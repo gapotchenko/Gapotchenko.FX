@@ -185,7 +185,7 @@ class Deployment
 
 It does the job but that's a lot of thought and code.
 
-We can do better with Gapotchenko.FX:
+We can do better with `Empty.Nullify` primitive:
 
 ``` csharp
 using Gapotchenko.FX;
