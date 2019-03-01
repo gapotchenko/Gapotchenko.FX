@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <!-- peverify-compat: https://github.com/dotnet/roslyn/issues/22485 -->
+    <Features>$(Features);peverify-compat</Features>
+    <DefaultItemExcludes>$(DefaultItemExcludes);**\*.orig;**\launchSettings.json</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>
