@@ -43,3 +43,77 @@ map[key2] = "Complex";
 
 Console.WriteLine(map[key1]);
 ```
+
+## Functional Influence
+
+Gapotchenko.FX has a strong influence from functional languages and paradigms,
+so it's important to keep that in mind when we study its main `Gapotchenko.FX` module.
+
+Some concepts may seem a bit odd at first look.
+However, they allow to reap the great benefits. Let's see how and why that happens.
+
+## Optional Values
+
+.NET provides a notion of nullable values. For example, a nullable `int` value:
+
+``` csharp
+int? x = null;
+if (!x.HasValue)
+	x = 10;
+Console.WriteLine(x);
+```
+
+But what if we want to do that with a reference type like `string`? Actually, we can:
+
+``` csharp
+string s = null;
+if (s == null)
+	s = "Test";
+Console.WriteLine(s);
+```
+
+Unfortunately, the scheme breaks at the following example:
+
+``` csharp
+class Deployment
+{
+	string m_CachedHomeDir;
+
+	public string HomeDir
+	{
+		get
+		{
+			if (m_CachedHomeDir == null)
+				m_CachedHomeDir = Environment.GetEnvironmentVariable("PRODUCT_HOME");
+			return m_CachedHomeDir;
+		}
+	}
+}
+```
+
+If `PRODUCT_HOME` environment variable is not set (e.g. its value is `null`), then `GetEnvironmentVariable` method will be called again and again
+diminishing the value of provided caching.
+
+To make this scenario work as designed, we should use an `Optional<T>` value provided by Gapotchenko FX. Like so:
+
+``` csharp
+using Gapotchenko.FX;
+
+class Deployment
+{
+	Optional<string> m_CachedHomeDir;
+
+	public string HomeDir
+	{
+		get
+		{
+			if (!m_CachedHomeDir.HasValue)
+				m_CachedHomeDir = Environment.GetEnvironmentVariable("PRODUCT_HOME");
+			return m_CachedHomeDir.Value;
+		}
+	}
+}
+```
+
+Optional values are pretty common in functional languages. And they are simple enough to grasp.
+But let's move to a more advanced topic - a notion of emptiness.
