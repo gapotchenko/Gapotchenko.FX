@@ -332,3 +332,4 @@ ASALocalRun/
 # Custom
 Publish/*
 !Publish/README.md
+*.snk
