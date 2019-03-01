@@ -157,21 +157,28 @@ on a machine of some customer.
 Let's improve the code to handle that condition:
 
 ``` csharp
-public string HomeDir
+using Gapotchenko.FX;
+
+class Deployment
 {
-	get
+	Optional<string> m_CachedHomeDir;
+
+	public string HomeDir
 	{
-		if (!m_CachedHomeDir.HasValue)
+		get
 		{
-			string s = Environment.GetEnvironmentVariable("PRODUCT_HOME");
-			if (string.IsNullOrEmpty(s))
+			if (!m_CachedHomeDir.HasValue)
 			{
-				// Treat an empty string as null. The value is absent.
-				s = null;
+				string s = Environment.GetEnvironmentVariable("PRODUCT_HOME");
+				if (string.IsNullOrEmpty(s))
+				{
+					// Treat an empty string as null. The value is absent.
+					s = null;
+				}
+				m_CachedHomeDir = s;
 			}
-			m_CachedHomeDir = s;
+			return m_CachedHomeDir.Value;
 		}
-		return m_CachedHomeDir.Value;
 	}
 }
 ```
@@ -181,13 +188,20 @@ It does the job but that's a lot of thought and code.
 We can do better with Gapotchenko.FX:
 
 ``` csharp
-public string HomeDir
+using Gapotchenko.FX;
+
+class Deployment
 {
-	get
+	Optional<string> m_CachedHomeDir;
+
+	public string HomeDir
 	{
-		if (!m_CachedHomeDir.HasValue)
-			m_CachedHomeDir = Empty.Nullify(Environment.GetEnvironmentVariable("PRODUCT_HOME"));
-		return m_CachedHomeDir.Value;
+		get
+		{
+			if (!m_CachedHomeDir.HasValue)
+				m_CachedHomeDir = Empty.Nullify(Environment.GetEnvironmentVariable("PRODUCT_HOME"));
+			return m_CachedHomeDir.Value;
+		}
 	}
 }
 ```
