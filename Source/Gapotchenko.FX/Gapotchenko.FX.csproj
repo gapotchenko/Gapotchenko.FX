@@ -3,7 +3,7 @@
   <Import Project="..\Metadata\Metadata.proj" />
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-    <Description>Gapotchenko FX</Description>
+    <Description>Gapotchenko.FX</Description>
     <LangVersion>7.2</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
