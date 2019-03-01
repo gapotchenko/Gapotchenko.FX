@@ -52,7 +52,7 @@ so it's important to keep that in mind when we study its main `Gapotchenko.FX` m
 Some concepts may seem a bit odd at first look.
 However, they allow to reap the **great** benefits. Let's see how and why that happens.
 
-Please note that Gapotchenko.FX is not an idiomatic functional kernel like the one you might expect in some languages like Haskell.
+Please note that Gapotchenko.FX is not an idiomatic functional kernel like one you might expect in a language like Haskell.
 Instead, Gapotchenko.FX is a mass-market product that uses the benefits of functional style up to the point where it remains beneficial.
 It also does OOP and some other techniques as long as they are bringing the benefit at a particular scenario.
 
