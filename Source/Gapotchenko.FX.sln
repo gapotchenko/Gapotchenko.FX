@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX", "Gapotchen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Threading", "Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj", "{413EB45F-F5C5-4432-85A7-1859C972CAC1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.Process", "Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj", "{C6404A82-9B1F-4A45-BCAD-39D83FCF84B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{413EB45F-F5C5-4432-85A7-1859C972CAC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{413EB45F-F5C5-4432-85A7-1859C972CAC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{413EB45F-F5C5-4432-85A7-1859C972CAC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6404A82-9B1F-4A45-BCAD-39D83FCF84B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6404A82-9B1F-4A45-BCAD-39D83FCF84B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6404A82-9B1F-4A45-BCAD-39D83FCF84B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6404A82-9B1F-4A45-BCAD-39D83FCF84B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Metadata\Metadata.proj" />
+  <PropertyGroup>
+    <TargetFramework></TargetFramework>
+    <Description>Gapotchenko.FX Diagnostics Process</Description>
+    <LangVersion>7.1</LangVersion>
+    <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+  </ItemGroup>
+</Project>

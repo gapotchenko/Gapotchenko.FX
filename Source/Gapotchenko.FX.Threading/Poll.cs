@@ -21,7 +21,7 @@ namespace Gapotchenko.FX.Threading
         /// The efficiency of a polling strategy is achieved by randomizing the delays between the polling attempts.
         /// In this way, the peak pressure on a thread pool is minimized by dispersing the thread activation requests on time axis.
         /// </remarks>
-        /// <param name="condition">The asynchonous predicate which defines the condition to wait for.</param>
+        /// <param name="condition">The asynchronous predicate which defines the condition to wait for.</param>
         /// <param name="millisecondsInterval">The amount of time, in milliseconds, to wait between condition polling attempts.</param>
         /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the condition to come true.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
