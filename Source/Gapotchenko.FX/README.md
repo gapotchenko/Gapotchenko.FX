@@ -94,7 +94,7 @@ class Deployment
 If `PRODUCT_HOME` environment variable is not set (e.g. its value is `null`), then `GetEnvironmentVariable` method will be called again and again
 diminishing the value of provided caching.
 
-To make this scenario work as designed, we should use an `Optional<T>` value provided by Gapotchenko FX. Like so:
+To make this scenario work as designed, we should use an `Optional<T>` value provided by Gapotchenko.FX. Like so:
 
 ``` csharp
 using Gapotchenko.FX;
@@ -117,3 +117,81 @@ class Deployment
 
 Optional values are pretty common in functional languages. And they are simple enough to grasp.
 But let's move to a more advanced topic - a notion of emptiness.
+
+## Notion of Emptiness
+
+Functional style is very similar to Unix philosophy.
+There are tools, they do their job and they do it well.
+Those Unix tools can be easily combined into more complex pipelines by redirecting inputs and outputs to form a chain.
+
+Functional programming is no different.
+There are primitives, and they can be combined to quickly achieve the goal.
+Due to the fact that underlying primitives are well-written, the combined outcome also tends to be excellent.
+
+Let's take a look at the notion of emptiness provided by the `Empty` class from `Gapotchenko.FX` assembly.
+
+The basic thing it does is nullifying. Say, we have the following code:
+
+``` csharp
+using Gapotchenko.FX;
+
+class Deployment
+{
+	Optional<string> m_CachedHomeDir;
+
+	public string HomeDir
+	{
+		get
+		{
+			if (!m_CachedHomeDir.HasValue)
+				m_CachedHomeDir = Environment.GetEnvironmentVariable("PRODUCT_HOME");
+			return m_CachedHomeDir.Value;
+		}
+	}
+}
+```
+
+It's all good, but in real world the `PRODUCT_HOME` environment variable may be set to an empty string `""`
+on a machine of some customer.
+
+Let's improve the code to handle that condition:
+
+``` csharp
+public string HomeDir
+{
+	get
+	{
+		if (!m_CachedHomeDir.HasValue)
+		{
+			string s = Environment.GetEnvironmentVariable("PRODUCT_HOME");
+			if (string.IsNullOrEmpty(s))
+			{
+				// Treat an empty string as null. The value is absent.
+				s = null;
+			}
+			m_CachedHomeDir = s;
+		}
+		return m_CachedHomeDir.Value;
+	}
+}
+```
+
+It does the job but that's a lot of thought and code.
+
+We can do better with Gapotchenko.FX:
+
+``` csharp
+public string HomeDir
+{
+	get
+	{
+		if (!m_CachedHomeDir.HasValue)
+			m_CachedHomeDir = Empty.Nullify(Environment.GetEnvironmentVariable("PRODUCT_HOME"));
+		return m_CachedHomeDir.Value;
+	}
+}
+```
+
+A simple one-liner.
+We used the `Empty.Nullify` primitive, combined it with `Optional<T>` primitive and got an excellent result.
+
