@@ -333,3 +333,4 @@ ASALocalRun/
 Publish/*
 !Publish/README.md
 *.snk
+Source/Metadata/Optimization.proj

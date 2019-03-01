@@ -1,0 +1,26 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TargetFrameworks>net40;net45;net46;netstandard2.0;netcoreapp2.1</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <DefineConstants>$(DefineConstants);TF_HOST_PROTECTION;TF_TRANSACTIONS;TFF_NET_FRAMEWORK</DefineConstants>
+    <TFF_NET_FRAMEWORK>true</TFF_NET_FRAMEWORK>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <DefineConstants>$(DefineConstants);TF_HOST_PROTECTION;TF_TRANSACTIONS;TF_ASYNC_STREAM;TF_READONLY_LIST;TF_READONLY_COLLECTION;TFF_AGGRESSIVE_INLINING;TFF_NET_FRAMEWORK;TFF_WEAKREFERENCE_1;TFF_CUSTOM_ATTRIBUTE_EXTENSIONS</DefineConstants>  
+    <TFF_NET_FRAMEWORK>true</TFF_NET_FRAMEWORK>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
+    <DefineConstants>$(DefineConstants);TF_HOST_PROTECTION;TF_TRANSACTIONS;TF_ASYNC_STREAM;TF_READONLY_LIST;TF_READONLY_COLLECTION;TF_ARRAY_EMPTY;TFF_AGGRESSIVE_INLINING;;TFF_NET_FRAMEWORK;TFF_WEAKREFERENCE_1;TFF_CUSTOM_ATTRIBUTE_EXTENSIONS</DefineConstants>
+    <TFF_NET_FRAMEWORK>true</TFF_NET_FRAMEWORK>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <DefineConstants>$(DefineConstants);TF_TRANSACTIONS;TF_ASYNC_STREAM;TF_READONLY_LIST;TF_READONLY_COLLECTION;TF_ARRAY_EMPTY;TFF_AGGRESSIVE_INLINING;TFF_WEAKREFERENCE_1;TFF_CUSTOM_ATTRIBUTE_EXTENSIONS</DefineConstants>  
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
+    <DefineConstants>$(DefineConstants);TF_TRANSACTIONS;TF_ASYNC_STREAM;TF_READONLY_LIST;TF_READONLY_COLLECTION;TF_ARRAY_EMPTY;TFF_AGGRESSIVE_INLINING;TFF_HASHCODE;TFF_WEAKREFERENCE_1;TFF_CUSTOM_ATTRIBUTE_EXTENSIONS;TFF_STRING_OPWITH_CHAR</DefineConstants>  
+  </PropertyGroup>
+
+</Project>

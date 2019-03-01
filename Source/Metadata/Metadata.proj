@@ -1,0 +1,23 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="VersionInfo.proj" />
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NeutralLanguage>en-US</NeutralLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageOutputPath>bin\$(Configuration)\package</PackageOutputPath>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <Target Name="CleanNuGetPackage" AfterTargets="Clean">
+    <RemoveDir Directories="$(PackageOutputPath)" /> 
+  </Target>
+
+  <Import Project="Sign.proj" />
+  <Import Project="TargetFrameworks.proj" />
+  <Import Project="Optimization.proj" Condition=" Exists('Optimization.proj') " />
+
+</Project>
