@@ -50,7 +50,11 @@ Gapotchenko.FX has a strong influence from functional languages and paradigms,
 so it's important to keep that in mind when we study its main `Gapotchenko.FX` module.
 
 Some concepts may seem a bit odd at first look.
-However, they allow to reap the great benefits. Let's see how and why that happens.
+However, they allow to reap the **great** benefits. Let's see how and why that happens.
+
+Please note that Gapotchenko.FX is not an idiomatic functional kernel like the one you might expect in some languages like Haskell.
+Instead, Gapotchenko.FX is a mass-market product that uses the benefits of functional style up to the point where it remains beneficial.
+It also does OOP and some other techniques as long as they are bringing the benefit at a particular scenario.
 
 ## Optional Values
 
@@ -126,7 +130,7 @@ Those Unix tools can be easily combined into more complex pipelines by redirecti
 
 Functional programming is no different.
 There are primitives, and they can be combined to quickly achieve the goal.
-Due to the fact that underlying primitives are well-written, the combined outcome also tends to be excellent.
+Due to the fact that underlying primitives are well-written and have no side effects, the combined outcome also tends to be excellent.
 
 Let's take a look at the notion of emptiness provided by the `Empty` class from `Gapotchenko.FX` assembly.
 
@@ -207,5 +211,37 @@ class Deployment
 ```
 
 A simple one-liner.
-We used the `Empty.Nullify` primitive, combined it with `Optional<T>` primitive and got an excellent result.
+We used the `Empty.Nullify` primitive, combined it with `Optional<T>` primitive and got a quick, excellent result.
 
+## Lazy Evaluation
+
+Most .NET languages employ eager evaluation model. But sometimes it may be beneficial to perform lazy evaluation.
+
+.NET comes pre-equipped with `Lazy<T>` primitive that does a very good job.
+However, during the years of extensive `Lazy<T>` usage it became evident that there are a few widespread usage scenarios where it becomes an overkill.
+
+First of all, `Lazy<T>` is a class, even in cases where it might be a struct.
+That means an additional pressure on GC.
+Secondly, `Lazy<T>` employs a sophisticated concurrency model where you can select the desired thread-safety level.
+That means an additional bookkeeping of state and storage, and thus fewer inlining opportunities for JIT.
+
+Gapotchenko.FX extends the .NET lazy evaluation model by providing the new `LazyEvaluation<T>` primitive.
+`LazyEvaluation<T>` is a struct, so it has no memory allocation burden.
+It also uses a simple concurrency model which relies on consistency guarantees of .NET memory model.
+
+The sample below demonstrates a typical usage scenario for `LazyEvaluation<T>`:
+
+``` csharp
+using Gapotchenko.FX;
+using System;
+
+class Program
+{
+	public static void Main()
+	{
+		var r = LazyEvaluation.Create(() => new Random().Next());
+		// ...
+		// Use 'r' value somewhere in the code.
+	}
+}
+```
