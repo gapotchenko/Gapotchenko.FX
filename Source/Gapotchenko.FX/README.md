@@ -12,10 +12,6 @@ Sure enough, .NET provides a similar `Enumerable.SequenceEqual` method (`System.
 Good luck trying to make something like `Dictionary<byte[], string>`.
 
 Many years had passed until it became clear that original platform maintainer is not going to solve that.
-Don't mind millions of people* are suffering.
-The world can wait.
-
-(* 8 million is approximate number of .NET developers in the world)
 
 As you can imagine, this whole situation gave an initial spark to Gapotchenko.FX project.
 
@@ -34,7 +30,7 @@ bool f = ArrayEqualityComparer.Equals(a1, a2);
 Console.WriteLine(f);
 ```
 
-And what about `Dictionary<byte[], string>`? Here you go:
+And what about `Dictionary<byte[], string>`? Here it is:
 
 ``` csharp
 var map = new Dictionary<byte[], string>(ArrayEqualityComparer<byte>.Default);
