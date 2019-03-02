@@ -47,7 +47,8 @@ namespace Gapotchenko.FX.ComponentModel
         /// <remarks>
         /// <para>
         /// The method does not provide thread safety guarantees except memory model consistency.
-        /// The <see cref="IDisposable.Dispose"/> method of a disposable object may be invoked several times when the <see cref="Clear{T}(ref T)"/> method is called concurrently by multiple threads.
+        /// As a result, the <see cref="IDisposable.Dispose"/> method of a disposable object may be invoked several times
+        /// when the <see cref="Clear{T}(ref T)"/> method is called concurrently by multiple threads.
         /// </para>
         /// <seealso cref="Clear{T}(ref T, bool)"/>
         /// </remarks>
@@ -95,11 +96,13 @@ namespace Gapotchenko.FX.ComponentModel
         /// </para>
         /// <para>
         /// When <paramref name="isThreadSafe"/> is <c>false</c>, the method does not provide thread safety guarantees except memory model consistency.
-        /// As a result, the <see cref="IDisposable.Dispose"/> method of a disposable object may be invoked several times when the <see cref="Clear{T}(ref T, bool)"/> method is called concurrently by multiple threads.
+        /// As a result, the <see cref="IDisposable.Dispose"/> method of a disposable object may be invoked several times
+        /// when the <see cref="Clear{T}(ref T, bool)"/> method is called concurrently by multiple threads.
         /// </para>
         /// <para>
         /// When <paramref name="isThreadSafe"/> is <c>true</c>, the method provides a publication and execution thread safety.
-        /// As a result, the <see cref="IDisposable.Dispose"/> method of a disposable object is invoked exactly once even when the <see cref="Clear{T}(ref T, bool)"/> method is called concurrently by multiple threads.
+        /// As a result, the <see cref="IDisposable.Dispose"/> method of a disposable object is invoked exactly once even
+        /// when the <see cref="Clear{T}(ref T, bool)"/> method is called concurrently by multiple threads.
         /// </para>
         /// </remarks>
         /// <typeparam name="T">The type of disposable object.</typeparam>

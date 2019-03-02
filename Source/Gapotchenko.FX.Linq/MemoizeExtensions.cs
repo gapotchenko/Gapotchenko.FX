@@ -46,7 +46,7 @@ namespace Gapotchenko.FX.Linq
                 case IList<T> _:
                 case IReadOnlyList<T> _:
                 case string _:
-                    // Given source types are intrinsically memoized by their inner construction.
+                    // Given source types are intrinsically memoized by their nature.
                     return source;
             }
 
