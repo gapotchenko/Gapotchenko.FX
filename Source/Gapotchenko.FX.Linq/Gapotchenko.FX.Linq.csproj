@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Metadata\Metadata.proj" />
+  <PropertyGroup>
+    <TargetFramework></TargetFramework>
+    <Description>Gapotchenko.FX.Linq module. A part of Core profile of Gapotchenko.FX framework.</Description>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <ProjectReference Include="..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
+  </ItemGroup>
+</Project>
