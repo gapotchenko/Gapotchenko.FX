@@ -29,7 +29,7 @@ bool f = ArrayEqualityComparer.Equals(a1, a2);
 Console.WriteLine(f);
 ```
 
-And what about `Dictionary<byte[], string>`? No problem, here it is:
+And what about `Dictionary<byte[], string>` scenario? It's easy now:
 
 ``` csharp
 var map = new Dictionary<byte[], string>(ArrayEqualityComparer<byte>.Default);
