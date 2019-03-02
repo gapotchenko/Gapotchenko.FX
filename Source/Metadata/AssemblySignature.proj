@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- INSTRUCTIONS -->
+  <!-- Put AssemlyKey.snk file to the current folder to sign the assemblies with your signing key. -->
+
   <PropertyGroup>
     <AssemblyOriginatorKeyFile Condition=" Exists('$(MSBuildThisFileDirectory)AssemblyKey.snk') ">$(MSBuildThisFileDirectory)AssemblyKey.snk</AssemblyOriginatorKeyFile>
     <SignAssembly Condition=" Exists('$(AssemblyOriginatorKeyFile)') ">true</SignAssembly>
