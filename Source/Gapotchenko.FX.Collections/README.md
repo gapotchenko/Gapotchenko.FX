@@ -27,7 +27,7 @@ Which is, well, not handy as it often comes to this:
 new KeyValuePair<BindingManagerDataErrorEventHandler, ICom2PropertyPageDisplayService>(key, value)
 ```
 
-`Gapotchenko.FX.Collections` provides a better way to instantiate a `KeyValuePair` struct:
+`Gapotchenko.FX.Collections` provides a better way to instantiate a `KeyValuePair<TKey, TValue>` struct:
 
 ``` csharp
 using Gapotchenko.FX.Collections.Generic;
@@ -39,7 +39,7 @@ It leverages the automatic type inference provided by some .NET languages like C
 
 #### Deconstruction
 
-`Gapotchenko.FX.Collections` module provides a function for automatic `KeyValuePair<TKey, TValue>` deconstruction, so you can write this:
+`Gapotchenko.FX.Collections` module comes with a function for `KeyValuePair<TKey, TValue>` deconstruction, so you can write this:
 
 ``` csharp
 using Gapotchenko.FX.Collections.Generic;
