@@ -267,6 +267,8 @@ A couple of things.
 
 First of all, Gapotchenko.FX closes the gaps in original .NET design by providing the missing functionality.
 
+### Lazy&lt;T&gt; Polyfill
+
 For example, `Lazy<T>` class has to be constructed with a `new` keyword, like so: `new Lazy<string>(() => ...)`.
 It's a no-brainer for simple types like `string`. But for custom types it quickly gets clunky:
 
@@ -287,6 +289,8 @@ It allows to leverage the type inference mechanism provided by some .NET languag
 It immediately translates into less typing for you on a daily basis.
 
 Secondly, Gapotchenko.FX provides some implementations from future versions of .NET.
+
+### HashCode Polyfill
 
 For example, `HashCode` struct first appeared in .NET Core 2.0.
 It allows to quickly combine various hash code sources into the final hash code value with a minimal probability of collisions.
