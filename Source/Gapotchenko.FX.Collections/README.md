@@ -1,8 +1,8 @@
 ﻿# Gapotchenko.FX.Collections
 
-The module was started by borrowing an implementation of `ConcurrentHashSet` from [Mr. Bar Arnon](https://github.com/i3arnon).
+The module was started by borrowing an implementation of `ConcurrentHashSet<T>` from [Mr. Bar Arnon](https://github.com/i3arnon).
 
-Other than that, the module does not offer much yet, mostly polyfills for missing functionality in .NET BCL.
+Other than that, the module provides polyfills for missing functionality in .NET.
 
 ## ConcurrentHashSet&lt;T&gt;
 
@@ -37,7 +37,9 @@ KeyValuePair.Create(key, value)
 
 It leverages the automatic type inference provided by some .NET languages like C#.
 
-Gapotchenko.FX does not stop there and also provides a function for automatic `KeyValuePair<TKey, TValue>` deconstruction, so you can write this:
+#### Deconstruction
+
+`Gapotchenko.FX.Collections` module provides a function for automatic `KeyValuePair<TKey, TValue>` deconstruction, so you can write this:
 
 ``` csharp
 using Gapotchenko.FX.Collections.Generic;
