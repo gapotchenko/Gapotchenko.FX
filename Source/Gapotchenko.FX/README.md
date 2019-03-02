@@ -301,12 +301,12 @@ It even goes further than that by providing extension methods that are likely to
 - `AddRange<T>(IEnumerable<T> source)`
 - `AddRange<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)`
 
+And so on.
+There are many little things that shape the productive environment into one you can immediately employ and reap the benefit in no-time.
+
 ### Ex Classes
 
 Some Gapotchenko.FX polyfill functionality cannot be packed into existing .NET structures because they don't provide enough extensibility points.
 In that case, Gapotchenko.FX provides so called "Ex" classes, where "Ex" is an abbreviation for "Extension". For example:
  - `HashCodeEx`
  - `LazyInitializerEx`
-
-And so on.
-As you can see, there are many little things that shape the productive environment into one you can immediately employ and reap the benefit in no-time.
