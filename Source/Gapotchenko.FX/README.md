@@ -1,7 +1,6 @@
 ﻿# Gapotchenko.FX
+
 `Gapotchenko.FX` is the main module of Gapotchenko.FX framework. Coincidently, they have identical names.
-
-
 
 The module was started by creating its first building block: `ArrayEqualityComparer`.
 
