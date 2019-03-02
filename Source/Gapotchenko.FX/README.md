@@ -230,12 +230,12 @@ The sample below demonstrates a typical usage scenario for `LazyEvaluation<T>`:
 ``` csharp
 using Gapotchenko.FX;
 
-class Deployment
+static class Deployment
 {
-	LazyEvaluation<string> m_CachedHomeDir = LazyEvaluation.Create(
+	static LazyEvaluation<string> m_HomeDir = LazyEvaluation.Create(
 		() => Empty.Nullify(Environment.GetEnvironmentVariable("PRODUCT_HOME")));
 
-	public string HomeDir => m_CachedHomeDir.Value;
+	public static string HomeDir => m_HomeDir.Value;
 }
 ```
 
