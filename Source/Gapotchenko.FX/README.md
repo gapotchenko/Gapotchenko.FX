@@ -18,7 +18,7 @@ As you can imagine, this whole situation gave an initial spark to Gapotchenko.FX
 What if we have an `ArrayEqualityComparer` that does the job out of the box?
 What if it does the job in the fastest possible way by leveraging the properties of host CPU and platform?
 
-No problem. Now we have it:
+`Gapotchenko.FX` provides the exact solution:
 
 ``` csharp
 using Gapotchenko.FX;
@@ -30,7 +30,7 @@ bool f = ArrayEqualityComparer.Equals(a1, a2);
 Console.WriteLine(f);
 ```
 
-And what about `Dictionary<byte[], string>`? Here it is:
+And what about `Dictionary<byte[], string>`? No problem, here it is:
 
 ``` csharp
 var map = new Dictionary<byte[], string>(ArrayEqualityComparer<byte>.Default);
@@ -50,11 +50,7 @@ Gapotchenko.FX has a strong influence from functional languages and paradigms,
 so it's important to keep that in mind when we study its main `Gapotchenko.FX` module.
 
 Some concepts may seem a bit odd at first look.
-However, they allow to reap the **great** benefits. Let's see how and why that happens.
-
-Please note that Gapotchenko.FX is not an idiomatic functional kernel like one you might expect in a language like Haskell.
-Instead, Gapotchenko.FX is a mass-market product that uses the benefits of functional style up to the point where it remains beneficial.
-It also does OOP and some other techniques as long as they are bringing the benefit at a particular scenario.
+However, they allow to reap the _great_ benefits. Let's see how and why that happens.
 
 ## Optional Values
 
@@ -211,13 +207,13 @@ class Deployment
 ```
 
 A simple one-liner.
-We used the `Empty.Nullify` primitive, combined it with `Optional<T>` primitive and got a quick, excellent result.
+We combine `Empty.Nullify` and `Optional<T>` primitives in order to get a quick, excellent result.
 
 ## Lazy Evaluation
 
 Most .NET languages employ eager evaluation model. But sometimes it may be beneficial to perform lazy evaluation.
 
-.NET comes pre-equipped with `Lazy<T>` primitive that does a very good job.
+.NET comes pre-equipped with `Lazy<T>` primitive that does a decent job.
 However, during the years of extensive `Lazy<T>` usage it became evident that there are a few widespread usage scenarios where it becomes an overkill.
 
 First of all, `Lazy<T>` is a class, even in cases where it might be a struct.
@@ -233,15 +229,29 @@ The sample below demonstrates a typical usage scenario for `LazyEvaluation<T>`:
 
 ``` csharp
 using Gapotchenko.FX;
-using System;
+
+class Deployment
+{
+	LazyEvaluation<string> m_CachedHomeDir = LazyEvaluation.Create(
+		() => Empty.Nullify(Environment.GetEnvironmentVariable("PRODUCT_HOME")));
+
+	public string HomeDir => m_CachedHomeDir.Value;
+}
+```
+
+Or as a local variable:
+
+``` csharp
+using Gapotchenko.FX;
 
 class Program
 {
 	public static void Main()
-	{
-		var r = LazyEvaluation.Create(() => new Random().Next());
+	{	
+		var homeDir = LazyEvaluation.Create(
+			() => Empty.Nullify(Environment.GetEnvironmentVariable("PRODUCT_HOME")));
 		// ...
-		// Use 'r' value somewhere in the code.
+		// Use 'homeDir' value somewhere in the code.
 	}
 }
 ```
