@@ -4,7 +4,7 @@ The module provides primitives for functional processing of data sequences.
 
 ## Memoization
 
-Memoization is a pinnacle of functional data processing.
+Memoization is a pillar of functional data processing.
 You already met it quite often albeit in somewhat masked forms.
 
 `Gapotchenko.FX.Linq` module provides the `Memoize()` extension method for `IEnumerable<T>` types.
