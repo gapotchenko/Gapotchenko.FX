@@ -52,9 +52,9 @@ namespace Gapotchenko.FX
             get
             {
                 var defaultFunc = Empty<T>.DefaultFunc;
-                if (_ValueFactory != defaultFunc)
+                var valueFactory = _ValueFactory;
+                if (valueFactory != defaultFunc)
                 {
-                    var valueFactory = _ValueFactory;
                     if (valueFactory != null)
                         _Value = valueFactory();
                     _ValueFactory = defaultFunc;
