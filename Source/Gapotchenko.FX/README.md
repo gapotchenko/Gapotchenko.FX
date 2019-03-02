@@ -298,5 +298,7 @@ A very decent thing that was _never_ backported to conventional .NET Framework.
 
 Gapotchenko.FX provides `HashCode` so you can use it in your project right now.
 
+<hr/>
+
 And so on.
 There are many little things that shape the productive environment into one you can immediately employ and reap the benefit in no-time.
