@@ -69,7 +69,7 @@ A little detail, but sometimes it matters a lot when you are amid the heat deep 
 
 ## Other Modules
 
-Let's continue with a look at some other modules provided by Gapotchenko.FX framework:
+Let's continue with a look to some other modules provided by Gapotchenko.FX framework:
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)

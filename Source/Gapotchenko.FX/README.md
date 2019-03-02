@@ -323,7 +323,7 @@ It's a polyfill to the future, after all.
 
 ## Other Modules
 
-Let's continue with a look at some other modules provided by Gapotchenko.FX framework:
+Let's continue with a look to some other modules provided by Gapotchenko.FX framework:
 
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
