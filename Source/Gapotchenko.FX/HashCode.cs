@@ -47,8 +47,12 @@ using System.Runtime.CompilerServices;
 namespace System
 {
     /// <summary>
+    /// <para>
     /// Provides extended functionality for building, combining and diffusing hash codes.
-    /// This is a polyfill provided by Gapotchenko FX.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </summary>
     public struct HashCode
     {

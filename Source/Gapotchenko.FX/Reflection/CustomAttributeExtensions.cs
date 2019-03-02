@@ -10,8 +10,12 @@ using System.Text;
 namespace System.Reflection
 {
     /// <summary>
+    /// <para>
     /// Contains static methods for retrieving custom attributes.
-    /// This is a polyfill provided by Gapotchenko FX.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </summary>
     public static class CustomAttributeExtensions
     {

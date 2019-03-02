@@ -10,8 +10,12 @@ using System.Threading;
 namespace System.Threading
 {
     /// <summary>
+    /// <para>
     /// Provides methods for performing volatile memory operations.
-    /// This is a polyfill provided by Gapotchenko FX.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </summary>
     public static class Volatile
     {

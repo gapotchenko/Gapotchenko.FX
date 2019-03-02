@@ -9,8 +9,12 @@ using System.Text;
 namespace System.Collections.Generic
 {
     /// <summary>
+    /// <para>
     /// Represents a read-only collection of elements that can be accessed by index.
-    /// This is a polyfill provided by Gapotchenko FX.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">
     /// The type of elements in the read-only list.

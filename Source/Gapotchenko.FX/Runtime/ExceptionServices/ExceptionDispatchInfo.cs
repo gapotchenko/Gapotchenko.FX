@@ -10,8 +10,12 @@ using System.Text;
 namespace System.Runtime.ExceptionServices
 {
     /// <summary>
+    /// <para>
     /// Represents an exception whose state is captured at a certain point in code.
-    /// This is a polyfill provided by Gapotchenko FX.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </summary>
     public sealed class ExceptionDispatchInfo
     {

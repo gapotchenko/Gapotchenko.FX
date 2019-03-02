@@ -11,8 +11,12 @@ using System.Text;
 namespace System
 {
     /// <summary>
+    /// <para>
     /// Represents a typed weak reference, which references an object while still allowing that object to be reclaimed by garbage collection.
-    /// This is a polyfill provided by Gapotchenko FX.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the object referenced.</typeparam>
     [Serializable]

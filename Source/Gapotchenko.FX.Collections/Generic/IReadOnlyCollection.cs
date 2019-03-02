@@ -9,8 +9,12 @@ using System.Text;
 namespace System.Collections.Generic
 {
     /// <summary>
+    /// <para>
     /// Represents a strongly-typed, read-only collection of elements.
-    /// This is a polyfill provided by Gapotchenko FX.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">
     /// The type of the elements.
