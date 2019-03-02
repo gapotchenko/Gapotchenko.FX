@@ -1,5 +1,5 @@
 ﻿# Gapotchenko.FX
-`Gapotchenko.FX` is the main module of Gapotchenko.FX framework. Coincidently, it has the very same name.
+`Gapotchenko.FX` is the main module of Gapotchenko.FX framework. Coincidently, they have identical names.
 
 
 
@@ -94,7 +94,7 @@ class Deployment
 If `PRODUCT_HOME` environment variable is not set (e.g. its value is `null`), then `GetEnvironmentVariable` method will be called again and again
 diminishing the value of provided caching.
 
-To make this scenario work as designed, we should use an `Optional<T>` value provided by Gapotchenko.FX. Like so:
+To make this scenario work as designed, we should use an `Optional<T>` value provided by `Gapotchenko.FX`. Like so:
 
 ``` csharp
 using Gapotchenko.FX;
@@ -277,6 +277,8 @@ new Lazy<ICom2PropertyPageDisplayService>(() => ...)
 The good news is Gapotchenko.FX allows you to do a better job here:
 
 ``` csharp
+using Gapotchenko.FX;
+
 Lazy.Create(() => ...)
 ```
 
