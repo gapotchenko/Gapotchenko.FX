@@ -8,9 +8,6 @@ Other than that, the module provides polyfills for missing functionality in .NET
 
 `ConcurrentHashSet<T>` provided by `Gapotchenko.FX.Collections` is a thread-safe implementation of `HashSet<T>`.
 
-For some strange reason, such an important primitive is missing in baseline .NET.
-But, of course, you have it out of the box when you use Gapotchenko.FX.
-
 ## Polyfills
 
 ### KeyValuePair Polyfill
