@@ -67,7 +67,7 @@ void ProcessMap(IDictionary<string, int> map)
 }
 ```
 
-A little detail, but sometimes it matters a lot when you are amid the heat deep inside the code.
+A little detail, but sometimes it matters a lot when you are amid the heat of the code.
 
 ## Other Modules
 

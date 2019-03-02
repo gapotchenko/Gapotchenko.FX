@@ -312,7 +312,7 @@ In that case, Gapotchenko.FX provides so called "Ex" classes, where "Ex" is an a
 
 As you can see, there are many little things that shape the productive environment into one you can immediately employ, and reap the benefit in no-time.
 
-If was the original idea of .NET itself when it had started.
+It was the original idea of .NET itself when it had started.
 However, it got lost somewhere along the road.
 Now (2019) it's a pretty bleak platform focused on micro-optimizations and breaking the compatibility,
 seeding the wrong seeds at people's hearts.
