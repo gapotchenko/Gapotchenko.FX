@@ -16,8 +16,9 @@
     <RemoveDir Directories="$(PackageOutputPath)" /> 
   </Target>
 
-  <Import Project="Sign.proj" />
+  <Import Project="AssemblySignature.proj" />
   <Import Project="TargetFrameworks.proj" />
   <Import Project="Optimization.proj" Condition=" Exists('Optimization.proj') " />
+  <Import Project="AuthenticodeSignature.proj" />
 
 </Project>

@@ -25,7 +25,7 @@
 
 #endif
 
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("Gapotchenko.FX")]
 
 namespace Gapotchenko.FX
 {
