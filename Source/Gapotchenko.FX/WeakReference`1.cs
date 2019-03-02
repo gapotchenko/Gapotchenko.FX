@@ -60,7 +60,7 @@ namespace System
 
         /// <summary>
         ///  Populates a <see cref="SerializationInfo"/> object with all the data
-        ///  necessary to serialize the current System.WeakReference`1 object.
+        ///  necessary to serialize the current <see cref="WeakReference{T}"/> object.
         /// </summary>
         /// <param name="info">An object that holds all the data necessary to serialize or deserialize the current <see cref="WeakReference{T}"/> object.</param>
         /// <param name="context">The location where serialized data is stored and retrieved.</param>
