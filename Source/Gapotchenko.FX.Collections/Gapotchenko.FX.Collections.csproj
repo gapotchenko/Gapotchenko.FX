@@ -3,13 +3,9 @@
   <Import Project="..\Metadata\Metadata.proj" />
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-    <LangVersion>7.1</LangVersion>
-    <Description>Gapotchenko.FX.Threading module. A part of Core profile of Gapotchenko.FX framework.</Description>
+    <Description>Gapotchenko.FX.Collections module. A part of Core profile of Gapotchenko.FX framework.</Description>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
   </ItemGroup>
 </Project>
