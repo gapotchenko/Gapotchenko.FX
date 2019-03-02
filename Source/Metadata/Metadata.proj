@@ -1,6 +1,38 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project="VersionInfo.proj" />
+  <!-- Product Information -->
+  <PropertyGroup>
+    <Company>Gapotchenko</Company>
+    <Product>Gapotchenko.FX</Product>
+    <Copyright>Copyright © 2019 Gapotchenko and Contributors</Copyright>
+  </PropertyGroup>
+
+  <!-- Assembly Information -->
+  <PropertyGroup>
+    <AssemblyVersion>1.1.134.16010</AssemblyVersion>
+    <FileVersion>1.1.134.16010</FileVersion>
+    <InformationalVersion>1.1 (Beta build 1.1.134.16010)</InformationalVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- NuGet Specification -->
+    <Authors>Gapotchenko</Authors>
+    <VersionPrefix>1.1.134</VersionPrefix>
+    <VersionSuffix>beta</VersionSuffix>
+    <Description>Gapotchenko.FX</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>framework platform polyfill</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);DISABLE_ASSEMBLY_METADATA_ATTRIBUTES</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AssemblyMetadata.cs" Link="Properties\AssemblyMetadata.cs" />
+  </ItemGroup>
+
+  <!-- =================================================================== -->
 
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -16,8 +48,10 @@
     <RemoveDir Directories="$(PackageOutputPath)" /> 
   </Target>
 
-  <Import Project="AssemblySignature.proj" />
+  <!-- =================================================================== -->
+
   <Import Project="TargetFrameworks.proj" />
+  <Import Project="AssemblySignature.proj" />
   <Import Project="Optimization.proj" Condition=" Exists('Optimization.proj') " />
   <Import Project="AuthenticodeSignature.proj" />
 

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-#if !DISABLE_ASSEMBLY_VERSION_ATTRIBUTES
+#if !DISABLE_ASSEMBLY_METADATA_ATTRIBUTES
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -17,7 +17,7 @@
 //      Revision
 //
 
-#if !DO_NOT_DEFINE_GLOBAL_ASSEMBLY_VERSION
+#if !DISABLE_ASSEMBLY_VERSION_ATTRIBUTE
 [assembly: AssemblyVersion("1.1.134.16010")]
 #endif
 [assembly: AssemblyFileVersion("1.1.134.16010")]
@@ -29,8 +29,8 @@
 
 namespace Gapotchenko.FX
 {
-#if ASSEMBLY_VERSION_INFO
-    static partial class AssemblyVersionInfo
+#if ASSEMBLY_METADATA
+    static partial class AssemblyMetadata
     {
         public const string ProductName = "Gapotchenko.FX";
         public const string CompanyName = "Gapotchenko";
