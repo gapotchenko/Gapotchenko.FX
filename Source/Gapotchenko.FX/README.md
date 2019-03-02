@@ -308,5 +308,24 @@ In that case, Gapotchenko.FX provides so called "Ex" classes, where "Ex" is an a
  - `HashCodeEx`
  - `LazyInitializerEx`
 
-And so on.
+## Summary
+
 As you can see, there are many little things that shape the productive environment into one you can immediately employ, and reap the benefit in no-time.
+
+If was the original idea of .NET itself when it had started.
+However, it got lost somewhere along the road.
+Now (2019) it's a pretty stagnant platform focused on micro-optimizations and breaking the compatibility,
+seeding the wrong seeds at people's hearts.
+
+Gapotchenko.FX was created to change that.
+Its mission is to bring joy of a Rapid Application Development (RAD) back to the people.
+It's a polyfill to the future, after all.
+
+## Other Modules
+
+Let's continue with a look to some other modules provided by Gapotchenko.FX framework:
+
+- [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
+- [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
+- [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
+- [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process)
