@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Collections
 
-The module was started by borrowing an implementation of `ConcurrentHashSet` from Mr. Bar Arnon (@i3arnon).
+The module was started by borrowing an implementation of `ConcurrentHashSet` from [Mr. Bar Arnon](https://github.com/i3arnon).
 
 Other than that, the module does not offer much yet, mostly polyfills for missing functionality in .NET BCL.
 
