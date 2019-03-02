@@ -46,7 +46,7 @@ Console.WriteLine(map[key1]);
 ## Functional Influence
 
 Gapotchenko.FX has a strong influence from functional languages and paradigms,
-so it's important to keep that in mind when we study its main `Gapotchenko.FX` module.
+so it's important to keep that in mind when studying `Gapotchenko.FX` module.
 
 Some concepts may seem a bit odd at first look.
 However, they allow to reap the _great_ benefits. Let's see how and why that happens.
