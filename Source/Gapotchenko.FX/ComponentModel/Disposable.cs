@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace Gapotchenko.FX
+namespace Gapotchenko.FX.ComponentModel
 {
     /// <summary>
-    /// Defines a base class for disposable objects that implement a finalizer pattern.
+    /// Defines a base class for disposable objects that implements a finalizer pattern.
     /// </summary>
     public abstract class Disposable : IDisposable
     {
