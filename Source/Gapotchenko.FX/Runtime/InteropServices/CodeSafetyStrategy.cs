@@ -6,18 +6,18 @@ using System.Threading;
 
 namespace Gapotchenko.FX.Runtime.InteropServices
 {
-    static class CodeSafetyConfiguration
+    static class CodeSafetyStrategy
     {
-        static CodeSafetyConfiguration()
+        static CodeSafetyStrategy()
         {
             UnsafeCodeAllowed = AppDomain.CurrentDomain.IsFullyTrusted;
         }
 
         public static bool UnsafeCodeAllowed { get; }
 
-        static LazyEvaluation<bool> _UnsafeCodeRecommended = LazyEvaluation.Create(_IsUnsafeCodeRecommendedCore);
+        static LazyEvaluation<bool> _IsUnsafeCodeRecommended = LazyEvaluation.Create(_IsUnsafeCodeRecommendedCore);
 
-        public static bool UnsafeCodeRecommended => _UnsafeCodeRecommended.Value;
+        public static bool IsUnsafeCodeRecommended => _IsUnsafeCodeRecommended.Value;
 
         static bool _IsUnsafeCodeRecommendedCore()
         {
