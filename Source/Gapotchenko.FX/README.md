@@ -302,7 +302,7 @@ It even goes further than that by providing extension methods that are likely to
 - `AddRange<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)`
 
 And so on.
-There are many little things that shape the productive environment into one you can immediately employ and reap the benefit in no-time.
+There are many little things that shape the productive environment into one you can immediately employ, and thus reap the benefits in no-time.
 
 ### Ex Classes
 
