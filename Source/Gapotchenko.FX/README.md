@@ -314,7 +314,7 @@ As you can see, there are many little things that shape the productive environme
 
 If was the original idea of .NET itself when it had started.
 However, it got lost somewhere along the road.
-Now (2019) it's a pretty stagnant platform focused on micro-optimizations and breaking the compatibility,
+Now (2019) it's a pretty bleak platform focused on micro-optimizations and breaking the compatibility,
 seeding the wrong seeds at people's hearts.
 
 Gapotchenko.FX was created to change that.
