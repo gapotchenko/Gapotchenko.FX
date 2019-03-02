@@ -292,7 +292,7 @@ Secondly, Gapotchenko.FX provides some implementations from future versions of .
 ### HashCode Polyfill
 
 For example, `HashCode` struct first appeared in .NET Core 2.0.
-It allows to quickly combine various hash code sources into the final hash code value with a minimal probability of collisions.
+It allows to quickly combine various hash code sources into the final value with a minimal probability of collisions.
 A very decent thing that was _never_ backported to conventional .NET Framework.
 
 `Gapotchenko.FX` provides `HashCode` so you can use it in your project right now.
@@ -301,12 +301,12 @@ It even goes further than that by providing extension methods that are likely to
 - `AddRange<T>(IEnumerable<T> source)`
 - `AddRange<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)`
 
-And so on.
-There are many little things that shape the productive environment into one you can immediately employ, and reap the benefit in no-time.
-
 ### Ex Classes
 
 Some Gapotchenko.FX polyfill functionality cannot be packed into existing .NET structures because they don't provide enough extensibility points.
 In that case, Gapotchenko.FX provides so called "Ex" classes, where "Ex" is an abbreviation of "Extension". For example:
  - `HashCodeEx`
  - `LazyInitializerEx`
+
+And so on.
+As you can see, there are many little things that shape the productive environment into one you can immediately employ, and reap the benefit in no-time.
