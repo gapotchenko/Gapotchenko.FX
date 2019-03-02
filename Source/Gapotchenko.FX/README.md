@@ -307,6 +307,6 @@ There are many little things that shape the productive environment into one you 
 ### Ex Classes
 
 Some Gapotchenko.FX polyfill functionality cannot be packed into existing .NET structures because they don't provide enough extensibility points.
-In that case, Gapotchenko.FX provides so called "Ex" classes, where "Ex" is an abbreviation for "Extension". For example:
+In that case, Gapotchenko.FX provides so called "Ex" classes, where "Ex" is an abbreviation of "Extension". For example:
  - `HashCodeEx`
  - `LazyInitializerEx`
