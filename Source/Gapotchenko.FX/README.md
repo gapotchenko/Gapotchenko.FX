@@ -259,3 +259,38 @@ class Program
 On a side note, just look how small our `Deployment` class became now.
 Using the functional composition of primitives, we were able to achieve a tiny, reliable and maintainable implementation.
 
+## Polyfills
+
+A tagline of Gapotchenko.FX project says "A .NET Polyfill to the Future".
+But what does it really mean?
+A couple of things.
+
+First of all, Gapotchenko.FX closes the gaps in original .NET design by providing the missing functionality.
+
+For example, `Lazy<T>` class has to be constructed with a `new` keyword, like so: `new Lazy<string>(() => ...)`.
+It's a no-brainer for simple types like `string`. But for custom types it quickly gets clunky:
+
+``` csharp
+new Lazy<ICom2PropertyPageDisplayService>(() => ...)
+```
+
+The good news is Gapotchenko.FX allows you to do a better job here:
+
+``` csharp
+Lazy.Create(() => ...)
+```
+
+`Gapotchenko.FX` provides a static `Lazy` class that contains a bunch of methods for `Lazy<T>` instantiation.
+It allows to leverage the type inference mechanism provided by some .NET languages like C#.
+It immediately translates into less typing for you on a daily basis.
+
+Secondly, Gapotchenko.FX provides some implementations from future versions of .NET.
+
+For example, `HashCode` struct first appeared in .NET Core 2.0.
+It allows to quickly combine various hash code sources into the final hash code value with a minimal probability of collisions.
+A very decent thing that was _never_ backported to conventional .NET Framework.
+
+Gapotchenko.FX provides `HashCode` so you can use it in your project right now.
+
+And so on.
+There are many little things that shape the productive environment into one you can immediately employ and reap the benefit in no-time.
