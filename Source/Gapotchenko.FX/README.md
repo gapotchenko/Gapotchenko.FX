@@ -221,7 +221,7 @@ That means an additional pressure on GC.
 Secondly, `Lazy<T>` employs a sophisticated concurrency model where you can select the desired thread-safety level.
 That means an additional bookkeeping of state and storage, and thus fewer inlining opportunities for JIT.
 
-Gapotchenko.FX extends the .NET lazy evaluation model by providing the new `LazyEvaluation<T>` primitive.
+`Gapotchenko.FX` extends the .NET lazy evaluation model by providing the new `LazyEvaluation<T>` primitive.
 `LazyEvaluation<T>` is a struct, so it has no memory allocation burden.
 It also uses a simple concurrency model which relies on consistency guarantees of .NET memory model.
 
@@ -255,3 +255,7 @@ class Program
 	}
 }
 ```
+
+On a side note, just look how small our `Deployment` class became now.
+Using the functional composition of primitives, we were able to achieve a tiny, reliable and maintainable implementation.
+
