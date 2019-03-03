@@ -50,7 +50,7 @@ void ProcessMap(IDictionary<string, int> map)
 }
 ```
 
-instead of a more clunky variant:
+instead of a more verbose variant:
 
 ``` csharp
 void ProcessMap(IDictionary<string, int> map)
