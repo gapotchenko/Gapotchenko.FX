@@ -206,7 +206,7 @@ class Deployment
 ```
 
 A simple one-liner.
-We combine `Empty.Nullify` and `Optional<T>` primitives in order to get a quick, excellent result.
+We combine `Empty.Nullify` and `Optional<T>` primitives in order to get a quick, sound result.
 
 ## Lazy Evaluation
 
