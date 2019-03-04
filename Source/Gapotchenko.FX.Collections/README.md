@@ -45,7 +45,7 @@ void ProcessMap(IDictionary<string, int> map)
 {
     foreach (var (key, value) in map)
     {
-        // ...
+        …
     }
 }
 ```
@@ -59,7 +59,7 @@ void ProcessMap(IDictionary<string, int> map)
     {
         var key = i.Key;
         var value = i.Value;
-        // ...
+        …
     }
 }
 ```
