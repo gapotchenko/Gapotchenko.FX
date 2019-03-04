@@ -17,26 +17,6 @@ namespace Gapotchenko.FX.Threading
     public static class LazyInitializerEx
     {
         /// <summary>
-        /// Initializes a target reference type with the type's default constructor if it hasn't already been initialized.
-        /// The type's default constructor can be potentially invoked more than once in case of concurrent access congestion.
-        /// </summary>
-        /// <typeparam name="TTarget">The type of the target to be initialized.</typeparam>
-        /// <param name="target">A reference of type <typeparamref name="TTarget"/> to initialize if it has not already been initialized.</param>
-        /// <returns>The initialized reference of type <typeparamref name="TTarget"/>.</returns>
-        public static TTarget EnsureInitialized<TTarget>(ref TTarget target) where TTarget : class, new()
-        {
-            return Volatile.Read(ref target) ?? _EnsureInitializedCore(ref target);
-        }
-
-        static TTarget _EnsureInitializedCore<TTarget>(ref TTarget target) where TTarget : class, new()
-        {
-            var result = new TTarget();
-            return Interlocked.CompareExchange(ref target, result, null) ?? result;
-        }
-
-        // ------------------------------------------------------------------------------------------------------------
-
-        /// <summary>
         /// Initializes a target reference or value type by using a specified function if it hasn't already been initialized.
         /// </summary>
         /// <typeparam name="TTarget">The type of the target to be initialized.</typeparam>
