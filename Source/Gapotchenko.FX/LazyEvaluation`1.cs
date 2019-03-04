@@ -11,16 +11,16 @@ namespace Gapotchenko.FX
     /// <summary>
     /// Provides an evaluation strategy which delays the evaluation of an expression until its value is needed.
     /// </summary>
+    /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
     /// <remarks>
     /// <para>
-    /// <see cref="LazyEvaluation{T}"/> struct does not provide thread safety guarantees except memory model consistency.
-    /// In this way, it brings considerable performance and memory benefits.
+    /// <see cref="LazyEvaluation{T}"/> is a better alternative to <see cref="Lazy{T}"/> when the evaluated value is located at a local variable.
     /// </para>
     /// <para>
-    /// For example, <see cref="LazyEvaluation{T}"/> is a much better alternative to <see cref="Lazy{T}"/> when the evaluated value is located at a local variable.
+    /// <see cref="LazyEvaluation{T}"/> is not thread-safe.
+    /// For thread-safe lazy evaluation, please use <see cref="Threading.EvaluateOnce{T}"/> struct.
     /// </para>
     /// </remarks>
-    /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
     [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
     public struct LazyEvaluation<T>
     {

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Threading
 {
     /// <summary>
-    /// Provides support for thread-safe lazy execution.
+    /// Provides a thread-safe strategy which delays the execution of an action until its explicitly asserted with <see cref="EnsureExecuted"/> method.
     /// </summary>
     [DebuggerDisplay("IsExecuted={IsExecuted}")]
 #if TF_HOST_PROTECTION

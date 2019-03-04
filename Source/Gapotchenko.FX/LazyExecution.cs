@@ -9,6 +9,10 @@ namespace Gapotchenko.FX
     /// <summary>
     /// Provides a strategy which delays the execution of an action until its explicitly asserted with <see cref="EnsureExecuted"/> method.
     /// </summary>
+    /// <remarks>
+    /// <see cref="LazyExecution"/> is not thread-safe.
+    /// For thread-safe lazy execution, please use <see cref="Threading.ExecuteOnce"/> struct.
+    /// </remarks>
     [DebuggerDisplay("IsExecuted={IsExecuted}")]
     public struct LazyExecution
     {

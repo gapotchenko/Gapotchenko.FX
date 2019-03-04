@@ -222,19 +222,19 @@ That means an additional bookkeeping of state and storage, and thus fewer inlini
 
 `Gapotchenko.FX` extends the .NET lazy evaluation model by providing the new `LazyEvaluation<T>` primitive.
 `LazyEvaluation<T>` is a struct, so it has no memory allocation burden.
-It also uses a simple concurrency model which relies on consistency guarantees of .NET memory model.
+It does not provide thread-safety, though a thread-safe variant does exist in a form of `EvaluateOnce<T>` primitive.
 
 The sample below demonstrates a typical usage scenario for `LazyEvaluation<T>`:
 
 ``` csharp
 using Gapotchenko.FX;
 
-static class Deployment
+class Deployment
 {
-	static LazyEvaluation<string> m_HomeDir = LazyEvaluation.Create(
+	LazyEvaluation<string> m_HomeDir = LazyEvaluation.Create(
 		() => Empty.Nullify(Environment.GetEnvironmentVariable("PRODUCT_HOME")));
 
-	public static string HomeDir => m_HomeDir.Value;
+	public string HomeDir => m_HomeDir.Value;
 }
 ```
 

@@ -6,14 +6,23 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Permissions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Threading
 {
     /// <summary>
-    /// Provides support for thread safe lazy evaluation.
+    /// Provides a thread-safe evaluation strategy which delays the evaluation of an expression until its value is needed.
     /// </summary>
     /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
+    /// <remarks>
+    /// <para>
+    /// <see cref="EvaluateOnce{T}"/> is a struct and thus sometimes it may be a better choice than <see cref="Lazy{T}"/> in terms of performance and memory allocation.
+    /// </para>
+    /// <para>
+    /// <see cref="EvaluateOnce{T}"/> is thread-safe.
+    /// </para>
+    /// </remarks>
     [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
 #if TF_HOST_PROTECTION
     [HostProtection(Synchronization = true, ExternalThreading = true)]
@@ -41,7 +50,7 @@ namespace Gapotchenko.FX.Threading
         {
             _ValueFactory = valueFactory ?? throw new ArgumentNullException(nameof(valueFactory));
             _SyncLock = syncLock;
-            _Value = default(T);
+            _Value = default;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -62,7 +71,16 @@ namespace Gapotchenko.FX.Threading
         /// <summary>
         /// Gets a value that indicates whether a value has been created for this <see cref="EvaluateOnce{T}"/> instance.
         /// </summary>
-        public bool IsValueCreated => _ValueFactory == null && _SyncLock != null; // check for _SyncLock is needed to cover uninitialized struct scenario
+        public bool IsValueCreated
+        {
+            get
+            {
+                Thread.MemoryBarrier();
+                return
+                    _ValueFactory == null &&
+                    _SyncLock != null; // check for _SyncLock is needed to cover uninitialized struct scenario
+            }
+        }
 
         /// <summary>
         /// Creates and returns a string representation of the <see cref="Value"/> property for this instance.
