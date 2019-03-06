@@ -315,7 +315,7 @@ As you can see, there are many little things that shape the productive environme
 It was the original idea of .NET when it was new.
 However, it got lost somewhere along the road.
 .NET is a pretty bleak set of segregated platforms nowadays (2019), mostly focused on micro-optimizations and breaking the compatibility,
-seeding the wrong seeds at people's hearts.
+sowing the wrong seeds at people's hearts.
 
 Gapotchenko.FX was created to change that.
 Its mission is to bring joy of a Rapid Application Development (RAD) back to the people.

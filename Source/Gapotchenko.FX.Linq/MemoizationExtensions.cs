@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Linq
     /// <summary>
     /// Functional memoization extensions for <see cref="IEnumerable{T}"/>.
     /// </summary>
-    public static class MemoizeExtensions
+    public static class MemoizationExtensions
     {
         /// <summary>
         /// Memoize all elements of a sequence, e.g. ensure that every element of a sequence is retrieved only once.

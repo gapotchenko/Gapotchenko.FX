@@ -16,8 +16,7 @@ namespace Gapotchenko.FX.Collections.Concurrent
     /// </summary>
     /// <typeparam name="T">The type of the items in the collection.</typeparam>
     /// <remarks>
-    /// All public members of <see cref="ConcurrentHashSet{T}"/> are thread-safe and may be used
-    /// concurrently from multiple threads.
+    /// All public members of <see cref="ConcurrentHashSet{T}"/> are thread-safe and may be used concurrently from multiple threads.
     /// </remarks>
     [DebuggerDisplay("Count = {Count}")]
     public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T>
@@ -34,14 +33,14 @@ namespace Gapotchenko.FX.Collections.Concurrent
         private static int DefaultConcurrencyLevel => PlatformHelper.ProcessorCount;
 
         /// <summary>
-        /// Gets the number of items contained in the <see
-        /// cref="ConcurrentHashSet{T}"/>.
+        /// Gets the number of items contained in the <see cref="ConcurrentHashSet{T}"/>.
         /// </summary>
-        /// <value>The number of items contained in the <see
-        /// cref="ConcurrentHashSet{T}"/>.</value>
-        /// <remarks>Count has snapshot semantics and represents the number of items in the <see
-        /// cref="ConcurrentHashSet{T}"/>
-        /// at the moment when Count was accessed.</remarks>
+        /// <value>
+        /// The number of items contained in the <see cref="ConcurrentHashSet{T}"/>.
+        /// </value>
+        /// <remarks>
+        /// Count has snapshot semantics and represents the number of items in the <see cref="ConcurrentHashSet{T}"/> at the moment when Count was accessed.
+        /// </remarks>
         public int Count
         {
             get
@@ -69,8 +68,9 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// <summary>
         /// Gets a value that indicates whether the <see cref="ConcurrentHashSet{T}"/> is empty.
         /// </summary>
-        /// <value>true if the <see cref="ConcurrentHashSet{T}"/> is empty; otherwise,
-        /// false.</value>
+        /// <value>
+        /// <c>true</c> if the <see cref="ConcurrentHashSet{T}"/> is empty; otherwise, <c>false</c>.
+        /// </value>
         public bool IsEmpty
         {
             get
@@ -98,10 +98,10 @@ namespace Gapotchenko.FX.Collections.Concurrent
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see
-        /// cref="ConcurrentHashSet{T}"/>
-        /// class that is empty, has the default concurrency level, has the default initial capacity, and
-        /// uses the default comparer for the item type.
+        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/> class that is empty,
+        /// has the default concurrency level,
+        /// has the default initial capacity,
+        /// and uses the default comparer for the item type.
         /// </summary>
         public ConcurrentHashSet()
             : this(DefaultConcurrencyLevel, DefaultCapacity, true, null)
@@ -109,10 +109,9 @@ namespace Gapotchenko.FX.Collections.Concurrent
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see
-        /// cref="ConcurrentHashSet{T}"/>
-        /// class that is empty, has the specified concurrency level and capacity, and uses the default
-        /// comparer for the item type.
+        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/> class that is empty,
+        /// has the specified concurrency level and capacity,
+        /// and uses the default comparer for the item type.
         /// </summary>
         /// <param name="concurrencyLevel">The estimated number of threads that will update the
         /// <see cref="ConcurrentHashSet{T}"/> concurrently.</param>
@@ -129,10 +128,11 @@ namespace Gapotchenko.FX.Collections.Concurrent
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/>
-        /// class that contains elements copied from the specified <see
-        /// cref="T:System.Collections.IEnumerable{T}"/>, has the default concurrency
-        /// level, has the default initial capacity, and uses the default comparer for the item type.
+        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/> class
+        /// that contains elements copied from the specified <see cref="T:System.Collections.IEnumerable{T}"/>,
+        /// has the default concurrency level,
+        /// has the default initial capacity,
+        /// and uses the default comparer for the item type.
         /// </summary>
         /// <param name="collection">The <see
         /// cref="T:System.Collections.IEnumerable{T}"/> whose elements are copied to
@@ -145,9 +145,9 @@ namespace Gapotchenko.FX.Collections.Concurrent
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/>
-        /// class that is empty, has the specified concurrency level and capacity, and uses the specified
-        /// <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
+        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/> class that is empty,
+        /// has the specified concurrency level and capacity,
+        /// and uses the specified <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
         /// </summary>
         /// <param name="comparer">The <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>
         /// implementation to use when comparing items.</param>
@@ -157,11 +157,11 @@ namespace Gapotchenko.FX.Collections.Concurrent
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/>
-        /// class that contains elements copied from the specified <see
-        /// cref="T:System.Collections.IEnumerable"/>, has the default concurrency level, has the default
-        /// initial capacity, and uses the specified
-        /// <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
+        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/> class
+        /// that contains elements copied from the specified <see cref="T:System.Collections.IEnumerable"/>,
+        /// has the default concurrency level,
+        /// has the default initial capacity,
+        /// and uses the specified <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
         /// </summary>
         /// <param name="collection">The <see
         /// cref="T:System.Collections.IEnumerable{T}"/> whose elements are copied to
@@ -181,12 +181,12 @@ namespace Gapotchenko.FX.Collections.Concurrent
             InitializeFromCollection(collection);
         }
 
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/> 
-        /// class that contains elements copied from the specified <see cref="T:System.Collections.IEnumerable"/>, 
-        /// has the specified concurrency level, has the specified initial capacity, and uses the specified 
-        /// <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
+        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/> class
+        /// that contains elements copied from the specified <see cref="T:System.Collections.IEnumerable"/>, 
+        /// has the specified concurrency level,
+        /// has the specified initial capacity,
+        /// and uses the specified  <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
         /// </summary>
         /// <param name="concurrencyLevel">The estimated number of threads that will update the 
         /// <see cref="ConcurrentHashSet{T}"/> concurrently.</param>
@@ -210,9 +210,10 @@ namespace Gapotchenko.FX.Collections.Concurrent
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/>
-        /// class that is empty, has the specified concurrency level, has the specified initial capacity, and
-        /// uses the specified <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
+        /// Initializes a new instance of the <see cref="ConcurrentHashSet{T}"/> class that is empty,
+        /// has the specified concurrency level,
+        /// has the specified initial capacity,
+        /// and uses the specified <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>.
         /// </summary>
         /// <param name="concurrencyLevel">The estimated number of threads that will update the
         /// <see cref="ConcurrentHashSet{T}"/> concurrently.</param>
@@ -263,8 +264,7 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// successfully; false if it already exists.</returns>
         /// <exception cref="T:System.OverflowException">The <see cref="ConcurrentHashSet{T}"/>
         /// contains too many items.</exception>
-        public bool Add(T item) =>
-            AddInternal(item, _comparer.GetHashCode(item), true);
+        public bool Add(T item) => AddInternal(item, _comparer.GetHashCode(item), true);
 
         /// <summary>
         /// Removes all items from the <see cref="ConcurrentHashSet{T}"/>.
@@ -287,11 +287,10 @@ namespace Gapotchenko.FX.Collections.Concurrent
         }
 
         /// <summary>
-        /// Determines whether the <see cref="ConcurrentHashSet{T}"/> contains the specified
-        /// item.
+        /// Determines whether the <see cref="ConcurrentHashSet{T}"/> contains the specified item.
         /// </summary>
         /// <param name="item">The item to locate in the <see cref="ConcurrentHashSet{T}"/>.</param>
-        /// <returns>true if the <see cref="ConcurrentHashSet{T}"/> contains the item; otherwise, false.</returns>
+        /// <returns><c>true</c> if the <see cref="ConcurrentHashSet{T}"/> contains the item; otherwise, <c>false</c>.</returns>
         public bool Contains(T item)
         {
             var hashcode = _comparer.GetHashCode(item);
@@ -321,7 +320,7 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// Attempts to remove the item from the <see cref="ConcurrentHashSet{T}"/>.
         /// </summary>
         /// <param name="item">The item to remove.</param>
-        /// <returns>true if an item was removed successfully; otherwise, false.</returns>
+        /// <returns><c>true</c> if an item was removed successfully; otherwise, <c>false</c>.</returns>
         public bool TryRemove(T item)
         {
             var hashcode = _comparer.GetHashCode(item);
@@ -369,8 +368,9 @@ namespace Gapotchenko.FX.Collections.Concurrent
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        /// <summary>Returns an enumerator that iterates through the <see
-        /// cref="ConcurrentHashSet{T}"/>.</summary>
+        /// <summary>
+        /// Returns an enumerator that iterates through the <see cref="ConcurrentHashSet{T}"/>.
+        /// </summary>
         /// <returns>An enumerator for the <see cref="ConcurrentHashSet{T}"/>.</returns>
         /// <remarks>
         /// The enumerator returned from the collection is safe to use concurrently with
