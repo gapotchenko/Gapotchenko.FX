@@ -3,7 +3,7 @@
 `Gapotchenko.FX.Text.StringEditor` class allows to perform an iterative random-access editing of a string.
 
 It was primarily designed to work in conjunction with the `Regex` class from `System.Text.RegularExpressions` namespace to efficiently handle an advanced set of tasks
-when functionality provided by conventional methods like `Regex.Replace` is not enough.
+when functionality provided by conventional methods like `Regex.Replace` is just not enough.
 
 Let's take a look on example:
 
