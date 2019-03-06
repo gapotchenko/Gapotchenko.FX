@@ -12,6 +12,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Test", "Test\Gapotchenko.FX.Test\Gapotchenko.FX.Test.csproj", "{394AB9E5-2AF1-4C7A-936C-43E5DC3351C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Framework", "01. Framework", "{223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Test", "02. Test", "{C0007571-9A88-4691-AAEA-4D6E2A04CAD6}"
 EndProject
