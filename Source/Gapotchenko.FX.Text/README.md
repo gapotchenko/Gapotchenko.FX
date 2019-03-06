@@ -64,7 +64,7 @@ The output of the example:
 This simple sentence should be preserved. This rocking sentence should be exclamatory! That's all.
 ```
 
-[More on `StringEditor` class](../Gapotchenko.FX)
+[More on `StringEditor` class](StringEditor.md)
 
 ## Other Modules
 

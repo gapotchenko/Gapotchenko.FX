@@ -73,3 +73,7 @@ s = StringEditor.Remove(s, match.Groups["complexity"]);
 ```
 
 Which is really handy.
+
+## See Also
+
+- [Gapotchenko.FX.Text module](../Gapotchenko.FX.Text)
