@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq", "Gapo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Test", "Test\Gapotchenko.FX.Linq.Test\Gapotchenko.FX.Linq.Test.csproj", "{2E3E19B9-7262-4CEA-8329-F41C212CE54D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Text", "Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj", "{77FC3FD0-89D7-46B3-BB6B-555A77665738}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{2E3E19B9-7262-4CEA-8329-F41C212CE54D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E3E19B9-7262-4CEA-8329-F41C212CE54D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E3E19B9-7262-4CEA-8329-F41C212CE54D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77FC3FD0-89D7-46B3-BB6B-555A77665738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77FC3FD0-89D7-46B3-BB6B-555A77665738}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77FC3FD0-89D7-46B3-BB6B-555A77665738}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77FC3FD0-89D7-46B3-BB6B-555A77665738}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{9CD580F3-FFC0-4071-8CE3-F21E204E5763} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
 		{9094EE1A-5940-40BE-A8AB-965BAEF37A44} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
 		{2E3E19B9-7262-4CEA-8329-F41C212CE54D} = {C0007571-9A88-4691-AAEA-4D6E2A04CAD6}
+		{77FC3FD0-89D7-46B3-BB6B-555A77665738} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}
