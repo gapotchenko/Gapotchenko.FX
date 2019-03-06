@@ -4,7 +4,7 @@
 
 The module was started by creating its first building block `ArrayEqualityComparer` back in 2014.
 
-Sure enough, .NET provides a similar `Enumerable.SequenceEqual` method (`System.Linq`) that allows to check two sequences for equality, however it is very limited:
+Sure enough, .NET provided a similar `Enumerable.SequenceEqual` method (`System.Linq`) that allowed to check two sequences for equality, however it was (and is) very limited:
 * It is slow, and puts a pressure on GC by allocating iterator objects
 * It does not treat `null` arguments well
 * It does not provide an implementation of `IEqualityComparer<T>` interface.
