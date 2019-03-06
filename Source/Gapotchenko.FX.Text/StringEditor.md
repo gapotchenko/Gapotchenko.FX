@@ -72,6 +72,14 @@ using Gapotchenko.FX.Text;
 s = StringEditor.Remove(s, match.Groups["complexity"]);
 ```
 
+There is a similar method for string replacements:
+
+``` csharp
+using Gapotchenko.FX.Text;
+
+s = StringEditor.Replace(s, match.Groups["complexity"], "easy");
+```
+
 Which is really handy.
 
 ## See Also
