@@ -71,6 +71,7 @@ A little detail, but sometimes it matters a lot when you are amid the heat of th
 Let's continue with a look to some other modules provided by Gapotchenko.FX framework:
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
+- &#x27B4; [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)

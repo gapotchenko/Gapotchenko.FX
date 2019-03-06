@@ -325,6 +325,7 @@ It's a polyfill to the future, after all.
 
 Let's continue with a look to some other modules provided by Gapotchenko.FX framework:
 
+- &#x27B4; [Gapotchenko.FX](../Gapotchenko.FX)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
