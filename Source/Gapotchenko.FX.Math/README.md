@@ -34,13 +34,12 @@ MathEx.Swap(ref val1, ref val2);
 
 An immediate improvement in readability.
 
-### Min/Max for Triplets
+### Min/Max for Three Values
 
-The conventional `Math` class provides ubiquitous `Min`/`Max` primitives for two values only.
+The conventional `Math` class provides ubiquitous `Min`/`Max` primitives for _two_ values.
 
-However, such a limitation on number of values was proven counter-productive.
-
-`MathEx` fixes that by providing `Min`/`Max` primitives for three values:
+However, such a limitation on number of values was proven counter-productive on more than several occasions.
+`MathEx` fixes that by providing `Min`/`Max` operations for _three_ values:
 
 ``` csharp
 using Gapotchenko.FX.Math;
