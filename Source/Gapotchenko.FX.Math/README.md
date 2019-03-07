@@ -51,7 +51,7 @@ Console.WriteLine(MathEx.Max(1, 2, 3));
 
 Ever found yourself trying to find the maximum `System.DateTime` value? Or `System.Version`?
 
-`MathEx` provides `Min`/`Max` operations for any comparable type:
+`MathEx` provides `Min`/`Max` operations for _any_ comparable type:
 
 ``` csharp
 using Gapotchenko.FX.Math;
