@@ -26,7 +26,7 @@ val1 = val2;
 val2 = val1;
 ```
 
-For comparison, please take a look on a concise version of the same:
+For comparison, please take a look at a concise version of the same:
 
 ``` csharp
 MathEx.Swap(ref val1, ref val2);
