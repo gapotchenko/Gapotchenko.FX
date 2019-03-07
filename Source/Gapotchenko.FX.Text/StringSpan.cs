@@ -32,10 +32,20 @@ namespace Gapotchenko.FX.Text
         /// </summary>
         public int Length { get; }
 
+        /// <summary>
+        /// Indicates whether the current <see cref="StringSpan"/> struct is equal to another <see cref="StringSpan"/>.
+        /// </summary>
+        /// <param name="other">An <see cref="StringSpan"/> value to compare with this struct.</param>
+        /// <returns><c>true</c> if the specified object is equal to the current <see cref="StringSpan"/>; otherwise, <c>false</c>.</returns>
         public bool Equals(StringSpan other) =>
             StartIndex == other.StartIndex &&
             Length == other.Length;
 
+        /// <summary>
+        /// Indicates whether the current <see cref="StringSpan"/> struct is equal to another object.
+        /// </summary>
+        /// <param name="obj">An object to compare with this <see cref="StringSpan"/>.</param>
+        /// <returns><c>true</c> if the specified object is equal to the current <see cref="StringSpan"/>; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             if (obj is StringSpan ss)
@@ -44,10 +54,26 @@ namespace Gapotchenko.FX.Text
                 return false;
         }
 
+        /// <summary>
+        /// Gets a hash code for the current <see cref="StringSpan"/> struct.
+        /// </summary>
+        /// <returns>A hash code for the current <see cref="StringSpan"/> struct.</returns>
         public override int GetHashCode() => HashCode.Combine(StartIndex, Length);
 
+        /// <summary>
+        /// Indicates whether two <see cref="StringSpan"/> structs are equal.
+        /// </summary>
+        /// <param name="a">The first value to compare.</param>
+        /// <param name="b">The second value to compare.</param>
+        /// <returns><c>true</c> if the specified <see cref="StringSpan"/> structs are equal; otherwise, <c>false</c>.</returns>
         public static bool operator ==(StringSpan a, StringSpan b) => a.Equals(b);
 
+        /// <summary>
+        /// Indicates whether two <see cref="StringSpan"/> structs are not equal.
+        /// </summary>
+        /// <param name="a">The first value to compare.</param>
+        /// <param name="b">The second value to compare.</param>
+        /// <returns><c>true</c> if the specified <see cref="StringSpan"/> structs are not equal; otherwise, <c>false</c>.</returns>
         public static bool operator !=(StringSpan a, StringSpan b) => !a.Equals(b);
 
         /// <summary>

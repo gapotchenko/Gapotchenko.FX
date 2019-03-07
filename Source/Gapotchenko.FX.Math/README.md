@@ -1,0 +1,77 @@
+﻿# Gapotchenko.FX.Math
+
+The module provides extended math primitives.
+
+## MathEx
+
+`MathEx` is a class provided by `Gapotchenko.FX.Math`.
+It provides extended mathematical functions,
+and serves as an addendum to a conventional `System.Math` class.
+
+### Swap
+
+The swap operation is a widely demanded primitive:
+
+``` csharp
+Swap<T>(ref T val1, ref T val2)
+```
+
+Its implementation is trivial, but was found highly desired during real-life coding sessions.
+`Swap` primitive allows to keep a mind of developer more focused on important things,
+instead of writing tedious code like:
+
+``` csharp
+T temp = val1;
+val1 = val2;
+val2 = val1;
+```
+
+For comparison, please take a look on a concise version of the same:
+
+``` csharp
+MathEx.Swap(ref val1, ref val2);
+```
+
+An immediate improvement in readability.
+
+### Min/Max for Triplets
+
+The conventional `Math` class provides ubiquitous `Min`/`Max` primitives for two values only.
+
+However, such a limitation on number of values was proven counter-productive.
+
+`MathEx` fixes that by providing `Min`/`Max` primitives for three values:
+
+``` csharp
+using Gapotchenko.FX.Math;
+
+Console.WriteLine(MathEx.Max(1, 2, 3));
+```
+
+### Min/Max for Any Comparable Type
+
+Ever found yourself trying to find the maximum `System.DateTime` value? Or `System.Version`?
+
+`MathEx` provides `Min`/`Max` operations for any comparable type:
+
+``` csharp
+using Gapotchenko.FX.Math;
+
+var currentProgress = new DateTime(2012, 1, 1);
+var desiredProgress = new DateTime(2019, 1, 1);
+
+var fxProgress = MathEx.Max(currentProgress, desiredProgress);
+Console.WriteLine(fxProgress);
+```
+
+## Other Modules
+
+Let's continue with a look to some other modules provided by Gapotchenko.FX framework:
+
+- [Gapotchenko.FX](../Gapotchenko.FX)
+- [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
+- [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
+- &#x27B4; [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
+- [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
+- [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process)
