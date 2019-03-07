@@ -23,7 +23,7 @@ instead of writing tedious code like:
 ``` csharp
 T temp = val1;
 val1 = val2;
-val2 = val1;
+val2 = temp;
 ```
 
 For comparison, please take a look at a concise version of the same:
