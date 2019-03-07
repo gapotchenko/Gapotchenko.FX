@@ -68,7 +68,7 @@ A little detail, but sometimes it matters a lot when you are amid the heat of th
 
 ## Other Modules
 
-Let's continue with a look to some other modules provided by Gapotchenko.FX framework:
+Let's continue with a look to some other modules provided by Gapotchenko.FX platform:
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
 - &#x27B4; [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)

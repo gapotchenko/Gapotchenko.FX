@@ -1,10 +1,10 @@
 ﻿# Gapotchenko.FX
 
-`Gapotchenko.FX` is the main module of Gapotchenko.FX framework. Coincidently, they have identical names.
+`Gapotchenko.FX` is the main module of Gapotchenko.FX platform. Coincidently, they have identical names.
 
 The module was started by creating its first building block `ArrayEqualityComparer` back in 2014.
 
-Sure enough, .NET provided a similar `Enumerable.SequenceEqual` method (`System.Linq`) that allowed to check two sequences for equality, however it is very limited:
+Sure enough, .NET provided a similar `Enumerable.SequenceEqual` method (`System.Linq`) that allowed to check two sequences for equality, however it was (and is) very limited:
 * It is slow, and puts a pressure on GC by allocating iterator objects
 * It does not treat `null` arguments well
 * It does not provide an implementation of `IEqualityComparer<T>` interface.
@@ -323,7 +323,7 @@ It's a polyfill to the future, after all.
 
 ## Other Modules
 
-Let's continue with a look to some other modules provided by Gapotchenko.FX framework:
+Let's continue with a look to some other modules provided by Gapotchenko.FX platform:
 
 - &#x27B4; [Gapotchenko.FX](../Gapotchenko.FX)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
