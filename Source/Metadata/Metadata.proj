@@ -1,25 +1,26 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <!-- Product Information -->
   <PropertyGroup>
     <Company>Gapotchenko</Company>
     <Product>Gapotchenko.FX</Product>
-    <Copyright>Copyright � 2019 Gapotchenko and Contributors</Copyright>
+    <Copyright>Copyright © 2019 Gapotchenko and Contributors</Copyright>
   </PropertyGroup>
 
   <!-- Assembly Information -->
   <PropertyGroup>
-    <AssemblyVersion>1.1.134.16010</AssemblyVersion>
-    <FileVersion>1.1.134.16010</FileVersion>
-    <InformationalVersion>1.1 (Beta build 1.1.134.16010)</InformationalVersion>
+    <AssemblyVersion>1.1.135.16010</AssemblyVersion>
+    <FileVersion>1.1.135.16010</FileVersion>
+    <InformationalVersion>1.1 (Beta build 1.1.135.16010)</InformationalVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <!-- NuGet Specification -->
     <Authors>Gapotchenko</Authors>
-    <VersionPrefix>1.1.134</VersionPrefix>
+    <VersionPrefix>1.1.135</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
     <Description>Gapotchenko.FX</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>framework platform polyfill</PackageTags>
   </PropertyGroup>

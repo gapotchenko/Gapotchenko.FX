@@ -18,10 +18,10 @@
 //
 
 #if !DISABLE_ASSEMBLY_VERSION_ATTRIBUTE
-[assembly: AssemblyVersion("1.1.134.16010")]
+[assembly: AssemblyVersion("1.1.135.16010")]
 #endif
-[assembly: AssemblyFileVersion("1.1.134.16010")]
-[assembly: AssemblyInformationalVersion("1.1 (Beta build 1.1.134.16010)")]
+[assembly: AssemblyFileVersion("1.1.135.16010")]
+[assembly: AssemblyInformationalVersion("1.1 (Beta build 1.1.135.16010)")]
 
 #endif
 
@@ -34,7 +34,7 @@ namespace Gapotchenko.FX
     {
         public const string ProductName = "Gapotchenko.FX";
         public const string CompanyName = "Gapotchenko";
-        public const string InformationalVersion = "1.1 (Beta build 1.1.134.16010)";
+        public const string InformationalVersion = "1.1 (Beta build 1.1.135.16010)";
         public const string DisplayVersion = "1.1";
         public const string DisplayVersion2F = "1.1";
     }
