@@ -8,6 +8,45 @@ Other than that, the module provides polyfills for missing functionality in .NET
 
 `ConcurrentHashSet<T>` provided by `Gapotchenko.FX.Collections` is a thread-safe implementation of `HashSet<T>`.
 
+## AddRange&lt;T&gt;(IEnumerable&lt;T&gt;) for Collections
+
+`AddRange` is a highly demanded operation that allows to add a sequence of elements to the end of a collection.
+Like this:
+
+``` csharp
+using Gapotchenko.FX.Collections.Generic;
+
+var collection = new Collection<int>();
+…
+collection.AddRange(numbers.Where(x => x % 2 == 0)); // add even numbers
+```
+
+
+## IsNullOrEmpty() for Containers
+
+`System.String` class provides a convenient `IsNullOrEmpty` primitive for strings.
+
+`Gapotchenko.FX.Collections` extends availability of the primitive by providing `IsNullOrEmpty()` extension method for other container types.
+Here is an example:
+
+``` csharp
+using Gapotchenko.FX.Collections;
+
+class Method
+{
+    List<Argument> m_Arguments;
+
+    public bool HasArguments => !m_Arguments.IsNullOrEmpty();
+
+    …
+}
+```
+
+The use of an extension method for a null check may look controversial at first,
+but since the method clearly starts with `IsNull…` prefix,
+it immediately communicates its purpose and function.
+Other benefits include automatic type inference and semantic locality. 
+
 ## Polyfills
 
 ### KeyValuePair Polyfill
