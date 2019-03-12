@@ -29,17 +29,11 @@ namespace Gapotchenko.FX.Collections.Generic
         }
 
         /// <summary>
-        /// Indicates whether the specified collection is null or empty.
+        /// Adds the elements of the specified collection to the end of the target.
         /// </summary>
-        /// <param name="value">The collection to test.</param>
-        /// <returns><c>true</c> if the <paramref name="value"/> parameter is null or an empty collection; otherwise, <c>false</c>.</returns>
-        public static bool IsNullOrEmpty<T>(this IReadOnlyCollection<T> value) => value == null || value.Count == 0;
-
-        /// <summary>
-        /// Indicates whether the specified set is null or empty.
-        /// </summary>
-        /// <param name="value">The set to test.</param>
-        /// <returns><c>true</c> if the <paramref name="value"/> parameter is null or an empty set; otherwise, <c>false</c>.</returns>
-        public static bool IsNullOrEmpty<T>(this ISet<T> value) => value == null || value.Count == 0;
+        /// <typeparam name="T">The type of the elements of collection.</typeparam>
+        /// <param name="target">The collection where the elements should be added to.</param>
+        /// <param name="collection">The collection whose elements should be added.</param>
+        public static void AddRange<T>(this ICollection<T> target, params T[] collection) => AddRange(target, (IEnumerable<T>)collection);
     }
 }

@@ -9,7 +9,7 @@ namespace Gapotchenko.FX
 {
     /// <summary>
     /// Represents an optional value.
-    /// It is similar to <see cref="Nullable{T}"/>, but can also hold the value of a reference type.
+    /// It is similar to <see cref="Nullable{T}"/>, but can also operate with a value of a reference type.
     /// </summary>
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
     [Serializable]

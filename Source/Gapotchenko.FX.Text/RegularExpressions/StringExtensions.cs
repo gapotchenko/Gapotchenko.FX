@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Text.RegularExpressions
     /// <summary>
     /// Provides drop-in alternatives to conventional string functions that allow to use regular expressions.
     /// </summary>
-    public static class RegexStringExtensions
+    public static class StringExtensions
     {
         /// <summary>
         /// Searches the input string for the first occurrence of the specified regular expression pattern,

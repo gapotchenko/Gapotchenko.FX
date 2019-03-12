@@ -21,7 +21,6 @@ var collection = new Collection<int>();
 collection.AddRange(numbers.Where(x => x % 2 == 0)); // add even numbers
 ```
 
-
 ## IsNullOrEmpty() for Containers
 
 `System.String` class provides a convenient `IsNullOrEmpty` primitive for strings.
@@ -43,7 +42,7 @@ class Method
 ```
 
 The use of an extension method for a null check may look controversial at first,
-but since the method clearly starts with `IsNull…` prefix,
+but since the method starts with `IsNull…` prefix,
 it immediately communicates its purpose and function.
 Other benefits include automatic type inference and semantic locality. 
 
