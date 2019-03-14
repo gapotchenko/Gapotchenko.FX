@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Gapotchenko.FX.Linq
 {
-    partial class EnumerableExtensions
+    partial class EnumerableEx
     {
         static TSource _MinMaxCore<TSource>(IEnumerable<TSource> source, IComparer<TSource> comparer, bool isMax, bool throwWhenEmpty)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Gapotchenko.FX.Linq
     /// <summary>
     /// Enumerable extensions.
     /// </summary>
-    public static partial class EnumerableExtensions
+    public static partial class EnumerableEx
     {
         /// <summary>
         /// <para>
@@ -452,5 +453,72 @@ namespace Gapotchenko.FX.Linq
             return true;
         }
 
+        /// <summary>
+        /// Returns a list view of a source sequence.
+        /// Depending on a source sequence kind, the result is either a directly casted instance or a copied in-memory list.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <returns>A list view of a source sequence.</returns>
+        public static List<TSource> AsList<TSource>(IEnumerable<TSource> source)
+        {
+            switch (source)
+            {
+                case null:
+                    return null;
+                case List<TSource> list:
+                    return list;
+                default:
+                    return source.ToList();
+            }
+        }
+
+        /// <summary>
+        /// Returns an array view of a source sequence.
+        /// Depending on a source sequence kind, the result is either a directly casted instance or a copied in-memory array.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <returns>An array view of a source sequence.</returns>
+        public static TSource[] AsArray<TSource>(IEnumerable<TSource> source)
+        {
+            switch (source)
+            {
+                case null:
+                    return null;
+                case TSource[] array:
+                    return array;
+                default:
+                    return source.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Returns a read-only view of a source sequence.
+        /// Depending on a source sequence kind, the result is either a read-only wrapper, a directly casted instance or a copied in-memory list.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <returns>A read-only view of a source sequence.</returns>
+        public static IReadOnlyList<TSource> AsReadOnly<TSource>(IEnumerable<TSource> source)
+        {
+            switch (source)
+            {
+                case null:
+                    return null;
+                case IList<TSource> list:
+                    return new ReadOnlyCollection<TSource>(list);
+                case IReadOnlyList<TSource> readOnlyList:
+                    return readOnlyList;
+                case string s:
+                    return (IReadOnlyList<TSource>)(object)new ReadOnlyCharList(s);
+                default:
+#if TF_READONLY_COLLECTION
+                    return AsList(source).AsReadOnly();
+#else
+                    return new ReadOnlyCollection<TSource>(AsList(source));
+#endif
+            }
+        }
     }
 }
