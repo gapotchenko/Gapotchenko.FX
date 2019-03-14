@@ -8,7 +8,7 @@ namespace Gapotchenko.FX
 {
     partial class ArrayEqualityComparer
     {
-        internal sealed class ByteRank1Comparer : EqualityComparer<byte[]>
+        internal sealed class ByteRank1Comparer : ArrayEqualityComparer<byte>
         {
             public override bool Equals(byte[] x, byte[] y)
             {

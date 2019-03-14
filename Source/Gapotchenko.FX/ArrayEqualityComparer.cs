@@ -118,7 +118,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T">The type of array elements.</typeparam>
         /// <param name="elementEqualityComparer">The element equality comparer.</param>
         /// <returns>A new equality comparer for one-dimensional array with elements of type <typeparamref name="T"/>.</returns>
-        public static IEqualityComparer<T[]> Create<T>(IEqualityComparer<T> elementEqualityComparer)
+        public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T> elementEqualityComparer)
         {
             var elementType = typeof(T);
             var elementTypeCode = Type.GetTypeCode(elementType);
@@ -126,10 +126,10 @@ namespace Gapotchenko.FX
             switch (elementTypeCode)
             {
                 case TypeCode.Byte when _IsDefaultEqualityComparer(elementEqualityComparer):
-                    return (IEqualityComparer<T[]>)(object)new ArrayEqualityComparer.ByteRank1Comparer();
+                    return (ArrayEqualityComparer<T>)(object)new ByteRank1Comparer();
             }
 
-            return new ArrayEqualityComparer<T>(elementEqualityComparer);
+            return new DefaultArrayEqualityComparer<T>(elementEqualityComparer);
         }
 
         static bool _IsDefaultEqualityComparer<T>(IEqualityComparer<T> equalityComparer) =>
