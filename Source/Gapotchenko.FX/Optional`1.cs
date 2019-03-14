@@ -59,10 +59,9 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <returns>
         /// The value of the <see cref="Value"/> property if the <see cref="HasValue"/> property is <c>true</c>;
-        /// otherwise, the default value of the current <see cref="Optional{T}"/> object.
-        /// The type of the default value is the type argument of the current <see cref="Optional{T}"/> object.
+        /// otherwise, the default value of <typeparamref name="T"/> type.
         /// </returns>
-        public T GetValueOrDefault() => m_HasValue ? m_Value : default;
+        public T GetValueOrDefault() => m_Value;
 
         /// <summary>
         ///  Retrieves the value of the current <see cref="Optional{T}"/> object, or the specified default value.
