@@ -11,11 +11,15 @@ namespace Gapotchenko.FX.Collections.Generic
     public static class ListExtensions
     {
         /// <summary>
-        /// Performs in-place stable sort of the elements in entire <see cref="List{T}"/> using the default comparer.
+        /// Performs in-place stable sort of the elements in entire <see cref="List{T}"/> using the specified comparer.
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <param name="list">The list.</param>
-        public static void StableSort<T>(this List<T> list)
+        /// <param name="comparer">
+        /// The <see cref="IComparer{T}"/> implementation to use when comparing elements,
+        /// or <c>null</c> to use the default comparer.
+        /// </param>
+        public static void StableSort<T>(this List<T> list, IComparer<T> comparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -23,11 +27,18 @@ namespace Gapotchenko.FX.Collections.Generic
             if (list.Count < 2)
                 return;
 
-            var sortedList = list.OrderBy(Empty.IdentityFunc).ToList();
+            var sortedList = list.OrderBy(Empty.IdentityFunc, comparer).ToList();
 
             list.Clear();
             list.AddRange(sortedList);
         }
+
+        /// <summary>
+        /// Performs in-place stable sort of the elements in entire <see cref="List{T}"/> using the default comparer.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <param name="list">The list.</param>
+        public static void StableSort<T>(this List<T> list) => list.StableSort(null);
 
         /// <summary>
         /// Clones the list.
