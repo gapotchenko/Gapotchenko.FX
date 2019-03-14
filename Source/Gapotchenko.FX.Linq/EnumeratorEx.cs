@@ -6,16 +6,16 @@ using System.Text;
 namespace Gapotchenko.FX.Linq
 {
     /// <summary>
-    /// Enumerator extensions.
+    /// Provides an extended set of static methods for querying objects that implement <see cref="IEnumerator{T}"/>.
     /// </summary>
-    public static class EnumeratorExtensions
+    public static class EnumeratorEx
     {
         /// <summary>
         /// Returns the enumeration of remaining elements for the given enumerator.
         /// </summary>
         /// <typeparam name="T">The type of elements in enumerator.</typeparam>
         /// <param name="enumerator">The enumerator.</param>
-        /// <returns>An <see cref="System.Collections.Generic.IEnumerable{T}"/> that contains the remaining elements of the given enumerator.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> that contains the remaining elements of the given enumerator.</returns>
         public static IEnumerable<T> Rest<T>(this IEnumerator<T> enumerator)
         {
             if (enumerator == null)

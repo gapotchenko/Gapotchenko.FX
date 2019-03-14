@@ -6,10 +6,7 @@ using System.Text;
 
 namespace Gapotchenko.FX.Linq
 {
-    /// <summary>
-    /// Partitioning extensions.
-    /// </summary>
-    public static class PartitioningExtensions
+    partial class EnumerableEx
     {
         sealed class PartinionedGrouping<TKey, TElement> : Collection<TElement>, IGrouping<TKey, TElement>
         {

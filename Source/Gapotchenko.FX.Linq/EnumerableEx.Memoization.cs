@@ -5,10 +5,7 @@ using System.Diagnostics;
 
 namespace Gapotchenko.FX.Linq
 {
-    /// <summary>
-    /// Functional memoization extensions for <see cref="IEnumerable{T}"/>.
-    /// </summary>
-    public static class MemoizationExtensions
+    partial class EnumerableEx
     {
         /// <summary>
         /// Memoize all elements of a sequence, e.g. ensure that every element of a sequence is retrieved only once.

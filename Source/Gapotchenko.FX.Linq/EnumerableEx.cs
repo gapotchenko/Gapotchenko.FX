@@ -8,7 +8,7 @@ using System.Text;
 namespace Gapotchenko.FX.Linq
 {
     /// <summary>
-    /// Enumerable extensions.
+    /// Provides an extended set of static methods for querying objects that implement <see cref="IEnumerable{T}"/>.
     /// </summary>
     public static partial class EnumerableEx
     {
@@ -161,7 +161,7 @@ namespace Gapotchenko.FX.Linq
                 throw new ArgumentNullException(nameof(source));
             if (keySelector == null)
                 throw new ArgumentNullException(nameof(keySelector));
-            return source.Distinct(new SelectedKeyEqualityComparer<TSource, TKey>(keySelector, comparer));
+            return source.Distinct(new KeyedEqualityComparer<TSource, TKey>(keySelector, comparer));
         }
 
         /// <summary>
