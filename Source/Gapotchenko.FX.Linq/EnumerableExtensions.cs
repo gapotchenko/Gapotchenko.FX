@@ -16,7 +16,7 @@ namespace Gapotchenko.FX.Linq
         /// Appends a value to the end of the sequence.
         /// </para>
         /// <para>
-        /// This is a polyfill provided by Gapotchenko.FX.Linq.
+        /// This is a polyfill provided by Gapotchenko.FX.
         /// </para>
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
@@ -43,7 +43,7 @@ namespace Gapotchenko.FX.Linq
         /// Adds a value to the beginning of the sequence.
         /// </para>
         /// <para>
-        /// This is a polyfill provided by Gapotchenko.FX.Linq.
+        /// This is a polyfill provided by Gapotchenko.FX.
         /// </para>
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
@@ -146,7 +146,7 @@ namespace Gapotchenko.FX.Linq
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) => source.DistinctBy(keySelector, null);
 
         /// <summary>
-        /// Returns distinct elements from a sequence by using a specified <see cref="IEqualityComparer{T}"/> comparer on the keys extracted by a specified selector function.
+        /// Returns distinct elements from a sequence by using a specified <see cref="IEqualityComparer{T}"/> on the keys extracted by a specified selector function.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
@@ -230,72 +230,6 @@ namespace Gapotchenko.FX.Linq
         }
 
         /// <summary>
-        /// Determines whether the <paramref name="first"/> sequence contains the <paramref name="second"/> sequence
-        /// by using a specified equality comparer.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>
-        /// <param name="first">An <see cref="IEnumerable{T}"/> to compare to second.</param>
-        /// <param name="second">An <see cref="IEnumerable{T}"/> to compare to the first sequence.</param>
-        /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to use to compare elements.</param>
-        /// <returns>
-        /// <c>true</c> if the <paramref name="first"/> sequence contains the <paramref name="second"/> sequence; otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
-        public static bool Contains<TSource>(this IEnumerable<TSource> first, IEnumerable<TSource> second, IEqualityComparer<TSource> comparer)
-        {
-            if (first == null)
-                throw new ArgumentNullException(nameof(first));
-            if (second == null)
-                throw new ArgumentNullException(nameof(second));
-
-            if (ReferenceEquals(first, second))
-                return true;
-
-            if (comparer == null)
-                comparer = EqualityComparer<TSource>.Default;
-
-            second = second.Memoize();
-            bool eqRegion = true;
-
-            using (var e2 = second.GetEnumerator())
-            {
-                foreach (var e1Current in first)
-                {
-                    if (!e2.MoveNext())
-                        return eqRegion;
-
-                    if (comparer.Equals(e1Current, e2.Current))
-                    {
-                        eqRegion = true;
-                    }
-                    else
-                    {
-                        eqRegion = false;
-                        e2.Reset();
-                    }
-                }
-
-                if (eqRegion)
-                    return !e2.MoveNext();
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Determines whether the <paramref name="first"/> sequence contains the <paramref name="second"/> sequence
-        /// by using the default equality comparer to compare values.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>
-        /// <param name="first">An <see cref="IEnumerable{T}"/> to compare to second.</param>
-        /// <param name="second">An <see cref="IEnumerable{T}"/> to compare to the first sequence.</param>
-        /// <returns>
-        /// <c>true</c> if the <paramref name="first"/> sequence contains the <paramref name="second"/> sequence; otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException"><paramref name="first"/> or <paramref name="second"/> is null.</exception>
-        public static bool Contains<TSource>(this IEnumerable<TSource> first, IEnumerable<TSource> second) => Contains(first, second, null);
-
-        /// <summary>
         /// Determines whether two sequences are equal by comparing their elements by using a specified <paramref name="predicate"/>.
         /// </summary>
         /// <typeparam name="TSource"></typeparam>
@@ -333,5 +267,190 @@ namespace Gapotchenko.FX.Linq
 
             return true;
         }
+
+        /// <summary>
+        /// Determines whether the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence
+        /// by using a specified equality comparer.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="value">An <see cref="IEnumerable{T}"/> to compare to the source sequence.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to use to compare elements.</param>
+        /// <returns>
+        /// <c>true</c> if the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is null.</exception>
+        public static bool Contains<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource> comparer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            if (ReferenceEquals(source, value))
+                return true;
+
+            if (comparer == null)
+                comparer = EqualityComparer<TSource>.Default;
+
+            value = value.Memoize();
+            bool eqRegion = true;
+
+            using (var e2 = value.GetEnumerator())
+            {
+                foreach (var e1Current in source)
+                {
+                    if (!e2.MoveNext())
+                        return eqRegion;
+
+                    if (comparer.Equals(e1Current, e2.Current))
+                    {
+                        eqRegion = true;
+                    }
+                    else
+                    {
+                        eqRegion = false;
+                        e2.Reset();
+                    }
+                }
+
+                if (eqRegion)
+                    return !e2.MoveNext();
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence
+        /// by using the default equality comparer to compare values.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="value">An <see cref="IEnumerable{T}"/> to compare to the source sequence.</param>
+        /// <returns>
+        /// <c>true</c> if the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is null.</exception>
+        public static bool Contains<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value) => Contains(source, value, null);
+
+        /// <summary>
+        /// Searches for the specified value and returns the index of the first occurrence within the entire sequence
+        /// by using the default equality comparer to compare values.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="value">The value to locate in sequence.</param>
+        /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
+        public static int IndexOf<TSource>(this IEnumerable<TSource> source, TSource value) => IndexOf(source, value, null);
+
+        /// <summary>
+        /// Searches for the specified value and returns the index of the first occurrence within the entire sequence
+        /// by using a specified <see cref="IEqualityComparer{T}"/> to compare values.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="value">The value to locate in sequence.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare values.</param>
+        /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
+        public static int IndexOf<TSource>(this IEnumerable<TSource> source, TSource value, IEqualityComparer<TSource> comparer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (comparer == null)
+                comparer = EqualityComparer<TSource>.Default;
+
+            using (var enumerator = source.GetEnumerator())
+            {
+                int index = 0;
+                while (enumerator.MoveNext())
+                {
+                    if (comparer.Equals(enumerator.Current, value))
+                        return index;
+                    ++index;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Searches for the value that satisfies a condition and returns the index of the first occurrence within the entire sequence.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="predicate">A function to test an element for a condition.</param>
+        /// <returns>The index of the first element that satisfies a condition; otherwise, -1.</returns>
+        public static int IndexOf<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            using (var enumerator = source.GetEnumerator())
+            {
+                int index = 0;
+                while (enumerator.MoveNext())
+                {
+                    if (predicate(enumerator.Current))
+                        return index;
+                    ++index;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Determines whether the beginning of a sequence matches the specified value by using the default equality comparer for elements' type.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="value">An <see cref="IEnumerable{T}"/> value to match.</param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="value"/> sequence matches the beginning of the <paramref name="source"/> sequence; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is <c>null</c>.</exception>
+        public static bool StartsWith<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value) => StartsWith(source, value, null);
+
+        /// <summary>
+        /// Determines whether the beginning of a sequence matches the specified value by using a specified equality comparer.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="value">An <see cref="IEnumerable{T}"/> value to match.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to use to compare elements.</param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="value"/> sequence matches the beginning of the <paramref name="source"/> sequence; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is <c>null</c>.</exception>
+        public static bool StartsWith<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource> comparer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            if (ReferenceEquals(source, value))
+                return true;
+
+            if (comparer == null)
+                comparer = EqualityComparer<TSource>.Default;
+
+            using (var e1 = source.GetEnumerator())
+            using (var e2 = value.GetEnumerator())
+            {
+                while (e2.MoveNext())
+                {
+                    if (!(e1.MoveNext() && comparer.Equals(e1.Current, e2.Current)))
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
     }
 }
