@@ -634,7 +634,7 @@ namespace Gapotchenko.FX
         static IBitConverter _Instance;
 
         /// <summary>
-        /// Gets a <see cref="BigEndianBitConverter"/> instance.
+        /// Returns a bit converter instance for big-endian byte order.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         [CLSCompliant(false)]

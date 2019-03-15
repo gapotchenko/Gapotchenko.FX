@@ -43,6 +43,10 @@ namespace Gapotchenko.FX.Harness.Console
             Console.WriteLine(list.IsNullOrEmpty());
 
             //Stream stream;
+
+            //var br = new BitReader(Stream.Null, LittleEndianBitConverter.);
+
+            //EqualityComparer<int>.D
         }
 
         static async Task _RunAsync()

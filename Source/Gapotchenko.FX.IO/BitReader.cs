@@ -13,6 +13,11 @@ namespace Gapotchenko.FX.IO
     /// </summary>
     public class BitReader : BinaryReader
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitReader"/> class.
+        /// </summary>
+        /// <param name="input">The input stream.</param>
+        /// <param name="bitConverter">The bit converter to use.</param>
         [CLSCompliant(false)]
         public BitReader(Stream input, IBitConverter bitConverter) :
             base(input)
@@ -20,6 +25,13 @@ namespace Gapotchenko.FX.IO
             BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitReader" /> class.
+        /// </summary>
+        /// <param name="input">The input stream.</param>
+        /// <param name="bitConverter">The bit converter to use.</param>
+        /// <param name="encoding">The character encoding to use.</param>
+        /// <exception cref="ArgumentNullException">bitConverter</exception>
         [CLSCompliant(false)]
         public BitReader(Stream input, IBitConverter bitConverter, Encoding encoding) :
             base(input, encoding)
@@ -28,6 +40,13 @@ namespace Gapotchenko.FX.IO
         }
 
 #if !NET40
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BitReader"/> class.
+        /// </summary>
+        /// <param name="input">The input stream.</param>
+        /// <param name="bitConverter">The bit converter to use.</param>
+        /// <param name="encoding">The character encoding to use.</param>
+        /// <param name="leaveOpen"><c>true</c> to leave the stream open after the <see cref="BitReader"/> object is disposed; otherwise, <c>false</c>.</param>
         [CLSCompliant(false)]
         public BitReader(Stream input, IBitConverter bitConverter, Encoding encoding, bool leaveOpen) :
             base(input, encoding, leaveOpen)
@@ -71,12 +90,24 @@ namespace Gapotchenko.FX.IO
             }
         }
 
+        /// <summary>
+        /// Reads a 2-byte signed integer from the current stream and advances the current position of the stream by two bytes.
+        /// </summary>
+        /// <returns>
+        /// A 2-byte signed integer read from the current stream.
+        /// </returns>
         public override short ReadInt16()
         {
             _FillBuffer(2);
             return BitConverter.ToInt16(_Buffer);
         }
 
+        /// <summary>
+        /// Reads a 2-byte unsigned integer from the current stream using little-endian encoding and advances the position of the stream by two bytes.
+        /// </summary>
+        /// <returns>
+        /// A 2-byte unsigned integer read from this stream.
+        /// </returns>
         [CLSCompliant(false)]
         public override ushort ReadUInt16()
         {
@@ -84,12 +115,20 @@ namespace Gapotchenko.FX.IO
             return BitConverter.ToUInt16(_Buffer);
         }
 
+        /// <summary>Reads a 4-byte signed integer from the current stream and advances the current position of the stream by four bytes.</summary>
+        /// <returns>A 4-byte signed integer read from the current stream.</returns>
         public override int ReadInt32()
         {
             _FillBuffer(4);
             return BitConverter.ToInt32(_Buffer);
         }
 
+        /// <summary>
+        /// Reads a 4-byte unsigned integer from the current stream and advances the position of the stream by four bytes.
+        /// </summary>
+        /// <returns>
+        /// A 4-byte unsigned integer read from this stream.
+        /// </returns>
         [CLSCompliant(false)]
         public override uint ReadUInt32()
         {
@@ -97,12 +136,24 @@ namespace Gapotchenko.FX.IO
             return BitConverter.ToUInt32(_Buffer);
         }
 
+        /// <summary>
+        /// Reads an 8-byte signed integer from the current stream and advances the current position of the stream by eight bytes.
+        /// </summary>
+        /// <returns>
+        /// An 8-byte signed integer read from the current stream.
+        /// </returns>
         public override long ReadInt64()
         {
             _FillBuffer(8);
             return BitConverter.ToInt64(_Buffer);
         }
 
+        /// <summary>
+        /// Reads an 8-byte unsigned integer from the current stream and advances the position of the stream by eight bytes.
+        /// </summary>
+        /// <returns>
+        /// An 8-byte unsigned integer read from this stream.
+        /// </returns>
         [CLSCompliant(false)]
         public override ulong ReadUInt64()
         {
@@ -110,18 +161,36 @@ namespace Gapotchenko.FX.IO
             return BitConverter.ToUInt64(_Buffer);
         }
 
+        /// <summary>
+        /// Reads a 4-byte floating point value from the current stream and advances the current position of the stream by four bytes.
+        /// </summary>
+        /// <returns>
+        /// A 4-byte floating point value read from the current stream.
+        /// </returns>
         public override float ReadSingle()
         {
             _FillBuffer(4);
             return BitConverter.ToSingle(_Buffer);
         }
 
+        /// <summary>
+        /// Reads an 8-byte floating point value from the current stream and advances the current position of the stream by eight bytes.
+        /// </summary>
+        /// <returns>
+        /// An 8-byte floating point value read from the current stream.
+        /// </returns>
         public override double ReadDouble()
         {
             _FillBuffer(8);
             return BitConverter.ToDouble(_Buffer);
         }
 
+        /// <summary>
+        /// Reads a decimal value from the current stream and advances the current position of the stream by sixteen bytes.
+        /// </summary>
+        /// <returns>
+        /// A decimal value read from the current stream.
+        /// </returns>
         public override decimal ReadDecimal()
         {
             _FillBuffer(16);

@@ -646,7 +646,7 @@ namespace Gapotchenko.FX
         static IBitConverter _Instance;
 
         /// <summary>
-        /// Gets a <see cref="LittleEndianBitConverter"/> instance.
+        /// Returns a bit converter instance for little-endian byte order.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         [CLSCompliant(false)]
