@@ -15,12 +15,12 @@ using System.Transactions;
 namespace Gapotchenko.FX.IO
 {
     /// <summary>
-    /// Represents additional file system functionality for the current operating system.
+    /// Provides file system functionality for the host operating system.
     /// </summary>
     public static class FileSystem
     {
         /// <summary>
-        /// Gets file path string comparison for the current operating system.
+        /// Gets file path string comparison.
         /// </summary>
         /// <value>File path string comparison.</value>
         public static StringComparison PathComparison =>
@@ -30,8 +30,10 @@ namespace Gapotchenko.FX.IO
 
         /// <summary>
         /// Gets file path string comparer.
-        /// Please note that the comparer does not apply path normalization or equivalence checks for the sake of performance.
         /// </summary>
+        /// <remarks>
+        /// The returned comparer instance does not apply path normalization or equivalence checks.
+        /// </remarks>
         /// <value>File path string comparer.</value>
         public static StringComparer PathComparer =>
             IsCaseSensitive ?
@@ -56,31 +58,31 @@ namespace Gapotchenko.FX.IO
         /// <summary>
         /// Determines whether given paths are equivalent, e.g. point to the same file system entry.
         /// </summary>
-        /// <param name="pathA">The file path A.</param>
-        /// <param name="pathB">The file path B.</param>
+        /// <param name="a">The file path A.</param>
+        /// <param name="b">The file path B.</param>
         /// <returns><c>true</c> when file paths are equivalent; otherwise, <c>false</c>.</returns>
-        public static bool PathsAreEquivalent(string pathA, string pathB)
+        public static bool PathsAreEquivalent(string a, string b)
         {
             var pathComparison = PathComparison;
 
-            if (string.Equals(pathA, pathB, pathComparison))
+            if (string.Equals(a, b, pathComparison))
                 return true;
-            if (pathA == null || pathB == null)
+            if (a == null || b == null)
                 return false;
 
-            pathA = _NormalizePath(pathA, false);
-            pathB = _NormalizePath(pathB, false);
+            a = _NormalizePath(a, false);
+            b = _NormalizePath(b, false);
 
-            if (pathA.Equals(pathB, pathComparison))
+            if (a.Equals(b, pathComparison))
             {
                 // Fast shortcut.
                 return true;
             }
 
-            pathA = Path.GetFullPath(pathA);
-            pathB = Path.GetFullPath(pathB);
+            a = Path.GetFullPath(a);
+            b = Path.GetFullPath(b);
 
-            return pathA.Equals(pathB, pathComparison);
+            return a.Equals(b, pathComparison);
         }
 
         /// <summary>
@@ -161,7 +163,7 @@ namespace Gapotchenko.FX.IO
         }
 
         /// <summary>
-        /// Gets a short version of the file path if current operating system supports it.
+        /// Gets a short version of a specified file path.
         /// </summary>
         /// <param name="filePath">The file path.</param>
         /// <returns>A short version of the file path.</returns>
@@ -171,27 +173,16 @@ namespace Gapotchenko.FX.IO
                 throw new ArgumentNullException(nameof(filePath));
             try
             {
-                int bufferSize = 260;
+                int bufferSize = filePath.Length;
 
                 var sb = new StringBuilder(bufferSize);
                 int r = NativeMethods.GetShortPathName(filePath, sb, bufferSize);
-                if (r == 0)
+                if (r == 0 || r > bufferSize)
                     return filePath;
-
-                if (r > bufferSize)
-                {
-                    bufferSize = r;
-                    sb = new StringBuilder(bufferSize);
-                    r = NativeMethods.GetShortPathName(filePath, sb, bufferSize);
-                    if (r == 0)
-                        return filePath;
-                    if (r > bufferSize)
-                        return filePath;
-                }
 
                 return sb.ToString();
             }
-            catch
+            catch (Exception e) when (!e.IsControlFlowException())
             {
                 return filePath;
             }
@@ -308,7 +299,7 @@ namespace Gapotchenko.FX.IO
         public static void EnlistFileInTransaction(string path) => EnlistFileInTransaction(path, null);
 
         /// <summary>
-        /// Enlists file in the given <see cref="Transaction"/>.
+        /// Enlists file in a specified <see cref="Transaction"/>.
         /// </summary>
         /// <param name="path">The file path.</param>
         /// <param name="transaction">The transaction. If the value is <c>null</c> then the current transaction is used.</param>

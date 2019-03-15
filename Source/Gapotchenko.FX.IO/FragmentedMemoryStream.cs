@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Based on the work "Improving on .NET Memory Management for Large Objects" by Michael Sydney Balloni
+// https://www.codeproject.com/Tips/894885/Improving-on-NET-Memory-Management-for-Large-Objec
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -79,14 +82,14 @@ namespace Gapotchenko.FX.IO
 
             var lcount = (long)count;
 
-            long remaining = (_Length - Position);
+            long remaining = _Length - Position;
             if (lcount > remaining)
                 lcount = remaining;
 
             int read = 0;
             do
             {
-                var copySize = Math.Min(lcount, (_BlockSize - _BlockOffset));
+                var copySize = Math.Min(lcount, _BlockSize - _BlockOffset);
                 Buffer.BlockCopy(_Block, (int)_BlockOffset, buffer, offset, (int)copySize);
                 lcount -= copySize;
                 offset += (int)copySize;
@@ -140,7 +143,7 @@ namespace Gapotchenko.FX.IO
 
                     _EnsureCapacity(Position + copySize);
 
-                    Buffer.BlockCopy(buffer, (int)offset, _Block, (int)_BlockOffset, copySize);
+                    Buffer.BlockCopy(buffer, offset, _Block, (int)_BlockOffset, copySize);
                     count -= copySize;
                     offset += copySize;
 
@@ -187,21 +190,27 @@ namespace Gapotchenko.FX.IO
         {
             var savedPosition = Position;
             Position = 0;
-            var buffer = new byte[Length];
-            Read(buffer, 0, (int)Length);
+
+            int length = checked((int)Length);
+            var buffer = new byte[length];
+            Read(buffer, 0, length);
+
             Position = savedPosition;
+
             return buffer;
         }
 
         /// <summary>
         /// Writes the entire stream into destination, regardless of Position, which remains unchanged.
         /// </summary>
-        /// <param name="destination">The stream to write the content of this stream to</param>
+        /// <param name="destination">The stream to write the content of this stream to.</param>
         public virtual void WriteTo(Stream destination)
         {
             var savedPosition = Position;
             Position = 0;
+
             CopyTo(destination);
+
             Position = savedPosition;
         }
     }

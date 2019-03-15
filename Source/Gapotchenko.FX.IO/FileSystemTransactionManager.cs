@@ -92,7 +92,7 @@ namespace Gapotchenko.FX.IO
             }
         }
 
-        static Dictionary<string, HashSet<string>> _EnlistedFiles = new Dictionary<string, HashSet<string>>();
+        static Dictionary<string, HashSet<string>> _EnlistedFiles = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
 
         public static void EnlistFileInTransaction(string path, Transaction transaction)
         {
