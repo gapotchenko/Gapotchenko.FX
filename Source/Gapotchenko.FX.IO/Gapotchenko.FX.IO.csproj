@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Metadata\Metadata.proj" />
+  <PropertyGroup>
+    <TargetFramework></TargetFramework>
+    <Description>Gapotchenko.FX.IO module. A part of Core profile of Gapotchenko.FX framework.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'net46' ">
+    <Reference Include="System.Transactions" />
+  </ItemGroup>
+</Project>

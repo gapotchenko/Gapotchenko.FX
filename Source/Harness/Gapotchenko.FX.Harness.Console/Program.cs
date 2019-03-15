@@ -1,10 +1,14 @@
-﻿using Gapotchenko.FX.Collections.Generic;
+﻿#region Usings
+using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Threading;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+#endregion
 
 namespace Gapotchenko.FX.Harness.Console
 {
@@ -37,6 +41,8 @@ namespace Gapotchenko.FX.Harness.Console
             list.AddRange(10, 20);
 
             Console.WriteLine(list.IsNullOrEmpty());
+
+            //Stream stream;
         }
 
         static async Task _RunAsync()

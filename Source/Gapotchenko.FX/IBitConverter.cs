@@ -54,6 +54,27 @@ namespace Gapotchenko.FX
         byte[] GetBytes(ulong value);
 
         /// <summary>
+        /// Returns the specified single-precision floating point value as an array of bytes.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <returns>An array of bytes with length 4.</returns>
+        byte[] GetBytes(float value);
+
+        /// <summary>
+        /// Returns the specified double-precision floating point value as an array of bytes.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <returns>An array of bytes with length 8.</returns>
+        byte[] GetBytes(double value);
+
+        /// <summary>
+        /// Returns the specified decimal value as an array of bytes.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <returns>An array of bytes with length 16.</returns>
+        byte[] GetBytes(decimal value);
+
+        /// <summary>
         /// Returns the specified <see cref="bool"/> value as an array of bytes.
         /// </summary>
         /// <param name="value">A <see cref="bool"/> value.</param>
@@ -109,6 +130,30 @@ namespace Gapotchenko.FX
         void FillBytes(ulong value, byte[] buffer, int startIndex);
 
         /// <summary>
+        /// Fills the array with four bytes of the specified single-precision floating point value beginning at <paramref name="startIndex"/>.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        /// <param name="startIndex">The start index where converted value is to be stored at <paramref name="buffer"/>.</param>
+        void FillBytes(float value, byte[] buffer, int startIndex);
+
+        /// <summary>
+        /// Fills the array with eight bytes of the specified double-precision floating point value beginning at <paramref name="startIndex"/>.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        /// <param name="startIndex">The start index where converted value is to be stored at <paramref name="buffer"/>.</param>
+        void FillBytes(double value, byte[] buffer, int startIndex);
+
+        /// <summary>
+        /// Fills the array with sixteen bytes of the specified decimal value beginning at <paramref name="startIndex"/>.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        /// <param name="startIndex">The start index where converted value is to be stored at <paramref name="buffer"/>.</param>
+        void FillBytes(decimal value, byte[] buffer, int startIndex);
+
+        /// <summary>
         /// Fills the array with one byte of the specified <see cref="bool"/> value beginning at <paramref name="startIndex"/>.
         /// </summary>
         /// <param name="value">A <see cref="bool"/> value.</param>
@@ -159,6 +204,27 @@ namespace Gapotchenko.FX
         void FillBytes(ulong value, byte[] buffer);
 
         /// <summary>
+        /// Fills the array with four bytes of the specified single-precision floating point value.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        void FillBytes(float value, byte[] buffer);
+
+        /// <summary>
+        /// Fills the array with eight bytes of the specified double-precision floating point value.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        void FillBytes(double value, byte[] buffer);
+
+        /// <summary>
+        /// Fills the array with sixteen bytes of the specified decimal value.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        void FillBytes(decimal value, byte[] buffer);
+
+        /// <summary>
         /// Fills the array with one byte of the specified <see cref="bool"/> value beginning.
         /// </summary>
         /// <param name="value">A <see cref="bool"/> value.</param>
@@ -166,62 +232,79 @@ namespace Gapotchenko.FX
         void FillBytes(bool value, byte[] buffer);
 
         /// <summary>
-        /// Returns a 16-bit signed integer converted from two bytes at a specified
-        /// position in a byte array.
+        /// Returns a 16-bit signed integer converted from two bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
-        /// <returns>A 16-bit signed integer formed by two bytes beginning at startIndex.</returns>
+        /// <returns>A 16-bit signed integer formed by two bytes beginning at <paramref name="startIndex"/>.</returns>
         short ToInt16(byte[] value, int startIndex);
 
         /// <summary>
-        /// Returns a 16-bit unsigned integer converted from two bytes at a specified
-        /// position in a byte array.
+        /// Returns a 16-bit unsigned integer converted from two bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
-        /// <returns>A 16-bit unsigned integer formed by two bytes beginning at startIndex.</returns>
+        /// <returns>A 16-bit unsigned integer formed by two bytes beginning at <paramref name="startIndex"/>.</returns>
         ushort ToUInt16(byte[] value, int startIndex);
 
         /// <summary>
-        /// Returns a 32-bit signed integer converted from four bytes at a specified
-        /// position in a byte array.
+        /// Returns a 32-bit signed integer converted from four bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
-        /// <returns>A 32-bit signed integer formed by four bytes beginning at startIndex.</returns>
+        /// <returns>A 32-bit signed integer formed by four bytes beginning at <paramref name="startIndex"/>.</returns>
         int ToInt32(byte[] value, int startIndex);
 
         /// <summary>
-        /// Returns a 32-bit unsigned integer converted from four bytes at a specified
-        /// position in a byte array.
+        /// Returns a 32-bit unsigned integer converted from four bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
-        /// <returns>A 32-bit unsigned integer formed by four bytes beginning at startIndex.</returns>
+        /// <returns>A 32-bit unsigned integer formed by four bytes beginning at <paramref name="startIndex"/>.</returns>
         uint ToUInt32(byte[] value, int startIndex);
 
         /// <summary>
-        /// Returns a 64-bit signed integer converted from eight bytes at a specified
-        /// position in a byte array.
+        /// Returns a 64-bit signed integer converted from eight bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
-        /// <returns>A 64-bit signed integer formed by eight bytes beginning at startIndex.</returns>
+        /// <returns>A 64-bit signed integer formed by eight bytes beginning at <paramref name="startIndex"/>.</returns>
         long ToInt64(byte[] value, int startIndex);
 
         /// <summary>
-        /// Returns a 64-bit unsigned integer converted from eight bytes at a specified
-        /// position in a byte array.
+        /// Returns a 64-bit unsigned integer converted from eight bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
-        /// <returns>A 64-bit unsigned integer formed by eight bytes beginning at startIndex.</returns>
+        /// <returns>A 64-bit unsigned integer formed by eight bytes beginning at <paramref name="startIndex"/>.</returns>
         ulong ToUInt64(byte[] value, int startIndex);
 
         /// <summary>
-        /// Returns a Boolean value converted from one byte at a specified position in
-        /// a byte array.
+        /// Returns a single-precision floating point number converted from four bytes at a specified position in a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <param name="startIndex">The starting position within value.</param>
+        /// <returns>A single-precision floating point number formed by four bytes beginning at <paramref name="startIndex"/>.</returns>
+        float ToSingle(byte[] value, int startIndex);
+
+        /// <summary>
+        /// Returns a double-precision floating point number converted from eight bytes at a specified position in a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <param name="startIndex">The starting position within value.</param>
+        /// <returns>A double-precision floating point number formed by eight bytes beginning at <paramref name="startIndex"/>.</returns>
+        double ToDouble(byte[] value, int startIndex);
+
+        /// <summary>
+        /// Returns a decimal number converted from sixteen bytes at a specified position in a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <param name="startIndex">The starting position within value.</param>
+        /// <returns>A decimal number formed by sixteen bytes beginning at <paramref name="startIndex"/>.</returns>
+        decimal ToDecimal(byte[] value, int startIndex);
+
+        /// <summary>
+        /// Returns a <see cref="Boolean"/> value converted from one byte at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
@@ -271,10 +354,31 @@ namespace Gapotchenko.FX
         ulong ToUInt64(byte[] value);
 
         /// <summary>
-        /// Returns a Boolean value converted from the first byte of a byte array.
+        /// Returns a single-precision floating point number converted from four bytes of a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
-        /// <returns><c>true</c> if the the first byte of a byte array is nonzero; otherwise, <c>false</c>.</returns>
+        /// <returns>A single-precision floating point number formed by four bytes of a byte array.</returns>
+        float ToSingle(byte[] value);
+
+        /// <summary>
+        /// Returns a double-precision floating point number converted from eight bytes of a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <returns>A double-precision floating point number formed by eight bytes of a byte array.</returns>
+        double ToDouble(byte[] value);
+
+        /// <summary>
+        /// Returns a decimal number converted from sixteen bytes of a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <returns>A decimal number formed by sixteen of a byte array.</returns>
+        decimal ToDecimal(byte[] value);
+
+        /// <summary>
+        /// Returns a <see cref="Boolean"/> value converted from the first byte of a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <returns><c>true</c> if the first byte of a byte array is nonzero; otherwise, <c>false</c>.</returns>
         bool ToBoolean(byte[] value);
     }
 }

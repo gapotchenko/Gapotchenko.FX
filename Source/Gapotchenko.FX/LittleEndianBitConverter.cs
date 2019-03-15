@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 
 namespace Gapotchenko.FX
 {
     /// <summary>
-    /// <para>
-    /// Converts base data types to an array of bytes, and an array of bytes to base data types in little endian byte order.
-    /// </para>
-    /// <seealso cref="NetworkBitConverter"/>
+    /// Converts base data types to an array of bytes, and an array of bytes to base data types in little-endian byte order.
     /// </summary>
+    /// <remarks>
+    /// <seealso cref="BigEndianBitConverter"/>
+    /// </remarks>
     public sealed class LittleEndianBitConverter : IBitConverter
     {
         private LittleEndianBitConverter()
@@ -27,7 +26,7 @@ namespace Gapotchenko.FX
         public static byte[] GetBytes(int value)
         {
             var buffer = new byte[4];
-            FillBytes(value, buffer, 0);
+            FillBytes(value, buffer);
             return buffer;
         }
 
@@ -61,7 +60,7 @@ namespace Gapotchenko.FX
         public static byte[] GetBytes(uint value)
         {
             var buffer = new byte[4];
-            FillBytes(value, buffer, 0);
+            FillBytes(value, buffer);
             return buffer;
         }
 
@@ -93,7 +92,7 @@ namespace Gapotchenko.FX
         public static byte[] GetBytes(short value)
         {
             var buffer = new byte[2];
-            FillBytes(value, buffer, 0);
+            FillBytes(value, buffer);
             return buffer;
         }
 
@@ -125,7 +124,7 @@ namespace Gapotchenko.FX
         public static byte[] GetBytes(ushort value)
         {
             var buffer = new byte[2];
-            FillBytes(value, buffer, 0);
+            FillBytes(value, buffer);
             return buffer;
         }
 
@@ -157,7 +156,7 @@ namespace Gapotchenko.FX
         public static byte[] GetBytes(long value)
         {
             var buffer = new byte[8];
-            FillBytes(value, buffer, 0);
+            FillBytes(value, buffer);
             return buffer;
         }
 
@@ -189,7 +188,7 @@ namespace Gapotchenko.FX
         public static byte[] GetBytes(ulong value)
         {
             var buffer = new byte[8];
-            FillBytes(value, buffer, 0);
+            FillBytes(value, buffer);
             return buffer;
         }
 
@@ -212,6 +211,102 @@ namespace Gapotchenko.FX
         /// <param name="buffer">The array of bytes to store converted value at.</param>
         [CLSCompliant(false)]
         public static void FillBytes(ulong value, byte[] buffer) => FillBytes(value, buffer, 0);
+
+        /// <summary>
+        /// Returns the specified single-precision floating point value as an array of bytes.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <returns>An array of bytes with length 4.</returns>
+        public static byte[] GetBytes(float value)
+        {
+            var buffer = new byte[4];
+            FillBytes(value, buffer);
+            return buffer;
+        }
+
+        /// <summary>
+        /// Fills the array with four bytes of the specified single-precision floating point value beginning at <paramref name="startIndex"/>.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        /// <param name="startIndex">The start index where converted value is to be stored at <paramref name="buffer"/>.</param>
+        public static void FillBytes(float value, byte[] buffer, int startIndex)
+        {
+            var rcg = new ReinterpretCastGround32();
+            rcg.Single = value;
+            FillBytes(rcg.Int32, buffer, startIndex);
+        }
+
+        /// <summary>
+        /// Fills the array with four bytes of the specified single-precision floating point value.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        public static void FillBytes(float value, byte[] buffer) => FillBytes(value, buffer, 0);
+
+        /// <summary>
+        /// Returns the specified double-precision floating point value as an array of bytes.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <returns>An array of bytes with length 8.</returns>
+        public static byte[] GetBytes(double value)
+        {
+            var buffer = new byte[8];
+            FillBytes(value, buffer);
+            return buffer;
+        }
+
+        /// <summary>
+        /// Fills the array with eight bytes of the specified double-precision floating point value beginning at <paramref name="startIndex"/>.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        /// <param name="startIndex">The start index where converted value is to be stored at <paramref name="buffer"/>.</param>
+        public static void FillBytes(double value, byte[] buffer, int startIndex)
+        {
+            var rcg = new ReinterpretCastGround64();
+            rcg.Double = value;
+            FillBytes(rcg.Int64, buffer, startIndex);
+        }
+
+        /// <summary>
+        /// Fills the array with eight bytes of the specified double-precision floating point value.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        public static void FillBytes(double value, byte[] buffer) => FillBytes(value, buffer, 0);
+
+        /// <summary>
+        /// Returns the specified decimal value as an array of bytes.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <returns>An array of bytes with length 16.</returns>
+        public static byte[] GetBytes(decimal value)
+        {
+            var buffer = new byte[16];
+            FillBytes(value, buffer);
+            return buffer;
+        }
+
+        /// <summary>
+        /// Fills the array with sixteen bytes of the specified decimal value beginning at <paramref name="startIndex"/>.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        /// <param name="startIndex">The start index where converted value is to be stored at <paramref name="buffer"/>.</param>
+        public static void FillBytes(decimal value, byte[] buffer, int startIndex)
+        {
+            var bits = decimal.GetBits(value);
+            for (int i = 0; i < bits.Length; ++i)
+                FillBytes(bits[i], buffer, startIndex + i * sizeof(int));
+        }
+
+        /// <summary>
+        /// Fills the array with sixteen bytes of the specified decimal value.
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="buffer">The array of bytes to store converted value at.</param>
+        public static void FillBytes(decimal value, byte[] buffer) => FillBytes(value, buffer, 0);
 
         /// <summary>
         /// Returns the specified <see cref="bool"/> value as an array of bytes.
@@ -363,8 +458,70 @@ namespace Gapotchenko.FX
         public static ulong ToUInt64(byte[] value) => ToUInt64(value, 0);
 
         /// <summary>
-        /// Returns a Boolean value converted from one byte at a specified position in
-        /// a byte array.
+        /// Returns a single-precision floating point number converted from four bytes at a specified position in a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <param name="startIndex">The starting position within value.</param>
+        /// <returns>A single-precision floating point number formed by four bytes beginning at <paramref name="startIndex"/>.</returns>
+        public static float ToSingle(byte[] value, int startIndex)
+        {
+            var rcg = new ReinterpretCastGround32();
+            rcg.Int32 = ToInt32(value, startIndex);
+            return rcg.Single;
+        }
+
+        /// <summary>
+        /// Returns a single-precision floating point number converted from four bytes of a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <returns>A single-precision floating point number formed by four bytes of a byte array.</returns>
+        public static float ToSingle(byte[] value) => ToSingle(value, 0);
+
+        /// <summary>
+        /// Returns a double-precision floating point number converted from eight bytes at a specified position in a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <param name="startIndex">The starting position within value.</param>
+        /// <returns>A double-precision floating point number formed by eight bytes beginning at <paramref name="startIndex"/>.</returns>
+        public static double ToDouble(byte[] value, int startIndex)
+        {
+            var rcg = new ReinterpretCastGround64();
+            rcg.Int64 = ToInt64(value, startIndex);
+            return rcg.Double;
+        }
+
+        /// <summary>
+        /// Returns a double-precision floating point number converted from eight bytes of a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <returns>A double-precision floating point number formed by eight bytes of a byte array.</returns>
+        public static double ToDouble(byte[] value) => ToDouble(value, 0);
+
+        /// <summary>
+        /// Returns a decimal number converted from sixteen bytes at a specified position in a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <param name="startIndex">The starting position within value.</param>
+        /// <returns>A decimal number formed by sixteen bytes beginning at <paramref name="startIndex"/>.</returns>
+        public static decimal ToDecimal(byte[] value, int startIndex)
+        {
+            var bits = new int[4];
+
+            for (int i = 0; i < bits.Length; ++i)
+                bits[i] = ToInt32(value, startIndex + i * sizeof(int));
+
+            return new decimal(bits);
+        }
+
+        /// <summary>
+        /// Returns a decimal number converted from sixteen bytes of a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <returns>A decimal number formed by sixteen of a byte array.</returns>
+        public static decimal ToDecimal(byte[] value) => ToDecimal(value, 0);
+
+        /// <summary>
+        /// Returns a <see cref="Boolean"/> value converted from one byte at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
@@ -378,7 +535,7 @@ namespace Gapotchenko.FX
         /// Returns a Boolean value converted from the first byte of a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
-        /// <returns><c>true</c> if the the first byte of a byte array is nonzero; otherwise, <c>false</c>.</returns>
+        /// <returns><c>true</c> if the first byte of a byte array is nonzero; otherwise, <c>false</c>.</returns>
         public static bool ToBoolean(byte[] value) => ToBoolean(value, 0);
 
         #region IBitConverter Implementation
@@ -395,6 +552,12 @@ namespace Gapotchenko.FX
 
         void IBitConverter.FillBytes(ulong value, byte[] buffer, int startIndex) => FillBytes(value, buffer, startIndex);
 
+        void IBitConverter.FillBytes(float value, byte[] buffer, int startIndex) => FillBytes(value, buffer, startIndex);
+
+        void IBitConverter.FillBytes(double value, byte[] buffer, int startIndex) => FillBytes(value, buffer, startIndex);
+
+        void IBitConverter.FillBytes(decimal value, byte[] buffer, int startIndex) => FillBytes(value, buffer, startIndex);
+
         void IBitConverter.FillBytes(bool value, byte[] buffer, int startIndex) => FillBytes(value, buffer, startIndex);
 
         void IBitConverter.FillBytes(short value, byte[] buffer) => FillBytes(value, buffer);
@@ -408,6 +571,12 @@ namespace Gapotchenko.FX
         void IBitConverter.FillBytes(long value, byte[] buffer) => FillBytes(value, buffer);
 
         void IBitConverter.FillBytes(ulong value, byte[] buffer) => FillBytes(value, buffer);
+
+        void IBitConverter.FillBytes(float value, byte[] buffer) => FillBytes(value, buffer);
+
+        void IBitConverter.FillBytes(double value, byte[] buffer) => FillBytes(value, buffer);
+
+        void IBitConverter.FillBytes(decimal value, byte[] buffer) => FillBytes(value, buffer);
 
         void IBitConverter.FillBytes(bool value, byte[] buffer) => FillBytes(value, buffer);
 
@@ -423,6 +592,12 @@ namespace Gapotchenko.FX
 
         byte[] IBitConverter.GetBytes(ulong value) => GetBytes(value);
 
+        byte[] IBitConverter.GetBytes(float value) => GetBytes(value);
+
+        byte[] IBitConverter.GetBytes(double value) => GetBytes(value);
+
+        byte[] IBitConverter.GetBytes(decimal value) => GetBytes(value);
+
         byte[] IBitConverter.GetBytes(bool value) => GetBytes(value);
 
         ushort IBitConverter.ToUInt16(byte[] value, int startIndex) => ToUInt16(value, startIndex);
@@ -436,6 +611,12 @@ namespace Gapotchenko.FX
         long IBitConverter.ToInt64(byte[] value, int startIndex) => ToInt64(value, startIndex);
 
         ulong IBitConverter.ToUInt64(byte[] value, int startIndex) => ToUInt64(value, startIndex);
+
+        float IBitConverter.ToSingle(byte[] value, int startIndex) => ToSingle(value, startIndex);
+
+        double IBitConverter.ToDouble(byte[] value, int startIndex) => ToDouble(value, startIndex);
+
+        decimal IBitConverter.ToDecimal(byte[] value, int startIndex) => ToDecimal(value, startIndex);
 
         bool IBitConverter.ToBoolean(byte[] value, int startIndex) => ToBoolean(value, startIndex);
 
@@ -451,6 +632,12 @@ namespace Gapotchenko.FX
 
         ulong IBitConverter.ToUInt64(byte[] value) => ToUInt64(value);
 
+        float IBitConverter.ToSingle(byte[] value) => ToSingle(value);
+
+        double IBitConverter.ToDouble(byte[] value) => ToDouble(value);
+
+        decimal IBitConverter.ToDecimal(byte[] value) => ToDecimal(value);
+
         bool IBitConverter.ToBoolean(byte[] value) => ToBoolean(value);
 
         #endregion
@@ -459,7 +646,7 @@ namespace Gapotchenko.FX
         static IBitConverter _Instance;
 
         /// <summary>
-        /// Gets <see cref="LittleEndianBitConverter"/> instance.
+        /// Gets a <see cref="LittleEndianBitConverter"/> instance.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         [CLSCompliant(false)]
