@@ -19,58 +19,51 @@ namespace Gapotchenko.FX.Diagnostics
 
         static bool _TryOpenUrlWithDefaultBrowser(string url)
         {
-            bool handled = false;
-
             try
             {
-                string scheme = null;
-
-                int j;
-
-                j = url.IndexOf(':');
+                string scheme;
+                int j = url.IndexOf(':');
                 if (j != -1)
                     scheme = url.Substring(0, j);
+                else
+                    return false;
 
-                if (scheme != null)
+                string command = _TryGetDefaultBrowserCommand(scheme);
+                if (command == null)
+                    return false;
+
+                var args = CommandLine.Split(command).ToList();
+
+                int argsCount = args.Count;
+                if (argsCount < 2)
+                    return false;
+
+                string filePath = args[0];
+
+                bool urlSet = false;
+                for (int i = 1; i < argsCount; ++i)
                 {
-                    string defaultBrowserCommand = _TryGetDefaultBrowserCommand(scheme);
-                    if (!string.IsNullOrWhiteSpace(defaultBrowserCommand))
+                    if (args[i].Equals("%1", StringComparison.Ordinal))
                     {
-                        if (defaultBrowserCommand[0] == '"')
-                            j = defaultBrowserCommand.IndexOf('"', 1);
-                        else
-                            j = defaultBrowserCommand.IndexOf(' ');
-
-                        if (j == -1)
-                            j = defaultBrowserCommand.Length;
-                        else
-                            ++j;
-
-                        string arguments = defaultBrowserCommand.Substring(j).Trim();
-                        defaultBrowserCommand = defaultBrowserCommand.Substring(0, j);
-
-                        defaultBrowserCommand = defaultBrowserCommand.Trim('"');
-
-                        string argumentsPattern = arguments;
-                        arguments = arguments.Replace("%1", url);
-
-                        if (arguments != argumentsPattern)
-                        {
-                            if (File.Exists(defaultBrowserCommand))
-                            {
-                                _RunProcess(defaultBrowserCommand, arguments);
-                                handled = true;
-                            }
-                        }
+                        args[i] = url;
+                        urlSet = true;
                     }
                 }
+
+                if (!urlSet)
+                    return false;
+
+                if (!File.Exists(filePath))
+                    return false;
+
+                _RunProcess(filePath, CommandLine.Build(args.Skip(1)));
+                return true;
             }
             catch (Exception e) when (!e.IsControlFlowException())
             {
                 Log.TraceSource.TraceEvent(TraceEventType.Warning, 1, e.Message);
+                return false;
             }
-
-            return handled;
         }
 
         static bool _IsWindowsVistaOrHigher()

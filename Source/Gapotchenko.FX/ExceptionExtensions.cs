@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,18 +12,23 @@ namespace Gapotchenko.FX
     public static class ExceptionExtensions
     {
         /// <summary>
-        /// Checks whether exception signifies cancellation of a logical execution thread.
+        /// <para>
+        /// Checks whether exception signifies a cancellation of a thread or task.
+        /// </para>
+        /// <para>
         /// There is a predefined set of such exceptions:
         /// <see cref="ThreadInterruptedException"/>, <see cref="ThreadAbortException"/>, <see cref="TaskCanceledException"/> and
         /// <see cref="OperationCanceledException"/>.
+        /// </para>
         /// </summary>
         /// <param name="exception">The exception.</param>
-        /// <returns><c>true</c> if exception signifies logical thread cancellation; otherwise, <c>false</c>.</returns>
+        /// <returns><c>true</c> if exception signifies a cancellation of a thread or task; otherwise, <c>false</c>.</returns>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public static bool IsCancellationException(this Exception exception)
         {
             if (exception == null)
                 throw new ArgumentNullException(nameof(exception));
+
             return
                 exception is ThreadAbortException ||
                 exception is ThreadInterruptedException ||
@@ -34,11 +37,17 @@ namespace Gapotchenko.FX
         }
 
         /// <summary>
+        /// <para>
         /// Checks whether exception is intended to affect the control flow of code execution.
+        /// </para>
+        /// <para>
         /// There is a predefined set of such exceptions:
         /// all the cancellation exceptions reported by <see cref="IsCancellationException(Exception)"/>, and
         /// <see cref="StackOverflowException"/>.
+        /// </para>
+        /// <para>
         /// The list can be semantically extended by deriving a custom exception from <see cref="IControlFlowException"/>.
+        /// </para>
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <returns><c>true</c> if exception represents a control flow exception; otherwise, <c>false</c>.</returns>
@@ -49,7 +58,7 @@ namespace Gapotchenko.FX
             exception is IControlFlowException;
 
         /// <summary>
-        /// Rethrows a control flow exception if there is any.
+        /// Rethrows a control flow exception if it is represented by the exception itself, or there is any in a chain of its inner exceptions.
         /// </summary>
         /// <param name="exception">The exception.</param>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
