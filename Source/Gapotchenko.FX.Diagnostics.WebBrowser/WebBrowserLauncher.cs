@@ -13,9 +13,6 @@ namespace Gapotchenko.FX.Diagnostics
     {
         public static void OpenUrl(string url)
         {
-            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
-                throw new ArgumentException("Malformed URL.", nameof(url));
-
             if (!_TryOpenUrlWithDefaultBrowser(url))
                 _RunProcess(url);
         }
@@ -67,12 +64,6 @@ namespace Gapotchenko.FX.Diagnostics
                 Log.TraceSource.TraceEvent(TraceEventType.Warning, 1, e.Message);
                 return false;
             }
-        }
-
-        static bool _IsWindowsVistaOrHigher()
-        {
-            var os = Environment.OSVersion;
-            return os.Platform == PlatformID.Win32NT && os.Version.Major >= 6;
         }
 
         static string _TryGetDefaultBrowserCommand(string scheme)

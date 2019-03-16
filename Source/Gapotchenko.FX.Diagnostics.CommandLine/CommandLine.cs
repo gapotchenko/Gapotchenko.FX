@@ -58,7 +58,7 @@ namespace Gapotchenko.FX.Diagnostics
         }
 
         /// <summary>
-        /// Splits command line into arguments.
+        /// Splits a command line into arguments.
         /// </summary>
         /// <param name="tr">Command line text reader.</param>
         /// <returns>A sequence of command line arguments.</returns>
@@ -154,7 +154,7 @@ namespace Gapotchenko.FX.Diagnostics
         }
 
         /// <summary>
-        /// Splits a specified command line into separate arguments.
+        /// Splits a specified command line into arguments.
         /// </summary>
         /// <param name="commandLine">Command line to split.</param>
         /// <returns>A sequence of command line arguments.</returns>
@@ -214,7 +214,7 @@ namespace Gapotchenko.FX.Diagnostics
                 .ToString();
 
         /// <summary>
-        /// Builds a command line from a sequence of arguments.
+        /// Builds a command line from a specified sequence of arguments.
         /// </summary>
         /// <param name="args">A sequence of arguments.</param>
         /// <returns>The command line.</returns>
@@ -230,7 +230,7 @@ namespace Gapotchenko.FX.Diagnostics
         }
 
         /// <summary>
-        /// Builds a command line from an array of arguments.
+        /// Builds a command line from a specified array of arguments.
         /// </summary>
         /// <param name="args">An array of arguments.</param>
         /// <returns>The command line.</returns>
