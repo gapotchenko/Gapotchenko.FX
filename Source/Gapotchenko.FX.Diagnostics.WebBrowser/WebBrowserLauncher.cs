@@ -74,28 +74,21 @@ namespace Gapotchenko.FX.Diagnostics
 
         static string _TryGetDefaultBrowserCommand(string scheme)
         {
+            var os = Environment.OSVersion;
+
+            if (os.Platform == PlatformID.Win32NT && os.Version.Major >= 6)
+            {
+                // Windows Vista and newer versions provide user choice for a default browser.
+                using (var key = Registry.CurrentUser.OpenSubKey($@"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\{scheme}\UserChoice"))
+                    scheme = Empty.NullifyWhiteSpace(key?.GetValue("ProgId") as string) ?? scheme;
+            }
+
             string command = null;
 
-            try
+            using (var key = Registry.ClassesRoot.OpenSubKey($@"{scheme}\shell\open\command"))
             {
-                var os = Environment.OSVersion;
-
-                if (os.Platform == PlatformID.Win32NT && os.Version.Major >= 6)
-                {
-                    // Windows Vista or higher provides a user choice for default browser.
-                    using (var key = Registry.CurrentUser.OpenSubKey($@"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\{scheme}\UserChoice"))
-                        scheme = Empty.NullifyWhiteSpace(key?.GetValue("ProgId") as string) ?? scheme;
-                }
-
-                using (var key = Registry.ClassesRoot.OpenSubKey($@"{scheme}\shell\open\command"))
-                {
-                    if (key != null)
-                        command = Empty.NullifyWhiteSpace(key.GetValue(null) as string);
-                }
-            }
-            catch (Exception e) when (!e.IsControlFlowException())
-            {
-                Log.TraceSource.TraceEvent(TraceEventType.Warning, 2, e.Message);
+                if (key != null)
+                    command = Empty.NullifyWhiteSpace(key.GetValue(null) as string);
             }
 
             return command;

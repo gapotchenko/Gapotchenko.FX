@@ -1,4 +1,4 @@
-﻿// Portions of code come from Boost Program Options library, courtesy of Vladimir Prus.
+﻿// Portions of the code came from Boost Program Options library authored by Vladimir Prus.
 
 using System;
 using System.Collections.Generic;

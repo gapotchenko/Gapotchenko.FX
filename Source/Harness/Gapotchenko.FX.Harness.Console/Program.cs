@@ -43,7 +43,7 @@ namespace Gapotchenko.FX.Harness.Console
 
             Console.WriteLine(list.IsNullOrEmpty());
 
-            //WebBrowser.Start("https://www.gapotchenko.com/");
+            WebBrowser.Start("https://www.gapotchenko.com/");
 
             //Stream stream;
 

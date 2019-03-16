@@ -1,4 +1,4 @@
-﻿// Portions of code come from MSBuild project from Microsoft.
+﻿// Portions of the code came from MSBuild project authored by Microsoft.
 
 using Gapotchenko.FX.Text;
 using System;
@@ -114,7 +114,7 @@ namespace Gapotchenko.FX.Diagnostics
             if (numberOfQuotes > 0)
             {
                 if ((numberOfQuotes % 2) != 0)
-                    throw new Exception("Command line parameter cannot contain odd number of double quotes.");
+                    throw new Exception("Command line parameter cannot contain an odd number of double quotes.");
                 unquotedTextToAppend = unquotedTextToAppend.Replace("\\\"", "\\\\\"").Replace("\"", "\\\"");
             }
 
