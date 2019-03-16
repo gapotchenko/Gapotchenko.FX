@@ -77,7 +77,7 @@ There is a similar method for string replacements:
 ``` csharp
 using Gapotchenko.FX.Text;
 
-s = StringEditor.Replace(s, match.Groups["complexity"], "easy");
+s = StringEditor.Replace(s, match.Groups["complexity"], "easiness");
 ```
 
 Which is really handy.
