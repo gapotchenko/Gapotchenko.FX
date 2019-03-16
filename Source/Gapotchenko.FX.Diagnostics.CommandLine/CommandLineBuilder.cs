@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -40,14 +41,14 @@ namespace Gapotchenko.FX.Diagnostics
         /// Appends a specified <see cref="String"/> command line argument to this instance.
         /// The argument text is automatically quoted according to the command line rules.
         /// </summary>
-        /// <param name="argument">The <see cref="String"/> command line argument to append.</param>
+        /// <param name="value">The <see cref="String"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
-        public CommandLineBuilder AppendArgument(string argument)
+        public CommandLineBuilder AppendArgument(string value)
         {
-            if (argument != null)
+            if (value != null)
             {
                 _SeparateArguments();
-                _AppendTextWithQuoting(argument);
+                _AppendTextWithQuoting(value);
             }
             return this;
         }
@@ -56,82 +57,82 @@ namespace Gapotchenko.FX.Diagnostics
         /// Appends a specified <see cref="Char"/> command line argument to this instance.
         /// The argument text is automatically quoted according to the command line rules.
         /// </summary>
-        /// <param name="argument">The <see cref="Char"/> command line argument to append.</param>
+        /// <param name="value">The <see cref="Char"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
-        public CommandLineBuilder AppendArgument(char argument) => AppendArgument(argument.ToString());
+        public CommandLineBuilder AppendArgument(char value) => AppendArgument(value.ToString());
 
         /// <summary>
         /// Appends a specified <see cref="Byte"/> command line argument to this instance.
         /// </summary>
-        /// <param name="argument">The <see cref="Byte"/> command line argument to append.</param>
+        /// <param name="value">The <see cref="Byte"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
-        public CommandLineBuilder AppendArgument(byte argument) => AppendArgument(argument.ToString());
+        public CommandLineBuilder AppendArgument(byte value) => AppendArgument(value.ToString());
 
         /// <summary>
         /// Appends a specified <see cref="SByte"/> command line argument to this instance.
         /// </summary>
-        /// <param name="argument">The <see cref="SByte"/> command line argument to append.</param>
+        /// <param name="value">The <see cref="SByte"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
         [CLSCompliant(false)]
-        public CommandLineBuilder AppendArgument(sbyte argument) => AppendArgument(argument.ToString());
+        public CommandLineBuilder AppendArgument(sbyte value) => AppendArgument(value.ToString());
 
         /// <summary>
         /// Appends a specified <see cref="Int16"/> command line argument to this instance.
         /// </summary>
-        /// <param name="argument">The <see cref="Int16"/> command line argument to append.</param>
+        /// <param name="value">The <see cref="Int16"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
-        public CommandLineBuilder AppendArgument(short argument) => AppendArgument(argument.ToString());
+        public CommandLineBuilder AppendArgument(short value) => AppendArgument(value.ToString());
 
         /// <summary>
         /// Appends a specified <see cref="UInt16"/> command line argument to this instance.
         /// </summary>
-        /// <param name="argument">The <see cref="UInt16"/> command line argument to append.</param>
+        /// <param name="value">The <see cref="UInt16"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
         [CLSCompliant(false)]
-        public CommandLineBuilder AppendArgument(ushort argument) => AppendArgument(argument.ToString());
+        public CommandLineBuilder AppendArgument(ushort value) => AppendArgument(value.ToString());
 
         /// <summary>
         /// Appends a specified <see cref="Int32"/> command line argument to this instance.
         /// </summary>
-        /// <param name="argument">The <see cref="Int32"/> command line argument to append.</param>
+        /// <param name="value">The <see cref="Int32"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
-        public CommandLineBuilder AppendArgument(int argument) => AppendArgument(argument.ToString());
+        public CommandLineBuilder AppendArgument(int value) => AppendArgument(value.ToString());
 
         /// <summary>
         /// Appends a specified <see cref="UInt32"/> command line argument to this instance.
         /// </summary>
-        /// <param name="argument">The <see cref="UInt32"/> command line argument to append.</param>
+        /// <param name="value">The <see cref="UInt32"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
         [CLSCompliant(false)]
-        public CommandLineBuilder AppendArgument(uint argument) => AppendArgument(argument.ToString());
+        public CommandLineBuilder AppendArgument(uint value) => AppendArgument(value.ToString());
 
         /// <summary>
         /// Appends a specified <see cref="Int64"/> command line argument to this instance.
         /// </summary>
-        /// <param name="argument">The <see cref="Int64"/> command line argument to append.</param>
+        /// <param name="value">The <see cref="Int64"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
-        public CommandLineBuilder AppendArgument(long argument) => AppendArgument(argument.ToString());
+        public CommandLineBuilder AppendArgument(long value) => AppendArgument(value.ToString());
 
         /// <summary>
         /// Appends a specified <see cref="UInt64"/> command line argument to this instance.
         /// </summary>
-        /// <param name="argument">The <see cref="UInt64"/> command line argument to append.</param>
+        /// <param name="value">The <see cref="UInt64"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
         [CLSCompliant(false)]
-        public CommandLineBuilder AppendArgument(ulong argument) => AppendArgument(argument.ToString());
+        public CommandLineBuilder AppendArgument(ulong value) => AppendArgument(value.ToString());
 
         /// <summary>
-        /// Appends a specified command line argument that represents a file name to this instance.
+        /// Appends a specified command line argument that represents a file name.
         /// The file name is automatically quoted according to the command line rules.
         /// </summary>
-        /// <param name="fileName">The command line argument that represents a file name to append.</param>
+        /// <param name="value">The command line argument that represents a file name to append.</param>
         /// <returns>The instance of command line builder.</returns>
-        public CommandLineBuilder AppendFileName(string fileName)
+        public CommandLineBuilder AppendFileName(string value)
         {
-            if (!string.IsNullOrEmpty(fileName) && fileName[0] == '-')
-                return AppendArgument(@".\" + fileName);
+            if (!string.IsNullOrEmpty(value) && value[0] == '-')
+                return AppendArgument("." + Path.DirectorySeparatorChar + value);
             else
-                return AppendArgument(fileName);
+                return AppendArgument(value);
         }
 
         /// <summary>

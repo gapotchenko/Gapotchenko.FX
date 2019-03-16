@@ -45,9 +45,6 @@ namespace Gapotchenko.FX.Harness.Console
 
             WebBrowser.Start("https://www.gapotchenko.com/");
 
-            var clb = new CommandLineBuilder();
-            //clb.AppendArgument()
-
             //Stream stream;
 
             //var br = new BitReader(Stream.Null, LittleEndianBitConverter.);
