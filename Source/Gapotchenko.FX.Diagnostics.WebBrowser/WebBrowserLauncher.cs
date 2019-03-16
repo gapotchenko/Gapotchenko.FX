@@ -13,6 +13,9 @@ namespace Gapotchenko.FX.Diagnostics
     {
         public static void OpenUrl(string url)
         {
+            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+                throw new ArgumentException("Malformed URL.", nameof(url));
+
             if (!_TryOpenUrlWithDefaultBrowser(url))
                 _RunProcess(url);
         }
