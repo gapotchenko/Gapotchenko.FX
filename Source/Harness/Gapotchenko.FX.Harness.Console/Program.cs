@@ -1,5 +1,6 @@
 ﻿#region Usings
 using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Threading;
@@ -41,6 +42,8 @@ namespace Gapotchenko.FX.Harness.Console
             list.AddRange(10, 20);
 
             Console.WriteLine(list.IsNullOrEmpty());
+
+            WebBrowser.Start("https://www.gapotchenko.com/");
 
             //Stream stream;
 

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Metadata\Metadata.proj" />
+  <PropertyGroup>
+    <TargetFramework></TargetFramework>
+    <Description>Gapotchenko.FX.Diagnostics.WebBrowser module. A part of Core profile of Gapotchenko.FX framework.</Description>
+    <LangVersion>7.1</LangVersion>
+    <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Win32.Registry" Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netcoreapp2.1' ">
+      <Version>4.5.0</Version>
+    </PackageReference>
+  </ItemGroup>
+</Project>
