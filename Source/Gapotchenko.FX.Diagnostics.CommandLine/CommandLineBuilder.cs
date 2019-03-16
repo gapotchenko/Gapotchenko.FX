@@ -37,10 +37,10 @@ namespace Gapotchenko.FX.Diagnostics
         bool _QuoteHyphens;
 
         /// <summary>
-        /// Appends a specified command line argument to this instance.
+        /// Appends a specified <see cref="String"/> command line argument to this instance.
         /// The argument text is automatically quoted according to the command line rules.
         /// </summary>
-        /// <param name="argument">The command line argument to append.</param>
+        /// <param name="argument">The <see cref="String"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
         public CommandLineBuilder AppendArgument(string argument)
         {
@@ -51,6 +51,74 @@ namespace Gapotchenko.FX.Diagnostics
             }
             return this;
         }
+
+        /// <summary>
+        /// Appends a specified <see cref="Char"/> command line argument to this instance.
+        /// The argument text is automatically quoted according to the command line rules.
+        /// </summary>
+        /// <param name="argument">The <see cref="Char"/> command line argument to append.</param>
+        /// <returns>The instance of command line builder.</returns>
+        public CommandLineBuilder AppendArgument(char argument) => AppendArgument(argument.ToString());
+
+        /// <summary>
+        /// Appends a specified <see cref="Byte"/> command line argument to this instance.
+        /// </summary>
+        /// <param name="argument">The <see cref="Byte"/> command line argument to append.</param>
+        /// <returns>The instance of command line builder.</returns>
+        public CommandLineBuilder AppendArgument(byte argument) => AppendArgument(argument.ToString());
+
+        /// <summary>
+        /// Appends a specified <see cref="SByte"/> command line argument to this instance.
+        /// </summary>
+        /// <param name="argument">The <see cref="SByte"/> command line argument to append.</param>
+        /// <returns>The instance of command line builder.</returns>
+        [CLSCompliant(false)]
+        public CommandLineBuilder AppendArgument(sbyte argument) => AppendArgument(argument.ToString());
+
+        /// <summary>
+        /// Appends a specified <see cref="Int16"/> command line argument to this instance.
+        /// </summary>
+        /// <param name="argument">The <see cref="Int16"/> command line argument to append.</param>
+        /// <returns>The instance of command line builder.</returns>
+        public CommandLineBuilder AppendArgument(short argument) => AppendArgument(argument.ToString());
+
+        /// <summary>
+        /// Appends a specified <see cref="UInt16"/> command line argument to this instance.
+        /// </summary>
+        /// <param name="argument">The <see cref="UInt16"/> command line argument to append.</param>
+        /// <returns>The instance of command line builder.</returns>
+        [CLSCompliant(false)]
+        public CommandLineBuilder AppendArgument(ushort argument) => AppendArgument(argument.ToString());
+
+        /// <summary>
+        /// Appends a specified <see cref="Int32"/> command line argument to this instance.
+        /// </summary>
+        /// <param name="argument">The <see cref="Int32"/> command line argument to append.</param>
+        /// <returns>The instance of command line builder.</returns>
+        public CommandLineBuilder AppendArgument(int argument) => AppendArgument(argument.ToString());
+
+        /// <summary>
+        /// Appends a specified <see cref="UInt32"/> command line argument to this instance.
+        /// </summary>
+        /// <param name="argument">The <see cref="UInt32"/> command line argument to append.</param>
+        /// <returns>The instance of command line builder.</returns>
+        [CLSCompliant(false)]
+        public CommandLineBuilder AppendArgument(uint argument) => AppendArgument(argument.ToString());
+
+        /// <summary>
+        /// Appends a specified <see cref="Int64"/> command line argument to this instance.
+        /// </summary>
+        /// <param name="argument">The <see cref="Int64"/> command line argument to append.</param>
+        /// <returns>The instance of command line builder.</returns>
+        public CommandLineBuilder AppendArgument(long argument) => AppendArgument(argument.ToString());
+
+        /// <summary>
+        /// Appends a specified <see cref="UInt64"/> command line argument to this instance.
+        /// </summary>
+        /// <param name="argument">The <see cref="UInt64"/> command line argument to append.</param>
+        /// <returns>The instance of command line builder.</returns>
+        [CLSCompliant(false)]
+        public CommandLineBuilder AppendArgument(ulong argument) => AppendArgument(argument.ToString());
 
         /// <summary>
         /// Appends a specified command line argument that represents a file name to this instance.
@@ -67,7 +135,18 @@ namespace Gapotchenko.FX.Diagnostics
         }
 
         /// <summary>
+        /// Removes all characters from the current <see cref="CommandLineBuilder"/> instance.
+        /// </summary>
+        /// <returns>The instance of command line builder.</returns>
+        public CommandLineBuilder Clear()
+        {
+            _CommandLine.Clear();
+            return this;
+        }
+
+        /// <summary>
         /// Gets the raw string builder for the command line.
+        /// The purpose of raw access is to cover non-conventional notations and scenarios of a command line.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -127,10 +206,7 @@ namespace Gapotchenko.FX.Diagnostics
                 buffer.Append('"');
         }
 
-        void _AppendTextWithQuoting(string textToAppend)
-        {
-            _AppendQuotedTextToBuffer(_CommandLine, textToAppend);
-        }
+        void _AppendTextWithQuoting(string textToAppend) => _AppendQuotedTextToBuffer(_CommandLine, textToAppend);
 
         bool _IsQuotingRequired(string parameter)
         {
@@ -156,10 +232,9 @@ namespace Gapotchenko.FX.Diagnostics
             {
                 if (_CachedAllowedUnquotedRegex == null)
                 {
-                    if (_QuoteHyphens)
-                        _CachedAllowedUnquotedRegex = new Regex(@"^[a-z\\/:0-9\._+=]*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
-                    else
-                        _CachedAllowedUnquotedRegex = new Regex(@"^[a-z\\/:0-9\._\-+=]*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                    _CachedAllowedUnquotedRegex = new Regex(
+                        _QuoteHyphens ? @"^[a-z\\/:0-9\._+=]*$" : @"^[a-z\\/:0-9\._\-+=]*$",
+                        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
                 }
                 return _CachedAllowedUnquotedRegex;
             }
@@ -175,10 +250,9 @@ namespace Gapotchenko.FX.Diagnostics
             {
                 if (_CachedDefinitelyNeedQuotesRegex == null)
                 {
-                    if (_QuoteHyphens)
-                        _CachedDefinitelyNeedQuotesRegex = new Regex("[|><\\s,;\\-\"]+", RegexOptions.CultureInvariant);
-                    else
-                        _CachedDefinitelyNeedQuotesRegex = new Regex("[|><\\s,;\"]+", RegexOptions.CultureInvariant);
+                    _CachedDefinitelyNeedQuotesRegex = new Regex(
+                        _QuoteHyphens ? "[|><\\s,;\\-\"]+" : "[|><\\s,;\"]+",
+                        RegexOptions.CultureInvariant);
                 }
                 return _CachedDefinitelyNeedQuotesRegex;
             }
