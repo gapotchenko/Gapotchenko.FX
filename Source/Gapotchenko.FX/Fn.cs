@@ -6,7 +6,7 @@ using System.Linq;
 namespace Gapotchenko.FX
 {
     /// <summary>
-    /// Provides primitives for composition and instantiation of functions.
+    /// Provides functional primitives for composition and instantiation of functions.
     /// </summary>
     public static class Fn
     {
@@ -125,13 +125,13 @@ namespace Gapotchenko.FX
             params T[] rest)
         {
             if (rest == null && TypeTraits<T>.IsValueType)
-                throw new ArgumentNullException("The argument cannot be null when T is a value type.", nameof(rest));
+                throw new ArgumentNullException(nameof(rest), "The argument cannot be null when T is a value type.");
 
             var a = Aggregate(f, val1, val2, val3, val4, val5, val6, val7);
 
             if (rest == null)
             {
-                // The automatic disambiguation for a 'rest = null' scenario when T is a reference type and imaginary val6 is meant to be null.
+                // The automatic disambiguation for a 'rest = null' scenario when T is a reference type and imaginary val8 is meant to be null.
                 a = f(a, default);
             }
             else

@@ -47,10 +47,10 @@ namespace Gapotchenko.FX.Harness.Console
 
             //WebBrowser.Start("https://www.gapotchenko.com/");
 
-            var x = Fn.Aggregate(MathEx.Max, new Version(1, 0), new Version(1, 5), new Version(100, 0), null);
-            Console.WriteLine(x);
+            //var x = Fn.Aggregate(MathEx.Max, new Version(1, 0), new Version(1, 5), new Version(100, 0), null);
+            //Console.WriteLine(x);
 
-            //Fn.Aggregate()
+            Console.WriteLine(Fn.Aggregate((x, y) => x + y, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 
 
             //Stream stream;
