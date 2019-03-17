@@ -3,6 +3,7 @@ using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq;
+using Gapotchenko.FX.Math;
 using Gapotchenko.FX.Threading;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Harness.Console
 {
     using Console = System.Console;
+    using Math = System.Math;
 
     class Program
     {
@@ -43,7 +45,13 @@ namespace Gapotchenko.FX.Harness.Console
 
             Console.WriteLine(list.IsNullOrEmpty());
 
-            WebBrowser.Start("https://www.gapotchenko.com/");
+            //WebBrowser.Start("https://www.gapotchenko.com/");
+
+            var x = Fn.Aggregate(MathEx.Max, new Version(1, 0), new Version(1, 5), new Version(100, 0), null);
+            Console.WriteLine(x);
+
+            //Fn.Aggregate()
+
 
             //Stream stream;
 
