@@ -12,6 +12,14 @@ namespace Gapotchenko.FX.Linq.Expressions
     /// </summary>
     public sealed class ExpressionEqualityComparer : EqualityComparer<Expression>
     {
+        /// <summary>
+        /// Determines whether two <see cref="Expression"/> objects are equal.
+        /// </summary>
+        /// <param name="x">The first object to compare.</param>
+        /// <param name="y">The second object to compare.</param>
+        /// <returns>
+        /// <c>true</c> if the specified objects are equal; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(Expression x, Expression y)
         {
             if (x == y)
@@ -23,6 +31,11 @@ namespace Gapotchenko.FX.Linq.Expressions
             return worker.AreEqual(x, y);
         }
 
+        /// <summary>
+        /// Gets a hash code for a specified <see cref="Expression"/> object.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns>The hash code.</returns>
         public override int GetHashCode(Expression obj)
         {
             if (obj == null)
