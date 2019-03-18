@@ -12,11 +12,6 @@ namespace Gapotchenko.FX
     public static class Empty
     {
         /// <summary>
-        /// Gets an <see cref="System.Action"/> instance that does nothing.
-        /// </summary>
-        public static Action Action { get; } = () => { };
-
-        /// <summary>
         /// Nullifies an empty collection.
         /// </summary>
         /// <typeparam name="TSource">The type of the input collection.</typeparam>
@@ -193,54 +188,39 @@ namespace Gapotchenko.FX
         }
 
         /// <summary>
-        /// A pure function that returns a default value of <typeparamref name="T"/>, e.g. f() = default(T).
-        /// </summary>
-        /// <typeparam name="T">The type a function works with.</typeparam>
-        /// <returns>The default value of  <typeparamref name="T"/>.</returns>
-        public static T DefaultFunc<T>() => default(T);
-
-        /// <summary>
-        /// A pure function that returns a value of its single argument, e.g. f(x) = x.
-        /// </summary>
-        /// <typeparam name="T">The type a function works with.</typeparam>
-        /// <param name="x">The argument.</param>
-        /// <returns>The value of argument <paramref name="x"/>.</returns>
-        public static T IdentityFunc<T>(T x) => x;
-
-        /// <summary>
-        /// Nullifies an empty action.
+        /// Nullifies an empty function in terms of lambda calculus.
         /// </summary>
         /// <param name="action">The action.</param>
-        /// <returns>The value of <paramref name="action"/> or <c>null</c> if it represents an empty action.</returns>
+        /// <returns>The value of <paramref name="action"/> or <c>null</c> if it represents an empty function in terms of lambda calculus.</returns>
         public static Action Nullify(Action action)
         {
-            if (action == Action)
+            if (action == Lambda.Empty)
                 return null;
             else
                 return action;
         }
 
         /// <summary>
-        /// Nullifies an empty function.
+        /// Nullifies a default function in terms of lambda calculus.
         /// </summary>
         /// <param name="func">The function.</param>
-        /// <returns>The value of <paramref name="func"/> or <c>null</c> if it represents an empty function.</returns>
+        /// <returns>The value of <paramref name="func"/> or <c>null</c> if it represents a default function in terms of lambda calculus.</returns>
         public static Func<T> Nullify<T>(Func<T> func)
         {
-            if (func == Empty<T>.DefaultFunc)
+            if (func == Lambda<T>.Default)
                 return null;
             else
                 return func;
         }
 
         /// <summary>
-        /// Nullifies an empty function.
+        /// Nullifies an identity function in terms of lambda calculus.
         /// </summary>
         /// <param name="func">The function.</param>
-        /// <returns>The value of <paramref name="func"/> or <c>null</c> if it represents an empty function.</returns>
+        /// <returns>The value of <paramref name="func"/> or <c>null</c> if it represents an identity function in terms of lambda calculus.</returns>
         public static Func<T, T> Nullify<T>(Func<T, T> func)
         {
-            if (func == Empty<T>.IdentityFunc)
+            if (func == Lambda<T>.Identity)
                 return null;
             else
                 return func;

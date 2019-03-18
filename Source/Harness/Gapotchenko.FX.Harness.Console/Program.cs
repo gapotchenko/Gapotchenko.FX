@@ -7,6 +7,7 @@ using Gapotchenko.FX.Math;
 using Gapotchenko.FX.Threading;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,6 +38,8 @@ namespace Gapotchenko.FX.Harness.Console
             }
         }
 
+        static ISynchronizeInvoke _inv;
+
         static void _Run()
         {
             var list = new List<int>();
@@ -52,12 +55,21 @@ namespace Gapotchenko.FX.Harness.Console
 
             Console.WriteLine(Fn.Aggregate((x, y) => x + y, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 
-
             //Stream stream;
 
             //var br = new BitReader(Stream.Null, LittleEndianBitConverter.);
 
             //EqualityComparer<int>.D
+        }
+
+        static void _MyMethod(string s)
+        {
+
+        }
+
+        static string _MyMethod()
+        {
+            return "123";
         }
 
         static async Task _RunAsync()

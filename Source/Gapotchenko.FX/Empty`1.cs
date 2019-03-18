@@ -27,21 +27,5 @@ namespace Gapotchenko.FX
 #else
             System.Array.Empty<T>();
 #endif
-
-        static class FuncFactory
-        {
-            public static readonly Func<T> DefaultFunc = Empty.DefaultFunc<T>;
-            public static readonly Func<T, T> IdentityFunc = Empty.IdentityFunc;
-        }
-
-        /// <summary>
-        /// Gets a <see cref="Func{TResult}"/> instance that represents a pure function that returns a default value of <typeparamref name="T"/>, e.g. f() = default(T).
-        /// </summary>
-        public static Func<T> DefaultFunc { get; } = FuncFactory.DefaultFunc;
-
-        /// <summary>
-        /// Gets a <see cref="Func{T, TResult}"/> instance that represents a pure identity function that returns a value of its single argument, e.g. f(x) = x.
-        /// </summary>
-        public static Func<T, T> IdentityFunc { get; } = FuncFactory.IdentityFunc;
     }
 }

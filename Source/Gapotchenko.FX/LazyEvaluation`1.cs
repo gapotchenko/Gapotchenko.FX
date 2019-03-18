@@ -51,7 +51,7 @@ namespace Gapotchenko.FX
         {
             get
             {
-                var defaultFunc = Empty<T>.DefaultFunc;
+                var defaultFunc = Lambda<T>.Default;
                 if (_ValueFactory != defaultFunc)
                 {
                     var valueFactory = _ValueFactory;
@@ -66,7 +66,7 @@ namespace Gapotchenko.FX
         /// <summary>
         /// Gets a value that indicates whether a value has been created for this <see cref="LazyEvaluation{T}"/> instance.
         /// </summary>
-        public bool IsValueCreated => _ValueFactory == Empty<T>.DefaultFunc;
+        public bool IsValueCreated => _ValueFactory == Lambda<T>.Default;
 
         /// <summary>
         /// Creates and returns a string representation of the <see cref="Value"/> property for this instance.

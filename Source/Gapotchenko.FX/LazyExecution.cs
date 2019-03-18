@@ -36,7 +36,7 @@ namespace Gapotchenko.FX
         /// </summary>
         public void EnsureExecuted()
         {
-            var emptyAction = Empty.Action;
+            var emptyAction = Lambda.Empty;
             if (_Action != emptyAction)
             {
                 _Action?.Invoke();
@@ -47,6 +47,6 @@ namespace Gapotchenko.FX
         /// <summary>
         /// Gets a value indicating whether the action was executed.
         /// </summary>
-        public bool IsExecuted => _Action == Empty.Action;
+        public bool IsExecuted => _Action == Lambda.Empty;
     }
 }

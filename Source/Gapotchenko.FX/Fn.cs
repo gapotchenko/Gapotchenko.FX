@@ -1,12 +1,11 @@
 ﻿using Gapotchenko.FX.Runtime.CompilerServices;
 using System;
-using System.ComponentModel;
 using System.Linq;
 
 namespace Gapotchenko.FX
 {
     /// <summary>
-    /// Provides functional primitives for composition and instantiation of functions.
+    /// Provides functional primitives.
     /// </summary>
     public static class Fn
     {
