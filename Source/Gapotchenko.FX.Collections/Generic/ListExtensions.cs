@@ -27,7 +27,7 @@ namespace Gapotchenko.FX.Collections.Generic
             if (list.Count < 2)
                 return;
 
-            var sortedList = list.OrderBy(Lambda.Identity, comparer).ToList();
+            var sortedList = list.OrderBy(Fn.Identity, comparer).ToList();
 
             list.Clear();
             list.AddRange(sortedList);

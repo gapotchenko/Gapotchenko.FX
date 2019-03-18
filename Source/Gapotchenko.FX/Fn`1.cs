@@ -6,15 +6,15 @@ using System.Text;
 namespace Gapotchenko.FX
 {
     /// <summary>
-    /// Provides lambda calculus primitives for type <typeparamref name="T"/>.
+    /// Provides lambda calculus and functional composition primitives for type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T">The type to provide lambda calculus primitives for.</typeparam>
-    public static class Lambda<T>
+    /// <typeparam name="T">The type to provide lambda calculus and functional composition primitives for.</typeparam>
+    public static class Fn<T>
     {
         static class Factory
         {
-            public static readonly Func<T> Default = Lambda.Default<T>;
-            public static readonly Func<T, T> Identity = Lambda.Identity;
+            public static readonly Func<T> Default = Fn.Default<T>;
+            public static readonly Func<T, T> Identity = Fn.Identity;
         }
 
         /// <summary>

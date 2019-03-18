@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 #endregion
 
@@ -51,9 +52,20 @@ namespace Gapotchenko.FX.Harness.Console
             //WebBrowser.Start("https://www.gapotchenko.com/");
 
             //var x = Fn.Aggregate(MathEx.Max, new Version(1, 0), new Version(1, 5), new Version(100, 0), null);
-            //Console.WriteLine(x);
+            //Console.WriteLine(x);           
 
             Console.WriteLine(Fn.Aggregate((x, y) => x + y, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+
+            var m = Fn.Expression(() => Console.WriteLine("Test"));
+            m.Compile().Invoke();
+
+            var test = Fn.Delegate((int x) => x);
+
+            test(10);
+
+            
+            var ex = Fn.Expression((int x) => Console.WriteLine(x));
+            ex.Compile().Invoke(1000);
 
             //Stream stream;
 

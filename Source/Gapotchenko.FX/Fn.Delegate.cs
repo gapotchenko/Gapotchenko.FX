@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Gapotchenko.FX
 {
-    partial class Lambda
+    partial class Fn
     {
         /// <summary>
         /// Infers the delegate type of a specified lambda function.

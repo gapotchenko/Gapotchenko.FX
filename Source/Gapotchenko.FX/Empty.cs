@@ -188,39 +188,39 @@ namespace Gapotchenko.FX
         }
 
         /// <summary>
-        /// Nullifies an empty function in terms of lambda calculus.
+        /// Nullifies an empty function in terms of lambda calculus provided by <see cref="Fn"/> class.
         /// </summary>
         /// <param name="action">The action.</param>
         /// <returns>The value of <paramref name="action"/> or <c>null</c> if it represents an empty function in terms of lambda calculus.</returns>
         public static Action Nullify(Action action)
         {
-            if (action == Lambda.Empty)
+            if (action == Fn.Empty)
                 return null;
             else
                 return action;
         }
 
         /// <summary>
-        /// Nullifies a default function in terms of lambda calculus.
+        /// Nullifies a default function in terms of lambda calculus provided by <see cref="Fn"/> class.
         /// </summary>
         /// <param name="func">The function.</param>
         /// <returns>The value of <paramref name="func"/> or <c>null</c> if it represents a default function in terms of lambda calculus.</returns>
         public static Func<T> Nullify<T>(Func<T> func)
         {
-            if (func == Lambda<T>.Default)
+            if (func == Fn<T>.Default)
                 return null;
             else
                 return func;
         }
 
         /// <summary>
-        /// Nullifies an identity function in terms of lambda calculus.
+        /// Nullifies an identity function in terms of lambda calculus provided by <see cref="Fn"/> class.
         /// </summary>
         /// <param name="func">The function.</param>
         /// <returns>The value of <paramref name="func"/> or <c>null</c> if it represents an identity function in terms of lambda calculus.</returns>
         public static Func<T, T> Nullify<T>(Func<T, T> func)
         {
-            if (func == Lambda<T>.Identity)
+            if (func == Fn<T>.Identity)
                 return null;
             else
                 return func;
