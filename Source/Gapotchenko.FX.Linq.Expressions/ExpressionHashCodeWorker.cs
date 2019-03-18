@@ -20,24 +20,11 @@ namespace Gapotchenko.FX.Linq.Expressions
                 return HashCode.Combine(base.Visit(e), e.NodeType, e.Type);
         }
 
-        protected override int VisitUnary(UnaryExpression u) =>
-            HashCode.Combine(Visit(u.Operand), u.Method);
-
         protected override int VisitBinary(BinaryExpression b) =>
             HashCode.Combine(Visit(b.Left), Visit(b.Right), b.Method);
 
-        protected override int VisitTypeIs(TypeBinaryExpression tb) =>
-            HashCode.Combine(Visit(tb.Expression), tb.TypeOperand);
-
-        protected override int VisitConstant(ConstantExpression c) => _GetPrimitiveHashCode(c.Value);
-
-        protected override int VisitConditional(ConditionalExpression c) =>
-            HashCode.Combine(Visit(c.Test), Visit(c.IfTrue), Visit(c.IfFalse));
-
-        protected override int VisitParameter(ParameterExpression p) => _Parameters.GetIndex(p);
-
-        protected override int VisitMemberAccess(MemberExpression m) =>
-            HashCode.Combine(Visit(m.Expression), m.Member);
+        protected override int VisitUnary(UnaryExpression u) =>
+            HashCode.Combine(Visit(u.Operand), u.Method);
 
         protected override int VisitMethodCall(MethodCallExpression mc)
         {
@@ -48,6 +35,19 @@ namespace Gapotchenko.FX.Linq.Expressions
             return hc.ToHashCode();
         }
 
+        protected override int VisitConditional(ConditionalExpression c) =>
+            HashCode.Combine(Visit(c.Test), Visit(c.IfTrue), Visit(c.IfFalse));
+
+        protected override int VisitConstant(ConstantExpression c) => _GetPrimitiveHashCode(c.Value);
+
+        protected override int VisitInvocation(InvocationExpression i)
+        {
+            var hc = new HashCode();
+            hc.AddRange(i.Arguments.Select(Visit));
+            hc.Add(Visit(i.Expression));
+            return hc.ToHashCode();
+        }
+
         protected override int VisitLambda(LambdaExpression l)
         {
             _Parameters.AddRange(l.Parameters);
@@ -55,27 +55,6 @@ namespace Gapotchenko.FX.Linq.Expressions
             var hc = new HashCode();
             hc.AddRange(l.Parameters.Select(Visit));
             hc.Add(Visit(l.Body));
-            return hc.ToHashCode();
-        }
-
-        protected override int VisitNew(NewExpression n)
-        {
-            var hc = new HashCode();
-            hc.Add(n.Constructor);
-            hc.AddRange(n.Members);
-            hc.AddRange(n.Arguments.Select(Visit));
-            return hc.ToHashCode();
-        }
-
-        protected override int VisitMemberInit(MemberInitExpression mi)
-        {
-            var hc = new HashCode();
-            hc.Add(Visit(mi.NewExpression));
-            foreach (var i in mi.Bindings)
-            {
-                hc.Add(i.BindingType);
-                hc.Add(i.Member);
-            }
             return hc.ToHashCode();
         }
 
@@ -91,15 +70,36 @@ namespace Gapotchenko.FX.Linq.Expressions
             return hc.ToHashCode();
         }
 
-        protected override int VisitNewArray(NewArrayExpression na) => HashCodeEx.Combine(na.Expressions.Select(Visit));
+        protected override int VisitMemberAccess(MemberExpression m) =>
+            HashCode.Combine(Visit(m.Expression), m.Member);
 
-        protected override int VisitInvocation(InvocationExpression i)
+        protected override int VisitMemberInit(MemberInitExpression mi)
         {
             var hc = new HashCode();
-            hc.AddRange(i.Arguments.Select(Visit));
-            hc.Add(Visit(i.Expression));
+            hc.Add(Visit(mi.NewExpression));
+            foreach (var i in mi.Bindings)
+            {
+                hc.Add(i.BindingType);
+                hc.Add(i.Member);
+            }
             return hc.ToHashCode();
         }
+
+        protected override int VisitNew(NewExpression n)
+        {
+            var hc = new HashCode();
+            hc.Add(n.Constructor);
+            hc.AddRange(n.Members);
+            hc.AddRange(n.Arguments.Select(Visit));
+            return hc.ToHashCode();
+        }
+
+        protected override int VisitNewArray(NewArrayExpression na) => HashCodeEx.Combine(na.Expressions.Select(Visit));
+
+        protected override int VisitParameter(ParameterExpression p) => _Parameters.GetIndex(p);
+
+        protected override int VisitTypeIs(TypeBinaryExpression tb) =>
+            HashCode.Combine(Visit(tb.Expression), tb.TypeOperand);
 
         protected override int VisitOther(Expression e) => HashCode.Combine(e);
 
