@@ -40,8 +40,6 @@ namespace Gapotchenko.FX.Harness.Console
             }
         }
 
-        static ISynchronizeInvoke _inv;
-
         static void _Run()
         {
             var list = new List<int>();
@@ -57,11 +55,9 @@ namespace Gapotchenko.FX.Harness.Console
 
             Console.WriteLine(Fn.Aggregate((x, y) => x + y, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 
-
             //Optional<int> b = default;
             //Optional<int> a = 20;
             //Console.WriteLine(a > b);
-
 
             //Stream stream;
 
