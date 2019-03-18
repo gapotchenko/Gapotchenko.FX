@@ -77,15 +77,13 @@ namespace Gapotchenko.FX.Diagnostics
                     scheme = Empty.NullifyWhiteSpace(key?.GetValue("ProgId") as string) ?? scheme;
             }
 
-            string command = null;
-
             using (var key = Registry.ClassesRoot.OpenSubKey($@"{scheme}\shell\open\command"))
             {
                 if (key != null)
-                    command = Empty.NullifyWhiteSpace(key.GetValue(null) as string);
+                    return Empty.NullifyWhiteSpace(key.GetValue(null) as string);
             }
 
-            return command;
+            return null;
         }
 
         static void _RunProcess(string fileName, string arguments = null)

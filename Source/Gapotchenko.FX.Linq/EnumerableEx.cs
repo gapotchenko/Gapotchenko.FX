@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -268,6 +269,42 @@ namespace Gapotchenko.FX.Linq
 
             return true;
         }
+
+#if TF_READONLY_LIST
+        /// <summary>
+        /// Determines whether two lists are equal by comparing their elements by using a specified <paramref name="predicate"/>.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="first">An <see cref="IList{T}"/> to compare to the second list.</param>
+        /// <param name="second">An <see cref="IList{T}"/> to compare to the first list.</param>
+        /// <param name="predicate">The equality predicate for sequence elements.</param>
+        /// <returns>
+        /// <c>true</c> if the two source lists are of equal length and
+        /// their corresponding elements are equal according to a specified <paramref name="predicate"/>;
+        /// otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="first"/>, <paramref name="second"/> or <paramref name="predicate"/> is null.</exception>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool SequenceEqual<TSource>(this IReadOnlyList<TSource> first, IReadOnlyList<TSource> second, Func<TSource, TSource, bool> predicate)
+        {
+            if (first == null)
+                throw new ArgumentNullException(nameof(first));
+            if (second == null)
+                throw new ArgumentNullException(nameof(second));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            int count = first.Count;
+            if (second.Count != count)
+                return false;
+
+            for (int i = 0; i < count; ++i)
+                if (!predicate(first[i], second[i]))
+                    return false;
+
+            return true;
+        }
+#endif
 
         /// <summary>
         /// Determines whether the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence

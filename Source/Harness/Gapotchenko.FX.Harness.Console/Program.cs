@@ -4,6 +4,7 @@ using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Math;
+using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading;
 using System;
 using System.Collections.Generic;
@@ -56,16 +57,11 @@ namespace Gapotchenko.FX.Harness.Console
 
             Console.WriteLine(Fn.Aggregate((x, y) => x + y, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 
-            var m = Fn.Expression(() => Console.WriteLine("Test"));
-            m.Compile().Invoke();
 
-            var test = Fn.Delegate((int x) => x);
+            //Optional<int> b = default;
+            //Optional<int> a = 20;
+            //Console.WriteLine(a > b);
 
-            test(10);
-
-            
-            var ex = Fn.Expression((int x) => Console.WriteLine(x));
-            ex.Compile().Invoke(1000);
 
             //Stream stream;
 
