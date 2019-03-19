@@ -297,9 +297,8 @@ A very decent thing that was _never_ backported to conventional .NET Framework.
 
 `Gapotchenko.FX` provides `HashCode` so you can use it in your project right now.
 It even goes further than that by providing extension methods that are likely to appear in .NET in the future (yes, we own a Cassandra's magic ball):
-- `Combine<T>(IEnumerable<T> source)`
+- `SequenceCombine<T>(IEnumerable<T> source)`
 - `AddRange<T>(IEnumerable<T> source)`
-- `AddRange<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)`
 
 ### Ex Classes
 

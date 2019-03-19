@@ -94,7 +94,7 @@ namespace Gapotchenko.FX.Linq.Expressions
             return hc.ToHashCode();
         }
 
-        protected override int VisitNewArray(NewArrayExpression na) => HashCodeEx.Combine(na.Expressions.Select(Visit));
+        protected override int VisitNewArray(NewArrayExpression na) => HashCodeEx.SequenceCombine(na.Expressions.Select(Visit));
 
         protected override int VisitParameter(ParameterExpression p) => _Parameters.GetIndex(p);
 
@@ -111,7 +111,7 @@ namespace Gapotchenko.FX.Linq.Expressions
                     return 0;
 
                 case IEnumerable<object> e:
-                    return HashCodeEx.Combine(e.Select(_GetPrimitiveHashCode));
+                    return HashCodeEx.SequenceCombine(e.Select(_GetPrimitiveHashCode));
 
                 case string s:
                     return StringComparer.Ordinal.GetHashCode(s);

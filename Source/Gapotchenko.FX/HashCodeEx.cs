@@ -11,11 +11,12 @@ namespace Gapotchenko.FX
     public static class HashCodeEx
     {
         /// <summary>
-        /// Combines hash codes of the elements of the specified collection.
+        /// Combines hash codes of the elements of a specified sequence.
         /// </summary>
-        /// <typeparam name="T">The element type.</typeparam>
-        /// <param name="source">The collection of elements. The collection itself can be <c>null</c>, and it can contain elements that are <c>null</c>.</param>
-        public static int Combine<T>(IEnumerable<T> source)
+        /// <typeparam name="T">The sequence element type.</typeparam>
+        /// <param name="source">The sequence of elements. The sequence itself can be <c>null</c>, and it can contain elements that are <c>null</c>.</param>
+        /// <returns>The combined hash code.</returns>
+        public static int SequenceCombine<T>(IEnumerable<T> source)
         {
             var hc = new HashCode();
             hc.AddRange(source);
@@ -23,11 +24,26 @@ namespace Gapotchenko.FX
         }
 
         /// <summary>
-        /// Adds hash codes of the elements of the specified collection to this instance.
+        /// Combines hash codes of the elements of a specified sequence by using a specified <see cref="IEqualityComparer{T}"/>.
         /// </summary>
-        /// <typeparam name="T">The element type.</typeparam>
+        /// <typeparam name="T">The sequence element type.</typeparam>
+        /// <param name="source">The sequence of elements. The sequence itself can be <c>null</c>, and it can contain elements that are <c>null</c>.</param>
+        /// <param name="comparer">The equality comparer to get element hash codes from.</param>
+        /// <returns>The combined hash code.</returns>
+        public static int SequenceCombine<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)
+        {
+            var hc = new HashCode();
+            hc.AddRange(source, comparer);
+            return hc.ToHashCode();
+        }
+
+        /// <summary>
+        /// Adds hash codes of the elements of a specified sequence to this instance.
+        /// </summary>
+        /// <typeparam name="T">The sequence element type.</typeparam>
         /// <param name="hashCode">The hash code.</param>
-        /// <param name="source">The collection of elements. The collection itself can be <c>null</c>, and it can contain elements that are <c>null</c>.</param>
+        /// <param name="source">The sequence of elements. The sequence itself can be <c>null</c>, and it can contain elements that are <c>null</c>.</param>
+        /// <returns>The combined hash code.</returns>
         public static void AddRange<T>(this ref HashCode hashCode, IEnumerable<T> source)
         {
             if (source != null)
@@ -36,12 +52,13 @@ namespace Gapotchenko.FX
         }
 
         /// <summary>
-        /// Adds hash codes of the elements of the specified collection to this instance.
+        /// Adds hash codes of the elements of a specified sequence to this instance by using a specified <see cref="IEqualityComparer{T}"/>.
         /// </summary>
-        /// <typeparam name="T">The element type.</typeparam>
+        /// <typeparam name="T">The sequence element type.</typeparam>
         /// <param name="hashCode">The hash code.</param>
-        /// <param name="source">The collection of elements. The collection itself can be <c>null</c>, and it can contain elements that are <c>null</c>.</param>
-        /// <param name="comparer">The equality comparer.</param>
+        /// <param name="source">The sequence of elements. The sequence itself can be <c>null</c>, and it can contain elements that are <c>null</c>.</param>
+        /// <param name="comparer">The equality comparer to get element hash codes from.</param>
+        /// <returns>The combined hash code.</returns>
         public static void AddRange<T>(this ref HashCode hashCode, IEnumerable<T> source, IEqualityComparer<T> comparer)
         {
             if (source != null)
