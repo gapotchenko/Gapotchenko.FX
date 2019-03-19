@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />

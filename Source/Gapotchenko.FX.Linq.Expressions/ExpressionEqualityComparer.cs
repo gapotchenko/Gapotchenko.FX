@@ -46,8 +46,8 @@ namespace Gapotchenko.FX.Linq.Expressions
         }
 
         /// <summary>
-        /// Returns the default instance of equality comparer for LINQ expressions.
+        /// Returns a default equality comparer for LINQ expressions.
         /// </summary>
-        public new static IEqualityComparer<Expression> Default { get; } = new ExpressionEqualityComparer();
+        public new static ExpressionEqualityComparer Default { get; } = new ExpressionEqualityComparer();
     }
 }

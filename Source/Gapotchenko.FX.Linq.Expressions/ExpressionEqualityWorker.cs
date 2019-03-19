@@ -105,7 +105,7 @@ namespace Gapotchenko.FX.Linq.Expressions
         bool _VisitListInit(ListInitExpression x, ListInitExpression y)
         {
             if (_VisitNew(x.NewExpression, y.NewExpression) && x.Initializers.Count == y.Initializers.Count)
-                return Enumerable.All(Util.Zip(x.Initializers, y.Initializers), p => _VisitElementInit(p.First, p.Second));
+                return Enumerable.All(x.Initializers.Zip(y.Initializers), p => _VisitElementInit(p.Key, p.Value));
             return false;
         }
 
@@ -115,7 +115,7 @@ namespace Gapotchenko.FX.Linq.Expressions
                 return false;
             if (!_VisitNew(x.NewExpression, y.NewExpression))
                 return false;
-            if (!Util.Zip(x.Bindings, y.Bindings).All(p => _VisitMemberBinding(p.First, p.Second)))
+            if (!x.Bindings.Zip(y.Bindings).All(p => _VisitMemberBinding(p.Key, p.Value)))
                 return false;
             return true;
         }
@@ -134,14 +134,14 @@ namespace Gapotchenko.FX.Linq.Expressions
                     var memberMemberBinding1 = (MemberMemberBinding)x;
                     var memberMemberBinding2 = (MemberMemberBinding)y;
                     if (memberMemberBinding1.Bindings.Count == memberMemberBinding2.Bindings.Count)
-                        return Enumerable.All(Util.Zip(memberMemberBinding1.Bindings, memberMemberBinding2.Bindings), p => _VisitMemberBinding(p.First, p.Second));
+                        return Enumerable.All(memberMemberBinding1.Bindings.Zip(memberMemberBinding2.Bindings), p => _VisitMemberBinding(p.Key, p.Value));
                     return false;
 
                 case MemberBindingType.ListBinding:
                     var memberListBinding1 = (MemberListBinding)x;
                     var memberListBinding2 = (MemberListBinding)y;
                     if (memberListBinding1.Initializers.Count == memberListBinding2.Initializers.Count)
-                        return Enumerable.All(Util.Zip(memberListBinding1.Initializers, memberListBinding2.Initializers), p => _VisitElementInit(p.First, p.Second));
+                        return Enumerable.All(memberListBinding1.Initializers.Zip(memberListBinding2.Initializers), p => _VisitElementInit(p.Key, p.Value));
                     return false;
 
                 default:

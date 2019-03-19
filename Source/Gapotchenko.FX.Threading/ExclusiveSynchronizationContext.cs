@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Threading
             set;
         }
 
-        readonly Queue<Pair<SendOrPostCallback, object>> _Items = new Queue<Pair<SendOrPostCallback, object>>();
+        readonly Queue<KeyValuePair<SendOrPostCallback, object>> _Items = new Queue<KeyValuePair<SendOrPostCallback, object>>();
 
         public override void Send(SendOrPostCallback d, object state)
         {
@@ -29,7 +29,7 @@ namespace Gapotchenko.FX.Threading
 
         public override void Post(SendOrPostCallback d, object state)
         {
-            var item = Pair.Create(d, state);
+            var item = new KeyValuePair<SendOrPostCallback, object>(d, state);
             lock (_Items)
             {
                 _Items.Enqueue(item);
@@ -46,7 +46,7 @@ namespace Gapotchenko.FX.Threading
         {
             while (!_Done)
             {
-                Pair<SendOrPostCallback, object> task;
+                KeyValuePair<SendOrPostCallback, object> task;
 
                 // Retrieve task.
                 lock (_Items)
@@ -63,7 +63,7 @@ namespace Gapotchenko.FX.Threading
                 }
 
                 // Execute task.
-                task.First(task.Second);
+                task.Key(task.Value);
 
                 var edi = _ExceptionDispatchInfo;
                 if (edi != null)
