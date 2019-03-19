@@ -25,7 +25,7 @@ collection.AddRange(numbers.Where(x => x % 2 == 0)); // add even numbers
 
 `System.String` class provides a convenient `IsNullOrEmpty` primitive for strings.
 
-`Gapotchenko.FX.Collections` extends availability of the primitive by providing `IsNullOrEmpty()` extension method for other container types.
+`Gapotchenko.FX.Collections` extends availability of that primitive by providing `IsNullOrEmpty()` extension method for other container types.
 Here is an example:
 
 ``` csharp

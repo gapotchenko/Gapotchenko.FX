@@ -8,7 +8,7 @@ using System.Threading;
 namespace Gapotchenko.FX.ComponentModel
 {
     /// <summary>
-    /// Defines a base class for disposable objects that implements a finalizer pattern.
+    /// Defines a base class for disposable objects that implement a finalizer pattern.
     /// </summary>
     public abstract class Disposable : IDisposable
     {
@@ -21,8 +21,7 @@ namespace Gapotchenko.FX.ComponentModel
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting
-        /// unmanaged resources.
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
@@ -42,13 +41,13 @@ namespace Gapotchenko.FX.ComponentModel
         }
 
         /// <summary>
-        /// Tries to dispose an object and clear a value at the given reference.
+        /// Tries to dispose an object and clear a value at the given reference by setting it to <c>null</c>.
         /// </summary>
         /// <remarks>
         /// <para>
         /// The method does not provide thread safety guarantees except memory model consistency.
         /// As a result, the <see cref="IDisposable.Dispose"/> method of a disposable object may be invoked several times
-        /// when the <see cref="Clear{T}(ref T)"/> method is called concurrently by multiple threads.
+        /// when the <see cref="Clear{T}(ref T)"/> method is called concurrently from multiple threads.
         /// </para>
         /// <seealso cref="Clear{T}(ref T, bool)"/>
         /// </remarks>
@@ -76,6 +75,8 @@ namespace Gapotchenko.FX.ComponentModel
 
         static void _RevertibleDispose<T>(T value, ref T store) where T : class, IDisposable
         {
+            // This is a separate method to allow inlining of the caller.
+
             try
             {
                 value.Dispose();
@@ -88,7 +89,7 @@ namespace Gapotchenko.FX.ComponentModel
         }
 
         /// <summary>
-        /// Tries to dispose an object and clear a value at the given reference.
+        /// Tries to dispose an object and clear a value at the given reference by setting it to <c>null</c>.
         /// </summary>
         /// <remarks>
         /// <para>
@@ -97,12 +98,12 @@ namespace Gapotchenko.FX.ComponentModel
         /// <para>
         /// When <paramref name="isThreadSafe"/> is <c>false</c>, the method does not provide thread safety guarantees except memory model consistency.
         /// As a result, the <see cref="IDisposable.Dispose"/> method of a disposable object may be invoked several times
-        /// when the <see cref="Clear{T}(ref T, bool)"/> method is called concurrently by multiple threads.
+        /// when the <see cref="Clear{T}(ref T, bool)"/> method is called concurrently from multiple threads.
         /// </para>
         /// <para>
         /// When <paramref name="isThreadSafe"/> is <c>true</c>, the method provides a publication and execution thread safety.
         /// As a result, the <see cref="IDisposable.Dispose"/> method of a disposable object is invoked exactly once even
-        /// when the <see cref="Clear{T}(ref T, bool)"/> method is called concurrently by multiple threads.
+        /// when the <see cref="Clear{T}(ref T, bool)"/> method is called concurrently from multiple threads.
         /// </para>
         /// </remarks>
         /// <typeparam name="T">The type of disposable object.</typeparam>
@@ -136,6 +137,8 @@ namespace Gapotchenko.FX.ComponentModel
 
         static void _RevertibleDisposeInterlocked<T>(T value, ref T store) where T : class, IDisposable
         {
+            // This is a separate method to allow inlining of the caller.
+
             try
             {
                 value.Dispose();
