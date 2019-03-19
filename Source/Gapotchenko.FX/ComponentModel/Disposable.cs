@@ -41,7 +41,8 @@ namespace Gapotchenko.FX.ComponentModel
         }
 
         /// <summary>
-        /// Tries to dispose an object and clear a value at the given reference by setting it to <c>null</c>.
+        /// Tries to clear a disposable object at the specified reference
+        /// by calling <see cref="IDisposable.Dispose"/> method and setting its value to <c>null</c>.
         /// </summary>
         /// <remarks>
         /// <para>
@@ -89,7 +90,8 @@ namespace Gapotchenko.FX.ComponentModel
         }
 
         /// <summary>
-        /// Tries to dispose an object and clear a value at the given reference by setting it to <c>null</c>.
+        /// Tries to clear a disposable object at the specified reference
+        /// by calling <see cref="IDisposable.Dispose"/> method and setting its value to <c>null</c>.
         /// </summary>
         /// <remarks>
         /// <para>
