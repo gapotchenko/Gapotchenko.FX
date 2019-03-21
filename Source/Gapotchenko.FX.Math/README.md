@@ -69,9 +69,7 @@ Let's continue with a look to some other modules provided by Gapotchenko.FX plat
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
-- [Gapotchenko.FX.Diagnostics.CommandLine](../Gapotchenko.FX.Diagnostics.CommandLine)
-- [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process)
-- [Gapotchenko.FX.Diagnostics.WebBrowser](../Gapotchenko.FX.Diagnostics.WebBrowser)
+- [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - &#x27B4; [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
