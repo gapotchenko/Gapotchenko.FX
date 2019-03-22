@@ -631,7 +631,7 @@ namespace Gapotchenko.FX
         #endregion
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static IBitConverter _Instance;
+        static volatile IBitConverter _Instance;
 
         /// <summary>
         /// Returns a default bit converter instance for big-endian byte order.

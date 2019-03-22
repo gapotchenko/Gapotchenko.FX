@@ -52,7 +52,7 @@ namespace System.Runtime.InteropServices
             if (osPlatform == null)
                 throw new ArgumentNullException(nameof(osPlatform));
             if (osPlatform.Length == 0)
-                throw new ArgumentException(Resources.ValueCannotBeEmpty, nameof(osPlatform));
+                throw new ArgumentException(Resources.Argument_EmptyValue, nameof(osPlatform));
 
             return new OSPlatform(osPlatform);
         }

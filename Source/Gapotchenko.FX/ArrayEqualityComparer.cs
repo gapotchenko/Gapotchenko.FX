@@ -49,13 +49,13 @@ namespace Gapotchenko.FX
             var arrayY = y as Array;
 
             if (arrayX == null && arrayY == null)
-                throw new ArgumentException(Resources.InvalidArgumentsForComparison);
+                throw new ArgumentException(Resources.Argument_InvalidComparison);
 
             if (arrayX == null || arrayY == null)
                 return false;
 
             if (arrayX.Rank != 1 && arrayY.Rank != 1)
-                throw new ArgumentException(Resources.InvalidArgumentsForComparison);
+                throw new ArgumentException(Resources.Argument_InvalidComparison);
 
             if (arrayX.Rank != arrayY.Rank)
                 return false;

@@ -61,29 +61,38 @@ namespace Gapotchenko.FX.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid arguments for comparison..
-        /// </summary>
-        internal static string InvalidArgumentsForComparison {
-            get {
-                return ResourceManager.GetString("InvalidArgumentsForComparison", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} structure is not initialized..
-        /// </summary>
-        internal static string StructNotInitilized {
-            get {
-                return ResourceManager.GetString("StructNotInitilized", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Value cannot be empty..
         /// </summary>
-        internal static string ValueCannotBeEmpty {
+        internal static string Argument_EmptyValue {
             get {
-                return ResourceManager.GetString("ValueCannotBeEmpty", resourceCulture);
+                return ResourceManager.GetString("Argument_EmptyValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Array is not long enough. Check array index and length..
+        /// </summary>
+        internal static string Argument_IndexedArrayTooSmall {
+            get {
+                return ResourceManager.GetString("Argument_IndexedArrayTooSmall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid arguments for comparison..
+        /// </summary>
+        internal static string Argument_InvalidComparison {
+            get {
+                return ResourceManager.GetString("Argument_InvalidComparison", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index was out of range. Must be non-negative and less than the size of the collection..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Index {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Index", resourceCulture);
             }
         }
         
