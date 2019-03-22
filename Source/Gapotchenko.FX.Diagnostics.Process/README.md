@@ -1,8 +1,4 @@
-﻿# Gapotchenko.FX.Diagnostics.CommandLine
-
-The module provides primitives for command line manipulation.
-
-## CommandLineBuilder
+﻿# Gapotchenko.FX.Diagnostics.Process
 
 TODO
 
@@ -12,9 +8,9 @@ Let's continue with a look to some other modules provided by Gapotchenko.FX plat
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
-- [Gapotchenko.FX.Diagnostics](#)
-  - &#x27B4; [Gapotchenko.FX.Diagnostics.CommandLine](../Gapotchenko.FX.Diagnostics.CommandLine)
-  - [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process)
+- [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
+  - [Gapotchenko.FX.Diagnostics.CommandLine](../Gapotchenko.FX.Diagnostics.CommandLine)
+  - &#x27B4; [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process)
   - [Gapotchenko.FX.Diagnostics.WebBrowser](../Gapotchenko.FX.Diagnostics.WebBrowser)
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
