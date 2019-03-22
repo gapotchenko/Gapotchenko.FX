@@ -14,6 +14,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 #endregion
 
@@ -56,6 +57,9 @@ namespace Gapotchenko.FX.Harness.Console
             //Console.WriteLine(x);           
 
             Console.WriteLine(Fn.Aggregate((x, y) => x + y, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+
+
+            Console.WriteLine(RuntimeInformation.OSDescription);
 
             //Stream stream;
 

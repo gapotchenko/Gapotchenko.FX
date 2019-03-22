@@ -46,11 +46,26 @@ namespace Gapotchenko.FX.IO
         /// <value>
         /// <c>true</c> if the file system is case sensitive; otherwise, <c>false</c>.
         /// </value>
-        public static bool IsCaseSensitive
+        public static bool IsCaseSensitive { get; } = _IsCaseSensitiveCore();
+
+        static bool _IsCaseSensitiveCore()
         {
-            get
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
+                RuntimeInformation.IsOSPlatform(OSPlatform.OSX))  // HFS+ (the Mac file-system) is usually configured to be case insensitive.
             {
-                // TODO: Add support for platforms other than Windows
+                return false;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return true;
+            }
+            else if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                return true;
+            }
+            else
+            {
+                // A sane default.
                 return false;
             }
         }
@@ -271,7 +286,7 @@ namespace Gapotchenko.FX.IO
                 if (sw == null)
                 {
                     // TODO: Use AppContext.TryGetSwitch to turn that behavior on.
-                    // Suggested switch name is Switch.Gapotchenko.FX.IO.UseGCForAccess
+                    // Suggested switch name is Switch.Gapotchenko.FX.IO.UseGCForFileAccess
 
                     // Try to close open file streams that weren't properly disposed.
                     //GC.Collect();

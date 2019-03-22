@@ -10,7 +10,12 @@ namespace System.Runtime.InteropServices
     using Resources = Gapotchenko.FX.Properties.Resources;
 
     /// <summary>
+    /// <para>
     /// Represents an operating system platform.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </summary>
     public readonly struct OSPlatform : IEquatable<OSPlatform>
     {
@@ -62,11 +67,11 @@ namespace System.Runtime.InteropServices
         public bool Equals(OSPlatform other) => string.Equals(_Value, other._Value, StringComparison.Ordinal);
 
         /// <summary>
-        /// Determines whether a specified <see cref="Object" /> is equal to this instance.
+        /// Determines whether a specified <see cref="object"/> is equal to this instance.
         /// </summary>
-        /// <param name="obj">The <see cref="Object" /> to compare with this instance.</param>
+        /// <param name="obj">The <see cref="object"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object obj) => obj is OSPlatform other && Equals(other);
 
@@ -82,7 +87,7 @@ namespace System.Runtime.InteropServices
         /// Converts to string.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="string"/> that represents this instance.
         /// </returns>
         public override string ToString() => _Value ?? string.Empty;
 
