@@ -79,6 +79,15 @@ namespace Gapotchenko.FX.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value cannot be empty..
+        /// </summary>
+        internal static string ValueCannotBeEmpty {
+            get {
+                return ResourceManager.GetString("ValueCannotBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value is not created..
         /// </summary>
         internal static string ValueNotCreated {

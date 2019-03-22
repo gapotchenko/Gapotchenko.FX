@@ -123,6 +123,9 @@
   <data name="StructNotInitilized" xml:space="preserve">
     <value>{0} structure is not initialized.</value>
   </data>
+  <data name="ValueCannotBeEmpty" xml:space="preserve">
+    <value>Value cannot be empty.</value>
+  </data>
   <data name="ValueNotCreated" xml:space="preserve">
     <value>Value is not created.</value>
   </data>
