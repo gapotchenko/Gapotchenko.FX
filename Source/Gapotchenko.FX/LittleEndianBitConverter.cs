@@ -329,12 +329,7 @@ namespace Gapotchenko.FX
         /// <param name="value">A <see cref="bool"/> value.</param>
         /// <param name="buffer">The array of bytes to store converted value at.</param>
         /// <param name="startIndex">The start index where converted value is to be stored at <paramref name="buffer"/>.</param>
-        public static void FillBytes(bool value, byte[] buffer, int startIndex)
-        {
-            BitConverterServices.ValidateFillArguments(buffer, startIndex, 1);
-
-            buffer[startIndex] = value ? (byte)1 : (byte)0;
-        }
+        public static void FillBytes(bool value, byte[] buffer, int startIndex) => BitConverterServices.FillBytes(value, buffer, startIndex);
 
         /// <summary>
         /// Fills the array with one byte of the specified <see cref="bool"/> value beginning.
@@ -344,8 +339,7 @@ namespace Gapotchenko.FX
         public static void FillBytes(bool value, byte[] buffer) => FillBytes(value, buffer, 0);
 
         /// <summary>
-        /// Returns a 32-bit signed integer converted from four bytes at a specified
-        /// position in a byte array.
+        /// Returns a 32-bit signed integer converted from four bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
@@ -360,8 +354,7 @@ namespace Gapotchenko.FX
         public static int ToInt32(byte[] value) => ToInt32(value, 0);
 
         /// <summary>
-        /// Returns a 32-bit unsigned integer converted from four bytes at a specified
-        /// position in a byte array.
+        /// Returns a 32-bit unsigned integer converted from four bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
@@ -387,8 +380,7 @@ namespace Gapotchenko.FX
         public static uint ToUInt32(byte[] value) => ToUInt32(value, 0);
 
         /// <summary>
-        /// Returns a 16-bit signed integer converted from two bytes at a specified
-        /// position in a byte array.
+        /// Returns a 16-bit signed integer converted from two bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
@@ -410,8 +402,7 @@ namespace Gapotchenko.FX
         public static short ToInt16(byte[] value) => ToInt16(value, 0);
 
         /// <summary>
-        /// Returns a 16-bit unsigned integer converted from two bytes at a specified
-        /// position in a byte array.
+        /// Returns a 16-bit unsigned integer converted from two bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
@@ -428,8 +419,7 @@ namespace Gapotchenko.FX
         public static ushort ToUInt16(byte[] value) => ToUInt16(value, 0);
 
         /// <summary>
-        /// Returns a 64-bit signed integer converted from eight bytes at a specified
-        /// position in a byte array.
+        /// Returns a 64-bit signed integer converted from eight bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
@@ -451,8 +441,7 @@ namespace Gapotchenko.FX
         public static long ToInt64(byte[] value) => ToInt64(value, 0);
 
         /// <summary>
-        /// Returns a 64-bit unsigned integer converted from eight bytes at a specified
-        /// position in a byte array.
+        /// Returns a 64-bit unsigned integer converted from eight bytes at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
@@ -543,12 +532,7 @@ namespace Gapotchenko.FX
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns><c>true</c> if the byte at startIndex in value is nonzero; otherwise, <c>false</c>.</returns>
-        public static bool ToBoolean(byte[] value, int startIndex)
-        {
-            BitConverterServices.ValidateToArguments(value, startIndex, 1);
-
-            return value[startIndex] != 0;
-        }
+        public static bool ToBoolean(byte[] value, int startIndex) => BitConverterServices.ToBoolean(value, startIndex);
 
         /// <summary>
         /// Returns a Boolean value converted from the first byte of a byte array.

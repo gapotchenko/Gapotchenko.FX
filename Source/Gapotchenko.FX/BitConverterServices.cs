@@ -29,5 +29,19 @@ namespace Gapotchenko.FX
             if (startIndex > array.Length - size)
                 throw new ArgumentException(Resources.Argument_IndexedArrayTooSmall);
         }
+
+        public static void FillBytes(bool value, byte[] buffer, int startIndex)
+        {
+            ValidateFillArguments(buffer, startIndex, 1);
+
+            buffer[startIndex] = value ? (byte)1 : (byte)0;
+        }
+
+        public static bool ToBoolean(byte[] value, int startIndex)
+        {
+            ValidateToArguments(value, startIndex, 1);
+
+            return value[startIndex] != 0;
+        }
     }
 }
