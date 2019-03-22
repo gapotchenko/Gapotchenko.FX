@@ -23,6 +23,9 @@ namespace Gapotchenko.FX.Diagnostics
         /// <returns>The environment variables.</returns>
         public static StringDictionary ReadEnvironmentVariables(this Process process)
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                throw new PlatformNotSupportedException();
+
             return ProcessEnvironment.ReadVariables(process);
         }
 
@@ -47,6 +50,9 @@ namespace Gapotchenko.FX.Diagnostics
         {
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
+
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                throw new PlatformNotSupportedException();
 
             int parentPID = _GetParentProcessID(process.Handle);
             try

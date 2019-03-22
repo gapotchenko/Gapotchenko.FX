@@ -58,9 +58,6 @@ namespace Gapotchenko.FX.Harness.Console
 
             Console.WriteLine(Fn.Aggregate((x, y) => x + y, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 
-
-            Console.WriteLine(RuntimeInformation.OSDescription);
-
             //Stream stream;
 
             //var br = new BitReader(Stream.Null, LittleEndianBitConverter.);

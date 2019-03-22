@@ -186,7 +186,8 @@ namespace Gapotchenko.FX.IO
         {
             if (filePath == null)
                 throw new ArgumentNullException(nameof(filePath));
-            try
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 int bufferSize = filePath.Length;
 
@@ -197,7 +198,7 @@ namespace Gapotchenko.FX.IO
 
                 return sb.ToString();
             }
-            catch (Exception e) when (!e.IsControlFlowException())
+            else
             {
                 return filePath;
             }
@@ -365,6 +366,7 @@ namespace Gapotchenko.FX.IO
         public static long GetFileSize(string path)
         {
             // TODO: Use native API to eliminate object allocation.
+            // GetFileAttributesEx is the fastest candidate on Windows.
             return new FileInfo(path).Length;
         }
     }

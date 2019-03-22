@@ -177,6 +177,9 @@ namespace Gapotchenko.FX.Diagnostics
 
         static async Task<bool> _TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return false;
+
             cancellationToken.ThrowIfCancellationRequested();
 
             bool isCurrentProcess = false;

@@ -28,7 +28,6 @@ namespace System.Runtime.InteropServices
                 case PlatformID.Win32NT:
                 case PlatformID.Win32Windows:
                 case PlatformID.Win32S:
-                case PlatformID.WinCE:
                     return osPlatform == OSPlatform.Windows;
 
                 case PlatformID.MacOSX:
