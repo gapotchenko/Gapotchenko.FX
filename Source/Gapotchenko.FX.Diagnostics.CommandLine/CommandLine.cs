@@ -12,50 +12,12 @@ namespace Gapotchenko.FX.Diagnostics
     /// <summary>
     /// Performs operations on <see cref="System.String"/> instances that contain command line information.
     /// </summary>
-    public static class CommandLine
+    public static partial class CommandLine
     {
         /// <summary>
         /// Represents a character used to separate arguments in a command line string.
         /// </summary>
         public const char ArgumentSeparator = ' ';
-
-        /// <summary>
-        /// Gets the maximum length of the command line that can be passed to a process.
-        /// </summary>
-        public static int MaxLengthForProcess
-        {
-            get
-            {
-                // The maximum command line length for the CreateProcess function is 32767 characters. This limitation comes from the UNICODE_STRING structure.
-                // https://blogs.msdn.microsoft.com/oldnewthing/20031210-00/?p=41553
-                return 32767;
-            }
-        }
-
-        /// <summary>
-        /// Gets the maximum length of the command line that can be used at the prompt.
-        /// </summary>
-        public static int MaxLengthForPrompt
-        {
-            get
-            {
-                // If you are using the CMD.EXE command processor, then you are also subject to the 8191 character command line length limit imposed by CMD.EXE.
-                return 8191;
-            }
-        }
-
-        /// <summary>
-        /// Gets the maximum length of the command line that can be passed to the shell.
-        /// </summary>
-        public static int MaxLengthForShell
-        {
-            get
-            {
-                // If you are using the ShellExecute/Ex function, then you become subject to the INTERNET_MAX_URL_LENGTH (around 2048) command line length limit imposed by the ShellExecute/Ex functions.
-                // If you are running on Windows 95, then the limit is only MAX_PATH.
-                return 2047;
-            }
-        }
 
         /// <summary>
         /// Splits a command line into arguments.
