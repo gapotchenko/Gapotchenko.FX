@@ -89,6 +89,39 @@ namespace Gapotchenko.FX
         public static string AppendParameter(string uri, string name, string value) => new UriQueryBuilder().AppendParameter(name, value).CombineWithUri(uri);
 
         /// <summary>
+        /// Appends specified query parameters to the given URI.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        /// <param name="name1">The name of the first parameter.</param>
+        /// <param name="value1">The value of the first parameter.</param>
+        /// <param name="name2">The name of the second parameter.</param>
+        /// <param name="value2">The value of the second parameter.</param>
+        /// <returns>The URI with an appended query parameter.</returns>
+        public static string AppendParameter(string uri, string name1, string value1, string name2, string value2) =>
+            new UriQueryBuilder()
+                .AppendParameter(name1, value1)
+                .AppendParameter(name2, value2)
+                .CombineWithUri(uri);
+
+        /// <summary>
+        /// Appends specified query parameters to the given URI.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        /// <param name="name1">The name of the first parameter.</param>
+        /// <param name="value1">The value of the first parameter.</param>
+        /// <param name="name2">The name of the second parameter.</param>
+        /// <param name="value2">The value of the second parameter.</param>
+        /// <param name="name3">The name of the third parameter.</param>
+        /// <param name="value3">The value of the third parameter.</param>
+        /// <returns>The URI with an appended query parameter.</returns>
+        public static string AppendParameter(string uri, string name1, string value1, string name2, string value2, string name3, string value3) =>
+            new UriQueryBuilder()
+                .AppendParameter(name1, value1)
+                .AppendParameter(name2, value2)
+                .AppendParameter(name3, value3)
+                .CombineWithUri(uri);
+
+        /// <summary>
         /// Appends a query parameter to the given <see cref="Uri"/>.
         /// </summary>
         /// <param name="uri">The URI.</param>
@@ -96,6 +129,39 @@ namespace Gapotchenko.FX
         /// <param name="value">The parameter value.</param>
         /// <returns>The <see cref="Uri"/> with an appended query parameter.</returns>
         public static Uri AppendParameter(Uri uri, string name, string value) => new UriQueryBuilder().AppendParameter(name, value).CombineWithUri(uri);
+
+        /// <summary>
+        /// Appends specified query parameters to the given URI.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        /// <param name="name1">The name of the first parameter.</param>
+        /// <param name="value1">The value of the first parameter.</param>
+        /// <param name="name2">The name of the second parameter.</param>
+        /// <param name="value2">The value of the second parameter.</param>
+        /// <returns>The URI with an appended query parameter.</returns>
+        public static Uri AppendParameter(Uri uri, string name1, string value1, string name2, string value2) =>
+            new UriQueryBuilder()
+                .AppendParameter(name1, value1)
+                .AppendParameter(name2, value2)
+                .CombineWithUri(uri);
+
+        /// <summary>
+        /// Appends specified query parameters to the given URI.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        /// <param name="name1">The name of the first parameter.</param>
+        /// <param name="value1">The value of the first parameter.</param>
+        /// <param name="name2">The name of the second parameter.</param>
+        /// <param name="value2">The value of the second parameter.</param>
+        /// <param name="name3">The name of the third parameter.</param>
+        /// <param name="value3">The value of the third parameter.</param>
+        /// <returns>The URI with an appended query parameter.</returns>
+        public static Uri AppendParameter(Uri uri, string name1, string value1, string name2, string value2, string name3, string value3) =>
+            new UriQueryBuilder()
+                .AppendParameter(name1, value1)
+                .AppendParameter(name2, value2)
+                .AppendParameter(name3, value3)
+                .CombineWithUri(uri);
 
         /// <summary>
         /// Checks whether a query in this instance has a parameter with the given name.
