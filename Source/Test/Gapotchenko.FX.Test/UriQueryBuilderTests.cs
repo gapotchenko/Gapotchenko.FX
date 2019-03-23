@@ -76,9 +76,9 @@ namespace Gapotchenko.FX.Test
         {
             var ub = new UriBuilder("https://example.com/?key=abc");
 
-            var uqb = new UriQueryBuilder(ub.Query);
-            uqb.AppendParameter("mode", "1");
-            uqb.AppendParameter("complexity", "easy");
+            var uqb = new UriQueryBuilder(ub.Query)
+                .AppendParameter("mode", "1")
+                .AppendParameter("complexity", "easy");
 
             ub.Query = uqb.ToString();
 
