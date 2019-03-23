@@ -231,9 +231,7 @@ namespace Gapotchenko.FX
         {
             BitConverterServices.ValidateFillArguments(buffer, startIndex, 4);
 
-            var rcg = new ReinterpretCastGround32();
-            rcg.Single = value;
-            FillBytes(rcg.Int32, buffer, startIndex);
+            FillBytes(BitConverterEx.SingleToInt32Bits(value), buffer, startIndex);
         }
 
         /// <summary>
@@ -265,9 +263,7 @@ namespace Gapotchenko.FX
         {
             BitConverterServices.ValidateFillArguments(buffer, startIndex, 8);
 
-            var rcg = new ReinterpretCastGround64();
-            rcg.Double = value;
-            FillBytes(rcg.Int64, buffer, startIndex);
+            FillBytes(BitConverter.DoubleToInt64Bits(value), buffer, startIndex);
         }
 
         /// <summary>
@@ -466,9 +462,7 @@ namespace Gapotchenko.FX
         {
             BitConverterServices.ValidateToArguments(value, startIndex, 4);
 
-            var rcg = new ReinterpretCastGround32();
-            rcg.Int32 = ToInt32(value, startIndex);
-            return rcg.Single;
+            return BitConverterEx.Int32BitsToSingle(ToInt32(value, startIndex));
         }
 
         /// <summary>
@@ -488,9 +482,7 @@ namespace Gapotchenko.FX
         {
             BitConverterServices.ValidateToArguments(value, startIndex, 8);
 
-            var rcg = new ReinterpretCastGround64();
-            rcg.Int64 = ToInt64(value, startIndex);
-            return rcg.Double;
+            return BitConverter.Int64BitsToDouble(ToInt64(value, startIndex));
         }
 
         /// <summary>
