@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
 namespace Gapotchenko.FX.Text
 {
     /// <summary>
-    /// <see cref="StringBuilder"/> extensions.
+    /// <see cref="StringBuilder"/> extensions and polyfills.
     /// </summary>
     public static class StringBuilderExtensions
     {
@@ -17,10 +18,17 @@ namespace Gapotchenko.FX.Text
         /// <param name="separator">The string to use as a separator.</param>
         /// <param name="values">An array that contains the elements to append.</param>
         /// <returns>A reference to string builder after the append operation has completed.</returns>
+#if TFF_STRING_BUILDER_APPEND_JOIN
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static StringBuilder AppendJoin(this StringBuilder sb, string separator, params object[] values)
         {
             if (sb == null)
                 throw new ArgumentNullException(nameof(sb));
+
+#if TFF_STRING_BUILDER_APPEND_JOIN
+            return sb.AppendJoin(separator, values);
+#else
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
 
@@ -38,6 +46,7 @@ namespace Gapotchenko.FX.Text
             }
 
             return sb;
+#endif
         }
 
         /// <summary>
@@ -47,10 +56,17 @@ namespace Gapotchenko.FX.Text
         /// <param name="separator">The string to use as a separator.</param>
         /// <param name="values">A collection that contains the objects to append.</param>
         /// <returns>A reference to string builder after the append operation has completed.</returns>
+#if TFF_STRING_BUILDER_APPEND_JOIN
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static StringBuilder AppendJoin<T>(this StringBuilder sb, string separator, IEnumerable<T> values)
         {
             if (sb == null)
                 throw new ArgumentNullException(nameof(sb));
+
+#if TFF_STRING_BUILDER_APPEND_JOIN
+            return sb.AppendJoin(separator, values);
+#else
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
 
@@ -71,6 +87,7 @@ namespace Gapotchenko.FX.Text
             }
 
             return sb;
+#endif
         }
 
         /// <summary>
@@ -80,10 +97,17 @@ namespace Gapotchenko.FX.Text
         /// <param name="separator">The string to use as a separator.</param>
         /// <param name="values">An array that contains the elements to append.</param>
         /// <returns>A reference to string builder after the append operation has completed.</returns>
+#if TFF_STRING_BUILDER_APPEND_JOIN
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static StringBuilder AppendJoin(this StringBuilder sb, string separator, params string[] values)
         {
             if (sb == null)
                 throw new ArgumentNullException(nameof(sb));
+
+#if TFF_STRING_BUILDER_APPEND_JOIN
+            return sb.AppendJoin(separator, values);
+#else
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
 
@@ -101,6 +125,7 @@ namespace Gapotchenko.FX.Text
             }
 
             return sb;
+#endif
         }
 
         /// <summary>
@@ -110,10 +135,17 @@ namespace Gapotchenko.FX.Text
         /// <param name="separator">The character to use as a separator.</param>
         /// <param name="values">An array that contains the elements to append.</param>
         /// <returns>A reference to string builder after the append operation has completed.</returns>
+#if TFF_STRING_BUILDER_APPEND_JOIN
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static StringBuilder AppendJoin(this StringBuilder sb, char separator, params object[] values)
         {
             if (sb == null)
                 throw new ArgumentNullException(nameof(sb));
+
+#if TFF_STRING_BUILDER_APPEND_JOIN
+            return sb.AppendJoin(separator, values);
+#else
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
 
@@ -131,6 +163,7 @@ namespace Gapotchenko.FX.Text
             }
 
             return sb;
+#endif
         }
 
         /// <summary>
@@ -140,10 +173,17 @@ namespace Gapotchenko.FX.Text
         /// <param name="separator">The character to use as a separator.</param>
         /// <param name="values">A collection that contains the objects to append.</param>
         /// <returns>A reference to string builder after the append operation has completed.</returns>
+#if TFF_STRING_BUILDER_APPEND_JOIN
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static StringBuilder AppendJoin<T>(this StringBuilder sb, char separator, IEnumerable<T> values)
         {
             if (sb == null)
                 throw new ArgumentNullException(nameof(sb));
+
+#if TFF_STRING_BUILDER_APPEND_JOIN
+            return sb.AppendJoin(separator, values);
+#else
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
 
@@ -164,6 +204,7 @@ namespace Gapotchenko.FX.Text
             }
 
             return sb;
+#endif
         }
 
         /// <summary>
@@ -173,10 +214,17 @@ namespace Gapotchenko.FX.Text
         /// <param name="separator">The character to use as a separator.</param>
         /// <param name="values">An array that contains the elements to append.</param>
         /// <returns>A reference to string builder after the append operation has completed.</returns>
+#if TFF_STRING_BUILDER_APPEND_JOIN
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static StringBuilder AppendJoin(this StringBuilder sb, char separator, params string[] values)
         {
             if (sb == null)
                 throw new ArgumentNullException(nameof(sb));
+
+#if TFF_STRING_BUILDER_APPEND_JOIN
+            return sb.AppendJoin(separator, values);
+#else
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
 
@@ -194,6 +242,7 @@ namespace Gapotchenko.FX.Text
             }
 
             return sb;
+#endif
         }
     }
 }
