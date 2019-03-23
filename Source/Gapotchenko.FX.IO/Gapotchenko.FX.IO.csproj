@@ -9,7 +9,7 @@
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'net46' ">
+  <ItemGroup Condition=" '$(TFF_NET_FRAMEWORK)' == 'true' ">
     <Reference Include="System.Transactions" />
   </ItemGroup>
 </Project>

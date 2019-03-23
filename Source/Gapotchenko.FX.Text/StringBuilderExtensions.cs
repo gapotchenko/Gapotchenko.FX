@@ -40,10 +40,7 @@ namespace Gapotchenko.FX.Text
 
             // Append remaining values.
             for (int i = 1; i < values.Length; ++i)
-            {
-                sb.Append(separator);
-                sb.Append(values[i]);
-            }
+                sb.Append(separator).Append(values[i]);
 
             return sb;
 #endif
@@ -80,10 +77,7 @@ namespace Gapotchenko.FX.Text
 
                 // Append remaining values.
                 while (enumerator.MoveNext())
-                {
-                    sb.Append(separator);
-                    sb.Append(enumerator.Current);
-                }
+                    sb.Append(separator).Append(enumerator.Current);
             }
 
             return sb;
@@ -119,10 +113,7 @@ namespace Gapotchenko.FX.Text
 
             // Append remaining values.
             for (int i = 1; i < values.Length; ++i)
-            {
-                sb.Append(separator);
-                sb.Append(values[i]);
-            }
+                sb.Append(separator).Append(values[i]);
 
             return sb;
 #endif
@@ -157,10 +148,7 @@ namespace Gapotchenko.FX.Text
 
             // Append remaining values.
             for (int i = 1; i < values.Length; ++i)
-            {
-                sb.Append(separator);
-                sb.Append(values[i]);
-            }
+                sb.Append(separator).Append(values[i]);
 
             return sb;
 #endif
@@ -197,10 +185,7 @@ namespace Gapotchenko.FX.Text
 
                 // Append remaining values.
                 while (enumerator.MoveNext())
-                {
-                    sb.Append(separator);
-                    sb.Append(enumerator.Current);
-                }
+                    sb.Append(separator).Append(enumerator.Current);
             }
 
             return sb;
@@ -236,10 +221,7 @@ namespace Gapotchenko.FX.Text
 
             // Append remaining values.
             for (int i = 1; i < values.Length; ++i)
-            {
-                sb.Append(separator);
-                sb.Append(values[i]);
-            }
+                sb.Append(separator).Append(values[i]);
 
             return sb;
 #endif
