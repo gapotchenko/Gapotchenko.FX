@@ -15,9 +15,9 @@ namespace Gapotchenko.FX.Diagnostics
     public static class CommandLine
     {
         /// <summary>
-        /// Represents the command line arguments separator char.
+        /// Represents a character used to separate arguments in a command line string.
         /// </summary>
-        public const char ArgumentsSeparator = ' ';
+        public const char ArgumentSeparator = ' ';
 
         /// <summary>
         /// Gets the maximum length of the command line that can be passed to a process.
@@ -162,13 +162,13 @@ namespace Gapotchenko.FX.Diagnostics
             Split(new StringReader(commandLine ?? throw new ArgumentNullException(nameof(commandLine))));
 
         /// <summary>
-        /// Builds a command line from a single specified argument.
+        /// Builds a command line from a specified argument.
         /// </summary>
-        /// <param name="arg1">The argument.</param>
+        /// <param name="arg">The argument.</param>
         /// <returns>The command line.</returns>
-        public static string Build(string arg1) =>
+        public static string Build(string arg) =>
             new CommandLineBuilder()
-                .AppendArgument(arg1)
+                .AppendArgument(arg)
                 .ToString();
 
         /// <summary>

@@ -47,7 +47,7 @@ namespace Gapotchenko.FX.Diagnostics
         {
             if (value != null)
             {
-                _SeparateArguments();
+                _DelimitArguments();
                 _AppendTextWithQuoting(value);
             }
             return this;
@@ -155,7 +155,7 @@ namespace Gapotchenko.FX.Diagnostics
 
         /// <summary>
         /// <para>
-        /// Separates command line arguments by ensuring that either the last appended character is a whitespace (<see cref="CommandLine.ArgumentsSeparator"/>) or the built command line is empty.
+        /// Delimits command line arguments by ensuring that either the last appended character is a whitespace or the built command line is empty.
         /// </para>
         /// <para>
         /// This method is used in conjunction with <see cref="Raw"/> property.
@@ -163,16 +163,16 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         /// <returns>The instance of command line builder.</returns>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public CommandLineBuilder SeparateArguments()
+        public CommandLineBuilder DelimitArguments()
         {
-            _SeparateArguments();
+            _DelimitArguments();
             return this;
         }
 
-        void _SeparateArguments()
+        void _DelimitArguments()
         {
-            if (_CommandLine.Length != 0 && _CommandLine[_CommandLine.Length - 1] != CommandLine.ArgumentsSeparator)
-                _CommandLine.Append(CommandLine.ArgumentsSeparator);
+            if (_CommandLine.Length != 0 && _CommandLine[_CommandLine.Length - 1] != CommandLine.ArgumentSeparator)
+                _CommandLine.Append(CommandLine.ArgumentSeparator);
         }
 
         void _AppendQuotedTextToBuffer(StringBuilder buffer, string unquotedTextToAppend)
