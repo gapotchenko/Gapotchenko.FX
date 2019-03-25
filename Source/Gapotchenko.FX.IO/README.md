@@ -42,7 +42,7 @@ The given set would contain one entry on Windows, and two entries on Linux.
 
 ### PathComparison
 
-`FileSystem.PathComparison` property returns a `StringComparison` value that signifies a file names comparison mode used by the host OS.
+`FileSystem.PathComparison` property returns a `StringComparison` value that signifies a file name comparison mode used by the host OS.
 
 It can be used in string comparison operations:
 
