@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics
 {
@@ -39,6 +35,25 @@ namespace Gapotchenko.FX.Diagnostics
             int cb,
             ref int pSize);
 
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct PROCESS_BASIC_INFORMATION_WOW64
+        {
+            public long Reserved1;
+            public long PebBaseAddress;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
+            public long[] Reserved2;
+            public long UniqueProcessId;
+            public long Reserved3;
+        }
+
+        [DllImport("ntdll.dll", SetLastError = true)]
+        public static extern int NtWow64QueryInformationProcess64(
+            IntPtr hProcess,
+            int pic,
+            ref PROCESS_BASIC_INFORMATION_WOW64 pbi,
+            int cb,
+            ref int pSize);
+
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool ReadProcessMemory(
           IntPtr hProcess,
@@ -55,6 +70,27 @@ namespace Gapotchenko.FX.Diagnostics
           IntPtr dwSize,
           ref IntPtr lpNumberOfBytesRead);
 
+        [DllImport("ntdll.dll", SetLastError = true)]
+        public static extern int NtWow64ReadVirtualMemory64(
+            IntPtr hProcess,
+            long lpBaseAddress,
+            IntPtr lpBuffer,
+            long dwSize,
+            ref long lpNumberOfBytesRead);
+
+        [DllImport("ntdll.dll", SetLastError = true)]
+        public static extern int NtWow64ReadVirtualMemory64(
+            IntPtr hProcess,
+            long lpBaseAddress,
+            [Out] byte[] lpBuffer,
+            long dwSize,
+            ref long lpNumberOfBytesRead);
+
+        public const int STATUS_SUCCESS = 0;
+
+        public const int PAGE_NOACCESS = 0x01;
+        public const int PAGE_EXECUTE = 0x10;
+
         [StructLayout(LayoutKind.Sequential)]
         public struct MEMORY_BASIC_INFORMATION
         {
@@ -67,11 +103,34 @@ namespace Gapotchenko.FX.Diagnostics
             public int Type;
         }
 
-        public const int PAGE_NOACCESS = 0x01;
-        public const int PAGE_EXECUTE = 0x10;
-
         [DllImport("kernel32")]
         public static extern int VirtualQueryEx(IntPtr hProcess, IntPtr lpAddress, ref MEMORY_BASIC_INFORMATION lpBuffer, int dwLength);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MEMORY_BASIC_INFORMATION_WOW64
+        {
+            public long BaseAddress;
+            public long AllocationBase;
+            public int AllocationProtect;
+            public long RegionSize;
+            public int State;
+            public int Protect;
+            public int Type;
+        }
+
+        public enum MEMORY_INFORMATION_CLASS
+        {
+            MemoryBasicInformation
+        }
+
+        [DllImport("ntdll.dll")]
+        public static extern int NtWow64QueryVirtualMemory64(
+            IntPtr hProcess,
+            long lpAddress,
+            MEMORY_INFORMATION_CLASS memoryInformationClass,
+            IntPtr lpBuffer, // MEMORY_BASIC_INFORMATION_WOW64, pointer must be 64-bit aligned
+            long memoryInformationLength,
+            ref long returnLength);
 
         [DllImport("kernel32.dll")]
         public static extern bool IsWow64Process(IntPtr hProcess, out bool wow64Process);

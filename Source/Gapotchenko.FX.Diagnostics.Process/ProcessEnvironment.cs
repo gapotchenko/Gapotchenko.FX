@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics
 {
-    static class ProcessEnvironment
+    static partial class ProcessEnvironment
     {
         public static StringDictionary ReadVariables(Process process)
         {
@@ -19,26 +16,59 @@ namespace Gapotchenko.FX.Diagnostics
 
         static StringDictionary _ReadVariablesCore(IntPtr hProcess)
         {
-            IntPtr penv = _GetPenv(hProcess);
-
-            int dataSize;
-            if (!_HasReadAccess(hProcess, penv, out dataSize))
-                throw new Exception("Unable to read environment block.");
+            var penv = _GetPenv(hProcess);
 
             const int maxEnvSize = 32767;
-            if (dataSize > maxEnvSize)
-                dataSize = maxEnvSize;
+            byte[] envData;
 
-            var envData = new byte[dataSize];
-            var res_len = IntPtr.Zero;
-            bool b = NativeMethods.ReadProcessMemory(
-                hProcess,
-                penv,
-                envData,
-                new IntPtr(dataSize),
-                ref res_len);
-            if (!b || (int)res_len != dataSize)
-                throw new Exception("Unable to read environment block data.");
+            if (penv.CanBeRepresentedByNativePointer)
+            {
+                int dataSize;
+                if (!_HasReadAccess(hProcess, penv, out dataSize))
+                    throw new Exception("Unable to read environment block.");
+
+                if (dataSize > maxEnvSize)
+                    dataSize = maxEnvSize;
+
+                envData = new byte[dataSize];
+                var res_len = IntPtr.Zero;
+                bool b = NativeMethods.ReadProcessMemory(
+                    hProcess,
+                    penv,
+                    envData,
+                    new IntPtr(dataSize),
+                    ref res_len);
+
+                if (!b || (int)res_len != dataSize)
+                    throw new Exception("Unable to read environment block data.");
+            }
+            else if (penv.Size == 8 && IntPtr.Size == 4)
+            {
+                // Accessing a 64-bit process from 32-bit host.
+
+                int dataSize;
+                if (!_HasReadAccessWow64(hProcess, penv.ToInt64(), out dataSize))
+                    throw new Exception("Unable to read environment block with WOW64 API.");
+
+                if (dataSize > maxEnvSize)
+                    dataSize = maxEnvSize;
+
+                envData = new byte[dataSize];
+                long res_len = 0;
+                int result = NativeMethods.NtWow64ReadVirtualMemory64(
+                    hProcess,
+                    penv.ToInt64(),
+                    envData,
+                    dataSize,
+                    ref res_len);
+
+                if (result != NativeMethods.STATUS_SUCCESS || res_len != dataSize)
+                    throw new Exception("Unable to read environment block data with WOW64 API.");
+            }
+            else
+            {
+                throw new Exception("Unable to access process memory due to unsupported bitness cardinality.");
+            }
 
             return _EnvToDictionary(envData);
         }
@@ -113,7 +143,7 @@ namespace Gapotchenko.FX.Diagnostics
             {
                 int dataSize = sizeof(Int32);
                 var data = Marshal.AllocHGlobal(dataSize);
-                IntPtr res_len = IntPtr.Zero;
+                var res_len = IntPtr.Zero;
                 bool b = NativeMethods.ReadProcessMemory(
                     hProcess,
                     ptr,
@@ -141,7 +171,7 @@ namespace Gapotchenko.FX.Diagnostics
             {
                 int dataSize = IntPtr.Size;
                 var data = Marshal.AllocHGlobal(dataSize);
-                IntPtr res_len = IntPtr.Zero;
+                var res_len = IntPtr.Zero;
                 bool b = NativeMethods.ReadProcessMemory(
                     hProcess,
                     ptr,
@@ -158,37 +188,79 @@ namespace Gapotchenko.FX.Diagnostics
             return result;
         }
 
-        static IntPtr _GetPenv(IntPtr hProcess)
+        static bool _TryReadIntPtrWow64(IntPtr hProcess, long ptr, out long readPtr)
+        {
+            bool result;
+            RuntimeHelpers.PrepareConstrainedRegions();
+            try
+            {
+            }
+            finally
+            {
+                int dataSize = sizeof(long);
+                var data = Marshal.AllocHGlobal(dataSize);
+                long res_len = 0;
+                int status = NativeMethods.NtWow64ReadVirtualMemory64(
+                    hProcess,
+                    ptr,
+                    data,
+                    dataSize,
+                    ref res_len);
+                readPtr = Marshal.ReadInt64(data);
+                Marshal.FreeHGlobal(data);
+                if (status != NativeMethods.STATUS_SUCCESS || res_len != dataSize)
+                    result = false;
+                else
+                    result = true;
+            }
+            return result;
+        }
+
+        static UniPtr _GetPenv(IntPtr hProcess)
         {
             int processBitness = _GetProcessBitness(hProcess);
 
             if (processBitness == 64)
             {
-                if (!Environment.Is64BitProcess)
-                    throw new InvalidOperationException("The current process should run in 64 bit mode to be able to get the environment of another 64 bit process.");
+                if (Environment.Is64BitProcess)
+                {
+                    // Accessing a 64-bit process from 64-bit host.
 
-                IntPtr pPeb = _GetPeb64(hProcess);
+                    IntPtr pPeb = _GetPeb64(hProcess);
 
-                IntPtr ptr;
-                if (!_TryReadIntPtr(hProcess, pPeb + 0x20, out ptr))
-                    throw new Exception("Unable to read PEB.");
+                    if (!_TryReadIntPtr(hProcess, pPeb + 0x20, out var ptr))
+                        throw new Exception("Unable to read PEB.");
 
-                IntPtr penv;
-                if (!_TryReadIntPtr(hProcess, ptr + 0x80, out penv))
-                    throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
+                    if (!_TryReadIntPtr(hProcess, ptr + 0x80, out var penv))
+                        throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
-                return penv;
+                    return penv;
+                }
+                else
+                {
+                    // Accessing a 64-bit process from 32-bit host.
+
+                    var pPeb = _GetPeb64(hProcess);
+
+                    if (!_TryReadIntPtrWow64(hProcess, pPeb.ToInt64() + 0x20, out var ptr))
+                        throw new Exception("Unable to read PEB.");
+
+                    if (!_TryReadIntPtrWow64(hProcess, ptr + 0x80, out var penv))
+                        throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
+
+                    return new UniPtr(penv);
+                }
             }
             else
             {
+                // Accessing a 32-bit process from 32-bit host.
+
                 IntPtr pPeb = _GetPeb32(hProcess);
 
-                IntPtr ptr;
-                if (!_TryReadIntPtr32(hProcess, pPeb + 0x10, out ptr))
+                if (!_TryReadIntPtr32(hProcess, pPeb + 0x10, out var ptr))
                     throw new Exception("Unable to read PEB.");
 
-                IntPtr penv;
-                if (!_TryReadIntPtr32(hProcess, ptr + 0x48, out penv))
+                if (!_TryReadIntPtr32(hProcess, ptr + 0x48, out var penv))
                     throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
                 return penv;
@@ -199,8 +271,7 @@ namespace Gapotchenko.FX.Diagnostics
         {
             if (Environment.Is64BitOperatingSystem)
             {
-                bool wow64;
-                if (!NativeMethods.IsWow64Process(hProcess, out wow64))
+                if (!NativeMethods.IsWow64Process(hProcess, out var wow64))
                     return 32;
                 if (wow64)
                     return 32;
@@ -251,9 +322,28 @@ namespace Gapotchenko.FX.Diagnostics
             return pbi.PebBaseAddress;
         }
 
-        static IntPtr _GetPeb64(IntPtr hProcess)
+        static UniPtr _GetPeb64(IntPtr hProcess)
         {
-            return _GetPebNative(hProcess);
+            if (Environment.Is64BitProcess)
+            {
+                return _GetPebNative(hProcess);
+            }
+            else
+            {
+                // Get PEB via WOW64 API.
+                var pbi = new NativeMethods.PROCESS_BASIC_INFORMATION_WOW64();
+                int res_len = 0;
+                int pbiSize = Marshal.SizeOf(pbi);
+                int status = NativeMethods.NtWow64QueryInformationProcess64(
+                    hProcess,
+                    NativeMethods.ProcessBasicInformation,
+                    ref pbi,
+                    pbiSize,
+                    ref res_len);
+                if (res_len != pbiSize)
+                    throw new Exception("Unable to query process information.");
+                return new UniPtr(pbi.PebBaseAddress);
+            }
         }
 
         static bool _HasReadAccess(IntPtr hProcess, IntPtr address, out int size)
@@ -287,5 +377,60 @@ namespace Gapotchenko.FX.Diagnostics
 
             return true;
         }
+
+        static bool _HasReadAccessWow64(IntPtr hProcess, long address, out int size)
+        {
+            size = 0;
+
+            NativeMethods.MEMORY_BASIC_INFORMATION_WOW64 memInfo;
+            var memInfoType = typeof(NativeMethods.MEMORY_BASIC_INFORMATION_WOW64);
+            int memInfoLength = Marshal.SizeOf(memInfoType);
+            const int memInfoAlign = 8;
+
+            long resultLength = 0;
+            int result;
+
+            IntPtr hMemInfo = Marshal.AllocHGlobal(memInfoLength + memInfoAlign * 2);
+            try
+            {
+                // Align to 64 bits.
+                var hMemInfoAligned = new IntPtr(hMemInfo.ToInt64() & ~(memInfoAlign - 1L));
+
+                result = NativeMethods.NtWow64QueryVirtualMemory64(
+                    hProcess,
+                    address,
+                    NativeMethods.MEMORY_INFORMATION_CLASS.MemoryBasicInformation,
+                    hMemInfoAligned,
+                    memInfoLength,
+                    ref resultLength);
+
+                memInfo = (NativeMethods.MEMORY_BASIC_INFORMATION_WOW64)Marshal.PtrToStructure(hMemInfoAligned, memInfoType);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(hMemInfo);
+            }
+
+            if (result != NativeMethods.STATUS_SUCCESS)
+                return false;
+
+            if (memInfo.Protect == NativeMethods.PAGE_NOACCESS || memInfo.Protect == NativeMethods.PAGE_EXECUTE)
+                return false;
+
+            try
+            {
+                size = Convert.ToInt32(memInfo.RegionSize - (address - memInfo.BaseAddress));
+            }
+            catch (OverflowException)
+            {
+                return false;
+            }
+
+            if (size <= 0)
+                return false;
+
+            return true;
+        }
+
     }
 }

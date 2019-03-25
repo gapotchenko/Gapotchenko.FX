@@ -11,6 +11,7 @@ using Gapotchenko.FX.Threading;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -45,36 +46,22 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _Run()
         {
-            var list = new List<int>();
+            var processes = Process.GetProcessesByName("devenv");
 
-            list.AddRange(10, 20);
+            if (processes.Length == 0)
+                Console.WriteLine("Process with a given name not found. Please modify the code and specify the existing process name.");
 
-            Console.WriteLine(list.IsNullOrEmpty());
+            foreach (var process in processes)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Process with ID {0} has a PATH environment variable:", process.Id);
 
-            //WebBrowser.Start("https://www.gapotchenko.com/");
+                var env = process.ReadEnvironmentVariables();
 
-            //var x = Fn.Aggregate(MathEx.Max, new Version(1, 0), new Version(1, 5), new Version(100, 0), null);
-            //Console.WriteLine(x);           
+                string path = env["PATH"];
+                Console.WriteLine(path);
+            }
 
-            Console.WriteLine(Fn.Aggregate((x, y) => x + y, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
-
-            var ms = new MemoryStream();
-
-            //Stream stream;
-
-            //var br = new BitReader(Stream.Null, LittleEndianBitConverter.);
-
-            //EqualityComparer<int>.D
-        }
-
-        static void _MyMethod(string s)
-        {
-
-        }
-
-        static string _MyMethod()
-        {
-            return "123";
         }
 
         static async Task _RunAsync()
