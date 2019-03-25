@@ -47,8 +47,17 @@ namespace Gapotchenko.FX.Diagnostics
                 // Accessing a 64-bit process from 32-bit host.
 
                 int dataSize;
-                if (!_HasReadAccessWow64(hProcess, penv.ToInt64(), out dataSize))
-                    throw new Exception("Unable to read environment block with WOW64 API.");
+
+                try
+                {
+                    if (!_HasReadAccessWow64(hProcess, penv.ToInt64(), out dataSize))
+                        throw new Exception("Unable to read environment block with WOW64 API.");
+                }
+                catch (EntryPointNotFoundException)
+                {
+                    // Windows 10 does not provide NtWow64QueryVirtualMemory64 API call.
+                    dataSize = maxEnvSize;
+                }
 
                 if (dataSize > maxEnvSize)
                     dataSize = maxEnvSize;
