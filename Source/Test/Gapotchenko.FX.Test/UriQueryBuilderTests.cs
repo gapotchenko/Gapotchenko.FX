@@ -92,5 +92,77 @@ namespace Gapotchenko.FX.Test
 
             Assert.AreEqual("https://example.com/?key=abc&say=hello", uri);
         }
+
+        [TestMethod]
+        public void UriQueryBuilder_B1()
+        {
+            var uri = UriQueryBuilder.AppendParameter("https://example.com/?p=1#test", "p", "2");
+
+            Assert.AreEqual("https://example.com/?p=1&p=2#test", uri);
+        }
+
+        [TestMethod]
+        public void UriQueryBuilder_B2()
+        {
+            string uri = "https://example.com/#test";
+            uri = UriQueryBuilder.CombineWithUri(uri, "p=1");
+
+            Assert.AreEqual("https://example.com/?p=1#test", uri);
+        }
+
+        [TestMethod]
+        public void UriQueryBuilder_B3()
+        {
+            string uri = "https://example.com/#test";
+            uri = UriQueryBuilder.CombineWithUri(uri, "p=1");
+            uri = UriQueryBuilder.CombineWithUri(uri, "p=2");
+
+            Assert.AreEqual("https://example.com/?p=1&p=2#test", uri);
+        }
+
+        [TestMethod]
+        public void UriQueryBuilder_B4()
+        {
+            string uri = "https://example.com/#test";
+            uri = UriQueryBuilder.AppendParameter(uri, "p", "a b c");
+
+            Assert.AreEqual("https://example.com/?p=a%20b%20c#test", uri);
+        }
+
+        [TestMethod]
+        public void UriQueryBuilder_B5()
+        {
+            string uri = "https://example.com/#should-test-be-used?";
+            uri = UriQueryBuilder.CombineWithUri(uri, "answer=yes");
+
+            Assert.AreEqual("https://example.com/?answer=yes#should-test-be-used?", uri);
+        }
+
+        [TestMethod]
+        public void UriQueryBuilder_B6()
+        {
+            string uri = "https://example.com/?action=ask#should-test-be-used?";
+            uri = UriQueryBuilder.CombineWithUri(uri, "answer=yes");
+
+            Assert.AreEqual("https://example.com/?action=ask&answer=yes#should-test-be-used?", uri);
+        }
+
+        [TestMethod]
+        public void UriQueryBuilder_B7()
+        {
+            string uri = "https://example.com/?#should-test-be-used?";
+            uri = UriQueryBuilder.CombineWithUri(uri, "answer=yes");
+
+            Assert.AreEqual("https://example.com/?answer=yes#should-test-be-used?", uri);
+        }
+
+        [TestMethod]
+        public void UriQueryBuilder_B8()
+        {
+            string uri = "#should-test-be-used?";
+            uri = UriQueryBuilder.CombineWithUri(uri, "answer=yes");
+
+            Assert.AreEqual("answer=yes#should-test-be-used?", uri);
+        }
     }
 }

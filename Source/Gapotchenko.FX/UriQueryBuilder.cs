@@ -231,13 +231,32 @@ namespace Gapotchenko.FX
             if (uri.Length == 0)
                 return query ?? string.Empty;
 
-            int i = uri.IndexOf(QuerySeparator);
-            if (i == -1)
-                return uri + QuerySeparator + query;
-            if (i == uri.Length - 1)
-                return uri + query;
+            int fsi = uri.IndexOf('#');
 
-            return uri + ParameterSeparator + query;
+            int qsi;
+            if (fsi == -1)
+                qsi = uri.IndexOf(QuerySeparator);
+            else
+                qsi = uri.IndexOf(QuerySeparator, 0, fsi);
+
+            int qend = fsi != -1 ? fsi : uri.Length;
+            if (qsi == qend - 1)
+            {
+                return _InsertOrConcat(uri, fsi, query);
+            }
+            else
+            {
+                char delimeter = qsi == -1 ? QuerySeparator : ParameterSeparator;
+                return _InsertOrConcat(uri, fsi, delimeter + query);
+            }
+        }
+
+        static string _InsertOrConcat(string s, int startIndex, string value)
+        {
+            if (startIndex == -1)
+                return s + value;
+            else
+                return s.Insert(startIndex, value);
         }
 
         /// <summary>
