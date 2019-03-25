@@ -154,6 +154,8 @@ FileSystem.WaitForFileWriteAccess(fileName);
 File.WriteAllText(fileName, "A user can now use the app without occasional 'File access denied' errors.");
 ```
 
+What it does is polls the file until write access is available.
+
 ## BitReader/BitWriter
 
 `BitReader` and `BitWriter` classes provided by `Gapotchenko.FX.IO` extend the functionality of conventional `BinaryReader` and `BinaryWriter` classes by inheriting from them.
