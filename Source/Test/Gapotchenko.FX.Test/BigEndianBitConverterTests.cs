@@ -199,7 +199,7 @@ namespace Gapotchenko.FX.Test
         {
             const int n = sizeof(Single);
 
-            const Single pos = MathF.PI;
+            const Single pos = (float)Math.PI;
             const Single zero = 0;
             const Single neg = -pos;
 
