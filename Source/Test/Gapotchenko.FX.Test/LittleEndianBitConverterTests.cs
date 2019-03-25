@@ -290,11 +290,11 @@ namespace Gapotchenko.FX.Test
             Assert.AreEqual(neg, LittleEndianBitConverter.ToDouble(buffer));
         }
 
-        static byte[] GetCanonicalRepresentation(Single value) => _GetCanonicalRepresentationCore(x => x.Write(value));
-        static byte[] GetCanonicalRepresentation(Double value) => _GetCanonicalRepresentationCore(x => x.Write(value));
-        static byte[] GetCanonicalRepresentation(Decimal value) => _GetCanonicalRepresentationCore(x => x.Write(value));
+        static byte[] GetCanonicalRepresentation(Single value) => GetCanonicalRepresentation(x => x.Write(value));
+        static byte[] GetCanonicalRepresentation(Double value) => GetCanonicalRepresentation(x => x.Write(value));
+        static byte[] GetCanonicalRepresentation(Decimal value) => GetCanonicalRepresentation(x => x.Write(value));
 
-        static byte[] _GetCanonicalRepresentationCore(Action<BinaryWriter> write)
+        internal static byte[] GetCanonicalRepresentation(Action<BinaryWriter> write)
         {
             var ms = new MemoryStream();
             var bw = new BinaryWriter(ms);

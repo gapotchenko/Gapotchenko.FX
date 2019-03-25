@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,6 +12,7 @@ namespace Gapotchenko.FX.IO
     /// <summary>
     /// Provides a set of static methods for querying <see cref="IOException"/> objects.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class IOExceptionExtensions
     {
         /// <summary>

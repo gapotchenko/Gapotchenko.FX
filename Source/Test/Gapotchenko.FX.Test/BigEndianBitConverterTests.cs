@@ -290,18 +290,12 @@ namespace Gapotchenko.FX.Test
             Assert.AreEqual(neg, BigEndianBitConverter.ToDouble(buffer));
         }
 
-        static byte[] GetCanonicalRepresentation(Single value) => _GetCanonicalRepresentationCore(x => x.Write(value));
-        static byte[] GetCanonicalRepresentation(Double value) => _GetCanonicalRepresentationCore(x => x.Write(value));
-        static byte[] GetCanonicalRepresentation(Decimal value) => _GetCanonicalRepresentationCore(x => x.Write(value));
+        static byte[] GetCanonicalRepresentation(Single value) => GetCanonicalRepresentation(x => x.Write(value));
+        static byte[] GetCanonicalRepresentation(Double value) => GetCanonicalRepresentation(x => x.Write(value));
+        static byte[] GetCanonicalRepresentation(Decimal value) => GetCanonicalRepresentation(x => x.Write(value));
 
-        static byte[] _GetCanonicalRepresentationCore(Action<BinaryWriter> write)
-        {
-            var ms = new MemoryStream();
-            var bw = new BinaryWriter(ms);
-            write(bw);
-            bw.Close();
-            return ms.ToArray().Reverse().ToArray();
-        }
+        static byte[] GetCanonicalRepresentation(Action<BinaryWriter> write) =>
+            LittleEndianBitConverterTests.GetCanonicalRepresentation(write).Reverse().ToArray();
 
         static IEnumerable<byte> Neg(IEnumerable<byte> source) => LittleEndianBitConverterTests.Neg(source.Reverse()).Reverse();
     }

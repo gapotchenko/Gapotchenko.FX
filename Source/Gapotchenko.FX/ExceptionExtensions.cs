@@ -9,6 +9,7 @@ namespace Gapotchenko.FX
     /// <summary>
     /// Exception extensions.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ExceptionExtensions
     {
         /// <summary>

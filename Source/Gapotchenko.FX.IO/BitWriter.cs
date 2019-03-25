@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.IO
         [CLSCompliant(false)]
         protected BitWriter(IBitConverter bitConverter)
         {
-            BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
+            _BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.IO
         public BitWriter(Stream output, IBitConverter bitConverter) :
             base(output)
         {
-            BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
+            _BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Gapotchenko.FX.IO
         public BitWriter(Stream output, IBitConverter bitConverter, Encoding encoding) :
             base(output, encoding)
         {
-            BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
+            _BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
         }
 
 #if !NET40
@@ -60,15 +60,22 @@ namespace Gapotchenko.FX.IO
         public BitWriter(Stream output, IBitConverter bitConverter, Encoding encoding, bool leaveOpen) :
             base(output, encoding, leaveOpen)
         {
-            BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
+            _BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
         }
 #endif
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IBitConverter _BitConverter;
+
         /// <summary>
-        /// A bit converter instance.
+        /// Gets or sets the bit converter for this writer.
         /// </summary>
         [CLSCompliant(false)]
-        protected readonly IBitConverter BitConverter;
+        public IBitConverter BitConverter
+        {
+            get => _BitConverter;
+            set => _BitConverter = value ?? throw new ArgumentNullException(nameof(value));
+        }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         byte[] _Buffer = new byte[16];
@@ -81,7 +88,7 @@ namespace Gapotchenko.FX.IO
         /// <param name="value">The two-byte signed integer to write.</param>
         public override void Write(short value)
         {
-            BitConverter.FillBytes(value, _Buffer);
+            _BitConverter.FillBytes(value, _Buffer);
             _WriteBuffer(2);
         }
 
@@ -92,7 +99,7 @@ namespace Gapotchenko.FX.IO
         [CLSCompliant(false)]
         public override void Write(ushort value)
         {
-            BitConverter.FillBytes(value, _Buffer);
+            _BitConverter.FillBytes(value, _Buffer);
             _WriteBuffer(2);
         }
 
@@ -102,7 +109,7 @@ namespace Gapotchenko.FX.IO
         /// <param name="value">The four-byte signed integer to write.</param>
         public override void Write(int value)
         {
-            BitConverter.FillBytes(value, _Buffer);
+            _BitConverter.FillBytes(value, _Buffer);
             _WriteBuffer(4);
         }
 
@@ -113,7 +120,7 @@ namespace Gapotchenko.FX.IO
         [CLSCompliant(false)]
         public override void Write(uint value)
         {
-            BitConverter.FillBytes(value, _Buffer);
+            _BitConverter.FillBytes(value, _Buffer);
             _WriteBuffer(4);
         }
 
@@ -123,7 +130,7 @@ namespace Gapotchenko.FX.IO
         /// <param name="value">The eight-byte signed integer to write.</param>
         public override void Write(long value)
         {
-            BitConverter.FillBytes(value, _Buffer);
+            _BitConverter.FillBytes(value, _Buffer);
             _WriteBuffer(8);
         }
 
@@ -134,7 +141,7 @@ namespace Gapotchenko.FX.IO
         [CLSCompliant(false)]
         public override void Write(ulong value)
         {
-            BitConverter.FillBytes(value, _Buffer);
+            _BitConverter.FillBytes(value, _Buffer);
             _WriteBuffer(8);
         }
 
@@ -144,7 +151,7 @@ namespace Gapotchenko.FX.IO
         /// <param name="value">The four-byte floating-point value to write.</param>
         public override void Write(float value)
         {
-            BitConverter.FillBytes(value, _Buffer);
+            _BitConverter.FillBytes(value, _Buffer);
             _WriteBuffer(4);
         }
 
@@ -154,7 +161,7 @@ namespace Gapotchenko.FX.IO
         /// <param name="value">The eight-byte floating-point value to write.</param>
         public override void Write(double value)
         {
-            BitConverter.FillBytes(value, _Buffer);
+            _BitConverter.FillBytes(value, _Buffer);
             _WriteBuffer(8);
         }
 
@@ -164,7 +171,7 @@ namespace Gapotchenko.FX.IO
         /// <param name="value">The decimal value to write.</param>
         public override void Write(decimal value)
         {
-            BitConverter.FillBytes(value, _Buffer);
+            _BitConverter.FillBytes(value, _Buffer);
             _WriteBuffer(16);
         }
     }
