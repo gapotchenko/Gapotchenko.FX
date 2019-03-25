@@ -101,11 +101,11 @@ namespace Gapotchenko.FX.IO
         }
 
         /// <summary>
-        /// Checks whether the beginning of the path matches the specified value in terms of file system equivalence.
+        /// Determines whether the beginning of the path matches the specified value in terms of file system equivalence.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="value">The value.</param>
-        /// <returns></returns>
+        /// <returns><c>true</c> when the beginning of the path matches the specified value in terms of file system equivalence; otherwise, <c>false</c>.</returns>
         public static bool PathStartsWith(string path, string value)
         {
             var pathComparison = PathComparison;

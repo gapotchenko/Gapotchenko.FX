@@ -2,9 +2,10 @@
 
 The module provides primitives for LINQ expressions.
 
-## Equality Comparer
+## Equality Comparer for LINQ Expressions
 
-TODO
+`ExpressionEqualityComparer` class allows to compare LINQ expressions for equality.
+This is useful for various purposes, most notably for caching.
 
 ## Other Modules
 
