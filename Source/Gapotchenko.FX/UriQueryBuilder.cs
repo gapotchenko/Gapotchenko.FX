@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 
 namespace Gapotchenko.FX
@@ -52,6 +53,7 @@ namespace Gapotchenko.FX
             }
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly StringBuilder _SB;
 
         /// <summary>
@@ -228,19 +230,18 @@ namespace Gapotchenko.FX
                 return uri;
             if (uri == null)
                 return query;
-            if (uri.Length == 0)
-                return query ?? string.Empty;
+
+            int ql = uri.Length;
+            if (ql == 0)
+                return query;
 
             int fsi = uri.IndexOf('#');
+            if (fsi != -1)
+                ql = fsi;
 
-            int qsi;
-            if (fsi == -1)
-                qsi = uri.IndexOf(QuerySeparator);
-            else
-                qsi = uri.IndexOf(QuerySeparator, 0, fsi);
+            int qsi = uri.IndexOf(QuerySeparator, 0, ql);
 
-            int qend = fsi != -1 ? fsi : uri.Length;
-            if (qsi == qend - 1)
+            if (qsi == ql - 1)
             {
                 return _InsertOrConcat(uri, fsi, query);
             }

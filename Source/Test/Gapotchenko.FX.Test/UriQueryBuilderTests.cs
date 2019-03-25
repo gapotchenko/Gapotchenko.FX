@@ -177,8 +177,14 @@ namespace Gapotchenko.FX.Test
         {
             string uri = "https://example.com/";
 
-            Assert.AreEqual("https://example.com/", UriQueryBuilder.CombineWithUri(uri, ""));
-            Assert.AreEqual("https://example.com/", UriQueryBuilder.CombineWithUri(uri, null));
+            Assert.AreEqual(uri, UriQueryBuilder.CombineWithUri(uri, ""));
+            Assert.AreEqual(uri, UriQueryBuilder.CombineWithUri(uri, null));
+        }
+
+        [TestMethod]
+        public void UriQueryBuilder_C3()
+        {
+            Assert.AreEqual("", UriQueryBuilder.CombineWithUri("", null));
         }
     }
 }
