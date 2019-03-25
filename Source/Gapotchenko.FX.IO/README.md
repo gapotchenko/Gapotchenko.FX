@@ -137,14 +137,14 @@ IsContosoReportsFolder(@"Contoso/Reports/2019/Progress") => true
 `FileSystem.WaitForFileWriteAccess` method is a subtle, highly-demanded and intricate primitive. It waits for a write access to the specified file.
 
 Why would anyone want such a method?
-It turns out that a modern OS is a noisy environment that can pull a sledge hammer on your app.
+It turns out that a modern OS is a noisy environment that can put your app under sledgehammer.
 
 For example, if an app changes a file, it immediately grabs attention of various OS services.
 Anti-virus tools, search engines, file synchronization applications all can lock the files for short random time spans.
 
 If a user of your app is unlucky or just uses an app frequently enough then he would occasionally get "File access denied" errors.
 
-To minimize a possibility of such a congestion, you may prefer to call `FileSystem.WaitForFileWriteAccess` method before changing a file:
+To minimize a possibility of such a congestion, you may should call `FileSystem.WaitForFileWriteAccess` method before changing a file:
 
 ``` csharp
 using Gapotchenko.FX.IO;
