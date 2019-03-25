@@ -19,7 +19,7 @@ The same goes to macOS.
 However, Linux and other Unix flavors use case-sensitive file names by default.
 Whenever an app creates two files named `Test.txt` and `test.txt`,
 those files are distinct and can coexist at the same folder.
-In that case, `FileSystem.IsCaseSensitive` returns `true`.
+`FileSystem.IsCaseSensitive` returns `true` on such operating systems.
 
 ### PathComparer
 
