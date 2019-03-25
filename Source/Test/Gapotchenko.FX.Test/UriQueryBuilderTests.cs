@@ -164,5 +164,21 @@ namespace Gapotchenko.FX.Test
 
             Assert.AreEqual("answer=yes#should-test-be-used?", uri);
         }
+
+        [TestMethod]
+        public void UriQueryBuilder_C1()
+        {
+            Assert.AreEqual("p=1", UriQueryBuilder.CombineWithUri("", "p=1"));
+            Assert.AreEqual("p=1", UriQueryBuilder.CombineWithUri((string)null, "p=1"));
+        }
+
+        [TestMethod]
+        public void UriQueryBuilder_C2()
+        {
+            string uri = "https://example.com/";
+
+            Assert.AreEqual("https://example.com/", UriQueryBuilder.CombineWithUri(uri, ""));
+            Assert.AreEqual("https://example.com/", UriQueryBuilder.CombineWithUri(uri, null));
+        }
     }
 }
