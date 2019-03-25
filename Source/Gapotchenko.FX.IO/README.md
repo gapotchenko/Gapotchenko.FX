@@ -12,13 +12,14 @@ and serves as an important addendum to a conventional `System.IO` namespace.
 
 The `FileSystem.IsCaseSensitive` property shows whether the current host operating system uses case sensitive file names.
 
-For example, Windows operating system uses case-insensitive file system by default,
-so `FileSystem.IsCaseSensitive` property returns `false` when an app runs on it.
+For example, Windows operating system uses case-**in**sensitive file names,
+so `FileSystem.IsCaseSensitive` returns `false` when an app runs on it.
 The same goes to macOS.
 
-However, Linux, FreeBSD and other Unix flavors use case-sensitive file names by default.
+However, Linux and other Unix flavors use case-sensitive file names by default.
 Whenever an app creates two files named `Test.txt` and `test.txt`,
 those files are distinct and can coexist at the same folder.
+In that case, `FileSystem.IsCaseSensitive` returns `true`.
 
 ### PathComparer
 
