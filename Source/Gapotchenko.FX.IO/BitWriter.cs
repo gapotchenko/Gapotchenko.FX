@@ -68,7 +68,7 @@ namespace Gapotchenko.FX.IO
         IBitConverter _BitConverter;
 
         /// <summary>
-        /// Gets or sets the bit converter for this writer.
+        /// Gets or sets the current bit converter.
         /// </summary>
         [CLSCompliant(false)]
         public IBitConverter BitConverter

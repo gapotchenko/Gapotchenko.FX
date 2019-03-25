@@ -51,7 +51,7 @@ namespace Gapotchenko.FX.IO
         public BitReader(Stream input, IBitConverter bitConverter, Encoding encoding, bool leaveOpen) :
             base(input, encoding, leaveOpen)
         {
-            BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
+            _BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
         }
 #endif
 
@@ -59,7 +59,7 @@ namespace Gapotchenko.FX.IO
         IBitConverter _BitConverter;
 
         /// <summary>
-        /// Gets or sets the bit converter for this reader.
+        /// Gets or sets the current bit converter.
         /// </summary>
         [CLSCompliant(false)]
         public IBitConverter BitConverter
@@ -76,6 +76,7 @@ namespace Gapotchenko.FX.IO
             var stream = BaseStream;
             if (stream == null)
                 throw new ObjectDisposedException(null);
+
             if (count == 1)
             {
                 int b = stream.ReadByte();

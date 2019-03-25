@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Gapotchenko.FX.IO
     /// <summary>
     /// <see cref="Stream"/> extensions.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class StreamExtensions
     {
         const int DefaultBlockCopyBufferSize = 0x10000;
