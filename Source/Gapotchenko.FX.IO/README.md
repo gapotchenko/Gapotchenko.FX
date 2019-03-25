@@ -115,7 +115,7 @@ The problem is gone.
 Until we ask for `IsContosoReportsFolder("Contoso\Reports")` value.
 It is `false` now despite the fact that `Contoso\Reports` is literally a Contoso reports folder we are looking for.
 
-The correct solution is to use Gapotchenko.FX:
+The correct solution is to use `FileSystem.PathStartsWith` method provided by `Gapotchenko.FX.IO` module:
 
 ``` csharp
 using Gapotchenko.FX.IO;
