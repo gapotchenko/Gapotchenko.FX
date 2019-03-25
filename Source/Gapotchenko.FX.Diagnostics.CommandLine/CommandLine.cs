@@ -12,6 +12,6 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         public const char ArgumentSeparator = ' ';
 
-        // This is a partial class. Take a look at CommandLine.*.cs files for more of its parts.
+        // This is a partial class. Other parts are located in CommandLine.*.cs files.
     }
 }

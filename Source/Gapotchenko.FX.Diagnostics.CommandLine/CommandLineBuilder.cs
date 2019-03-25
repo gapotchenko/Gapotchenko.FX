@@ -20,22 +20,25 @@ namespace Gapotchenko.FX.Diagnostics
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandLineBuilder"/> class.
         /// </summary>
-        public CommandLineBuilder() :
-            this(false)
-        {
-        }
-
-        CommandLineBuilder(bool quoteHyphensOnCommandLine)
+        public CommandLineBuilder()
         {
             _CommandLine = new StringBuilder();
-            _QuoteHyphens = quoteHyphensOnCommandLine;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandLineBuilder"/> class using the specified command line.
+        /// </summary>
+        /// <param name="commandLine">
+        /// The command line used to initialize the value of the instance.
+        /// If value is <c>null</c>, the new <see cref="CommandLineBuilder"/> will be empty.
+        /// </param>
+        public CommandLineBuilder(string commandLine)
+        {
+            _CommandLine = new StringBuilder(commandLine);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         StringBuilder _CommandLine;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool _QuoteHyphens;
 
         /// <summary>
         /// Appends a specified <see cref="String"/> command line argument to this instance.
@@ -146,8 +149,12 @@ namespace Gapotchenko.FX.Diagnostics
         }
 
         /// <summary>
+        /// <para>
         /// Gets the raw string builder for the command line.
+        /// </para>
+        /// <para>
         /// The purpose of raw access is to cover non-conventional notations and scenarios of a command line.
+        /// </para>
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -158,7 +165,8 @@ namespace Gapotchenko.FX.Diagnostics
         /// Delimits command line arguments by ensuring that either the last appended character is a whitespace or the built command line is empty.
         /// </para>
         /// <para>
-        /// This method is used in conjunction with <see cref="Raw"/> property.
+        /// This method should be used in conjunction with <see cref="Raw"/> property.
+        /// There is no need to call the method when conventional methods like <see cref="AppendArgument(string)"/> are used.
         /// </para>
         /// </summary>
         /// <returns>The instance of command line builder.</returns>
@@ -171,8 +179,10 @@ namespace Gapotchenko.FX.Diagnostics
 
         void _DelimitArguments()
         {
-            if (_CommandLine.Length != 0 && _CommandLine[_CommandLine.Length - 1] != CommandLine.ArgumentSeparator)
-                _CommandLine.Append(CommandLine.ArgumentSeparator);
+            var commandLine = _CommandLine;
+
+            if (commandLine.Length != 0 && commandLine[commandLine.Length - 1] != CommandLine.ArgumentSeparator)
+                commandLine.Append(CommandLine.ArgumentSeparator);
         }
 
         void _AppendQuotedTextToBuffer(StringBuilder buffer, string unquotedTextToAppend)
@@ -234,7 +244,7 @@ namespace Gapotchenko.FX.Diagnostics
                 if (_CachedAllowedUnquotedRegex == null)
                 {
                     _CachedAllowedUnquotedRegex = new Regex(
-                        _QuoteHyphens ? @"^[a-z\\/:0-9\._+=]*$" : @"^[a-z\\/:0-9\._\-+=]*$",
+                        @"^[a-z\\/:0-9\._\-+=]*$",
                         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
                 }
                 return _CachedAllowedUnquotedRegex;
@@ -252,7 +262,7 @@ namespace Gapotchenko.FX.Diagnostics
                 if (_CachedDefinitelyNeedQuotesRegex == null)
                 {
                     _CachedDefinitelyNeedQuotesRegex = new Regex(
-                        _QuoteHyphens ? "[|><\\s,;\\-\"]+" : "[|><\\s,;\"]+",
+                        "[|><\\s,;\"]+",
                         RegexOptions.CultureInvariant);
                 }
                 return _CachedDefinitelyNeedQuotesRegex;
