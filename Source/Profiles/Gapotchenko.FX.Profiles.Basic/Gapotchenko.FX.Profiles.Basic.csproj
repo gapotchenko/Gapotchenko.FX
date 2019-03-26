@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Metadata\Metadata.proj" />
+  <PropertyGroup>
+    <TargetFramework></TargetFramework>
+    <Description>Gapotchenko.FX Basic Profile</Description>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
+</Project>
