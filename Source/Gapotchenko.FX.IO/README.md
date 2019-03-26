@@ -155,6 +155,7 @@ File.WriteAllText(fileName, "A user can now use the app without occasional 'File
 ```
 
 What it does is polls the file until write access is available.
+If the access is not there for 10 seconds, the method falls through.
 
 ## BitReader/BitWriter
 
