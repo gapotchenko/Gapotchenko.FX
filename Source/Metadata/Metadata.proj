@@ -42,7 +42,12 @@
 
   <PropertyGroup>
     <PackageOutputPath>bin\$(Configuration)\package</PackageOutputPath>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <Target Name="CleanNuGetPackage" AfterTargets="Clean">
