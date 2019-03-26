@@ -72,6 +72,27 @@ Process.Start(
         "/b", @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt"));
 ```
 
+Another cool thing: if you want to exclude some argument from a command line then you can just make it `null`:
+
+``` csharp
+string mode = null;
+
+// 'mode' can be assigned to a non-null value if there is a need to specify it.
+
+string s = CommandLine.Build(mode, @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt");
+Console.WriteLine(s);
+```
+
+The code above produces the following output:
+
+```
+"C:\Temp\Test 1.txt" "C:\Temp\Test 2.txt"
+```
+
+This is a neat departure from a traditional .NET convention when it always throws `ArgumentNullException`.
+Instead, Gapotchenko.FX uses a slightly different philosophy by doing the best job possible under various conditions.
+
+
 ### Split
 
 `CommandLine.Split` provides the opposite operation to `CommandLine.Build`.
