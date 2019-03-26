@@ -3,7 +3,7 @@
   <Import Project="..\Metadata\Metadata.proj" />
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-    <Description>Gapotchenko.FX.IO module. A part of Core profile of Gapotchenko.FX framework.</Description>
+    <Description>Gapotchenko.FX.IO module. A part of Basic profile of Gapotchenko.FX framework.</Description>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />

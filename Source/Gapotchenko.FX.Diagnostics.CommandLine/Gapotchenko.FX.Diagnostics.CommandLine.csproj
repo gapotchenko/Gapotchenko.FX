@@ -3,7 +3,7 @@
   <Import Project="..\Metadata\Metadata.proj" />
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-    <Description>Gapotchenko.FX.Diagnostics.CommandLine module. A part of Core profile of Gapotchenko.FX framework.</Description>
+    <Description>Gapotchenko.FX.Diagnostics.CommandLine module. A part of Basic profile of Gapotchenko.FX framework.</Description>
     <LangVersion>7.1</LangVersion>
     <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
   </PropertyGroup>
