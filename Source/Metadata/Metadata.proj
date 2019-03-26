@@ -19,16 +19,16 @@
     <VersionPrefix>2019.1.140</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
 
-    <FXModule>$(MSBuildProjectName)</FXModule>
-    <FXModuleLiteral>$(FXModule) module</FXModuleLiteral>
-    <FXModuleLiteral Condition=" '$(FXModule)' == 'Gapotchenko.FX' ">the main module</FXModuleLiteral>
+    <_FXModule>$(MSBuildProjectName)</_FXModule>
+    <_FXModuleLiteral>$(_FXModule) module</_FXModuleLiteral>
+    <_FXModuleLiteral Condition=" '$(_FXModule)' == 'Gapotchenko.FX' ">the main module</_FXModuleLiteral>
 
     <Description>
-Gapotchenko.FX is a polyfill to the future versions of .NET.
+.NET polyfill to the future. A versatile RAD framework for .NET platform.
 
-At the same time, Gapotchenko.FX is a versatile RAD (Rapid Application Development) framework for .NET platform that closes the gaps in original .NET design.
+Gapotchenko.FX closes the gaps in original .NET design by providing the missing functionality.
 
-This package represents $(FXModuleLiteral) of Gapotchenko.FX.
+This package represents $(_FXModuleLiteral) of Gapotchenko.FX.
 
 Supported platforms:
 - .NET Framework 4.0+
@@ -69,7 +69,7 @@ Supported platforms:
   </PropertyGroup>
 
   <Target Name="CleanNuGetPackage" AfterTargets="Clean">
-    <RemoveDir Directories="$(PackageOutputPath)" /> 
+    <RemoveDir Directories="$(PackageOutputPath)" />
   </Target>
 
   <!-- =================================================================== -->
