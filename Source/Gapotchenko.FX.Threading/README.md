@@ -10,7 +10,7 @@ Executing an async task from synchronous code poses a few rather big challenges 
 - The wait operation for an async task is prone to deadlocks unless a proper synchronization context is in place
 - The cancellation models of sync and async code are different and often incompatible
 
-`TaskBridge` makes this a breeze:
+Meet `TaskBridge`. It makes interoperability a breeze:
 
 ``` csharp
 using System;
