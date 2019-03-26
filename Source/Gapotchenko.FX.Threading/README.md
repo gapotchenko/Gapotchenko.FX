@@ -50,7 +50,7 @@ void SyncMethod() // can be canceled by Thread.Abort()
 async Task DoJobAsync(CancellationToken ct)
 {
     …
-    // Handles cancellation opportunities gracefully.
+    // Gracefully handles cancellation opportunities.
     ct.ThrowIfCancellationRequested();
     …
 }
@@ -67,7 +67,7 @@ using Gapotchenko.FX.Threading;
 async Task DoJobAsync(CancellationToken ct) // can be canceled by supplied cancellation token
 {
     // Executes a synchronous method that is thread-aborted when
-    // the provided cancellation token is being canceled.
+    // the specified cancellation token is being canceled.
     await TaskBridge.ExecuteAsync(SyncMethod, ct); // <-- TaskBridge DOES THE MAGIC
 }
 
