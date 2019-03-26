@@ -57,7 +57,7 @@ Allows to end a process according to a specified mode of operation.
 
 The `End()` method is interesting and a bit intricate.
 The stock `Process` class already provides a similar `Kill()` method
-which performs an immediate and forceful termination of a process without giving it a chance to exit gracefully.
+which performs an immediate forceful termination of a process without giving it a chance to exit gracefully.
 
 Depending on a kind of process which is being terminated, `Kill()` is not always suitable.
 For example, it may have devastating consequences if someone kills a Microsoft Visual Studio process without giving it a graceful shutdown.
