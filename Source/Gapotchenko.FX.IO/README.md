@@ -66,7 +66,7 @@ The problem this method solves is caused by the fact that a file path can be spe
 - `Test.txt` (relative path)
 - `C:\Temp\Test.txt` (absolute path)
 
-Let's take a look on code:
+Let's take a look at code:
 
 ``` csharp
 using Gapotchenko.FX.IO;
