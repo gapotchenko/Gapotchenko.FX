@@ -23,7 +23,7 @@ collection.AddRange(numbers.Where(x => x % 2 == 0)); // add even numbers
 
 ## IsNullOrEmpty() for Containers
 
-`System.String` class provides a convenient `IsNullOrEmpty` primitive for strings.
+`System.String` class provides a convenient `IsNullOrEmpty` primitive.
 
 `Gapotchenko.FX.Collections` extends availability of that primitive by providing `IsNullOrEmpty()` extension method for other container types.
 Here is an example:
