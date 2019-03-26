@@ -29,7 +29,7 @@ collection.AddRange(numbers.Where(x => x % 2 == 0)); // add even numbers
 Here is an example:
 
 ``` csharp
-using Gapotchenko.FX.Collections;
+using Gapotchenko.FX.Collections.Generic;
 
 class Method
 {
