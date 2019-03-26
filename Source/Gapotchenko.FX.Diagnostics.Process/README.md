@@ -15,13 +15,9 @@ What it does is returns the parent process. Or `null` when parent process is abs
 
 Enumerates a chain of parent processes beginning with the closest parent.
 
-This is an extension method provided by `Gapotchenko.FX.Diagnostics.Process` module for `System.Diagnostics.Process` class.
-
 ### ReadEnvironmentVariables()
 
 Reads environment variables of a process.
-
-This is an extension method provided by `Gapotchenko.FX.Diagnostics.Process` module for `System.Diagnostics.Process` class.
 
 The functionality is achieved by reading the process environment block (PEB) at the operating system level.
 
@@ -58,8 +54,6 @@ class Program
 ### End()
 
 Allows to end a process according to a specified mode of operation.
-
-This is an extension method provided by `Gapotchenko.FX.Diagnostics.Process` module for `System.Diagnostics.Process` class.
 
 The `End()` method is interesting and a bit intricate.
 The stock `Process` class already provides a similar `Kill()` method
