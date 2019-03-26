@@ -26,7 +26,7 @@ For example, this is how a PATH environment variable can be retrieved from all r
 ``` csharp
 using System;
 using System.Diagnostics;
-using Gapotchenko.FX.Diagnostics.Process;
+using Gapotchenko.FX.Diagnostics;
 
 class Program
 {
@@ -79,7 +79,7 @@ After its completion, the `End()` method returns a `ProcessEndMode` value that i
 Let's take a look on example that tries to end all running Notepad processes:
 
 ``` csharp
-using Gapotchenko.FX.Diagnostics.Process;
+using Gapotchenko.FX.Diagnostics;
 
 foreach (var process in Process.GetProcessesByName("notepad"))
 {
