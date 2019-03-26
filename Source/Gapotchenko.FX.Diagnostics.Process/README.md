@@ -4,20 +4,22 @@ The module provides extended functionality for process manipulation.
 
 ## Process Extensions
 
-### Process.GetParent()
+### GetParent()
 
 `GetParent()` is an extension method provided by `Gapotchenko.FX.Diagnostics.Process` module
 for `System.Diagnostics.Process` class.
 
 What it does is returns the parent process. Or `null` when parent process is absent or no longer running.
 
-### Process.EnumerateParents()
+### EnumerateParents()
 
 Enumerates a chain of parent processes beginning with the closest parent.
+This is an extension method provided by `Gapotchenko.FX.Diagnostics.Process` module for `System.Diagnostics.Process` class.
 
-### Process.ReadEnvironmentVariables()
+### ReadEnvironmentVariables()
 
 Reads environment variables of a process.
+This is an extension method provided by `Gapotchenko.FX.Diagnostics.Process` module for `System.Diagnostics.Process` class.
 
 The functionality is achieved by reading the process environment block (PEB) at the operating system level.
 
@@ -51,13 +53,15 @@ class Program
 }
 ```
 
-### Process.End()
+### End()
 
 Allows to end a process according to a specified mode of operation.
+This is an extension method provided by `Gapotchenko.FX.Diagnostics.Process` module for `System.Diagnostics.Process` class.
 
-This is an interesting and a bit intricate method.
-The stock `Process` class already provides the `Kill()` method.
-It performs an immediate and forceful termination of a process without giving it a chance to exit gracefully.
+
+The `End()` method is interesting and a bit intricate.
+The stock `Process` class already provides a similar `Kill()` method
+which performs an immediate and forceful termination of a process without giving it a chance to exit gracefully.
 
 Depending on a kind of process which is being terminated, `Kill()` is not always suitable.
 For example, it may have devastating consequences if someone kills a Microsoft Visual Studio process without giving it a graceful shutdown.
@@ -74,7 +78,7 @@ The default mode of operation is `ProcessEndMode.Complete` that goes as follows 
   - Exit (suitable for the current process only)
   - Kill (SIGKILL)
 
-After its completion, the `End()` method returns a `ProcessEndMode` value that shows how a process was ended.
+After its completion, the `End()` method returns a `ProcessEndMode` value that indicates how a process was ended.
 
 Let's take a look on example that tries to end all running Notepad processes:
 
@@ -152,11 +156,11 @@ foreach (var process in Process.GetProcessesByName("notepad"))
 }
 ```
 
-As you can see, despite a simple-looking `Process.End(…)` method the possibilities of achieving a specific goal are enormous.
+As you can see, despite a simple-looking `End(…)` method the possibilities of achieving a specific goal are enormous.
 
-### Process.EndAsync()
+### EndAsync()
 
-The method is similar to `Process.End()` but has an async implementation.
+The method is similar to `End()` but has an async implementation.
 If was created in order to efficiently handle a lot of processes in a bulk.
 
 ## Other Modules
