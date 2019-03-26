@@ -109,7 +109,7 @@ Graceful shutdown was not possible because the process had an active modal dialo
 
 #### More Examples
 
-Let's modify the sample a bit:
+Let's modify sample a bit:
 
 ``` csharp
 foreach (var process in Process.GetProcessesByName("notepad"))
