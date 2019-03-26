@@ -88,7 +88,7 @@ foreach (var process in Process.GetProcessesByName("notepad"))
 }
 ```
 
-Once there is a running Notepad app the sample produces the following output:
+Once there is a running Notepad app, the sample produces the following output:
 
 ```
 Close
