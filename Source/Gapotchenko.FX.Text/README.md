@@ -9,7 +9,7 @@ The module provides primitives for string and text manipulation.
 It was primarily designed to work in conjunction with `Regex` class from `System.Text.RegularExpressions` namespace to efficiently handle an advanced set of tasks
 when functionality provided by conventional methods like `Regex.Replace` is just not enough.
 
-[More on `StringEditor` class](StringEditor.md#one-shot-editing-operations)
+[More on `StringEditor` class](StringEditor.md)
 
 ## Other Modules
 
