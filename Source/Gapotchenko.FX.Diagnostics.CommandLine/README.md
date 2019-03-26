@@ -62,6 +62,18 @@ Basically, this is a shortcut to `CommandLineBuilder` class in a handy functiona
 string s = CommandLine.Build("/b", @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt");
 ```
 
+Such a form is very useful in something like this:
+
+``` csharp
+Process.Start(
+    "cmd",
+    CommandLine.Build(
+        "/C", "copy",
+        "/b", @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt"));
+```
+
+As you can see, it is an absolute no-brainer.
+
 ### Split
 
 `CommandLine.Split` provides the opposite operation to `CommandLine.Build`.
