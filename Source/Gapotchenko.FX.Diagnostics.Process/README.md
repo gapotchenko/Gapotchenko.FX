@@ -161,7 +161,7 @@ If was created in order to efficiently handle a lot of processes in a bulk.
 
 ## Other Modules
 
-Let's continue with a look to some other modules provided by Gapotchenko.FX platform:
+Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)

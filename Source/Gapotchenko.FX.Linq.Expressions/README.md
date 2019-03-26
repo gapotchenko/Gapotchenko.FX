@@ -9,7 +9,7 @@ This is useful for various purposes, most notably for caching.
 
 ## Other Modules
 
-Let's continue with a look to some other modules provided by Gapotchenko.FX platform:
+Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)

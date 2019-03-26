@@ -322,7 +322,7 @@ It's a polyfill to the future, after all.
 
 ## Other Modules
 
-Let's continue with a look to some other modules provided by Gapotchenko.FX platform:
+Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 - &#x27B4; [Gapotchenko.FX](../Gapotchenko.FX)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
