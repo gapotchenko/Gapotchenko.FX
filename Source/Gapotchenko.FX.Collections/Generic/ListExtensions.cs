@@ -38,7 +38,7 @@ namespace Gapotchenko.FX.Collections.Generic
         /// </summary>
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <param name="list">The list.</param>
-        public static void StableSort<T>(this List<T> list) => list.StableSort(null);
+        public static void StableSort<T>(this List<T> list) => StableSort(list, null);
 
         /// <summary>
         /// Clones the list.
@@ -46,12 +46,6 @@ namespace Gapotchenko.FX.Collections.Generic
         /// <typeparam name="T">The type of elements in the list.</typeparam>
         /// <param name="list">The list.</param>
         /// <returns>A cloned list.</returns>
-        public static List<T> Clone<T>(this List<T> list)
-        {
-            if (list == null)
-                return null;
-            else
-                return new List<T>(list);
-        }
+        public static List<T> Clone<T>(this List<T> list) => new List<T>(list ?? throw new ArgumentNullException(nameof(list)));
     }
 }

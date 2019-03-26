@@ -51,7 +51,7 @@ Process.Start("copy", clb.ToString());
 
 ## CommandLine
 
-`CommandLine` static class provides various  operations for command line manipulation.
+`CommandLine` static class provides various operations for command line manipulation.
 
 ### Build
 
