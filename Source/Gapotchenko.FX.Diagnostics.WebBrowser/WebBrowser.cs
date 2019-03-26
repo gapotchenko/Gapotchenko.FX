@@ -8,10 +8,10 @@ namespace Gapotchenko.FX.Diagnostics
     public static class WebBrowser
     {
         /// <summary>
-        /// Starts a default web browser and navigates to a specified URL.
+        /// Launches the default web browser and navigates to a specified URL.
         /// </summary>
         /// <param name="url">The URL.</param>
-        public static void Start(string url)
+        public static void Launch(string url)
         {
             if (url == null)
                 throw new ArgumentNullException(nameof(url));
