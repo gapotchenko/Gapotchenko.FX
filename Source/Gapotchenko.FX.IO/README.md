@@ -60,7 +60,7 @@ void ProcessFile(string filePath)
 
 ### PathsAreEquivalent(string a, string b)
 
-Determines whether given paths are equivalent. If they point to the same file system entry then the method returns `true`; otherwise, `false`.
+Determines whether the given paths are equivalent. If they point to the same file system entry then the method returns `true`; otherwise, `false`.
 
 The problem this method solves is caused by the fact that a file path can be specified in multiple forms:
 - `Test.txt` (relative path)
@@ -96,7 +96,7 @@ Determines whether the beginning of the path matches the specified value in term
 Say we have a folder name `Contoso\Reports\2012\Final`.
 How do we know that it starts with `Contoso\Reports`?
 
-A straightforward solution would be to use string `StartsWith` function, like so:
+A straightforward solution would be to use string's `StartsWith` function, like so:
 
 ``` csharp
 bool IsContosoReportsFolder(string path) => path.StartsWith(@"Contoso\Reports");
