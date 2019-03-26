@@ -7,12 +7,12 @@ namespace Gapotchenko.FX
 {
     class DefaultArrayEqualityComparer<T> : ArrayEqualityComparer<T>
     {
-        internal DefaultArrayEqualityComparer(IEqualityComparer<T> elementEqualityComparer)
+        internal DefaultArrayEqualityComparer(IEqualityComparer<T> elementComparer)
         {
-            _ElementEqualityComparer = elementEqualityComparer ?? EqualityComparer<T>.Default;
+            _ElementComparer = elementComparer ?? EqualityComparer<T>.Default;
         }
 
-        readonly IEqualityComparer<T> _ElementEqualityComparer;
+        readonly IEqualityComparer<T> _ElementComparer;
 
         /// <summary>
         /// Determines whether the specified arrays are equal.
@@ -32,7 +32,7 @@ namespace Gapotchenko.FX
                 return false;
 
             for (int i = 0; i < x.Length; i++)
-                if (!_ElementEqualityComparer.Equals(x[i], y[i]))
+                if (!_ElementComparer.Equals(x[i], y[i]))
                     return false;
 
             return true;
@@ -51,7 +51,7 @@ namespace Gapotchenko.FX
             // FNV-1a
             uint hash = 2166136261;
             foreach (var i in obj)
-                hash = (hash ^ (uint)_ElementEqualityComparer.GetHashCode(i)) * 16777619;
+                hash = (hash ^ (uint)_ElementComparer.GetHashCode(i)) * 16777619;
             return (int)hash;
         }
 

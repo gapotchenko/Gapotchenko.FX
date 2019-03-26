@@ -116,24 +116,24 @@ namespace Gapotchenko.FX
         /// Creates a new equality comparer for one-dimensional array with a specified comparer for elements.
         /// </summary>
         /// <typeparam name="T">The type of array elements.</typeparam>
-        /// <param name="elementEqualityComparer">The element equality comparer.</param>
+        /// <param name="elementComparer">The equality comparer for array elements.</param>
         /// <returns>A new equality comparer for one-dimensional array with elements of type <typeparamref name="T"/>.</returns>
-        public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T> elementEqualityComparer)
+        public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T> elementComparer)
         {
             var elementType = typeof(T);
             var elementTypeCode = Type.GetTypeCode(elementType);
 
             switch (elementTypeCode)
             {
-                case TypeCode.Byte when _IsDefaultEqualityComparer(elementEqualityComparer):
+                case TypeCode.Byte when _IsDefaultEqualityComparer(elementComparer):
                     return (ArrayEqualityComparer<T>)(object)new ByteRank1Comparer();
             }
 
-            return new DefaultArrayEqualityComparer<T>(elementEqualityComparer);
+            return new DefaultArrayEqualityComparer<T>(elementComparer);
         }
 
-        static bool _IsDefaultEqualityComparer<T>(IEqualityComparer<T> equalityComparer) =>
-            equalityComparer == null ||
-            equalityComparer == EqualityComparer<T>.Default;
+        static bool _IsDefaultEqualityComparer<T>(IEqualityComparer<T> comparer) =>
+            comparer == null ||
+            comparer == EqualityComparer<T>.Default;
     }
 }

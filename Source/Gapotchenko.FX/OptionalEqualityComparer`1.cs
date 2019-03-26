@@ -8,18 +8,18 @@ namespace Gapotchenko.FX
     [Serializable]
     sealed class OptionalEqualityComparer<T> : IEqualityComparer<Optional<T>>
     {
-        public OptionalEqualityComparer(IEqualityComparer<T> valueEqualityComparer)
+        public OptionalEqualityComparer(IEqualityComparer<T> valueComparer)
         {
-            _ValueEqualityComparer = valueEqualityComparer ?? EqualityComparer<T>.Default;
+            _ValueComparer = valueComparer ?? EqualityComparer<T>.Default;
         }
 
-        readonly IEqualityComparer<T> _ValueEqualityComparer;
+        readonly IEqualityComparer<T> _ValueComparer;
 
-        public bool Equals(Optional<T> x, Optional<T> y) => EqualsCore(x, y, _ValueEqualityComparer);
+        public bool Equals(Optional<T> x, Optional<T> y) => EqualsCore(x, y, _ValueComparer);
 
-        public int GetHashCode(Optional<T> obj) => GetHashCodeCore(obj, _ValueEqualityComparer);
+        public int GetHashCode(Optional<T> obj) => GetHashCodeCore(obj, _ValueComparer);
 
-        internal static bool EqualsCore(Optional<T> x, object y, IEqualityComparer<T> valueEqualityComparer)
+        internal static bool EqualsCore(Optional<T> x, object y, IEqualityComparer<T> valueComparer)
         {
             if (!x.HasValue)
             {
@@ -31,13 +31,13 @@ namespace Gapotchenko.FX
             else if (y is Optional<T> otherOption)
             {
                 if (otherOption.HasValue)
-                    return valueEqualityComparer.Equals(x.Value, otherOption.Value);
+                    return valueComparer.Equals(x.Value, otherOption.Value);
                 else
                     return false;
             }
             else if (y is T anotherValue)
             {
-                return valueEqualityComparer.Equals(x.Value, anotherValue);
+                return valueComparer.Equals(x.Value, anotherValue);
             }
             else
             {
@@ -48,19 +48,19 @@ namespace Gapotchenko.FX
             }
         }
 
-        internal static bool EqualsCore(Optional<T> x, T y, IEqualityComparer<T> valueEqualityComparer)
+        internal static bool EqualsCore(Optional<T> x, T y, IEqualityComparer<T> valueComparer)
         {
             if (!x.HasValue)
                 return false;
-            return valueEqualityComparer.Equals(x.Value, y);
+            return valueComparer.Equals(x.Value, y);
         }
 
-        internal static bool EqualsCore(Optional<T> x, Optional<T> y, IEqualityComparer<T> valueEqualityComparer)
+        internal static bool EqualsCore(Optional<T> x, Optional<T> y, IEqualityComparer<T> valueComparer)
         {
             if (x.HasValue)
             {
                 if (y.HasValue)
-                    return valueEqualityComparer.Equals(x.Value, y.Value);
+                    return valueComparer.Equals(x.Value, y.Value);
                 return false;
             }
             else
@@ -69,7 +69,7 @@ namespace Gapotchenko.FX
             }
         }
 
-        internal static int GetHashCodeCore(Optional<T> obj, IEqualityComparer<T> valueEqualityComparer)
+        internal static int GetHashCodeCore(Optional<T> obj, IEqualityComparer<T> valueComparer)
         {
             if (!obj.HasValue)
             {
@@ -81,7 +81,7 @@ namespace Gapotchenko.FX
                 if (value == null)
                     return 0;
                 else
-                    return valueEqualityComparer.GetHashCode(value);
+                    return valueComparer.GetHashCode(value);
             }
         }
     }

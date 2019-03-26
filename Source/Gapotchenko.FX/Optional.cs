@@ -32,10 +32,10 @@ namespace Gapotchenko.FX
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
         /// <param name="x">The first optional value to compare.</param>
         /// <param name="y">The second optional value to compare.</param>
-        /// <param name="valueEqualityComparer">The value equality comparer.</param>
+        /// <param name="valueComparer">The value equality comparer.</param>
         /// <returns><c>true</c> if the specified objects are equal; otherwise, <c>false</c>.</returns>
-        public static bool Equals<T>(Optional<T> x, Optional<T> y, IEqualityComparer<T> valueEqualityComparer) =>
-            OptionalEqualityComparer<T>.EqualsCore(x, y, valueEqualityComparer ?? EqualityComparer<T>.Default);
+        public static bool Equals<T>(Optional<T> x, Optional<T> y, IEqualityComparer<T> valueComparer) =>
+            OptionalEqualityComparer<T>.EqualsCore(x, y, valueComparer ?? EqualityComparer<T>.Default);
 
         /// <summary>
         /// Determines whether the specified optional values are equal.
@@ -51,10 +51,10 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
         /// <param name="option">The optional value.</param>
-        /// <param name="valueEqualityComparer">The value equality comparer.</param>
+        /// <param name="valueComparer">The value equality comparer.</param>
         /// <returns>A hash code for the specified optional value.</returns>
-        public static int GetHashCode<T>(Optional<T> option, IEqualityComparer<T> valueEqualityComparer) =>
-            OptionalEqualityComparer<T>.GetHashCodeCore(option, valueEqualityComparer ?? EqualityComparer<T>.Default);
+        public static int GetHashCode<T>(Optional<T> option, IEqualityComparer<T> valueComparer) =>
+            OptionalEqualityComparer<T>.GetHashCodeCore(option, valueComparer ?? EqualityComparer<T>.Default);
 
         /// <summary>
         /// Returns a hash code for the specified optional value.
@@ -97,9 +97,9 @@ namespace Gapotchenko.FX
         /// Creates a new equality comparer for <see cref="Optional{T}"/> values with a specified comparer for <typeparamref name="T"/> values.
         /// </summary>
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
-        /// <param name="valueEqualityComparer">The value equality comparer.</param>
+        /// <param name="valueComparer">The value equality comparer.</param>
         /// <returns>A new equality comparer for <see cref="Optional{T}"/> objects.</returns>
-        public static IEqualityComparer<Optional<T>> CreateEqualityComparer<T>(IEqualityComparer<T> valueEqualityComparer) =>
-            new OptionalEqualityComparer<T>(valueEqualityComparer);
+        public static IEqualityComparer<Optional<T>> CreateEqualityComparer<T>(IEqualityComparer<T> valueComparer) =>
+            new OptionalEqualityComparer<T>(valueComparer);
     }
 }
