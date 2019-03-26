@@ -72,8 +72,6 @@ Process.Start(
         "/b", @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt"));
 ```
 
-As you can see, it is an absolute no-brainer.
-
 ### Split
 
 `CommandLine.Split` provides the opposite operation to `CommandLine.Build`.
