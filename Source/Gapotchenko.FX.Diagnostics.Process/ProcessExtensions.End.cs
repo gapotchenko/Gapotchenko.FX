@@ -13,8 +13,40 @@ namespace Gapotchenko.FX.Diagnostics
 {
     partial class ProcessExtensions
     {
+        const int DefaultEndTimeout = 3000;
+
         /// <summary>
-        /// Ends a process according to the specified mode.
+        /// Ends a process with default timeout.
+        /// </summary>
+        /// <remarks>
+        /// The default timeout is 3 seconds.
+        /// </remarks>
+        /// <param name="process">The process to end.</param>
+        /// <returns>The mode in which the process has been ended.</returns>
+        public static ProcessEndMode End(this Process process) => End(process, DefaultEndTimeout);
+
+        /// <summary>
+        /// Ends a process with a specified timeout.
+        /// </summary>
+        /// <param name="process">The process to end.</param>
+        /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
+        /// <returns>The mode in which the process has been ended.</returns>
+        public static ProcessEndMode End(this Process process, int millisecondsTimeout) =>
+            End(process, ProcessEndMode.Complete, millisecondsTimeout);
+
+        /// <summary>
+        /// Ends a process according to a specified mode with default timeout.
+        /// </summary>
+        /// <remarks>
+        /// The default timeout is 3 seconds.
+        /// </remarks>
+        /// <param name="process">The process to end.</param>
+        /// <param name="mode">The mode of ending a process.</param>
+        /// <returns>The mode in which the process has been ended.</returns>
+        public static ProcessEndMode End(this Process process, ProcessEndMode mode) => End(process, mode, DefaultEndTimeout);
+
+        /// <summary>
+        /// Ends a process according to a specified mode and timeout.
         /// </summary>
         /// <param name="process">The process to end.</param>
         /// <param name="mode">The mode of ending a process.</param>
@@ -24,16 +56,7 @@ namespace Gapotchenko.FX.Diagnostics
             TaskBridge.Execute(ct => EndAsync(process, mode, millisecondsTimeout, ct));
 
         /// <summary>
-        /// Ends a process.
-        /// </summary>
-        /// <param name="process">The process to end.</param>
-        /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
-        /// <returns>The mode in which the process has been ended.</returns>
-        public static ProcessEndMode End(this Process process, int millisecondsTimeout) =>
-            End(process, ProcessEndMode.Complete, millisecondsTimeout);
-
-        /// <summary>
-        /// Ends a process asynchronously according to the specified mode.
+        /// Ends a process asynchronously according to a specified mode and timeout.
         /// </summary>
         /// <param name="process">The process to end.</param>
         /// <param name="mode">The mode of ending a process.</param>
@@ -92,7 +115,20 @@ namespace Gapotchenko.FX.Diagnostics
         }
 
         /// <summary>
-        /// Ends a process asynchronously according to the specified mode.
+        /// Ends a process asynchronously according to a specified mode with default timeout.
+        /// </summary>
+        /// <remarks>
+        /// The default timeout is 3 seconds.
+        /// </remarks>
+        /// <param name="process">The process to end.</param>
+        /// <param name="mode">The mode of ending a process.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The mode in which the process has been ended.</returns>
+        public static Task<ProcessEndMode> EndAsync(this Process process, ProcessEndMode mode, CancellationToken cancellationToken) =>
+            EndAsync(process, mode, DefaultEndTimeout, cancellationToken);
+
+        /// <summary>
+        /// Ends a process asynchronously according to a specified mode and timeout.
         /// </summary>
         /// <param name="process">The process to end.</param>
         /// <param name="mode">The mode of ending a process.</param>
@@ -102,7 +138,18 @@ namespace Gapotchenko.FX.Diagnostics
             EndAsync(process, mode, millisecondsTimeout, CancellationToken.None);
 
         /// <summary>
-        /// Ends a process asynchronously.
+        /// Ends a process asynchronously according to a specified mode with default timeout.
+        /// </summary>
+        /// <remarks>
+        /// The default timeout is 3 seconds.
+        /// </remarks>
+        /// <param name="process">The process to end.</param>
+        /// <param name="mode">The mode of ending a process.</param>
+        /// <returns>The mode in which the process has been ended.</returns>
+        public static Task<ProcessEndMode> EndAsync(this Process process, ProcessEndMode mode) => EndAsync(process, mode, DefaultEndTimeout);
+
+        /// <summary>
+        /// Ends a process asynchronously with a specified timeout.
         /// </summary>
         /// <param name="process">The process to end.</param>
         /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
@@ -111,7 +158,17 @@ namespace Gapotchenko.FX.Diagnostics
             EndAsync(process, ProcessEndMode.Complete, millisecondsTimeout);
 
         /// <summary>
-        /// Ends a process asynchronously.
+        /// Ends a process asynchronously with default timeout.
+        /// </summary>
+        /// <remarks>
+        /// The default timeout is 3 seconds.
+        /// </remarks>
+        /// <param name="process">The process to end.</param>
+        /// <returns>The mode in which the process has been ended.</returns>
+        public static Task<ProcessEndMode> EndAsync(this Process process) => EndAsync(process, DefaultEndTimeout);
+
+        /// <summary>
+        /// Ends a process asynchronously with a specified timeout.
         /// </summary>
         /// <param name="process">The process to end.</param>
         /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
@@ -119,6 +176,18 @@ namespace Gapotchenko.FX.Diagnostics
         /// <returns>The mode in which the process has been ended.</returns>
         public static Task<ProcessEndMode> EndAsync(this Process process, int millisecondsTimeout, CancellationToken cancellationToken) =>
             EndAsync(process, ProcessEndMode.Complete, millisecondsTimeout, cancellationToken);
+
+        /// <summary>
+        /// Ends a process asynchronously with default timeout.
+        /// </summary>
+        /// <remarks>
+        /// The default timeout is 3 seconds.
+        /// </remarks>
+        /// <param name="process">The process to end.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The mode in which the process has been ended.</returns>
+        public static Task<ProcessEndMode> EndAsync(this Process process, CancellationToken cancellationToken) =>
+            EndAsync(process, DefaultEndTimeout, cancellationToken);
 
         static ProcessEndMode _ConditionEndMode(ProcessEndMode mode, ProcessEndMode group, ProcessEndMode groupModes)
         {

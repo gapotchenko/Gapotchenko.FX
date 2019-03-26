@@ -1,6 +1,163 @@
 ﻿# Gapotchenko.FX.Diagnostics.Process
 
-TODO
+The module provides extended functionality for process manipulation.
+
+## Process Extensions
+
+### Process.GetParent()
+
+`GetParent()` is an extension method provided by `Gapotchenko.FX.Diagnostics.Process` module
+for `System.Diagnostics.Process` class.
+
+What it does is returns the parent process. Or `null` when parent process is absent or no longer running.
+
+### Process.EnumerateParents()
+
+Enumerates a chain of parent processes beginning with the closest parent.
+
+### Process.ReadEnvironmentVariables()
+
+Reads environment variables of a process.
+
+The functionality is achieved by reading the process environment block (PEB) at the operating system level.
+
+For example, this is how a PATH environment variable can be retrieved from all running instances of Microsoft Visual Studio:
+
+``` csharp
+using System;
+using System.Diagnostics;
+using Gapotchenko.FX.Diagnostics.Process;
+
+class Program
+{
+    static void Main()
+    {
+        var processes = Process.GetProcessesByName("devenv");
+
+        if (processes.Length == 0)
+            Console.WriteLine("Process with a given name not found. Please modify the code and specify the existing process name.");
+
+        foreach (var process in processes)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Process with ID {0} has the following value of PATH environment variable:", process.Id);
+
+            var env = process.ReadEnvironmentVariables();
+
+            string path = env["PATH"];
+            Console.WriteLine(path);
+        }
+    }
+}
+```
+
+### Process.End()
+
+Allows to end a process according to a specified mode of operation.
+
+This is an interesting and a bit intricate method.
+The stock `Process` class already provides the `Kill()` method.
+It performs an immediate and forceful termination of a process without giving it a chance to exit gracefully.
+
+Depending on a kind of process which is being terminated, `Kill()` is not always suitable.
+For example, it may have devastating consequences if someone kills a Microsoft Visual Studio process without giving it a graceful shutdown.
+Lost files, potentially corrupted extensions and so on.
+
+Meet the `End()` method provided by `Gapotchenko.FX.Diagnostics.Process` module.
+It allows to end a process according to a specified mode of operation.
+The default mode of operation is `ProcessEndMode.Complete` that goes as follows whatever succeeds first:
+
+- Graceful
+  - Close main window
+  - Send Ctrl+C (SIGTERM) signal
+- Forceful
+  - Exit (suitable for the current process only)
+  - Kill (SIGKILL)
+
+After its completion, the `End()` method returns a `ProcessEndMode` value that shows how a process was ended.
+
+Let's take a look on example that tries to end all running Notepad processes:
+
+``` csharp
+using Gapotchenko.FX.Diagnostics.Process;
+
+foreach (var process in Process.GetProcessesByName("notepad"))
+{
+    var result = process.End();
+    Console.WriteLine(result);
+}
+```
+
+Once there is a running Notepad app the sample produces the following output:
+
+```
+Close
+```
+
+signifiying that a Notepad process was gracefully ended by closing its main window.
+
+Now let's repeat the experiment by launching a Notepad app again and opening its file save dialog via menu (File -> Save As...).
+Keep the save dialog open and launch the example code one more time.
+
+This time the result will be different:
+```
+Kill
+```
+
+Notepad process could not be shutdown gracefully and was forcefully killed.
+Graceful shutdown was not possible because an app had an active modal dialog.
+
+#### More Examples
+
+Let's modify the sample a bit:
+
+``` csharp
+foreach (var process in Process.GetProcessesByName("notepad2"))
+{
+    var result = process.End();
+
+    Console.WriteLine("PID {0}", process.Id);
+    Console.WriteLine("Graceful: {0}", (result & ProcessEndMode.Graceful) != 0);
+    Console.WriteLine("Forceful: {0}", (result & ProcessEndMode.Forceful) != 0);
+}
+```
+
+Now it shows the ID of a process that was ended together with a graceful/forceful classification of the result.
+
+What if we want to limit the `End()` method to only perform a graceful process termination?
+Let's use the `End(ProcessEndMode)` method overload:
+
+``` csharp
+foreach (var process in Process.GetProcessesByName("notepad"))
+{
+    var result = process.End(ProcessEndMode.Graceful);
+
+    Console.WriteLine("PID {0}", process.Id);
+    Console.WriteLine(result);
+}
+```
+
+Now the result will only be graceful, or have `ProcessEndMode.None` value if a process could not be gracefully ended.
+
+But what if we want to limit the `End()` method to only perform a graceful process termination via Ctrl+C (SIGINT) signal and forceful kill?
+No problem:
+
+``` csharp
+foreach (var process in Process.GetProcessesByName("notepad"))
+{
+    var result = process.End(ProcessEndMode.Interrupt | ProcessEndMode.Kill);
+
+    Console.WriteLine("PID {0}", process.Id);
+    Console.WriteLine(result);
+}
+```
+
+As you can see, despite a simple-looking `Process.End(…)` method the possibilities of achieving a specific goal are enormous.
+
+### Process.EndAsync()
+
+The method is similar to `Process.End()` but has an async implementation.
+If was created in order to efficiently handle a lot of processes in a bulk.
 
 ## Other Modules
 

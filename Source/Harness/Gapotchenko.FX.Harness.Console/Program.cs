@@ -47,22 +47,13 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _Run()
         {
-            var processes = Process.GetProcessesByName("devenv");
-
-            if (processes.Length == 0)
-                Console.WriteLine("Process with a given name not found. Please modify the code and specify the existing process name.");
-
-            foreach (var process in processes)
+            foreach (var process in Process.GetProcessesByName("notepad2"))
             {
-                Console.WriteLine();
-                Console.WriteLine("Process with ID {0} has a PATH environment variable:", process.Id);
-
-                var env = process.ReadEnvironmentVariables();
-
-                string path = env["PATH"];
-                Console.WriteLine(path);
+                var result = process.End();
+                Console.WriteLine("PID {0}", process.Id);
+                Console.WriteLine("Graceful: {0}", (result & ProcessEndMode.Graceful) != 0);
+                Console.WriteLine("Forceful: {0}", (result & ProcessEndMode.Forceful) != 0);
             }
-
         }
 
         static async Task _RunAsync(CancellationToken ct)
