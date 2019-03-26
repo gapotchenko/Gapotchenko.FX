@@ -97,15 +97,15 @@ Close
 signifiying that a Notepad process was gracefully ended by closing its main window.
 
 Now let's repeat the experiment by launching a Notepad app again and opening its file save dialog via menu (File -> Save As...).
-Keep the save dialog open and launch the example code one more time.
+Let's keep the save dialog open, and launch the example code one more time.
 
 This time the result will be different:
 ```
 Kill
 ```
 
-Notepad process could not be shutdown gracefully and was forcefully killed.
-Graceful shutdown was not possible because an app had an active modal dialog.
+The Notepad process could not be shutdown gracefully and thus was forcefully killed.
+Graceful shutdown was not possible because it had an active modal dialog.
 
 #### More Examples
 
