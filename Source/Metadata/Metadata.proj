@@ -18,12 +18,17 @@
     <!-- NuGet Specification -->
     <VersionPrefix>2019.1.140</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
+
+    <FXModule>$(MSBuildProjectName)</FXModule>
+    <FXModuleLiteral>$(FXModule) module</FXModuleLiteral>
+    <FXModuleLiteral Condition=" '$(FXModule)' == 'Gapotchenko.FX' ">the main module</FXModuleLiteral>
+
     <Description>
 Gapotchenko.FX is a polyfill to the future versions of .NET.
 
-At the same time, it is a versatile RAD (Rapid Application Development) framework for .NET platform that closes the gaps in original .NET design.
+At the same time, Gapotchenko.FX is a versatile RAD (Rapid Application Development) framework for .NET platform that closes the gaps in original .NET design.
 
-This package represents $(MSBuildProjectName) module of Gapotchenko.FX.
+This package represents $(FXModuleLiteral) of Gapotchenko.FX.
 
 Supported platforms:
 - .NET Framework 4.0+
