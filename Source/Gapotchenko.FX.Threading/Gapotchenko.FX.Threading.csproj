@@ -4,7 +4,6 @@
   <PropertyGroup>
     <TargetFramework></TargetFramework>
     <LangVersion>7.1</LangVersion>
-    <Description>Gapotchenko.FX.Threading module. A part of Basic profile of Gapotchenko.FX framework.</Description>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />

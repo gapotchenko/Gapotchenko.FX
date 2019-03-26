@@ -3,7 +3,7 @@
   <Import Project="..\..\Metadata\Metadata.proj" />
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-    <Description>Basic profile of Gapotchenko.FX framework.</Description>
+    <!-- Description>Basic profile of Gapotchenko.FX framework.</Description -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
   <ItemGroup>

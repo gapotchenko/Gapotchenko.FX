@@ -3,7 +3,6 @@
   <Import Project="..\Metadata\Metadata.proj" />
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-    <Description>Gapotchenko.FX.Math module. A part of Basic profile of Gapotchenko.FX framework.</Description>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>

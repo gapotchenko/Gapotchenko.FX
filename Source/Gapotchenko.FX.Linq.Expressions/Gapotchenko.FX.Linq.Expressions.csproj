@@ -3,7 +3,6 @@
   <Import Project="..\Metadata\Metadata.proj" />
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-    <Description>Gapotchenko.FX.Linq.Expressions module. A part of Basic profile of Gapotchenko.FX framework.</Description>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>

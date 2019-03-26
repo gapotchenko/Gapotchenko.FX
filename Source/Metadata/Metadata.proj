@@ -9,20 +9,31 @@
 
   <!-- Assembly Information -->
   <PropertyGroup>
-    <AssemblyVersion>2019.1.139.16010</AssemblyVersion>
-    <FileVersion>2019.1.139.16010</FileVersion>
-    <InformationalVersion>2019.1.139 (Beta build 2019.1.139.16010)</InformationalVersion>
+    <AssemblyVersion>2019.1.140.16010</AssemblyVersion>
+    <FileVersion>2019.1.140.16010</FileVersion>
+    <InformationalVersion>2019.1.140 (Beta build 2019.1.140.16010)</InformationalVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <!-- NuGet Specification -->
-    <VersionPrefix>2019.1.139</VersionPrefix>
+    <VersionPrefix>2019.1.140</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
-    <Description>Gapotchenko.FX</Description>
+    <Description>
+Gapotchenko.FX is a polyfill to the future versions of .NET.
+
+At the same time, it is a versatile RAD (Rapid Application Development) framework for .NET platform that closes the gaps in original .NET design.
+
+This package represents $(MSBuildProjectName) module of Gapotchenko.FX.
+
+Supported platforms:
+- .NET Framework 4.0+
+- .NET Standard 2.0+
+- .NET Core 2.0+
+    </Description>
     <Authors>Gapotchenko</Authors>
     <PackageTags>framework platform polyfill rad</PackageTags>
     <PackageIconUrl>https://cdn.gapotchenko.com/publish/fx/assets/e84f03b5893f47d4a768729ea46875d8/icon48.png</PackageIconUrl>
-    <PackageProjectUrl>https://www.gapotchenko.com/fx</PackageProjectUrl>
+    <PackageProjectUrl>https://gapotchenko.com/fx</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
