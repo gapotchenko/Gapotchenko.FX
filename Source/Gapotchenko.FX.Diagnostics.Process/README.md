@@ -105,7 +105,7 @@ Kill
 ```
 
 The Notepad process could not be shutdown gracefully and thus was forcefully killed.
-Graceful shutdown was not possible because it had an active modal dialog.
+Graceful shutdown was not possible because the process had an active modal dialog.
 
 #### More Examples
 
