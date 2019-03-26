@@ -7,7 +7,7 @@ The module provides primitives for command line manipulation.
 `CommandLineBuilder` class from `Gapotchenko.FX.Diagnostics.CommandLine` module allows to dynamically build a command line on the fly.
 It provides the built-in support for characters than need escaping.
 
-Semantically `CommandLineBuilder` is similar to `StringBuilder` and can be easily employed for your purposes:
+Semantically `CommandLineBuilder` is similar to `StringBuilder` class:
 
 ``` csharp
 using Gapotchenko.FX.Diagnostics;
@@ -26,7 +26,7 @@ The code above produces the following output:
 /b "C:\Temp\Test 1.txt" "C:\Temp\Test 2.txt"
 ```
 
-Note how some command line parameters were automatically quoted because they contain whitespace.
+Note how some command line parameters were automatically quoted because they contained whitespace characters.
 
 `CommandLineBuilder` supports a fluent interface just like conventional `StringBuilder`,
 so the code can be rewritten as:
