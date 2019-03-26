@@ -9,15 +9,15 @@
 
   <!-- Assembly Information -->
   <PropertyGroup>
-    <AssemblyVersion>1.1.135.16010</AssemblyVersion>
-    <FileVersion>1.1.135.16010</FileVersion>
-    <InformationalVersion>1.1 (Beta build 1.1.135.16010)</InformationalVersion>
+    <AssemblyVersion>2019.1.139.16010</AssemblyVersion>
+    <FileVersion>2019.1.139.16010</FileVersion>
+    <InformationalVersion>2019.1.139 (Beta build 2019.1.139.16010)</InformationalVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <!-- NuGet Specification -->
     <Authors>Gapotchenko</Authors>
-    <VersionPrefix>1.1.135</VersionPrefix>
+    <VersionPrefix>2019.1.139</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
     <Description>Gapotchenko.FX</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
