@@ -4,7 +4,85 @@ The module provides primitives for command line manipulation.
 
 ## CommandLineBuilder
 
-TODO
+`CommandLineBuilder` class from `Gapotchenko.FX.Diagnostics.CommandLine` module allows to dynamically build a command line on the fly.
+It provides the built-in support for characters than need escaping.
+
+Semantically `CommandLineBuilder` is similar to `StringBuilder` and can be easily employed for your purposes:
+
+``` csharp
+using Gapotchenko.FX.Diagnostics;
+
+var clb = new CommandLineBuilder();
+clb.AppendParameter("/b");
+clb.AppendParameter(@"C:\Temp\Test 1.txt");
+clb.AppendParameter(@"C:\Temp\Test 2.txt");
+
+Console.WriteLine(clb.ToString());
+```
+
+The code above produces the following output:
+
+```
+/b "C:\Temp\Test 1.txt" "C:\Temp\Test 2.txt"
+```
+
+Note how some command line parameters were automatically quoted because they contain whitespace.
+
+`CommandLineBuilder` supports a fluent interface just like conventional `StringBuilder`,
+so the code can be rewritten as:
+
+``` csharp
+var clb = new CommandLineBuilder()
+    .AppendParameter("/b")
+    .AppendParameter(@"C:\Temp\Test 1.txt")
+    .AppendParameter(@"C:\Temp\Test 2.txt");
+
+Console.WriteLine(clb.ToString());
+```
+
+The resulting command line can be used in various places, most notably for starting a new process:
+
+``` csharp
+using System.Diagnostics;
+
+…
+Process.Start("copy", clb.ToString());
+```
+
+## CommandLine
+
+`CommandLine` static class provides various  operations for command line manipulation.
+
+### Build
+
+`CommandLine.Build` method allows to quickly build a command line string from a specified list of arguments.
+Basically, this is a shortcut to `CommandLineBuilder` class in a handy functional form:
+
+``` csharp
+string s = CommandLine.Build("/b", @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt");
+```
+
+### Split
+
+`CommandLine.Split` provides the opposite operation to `CommandLine.Build`.
+It allows to split a command line string into a list of arguments:
+
+``` csharp
+using Gapotchenko.FX.Diagnostics;
+
+string s = "/b \"C:\\Temp\\Test 1.txt\" \"C:\\Temp\\Test 2.txt\"";
+
+foreach (string arg in CommandLine.Split(s))
+    Console.WriteLine(arg);
+```
+
+The code above produces the following output:
+
+```
+/b
+C:\Temp\Test 1.txt
+C:\Temp\Test 2.txt
+```
 
 ## Other Modules
 
