@@ -78,7 +78,7 @@ void SyncMethod()
 ```
 
 As you can see, `TaskBridge` has a lot of chances to become your tool #1,
-as it elegantly solves a world-class problem of bridging sync and async tasks together.
+as it elegantly solves a world-class problem of bridging sync and async models together.
 
 ## Other Modules
 
