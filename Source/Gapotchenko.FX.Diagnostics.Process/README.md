@@ -112,7 +112,7 @@ Graceful shutdown was not possible because an app had an active modal dialog.
 Let's modify the sample a bit:
 
 ``` csharp
-foreach (var process in Process.GetProcessesByName("notepad2"))
+foreach (var process in Process.GetProcessesByName("notepad"))
 {
     var result = process.End();
 
