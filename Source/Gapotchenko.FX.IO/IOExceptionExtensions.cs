@@ -16,7 +16,7 @@ namespace Gapotchenko.FX.IO
     public static class IOExceptionExtensions
     {
         /// <summary>
-        /// Checks whether an IO exception signifies a file access violation error.
+        /// Determines whether an IO exception signifies a file access violation error.
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <returns><c>true</c> if exception represents a file access violation error; otherwise, <c>false</c>.</returns>

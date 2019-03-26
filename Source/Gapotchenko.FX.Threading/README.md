@@ -1,6 +1,84 @@
 ﻿# Gapotchenko.FX.Threading
 
-TODO
+The module provides extended primitives for multithreaded and asynchronous programming.
+
+## TaskBridge
+
+`TaskBridge` class from `Gapotchenko.FX.Threading` module provides seamless interoperability between synchronous and asynchronous code execution models.
+
+Executing an async task from synchronous code provides a few rather big challenges in conventional .NET:
+- The wait operation for an async task is prone to deadlocks unless a proper synchronization context is in place
+- The cancellation models of sync and async code are different and often incompatible
+
+`TaskBridge` makes this a breeze:
+
+``` csharp
+using System;
+using Gapotchenko.FX.Threading;
+
+class Program
+{
+    static void Main()
+    {
+        TaskBridge.Execute(RunAsync);
+    }
+
+    static async Task RunAsync()
+    {
+        await Console.Out.WriteLineAsync("Hello, Async World!");
+    }
+}
+```
+
+### Cancellation Models
+
+`TaskBridge` provides automatic interoperability between different cancellation models.
+
+Let's call a cancelable async method from a synchronous thread that can be aborted by `Thread.Abort()` method:
+
+``` csharp
+using System.Threading;
+using Gapotchenko.FX.Threading;
+
+void SyncMethod() // can be canceled by Thread.Abort()
+{
+    // Executes an async task that is gracefully canceled via cancellation
+    // token when current thread is being aborted or interrupted.
+    TaskBridge.Execute(DoJobAsync); // <-- TaskBridge DOES THE MAGIC
+}
+
+async Task DoJobAsync(CancellationToken ct)
+{
+    …
+    // Handles cancellation opportunities gracefully.
+    ct.ThrowIfCancellationRequested();
+    …
+}
+```
+
+You see this? A simple one-liner for a *complete* interoperability between two execution models.
+
+Now, let's take a look at the opposite scenario where a cancelable async task calls an abortable synchronous code:
+
+``` csharp
+using System.Threading;
+using Gapotchenko.FX.Threading;
+
+async Task DoJobAsync(CancellationToken ct) // can be canceled by supplied cancellation token
+{
+    // Executes a synchronous method that is thread-aborted when
+    // the provided cancellation token is being canceled.
+    await TaskBridge.ExecuteAsync(SyncMethod, ct); // <-- TaskBridge DOES THE MAGIC
+}
+
+void SyncMethod()
+{
+    …
+}
+```
+
+As you can see, `TaskBridge` has a lot of chances to become your tool #1,
+as it elegantly solves a world-class problem of bridging sync and async tasks together.
 
 ## Other Modules
 

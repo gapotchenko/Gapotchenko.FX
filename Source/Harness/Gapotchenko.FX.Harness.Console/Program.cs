@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 #endregion
 
@@ -64,9 +65,18 @@ namespace Gapotchenko.FX.Harness.Console
 
         }
 
-        static async Task _RunAsync()
+        static async Task _RunAsync(CancellationToken ct)
         {
-            await Task.Yield();
+            await Console.Out.WriteLineAsync("Hello async world!");
+
+            ct.ThrowIfCancellationRequested();
+
+            await TaskBridge.ExecuteAsync(_SyncMethod, ct);
+        }
+
+        static void _SyncMethod()
+        {
+            Console.WriteLine("Sync");
         }
     }
 }
