@@ -18,6 +18,7 @@ Looks easy enough? It is, but it tends to do the job badly:
 - Sometimes it starts not the default web browser but an Internet Explorer or Edge.
 Go figure.
 Spotted on more than several occasions on different machines at random points of time
+- It does nothing on some machines
 - It fails on .NET Core
 
 ## The Solution
