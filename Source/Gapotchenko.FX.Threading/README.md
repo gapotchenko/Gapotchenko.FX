@@ -6,7 +6,7 @@ The module provides extended primitives for multithreaded and asynchronous progr
 
 `TaskBridge` class from `Gapotchenko.FX.Threading` module provides seamless interoperability between synchronous and asynchronous code execution models.
 
-Executing an async task from synchronous code provides a few rather big challenges in conventional .NET:
+Executing an async task from synchronous code poses a few rather big challenges in conventional .NET:
 - The wait operation for an async task is prone to deadlocks unless a proper synchronization context is in place
 - The cancellation models of sync and async code are different and often incompatible
 
