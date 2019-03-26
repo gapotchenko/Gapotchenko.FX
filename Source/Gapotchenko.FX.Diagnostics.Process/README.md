@@ -104,7 +104,7 @@ This time the result will be different:
 Kill
 ```
 
-The Notepad process could not be shutdown gracefully and thus was forcefully killed.
+The Notepad process was unable to shutdown gracefully and thus was forcefully killed.
 Graceful shutdown was not possible because the process had an active modal dialog.
 
 #### More Examples
