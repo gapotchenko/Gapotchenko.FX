@@ -16,13 +16,15 @@
 
   <PropertyGroup>
     <!-- NuGet Specification -->
-    <Authors>Gapotchenko</Authors>
     <VersionPrefix>2019.1.139</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
     <Description>Gapotchenko.FX</Description>
+    <Authors>Gapotchenko</Authors>
+    <PackageTags>framework platform polyfill rad</PackageTags>
+    <PackageIconUrl>https://cdn.gapotchenko.com/publish/fx/assets/e84f03b5893f47d4a768729ea46875d8/icon48.png</PackageIconUrl>
+    <PackageProjectUrl>https://www.gapotchenko.com/fx</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageTags>framework platform polyfill</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup>
