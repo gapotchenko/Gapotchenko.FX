@@ -89,7 +89,7 @@ The code above produces the following output:
 "C:\Temp\Test 1.txt" "C:\Temp\Test 2.txt"
 ```
 
-This is a neat departure from a traditional .NET convention when it always throws `ArgumentNullException`.
+This is a neat departure from a traditional .NET convention where it always throws `ArgumentNullException`.
 Instead, Gapotchenko.FX uses a slightly different philosophy by doing the best job possible under various conditions.
 
 
