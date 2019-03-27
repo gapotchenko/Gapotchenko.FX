@@ -41,7 +41,7 @@ namespace Gapotchenko.FX.Linq.Testing
         }
 
         [TestMethod]
-        public void Linq_Memoization_1()
+        public void Linq_Memoize_A1()
         {
             var sw = new StringWriter();
             var seq = _LazyGen(sw).Memoize();
@@ -51,7 +51,7 @@ namespace Gapotchenko.FX.Linq.Testing
         }
 
         [TestMethod]
-        public void Linq_Memoization_2()
+        public void Linq_Memoize_A2()
         {
             var sw = new StringWriter();
             var seq = _LazyGen(sw).Memoize();
@@ -63,7 +63,7 @@ namespace Gapotchenko.FX.Linq.Testing
         }
 
         [TestMethod]
-        public void Linq_Memoization_3()
+        public void Linq_Memoize_A3()
         {
             var sw = new StringWriter();
             var seq = _LazyGen(sw).Memoize();
@@ -77,7 +77,7 @@ namespace Gapotchenko.FX.Linq.Testing
         static volatile int _V;
 
         [TestMethod]
-        public void Linq_Memoization_4()
+        public void Linq_Memoize_A4()
         {
             var sw = new StringWriter();
             var seq = _LazyGen(sw).Memoize();
@@ -151,7 +151,7 @@ namespace Gapotchenko.FX.Linq.Testing
         }
 
         [TestMethod]
-        public void Linq_Memoization_5()
+        public void Linq_Memoize_A5()
         {
             var sw = new StringWriter();
             var seq = _LazyGen(sw).Memoize();
@@ -202,7 +202,7 @@ namespace Gapotchenko.FX.Linq.Testing
         }
 
         [TestMethod]
-        public void Linq_Memoization_6()
+        public void Linq_Memoize_A6()
         {
             var sw = new StringWriter();
             var seq = _LazyGen(sw).Memoize();
@@ -251,7 +251,7 @@ namespace Gapotchenko.FX.Linq.Testing
         }
 
         [TestMethod]
-        public void Linq_Memoization_7()
+        public void Linq_Memoize_A7()
         {
             var te = new TracedEnumerable<int>(new int[] { 1, 2, 3 });
             Assert.IsFalse(te.EnumeratorRetrieved);

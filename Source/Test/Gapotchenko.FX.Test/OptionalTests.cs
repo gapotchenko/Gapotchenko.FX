@@ -7,7 +7,7 @@ namespace Gapotchenko.FX.Test
     public class OptionalTests
     {
         [TestMethod]
-        public void Optional_TestAV1()
+        public void Optional_AV1()
         {
             var option = Optional<int>.None;
             Assert.IsFalse(option.HasValue);
@@ -15,14 +15,14 @@ namespace Gapotchenko.FX.Test
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void Optional_TestAV2()
+        public void Optional_AV2()
         {
             var option = Optional<int>.None;
             var value = option.Value;
         }
 
         [TestMethod]
-        public void Optional_TestAV3()
+        public void Optional_AV3()
         {
             var option = Optional.Some(10);
             Assert.IsTrue(option.HasValue);
@@ -30,7 +30,7 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestAV4()
+        public void Optional_AV4()
         {
             var option = new Optional<int>();
             Assert.IsFalse(option.HasValue);
@@ -38,14 +38,14 @@ namespace Gapotchenko.FX.Test
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void Optional_TestAV5()
+        public void Optional_AV5()
         {
             var option = new Optional<int>();
             var value = option.Value;
         }
 
         [TestMethod]
-        public void Optional_TestAV6()
+        public void Optional_AV6()
         {
             var option = new Optional<int>(100);
             Assert.IsTrue(option.HasValue);
@@ -53,7 +53,7 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestAR1()
+        public void Optional_AR1()
         {
             var option = Optional<string>.None;
             Assert.IsFalse(option.HasValue);
@@ -61,14 +61,14 @@ namespace Gapotchenko.FX.Test
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void Optional_TestAR2()
+        public void Optional_AR2()
         {
             var option = Optional<string>.None;
             var value = option.Value;
         }
 
         [TestMethod]
-        public void Optional_TestAR3()
+        public void Optional_AR3()
         {
             var option = Optional.Some("ABC");
             Assert.IsTrue(option.HasValue);
@@ -76,7 +76,7 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestAR4()
+        public void Optional_AR4()
         {
             var option = new Optional<string>();
             Assert.IsFalse(option.HasValue);
@@ -84,14 +84,14 @@ namespace Gapotchenko.FX.Test
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void Optional_TestAR5()
+        public void Optional_AR5()
         {
             var option = new Optional<string>();
             var value = option.Value;
         }
 
         [TestMethod]
-        public void Optional_TestAR6()
+        public void Optional_AR6()
         {
             var option = new Optional<string>("ABCDEF");
             Assert.IsTrue(option.HasValue);
@@ -99,7 +99,7 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestAR7()
+        public void Optional_AR7()
         {
             var option = new Optional<string>(null);
             Assert.IsTrue(option.HasValue);
@@ -107,7 +107,7 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestBV1()
+        public void Optional_BV1()
         {
             var option = Optional<int>.None;
             Assert.IsFalse(option.Equals(0));
@@ -115,14 +115,14 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestBV2()
+        public void Optional_BV2()
         {
             var option = Optional<int>.None;
             Assert.IsFalse(option.Equals((object)0));
         }
 
         [TestMethod]
-        public void Optional_TestBV3()
+        public void Optional_BV3()
         {
             var option = Optional<int>.None;
             Assert.IsFalse(option.Equals(Optional.Some(0)));
@@ -135,7 +135,7 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestBV4()
+        public void Optional_BV4()
         {
             var option = Optional.Some(10);
             Assert.IsTrue(option.Equals(10));
@@ -143,7 +143,7 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestBV5()
+        public void Optional_BV5()
         {
             var option = Optional.Some(10);
             Assert.IsTrue(option.Equals((object)10));
@@ -151,7 +151,7 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestBV6()
+        public void Optional_BV6()
         {
             var option = Optional.Some(10);
             Assert.IsTrue(option.Equals(Optional.Some(10)));
@@ -159,21 +159,21 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestBR1()
+        public void Optional_BR1()
         {
             var option = Optional<string>.None;
             Assert.IsFalse(option.Equals(null));
         }
 
         [TestMethod]
-        public void Optional_TestBR2()
+        public void Optional_BR2()
         {
             var option = Optional<string>.None;
             Assert.IsFalse(option.Equals((object)null));
         }
 
         [TestMethod]
-        public void Optional_TestBR3()
+        public void Optional_BR3()
         {
             var option = Optional<string>.None;
             Assert.IsFalse(option.Equals(Optional.Some<string>(null)));
@@ -186,7 +186,7 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestBR4()
+        public void Optional_BR4()
         {
             var option = Optional.Some("10");
             Assert.IsTrue(option.Equals("10"));
@@ -194,7 +194,7 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestBR5()
+        public void Optional_BR5()
         {
             var option = Optional.Some("10");
             Assert.IsTrue(option.Equals((object)"10"));
@@ -202,7 +202,7 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestBR6()
+        public void Optional_BR6()
         {
             var option = Optional.Some("10");
             Assert.IsTrue(option.Equals(Optional.Some("10")));
@@ -210,35 +210,35 @@ namespace Gapotchenko.FX.Test
         }
 
         [TestMethod]
-        public void Optional_TestCV1()
+        public void Optional_CV1()
         {
             var option = Optional<int>.None;
             Assert.AreEqual(0, option.GetHashCode());
         }
 
         [TestMethod]
-        public void Optional_TestCV2()
+        public void Optional_CV2()
         {
             var option = Optional.Some(10);
             Assert.AreEqual(10.GetHashCode(), option.GetHashCode());
         }
 
         [TestMethod]
-        public void Optional_TestCR1()
+        public void Optional_CR1()
         {
             var option = Optional<string>.None;
             Assert.AreEqual(0, option.GetHashCode());
         }
 
         [TestMethod]
-        public void Optional_TestCR2()
+        public void Optional_CR2()
         {
             var option = Optional.Some("10");
             Assert.AreEqual("10".GetHashCode(), option.GetHashCode());
         }
 
         [TestMethod]
-        public void Optional_TestCR3()
+        public void Optional_CR3()
         {
             var option = Optional.Some<string>(null);
             Assert.AreEqual(0, option.GetHashCode());

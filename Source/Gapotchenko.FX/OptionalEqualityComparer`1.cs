@@ -35,9 +35,9 @@ namespace Gapotchenko.FX
                 else
                     return false;
             }
-            else if (y is T anotherValue)
+            else if (y is T otherValue)
             {
-                return valueComparer.Equals(x.Value, anotherValue);
+                return valueComparer.Equals(x.Value, otherValue);
             }
             else
             {
