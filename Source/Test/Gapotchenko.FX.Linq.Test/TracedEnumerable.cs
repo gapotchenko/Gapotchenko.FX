@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Linq.Testing
+namespace Gapotchenko.FX.Linq.Test
 {
     sealed class TracedEnumerable<T> : IEnumerable<T>
     {

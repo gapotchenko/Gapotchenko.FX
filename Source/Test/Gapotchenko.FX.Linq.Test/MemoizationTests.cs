@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Linq.Testing
+namespace Gapotchenko.FX.Linq.Test
 {
     [TestClass]
     public class MemoizationTests
