@@ -8,6 +8,6 @@ Instead of referencing each individual Gapotchenko.FX module, you can opt-in int
 
 Technically, profile is a NuGet meta-package that contains the references to relevant modules.
 
-Let's take a look at the list of available profiles:
+## Available Profiles
 
-- [Gapotchenko.FX.Profiles.Core](Gapotchenko.FX.Profiles.Core)
+- [Core](Gapotchenko.FX.Profiles.Core)
