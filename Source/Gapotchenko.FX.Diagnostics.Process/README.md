@@ -152,7 +152,7 @@ foreach (var process in Process.GetProcessesByName("notepad"))
 }
 ```
 
-As you can see, despite a simple-looking `End(…)` method the possibilities of achieving a specific goal are enormous.
+As you can see, despite a simple-looking signature, the End(…) method gives enormous possibilities for achieving a specific goal.
 
 ### EndAsync()
 
