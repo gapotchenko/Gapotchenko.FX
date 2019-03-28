@@ -1,7 +1,5 @@
 ﻿# Gapotchenko.FX.Diagnostics.WebBrowser
 
-## The Problem
-
 It turns out that launching a web browser is a black voodoo art that should be grasped on every particular version of an operating system.
 
 .NET developers used to do this trick back in the day:
