@@ -94,10 +94,10 @@ Once there is a running Notepad app, the sample produces the following output:
 Close
 ```
 
-signifiying that a Notepad process was gracefully ended by closing its main window.
+signifying that a Notepad process was gracefully ended by closing its main window.
 
 Now let's repeat the experiment by launching a Notepad app again and opening its File Save dialog via menu (File -> Save As...).
-Let's keep the File Save dialog open, and launch the example code one more time.
+Let's keep the File Save dialog open, and launch the example code once again.
 
 This time the result will be different:
 ```
