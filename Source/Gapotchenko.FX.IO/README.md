@@ -96,7 +96,7 @@ Determines whether the beginning of the path matches the specified value in term
 Say we have a folder name `Contoso\Reports\2012\Final`.
 How do we know that it starts with `Contoso\Reports`?
 
-A straightforward solution would be to use string's `StartsWith` function, like so:
+A straightforward solution would be to use `String.StartsWith` function, like so:
 
 ``` csharp
 bool IsContosoReportsFolder(string path) => path.StartsWith(@"Contoso\Reports");
