@@ -32,6 +32,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math", "Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj", "{C4BFF210-5036-460E-85EF-1F3C2B53185C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04. Misc", "04. Misc", "{2B63C0D4-A90F-458D-9116-83ABC34274D9}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Harness", "Harness", "{93EBF1AB-34B5-4A12-8135-8BC2047A9634}"
 EndProject
@@ -46,8 +49,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Expressions", "Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj", "{7CF2CFC3-E676-494D-908F-5CBC139543C4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Profiles", "02. Profiles", "{7EF72767-6970-43FD-98E6-B669ADD680A4}"
+	ProjectSection(SolutionItems) = preProject
+		Profiles\README.md = Profiles\README.md
+	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Profiles.Basic", "Profiles\Gapotchenko.FX.Profiles.Basic\Gapotchenko.FX.Profiles.Basic.csproj", "{0BA201BE-385A-43CC-94B9-B934EBB4514F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Profiles.Core", "Profiles\Gapotchenko.FX.Profiles.Core\Gapotchenko.FX.Profiles.Core.csproj", "{0BA201BE-385A-43CC-94B9-B934EBB4514F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Text.Test", "Test\Gapotchenko.FX.Text.Test\Gapotchenko.FX.Text.Test.csproj", "{45485C62-828E-47C3-B58A-E89AA5781AAB}"
 EndProject

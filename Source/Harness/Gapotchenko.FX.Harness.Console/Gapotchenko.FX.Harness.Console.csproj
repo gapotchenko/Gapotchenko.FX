@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Profiles\Gapotchenko.FX.Profiles.Basic\Gapotchenko.FX.Profiles.Basic.csproj" />
+    <ProjectReference Include="..\..\Profiles\Gapotchenko.FX.Profiles.Core\Gapotchenko.FX.Profiles.Core.csproj" />
   </ItemGroup>
 
 </Project>
