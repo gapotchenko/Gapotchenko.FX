@@ -59,7 +59,7 @@ The `End()` method is interesting and a bit intricate.
 The stock `Process` class already provides a similar `Kill()` method
 which performs an immediate forceful termination of a process without giving it a chance to exit gracefully.
 
-Depending on a kind of process which is being terminated, `Kill()` is not always suitable.
+Depending on a kind of process being terminated, `Kill()` is not always suitable.
 For example, it may have devastating consequences if someone kills a Microsoft Visual Studio process without giving it a graceful shutdown.
 Lost files, potentially corrupted extensions and so on.
 
@@ -67,16 +67,16 @@ Meet the `End()` method provided by `Gapotchenko.FX.Diagnostics.Process` module.
 It allows to end a process according to a specified mode of operation.
 The default mode of operation is `ProcessEndMode.Complete` that goes as follows whatever succeeds first:
 
-- Graceful
-  - Close main window
-  - Send Ctrl+C (SIGTERM) signal
-- Forceful
-  - Exit (suitable for the current process only)
-  - Kill (SIGKILL)
+ 1. Graceful techniques:  
+   1.1. Tries to close a main window of a process  
+   1.2. If that fails, tries to send Ctrl+C (SIGTERM) signal
+ 2. Forceful techniques:  
+   2.1. If graceful techniques failed, tries to exit the process (suitable for the current process only)  
+   2.2. If that fails, kills the process (SIGKILL)
 
 After its completion, the `End()` method returns a `ProcessEndMode` value that indicates how a process was ended.
 
-Let's take a look on example that tries to end all running Notepad processes:
+Let's take a look on example that tries to end all running instances of Notepad:
 
 ``` csharp
 using Gapotchenko.FX.Diagnostics;
@@ -122,7 +122,7 @@ foreach (var process in Process.GetProcessesByName("notepad"))
 }
 ```
 
-Now it shows the ID of a process that was ended together with a graceful/forceful classification of the result.
+Now it shows the `Id` of a process that was ended together with a graceful/forceful classification of the result.
 
 What if we want to limit the `End()` method to only perform a graceful process termination?
 Let's use the `End(ProcessEndMode)` method overload:
