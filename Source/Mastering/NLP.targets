@@ -23,8 +23,9 @@ tw.WriteLine(".NET polyfill to the future. A versatile RAD (Rapid Application De
 tw.WriteLine();
 tw.WriteLine("Gapotchenko.FX closes the gaps in original .NET design by providing the long-missing functionality that should have been mainstream since 2012.");
 
-string moduleLiteral = PackageId;
+bool isProfile = false;
 
+string moduleLiteral = PackageId;
 if (moduleLiteral == "Gapotchenko.FX")
 {
     moduleLiteral = "the main module";
@@ -34,6 +35,7 @@ else
     const string profilePrefix = "Gapotchenko.FX.Profiles.";
     if (moduleLiteral.StartsWith(profilePrefix))
     {
+        isProfile = true;
         moduleLiteral = moduleLiteral.Substring(profilePrefix.Length);
         moduleLiteral = "the " + moduleLiteral + " profile";
     }
@@ -46,7 +48,19 @@ else
 tw.WriteLine();
 tw.WriteLine("This package represents {0} of Gapotchenko.FX.", moduleLiteral);
 
-Description = tw.ToString();
+if (isProfile)
+{
+    tw.WriteLine();
+    tw.WriteLine("Hint: instead of referencing each individual Gapotchenko.FX module, you can opt-in into referencing a profile.");
+}
+
+tw.WriteLine();
+tw.WriteLine("Supported Platforms:");
+tw.WriteLine("- .NET Standard 2.0+");
+tw.WriteLine("- .NET Framework 4.0+");
+tw.WriteLine("- .NET Core 2.0+");
+
+Description = tw.ToString().Trim();
         ]]>
       </Code>
     </Task>
