@@ -137,7 +137,7 @@ IsContosoReportsFolder(@"Contoso/Reports/2019/Progress") => true
 `FileSystem.WaitForFileWriteAccess` method is a subtle but important primitive. It waits for a write access to the specified file.
 
 Why would anyone want such a method?
-It turns out that a modern OS is a noisy environment that can put your app under sledgehammer.
+It turns out that a modern OS is a noisy environment that can put your app under a sledgehammer.
 
 For example, if an app changes a file, it immediately grabs attention of various OS services.
 Anti-virus tools, search engines, file synchronization applications all can lock the files for short random time spans.
