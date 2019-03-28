@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\Metadata\Metadata.proj" />
+  <Import Project="..\Mastering\Metadata.proj" />
   <PropertyGroup>
-    <!-- The empty tag below is needed to keep Microsoft Visual Studio happy -->
     <TargetFramework></TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
