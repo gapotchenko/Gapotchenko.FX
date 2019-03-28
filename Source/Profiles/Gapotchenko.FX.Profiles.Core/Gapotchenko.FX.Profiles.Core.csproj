@@ -6,6 +6,14 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
   <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Linq" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.IO" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.WebBrowser" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.CommandLine" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Threading" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />

@@ -8,6 +8,7 @@
 
     <ParameterGroup>
       <PackageId ParameterType="System.String" Required="true" />
+      <CommonlyUsedParts ParameterType="System.String[]" />
       <Description ParameterType="System.String" Output="true" />
     </ParameterGroup>
 
@@ -52,6 +53,21 @@ if (isProfile)
 {
     tw.WriteLine();
     tw.WriteLine("Hint: instead of referencing each individual Gapotchenko.FX module, you can opt-in into referencing a profile.");
+}
+
+if (CommonlyUsedParts != null && CommonlyUsedParts.Length != 0)
+{
+    tw.WriteLine();
+    if (isProfile)
+        tw.WriteLine("Commonly Used Modules:");
+    else
+        tw.WriteLine("Commonly Used Types:");
+
+    foreach (var part in CommonlyUsedParts)
+    {
+        tw.Write("- ");
+        tw.WriteLine(part);
+    }
 }
 
 tw.WriteLine();

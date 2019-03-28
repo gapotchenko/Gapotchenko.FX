@@ -6,6 +6,9 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Threading.TaskBridge" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">

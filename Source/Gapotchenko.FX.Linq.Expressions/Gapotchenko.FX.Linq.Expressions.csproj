@@ -6,6 +6,9 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Linq.Expressions.ExpressionEqualityComparer" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
   </ItemGroup>

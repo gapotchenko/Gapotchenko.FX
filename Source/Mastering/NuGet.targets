@@ -19,13 +19,13 @@
   <!-- =================================================================== -->
 
   <PropertyGroup>
-    <PackageOutputPath>bin\$(Configuration)\package</PackageOutputPath>
+    <PackageOutputPath>bin\$(Configuration)\nuget</PackageOutputPath>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateNuspecDependsOn>PrepareNuspec;$(GenerateNuspecDependsOn)</GenerateNuspecDependsOn>
   </PropertyGroup>
 
   <Target Name="PrepareNuspec">
-    <NLP_GeneratePackageSpecification PackageId="$(PackageId)">
+    <NLP_GeneratePackageSpecification PackageId="$(PackageId)" CommonlyUsedParts="@(CommonlyUsedPart)">
       <Output PropertyName="PackageDescription" TaskParameter="Description" />
     </NLP_GeneratePackageSpecification>
   </Target>

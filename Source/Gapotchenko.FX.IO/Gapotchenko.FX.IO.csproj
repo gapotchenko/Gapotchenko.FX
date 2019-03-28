@@ -5,6 +5,11 @@
     <TargetFramework></TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.IO.FileSystem" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.IO.BitReader" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.IO.BitWriter" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
   </ItemGroup>
