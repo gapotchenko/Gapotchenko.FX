@@ -65,7 +65,7 @@ Lost files, potentially corrupted extensions and so on.
 
 Meet the `End()` method provided by `Gapotchenko.FX.Diagnostics.Process` module.
 It allows to end a process according to a specified mode of operation.
-The default mode of operation is `ProcessEndMode.Complete` that goes as follows whatever succeeds first:
+The default mode of operation is `ProcessEndMode.Complete` that goes as follows:
 
  1. Graceful techniques:  
    1.1. Tries to close a main window of a process  
