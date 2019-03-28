@@ -96,8 +96,8 @@ Close
 
 signifiying that a Notepad process was gracefully ended by closing its main window.
 
-Now let's repeat the experiment by launching a Notepad app again and opening its file save dialog via menu (File -> Save As...).
-Let's keep the save dialog open, and launch the example code one more time.
+Now let's repeat the experiment by launching a Notepad app again and opening its File Save dialog via menu (File -> Save As...).
+Let's keep the File Save dialog open, and launch the example code one more time.
 
 This time the result will be different:
 ```
