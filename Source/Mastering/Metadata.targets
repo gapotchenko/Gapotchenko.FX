@@ -5,6 +5,7 @@
   <PropertyGroup>
     <Company>Gapotchenko</Company>
     <Product>Gapotchenko.FX</Product>
+    <Description>.NET polyfill to the future. A versatile RAD framework for .NET platform.</Description>
     <Copyright>Copyright © 2019 Gapotchenko and Contributors</Copyright>
   </PropertyGroup>
 
@@ -15,38 +16,20 @@
     <InformationalVersion>2019.1.140 (Beta build 2019.1.140.16010)</InformationalVersion>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <!-- NuGet Specification -->
-    <VersionPrefix>2019.1.140</VersionPrefix>
-    <VersionSuffix>beta</VersionSuffix>
-
-    <_FXModule>$(MSBuildProjectName)</_FXModule>
-    <_FXModuleLiteral>$(_FXModule) module</_FXModuleLiteral>
-    <_FXModuleLiteral Condition=" '$(_FXModule)' == 'Gapotchenko.FX' ">the main module</_FXModuleLiteral>
-
-    <Description>
-.NET polyfill to the future. A versatile RAD (Rapid Application Development) framework for .NET platform.
-
-Gapotchenko.FX closes the gaps in original .NET design by providing the missing functionality.
-
-This package represents $(_FXModuleLiteral) of Gapotchenko.FX.
-
-Supported platforms:
-- .NET Framework 4.0+
-- .NET Standard 2.0+
-- .NET Core 2.0+
-    </Description>
-    <Authors>Gapotchenko</Authors>
-    <PackageTags>framework platform polyfill rad</PackageTags>
-    <PackageIconUrl>https://cdn.gapotchenko.com/publish/fx/assets/e84f03b5893f47d4a768729ea46875d8/icon48.png</PackageIconUrl>
-    <PackageProjectUrl>https://gapotchenko.com/fx</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-  </PropertyGroup>
+  <!-- =================================================================== -->
 
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);DISABLE_ASSEMBLY_METADATA_ATTRIBUTES</DefineConstants>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <!-- =================================================================== -->
 
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyMetadata.cs" Link="Properties\AssemblyMetadata.cs" />
@@ -54,27 +37,7 @@ Supported platforms:
 
   <!-- =================================================================== -->
 
-  <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NeutralLanguage>en-US</NeutralLanguage>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <PackageOutputPath>bin\$(Configuration)\package</PackageOutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>none</DebugType>
-    <DebugSymbols>false</DebugSymbols>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
-
-  <Target Name="CleanNuGetPackage" AfterTargets="Clean">
-    <RemoveDir Directories="$(PackageOutputPath)" />
-  </Target>
-
-  <!-- =================================================================== -->
-
+  <Import Project="NuGet.targets" />
   <Import Project="TargetFrameworks.targets" />
   <Import Project="AssemblySignature.targets" />
   <Import Project="Optimization.targets" Condition=" Exists('Optimization.targets') " />

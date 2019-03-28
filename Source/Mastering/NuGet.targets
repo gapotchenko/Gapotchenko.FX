@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="NLP.targets" />
+
+  <!-- =================================================================== -->
+
+  <!-- NuGet Specification -->
+  <PropertyGroup>
+    <Version>2019.1.140-beta</Version>
+    <Authors>Gapotchenko</Authors>
+    <PackageTags>framework platform polyfill rad</PackageTags>
+    <PackageIconUrl>https://cdn.gapotchenko.com/publish/fx/assets/e84f03b5893f47d4a768729ea46875d8/icon48.png</PackageIconUrl>
+    <PackageProjectUrl>https://gapotchenko.com/fx</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <!-- =================================================================== -->
+
+  <PropertyGroup>
+    <PackageOutputPath>bin\$(Configuration)\package</PackageOutputPath>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GenerateNuspecDependsOn>PrepareNuspec;$(GenerateNuspecDependsOn)</GenerateNuspecDependsOn>
+  </PropertyGroup>
+
+  <Target Name="PrepareNuspec">
+    <NLP_GeneratePackageSpecification PackageId="$(PackageId)">
+      <Output PropertyName="PackageDescription" TaskParameter="Description" />
+    </NLP_GeneratePackageSpecification>
+  </Target>
+
+</Project>

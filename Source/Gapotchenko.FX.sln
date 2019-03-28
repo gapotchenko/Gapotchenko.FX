@@ -32,9 +32,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math", "Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj", "{C4BFF210-5036-460E-85EF-1F3C2B53185C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04. Misc", "04. Misc", "{2B63C0D4-A90F-458D-9116-83ABC34274D9}"
-	ProjectSection(SolutionItems) = preProject
-		..\README.md = ..\README.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Harness", "Harness", "{93EBF1AB-34B5-4A12-8135-8BC2047A9634}"
 EndProject
@@ -58,6 +55,16 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Text.Test", "Test\Gapotchenko.FX.Text.Test\Gapotchenko.FX.Text.Test.csproj", "{45485C62-828E-47C3-B58A-E89AA5781AAB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Collections.Test", "Test\Gapotchenko.FX.Collections.Test\Gapotchenko.FX.Collections.Test.csproj", "{83E881DB-1419-4145-980D-51DCE3650427}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Home", "Home", "{886D55E2-1640-4D63-AA13-4C562469E669}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mastering", "Mastering", "{68BA92DB-7296-463D-9C99-01357420A1A0}"
+	ProjectSection(SolutionItems) = preProject
+		Mastering\NLP.targets = Mastering\NLP.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -156,6 +163,8 @@ Global
 		{0BA201BE-385A-43CC-94B9-B934EBB4514F} = {7EF72767-6970-43FD-98E6-B669ADD680A4}
 		{45485C62-828E-47C3-B58A-E89AA5781AAB} = {C0007571-9A88-4691-AAEA-4D6E2A04CAD6}
 		{83E881DB-1419-4145-980D-51DCE3650427} = {C0007571-9A88-4691-AAEA-4D6E2A04CAD6}
+		{886D55E2-1640-4D63-AA13-4C562469E669} = {2B63C0D4-A90F-458D-9116-83ABC34274D9}
+		{68BA92DB-7296-463D-9C99-01357420A1A0} = {2B63C0D4-A90F-458D-9116-83ABC34274D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}

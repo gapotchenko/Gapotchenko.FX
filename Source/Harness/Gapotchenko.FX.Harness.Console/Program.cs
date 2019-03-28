@@ -47,6 +47,8 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _Run()
         {
+            var tw = new StringWriter();
+
             foreach (var process in Process.GetProcessesByName("notepad2"))
             {
                 var result = process.End();
