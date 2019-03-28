@@ -134,7 +134,7 @@ IsContosoReportsFolder(@"Contoso/Reports/2019/Progress") => true
 
 ### WaitForFileWriteAccess(path)
 
-`FileSystem.WaitForFileWriteAccess` method is a subtle, highly-demanded and intricate primitive. It waits for a write access to the specified file.
+`FileSystem.WaitForFileWriteAccess` method is a subtle but important primitive. It waits for a write access to the specified file.
 
 Why would anyone want such a method?
 It turns out that a modern OS is a noisy environment that can put your app under sledgehammer.
@@ -156,6 +156,8 @@ File.WriteAllText(fileName, "A user can now use the app without occasional 'File
 
 What it does is polls the file until write access is available.
 If the access is not there for 10 seconds, the method falls through.
+
+[More on this topic (Raymond Chen, "The Old New Thing" blog)](https://devblogs.microsoft.com/oldnewthing/?p=6663)
 
 ## BitReader/BitWriter
 
