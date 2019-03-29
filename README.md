@@ -7,6 +7,6 @@
 
 Gapotchenko.FX closes the gaps in original .NET design by providing the missing functionality that should have been mainstream since long ago.
 
-![.NET Progress 2012 - 2018](Documentation/Assets/dotnet-progress-2012-2018.png?raw=true ".NET Progress 2012 - 2018")
+![.NET Progress ca. 2012 - 2018](Documentation/Assets/dotnet-progress-ca-2012-2018.png?raw=true ".NET Progress ca. 2012 - 2018")
 
 [Continue >](Source/Gapotchenko.FX#gapotchenkofx)
