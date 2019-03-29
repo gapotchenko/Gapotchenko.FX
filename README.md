@@ -3,4 +3,4 @@
 
 Gapotchenko.FX closes the gaps in original .NET design by providing the missing functionality that should have been mainstream since long ago.
 
-This repository is in progress. Come back soon.
+[Learn more](Source/Gapotchenko.FX)
