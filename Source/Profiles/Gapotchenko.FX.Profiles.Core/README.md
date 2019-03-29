@@ -24,6 +24,13 @@ The Core profile contains the following Gapotchenko.FX modules:
 Those modules represent the canonical and most frequently used parts of Gapotchenko.FX.
 Instead of referencing each of them individually, you can opt-in into just using `Gapotchenko.FX.Profiles.Core` profile.
 
+## Usage
+
+The Core profile is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Profiles.Core):
+
+```
+PM> Install-Package Gapotchenko.FX.Profiles.Core
+```
 
 ## See Also
 

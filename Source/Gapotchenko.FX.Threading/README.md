@@ -83,6 +83,14 @@ void SyncMethod()
 As you can see, `TaskBridge` has a lot of chances to become your tool #1,
 as it elegantly solves a world-class problem of bridging sync and async models together.
 
+## Usage
+
+`Gapotchenko.FX.Threading` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Threading):
+
+```
+PM> Install-Package Gapotchenko.FX.Threading
+```
+
 ## Other Modules
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:

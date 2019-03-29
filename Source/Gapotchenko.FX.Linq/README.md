@@ -30,6 +30,14 @@ This often leads to suboptimal performance of an otherwise sound functional algo
 
 `Memoize()` solves that. This is the method you are going to use the most for LINQ caching.
 
+## Usage
+
+`Gapotchenko.FX.Linq` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Linq):
+
+```
+PM> Install-Package Gapotchenko.FX.Linq
+```
+
 ## Other Modules
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:

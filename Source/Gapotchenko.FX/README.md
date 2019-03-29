@@ -327,6 +327,12 @@ It's a polyfill to the future, after all.
 Nobody can take it away or undermine its progress.
 Gapotchenko.FX brings back RAD to the people 💪")
 
+## Supported Platforms
+
+- .NET Standard 2.0+
+- .NET Framework 4.0+
+- .NET Core 2.0+
+
 ## Usage
 
 The main Gapotchenko.FX module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX):

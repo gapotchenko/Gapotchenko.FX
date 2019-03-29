@@ -14,6 +14,14 @@ when functionality provided by conventional methods like `Regex.Replace` is just
 
 [More on `StringEditor` class](StringEditor.md)
 
+## Usage
+
+`Gapotchenko.FX.Text` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Text):
+
+```
+PM> Install-Package Gapotchenko.FX.Text
+```
+
 ## Other Modules
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:

@@ -162,6 +162,14 @@ As you can see, despite a simple-looking signature, the End(…) method gives en
 The method is similar to `End()` but has an async implementation.
 If was created in order to efficiently handle a lot of processes in bulk.
 
+## Usage
+
+`Gapotchenko.FX.Diagnostics.Process` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Diagnostics.Process):
+
+```
+PM> Install-Package Gapotchenko.FX.Diagnostics.Process
+```
+
 ## Other Modules
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:

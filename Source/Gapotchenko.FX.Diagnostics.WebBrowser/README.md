@@ -34,6 +34,14 @@ using Gapotchenko.FX.Diagnostics;
 WebBrowser.Launch("https://example.com/");
 ```
 
+## Usage
+
+`Gapotchenko.FX.Diagnostics.WebBrowser` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Diagnostics.WebBrowser):
+
+```
+PM> Install-Package Gapotchenko.FX.Diagnostics.WebBrowser
+```
+
 ## Other Modules
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:

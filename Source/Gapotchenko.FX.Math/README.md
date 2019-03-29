@@ -66,6 +66,14 @@ var fxProgress = MathEx.Max(currentProgress, desiredProgress);
 Console.WriteLine(fxProgress);
 ```
 
+## Usage
+
+`Gapotchenko.FX.Math` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math):
+
+```
+PM> Install-Package Gapotchenko.FX.Math
+```
+
 ## Other Modules
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:

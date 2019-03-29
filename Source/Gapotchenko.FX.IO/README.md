@@ -181,6 +181,14 @@ var br = new BitReader(BigEndianBitConverter.Instance);
 Thanks to the fact that `BitReader` is inherited from `BinaryReader` class, it is almost a drop-in replacement.
 The same goes to `BitWriter`.
 
+## Usage
+
+`Gapotchenko.FX.IO` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.IO):
+
+```
+PM> Install-Package Gapotchenko.FX.IO
+```
+
 ## Other Modules
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
