@@ -109,7 +109,7 @@ A little detail, but sometimes it matters a lot when you are amid the heat of th
 
 ## Usage
 
-`Gapotchenko.FX.Collections` module is available as a NuGet package: https://nuget.org/packages/Gapotchenko.FX.Collections
+`Gapotchenko.FX.Collections` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Collections):
 
 ```
 PM> Install-Package Gapotchenko.FX.Collections

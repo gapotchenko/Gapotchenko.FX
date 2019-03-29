@@ -329,7 +329,7 @@ Gapotchenko.FX brings back RAD to the people 💪")
 
 ## Usage
 
-The main Gapotchenko.FX module is available as a NuGet package: https://nuget.org/packages/Gapotchenko.FX
+The main Gapotchenko.FX module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX):
 
 ```
 PM> Install-Package Gapotchenko.FX
