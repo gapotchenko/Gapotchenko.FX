@@ -327,6 +327,14 @@ It's a polyfill to the future, after all.
 Nobody can take it away or undermine its progress.
 Gapotchenko.FX brings back RAD to the people 💪")
 
+## Usage
+
+The main Gapotchenko.FX module is available as a NuGet package: https://nuget.org/packages/Gapotchenko.FX
+
+```
+PM> Install-Package Gapotchenko.FX
+```
+
 ## Other Modules
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:

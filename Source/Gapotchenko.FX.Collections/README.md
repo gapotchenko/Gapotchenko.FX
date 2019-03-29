@@ -107,6 +107,14 @@ void ProcessMap(IDictionary<string, int> map)
 
 A little detail, but sometimes it matters a lot when you are amid the heat of the code.
 
+## Usage
+
+`Gapotchenko.FX.Collections` module is available as a NuGet package: https://nuget.org/packages/Gapotchenko.FX.Collections
+
+```
+PM> Install-Package Gapotchenko.FX.Collections
+```
+
 ## Other Modules
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:

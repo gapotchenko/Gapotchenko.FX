@@ -118,6 +118,14 @@ C:\Temp\Test 1.txt
 C:\Temp\Test 2.txt
 ```
 
+## Usage
+
+`Gapotchenko.FX.Diagnostics.CommandLine` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Diagnostics.CommandLine):
+
+```
+PM> Install-Package Gapotchenko.FX.Diagnostics.CommandLine
+```
+
 ## Other Modules
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
