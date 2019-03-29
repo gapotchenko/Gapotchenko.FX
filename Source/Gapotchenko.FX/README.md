@@ -294,7 +294,7 @@ Secondly, Gapotchenko.FX provides some implementations from future versions of .
 
 ### HashCode Polyfill
 
-For example, `HashCode` struct first appeared in .NET Core 2.0.
+For example, `HashCode` struct first appeared in .NET Core 2.1.
 It allows to quickly combine various hash code sources into the final value with a minimal probability of collisions.
 A very decent thing that was _never_ backported to conventional .NET Framework.
 
