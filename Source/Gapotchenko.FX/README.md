@@ -324,8 +324,8 @@ Its mission is to bring joy of a Rapid Application Development (RAD) back to the
 It's a polyfill to the future, after all.
 
 ![Gapotchenko FX Ark](../../Documentation/Assets/gapotchenko-fx-ark-2019.png?raw=true ".NET is a technology for everyone.
-Nobody can take it away or sabotage its progress.
-Gapotchenko.FX brings back RAD to the people ✊")
+Nobody can take it away or undermine its progress.
+Gapotchenko.FX brings back RAD to the people 💪")
 
 ## Other Modules
 
