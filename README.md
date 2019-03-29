@@ -9,4 +9,4 @@ Gapotchenko.FX closes the gaps in original .NET design by providing the missing 
 
 ![.NET Progress ca. 2012 - 2018](Documentation/Assets/dotnet-progress-ca-2012-2018.png?raw=true ".NET Progress ca. 2012 - 2018")
 
-[Continue >](Source/Gapotchenko.FX#readme)
+[Continue >](Source/Gapotchenko.FX#gapotchenkofx)
