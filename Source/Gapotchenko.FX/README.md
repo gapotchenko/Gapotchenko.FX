@@ -323,6 +323,10 @@ Gapotchenko.FX was created to change that.
 Its mission is to bring joy of a Rapid Application Development (RAD) back to the people.
 It's a polyfill to the future, after all.
 
+![Gapotchenko FX Ark](../../Documentation/Assets/gapotchenko-fx-ark-2019.png?raw=true ".NET is a technology for everyone.
+Nobody can take it away or sabotage its progress.
+Gapotchenko.FX brings back RAD to the people ✊")
+
 ## Other Modules
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
