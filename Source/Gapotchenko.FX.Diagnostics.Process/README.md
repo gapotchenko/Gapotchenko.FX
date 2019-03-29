@@ -77,7 +77,7 @@ The default mode of operation is `ProcessEndMode.Complete` that goes as follows:
    2.1. If graceful techniques failed, it tries to exit the process (suitable for the current process only)  
    2.2. If that fails, it kills the process (SIGKILL)
 
-`End()` method returns a `ProcessEndMode` value on completion indicating how the process was actually ended.
+The method returns a `ProcessEndMode` value on completion indicating how the process was actually ended.
 
 Let's take a look on example that tries to end all running instances of Notepad:
 
