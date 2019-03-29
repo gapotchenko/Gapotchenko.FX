@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project="NLP.targets" />
-
-  <!-- =================================================================== -->
-
   <!-- NuGet Specification -->
   <PropertyGroup>
     <Version>2019.1.140-beta</Version>
@@ -29,5 +25,93 @@
       <Output PropertyName="PackageDescription" TaskParameter="Description" />
     </NLP_GeneratePackageSpecification>
   </Target>
+
+  <!-- =================================================================== -->
+  <!-- NLP -->
+  <!-- =================================================================== -->
+
+  <UsingTask
+    TaskName="NLP_GeneratePackageSpecification"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+
+    <ParameterGroup>
+      <PackageId ParameterType="System.String" Required="true" />
+      <CommonlyUsedParts ParameterType="System.String[]" />
+      <Description ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+var tw = new StringWriter();
+
+tw.WriteLine(".NET polyfill to the future. A versatile RAD (Rapid Application Development) framework for .NET platform.");
+
+tw.WriteLine();
+tw.WriteLine("Gapotchenko.FX closes the gaps in original .NET design by providing the long-missing functionality that should have been mainstream since 2012.");
+
+bool isProfile = false;
+
+string moduleLiteral = PackageId;
+if (moduleLiteral == "Gapotchenko.FX")
+{
+    moduleLiteral = "the main module";
+}
+else
+{
+    const string profilePrefix = "Gapotchenko.FX.Profiles.";
+    if (moduleLiteral.StartsWith(profilePrefix))
+    {
+        isProfile = true;
+        moduleLiteral = moduleLiteral.Substring(profilePrefix.Length);
+        moduleLiteral = "the " + moduleLiteral + " profile";
+    }
+    else
+    {
+        moduleLiteral += " module";
+    }
+}
+
+tw.WriteLine();
+tw.WriteLine("This package represents {0} of Gapotchenko.FX.", moduleLiteral);
+
+if (isProfile)
+{
+    tw.WriteLine();
+    tw.WriteLine("Hint: instead of referencing each individual Gapotchenko.FX module, you can opt-in into referencing a profile.");
+}
+
+if (CommonlyUsedParts != null && CommonlyUsedParts.Length != 0)
+{
+    tw.WriteLine();
+    if (isProfile)
+        tw.WriteLine("Commonly Used Modules:");
+    else
+        tw.WriteLine("Commonly Used Types:");
+
+    foreach (var part in CommonlyUsedParts)
+    {
+        tw.Write("- ");
+        tw.WriteLine(part);
+    }
+}
+
+tw.WriteLine();
+tw.WriteLine("Supported Platforms:");
+tw.WriteLine("- .NET Standard 2.0+");
+tw.WriteLine("- .NET Framework 4.0+");
+tw.WriteLine("- .NET Core 2.0+");
+
+Description = tw.ToString().TrimEnd();
+        ]]>
+      </Code>
+    </Task>
+
+  </UsingTask>
+
+  <!-- =================================================================== -->
 
 </Project>
