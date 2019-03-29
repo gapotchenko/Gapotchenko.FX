@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.IO
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.IO.svg)](https://www.nuget.org/packages/Gapotchenko.FX.IO)
+
 The module provides highly demanded input/output functionality that is missing in conventional .NET platform.
 
 ## FileSystem

@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Threading
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Threading.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Threading)
+
 The module provides extended primitives for multithreaded and asynchronous programming.
 
 ## TaskBridge

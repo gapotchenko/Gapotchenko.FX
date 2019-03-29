@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Profiles.Core
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Profiles.Core.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Profiles.Core)
+
 `Gapotchenko.FX.Profiles.Core` package represents the Core profile of Gapotchenko.FX.
 
 (Disambiguation: a `Core` word in the name has no specific relation to .NET Core)

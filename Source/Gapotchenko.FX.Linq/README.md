@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Linq
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Linq.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Linq)
+
 The module provides primitives for functional processing of data sequences.
 
 ## Memoization

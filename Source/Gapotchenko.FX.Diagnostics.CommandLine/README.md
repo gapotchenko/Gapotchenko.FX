@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Diagnostics.CommandLine
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Diagnostics.CommandLine.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Diagnostics.CommandLine)
+
 The module provides primitives for command line manipulation.
 
 ## CommandLineBuilder

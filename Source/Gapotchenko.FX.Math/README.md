@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Math
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math)
+
 The module provides extended math primitives.
 
 ## MathEx

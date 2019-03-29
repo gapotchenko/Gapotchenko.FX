@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Linq.Expressions
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Linq.Expressions.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Linq.Expressions)
+
 The module provides primitives for LINQ expressions.
 
 ## Equality Comparer for LINQ Expressions

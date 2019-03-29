@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Collections
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Collections.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Collections)
+
 The module was started by borrowing an implementation of `ConcurrentHashSet<T>` from [Mr. Bar Arnon](https://github.com/i3arnon).
 
 Other than that, the module provides polyfills for missing functionality in .NET.

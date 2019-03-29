@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Text
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Text.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Text)
+
 The module provides primitives for string and text manipulation.
 
 ## StringEditor
