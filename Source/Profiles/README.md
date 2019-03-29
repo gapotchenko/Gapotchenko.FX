@@ -2,7 +2,7 @@
 
 Gapotchenko.FX provides a concept of profile that solves the following problem:
 
-TODO
+![Gapotchenko FX Profile](../../Documentation/Assets/gapotchenko-fx-profile-shrink.png?raw=true)
 
 Instead of referencing each individual Gapotchenko.FX module, you can opt-in into referencing a profile.
 
