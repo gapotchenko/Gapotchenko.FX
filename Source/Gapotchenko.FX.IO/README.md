@@ -16,7 +16,7 @@ and serves as an important addendum to a conventional `System.IO` namespace.
 The `FileSystem.IsCaseSensitive` property shows whether the current host operating system uses case sensitive file names.
 
 For example, Windows operating system uses case-**in**sensitive file names,
-so `FileSystem.IsCaseSensitive` returns `false` when an app runs on it.
+so `FileSystem.IsCaseSensitive` returns `false`.
 The same goes to macOS.
 
 However, Linux and other Unix flavors use case-sensitive file names by default.
