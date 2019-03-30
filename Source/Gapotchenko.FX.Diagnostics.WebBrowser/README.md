@@ -13,7 +13,7 @@ using System.Diagnostics;
 Process.Start("https://example.com/");
 ```
 
-Looks easy enough? It is, but there is a catch (or a lot of them):
+Looks easy enough? It is, but there is a catch (or lots of them):
 
 - Sometimes web browser is started while the `Process.Start(…)` method throws an exception on some machines
 - Sometimes it starts not the default web browser but Internet Explorer or Edge.
