@@ -298,7 +298,7 @@ For example, `HashCode` struct first appeared in .NET Core 2.1.
 It allows to quickly combine various hash code sources into the final value with a minimal probability of collisions.
 A very decent thing that was _never_ backported to conventional .NET Framework.
 
-`Gapotchenko.FX` provides `HashCode` so you can use it in your project right now.
+`Gapotchenko.FX` provides `HashCode` so you can use it in your projects right now.
 It even goes further than that by providing extension methods that are likely to appear in .NET in the future (yes, we own a Cassandra's magic ball):
 - `SequenceCombine<T>(IEnumerable<T> source)`
 - `AddRange<T>(IEnumerable<T> source)`
