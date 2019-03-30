@@ -328,7 +328,7 @@ Nobody can take it away or undermine its progress.
 Gapotchenko.FX brings RAD back to the people 💪")
 
 <div align="right">
-    <a href="../../../../wiki/Gapotchenko.FX-Manifesto">Project Manifesto</a>
+    <a href="../../../../wiki/Manifesto">Project Manifesto</a>
     |
     <a href="../../../../wiki/RAD">More on RAD</a>
 </div>
