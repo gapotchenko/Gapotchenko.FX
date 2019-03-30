@@ -328,9 +328,9 @@ Nobody can take it away or undermine its progress.
 Gapotchenko.FX brings RAD back to the people 💪")
 
 <div align="right">
-    <a href="../../../../wiki/Gapotchenko.FX-Manifesto">Project Manifesto</a>
+    <a href="../../../../wiki/Manifesto">Project Manifesto</a>
     |
-    <a href="../../../../wiki/What-is-RAD%3F">More on RAD</a>
+    <a href="../../../../wiki/RAD" title="Learn more about Rapid Application Development and why it matters">More on RAD</a>
 </div>
 
 ## Supported Platforms
