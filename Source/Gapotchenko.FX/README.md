@@ -329,6 +329,8 @@ Gapotchenko.FX brings RAD back to the people 💪")
 
 <div align="right">
     <a href="../../../../wiki/Gapotchenko.FX-Manifesto">Project Manifesto</a>
+    |
+    <a href="../../../../wiki/What-is-RAD%3F">What is RAD?</a>
 </div>
 
 ## Supported Platforms
