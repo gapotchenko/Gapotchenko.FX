@@ -325,7 +325,7 @@ It's a polyfill to the future, after all.
 
 ![Gapotchenko FX Ark](../../Documentation/Assets/gapotchenko-fx-ark-2019.png?raw=true ".NET is a technology for everyone.
 Nobody can take it away or undermine its progress.
-Gapotchenko.FX brings back RAD to the people 💪")
+Gapotchenko.FX brings RAD back to the people 💪")
 
 [Project Manifesto](../../../../wiki/Gapotchenko.FX-Manifesto)
 
