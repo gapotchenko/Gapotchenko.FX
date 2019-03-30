@@ -17,6 +17,7 @@ Meet `TaskBridge`. It makes interoperability a breeze:
 
 ``` csharp
 using System;
+using System.Threading.Tasks;
 using Gapotchenko.FX.Threading.Tasks;
 
 class Program
@@ -41,6 +42,7 @@ Let's call a cancelable async method from a synchronous thread that can be abort
 
 ``` csharp
 using System.Threading;
+using System.Threading.Tasks;
 using Gapotchenko.FX.Threading.Tasks;
 
 void SyncMethod() // can be canceled by Thread.Abort()
@@ -65,6 +67,7 @@ Now, let's take a look at the opposite scenario where a cancelable async task ca
 
 ``` csharp
 using System.Threading;
+using System.Threading.Tasks;
 using Gapotchenko.FX.Threading.Tasks;
 
 async Task DoJobAsync(CancellationToken ct) // can be canceled by supplied cancellation token
