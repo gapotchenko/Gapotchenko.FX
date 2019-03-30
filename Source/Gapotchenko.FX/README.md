@@ -327,7 +327,7 @@ It's a polyfill to the future, after all.
 Nobody can take it away or undermine its progress.
 Gapotchenko.FX brings RAD back to the people 💪")
 
-[Project Manifesto](../../../../wiki/Gapotchenko.FX-Manifesto)
+[Project Manifesto](../../../../wiki/Gapotchenko.FX-Manifesto){style="display: block; text-align: right;"}
 
 ## Supported Platforms
 
