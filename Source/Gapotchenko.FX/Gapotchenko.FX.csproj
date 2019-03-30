@@ -25,5 +25,6 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.LazyEvaluation" />
     <CommonlyUsedPart Include="Gapotchenko.FX.UriQueryBuilder" />
     <CommonlyUsedPart Include="Gapotchenko.FX.ComponentModel.Disposable" />
+    <CommonlyUsedPart Include="System.HashCode" />
   </ItemGroup>
 </Project>
