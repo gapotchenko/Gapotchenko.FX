@@ -25,7 +25,7 @@ Console.WriteLine("A text file with a name longer than 12 letters is present: {0
 `Memoize()` caches the already retrieved elements of a sequence, and does it lazily.
 
 .NET developers often use `ToList()` and `ToArray()` methods for the very same purpose.
-But those methods are eager, as they retrieve all elements of a sequence in one shot.
+But those methods are eager, as they retrieve _all_ elements of a sequence in one shot.
 This often leads to suboptimal performance of an otherwise sound functional algorithm.
 
 `Memoize()` solves that. This is the method you are going to use the most for LINQ caching.
