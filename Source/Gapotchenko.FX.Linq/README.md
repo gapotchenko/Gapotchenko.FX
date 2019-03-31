@@ -22,7 +22,7 @@ Console.WriteLine("A text file with an upper case letter is present: {0}", files
 Console.WriteLine("A text file with a name longer than 12 letters is present: {0}", files.Any(x => x.Length > 12));
 ```
 
-It caches the already retrieved elements of a sequence, and does it lazily.
+`Memoize()` caches the already retrieved elements of a sequence, and does it lazily.
 
 .NET developers often use `ToList()` and `ToArray()` methods for the very same purpose.
 But those methods are eager, as they retrieve all elements of a sequence in one shot.
