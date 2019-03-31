@@ -73,7 +73,7 @@ using Gapotchenko.FX.Threading.Tasks;
 async Task DoJobAsync(CancellationToken ct) // can be canceled by a specified cancellation token
 {
     // Executes a synchronous method that is thread-aborted when
-    // aaa specified cancellation token is being canceled.
+    // a specified cancellation token is being canceled.
     await TaskBridge.ExecuteAsync(SyncMethod, ct); // <-- TaskBridge DOES THE MAGIC
 }
 
