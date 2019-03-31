@@ -80,14 +80,14 @@ string fileA = "Test.txt";
 string fileB = @"C:\Temp\Test.txt";
 
 Console.WriteLine("String equality: {0}", string.Equals(fileA, fileB));
-Console.WriteLine("File path equivalence: {0}", FileSystem.PathsAreEquivalent(fileA, fileB));
+Console.WriteLine("Path equivalence: {0}", FileSystem.PathsAreEquivalent(fileA, fileB));
 ```
 
 It produces the following results:
 
 ```
 String equality: False
-File path equivalence: True
+Path equivalence: True
 ```
 
 Note that file equivalence check is positive despite the different forms of a file path.
