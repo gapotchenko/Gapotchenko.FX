@@ -71,7 +71,7 @@ So you know what to do now:
 var set = new ConcurrentDictionary<string, Unit>();
 ```
 
-But there is a better way.
+However, there is a better solution for this particular case.
 You can just use the readily available [`ConcurrentHashSet`](../Gapotchenko.FX.Collections/Concurrent/ConcurrentHashSet.cs) from [`Gapotchenko.FX.Collections`](../Gapotchenko.FX.Collections#gapotchenkofxcollections) module.
 
 ## See Also
