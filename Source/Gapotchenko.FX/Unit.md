@@ -45,7 +45,7 @@ So a better way to write this would be:
 var set = new Dictionary<string, Unit>();
 ```
 
-so that nobody could perform an erroneous operation like `stringSet["contoso"] = DateTime.UtcNow` which is not intended for a set.
+so that nobody could perform an erroneous operation like `stringSet["contoso"] = DateTime.UtcNow` which is not allowed for a set.
 
 Now you see this. 
 The `Unit` type can be used as a parameter in generic specializations whenever your intent is to "void" a specific parameter because you do not need it.
