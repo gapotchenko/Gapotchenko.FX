@@ -52,7 +52,7 @@ The `Unit` type can be used as a parameter in generic specializations whenever y
 
 ## A Dream
 
-It would be cool if we could write something like:
+It would be cool to be able to write something like:
 
 - `Func<void>`
 - `Dictionary<string, void>`
