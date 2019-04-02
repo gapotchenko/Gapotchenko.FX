@@ -33,7 +33,7 @@ Some time ago, .NET had no `HashSet<T>` class.
 So whenever a developer needed a set, he used a dictionary which was readily available:
 
 ``` csharp
-var stringSet = new Dictionary<string, object>();
+var set = new Dictionary<string, object>();
 ```
 
 The values in these dictionaries were always `null`, and only the keys represented the useful payload.
@@ -42,7 +42,7 @@ What most developers did not know then, is that they were essentially using a Un
 So a better way to write this would be:
 
 ``` csharp
-var stringSet = new Dictionary<string, Unit>();
+var set = new Dictionary<string, Unit>();
 ```
 
 so that nobody could perform an erroneous operation like `stringSet["contoso"] = DateTime.UtcNow` which is not intended for a set.
@@ -66,7 +66,7 @@ Surprise, surprise, meet a `ConcurrentHashSet` which is… still absent in conve
 So you know what to do now:
 
 ```
-var stringSet = new ConcurrentDictionary<string, Unit>();
+var set = new ConcurrentDictionary<string, Unit>();
 ```
 
 But there is a better way.
