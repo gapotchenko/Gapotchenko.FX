@@ -12,8 +12,8 @@ using Gapotchenko.FX;
 
 Unit val;
 
-val = null; // OK: null is the only possible value for Unit.
-val = new Unit(); // ERROR: wouldn't compile.
+val = null;  // OK: null is the only possible value for Unit
+val = new Unit();  // ERROR: wouldn't compile
 ```
 
 In this way, the unit type is the terminal object in the category of types and typed functions.
