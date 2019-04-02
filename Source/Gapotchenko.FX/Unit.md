@@ -1,4 +1,4 @@
-﻿# Unit
+﻿# Gapotchenko.FX.Unit
 
 `Unit` is a class defined in `Gapotchenko.FX` module.
 
