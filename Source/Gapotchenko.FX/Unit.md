@@ -30,7 +30,7 @@ A visual placement of the `Unit` type in .NET type system:
 ## Usage
 
 Some time ago, .NET had no `HashSet<T>` class.
-So whenever a developer needed a set, he used a dictionary which was readily available:
+So whenever a developer needed a set, he used a dictionary which was readily available to imitate it:
 
 ``` csharp
 var set = new Dictionary<string, object>();
