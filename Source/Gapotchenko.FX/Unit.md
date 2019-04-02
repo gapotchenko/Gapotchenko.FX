@@ -50,7 +50,7 @@ so that nobody could perform an erroneous operation like `stringSet["contoso"] =
 Now you see this. 
 The `Unit` type can be used as a parameter in generic specializations whenever your intent is to "void" a specific parameter because you do not need it.
 
-## Ideal
+----
 
 It would be cool to be able to write something like:
 
