@@ -63,14 +63,14 @@ Instead, we have the second best alternative out there: the `Unit` type from `Ga
 You think that the whole story with `Dictionary` as a `HashSet` is the thing of the past?
 
 Surprise, surprise, meet a `ConcurrentHashSet` which is… still absent in conventional .NET.
-So you know what to do know:
+So you know what to do now:
 
 ```
 var stringSet = new ConcurrentDictionary<string, Unit>();
 ```
 
 But there is a better way.
-You can just use the readily available [`ConcurrentHashSet`](../Gapotchenko.FX.Collections/Concurrent/ConcurrentHashSet.cs) from [`Gapotchenko.FX.Collections`](../Gapotchenko.FX.Collections) module.
+You can just use the readily available [`ConcurrentHashSet`](../Gapotchenko.FX.Collections/Concurrent/ConcurrentHashSet.cs) from [`Gapotchenko.FX.Collections`](../Gapotchenko.FX.Collections#gapotchenkofxcollections) module.
 
 ## See Also
 
