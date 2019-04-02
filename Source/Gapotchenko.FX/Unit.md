@@ -62,7 +62,7 @@ Instead, we have the second best alternative out there: the `Unit` type from `Ga
 
 ## The History Tends to Repeat Itself
 
-You think that the whole story with `Dictionary` as a `HashSet` is the thing of the past?
+You think that the whole story with `Dictionary` as a `HashSet` is a thing of the past?
 
 Surprise, surprise, meet a `ConcurrentHashSet` which is… still absent in conventional .NET.
 So you know what to do now:
