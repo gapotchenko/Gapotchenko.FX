@@ -12,7 +12,7 @@ using Gapotchenko.FX;
 
 Unit val;
 
-val = null;  // OK: null is the only possible value for Unit
+val = null;        // OK: null is the only possible value for Unit
 val = new Unit();  // ERROR: wouldn't compile
 ```
 
