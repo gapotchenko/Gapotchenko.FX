@@ -50,7 +50,9 @@ so that nobody could perform an erroneous operation like `stringSet["contoso"] =
 Now you see this. 
 The `Unit` type can be used as a parameter in generic specializations whenever your intent is to "void" a specific parameter because you do not need it.
 
-Actually, it would be cool if we could write something like:
+## A Dream
+
+It would be cool if we could write something like:
 
 - `Func<void>`
 - `Dictionary<string, void>`
