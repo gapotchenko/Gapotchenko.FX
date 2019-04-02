@@ -5,7 +5,7 @@
 `Unit` class cannot be instantiated and thus can hold no information.
 Its notion comes from the area of mathematical logic and computer science known as [type theory](https://en.wikipedia.org/wiki/Type_theory).
 
-The `Unit` class can only have a single possible value `null`:
+The `Unit` class can only have a single possible value (`null`):
 
 ``` csharp
 using Gapotchenko.FX;
