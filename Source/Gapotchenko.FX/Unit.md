@@ -39,7 +39,7 @@ var stringSet = new Dictionary<string, object>();
 The values in these dictionaries were always `null`, and only the keys represented the useful payload.
 
 What most developers did not know then, is that they were essentially using a Unit type in disguise.
-So a better to write this would be:
+So a better way to write this would be:
 
 ``` csharp
 var stringSet = new Dictionary<string, Unit>();
