@@ -69,6 +69,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mastering", "Mastering", "{
 		Mastering\TargetFrameworks.targets = Mastering\TargetFrameworks.targets
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{0EC93163-AEB9-4D7B-ADC2-F665157CE38C}"
+	ProjectSection(SolutionItems) = preProject
+		..\Documentation\README.md = ..\Documentation\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -168,6 +173,7 @@ Global
 		{83E881DB-1419-4145-980D-51DCE3650427} = {C0007571-9A88-4691-AAEA-4D6E2A04CAD6}
 		{886D55E2-1640-4D63-AA13-4C562469E669} = {2B63C0D4-A90F-458D-9116-83ABC34274D9}
 		{68BA92DB-7296-463D-9C99-01357420A1A0} = {2B63C0D4-A90F-458D-9116-83ABC34274D9}
+		{0EC93163-AEB9-4D7B-ADC2-F665157CE38C} = {2B63C0D4-A90F-458D-9116-83ABC34274D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}
