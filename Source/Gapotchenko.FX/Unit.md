@@ -38,7 +38,7 @@ var set = new Dictionary<string, object>();
 
 The values in these dictionaries were always `null`, and only the keys represented the useful payload.
 
-What most developers did not know then, is that they were essentially using a Unit type in disguise.
+What most of developers did not realize back then, is that they were essentially using a Unit type in disguise.
 So a better way to write this would be:
 
 ``` csharp
