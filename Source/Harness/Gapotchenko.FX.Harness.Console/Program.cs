@@ -50,16 +50,14 @@ namespace Gapotchenko.FX.Harness.Console
         {
             var source = new[]
             {
-                new { FirstName = "Alex", LastName = "Cooper" },
-                new { FirstName = "John", LastName = "Walker" },
-                new { FirstName = "Alex", LastName = "The Great" },
-                new { FirstName = "Jeremy", LastName = "Doer" }
+                new { FirstName = "Alex", LastName = "Cooper", Age = 45 },
+                new { FirstName = "John", LastName = "Walker", Age = 17 },
+                new { FirstName = "Alex", LastName = "The Great", Age = 1500 },
+                new { FirstName = "Jeremy", LastName = "Doer", Age = 29 }
             };
 
-            var query = source.DistinctBy(x => x.FirstName);
-
-            foreach (var i in query)
-                Console.WriteLine(i);
+            Console.WriteLine("The oldest person: {0}", source.MaxBy(x => x.Age));
+            Console.WriteLine("The youngest person: {0}", source.MinBy(x => x.Age));
         }
 
         static async Task _RunAsync(CancellationToken ct)

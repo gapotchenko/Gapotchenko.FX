@@ -90,6 +90,35 @@ The code produces the following output:
 { FirstName = Jeremy, LastName = Doer }
 ```
 
+## MinBy(…)/MaxBy(…)
+
+Returns a minimum/maximum value in a sequence according to a specified key selector function.
+
+Let's take a look at example:
+
+``` csharp
+using Gapotchenko.FX.Linq;
+
+var source = new[]
+{
+    new { FirstName = "Alex", LastName = "Cooper", Age = 45 },
+    new { FirstName = "John", LastName = "Walker", Age = 17 },
+    new { FirstName = "Alex", LastName = "The Great", Age = 1500 },
+    new { FirstName = "Jeremy", LastName = "Doer", Age = 29 }
+};
+
+Console.WriteLine("The oldest person: {0}", source.MaxBy(x => x.Age));
+Console.WriteLine("The youngest person: {0}", source.MinBy(x => x.Age));
+```
+
+The code produces the following output:
+
+```
+The oldest person: { FirstName = Alex, LastName = The Great, Age = 1500 }
+The youngest person: { FirstName = John, LastName = Walker, Age = 17 }
+```
+
+
 ## Usage
 
 `Gapotchenko.FX.Linq` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Linq):
