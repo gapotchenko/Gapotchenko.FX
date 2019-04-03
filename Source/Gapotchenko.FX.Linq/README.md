@@ -30,6 +30,33 @@ This often leads to suboptimal performance of an otherwise sound functional algo
 
 `Memoize()` solves that. This is the method you are going to use the most for LINQ caching.
 
+## ScalarOrDefault()
+
+The second most popular primitive provided by `Gapotchenko.FX.Linq` module is `ScalarOrDefault()` method.
+It is similar to `SingleOrDefault()` from conventional .NET but with one big difference: it does not throw an exception when there are multiple elements in a sequence.
+
+### _SingleOrDefault()_ Semantics
+
+``` csharp
+using System.Linq;
+
+new string[0].SingleOrDefault(); // returns null
+new[] { "A" }.SingleOrDefault(); // returns "A"
+new[] { "A", "B" }.SingleOrDefault(); // throws an exception 😞
+```
+
+### _ScalarOrDefault()_ Semantics
+
+``` csharp
+using Gapotchenko.FX.Linq;
+
+new string[0].ScalarOrDefault(); // returns null
+new[] { "A" }.ScalarOrDefault(); // returns "A"
+new[] { "A", "B" }.ScalarOrDefault(); // returns null 👍
+```
+
+In practice, `ScalarOrDefault()` semantics is a big win as it allows to _safely_ determine whether a given query converged to a scalar result.
+
 ## Usage
 
 `Gapotchenko.FX.Linq` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Linq):
