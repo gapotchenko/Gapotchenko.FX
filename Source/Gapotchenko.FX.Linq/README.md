@@ -30,12 +30,12 @@ This often leads to suboptimal performance of an otherwise sound functional algo
 
 `Memoize()` solves that. This is the method you are going to use the most for LINQ caching.
 
-## ScalarOrDefault()
+## ScalarOrDefault
 
 The second most popular primitive provided by `Gapotchenko.FX.Linq` module is `ScalarOrDefault()` method.
 It is similar to `SingleOrDefault()` from conventional .NET but with one big difference: it does not throw an exception when sequence contains multiple elements.
 
-### _SingleOrDefault()_ Semantics
+### _SingleOrDefault_ Semantics
 
 ``` csharp
 using System.Linq;
@@ -45,7 +45,7 @@ new[] { "A" }.SingleOrDefault(); // returns "A"
 new[] { "A", "B" }.SingleOrDefault(); // throws an exception 😞
 ```
 
-### _ScalarOrDefault()_ Semantics
+### _ScalarOrDefault_ Semantics
 
 ``` csharp
 using Gapotchenko.FX.Linq;
@@ -57,7 +57,7 @@ new[] { "A", "B" }.ScalarOrDefault(); // returns null 👍
 
 In practice, `ScalarOrDefault()` semantics is a big win as it allows to _safely_ determine whether a given query converges to a scalar result.
 
-## DistinctBy(…)
+## DistinctBy
 
 Returns distinct elements from a sequence by using the default equality comparer on the keys extracted by a specified selector function.
 
@@ -90,7 +90,7 @@ The code produces the following output:
 { FirstName = Jeremy, LastName = Doer }
 ```
 
-## MinBy(…)/MaxBy(…)
+## MinBy/MaxBy
 
 Returns a minimum/maximum value in a sequence according to a specified key selector function.
 
