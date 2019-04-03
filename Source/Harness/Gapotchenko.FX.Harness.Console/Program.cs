@@ -48,15 +48,18 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _Run()
         {
-            var tw = new StringWriter();
-
-            foreach (var process in Process.GetProcessesByName("notepad2"))
+            var source = new[]
             {
-                var result = process.End();
-                Console.WriteLine("PID {0}", process.Id);
-                Console.WriteLine("Graceful: {0}", (result & ProcessEndMode.Graceful) != 0);
-                Console.WriteLine("Forceful: {0}", (result & ProcessEndMode.Forceful) != 0);
-            }
+                new { FirstName = "Alex", LastName = "Cooper" },
+                new { FirstName = "John", LastName = "Walker" },
+                new { FirstName = "Alex", LastName = "The Great" },
+                new { FirstName = "Jeremy", LastName = "Doer" }
+            };
+
+            var query = source.DistinctBy(x => x.FirstName);
+
+            foreach (var i in query)
+                Console.WriteLine(i);
         }
 
         static async Task _RunAsync(CancellationToken ct)

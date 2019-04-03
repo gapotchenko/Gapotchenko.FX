@@ -57,6 +57,39 @@ new[] { "A", "B" }.ScalarOrDefault(); // returns null 👍
 
 In practice, `ScalarOrDefault()` semantics is a big win as it allows to _safely_ determine whether a given query converged to a scalar result.
 
+## DistinctBy(…)
+
+Returns distinct elements from a sequence by using the default equality comparer on the keys extracted by a specified selector function.
+
+The method is similar to `Distinct()` method provided by the stock `System.Linq` namespace, but allows to specify a selector function in order to differentiate the elements by a specific criteria.
+
+A small example:
+
+``` csharp
+using Gapotchenko.FX.Linq;
+
+var source = new[]
+{
+    new { FirstName = "Alex", LastName = "Cooper" },
+    new { FirstName = "John", LastName = "Walker" },
+    new { FirstName = "Alex", LastName = "The Great" },
+    new { FirstName = "Jeremy", LastName = "Doer" }
+};
+
+var query = source.DistinctBy(x => x.FirstName);
+
+foreach (var i in query)
+    Console.WriteLine(i);
+```
+
+The output of the sample:
+
+```
+{ FirstName = Alex, LastName = Cooper }
+{ FirstName = John, LastName = Walker }
+{ FirstName = Jeremy, LastName = Doer }
+```
+
 ## Usage
 
 `Gapotchenko.FX.Linq` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Linq):
