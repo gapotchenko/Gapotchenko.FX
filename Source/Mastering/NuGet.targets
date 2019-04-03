@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://gapotchenko.com/fx</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <RepositoryUrl>https://github.com/gapotchenko/Gapotchenko.FX</RepositoryUrl>
   </PropertyGroup>
 
   <!-- =================================================================== -->
@@ -21,6 +22,13 @@
   </PropertyGroup>
 
   <Target Name="PrepareNuspec">
+    <NLP_GeneratePackageRepositoryUrl
+        ProjectDirectory="$(MSBuildProjectDirectory)"
+        SolutionDirectory="$(SolutionDir)"
+        RepositoryUrl="$(RepositoryUrl)">
+      <Output PropertyName="RepositoryUrl" TaskParameter="RepositoryUrl" />
+    </NLP_GeneratePackageRepositoryUrl>
+
     <NLP_GeneratePackageSpecification PackageId="$(PackageId)" CommonlyUsedParts="@(CommonlyUsedPart)">
       <Output PropertyName="PackageDescription" TaskParameter="Description" />
     </NLP_GeneratePackageSpecification>
@@ -106,6 +114,61 @@ tw.WriteLine("- .NET Framework 4.0+");
 tw.WriteLine("- .NET Core 2.0+");
 
 Description = tw.ToString().TrimEnd();
+        ]]>
+      </Code>
+    </Task>
+
+  </UsingTask>
+
+  <!-- =================================================================== -->
+
+  <UsingTask
+    TaskName="NLP_GeneratePackageRepositoryUrl"
+    TaskFactory="RoslynCodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+
+    <ParameterGroup>
+      <ProjectDirectory ParameterType="System.String" Required="true" />
+      <SolutionDirectory ParameterType="System.String" Required="true" />
+      <RepositoryUrl ParameterType="System.String" Required="true" Output="true" />
+    </ParameterGroup>
+
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+string MakeRelativePath(string path, string basePath)
+{
+    if (path == null)
+        throw new ArgumentNullException(nameof(path));
+    if (basePath == null)
+        throw new ArgumentNullException(nameof(basePath));
+
+    // Require trailing backslash for path.
+    if (!basePath.EndsWith("\\"))
+        basePath += "\\";
+
+    var baseUri = new Uri(basePath);
+    var fullUri = new Uri(path);
+
+    var relativeUri = baseUri.MakeRelativeUri(fullUri);
+
+    if (relativeUri.IsAbsoluteUri)
+    {
+        return relativeUri.LocalPath;
+    }
+    else
+    {
+        // Uri uses forward slashes, so convert them back to file system slashes.
+        return Uri.UnescapeDataString(relativeUri.ToString()).Replace('/', Path.DirectorySeparatorChar);
+    }
+}
+
+RepositoryUrl =
+    RepositoryUrl +
+    "/tree/master/Source/" +
+    MakeRelativePath(ProjectDirectory, SolutionDirectory).Replace(Path.DirectorySeparatorChar, '/');
         ]]>
       </Code>
     </Task>
