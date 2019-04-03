@@ -63,7 +63,7 @@ Returns distinct elements from a sequence by using the default equality comparer
 
 The method is similar to `Distinct()` method provided by the stock `System.Linq` namespace, but allows to specify a selector function in order to differentiate the elements by a specific criteria.
 
-A small example:
+Let's take a look at example:
 
 ``` csharp
 using Gapotchenko.FX.Linq;
@@ -82,7 +82,7 @@ foreach (var i in query)
     Console.WriteLine(i);
 ```
 
-The output of the sample:
+The code produces the following output:
 
 ```
 { FirstName = Alex, LastName = Cooper }
