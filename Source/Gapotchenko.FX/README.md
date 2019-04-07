@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.svg)](https://www.nuget.org/packages/Gapotchenko.FX)
+
 `Gapotchenko.FX` is the main module of Gapotchenko.FX platform. Coincidently, they have identical names.
 
 The module was started by creating its first building block `ArrayEqualityComparer` back in 2014.
@@ -291,11 +294,11 @@ Secondly, Gapotchenko.FX provides some implementations from future versions of .
 
 ### HashCode Polyfill
 
-For example, `HashCode` struct first appeared in .NET Core 2.0.
+For example, `HashCode` struct first appeared in .NET Core 2.1.
 It allows to quickly combine various hash code sources into the final value with a minimal probability of collisions.
 A very decent thing that was _never_ backported to conventional .NET Framework.
 
-`Gapotchenko.FX` provides `HashCode` so you can use it in your project right now.
+`Gapotchenko.FX` provides `HashCode` so you can use it in your projects right now.
 It even goes further than that by providing extension methods that are likely to appear in .NET in the future (yes, we own a Cassandra's magic ball):
 - `SequenceCombine<T>(IEnumerable<T> source)`
 - `AddRange<T>(IEnumerable<T> source)`
@@ -319,6 +322,30 @@ sowing the wrong seeds at people's hearts.
 Gapotchenko.FX was created to change that.
 Its mission is to bring joy of a Rapid Application Development (RAD) back to the people.
 It's a polyfill to the future, after all.
+
+![Gapotchenko FX Ark](../../Documentation/Assets/gapotchenko-fx-ark-2019.png?raw=true ".NET is a technology for everyone.
+Nobody can take it away or undermine its progress.
+Gapotchenko.FX brings RAD back to the people 💪")
+
+<div align="right">
+    <a href="../../../../wiki/Manifesto">Project Manifesto</a>
+    |
+    <a href="../../../../wiki/RAD" title="Learn more about Rapid Application Development and why it matters">More on RAD</a>
+</div>
+
+## Supported Platforms
+
+- .NET Standard 2.0+
+- .NET Framework 4.0+
+- .NET Core 2.0+
+
+## Usage
+
+The main Gapotchenko.FX module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX):
+
+```
+PM> Install-Package Gapotchenko.FX
+```
 
 ## Other Modules
 

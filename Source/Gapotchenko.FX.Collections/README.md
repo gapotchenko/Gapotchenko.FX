@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Collections
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Collections.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Collections)
+
 The module was started by borrowing an implementation of `ConcurrentHashSet<T>` from [Mr. Bar Arnon](https://github.com/i3arnon).
 
 Other than that, the module provides polyfills for missing functionality in .NET.
@@ -103,6 +106,14 @@ void ProcessMap(IDictionary<string, int> map)
 ```
 
 A little detail, but sometimes it matters a lot when you are amid the heat of the code.
+
+## Usage
+
+`Gapotchenko.FX.Collections` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Collections):
+
+```
+PM> Install-Package Gapotchenko.FX.Collections
+```
 
 ## Other Modules
 

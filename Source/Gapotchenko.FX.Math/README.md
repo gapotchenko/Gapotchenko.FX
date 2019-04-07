@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Math
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math)
+
 The module provides extended math primitives.
 
 ## MathEx
@@ -61,6 +64,14 @@ var desiredProgress = new DateTime(2019, 1, 1);
 
 var fxProgress = MathEx.Max(currentProgress, desiredProgress);
 Console.WriteLine(fxProgress);
+```
+
+## Usage
+
+`Gapotchenko.FX.Math` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math):
+
+```
+PM> Install-Package Gapotchenko.FX.Math
 ```
 
 ## Other Modules

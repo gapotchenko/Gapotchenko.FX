@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Diagnostics.CommandLine
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Diagnostics.CommandLine.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Diagnostics.CommandLine)
+
 The module provides primitives for command line manipulation.
 
 ## CommandLineBuilder
@@ -113,6 +116,14 @@ The code above produces the following output:
 /b
 C:\Temp\Test 1.txt
 C:\Temp\Test 2.txt
+```
+
+## Usage
+
+`Gapotchenko.FX.Diagnostics.CommandLine` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Diagnostics.CommandLine):
+
+```
+PM> Install-Package Gapotchenko.FX.Diagnostics.CommandLine
 ```
 
 ## Other Modules

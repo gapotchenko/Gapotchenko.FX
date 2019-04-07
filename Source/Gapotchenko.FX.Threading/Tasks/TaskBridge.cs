@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Threading
+namespace Gapotchenko.FX.Threading.Tasks
 {
     /// <summary>
     /// Bridges together synchronous and asynchronous task execution models.
@@ -52,10 +52,10 @@ namespace Gapotchenko.FX.Threading
         }
 
         /// <summary>
-        /// Synchronously executes a cancellable async task with a void return value.
+        /// Synchronously executes a cancelable async task with a void return value.
         /// If the current thread is being aborted or interrupted then a corresponding cancellation request is issued for the given task.
         /// </summary>
-        /// <param name="task">The cancellable async task to execute.</param>
+        /// <param name="task">The cancelable async task to execute.</param>
         public static void Execute(Func<CancellationToken, Task> task)
         {
             if (task == null)
@@ -139,7 +139,7 @@ namespace Gapotchenko.FX.Threading
         /// Synchronously executes an async task with a return value of type <typeparamref name="T"/>.
         /// If the current thread is being aborted or interrupted then a corresponding cancellation request is issued for the given task.
         /// </summary>
-        /// <param name="task">The cancellable async task to execute.</param>
+        /// <param name="task">The cancelable async task to execute.</param>
         /// <returns>The return value.</returns>
         public static T Execute<T>(Func<CancellationToken, Task<T>> task)
         {
@@ -200,10 +200,10 @@ namespace Gapotchenko.FX.Threading
         }
 
         /// <summary>
-        /// Asynchronously executes a synchronous and cancellable long-running action.
-        /// If the asynchronous task is cancelled via cancellation token then a thread abort is issued for the execution thread of a synchronous action.
+        /// Asynchronously executes a synchronous and cancelable long-running action.
+        /// If the asynchronous task is canceled via cancellation token then a thread abort is issued for the execution thread of a synchronous action.
         /// </summary>
-        /// <param name="action">The cancellable synchronous action to execute.</param>
+        /// <param name="action">The cancelable synchronous action to execute.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
         public static Task ExecuteAsync(Action action, CancellationToken cancellationToken)
@@ -265,10 +265,10 @@ namespace Gapotchenko.FX.Threading
         }
 
         /// <summary>
-        /// Asynchronously executes a synchronous and cancellable long-running function with a return value of type <typeparamref name="T"/>.
-        /// If the asynchronous task is cancelled via cancellation token then a thread abort is issued for the execution thread of a synchronous function.
+        /// Asynchronously executes a synchronous and cancelable long-running function with a return value of type <typeparamref name="T"/>.
+        /// If the asynchronous task is canceled via cancellation token then a thread abort is issued for the execution thread of a synchronous function.
         /// </summary>
-        /// <param name="func">The cancellable synchronous function to execute.</param>
+        /// <param name="func">The cancelable synchronous function to execute.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
         public static async Task<T> ExecuteAsync<T>(Func<T> func, CancellationToken cancellationToken)

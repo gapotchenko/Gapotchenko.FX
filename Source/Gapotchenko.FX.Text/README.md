@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Text
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Text.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Text)
+
 The module provides primitives for string and text manipulation.
 
 ## StringEditor
@@ -10,6 +13,14 @@ It was primarily designed to work in conjunction with `Regex` class from `System
 when functionality provided by conventional methods like `Regex.Replace` is just not enough.
 
 [More on `StringEditor` class](StringEditor.md)
+
+## Usage
+
+`Gapotchenko.FX.Text` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Text):
+
+```
+PM> Install-Package Gapotchenko.FX.Text
+```
 
 ## Other Modules
 

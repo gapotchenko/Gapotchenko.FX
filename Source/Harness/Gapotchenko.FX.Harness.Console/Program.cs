@@ -8,6 +8,7 @@ using Gapotchenko.FX.Linq.Expressions;
 using Gapotchenko.FX.Math;
 using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading;
+using Gapotchenko.FX.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -47,15 +48,16 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _Run()
         {
-            var tw = new StringWriter();
-
-            foreach (var process in Process.GetProcessesByName("notepad2"))
+            var source = new[]
             {
-                var result = process.End();
-                Console.WriteLine("PID {0}", process.Id);
-                Console.WriteLine("Graceful: {0}", (result & ProcessEndMode.Graceful) != 0);
-                Console.WriteLine("Forceful: {0}", (result & ProcessEndMode.Forceful) != 0);
-            }
+                new { FirstName = "Alex", LastName = "Cooper", Age = 45 },
+                new { FirstName = "John", LastName = "Walker", Age = 17 },
+                new { FirstName = "Alex", LastName = "The Great", Age = 1500 },
+                new { FirstName = "Jeremy", LastName = "Doer", Age = 29 }
+            };
+
+            Console.WriteLine("The oldest person: {0}", source.MaxBy(x => x.Age));
+            Console.WriteLine("The youngest person: {0}", source.MinBy(x => x.Age));
         }
 
         static async Task _RunAsync(CancellationToken ct)

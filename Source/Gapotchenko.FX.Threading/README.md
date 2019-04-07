@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Threading
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Threading.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Threading)
+
 The module provides extended primitives for multithreaded and asynchronous programming.
 
 ## TaskBridge
@@ -14,7 +17,8 @@ Meet `TaskBridge`. It makes interoperability a breeze:
 
 ``` csharp
 using System;
-using Gapotchenko.FX.Threading;
+using System.Threading.Tasks;
+using Gapotchenko.FX.Threading.Tasks;
 
 class Program
 {
@@ -38,7 +42,8 @@ Let's call a cancelable async method from a synchronous thread that can be abort
 
 ``` csharp
 using System.Threading;
-using Gapotchenko.FX.Threading;
+using System.Threading.Tasks;
+using Gapotchenko.FX.Threading.Tasks;
 
 void SyncMethod() // can be canceled by Thread.Abort()
 {
@@ -62,12 +67,13 @@ Now, let's take a look at the opposite scenario where a cancelable async task ca
 
 ``` csharp
 using System.Threading;
-using Gapotchenko.FX.Threading;
+using System.Threading.Tasks;
+using Gapotchenko.FX.Threading.Tasks;
 
-async Task DoJobAsync(CancellationToken ct) // can be canceled by supplied cancellation token
+async Task DoJobAsync(CancellationToken ct) // can be canceled by a specified cancellation token
 {
     // Executes a synchronous method that is thread-aborted when
-    // the specified cancellation token is being canceled.
+    // a specified cancellation token is being canceled.
     await TaskBridge.ExecuteAsync(SyncMethod, ct); // <-- TaskBridge DOES THE MAGIC
 }
 
@@ -79,6 +85,14 @@ void SyncMethod()
 
 As you can see, `TaskBridge` has a lot of chances to become your tool #1,
 as it elegantly solves a world-class problem of bridging sync and async models together.
+
+## Usage
+
+`Gapotchenko.FX.Threading` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Threading):
+
+```
+PM> Install-Package Gapotchenko.FX.Threading
+```
 
 ## Other Modules
 

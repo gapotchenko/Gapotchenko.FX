@@ -547,7 +547,7 @@ namespace System
         /// <see cref="HashCode"/> is a mutable struct and should not be compared with other HashCodes. Use <see cref="ToHashCode"/> to retrieve the computed hash code.
         /// </summary>
         /// <returns>Always throws <see cref="NotSupportedException"/>.</returns>
-        [Obsolete("HashCodeEx is a mutable struct and should not be compared with other HashCodes. Use ToHashCode to retrieve the computed hash code.", error: true)]
+        [Obsolete("HashCode is a mutable struct and should not be compared with other HashCodes. Use ToHashCode to retrieve the computed hash code.", error: true)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode() => throw new NotSupportedException();
 
@@ -555,7 +555,7 @@ namespace System
         /// <see cref="HashCode"/> is a mutable struct and should not be compared with other HashCodes.
         /// </summary>
         /// <returns>Always throws <see cref="NotSupportedException"/>.</returns>
-        [Obsolete("HashCodeEx is a mutable struct and should not be compared with other HashCodes.", error: true)]
+        [Obsolete("HashCode is a mutable struct and should not be compared with other HashCodes.", error: true)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj) => throw new NotSupportedException();
 #pragma warning restore 0809

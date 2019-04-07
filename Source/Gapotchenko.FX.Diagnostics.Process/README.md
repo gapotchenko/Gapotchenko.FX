@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Diagnostics.Process
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Diagnostics.Process.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Diagnostics.Process)
+
 The module provides extended functionality for process manipulation.
 
 ## Process Extensions
@@ -68,13 +71,13 @@ It allows to end a process according to a specified mode of operation.
 The default mode of operation is `ProcessEndMode.Complete` that goes as follows:
 
  1. Graceful techniques:  
-   1.1. Tries to close a main window of a process  
-   1.2. If that fails, tries to send Ctrl+C (SIGTERM) signal
+   1.1. `End()` method tries to close a main window of a process  
+   1.2. If that fails, it tries to send Ctrl+C (SIGTERM) signal
  2. Forceful techniques:  
-   2.1. If graceful techniques failed, tries to exit the process (suitable for the current process only)  
-   2.2. If that fails, kills the process (SIGKILL)
+   2.1. If graceful techniques failed, it tries to exit the process (suitable for the current process only)  
+   2.2. If that fails, it kills the process (SIGKILL)
 
-`End()` method returns a `ProcessEndMode` value on completion indicating how the process was actually ended.
+The method returns a `ProcessEndMode` value on completion indicating how the process was actually ended.
 
 Let's take a look on example that tries to end all running instances of Notepad:
 
@@ -158,6 +161,14 @@ As you can see, despite a simple-looking signature, the End(…) method gives en
 
 The method is similar to `End()` but has an async implementation.
 If was created in order to efficiently handle a lot of processes in bulk.
+
+## Usage
+
+`Gapotchenko.FX.Diagnostics.Process` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Diagnostics.Process):
+
+```
+PM> Install-Package Gapotchenko.FX.Diagnostics.Process
+```
 
 ## Other Modules
 

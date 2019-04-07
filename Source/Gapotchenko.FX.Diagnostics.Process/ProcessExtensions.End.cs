@@ -1,4 +1,4 @@
-﻿using Gapotchenko.FX.Threading;
+﻿using Gapotchenko.FX.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

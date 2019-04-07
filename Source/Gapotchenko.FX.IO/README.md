@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.IO
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.IO.svg)](https://www.nuget.org/packages/Gapotchenko.FX.IO)
+
 The module provides highly demanded input/output functionality that is missing in conventional .NET platform.
 
 ## FileSystem
@@ -13,7 +16,7 @@ and serves as an important addendum to a conventional `System.IO` namespace.
 The `FileSystem.IsCaseSensitive` property shows whether the current host operating system uses case sensitive file names.
 
 For example, Windows operating system uses case-**in**sensitive file names,
-so `FileSystem.IsCaseSensitive` returns `false` when an app runs on it.
+so `FileSystem.IsCaseSensitive` returns `false`.
 The same goes to macOS.
 
 However, Linux and other Unix flavors use case-sensitive file names by default.
@@ -77,14 +80,14 @@ string fileA = "Test.txt";
 string fileB = @"C:\Temp\Test.txt";
 
 Console.WriteLine("String equality: {0}", string.Equals(fileA, fileB));
-Console.WriteLine("File equivalence: {0}", FileSystem.PathsAreEquivalent(fileA, fileB));
+Console.WriteLine("Path equivalence: {0}", FileSystem.PathsAreEquivalent(fileA, fileB));
 ```
 
 It produces the following results:
 
 ```
 String equality: False
-File equivalence: True
+Path equivalence: True
 ```
 
 Note that file equivalence check is positive despite the different forms of a file path.
@@ -177,6 +180,14 @@ var br = new BitReader(BigEndianBitConverter.Instance);
 
 Thanks to the fact that `BitReader` is inherited from `BinaryReader` class, it is almost a drop-in replacement.
 The same goes to `BitWriter`.
+
+## Usage
+
+`Gapotchenko.FX.IO` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.IO):
+
+```
+PM> Install-Package Gapotchenko.FX.IO
+```
 
 ## Other Modules
 
