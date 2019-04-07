@@ -7,7 +7,12 @@ using System.Runtime.InteropServices;
 namespace System.Runtime.InteropServices
 {
     /// <summary>
+    /// <para>
     /// Indicates the processor architecture.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </summary>
     public enum Architecture
     {

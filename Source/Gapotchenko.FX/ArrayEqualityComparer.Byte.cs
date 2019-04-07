@@ -21,7 +21,7 @@ namespace Gapotchenko.FX
                 if (x.Length != y.Length)
                     return false;
 
-                if (CodeSafetyStrategy.IsUnsafeCodeRecommended)
+                if (CodeSafetyStrategy.UnsafeCodeRecommended)
                     return _EqualsUnsafeCore(x, y);
                 else
                     return _EqualsSafeCore(x, y);
@@ -114,7 +114,7 @@ namespace Gapotchenko.FX
                 // The fastest hash function for byte arrays with lowest collision rate so far (10/2014).
                 // http://isthe.com/chongo/tech/comp/fnv/
 
-                if (CodeSafetyStrategy.IsUnsafeCodeRecommended)
+                if (CodeSafetyStrategy.UnsafeCodeRecommended)
                     return _GetHashCodeUnsafeCore(obj);
                 else
                     return _GetHashCodeSafeCore(obj);

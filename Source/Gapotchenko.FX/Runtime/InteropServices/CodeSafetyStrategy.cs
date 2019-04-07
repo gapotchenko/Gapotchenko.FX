@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Threading;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,17 @@ namespace Gapotchenko.FX.Runtime.InteropServices
             UnsafeCodeAllowed = AppDomain.CurrentDomain.IsFullyTrusted;
         }
 
+        /// <summary>
+        /// Indicates whether unsafe code is allowed in the current execution context.
+        /// </summary>
         public static bool UnsafeCodeAllowed { get; }
 
-        static LazyEvaluation<bool> _IsUnsafeCodeRecommended = LazyEvaluation.Create(_IsUnsafeCodeRecommendedCore);
+        static EvaluateOnce<bool> _UnsafeCodeRecommended = EvaluateOnce.Create(_IsUnsafeCodeRecommendedCore);
 
-        public static bool IsUnsafeCodeRecommended => _IsUnsafeCodeRecommended.Value;
+        /// <summary>
+        /// Indicates whether unsafe code is recommended in the current execution context.
+        /// </summary>
+        public static bool UnsafeCodeRecommended => _UnsafeCodeRecommended.Value;
 
         static bool _IsUnsafeCodeRecommendedCore()
         {
