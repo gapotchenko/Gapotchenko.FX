@@ -37,6 +37,9 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
             return null;
         }
 
+        /// <summary>
+        /// Intrinsic patcher base.
+        /// </summary>
         abstract class Patcher
         {
             public abstract void PatchMethod(MethodInfo method, byte[] code);
@@ -50,6 +53,9 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
             }
         }
 
+        /// <summary>
+        /// Intrinsic patcher for Windows OS on AMD-based 64-bit processor architecture.
+        /// </summary>
         sealed class PatcherWindowsX64 : Patcher
         {
             static byte* _GetMethodInstructionPointer(MethodInfo method)
@@ -177,7 +183,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
         }
 
         /// <summary>
-        /// Compiles intrinsic methods in a specified type.
+        /// Initializes intrinsic methods of a specified type.
         /// </summary>
         /// <param name="type">The type.</param>
         public static void InitializeType(Type type)
