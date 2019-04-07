@@ -35,9 +35,9 @@ namespace System.Numerics
         /// The behavior corresponds to <c>BSR</c> instruction from Intel x86 instruction set.
         /// </summary>
         /// <param name="value">A number whose logarithm is to be found.</param>
-        [MachineCodeIntrinsic(Architecture.X64, 0x0f, 0xbd, 0xc1)]  // BSR EAX, ECX
-        [MethodImpl(MethodImplOptions.NoInlining)]
         [CLSCompliant(false)]
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        [MachineCodeIntrinsic(Architecture.X64, 0x0f, 0xbd, 0xc1)]  // BSR EAX, ECX
         public static int Log2(uint value)
         {
             // Round down to one less than a power of 2.
