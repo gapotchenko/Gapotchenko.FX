@@ -200,7 +200,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
             var methods = type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (var method in methods)
             {
-                foreach (var attr in method.GetCustomAttributes<MachineCodeIntrinsicAttribute>())
+                foreach (var attr in method.GetCustomAttributes<MachineCodeIntrinsicAttribute>(false))
                 {
                     if (attr.Architecture != arch)
                         continue;
