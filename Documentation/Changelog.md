@@ -2,7 +2,7 @@
 
 ## Gapotchenko.FX 2019.2
 
-There is no official release yet, the version is in progress. See the [`new`](../tree/new) repository branch for more details.
+There is no official release yet, the version is in progress. See the [`new`](../../../tree/new) repository branch for more details.
 
 - Improved `System.Runtime.InteropServices.RuntimeInformation` polyfill.
 `ProcessArchitecture` and `OSArchitecture` properties are added
