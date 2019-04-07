@@ -48,30 +48,13 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _Run()
         {
-            var source = new[]
-            {
-                new { FirstName = "Alex", LastName = "Cooper", Age = 45 },
-                new { FirstName = "John", LastName = "Walker", Age = 17 },
-                new { FirstName = "Alex", LastName = "The Great", Age = 1500 },
-                new { FirstName = "Jeremy", LastName = "Doer", Age = 29 }
-            };
-
-            Console.WriteLine("The oldest person: {0}", source.MaxBy(x => x.Age));
-            Console.WriteLine("The youngest person: {0}", source.MinBy(x => x.Age));
+            Console.WriteLine("Process: {0}", RuntimeInformation.ProcessArchitecture);
+            Console.WriteLine("OS: {0}", RuntimeInformation.OSArchitecture);
         }
 
         static async Task _RunAsync(CancellationToken ct)
         {
-            await Console.Out.WriteLineAsync("Hello async world!");
-
-            ct.ThrowIfCancellationRequested();
-
-            await TaskBridge.ExecuteAsync(_SyncMethod, ct);
-        }
-
-        static void _SyncMethod()
-        {
-            Console.WriteLine("Sync");
+            await Task.Yield();
         }
     }
 }
