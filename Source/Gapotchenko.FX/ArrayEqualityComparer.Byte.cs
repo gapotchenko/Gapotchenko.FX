@@ -37,72 +37,12 @@ namespace Gapotchenko.FX
 
             static unsafe bool _EqualsUnsafeCore(byte[] x, byte[] y)
             {
-                var n = (uint)x.Length;
+                var n = x.Length;
                 if (n == 0)
                     return true;
 
-                fixed (byte* p1 = x, p2 = y)
-                {
-                    byte* ix1 = p1, ix2 = p2;
-
-                    int wordSize = IntPtr.Size;
-
-                    if (n < wordSize)
-                    {
-                        for (uint i = 0; i < n; i++, ix1++, ix2++)
-                        {
-                            if (*ix1 != *ix2)
-                                return false;
-                        }
-                    }
-                    else
-                    {
-                        if (wordSize == 4)
-                        {
-                            // 32-bit architecture.
-                            uint n4 = n >> 2;
-                            for (uint i = 0; i < n4; i++, ix1 += 4, ix2 += 4)
-                            {
-                                if (*((uint*)ix1) != *((uint*)ix2))
-                                    return false;
-                            }
-                        }
-                        else
-                        {
-                            // 64-bit architecture.
-                            uint n8 = n >> 3;
-                            for (uint i = 0; i < n8; i++, ix1 += 8, ix2 += 8)
-                            {
-                                if (*((ulong*)ix1) != *((ulong*)ix2))
-                                    return false;
-                            }
-
-                            if ((n & 4) != 0)
-                            {
-                                if (*((uint*)ix1) != *((uint*)ix2))
-                                    return false;
-                                ix1 += 4;
-                                ix2 += 4;
-                            }
-                        }
-
-                        if ((n & 2) != 0)
-                        {
-                            if (*((ushort*)ix1) != *((ushort*)ix2))
-                                return false;
-                            ix1 += 2;
-                            ix2 += 2;
-                        }
-
-                        if ((n & 1) != 0)
-                        {
-                            if (*ix1 != *ix2)
-                                return false;
-                        }
-                    }
-                }
-
-                return true;
+                fixed (byte* px = x, py = y)
+                    return Block.Equals(px, py, n);
             }
 
             public override int GetHashCode(byte[] obj)
