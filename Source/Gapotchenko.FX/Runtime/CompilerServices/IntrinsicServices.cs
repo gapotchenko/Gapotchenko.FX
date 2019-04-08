@@ -54,11 +54,11 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
         }
 
         /// <summary>
-        /// Intrinsic patcher for Windows OS on AMD-based 64-bit processor architecture.
+        /// Intrinsic patcher for Windows OS and AMD-based 64-bit processor architecture.
         /// </summary>
         sealed class PatcherWindowsX64 : Patcher
         {
-            static byte* _GetMethodInstructionPointer(MethodInfo method)
+            static byte* _GetPointerToMethodInstructions(MethodInfo method)
             {
                 // Compile the method.
                 RuntimeHelpers.PrepareMethod(method.MethodHandle);
@@ -66,13 +66,18 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                 // Get pointer to the first instruction.
                 var p = (byte*)method.MethodHandle.GetFunctionPointer();
 
-                // Skip all jumps.
+                p = _SkipJumps(p);
+
+                return p;
+            }
+
+            static byte* _SkipJumps(byte* p)
+            {
                 while (*p == 0xe9)
                 {
                     var delta = *(int*)(p + 1) + 5;
                     p += delta;
                 }
-
                 return p;
             }
 
@@ -84,7 +89,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                 new byte[] { 0x55, 0x48, 0x83, 0xec, 0x20 },
                 new byte[] { 0x55, 0x57, 0x56, 0x48, 0x83, 0xec, 0x30 },
                 new byte[] { 0x56, 0x48, 0x83, 0xec, 0x20 },
-                new byte[] { 0x57, 0x56, 0x48, 0x83, 0xec, 0x28 }, // NGEN 4.7.2
+                new byte[] { 0x57, 0x56, 0x48, 0x83, 0xec, 0x28 }, // Windows 10 x64, NGen 4.7.2
             };
 
             static bool _IsSupportedPrologue(byte* buffer)
@@ -109,7 +114,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
 
             public override void PatchMethod(MethodInfo method, byte[] code)
             {
-                var p = _GetMethodInstructionPointer(method);
+                var p = _GetPointerToMethodInstructions(method);
                 if (!_IsSupportedPrologue(p))
                     return;
 
@@ -151,6 +156,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
 
                 public void Dispose()
                 {
+                    // Restore the original memory protection at the end of a scope.
                     NativeMethods.VirtualProtect(m_Address, m_Size, m_OldProtect, out _);
                 }
             }
@@ -160,14 +166,14 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                 [Flags]
                 public enum Page : uint
                 {
-                    Execute = 0x10,
-                    ExecuteRead = 0x20,
-                    ExecuteReadWrite = 0x40,
-                    ExecuteWriteCopy = 0x80,
                     NoAccess = 0x01,
                     ReadOnly = 0x02,
                     ReadWrite = 0x04,
                     WriteCopy = 0x08,
+                    Execute = 0x10,
+                    ExecuteRead = 0x20,
+                    ExecuteReadWrite = 0x40,
+                    ExecuteWriteCopy = 0x80,
                     Guard = 0x100,
                     NoCache = 0x200,
                     WriteCombine = 0x400
@@ -211,6 +217,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                     }
                     catch (Exception e) when (!e.IsControlFlowException())
                     {
+                        // Give up on patching the code if an error occurs.
                         _Patcher = null;
                         return;
                     }

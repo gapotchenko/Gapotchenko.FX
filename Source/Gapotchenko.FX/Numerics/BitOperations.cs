@@ -34,7 +34,7 @@ namespace System.Numerics
         /// By convention, input value 0 returns 0 since log2(0) is undefined.
         /// The behavior corresponds to <c>BSR</c> instruction from Intel x86 instruction set.
         /// </summary>
-        /// <param name="value">A number whose logarithm is to be found.</param>
+        /// <param name="value">A number whose integer (floor) base 2 logarithm is to be found.</param>
         [CLSCompliant(false)]
         [MethodImpl(MethodImplOptions.NoInlining)]
         [MachineCodeIntrinsic(Architecture.X64, 0x0f, 0xbd, 0xc1)]  // BSR EAX, ECX
