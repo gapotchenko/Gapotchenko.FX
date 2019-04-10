@@ -52,6 +52,27 @@ namespace System.Numerics
         }
 
         /// <summary>
+        /// Returns the bit population count for a specified value.
+        /// It corresponds to the number of bits set to 1.
+        /// The behavior corresponds to <c>POPCNT</c> instruction from Intel x86 instruction set.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        [CLSCompliant(false)]
+        public static int PopCount(uint value)
+        {
+            // TODO: Implement hardware intrinsic.
+            // https://en.wikipedia.org/wiki/SSE4#POPCNT_and_LZCNT
+
+            var x = value;
+            x = x - ((x >> 1) & 0x55555555);
+            x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
+            x = (x + (x >> 4)) & 0x0f0f0f0f;
+            x += x >> 8;
+            x += x >> 16;
+            return (int)(x & 0x3f);
+        }
+
+        /// <summary>
         /// Rotates the specified value left by the specified number of bits.
         /// The behavior corresponds to <c>ROL</c> instruction from Intel x86 instruction set.
         /// </summary>
