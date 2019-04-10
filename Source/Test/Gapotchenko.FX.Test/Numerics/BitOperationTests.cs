@@ -13,6 +13,8 @@ namespace Gapotchenko.FX.Test.Numerics
         public void BitOps_Log2()
         {
             Assert.AreEqual(0, BitOperations.Log2(0));
+            Assert.AreEqual(0, BitOperations.Log2(1));
+            Assert.AreEqual(1, BitOperations.Log2(2));
             Assert.AreEqual(5, BitOperations.Log2(32));
             Assert.AreEqual(6, BitOperations.Log2(127));
             Assert.AreEqual(7, BitOperations.Log2(128));
@@ -28,8 +30,17 @@ namespace Gapotchenko.FX.Test.Numerics
             Assert.AreEqual(1, BitOperations.PopCount(1));
             Assert.AreEqual(32, BitOperations.PopCount(~0U));
 
-            for (int i = 1; i < 32; ++i)
-                Assert.AreEqual(i, BitOperations.PopCount((1U << i) - 1));
+            for (int j = 1; j < 32; ++j)
+            {
+                // Get a mask for the j-th bit.
+                uint mask = 1U << j;
+
+                // The j-th bit is single.
+                Assert.AreEqual(1, BitOperations.PopCount(mask));
+
+                // A mask - 1 signifies all the bits prior to j-th: 10000 - 1 = 01111
+                Assert.AreEqual(j, BitOperations.PopCount(mask - 1));
+            }
         }
     }
 }

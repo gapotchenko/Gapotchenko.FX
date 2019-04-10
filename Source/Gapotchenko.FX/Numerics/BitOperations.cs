@@ -30,9 +30,13 @@ namespace System.Numerics
         };
 
         /// <summary>
+        /// <para>
         /// Returns the integer (floor) base 2 logarithm of a specified number.
         /// By convention, input value 0 returns 0 since log2(0) is undefined.
+        /// </para>
+        /// <para>
         /// The behavior corresponds to <c>BSR</c> instruction from Intel x86 instruction set.
+        /// </para>
         /// </summary>
         /// <param name="value">A number whose integer (floor) base 2 logarithm is to be found.</param>
         [CLSCompliant(false)]
@@ -52,9 +56,13 @@ namespace System.Numerics
         }
 
         /// <summary>
+        /// <para>
         /// Returns the bit population count for a specified value.
-        /// It corresponds to the number of bits set to 1.
+        /// The result corresponds to the number of bits set to <c>1</c>.
+        /// </para>
+        /// <para>
         /// The behavior corresponds to <c>POPCNT</c> instruction from Intel x86 instruction set.
+        /// </para>
         /// </summary>
         /// <param name="value">The value.</param>
         [CLSCompliant(false)]
@@ -73,8 +81,12 @@ namespace System.Numerics
         }
 
         /// <summary>
+        /// <para>
         /// Rotates the specified value left by the specified number of bits.
+        /// </para>
+        /// <para>
         /// The behavior corresponds to <c>ROL</c> instruction from Intel x86 instruction set.
+        /// </para>
         /// </summary>
         /// <param name="value">The value to rotate.</param>
         /// <param name="offset">
@@ -89,8 +101,12 @@ namespace System.Numerics
         public static uint RotateLeft(uint value, int offset) => (value << offset) | (value >> (32 - offset));
 
         /// <summary>
+        /// <para>
         /// Rotates the specified value left by the specified number of bits.
+        /// </para>
+        /// <para>
         /// The behavior corresponds to <c>ROL</c> instruction from Intel x86 instruction set.
+        /// </para>
         /// </summary>
         /// <param name="value">The value to rotate.</param>
         /// <param name="offset">
@@ -105,8 +121,12 @@ namespace System.Numerics
         public static ulong RotateLeft(ulong value, int offset) => (value << offset) | (value >> (64 - offset));
 
         /// <summary>
+        /// <para>
         /// Rotates the specified value right by the specified number of bits.
+        /// </para>
+        /// <para>
         /// The behavior corresponds to <c>ROR</c> instruction from Intel x86 instruction set.
+        /// </para>
         /// </summary>
         /// <param name="value">The value to rotate.</param>
         /// <param name="offset">
@@ -121,8 +141,12 @@ namespace System.Numerics
         public static uint RotateRight(uint value, int offset) => (value >> offset) | (value << (32 - offset));
 
         /// <summary>
+        /// <para>
         /// Rotates the specified value right by the specified number of bits.
+        /// </para>
+        /// <para>
         /// The behavior corresponds to <c>ROR</c> instruction from Intel x86 instruction set.
+        /// </para>
         /// </summary>
         /// <param name="value">The value to rotate.</param>
         /// <param name="offset">
