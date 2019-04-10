@@ -32,7 +32,7 @@ namespace System.Numerics
         /// <summary>
         /// <para>
         /// Returns the integer (floor) base 2 logarithm of a specified number.
-        /// By convention, input value 0 returns 0 since log2(0) is undefined.
+        /// By convention, Log2(0) returns 0 since such operation is undefined.
         /// </para>
         /// <para>
         /// The behavior corresponds to <c>BSR</c> instruction from Intel x86 instruction set.

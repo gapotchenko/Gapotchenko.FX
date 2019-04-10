@@ -12,24 +12,31 @@ namespace Gapotchenko.FX.Test.Numerics
         [TestMethod]
         public void BitOps_Log2()
         {
+            // The convention for undefined log2(0) operation.
             Assert.AreEqual(0, BitOperations.Log2(0));
+
+            // Sanity checks.
             Assert.AreEqual(0, BitOperations.Log2(1));
             Assert.AreEqual(1, BitOperations.Log2(2));
+            Assert.AreEqual(31, BitOperations.Log2(uint.MaxValue));
+
+            // Verification.
             Assert.AreEqual(5, BitOperations.Log2(32));
             Assert.AreEqual(6, BitOperations.Log2(127));
             Assert.AreEqual(7, BitOperations.Log2(128));
             Assert.AreEqual(7, BitOperations.Log2(255));
             Assert.AreEqual(8, BitOperations.Log2(256));
-            Assert.AreEqual(31, BitOperations.Log2(uint.MaxValue));
         }
 
         [TestMethod]
         public void BitOps_PopCount()
         {
+            // Sanity checks.
             Assert.AreEqual(0, BitOperations.PopCount(0));
             Assert.AreEqual(1, BitOperations.PopCount(1));
             Assert.AreEqual(32, BitOperations.PopCount(~0U));
 
+            // Algorithmic verification for linear bit masks.
             for (int j = 1; j < 32; ++j)
             {
                 // Get a mask for the j-th bit.
