@@ -25,7 +25,8 @@
     <NLP_GeneratePackageRepositoryUrl
         ProjectDirectory="$(MSBuildProjectDirectory)"
         SolutionDirectory="$(SolutionDir)"
-        RepositoryUrl="$(RepositoryUrl)">
+        RepositoryUrl="$(RepositoryUrl)"
+	PackageVersion="$(Version)">
       <Output PropertyName="RepositoryUrl" TaskParameter="RepositoryUrl" />
     </NLP_GeneratePackageRepositoryUrl>
 
@@ -131,6 +132,7 @@ Description = tw.ToString().TrimEnd();
       <ProjectDirectory ParameterType="System.String" Required="true" />
       <SolutionDirectory ParameterType="System.String" Required="true" />
       <RepositoryUrl ParameterType="System.String" Required="true" Output="true" />
+      <PackageVersion ParameterType="System.String" Required="true" />
     </ParameterGroup>
 
     <Task>
@@ -165,9 +167,12 @@ string MakeRelativePath(string path, string basePath)
     }
 }
 
+bool isPreview = PackageVersion.Contains("-");
+
+string branch = isPreview ? "new" : "master";
+
 RepositoryUrl =
-    RepositoryUrl +
-    "/tree/master/Source/" +
+    $"{RepositoryUrl}/tree/{branch}/Source/" +
     MakeRelativePath(ProjectDirectory, SolutionDirectory).Replace(Path.DirectorySeparatorChar, '/');
         ]]>
       </Code>
