@@ -4,9 +4,10 @@
 
 There is no official release yet, the version is in progress. See the [`new`](../../../tree/new) repository branch for more details.
 
-- Added `System.Numerics.BitOperations` polyfill
-- Improved `System.Runtime.InteropServices.RuntimeInformation` polyfill.
-`ProcessArchitecture` and `OSArchitecture` properties are added
+- Intrinsic compiler for hardware-accelerated operations 
+- Added `System.Numerics.BitOperations` polyfill with `Log2` and `PopCount` operations
+- Added `ProcessArchitecture` and `OSArchitecture` properties to `System.Runtime.InteropServices.RuntimeInformation` polyfill
+- Improved wording of `ProgramExitException` message
 
 
 ## Gapotchenko.FX 2019.1
