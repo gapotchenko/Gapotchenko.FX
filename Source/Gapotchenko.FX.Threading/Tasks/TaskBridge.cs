@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.ExceptionServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,7 +41,11 @@ namespace Gapotchenko.FX.Threading.Tasks
                 throw new ArgumentNullException(nameof(task));
 
             if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
+            {
+                // Reproduce the memory behavior of a wait operation.
+                Thread.MemoryBarrier();
                 return;
+            }
 
             Execute(() => task);
         }
@@ -130,7 +129,11 @@ namespace Gapotchenko.FX.Threading.Tasks
                 throw new ArgumentNullException(nameof(task));
 
             if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
+            {
+                // Reproduce the memory behavior of a wait operation.
+                Thread.MemoryBarrier();
                 return task.Result;
+            }
 
             return Execute(() => task);
         }

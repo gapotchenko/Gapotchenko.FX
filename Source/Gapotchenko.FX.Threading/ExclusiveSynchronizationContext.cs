@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Threading
 {
     sealed class ExclusiveSynchronizationContext : SynchronizationContext
     {
-        bool _Done;
+        volatile bool _Done;
 
         ExceptionDispatchInfo _ExceptionDispatchInfo;
 
