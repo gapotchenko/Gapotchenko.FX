@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -17,7 +18,7 @@ namespace Gapotchenko.FX
         /// Initializes a new instance of the <see cref="ProgramExitException"/> class.
         /// </summary>
         public ProgramExitException() :
-            base("The program exit has been requested.")
+            base(string.Format(Resources.ProgramExit_Message, 0))
         {
         }
 
@@ -26,7 +27,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="exitCode">The exit code.</param>
         public ProgramExitException(int exitCode) :
-            this()
+            base(string.Format(Resources.ProgramExit_Message, exitCode))
         {
             ExitCode = exitCode;
         }

@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -93,6 +93,15 @@ namespace Gapotchenko.FX.Properties {
         internal static string ArgumentOutOfRange_Index {
             get {
                 return ResourceManager.GetString("ArgumentOutOfRange_Index", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The program exit has been requested with code {0}..
+        /// </summary>
+        internal static string ProgramExit_Message {
+            get {
+                return ResourceManager.GetString("ProgramExit_Message", resourceCulture);
             }
         }
         
