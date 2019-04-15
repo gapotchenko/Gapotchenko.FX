@@ -77,6 +77,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{FE418288-EAB6-41FC-A2B6-6FDEB2473213}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Threading.Test", "Test\Gapotchenko.FX.Threading.Test\Gapotchenko.FX.Threading.Test.csproj", "{D4447E26-D520-46C1-8FAE-D6176318F376}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,6 +153,10 @@ Global
 		{83E881DB-1419-4145-980D-51DCE3650427}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83E881DB-1419-4145-980D-51DCE3650427}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83E881DB-1419-4145-980D-51DCE3650427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4447E26-D520-46C1-8FAE-D6176318F376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4447E26-D520-46C1-8FAE-D6176318F376}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4447E26-D520-46C1-8FAE-D6176318F376}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4447E26-D520-46C1-8FAE-D6176318F376}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -178,6 +184,7 @@ Global
 		{68BA92DB-7296-463D-9C99-01357420A1A0} = {2B63C0D4-A90F-458D-9116-83ABC34274D9}
 		{0EC93163-AEB9-4D7B-ADC2-F665157CE38C} = {FE418288-EAB6-41FC-A2B6-6FDEB2473213}
 		{FE418288-EAB6-41FC-A2B6-6FDEB2473213} = {2B63C0D4-A90F-458D-9116-83ABC34274D9}
+		{D4447E26-D520-46C1-8FAE-D6176318F376} = {C0007571-9A88-4691-AAEA-4D6E2A04CAD6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}

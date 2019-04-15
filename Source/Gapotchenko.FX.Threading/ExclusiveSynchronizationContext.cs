@@ -22,9 +22,9 @@ namespace Gapotchenko.FX.Threading
 
         ExceptionDispatchInfo m_ExceptionDispatchInfo;
 
-        public Func<Exception, bool> InnerExceptionFilter { get; set; }
+        public Func<Exception, bool> ExceptionFilter { get; set; }
 
-        void BeginMessageLoop()
+        void Run()
         {
             while (m_Queue.TryTake(out var task, Timeout.Infinite))
             {
@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Threading
                 var edi = m_ExceptionDispatchInfo;
                 if (edi != null)
                 {
-                    var fiter = InnerExceptionFilter;
+                    var fiter = ExceptionFilter;
                     if (fiter == null || fiter(edi.SourceException))
                         edi.Throw();
                     else
@@ -43,7 +43,7 @@ namespace Gapotchenko.FX.Threading
             }
         }
 
-        void EndMessageLoop() => m_Queue.CompleteAdding();
+        void Complete() => m_Queue.CompleteAdding();
 
         public void Execute(Func<Task> task)
         {
@@ -61,12 +61,12 @@ namespace Gapotchenko.FX.Threading
                     }
                     finally
                     {
-                        EndMessageLoop();
+                        Complete();
                     }
                 },
                 null);
 
-            BeginMessageLoop();
+            Run();
         }
     }
 }

@@ -45,8 +45,14 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
+            // Use a short path when possible.
             if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
+            {
+                // Task.IsCompleted only provides a half fence.
+                // A full barrier is needed to reproduce the semantics of a wait operation.
+                Thread.MemoryBarrier();
                 return;
+            }
 
             Execute(() => task);
         }
@@ -80,7 +86,7 @@ namespace Gapotchenko.FX.Threading.Tasks
 
                         if (pendingTask != null)
                         {
-                            context.InnerExceptionFilter = exception => !(exception is TaskCanceledException);
+                            context.ExceptionFilter = exception => !(exception is TaskCanceledException);
 
                             // Execute remaining async iterations and finalizers.
                             context.Execute(() => pendingTask);
@@ -130,7 +136,12 @@ namespace Gapotchenko.FX.Threading.Tasks
                 throw new ArgumentNullException(nameof(task));
 
             if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
+            {
+                // Task.IsCompleted only provides a half fence.
+                // A full barrier is needed to reproduce the semantics of a wait operation.
+                Thread.MemoryBarrier();
                 return task.Result;
+            }
 
             return Execute(() => task);
         }
