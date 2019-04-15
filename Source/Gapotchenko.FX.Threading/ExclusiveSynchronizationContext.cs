@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
@@ -10,79 +11,41 @@ namespace Gapotchenko.FX.Threading
 {
     sealed class ExclusiveSynchronizationContext : SynchronizationContext
     {
-        bool _Done;
+        readonly BlockingCollection<KeyValuePair<SendOrPostCallback, object>> m_Queue = new BlockingCollection<KeyValuePair<SendOrPostCallback, object>>();
 
-        ExceptionDispatchInfo _ExceptionDispatchInfo;
+        public override void Post(SendOrPostCallback d, object state) =>
+            m_Queue.Add(new KeyValuePair<SendOrPostCallback, object>(d, state));
 
-        public Func<Exception, bool> InnerExceptionFilter
+        public override void Send(SendOrPostCallback d, object state) => throw new InvalidOperationException();
+
+        public override SynchronizationContext CreateCopy() => this;
+
+        ExceptionDispatchInfo m_ExceptionDispatchInfo;
+
+        public Func<Exception, bool> InnerExceptionFilter { get; set; }
+
+        void BeginMessageLoop()
         {
-            get;
-            set;
-        }
-
-        readonly Queue<KeyValuePair<SendOrPostCallback, object>> _Items = new Queue<KeyValuePair<SendOrPostCallback, object>>();
-
-        public override void Send(SendOrPostCallback d, object state)
-        {
-            throw new InvalidOperationException();
-        }
-
-        public override void Post(SendOrPostCallback d, object state)
-        {
-            var item = new KeyValuePair<SendOrPostCallback, object>(d, state);
-            lock (_Items)
+            while (m_Queue.TryTake(out var task, Timeout.Infinite))
             {
-                _Items.Enqueue(item);
-                Monitor.Pulse(_Items);
-            }
-        }
-
-        public void EndMessageLoop()
-        {
-            Post(_ => _Done = true, null);
-        }
-
-        public void BeginMessageLoop()
-        {
-            while (!_Done)
-            {
-                KeyValuePair<SendOrPostCallback, object> task;
-
-                // Retrieve task.
-                lock (_Items)
-                {
-                    if (_Items.Count > 0)
-                    {
-                        task = _Items.Dequeue();
-                    }
-                    else
-                    {
-                        Monitor.Wait(_Items);
-                        continue;
-                    }
-                }
-
                 // Execute task.
                 task.Key(task.Value);
 
-                var edi = _ExceptionDispatchInfo;
+                var edi = m_ExceptionDispatchInfo;
                 if (edi != null)
                 {
                     var fiter = InnerExceptionFilter;
                     if (fiter == null || fiter(edi.SourceException))
                         edi.Throw();
                     else
-                        _ExceptionDispatchInfo = null;
+                        m_ExceptionDispatchInfo = null;
                 }
             }
         }
 
-        public override SynchronizationContext CreateCopy()
-        {
-            return this;
-        }
+        void EndMessageLoop() => m_Queue.CompleteAdding();
 
-        internal void ExecuteAsyncTaskSynchronously(Func<Task> task)
+        public void Execute(Func<Task> task)
         {
             Post(
                 async (state) =>
@@ -93,7 +56,7 @@ namespace Gapotchenko.FX.Threading
                     }
                     catch (Exception e)
                     {
-                        _ExceptionDispatchInfo = ExceptionDispatchInfo.Capture(e);
+                        m_ExceptionDispatchInfo = ExceptionDispatchInfo.Capture(e);
                         throw;
                     }
                     finally

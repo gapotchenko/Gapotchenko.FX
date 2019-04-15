@@ -28,7 +28,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             try
             {
                 SynchronizationContext.SetSynchronizationContext(context);
-                context.ExecuteAsyncTaskSynchronously(task);
+                context.Execute(task);
             }
             finally
             {
@@ -71,7 +71,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                     try
                     {
                         SynchronizationContext.SetSynchronizationContext(context);
-                        context.ExecuteAsyncTaskSynchronously(() => pendingTask = task(cts.Token));
+                        context.Execute(() => pendingTask = task(cts.Token));
                         pendingTask = null;
                     }
                     catch (Exception ex) when (ex is ThreadAbortException || ex is ThreadInterruptedException)
@@ -83,7 +83,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                             context.InnerExceptionFilter = exception => !(exception is TaskCanceledException);
 
                             // Execute remaining async iterations and finalizers.
-                            context.ExecuteAsyncTaskSynchronously(() => pendingTask);
+                            context.Execute(() => pendingTask);
                         }
 
                         throw;
