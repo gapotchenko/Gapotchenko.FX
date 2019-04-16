@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Threading.Tasks
         }
 
         /// <summary>
-        /// Synchronously executes an async task with a void return value.
+        /// Synchronously completes execution of an already started async task.
         /// </summary>
         /// <param name="task">The async task to execute.</param>
         public static void Execute(Task task)
@@ -121,7 +121,7 @@ namespace Gapotchenko.FX.Threading.Tasks
         }
 
         /// <summary>
-        /// Synchronously executes an async task with a return value of type <typeparamref name="T"/>.
+        /// Synchronously completes execution of an already started async task that returns a value of type <typeparamref name="T"/>.
         /// </summary>
         /// <param name="task">The async task to execute.</param>
         /// <returns>The return value.</returns>
