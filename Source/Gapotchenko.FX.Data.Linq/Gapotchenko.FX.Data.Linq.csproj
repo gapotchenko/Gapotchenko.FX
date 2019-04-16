@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Mastering\Metadata.targets" />
+  <PropertyGroup>
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net40</TargetFrameworks>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Data.Linq.DataContextExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Data.Linq" />
+  </ItemGroup>
+</Project>
