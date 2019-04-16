@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.ExceptionServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,9 +41,9 @@ namespace Gapotchenko.FX.Threading.Tasks
                 throw new ArgumentNullException(nameof(task));
 
             // Use a short path when possible.
-            if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
+            if (task.Status == TaskStatus.RanToCompletion)
             {
-                // Task.IsCompleted only provides a half fence.
+                // Task.Status only provides a half fence.
                 // A full barrier is needed to reproduce the semantics of a wait operation.
                 Thread.MemoryBarrier();
                 return;
@@ -135,9 +130,9 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
-            if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
+            if (task.Status == TaskStatus.RanToCompletion)
             {
-                // Task.IsCompleted only provides a half fence.
+                // Task.Status only provides a half fence.
                 // A full barrier is needed to reproduce the semantics of a wait operation.
                 Thread.MemoryBarrier();
                 return task.Result;
@@ -166,7 +161,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             return result;
         }
 
-        static Task _RunLongTask(Action action, CancellationToken cancellationToken)
+        static Task RunLongTask(Action action, CancellationToken cancellationToken)
         {
             return Task.Factory.StartNew(
                 action,
@@ -185,9 +180,9 @@ namespace Gapotchenko.FX.Threading.Tasks
         /// <param name="action">The synchronous action to execute.</param>
         /// <returns>The task.</returns>
         public static Task ExecuteAsync(Action action) =>
-            _ExecuteAsyncCore(action ?? throw new ArgumentNullException(nameof(action)));
+            ExecuteAsyncCore(action ?? throw new ArgumentNullException(nameof(action)));
 
-        static Task _ExecuteAsyncCore(Action action) => _RunLongTask(action, CancellationToken.None);
+        static Task ExecuteAsyncCore(Action action) => RunLongTask(action, CancellationToken.None);
 
         /// <summary>
         /// Asynchronously executes a synchronous long-running function with a return value of type <typeparamref name="T"/>.
@@ -223,12 +218,12 @@ namespace Gapotchenko.FX.Threading.Tasks
                 throw new ArgumentNullException(nameof(action));
 
             if (!cancellationToken.CanBeCanceled)
-                return _ExecuteAsyncCore(action);
+                return ExecuteAsyncCore(action);
             else
-                return _ExecuteAsyncCore(action, cancellationToken);
+                return ExecuteAsyncCore(action, cancellationToken);
         }
 
-        static Task _ExecuteAsyncCore(Action action, CancellationToken cancellationToken)
+        static Task ExecuteAsyncCore(Action action, CancellationToken cancellationToken)
         {
             Thread taskThread = null;
             using (cancellationToken.Register(
@@ -249,7 +244,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                 false))
             {
                 return
-                    _RunLongTask(
+                    RunLongTask(
                         () =>
                         {
                             try
