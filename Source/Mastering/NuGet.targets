@@ -33,6 +33,10 @@
     <NLP_GeneratePackageSpecification PackageId="$(PackageId)" CommonlyUsedParts="@(CommonlyUsedPart)">
       <Output PropertyName="PackageDescription" TaskParameter="Description" />
     </NLP_GeneratePackageSpecification>
+
+    <PropertyGroup>
+	<PackageTags>$(PackageTags) @(PackageTag)</PackageTags>
+    </PropertyGroup>
   </Target>
 
   <!-- =================================================================== -->

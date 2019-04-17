@@ -7,6 +7,10 @@
     <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageTag Include="process" />
+    <PackageTag Include="environment" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
   </ItemGroup>

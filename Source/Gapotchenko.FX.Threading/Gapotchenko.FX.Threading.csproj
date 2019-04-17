@@ -6,6 +6,8 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageTag Include="async" />
+    <PackageTag Include="bridge" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.TaskBridge" />
   </ItemGroup>
   <ItemGroup>
