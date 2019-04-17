@@ -30,7 +30,10 @@
       <Output PropertyName="RepositoryUrl" TaskParameter="RepositoryUrl" />
     </NLP_GeneratePackageRepositoryUrl>
 
-    <NLP_GeneratePackageSpecification PackageId="$(PackageId)" CommonlyUsedParts="@(CommonlyUsedPart)">
+    <NLP_GeneratePackageSpecification
+        PackageId="$(PackageId)"
+        CommonlyUsedParts="@(CommonlyUsedPart)"
+        TargetFrameworks="$(TargetFrameworks)">
       <Output PropertyName="PackageDescription" TaskParameter="Description" />
     </NLP_GeneratePackageSpecification>
 
@@ -51,15 +54,20 @@
     <ParameterGroup>
       <PackageId ParameterType="System.String" Required="true" />
       <CommonlyUsedParts ParameterType="System.String[]" />
+      <TargetFrameworks ParameterType="System.String" Required="true" />
+
       <Description ParameterType="System.String" Output="true" />
     </ParameterGroup>
 
     <Task>
       <Using Namespace="System" />
       <Using Namespace="System.IO" />
+      <Using Namespace="System.Collections.Generic" />
       <Code Type="Fragment" Language="cs">
         <![CDATA[
 var tw = new StringWriter();
+
+// --- Summary ---
 
 tw.WriteLine(".NET polyfill to the future. A versatile RAD (Rapid Application Development) framework for .NET platform.");
 
@@ -97,6 +105,8 @@ if (isProfile)
     tw.WriteLine("Hint: instead of referencing each individual Gapotchenko.FX module, you can opt-in into referencing a profile.");
 }
 
+// --- Commonly Used Parts ---
+
 if (CommonlyUsedParts != null && CommonlyUsedParts.Length != 0)
 {
     tw.WriteLine();
@@ -112,11 +122,29 @@ if (CommonlyUsedParts != null && CommonlyUsedParts.Length != 0)
     }
 }
 
-tw.WriteLine();
-tw.WriteLine("Supported Platforms:");
-tw.WriteLine("- .NET Standard 2.0+");
-tw.WriteLine("- .NET Framework 4.0+");
-tw.WriteLine("- .NET Core 2.0+");
+// --- Supported Platforms ---
+
+var targetFrameworks = new HashSet<string>(TargetFrameworks.Split(';'), StringComparer.OrdinalIgnoreCase);
+
+var supportedPlatforms = new List<string>();
+
+if (targetFrameworks.Contains("netstandard2.0"))
+    supportedPlatforms.Add(".NET Standard 2.0+");
+if (targetFrameworks.Contains("net40"))
+    supportedPlatforms.Add(".NET Framework 4.0+");
+if (targetFrameworks.Contains("netcoreapp2.0"))
+    supportedPlatforms.Add(".NET Core 2.0+");
+
+if (supportedPlatforms.Count != 0)
+{
+    tw.WriteLine();
+    tw.WriteLine("Supported Platforms:");
+    foreach (var i in supportedPlatforms)
+    {
+        tw.Write("- ");
+        tw.WriteLine(i);
+    }
+}
 
 Description = tw.ToString().TrimEnd();
         ]]>
