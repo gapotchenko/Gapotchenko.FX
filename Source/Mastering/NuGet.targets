@@ -3,7 +3,7 @@
 
   <!-- NuGet Specification -->
   <PropertyGroup>
-    <Version>2019.2.5-beta</Version>
+    <Version>2019.2.7-beta</Version>
     <Authors>Gapotchenko</Authors>
     <PackageTags>framework platform polyfill rad</PackageTags>
     <PackageIconUrl>https://cdn.gapotchenko.com/publish/fx/assets/e84f03b5893f47d4a768729ea46875d8/icon48.png</PackageIconUrl>
