@@ -163,6 +163,8 @@ namespace Gapotchenko.FX.Threading.Tasks
 
         static Task RunLongTask(Action action, CancellationToken cancellationToken)
         {
+            // Running a long task allows to avoid thread pool pollution on a large number of concurrent operations.
+
             return Task.Factory.StartNew(
                 action,
                 cancellationToken,

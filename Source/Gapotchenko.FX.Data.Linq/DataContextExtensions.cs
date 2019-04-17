@@ -38,7 +38,6 @@ namespace Gapotchenko.FX.Data.Linq
 
             var command = dataContext.GetCommand(query);
 
-            DbDataReader reader;
             if (command is SqlCommand sqlCommand)
             {
                 // Microsoft SQL Server data provider natively supports async operations.
@@ -47,13 +46,23 @@ namespace Gapotchenko.FX.Data.Linq
                 if (connection.State == ConnectionState.Closed)
                     await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
-                reader = await sqlCommand.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                var reader = await sqlCommand.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+
+                // Execute Translate via TaskBridge because it uses synchronous operations
+                // like Read() and NextResult() on a specified reader instance.
+                // This allows to avoid possible thread pool pollution on a large number of concurrent operations.
+                // In essence, this is an async polyfill but there is no better way without modifying the stock LINQ to SQL implementation.
+                return await
+                    TaskBridge.ExecuteAsync(
+                        () => dataContext.Translate<TResult>(reader),
+                        cancellationToken)
+                    .ConfigureAwait(false);
             }
             else
             {
                 // Use TaskBridge-based async polyfill for other providers.
 
-                reader = await
+                return await
                     TaskBridge.ExecuteAsync(
                         () =>
                         {
@@ -61,13 +70,13 @@ namespace Gapotchenko.FX.Data.Linq
                             if (connection.State == ConnectionState.Closed)
                                 connection.Open();
 
-                            return command.ExecuteReader();
+                            var reader = command.ExecuteReader();
+
+                            return dataContext.Translate<TResult>(reader);
                         },
                         cancellationToken)
                     .ConfigureAwait(false);
             }
-
-            return dataContext.Translate<TResult>(reader);
         }
 
         /// <summary>
@@ -93,7 +102,8 @@ namespace Gapotchenko.FX.Data.Linq
             if (dataContext == null)
                 throw new ArgumentNullException(nameof(dataContext));
 
-            // Using TaskBridge-based async polyfill because there is no better way.
+            // Using TaskBridge-based async polyfill as the best effort solution
+            // (there is no better way without modifying the stock LINQ to SQL implementation).
 
             return TaskBridge.ExecuteAsync(
                 () => dataContext.SubmitChanges(failureMode),
