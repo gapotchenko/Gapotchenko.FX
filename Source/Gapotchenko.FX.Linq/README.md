@@ -35,7 +35,7 @@ This often leads to suboptimal performance of an otherwise sound functional algo
 The second most popular primitive provided by `Gapotchenko.FX.Linq` module is `ScalarOrDefault()` method.
 It is similar to `SingleOrDefault()` from conventional .NET but with one big difference: it does not throw an exception when sequence contains multiple elements.
 
-### _SingleOrDefault()_ Semantics
+### *Single*OrDefault() Semantics
 
 ``` csharp
 using System.Linq;
@@ -45,7 +45,7 @@ new[] { "A" }.SingleOrDefault(); // returns "A"
 new[] { "A", "B" }.SingleOrDefault(); // throws an exception 😞
 ```
 
-### _ScalarOrDefault()_ Semantics
+### *Scalar*OrDefault() Semantics
 
 ``` csharp
 using Gapotchenko.FX.Linq;
