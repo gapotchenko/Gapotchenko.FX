@@ -22,7 +22,10 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
         static Patcher _CreatePatcher()
         {
             if (!CodeSafetyStrategy.UnsafeCodeRecommended)
+            {
+                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1003, "Intrinsic compiler cannot be activated because code safety strategy does not recommend unsafe code.");
                 return null;
+            }
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -31,7 +34,15 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                 {
                     case Architecture.X64:
                         return new PatcherWindowsX64();
+
+                    default:
+                        Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1004, "Intrinsic compiler does not support {0} architecture for Windows host platform.", arch);
+                        break;
                 }
+            }
+            else
+            {
+                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1005, "Intrinsic compiler does not support the current host platform.");
             }
 
             return null;
@@ -42,7 +53,13 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
         /// </summary>
         abstract class Patcher
         {
-            public abstract void PatchMethod(MethodInfo method, byte[] code);
+            public enum PatchResult
+            {
+                Success,
+                UnexpectedEpilogue
+            }
+
+            public abstract PatchResult PatchMethod(MethodInfo method, byte[] code);
 
             protected static byte* Write(byte* dest, params byte[] data)
             {
@@ -113,11 +130,11 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                 return false;
             }
 
-            public override void PatchMethod(MethodInfo method, byte[] code)
+            public override PatchResult PatchMethod(MethodInfo method, byte[] code)
             {
                 var p = _GetPointerToMethodInstructions(method);
                 if (!_IsSupportedPrologue(p))
-                    return;
+                    return PatchResult.UnexpectedEpilogue;
 
                 int codeSize = code.Length;
 
@@ -138,6 +155,8 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                         Write(p, 0xc3);
                     }
                 }
+
+                return PatchResult.Success;
             }
 
             struct VirtualProtectScope : IDisposable
@@ -189,6 +208,11 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
             }
         }
 
+        static class Log
+        {
+            public static readonly TraceSource TraceSource = new TraceSource("Gapotchenko.FX.Runtime.CompilerServices.Intrinsics", SourceLevels.Error);
+        }
+
         /// <summary>
         /// Initializes intrinsic methods of a specified type.
         /// </summary>
@@ -212,15 +236,33 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                     if (attr.Architecture != arch)
                         continue;
 
+                    Patcher.PatchResult patchResult;
                     try
                     {
-                        patcher.PatchMethod(method, attr.Code);
+                        patchResult = patcher.PatchMethod(method, attr.Code);
                     }
                     catch (Exception e) when (!e.IsControlFlowException())
                     {
                         // Give up on patching the code if an error occurs.
                         _Patcher = null;
+
+                        Log.TraceSource.TraceEvent(
+                            TraceEventType.Error,
+                            1002,
+                            string.Format("Unexpected error occurred during compilation of intrinsic method '{0}'. Giving up on intrinsics for the current environment.", method) + Environment.NewLine + e);
+
                         return;
+                    }
+
+                    switch (patchResult)
+                    {
+                        case Patcher.PatchResult.Success:
+                            Log.TraceSource.TraceEvent(TraceEventType.Information, 1000, "Intrinsic method '{0}' compiled successfully.", method);
+                            break;
+
+                        case Patcher.PatchResult.UnexpectedEpilogue:
+                            Log.TraceSource.TraceEvent(TraceEventType.Warning, 1001, "Unexpected machine code epilogue encountered for intrinsic method '{0}'. Compilation discarded.", method);
+                            break;
                     }
 
                     break;
