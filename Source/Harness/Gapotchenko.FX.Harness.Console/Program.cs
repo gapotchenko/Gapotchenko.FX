@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,6 +51,8 @@ namespace Gapotchenko.FX.Harness.Console
         {
             Console.WriteLine("Process: {0}", RuntimeInformation.ProcessArchitecture);
             Console.WriteLine("OS: {0}", RuntimeInformation.OSArchitecture);
+
+            Console.WriteLine(BitOperations.Log2(32));
         }
 
         static async Task _RunAsync(CancellationToken ct)
