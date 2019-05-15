@@ -94,19 +94,19 @@ namespace Gapotchenko.FX
         /// Returns a hash code for the specified optional value.
         /// </summary>
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
-        /// <param name="option">The optional value.</param>
+        /// <param name="optional">The optional value.</param>
         /// <param name="valueComparer">The value equality comparer.</param>
         /// <returns>A hash code for the specified optional value.</returns>
-        public static int GetHashCode<T>(Optional<T> option, IEqualityComparer<T> valueComparer) =>
-            OptionalEqualityComparer<T>.GetHashCodeCore(option, valueComparer ?? EqualityComparer<T>.Default);
+        public static int GetHashCode<T>(Optional<T> optional, IEqualityComparer<T> valueComparer) =>
+            OptionalEqualityComparer<T>.GetHashCodeCore(optional, valueComparer ?? EqualityComparer<T>.Default);
 
         /// <summary>
         /// Returns a hash code for the specified optional value.
         /// </summary>
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
-        /// <param name="option">The optional value.</param>
+        /// <param name="optional">The optional value.</param>
         /// <returns>A hash code for the specified optional value.</returns>
-        public static int GetHashCode<T>(Optional<T> option) => GetHashCode(option, null);
+        public static int GetHashCode<T>(Optional<T> optional) => GetHashCode(optional, null);
 
         /// <summary>
         /// Compares two optional values using a specified comparer for values.

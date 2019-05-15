@@ -176,18 +176,18 @@ namespace Gapotchenko.FX
         /// <summary>
         /// Determines whether two specified <see cref="Optional{T}"/> objects are equal.
         /// </summary>
-        /// <param name="option1">The first <see cref="Optional{T}"/> object.</param>
-        /// <param name="option2">The second <see cref="Optional{T}"/> object.</param>
-        /// <returns><c>true</c> if <paramref name="option1"/> equals <paramref name="option2"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator ==(Optional<T> option1, Optional<T> option2) => option1._EqualsOp(option2);
+        /// <param name="optional1">The first <see cref="Optional{T}"/> object.</param>
+        /// <param name="optional2">The second <see cref="Optional{T}"/> object.</param>
+        /// <returns><c>true</c> if <paramref name="optional1"/> equals <paramref name="optional2"/>; otherwise, <c>false</c>.</returns>
+        public static bool operator ==(Optional<T> optional1, Optional<T> optional2) => optional1._EqualsOp(optional2);
 
         /// <summary>
         /// Determines whether two specified <see cref="Optional{T}"/> objects are not equal.
         /// </summary>
-        /// <param name="option1">The first <see cref="Optional{T}"/> object.</param>
-        /// <param name="option2">The second <see cref="Optional{T}"/> object.</param>
-        /// <returns><c>true</c> if <paramref name="option1"/> does not equal <paramref name="option2"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator !=(Optional<T> option1, Optional<T> option2) => !option1._EqualsOp(option2);
+        /// <param name="optional1">The first <see cref="Optional{T}"/> object.</param>
+        /// <param name="optional2">The second <see cref="Optional{T}"/> object.</param>
+        /// <returns><c>true</c> if <paramref name="optional1"/> does not equal <paramref name="optional2"/>; otherwise, <c>false</c>.</returns>
+        public static bool operator !=(Optional<T> optional1, Optional<T> optional2) => !optional1._EqualsOp(optional2);
 
     }
 }
