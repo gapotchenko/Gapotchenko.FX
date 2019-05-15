@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Mastering\Metadata.targets" />
+  <PropertyGroup>
+    <TargetFramework></TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Numerics.BitOperations" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
+</Project>
