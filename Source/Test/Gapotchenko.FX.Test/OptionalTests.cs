@@ -243,5 +243,31 @@ namespace Gapotchenko.FX.Test
             var option = Optional.Some<string>(null);
             Assert.AreEqual(0, option.GetHashCode());
         }
+
+        [TestMethod]
+        public void Optional_DA1()
+        {
+            Assert.AreEqual(Optional.Some(-1), Optional.Discriminate(-1));
+            Assert.AreEqual(Optional<int>.None, Optional.Discriminate(0));
+            Assert.AreEqual(Optional.Some(1), Optional.Discriminate(1));
+            Assert.AreEqual(Optional.Some(2), Optional.Discriminate(2));
+        }
+
+        [TestMethod]
+        public void Optional_DA2()
+        {
+            Assert.AreEqual(Optional.Some(-1), Optional.Discriminate(-1, 1));
+            Assert.AreEqual(Optional.Some(0), Optional.Discriminate(0, 1));
+            Assert.AreEqual(Optional<int>.None, Optional.Discriminate(1, 1));
+            Assert.AreEqual(Optional.Some(2), Optional.Discriminate(2, 1));
+        }
+
+        [TestMethod]
+        public void Optional_DA3()
+        {
+            Assert.AreEqual(Optional<string>.None, Optional.Discriminate<string>(null, string.IsNullOrEmpty));
+            Assert.AreEqual(Optional<string>.None, Optional.Discriminate("", string.IsNullOrEmpty));
+            Assert.AreEqual("A", Optional.Discriminate("A", string.IsNullOrEmpty));
+        }
     }
 }

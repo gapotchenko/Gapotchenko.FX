@@ -22,9 +22,53 @@ namespace Gapotchenko.FX
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
         /// <param name="value">A value.</param>
         /// <returns>
-        /// A <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the value parameter.
+        /// An <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the value parameter.
         /// </returns>
         public static Optional<T> Some<T>(T value) => new Optional<T>(value);
+
+        /// <summary>
+        /// Either creates a new <see cref="Optional{T}"/> object initialized to a specified value or
+        /// returns an <see cref="Optional{T}"/> object without a value when the specified parameter equals to the default value of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
+        /// <param name="value">A value to discriminate.</param>
+        /// <returns>
+        /// An <see cref="Optional{T}"/> object without a value when the specified parameter equals to the default value of type <typeparamref name="T"/>;
+        /// otherwise, an <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the <paramref name="value"/> parameter.
+        /// </returns>
+        public static Optional<T> Discriminate<T>(T value) => Discriminate(value, default(T));
+
+        /// <summary>
+        /// Either creates a new <see cref="Optional{T}"/> object initialized to a specified value or
+        /// returns an <see cref="Optional{T}"/> object without a value when the specified parameter equals to the <paramref name="noneValue"/>.
+        /// </summary>
+        /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
+        /// <param name="value">A value to discriminate.</param>
+        /// <param name="noneValue">A value to treat as <seealso cref="Optional{T}.None"/>.</param>
+        /// <returns>
+        /// An <see cref="Optional{T}"/> object without a value when the specified <paramref name="value"/> equals to the <paramref name="noneValue"/> parameter;
+        /// otherwise, an <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the <paramref name="value"/> parameter.
+        /// </returns>
+        public static Optional<T> Discriminate<T>(T value, T noneValue) => EqualityComparer<T>.Default.Equals(value, noneValue) ? default : Some(value);
+
+        /// <summary>
+        /// Either creates a new <see cref="Optional{T}"/> object initialized to a specified value or
+        /// returns an <see cref="Optional{T}"/> object without a value when the specified predicate returns <c>true</c>.
+        /// </summary>
+        /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
+        /// <param name="value">A value to discriminate.</param>
+        /// <param name="nonePredicate">A predicate that indicates whether to treat the specified value as <seealso cref="Optional{T}.None"/>.</param>
+        /// <returns>
+        /// An <see cref="Optional{T}"/> object without a value when the specified predicate returns <c>true</c>;
+        /// otherwise, an <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the <paramref name="value"/> parameter.
+        /// </returns>
+        public static Optional<T> Discriminate<T>(T value, Func<T, bool> nonePredicate)
+        {
+            if (nonePredicate == null)
+                throw new ArgumentNullException(nameof(nonePredicate));
+
+            return nonePredicate(value) ? default : Some(value);
+        }
 
         /// <summary>
         /// Determines whether the specified optional values are equal.
