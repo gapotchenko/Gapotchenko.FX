@@ -9,239 +9,239 @@ namespace Gapotchenko.FX.Test
         [TestMethod]
         public void Optional_AV1()
         {
-            var option = Optional<int>.None;
-            Assert.IsFalse(option.HasValue);
+            var optional = Optional<int>.None;
+            Assert.IsFalse(optional.HasValue);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void Optional_AV2()
         {
-            var option = Optional<int>.None;
-            var value = option.Value;
+            var optional = Optional<int>.None;
+            var value = optional.Value;
         }
 
         [TestMethod]
         public void Optional_AV3()
         {
-            var option = Optional.Some(10);
-            Assert.IsTrue(option.HasValue);
-            Assert.AreEqual(10, option.Value);
+            var optional = Optional.Some(10);
+            Assert.IsTrue(optional.HasValue);
+            Assert.AreEqual(10, optional.Value);
         }
 
         [TestMethod]
         public void Optional_AV4()
         {
-            var option = new Optional<int>();
-            Assert.IsFalse(option.HasValue);
+            var optional = new Optional<int>();
+            Assert.IsFalse(optional.HasValue);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void Optional_AV5()
         {
-            var option = new Optional<int>();
-            var value = option.Value;
+            var optional = new Optional<int>();
+            var value = optional.Value;
         }
 
         [TestMethod]
         public void Optional_AV6()
         {
-            var option = new Optional<int>(100);
-            Assert.IsTrue(option.HasValue);
-            Assert.AreEqual(100, option.Value);
+            var optional = new Optional<int>(100);
+            Assert.IsTrue(optional.HasValue);
+            Assert.AreEqual(100, optional.Value);
         }
 
         [TestMethod]
         public void Optional_AR1()
         {
-            var option = Optional<string>.None;
-            Assert.IsFalse(option.HasValue);
+            var optional = Optional<string>.None;
+            Assert.IsFalse(optional.HasValue);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void Optional_AR2()
         {
-            var option = Optional<string>.None;
-            var value = option.Value;
+            var optional = Optional<string>.None;
+            _ = optional.Value;
         }
 
         [TestMethod]
         public void Optional_AR3()
         {
-            var option = Optional.Some("ABC");
-            Assert.IsTrue(option.HasValue);
-            Assert.AreEqual("ABC", option.Value);
+            var optional = Optional.Some("ABC");
+            Assert.IsTrue(optional.HasValue);
+            Assert.AreEqual("ABC", optional.Value);
         }
 
         [TestMethod]
         public void Optional_AR4()
         {
-            var option = new Optional<string>();
-            Assert.IsFalse(option.HasValue);
+            var optional = new Optional<string>();
+            Assert.IsFalse(optional.HasValue);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void Optional_AR5()
         {
-            var option = new Optional<string>();
-            var value = option.Value;
+            var optional = new Optional<string>();
+            var value = optional.Value;
         }
 
         [TestMethod]
         public void Optional_AR6()
         {
-            var option = new Optional<string>("ABCDEF");
-            Assert.IsTrue(option.HasValue);
-            Assert.AreEqual("ABCDEF", option.Value);
+            var optional = new Optional<string>("ABCDEF");
+            Assert.IsTrue(optional.HasValue);
+            Assert.AreEqual("ABCDEF", optional.Value);
         }
 
         [TestMethod]
         public void Optional_AR7()
         {
-            var option = new Optional<string>(null);
-            Assert.IsTrue(option.HasValue);
-            Assert.IsNull(option.Value);
+            var optional = new Optional<string>(null);
+            Assert.IsTrue(optional.HasValue);
+            Assert.IsNull(optional.Value);
         }
 
         [TestMethod]
         public void Optional_BV1()
         {
-            var option = Optional<int>.None;
-            Assert.IsFalse(option.Equals(0));
-            Assert.IsFalse(option.Equals(null));
+            var optional = Optional<int>.None;
+            Assert.IsFalse(optional.Equals(0));
+            Assert.IsFalse(optional.Equals(null));
         }
 
         [TestMethod]
         public void Optional_BV2()
         {
-            var option = Optional<int>.None;
-            Assert.IsFalse(option.Equals((object)0));
+            var optional = Optional<int>.None;
+            Assert.IsFalse(optional.Equals((object)0));
         }
 
         [TestMethod]
         public void Optional_BV3()
         {
-            var option = Optional<int>.None;
-            Assert.IsFalse(option.Equals(Optional.Some(0)));
+            var optional = Optional<int>.None;
+            Assert.IsFalse(optional.Equals(Optional.Some(0)));
 
-            Assert.IsTrue(option.Equals(Optional<int>.None));
-            Assert.IsFalse(option.Equals(Optional<long>.None));
+            Assert.IsTrue(optional.Equals(Optional<int>.None));
+            Assert.IsFalse(optional.Equals(Optional<long>.None));
 
-            Assert.IsTrue(option.Equals((object)Optional<int>.None));
-            Assert.IsFalse(option.Equals((object)Optional<long>.None));
+            Assert.IsTrue(optional.Equals((object)Optional<int>.None));
+            Assert.IsFalse(optional.Equals((object)Optional<long>.None));
         }
 
         [TestMethod]
         public void Optional_BV4()
         {
-            var option = Optional.Some(10);
-            Assert.IsTrue(option.Equals(10));
-            Assert.IsFalse(option.Equals(11));
+            var optional = Optional.Some(10);
+            Assert.IsTrue(optional.Equals(10));
+            Assert.IsFalse(optional.Equals(11));
         }
 
         [TestMethod]
         public void Optional_BV5()
         {
-            var option = Optional.Some(10);
-            Assert.IsTrue(option.Equals((object)10));
-            Assert.IsFalse(option.Equals((object)11));
+            var optional = Optional.Some(10);
+            Assert.IsTrue(optional.Equals((object)10));
+            Assert.IsFalse(optional.Equals((object)11));
         }
 
         [TestMethod]
         public void Optional_BV6()
         {
-            var option = Optional.Some(10);
-            Assert.IsTrue(option.Equals(Optional.Some(10)));
-            Assert.IsFalse(option.Equals(Optional.Some(11)));
+            var optional = Optional.Some(10);
+            Assert.IsTrue(optional.Equals(Optional.Some(10)));
+            Assert.IsFalse(optional.Equals(Optional.Some(11)));
         }
 
         [TestMethod]
         public void Optional_BR1()
         {
-            var option = Optional<string>.None;
-            Assert.IsFalse(option.Equals(null));
+            var optional = Optional<string>.None;
+            Assert.IsFalse(optional.Equals(null));
         }
 
         [TestMethod]
         public void Optional_BR2()
         {
-            var option = Optional<string>.None;
-            Assert.IsFalse(option.Equals((object)null));
+            var optional = Optional<string>.None;
+            Assert.IsFalse(optional.Equals((object)null));
         }
 
         [TestMethod]
         public void Optional_BR3()
         {
-            var option = Optional<string>.None;
-            Assert.IsFalse(option.Equals(Optional.Some<string>(null)));
+            var optional = Optional<string>.None;
+            Assert.IsFalse(optional.Equals(Optional.Some<string>(null)));
 
-            Assert.IsTrue(option.Equals(Optional<string>.None));
-            Assert.IsFalse(option.Equals(Optional<Version>.None));
+            Assert.IsTrue(optional.Equals(Optional<string>.None));
+            Assert.IsFalse(optional.Equals(Optional<Version>.None));
 
-            Assert.IsTrue(option.Equals((object)Optional<string>.None));
-            Assert.IsFalse(option.Equals(Optional<Version>.None));
+            Assert.IsTrue(optional.Equals((object)Optional<string>.None));
+            Assert.IsFalse(optional.Equals(Optional<Version>.None));
         }
 
         [TestMethod]
         public void Optional_BR4()
         {
-            var option = Optional.Some("10");
-            Assert.IsTrue(option.Equals("10"));
-            Assert.IsFalse(option.Equals("11"));
+            var optional = Optional.Some("10");
+            Assert.IsTrue(optional.Equals("10"));
+            Assert.IsFalse(optional.Equals("11"));
         }
 
         [TestMethod]
         public void Optional_BR5()
         {
-            var option = Optional.Some("10");
-            Assert.IsTrue(option.Equals((object)"10"));
-            Assert.IsFalse(option.Equals((object)"11"));
+            var optional = Optional.Some("10");
+            Assert.IsTrue(optional.Equals((object)"10"));
+            Assert.IsFalse(optional.Equals((object)"11"));
         }
 
         [TestMethod]
         public void Optional_BR6()
         {
-            var option = Optional.Some("10");
-            Assert.IsTrue(option.Equals(Optional.Some("10")));
-            Assert.IsFalse(option.Equals(Optional.Some("11")));
+            var optional = Optional.Some("10");
+            Assert.IsTrue(optional.Equals(Optional.Some("10")));
+            Assert.IsFalse(optional.Equals(Optional.Some("11")));
         }
 
         [TestMethod]
         public void Optional_CV1()
         {
-            var option = Optional<int>.None;
-            Assert.AreEqual(0, option.GetHashCode());
+            var optional = Optional<int>.None;
+            Assert.AreEqual(0, optional.GetHashCode());
         }
 
         [TestMethod]
         public void Optional_CV2()
         {
-            var option = Optional.Some(10);
-            Assert.AreEqual(10.GetHashCode(), option.GetHashCode());
+            var optional = Optional.Some(10);
+            Assert.AreEqual(10.GetHashCode(), optional.GetHashCode());
         }
 
         [TestMethod]
         public void Optional_CR1()
         {
-            var option = Optional<string>.None;
-            Assert.AreEqual(0, option.GetHashCode());
+            var optional = Optional<string>.None;
+            Assert.AreEqual(0, optional.GetHashCode());
         }
 
         [TestMethod]
         public void Optional_CR2()
         {
-            var option = Optional.Some("10");
-            Assert.AreEqual("10".GetHashCode(), option.GetHashCode());
+            var optional = Optional.Some("10");
+            Assert.AreEqual("10".GetHashCode(), optional.GetHashCode());
         }
 
         [TestMethod]
         public void Optional_CR3()
         {
-            var option = Optional.Some<string>(null);
-            Assert.AreEqual(0, option.GetHashCode());
+            var optional = Optional.Some<string>(null);
+            Assert.AreEqual(0, optional.GetHashCode());
         }
 
         [TestMethod]
