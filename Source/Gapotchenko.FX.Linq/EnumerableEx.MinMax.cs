@@ -63,7 +63,7 @@ namespace Gapotchenko.FX.Linq
         public static TSource Max<TSource>(this IEnumerable<TSource> source, IComparer<TSource> comparer) => _MinMaxCore(source, comparer, true, true);
 
         /// <summary>
-        /// Returns the minimum value in a sequence, or a default value if the sequence is empty.
+        /// Returns the minimum value in a sequence, or a default value if the sequence is empty by using a specified comparer.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to determine the minimum value of.</param>
@@ -72,13 +72,29 @@ namespace Gapotchenko.FX.Linq
         public static TSource MinOrDefault<TSource>(this IEnumerable<TSource> source, IComparer<TSource> comparer) => _MinMaxCore(source, comparer, false, false);
 
         /// <summary>
-        /// Returns the maximum value in a sequence, or a default value if the sequence is empty.
+        /// Returns the minimum value in a sequence, or a default value if the sequence is empty.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">A sequence of values to determine the minimum value of.</param>
+        /// <returns>The minimum value in the sequence, or a default value if the sequence is empty.</returns>
+        public static TSource MinOrDefault<TSource>(this IEnumerable<TSource> source) => MinOrDefault(source, null);
+
+        /// <summary>
+        /// Returns the maximum value in a sequence, or a default value if the sequence is empty by using a specified comparer.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to determine the maximum value of.</param>
         /// <param name="comparer">The comparer.</param>
         /// <returns>The maximum value in the sequence, or a default value if the sequence is empty.</returns>
         public static TSource MaxOrDefault<TSource>(this IEnumerable<TSource> source, IComparer<TSource> comparer) => _MinMaxCore(source, comparer, true, false);
+
+        /// <summary>
+        /// Returns the maximum value in a sequence, or a default value if the sequence is empty.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">A sequence of values to determine the maximum value of.</param>
+        /// <returns>The maximum value in the sequence, or a default value if the sequence is empty.</returns>
+        public static TSource MaxOrDefault<TSource>(this IEnumerable<TSource> source) => MaxOrDefault(source, null);
 
         static TSource _MinMaxCore<TSource, TKey>(
             IEnumerable<TSource> source,
