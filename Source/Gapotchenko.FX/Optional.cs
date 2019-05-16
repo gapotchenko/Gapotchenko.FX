@@ -28,7 +28,7 @@ namespace Gapotchenko.FX
 
         /// <summary>
         /// Either creates a new <see cref="Optional{T}"/> object initialized to a specified value or
-        /// returns an <see cref="Optional{T}"/> object without a value when the specified parameter equals to the default value of type <typeparamref name="T"/>.
+        /// returns an <see cref="Optional{T}"/> object without a value when it equals to the default value of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
         /// <param name="value">A value to discriminate.</param>
@@ -40,7 +40,7 @@ namespace Gapotchenko.FX
 
         /// <summary>
         /// Either creates a new <see cref="Optional{T}"/> object initialized to a specified value or
-        /// returns an <see cref="Optional{T}"/> object without a value when the specified parameter equals to the <paramref name="noneValue"/>.
+        /// returns an <see cref="Optional{T}"/> object without a value when it equals to the <paramref name="noneValue"/>.
         /// </summary>
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
         /// <param name="value">A value to discriminate.</param>
