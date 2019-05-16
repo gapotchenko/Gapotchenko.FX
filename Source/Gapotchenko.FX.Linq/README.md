@@ -118,6 +118,10 @@ The oldest person: { FirstName = Alex, LastName = The Great, Age = 1500 }
 The youngest person: { FirstName = John, LastName = Walker, Age = 17 }
 ```
 
+## MinOrDefault/MaxOrDefault
+
+These methods augment the semantics of conventional `Min` and `Max` methods, allowing to return the default value when the input sequence is empty.
+Conventional `Min` and `Max` methods just throw an exception in that case.
 
 ## Usage
 
