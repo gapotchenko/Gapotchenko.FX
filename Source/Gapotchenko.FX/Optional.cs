@@ -17,6 +17,7 @@ namespace Gapotchenko.FX
         /// </para>
         /// <para>
         /// Use <seealso cref="Optional{T}.None"/> property to get an <see cref="Optional{T}"/> object without a value.
+        /// Alternatively, it can be obtained by using the <c>default</c> (C#) or <c>Nothing</c> (VB.NET) compiler keyword.
         /// </para>
         /// </summary>
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
