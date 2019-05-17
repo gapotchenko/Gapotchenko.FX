@@ -110,36 +110,41 @@ namespace Gapotchenko.FX.Linq
             if (keySelector == null)
                 throw new ArgumentNullException(nameof(keySelector));
 
-            if (comparer == null)
-                comparer = Comparer<TKey>.Default;
-
-            Optional<TSource> value = default;
-            Optional<TKey> key = default;
-
-            foreach (var candidateValue in source)
+            using (var e = source.GetEnumerator())
             {
-                if (value.HasValue)
+                if (!e.MoveNext())
                 {
-                    if (!key.HasValue)
-                        key = keySelector(value.Value);
+                    if (throwWhenEmpty)
+                        throw new InvalidOperationException(Resources.NoElements);
+                    else
+                        return default;
+                }
 
-                    var candidateKey = keySelector(candidateValue);
-                    if (_IsMatch(candidateKey, key.Value, isMax, comparer))
+                var value = e.Current;
+
+                if (e.MoveNext())
+                {
+                    var key = keySelector(value);
+
+                    if (comparer == null)
+                        comparer = Comparer<TKey>.Default;
+
+                    do
                     {
-                        value = candidateValue;
-                        key = candidateKey;
+                        var candidateValue = e.Current;
+                        var candidateKey = keySelector(candidateValue);
+
+                        if (_IsMatch(candidateKey, key, isMax, comparer))
+                        {
+                            value = candidateValue;
+                            key = candidateKey;
+                        }
                     }
+                    while (e.MoveNext());
                 }
-                else
-                {
-                    value = candidateValue;
-                }
+
+                return value;
             }
-
-            if (throwWhenEmpty && !value.HasValue)
-                throw new InvalidOperationException(Resources.NoElements);
-
-            return value.GetValueOrDefault();
         }
 
         /// <summary>
