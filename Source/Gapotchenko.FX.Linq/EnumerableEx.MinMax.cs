@@ -47,7 +47,7 @@ namespace Gapotchenko.FX.Linq
         }
 
         /// <summary>
-        /// Returns the minimum value in a sequence.
+        /// Returns the minimum value in a sequence by using a specified comparer.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to determine the minimum value of.</param>
@@ -56,7 +56,7 @@ namespace Gapotchenko.FX.Linq
         public static TSource Min<TSource>(this IEnumerable<TSource> source, IComparer<TSource> comparer) => _MinMaxCore(source, comparer, false, true);
 
         /// <summary>
-        /// Returns the maximum value in a sequence.
+        /// Returns the maximum value in a sequence by using a specified comparer.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to determine the maximum value of.</param>

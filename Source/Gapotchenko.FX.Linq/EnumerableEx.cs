@@ -195,7 +195,7 @@ namespace Gapotchenko.FX.Linq
         }
 
         /// <summary>
-        /// Determines whether a sequence contains any elements and all of them satisfy a condition.
+        /// Determines whether a sequence contains any elements and all of them satisfy a specified condition.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">An <see cref="IEnumerable{T}"/> that contains the elements to apply the predicate to.</param>
