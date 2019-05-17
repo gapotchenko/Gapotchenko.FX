@@ -25,14 +25,18 @@ namespace Gapotchenko.FX.Linq
 
                 var value = e.Current;
 
-                if (comparer == null)
-                    comparer = Comparer<TSource>.Default;
-
-                while (e.MoveNext())
+                if (e.MoveNext())
                 {
-                    var candidateValue = e.Current;
-                    if (_IsMatch(candidateValue, value, isMax, comparer))
-                        value = candidateValue;
+                    if (comparer == null)
+                        comparer = Comparer<TSource>.Default;
+
+                    do
+                    {
+                        var candidateValue = e.Current;
+                        if (_IsMatch(candidateValue, value, isMax, comparer))
+                            value = candidateValue;
+                    }
+                    while (e.MoveNext());
                 }
 
                 return value;
