@@ -128,7 +128,7 @@ var targetFrameworks = new HashSet<string>(TargetFrameworks.Split(';'), StringCo
 var supportedPlatforms = new List<string>();
 
 if (targetFrameworks.Contains("netstandard2.0"))
-    supportedPlatforms.Add(".NET Standard 2.0+");
+    supportedPlatforms.Add(".NET Standard 2.0");
 if (targetFrameworks.Contains("net40"))
     supportedPlatforms.Add(".NET Framework 4.0+");
 if (targetFrameworks.Contains("netcoreapp2.0"))
