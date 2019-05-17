@@ -13,28 +13,30 @@ namespace Gapotchenko.FX.Linq
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            if (comparer == null)
-                comparer = Comparer<TSource>.Default;
-
-            Optional<TSource> value = default;
-
-            foreach (var candidateValue in source)
+            using (var e = source.GetEnumerator())
             {
-                if (value.HasValue)
+                if (!e.MoveNext())
                 {
-                    if (_IsMatch(candidateValue, value.Value, isMax, comparer))
+                    if (throwWhenEmpty)
+                        throw new InvalidOperationException(Resources.NoElements);
+                    else
+                        return default;
+                }
+
+                var value = e.Current;
+
+                if (comparer == null)
+                    comparer = Comparer<TSource>.Default;
+
+                while (e.MoveNext())
+                {
+                    var candidateValue = e.Current;
+                    if (_IsMatch(candidateValue, value, isMax, comparer))
                         value = candidateValue;
                 }
-                else
-                {
-                    value = candidateValue;
-                }
+
+                return value;
             }
-
-            if (throwWhenEmpty && !value.HasValue)
-                throw new InvalidOperationException(Resources.NoElements);
-
-            return value.GetValueOrDefault();
         }
 
         static bool _IsMatch<T>(T candidateValue, T value, bool isMax, IComparer<T> comparer)
