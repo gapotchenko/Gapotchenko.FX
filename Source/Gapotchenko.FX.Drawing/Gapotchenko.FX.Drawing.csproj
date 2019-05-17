@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Mastering\Metadata.targets" />
+  <PropertyGroup>
+    <TargetFramework></TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Drawing.ThemeColors" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Drawing.ColorMetrics" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TFF_NET_FRAMEWORK)' == 'true' ">
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+</Project>
