@@ -178,6 +178,19 @@ namespace Gapotchenko.FX.IO
         }
 
         /// <summary>
+        /// <para>
+        /// Canonicalizes a specified path.
+        /// </para>
+        /// <para>
+        /// The alternative directory separators are replaced with native ones;
+        /// the duplicate adjacent separators are removed.
+        /// </para>
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>The canonicalized path.</returns>
+        public static string CanonicalizePath(string path) => _NormalizePath(path);
+
+        /// <summary>
         /// Gets a short version of a specified file path.
         /// </summary>
         /// <param name="filePath">The file path.</param>
