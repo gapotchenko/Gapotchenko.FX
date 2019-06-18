@@ -175,6 +175,122 @@ namespace Gapotchenko.FX
         }
 
         /// <summary>
+        /// Nullifies an empty <see cref="SByte"/> value.
+        /// </summary>
+        /// <param name="value">The value to nullify.</param>
+        /// <param name="empty">The value to treat as empty.</param>
+        /// <returns>The value or a <c>null</c> if the value is empty.</returns>
+        [CLSCompliant(false)]
+        public static sbyte? Nullify(sbyte value, sbyte empty)
+        {
+            if (value == empty)
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
+        /// Nullifies an empty <see cref="Byte"/> value.
+        /// </summary>
+        /// <param name="value">The value to nullify.</param>
+        /// <param name="empty">The value to treat as empty.</param>
+        /// <returns>The value or a <c>null</c> if the value is empty.</returns>
+        public static byte? Nullify(byte value, byte empty)
+        {
+            if (value == empty)
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
+        /// Nullifies an empty <see cref="Int16"/> value.
+        /// </summary>
+        /// <param name="value">The value to nullify.</param>
+        /// <param name="empty">The value to treat as empty.</param>
+        /// <returns>The value or a <c>null</c> if the value is empty.</returns>
+        public static short? Nullify(short value, short empty)
+        {
+            if (value == empty)
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
+        /// Nullifies an empty <see cref="UInt16"/> value.
+        /// </summary>
+        /// <param name="value">The value to nullify.</param>
+        /// <param name="empty">The value to treat as empty.</param>
+        /// <returns>The value or a <c>null</c> if the value is empty.</returns>
+        [CLSCompliant(false)]
+        public static ushort? Nullify(ushort value, ushort empty)
+        {
+            if (value == empty)
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
+        /// Nullifies an empty <see cref="Int32"/> value.
+        /// </summary>
+        /// <param name="value">The value to nullify.</param>
+        /// <param name="empty">The value to treat as empty.</param>
+        /// <returns>The value or a <c>null</c> if the value is empty.</returns>
+        public static int? Nullify(int value, int empty)
+        {
+            if (value == empty)
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
+        /// Nullifies an empty <see cref="UInt32"/> value.
+        /// </summary>
+        /// <param name="value">The value to nullify.</param>
+        /// <param name="empty">The value to treat as empty.</param>
+        /// <returns>The value or a <c>null</c> if the value is empty.</returns>
+        [CLSCompliant(false)]
+        public static uint? Nullify(uint value, uint empty)
+        {
+            if (value == empty)
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
+        /// Nullifies an empty <see cref="Int64"/> value.
+        /// </summary>
+        /// <param name="value">The value to nullify.</param>
+        /// <param name="empty">The value to treat as empty.</param>
+        /// <returns>The value or a <c>null</c> if the value is empty.</returns>
+        public static long? Nullify(long value, long empty)
+        {
+            if (value == empty)
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
+        /// Nullifies an empty <see cref="UInt64"/> value.
+        /// </summary>
+        /// <param name="value">The value to nullify.</param>
+        /// <param name="empty">The value to treat as empty.</param>
+        /// <returns>The value or a <c>null</c> if the value is empty.</returns>
+        [CLSCompliant(false)]
+        public static ulong? Nullify(ulong value, ulong empty)
+        {
+            if (value == empty)
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
         /// Nullifies a string when it is empty, or consists only of white-space characters.
         /// </summary>
         /// <param name="source">The source string.</param>
