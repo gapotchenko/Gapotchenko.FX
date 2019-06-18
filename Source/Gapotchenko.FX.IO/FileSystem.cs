@@ -182,7 +182,7 @@ namespace Gapotchenko.FX.IO
         /// Canonicalizes a specified path.
         /// </para>
         /// <para>
-        /// The alternative directory separators are replaced with native ones;
+        /// The alternative directory separators are replaced with native;
         /// the duplicate adjacent separators are removed.
         /// </para>
         /// </summary>
