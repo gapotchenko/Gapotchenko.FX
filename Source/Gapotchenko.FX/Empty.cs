@@ -56,14 +56,14 @@ namespace Gapotchenko.FX
         /// <summary>
         /// Nullifies an empty string.
         /// </summary>
-        /// <param name="source">The source string.</param>
-        /// <returns>The source or a null string if the source is empty or null.</returns>
-        public static string Nullify(string source)
+        /// <param name="value">The value.</param>
+        /// <returns>The string value or a null if the string is empty or null.</returns>
+        public static string Nullify(string value)
         {
-            if (string.IsNullOrEmpty(source))
+            if (string.IsNullOrEmpty(value))
                 return null;
             else
-                return source;
+                return value;
         }
 
         /// <summary>
@@ -293,14 +293,14 @@ namespace Gapotchenko.FX
         /// <summary>
         /// Nullifies a string when it is empty, or consists only of white-space characters.
         /// </summary>
-        /// <param name="source">The source string.</param>
-        /// <returns>The source or a null string if the source is empty, or consists only of white-space characters.</returns>
-        public static string NullifyWhiteSpace(string source)
+        /// <param name="value">The value.</param>
+        /// <returns>The string value or a null if the string is empty, or consists only of white-space characters.</returns>
+        public static string NullifyWhiteSpace(string value)
         {
-            if (string.IsNullOrWhiteSpace(source))
+            if (string.IsNullOrWhiteSpace(value))
                 return null;
             else
-                return source;
+                return value;
         }
 
         /// <summary>
