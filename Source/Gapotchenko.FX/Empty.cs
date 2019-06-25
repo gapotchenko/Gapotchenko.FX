@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Gapotchenko.FX
 {
@@ -341,5 +342,16 @@ namespace Gapotchenko.FX
             else
                 return func;
         }
+
+        /// <summary>
+        /// Returns an empty <see cref="System.Threading.Tasks.Task"/> that has already completed successfully.
+        /// </summary>
+        public static Task Task =>
+#if TFF_COMPLETED_TASK
+            Task.CompletedTask;
+#else
+            Empty<Unit>.Task;
+#endif
+
     }
 }

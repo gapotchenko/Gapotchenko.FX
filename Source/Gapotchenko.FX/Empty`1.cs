@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Gapotchenko.FX
 {
@@ -19,7 +20,7 @@ namespace Gapotchenko.FX
 #endif
 
         /// <summary>
-        /// Gets an empty array instance.
+        /// Returns an empty array.
         /// </summary>
         public static T[] Array =>
 #if !TF_ARRAY_EMPTY
@@ -27,5 +28,26 @@ namespace Gapotchenko.FX
 #else
             System.Array.Empty<T>();
 #endif
+
+        static class TaskFactory
+        {
+            public static readonly Task<T> Task = FromResult(default);
+
+            static Task<T> FromResult(T value)
+            {
+#if NET40
+                var tcs = new TaskCompletionSource<T>();
+                tcs.SetResult(value);
+                return tcs.Task;
+#else
+                return System.Threading.Tasks.Task.FromResult(value);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Returns an empty <see cref="Task{TResult}"/> that has already completed successfully with the default result.
+        /// </summary>
+        public static Task<T> Task => TaskFactory.Task;
     }
 }
