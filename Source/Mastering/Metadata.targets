@@ -11,9 +11,9 @@
 
   <!-- Assembly Information -->
   <PropertyGroup>
-    <AssemblyVersion>2019.2.11.16010</AssemblyVersion>
-    <FileVersion>2019.2.11.16010</FileVersion>
-    <InformationalVersion>2019.2.11 (Beta build 2019.2.11.16010)</InformationalVersion>
+    <AssemblyVersion>2019.2.12.16010</AssemblyVersion>
+    <FileVersion>2019.2.12.16010</FileVersion>
+    <InformationalVersion>2019.2.12 (Beta build 2019.2.12.16010)</InformationalVersion>
   </PropertyGroup>
 
   <!-- =================================================================== -->
