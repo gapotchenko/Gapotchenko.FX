@@ -17,20 +17,20 @@ namespace Gapotchenko.FX.Threading.Test.Tasks
         {
             var map = new Dictionary<int, int>();
 
+            async Task _ThreadAffinityChecker(Dictionary<int, int> mapArg)
+            {
+                for (int i = 0; i < 10000; i++)
+                {
+                    int tid = Thread.CurrentThread.ManagedThreadId;
+                    mapArg[tid] = mapArg.TryGetValue(tid, out var count) ? count + 1 : 1;
+                    await Task.Yield();
+                }
+            }
+
             TaskBridge.Execute(() => _ThreadAffinityChecker(map));
 
             Assert.AreEqual(1, map.Count);
             Assert.AreEqual(10000, map.Single().Value);
-        }
-
-        static async Task _ThreadAffinityChecker(Dictionary<int, int> map)
-        {
-            for (int i = 0; i < 10000; i++)
-            {
-                int tid = Thread.CurrentThread.ManagedThreadId;
-                map[tid] = map.TryGetValue(tid, out var count) ? count + 1 : 1;
-                await Task.Yield();
-            }
         }
     }
 }
