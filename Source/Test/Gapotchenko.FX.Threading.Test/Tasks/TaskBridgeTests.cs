@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -17,7 +18,7 @@ namespace Gapotchenko.FX.Threading.Test.Tasks
         {
             var map = new Dictionary<int, int>();
 
-            async Task _ThreadAffinityChecker(Dictionary<int, int> mapArg)
+            static async Task _ThreadAffinityChecker(Dictionary<int, int> mapArg)
             {
                 for (int i = 0; i < 10000; i++)
                 {
@@ -88,6 +89,72 @@ namespace Gapotchenko.FX.Threading.Test.Tasks
             cts.Cancel();
 
             Assert.ThrowsException<AggregateException>(() => TaskBridge.Execute(task));
+        }
+
+        [TestMethod]
+        public void TaskBridge_AsyncString()
+        {
+            static async Task<string> F(string s)
+            {
+                await Task.Yield();
+                return s;
+            }
+
+            Assert.AreEqual("abc", TaskBridge.Execute(F("abc")));
+            Assert.AreEqual("def", TaskBridge.Execute(() => F("def")));
+        }
+
+        [TestMethod]
+        public void TaskBridge_AsyncStringDelay()
+        {
+            if (!Environment.UserInteractive)
+                Assert.Inconclusive();
+
+            static async Task<string> F(string s, int delay)
+            {
+                await Task.Delay(delay);
+                return s;
+            }
+
+            const int delay = 100;
+
+            var sw = Stopwatch.StartNew();
+            Assert.AreEqual("abc", TaskBridge.Execute(() => F("abc", delay)));
+            Assert.AreEqual(delay, sw.ElapsedMilliseconds, delay / 2);
+
+            sw = Stopwatch.StartNew();
+            Assert.AreEqual("def", TaskBridge.Execute(F("def", delay)));
+            Assert.AreEqual(delay, sw.ElapsedMilliseconds, delay / 2);
+        }
+
+        [TestMethod]
+        public void TaskBridge_AsyncInt32Exception()
+        {
+            static async Task<int> F()
+            {
+                await Task.Yield();
+                throw new Exception("Expected exception.");
+            }
+
+            var exception = Assert.ThrowsException<Exception>(() => TaskBridge.Execute(F));
+            Assert.AreEqual(typeof(Exception), exception.GetType());
+            Assert.AreEqual("Expected exception.", exception.Message);
+        }
+
+        [TestMethod]
+        public void TaskBridge_SyncContext_Send()
+        {
+            int value1 = 0, value2 = 0;
+
+            TaskBridge.Execute(async () =>
+            {
+                SynchronizationContext.Current.Send(_ => { value1 = 100; }, null);
+                await Task.Yield();
+                SynchronizationContext.Current.Send(_ => { value2 = 200; }, null);
+            });
+
+            Assert.AreEqual(100, value1);
+            Assert.AreEqual(200, value2);
         }
     }
 }

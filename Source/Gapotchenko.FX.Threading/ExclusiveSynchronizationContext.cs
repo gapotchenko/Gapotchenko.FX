@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Threading
 
         public override void Post(SendOrPostCallback d, object state) => m_Queue.Add(new KeyValuePair<SendOrPostCallback, object>(d, state));
 
-        public override void Send(SendOrPostCallback d, object state) => throw new InvalidOperationException();
+        public override void Send(SendOrPostCallback d, object state) => d(state);
 
         public override SynchronizationContext CreateCopy() => this;
 
