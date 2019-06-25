@@ -13,8 +13,7 @@ namespace Gapotchenko.FX.Threading
     {
         readonly BlockingCollection<KeyValuePair<SendOrPostCallback, object>> m_Queue = new BlockingCollection<KeyValuePair<SendOrPostCallback, object>>();
 
-        public override void Post(SendOrPostCallback d, object state) =>
-            m_Queue.Add(new KeyValuePair<SendOrPostCallback, object>(d, state));
+        public override void Post(SendOrPostCallback d, object state) => m_Queue.Add(new KeyValuePair<SendOrPostCallback, object>(d, state));
 
         public override void Send(SendOrPostCallback d, object state) => throw new InvalidOperationException();
 
