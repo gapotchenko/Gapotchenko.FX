@@ -32,5 +32,62 @@ namespace Gapotchenko.FX.Threading.Test.Tasks
             Assert.AreEqual(1, map.Count);
             Assert.AreEqual(10000, map.Single().Value);
         }
+
+        [TestMethod]
+        public void TaskBridge_CancelWait()
+        {
+            var cts = new CancellationTokenSource();
+            var ct = cts.Token;
+
+            var ev = new ManualResetEventSlim();
+
+            var task = Task.Factory.StartNew(
+                () =>
+                {
+                    for (; ; )
+                    {
+                        ct.ThrowIfCancellationRequested();
+                        Thread.Sleep(10);
+                        ev.Set();
+                    }
+                },
+                TaskCreationOptions.LongRunning);
+
+            ev.Wait();
+            cts.Cancel();
+
+            Assert.ThrowsException<OperationCanceledException>(() => TaskBridge.Execute(task));
+        }
+
+        [TestMethod]
+        public void TaskBridge_CancelWaitAggregate()
+        {
+            var cts = new CancellationTokenSource();
+            var ct = cts.Token;
+
+            var ev = new ManualResetEventSlim();
+
+            var task = Task.Factory.StartNew(
+                () =>
+                {
+                    var thread = new Action(() =>
+                    {
+                        for (; ; )
+                        {
+                            ct.ThrowIfCancellationRequested();
+                            Thread.Sleep(10);
+                            ev.Set();
+                        }
+                    });
+
+                    Parallel.Invoke(thread, thread);
+                },
+                TaskCreationOptions.LongRunning);
+
+            ev.Wait();
+            cts.Cancel();
+
+            Assert.ThrowsException<AggregateException>(() => TaskBridge.Execute(task));
+        }
     }
 }

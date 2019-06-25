@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Threading
 
         public override SynchronizationContext CreateCopy() => this;
 
-        ExceptionDispatchInfo m_ExceptionDispatchInfo;
+        volatile ExceptionDispatchInfo m_ExceptionDispatchInfo;
 
         public Func<Exception, bool> ExceptionFilter { get; set; }
 
@@ -57,7 +57,9 @@ namespace Gapotchenko.FX.Threading
                     catch (Exception e)
                     {
                         m_ExceptionDispatchInfo = ExceptionDispatchInfo.Capture(e);
-                        throw;
+
+                        if (e is ThreadAbortException)
+                            Thread.ResetAbort();
                     }
                     finally
                     {
