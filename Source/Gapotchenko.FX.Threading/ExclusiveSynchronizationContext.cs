@@ -43,12 +43,12 @@ namespace Gapotchenko.FX.Threading
             }
         }
 
-        void Complete() => m_Queue.CompleteAdding();
+        void Complete() => Post((_) => m_Queue.CompleteAdding(), null);
 
         public void Execute(Func<Task> task)
         {
             Post(
-                async (state) =>
+                async (_) =>
                 {
                     try
                     {
