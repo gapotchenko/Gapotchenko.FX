@@ -9,6 +9,7 @@ There is no official release yet, the version is in progress. See the [`new`](..
 - Added `ProcessArchitecture` and `OSArchitecture` properties to `System.Runtime.InteropServices.RuntimeInformation` polyfill
 - Added ability to nullify specific integer values in `Empty` functional primitive
 - Added ability to canonicalize a file path with `FileSystem.CanonicalizePath` method
+- Introduced `Gapotchenko.FX.Reflection.Loader` module. It provides a versatile `AssemblyAutoLoader` type that can be used to automatically find and load assembly dependencies in various dynamic scenarios
 - Introduced `Gapotchenko.FX.Data.Linq` module. Currently it provides async operations for LINQ to SQL technology
 - Improved wording of `ProgramExitException` message
 

@@ -3,7 +3,7 @@
 
   <!-- NuGet Specification -->
   <PropertyGroup>
-    <Version>2019.2.15-beta</Version>
+    <Version>2019.2.16-beta</Version>
     <Authors>Gapotchenko</Authors>
     <PackageTags>framework platform polyfill rad</PackageTags>
     <PackageIconUrl>https://cdn.gapotchenko.com/publish/fx/assets/e84f03b5893f47d4a768729ea46875d8/icon48.png</PackageIconUrl>
@@ -128,7 +128,7 @@ var targetFrameworks = new HashSet<string>(TargetFrameworks.Split(';'), StringCo
 var supportedPlatforms = new List<string>();
 
 if (targetFrameworks.Contains("netstandard2.0"))
-    supportedPlatforms.Add(".NET Standard 2.0");
+    supportedPlatforms.Add(".NET Standard 2.0+");
 if (targetFrameworks.Contains("net40"))
     supportedPlatforms.Add(".NET Framework 4.0+");
 if (targetFrameworks.Contains("netcoreapp2.0"))
