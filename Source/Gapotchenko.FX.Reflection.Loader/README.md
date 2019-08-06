@@ -87,7 +87,7 @@ A straightforward approach would be to put `Newtonsoft.Json.dll` assembly just b
 
 But Mr. Alberto Olivetti from Contoso's Deployment Division decided that an additional file laying near `ContosoApp.exe` would be an unwanted distraction for command line users of the app.
 Mr. Olivetti tends to pay a lot of respect to his customers and wants to save their time while they are hanging around `ContosoApp.exe`.
-Thus Alberto came up with a respectful solution to put all 3rd party assemblies to `Components` subfolder of the app.
+Thus Alberto came up with a respectful solution to put all third-party assemblies to `Components` subfolder of the app.
 
 Now how can `ContosoApp.exe` module load the required assemblies from `Components` folder?
 Thankfully, the default .NET assembly loader allows to achieve that by specifying a set of private probing paths in application configuration file:
@@ -109,7 +109,7 @@ The default .NET assembly loader can be instructed to load dependent assemblies 
 
 But what if you need to specify probing paths not for a whole app, but for a specific assembly only?
 Say you created an Autodesk AutoCAD plugin that depends on `Newtonsoft.Json.dll` and a bunch of other assemblies,
-and then want to put all those 3rd party files somewhere else.
+and then want to put all those third-party files somewhere else.
 
 Contoso company met the very same challenge.
 They created an AutoCAD plugin for their ContosoApp product.
