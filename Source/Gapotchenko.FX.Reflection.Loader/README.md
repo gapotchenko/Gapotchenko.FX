@@ -251,6 +251,33 @@ namespace MyPlugin
 There are a lot of projects where you may need this: T4 templates, MSBuild tasks, plugins, extensions etc.
 Basically everything that gets dynamically loaded and depends on one or more NuGet packages.
 
+<hr/>
+
+![Chicken & Egg Dilemma](../../Documentation/Assets/chicken-and-egg-dilemma.png)
+
+`Gapotchenko.FX.Reflection.Loader` module is distributed as a NuGet package with a single assembly file without dependencies.
+
+To avoid chicken & egg dilemma, `Gapotchenko.FX.Reflection.Loader` assembly has a **fixed strong name:**
+
+```
+Gapotchenko.FX.Reflection.Loader, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a750ee378eaf756f
+```
+
+Please note that assembly version is pinned to 1.0.0.0 and never changes.
+In this way, the default .NET assembly loader can always resolve the assembly despite the possible variety of different NuGet packages that can be used in the given project.
+
+Another point to consider is **how to select a point to install an assembly loader** that is early enough at the assembly lifecycle.
+This tends to be trivial for an app: the first few lines of main entry point are good to go.
+But it may be difficult or even infeasible for a class library that has wide public API surface with lots of possible entry points.
+To overcome that dilemma, assembly loader can be installed at module initializer of a class library.
+
+A module initializer can be seen as a constructor for an assembly (technically it is a constructor for a module; each .NET assembly is comprised of one or more modules, typically just one).
+It is run when a module is loaded for the first time, and is guaranteed to run _before_ any other code in the module. 
+
+[Fody/ModuleInit](https://github.com/Fody/ModuleInit) is an example of tool that gives access to .NET module initialization functionality from high-level programming languages like C#/VB.NET.
+
+<hr/>
+
 ## Usage
 
 `Gapotchenko.FX.Reflection.Loader` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Reflection.Loader):
