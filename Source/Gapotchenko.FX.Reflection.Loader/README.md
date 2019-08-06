@@ -266,7 +266,7 @@ Gapotchenko.FX.Reflection.Loader, Version=1.0.0.0, Culture=neutral, PublicKeyTok
 Please note that assembly version is pinned to 1.0.0.0 and never changes.
 In this way, the default .NET assembly loader can always resolve the assembly despite the possible variety of different NuGet packages that can be used in the given project.
 
-Another point to consider is **how to select a point to install an assembly loader** that is early enough at the assembly lifecycle.
+Another point to consider is **how to select a point of assembly loader installation** that is early enough at the assembly lifecycle.
 This tends to be trivial for an app: the first few lines of main entry point are good to go.
 But it may be difficult or even infeasible for a class library with a wide public API surface.
 To overcome that dilemma, assembly loader can be installed at module initializer of a class library.
