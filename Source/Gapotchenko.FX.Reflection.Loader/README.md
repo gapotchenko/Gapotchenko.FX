@@ -156,10 +156,10 @@ namespace ContosoApp.Integration.AutoCAD
 ```
 
 Now Alberto had a skeleton for a proper assembly loader initialization.
-The only missing part was the actual assembly loader implementation which was going to be enormous.
+The only missing part was the actual implementation which was going to be enormous.
 
 Thanks to the prior experience with custom assembly loading, Alberto was aware about that fancy `AssemblyAutoLoader` class provided by `Gapotchenko.FX.Reflection.Loader` package.
-Then he wrote:
+So he wrote:
 
 ``` csharp
 using System;
@@ -189,8 +189,8 @@ namespace ContosoApp.Integration.AutoCAD
 }
 ```
 
-Please note how Alberto wrote an implementation inside a static constructor while leaving `Activate` method empty.
-In that way, he was able to achieve a single mode of execution, where the actual assembly loader initialization takes place only once on a first call to `Activate` method.
+Please note how Alberto put the implementation inside a static constructor while leaving `Activate` method empty.
+In that way, he was able to achieve a one-shot mode of execution, where the actual assembly loader initialization takes place only once on a first call to `Activate` method.
 Smart.
 
 But even if Alberto did not create a singleton, `AssemblyAutoLoader` is smart enough to do the right job out of the box.
