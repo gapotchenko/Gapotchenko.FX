@@ -162,6 +162,10 @@ Thanks to the prior experience with custom assembly loading, Alberto was aware a
 Then he wrote:
 
 ``` csharp
+using System;
+using System.IO;
+using Gapotchenko.FX.Reflection;
+
 namespace ContosoApp.Integration.AutoCAD
 {
     static class AssemblyLoader
@@ -203,7 +207,48 @@ It only serves the dependencies of a _specified assembly_.
 It turns out that this is a much saner choice for plugins where app domain is shared among a lot of things.
 In this way, assembly loaders from different plugins would not clash with each other, even when they look for a conflicting assembly dependency (it's easy to imagine that a lot of plugins would use the "same" but subtly different version of `Newtonsoft.Json`).
 
+## Scenario #4. Automatic handling of binding redirects for a .DLL assembly
 
+Assembly binding redirects allow to "remap" specific ranges of assembly versions.
+The redirects are automatically created by build tools, and then put to corresponding `.config` files of resulting assemblies.
+[(Learn more)](https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/how-to-enable-and-disable-automatic-binding-redirection)
+
+Assembly binding redirects work well for apps, but get completely broken if you want to employ them for .DLL assemblies like plugins.
+The default .NET assembly loader simply ignores `.config` files of .DLL assemblies!
+
+`Gapotchenko.FX.Reflection.Loader` solves this. Just add the following code early at the assembly lifecycle:
+
+``` csharp
+AssemblyLoader.Activate()
+```
+
+`AssemblyLoader` implementation then goes as follows:
+
+``` csharp
+using Gapotchenko.FX.Reflection;
+
+namespace MyPlugin
+{
+    static class AssemblyLoader
+    {
+        static AssemblyLoader()
+        {
+            // The statement below instructs Gapotchenko.FX assembly loader to add a specified
+            // assembly to the list of sources to consider during assembly resolution process.
+            // The loader automatically handles binding redirects according to a corresponding assembly
+            // configuration (.config) file. If configuration file is missing then binding redirects are
+            // automatically deducted according to the assembly compatibility heuristics.
+            AssemblyAutoLoader.AddAssembly(typeof(AssemblyLoader).Assembly);
+        }
+
+        public static void Activate()
+        {
+        }
+    }
+}
+```
+
+There are a lot of situations when you may want this: T4 templates, MSBuild tasks, plugins, extensions etc.
 
 ## Usage
 
