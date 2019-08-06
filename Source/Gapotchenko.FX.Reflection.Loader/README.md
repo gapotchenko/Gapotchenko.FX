@@ -86,7 +86,7 @@ A straightforward approach would be to put `Newtonsoft.Json.dll` assembly just b
 
 
 But Mr. Alberto Olivetti from Contoso's Deployment Division decided that an additional file laying near `ContosoApp.exe` would be an unwanted distraction for command line users of the app.
-Mr. Olivetti tends to pay a lot of respect to his customers and wants to save their time while they are hanging around `ContosoApp.exe` file.
+Mr. Olivetti tends to pay a lot of respect to his customers and wants to save their time while they are hanging around `ContosoApp.exe`.
 Thus Alberto came up with a respectful solution to put all 3rd party assemblies to `Components` subfolder of the app.
 
 Now how can `ContosoApp.exe` module load the required assemblies from `Components` folder?
@@ -108,11 +108,11 @@ The default .NET assembly loader can be instructed to load dependent assemblies 
 ## Scenario #3. Specifying probing paths for a .DLL assembly
 
 But what if you need to specify probing paths not for a whole app, but for a specific assembly only?
-Say you created an Autodesk plugin that depends on `Newtonsoft.Json.dll` and a bunch of other assemblies,
+Say you created an Autodesk AutoCAD plugin that depends on `Newtonsoft.Json.dll` and a bunch of other assemblies,
 and then want to put all those 3rd party files somewhere else.
 
 Contoso company met the very same challenge.
-They created an Autodesk plugin for their ContosoApp product.
+They created an AutoCAD plugin for their ContosoApp product.
 A straightforward way was to redistribute the dependencies together with plugin but its size then skyrocketed to 1 GB in ZIP file.
 Bummer.
 
@@ -120,12 +120,12 @@ The substantial contributor to the size was ContosoEngine which was about 3 GB u
 Mr. Alberto Olivetti, Contoso's deployment specialist, quickly recognized an opportunity to use a shared setup of ContosoEngine,
 which was already present at `C:\Program Files\Common Files\Contoso\Engine` folder.
 
-So the Autodesk plugin (a .DLL assembly) had to gain an ability to load the dependencies from that folder.
+So the AutoCAD plugin (a .DLL assembly) had to gain an ability to load the dependencies from that folder.
 
-This is what Alberto did. He created `AssemblyLoader` class in Autodesk plugin assembly with just one method `Activate`:
+This is what Alberto did. He created `AssemblyLoader` class in AutoCAD plugin assembly with just one method `Activate`:
 
 ``` csharp
-namespace ContosoApp.Integration.Autodesk
+namespace ContosoApp.Integration.AutoCAD
 {
     static class AssemblyLoader
     {
@@ -139,7 +139,7 @@ namespace ContosoApp.Integration.Autodesk
 Alberto then ensured that `Activate` method is getting called at the early stages of a plugin lifecycle:
 
 ``` csharp
-namespace ContosoApp.Integration.Autodesk
+namespace ContosoApp.Integration.AutoCAD
 {
     public class Plugin : AutodeskPluginBase
     {
@@ -162,7 +162,7 @@ Thanks to the prior experience with custom assembly loading, Alberto was aware a
 Then he wrote:
 
 ``` csharp
-namespace ContosoApp.Integration.Autodesk
+namespace ContosoApp.Integration.AutoCAD
 {
     static class AssemblyLoader
     {
@@ -170,7 +170,7 @@ namespace ContosoApp.Integration.Autodesk
         {
             // The statement below instructs Gapotchenko.FX assembly loader to use
             // 'C:\Program Files\Common Files\Contoso\Engine' folder as a probing path for
-            // resolution of 'ContosoApp.Integration.Autodesk.dll' assembly dependencies.
+            // resolution of 'ContosoApp.Integration.AutoCAD.dll' assembly dependencies.
             AssemblyAutoLoader.AddAssembly(
                 typeof(AssemblyLoader).Assembly,
                 Path.Combine(
@@ -201,7 +201,7 @@ Sometimes this is a beneficial behavior, like in case with the root `ContosoApp.
 In contrast, `AssemblyAutoLoader.AddAssembly` method provides a finer control.
 It only serves the dependencies of a _specified assembly_.
 It turns out that this is a much saner choice for plugins where app domain is shared among a lot of things.
-In this way, assembly loaders from different plugins would not clash with each other even when they look for a conflicting assembly dependency (it's easy to imagine that a lot of plugins would use the "same" but subtly different version of `Newtonsoft.Json`).
+In this way, assembly loaders from different plugins would not clash with each other, even when they look for a conflicting assembly dependency (it's easy to imagine that a lot of plugins would use the "same" but subtly different version of `Newtonsoft.Json`).
 
 
 
