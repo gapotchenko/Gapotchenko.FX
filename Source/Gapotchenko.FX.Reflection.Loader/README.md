@@ -193,7 +193,7 @@ Please note how Alberto put the implementation inside a static constructor while
 In that way, he was able to achieve a one-shot mode of execution, where the actual assembly loader initialization takes place only once on a first call to `Activate` method.
 Smart.
 
-But even if Alberto did not create a singleton, `AssemblyAutoLoader` is smart enough to do the right job out of the box.
+But even if Alberto did not create a singleton, `AssemblyAutoLoader` is sophisticated enough to do the right job out of the box.
 
 Now why did Alberto call `AssemblyAutoLoader.AddAssembly` method instead of `AssemblyAutoLoader.AddProbingPath`?
 Both would work, actually. There is a subtle but very important difference.
