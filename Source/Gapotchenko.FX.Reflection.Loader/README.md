@@ -268,11 +268,8 @@ In this way, the default .NET assembly loader can always resolve the assembly de
 
 Another point to consider is **how to select a point to install an assembly loader** that is early enough at the assembly lifecycle.
 This tends to be trivial for an app: the first few lines of main entry point are good to go.
-But it may be difficult or even infeasible for a class library that has wide public API surface with lots of possible entry points.
+But it may be difficult or even infeasible for a class library with a wide public API surface.
 To overcome that dilemma, assembly loader can be installed at module initializer of a class library.
-
-A module initializer can be seen as a constructor for an assembly (technically it is a constructor for a module; each .NET assembly is comprised of one or more modules, typically just one).
-It is run when a module is loaded for the first time, and is guaranteed to run _before_ any other code in the module. 
 
 [Fody/ModuleInit](https://github.com/Fody/ModuleInit) is an example of tool that gives access to .NET module initialization functionality from high-level programming languages like C#/VB.NET.
 
