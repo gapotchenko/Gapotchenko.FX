@@ -205,7 +205,7 @@ Sometimes this is a beneficial behavior, like in case with the root `ContosoApp.
 In contrast, `AssemblyAutoLoader.AddAssembly` method provides a finer control.
 It only serves the dependencies of a _specified assembly_.
 It turns out to be a much saner choice for plugins where app domain is shared among a lot of things.
-In this way, assembly loaders from different plugins would not clash with each other, even when they look for a conflicting assembly dependency (it's easy to imagine that a lot of plugins would use the "same" but subtly different version of `Newtonsoft.Json`).
+In this way, assembly loaders from different plugins would not clash with each other, even when they look at a conflicting assembly dependency (it's easy to imagine that a lot of plugins would use the "same" but subtly different version of `Newtonsoft.Json`).
 
 ## Scenario #4. Automatic handling of binding redirects for a .DLL assembly
 
@@ -213,7 +213,7 @@ Assembly binding redirects allow to "remap" specific ranges of assembly versions
 The redirects are automatically created by build tools, and then put to corresponding `.config` files of resulting assemblies.
 [(Learn more)](https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/how-to-enable-and-disable-automatic-binding-redirection)
 
-Assembly binding redirects work well for apps, but get completely broken if you want to employ them for .DLL assemblies like plugins.
+Assembly binding redirects work well for apps, but get completely broken if you want to employ them for dynamically loaded assemblies like plugins.
 The default .NET assembly loader simply ignores `.config` files of .DLL assemblies!
 
 `Gapotchenko.FX.Reflection.Loader` solves this. Just add the following code early at the assembly lifecycle:
