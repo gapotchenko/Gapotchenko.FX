@@ -214,7 +214,7 @@ The redirects are automatically created by build tools, and then put to correspo
 [(Learn more)](https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/how-to-enable-and-disable-automatic-binding-redirection)
 
 Assembly binding redirects work well for apps, but get completely broken if you want to employ them for dynamically loaded assemblies like plugins.
-The default .NET assembly loader simply ignores `.config` files of .DLL assemblies!
+The default .NET loader simply ignores `.config` files of .DLL assemblies!
 
 `Gapotchenko.FX.Reflection.Loader` solves this. Just add the following code early at the assembly lifecycle:
 
@@ -248,7 +248,8 @@ namespace MyPlugin
 }
 ```
 
-There are a lot of situations when you may want this: T4 templates, MSBuild tasks, plugins, extensions etc.
+There are a lot of projects where you may need this: T4 templates, MSBuild tasks, plugins, extensions etc.
+Basically everything that gets dynamically loaded and depends on one or more NuGet packages.
 
 ## Usage
 
