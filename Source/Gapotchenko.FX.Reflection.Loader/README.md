@@ -204,7 +204,7 @@ Sometimes this is a beneficial behavior, like in case with the root `ContosoApp.
 
 In contrast, `AssemblyAutoLoader.AddAssembly` method provides a finer control.
 It only serves the dependencies of a _specified assembly_.
-It turns out that this is a much saner choice for plugins where app domain is shared among a lot of things.
+It turns out to be a much saner choice for plugins where app domain is shared among a lot of things.
 In this way, assembly loaders from different plugins would not clash with each other, even when they look for a conflicting assembly dependency (it's easy to imagine that a lot of plugins would use the "same" but subtly different version of `Newtonsoft.Json`).
 
 ## Scenario #4. Automatic handling of binding redirects for a .DLL assembly
