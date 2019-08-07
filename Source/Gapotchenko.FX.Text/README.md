@@ -9,10 +9,63 @@ The module provides primitives for string and text manipulation.
 
 `StringEditor` class provided by `Gapotchenko.FX.Text` module allows to perform an iterative random-access editing of a string.
 
-It was primarily designed to work in conjunction with `Regex` class from `System.Text.RegularExpressions` namespace to efficiently handle an advanced set of tasks
+It is primarily designed to work in conjunction with `Regex` class from `System.Text.RegularExpressions` namespace to efficiently handle an advanced set of tasks
 when functionality provided by conventional methods like `Regex.Replace` is just not enough.
 
 [More on `StringEditor` class](StringEditor.md)
+
+## Regular Expression Trampolines
+
+Regex trampolines are special functions that allow to gradually convert the conventional string manipulation code into one that uses regex semantics.
+
+Let's take a look on example:
+
+``` csharp
+if (name.Equals("[mscorlib]System.Object", StringComparison.Ordinal))
+    Console.WriteLine("The name represents a system object.");
+```
+
+The given code is later changed in order to cover the new requirements:
+
+``` csharp
+if (name.Equals("[mscorlib]System.Object", StringComparison.Ordinal) ||
+    name.Equals("[netstandard]System.Object", StringComparison.Ordinal) ||
+    name.Equals("[System.Runtime]System.Object", StringComparison.Ordinal))
+{
+    Console.WriteLine("The name represents a system object.");
+}
+```
+
+It does the job but such mechanical changes may put a toll on code maintainability when they accumulate.
+One can clearly see some amount of duplication here.
+
+Another approach would be to use `Regex` class which is readily available in .NET.
+But that would destroy the expressiveness of string manipulation functions like `Equals`.
+And even more than that.
+If a string function takes a `StringComparison` parameter then it becomes a significant challenge to reliably refactor it to `Regex` implementation.
+It would quickly go beyond the trivial. Surely not something you put into word "mechanical refactoring" or a "quick change".
+
+That's why `Gapotchenko.FX.Text` module provides a set of so called regex trampoline functions.
+They look exactly like `Equals`, `StartsWith`, `EndsWith`, `IndexOf` but work on regex patterns instead of raw strings.
+They also end with `Regex` suffix in their names, so `Equals` has `EqualsRegex` companion, `StartsWith` has `EndsWithRegex` and so on.
+
+This is how a regex trampoline can be used for the given sample to meet the new requirements by one-line change:
+
+``` csharp
+using Gapotchenko.FX.Text.RegularExpressions;
+
+if (name.EqualsRegex(@"\[(mscorlib|netstandard|System\.Runtime)]System\.Object", StringComparison.Ordinal))
+    Console.WriteLine("The name represents a system object.");
+```
+
+An immediate improvement in expressiveness and readability. And, hey, no duplication.
+
+## StringBuilder Polyfills
+
+### StringBuilder.AppendJoin
+
+`AppendJoin` is a method that appeared in later versions of .NET platform.
+Gapochenko.FX provides a corresponding polyfill so it can be used in code targeting older versions.
 
 ## Usage
 
