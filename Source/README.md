@@ -6,7 +6,11 @@ Let's start by taking a look at its ☞ [main module](Gapotchenko.FX) ☜.
 
 ## Available Modules
 
+### Legend
+
 Symbol ✹ denotes an advanced module.
+
+### Table
 
 - [Gapotchenko.FX](Gapotchenko.FX)
 - [Gapotchenko.FX.Collections](Gapotchenko.FX.Collections)
