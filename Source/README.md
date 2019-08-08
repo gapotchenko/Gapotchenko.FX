@@ -11,7 +11,7 @@ Symbol ✹ denotes an advanced module.
 - [Gapotchenko.FX](Gapotchenko.FX)
 - [Gapotchenko.FX.Collections](Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Data.Linq](Gapotchenko.FX.Data.Linq) ✹
-- Gapotchenko.FX.Diagnostics (namespace)
+- [Gapotchenko.FX.Diagnostics](Gapotchenko.FX.Diagnostics.CommandLine)
   - [Gapotchenko.FX.Diagnostics.CommandLine](Gapotchenko.FX.Diagnostics.CommandLine)
   - [Gapotchenko.FX.Diagnostics.Process](Gapotchenko.FX.Diagnostics.Process)
   - [Gapotchenko.FX.Diagnostics.WebBrowser](Gapotchenko.FX.Diagnostics.WebBrowser)
