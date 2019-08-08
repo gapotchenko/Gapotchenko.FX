@@ -11,8 +11,8 @@ The module provides extended primitives covering the advanced tasks related to d
 
 `Gapotchenko.FX.Drawing.ThemeColors` class provides access to theme colors of a host operating system.
 
-The difference between `ThemeColors` and `SystemColors` is that theme colors are **the real colors** shown on screen,
-while `SystemColors` provided by the stock `System.Drawing` module are at most just a compatible approximation from the past.
+The difference between `ThemeColors` and `SystemColors` is that theme colors are **the real colors** displayed on screen,
+while `SystemColors` provided by the stock `System.Drawing` module are at most just a compatible approximation stuck in the constraints of the past.
 
 ## ColorMetrics
 
