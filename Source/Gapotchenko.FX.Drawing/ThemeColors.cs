@@ -40,13 +40,11 @@ namespace Gapotchenko.FX.Drawing
 
         class ThemeEngineWindowsGeneric : ThemeEngineDefault
         {
-            protected static Color COLORREFToColor(int value)
-            {
-                return Color.FromArgb(
+            protected static Color COLORREFToColor(int value) =>
+                Color.FromArgb(
                     (byte)value,
                     (byte)(value >> 8),
                     (byte)(value >> 16));
-            }
         }
 
         class ThemeEngineWindowsXP : ThemeEngineWindowsGeneric
@@ -83,9 +81,7 @@ namespace Gapotchenko.FX.Drawing
                         using (var bmp = new Bitmap(canvasSize.Width, canvasSize.Height))
                         {
                             using (var graphics = Graphics.FromImage(bmp))
-                            {
                                 renderer.DrawBackground(graphics, new Rectangle(Point.Empty, canvasSize));
-                            }
 
                             _InfoColor = bmp.GetPixel(canvasSize.Width / 2, canvasSize.Height / 2);
                             _WindowFrameColor = bmp.GetPixel(0, canvasSize.Height / 2);
@@ -133,13 +129,7 @@ namespace Gapotchenko.FX.Drawing
 
         class ThemeEngineWindowsVista : ThemeEngineWindowsXP
         {
-            protected static bool IsAeroGlassEnabled
-            {
-                get
-                {
-                    return NativeMethods.DwmIsCompositionEnabled(out var enabled) == 0 && enabled;
-                }
-            }
+            protected static bool IsAeroGlassEnabled => NativeMethods.DwmIsCompositionEnabled(out var enabled) == 0 && enabled;
         }
 
         class ThemeEngineWindows8 : ThemeEngineWindowsVista
@@ -149,29 +139,11 @@ namespace Gapotchenko.FX.Drawing
 
         class ThemeEngineWindows10 : ThemeEngineWindowsVista
         {
-            static bool _ShouldCustomDrawSystemTitlebar
-            {
-                get
-                {
-                    return !SystemInformation.HighContrast;
-                }
-            }
+            static bool _ShouldCustomDrawSystemTitlebar => !SystemInformation.HighContrast;
 
-            static bool _ShouldUseNativeFrame
-            {
-                get
-                {
-                    return _ShouldCustomDrawSystemTitlebar && IsAeroGlassEnabled;
-                }
-            }
+            static bool _ShouldUseNativeFrame => _ShouldCustomDrawSystemTitlebar && IsAeroGlassEnabled;
 
-            static bool _DwmColorsAllowed
-            {
-                get
-                {
-                    return _ShouldUseNativeFrame;
-                }
-            }
+            static bool _DwmColorsAllowed => _ShouldUseNativeFrame;
 
             bool _Initialized;
 
