@@ -248,7 +248,7 @@ namespace MyPlugin
 }
 ```
 
-There are a lot of projects where you may need this: T4 templates, MSBuild tasks, plugins, extensions etc.
+There are a lot of projects that may need this: T4 templates, MSBuild tasks, plugins, extensions etc.
 Basically everything that gets dynamically loaded and depends on one or more NuGet packages.
 
 <hr/>
@@ -268,8 +268,8 @@ In this way, the default .NET assembly loader can always resolve the assembly de
 
 Another point to consider is **how to select a point of assembly loader installation** that is early enough in the assembly lifecycle.
 This tends to be trivial for an app: the first few lines of main entry point are good to go.
-But it may be difficult or even infeasible for a class library with a wide public API surface.
-To overcome that dilemma, assembly loader can be installed in module initializer of a class library.
+But it may infeasible for a class library with a wide public API surface.
+To overcome that dilemma, assembly loader can be installed at module initializer of a class library.
 
 [Fody/ModuleInit](https://github.com/Fody/ModuleInit) is an example of tool that gives access to .NET module initialization functionality from high-level programming languages like C#/VB.NET.
 
