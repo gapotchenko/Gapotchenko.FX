@@ -43,6 +43,8 @@ namespace Gapotchenko.FX.Drawing
         /// <returns>The similarity factor ranging from 0 to 1.</returns>
         public static double Similarity(Color a, Color b)
         {
+            // The function contains elements of an original research by Oleksiy Gapotchenko 2017.
+
             var hslA = Hsluv.RgbToHsluv(new double[] { a.R / 255.0, a.G / 255.0, a.B / 255.0 });
             var hslB = Hsluv.RgbToHsluv(new double[] { b.R / 255.0, b.G / 255.0, b.B / 255.0 });
 

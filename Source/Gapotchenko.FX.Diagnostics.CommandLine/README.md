@@ -93,7 +93,8 @@ The code above produces the following output:
 ```
 
 This is a neat departure from a traditional .NET convention where it always throws `ArgumentNullException`.
-Instead, Gapotchenko.FX uses a slightly different philosophy by doing the best job possible under various conditions.
+Instead, Gapotchenko.FX uses a slightly different philosophy:
+it does the best possible job under existing conditions by following common-sense expectations of the customers.
 
 
 ### Split
