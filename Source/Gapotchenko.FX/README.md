@@ -360,5 +360,5 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 
-Or look at the [full list of modules](..#table-of-modules).
+Or look at the [full list of modules](..#available-modules).
 
