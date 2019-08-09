@@ -37,12 +37,12 @@ if (name.Equals("[mscorlib]System.Object", StringComparison.Ordinal) ||
 ```
 
 It does the job but such mechanical changes may put a toll on code maintainability when they accumulate.
-One can clearly see some amount of duplication here.
+You can also spot some amount of code duplication there.
 
 Another approach would be to use `Regex` class which is readily available in .NET.
 But that would destroy the expressiveness of string manipulation functions like `Equals`.
 And even more than that.
-If a string function takes a `StringComparison` parameter then it becomes a significant challenge to reliably refactor it to `Regex` implementation.
+If a string function takes a `StringComparison` parameter then it may become a significant challenge to reliably refactor it to `Regex` implementation.
 It would quickly go beyond the trivial. Surely not something you put into words "mechanical refactoring" and "quick change".
 
 That's why `Gapotchenko.FX.Text` module provides a set of so called regex trampoline functions.
@@ -58,7 +58,7 @@ if (name.EqualsRegex(@"\[(mscorlib|netstandard|System\.Runtime)]System\.Object",
     Console.WriteLine("The name represents a system object.");
 ```
 
-An immediate improvement in expressiveness and readability. And, hey, no duplication.
+An immediate improvement in expressiveness without duplication.
 
 ## StringBuilder Polyfills
 
