@@ -18,9 +18,11 @@ Let's start by taking a look at its ☞ [main module](Gapotchenko.FX) ☜.
 - [Gapotchenko.FX.Drawing](Gapotchenko.FX.Drawing) ✱
 - [Gapotchenko.FX.IO](Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](Gapotchenko.FX.Linq)
+  - [Gapotchenko.FX.Linq.Expressions](Gapotchenko.FX.Linq.Expressions) ✱
 - [Gapotchenko.FX.Math](Gapotchenko.FX.Math)
 - [Gapotchenko.FX.Numerics](Gapotchenko.FX.Numerics) ✱
-- [Gapotchenko.FX.Reflection.Loader](Gapotchenko.FX.Reflection.Loader) ✱✱
+- [Gapotchenko.FX.Reflection.Loader](Gapotchenko.FX.Reflection.Loader) ✱
+- [Gapotchenko.FX.Runtime.CompilerServices.Intrinsics](Gapotchenko.FX.Runtime.CompilerServices.Intrinsics) ✱✱
 - [Gapotchenko.FX.Text](Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](Gapotchenko.FX.Threading)
 
