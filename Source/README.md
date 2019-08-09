@@ -15,7 +15,7 @@ Let's start by taking a look at its ☞ [main module](Gapotchenko.FX) ☜.
   - [Gapotchenko.FX.Diagnostics.CommandLine](Gapotchenko.FX.Diagnostics.CommandLine)
   - [Gapotchenko.FX.Diagnostics.Process](Gapotchenko.FX.Diagnostics.Process)
   - [Gapotchenko.FX.Diagnostics.WebBrowser](Gapotchenko.FX.Diagnostics.WebBrowser)
-- [Gapotchenko.FX.Drawing](Gapotchenko.FX.Drawing) ✱
+- [Gapotchenko.FX.Drawing](Gapotchenko.FX.Drawing)
 - [Gapotchenko.FX.IO](Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](Gapotchenko.FX.Linq)
   - [Gapotchenko.FX.Linq.Expressions](Gapotchenko.FX.Linq.Expressions) ✱
