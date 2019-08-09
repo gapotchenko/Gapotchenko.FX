@@ -1,4 +1,8 @@
-﻿# Gapotchenko.FX.Reflection.Loader
+﻿---
+complexity: advanced
+---
+
+# Gapotchenko.FX.Reflection.Loader
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Reflection.Loader.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Reflection.Loader)
