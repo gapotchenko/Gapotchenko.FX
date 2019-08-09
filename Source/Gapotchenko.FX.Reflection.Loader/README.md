@@ -307,3 +307,5 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 
 Symbol ✱ denotes an advanced module.
+
+Or take a look at the [full list of modules](..#available-modules).
