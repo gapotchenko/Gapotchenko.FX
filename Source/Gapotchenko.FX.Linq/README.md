@@ -140,7 +140,6 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - &#x27B4; [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
-  - [Gapotchenko.FX.Linq.Expressions](../Gapotchenko.FX.Linq.Expressions)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
