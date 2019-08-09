@@ -1,5 +1,11 @@
 ﻿# Gapotchenko.FX.Drawing
 
+<!--
+<docmeta>
+	<complexity>advanced</complexity>
+</docmeta>
+-->
+
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Drawing.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Drawing)
 

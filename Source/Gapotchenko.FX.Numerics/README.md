@@ -1,5 +1,11 @@
 ﻿# Gapotchenko.FX.Numerics
 
+<!--
+<docmeta>
+	<complexity>advanced</complexity>
+</docmeta>
+-->
+
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Numerics.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Numerics)
 

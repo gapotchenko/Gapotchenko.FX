@@ -1,5 +1,11 @@
 ﻿# Gapotchenko.FX.Data.Linq
 
+<!--
+<docmeta>
+	<complexity>advanced</complexity>
+</docmeta>
+-->
+
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Linq.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Linq)
 
