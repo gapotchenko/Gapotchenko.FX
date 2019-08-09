@@ -1,6 +1,8 @@
-﻿---
-complexity: advanced
----
+﻿<!--
+<docmeta>
+	<complexity>advanced</complexity>
+</docmeta>
+-->
 
 # Gapotchenko.FX.Reflection.Loader
 
