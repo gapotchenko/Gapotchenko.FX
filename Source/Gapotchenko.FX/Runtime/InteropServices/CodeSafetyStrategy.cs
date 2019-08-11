@@ -7,7 +7,10 @@ using System.Threading;
 
 namespace Gapotchenko.FX.Runtime.InteropServices
 {
-    static class CodeSafetyStrategy
+    /// <summary>
+    /// Provides information on code safety strategy.
+    /// </summary>
+    public static class CodeSafetyStrategy
     {
         static CodeSafetyStrategy()
         {
