@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
         {
             if (!CodeSafetyStrategy.UnsafeCodeRecommended)
             {
-                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1003, "Intrinsic compiler cannot be activated because code safety strategy does not recommend unsafe code.");
+                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1003, "Intrinsic compiler cannot be activated because code safety strategy does not recommend using unsafe code.");
                 return null;
             }
 
