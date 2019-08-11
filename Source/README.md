@@ -6,6 +6,8 @@ Let's start by taking a look at its ☞ [main module](Gapotchenko.FX) ☜.
 
 ## Available Modules
 
+The full list of Gapotchenko.FX modules is presented at the table below.
+
 ### Table
 
 - [Gapotchenko.FX](Gapotchenko.FX)
