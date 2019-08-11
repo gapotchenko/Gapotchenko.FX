@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
         {
             if (!CodeSafetyStrategy.UnsafeCodeRecommended)
             {
-                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1003, "Intrinsic compiler cannot be activated because code safety strategy does not recommend using unsafe code.");
+                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901003, "Intrinsic compiler cannot be activated because code safety strategy does not recommend using unsafe code.");
                 return null;
             }
 
@@ -36,13 +36,13 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                         return new PatcherWindowsX64();
 
                     default:
-                        Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1004, "Intrinsic compiler does not support {0} architecture for Windows host platform.", arch);
+                        Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901004, "Intrinsic compiler does not support {0} architecture for Windows host platform.", arch);
                         break;
                 }
             }
             else
             {
-                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1005, "Intrinsic compiler does not support the current host platform.");
+                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901005, "Intrinsic compiler does not support the current host platform.");
             }
 
             return null;
@@ -248,7 +248,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
 
                         Log.TraceSource.TraceEvent(
                             TraceEventType.Error,
-                            1002,
+                            1932901002,
                             string.Format("Unexpected error occurred during compilation of intrinsic method '{0}'. Giving up on intrinsics for the current environment.", method) + Environment.NewLine + e);
 
                         return;
@@ -257,11 +257,11 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                     switch (patchResult)
                     {
                         case Patcher.PatchResult.Success:
-                            Log.TraceSource.TraceEvent(TraceEventType.Information, 1000, "Intrinsic method '{0}' compiled successfully.", method);
+                            Log.TraceSource.TraceEvent(TraceEventType.Information, 1932901000, "Intrinsic method '{0}' compiled successfully.", method);
                             break;
 
                         case Patcher.PatchResult.UnexpectedEpilogue:
-                            Log.TraceSource.TraceEvent(TraceEventType.Warning, 1001, "Unexpected machine code epilogue encountered for intrinsic method '{0}'. Compilation discarded.", method);
+                            Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901001, "Unexpected machine code epilogue encountered for intrinsic method '{0}'. Compilation discarded.", method);
                             break;
                     }
 
