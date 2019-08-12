@@ -42,6 +42,8 @@ namespace Gapotchenko.FX.Reflection
 
             lock (m_AssemblyDescriptors)
             {
+                EnsureNotDisposed();
+
                 if (m_AssemblyDescriptors.TryGetValue(assembly, out var descriptor))
                 {
                     return descriptor.AddProbingPaths(additionalProbingPaths);
@@ -91,6 +93,8 @@ namespace Gapotchenko.FX.Reflection
 
             lock (m_ProbingPathResolvers)
             {
+                EnsureNotDisposed();
+
                 if (m_ProbingPathResolvers.ContainsKey(path))
                     return false;
 
@@ -121,6 +125,14 @@ namespace Gapotchenko.FX.Reflection
             return true;
         }
 
+        bool m_Disposed;
+
+        void EnsureNotDisposed()
+        {
+            if (m_Disposed)
+                throw new ObjectDisposedException(null);
+        }
+
         /// <summary>
         /// Unregisters all added probing paths and assemblies.
         /// Releases all resources used by the <see cref="ScopedAssemblyAutoLoader"/>.
@@ -133,12 +145,14 @@ namespace Gapotchenko.FX.Reflection
             {
                 disposables.AddRange(m_AssemblyDescriptors.Values);
                 m_AssemblyDescriptors.Clear();
+                m_Disposed = true;
             }
 
             lock (m_ProbingPathResolvers)
             {
                 disposables.AddRange(m_ProbingPathResolvers.Values);
                 m_ProbingPathResolvers.Clear();
+                m_Disposed = true;
             }
 
             foreach (var i in disposables)
