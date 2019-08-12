@@ -236,6 +236,8 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                     if (attr.Architecture != arch)
                         continue;
 
+                    ValidateMethod(method);
+
                     Patcher.PatchResult patchResult;
                     try
                     {
@@ -268,6 +270,21 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                     break;
                 }
             }
+        }
+
+        static void ValidateMethod(MethodInfo method)
+        {
+#if !NET40
+            if ((method.MethodImplementationFlags & MethodImplAttributes.NoInlining) == 0)
+            {
+                throw new Exception(
+                    string.Format(
+                        "Intrinsic method '{0}' declared in type '{1}' is not marked with {2} implementation flag.",
+                        method,
+                        method.DeclaringType,
+                        "NoInlining"));
+            }
+#endif
         }
     }
 }
