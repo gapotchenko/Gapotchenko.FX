@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
     /// <summary>
     /// Provides intrinsic compilation services.
     /// </summary>
-    public static unsafe class IntrinsicServices
+    public static unsafe class Intrinsics
     {
         static Patcher _Patcher = _CreatePatcher();
 

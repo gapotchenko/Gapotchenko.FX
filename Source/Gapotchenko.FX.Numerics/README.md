@@ -17,7 +17,7 @@
 
 The main consumers of hardware-accelerated bit operations are path-finding and cryptographic algorithms.
 
-`BitOperations` class is a polyfill to the future as it first appeared in .NET Core 3.0 (which is not released yet).
+`BitOperations` class is a polyfill to the future as it first appeared in .NET Core 3.0.
 
 
 ### Log2

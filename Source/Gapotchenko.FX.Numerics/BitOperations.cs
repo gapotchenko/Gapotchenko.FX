@@ -16,12 +16,12 @@ namespace System.Numerics
     /// </summary>
     public static class BitOperations
     {
-        static BitOperations() => IntrinsicServices.InitializeType(typeof(BitOperations));
+        static BitOperations() => Intrinsics.InitializeType(typeof(BitOperations));
 
         // Some routines use techniques from the "Bit Twiddling Hacks" by Sean Eron Anderson:
         // http://graphics.stanford.edu/~seander/bithacks.html
 
-        static readonly int[] _Log2DeBruijn32 =
+        static readonly int[] m_Log2DeBruijn32 =
         {
              0,  9,  1, 10, 13, 21,  2, 29,
             11, 14, 16, 18, 22, 25,  3, 30,
@@ -52,7 +52,7 @@ namespace System.Numerics
             value |= value >> 16;
 
             var index = (value * 0x07C4ACDDU) >> 27;
-            return _Log2DeBruijn32[index];
+            return m_Log2DeBruijn32[index];
         }
 
         /// <summary>
