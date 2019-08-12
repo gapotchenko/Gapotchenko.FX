@@ -19,7 +19,7 @@ The async support is provided by two extension methods for `System.Data.Linq.Dat
 - `ExecuteQueryAsync`
 - `SubmitChangesAsync`
 
-Those async methods can be used instead of synchronous `ExecuteQuery` and `SubmitChanges` alternatives whenever you need to execute an async LINQ to SQL query.
+Those async methods can be used instead of synchronous `ExecuteQuery` and `SubmitChanges` alternatives whenever you need to execute a LINQ to SQL query asynchronously.
 
 ## Example
 
