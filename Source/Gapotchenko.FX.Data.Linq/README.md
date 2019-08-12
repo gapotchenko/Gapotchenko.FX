@@ -6,10 +6,38 @@
 </docmeta>
 -->
 
+`Gapotchenko.FX.Data.Linq` is a complementary module to `System.Data.Linq` provided by .NET Framework.
+
+The module provides async support for LINQ to SQL technology.
+
+
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Linq.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Linq)
 
-TODO
+The async support is represented by two extension methods for `System.Data.Linq.DataContext` class:
+
+- `ExecuteQueryAsync`
+- `SubmitChangesAsync`
+
+Those async methods can be used instead of synchronous `ExecuteQuery` and `SubmitChanges` variants whenever you need to execute an async LINQ to SQL query.
+
+## Example
+
+``` csharp
+using Gapotchenko.Data.Linq;
+using System.Linq;
+using System.Threading.Tasks;
+
+async Task<DateTime> GetCustomerRegistrationDate(string name)
+{
+    using (var db = new ContosoDataContext())
+    {
+        var query = db.Customers.Where(x => x.Name == name);
+        var result = await db.ExecuteQueryAsync(query);
+        return result.Single().RegistrationDate;
+    }
+}
+```
 
 ## Usage
 
