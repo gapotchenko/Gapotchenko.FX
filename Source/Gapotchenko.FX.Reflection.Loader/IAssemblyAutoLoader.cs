@@ -4,7 +4,7 @@ using System.Reflection;
 namespace Gapotchenko.FX.Reflection
 {
     /// <summary>
-    /// Defines interface of a loader for automatic assembly resolution and dynamic loading based on specified probing paths, binding redirects and common sense heuristics.
+    /// Defines interface of a loader for automatic assembly resolution based on specified probing paths, binding redirects and common sense heuristics.
     /// </summary>
     public interface IAssemblyAutoLoader
     {
