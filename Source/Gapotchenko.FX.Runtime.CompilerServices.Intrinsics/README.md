@@ -69,7 +69,7 @@ It brought the Bit Scan Reverse (BSR) instruction that does exactly what we want
 using just a small fraction of cycles.
 
 Chances are your machine runs on a descendant of that influential CPU, be it AMD Ryzen or Intel Core.
-So how can we use the `BSR` instruction from C#?
+So how can we use the `BSR` instruction from .NET?
 
 This is why `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` class was created.
 It allows to provide an intrinsic implementation of a method with `MachineCodeIntrinsicAttribute`. Let's see how:
@@ -110,7 +110,7 @@ class BitOperations
 `Log2_Intrinsic` method defines a custom attribute that provides a machine code for `BSR EAX, ECX` instruction.
 Machine code is tied to CPU architecture and this is reflected in the attribute as well.
 
-`BitOperations` class now has a static constructor that ensures that intrinsic methods of a type are initialized (compiled) before they are used.
+`BitOperations` class now has a static constructor that ensures that intrinsic methods of the type are initialized (compiled) before they are used.
 
 Here are the performance results of those implementations (lower is better):
 
