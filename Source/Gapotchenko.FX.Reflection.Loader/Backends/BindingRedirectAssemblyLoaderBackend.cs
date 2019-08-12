@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Gapotchenko.FX.Reflection
+namespace Gapotchenko.FX.Reflection.Loader.Backends
 {
-    sealed class BindingRedirectAssemblyLoader : IAssemblyLoader
+    sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
     {
-        private BindingRedirectAssemblyLoader(
+        private BindingRedirectAssemblyLoaderBackend(
             Dictionary<string, BindingRedirect> bindingRedirects,
             AssemblyDependencyTracker assemblyDependencyTracker)
         {
@@ -48,9 +48,9 @@ namespace Gapotchenko.FX.Reflection
         readonly Dictionary<string, BindingRedirect> _BindingRedirects;
         readonly AssemblyDependencyTracker _AssemblyDependencyTracker;
 
-        public static bool TryCreate(string assemblyFilePath, AssemblyDependencyTracker assemblyDependencyTracker, out IAssemblyLoader loader)
+        public static bool TryCreate(string assemblyFilePath, AssemblyDependencyTracker assemblyDependencyTracker, out IAssemblyLoaderBackend backend)
         {
-            loader = null;
+            backend = null;
 
             string configFilePath = assemblyFilePath + ".config";
             if (!File.Exists(configFilePath))
@@ -58,7 +58,7 @@ namespace Gapotchenko.FX.Reflection
 
             var bindingRedirects = _LoadBindingRedirects(configFilePath);
             if (bindingRedirects != null)
-                loader = new BindingRedirectAssemblyLoader(bindingRedirects, assemblyDependencyTracker);
+                backend = new BindingRedirectAssemblyLoaderBackend(bindingRedirects, assemblyDependencyTracker);
 
             return true;
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Reflection.Pal
+namespace Gapotchenko.FX.Reflection.Loader.Pal
 {
     static class ArrayEqualityComparer
     {

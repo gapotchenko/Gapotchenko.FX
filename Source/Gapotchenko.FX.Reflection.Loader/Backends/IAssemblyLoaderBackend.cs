@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Reflection
+namespace Gapotchenko.FX.Reflection.Loader.Backends
 {
-    interface IAssemblyLoader : IDisposable
+    interface IAssemblyLoaderBackend : IDisposable
     {
     }
 }

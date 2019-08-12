@@ -1,4 +1,5 @@
-﻿using Gapotchenko.FX.Reflection.Pal;
+﻿using Gapotchenko.FX.Reflection.Loader.Backends;
+using Gapotchenko.FX.Reflection.Loader.Pal;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -76,7 +77,7 @@ namespace Gapotchenko.FX.Reflection
             return true;
         }
 
-        readonly Dictionary<string, ProbingPathAssemblyLoader> m_ProbingPathResolvers = new Dictionary<string, ProbingPathAssemblyLoader>(FileSystem.PathComparer);
+        readonly Dictionary<string, ProbingPathAssemblyLoaderBackend> m_ProbingPathResolvers = new Dictionary<string, ProbingPathAssemblyLoaderBackend>(FileSystem.PathComparer);
 
         /// <summary>
         /// Adds a specified probing path for the current app domain.
@@ -98,7 +99,7 @@ namespace Gapotchenko.FX.Reflection
                 if (m_ProbingPathResolvers.ContainsKey(path))
                     return false;
 
-                m_ProbingPathResolvers.Add(path, new ProbingPathAssemblyLoader(path));
+                m_ProbingPathResolvers.Add(path, new ProbingPathAssemblyLoaderBackend(path));
                 return true;
             }
         }
@@ -116,7 +117,7 @@ namespace Gapotchenko.FX.Reflection
 
             path = Path.GetFullPath(path);
 
-            ProbingPathAssemblyLoader loader;
+            ProbingPathAssemblyLoaderBackend loader;
             lock (m_ProbingPathResolvers)
                 if (!m_ProbingPathResolvers.TryGetValue(path, out loader))
                     return false;

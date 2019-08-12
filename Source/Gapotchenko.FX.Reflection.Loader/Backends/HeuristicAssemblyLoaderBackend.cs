@@ -7,11 +7,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Reflection
+namespace Gapotchenko.FX.Reflection.Loader.Backends
 {
-    sealed class HeuristicAssemblyLoader : ProbingPathAssemblyLoader
+    sealed class HeuristicAssemblyLoaderBackend : ProbingPathAssemblyLoaderBackend
     {
-        public HeuristicAssemblyLoader(AssemblyDependencyTracker assemblyDependencyTracker, params string[] probingPaths) :
+        public HeuristicAssemblyLoaderBackend(AssemblyDependencyTracker assemblyDependencyTracker, params string[] probingPaths) :
             base(probingPaths)
         {
             _AssemblyDependencyTracker = assemblyDependencyTracker;
