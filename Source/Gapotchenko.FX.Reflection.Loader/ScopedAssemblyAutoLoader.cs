@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Reflection
     /// <summary>
     /// Provides services with a controlled lifespan for automatic assembly resolution and dynamic loading based on specified probing paths, binding redirects and common sense heuristics.
     /// </summary>
-    sealed class AssemblyAutoLoaderDomain : IDisposable
+    public sealed class ScopedAssemblyAutoLoader : IAssemblyAutoLoader, IDisposable
     {
         readonly Dictionary<Assembly, AssemblyDescriptor> m_AssemblyDescriptors = new Dictionary<Assembly, AssemblyDescriptor>();
 
@@ -81,6 +81,7 @@ namespace Gapotchenko.FX.Reflection
         /// Once added, establishes the specified directory path as the location of assemblies to probe during assembly resolution process.
         /// </summary>
         /// <param name="path">The probing path.</param>
+        /// <returns><c>true</c> if the probing path is added; <c>false</c> if the probing path is already added.</returns>
         public bool AddProbingPath(string path)
         {
             if (path == null)
@@ -103,6 +104,7 @@ namespace Gapotchenko.FX.Reflection
         /// Once removed, ceases to treat the specified directory path as the location of assemblies to probe during assembly resolution process.
         /// </summary>
         /// <param name="path">The probing path.</param>
+        /// <returns><c>true</c> if the probing path is removed; <c>false</c> if the probing path is already removed.</returns>
         public bool RemoveProbingPath(string path)
         {
             if (path == null)
@@ -119,6 +121,10 @@ namespace Gapotchenko.FX.Reflection
             return true;
         }
 
+        /// <summary>
+        /// Unregisters all added probing paths and assemblies.
+        /// Releases all resources used by the <see cref="ScopedAssemblyAutoLoader"/>.
+        /// </summary>
         public void Dispose()
         {
             var disposables = new List<IDisposable>();
