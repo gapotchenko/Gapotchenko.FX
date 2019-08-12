@@ -6,7 +6,7 @@
 </docmeta>
 -->
 
-`Gapotchenko.FX.Data.Linq` is a complementary module to `System.Data.Linq` provided by .NET Framework.
+`Gapotchenko.FX.Data.Linq` is a complementary module to `System.Data.Linq` library provided as a part of .NET Framework.
 
 The module provides async support for LINQ to SQL technology.
 
