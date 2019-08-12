@@ -14,12 +14,12 @@ The module provides async support for LINQ to SQL technology.
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Linq.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Linq)
 
-The async support is represented by two extension methods for `System.Data.Linq.DataContext` class:
+The async support is provided by two extension methods for `System.Data.Linq.DataContext` class:
 
 - `ExecuteQueryAsync`
 - `SubmitChangesAsync`
 
-Those async methods can be used instead of synchronous `ExecuteQuery` and `SubmitChanges` variants whenever you need to execute an async LINQ to SQL query.
+Those async methods can be used instead of synchronous `ExecuteQuery` and `SubmitChanges` alternatives whenever you need to execute an async LINQ to SQL query.
 
 ## Example
 
