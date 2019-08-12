@@ -11,6 +11,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
     /// <summary>
     /// Defines machine code intrinsic for a specified processor architecture.
     /// </summary>
+    [CLSCompliant(false)]
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public sealed class MachineCodeIntrinsicAttribute : Attribute
     {
