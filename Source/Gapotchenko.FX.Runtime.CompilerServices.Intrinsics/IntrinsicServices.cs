@@ -65,7 +65,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
             {
                 int size = data.Length;
                 fixed (byte* src = data)
-                    Block.Copy(src, dest, size);
+                    MemoryOperations.BlockCopy(src, dest, size);
                 return dest + size;
             }
         }

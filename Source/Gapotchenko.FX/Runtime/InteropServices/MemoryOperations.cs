@@ -4,14 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX
+namespace Gapotchenko.FX.Runtime.InteropServices
 {
-    static class Block
+    /// <summary>
+    /// Provides interoperability operations for memory.
+    /// </summary>
+    public static class MemoryOperations
     {
-        public static unsafe void Copy(void* src, void* dest, int size)
+        /// <summary>
+        /// Copies a block of memory.
+        /// </summary>
+        /// <param name="source">The source pointer.</param>
+        /// <param name="destination">The destination pointer.</param>
+        /// <param name="size">The amount of bytes to copy.</param>
+        [CLSCompliant(false)]
+        public static unsafe void BlockCopy(void* source, void* destination, int size)
         {
-            var s = (byte*)src;
-            var d = (byte*)dest;
+            var s = (byte*)source;
+            var d = (byte*)destination;
             var n = (uint)size;
 
             int wordSize = IntPtr.Size;
@@ -57,10 +67,18 @@ namespace Gapotchenko.FX
             }
         }
 
-        public static unsafe bool Equals(void* ptrA, void* ptrB, int size)
+        /// <summary>
+        /// Determines whether specified blocks of memory are equal.
+        /// </summary>
+        /// <param name="ptr1">A pointer to the first block to compare.</param>
+        /// <param name="ptr2">A pointer to the second block to compare.</param>
+        /// <param name="size">The amount of bytes to compare.</param>
+        /// <returns><c>true</c> if the specified blocks are equal; otherwise, <c>false</c>.</returns>
+        [CLSCompliant(false)]
+        public static unsafe bool BlockEquals(void* ptr1, void* ptr2, int size)
         {
-            var a = (byte*)ptrA;
-            var b = (byte*)ptrB;
+            var a = (byte*)ptr1;
+            var b = (byte*)ptr2;
             var n = (uint)size;
 
             int wordSize = IntPtr.Size;

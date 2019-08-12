@@ -42,7 +42,7 @@ namespace Gapotchenko.FX
                     return true;
 
                 fixed (byte* px = x, py = y)
-                    return Block.Equals(px, py, n);
+                    return MemoryOperations.BlockEquals(px, py, n);
             }
 
             public override int GetHashCode(byte[] obj)
