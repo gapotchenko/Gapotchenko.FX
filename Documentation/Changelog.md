@@ -2,7 +2,7 @@
 
 ## Gapotchenko.FX 2019.2
 
-There is no official release yet, the version is in progress. See the [`new`](../../../tree/new) repository branch for more details.
+Release date: August 14, 2019
 
 - Added support for .NET Standard 2.1 target
 - Added `System.Numerics.BitOperations` polyfill with `Log2` and `PopCount` hardware-accelerated operations
