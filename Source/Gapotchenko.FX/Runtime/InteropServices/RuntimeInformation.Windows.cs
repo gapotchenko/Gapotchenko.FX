@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-#if !TFF_RUNTIME_INFORMATION
+#if !TPF_RUNTIME_INFORMATION
 
 namespace System.Runtime.InteropServices
 {
