@@ -27,5 +27,5 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.ComponentModel.Disposable" />
     <CommonlyUsedPart Include="System.HashCode" />
   </ItemGroup>
-  <Import Project="..\Mastering\Polyfills\System.Runtime.InteropServices.RuntimeInformation.targets" />
+  <Import Project="..\Mastering\OOB\System.Runtime.InteropServices.RuntimeInformation.targets" />
 </Project>
