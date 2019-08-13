@@ -122,8 +122,8 @@ Here are the execution times of those implementations (lower is better):
 
 `Log2_Intrinsic` is a clear winner.
 
-An interesting aspect of a machine code intrinsic is that compiler may decide to not apply it at all.
-In that case, the original method implementation is used, thus providing a graceful but less performant fallback.
+Intrinsic compiler may or may not apply machine code to a method depending on current app host environment.
+When the code is not applied, the original method implementation is used thus providing a graceful, albeit less performant, fallback.
 
 ## Usage
 
