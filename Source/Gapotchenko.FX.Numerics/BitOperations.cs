@@ -68,7 +68,7 @@ namespace System.Numerics
         [CLSCompliant(false)]
         public static int PopCount(uint value)
         {
-            // TODO: Implement POPCNT hardware intrinsic.
+            // TODO: Implement POPCNT machine code intrinsic for x64.
             // https://en.wikipedia.org/wiki/SSE4#POPCNT_and_LZCNT
 
             var x = value;

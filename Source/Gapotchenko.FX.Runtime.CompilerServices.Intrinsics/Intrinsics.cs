@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
         {
             if (!CodeSafetyStrategy.UnsafeCodeRecommended)
             {
-                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901003, "Intrinsic compiler cannot be activated because code safety strategy does not recommend usage of unsafe code.");
+                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901003, "Intrinsic compiler is not activated because code safety strategy does not recommend unsafe code usage.");
                 return null;
             }
 
@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                         return new PatcherWindowsX64();
 
                     default:
-                        Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901004, "Intrinsic compiler does not support {0} architecture for Windows host platform.", arch);
+                        Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901004, "Intrinsic compiler does not support {0} architecture for {1} host platform.", arch, "Windows");
                         break;
                 }
             }
