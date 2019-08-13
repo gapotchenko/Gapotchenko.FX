@@ -112,7 +112,7 @@ Machine code is tied to CPU architecture and this is reflected in the attribute 
 
 `BitOperations` class now has a static constructor that ensures that intrinsic methods of the type are initialized (compiled) before they are used.
 
-Here are the performance results of those implementations (lower is better):
+Here are the execution times of those implementations (lower is better):
 
 |         Method |     Mean |     Error |    StdDev |
 |--------------- |---------:|----------:|----------:|
