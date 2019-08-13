@@ -258,7 +258,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                             break;
 
                         case Patcher.PatchResult.UnexpectedEpilogue:
-                            Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901001, "Unexpected machine code epilogue encountered for intrinsic method '{0}'. Compilation discarded.", method);
+                            Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901001, "Unexpected machine code epilogue encountered in intrinsic method '{0}'. Compilation discarded.", method);
                             break;
                     }
 
