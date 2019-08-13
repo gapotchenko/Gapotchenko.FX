@@ -261,7 +261,7 @@ Basically everything that gets dynamically loaded and depends on one or more NuG
 
 ![Chicken & Egg Dilemma](../../Documentation/Assets/chicken-and-egg-dilemma.png)
 
-`Gapotchenko.FX.Reflection.Loader` module is distributed as a NuGet package with a single assembly file without dependencies.
+`Gapotchenko.FX.Reflection.Loader` module is distributed as a NuGet package with a single assembly file **without dependencies.**
 
 This is done to avoid chicken & egg dilemma.
 In this way, the default .NET assembly loader can always load the assembly despite the possible variety of different NuGet packages that can be used in the given project.
