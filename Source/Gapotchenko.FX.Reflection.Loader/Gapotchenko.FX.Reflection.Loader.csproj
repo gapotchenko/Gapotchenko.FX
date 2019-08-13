@@ -2,7 +2,6 @@
   <Import Project="..\Mastering\Metadata.targets" />
   <PropertyGroup>
     <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Reflection.AssemblyAutoLoader" />

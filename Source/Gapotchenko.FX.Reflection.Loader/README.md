@@ -263,14 +263,7 @@ Basically everything that gets dynamically loaded and depends on one or more NuG
 
 `Gapotchenko.FX.Reflection.Loader` module is distributed as a NuGet package with a single assembly file without dependencies.
 
-To avoid chicken & egg dilemma, `Gapotchenko.FX.Reflection.Loader` assembly has a **fixed strong name:**
-
-```
-Gapotchenko.FX.Reflection.Loader, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a750ee378eaf756f
-```
-
-Please note that assembly version is pinned to 1.0.0.0 and never changes.
-In this way, the default .NET assembly loader can always resolve the assembly despite the possible variety of different NuGet packages that can be used in the given project.
+This is done to avoid chicken & egg dilemma. In this way, the default .NET assembly loader can always load the assembly despite the possible variety of different NuGet packages that can be used in the given project.
 
 Another point to consider is **how to select a point of assembly loader installation** that is early enough in the assembly lifecycle.
 This tends to be trivial for an app: the first few lines of main entry point are good to go.
