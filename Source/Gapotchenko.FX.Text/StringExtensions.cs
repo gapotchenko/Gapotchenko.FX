@@ -22,7 +22,7 @@ namespace Gapotchenko.FX.Text
         /// <param name="s">The string instance.</param>
         /// <param name="value">The character to compare.</param>
         /// <returns><c>true</c> if the string instance begins with the value; otherwise, <c>false</c>.</returns>
-#if NETCOREAPP
+#if TFF_STRING_OPWITH_CHAR
         [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
         public static bool StartsWith(this string s, char value)
@@ -44,7 +44,7 @@ namespace Gapotchenko.FX.Text
         /// <param name="s">The string instance.</param>
         /// <param name="value">The character to compare.</param>
         /// <returns><c>true</c> if the string instance ends with the value; otherwise, <c>false</c>.</returns>
-#if NETCOREAPP
+#if TFF_STRING_OPWITH_CHAR
         [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
         public static bool EndsWith(this string s, char value)
