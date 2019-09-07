@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Linq
     partial class EnumerableEx
     {
         /// <summary>
-        /// Memoize all elements of a sequence, e.g. ensure that every element of a sequence is retrieved only once.
+        /// Memoize all elements of a sequence by ensuring that every element is retrieved only once.
         /// </summary>
         /// <remarks>
         /// The resulting sequence is not thread safe.
@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.Linq
         public static IEnumerable<T> Memoize<T>(this IEnumerable<T> source) => Memoize(source, false);
 
         /// <summary>
-        /// Memoize all elements of a sequence, e.g. ensure that every element of a sequence is retrieved only once.
+        /// Memoize all elements of a sequence by ensuring that every element is retrieved only once.
         /// </summary>
         /// <typeparam name="T">The type of the elements of source.</typeparam>
         /// <param name="source">The source sequence.</param>
