@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -346,6 +347,9 @@ namespace Gapotchenko.FX
         /// <summary>
         /// Returns an empty <see cref="System.Threading.Tasks.Task"/> that has already completed successfully.
         /// </summary>
+#if TFF_COMPLETED_TASK
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static Task Task =>
 #if TFF_COMPLETED_TASK
             Task.CompletedTask;

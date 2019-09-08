@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace Gapotchenko.FX
 
             static Task<T> FromResult(T value)
             {
-#if NET40
+#if !TFF_TASK_FROMRESULT
                 var tcs = new TaskCompletionSource<T>();
                 tcs.SetResult(value);
                 return tcs.Task;
@@ -48,6 +49,9 @@ namespace Gapotchenko.FX
         /// <summary>
         /// Returns an empty <see cref="Task{TResult}"/> that has already completed successfully with the default result.
         /// </summary>
+#if TFF_TASK_FROMRESULT
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static Task<T> Task => TaskFactory.Task;
     }
 }
