@@ -270,7 +270,7 @@ namespace Gapotchenko.FX.Linq
             return true;
         }
 
-#if TF_READONLY_LIST
+#if TFF_READONLY_LIST
         /// <summary>
         /// Determines whether two lists are equal by comparing their elements by using a specified <paramref name="predicate"/>.
         /// </summary>

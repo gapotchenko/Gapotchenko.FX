@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-#if !TF_READONLY_LIST
+#if !TFF_READONLY_LIST
 
 namespace System.Collections.Generic
 {
