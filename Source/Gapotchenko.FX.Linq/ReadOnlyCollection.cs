@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Gapotchenko.FX.Linq
 {
-#if !TF_READONLY_COLLECTION
+#if !TFF_READONLY_COLLECTION
     /// <summary>
     /// Generic read-only collection.
     /// A polyfill for .NET 4.0.

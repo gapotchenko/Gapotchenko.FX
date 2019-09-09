@@ -550,7 +550,7 @@ namespace Gapotchenko.FX.Linq
                 case string s:
                     return (IReadOnlyList<TSource>)(object)new ReadOnlyCharList(s);
                 default:
-#if TF_READONLY_COLLECTION
+#if TFF_READONLY_COLLECTION
                     return AsList(source).AsReadOnly();
 #else
                     return new ReadOnlyCollection<TSource>(AsList(source));
