@@ -36,7 +36,7 @@
     <DefineConstants Condition=" '$(TargetFramework)' == 'netstandard2.0' ">$(DefineConstants);$(GPFX_DefineConstants_NETStandard20)</DefineConstants>  
 
     <!-- .NET Standard 2.1 -->
-    <GPFX_DefineConstants_NETStandard21>$(GPFX_DefineConstants_NETStandard20);TFF_HASHCODE;TFF_STRING_OPWITH_CHAR;TFF_STRING_BUILDER_APPEND_JOIN</GPFX_DefineConstants_NETStandard21>
+    <GPFX_DefineConstants_NETStandard21>$(GPFX_DefineConstants_NETStandard20);TFF_HASHCODE;TFF_STRING_BUILDER_APPEND_JOIN;TFF_STRING_OPWITH_CHAR</GPFX_DefineConstants_NETStandard21>
     <DefineConstants Condition=" '$(TargetFramework)' == 'netstandard2.1' ">$(DefineConstants);$(GPFX_DefineConstants_NETStandard21)</DefineConstants>  
   </PropertyGroup>
 
