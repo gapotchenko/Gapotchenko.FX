@@ -8,10 +8,10 @@
   <!-- .NET Framework -->
   <!-- ================================================================== -->
   <PropertyGroup>
-    <TFF_NET_FRAMEWORK Condition=" $(TargetFramework.StartsWith('net4', StringComparison.OrdinalIgnoreCase)) ">true</TFF_NET_FRAMEWORK>
+    <TF_NET_FRAMEWORK Condition=" $(TargetFramework.StartsWith('net4', StringComparison.OrdinalIgnoreCase)) ">true</TF_NET_FRAMEWORK>
 
     <!-- .NET Framework 4.0 -->
-    <GPFX_DefineConstants_NET40>TFF_HOST_PROTECTION;TFF_TRANSACTIONS;TFF_NET_FRAMEWORK</GPFX_DefineConstants_NET40>
+    <GPFX_DefineConstants_NET40>TFF_HOST_PROTECTION;TFF_TRANSACTIONS;TF_NET_FRAMEWORK</GPFX_DefineConstants_NET40>
     <DefineConstants Condition=" '$(TargetFramework)' == 'net40' ">$(DefineConstants);$(GPFX_DefineConstants_NET40)</DefineConstants>
 
     <!-- .NET Framework 4.5 -->

@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TFF_NET_FRAMEWORK)' == 'true' ">
+  <ItemGroup Condition=" '$(TF_NET_FRAMEWORK)' == 'true' ">
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>

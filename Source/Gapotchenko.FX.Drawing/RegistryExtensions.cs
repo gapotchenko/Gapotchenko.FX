@@ -1,4 +1,4 @@
-﻿#if TFF_NET_FRAMEWORK
+﻿#if TF_NET_FRAMEWORK
 
 using Microsoft.Win32;
 using System;
