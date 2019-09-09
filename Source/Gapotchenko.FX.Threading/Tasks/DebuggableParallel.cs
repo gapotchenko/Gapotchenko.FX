@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Threading.Tasks
 {
     /// <summary>
-    /// Provides a drop-in replacement for <see cref="Parallel"/> class that performs a sequential execution of operations when the debugger is attached and parallel execution otherwise.
-    /// <see cref="DebuggableParallel"/> is used for writing a debugging-friendly code.
+    /// Provides a drop-in replacement for <see cref="Parallel"/> class that by default performs a sequential execution of operations when the debugger is attached and parallel execution otherwise.
+    /// <see cref="DebuggableParallel"/> is used for writing a debug-friendly code.
     /// </summary>
     public static class DebuggableParallel
     {
