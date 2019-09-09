@@ -15,7 +15,7 @@
     <DefineConstants Condition=" '$(TargetFramework)' == 'net40' ">$(DefineConstants);$(GPFX_DefineConstants_NET40)</DefineConstants>
 
     <!-- .NET Framework 4.5 -->
-    <GPFX_DefineConstants_NET45>$(GPFX_DefineConstants_NET40);TFF_ASYNC_STREAM;TFF_READONLY_LIST;TFF_READONLY_COLLECTION;TFF_AGGRESSIVE_INLINING;TFF_WEAKREFERENCE_1;TFF_CUSTOM_ATTRIBUTE_EXTENSIONS;TFF_TASK_FROMRESULT</GPFX_DefineConstants_NET45>
+    <GPFX_DefineConstants_NET45>$(GPFX_DefineConstants_NET40);TFF_AGGRESSIVE_INLINING;TFF_ASYNC_STREAM;TFF_CUSTOM_ATTRIBUTE_EXTENSIONS;TFF_READONLY_COLLECTION;TFF_READONLY_LIST;TFF_TASK_FROMRESULT;TFF_WEAKREFERENCE_1</GPFX_DefineConstants_NET45>
     <DefineConstants Condition=" '$(TargetFramework)' == 'net45' ">$(DefineConstants);$(GPFX_DefineConstants_NET45)</DefineConstants>
 
     <!-- .NET Framework 4.6 -->
