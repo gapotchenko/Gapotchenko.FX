@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-#if !TPF_RUNTIME_INFORMATION
+#if !TFF_RUNTIME_INFORMATION
 
 namespace System.Runtime.InteropServices
 {
