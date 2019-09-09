@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Threading
 
         public Func<Exception, bool> ExceptionFilter { get; set; }
 
-        void Run()
+        void Loop()
         {
             while (m_Queue.TryTake(out var task, Timeout.Infinite))
             {
@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Threading
             }
         }
 
-        void Complete() => Post((_) => m_Queue.CompleteAdding(), null);
+        void End() => Post(_ => m_Queue.CompleteAdding(), null);
 
         public void Execute(Func<Task> task)
         {
@@ -62,12 +62,12 @@ namespace Gapotchenko.FX.Threading
                     }
                     finally
                     {
-                        Complete();
+                        End();
                     }
                 },
                 null);
 
-            Run();
+            Loop();
         }
     }
 }
