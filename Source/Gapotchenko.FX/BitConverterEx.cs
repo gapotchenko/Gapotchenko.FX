@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Gapotchenko.FX
 {
-    static class BitConverterEx
+    /// <summary>
+    /// Provides extended functionality for base data type conversion.
+    /// </summary>
+#if TFF_BITCONVERTER_SINGLETOINT32BITS
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static class BitConverterEx
     {
 #if !TFF_BITCONVERTER_SINGLETOINT32BITS
         [StructLayout(LayoutKind.Explicit)]
@@ -20,6 +27,19 @@ namespace Gapotchenko.FX
         }
 #endif
 
+        /// <summary>
+        /// <para>
+        /// Converts the specified single-precision floating point number to a 32-bit signed integer.
+        /// </para>
+        /// <para>
+        /// This is a polyfill provided by Gapotchenko.FX.
+        /// </para>
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <returns>A 32-bit signed integer whose value is equivalent to <paramref name="value"/>.</returns>
+#if TFF_BITCONVERTER_SINGLETOINT32BITS
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static int SingleToInt32Bits(float value)
         {
 #if TFF_BITCONVERTER_SINGLETOINT32BITS
@@ -31,6 +51,19 @@ namespace Gapotchenko.FX
 #endif
         }
 
+        /// <summary>
+        /// <para>
+        /// Converts the specified 32-bit signed integer to a single-precision floating point number.
+        /// </para>
+        /// <para>
+        /// This is a polyfill provided by Gapotchenko.FX.
+        /// </para>
+        /// </summary>
+        /// <param name="value">The number to convert.</param>
+        /// <returns>A single-precision floating point number whose value is equivalent to <paramref name="value"/>.</returns>
+#if TFF_BITCONVERTER_SINGLETOINT32BITS
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static float Int32BitsToSingle(int value)
         {
 #if TFF_BITCONVERTER_SINGLETOINT32BITS
