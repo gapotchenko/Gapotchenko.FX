@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-#if TF_TRANSACTIONS
+#if TFF_TRANSACTIONS
 using System.Transactions;
 #endif
 
@@ -319,7 +319,7 @@ namespace Gapotchenko.FX.IO
             }
         }
 
-#if TF_TRANSACTIONS
+#if TFF_TRANSACTIONS
 
         /// <summary>
         /// Enlists file in the current <see cref="Transaction"/>.

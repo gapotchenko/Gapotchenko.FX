@@ -1,4 +1,4 @@
-﻿#if TF_TRANSACTIONS
+﻿#if TFF_TRANSACTIONS
 
 using System;
 using System.Collections.Generic;
