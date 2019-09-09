@@ -18,16 +18,26 @@ namespace Gapotchenko.FX.Threading.Tasks
         /// <typeparam name="TSource">The type of the data in the source.</typeparam>
         /// <param name="source">An enumerable data source.</param>
         /// <param name="body">The delegate that is invoked once per iteration.</param>
-        public static void ForEach<TSource>(IEnumerable<TSource> source, Action<TSource> body)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (body == null)
-                throw new ArgumentNullException(nameof(body));
+        /// <returns>A structure that contains information about which portion of the loop completed.</returns>
+        public static ParallelLoopResult ForEach<TSource>(IEnumerable<TSource> source, Action<TSource> body) =>
+            Parallel.ForEach(
+                source,
+                new ParallelOptions { MaxDegreeOfParallelism = 1 },
+                body);
 
-            foreach (var i in source)
-                body(i);
-        }
+        /// <summary>
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially.
+        /// </summary>
+        /// <param name="fromInclusive">The start index, inclusive.</param>
+        /// <param name="toExclusive">The end index, exclusive.</param>
+        /// <param name="body">The delegate that is invoked once per iteration.</param>
+        /// <returns>A structure that contains information about which portion of the loop completed.</returns>
+        public static ParallelLoopResult For(int fromInclusive, int toExclusive, Action<int> body) =>
+            Parallel.For(
+                fromInclusive,
+                toExclusive,
+                new ParallelOptions { MaxDegreeOfParallelism = 1 },
+                body);
 
         /// <summary>
         /// Executes each of the provided actions, sequentially.
