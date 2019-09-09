@@ -13,7 +13,7 @@ namespace Gapotchenko.FX
     /// <typeparam name="T">The type.</typeparam>
     public static class Empty<T>
     {
-#if !TF_ARRAY_EMPTY
+#if !TFF_ARRAY_EMPTY
         static class ArrayFactory
         {
             public static readonly T[] Array = new T[0];
@@ -24,7 +24,7 @@ namespace Gapotchenko.FX
         /// Returns an empty array.
         /// </summary>
         public static T[] Array =>
-#if !TF_ARRAY_EMPTY
+#if !TFF_ARRAY_EMPTY
             ArrayFactory.Array;
 #else
             System.Array.Empty<T>();
