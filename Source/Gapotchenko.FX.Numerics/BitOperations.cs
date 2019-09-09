@@ -1,7 +1,10 @@
 ﻿using Gapotchenko.FX.Runtime.CompilerServices;
 using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
+#if !TFF_BITOPERATIONS
 
 namespace System.Numerics
 {
@@ -161,3 +164,9 @@ namespace System.Numerics
         public static ulong RotateRight(ulong value, int offset) => (value >> offset) | (value << (64 - offset));
     }
 }
+
+#else
+
+[assembly: TypeForwardedTo(typeof(BitOperations))]
+
+#endif

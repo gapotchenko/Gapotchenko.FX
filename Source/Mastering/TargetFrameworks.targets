@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;net46;net471;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net40;net45;net46;net471;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
 
   <!-- ================================================================== -->
@@ -51,6 +51,10 @@
     <!-- .NET Core 2.1 -->
     <GPFX_DefineConstants_NETCore21>$(GPFX_DefineConstants_NETCore20);TFF_HASHCODE</GPFX_DefineConstants_NETCore21>
     <DefineConstants Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">$(DefineConstants);$(GPFX_DefineConstants_NETCore21)</DefineConstants>
+
+    <!-- .NET Core 3.0 -->
+    <GPFX_DefineConstants_NETCore30>$(GPFX_DefineConstants_NETCore21);TFF_BITOPERATIONS</GPFX_DefineConstants_NETCore30>
+    <DefineConstants Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">$(DefineConstants);$(GPFX_DefineConstants_NETCore30)</DefineConstants>
   </PropertyGroup>
 
 </Project>
