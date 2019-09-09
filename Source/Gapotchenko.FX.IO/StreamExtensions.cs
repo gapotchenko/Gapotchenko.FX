@@ -64,7 +64,7 @@ namespace Gapotchenko.FX.IO
         public static void CopyBlockTo(this Stream source, Stream destination, long count) =>
             source.CopyBlockTo(destination, count, DefaultBlockCopyBufferSize);
 
-#if TF_ASYNC_STREAM
+#if TFF_ASYNC_STREAM
 
         /// <summary>
         /// Reads the bytes from the source stream and writes them to destination stream.
