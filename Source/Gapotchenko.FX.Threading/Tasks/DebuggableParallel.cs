@@ -38,7 +38,7 @@ namespace Gapotchenko.FX.Threading.Tasks
         }
 
         /// <summary>
-        /// Executes a <c>foreach</c> (<c>For Each</c> in Visual Basic) operation on an <see cref="IEnumerable{T}"/> in which iterations are run sequentially.
+        /// Executes a <c>foreach</c> (<c>For Each</c> in Visual Basic) operation on an <see cref="IEnumerable{T}"/> in which iterations are run sequentially when the debugger is attached or in parallel otherwise.
         /// </summary>
         /// <typeparam name="TSource">The type of the data in the source.</typeparam>
         /// <param name="source">An enumerable data source.</param>
@@ -50,7 +50,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                 Sequential.ForEach(source, body);
 
         /// <summary>
-        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially.
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially when the debugger is attached or in parallel otherwise.
         /// </summary>
         /// <param name="fromInclusive">The start index, inclusive.</param>
         /// <param name="toExclusive">The end index, exclusive.</param>
@@ -62,7 +62,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                 Sequential.For(fromInclusive, toExclusive, body);
 
         /// <summary>
-        /// Executes each of the provided actions, sequentially.
+        /// Executes each of the provided actions sequentially when the debugger is attached or in parallel otherwise.
         /// </summary>
         /// <param name="actions">An array of <see cref="Action"/> to execute.</param>
         public static void Invoke(params Action[] actions)
