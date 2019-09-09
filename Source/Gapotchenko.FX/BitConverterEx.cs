@@ -8,7 +8,7 @@ namespace Gapotchenko.FX
 {
     static class BitConverterEx
     {
-#if NETCOREAPP
+#if TFF_BITCONVERTER_SINGLETOINT32BITS
         public static int SingleToInt32Bits(float value) => BitConverter.SingleToInt32Bits(value);
 
         public static float Int32BitsToSingle(int value) => BitConverter.Int32BitsToSingle(value);
