@@ -11,7 +11,7 @@
     <TFF_NET_FRAMEWORK Condition=" $(TargetFramework.StartsWith('net4', StringComparison.OrdinalIgnoreCase)) ">true</TFF_NET_FRAMEWORK>
 
     <!-- .NET Framework 4.0 -->
-    <GPFX_DefineConstants_NET40>TF_HOST_PROTECTION;TF_TRANSACTIONS;TFF_NET_FRAMEWORK</GPFX_DefineConstants_NET40>
+    <GPFX_DefineConstants_NET40>TFF_HOST_PROTECTION;TF_TRANSACTIONS;TFF_NET_FRAMEWORK</GPFX_DefineConstants_NET40>
     <DefineConstants Condition=" '$(TargetFramework)' == 'net40' ">$(DefineConstants);$(GPFX_DefineConstants_NET40)</DefineConstants>
 
     <!-- .NET Framework 4.5 -->

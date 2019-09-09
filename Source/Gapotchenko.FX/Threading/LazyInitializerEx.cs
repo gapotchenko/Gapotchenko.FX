@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Threading
     /// <summary>
     /// Provides extended routines for lazy initialization.
     /// </summary>
-#if TF_HOST_PROTECTION
+#if TFF_HOST_PROTECTION
     [HostProtection(SecurityAction.LinkDemand, Synchronization = true, ExternalThreading = true)]
 #endif
     public static class LazyInitializerEx

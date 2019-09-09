@@ -24,7 +24,7 @@ namespace Gapotchenko.FX.Threading
     /// </para>
     /// </remarks>
     [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
-#if TF_HOST_PROTECTION
+#if TFF_HOST_PROTECTION
     [HostProtection(Synchronization = true, ExternalThreading = true)]
 #endif
     public struct EvaluateOnce<T>
