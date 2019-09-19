@@ -25,11 +25,12 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">A sequence of values.</param>
         /// <param name="element">The value to append to <paramref name="source"/>.</param>
         /// <returns>A new sequence that ends with <paramref name="element"/>.</returns>
+#if TFF_ENUMERABLE_APPEND
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static IEnumerable<TSource> Append<TSource>(IEnumerable<TSource> source, TSource element) => Enumerable.Append(source, element);
+#else
         public static IEnumerable<TSource> Append<TSource>(this IEnumerable<TSource> source, TSource element)
         {
-#if TFF_ENUMERABLE_APPEND
-            return Enumerable.Append(source, element);
-#else
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
@@ -37,8 +38,8 @@ namespace Gapotchenko.FX.Linq
                 yield return i;
 
             yield return element;
-#endif
         }
+#endif
 
         /// <summary>
         /// <para>
@@ -52,11 +53,12 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">A sequence of values.</param>
         /// <param name="element">The value to prepend to <paramref name="source"/>.</param>
         /// <returns>A new sequence that begins with <paramref name="element"/>.</returns>
+#if TFF_ENUMERABLE_PREPEND
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static IEnumerable<TSource> Prepend<TSource>(IEnumerable<TSource> source, TSource element) => Enumerable.Prepend(source, element);
+#else
         public static IEnumerable<TSource> Prepend<TSource>(this IEnumerable<TSource> source, TSource element)
         {
-#if TFF_ENUMERABLE_PREPEND
-            return Enumerable.Prepend(source, element);
-#else
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
@@ -64,8 +66,8 @@ namespace Gapotchenko.FX.Linq
 
             foreach (var i in source)
                 yield return i;
-#endif
         }
+#endif
 
         /// <summary>
         /// Returns the only element of a sequence, or a default value if the sequence is empty or contains several elements.
