@@ -112,6 +112,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                 {
                     result = await task().ConfigureAwait(false);
                 });
+
             return result;
         }
 
@@ -126,12 +127,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                 throw new ArgumentNullException(nameof(task));
 
             if (task.Status == TaskStatus.RanToCompletion)
-            {
-                // Task.Status only provides a half fence.
-                // A full barrier is needed to reproduce the semantics of a wait operation.
-                Thread.MemoryBarrier();
                 return task.Result;
-            }
 
             return Execute(() => task);
         }
@@ -153,6 +149,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                 {
                     result = await task(ct).ConfigureAwait(false);
                 });
+
             return result;
         }
 
@@ -199,6 +196,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                         result = func();
                     })
                 .ConfigureAwait(false);
+
             return result;
         }
 
@@ -240,30 +238,29 @@ namespace Gapotchenko.FX.Threading.Tasks
                 },
                 false))
             {
-                return
-                    RunLongTask(
-                        () =>
+                return RunLongTask(
+                    () =>
+                    {
+                        try
                         {
+                            taskThread = Thread.CurrentThread;
                             try
                             {
-                                taskThread = Thread.CurrentThread;
-                                try
-                                {
-                                    cancellationToken.ThrowIfCancellationRequested();
-                                    action();
-                                }
-                                finally
-                                {
-                                    taskThread = null;
-                                }
+                                cancellationToken.ThrowIfCancellationRequested();
+                                action();
                             }
-                            catch (ThreadAbortException)
+                            finally
                             {
-                                Thread.ResetAbort();
-                                throw new TaskCanceledException();
+                                taskThread = null;
                             }
-                        },
-                        cancellationToken);
+                        }
+                        catch (ThreadAbortException)
+                        {
+                            Thread.ResetAbort();
+                            throw new TaskCanceledException();
+                        }
+                    },
+                    cancellationToken);
             }
         }
 
@@ -288,6 +285,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                     },
                     cancellationToken)
                 .ConfigureAwait(false);
+
             return result;
         }
     }
