@@ -127,7 +127,8 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             assemblyName.Version = null;
 
             if (_BindingRedirects.TryGetValue(assemblyName.ToString(), out var bindingRedirect) &&
-                bindingRedirect.Matches(assemblyVersion))
+                bindingRedirect.Matches(assemblyVersion) &&
+                assemblyVersion != bindingRedirect.To)
             {
                 assemblyName.Version = bindingRedirect.To;
 
