@@ -27,7 +27,7 @@ namespace Gapotchenko.FX.Linq
         /// <returns>A new sequence that ends with <paramref name="element"/>.</returns>
         public static IEnumerable<TSource> Append<TSource>(this IEnumerable<TSource> source, TSource element)
         {
-#if NETCOREAPP
+#if TFF_ENUMERABLE_APPEND
             return Enumerable.Append(source, element);
 #else
             if (source == null)
@@ -54,7 +54,7 @@ namespace Gapotchenko.FX.Linq
         /// <returns>A new sequence that begins with <paramref name="element"/>.</returns>
         public static IEnumerable<TSource> Prepend<TSource>(this IEnumerable<TSource> source, TSource element)
         {
-#if NETCOREAPP
+#if TFF_ENUMERABLE_PREPEND
             return Enumerable.Prepend(source, element);
 #else
             if (source == null)
