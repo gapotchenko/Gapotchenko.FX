@@ -42,12 +42,7 @@ namespace Gapotchenko.FX.Threading.Tasks
 
             // Use a short path when possible.
             if (task.Status == TaskStatus.RanToCompletion)
-            {
-                // Task.Status only provides a half fence.
-                // A full barrier is needed to reproduce the semantics of a wait operation.
-                Thread.MemoryBarrier();
                 return;
-            }
 
             Execute(() => task);
         }
