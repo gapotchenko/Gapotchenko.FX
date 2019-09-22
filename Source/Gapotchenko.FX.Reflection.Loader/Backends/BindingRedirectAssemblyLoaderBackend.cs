@@ -134,20 +134,16 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
                 bool assemblyRegistered = _AssemblyDependencyTracker.RegisterReferencedAssembly(assemblyName);
 
-                Assembly assembly;
+                Assembly assembly = null;
                 try
                 {
                     assembly = Assembly.Load(assemblyName);
                 }
-                catch
+                finally
                 {
-                    if (assemblyRegistered)
+                    if (assembly == null && assemblyRegistered)
                         _AssemblyDependencyTracker.UnregisterReferencedAssembly(assemblyName);
-                    throw;
                 }
-
-                if (assembly == null && assemblyRegistered)
-                    _AssemblyDependencyTracker.UnregisterReferencedAssembly(assemblyName);
 
                 return assembly;
             }
