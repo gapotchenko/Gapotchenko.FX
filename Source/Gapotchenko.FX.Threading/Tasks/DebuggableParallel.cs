@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Threading.Tasks
 {
     /// <summary>
     /// Provides a drop-in replacement for <see cref="Parallel"/> class that by default performs a sequential execution of operations when the debugger is attached and parallel execution otherwise.
-    /// <see cref="DebuggableParallel"/> is used for writing a debug-friendly code.
+    /// <see cref="DebuggableParallel"/> is used for writing a debug-friendly code that has a deterministic behavior under debugger.
     /// </summary>
     public static class DebuggableParallel
     {
