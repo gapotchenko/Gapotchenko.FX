@@ -505,8 +505,10 @@ namespace Gapotchenko.FX.Linq
             {
                 case null:
                     return null;
+
                 case List<TSource> list:
                     return list;
+
                 default:
                     return source.ToList();
             }
@@ -525,8 +527,10 @@ namespace Gapotchenko.FX.Linq
             {
                 case null:
                     return null;
+
                 case TSource[] array:
                     return array;
+
                 default:
                     return source.ToArray();
             }
@@ -545,12 +549,16 @@ namespace Gapotchenko.FX.Linq
             {
                 case null:
                     return null;
+
                 case IList<TSource> list:
                     return new ReadOnlyCollection<TSource>(list);
+
                 case IReadOnlyList<TSource> readOnlyList:
                     return readOnlyList;
+
                 case string s:
                     return (IReadOnlyList<TSource>)(object)new ReadOnlyCharList(s);
+
                 default:
 #if TFF_READONLY_COLLECTION
                     return AsList(source).AsReadOnly();

@@ -6,21 +6,22 @@ namespace Gapotchenko.FX.Linq
 {
     sealed class ReadOnlyCharList : IReadOnlyList<char>
     {
-        public ReadOnlyCharList(string s)
+        public ReadOnlyCharList(string source)
         {
-            if (s == null)
-                throw new ArgumentNullException(nameof(s));
-            _S = s;
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            m_Source = source;
         }
 
-        readonly string _S;
+        readonly string m_Source;
 
-        public char this[int index] => _S[index];
+        public char this[int index] => m_Source[index];
 
-        public int Count => _S.Length;
+        public int Count => m_Source.Length;
 
-        public IEnumerator<char> GetEnumerator() => _S.GetEnumerator();
+        public IEnumerator<char> GetEnumerator() => m_Source.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_S).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)m_Source).GetEnumerator();
     }
 }
