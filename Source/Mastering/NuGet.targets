@@ -3,7 +3,7 @@
 
   <!-- NuGet Specification -->
   <PropertyGroup>
-    <Version>2019.3.2-beta</Version>
+    <Version>2019.3.3-beta</Version>
     <Authors>Gapotchenko</Authors>
     <PackageTags>framework platform polyfill rad</PackageTags>
     <PackageIconUrl>https://cdn.gapotchenko.com/publish/fx/assets/e84f03b5893f47d4a768729ea46875d8/icon48.png</PackageIconUrl>
@@ -19,6 +19,19 @@
     <PackageOutputPath>bin\$(Configuration)\nuget</PackageOutputPath>
     <GenerateNuspecDependsOn>PrepareNuspec;$(GenerateNuspecDependsOn)</GenerateNuspecDependsOn>
   </PropertyGroup>
+
+  <!-- =================================================================== -->
+
+  <!-- Workaround for https://github.com/NuGet/Home/issues/7001 -->
+  <Target Name="DisableNuGetDeterministicPackaging"
+          BeforeTargets="GenerateNuspec"
+          AfterTargets="CoreCompile">
+    <PropertyGroup>
+      <Deterministic>false</Deterministic>
+    </PropertyGroup>
+  </Target>
+
+  <!-- =================================================================== -->
 
   <Target Name="PrepareNuspec">
     <NLP_GeneratePackageRepositoryUrl
