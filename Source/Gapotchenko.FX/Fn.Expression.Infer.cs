@@ -169,7 +169,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T9">The type of the ninth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T10">The type of the tenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T11">The type of the eleventh parameter of a lambda expression.</typeparam>
-        /// <typeparam name="T12">The type of the twelveth parameter of a lambda expression.</typeparam>
+        /// <typeparam name="T12">The type of the twelfth parameter of a lambda expression.</typeparam>
         /// <param name="expression">The lambda expression.</param>
         /// <returns>The lambda expression specified by an <paramref name="expression"/> parameter.</returns>
         public static Expression<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>> Expression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(Expression<Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>> expression) => expression;
@@ -188,7 +188,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T9">The type of the ninth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T10">The type of the tenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T11">The type of the eleventh parameter of a lambda expression.</typeparam>
-        /// <typeparam name="T12">The type of the twelveth parameter of a lambda expression.</typeparam>
+        /// <typeparam name="T12">The type of the twelfth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T13">The type of the thirteenth parameter of a lambda expression.</typeparam>
         /// <param name="expression">The lambda expression.</param>
         /// <returns>The lambda expression specified by an <paramref name="expression"/> parameter.</returns>
@@ -208,7 +208,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T9">The type of the ninth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T10">The type of the tenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T11">The type of the eleventh parameter of a lambda expression.</typeparam>
-        /// <typeparam name="T12">The type of the twelveth parameter of a lambda expression.</typeparam>
+        /// <typeparam name="T12">The type of the twelfth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T13">The type of the thirteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T14">The type of the fourteenth parameter of a lambda expression.</typeparam>
         /// <param name="expression">The lambda expression.</param>
@@ -229,7 +229,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T9">The type of the ninth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T10">The type of the tenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T11">The type of the eleventh parameter of a lambda expression.</typeparam>
-        /// <typeparam name="T12">The type of the twelveth parameter of a lambda expression.</typeparam>
+        /// <typeparam name="T12">The type of the twelfth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T13">The type of the thirteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T14">The type of the fourteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T15">The type of the fifteenth parameter of a lambda expression.</typeparam>
@@ -251,7 +251,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T9">The type of the ninth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T10">The type of the tenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T11">The type of the eleventh parameter of a lambda expression.</typeparam>
-        /// <typeparam name="T12">The type of the twelveth parameter of a lambda expression.</typeparam>
+        /// <typeparam name="T12">The type of the twelfth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T13">The type of the thirteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T14">The type of the fourteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T15">The type of the fifteenth parameter of a lambda expression.</typeparam>
@@ -436,7 +436,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T9">The type of the ninth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T10">The type of the tenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T11">The type of the eleventh parameter of a lambda expression.</typeparam>
-        /// <typeparam name="T12">The type of the twelveth parameter of a lambda expression.</typeparam>
+        /// <typeparam name="T12">The type of the twelfth parameter of a lambda expression.</typeparam>
         /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
         /// <param name="expression">The lambda expression.</param>
         /// <returns>The lambda expression specified by an <paramref name="expression"/> parameter.</returns>
@@ -456,7 +456,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T9">The type of the ninth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T10">The type of the tenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T11">The type of the eleventh parameter of a lambda expression.</typeparam>
-        /// <typeparam name="T12">The type of the twelveth parameter of a lambda expression.</typeparam>
+        /// <typeparam name="T12">The type of the twelfth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T13">The type of the thirteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
         /// <param name="expression">The lambda expression.</param>
@@ -477,7 +477,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T9">The type of the ninth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T10">The type of the tenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T11">The type of the eleventh parameter of a lambda expression.</typeparam>
-        /// <typeparam name="T12">The type of the twelveth parameter of a lambda expression.</typeparam>
+        /// <typeparam name="T12">The type of the twelfth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T13">The type of the thirteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T14">The type of the fourteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
@@ -499,7 +499,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T9">The type of the ninth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T10">The type of the tenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T11">The type of the eleventh parameter of a lambda expression.</typeparam>
-        /// <typeparam name="T12">The type of the twelveth parameter of a lambda expression.</typeparam>
+        /// <typeparam name="T12">The type of the twelfth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T13">The type of the thirteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T14">The type of the fourteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T15">The type of the fifteenth parameter of a lambda expression.</typeparam>
@@ -522,7 +522,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T9">The type of the ninth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T10">The type of the tenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T11">The type of the eleventh parameter of a lambda expression.</typeparam>
-        /// <typeparam name="T12">The type of the twelveth parameter of a lambda expression.</typeparam>
+        /// <typeparam name="T12">The type of the twelfth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T13">The type of the thirteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T14">The type of the fourteenth parameter of a lambda expression.</typeparam>
         /// <typeparam name="T15">The type of the fifteenth parameter of a lambda expression.</typeparam>
