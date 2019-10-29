@@ -6,7 +6,7 @@ This version is currently in beta.
 
 - Added support for .NET Core 3.0 target framework
 - Introduced `Sequential` and `DebuggableParallel` primitives in `Gapotchenko.FX.Threading` module.
-Both primitives form a drop-in replacement for `System.Threading.Tasks.Parallel` and are useful for debugging purposes
+Both primitives provide drop-in replacements for `System.Threading.Tasks.Parallel` and are useful for debugging purposes
 - Added `CommandLine.OemEncoding` property that gets OEM encoding used by Windows command line and console applications
 - Implemented polyfill for `Enumerable.ToHashSet<T>` operation
 - Implemented polyfills for `BitConverter.SingleToInt32Bits` and `Int32BitsToSingle` operations
@@ -29,7 +29,6 @@ Release date: August 14, 2019
 - Introduced intrinsic compiler for hardware-accelerated operations 
 - Implemented `ProcessArchitecture` and `OSArchitecture` properties in `System.Runtime.InteropServices.RuntimeInformation` polyfill
 - Improved wording of `ProgramExitException` message
-
 
 ## Gapotchenko.FX 2019.1
 
