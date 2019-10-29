@@ -8,6 +8,7 @@ This version is currently in beta.
 - Introduced `Sequential` and `DebuggableParallel` primitives in `Gapotchenko.FX.Threading` module.
 Both primitives provide drop-in replacements for `System.Threading.Tasks.Parallel` and are useful for debugging purposes
 - Added `CommandLine.OemEncoding` property that gets OEM encoding used by Windows command line and console applications
+- Added ability to create LINQ expressions from functions via `Gapotchenko.FX.Fn` primitive
 - Implemented polyfill for `Enumerable.ToHashSet<T>` operation
 - Implemented polyfills for `BitConverter.SingleToInt32Bits` and `Int32BitsToSingle` operations
 - `Empty.Task` is not suggested by the code editor when it is natively provided by the host platform
