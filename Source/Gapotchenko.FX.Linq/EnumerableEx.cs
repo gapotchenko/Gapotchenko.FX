@@ -70,6 +70,47 @@ namespace Gapotchenko.FX.Linq
 #endif
 
         /// <summary>
+        /// <para>
+        /// Creates a <see cref="HashSet{T}"/> from an <see cref="IEnumerable{T}"/>.
+        /// </para>
+        /// <para>
+        /// This is a polyfill provided by Gapotchenko.FX.
+        /// </para>
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="IEnumerable{T}"/> to create a <see cref="HashSet{T}"/> from.</param>
+        /// <returns>A <see cref="HashSet{T}"/> that contains values of type <typeparamref name="TSource"/> retrieved from the <paramref name="source"/>.</returns>
+#if TFF_ENUMERABLE_TOHASHSET
+        public static HashSet<TSource> ToHashSet<TSource>(IEnumerable<TSource> source) => Enumerable.ToHashSet(source);
+#else
+        public static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source) => ToHashSet(source, null);
+#endif
+
+        /// <summary>
+        /// <para>
+        /// Creates a <see cref="HashSet{T}"/> from an <see cref="IEnumerable{T}"/> using the <paramref name="comparer"/> to compare keys.
+        /// </para>
+        /// <para>
+        /// This is a polyfill provided by Gapotchenko.FX.
+        /// </para>
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="IEnumerable{T}"/> to create a <see cref="HashSet{T}"/> from.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare keys.</param>
+        /// <returns>A <see cref="HashSet{T}"/> that contains values of type <typeparamref name="TSource"/> retrieved from the <paramref name="source"/>.</returns>
+#if TFF_ENUMERABLE_TOHASHSET
+        public static HashSet<TSource> ToHashSet<TSource>(IEnumerable<TSource> source, IEqualityComparer<TSource> comparer) => Enumerable.ToHashSet(source, comparer);
+#else
+        public static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new HashSet<TSource>(source, comparer);
+        }
+#endif
+
+        /// <summary>
         /// Returns the only element of a sequence, or a default value if the sequence is empty or contains several elements.
         /// </summary>
         /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>

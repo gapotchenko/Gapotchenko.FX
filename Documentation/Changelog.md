@@ -7,6 +7,7 @@ This version is currently in beta.
 - Added support for .NET Core 3.0 target framework
 - Introduced `Sequential` and `DebuggableParallel` primitives in `Gapotchenko.FX.Threading` module.
 Both primitives form a drop-in replacement for `System.Threading.Tasks.Parallel` and are useful for debugging purposes
+- Implemented polyfill for `Enumerable.ToHashSet<T>` operation
 - Implemented polyfills for `BitConverter.SingleToInt32Bits` and `Int32BitsToSingle` operations
 - `Empty.Task` is not suggested by the code editor when it is natively provided by the host platform
 - Fixed issue with ambiguous match of `Append` and `Prepend` polyfills for `IEnumerable<T>` type of some target frameworks
