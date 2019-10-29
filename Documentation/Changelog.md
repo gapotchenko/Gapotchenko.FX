@@ -1,5 +1,17 @@
 # What's New in Gapotchenko.FX
 
+## Gapotchenko.FX 2019.3
+
+This version is currently in beta.
+
+- Added support for .NET Core 3.0 target framework
+- Introduced `Sequential` and `DebuggableParallel` primitives in `Gapotchenko.FX.Threading` module.
+Both primitives form a drop-in replacement for `System.Threading.Tasks.Parallel` and are useful for debugging purposes
+- Implemented polyfills for `BitConverter.SingleToInt32Bits` and `Int32BitsToSingle` operations
+- `Empty.Task` is not suggested by the editor when it is natively provided by the host platform
+- Fixed issue with ambiguous match of `Append` and `Prepend` polyfills for `IEnumerable<T>` type of some target frameworks
+- Fixed issue with binding redirects handling in `Gapotchenko.FX.Reflection.Loader` module that could lead to `StackOverflowException` under specific conditions
+
 ## Gapotchenko.FX 2019.2
 
 Release date: August 14, 2019
