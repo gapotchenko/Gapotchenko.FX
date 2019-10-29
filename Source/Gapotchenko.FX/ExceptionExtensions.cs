@@ -25,17 +25,16 @@ namespace Gapotchenko.FX
         /// <param name="exception">The exception.</param>
         /// <returns><c>true</c> if exception signifies a cancellation of a thread or task; otherwise, <c>false</c>.</returns>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static bool IsCancellationException(this Exception exception)
-        {
-            if (exception == null)
-                throw new ArgumentNullException(nameof(exception));
+        public static bool IsCancellationException(this Exception exception) =>
+            ConsiderAggregation(
+                exception ?? throw new ArgumentNullException(nameof(exception)),
+                IsCancellationExceptionCore);
 
-            return
-                exception is ThreadAbortException ||
-                exception is ThreadInterruptedException ||
-                exception is OperationCanceledException ||
-                exception is TaskCanceledException;
-        }
+        static bool IsCancellationExceptionCore(Exception exception) =>
+            exception is ThreadAbortException ||
+            exception is ThreadInterruptedException ||
+            exception is OperationCanceledException ||
+            exception is TaskCanceledException;
 
         /// <summary>
         /// <para>
@@ -54,9 +53,54 @@ namespace Gapotchenko.FX
         /// <returns><c>true</c> if exception represents a control flow exception; otherwise, <c>false</c>.</returns>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public static bool IsControlFlowException(this Exception exception) =>
-            IsCancellationException(exception) ||
+            ConsiderAggregation(
+                exception ?? throw new ArgumentNullException(nameof(exception)),
+                IsControlFlowExceptionCore);
+
+        static bool IsControlFlowExceptionCore(Exception exception) =>
+            IsCancellationExceptionCore(exception) ||
             exception is StackOverflowException ||
             exception is IControlFlowException;
+
+        static bool ConsiderAggregation(Exception e, Predicate<Exception> p)
+        {
+            if (p(e))
+                return true;
+
+            if (e is AggregateException aggregateException)
+            {
+                if (aggregateException.InnerExceptions.AnyAndAll(x => ConsiderAggregation(x, p)))
+                    return true;
+            }
+
+            return false;
+        }
+
+        static bool AnyAndAll<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            using (var enumerator = source.GetEnumerator())
+            {
+                if (!enumerator.MoveNext())
+                {
+                    // Sequence is empty.
+                    return false;
+                }
+
+                do
+                {
+                    if (!predicate(enumerator.Current))
+                        return false;
+                }
+                while (enumerator.MoveNext());
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Rethrows a control flow exception if it is represented by the exception itself, or there is any in a chain of its inner exceptions.
