@@ -8,7 +8,7 @@ This version is currently in beta.
 - Introduced `Sequential` and `DebuggableParallel` primitives in `Gapotchenko.FX.Threading` module.
 Both primitives form a drop-in replacement for `System.Threading.Tasks.Parallel` and are useful for debugging purposes
 - Implemented polyfills for `BitConverter.SingleToInt32Bits` and `Int32BitsToSingle` operations
-- `Empty.Task` is not suggested by the editor when it is natively provided by the host platform
+- `Empty.Task` is not suggested by the code editor when it is natively provided by the host platform
 - Fixed issue with ambiguous match of `Append` and `Prepend` polyfills for `IEnumerable<T>` type of some target frameworks
 - Fixed issue with binding redirects handling in `Gapotchenko.FX.Reflection.Loader` module that could lead to `StackOverflowException` under specific conditions
 
