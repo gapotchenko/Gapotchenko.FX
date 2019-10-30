@@ -522,6 +522,78 @@ namespace Gapotchenko.FX.Threading.Tasks
                 localFinally);
 
         /// <summary>
+        /// Executes a <c>foreach</c> (<c>For Each</c> in Visual Basic) operation on a <see cref="OrderablePartitioner{TSource}"/> in which iterations are run sequentially,
+        /// loop options can be configured,
+        /// and the state of the loop can be monitored and manipulated.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements in source.</typeparam>
+        /// <param name="source">The orderable partitioner that contains the original data source.</param>
+        /// <param name="body">The delegate that is invoked once per iteration.</param>
+        /// <returns>A structure that contains information about which portion of the loop completed.</returns>
+        public static ParallelLoopResult ForEach<TSource>(OrderablePartitioner<TSource> source, Action<TSource, ParallelLoopState, long> body) =>
+            Parallel.ForEach(
+                source,
+                m_SequentialParallelOptions,
+                body);
+
+        /// <summary>
+        /// Executes a <c>foreach</c> (<c>For Each</c> in Visual Basic) operation on a <see cref="OrderablePartitioner{TSource}"/> in which iterations are run sequentially,
+        /// loop options can be configured,
+        /// and the state of the loop can be monitored and manipulated.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements in source.</typeparam>
+        /// <param name="source">The orderable partitioner that contains the original data source.</param>
+        /// <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+        /// <param name="body">The delegate that is invoked once per iteration.</param>
+        /// <returns>A structure that contains information about which portion of the loop completed.</returns>
+        public static ParallelLoopResult ForEach<TSource>(OrderablePartitioner<TSource> source, ParallelOptions parallelOptions, Action<TSource, ParallelLoopState, long> body) =>
+            Parallel.ForEach(
+                source,
+                MakeSequential(parallelOptions),
+                body);
+
+        /// <summary>
+        /// Executes a <c>foreach</c> (<c>For Each</c> in Visual Basic) operation with 64-bit indexes and with thread-local data on a <see cref="OrderablePartitioner{TSource}"/> in which iterations are run sequentially,
+        /// loop options can be configured,
+        /// and the state of the loop can be monitored and manipulated.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements in source.</typeparam>
+        /// <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+        /// <param name="source">The orderable partitioner that contains the original data source.</param>
+        /// <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+        /// <param name="body">The delegate that is invoked once per iteration.</param>
+        /// <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+        /// <returns>A structure that contains information about which portion of the loop completed.</returns>
+        public static ParallelLoopResult ForEach<TSource, TLocal>(OrderablePartitioner<TSource> source, Func<TLocal> localInit, Func<TSource, ParallelLoopState, long, TLocal, TLocal> body, Action<TLocal> localFinally) =>
+            Parallel.ForEach(
+                source,
+                m_SequentialParallelOptions,
+                localInit,
+                body,
+                localFinally);
+
+        /// <summary>
+        /// Executes a <c>foreach</c> (<c>For Each</c> in Visual Basic) operation with 64-bit indexes and with thread-local data on a <see cref="OrderablePartitioner{TSource}"/> in which iterations are run sequentially,
+        /// loop options can be configured,
+        /// and the state of the loop can be monitored and manipulated.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements in source.</typeparam>
+        /// <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+        /// <param name="source">The orderable partitioner that contains the original data source.</param>
+        /// <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+        /// <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+        /// <param name="body">The delegate that is invoked once per iteration.</param>
+        /// <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+        /// <returns>A structure that contains information about which portion of the loop completed.</returns>
+        public static ParallelLoopResult ForEach<TSource, TLocal>(OrderablePartitioner<TSource> source, ParallelOptions parallelOptions, Func<TLocal> localInit, Func<TSource, ParallelLoopState, long, TLocal, TLocal> body, Action<TLocal> localFinally) =>
+            Parallel.ForEach(
+                source,
+                MakeSequential(parallelOptions),
+                localInit,
+                body,
+                localFinally);
+
+        /// <summary>
         /// Executes each of the provided actions, sequentially.
         /// </summary>
         /// <param name="actions">An array of <see cref="Action"/> to execute.</param>
