@@ -112,6 +112,37 @@ namespace Gapotchenko.FX.Linq.Test
         }
 
         [TestMethod]
+        public void Linq_Enumerable_IndexOf_Match_1()
+        {
+            static void Check(string source, string value)
+            {
+                int expected = source.IndexOf(value);
+                int actual = EnumerableEx.IndexOf(source, value);
+                Assert.AreEqual(expected, actual);
+            }
+
+            Check("abc", "");
+            Check("abc", "a");
+            Check("abc", "b");
+            Check("abc", "c");
+            Check("abc", "d");
+
+            Check("abc", "ab");
+            Check("abc", "bc");
+            Check("abc", "abc");
+            Check("abc", "abcd");
+
+            Check("abc", "efg");
+            Check("abc", "abe");
+            Check("abc", "aec");
+            Check("abc", "ebc");
+
+            Check("", "");
+            Check("a", "a");
+        }
+
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Linq_Enumerable_ScalarOrDefault_NullArg()
         {

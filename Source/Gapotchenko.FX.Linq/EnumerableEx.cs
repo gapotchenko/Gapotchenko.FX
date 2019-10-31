@@ -488,6 +488,75 @@ namespace Gapotchenko.FX.Linq
         }
 
         /// <summary>
+        /// Searches for the specified value and returns the index of the first occurrence within the entire sequence
+        /// by using a specified <see cref="IEqualityComparer{T}"/> to compare sequence elements.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="value">The value to locate in the source sequence.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare values.</param>
+        /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
+        public static int IndexOf<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource> comparer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            if (ReferenceEquals(source, value))
+                return 0;
+
+            if (comparer == null)
+                comparer = EqualityComparer<TSource>.Default;
+
+            value = value.Memoize();
+            int match = 0;
+
+            using (var e2 = value.GetEnumerator())
+            {
+                int index = 0;
+                foreach (var e1Current in source)
+                {
+                    if (!e2.MoveNext())
+                        return match;
+
+                    if (comparer.Equals(e1Current, e2.Current))
+                    {
+                        if (match == -1)
+                            match = index;
+                    }
+                    else
+                    {
+                        match = -1;
+                        e2.Reset();
+                    }
+
+                    ++index;
+                }
+
+                if (match != -1)
+                {
+                    if (!e2.MoveNext())
+                        return match;
+                    else
+                        return -1;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Searches for the specified value and returns the index of the first occurrence within the entire sequence
+        /// by using a specified <see cref="IEqualityComparer{T}"/> to compare sequence elements.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="value">The value to locate in the source sequence.</param>
+        /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
+        public static int IndexOf<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value) => IndexOf(source, value, null);
+
+        /// <summary>
         /// Determines whether the beginning of a sequence matches the specified value by using the default equality comparer for elements' type.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>

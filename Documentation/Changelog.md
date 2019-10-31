@@ -6,9 +6,10 @@ This version is currently in beta.
 
 - Added support for .NET Core 3.0 target framework
 - Introduced `Sequential` and `DebuggableParallel` primitives in `Gapotchenko.FX.Threading` module.
-Both primitives provide drop-in replacements for `System.Threading.Tasks.Parallel` and are useful for debugging purposes
+Both primitives constitute drop-in replacements for `System.Threading.Tasks.Parallel` and are useful for debugging purposes
 - Added `CommandLine.OemEncoding` property that gets OEM encoding used by Windows command line and console applications
 - Added ability to create LINQ expressions from functions via `Gapotchenko.FX.Fn` primitive
+- Added `IndexOf(IEnumerable<T> source, IEnumerable<T> value)` and `IndexOf(IEnumerable<T> source, IEnumerable<T> value, IEqualityComparer<T>)` LINQ methods
 - Implemented polyfill for `Enumerable.ToHashSet<T>` operation
 - Implemented polyfills for `BitConverter.SingleToInt32Bits` and `Int32BitsToSingle` operations
 - Implemented polyfills to the future for `WaitForExit(CancellationToken)` and `WaitForExit(int, CancellationToken)` methods of `System.Diagnostics.Process` type
