@@ -278,28 +278,28 @@ namespace Gapotchenko.FX.Linq
         /// <summary>
         /// Determines whether two sequences are equal by comparing their elements with a specified <paramref name="predicate"/>.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of the source input sequence.</typeparam>
-        /// <typeparam name="TOther">The type of the elements of the other input sequence.</typeparam>
-        /// <param name="source">An <see cref="IEnumerable{T}"/> to compare to the other sequence.</param>
-        /// <param name="other">An <see cref="IEnumerable{T}"/> to compare to the source sequence.</param>
+        /// <typeparam name="TFirst">The type of the elements of the first input sequence.</typeparam>
+        /// <typeparam name="TSecond">The type of the elements of the second input sequence.</typeparam>
+        /// <param name="first">An <see cref="IEnumerable{T}"/> to compare to the second sequence.</param>
+        /// <param name="second">An <see cref="IEnumerable{T}"/> to compare to the first sequence.</param>
         /// <param name="predicate">The equality predicate for sequence elements.</param>
         /// <returns>
-        /// <c>true</c> if the two input sequences are of equal length and
+        /// <c>true</c> if both input sequences are of equal length and
         /// their corresponding elements are equal according to a specified <paramref name="predicate"/>;
         /// otherwise, <c>false</c>.
         /// </returns>
-        /// <exception cref="ArgumentNullException"><paramref name="source"/>, <paramref name="other"/> or <paramref name="predicate"/> is null.</exception>
-        public static bool SequenceEqual<TSource, TOther>(this IEnumerable<TSource> source, IEnumerable<TOther> other, Func<TSource, TOther, bool> predicate)
+        /// <exception cref="ArgumentNullException"><paramref name="first"/>, <paramref name="second"/> or <paramref name="predicate"/> is null.</exception>
+        public static bool SequenceEqual<TFirst, TSecond>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            if (first == null)
+                throw new ArgumentNullException(nameof(first));
+            if (second == null)
+                throw new ArgumentNullException(nameof(second));
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            using (var e1 = source.GetEnumerator())
-            using (var e2 = other.GetEnumerator())
+            using (var e1 = first.GetEnumerator())
+            using (var e2 = second.GetEnumerator())
             {
                 while (e1.MoveNext())
                 {
@@ -319,33 +319,33 @@ namespace Gapotchenko.FX.Linq
         /// <summary>
         /// Determines whether two lists are equal by comparing their elements with a specified <paramref name="predicate"/>.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of the source input list.</typeparam>
-        /// <typeparam name="TOther">The type of the elements of the other input list.</typeparam>
-        /// <param name="source">An <see cref="IList{T}"/> to compare to the other list.</param>
-        /// <param name="other">An <see cref="IList{T}"/> to compare to the source list.</param>
+        /// <typeparam name="TFirst">The type of the elements of the first input list.</typeparam>
+        /// <typeparam name="TSecond">The type of the elements of the second input list.</typeparam>
+        /// <param name="first">An <see cref="IList{T}"/> to compare to the second list.</param>
+        /// <param name="second">An <see cref="IList{T}"/> to compare to the first list.</param>
         /// <param name="predicate">The equality predicate for sequence elements.</param>
         /// <returns>
-        /// <c>true</c> if the two input lists are of equal length and
+        /// <c>true</c> if both input lists are of equal length and
         /// their corresponding elements are equal according to a specified <paramref name="predicate"/>;
         /// otherwise, <c>false</c>.
         /// </returns>
-        /// <exception cref="ArgumentNullException"><paramref name="source"/>, <paramref name="other"/> or <paramref name="predicate"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="first"/>, <paramref name="second"/> or <paramref name="predicate"/> is null.</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static bool SequenceEqual<TSource, TOther>(this IReadOnlyList<TSource> source, IReadOnlyList<TOther> other, Func<TSource, TOther, bool> predicate)
+        public static bool SequenceEqual<TFirst, TSecond>(this IReadOnlyList<TFirst> first, IReadOnlyList<TSecond> second, Func<TFirst, TSecond, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            if (first == null)
+                throw new ArgumentNullException(nameof(first));
+            if (second == null)
+                throw new ArgumentNullException(nameof(second));
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            int count = source.Count;
-            if (other.Count != count)
+            int count = first.Count;
+            if (second.Count != count)
                 return false;
 
             for (int i = 0; i < count; ++i)
-                if (!predicate(source[i], other[i]))
+                if (!predicate(first[i], second[i]))
                     return false;
 
             return true;
