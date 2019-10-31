@@ -656,7 +656,7 @@ namespace Gapotchenko.FX.Linq
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
         /// <param name="source">The source sequence.</param>
         /// <returns>A read-only view of a source sequence.</returns>
-        public static IReadOnlyList<TSource> AsReadOnly<TSource>(IEnumerable<TSource> source)
+        public static IReadOnlyList<TSource> AsReadOnly<TSource>(this IEnumerable<TSource> source)
         {
             switch (source)
             {

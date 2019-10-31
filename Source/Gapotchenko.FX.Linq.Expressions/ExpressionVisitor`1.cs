@@ -111,12 +111,12 @@ namespace Gapotchenko.FX.Linq.Expressions
             return result;
         }
 
-        protected virtual ReadOnlyCollection<TResult> VisitExpressions(ReadOnlyCollection<Expression> expressions)
+        protected virtual IReadOnlyList<TResult> VisitExpressions(IReadOnlyList<Expression> expressions)
         {
             if (expressions == null)
                 return null;
             else
-                return expressions.Select(Visit).ToList().AsReadOnly();
+                return expressions.Select(Visit).AsReadOnly();
         }
 
         protected abstract TResult VisitBinary(BinaryExpression expression);
