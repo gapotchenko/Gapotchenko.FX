@@ -378,27 +378,27 @@ namespace Gapotchenko.FX.Linq
                 comparer = EqualityComparer<TSource>.Default;
 
             value = value.Memoize();
-            bool eqRegion = true;
+            bool match = true;
 
             using (var e2 = value.GetEnumerator())
             {
                 foreach (var e1Current in source)
                 {
                     if (!e2.MoveNext())
-                        return eqRegion;
+                        return match;
 
                     if (comparer.Equals(e1Current, e2.Current))
                     {
-                        eqRegion = true;
+                        match = true;
                     }
                     else
                     {
-                        eqRegion = false;
+                        match = false;
                         e2.Reset();
                     }
                 }
 
-                if (eqRegion)
+                if (match)
                     return !e2.MoveNext();
             }
 
