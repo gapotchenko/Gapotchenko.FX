@@ -139,6 +139,10 @@ namespace Gapotchenko.FX.Linq.Test
 
             Check("", "");
             Check("a", "a");
+
+            Check("a", "abc");
+            Check("b", "abc");
+            Check("c", "abc");
         }
 
 
