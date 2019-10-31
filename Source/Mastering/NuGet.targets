@@ -3,15 +3,19 @@
 
   <!-- NuGet Specification -->
   <PropertyGroup>
-    <Version>2019.3.3-beta</Version>
+    <Version>2019.3.4-beta</Version>
     <Authors>Gapotchenko</Authors>
     <PackageTags>framework platform polyfill rad</PackageTags>
-    <PackageIconUrl>https://cdn.gapotchenko.com/publish/fx/assets/e84f03b5893f47d4a768729ea46875d8/icon48.png</PackageIconUrl>
+    <PackageIcon>Icon.png</PackageIcon>
     <PackageProjectUrl>https://gapotchenko.com/fx</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/gapotchenko/Gapotchenko.FX</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Resources\Icon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <!-- =================================================================== -->
 
