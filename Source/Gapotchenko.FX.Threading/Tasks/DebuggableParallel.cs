@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                     case DebuggableParallelMode.AlwaysSequential:
                         return false;
 
-                    case DebuggableParallelMode.AwaysParallel:
+                    case DebuggableParallelMode.AlwaysParallel:
                         return true;
                 }
             }

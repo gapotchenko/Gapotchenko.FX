@@ -24,6 +24,6 @@ namespace Gapotchenko.FX.Threading.Tasks
         /// <summary>
         /// <see cref="DebuggableParallel"/> always executes operations in parallel.
         /// </summary>
-        AwaysParallel
+        AlwaysParallel
     }
 }
