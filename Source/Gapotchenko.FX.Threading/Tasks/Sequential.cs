@@ -20,6 +20,7 @@ namespace Gapotchenko.FX.Threading.Tasks
 
         /// <summary>
         /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with thread-local data in which iterations are run sequentially,
+        /// loop options can be configured,
         /// and the state of the loop can be monitored and manipulated.
         /// </summary>
         /// <typeparam name="TLocal">The type of the thread-local data.</typeparam>
@@ -39,7 +40,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 localFinally);
 
         /// <summary>
-        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with thread-local data in which iterations are run sequentially,
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with 64-bit indexes and thread-local data in which iterations are run sequentially,
+        /// loop options can be configured,
         /// and the state of the loop can be monitored and manipulated.
         /// </summary>
         /// <typeparam name="TLocal">The type of the thread-local data.</typeparam>
@@ -88,6 +90,7 @@ namespace Gapotchenko.FX.Threading.Tasks
 
         /// <summary>
         /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with thread-local data in which iterations are run sequentially,
+        /// loop options can be configured,
         /// and the state of the loop can be monitored and manipulated.
         /// </summary>
         /// <typeparam name="TLocal">The type of the thread-local data.</typeparam>
@@ -108,7 +111,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 localFinally);
 
         /// <summary>
-        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with thread-local data in which iterations are run sequentially,
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with 64-bit indexes and thread-local data in which iterations are run sequentially,
+        /// loop options can be configured,
         /// and the state of the loop can be monitored and manipulated.
         /// </summary>
         /// <typeparam name="TLocal">The type of the thread-local data.</typeparam>
@@ -129,7 +133,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 localFinally);
 
         /// <summary>
-        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially.
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially
+        /// and loop options can be configured,
         /// </summary>
         /// <param name="fromInclusive">The start index, inclusive.</param>
         /// <param name="toExclusive">The end index, exclusive.</param>
@@ -143,7 +148,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 body);
 
         /// <summary>
-        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially.
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with 64-bit indexes in which iterations are run sequentially
+        /// and loop options can be configured.
         /// </summary>
         /// <param name="fromInclusive">The start index, inclusive.</param>
         /// <param name="toExclusive">The end index, exclusive.</param>
@@ -157,7 +163,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 body);
 
         /// <summary>
-        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially.
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially
+        /// and loop options can be configured.
         /// </summary>
         /// <param name="fromInclusive">The start index, inclusive.</param>
         /// <param name="toExclusive">The end index, exclusive.</param>
@@ -172,7 +179,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 body);
 
         /// <summary>
-        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially.
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with 64-bit indexes in which iterations are run sequentially
+        /// and loop options can be configured,
         /// </summary>
         /// <param name="fromInclusive">The start index, inclusive.</param>
         /// <param name="toExclusive">The end index, exclusive.</param>
@@ -187,7 +195,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 body);
 
         /// <summary>
-        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially,
+        /// loop options can be configured,
         /// and the state of the loop can be monitored and manipulated.
         /// </summary>
         /// <param name="fromInclusive">The start index, inclusive.</param>
@@ -202,7 +211,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 body);
 
         /// <summary>
-        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with 64-bit indexes in which iterations are run sequentially,
+        /// loop options can be configured,
         /// and the state of the loop can be monitored and manipulated.
         /// </summary>
         /// <param name="fromInclusive">The start index, inclusive.</param>
@@ -217,7 +227,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 body);
 
         /// <summary>
-        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially,
+        /// loop options can be configured,
         /// and the state of the loop can be monitored and manipulated.
         /// </summary>
         /// <param name="fromInclusive">The start index, inclusive.</param>
@@ -233,7 +244,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 body);
 
         /// <summary>
-        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop in which iterations are run sequentially
+        /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with 64-bit indexes in which iterations are run sequentially,
+        /// loop options can be configured,
         /// and the state of the loop can be monitored and manipulated.
         /// </summary>
         /// <param name="fromInclusive">The start index, inclusive.</param>
@@ -249,7 +261,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 body);
 
         /// <summary>
-        /// Executes a <c>foreach</c> (<c>For Each</c> in Visual Basic) operation on an <see cref="IEnumerable{T}"/> in which iterations are run sequentially.
+        /// Executes a <c>foreach</c> (<c>For Each</c> in Visual Basic) operation on an <see cref="IEnumerable{T}"/> in which iterations are run sequentially
+        /// and loop options can be configured.
         /// </summary>
         /// <typeparam name="TSource">The type of the data in the source.</typeparam>
         /// <param name="source">An enumerable data source.</param>
@@ -262,7 +275,8 @@ namespace Gapotchenko.FX.Threading.Tasks
                 body);
 
         /// <summary>
-        /// Executes a <c>foreach</c> (<c>For Each</c> in Visual Basic) operation on an <see cref="IEnumerable{T}"/> in which iterations are run sequentially.
+        /// Executes a <c>foreach</c> (<c>For Each</c> in Visual Basic) operation on an <see cref="IEnumerable{T}"/> in which iterations are run sequentially,
+        /// and loop options can be configured.
         /// </summary>
         /// <typeparam name="TSource">The type of the data in the source.</typeparam>
         /// <param name="source">An enumerable data source.</param>
@@ -274,7 +288,6 @@ namespace Gapotchenko.FX.Threading.Tasks
                 source,
                 MakeSequential(parallelOptions),
                 body);
-
 
         /// <summary>
         /// Executes a <c>foreach</c> (<c>For Each</c> in Visual Basic) operation on an <see cref="IEnumerable{T}"/> in which iterations are run sequentially,
