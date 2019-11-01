@@ -132,6 +132,12 @@
   <data name="ProgramExit_Message" xml:space="preserve">
     <value>The program exit has been requested with code {0}.</value>
   </data>
+  <data name="SwitchExpressionException_Message" xml:space="preserve">
+    <value>Non-exhaustive switch expression failed to match its input.</value>
+  </data>
+  <data name="SwitchExpressionException_UnmatchedValue" xml:space="preserve">
+    <value>Unmatched value was {0}.</value>
+  </data>
   <data name="ValueNotCreated" xml:space="preserve">
     <value>Value is not created.</value>
   </data>

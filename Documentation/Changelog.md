@@ -13,6 +13,7 @@ Both primitives constitute drop-in replacements for `System.Threading.Tasks.Para
 - Implemented polyfill for `Enumerable.ToHashSet<T>` operation
 - Implemented polyfills for `BitConverter.SingleToInt32Bits` and `Int32BitsToSingle` operations
 - Implemented polyfills to the future for `WaitForExit(CancellationToken)` and `WaitForExit(int, CancellationToken)` methods of `System.Diagnostics.Process` type
+- Implemented polyfill for `SwitchExpressionException`
 - `Empty.Task` is not suggested by the code editor when it is natively provided by the host platform
 - Fixed issue with ambiguous match of `Append` and `Prepend` polyfills for `IEnumerable<T>` type in some target frameworks
 - Fixed issue with binding redirects handling in `Gapotchenko.FX.Reflection.Loader` module that could lead to `StackOverflowException` under specific conditions
