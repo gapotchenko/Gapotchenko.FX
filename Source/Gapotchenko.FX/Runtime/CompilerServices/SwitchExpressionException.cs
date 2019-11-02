@@ -88,21 +88,10 @@ namespace System.Runtime.CompilerServices
         /// <summary>
         /// Gets the exception message.
         /// </summary>
-        public override string Message
-        {
-            get
-            {
-                if (UnmatchedValue is null)
-                {
-                    return base.Message;
-                }
-                else
-                {
-                    string valueMessage = string.Format(Resources.SwitchExpressionException_UnmatchedValue, UnmatchedValue);
-                    return base.Message + Environment.NewLine + valueMessage;
-                }
-            }
-        }
+        public override string Message =>
+            UnmatchedValue is null ?
+                base.Message :
+                base.Message + Environment.NewLine + string.Format(Resources.SwitchExpressionException_UnmatchedValue, UnmatchedValue);
     }
 }
 
