@@ -11,11 +11,11 @@ namespace Gapotchenko.FX.Linq
     public static class ParallelEnumerableEx
     {
         /// <summary>
-        /// Enables debug-friendly execution of a parallelized query by running it sequentially when the debugger is attached or in parallel otherwise.
+        /// Enables debugging-friendly execution of a parallelized query by running it sequentially when the debugger is attached or in parallel otherwise.
         /// </summary>
         /// <typeparam name="TSource">The type of elements of source.</typeparam>
         /// <param name="source">A <see cref="ParallelQuery{TSource}"/> on which to set a debug-friendly limit on the degrees of parallelism.</param>
-        /// <returns><see cref="ParallelQuery{TSource}"/> representing the same query as <paramref name="source"/>, with the debug-friendly limit on the degrees of parallelism set.</returns>
+        /// <returns><see cref="ParallelQuery{TSource}"/> representing the same query as <paramref name="source"/>, with the debugging-friendly limit on the degrees of parallelism set.</returns>
         public static ParallelQuery<TSource> AsDebuggable<TSource>(this ParallelQuery<TSource> source) =>
             DebuggableParallel.IsParallel ?
                 source :
