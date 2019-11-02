@@ -19,7 +19,11 @@ namespace Gapotchenko.FX.Threading.Tasks
         /// </summary>
         public static DebuggableParallelMode Mode { get; set; }
 
-        static bool IsParallel
+        /// <summary>
+        /// Gets a value indicating whether to perform parallel execution of operations in the current context.
+        /// By default, operations are executed sequentially when the debugger is attached and in parallel otherwise.
+        /// </summary>
+        public static bool IsParallel
         {
             get
             {
