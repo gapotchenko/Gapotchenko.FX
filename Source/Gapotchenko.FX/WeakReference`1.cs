@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -43,28 +44,25 @@ namespace System
         /// </param>
         public WeakReference(T target, bool trackResurrection)
         {
-            _Create(target, trackResurrection);
+            m_WR = new WeakReference(target, trackResurrection);
         }
 
-        internal WeakReference(SerializationInfo info, StreamingContext context)
+        WeakReference(SerializationInfo info, StreamingContext context)
         {
             if (info == null)
                 throw new ArgumentNullException(nameof(info));
+
             var target = (T)info.GetValue("TrackedObject", typeof(T));
             bool trackResurrection = info.GetBoolean("TrackResurrection");
-            _Create(target, trackResurrection);
+
+            m_WR = new WeakReference(target, trackResurrection);
         }
 
-        WeakReference _WR;
-
-        void _Create(T target, bool trackResurrection)
-        {
-            _WR = new WeakReference(target, trackResurrection);
-        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        WeakReference m_WR;
 
         /// <summary>
-        ///  Populates a <see cref="SerializationInfo"/> object with all the data
-        ///  necessary to serialize the current <see cref="WeakReference{T}"/> object.
+        /// Populates a <see cref="SerializationInfo"/> object with all the data necessary to serialize the current <see cref="WeakReference{T}"/> object.
         /// </summary>
         /// <param name="info">An object that holds all the data necessary to serialize or deserialize the current <see cref="WeakReference{T}"/> object.</param>
         /// <param name="context">The location where serialized data is stored and retrieved.</param>
@@ -72,21 +70,17 @@ namespace System
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             if (info == null)
-            {
-                throw new ArgumentNullException("info");
-            }
-            info.AddValue("TrackedObject", _WR.Target, typeof(T));
-            info.AddValue("TrackResurrection", _WR.TrackResurrection);
+                throw new ArgumentNullException(nameof(info));
+
+            info.AddValue("TrackedObject", m_WR.Target, typeof(T));
+            info.AddValue("TrackResurrection", m_WR.TrackResurrection);
         }
 
         /// <summary>
         /// Sets the target object that is referenced by this <see cref="WeakReference{T}"/> object.
         /// </summary>
         /// <param name="target">The new target object.</param>
-        public void SetTarget(T target)
-        {
-            _WR.Target = target;
-        }
+        public void SetTarget(T target) => m_WR.Target = target;
 
         /// <summary>
         /// Tries to retrieve the target object that is referenced by the current <see cref="WeakReference{T}"/> object.
@@ -98,7 +92,7 @@ namespace System
         /// <returns><c>true</c> if the target was retrieved; otherwise, <c>false</c>.</returns>
         public bool TryGetTarget(out T target)
         {
-            var t = (T)_WR.Target;
+            var t = (T)m_WR.Target;
             target = t;
             return t != null;
         }

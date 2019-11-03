@@ -69,21 +69,32 @@ namespace System.Runtime.CompilerServices
         {
         }
 
+        SwitchExpressionException(SerializationInfo info, StreamingContext context) :
+            base(info, context)
+        {
+            UnmatchedValue = info.GetValue(nameof(UnmatchedValue), typeof(object));
+        }
+
+        /// <summary>
+        /// Sets the <see cref="SerializationInfo"/> with information about the exception.
+        /// </summary>
+        /// <param name="info">
+        /// The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.
+        /// </param>
+        /// <param name="context">
+        /// The <see cref="StreamingContext"/> that contains contextual information about the source or destination.
+        /// </param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+
+            info.AddValue(nameof(UnmatchedValue), UnmatchedValue, typeof(object));
+        }
+
         /// <summary>
         /// Gets the unmatched value associated with the exception.
         /// </summary>
         public object UnmatchedValue { get; }
-
-        /// <summary>
-        /// Sets the <see cref="SerializationInfo"/> with the parameter name and additional exception information.
-        /// </summary>
-        /// <param name="info">Serialization information.</param>
-        /// <param name="context">Streaming context.</param>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-            info.AddValue(nameof(UnmatchedValue), UnmatchedValue, typeof(object));
-        }
 
         /// <summary>
         /// Gets the exception message.
