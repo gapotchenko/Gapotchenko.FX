@@ -44,6 +44,19 @@ namespace Gapotchenko.FX
         protected ProgramExitException(SerializationInfo info, StreamingContext context) :
             base(info, context)
         {
+            ExitCode = info.GetInt32(nameof(ExitCode));
+        }
+
+        /// <summary>
+        /// Sets the <see cref="SerializationInfo"/> with the parameter name and additional exception information.
+        /// </summary>
+        /// <param name="info">Serialization information.</param>
+        /// <param name="context">Streaming context.</param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+
+            info.AddValue(nameof(ExitCode), ExitCode);
         }
 
         /// <summary>
