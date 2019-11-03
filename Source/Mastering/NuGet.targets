@@ -6,7 +6,7 @@
     <Version>2019.3.5-beta</Version>
     <Authors>Gapotchenko</Authors>
     <PackageTags>framework platform polyfill rad</PackageTags>
-    <PackageIcon>Icon.png</PackageIcon>
+    <PackageIcon>PackageIcon.png</PackageIcon>
     <PackageProjectUrl>https://gapotchenko.com/fx</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Resources\Icon.png" Pack="true" PackagePath="" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\PackageIcon.png" Pack="true" PackagePath="" Visible="false" />
   </ItemGroup>
 
   <!-- =================================================================== -->
