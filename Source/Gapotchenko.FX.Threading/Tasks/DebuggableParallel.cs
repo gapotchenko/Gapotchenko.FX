@@ -21,7 +21,7 @@ namespace Gapotchenko.FX.Threading.Tasks
 
         /// <summary>
         /// Gets a value indicating whether to perform parallel execution of operations in the current context.
-        /// By default, operations are executed sequentially when the debugger is attached and in parallel otherwise.
+        /// By default, operations are executed sequentially when the debugger is attached or in parallel otherwise.
         /// </summary>
         public static bool IsParallel
         {
