@@ -5,6 +5,7 @@
     <TargetFramework></TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gapotchenko.FX.Test
+namespace Gapotchenko.FX.Threading.Test
 {
     [TestClass]
     public class ThreadingCapabilitiesTests

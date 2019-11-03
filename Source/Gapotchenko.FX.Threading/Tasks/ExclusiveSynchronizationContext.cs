@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Threading
+namespace Gapotchenko.FX.Threading.Tasks
 {
     sealed class ExclusiveSynchronizationContext : SynchronizationContext
     {
