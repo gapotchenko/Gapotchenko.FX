@@ -40,14 +40,13 @@ It does the job but such mechanical changes may put a toll on code maintainabili
 You can also spot some amount of code duplication there.
 
 Another approach would be to use `Regex` class which is readily available in .NET.
-But that would destroy the expressiveness of string manipulation functions like `Equals`.
-And even more than that.
+But that might destroy the expressiveness of string manipulation functions like `Equals`.
 If a string function takes a `StringComparison` parameter then it may become a significant challenge to reliably refactor it to `Regex` implementation.
-It would quickly go beyond the trivial. Surely not something you put into words "mechanical refactoring" and "quick change".
+
 
 That's why `Gapotchenko.FX.Text` module provides a set of so called regex trampoline functions.
 They look exactly like `Equals`, `StartsWith`, `EndsWith`, `IndexOf` but work on regex patterns instead of raw strings.
-They also end with `Regex` suffix in their names, so `Equals` has `EqualsRegex` companion, `StartsWith` has `StartsWithRegex` and so on.
+They also end with `Regex` suffix in their names, so `Equals` becomes `EqualsRegex`, `StartsWith` becomes `StartsWithRegex` and so on.
 
 This is how a regex trampoline can be used for the given sample to meet the new requirements by a one-line change:
 
@@ -65,7 +64,7 @@ An immediate improvement in expressiveness without duplication.
 ### StringBuilder.AppendJoin
 
 `AppendJoin` is a method that appeared in later versions of .NET platform.
-Gapochenko.FX provides a corresponding polyfill so it can be used in code targeting older versions.
+Gapochenko.FX provides a corresponding polyfill that can be used in code targeting older .NET versions.
 
 ## Usage
 
