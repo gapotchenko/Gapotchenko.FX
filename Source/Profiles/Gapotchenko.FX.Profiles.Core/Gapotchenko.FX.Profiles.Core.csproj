@@ -4,6 +4,7 @@
   <PropertyGroup>
     <TargetFramework></TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoWarn>NU5128</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX" />
