@@ -74,7 +74,7 @@ The default mode of operation is `ProcessEndMode.Complete` that follows a sequen
    1.1. `End()` method tries to close a main window of a process  
    1.2. If that fails, it tries to send Ctrl+C (SIGTERM) signal
  2. Forceful techniques:  
-   2.1. If graceful techniques failed, it tries to exit the process (suitable for the current process only)  
+   2.1. If graceful techniques failed, `End()` method tries to exit the process (suitable for the current process only)  
    2.2. If that fails, it kills the process (SIGKILL)
 
 The method returns a `ProcessEndMode` value on completion indicating how the process was actually ended.
