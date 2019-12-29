@@ -336,8 +336,8 @@ Gapotchenko.FX brings RAD back to the people 💪")
 ## Supported Platforms
 
 - .NET Standard 2.0+
-- .NET Framework 4.0+
 - .NET Core 2.0+
+- .NET Framework 4.0+
 
 ## Usage
 
