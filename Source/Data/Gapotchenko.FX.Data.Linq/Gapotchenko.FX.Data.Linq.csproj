@@ -9,8 +9,8 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.Data.Linq.DataContextExtensions" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
-    <ProjectReference Include="..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Data.Linq" />
