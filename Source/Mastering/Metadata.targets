@@ -6,7 +6,7 @@
     <Company>Gapotchenko</Company>
     <Product>Gapotchenko.FX</Product>
     <Description>.NET polyfill to the future. A versatile RAD framework for .NET platform.</Description>
-    <Copyright>Copyright © 2019 Gapotchenko and Contributors</Copyright>
+    <Copyright>Copyright © 2019-2020 Gapotchenko and Contributors</Copyright>
   </PropertyGroup>
 
   <!-- Assembly Information -->
