@@ -1,1 +1,1 @@
-`Data` folder contains Gapotchenko.FX modules responsible for data access and serialization.
+This folder contains Gapotchenko.FX modules responsible for data access and serialization.
