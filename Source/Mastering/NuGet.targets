@@ -11,6 +11,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/gapotchenko/Gapotchenko.FX</RepositoryUrl>
+    <IsPackable>$(IsPublicProject)</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

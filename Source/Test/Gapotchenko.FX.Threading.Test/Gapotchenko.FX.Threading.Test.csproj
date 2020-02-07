@@ -3,8 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
     <LangVersion>preview</LangVersion>
-
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
