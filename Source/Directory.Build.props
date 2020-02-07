@@ -1,4 +1,5 @@
 <Project>
+  <Import Project="Mastering\Metadata.targets" />
   <PropertyGroup>
     <!-- peverify-compat: https://github.com/dotnet/roslyn/issues/22485 -->
     <Features>$(Features);peverify-compat</Features>

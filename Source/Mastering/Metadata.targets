@@ -19,9 +19,14 @@
   <!-- =================================================================== -->
 
   <PropertyGroup>
+    <IsPublicProject>false</IsPublicProject>
+    <IsPublicProject Condition=" !($(MSBuildProjectName.EndsWith('.Test')) OR $(MSBuildProjectName.Contains('.Harness.'))) ">true</IsPublicProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <DefineConstants>$(DefineConstants);DISABLE_ASSEMBLY_METADATA_ATTRIBUTES</DefineConstants>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDocumentationFile>$(IsPublicProject)</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
