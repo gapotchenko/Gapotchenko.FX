@@ -4,4 +4,9 @@
     <TargetFramework></TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Xml.XPointer\Gapotchenko.FX.Data.Xml.XPointer.csproj" />
+  </ItemGroup>
+
 </Project>
