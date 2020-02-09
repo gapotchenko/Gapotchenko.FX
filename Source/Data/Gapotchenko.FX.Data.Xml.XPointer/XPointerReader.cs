@@ -6,7 +6,7 @@ using System.Collections;
 namespace Gapotchenko.FX.Data.Xml.XPointer
 {
     /// <summary>
-    /// XPointer-aware XmlReader.
+    /// XPointer-aware XML reader.
     /// </summary>
     public class XPointerReader : XmlReader
     {
@@ -235,7 +235,7 @@ namespace Gapotchenko.FX.Data.Xml.XPointer
                     doc.Load(new XmlTextReader(_uri.AbsoluteUri, new StreamReader(_stream)));
                 else
                     doc.Load(_extReader);
-                var pointer = XPointerParser.ParseXPointer(_xpointer);
+                var pointer = XPointer.Parse(_xpointer);
                 var list = pointer.Evaluate(doc);
                 _pointedNodes = list.GetEnumerator();
                 _pointedNodes.MoveNext();

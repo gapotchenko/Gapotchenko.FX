@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Gapotchenko.FX.Data.Xml.XPointer
 {
     /// <summary>
     /// Shorthand XPointer pointer.
     /// </summary>
-    internal class ShorthandPointer : XPointer
+    sealed class ShorthandPointer : XPointer
     {
         string _NCName;
 
@@ -27,6 +29,12 @@ namespace Gapotchenko.FX.Data.Xml.XPointer
                 return result;
             else
                 throw new XPointerMatchException("XPointer doesn't identify any subresource");
+        }
+
+        public override IEnumerable<XNode> Evaluate(XDocument document)
+        {
+            // TODO
+            throw new NotImplementedException();
         }
     }
 }

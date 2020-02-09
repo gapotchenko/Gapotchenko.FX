@@ -1,19 +1,15 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Gapotchenko.FX.Data.Xml.XPointer
 {
-    /// <summary>
-    /// SchemaBased XPointer pointer.
-    /// </summary>
-    internal class SchemaBasedPointer : XPointer
+    sealed class SchemaBasedPointer : XPointer
     {
         private ArrayList _parts;
 
-        /// <summary>
-        /// Pointer parts collection.
-        /// </summary>
         public ArrayList Parts
         {
             get { return _parts; }
@@ -24,11 +20,6 @@ namespace Gapotchenko.FX.Data.Xml.XPointer
             _parts = parts;
         }
 
-        /// <summary>
-        /// Evaluates this pointer.
-        /// </summary>
-        /// <param name="doc">Document to evaluate pointer on.</param>
-        /// <returns>Pointed nodes.</returns>
         public override XmlNodeList Evaluate(XmlDocument doc)
         {
             XmlNodeList result;
@@ -41,6 +32,12 @@ namespace Gapotchenko.FX.Data.Xml.XPointer
                     return result;
             }
             throw new XPointerMatchException("XPointer does not match any sub-resource.");
+        }
+
+        public override IEnumerable<XNode> Evaluate(XDocument document)
+        {
+            // TODO
+            throw new NotImplementedException();
         }
     }
 }

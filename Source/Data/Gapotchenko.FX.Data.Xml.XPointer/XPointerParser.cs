@@ -4,14 +4,11 @@ using System.Xml;
 
 namespace Gapotchenko.FX.Data.Xml.XPointer
 {
-    /// <summary>
-    /// XPointer parser.
-    /// </summary>
-    public class XPointerParser
+    static class XPointerParser
     {
         private static Hashtable _schemas = XPointerSchema.Schemas;
 
-        public static XPointer ParseXPointer(string xpointer)
+        public static XPointer ParseXPointer(string xpointer, bool throwOnError)
         {
             ArrayList parts;
             XPointerLexer lexer;
