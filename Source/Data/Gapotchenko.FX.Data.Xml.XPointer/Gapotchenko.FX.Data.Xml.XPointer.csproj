@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework></TargetFramework>
     <LangVersion>8.0</LangVersion>
+    
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
