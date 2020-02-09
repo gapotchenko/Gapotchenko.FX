@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Data.Xml.XPointer
 {
     /// <summary>
@@ -11,14 +13,14 @@ namespace Gapotchenko.FX.Data.Xml.XPointer
     public abstract class XPointer
     {
         /// <summary>
-        /// Evaluates XPointer and returns the selected nodes.
+        /// Evaluates XPointer and returns a list of selected nodes.
         /// </summary>
         /// <param name="document">Document to evaluate the XPointer on.</param>
         /// <returns>The list of selected nodes.</returns>	    					
         public abstract XmlNodeList Evaluate(XmlDocument document);
 
         /// <summary>
-        /// Evaluates XPointer and returns the selected nodes.
+        /// Evaluates XPointer and returns a sequence of selected nodes.
         /// </summary>
         /// <param name="document">Document to evaluate the XPointer on.</param>
         /// <returns>The sequence of selected nodes.</returns>	    					
@@ -49,7 +51,7 @@ namespace Gapotchenko.FX.Data.Xml.XPointer
         /// </para>
         /// </param>
         /// <returns><c>true</c> if the <paramref name="input"/> parameter was converted successfully; otherwise, <c>false</c>.</returns>
-        public static bool TryParse(string input, out XPointer result)
+        public static bool TryParse(string? input, out XPointer? result)
         {
             var xptr = TryParse(input);
             result = xptr;
@@ -72,6 +74,6 @@ namespace Gapotchenko.FX.Data.Xml.XPointer
         /// <para>
         /// </para>
         /// </returns>
-        public static XPointer TryParse(string input) => XPointerParser.ParseXPointer(input, false);
+        public static XPointer? TryParse(string? input) => XPointerParser.ParseXPointer(input, false);
     }
 }
