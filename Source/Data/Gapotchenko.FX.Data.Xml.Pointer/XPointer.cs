@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 #nullable enable
 
-namespace Gapotchenko.FX.Data.Xml.XPointer
+namespace Gapotchenko.FX.Data.Xml.Pointer
 {
     /// <summary>
     /// The abstract XPointer definition.

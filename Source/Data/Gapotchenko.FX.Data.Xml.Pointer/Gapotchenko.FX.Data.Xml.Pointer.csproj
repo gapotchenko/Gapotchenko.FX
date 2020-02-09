@@ -3,13 +3,13 @@
   <PropertyGroup>
     <TargetFramework></TargetFramework>
     <LangVersion>8.0</LangVersion>
-
+    
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
-    <ProjectReference Include="..\Gapotchenko.FX.Data.Xml.XPointer\Gapotchenko.FX.Data.Xml.XPointer.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Xml\Gapotchenko.FX.Data.Xml.csproj" />
   </ItemGroup>
 
 </Project>

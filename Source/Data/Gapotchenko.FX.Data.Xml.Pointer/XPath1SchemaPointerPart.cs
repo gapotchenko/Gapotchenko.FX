@@ -1,12 +1,12 @@
 using System;
 using System.Xml;
 
-namespace Gapotchenko.FX.Data.Xml.XPointer
+namespace Gapotchenko.FX.Data.Xml.Pointer
 {
     /// <summary>
-    /// xpointer() schema based XPointer pointer part.
+    /// xpath1() schema based XPointer pointer part.
     /// </summary>
-    internal class XPointerSchemaPointerPart : PointerPart
+    internal class XPath1SchemaPointerPart : PointerPart
     {
         private string _xpath;
 
@@ -28,16 +28,16 @@ namespace Gapotchenko.FX.Data.Xml.XPointer
             }
         }
 
-        public static XPointerSchemaPointerPart ParseSchemaData(XPointerLexer lexer)
+        public static XPath1SchemaPointerPart ParseSchemaData(XPointerLexer lexer)
         {
-            XPointerSchemaPointerPart part = new XPointerSchemaPointerPart();
+            XPath1SchemaPointerPart part = new XPath1SchemaPointerPart();
             try
             {
                 part.XPath = lexer.ParseEscapedData();
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine("Syntax error in xpointer() schema data: " + e.Message);
+                Console.Error.WriteLine("Syntax error in xpath1() schema data: " + e.Message);
                 return null;
             }
             return part;

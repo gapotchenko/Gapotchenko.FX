@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Xml;
 
-namespace Gapotchenko.FX.Data.Xml.XInclude
+namespace Gapotchenko.FX.Data.Xml.Include
 {
     /// <summary>
     /// Custom <c>XmlReader</c>, handler for parse="text" case.	

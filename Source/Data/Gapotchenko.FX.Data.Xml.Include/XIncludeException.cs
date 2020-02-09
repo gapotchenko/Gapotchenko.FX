@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace Gapotchenko.FX.Data.Xml.XInclude
+namespace Gapotchenko.FX.Data.Xml.Include
 {
     public class XIncludeException : XmlException
     {

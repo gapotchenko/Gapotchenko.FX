@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gapotchenko.FX.Data.Xml.XInclude
+namespace Gapotchenko.FX.Data.Xml.Include
 {
     enum XIncludeReadState
     {

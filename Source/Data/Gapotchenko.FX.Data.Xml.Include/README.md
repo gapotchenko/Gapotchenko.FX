@@ -1,16 +1,16 @@
-﻿# Gapotchenko.FX.Data.Xml.XInclude
+﻿# Gapotchenko.FX.Data.Xml.Include
 
 [![License](https://img.shields.io/badge/license-custom-blue.svg)](LICENSE)
-[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Xml.XInclude.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Xml.XInclude)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Xml.Include.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Xml.Include)
 
 The module implements XML XInclude functionality according to [XML Inclusions (XInclude) W3C Specification](https://www.w3.org/TR/xinclude/).
 
 ## Usage
 
-`Gapotchenko.FX.Data.Xml.XInclude` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Xml.XInclude):
+`Gapotchenko.FX.Data.Xml.Include` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Xml.Include):
 
 ```
-PM> Install-Package Gapotchenko.FX.Data.Xml.XInclude
+PM> Install-Package Gapotchenko.FX.Data.Xml.Include
 ```
 
 ## Other Modules

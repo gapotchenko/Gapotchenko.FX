@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Gapotchenko.FX.Data.Xml.XPointer
+namespace Gapotchenko.FX.Data.Xml.Pointer
 {
     sealed class SchemaBasedPointer : XPointer
     {
@@ -22,16 +22,15 @@ namespace Gapotchenko.FX.Data.Xml.XPointer
 
         public override XmlNodeList Evaluate(XmlDocument doc)
         {
-            XmlNodeList result;
             var nm = new XmlNamespaceManager(doc.NameTable);
             for (int i = 0; i < _parts.Count; i++)
             {
                 PointerPart part = (PointerPart)_parts[i];
-                result = part.Evaluate(doc, nm);
-                if (result != null && result.Count > 0)
+                var result = part.Evaluate(doc, nm);
+                if (result.IsNullOrEmpty())
                     return result;
             }
-            throw new XPointerMatchException("XPointer does not match any sub-resource.");
+            return XmlEmptyNodeList.Instance;
         }
 
         public override IEnumerable<XNode> Evaluate(XDocument document)

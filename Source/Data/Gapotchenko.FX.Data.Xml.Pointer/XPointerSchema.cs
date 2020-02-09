@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-namespace Gapotchenko.FX.Data.Xml.XPointer
+namespace Gapotchenko.FX.Data.Xml.Pointer
 {
     /// <summary>
     /// XPointer schema.

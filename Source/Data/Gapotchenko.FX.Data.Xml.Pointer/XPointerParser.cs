@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Xml;
 
-namespace Gapotchenko.FX.Data.Xml.XPointer
+namespace Gapotchenko.FX.Data.Xml.Pointer
 {
     static class XPointerParser
     {

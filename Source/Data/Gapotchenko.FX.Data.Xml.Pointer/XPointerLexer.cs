@@ -2,7 +2,7 @@ using System;
 using System.Xml;
 using System.Text;
 
-namespace Gapotchenko.FX.Data.Xml.XPointer
+namespace Gapotchenko.FX.Data.Xml.Pointer
 {
     /// <summary>
     /// XPointer lexical analyzer.

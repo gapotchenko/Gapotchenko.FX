@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Data\Gapotchenko.FX.Data.Xml.XPointer\Gapotchenko.FX.Data.Xml.XPointer.csproj" />
-    <ProjectReference Include="..\..\..\Data\Gapotchenko.FX.Data.Xml.XInclude\Gapotchenko.FX.Data.Xml.XInclude.csproj" />
+    <ProjectReference Include="..\..\..\Data\Gapotchenko.FX.Data.Xml.Include\Gapotchenko.FX.Data.Xml.Include.csproj" />
+    <ProjectReference Include="..\..\..\Data\Gapotchenko.FX.Data.Xml.Pointer\Gapotchenko.FX.Data.Xml.Pointer.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ using System.Xml;
 using System.IO;
 using System.Collections;
 
-namespace Gapotchenko.FX.Data.Xml.XPointer
+namespace Gapotchenko.FX.Data.Xml.Pointer
 {
     /// <summary>
     /// XPointer-aware XML reader.

@@ -1,4 +1,4 @@
-﻿using Gapotchenko.FX.Data.Xml.XPointer;
+﻿using Gapotchenko.FX.Data.Xml.Pointer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Security;
 using System.Text;
 using System.Xml;
 
-namespace Gapotchenko.FX.Data.Xml.XInclude
+namespace Gapotchenko.FX.Data.Xml.Include
 {
     public class XIncludeReader : XmlReader
     {
