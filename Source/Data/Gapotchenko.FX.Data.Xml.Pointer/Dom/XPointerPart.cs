@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Data.Xml.Pointer.Dom
         string? m_SchemeNamePrefix;
 
         /// <summary>
-        /// Gets an existing or sets the desired scheme name prefix.
+        /// Gets or sets the prefix of a scheme name namespace.
         /// </summary>
         public string? SchemeNamePrefix
         {

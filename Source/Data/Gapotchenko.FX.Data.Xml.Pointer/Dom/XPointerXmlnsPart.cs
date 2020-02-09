@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 
 #nullable enable
@@ -13,7 +14,6 @@ namespace Gapotchenko.FX.Data.Xml.Pointer.Dom
     {
         public XPointerXmlnsPart()
         {
-            Prefix = string.Empty;
             Namespace = XNamespace.None;
         }
 
@@ -28,7 +28,13 @@ namespace Gapotchenko.FX.Data.Xml.Pointer.Dom
             Namespace = ns;
         }
 
-        public string Prefix { get; set; }
+        string m_Prefix = string.Empty;
+
+        public string Prefix
+        {
+            get => m_Prefix;
+            set => m_Prefix = XmlConvert.VerifyNCName(value ?? throw new ArgumentNullException(nameof(value)));
+        }
 
         public XNamespace Namespace { get; set; }
 
@@ -47,7 +53,7 @@ namespace Gapotchenko.FX.Data.Xml.Pointer.Dom
 
                 int j = value.IndexOf('=');
                 if (j == -1)
-                    throw new FormatException("XML pointer xmlns expression does not contain '=' operator.");
+                    throw new FormatException("XPointer xmlns expression does not contain '=' operator.");
 
                 Prefix = value.Substring(0, j);
                 Namespace = XNamespace.Get(value.Substring(j + 1));
