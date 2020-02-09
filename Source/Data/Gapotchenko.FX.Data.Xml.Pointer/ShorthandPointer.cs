@@ -24,7 +24,7 @@ namespace Gapotchenko.FX.Data.Xml.Pointer
 
         public override XmlNodeList Evaluate(XmlDocument doc)
         {
-            XmlNodeList result = doc.SelectNodes("id('" + _NCName + "')");
+            XmlNodeList result = doc.SelectNodes($"//*[@id=\"{_NCName}\"]");
             if (result != null && result.Count > 0)
                 return result;
             else

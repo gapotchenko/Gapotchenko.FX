@@ -3,7 +3,11 @@
 [![License](https://img.shields.io/badge/license-custom-blue.svg)](LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Xml.Pointer.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Xml.Pointer)
 
-The module implements XML XPointer functionality according to [XML Pointer Language (XPointer) W3C Specification](https://www.w3.org/TR/WD-xptr).
+The module implements XML pointer functionality according to the following W3C specifications:
+- [XPointer Framework](https://www.w3.org/TR/2003/REC-xptr-framework-20030325/)
+- [XPointer element() Scheme](https://www.w3.org/TR/2003/REC-xptr-element-20030325/)
+- [XPointer xmlns() Scheme](https://www.w3.org/TR/2003/REC-xptr-xmlns-20030325/)
+- [XPointer xpointer() Scheme](https://www.w3.org/TR/2002/WD-xptr-xpointer-20021219/)
 
 ## Usage
 

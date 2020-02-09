@@ -16,7 +16,20 @@ namespace Gapotchenko.FX.Data.Xml.Test
             var xdoc = new XmlDocument();
             xdoc.LoadXml(xml);
 
-            var xptr = XPointer.Parse("id('Rottweiler')");
+            var xptr = XPointer.Parse("xpointer(id('Rottweiler'))");
+
+            var list = xptr.Evaluate(xdoc);
+        }
+
+        [TestMethod]
+        public void XPointer_Test2()
+        {
+            var xdoc = new XmlDocument();
+
+            using (var stream = Snippet.GetStream("JORF.xml"))
+                xdoc.Load(stream);
+
+            var xptr = XPointer.Parse("auth1");
 
             var list = xptr.Evaluate(xdoc);
         }
