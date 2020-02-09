@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Gapotchenko.FX.Data.Xml.Pointer
+namespace Gapotchenko.FX.Data.Xml.Pointer._Legacy_
 {
     /// <summary>
     /// Shorthand XPointer pointer.

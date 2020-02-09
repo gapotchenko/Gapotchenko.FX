@@ -1,7 +1,7 @@
 using System;
 using System.Xml;
 
-namespace Gapotchenko.FX.Data.Xml.Pointer
+namespace Gapotchenko.FX.Data.Xml.Pointer._Legacy_
 {
     /// <summary>
     /// xmlns() schema based XPointer pointer part.

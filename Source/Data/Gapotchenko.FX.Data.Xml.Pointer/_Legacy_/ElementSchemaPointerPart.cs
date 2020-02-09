@@ -3,7 +3,7 @@ using System.Collections;
 using System.Xml;
 using System.Text;
 
-namespace Gapotchenko.FX.Data.Xml.Pointer
+namespace Gapotchenko.FX.Data.Xml.Pointer._Legacy_
 {
     /// <summary>
     /// element() schema based XPointer pointer part.

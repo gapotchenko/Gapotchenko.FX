@@ -1,4 +1,4 @@
-﻿using Gapotchenko.FX.Data.Xml.Pointer;
+﻿using Gapotchenko.FX.Data.Xml.Pointer._Legacy_;
 using System;
 using System.Collections;
 using System.Collections.Generic;
