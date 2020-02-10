@@ -25,16 +25,20 @@ namespace Gapotchenko.FX.Data.Xml.Pointer
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TextReader m_Input;
+        readonly TextReader m_Input;
+
+        #region Settings
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool m_CloseInput;
+        readonly bool m_CloseInput;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool m_IgnoreWhitespace;
+        readonly bool m_IgnoreWhitespace;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        int m_MaxCharactersInDocument;
+        readonly int m_MaxCharactersInDocument;
+
+        #endregion
 
         public override void Close()
         {
@@ -45,6 +49,8 @@ namespace Gapotchenko.FX.Data.Xml.Pointer
             ResetToken();
             m_ReadState = XPointerReadState.Closed;
         }
+
+        #region State
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int m_NumberOfCharactersInDocument;
@@ -75,6 +81,12 @@ namespace Gapotchenko.FX.Data.Xml.Pointer
 
         public override string? Value => m_Value;
 
+        void ResetToken()
+        {
+            m_TokenType = XPointerTokenType.None;
+            m_Value = null;
+        }
+
         bool IXmlLineInfo.HasLineInfo() => true;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -99,6 +111,7 @@ namespace Gapotchenko.FX.Data.Xml.Pointer
             m_LinePosition = LineStartPosition;
         }
 
+        #endregion
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         char? m_ReturnedChar;
@@ -138,12 +151,6 @@ namespace Gapotchenko.FX.Data.Xml.Pointer
             if (m_ReturnedChar.HasValue)
                 throw new InvalidOperationException();
             m_ReturnedChar = ch;
-        }
-
-        void ResetToken()
-        {
-            m_TokenType = XPointerTokenType.None;
-            m_Value = null;
         }
 
         public override bool Read()
