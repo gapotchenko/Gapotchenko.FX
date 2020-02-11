@@ -57,6 +57,8 @@ namespace Gapotchenko.FX.Harness.Console
             IEnumerable<int> source = new[] { 1, 2, 3 };
             
             var h = source.ToHashSet();
+
+            Console.WriteLine(h.IsNullOrEmpty());
         }
 
         static async Task _RunAsync(CancellationToken ct)
