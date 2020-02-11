@@ -53,6 +53,10 @@ namespace Gapotchenko.FX.Harness.Console
             Console.WriteLine("OS: {0}", RuntimeInformation.OSArchitecture);
 
             Console.WriteLine(BitOperations.Log2(32));
+
+            IEnumerable<int> source = new[] { 1, 2, 3 };
+            
+            var h = source.ToHashSet();
         }
 
         static async Task _RunAsync(CancellationToken ct)

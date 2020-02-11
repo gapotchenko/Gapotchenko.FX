@@ -1,5 +1,11 @@
 # What's New in Gapotchenko.FX
 
+## Gapotchenko.FX 2020.1
+
+Release date: not released yet
+
+- Fixed issue with ambiguous match of `ToHashSet` polyfill method of `IEnumerable<T>` type for .NET 4.7.2+ target frameworks
+
 ## Gapotchenko.FX 2019.3
 
 Release date: November 4, 2019

@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <TargetFrameworks Condition=" $(IsPublicProject) ">net40;net45;net46;net471;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks Condition=" $(IsPublicProject) ">net40;net45;net46;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
 
   <!-- ================================================================== -->
@@ -25,6 +25,10 @@
     <!-- .NET Framework 4.7.1 -->
     <GPFX_DefineConstants_NET471>$(GPFX_DefineConstants_NET46);TFF_RUNTIME_INFORMATION;TFF_ENUMERABLE_APPEND;TFF_ENUMERABLE_PREPEND</GPFX_DefineConstants_NET471>
     <DefineConstants Condition=" '$(TargetFramework)' == 'net471' ">$(DefineConstants);$(GPFX_DefineConstants_NET471)</DefineConstants>
+
+    <!-- .NET Framework 4.7.2 -->
+    <GPFX_DefineConstants_NET472>$(GPFX_DefineConstants_NET471);TFF_ENUMERABLE_TOHASHSET</GPFX_DefineConstants_NET472>
+    <DefineConstants Condition=" '$(TargetFramework)' == 'net472' ">$(DefineConstants);$(GPFX_DefineConstants_NET472)</DefineConstants>
   </PropertyGroup>
 
   <!-- ================================================================== -->
