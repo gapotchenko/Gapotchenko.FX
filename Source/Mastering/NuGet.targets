@@ -149,8 +149,8 @@ bool containsNETStandard20 = targetFrameworks.Contains("netstandard2.0");
 if (containsNETStandard20)
     supportedPlatforms.Add(".NET Standard 2.0+");
 
-if (targetFrameworks.Contains("net40"))
-    supportedPlatforms.Add(".NET Framework 4.0+");
+if (targetFrameworks.Contains("net45"))
+    supportedPlatforms.Add(".NET Framework 4.5+");
 
 if (targetFrameworks.Contains("netcoreapp2.0") || containsNETStandard20)
     supportedPlatforms.Add(".NET Core 2.0+");

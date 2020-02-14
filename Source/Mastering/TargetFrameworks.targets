@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <TargetFrameworks Condition=" $(IsPublicProject) ">net40;net45;net46;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks Condition=" $(IsPublicProject) ">net45;net46;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
 
   <!-- ================================================================== -->
@@ -40,7 +40,7 @@
     <DefineConstants Condition=" '$(TargetFramework)' == 'netstandard2.0' ">$(DefineConstants);$(GPFX_DefineConstants_NETStandard20)</DefineConstants>  
 
     <!-- .NET Standard 2.1 -->
-    <GPFX_DefineConstants_NETStandard21>$(GPFX_DefineConstants_NETStandard20);TFF_ENUMERABLE_TOHASHSET;TFF_HASHCODE;TFF_BITCONVERTER_SINGLETOINT32BITS;TFF_STRING_BUILDER_APPEND_JOIN;TFF_STRING_OPWITH_CHAR;TFF_SWITCHEXPRESSIONEXCEPTION</GPFX_DefineConstants_NETStandard21>
+    <GPFX_DefineConstants_NETStandard21>$(GPFX_DefineConstants_NETStandard20);TFF_ENUMERABLE_TOHASHSET;TFF_HASHCODE;TFF_BITCONVERTER_SINGLETOINT32BITS;TFF_SPAN;TFF_STRING_BUILDER_APPEND_JOIN;TFF_STRING_OPWITH_CHAR;TFF_SWITCHEXPRESSIONEXCEPTION</GPFX_DefineConstants_NETStandard21>
     <DefineConstants Condition=" '$(TargetFramework)' == 'netstandard2.1' ">$(DefineConstants);$(GPFX_DefineConstants_NETStandard21)</DefineConstants>  
   </PropertyGroup>
 
@@ -53,7 +53,7 @@
     <DefineConstants Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">$(DefineConstants);$(GPFX_DefineConstants_NETCore20)</DefineConstants>
 
     <!-- .NET Core 2.1 -->
-    <GPFX_DefineConstants_NETCore21>$(GPFX_DefineConstants_NETCore20);TFF_HASHCODE</GPFX_DefineConstants_NETCore21>
+    <GPFX_DefineConstants_NETCore21>$(GPFX_DefineConstants_NETCore20);TFF_HASHCODE;TFF_SPAN</GPFX_DefineConstants_NETCore21>
     <DefineConstants Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">$(DefineConstants);$(GPFX_DefineConstants_NETCore21)</DefineConstants>
 
     <!-- .NET Core 3.0 -->
