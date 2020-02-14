@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 
 namespace Gapotchenko.FX.Data.Encoding
@@ -41,7 +39,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
         /// <returns>The string representation, in Base32, of the contents of <paramref name="data"/>.</returns>
-        public new static string GetString(byte[] data)
+        public new static string GetString(ReadOnlySpan<byte> data)
         {
             if (data == null)
                 return null;
@@ -81,7 +79,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override string GetStringCore(byte[] data) => GetString(data);
+        protected override string GetStringCore(ReadOnlySpan<byte> data) => GetString(data);
 
         /// <summary>
         /// Decodes the specified string, which represents encoded binary data as Base32 symbols, to an equivalent array of bytes.

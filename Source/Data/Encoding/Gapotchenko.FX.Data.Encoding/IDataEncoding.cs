@@ -26,13 +26,13 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="data">The input data.</param>
         /// <returns>The encoded output data.</returns>
-        byte[] EncodeData(byte[] data);
+        byte[] EncodeData(ReadOnlySpan<byte> data);
 
         /// <summary>
         /// Decodes the data.
         /// </summary>
         /// <param name="data">The encoded input data.</param>
         /// <returns>The decoded output data.</returns>
-        byte[] DecodeData(byte[] data);
+        byte[] DecodeData(ReadOnlySpan<byte> data);
     }
 }

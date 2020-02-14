@@ -4,4 +4,6 @@
     <TargetFramework></TargetFramework>
   </PropertyGroup>
 
+  <Import Project="$(RepositorySourceDir)\Mastering\OOB\System.Memory.targets" />
+
 </Project>

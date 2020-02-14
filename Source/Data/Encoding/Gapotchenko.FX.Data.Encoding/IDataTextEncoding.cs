@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
         /// <returns>The string representation of the contents of <paramref name="data"/>.</returns>
-        string GetString(byte[] data);
+        string GetString(ReadOnlySpan<byte> data);
 
         /// <summary>
         /// Decodes the specified string to an equivalent array of bytes.

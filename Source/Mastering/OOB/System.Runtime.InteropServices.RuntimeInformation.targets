@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TFF_RUNTIME_INFORMATION_OOB)' == 'true' ">
-    <DefineConstants>$(DefineConstants);TFF_RUNTIME_INFORMATION</DefineConstants>
+    <DefineConstants>$(DefineConstants);TFF_RUNTIME_INFORMATION;TFF_RUNTIME_INFORMATION_OOB</DefineConstants>
   </PropertyGroup>
 
 </Project>

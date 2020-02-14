@@ -35,13 +35,19 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
         /// <returns>The string representation, in Base64, of the contents of <paramref name="data"/>.</returns>
-        public new static string GetString(byte[] data) =>
+        public new static string GetString(ReadOnlySpan<byte> data) =>
             data == null ?
                 null :
-                Convert.ToBase64String(data);
+                Convert.ToBase64String(
+#if TFF_MEMORY && !TFF_MEMORY_OOB
+                    data
+#else
+                    data.ToArray()
+#endif
+                    );
 
         /// <inheritdoc/>
-        protected override string GetStringCore(byte[] data) => GetString(data);
+        protected override string GetStringCore(ReadOnlySpan<byte> data) => GetString(data);
 
         /// <summary>
         /// Decodes the specified string, which represents encoded binary data as Base64 symbols, to an equivalent array of bytes.

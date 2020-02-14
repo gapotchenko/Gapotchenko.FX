@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TFF_MEMORY_OOB)' == 'true' ">
-    <DefineConstants>$(DefineConstants);TFF_MEMORY</DefineConstants>
+    <DefineConstants>$(DefineConstants);TFF_MEMORY;TFF_MEMORY_OOB</DefineConstants>
   </PropertyGroup>
 
 </Project>

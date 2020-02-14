@@ -15,14 +15,14 @@ namespace Gapotchenko.FX.Data.Encoding
     public abstract class DataTextEncoding : DataEncoding, IDataTextEncoding
     {
         /// <inheritdoc/>
-        public string GetString(byte[] data) => data == null ? null : GetStringCore(data);
+        public string GetString(ReadOnlySpan<byte> data) => data == null ? null : GetStringCore(data);
 
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation.
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
         /// <returns>The string representation of the contents of <paramref name="data"/>.</returns>
-        protected abstract string GetStringCore(byte[] data);
+        protected abstract string GetStringCore(ReadOnlySpan<byte> data);
 
         /// <inheritdoc/>
         public byte[] GetBytes(string s) => s == null ? null : GetBytesCore(s);
@@ -35,9 +35,16 @@ namespace Gapotchenko.FX.Data.Encoding
         protected abstract byte[] GetBytesCore(string s);
 
         /// <inheritdoc/>
-        protected override byte[] EncodeDataCore(byte[] data) => Encoding.ASCII.GetBytes(GetString(data));
+        protected override byte[] EncodeDataCore(ReadOnlySpan<byte> data) => Encoding.ASCII.GetBytes(GetString(data));
 
         /// <inheritdoc/>
-        protected override byte[] DecodeDataCore(byte[] data) => GetBytes(Encoding.ASCII.GetString(data));
+        protected override byte[] DecodeDataCore(ReadOnlySpan<byte> data) =>
+            GetBytes(Encoding.ASCII.GetString(
+#if TFF_MEMORY && !TFF_MEMORY_OOB
+                data
+#else
+                data.ToArray()
+#endif
+                ));
     }
 }

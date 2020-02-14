@@ -24,23 +24,23 @@ namespace Gapotchenko.FX.Data.Encoding
         protected abstract float EfficiencyCore { get; }
 
         /// <inheritdoc/>
-        public byte[] EncodeData(byte[] data) => data == null ? null : EncodeDataCore(data);
+        public byte[] EncodeData(ReadOnlySpan<byte> data) => data == null ? null : EncodeDataCore(data);
 
         /// <summary>
         /// Provides the core implementation of data encoding.
         /// </summary>
         /// <param name="data">The input data.</param>
         /// <returns>The encoded output data.</returns>
-        protected abstract byte[] EncodeDataCore(byte[] data);
+        protected abstract byte[] EncodeDataCore(ReadOnlySpan<byte> data);
 
         /// <inheritdoc/>
-        public byte[] DecodeData(byte[] data) => data == null ? null : DecodeDataCore(data);
+        public byte[] DecodeData(ReadOnlySpan<byte> data) => data == null ? null : DecodeDataCore(data);
 
         /// <summary>
         /// Provides the core implementation of data decoding.
         /// </summary>
         /// <param name="data">The encoded input data.</param>
         /// <returns>The decoded output data.</returns>
-        protected abstract byte[] DecodeDataCore(byte[] data);
+        protected abstract byte[] DecodeDataCore(ReadOnlySpan<byte> data);
     }
 }

@@ -1,6 +1,9 @@
 <Project>
   <Import Project="Mastering\Metadata.targets" />
   <PropertyGroup>
+    <RepositorySourceDir>$(MSBuildThisFileDirectory)</RepositorySourceDir>
+  </PropertyGroup>
+  <PropertyGroup>
     <!-- peverify-compat: https://github.com/dotnet/roslyn/issues/22485 -->
     <Features>$(Features);peverify-compat</Features>
     <DefaultItemExcludes>$(DefaultItemExcludes);**\*.orig;**\launchSettings.json</DefaultItemExcludes>
