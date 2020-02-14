@@ -1,6 +1,7 @@
 ﻿#region Usings
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.ComponentModel;
+using Gapotchenko.FX.Data.Encoding;
 using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq;
@@ -58,7 +59,7 @@ namespace Gapotchenko.FX.Harness.Console
             
             var h = source.ToHashSet();
 
-            Console.WriteLine(h.IsNullOrEmpty());
+            Console.WriteLine(h.IsNullOrEmpty());            
         }
 
         static async Task _RunAsync(CancellationToken ct)
