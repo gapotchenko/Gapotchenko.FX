@@ -56,10 +56,12 @@ namespace Gapotchenko.FX.Harness.Console
             Console.WriteLine(BitOperations.Log2(32));
 
             IEnumerable<int> source = new[] { 1, 2, 3 };
-            
+
             var h = source.ToHashSet();
 
-            Console.WriteLine(h.IsNullOrEmpty());            
+            Console.WriteLine(h.IsNullOrEmpty());
+
+            var data = Base32.Instance.EncodeData(new byte[] { 1, 2, 3 });
         }
 
         static async Task _RunAsync(CancellationToken ct)

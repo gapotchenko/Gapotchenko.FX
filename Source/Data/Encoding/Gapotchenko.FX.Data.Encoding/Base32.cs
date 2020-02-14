@@ -12,17 +12,26 @@ namespace Gapotchenko.FX.Data.Encoding
     /// <summary>
     /// Base32 encoding.
     /// </summary>
-    public sealed class Base32 : IDataTextEncoding
+    public class Base32 : DataTextEncoding, IDataTextEncoding
     {
-        private Base32()
+        /// <summary>
+        /// Initializes a new instance of <see cref="Base32"/> class.
+        /// </summary>
+        protected Base32()
         {
         }
+
+        /// <inheritdoc/>
+        public override string Name => "Base32";
 
         /// <summary>
         /// Base32 encoding efficiency.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
-        public const float Efficiency = 0.625f;
+        public new const float Efficiency = 0.625f;
+
+        /// <inheritdoc/>
+        protected override float EfficiencyCore => Efficiency;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static readonly string m_Symbols = "QAZ2WSX3" + "EDC4RFV5" + "TGB6YHN7" + "UJM8K9LP";
@@ -32,7 +41,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
         /// <returns>The string representation, in Base32, of the contents of <paramref name="data"/>.</returns>
-        public static string GetString(byte[] data)
+        public new static string GetString(byte[] data)
         {
             if (data == null)
                 return null;
@@ -71,12 +80,15 @@ namespace Gapotchenko.FX.Data.Encoding
             return sb.ToString();
         }
 
+        /// <inheritdoc/>
+        protected override string GetStringCore(byte[] data) => GetString(data);
+
         /// <summary>
         /// Decodes the specified string, which represents encoded binary data as Base32 symbols, to an equivalent array of bytes.
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        public static byte[] GetBytes(string s)
+        public new static byte[] GetBytes(string s)
         {
             if (s == null)
                 return null;
@@ -112,29 +124,14 @@ namespace Gapotchenko.FX.Data.Encoding
             return bytes;
         }
 
-        string IDataEncoding.Name => "Base32";
-
-        float IDataEncoding.Efficiency => Efficiency;
-
-        byte[] IDataEncoding.EncodeData(byte[] data) =>
-            data == null ?
-                null :
-                Encoding.ASCII.GetBytes(GetString(data));
-
-        byte[] IDataEncoding.DecodeData(byte[] data) =>
-            data == null ?
-                null :
-                GetBytes(Encoding.ASCII.GetString(data));
-
-        byte[] IDataTextEncoding.GetBytes(string s) => GetBytes(s);
-
-        string IDataTextEncoding.GetString(byte[] data) => GetString(data);
+        /// <inheritdoc/>
+        protected override byte[] GetBytesCore(string s) => GetBytes(s);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static volatile IDataTextEncoding m_Instance;
 
         /// <summary>
-        /// Returns a default instance of Base32 encoding.
+        /// Returns a default instance of <see cref="Base32"/> encoding.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public static IDataTextEncoding Instance
