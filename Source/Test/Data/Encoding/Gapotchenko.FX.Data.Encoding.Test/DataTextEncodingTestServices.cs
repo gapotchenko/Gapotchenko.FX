@@ -39,6 +39,19 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             // -----------------------------------------------------------------
 
+            var actualEncodedUnpadded = dataEncoding.Unpad(actualEncoded);
+            string actualEncodedRepadded = dataEncoding.Pad(actualEncodedUnpadded);
+
+            Assert.AreEqual(actualEncoded, actualEncodedRepadded);
+
+            string actualEncodedOverpadded = dataEncoding.Pad(actualEncoded);
+            Assert.AreEqual(actualEncoded, actualEncodedOverpadded);
+
+            var actualEncodedUnderpadded = dataEncoding.Unpad(actualEncodedUnpadded);
+            Assert.AreEqual(actualEncodedUnpadded.ToString(), actualEncodedUnderpadded.ToString());
+
+            // -----------------------------------------------------------------
+
             var actualEncodedBytes = dataEncoding.EncodeData(rawBytes);
             Assert.IsTrue(encodedBytes.SequenceEqual(actualEncodedBytes));
 
@@ -47,7 +60,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             // -----------------------------------------------------------------
 
-            int actualEncodedBytesCount = textEncoding.GetByteCount(dataEncoding.Unpad(actualEncoded));
+            int actualEncodedBytesCount = textEncoding.GetByteCount(actualEncodedUnpadded);
             if (actualEncodedBytesCount > 0)
             {
                 float actualEfficiencyCeiling = (float)rawBytes.Length / actualEncodedBytesCount;

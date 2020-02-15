@@ -34,13 +34,13 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="s">The encoded string to pad.</param>
         /// <returns>The padded encoded string.</returns>
-        string Pad(string s);
+        string Pad(ReadOnlySpan<char> s);
 
         /// <summary>
         /// Unpads the encoded string.
         /// </summary>
         /// <param name="s">The encoded string to unpad.</param>
         /// <returns>The unpadded encoded string.</returns>
-        string Unpad(string s);
+        ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s);
     }
 }

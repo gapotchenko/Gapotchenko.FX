@@ -43,24 +43,24 @@ namespace Gapotchenko.FX.Data.Encoding
         protected virtual int PaddingCore => 1;
 
         /// <inheritdoc/>
-        public string Pad(string s) => s == null ? null : PadCore(s);
+        public string Pad(ReadOnlySpan<char> s) => s == null ? null : PadCore(s);
 
         /// <summary>
         /// Pads the encoded string.
         /// </summary>
         /// <param name="s">The encoded string to pad.</param>
         /// <returns>The padded encoded string.</returns>
-        protected virtual string PadCore(string s) => s;
+        protected virtual string PadCore(ReadOnlySpan<char> s) => s.ToString();
 
         /// <inheritdoc/>
-        public string Unpad(string s) => s == null ? null : UnpadCore(s);
+        public ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => s == null ? null : UnpadCore(s);
 
         /// <summary>
         /// Unpads the encoded string.
         /// </summary>
         /// <param name="s">The encoded string to unpad.</param>
         /// <returns>The unpadded encoded string.</returns>
-        protected virtual string UnpadCore(string s) => s;
+        protected virtual ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => s;
 
         /// <inheritdoc/>
         protected override byte[] EncodeDataCore(ReadOnlySpan<byte> data) => Encoding.ASCII.GetBytes(GetString(data));

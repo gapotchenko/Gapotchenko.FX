@@ -70,25 +70,30 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override int PaddingCore => Padding;
 
+        const char PaddingChar = '=';
+
         /// <summary>
         /// Pads the encoded string.
         /// </summary>
         /// <param name="s">The encoded string to pad.</param>
         /// <returns>The padded encoded string.</returns>
-        public new static string Pad(string s) => throw new NotImplementedException();
+        public new static string Pad(ReadOnlySpan<char> s) =>
+            s == null ?
+                null :
+                s.ToString().PadRight((s.Length + 3) >> 2 << 2, PaddingChar);
 
         /// <inheritdoc/>
-        protected override string PadCore(string s) => Pad(s);
+        protected override string PadCore(ReadOnlySpan<char> s) => Pad(s);
 
         /// <summary>
         /// Unpads the encoded string.
         /// </summary>
         /// <param name="s">The encoded string to unpad.</param>
         /// <returns>The unpadded encoded string.</returns>
-        public new static string Unpad(string s) => s?.TrimEnd('=');
+        public new static ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => s.TrimEnd(PaddingChar);
 
         /// <inheritdoc/>
-        protected override string UnpadCore(string s) => Unpad(s);
+        protected override ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => Unpad(s);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static volatile IDataTextEncoding m_Instance;
