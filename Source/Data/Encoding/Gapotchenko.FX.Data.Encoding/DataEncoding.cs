@@ -19,9 +19,29 @@ namespace Gapotchenko.FX.Data.Encoding
         public float Efficiency => EfficiencyCore;
 
         /// <summary>
-        /// Provides the core implementation of encoding efficiency retrieval.
+        /// Gets the average encoding efficiency.
         /// </summary>
         protected abstract float EfficiencyCore { get; }
+
+        /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public float MaxEfficiency => MaxEfficiencyCore;
+
+        /// <summary>
+        /// Gets the maximum encoding efficiency.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        protected virtual float MaxEfficiencyCore => EfficiencyCore;
+
+        /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public float MinEfficiency => MinEfficiencyCore;
+
+        /// <summary>
+        /// Gets the minimum encoding efficiency.                   
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        protected virtual float MinEfficiencyCore => EfficiencyCore;
 
         /// <inheritdoc/>
         public byte[] EncodeData(ReadOnlySpan<byte> data) => data == null ? null : EncodeDataCore(data);
