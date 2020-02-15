@@ -54,13 +54,13 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        public new static byte[] GetBytes(string s) =>
+        public new static byte[] GetBytes(ReadOnlySpan<char> s) =>
             s == null ?
                 null :
-                Convert.FromBase64String(s);
+                Convert.FromBase64String(s.ToString());
 
         /// <inheritdoc/>
-        protected override byte[] GetBytesCore(string s) => GetBytes(s);
+        protected override byte[] GetBytesCore(ReadOnlySpan<char> s) => GetBytes(s);
 
         /// <summary>
         /// The number of characters for encoded string padding.

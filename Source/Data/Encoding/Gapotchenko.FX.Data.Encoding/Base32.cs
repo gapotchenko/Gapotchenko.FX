@@ -81,12 +81,14 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override string GetStringCore(ReadOnlySpan<byte> data) => GetString(data);
 
+        static int GetSymbolIndex(char c) => m_Symbols.IndexOf(char.ToUpperInvariant(c));
+
         /// <summary>
         /// Decodes the specified string, which represents encoded binary data as Base32 symbols, to an equivalent array of bytes.
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        public new static byte[] GetBytes(string s)
+        public new static byte[] GetBytes(ReadOnlySpan<char> s)
         {
             if (s == null)
                 return null;
@@ -95,15 +97,13 @@ namespace Gapotchenko.FX.Data.Encoding
             int bytesCount = textLength * 5 / 8;
             var bytes = new byte[bytesCount];
 
-            s = s.ToUpperInvariant();
-
             if (textLength < 3)
             {
-                bytes[0] = (byte)(m_Symbols.IndexOf(s[0]) | m_Symbols.IndexOf(s[1]) << 5);
+                bytes[0] = (byte)(GetSymbolIndex(s[0]) | GetSymbolIndex(s[1]) << 5);
             }
             else
             {
-                int bits = m_Symbols.IndexOf(s[0]) | m_Symbols.IndexOf(s[1]) << 5;
+                int bits = GetSymbolIndex(s[0]) | GetSymbolIndex(s[1]) << 5;
                 int bitsCount = 10;
                 int charIndex = 2;
                 for (int i = 0; i < bytesCount; i++)
@@ -113,7 +113,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     bitsCount -= 8;
                     while (bitsCount < 8 && charIndex < textLength)
                     {
-                        bits |= m_Symbols.IndexOf(s[charIndex++]) << bitsCount;
+                        bits |= GetSymbolIndex(s[charIndex++]) << bitsCount;
                         bitsCount += 5;
                     }
                 }
@@ -123,7 +123,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override byte[] GetBytesCore(string s) => GetBytes(s);
+        protected override byte[] GetBytesCore(ReadOnlySpan<char> s) => GetBytes(s);
 
         /// <summary>
         /// The number of characters for encoded string padding.

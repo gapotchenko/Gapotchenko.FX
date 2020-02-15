@@ -25,14 +25,14 @@ namespace Gapotchenko.FX.Data.Encoding
         protected abstract string GetStringCore(ReadOnlySpan<byte> data);
 
         /// <inheritdoc/>
-        public byte[] GetBytes(string s) => s == null ? null : GetBytesCore(s);
+        public byte[] GetBytes(ReadOnlySpan<char> s) => s == null ? null : GetBytesCore(s);
 
         /// <summary>
         /// Decodes the specified string to an equivalent array of bytes.
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        protected abstract byte[] GetBytesCore(string s);
+        protected abstract byte[] GetBytesCore(ReadOnlySpan<char> s);
 
         /// <inheritdoc/>
         public int Padding => PaddingCore;
@@ -67,12 +67,14 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <inheritdoc/>
         protected override byte[] DecodeDataCore(ReadOnlySpan<byte> data) =>
-            GetBytes(Encoding.ASCII.GetString(
+            GetBytes(
+                Encoding.ASCII.GetString(
 #if TFF_MEMORY && !TFF_MEMORY_OOB
-                data
+                    data
 #else
-                data.ToArray()
+                    data.ToArray()
 #endif
-                ));
+                )
+                .AsSpan());
     }
 }

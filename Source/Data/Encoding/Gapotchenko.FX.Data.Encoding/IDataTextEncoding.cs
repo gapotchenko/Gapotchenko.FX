@@ -22,7 +22,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        byte[] GetBytes(string s);
+        byte[] GetBytes(ReadOnlySpan<char> s);
 
         /// <summary>
         /// Gets the number of characters for encoded string padding.
