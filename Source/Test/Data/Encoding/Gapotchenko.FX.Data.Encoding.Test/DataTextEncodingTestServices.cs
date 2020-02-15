@@ -23,12 +23,22 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             if (encoded == null)
                 throw new ArgumentNullException(nameof(encoded));
 
+            // -----------------------------------------------------------------
+            // Parameters normalization
+            // -----------------------------------------------------------------
+
             if (textEncoding == null)
                 textEncoding = Encoding.ASCII;
+
+            // -----------------------------------------------------------------
+            // Data preparation
+            // -----------------------------------------------------------------
 
             var rawBytes = textEncoding.GetBytes(raw);
             var encodedBytes = textEncoding.GetBytes(encoded);
 
+            // -----------------------------------------------------------------
+            // Check text-based data encoding API
             // -----------------------------------------------------------------
 
             string actualEncoded = dataEncoding.GetString(rawBytes);
@@ -37,6 +47,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             var actualDecoded = dataEncoding.GetBytes(actualEncoded);
             Assert.IsTrue(rawBytes.SequenceEqual(actualDecoded));
 
+            // -----------------------------------------------------------------
+            // Check padding operations
             // -----------------------------------------------------------------
 
             var actualEncodedUnpadded = dataEncoding.Unpad(actualEncoded).ToString();
@@ -62,6 +74,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             Assert.AreEqual(actualEncodedUnpadded, actualEncodedWithoutPadding, "DataTextEncodingOptions.NoPadding is not honored.");
 
             // -----------------------------------------------------------------
+            // Check the general data encoding API
+            // -----------------------------------------------------------------
 
             var actualEncodedBytes = dataEncoding.EncodeData(rawBytes);
             Assert.IsTrue(encodedBytes.SequenceEqual(actualEncodedBytes));
@@ -69,6 +83,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             var actualDecodedBytes = dataEncoding.DecodeData(actualEncodedBytes);
             Assert.IsTrue(rawBytes.SequenceEqual(actualDecodedBytes));
 
+            // -----------------------------------------------------------------
+            // Check actual encoding efficiency and boundaries
             // -----------------------------------------------------------------
 
             int actualEncodedBytesCount = textEncoding.GetByteCount(actualEncodedUnpadded);

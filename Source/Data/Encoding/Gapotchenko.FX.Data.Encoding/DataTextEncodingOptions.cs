@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Defines binary-to-text encoding options.
+    /// Binary-to-text encoding options.
     /// </summary>
     [Flags]
     public enum DataTextEncodingOptions
@@ -18,9 +18,14 @@ namespace Gapotchenko.FX.Data.Encoding
         Default = 0,
 
         /// <summary>
-        /// Do not add padding to the encoded string representation.
+        /// Instructs to inhibit padding production in encoding operation, or its consumption in decoding operation.
         /// </summary>
-        NoPadding = 1 << 0
+        NoPadding = 1 << 0,
+
+        /// <summary>
+        /// Instructs to produce padding in encoding operation, or to make its presence obligatory in decoding operation.
+        /// </summary>
+        RequirePadding = 1 << 1
     }
 }
 
