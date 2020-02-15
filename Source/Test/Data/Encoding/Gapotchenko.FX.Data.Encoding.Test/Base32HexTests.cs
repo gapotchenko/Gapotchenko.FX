@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace Gapotchenko.FX.Data.Encoding.Test.Base32
+namespace Gapotchenko.FX.Data.Encoding.Test
 {
     using Encoding = System.Text.Encoding;
 

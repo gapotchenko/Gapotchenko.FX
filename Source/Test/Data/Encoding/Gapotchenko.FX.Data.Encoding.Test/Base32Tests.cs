@@ -2,10 +2,9 @@
 using System;
 using System.Linq;
 
-namespace Gapotchenko.FX.Data.Encoding.Test.Base32
+namespace Gapotchenko.FX.Data.Encoding.Test
 {
     using Encoding = System.Text.Encoding;
-    using Base32 = Gapotchenko.FX.Data.Encoding.Base32;
 
     [TestClass]
     public class Base32Tests
