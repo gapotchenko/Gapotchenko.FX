@@ -44,6 +44,12 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             Assert.AreEqual(actualEncoded, actualEncodedRepadded);
 
+            if (dataEncoding.Padding == 1)
+            {
+                Assert.AreEqual(actualEncodedUnpadded.ToString(), actualEncoded);
+                Assert.AreEqual(actualEncodedUnpadded.ToString(), actualEncodedRepadded);
+            }
+
             string actualEncodedOverpadded = dataEncoding.Pad(actualEncoded);
             Assert.AreEqual(actualEncoded, actualEncodedOverpadded);
 
