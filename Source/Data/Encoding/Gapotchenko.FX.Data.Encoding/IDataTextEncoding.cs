@@ -23,5 +23,24 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
         byte[] GetBytes(string s);
+
+        /// <summary>
+        /// Gets the number of characters for encoded string representation padding.
+        /// </summary>
+        int Padding { get; }
+
+        /// <summary>
+        /// Pads the encoded string.
+        /// </summary>
+        /// <param name="s">The encoded string to pad.</param>
+        /// <returns>The padded encoded string.</returns>
+        string Pad(string s);
+
+        /// <summary>
+        /// Unpads the encoded string.
+        /// </summary>
+        /// <param name="s">The encoded string to unpad.</param>
+        /// <returns>The unpadded encoded string.</returns>
+        string Unpad(string s);
     }
 }

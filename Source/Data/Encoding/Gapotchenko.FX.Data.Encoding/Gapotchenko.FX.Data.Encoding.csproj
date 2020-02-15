@@ -1,9 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework></TargetFramework>
   </PropertyGroup>
 
   <Import Project="$(RepositorySourceDir)\Mastering\OOB\System.Memory.targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
 
 </Project>

@@ -62,6 +62,34 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override byte[] GetBytesCore(string s) => GetBytes(s);
 
+        /// <summary>
+        /// The number of characters for encoded string representation padding.
+        /// </summary>
+        public new const int Padding = 4;
+
+        /// <inheritdoc/>
+        protected override int PaddingCore => Padding;
+
+        /// <summary>
+        /// Pads the encoded string.
+        /// </summary>
+        /// <param name="s">The encoded string to pad.</param>
+        /// <returns>The padded encoded string.</returns>
+        public new static string Pad(string s) => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        protected override string PadCore(string s) => Pad(s);
+
+        /// <summary>
+        /// Unpads the encoded string.
+        /// </summary>
+        /// <param name="s">The encoded string to unpad.</param>
+        /// <returns>The unpadded encoded string.</returns>
+        public new static string Unpad(string s) => s?.TrimEnd('=');
+
+        /// <inheritdoc/>
+        protected override string UnpadCore(string s) => Unpad(s);
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static volatile IDataTextEncoding m_Instance;
 
