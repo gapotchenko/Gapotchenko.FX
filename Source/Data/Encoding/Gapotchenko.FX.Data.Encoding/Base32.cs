@@ -87,11 +87,11 @@ namespace Gapotchenko.FX.Data.Encoding
         public new static string GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
 
         /// <summary>
-        /// Encodes an array of bytes to its equivalent string representation that is encoded with Base64 symbols with specified options.
+        /// Encodes an array of bytes to its equivalent string representation that is encoded with Base32 symbols with specified options.
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
         /// <param name="options">The options.</param>
-        /// <returns>The string representation, in Base64, of the contents of <paramref name="data"/>.</returns>
+        /// <returns>The string representation, in Base32, of the contents of <paramref name="data"/>.</returns>
         public new static string GetString(ReadOnlySpan<byte> data, DataTextEncodingOptions options) => Instance.GetString(data, options);
 
         /// <inheritdoc/>
