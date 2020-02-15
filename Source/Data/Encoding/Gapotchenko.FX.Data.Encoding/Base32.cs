@@ -196,7 +196,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
-        /// The number of characters for encoded string padding.
+        /// The number of characters for padding of an encoded string representation.
         /// </summary>
         public new const int Padding = 8;
 

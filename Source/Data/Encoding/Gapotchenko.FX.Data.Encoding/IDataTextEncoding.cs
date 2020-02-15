@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Data.Encoding
         byte[] GetBytes(ReadOnlySpan<char> s);
 
         /// <summary>
-        /// Gets the number of characters for encoded string padding.
+        /// Gets the number of characters for padding of an encoded string representation.
         /// </summary>
         int Padding { get; }
 
