@@ -18,7 +18,7 @@ namespace Gapotchenko.FX.Data.Encoding
         Default = 0,
 
         /// <summary>
-        /// Instructs to inhibit padding production in encoding operation, or its consumption in decoding operation.
+        /// Instructs to inhibit padding production in encoding operation.
         /// </summary>
         NoPadding = 1 << 0,
 
