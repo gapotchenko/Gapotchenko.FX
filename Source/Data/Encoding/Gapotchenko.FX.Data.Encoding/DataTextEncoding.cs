@@ -15,14 +15,18 @@ namespace Gapotchenko.FX.Data.Encoding
     public abstract class DataTextEncoding : DataEncoding, IDataTextEncoding
     {
         /// <inheritdoc/>
-        public string GetString(ReadOnlySpan<byte> data) => data == null ? null : GetStringCore(data);
+        public string GetString(ReadOnlySpan<byte> data) => GetString(data, DataTextEncodingOptions.Default);
+
+        /// <inheritdoc/>
+        public string GetString(ReadOnlySpan<byte> data, DataTextEncodingOptions options) => data == null ? null : GetStringCore(data, options);
 
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation.
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
+        /// <param name="options">The options.</param>
         /// <returns>The string representation of the contents of <paramref name="data"/>.</returns>
-        protected abstract string GetStringCore(ReadOnlySpan<byte> data);
+        protected abstract string GetStringCore(ReadOnlySpan<byte> data, DataTextEncodingOptions options);
 
         /// <inheritdoc/>
         public byte[] GetBytes(ReadOnlySpan<char> s) => s == null ? null : GetBytesCore(s);

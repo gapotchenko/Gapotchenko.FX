@@ -33,19 +33,36 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
         /// <returns>The string representation, in Base64, of the contents of <paramref name="data"/>.</returns>
-        public new static string GetString(ReadOnlySpan<byte> data) =>
+        public new static string GetString(ReadOnlySpan<byte> data) => GetString(data, DataTextEncodingOptions.Default);
+
+        /// <summary>
+        /// Encodes an array of bytes to its equivalent string representation that is encoded with Base64 symbols with specified options.
+        /// </summary>
+        /// <param name="data">The input array of bytes.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The string representation, in Base64, of the contents of <paramref name="data"/>.</returns>
+        public new static string GetString(ReadOnlySpan<byte> data, DataTextEncodingOptions options) =>
             data == null ?
                 null :
-                Convert.ToBase64String(
+                ApplyOptions(
+                    Convert.ToBase64String(
 #if TFF_MEMORY && !TFF_MEMORY_OOB
-                    data
+                        data
 #else
-                    data.ToArray()
+                        data.ToArray()
 #endif
-                    );
+                        ),
+                    options);
+
+        static string ApplyOptions(string s, DataTextEncodingOptions options)
+        {
+            if ((options & DataTextEncodingOptions.NoPadding) != 0)
+                s = Unpad(s.AsSpan()).ToString();
+            return s;
+        }
 
         /// <inheritdoc/>
-        protected override string GetStringCore(ReadOnlySpan<byte> data) => GetString(data);
+        protected override string GetStringCore(ReadOnlySpan<byte> data, DataTextEncodingOptions options) => GetString(data, options);
 
         /// <summary>
         /// Decodes the specified string, which represents encoded binary data as Base64 symbols, to an equivalent array of bytes.
@@ -55,7 +72,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public new static byte[] GetBytes(ReadOnlySpan<char> s) =>
             s == null ?
                 null :
-                Convert.FromBase64String(s.ToString());
+                Convert.FromBase64String(Pad(s));
 
         /// <inheritdoc/>
         protected override byte[] GetBytesCore(ReadOnlySpan<char> s) => GetBytes(s);

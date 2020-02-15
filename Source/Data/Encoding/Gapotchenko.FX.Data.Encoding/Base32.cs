@@ -86,8 +86,16 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <returns>The string representation, in Base32, of the contents of <paramref name="data"/>.</returns>
         public new static string GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
 
+        /// <summary>
+        /// Encodes an array of bytes to its equivalent string representation that is encoded with Base64 symbols with specified options.
+        /// </summary>
+        /// <param name="data">The input array of bytes.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The string representation, in Base64, of the contents of <paramref name="data"/>.</returns>
+        public new static string GetString(ReadOnlySpan<byte> data, DataTextEncodingOptions options) => Instance.GetString(data, options);
+
         /// <inheritdoc/>
-        protected override string GetStringCore(ReadOnlySpan<byte> data)
+        protected override string GetStringCore(ReadOnlySpan<byte> data, DataTextEncodingOptions options)
         {
             int n = data.Length;
 
@@ -120,9 +128,12 @@ namespace Gapotchenko.FX.Data.Encoding
                 sb.Append(m_Alphabet[digit]);
             }
 
-            int padding = Padding;
-            while (sb.Length % padding != 0)
-                sb.Append(PaddingChar);
+            if ((options & DataTextEncodingOptions.NoPadding) == 0)
+            {
+                int padding = Padding;
+                while (sb.Length % padding != 0)
+                    sb.Append(PaddingChar);
+            }
 
             return sb.ToString();
         }

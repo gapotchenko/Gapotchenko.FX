@@ -18,6 +18,14 @@ namespace Gapotchenko.FX.Data.Encoding
         string GetString(ReadOnlySpan<byte> data);
 
         /// <summary>
+        /// Encodes an array of bytes to its equivalent string representation with specified options.
+        /// </summary>
+        /// <param name="data">The input array of bytes.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The string representation of the contents of <paramref name="data"/>.</returns>
+        string GetString(ReadOnlySpan<byte> data, DataTextEncodingOptions options);
+
+        /// <summary>
         /// Decodes the specified string to an equivalent array of bytes.
         /// </summary>
         /// <param name="s">The string to decode.</param>

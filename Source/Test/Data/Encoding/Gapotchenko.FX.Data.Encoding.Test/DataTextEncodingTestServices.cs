@@ -39,22 +39,27 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             // -----------------------------------------------------------------
 
-            var actualEncodedUnpadded = dataEncoding.Unpad(actualEncoded);
+            var actualEncodedUnpadded = dataEncoding.Unpad(actualEncoded).ToString();
             string actualEncodedRepadded = dataEncoding.Pad(actualEncodedUnpadded);
 
             Assert.AreEqual(actualEncoded, actualEncodedRepadded);
 
             if (dataEncoding.Padding == 1)
             {
-                Assert.AreEqual(actualEncodedUnpadded.ToString(), actualEncoded);
-                Assert.AreEqual(actualEncodedUnpadded.ToString(), actualEncodedRepadded);
+                Assert.AreEqual(actualEncodedUnpadded, actualEncoded);
+                Assert.AreEqual(actualEncodedUnpadded, actualEncodedRepadded);
             }
 
             string actualEncodedOverpadded = dataEncoding.Pad(actualEncoded);
             Assert.AreEqual(actualEncoded, actualEncodedOverpadded);
 
-            var actualEncodedUnderpadded = dataEncoding.Unpad(actualEncodedUnpadded);
-            Assert.AreEqual(actualEncodedUnpadded.ToString(), actualEncodedUnderpadded.ToString());
+            string actualEncodedUnderpadded = dataEncoding.Unpad(actualEncodedUnpadded).ToString();
+            Assert.AreEqual(actualEncodedUnpadded, actualEncodedUnderpadded);
+
+            Assert.IsTrue(rawBytes.SequenceEqual(dataEncoding.GetBytes(actualEncodedUnpadded)), "Cannot decode unpadded string.");
+
+            string actualEncodedWithoutPadding = dataEncoding.GetString(rawBytes, DataTextEncodingOptions.NoPadding);
+            Assert.AreEqual(actualEncodedUnpadded, actualEncodedWithoutPadding, "DataTextEncodingOptions.NoPadding is not honored.");
 
             // -----------------------------------------------------------------
 
