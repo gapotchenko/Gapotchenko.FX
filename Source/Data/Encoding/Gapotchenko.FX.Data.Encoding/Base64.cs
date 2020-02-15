@@ -4,10 +4,8 @@ using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
-    using Encoding = System.Text.Encoding;
-
     /// <summary>
-    /// Base64 encoding.
+    /// Base64 encoding conforming to RFC 4648.
     /// </summary>
     public class Base64 : DataTextEncoding
     {

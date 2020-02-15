@@ -5,18 +5,60 @@ using System.Text;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
-    using Encoding = System.Text.Encoding;
-
     /// <summary>
-    /// Base32 encoding.
+    /// Base32 encoding conforming to RFC 4648.
     /// </summary>
     public class Base32 : DataTextEncoding, IDataTextEncoding
     {
         /// <summary>
         /// Initializes a new instance of <see cref="Base32"/> class.
         /// </summary>
-        protected Base32()
+        protected Base32() :
+            this("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567")
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="Base32"/> class with the specified alphabet.
+        /// </summary>
+        /// <param name="alphabet">The alphabet.</param>
+        protected Base32(string alphabet)
+        {
+            if (alphabet == null)
+                throw new ArgumentNullException(nameof(alphabet));
+
+            if (alphabet.Length != 32)
+                throw new ArgumentException("Base32 alphabet size should be 32.", nameof(alphabet));
+
+            m_Alphabet = alphabet;
+            m_LookupTable = CreateLookupTable(alphabet);
+        }
+
+        /// <summary>
+        /// Creates a lookup table for the specified alphabet.
+        /// </summary>
+        /// <param name="alphabet">The alphabet.</param>
+        /// <returns>The lookup table.</returns>
+        protected virtual byte[] CreateLookupTable(string alphabet)
+        {
+            var table = new byte[80];
+
+#if NETCOREAPP || (NETSTANDARD && !NETSTANDARD2_0)
+            Array.Fill(table, (byte)0xff);
+#else
+            for (int i = 0; i < table.Length; ++i)
+                table[i] = 0xff;
+#endif
+
+            for (int i = 0; i < alphabet.Length; ++i)
+            {
+                char symbol = alphabet[i];
+
+                table[char.ToLowerInvariant(symbol) - '0'] = (byte)i;
+                table[char.ToUpperInvariant(symbol) - '0'] = (byte)i;
+            }
+
+            return table;
         }
 
         /// <inheritdoc/>
@@ -32,98 +74,115 @@ namespace Gapotchenko.FX.Data.Encoding
         protected override float EfficiencyCore => Efficiency;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static readonly string m_Symbols = "QAZ2WSX3" + "EDC4RFV5" + "TGB6YHN7" + "UJM8K9LP";
+        readonly string m_Alphabet;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly byte[] m_LookupTable;
 
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation that is encoded with Base32 symbols.
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
         /// <returns>The string representation, in Base32, of the contents of <paramref name="data"/>.</returns>
-        public new static string GetString(ReadOnlySpan<byte> data)
+        public new static string GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
+
+        /// <inheritdoc/>
+        protected override string GetStringCore(ReadOnlySpan<byte> data)
         {
-            if (data == null)
-                return null;
-
-            var sb = new StringBuilder();
-
             int n = data.Length;
-            int i = 0;
-            int hi = 5;
+
+            var sb = new StringBuilder((n + 7) << 3 / 5 + 8);
+
+            int i = 0, index = 0;
 
             while (i < n)
             {
-                int charIndex;
+                int digit;
+                byte b = data[i];
+                if (index > 3)
+                {
+                    int nbi = i + 1;
+                    byte nb = nbi < n ? data[nbi] : (byte)0;
 
-                if (hi > 8)
-                {
-                    charIndex = data[i++] >> (hi - 5);
-                    if (i != n)
-                        charIndex |= (byte)(data[i] << (16 - hi)) >> 3;
-                    hi -= 3;
-                }
-                else if (hi == 8)
-                {
-                    charIndex = data[i++] >> 3;
-                    hi -= 3;
+                    digit = b & (0xff >> index);
+                    index = (index + 5) & 7;
+                    digit <<= index;
+                    digit |= nb >> (8 - index);
+                    i++;
                 }
                 else
                 {
-                    charIndex = (byte)(data[i] << (8 - hi)) >> 3;
-                    hi += 5;
+                    digit = (b >> (8 - (index + 5))) & 0x1f;
+                    index = (index + 5) & 7;
+                    if (index == 0)
+                        i++;
                 }
-
-                sb.Append(m_Symbols[charIndex]);
+                sb.Append(m_Alphabet[digit]);
             }
+
+            int padding = Padding;
+            while (sb.Length % padding != 0)
+                sb.Append(PaddingChar);
 
             return sb.ToString();
         }
-
-        /// <inheritdoc/>
-        protected override string GetStringCore(ReadOnlySpan<byte> data) => GetString(data);
-
-        static int GetSymbolIndex(char c) => m_Symbols.IndexOf(char.ToUpperInvariant(c));
 
         /// <summary>
         /// Decodes the specified string, which represents encoded binary data as Base32 symbols, to an equivalent array of bytes.
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        public new static byte[] GetBytes(ReadOnlySpan<char> s)
+        public new static byte[] GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
+
+        /// <inheritdoc/>
+        protected override byte[] GetBytesCore(ReadOnlySpan<char> s)
         {
-            if (s == null)
-                return null;
+            s = Unpad(s);
 
             int textLength = s.Length;
-            int bytesCount = textLength * 5 / 8;
-            var bytes = new byte[bytesCount];
+            int byteCount = textLength * 5 >> 3;
+            var bytes = new byte[byteCount];
 
-            if (textLength < 3)
+            int lookupTableLength = m_LookupTable.Length;
+
+            for (int i = 0, index = 0, offset = 0; i < textLength; i++)
             {
-                bytes[0] = (byte)(GetSymbolIndex(s[0]) | GetSymbolIndex(s[1]) << 5);
-            }
-            else
-            {
-                int bits = GetSymbolIndex(s[0]) | GetSymbolIndex(s[1]) << 5;
-                int bitsCount = 10;
-                int charIndex = 2;
-                for (int i = 0; i < bytesCount; i++)
+                int lookup = s[i] - '0';
+                if (lookup < 0 || lookup >= lookupTableLength)
+                    continue;
+
+                byte digit = m_LookupTable[lookup];
+                if (digit == 0xff)
+                    continue;
+
+                if (index <= 3)
                 {
-                    bytes[i] = (byte)bits;
-                    bits >>= 8;
-                    bitsCount -= 8;
-                    while (bitsCount < 8 && charIndex < textLength)
+                    index = (index + 5) & 7;
+                    if (index == 0)
                     {
-                        bits |= GetSymbolIndex(s[charIndex++]) << bitsCount;
-                        bitsCount += 5;
+                        bytes[offset++] |= digit;
+                        if (offset >= byteCount)
+                            break;
                     }
+                    else
+                    {
+                        bytes[offset] |= (byte)(digit << (8 - index));
+                    }
+                }
+                else
+                {
+                    index = (index + 5) & 7;
+                    bytes[offset++] |= (byte)(digit >> index);
+
+                    if (offset >= byteCount)
+                        break;
+
+                    bytes[offset] |= (byte)(digit << (8 - index));
                 }
             }
 
             return bytes;
         }
-
-        /// <inheritdoc/>
-        protected override byte[] GetBytesCore(ReadOnlySpan<char> s) => GetBytes(s);
 
         /// <summary>
         /// The number of characters for encoded string padding.
