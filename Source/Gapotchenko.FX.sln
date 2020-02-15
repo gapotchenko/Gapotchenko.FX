@@ -112,8 +112,16 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Xml", "Data\Gapotchenko.FX.Data.Xml\Gapotchenko.FX.Data.Xml.csproj", "{F77000CF-32B0-4A28-9F03-913DF019ADBB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Encoding", "Encoding", "{3FEEE50B-7D21-48C8-9DB2-C410DB674EB5}"
+	ProjectSection(SolutionItems) = preProject
+		Data\Encoding\README.md = Data\Encoding\README.md
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Encoding", "Data\Encoding\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj", "{F901E9C3-32CD-41BA-ADCD-F3CC909B3647}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding", "Data\Encoding\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj", "{F901E9C3-32CD-41BA-ADCD-F3CC909B3647}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Encoding", "Encoding", "{DE529E09-D427-41CF-887B-79979CF071C6}"
+	ProjectSection(SolutionItems) = preProject
+		Test\Data\Encoding\README.md = Test\Data\Encoding\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -280,6 +288,7 @@ Global
 		{F77000CF-32B0-4A28-9F03-913DF019ADBB} = {A80D0BB1-33D4-4C0D-8FC7-EE1999EAF7C9}
 		{3FEEE50B-7D21-48C8-9DB2-C410DB674EB5} = {C2DC67EB-5194-432D-A088-2EA90951DF87}
 		{F901E9C3-32CD-41BA-ADCD-F3CC909B3647} = {3FEEE50B-7D21-48C8-9DB2-C410DB674EB5}
+		{DE529E09-D427-41CF-887B-79979CF071C6} = {0D07D6F9-E558-4E2F-8DFE-7A295BFB5472}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}
