@@ -63,7 +63,7 @@ namespace Gapotchenko.FX.Data.Encoding
         protected override byte[] GetBytesCore(string s) => GetBytes(s);
 
         /// <summary>
-        /// The number of characters for encoded string representation padding.
+        /// The number of characters for padding of encoded string.
         /// </summary>
         public new const int Padding = 4;
 

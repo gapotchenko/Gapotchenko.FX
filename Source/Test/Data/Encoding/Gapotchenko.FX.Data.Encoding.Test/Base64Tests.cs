@@ -23,7 +23,14 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             // -----------------------------------------------------------------
 
-            DataTextEncodingTestServices.TestVector(Base64.Instance, raw, encoded);
+            var instance = Base64.Instance;
+
+            Assert.AreEqual(Base64.Efficiency, instance.Efficiency);
+            Assert.AreEqual(Base64.Padding, instance.Padding);
+
+            // -----------------------------------------------------------------
+
+            DataTextEncodingTestServices.TestVector(instance, raw, encoded);
         }
 
         [TestMethod]
