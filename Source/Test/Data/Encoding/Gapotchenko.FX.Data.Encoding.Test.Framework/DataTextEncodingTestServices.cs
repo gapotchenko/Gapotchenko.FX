@@ -55,6 +55,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Framework
             string actualEncodedRepadded = dataEncoding.Pad(actualEncodedUnpadded.AsSpan());
 
             Assert.AreEqual(actualEncoded, actualEncodedRepadded);
+            Assert.IsTrue(dataEncoding.IsPadded(actualEncodedRepadded.AsSpan()));
 
             if (dataEncoding.Padding == 1)
             {

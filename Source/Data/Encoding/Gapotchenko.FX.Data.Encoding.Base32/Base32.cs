@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Initializes a new instance of <see cref="Base32"/> class with the specified alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        protected Base32(string alphabet)
+        internal Base32(string alphabet)
         {
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));
@@ -31,12 +31,14 @@ namespace Gapotchenko.FX.Data.Encoding
             m_LookupTable = CreateLookupTable(alphabet);
         }
 
+        const char BaseSymbol = '0';
+
         /// <summary>
         /// Creates a lookup table for the specified alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
         /// <returns>The lookup table.</returns>
-        protected virtual byte[] CreateLookupTable(string alphabet)
+        byte[] CreateLookupTable(string alphabet)
         {
             var table = new byte[80];
 
@@ -51,8 +53,8 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 char symbol = alphabet[i];
 
-                table[char.ToLowerInvariant(symbol) - '0'] = (byte)i;
-                table[char.ToUpperInvariant(symbol) - '0'] = (byte)i;
+                table[char.ToLowerInvariant(symbol) - BaseSymbol] = (byte)i;
+                table[char.ToUpperInvariant(symbol) - BaseSymbol] = (byte)i;
             }
 
             return table;
@@ -155,7 +157,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             for (int i = 0, index = 0, offset = 0; i < textLength; i++)
             {
-                int lookup = s[i] - '0';
+                int lookup = s[i] - BaseSymbol;
                 if (lookup < 0 || lookup >= lookupTableLength)
                     continue;
 

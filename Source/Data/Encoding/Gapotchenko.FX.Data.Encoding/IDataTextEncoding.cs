@@ -50,5 +50,12 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The encoded string to unpad.</param>
         /// <returns>The unpadded encoded string.</returns>
         ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s);
+
+        /// <summary>
+        /// Gets a value indicating whether the specified encoded string is padded.
+        /// </summary>
+        /// <param name="s">The encoded string.</param>
+        /// <returns><c>true</c> when specified encoded string is padded; otherwise, <c>false</c>.</returns>
+        bool IsPadded(ReadOnlySpan<char> s);
     }
 }
