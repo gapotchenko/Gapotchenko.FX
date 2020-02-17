@@ -33,6 +33,14 @@ namespace Gapotchenko.FX.Data.Encoding
         byte[] GetBytes(ReadOnlySpan<char> s);
 
         /// <summary>
+        /// Decodes the specified string to an equivalent array of bytes with specified options.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
+        byte[] GetBytes(ReadOnlySpan<char> s, DataTextEncodingOptions options);
+
+        /// <summary>
         /// Gets the number of characters for padding of an encoded string representation.
         /// </summary>
         int Padding { get; }

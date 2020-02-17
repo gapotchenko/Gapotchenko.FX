@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 
 namespace Gapotchenko.FX.Data.Encoding
@@ -144,9 +145,23 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
         public new static byte[] GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
 
+        /// <summary>
+        /// Decodes the specified string, which represents encoded binary data as Base32 symbols, to an equivalent array of bytes with specified options.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
+        public new static byte[] GetBytes(ReadOnlySpan<char> s, DataTextEncodingOptions options) => Instance.GetBytes(s, options);
+
         /// <inheritdoc/>
-        protected override byte[] GetBytesCore(ReadOnlySpan<char> s)
+        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options)
         {
+            if ((options & DataTextEncodingOptions.RequirePadding) != 0)
+            {
+                if (!IsPadded(s))
+                    throw new InvalidDataException("Encountered unpadded input of a Base32 encoding.");
+            }
+
             s = Unpad(s);
 
             int textLength = s.Length;

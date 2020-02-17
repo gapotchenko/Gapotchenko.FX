@@ -29,14 +29,18 @@ namespace Gapotchenko.FX.Data.Encoding
         protected abstract string GetStringCore(ReadOnlySpan<byte> data, DataTextEncodingOptions options);
 
         /// <inheritdoc/>
-        public byte[] GetBytes(ReadOnlySpan<char> s) => s == null ? null : GetBytesCore(s);
+        public byte[] GetBytes(ReadOnlySpan<char> s) => GetBytes(s, DataTextEncodingOptions.Default);
+
+        /// <inheritdoc/>
+        public byte[] GetBytes(ReadOnlySpan<char> s, DataTextEncodingOptions options) => s == null ? null : GetBytesCore(s, options);
 
         /// <summary>
         /// Decodes the specified string to an equivalent array of bytes.
         /// </summary>
         /// <param name="s">The string to decode.</param>
+        /// <param name="options">The options.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        protected abstract byte[] GetBytesCore(ReadOnlySpan<char> s);
+        protected abstract byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options);
 
         /// <inheritdoc/>
         public int Padding => PaddingCore;

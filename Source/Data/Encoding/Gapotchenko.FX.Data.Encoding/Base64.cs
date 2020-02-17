@@ -41,7 +41,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public new static string GetString(ReadOnlySpan<byte> data, DataTextEncodingOptions options) =>
             data == null ?
                 null :
-                ApplyOptions(
+                ApplyEncodingOptions(
                     Convert.ToBase64String(
 #if TFF_MEMORY && !TFF_MEMORY_OOB
                         data
@@ -51,7 +51,7 @@ namespace Gapotchenko.FX.Data.Encoding
                         ),
                     options);
 
-        static string ApplyOptions(string s, DataTextEncodingOptions options)
+        static string ApplyEncodingOptions(string s, DataTextEncodingOptions options)
         {
             if ((options & DataTextEncodingOptions.NoPadding) != 0)
                 s = Unpad(s.AsSpan()).ToString();
@@ -66,13 +66,29 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        public new static byte[] GetBytes(ReadOnlySpan<char> s) =>
+        public new static byte[] GetBytes(ReadOnlySpan<char> s) => GetBytes(s, DataTextEncodingOptions.Default);
+
+        /// <summary>
+        /// Decodes the specified string, which represents encoded binary data as Base64 symbols, to an equivalent array of bytes with specified options.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
+        public new static byte[] GetBytes(ReadOnlySpan<char> s, DataTextEncodingOptions options) =>
             s == null ?
                 null :
-                Convert.FromBase64String(Pad(s));
+                Convert.FromBase64String(ApplyDecodingOptions(s, options));
+
+        static string ApplyDecodingOptions(ReadOnlySpan<char> s, DataTextEncodingOptions options)
+        {
+            if ((options & DataTextEncodingOptions.RequirePadding) == 0)
+                return Pad(s);
+            else
+                return s.ToString();
+        }
 
         /// <inheritdoc/>
-        protected override byte[] GetBytesCore(ReadOnlySpan<char> s) => GetBytes(s);
+        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options) => GetBytes(s, options);
 
         /// <summary>
         /// The number of characters for padding of an encoded string representation.
