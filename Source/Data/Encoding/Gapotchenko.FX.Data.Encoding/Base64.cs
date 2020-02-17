@@ -5,14 +5,11 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Base64 encoding conforming to RFC 4648.
+    /// Implements Base64 encoding described in RFC 4648.
     /// </summary>
-    public class Base64 : DataTextEncoding
+    public sealed class Base64 : DataTextEncoding
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="Base64"/> class.
-        /// </summary>
-        protected Base64()
+        private Base64()
         {
         }
 

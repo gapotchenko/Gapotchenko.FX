@@ -1,7 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Gapotchenko.FX.Data.Encoding.Test</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base32\Gapotchenko.FX.Data.Encoding.Base32.csproj" />
-    <ProjectReference Include="..\..\..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding.Test.Framework\Gapotchenko.FX.Data.Encoding.Test.Framework.csproj" />
   </ItemGroup>
 

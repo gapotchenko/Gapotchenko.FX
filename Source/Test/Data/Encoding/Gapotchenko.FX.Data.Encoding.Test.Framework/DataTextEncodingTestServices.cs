@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Gapotchenko.FX.Data.Encoding.Test
+namespace Gapotchenko.FX.Data.Encoding.Test.Framework
 {
     using Encoding = System.Text.Encoding;
 
@@ -44,15 +44,15 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             string actualEncoded = dataEncoding.GetString(rawBytes);
             Assert.AreEqual(encoded, actualEncoded);
 
-            var actualDecoded = dataEncoding.GetBytes(actualEncoded);
+            var actualDecoded = dataEncoding.GetBytes(actualEncoded.AsSpan());
             Assert.IsTrue(rawBytes.SequenceEqual(actualDecoded));
 
             // -----------------------------------------------------------------
             // Check padding operations
             // -----------------------------------------------------------------
 
-            var actualEncodedUnpadded = dataEncoding.Unpad(actualEncoded).ToString();
-            string actualEncodedRepadded = dataEncoding.Pad(actualEncodedUnpadded);
+            var actualEncodedUnpadded = dataEncoding.Unpad(actualEncoded.AsSpan()).ToString();
+            string actualEncodedRepadded = dataEncoding.Pad(actualEncodedUnpadded.AsSpan());
 
             Assert.AreEqual(actualEncoded, actualEncodedRepadded);
 
@@ -62,13 +62,13 @@ namespace Gapotchenko.FX.Data.Encoding.Test
                 Assert.AreEqual(actualEncodedUnpadded, actualEncodedRepadded);
             }
 
-            string actualEncodedOverpadded = dataEncoding.Pad(actualEncoded);
+            string actualEncodedOverpadded = dataEncoding.Pad(actualEncoded.AsSpan());
             Assert.AreEqual(actualEncoded, actualEncodedOverpadded);
 
-            string actualEncodedUnderpadded = dataEncoding.Unpad(actualEncodedUnpadded).ToString();
+            string actualEncodedUnderpadded = dataEncoding.Unpad(actualEncodedUnpadded.AsSpan()).ToString();
             Assert.AreEqual(actualEncodedUnpadded, actualEncodedUnderpadded);
 
-            Assert.IsTrue(rawBytes.SequenceEqual(dataEncoding.GetBytes(actualEncodedUnpadded)), "Cannot decode unpadded string.");
+            Assert.IsTrue(rawBytes.SequenceEqual(dataEncoding.GetBytes(actualEncodedUnpadded.AsSpan())), "Cannot decode unpadded string.");
 
             string actualEncodedWithoutPadding = dataEncoding.GetString(rawBytes, DataTextEncodingOptions.NoPadding);
             Assert.AreEqual(actualEncodedUnpadded, actualEncodedWithoutPadding, "DataTextEncodingOptions.NoPadding is not honored.");

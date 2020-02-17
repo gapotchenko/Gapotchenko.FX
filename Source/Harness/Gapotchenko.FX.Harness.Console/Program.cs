@@ -62,6 +62,8 @@ namespace Gapotchenko.FX.Harness.Console
             Console.WriteLine(h.IsNullOrEmpty());
 
             var data = Base32.Instance.EncodeData(new byte[] { 1, 2, 3 });
+
+            
         }
 
         static async Task _RunAsync(CancellationToken ct)

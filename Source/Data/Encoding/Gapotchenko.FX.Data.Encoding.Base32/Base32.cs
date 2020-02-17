@@ -6,14 +6,11 @@ using System.Text;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Base32 encoding conforming to RFC 4648.
+    /// Implements Base32 encoding described in RFC 4648.
     /// </summary>
     public class Base32 : DataTextEncoding, IDataTextEncoding
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="Base32"/> class.
-        /// </summary>
-        protected Base32() :
+        internal Base32() :
             this("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567")
         {
         }

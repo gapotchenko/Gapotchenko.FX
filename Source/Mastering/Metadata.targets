@@ -20,7 +20,7 @@
 
   <PropertyGroup>
     <IsPublicProject>false</IsPublicProject>
-    <IsPublicProject Condition=" !($(MSBuildProjectName.EndsWith('.Test')) OR $(MSBuildProjectName.Contains('.Harness.'))) ">true</IsPublicProject>
+    <IsPublicProject Condition=" !($(MSBuildProjectName.EndsWith('.Test')) OR $(MSBuildProjectName.Contains('.Test.')) OR $(MSBuildProjectName.Contains('.Harness.'))) ">true</IsPublicProject>
   </PropertyGroup>
 
   <PropertyGroup>

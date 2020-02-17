@@ -5,14 +5,11 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// base32-hex encoding conforming to RFC 4648.
+    /// Implements base32-hex encoding described in RFC 4648.
     /// </summary>
-    public class Base32Hex : Base32
+    public sealed class Base32Hex : Base32
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="Base32Hex"/> class.
-        /// </summary>
-        protected Base32Hex() :
+        private Base32Hex() :
             base("0123456789ABCDEFGHIJKLMNOPQRSTUV")
         {
         }
