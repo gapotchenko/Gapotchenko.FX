@@ -7,9 +7,10 @@ namespace Gapotchenko.FX.Data.Encoding
     /// <summary>
     /// Implements Base64 encoding described in RFC 4648.
     /// </summary>
-    public sealed class Base64 : DataTextEncoding, IBase64
+    public sealed class Base64 : GenericBase64
     {
-        private Base64()
+        private Base64() :
+            base(new DataTextEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"))
         {
         }
 
@@ -30,7 +31,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
         /// <returns>The string representation, in Base64, of the contents of <paramref name="data"/>.</returns>
-        public new static string GetString(ReadOnlySpan<byte> data) => GetString(data, DataTextEncodingOptions.Default);
+        public new static string GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
 
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation that is encoded with Base64 symbols with specified options.
@@ -38,28 +39,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="data">The input array of bytes.</param>
         /// <param name="options">The options.</param>
         /// <returns>The string representation, in Base64, of the contents of <paramref name="data"/>.</returns>
-        public new static string GetString(ReadOnlySpan<byte> data, DataTextEncodingOptions options) =>
-            data == null ?
-                null :
-                ApplyEncodingOptions(
-                    Convert.ToBase64String(
-#if TFF_MEMORY && !TFF_MEMORY_OOB
-                        data
-#else
-                        data.ToArray()
-#endif
-                        ),
-                    options);
-
-        static string ApplyEncodingOptions(string s, DataTextEncodingOptions options)
-        {
-            if ((options & DataTextEncodingOptions.NoPadding) != 0)
-                s = Unpad(s.AsSpan()).ToString();
-            return s;
-        }
-
-        /// <inheritdoc/>
-        protected override string GetStringCore(ReadOnlySpan<byte> data, DataTextEncodingOptions options) => GetString(data, options);
+        public new static string GetString(ReadOnlySpan<byte> data, DataTextEncodingOptions options) => Instance.GetString(data, options);
 
         /// <summary>
         /// Decodes the specified string, which represents encoded binary data as Base64 symbols, to an equivalent array of bytes.
@@ -98,33 +78,19 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         public new const int Padding = 4;
 
-        /// <inheritdoc/>
-        protected override int PaddingCore => Padding;
-
-        const char PaddingChar = '=';
-
         /// <summary>
         /// Pads the encoded string.
         /// </summary>
         /// <param name="s">The encoded string to pad.</param>
         /// <returns>The padded encoded string.</returns>
-        public new static string Pad(ReadOnlySpan<char> s) =>
-            s == null ?
-                null :
-                s.ToString().PadRight((s.Length + 3) >> 2 << 2, PaddingChar);
-
-        /// <inheritdoc/>
-        protected override string PadCore(ReadOnlySpan<char> s) => Pad(s);
+        public new static string Pad(ReadOnlySpan<char> s) => Instance.Pad(s);
 
         /// <summary>
         /// Unpads the encoded string.
         /// </summary>
         /// <param name="s">The encoded string to unpad.</param>
         /// <returns>The unpadded encoded string.</returns>
-        public new static ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => s.TrimEnd(PaddingChar);
-
-        /// <inheritdoc/>
-        protected override ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => Unpad(s);
+        public new static ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => Instance.Unpad(s);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static volatile IDataTextEncoding m_Instance;
