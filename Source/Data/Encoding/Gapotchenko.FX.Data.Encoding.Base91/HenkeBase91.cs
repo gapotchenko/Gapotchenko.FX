@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Data.Encoding
         protected override float MaxEfficiencyCore => 0.875f;
 
         /// <summary>
-        /// Base91 encoding efficiency.
+        /// Average efficiency of basE91 encoding.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
         public new const float Efficiency = 0.8132f;
