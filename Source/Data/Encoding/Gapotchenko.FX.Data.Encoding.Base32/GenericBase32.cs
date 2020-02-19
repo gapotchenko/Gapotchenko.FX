@@ -22,10 +22,15 @@ namespace Gapotchenko.FX.Data.Encoding
         protected GenericBase32(in DataTextEncodingAlphabet alphabet)
         {
             if (alphabet.Size != 32)
-                throw new ArgumentException("The alphabet size for Base32 encoding should be 32.", nameof(alphabet));
+                throw new ArgumentException("The alphabet size of a Base32 encoding should be 32.", nameof(alphabet));
 
             Alphabet = alphabet;
         }
+
+        /// <summary>
+        /// The encoding alphabet.
+        /// </summary>
+        protected readonly DataTextEncodingAlphabet Alphabet;
 
         /// <summary>
         /// Base32 encoding efficiency.
@@ -35,11 +40,6 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
-
-        /// <summary>
-        /// The encoding alphabet.
-        /// </summary>
-        protected readonly DataTextEncodingAlphabet Alphabet;
 
         /// <inheritdoc/>
         protected override string GetStringCore(ReadOnlySpan<byte> data, DataTextEncodingOptions options)
@@ -88,12 +88,6 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options)
         {
-            if ((options & DataTextEncodingOptions.RequirePadding) != 0)
-            {
-                if (!IsPadded(s))
-                    throw new InvalidDataException("Encountered unpadded input of a Base32 encoding.");
-            }
-
             s = Unpad(s);
 
             int textLength = s.Length;
@@ -142,14 +136,14 @@ namespace Gapotchenko.FX.Data.Encoding
         protected override int PaddingCore => 8;
 
         /// <summary>
-        /// Padding character.
+        /// The padding character.
         /// </summary>
         protected const char PaddingChar = '=';
 
         /// <inheritdoc/>
-        protected override string PadCore(ReadOnlySpan<char> s) => PadRight(s, Padding, PaddingChar);
+        protected override string PadCore(ReadOnlySpan<char> s) => PadRight(s, PaddingChar);
 
         /// <inheritdoc/>
-        protected override ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => UnpadRight(s, Padding, PaddingChar);
+        protected override ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => UnpadRight(s, PaddingChar);
     }
 }
