@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework></TargetFramework>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <Import Project="$(RepositorySourceDir)\Mastering\OOB\System.Memory.targets" />

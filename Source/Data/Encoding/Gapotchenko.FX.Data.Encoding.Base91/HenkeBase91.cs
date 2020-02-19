@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace Gapotchenko.FX.Data.Encoding.Base91
+namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
     /// Implements Jochaim Henke's Base91 (basE91) encoding.
     /// </summary>
-    public sealed class HenkeBase91 : DataTextEncoding
+    public sealed class HenkeBase91 : DataTextEncoding, IBase91
     {
         /// <inheritdoc/>
-        public override string Name => "Base91";
+        public override string Name => "basE91";
 
         /// <inheritdoc/>
         protected override float MaxEfficiencyCore => 0.875f;

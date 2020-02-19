@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// <summary>
     /// Implements Base32 encoding described in RFC 4648.
     /// </summary>
-    public class Base32 : DataTextEncoding, IDataTextEncoding
+    public class Base32 : DataTextEncoding, IBase32
     {
         internal Base32() :
             this(new DataTextEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", false))

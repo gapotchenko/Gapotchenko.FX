@@ -7,7 +7,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// <summary>
     /// Implements Base64 encoding described in RFC 4648.
     /// </summary>
-    public sealed class Base64 : DataTextEncoding
+    public sealed class Base64 : DataTextEncoding, IBase64
     {
         private Base64()
         {

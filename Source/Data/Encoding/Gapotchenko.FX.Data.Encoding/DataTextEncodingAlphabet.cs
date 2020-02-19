@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
@@ -28,51 +30,154 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="symbols">The symbols.</param>
         /// <param name="caseSensitive">Indicates whether alphabet is case sensitive.</param>
-        public DataTextEncodingAlphabet(string symbols, bool caseSensitive)
+        public DataTextEncodingAlphabet(string symbols, bool caseSensitive) :
+            this(symbols, caseSensitive, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="DataTextEncodingAlphabet"/>.
+        /// </summary>
+        /// <param name="symbols">The symbols.</param>
+        /// <param name="caseSensitive">Indicates whether alphabet is case sensitive.</param>
+        /// <param name="synonyms">The synonyms.</param>
+        public DataTextEncodingAlphabet(
+            string symbols,
+            bool caseSensitive,
+            IReadOnlyDictionary<char, string>? synonyms)
         {
             if (symbols == null)
                 throw new ArgumentNullException(nameof(symbols));
 
             m_Symbols = symbols;
-            m_LookupTable = CreateLookupTable(symbols, caseSensitive);
+
+            m_LookupTable = TryCreateLookupTable(symbols, caseSensitive, synonyms);
+
+            if (m_LookupTable != null)
+                m_LookupDictionary = null;
+            else
+                m_LookupDictionary = CreateLookupDictionary(symbols, caseSensitive, synonyms);
         }
 
-        const char BaseSymbol = '0';
-
-        static byte[] CreateLookupTable(string symbols, bool caseSensitive)
+        static byte[]? TryCreateLookupTable(
+            string symbols,
+            bool caseSensitive,
+            IReadOnlyDictionary<char, string>? synonyms)
         {
-            var table = new byte[80];
+            if (symbols.Length >= 0xff)
+            {
+                // Discard lookup table creation due to inability to represent symbol variety.
+                return null;
+            }
+
+            var table = new byte[LookupTableSize];
 
 #if NETCOREAPP || (NETSTANDARD && !NETSTANDARD2_0)
             Array.Fill(table, (byte)0xff);
 #else
-            for (int i = 0; i < table.Length; ++i)
+            for (int i = 0; i < LookupTableSize; ++i)
                 table[i] = 0xff;
 #endif
 
             for (int i = 0; i < symbols.Length; ++i)
             {
-                char symbol = symbols[i];
+                foreach (var c in EnumerateSymbolVariations(symbols[i], caseSensitive, synonyms))
+                {
+                    if (c < LookupTableBaseSymbol)
+                    {
+                        // Discard lookup table creation due to underflow.
+                        return null;
+                    }
 
-                if (caseSensitive)
-                {
-                    table[symbol - BaseSymbol] = (byte)i;
-                }
-                else
-                {
-                    table[char.ToLowerInvariant(symbol) - BaseSymbol] = (byte)i;
-                    table[char.ToUpperInvariant(symbol) - BaseSymbol] = (byte)i;
+                    int key = c - LookupTableBaseSymbol;
+                    if (key >= LookupTableSize)
+                    {
+                        // Discard lookup table creation due to overflow.
+                        return null;
+                    }
+
+                    if (table[key] != 0xff)
+                        throw CreateSymbolClashException(c);
+
+                    table[key] = (byte)i;
                 }
             }
 
             return table;
         }
 
+        static Dictionary<char, int> CreateLookupDictionary(
+            string symbols,
+            bool caseSensitive,
+            IReadOnlyDictionary<char, string>? synonyms)
+        {
+            int symbolCount = symbols.Length;
+            var dictionary = new Dictionary<char, int>(symbolCount);
+
+            for (int i = 0; i < symbolCount; ++i)
+                foreach (var c in EnumerateSymbolVariations(symbols[i], caseSensitive, synonyms))
+                {
+                    if (dictionary.ContainsKey(c))
+                        throw CreateSymbolClashException(c);
+
+                    dictionary[c] = (byte)i;
+                }
+
+            return dictionary;
+        }
+
+        static Exception CreateSymbolClashException(char symbol) =>
+            new Exception(
+                string.Format(
+                    "Encountered a clash in data encoding alphabet for symbol '{0}' (0x{1:X}).",
+                    symbol,
+                    (int)symbol));
+
+        static IEnumerable<char> EnumerateSymbolVariations(
+            char symbol,
+            bool caseSensitive,
+            IReadOnlyDictionary<char, string>? synonyms)
+        {
+            foreach (var c in EnumerateSymbolVariations(symbol, caseSensitive))
+                yield return c;
+
+            if (synonyms != null &&
+                synonyms.TryGetValue(symbol, out var s) &&
+                s != null)
+            {
+                foreach (var c in s.SelectMany(x => EnumerateSymbolVariations(x, caseSensitive)))
+                    yield return c;
+            }
+        }
+
+        static IEnumerable<char> EnumerateSymbolVariations(char symbol, bool caseSensitive)
+        {
+            if (caseSensitive)
+            {
+                yield return symbol;
+            }
+            else
+            {
+                char c1 = char.ToLowerInvariant(symbol);
+                yield return c1;
+
+                char c2 = char.ToUpperInvariant(symbol);
+                if (c2 != c1)
+                    yield return c2;
+            }
+        }
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly string m_Symbols;
 
+        const int LookupTableSize = 80;
+        const char LookupTableBaseSymbol = '0';
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly byte[] m_LookupTable;
+        readonly byte[]? m_LookupTable;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly Dictionary<char, int>? m_LookupDictionary;
 
         /// <summary>
         /// Gets the size of this alphabet.
@@ -98,15 +203,29 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <returns>A zero-based index position of the symbol if it is found, or -1 if it is not.</returns>
         public int IndexOf(char symbol)
         {
-            int lookup = symbol - BaseSymbol;
-            if (lookup < 0 || lookup >= m_LookupTable.Length)
-                return -1;
+            var lookupTable = m_LookupTable;
+            if (lookupTable != null)
+            {
+                int key = symbol - LookupTableBaseSymbol;
+                if (key < 0 || key >= LookupTableSize)
+                    return -1;
 
-            byte index = m_LookupTable[lookup];
-            if (index == 0xff)
-                return -1;
+                byte index = lookupTable[key];
+                if (index == 0xff)
+                    return -1;
 
-            return index;
+                return index;
+            }
+
+            var lookupDictionary = m_LookupDictionary;
+            if (lookupDictionary != null)
+            {
+                if (lookupDictionary.TryGetValue(symbol, out var index))
+                    return index;
+                return -1;
+            }
+
+            return Symbols.IndexOf(symbol);
         }
     }
 }
