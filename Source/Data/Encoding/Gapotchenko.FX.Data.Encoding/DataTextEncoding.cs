@@ -43,6 +43,9 @@ namespace Gapotchenko.FX.Data.Encoding
         protected abstract byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options);
 
         /// <inheritdoc/>
+        public abstract bool IsCaseSensitive { get; }
+
+        /// <inheritdoc/>
         public int Padding => PaddingCore;
 
         /// <summary>

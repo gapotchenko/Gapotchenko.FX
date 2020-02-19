@@ -90,6 +90,9 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options) => GetBytes(s, options);
 
+        /// <inheritdoc/>
+        public override bool IsCaseSensitive => true;
+
         /// <summary>
         /// The number of characters for padding of an encoded string representation.
         /// </summary>

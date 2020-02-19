@@ -36,5 +36,8 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        public override bool IsCaseSensitive => true;
     }
 }

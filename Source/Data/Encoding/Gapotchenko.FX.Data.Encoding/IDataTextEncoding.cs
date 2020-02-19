@@ -41,6 +41,11 @@ namespace Gapotchenko.FX.Data.Encoding
         byte[] GetBytes(ReadOnlySpan<char> s, DataTextEncodingOptions options);
 
         /// <summary>
+        /// Gets a value indicating whether encoding is case-sensitive.
+        /// </summary>
+        bool IsCaseSensitive { get; }
+
+        /// <summary>
         /// Gets the number of characters for padding of an encoded string representation.
         /// </summary>
         int Padding { get; }
