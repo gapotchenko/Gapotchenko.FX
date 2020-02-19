@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Data.Encoding
     public class Base32 : DataTextEncoding, IDataTextEncoding
     {
         internal Base32() :
-            this("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567")
+            this(new DataTextEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", false))
         {
         }
 
@@ -20,45 +20,9 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Initializes a new instance of <see cref="Base32"/> class with the specified alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        internal Base32(string alphabet)
+        internal Base32(in DataTextEncodingAlphabet alphabet)
         {
-            if (alphabet == null)
-                throw new ArgumentNullException(nameof(alphabet));
-
-            if (alphabet.Length != 32)
-                throw new ArgumentException("Base32 alphabet size should be 32.", nameof(alphabet));
-
             m_Alphabet = alphabet;
-            m_LookupTable = CreateLookupTable(alphabet);
-        }
-
-        const char BaseSymbol = '0';
-
-        /// <summary>
-        /// Creates a lookup table for the specified alphabet.
-        /// </summary>
-        /// <param name="alphabet">The alphabet.</param>
-        /// <returns>The lookup table.</returns>
-        byte[] CreateLookupTable(string alphabet)
-        {
-            var table = new byte[80];
-
-#if NETCOREAPP || (NETSTANDARD && !NETSTANDARD2_0)
-            Array.Fill(table, (byte)0xff);
-#else
-            for (int i = 0; i < table.Length; ++i)
-                table[i] = 0xff;
-#endif
-
-            for (int i = 0; i < alphabet.Length; ++i)
-            {
-                char symbol = alphabet[i];
-
-                table[char.ToLowerInvariant(symbol) - BaseSymbol] = (byte)i;
-                table[char.ToUpperInvariant(symbol) - BaseSymbol] = (byte)i;
-            }
-
-            return table;
         }
 
         /// <inheritdoc/>
@@ -74,10 +38,7 @@ namespace Gapotchenko.FX.Data.Encoding
         protected override float EfficiencyCore => Efficiency;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly string m_Alphabet;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly byte[] m_LookupTable;
+        readonly DataTextEncodingAlphabet m_Alphabet;
 
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation that is encoded with Base32 symbols.
@@ -168,16 +129,10 @@ namespace Gapotchenko.FX.Data.Encoding
             int byteCount = textLength * 5 >> 3;
             var bytes = new byte[byteCount];
 
-            int lookupTableLength = m_LookupTable.Length;
-
             for (int i = 0, index = 0, offset = 0; i < textLength; i++)
             {
-                int lookup = s[i] - BaseSymbol;
-                if (lookup < 0 || lookup >= lookupTableLength)
-                    continue;
-
-                byte digit = m_LookupTable[lookup];
-                if (digit == 0xff)
+                int digit = m_Alphabet.IndexOf(s[i]);
+                if (digit == -1)
                     continue;
 
                 if (index <= 3)
@@ -185,7 +140,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     index = (index + 5) & 7;
                     if (index == 0)
                     {
-                        bytes[offset++] |= digit;
+                        bytes[offset++] |= (byte)digit;
                         if (offset >= byteCount)
                             break;
                     }

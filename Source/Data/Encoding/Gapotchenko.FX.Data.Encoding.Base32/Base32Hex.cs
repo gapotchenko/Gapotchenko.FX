@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Encoding
     public sealed class Base32Hex : Base32
     {
         private Base32Hex() :
-            base("0123456789ABCDEFGHIJKLMNOPQRSTUV")
+            base(new DataTextEncodingAlphabet("0123456789ABCDEFGHIJKLMNOPQRSTUV", false))
         {
         }
 

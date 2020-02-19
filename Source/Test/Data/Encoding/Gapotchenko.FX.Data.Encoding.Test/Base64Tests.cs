@@ -54,5 +54,11 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         public void Base64_Rfc4648_TV7() => TestVector("foobar", "Zm9vYmFy");
+
+        [TestMethod]
+        public void Base64_PaddedConcat() =>
+            Assert.IsTrue(
+                Base64.GetBytes("SQ==QU0=VEpN")
+                .SequenceEqual(Encoding.ASCII.GetBytes("IAMTJM")));
     }
 }

@@ -113,6 +113,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Xml", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Encoding", "Encoding", "{3FEEE50B-7D21-48C8-9DB2-C410DB674EB5}"
 	ProjectSection(SolutionItems) = preProject
+		Data\Encoding\Directory.Build.props = Data\Encoding\Directory.Build.props
 		Data\Encoding\README.md = Data\Encoding\README.md
 	EndProjectSection
 EndProject
@@ -129,7 +130,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encodin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base32.Test", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base32.Test\Gapotchenko.FX.Data.Encoding.Base32.Test.csproj", "{91792366-3F60-4444-BFFA-3AB1D1FE0489}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Encoding.Test.Framework", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Test.Framework\Gapotchenko.FX.Data.Encoding.Test.Framework.csproj", "{06B7F74D-1094-4843-A55C-5B577858D464}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Test.Framework", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Test.Framework\Gapotchenko.FX.Data.Encoding.Test.Framework.csproj", "{06B7F74D-1094-4843-A55C-5B577858D464}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base91", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base91\Gapotchenko.FX.Data.Encoding.Base91.csproj", "{3F52F9DE-9397-42DF-9E03-A2DA6F9219A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -269,6 +272,10 @@ Global
 		{06B7F74D-1094-4843-A55C-5B577858D464}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06B7F74D-1094-4843-A55C-5B577858D464}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06B7F74D-1094-4843-A55C-5B577858D464}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F52F9DE-9397-42DF-9E03-A2DA6F9219A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F52F9DE-9397-42DF-9E03-A2DA6F9219A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F52F9DE-9397-42DF-9E03-A2DA6F9219A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F52F9DE-9397-42DF-9E03-A2DA6F9219A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -317,6 +324,7 @@ Global
 		{83D53DEA-66B1-491E-A038-5A8FD8DB1ADF} = {3FEEE50B-7D21-48C8-9DB2-C410DB674EB5}
 		{91792366-3F60-4444-BFFA-3AB1D1FE0489} = {DE529E09-D427-41CF-887B-79979CF071C6}
 		{06B7F74D-1094-4843-A55C-5B577858D464} = {DE529E09-D427-41CF-887B-79979CF071C6}
+		{3F52F9DE-9397-42DF-9E03-A2DA6F9219A3} = {3FEEE50B-7D21-48C8-9DB2-C410DB674EB5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}
