@@ -147,16 +147,9 @@ namespace Gapotchenko.FX.Data.Encoding
         protected const char PaddingChar = '=';
 
         /// <inheritdoc/>
-        protected override string PadCore(ReadOnlySpan<char> s)
-        {
-            int padding = Padding;
-            if (padding == 1)
-                return s.ToString();
-            int width = (s.Length + padding - 1) / padding * padding;
-            return s.ToString().PadRight(width, PaddingChar);
-        }
+        protected override string PadCore(ReadOnlySpan<char> s) => PadRight(s, Padding, PaddingChar);
 
         /// <inheritdoc/>
-        protected override ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => s.TrimEnd(PaddingChar);
+        protected override ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => UnpadRight(s, Padding, PaddingChar);
     }
 }

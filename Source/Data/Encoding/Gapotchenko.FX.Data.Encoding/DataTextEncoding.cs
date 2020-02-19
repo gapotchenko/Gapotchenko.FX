@@ -90,5 +90,67 @@ namespace Gapotchenko.FX.Data.Encoding
 #endif
                 )
                 .AsSpan());
+
+        static int GetPaddingWidth(ReadOnlySpan<char> s, int padding)
+        {
+            if (padding < 2)
+                return 0;
+            else
+                return (s.Length + padding - 1) / padding * padding;
+        }
+
+        static string Pad(ReadOnlySpan<char> s, int padding, char paddingChar, bool right)
+        {
+            if (s == null)
+                return null;
+
+            string output = s.ToString();
+
+            int width = GetPaddingWidth(s, padding);
+            if (width == 0)
+                return output;
+            else if (right)
+                return output.PadRight(width, paddingChar);
+            else
+                return output.PadLeft(width, paddingChar);
+        }
+
+        /// <summary>
+        /// Pads the encoded string to the right.
+        /// </summary>
+        /// <param name="s">The encoded string.</param>
+        /// <param name="padding">The padding.</param>
+        /// <param name="paddingChar">The padding character.</param>
+        /// <returns>The padded encoded string.</returns>
+        protected static string PadRight(ReadOnlySpan<char> s, int padding, char paddingChar) =>
+            Pad(s, padding, paddingChar, true);
+
+        /// <summary>
+        /// Pads the encoded string to the left.
+        /// </summary>
+        /// <param name="s">The encoded string.</param>
+        /// <param name="padding">The padding.</param>
+        /// <param name="paddingChar">The padding character.</param>
+        /// <returns>The padded encoded string.</returns>
+        protected static string PadLeft(ReadOnlySpan<char> s, int padding, char paddingChar) =>
+            Pad(s, padding, paddingChar, false);
+
+        /// <summary>
+        /// Unpads the encoded string from the right side.
+        /// </summary>
+        /// <param name="s">The encoded string.</param>
+        /// <param name="padding">The padding.</param>
+        /// <param name="paddingChar">The padding character.</param>
+        /// <returns>The unpadded encoded string.</returns>
+        protected static ReadOnlySpan<char> UnpadRight(ReadOnlySpan<char> s, int padding, char paddingChar) => s.TrimEnd(paddingChar);
+
+        /// <summary>
+        /// Unpads the encoded string from the left side.
+        /// </summary>
+        /// <param name="s">The encoded string.</param>
+        /// <param name="padding">The padding.</param>
+        /// <param name="paddingChar">The padding character.</param>
+        /// <returns>The unpadded encoded string.</returns>
+        protected static ReadOnlySpan<char> UnpadLeft(ReadOnlySpan<char> s, int padding, char paddingChar) => s.TrimStart(paddingChar);
     }
 }
