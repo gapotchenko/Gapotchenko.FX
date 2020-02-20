@@ -376,6 +376,15 @@ namespace Gapotchenko.FX.Data.Encoding
                 m_Buffer = new MemoryStream();
             }
 
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    if (m_OwnsTextReader)
+                        m_TextReader.Dispose();
+                }
+            }
+
             readonly TextReader m_TextReader;
             readonly IDecoderContext m_Context;
             readonly float m_Efficiency;
