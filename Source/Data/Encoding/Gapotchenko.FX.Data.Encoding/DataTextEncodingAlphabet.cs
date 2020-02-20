@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// Defines an alphabet and related operations for <see cref="IDataTextEncoding"/> implementations.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public readonly struct DataTextEncodingAlphabet
+    public sealed class DataTextEncodingAlphabet
     {
         /// <summary>
         /// Initializes a new instance of a case-sensitive <see cref="DataTextEncodingAlphabet"/>.

@@ -18,8 +18,11 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Initializes a new instance of <see cref="GenericBase64"/> class with the specified alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        protected GenericBase64(in DataTextEncodingAlphabet alphabet)
+        protected GenericBase64(DataTextEncodingAlphabet alphabet)
         {
+            if (alphabet == null)
+                throw new ArgumentNullException(nameof(alphabet));
+
             if (alphabet.Size != Radix)
             {
                 throw new ArgumentException(
@@ -33,7 +36,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// The encoding alphabet.
         /// </summary>
-        protected DataTextEncodingAlphabet Alphabet;
+        protected readonly DataTextEncodingAlphabet Alphabet;
 
         /// <inheritdoc/>
         public int Radix => 64;
@@ -49,14 +52,14 @@ namespace Gapotchenko.FX.Data.Encoding
 
         struct Context
         {
-            public Context(GenericBase64 base64, DataTextEncodingOptions options) :
+            public Context(DataTextEncodingAlphabet alphabet, DataTextEncodingOptions options) :
                 this()
             {
-                m_Base64 = base64;
+                m_Alphabet = alphabet;
                 m_Options = options;
             }
 
-            readonly GenericBase64 m_Base64;
+            readonly DataTextEncodingAlphabet m_Alphabet;
             readonly DataTextEncodingOptions m_Options;
 
             int m_Bits;
@@ -72,7 +75,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if (m_Eof)
                     return;
 
-                ref var alphabet = ref m_Base64.Alphabet;
+                var alphabet = m_Alphabet;
 
                 if (input == null)
                 {
@@ -136,7 +139,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if (input == null)
                     m_Eof = true;
 
-                ref var alphabet = ref m_Base64.Alphabet;
+                var alphabet = m_Alphabet;
 
                 foreach (var c in input)
                 {
@@ -216,7 +219,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             var tw = new StringWriter();
 
-            var context = new Context(this, options);
+            var context = new Context(Alphabet, options);
             context.Encode(data, tw);
             context.Encode(null, tw);
 
@@ -228,7 +231,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             var ms = new MemoryStream();
 
-            var context = new Context(this, options);
+            var context = new Context(Alphabet, options);
             context.Decode(s, ms);
             context.Decode(null, ms);
 
