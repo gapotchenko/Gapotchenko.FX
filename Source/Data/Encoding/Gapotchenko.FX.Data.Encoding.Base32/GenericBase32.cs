@@ -21,8 +21,12 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="alphabet">The alphabet.</param>
         protected GenericBase32(in DataTextEncodingAlphabet alphabet)
         {
-            if (alphabet.Size != 32)
-                throw new ArgumentException("The alphabet size of a Base32 encoding should be 32.", nameof(alphabet));
+            if (alphabet.Size != Radix)
+            {
+                throw new ArgumentException(
+                    string.Format("The alphabet size of {0} encoding should be {1}.", Name, Radix),
+                    nameof(alphabet));
+            }
 
             Alphabet = alphabet;
         }

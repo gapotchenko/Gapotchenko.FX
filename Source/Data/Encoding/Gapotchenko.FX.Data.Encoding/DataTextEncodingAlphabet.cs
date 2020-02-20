@@ -181,6 +181,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <summary>
         /// Gets the size of this alphabet.
+        /// The value is equivalent to radix, which is the number of unique symbols in positional numeral system of the encoding.
         /// </summary>
         public int Size => m_Symbols.Length;
 

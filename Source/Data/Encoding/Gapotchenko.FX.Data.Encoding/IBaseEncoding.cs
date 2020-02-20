@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// The interface of binary-to-text encoding based on positional numeral system.
+    /// Defines the interface of a binary-to-text encoding based on positional numeral system.
     /// </summary>
     public interface IBaseEncoding : IDataTextEncoding
     {

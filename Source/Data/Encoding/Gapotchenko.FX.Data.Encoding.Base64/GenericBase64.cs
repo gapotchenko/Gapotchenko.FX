@@ -20,8 +20,12 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="alphabet">The alphabet.</param>
         protected GenericBase64(in DataTextEncodingAlphabet alphabet)
         {
-            if (alphabet.Size != 64)
-                throw new ArgumentException("The alphabet size of a Base64 encoding should be 64.", nameof(alphabet));
+            if (alphabet.Size != Radix)
+            {
+                throw new ArgumentException(
+                    string.Format("The alphabet size of {0} encoding should be {1}.", Name, Radix),
+                    nameof(alphabet));
+            }
 
             Alphabet = alphabet;
         }

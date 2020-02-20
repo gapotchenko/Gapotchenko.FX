@@ -18,15 +18,6 @@ namespace Gapotchenko.FX.Data.Encoding
         public override string Name => "Base64";
 
         /// <summary>
-        /// Base64 encoding efficiency.
-        /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
-        /// </summary>
-        public new const float Efficiency = 0.75f;
-
-        /// <inheritdoc/>
-        protected override float EfficiencyCore => Efficiency;
-
-        /// <summary>
         /// Encodes an array of bytes to its equivalent string representation that is encoded with Base64 symbols.
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
