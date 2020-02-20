@@ -173,7 +173,11 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.None)
         {
-            throw new NotImplementedException();
+            if (textReader == null)
+                throw new ArgumentNullException(nameof(textReader));
+
+            var context = CreateDecoderContext(options);
+            return new DecoderStream(textReader, context, options, StreamBufferSize, MinEfficiency);
         }
 
         sealed class EncoderStream : Stream
@@ -208,13 +212,13 @@ namespace Gapotchenko.FX.Data.Encoding
             }
 #endif
 
-            TextWriter m_TextWriter;
-            IEncoderContext m_Context;
-            bool m_OwnsTextWriter;
+            readonly TextWriter m_TextWriter;
+            readonly IEncoderContext m_Context;
+            readonly bool m_OwnsTextWriter;
 
             StringBuilder m_Buffer;
             StringWriter m_BufferWriter;
-            int m_BufferSize;
+            readonly int m_BufferSize;
 
             public override bool CanRead => false;
 
@@ -294,12 +298,14 @@ namespace Gapotchenko.FX.Data.Encoding
                 m_Context.Encode(null, m_TextWriter);
             }
 
+#if TFF_ASYNC_DISPOSABLE
             async Task FlushFinalBlockAsync(CancellationToken cancellationToken = default)
             {
                 EnsureBufferCreated();
                 m_Context.Encode(null, m_BufferWriter);
                 await FlushBufferAsync(cancellationToken).ConfigureAwait(false);
             }
+#endif
 
             void EnsureBufferCreated()
             {
@@ -343,10 +349,225 @@ namespace Gapotchenko.FX.Data.Encoding
 #elif TFF_TEXT_IO_CANCELLATION
                     await m_TextWriter.WriteAsync(m_Buffer.ToString().AsMemory(), cancellationToken).ConfigureAwait(false);
 #else
+                    cancellationToken.ThrowIfCancellationRequested();
                     await m_TextWriter.WriteAsync(m_Buffer.ToString()).ConfigureAwait(false);
 #endif
                     m_Buffer.Clear();
                 }
+            }
+        }
+
+        sealed class DecoderStream : Stream
+        {
+            public DecoderStream(
+                TextReader textReader,
+                IDecoderContext context,
+                DataEncodingOptions options,
+                int bufferSize,
+                float efficiency)
+            {
+                m_TextReader = textReader;
+                m_Context = context;
+                m_Efficiency = efficiency;
+                m_BufferSize = bufferSize;
+
+                m_OwnsTextReader = (options & DataEncodingOptions.NoOwnership) == 0;
+
+                m_Buffer = new MemoryStream();
+            }
+
+            readonly TextReader m_TextReader;
+            readonly IDecoderContext m_Context;
+            readonly float m_Efficiency;
+            readonly bool m_OwnsTextReader;
+
+            readonly int m_BufferSize;
+            MemoryStream m_Buffer;
+
+            public override bool CanRead => true;
+
+            public override bool CanSeek => false;
+
+            public override bool CanWrite => false;
+
+            public override long Length => throw new NotSupportedException();
+
+            public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+            public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+            public override void SetLength(long value) => throw new NotSupportedException();
+
+            public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                int totalRead = 0;
+                for (; ; )
+                {
+                    if (m_Buffer.Length == 0)
+                        FillBuffer(count);
+
+                    int r = m_Buffer.Read(buffer, offset, count);
+                    if (r == 0)
+                        break;
+
+                    offset += r;
+                    count -= r;
+                    totalRead += r;
+
+                    if (count == 0)
+                        break;
+
+                    m_Buffer.SetLength(0);
+                }
+                return totalRead;
+            }
+
+            public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+            {
+                int totalRead = 0;
+                for (; ; )
+                {
+                    if (m_Buffer.Length == 0)
+                        await FillBufferAsync(count, cancellationToken).ConfigureAwait(false);
+
+                    int r = m_Buffer.Read(buffer, offset, count);
+                    if (r == 0)
+                        break;
+
+                    offset += r;
+                    count -= r;
+                    totalRead += r;
+
+                    if (count == 0)
+                        break;
+
+                    m_Buffer.SetLength(0);
+                }
+                return totalRead;
+            }
+
+#if TFF_VALUETASK && !NETCOREAPP2_0
+            public override int Read(Span<byte> buffer)
+            {
+                int count = buffer.Length;
+                int offset = 0;
+                int totalRead = 0;
+
+                for (; ; )
+                {
+                    if (m_Buffer.Length == 0)
+                        FillBuffer(count);
+
+                    int r = m_Buffer.Read(buffer.Slice(offset, count));
+                    if (r == 0)
+                        break;
+
+                    offset += r;
+                    count -= r;
+                    totalRead += r;
+
+                    if (count == 0)
+                        break;
+
+                    m_Buffer.SetLength(0);
+                }
+
+                return totalRead;
+            }
+
+            public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken)
+            {
+                int count = buffer.Length;
+                int offset = 0;
+                int totalRead = 0;
+
+                for (; ; )
+                {
+                    if (m_Buffer.Length == 0)
+                        await FillBufferAsync(count, cancellationToken).ConfigureAwait(false);
+
+                    int r = m_Buffer.Read(buffer.Slice(offset, count).Span);
+                    if (r == 0)
+                        break;
+
+                    offset += r;
+                    count -= r;
+                    totalRead += r;
+
+                    if (count == 0)
+                        break;
+
+                    m_Buffer.SetLength(0);
+                }
+
+                return totalRead;
+            }
+#endif
+
+            public override void Flush()
+            {
+            }
+
+            void FillBuffer(int count)
+            {
+                count = Math.Min(count, m_BufferSize);
+
+                var text = new char[m_BufferSize / sizeof(char)];
+                while (m_Buffer.Length < count)
+                {
+                    int byteCountToRead = count - (int)m_Buffer.Length;
+
+                    int charCountToRead = Math.Min(
+                        checked((int)Math.Ceiling(byteCountToRead / m_Efficiency * 1.1f)),
+                        text.Length);
+
+                    int r = m_TextReader.ReadBlock(text, 0, charCountToRead);
+                    if (r == 0)
+                    {
+                        // Final block.
+                        m_Context.Decode(null, m_Buffer);
+                        break;
+                    }
+
+                    m_Context.Decode(text.AsSpan(0, r), m_Buffer);
+                }
+
+                m_Buffer.Position = 0;
+            }
+
+            async Task FillBufferAsync(int count, CancellationToken cancellationToken)
+            {
+                count = Math.Min(count, m_BufferSize);
+
+                var text = new char[m_BufferSize / sizeof(char)];
+                while (m_Buffer.Length < count)
+                {
+                    int byteCountToRead = count - (int)m_Buffer.Length;
+
+                    int charCountToRead = Math.Min(
+                        checked((int)Math.Ceiling(byteCountToRead / m_Efficiency * 1.1f)),
+                        text.Length);
+
+                    int r;
+#if TFF_TEXT_IO_CANCELLATION
+                    r = await m_TextReader.ReadBlockAsync(text.AsMemory(0, charCountToRead), cancellationToken).ConfigureAwait(false);
+#else
+                    cancellationToken.ThrowIfCancellationRequested();
+                    r = await m_TextReader.ReadBlockAsync(text, 0, charCountToRead).ConfigureAwait(false);
+#endif
+                    if (r == 0)
+                    {
+                        // Final block.
+                        m_Context.Decode(null, m_Buffer);
+                        break;
+                    }
+
+                    m_Context.Decode(text.AsSpan(0, r), m_Buffer);
+                }
+
+                m_Buffer.Position = 0;
             }
         }
 
