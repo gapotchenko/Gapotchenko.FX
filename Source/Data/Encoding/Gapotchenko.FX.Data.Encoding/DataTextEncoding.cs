@@ -16,10 +16,10 @@ namespace Gapotchenko.FX.Data.Encoding
     public abstract class DataTextEncoding : DataEncoding, IDataTextEncoding
     {
         /// <inheritdoc/>
-        public string GetString(ReadOnlySpan<byte> data) => GetString(data, DataTextEncodingOptions.Default);
+        public string GetString(ReadOnlySpan<byte> data) => GetString(data, DataEncodingOptions.Default);
 
         /// <inheritdoc/>
-        public string GetString(ReadOnlySpan<byte> data, DataTextEncodingOptions options) => data == null ? null : GetStringCore(data, options);
+        public string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => data == null ? null : GetStringCore(data, options);
 
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation.
@@ -27,25 +27,22 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="data">The input array of bytes.</param>
         /// <param name="options">The options.</param>
         /// <returns>The string representation of the contents of <paramref name="data"/>.</returns>
-        protected abstract string GetStringCore(ReadOnlySpan<byte> data, DataTextEncodingOptions options);
-
-        /// <inheritdoc/>
-        public byte[] GetBytes(ReadOnlySpan<char> s) => GetBytes(s, DataTextEncodingOptions.Default);
-
-        /// <inheritdoc/>
-        public byte[] GetBytes(ReadOnlySpan<char> s, DataTextEncodingOptions options)
+        protected virtual string GetStringCore(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
-            if (s == null)
-                return null;
+            var sw = new StringWriter();
 
-            if ((options & DataTextEncodingOptions.RequirePadding) != 0)
-            {
-                if (!IsPadded(s))
-                    throw new InvalidDataException(string.Format("Encountered unpadded input of {0} encoding.", Name));
-            }
+            var context = CreateEncoderContext(options);
+            context.Encode(data, sw);
+            context.Encode(null, sw);
 
-            return GetBytesCore(s, options);
+            return sw.ToString();
         }
+
+        /// <inheritdoc/>
+        public byte[] GetBytes(ReadOnlySpan<char> s) => GetBytes(s, DataEncodingOptions.Default);
+
+        /// <inheritdoc/>
+        public byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => s == null ? null : GetBytesCore(s, options);
 
         /// <summary>
         /// Decodes the specified string to an equivalent array of bytes.
@@ -53,7 +50,16 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The string to decode.</param>
         /// <param name="options">The options.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        protected abstract byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options);
+        protected virtual byte[] GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            var ms = new MemoryStream();
+
+            var context = CreateDecoderContext(options);
+            context.Decode(s, ms);
+            context.Decode(null, ms);
+
+            return ms.ToArray();
+        }
 
         /// <inheritdoc/>
         public abstract bool IsCaseSensitive { get; }
@@ -103,6 +109,64 @@ namespace Gapotchenko.FX.Data.Encoding
 #endif
                 )
                 .AsSpan());
+
+        /// <summary>
+        /// The encoder context.
+        /// </summary>
+        public interface IEncoderContext
+        {
+            /// <summary>
+            /// Encodes a block of data.
+            /// </summary>
+            /// <param name="input">
+            /// The input.
+            /// The <c>null</c> value signals a final block.
+            /// </param>
+            /// <param name="output">The output.</param>
+            void Encode(ReadOnlySpan<byte> input, TextWriter output);
+        }
+
+        /// <summary>
+        /// Creates encoder context.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <returns>The encoder context.</returns>
+        protected abstract IEncoderContext CreateEncoderContext(DataEncodingOptions options);
+
+        /// <summary>
+        /// The decoder context.
+        /// </summary>
+        public interface IDecoderContext
+        {
+            /// <summary>
+            /// Decodes a block of data.
+            /// </summary>
+            /// <param name="input">
+            /// The input.
+            /// The <c>null</c> value signals a final block.
+            /// </param>
+            /// <param name="output">The output.</param>
+            void Decode(ReadOnlySpan<char> input, Stream output);
+        }
+
+        /// <summary>
+        /// Creates decoder context.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <returns>The decoder context.</returns>
+        protected abstract IDecoderContext CreateDecoderContext(DataEncodingOptions options);
+
+        /// <inheritdoc/>
+        public Stream CreateEncoder(TextWriter textWriter, DataEncodingOptions options = DataEncodingOptions.Default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.Default)
+        {
+            throw new NotImplementedException();
+        }
 
         #region Implementation Helpers
 

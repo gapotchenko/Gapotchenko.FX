@@ -30,7 +30,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="data">The input array of bytes.</param>
         /// <param name="options">The options.</param>
         /// <returns>The string representation, in base32-hex, of the contents of <paramref name="data"/>.</returns>
-        public new static string GetString(ReadOnlySpan<byte> data, DataTextEncodingOptions options) => Instance.GetString(data, options);
+        public new static string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => Instance.GetString(data, options);
 
         /// <summary>
         /// Decodes the specified string, which represents encoded binary data as base32-hex symbols, to an equivalent array of bytes.
@@ -45,7 +45,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The string to decode.</param>
         /// <param name="options">The options.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        public new static byte[] GetBytes(ReadOnlySpan<char> s, DataTextEncodingOptions options) => Instance.GetBytes(s, options);
+        public new static byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBytes(s, options);
 
         /// <summary>
         /// The number of characters for padding of an encoded string representation.

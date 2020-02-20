@@ -29,13 +29,13 @@ namespace Gapotchenko.FX.Data.Encoding
         protected override float MinEfficiencyCore => 0.8125f;
 
         /// <inheritdoc/>
-        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options)
+        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        protected override string GetStringCore(ReadOnlySpan<byte> data, DataTextEncodingOptions options)
+        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options)
         {
             throw new NotImplementedException();
         }

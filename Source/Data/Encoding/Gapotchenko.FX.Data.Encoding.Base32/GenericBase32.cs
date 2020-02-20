@@ -52,7 +52,7 @@ namespace Gapotchenko.FX.Data.Encoding
         protected override float EfficiencyCore => Efficiency;
 
         /// <inheritdoc/>
-        protected override string GetStringCore(ReadOnlySpan<byte> data, DataTextEncodingOptions options)
+        protected override string GetStringCore(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
             int n = data.Length;
 
@@ -85,7 +85,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 sb.Append(Alphabet[digit]);
             }
 
-            if ((options & DataTextEncodingOptions.NoPadding) == 0)
+            if ((options & DataEncodingOptions.NoPadding) == 0)
             {
                 int padding = Padding;
                 while (sb.Length % padding != 0)
@@ -96,7 +96,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options)
+        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options)
         {
             s = Unpad(s);
 
@@ -155,5 +155,17 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <inheritdoc/>
         protected override ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => UnpadRight(s, PaddingChar);
+
+        /// <inheritdoc/>
+        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

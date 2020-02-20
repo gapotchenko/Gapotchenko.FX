@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -23,7 +21,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="data">The input array of bytes.</param>
         /// <param name="options">The options.</param>
         /// <returns>The string representation of the contents of <paramref name="data"/>.</returns>
-        string GetString(ReadOnlySpan<byte> data, DataTextEncodingOptions options);
+        string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <summary>
         /// Decodes the specified string to an equivalent array of bytes.
@@ -38,7 +36,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The string to decode.</param>
         /// <param name="options">The options.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        byte[] GetBytes(ReadOnlySpan<char> s, DataTextEncodingOptions options);
+        byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options);
 
         /// <summary>
         /// Gets a value indicating whether encoding is case-sensitive.
@@ -70,5 +68,21 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The encoded string.</param>
         /// <returns><c>true</c> when specified encoded string is padded; otherwise, <c>false</c>.</returns>
         bool IsPadded(ReadOnlySpan<char> s);
+
+        /// <summary>
+        /// Creates a streaming encoder with specified options.
+        /// </summary>
+        /// <param name="textWriter">The text writer.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The stream.</returns>
+        Stream CreateEncoder(TextWriter textWriter, DataEncodingOptions options = DataEncodingOptions.Default);
+
+        /// <summary>
+        /// Creates a streaming decoder with specified options.
+        /// </summary>
+        /// <param name="textReader">The text reader.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The stream.</returns>
+        Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.Default);
     }
 }

@@ -50,17 +50,16 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
 
-        struct Context
+        sealed class CodecContext : IEncoderContext, IDecoderContext
         {
-            public Context(DataTextEncodingAlphabet alphabet, DataTextEncodingOptions options) :
-                this()
+            public CodecContext(DataTextEncodingAlphabet alphabet, DataEncodingOptions options)
             {
                 m_Alphabet = alphabet;
                 m_Options = options;
             }
 
             readonly DataTextEncodingAlphabet m_Alphabet;
-            readonly DataTextEncodingOptions m_Options;
+            readonly DataEncodingOptions m_Options;
 
             int m_Bits;
             int m_Modulus;
@@ -90,7 +89,7 @@ namespace Gapotchenko.FX.Data.Encoding
                             // 8 bits = 6 + 2
                             output.Write(alphabet[(m_Bits >> 2) & Mask6Bits]); // 6 bits
                             output.Write(alphabet[(m_Bits << 4) & Mask6Bits]); // 2 bits
-                            if ((m_Options & DataTextEncodingOptions.NoPadding) == 0)
+                            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
                             {
                                 output.Write(PaddingChar);
                                 output.Write(PaddingChar);
@@ -102,7 +101,7 @@ namespace Gapotchenko.FX.Data.Encoding
                             output.Write(alphabet[(m_Bits >> 10) & Mask6Bits]); // 6 bits
                             output.Write(alphabet[(m_Bits >> 4) & Mask6Bits]); // 6 bits
                             output.Write(alphabet[(m_Bits << 2) & Mask6Bits]); // 4 bits
-                            if ((m_Options & DataTextEncodingOptions.NoPadding) == 0)
+                            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
                                 output.Write(PaddingChar);
                             break;
 
@@ -215,28 +214,10 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override string GetStringCore(ReadOnlySpan<byte> data, DataTextEncodingOptions options)
-        {
-            var tw = new StringWriter();
-
-            var context = new Context(Alphabet, options);
-            context.Encode(data, tw);
-            context.Encode(null, tw);
-
-            return tw.ToString();
-        }
+        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => new CodecContext(Alphabet, options);
 
         /// <inheritdoc/>
-        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options)
-        {
-            var ms = new MemoryStream();
-
-            var context = new Context(Alphabet, options);
-            context.Decode(s, ms);
-            context.Decode(null, ms);
-
-            return ms.ToArray();
-        }
+        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => new CodecContext(Alphabet, options);
 
         /// <inheritdoc/>
         public override bool IsCaseSensitive => true;

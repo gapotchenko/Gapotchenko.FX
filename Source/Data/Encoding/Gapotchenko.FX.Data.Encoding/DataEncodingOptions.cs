@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Binary-to-text encoding options.
+    /// Defines data encoding options.
     /// </summary>
     [Flags]
-    public enum DataTextEncodingOptions
+    public enum DataEncodingOptions
     {
         /// <summary>
         /// The default options.
