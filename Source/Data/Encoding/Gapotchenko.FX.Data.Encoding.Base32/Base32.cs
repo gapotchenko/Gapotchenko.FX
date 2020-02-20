@@ -69,13 +69,13 @@ namespace Gapotchenko.FX.Data.Encoding
         public new static ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => Instance.Unpad(s);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static volatile IDataTextEncoding m_Instance;
+        static volatile IBase32 m_Instance;
 
         /// <summary>
         /// Returns a default instance of <see cref="Base32"/> encoding.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static IDataTextEncoding Instance
+        public static IBase32 Instance
         {
             get
             {

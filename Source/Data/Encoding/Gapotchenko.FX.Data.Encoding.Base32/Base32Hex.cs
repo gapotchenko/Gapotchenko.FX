@@ -53,13 +53,13 @@ namespace Gapotchenko.FX.Data.Encoding
         public new const int Padding = 8;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static volatile IDataTextEncoding m_Instance;
+        static volatile IBase32 m_Instance;
 
         /// <summary>
         /// Returns a default instance of <see cref="Base32Hex"/> encoding.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static IDataTextEncoding Instance
+        public static IBase32 Instance
         {
             get
             {

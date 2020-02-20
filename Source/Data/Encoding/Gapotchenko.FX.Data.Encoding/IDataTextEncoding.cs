@@ -70,7 +70,7 @@ namespace Gapotchenko.FX.Data.Encoding
         bool IsPadded(ReadOnlySpan<char> s);
 
         /// <summary>
-        /// Creates a streaming encoder with specified options.
+        /// Creates a streaming encoder.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         /// <param name="options">The options.</param>
@@ -78,7 +78,7 @@ namespace Gapotchenko.FX.Data.Encoding
         Stream CreateEncoder(TextWriter textWriter, DataEncodingOptions options = DataEncodingOptions.None);
 
         /// <summary>
-        /// Creates a streaming decoder with specified options.
+        /// Creates a streaming decoder.
         /// </summary>
         /// <param name="textReader">The text reader.</param>
         /// <param name="options">The options.</param>
