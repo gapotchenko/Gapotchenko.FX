@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -19,6 +21,24 @@ namespace Gapotchenko.FX.Data.Encoding
             int m_Bits;
             int m_Modulus;
             bool m_Eof;
+
+            int m_LinePosition;
+
+            void IncrementLinePosition(int delta)
+            {
+                m_LinePosition += delta;
+            }
+
+            void InsertLineBreak(TextWriter output)
+            {
+                if (m_LinePosition >= 76)
+                {
+                    m_LinePosition = 0;
+
+                    if ((m_Options & DataEncodingOptions.Indent) != 0)
+                        output.WriteLine();
+                }
+            }
 
             const int Mask6Bits = 0x3f;
             const int Mask4Bits = 0x0f;
@@ -41,10 +61,13 @@ namespace Gapotchenko.FX.Data.Encoding
                             break;
 
                         case 1:
+                            InsertLineBreak(output);
+
                             // 8 bits = 6 + 2
                             output.Write(alphabet[(m_Bits >> 2) & Mask6Bits]); // 6 bits
                             output.Write(alphabet[(m_Bits << 4) & Mask6Bits]); // 2 bits
-                            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
+
+                            if ((m_Options & DataEncodingOptions.InhibitPadding) == 0)
                             {
                                 output.Write(PaddingChar);
                                 output.Write(PaddingChar);
@@ -52,11 +75,14 @@ namespace Gapotchenko.FX.Data.Encoding
                             break;
 
                         case 2:
+                            InsertLineBreak(output);
+
                             // 16 bits = 6 + 6 + 4
                             output.Write(alphabet[(m_Bits >> 10) & Mask6Bits]); // 6 bits
                             output.Write(alphabet[(m_Bits >> 4) & Mask6Bits]); // 6 bits
                             output.Write(alphabet[(m_Bits << 2) & Mask6Bits]); // 4 bits
-                            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
+
+                            if ((m_Options & DataEncodingOptions.InhibitPadding) == 0)
                                 output.Write(PaddingChar);
                             break;
 
@@ -75,11 +101,15 @@ namespace Gapotchenko.FX.Data.Encoding
                         {
                             m_Modulus = 0;
 
+                            InsertLineBreak(output);
+
                             // 3 bytes = 24 bits = 4 * 6 bits
                             output.Write(alphabet[(m_Bits >> 18) & Mask6Bits]);
                             output.Write(alphabet[(m_Bits >> 12) & Mask6Bits]);
                             output.Write(alphabet[(m_Bits >> 6) & Mask6Bits]);
                             output.Write(alphabet[m_Bits & Mask6Bits]);
+
+                            IncrementLinePosition(4);
                         }
                     }
                 }

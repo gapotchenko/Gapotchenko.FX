@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,19 +14,29 @@ namespace Gapotchenko.FX.Data.Encoding
     public enum DataEncodingOptions
     {
         /// <summary>
-        /// The default options.
+        /// No options.
         /// </summary>
-        Default = 0,
+        None = 0,
 
         /// <summary>
-        /// Instructs to inhibit padding production in encoding operation.
+        /// Instructs to inhibit padding generation.
         /// </summary>
-        NoPadding = 1 << 0,
+        InhibitPadding = 1 << 0,
 
         /// <summary>
-        /// Instructs to produce padding in encoding operation, or to make its presence obligatory in decoding operation.
+        /// Instructs to enforce padding generation and its presence validation.
         /// </summary>
-        RequirePadding = 1 << 1
+        RequirePadding = 1 << 1,
+
+        /// <summary>
+        /// Instructs to not perform the lifetime management of an underlying data object such as <see cref="Stream"/>, <see cref="TextReader"/> or <see cref="TextWriter"/>.
+        /// </summary>
+        NoOwnership = 1 << 2,
+
+        /// <summary>
+        /// Instructs to produce the indented or formatted output if the encoding natively supports it.
+        /// </summary>
+        Indent = 1 << 3
     }
 }
 

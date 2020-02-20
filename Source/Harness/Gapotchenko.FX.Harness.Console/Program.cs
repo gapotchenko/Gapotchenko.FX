@@ -19,6 +19,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 #endregion
@@ -60,15 +61,26 @@ namespace Gapotchenko.FX.Harness.Console
             var h = source.ToHashSet();
 
             Console.WriteLine(h.IsNullOrEmpty());
-
-            var data = Base32.Instance.EncodeData(new byte[] { 1, 2, 3 });
-
-            
         }
 
         static async Task _RunAsync(CancellationToken ct)
         {
             await Task.Yield();
+
+            string s = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit, lectus et dapibus ultricies, sem nulla finibus dolor, vitae pharetra urna risus eget nunc. Nunc laoreet condimentum magna, a varius massa auctor in. Mauris cursus sodales justo eget faucibus. Nullam nec nisi eget lorem faucibus feugiat. Fusce sed iaculis turpis, ut vestibulum ipsum.";
+
+            using (var stream = Base64.Instance.CreateEncoder(
+                File.CreateText(Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\Temp\base.txt")),
+                DataEncodingOptions.Indent))
+            {
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+            }
+
+            string e = Base64.GetString(Encoding.UTF8.GetBytes(s), DataEncodingOptions.Indent);
+
+            //e = Convert.ToBase64String(Encoding.UTF8.GetBytes(s), Base64FormattingOptions.InsertLineBreaks);
+
+            Console.WriteLine(e);
         }
     }
 }

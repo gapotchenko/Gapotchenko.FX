@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -16,7 +18,7 @@ namespace Gapotchenko.FX.Data.Encoding
     public abstract class DataTextEncoding : DataEncoding, IDataTextEncoding
     {
         /// <inheritdoc/>
-        public string GetString(ReadOnlySpan<byte> data) => GetString(data, DataEncodingOptions.Default);
+        public string GetString(ReadOnlySpan<byte> data) => GetString(data, DataEncodingOptions.None);
 
         /// <inheritdoc/>
         public string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => data == null ? null : GetStringCore(data, options);
@@ -39,7 +41,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        public byte[] GetBytes(ReadOnlySpan<char> s) => GetBytes(s, DataEncodingOptions.Default);
+        public byte[] GetBytes(ReadOnlySpan<char> s) => GetBytes(s, DataEncodingOptions.None);
 
         /// <inheritdoc/>
         public byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => s == null ? null : GetBytesCore(s, options);
@@ -113,7 +115,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// The encoder context.
         /// </summary>
-        public interface IEncoderContext
+        protected interface IEncoderContext
         {
             /// <summary>
             /// Encodes a block of data.
@@ -136,7 +138,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// The decoder context.
         /// </summary>
-        public interface IDecoderContext
+        protected interface IDecoderContext
         {
             /// <summary>
             /// Decodes a block of data.
@@ -157,15 +159,177 @@ namespace Gapotchenko.FX.Data.Encoding
         protected abstract IDecoderContext CreateDecoderContext(DataEncodingOptions options);
 
         /// <inheritdoc/>
-        public Stream CreateEncoder(TextWriter textWriter, DataEncodingOptions options = DataEncodingOptions.Default)
+        public Stream CreateEncoder(TextWriter textWriter, DataEncodingOptions options = DataEncodingOptions.None)
+        {
+            if (textWriter == null)
+                throw new ArgumentNullException(nameof(textWriter));
+
+            var context = CreateEncoderContext(options);
+            return new EncoderStream(textWriter, context, options, 1024);
+        }
+
+        /// <inheritdoc/>
+        public Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.None)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
-        public Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.Default)
+        sealed class EncoderStream : Stream
         {
-            throw new NotImplementedException();
+            public EncoderStream(TextWriter textWriter, IEncoderContext context, DataEncodingOptions options, int bufferSize)
+            {
+                m_TextWriter = textWriter;
+                m_Context = context;
+                m_BufferSize = bufferSize;
+
+                m_OwnsTextWriter = (options & DataEncodingOptions.NoOwnership) == 0;
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                base.Dispose(disposing);
+
+                if (disposing)
+                {
+                    if (m_OwnsTextWriter)
+                        m_TextWriter.Dispose();
+                }
+            }
+
+            TextWriter m_TextWriter;
+            IEncoderContext m_Context;
+            bool m_OwnsTextWriter;
+
+            StringBuilder m_Buffer;
+            StringWriter m_BufferWriter;
+            int m_BufferSize;
+
+            public override bool CanRead => false;
+
+            public override bool CanSeek => false;
+
+            public override bool CanWrite => true;
+
+            public override long Length => throw new NotSupportedException();
+
+            public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+            public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+            public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+            public override void SetLength(long value) => throw new NotSupportedException();
+
+            public override void Close()
+            {
+                FlushFinalBlock();
+                base.Close();
+            }
+
+            public override void Write(byte[] buffer, int offset, int count)
+            {
+                m_Context.Encode(new ReadOnlySpan<byte>(buffer, offset, count), m_TextWriter);
+            }
+
+            public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+            {
+                if (count == 0)
+                    return;
+
+                var input = new ReadOnlyMemory<byte>(buffer, offset, count);
+
+                EnsureBufferCreated();
+                foreach (var chunk in SplitMemoryIntoChunks(input, m_BufferSize))
+                {
+                    m_Context.Encode(chunk.Span, m_BufferWriter);
+                    await FlushBufferAsync(cancellationToken).ConfigureAwait(false);
+                }
+            }
+
+            static IEnumerable<ReadOnlyMemory<T>> SplitMemoryIntoChunks<T>(ReadOnlyMemory<T> memory, int chunkSize)
+            {
+                int memoryLength = memory.Length;
+                if (memoryLength <= chunkSize)
+                {
+                    yield return memory;
+                    yield break;
+                }
+
+                int chunkOffset = 0;
+                while (chunkOffset < memoryLength)
+                {
+                    int chunkLength = Math.Min(chunkSize, memoryLength - chunkOffset);
+                    yield return memory.Slice(chunkOffset, chunkLength);
+                    chunkOffset += chunkLength;
+                }
+            }
+
+            public override void Flush()
+            {
+                FlushFinalBlock();
+                m_TextWriter.Flush();
+            }
+
+            void FlushFinalBlock()
+            {
+                FlushBuffer();
+                m_Context.Encode(null, m_TextWriter);
+            }
+
+            async Task FlushFinalBlockAsync(CancellationToken cancellationToken = default)
+            {
+                EnsureBufferCreated();
+                m_Context.Encode(null, m_BufferWriter);
+                await FlushBufferAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            void EnsureBufferCreated()
+            {
+                if (m_Buffer != null)
+                    return;
+
+                m_Buffer = new StringBuilder();
+                m_BufferWriter = new StringWriter(m_Buffer)
+                {
+                    NewLine = m_TextWriter.NewLine
+                };
+            }
+
+            void FlushBuffer()
+            {
+                if (m_Buffer == null)
+                    return;
+
+                m_BufferWriter.Flush();
+                if (m_Buffer.Length != 0)
+                {
+#if TFF_TEXT_IO_STRINGBUILDER
+                    m_TextWriter.Write(m_Buffer);
+#else
+                    m_TextWriter.Write(m_Buffer.ToString());
+#endif
+                    m_Buffer.Clear();
+                }
+            }
+
+            async Task FlushBufferAsync(CancellationToken cancellationToken)
+            {
+                if (m_Buffer == null)
+                    return;
+
+                m_BufferWriter.Flush();
+                if (m_Buffer.Length != 0)
+                {
+#if TFF_TEXT_IO_STRINGBUILDER
+                    await m_TextWriter.WriteAsync(m_Buffer, cancellationToken).ConfigureAwait(false);
+#elif TFF_TEXT_IO_CANCELLATION
+                    await m_TextWriter.WriteAsync(m_Buffer.ToString().AsMemory(), cancellationToken).ConfigureAwait(false);
+#else
+                    await m_TextWriter.WriteAsync(m_Buffer.ToString()).ConfigureAwait(false);
+#endif
+                    m_Buffer.Clear();
+                }
+            }
         }
 
         #region Implementation Helpers
