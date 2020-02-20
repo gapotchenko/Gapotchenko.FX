@@ -158,6 +158,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <returns>The decoder context.</returns>
         protected abstract IDecoderContext CreateDecoderContext(DataEncodingOptions options);
 
+        const int StreamBufferSize = 2048;
+
         /// <inheritdoc/>
         public Stream CreateEncoder(TextWriter textWriter, DataEncodingOptions options = DataEncodingOptions.None)
         {
@@ -165,7 +167,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 throw new ArgumentNullException(nameof(textWriter));
 
             var context = CreateEncoderContext(options);
-            return new EncoderStream(textWriter, context, options, 1024);
+            return new EncoderStream(textWriter, context, options, StreamBufferSize);
         }
 
         /// <inheritdoc/>
@@ -187,14 +189,24 @@ namespace Gapotchenko.FX.Data.Encoding
 
             protected override void Dispose(bool disposing)
             {
-                base.Dispose(disposing);
-
                 if (disposing)
                 {
+                    FlushFinalBlock();
+
                     if (m_OwnsTextWriter)
                         m_TextWriter.Dispose();
                 }
             }
+
+#if TFF_ASYNC_DISPOSABLE
+            public override async ValueTask DisposeAsync()
+            {
+                await FlushFinalBlockAsync().ConfigureAwait(false);
+
+                if (m_OwnsTextWriter)
+                    await m_TextWriter.DisposeAsync().ConfigureAwait(false);
+            }
+#endif
 
             TextWriter m_TextWriter;
             IEncoderContext m_Context;
@@ -220,12 +232,6 @@ namespace Gapotchenko.FX.Data.Encoding
 
             public override void SetLength(long value) => throw new NotSupportedException();
 
-            public override void Close()
-            {
-                FlushFinalBlock();
-                base.Close();
-            }
-
             public override void Write(byte[] buffer, int offset, int count)
             {
                 m_Context.Encode(new ReadOnlySpan<byte>(buffer, offset, count), m_TextWriter);
@@ -233,13 +239,25 @@ namespace Gapotchenko.FX.Data.Encoding
 
             public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
             {
-                if (count == 0)
+                if (count != 0)
+                    await WriteAsyncCore(new ReadOnlyMemory<byte>(buffer, offset, count), cancellationToken).ConfigureAwait(false);
+            }
+
+#if TFF_VALUETASK && !NETCOREAPP2_0
+            public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
+            {
+                await WriteAsyncCore(buffer, cancellationToken).ConfigureAwait(false);
+            }
+#endif
+
+            async Task WriteAsyncCore(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
+            {
+                if (buffer.IsEmpty)
                     return;
 
-                var input = new ReadOnlyMemory<byte>(buffer, offset, count);
-
                 EnsureBufferCreated();
-                foreach (var chunk in SplitMemoryIntoChunks(input, m_BufferSize))
+
+                foreach (var chunk in SplitMemoryIntoChunks(buffer, m_BufferSize))
                 {
                     m_Context.Encode(chunk.Span, m_BufferWriter);
                     await FlushBufferAsync(cancellationToken).ConfigureAwait(false);

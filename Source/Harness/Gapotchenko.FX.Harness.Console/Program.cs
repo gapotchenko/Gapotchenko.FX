@@ -69,11 +69,16 @@ namespace Gapotchenko.FX.Harness.Console
 
             string s = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit, lectus et dapibus ultricies, sem nulla finibus dolor, vitae pharetra urna risus eget nunc. Nunc laoreet condimentum magna, a varius massa auctor in. Mauris cursus sodales justo eget faucibus. Nullam nec nisi eget lorem faucibus feugiat. Fusce sed iaculis turpis, ut vestibulum ipsum.";
 
-            using (var stream = Base64.Instance.CreateEncoder(
+            var stream = Base64.Instance.CreateEncoder(
                 File.CreateText(Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\Temp\base.txt")),
-                DataEncodingOptions.Indent))
+                DataEncodingOptions.Indent);
+            try
             {
                 await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+            }
+            finally
+            {
+                await stream.DisposeAsync();
             }
 
             string e = Base64.GetString(Encoding.UTF8.GetBytes(s), DataEncodingOptions.Indent);
