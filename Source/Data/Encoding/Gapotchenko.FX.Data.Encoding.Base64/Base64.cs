@@ -46,7 +46,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        public new static byte[] GetBytes(ReadOnlySpan<char> s) => GetBytes(s, DataTextEncodingOptions.Default);
+        public new static byte[] GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
 
         /// <summary>
         /// Decodes the specified string, which represents encoded binary data as Base64 symbols, to an equivalent array of bytes with specified options.
@@ -54,24 +54,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The string to decode.</param>
         /// <param name="options">The options.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        public new static byte[] GetBytes(ReadOnlySpan<char> s, DataTextEncodingOptions options) =>
-            s == null ?
-                null :
-                Convert.FromBase64String(ApplyDecodingOptions(s, options));
-
-        static string ApplyDecodingOptions(ReadOnlySpan<char> s, DataTextEncodingOptions options)
-        {
-            if ((options & DataTextEncodingOptions.RequirePadding) == 0)
-                return Pad(s);
-            else
-                return s.ToString();
-        }
-
-        /// <inheritdoc/>
-        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options) => GetBytes(s, options);
-
-        /// <inheritdoc/>
-        public override bool IsCaseSensitive => true;
+        public new static byte[] GetBytes(ReadOnlySpan<char> s, DataTextEncodingOptions options) => Instance.GetBytes(s, options);
 
         /// <summary>
         /// The number of characters for padding of an encoded string representation.

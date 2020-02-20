@@ -100,6 +100,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 {
                     foreach (var b in input)
                     {
+                        // Accumulate data bits.
                         m_Bits = (m_Bits << 8) | b;
 
                         if (++m_Modulus == 3)
@@ -115,6 +116,71 @@ namespace Gapotchenko.FX.Data.Encoding
                     }
                 }
             }
+
+            public void Decode(ReadOnlySpan<char> input, Stream output)
+            {
+                if (m_Eof)
+                    return;
+
+                if (input == null)
+                    m_Eof = true;
+
+                foreach (var c in input)
+                {
+                    if (c == PaddingChar)
+                    {
+                        m_Eof = true;
+                        break;
+                    }
+
+                    int result = m_Base64.Alphabet.IndexOf(c);
+                    if (result != -1)
+                    {
+                        // Accumulate data bits.
+                        m_Bits = (m_Bits << 6) | result;
+
+                        if (++m_Modulus == 4)
+                        {
+                            m_Modulus = 0;
+
+                            output.WriteByte((byte)(m_Bits >> 16));
+                            output.WriteByte((byte)(m_Bits >> 8));
+                            output.WriteByte((byte)m_Bits);
+                        }
+                    }
+                }
+
+                if (m_Eof)
+                {
+                    if (m_Modulus != 0)
+                    {
+                        switch (m_Modulus)
+                        {
+                            case 1:
+                                // 6 bits
+                                // Invalid truncated encoding: 6 bits cannot form a byte.
+                                break;
+
+                            case 2:
+                                // 2 * 6 bits = 12 = 8 + 4
+                                output.WriteByte((byte)(m_Bits >> 4));
+                                break;
+
+                            case 3:
+                                // 3 * 6 bits = 18 = 8 + 8 + 2
+                                output.WriteByte((byte)(m_Bits >> 10));
+                                output.WriteByte((byte)(m_Bits >> 2));
+                                break;
+
+                            default:
+                                throw new InvalidOperationException();
+                        }
+
+                        m_Modulus = 0;
+                    }
+                }
+            }
+
         }
 
         /// <inheritdoc/>
@@ -127,6 +193,18 @@ namespace Gapotchenko.FX.Data.Encoding
             context.Encode(null, tw);
 
             return tw.ToString();
+        }
+
+        /// <inheritdoc/>
+        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataTextEncodingOptions options)
+        {
+            var ms = new MemoryStream();
+
+            var context = new Context(this, options);
+            context.Decode(s, ms);
+            context.Decode(null, ms);
+
+            return ms.ToArray();
         }
 
         /// <inheritdoc/>
