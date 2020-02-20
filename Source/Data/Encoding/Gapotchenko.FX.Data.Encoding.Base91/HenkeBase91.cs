@@ -8,6 +8,9 @@ namespace Gapotchenko.FX.Data.Encoding
     public sealed class HenkeBase91 : DataTextEncoding, IBase91
     {
         /// <inheritdoc/>
+        public int Radix => 91;
+
+        /// <inheritdoc/>
         public override string Name => "basE91";
 
         /// <inheritdoc/>

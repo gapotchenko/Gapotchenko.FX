@@ -30,7 +30,10 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// The encoding alphabet.
         /// </summary>
-        protected readonly DataTextEncodingAlphabet Alphabet;
+        protected DataTextEncodingAlphabet Alphabet;
+
+        /// <inheritdoc/>
+        public int Radix => 32;
 
         /// <summary>
         /// Base32 encoding efficiency.
