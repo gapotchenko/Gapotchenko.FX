@@ -71,24 +71,28 @@ namespace Gapotchenko.FX.Harness.Console
 
             string filePath = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\Temp\base.txt");
 
-            var stream = Base64.Instance.CreateEncoder(
-                File.CreateText(filePath),
-                DataEncodingOptions.Indent);
-            try
-            {
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-            }
-            finally
-            {
-                await stream.DisposeAsync();
-            }
+            //var stream = Base64.Instance.CreateEncoder(
+            //    File.CreateText(filePath),
+            //    DataEncodingOptions.Indent);
+            //try
+            //{
+            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+            //    await stream.WriteAsync(Encoding.UTF8.GetBytes("h"));
+            //}
+            //finally
+            //{
+            //    await stream.DisposeAsync();
+            //}
 
-            using (var tr = new StreamReader(Base64.Instance.CreateDecoder(File.OpenText(filePath))))
+            using (var tr = new StreamReader(
+                Base64.Instance.CreateDecoder(
+                    File.OpenText(filePath),
+                    DataEncodingOptions.RequirePadding)))
             {
                 Console.WriteLine(await tr.ReadLineAsync());
             }

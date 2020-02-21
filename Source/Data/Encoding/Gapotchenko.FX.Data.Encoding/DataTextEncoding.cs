@@ -98,12 +98,12 @@ namespace Gapotchenko.FX.Data.Encoding
         public bool IsPadded(ReadOnlySpan<char> s) => s.Length % Padding == 0;
 
         /// <inheritdoc/>
-        protected override byte[] EncodeDataCore(ReadOnlySpan<byte> data) => Encoding.ASCII.GetBytes(GetString(data));
+        protected override byte[] EncodeDataCore(ReadOnlySpan<byte> data) => Encoding.UTF8.GetBytes(GetString(data));
 
         /// <inheritdoc/>
         protected override byte[] DecodeDataCore(ReadOnlySpan<byte> data) =>
             GetBytes(
-                Encoding.ASCII.GetString(
+                Encoding.UTF8.GetString(
 #if TFF_MEMORY && !TFF_MEMORY_OOB
                     data
 #else

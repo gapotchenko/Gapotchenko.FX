@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
     {
         static void TestVector(string raw, string encoded)
         {
-            var rawBytes = Encoding.ASCII.GetBytes(raw);
+            var rawBytes = Encoding.UTF8.GetBytes(raw);
 
             // -----------------------------------------------------------------
 

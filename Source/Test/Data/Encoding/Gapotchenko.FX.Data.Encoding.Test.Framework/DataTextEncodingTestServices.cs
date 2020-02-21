@@ -28,7 +28,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Framework
             // -----------------------------------------------------------------
 
             if (textEncoding == null)
-                textEncoding = Encoding.ASCII;
+                textEncoding = Encoding.UTF8;
 
             // -----------------------------------------------------------------
             // Data preparation
@@ -71,7 +71,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Framework
 
             Assert.IsTrue(rawBytes.SequenceEqual(dataEncoding.GetBytes(actualEncodedUnpadded.AsSpan())), "Cannot decode unpadded string.");
 
-            string actualEncodedWithoutPadding = dataEncoding.GetString(rawBytes, DataEncodingOptions.InhibitPadding);
+            string actualEncodedWithoutPadding = dataEncoding.GetString(rawBytes, DataEncodingOptions.NoPadding);
             Assert.AreEqual(actualEncodedUnpadded, actualEncodedWithoutPadding, "DataTextEncodingOptions.NoPadding is not honored.");
 
             // -----------------------------------------------------------------

@@ -110,7 +110,7 @@ namespace Gapotchenko.FX.Data.Encoding
                             output.Write(alphabet[(m_Bits >> 2) & Mask6Bits]); // 6 bits
                             output.Write(alphabet[(m_Bits << 4) & Mask6Bits]); // 2 bits
 
-                            if ((m_Options & DataEncodingOptions.InhibitPadding) == 0)
+                            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
                             {
                                 output.Write(PaddingChar);
                                 output.Write(PaddingChar);
@@ -125,7 +125,7 @@ namespace Gapotchenko.FX.Data.Encoding
                             output.Write(alphabet[(m_Bits >> 4) & Mask6Bits]); // 6 bits
                             output.Write(alphabet[(m_Bits << 2) & Mask6Bits]); // 4 bits
 
-                            if ((m_Options & DataEncodingOptions.InhibitPadding) == 0)
+                            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
                                 output.Write(PaddingChar);
                             break;
 
@@ -176,25 +176,40 @@ namespace Gapotchenko.FX.Data.Encoding
                         continue;
                     }
 
-                    int result = alphabet.IndexOf(c);
-                    if (result != -1)
+                    int b = alphabet.IndexOf(c);
+                    if (b == -1)
                     {
-                        // Accumulate data bits.
-                        m_Bits = (m_Bits << 6) | result;
-
-                        if (++m_Modulus == 4)
+                        if ((m_Options & DataEncodingOptions.Relaxed) == 0)
                         {
-                            m_Modulus = 0;
-
-                            output.WriteByte((byte)(m_Bits >> 16));
-                            output.WriteByte((byte)(m_Bits >> 8));
-                            output.WriteByte((byte)m_Bits);
+                            if (!char.IsWhiteSpace(c))
+                                throw new InvalidDataException("Encountered a non-Base64 character.");
                         }
+                        continue;
+                    }
+
+                    // Accumulate data bits.
+                    m_Bits = (m_Bits << 6) | b;
+
+                    if (++m_Modulus == 4)
+                    {
+                        m_Modulus = 0;
+
+                        output.WriteByte((byte)(m_Bits >> 16));
+                        output.WriteByte((byte)(m_Bits >> 8));
+                        output.WriteByte((byte)m_Bits);
                     }
                 }
 
                 if (m_Eof)
+                {
+                    if ((m_Options & DataEncodingOptions.RequirePadding) != 0)
+                    {
+                        if (m_Modulus != 0)
+                            throw new InvalidDataException("Invalid Base64 padding.");
+                    }
+
                     FlushDecode(output);
+                }
             }
 
             void FlushDecode(Stream output)
@@ -231,13 +246,14 @@ namespace Gapotchenko.FX.Data.Encoding
 
             void ValidateIncompleteByte()
             {
-                throw new InvalidDataException("Cannot form the last byte due to missing Base64 symbol.");
+                if ((m_Options & DataEncodingOptions.Relaxed) == 0)
+                    throw new InvalidDataException("Cannot decode the last byte due to missing Base64 symbol.");
             }
 
             void ValidateLastSymbol(int zeroMask)
             {
-                if ((m_Bits & zeroMask) != 0)
-                    throw new InvalidDataException("The discarded bits of the last Base64 symbol are expected to be zero.");
+                if ((m_Options & DataEncodingOptions.Relaxed) == 0 && (m_Bits & zeroMask) != 0)
+                    throw new InvalidDataException("The insignificant bits of the last Base64 symbol are expected to be zero.");
             }
         }
 
