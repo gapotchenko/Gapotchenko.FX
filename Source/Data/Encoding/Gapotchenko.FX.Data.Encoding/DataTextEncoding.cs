@@ -70,7 +70,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public int Padding => PaddingCore;
 
         /// <summary>
-        /// Gets the number of characters used for padding of encoded string representation.
+        /// Gets the number of characters used for padding of an encoded string representation.
         /// </summary>
         protected virtual int PaddingCore => 1;
 

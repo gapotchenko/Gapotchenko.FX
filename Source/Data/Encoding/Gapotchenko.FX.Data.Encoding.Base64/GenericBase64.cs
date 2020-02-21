@@ -77,6 +77,8 @@ namespace Gapotchenko.FX.Data.Encoding
             {
             }
 
+            readonly char[] m_Buffer = new char[4];
+
             int m_LinePosition;
 
             void IncrementLinePosition(int delta)
@@ -105,6 +107,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if (input == null)
                 {
                     m_Eof = true;
+
                     switch (m_Modulus)
                     {
                         case 0:
@@ -112,29 +115,41 @@ namespace Gapotchenko.FX.Data.Encoding
                             break;
 
                         case 1:
-                            InsertLineBreak(output);
-
-                            // 8 bits = 6 + 2
-                            output.Write(alphabet[(m_Bits >> 2) & Mask6Bits]); // 6 bits
-                            output.Write(alphabet[(m_Bits << 4) & Mask6Bits]); // 2 bits
-
-                            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
                             {
-                                output.Write(PaddingChar);
-                                output.Write(PaddingChar);
+                                // 8 bits = 6 + 2
+                                m_Buffer[0] = alphabet[(m_Bits >> 2) & Mask6Bits]; // 6 bits
+                                m_Buffer[1] = alphabet[(m_Bits << 4) & Mask6Bits]; // 2 bits
+
+                                int count = 2;
+                                if ((m_Options & DataEncodingOptions.NoPadding) == 0)
+                                {
+                                    m_Buffer[2] = PaddingChar;
+                                    m_Buffer[3] = PaddingChar;
+                                    count = 4;
+                                }
+
+                                InsertLineBreak(output);
+                                output.Write(m_Buffer, 0, count);
                             }
                             break;
 
                         case 2:
-                            InsertLineBreak(output);
+                            {
+                                // 16 bits = 6 + 6 + 4
+                                m_Buffer[0] = alphabet[(m_Bits >> 10) & Mask6Bits]; // 6 bits
+                                m_Buffer[1] = alphabet[(m_Bits >> 4) & Mask6Bits]; // 6 bits
+                                m_Buffer[2] = alphabet[(m_Bits << 2) & Mask6Bits]; // 4 bits
 
-                            // 16 bits = 6 + 6 + 4
-                            output.Write(alphabet[(m_Bits >> 10) & Mask6Bits]); // 6 bits
-                            output.Write(alphabet[(m_Bits >> 4) & Mask6Bits]); // 6 bits
-                            output.Write(alphabet[(m_Bits << 2) & Mask6Bits]); // 4 bits
+                                int count = 3;
+                                if ((m_Options & DataEncodingOptions.NoPadding) == 0)
+                                {
+                                    m_Buffer[3] = PaddingChar;
+                                    count = 4;
+                                }
 
-                            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
-                                output.Write(PaddingChar);
+                                InsertLineBreak(output);
+                                output.Write(m_Buffer, 0, count);
+                            }
                             break;
 
                         default:
@@ -155,10 +170,11 @@ namespace Gapotchenko.FX.Data.Encoding
                             InsertLineBreak(output);
 
                             // 3 bytes = 24 bits = 4 * 6 bits
-                            output.Write(alphabet[(m_Bits >> 18) & Mask6Bits]);
-                            output.Write(alphabet[(m_Bits >> 12) & Mask6Bits]);
-                            output.Write(alphabet[(m_Bits >> 6) & Mask6Bits]);
-                            output.Write(alphabet[m_Bits & Mask6Bits]);
+                            m_Buffer[0] = alphabet[(m_Bits >> 18) & Mask6Bits];
+                            m_Buffer[1] = alphabet[(m_Bits >> 12) & Mask6Bits];
+                            m_Buffer[2] = alphabet[(m_Bits >> 6) & Mask6Bits];
+                            m_Buffer[3] = alphabet[m_Bits & Mask6Bits];
+                            output.Write(m_Buffer);
 
                             IncrementLinePosition(4);
                         }
@@ -173,6 +189,8 @@ namespace Gapotchenko.FX.Data.Encoding
                 base(alphabet, options)
             {
             }
+
+            readonly byte[] m_Buffer = new byte[3];
 
             public void Decode(ReadOnlySpan<char> input, Stream output)
             {
@@ -210,9 +228,11 @@ namespace Gapotchenko.FX.Data.Encoding
                     {
                         m_Modulus = 0;
 
-                        output.WriteByte((byte)(m_Bits >> 16));
-                        output.WriteByte((byte)(m_Bits >> 8));
-                        output.WriteByte((byte)m_Bits);
+                        m_Buffer[0] = (byte)(m_Bits >> 16);
+                        m_Buffer[1] = (byte)(m_Bits >> 8);
+                        m_Buffer[2] = (byte)m_Bits;
+
+                        output.Write(m_Buffer, 0, 3);
                     }
                 }
 
@@ -249,8 +269,11 @@ namespace Gapotchenko.FX.Data.Encoding
                     case 3:
                         // 3 * 6 bits = 18 = 8 + 8 + 2
                         ValidateLastSymbol(Mask2Bits);
-                        output.WriteByte((byte)(m_Bits >> 10));
-                        output.WriteByte((byte)(m_Bits >> 2));
+
+                        m_Buffer[0] = (byte)(m_Bits >> 10);
+                        m_Buffer[1] = (byte)(m_Bits >> 2);
+
+                        output.Write(m_Buffer, 0, 2);
                         break;
 
                     default:
@@ -268,8 +291,11 @@ namespace Gapotchenko.FX.Data.Encoding
 
             void ValidateLastSymbol(int zeroMask)
             {
-                if ((m_Options & DataEncodingOptions.Relaxed) == 0 && (m_Bits & zeroMask) != 0)
+                if ((m_Options & DataEncodingOptions.Relaxed) == 0 &&
+                    (m_Bits & zeroMask) != 0)
+                {
                     throw new InvalidDataException("The insignificant bits of the last Base64 symbol are expected to be zero.");
+                }
             }
         }
 
