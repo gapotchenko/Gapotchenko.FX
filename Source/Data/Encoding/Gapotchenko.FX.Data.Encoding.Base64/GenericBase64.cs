@@ -50,20 +50,32 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
 
-        sealed class CodecContext : IEncoderContext, IDecoderContext
+        abstract class CodecContextBase
         {
-            public CodecContext(DataTextEncodingAlphabet alphabet, DataEncodingOptions options)
+            public CodecContextBase(DataTextEncodingAlphabet alphabet, DataEncodingOptions options)
             {
                 m_Alphabet = alphabet;
                 m_Options = options;
             }
 
-            readonly DataTextEncodingAlphabet m_Alphabet;
-            readonly DataEncodingOptions m_Options;
+            protected readonly DataTextEncodingAlphabet m_Alphabet;
+            protected readonly DataEncodingOptions m_Options;
 
-            int m_Bits;
-            int m_Modulus;
-            bool m_Eof;
+            protected int m_Bits;
+            protected int m_Modulus;
+            protected bool m_Eof;
+
+            protected const int Mask6Bits = 0x3f;
+            protected const int Mask4Bits = 0x0f;
+            protected const int Mask2Bits = 0x03;
+        }
+
+        sealed class EncoderContext : CodecContextBase, IEncoderContext
+        {
+            public EncoderContext(DataTextEncodingAlphabet alphabet, DataEncodingOptions options) :
+                base(alphabet, options)
+            {
+            }
 
             int m_LinePosition;
 
@@ -82,10 +94,6 @@ namespace Gapotchenko.FX.Data.Encoding
                         output.WriteLine();
                 }
             }
-
-            const int Mask6Bits = 0x3f;
-            const int Mask4Bits = 0x0f;
-            const int Mask2Bits = 0x03;
 
             public void Encode(ReadOnlySpan<byte> input, TextWriter output)
             {
@@ -156,6 +164,14 @@ namespace Gapotchenko.FX.Data.Encoding
                         }
                     }
                 }
+            }
+        }
+
+        sealed class DecoderContext : CodecContextBase, IDecoderContext
+        {
+            public DecoderContext(DataTextEncodingAlphabet alphabet, DataEncodingOptions options) :
+                base(alphabet, options)
+            {
             }
 
             public void Decode(ReadOnlySpan<char> input, Stream output)
@@ -258,10 +274,10 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => new CodecContext(Alphabet, options);
+        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => new EncoderContext(Alphabet, options);
 
         /// <inheritdoc/>
-        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => new CodecContext(Alphabet, options);
+        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => new DecoderContext(Alphabet, options);
 
         /// <inheritdoc/>
         public override bool IsCaseSensitive => true;
