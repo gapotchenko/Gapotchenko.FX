@@ -18,6 +18,9 @@ namespace Gapotchenko.FX.Data.Encoding
     public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
     {
         /// <inheritdoc/>
+        public abstract bool IsCaseSensitive { get; }
+
+        /// <inheritdoc/>
         public string GetString(ReadOnlySpan<byte> data) => GetString(data, DataEncodingOptions.None);
 
         /// <inheritdoc/>
@@ -62,32 +65,6 @@ namespace Gapotchenko.FX.Data.Encoding
 
             return ms.ToArray();
         }
-
-        /// <inheritdoc/>
-        public abstract bool IsCaseSensitive { get; }
-
-        /// <inheritdoc/>
-        public string Pad(ReadOnlySpan<char> s) => s == null ? null : PadCore(s);
-
-        /// <summary>
-        /// Pads the encoded string.
-        /// </summary>
-        /// <param name="s">The encoded string to pad.</param>
-        /// <returns>The padded encoded string.</returns>
-        protected virtual string PadCore(ReadOnlySpan<char> s) => s.ToString();
-
-        /// <inheritdoc/>
-        public ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => s == null ? null : UnpadCore(s);
-
-        /// <summary>
-        /// Unpads the encoded string.
-        /// </summary>
-        /// <param name="s">The encoded string to unpad.</param>
-        /// <returns>The unpadded encoded string.</returns>
-        protected virtual ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => s;
-
-        /// <inheritdoc/>
-        public bool IsPadded(ReadOnlySpan<char> s) => s.Length % Padding == 0;
 
         /// <inheritdoc/>
         protected override byte[] EncodeDataCore(ReadOnlySpan<byte> data) => Encoding.UTF8.GetBytes(GetString(data));
@@ -571,6 +548,29 @@ namespace Gapotchenko.FX.Data.Encoding
                 m_Buffer.Position = 0;
             }
         }
+
+        /// <inheritdoc/>
+        public string Pad(ReadOnlySpan<char> s) => s == null ? null : PadCore(s);
+
+        /// <summary>
+        /// Pads the encoded string.
+        /// </summary>
+        /// <param name="s">The encoded string to pad.</param>
+        /// <returns>The padded encoded string.</returns>
+        protected virtual string PadCore(ReadOnlySpan<char> s) => s.ToString();
+
+        /// <inheritdoc/>
+        public ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => s == null ? null : UnpadCore(s);
+
+        /// <summary>
+        /// Unpads the encoded string.
+        /// </summary>
+        /// <param name="s">The encoded string to unpad.</param>
+        /// <returns>The unpadded encoded string.</returns>
+        protected virtual ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => s;
+
+        /// <inheritdoc/>
+        public bool IsPadded(ReadOnlySpan<char> s) => s.Length % Padding == 0;
 
         #region Implementation Helpers
 

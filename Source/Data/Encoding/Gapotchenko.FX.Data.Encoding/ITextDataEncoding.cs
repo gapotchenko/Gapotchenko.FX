@@ -9,6 +9,11 @@ namespace Gapotchenko.FX.Data.Encoding
     public interface ITextDataEncoding : IDataEncoding
     {
         /// <summary>
+        /// Gets a value indicating whether encoding is case-sensitive.
+        /// </summary>
+        bool IsCaseSensitive { get; }
+
+        /// <summary>
         /// Encodes an array of bytes to its equivalent string representation.
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
@@ -39,9 +44,20 @@ namespace Gapotchenko.FX.Data.Encoding
         byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options);
 
         /// <summary>
-        /// Gets a value indicating whether encoding is case-sensitive.
+        /// Creates a streaming encoder.
         /// </summary>
-        bool IsCaseSensitive { get; }
+        /// <param name="textWriter">The text writer.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The stream.</returns>
+        Stream CreateEncoder(TextWriter textWriter, DataEncodingOptions options = DataEncodingOptions.None);
+
+        /// <summary>
+        /// Creates a streaming decoder.
+        /// </summary>
+        /// <param name="textReader">The text reader.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The stream.</returns>
+        Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.None);
 
         /// <summary>
         /// Pads the encoded string.
@@ -63,21 +79,5 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The encoded string.</param>
         /// <returns><c>true</c> when specified encoded string is padded; otherwise, <c>false</c>.</returns>
         bool IsPadded(ReadOnlySpan<char> s);
-
-        /// <summary>
-        /// Creates a streaming encoder.
-        /// </summary>
-        /// <param name="textWriter">The text writer.</param>
-        /// <param name="options">The options.</param>
-        /// <returns>The stream.</returns>
-        Stream CreateEncoder(TextWriter textWriter, DataEncodingOptions options = DataEncodingOptions.None);
-
-        /// <summary>
-        /// Creates a streaming decoder.
-        /// </summary>
-        /// <param name="textReader">The text reader.</param>
-        /// <param name="options">The options.</param>
-        /// <returns>The stream.</returns>
-        Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.None);
     }
 }
