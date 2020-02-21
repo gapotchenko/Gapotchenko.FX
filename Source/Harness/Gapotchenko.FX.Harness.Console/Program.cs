@@ -97,7 +97,7 @@ namespace Gapotchenko.FX.Harness.Console
                 Console.WriteLine(await tr.ReadLineAsync());
             }
 
-            Console.WriteLine(Encoding.UTF8.GetString(Base64.GetBytes("SQ==QU0=VEpN", DataEncodingOptions.Padding)));
+            Console.WriteLine(Encoding.UTF8.GetString(Base64.GetBytes("SQ=Ж=QU0=VEpN", DataEncodingOptions.Padding | DataEncodingOptions.Relax)));
 
             //string e = Base64.GetString(Encoding.UTF8.GetBytes(s), DataEncodingOptions.Indent);
 

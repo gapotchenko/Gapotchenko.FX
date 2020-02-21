@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -155,29 +156,29 @@ namespace Gapotchenko.FX.Data.Encoding
                         default:
                             throw new InvalidOperationException();
                     }
+
+                    return;
                 }
-                else
+
+                foreach (var b in input)
                 {
-                    foreach (var b in input)
+                    // Accumulate data bits.
+                    m_Bits = (m_Bits << 8) | b;
+
+                    if (++m_Modulus == 3)
                     {
-                        // Accumulate data bits.
-                        m_Bits = (m_Bits << 8) | b;
+                        m_Modulus = 0;
 
-                        if (++m_Modulus == 3)
-                        {
-                            m_Modulus = 0;
+                        InsertLineBreak(output);
 
-                            InsertLineBreak(output);
+                        // 3 bytes = 24 bits = 4 * 6 bits
+                        m_Buffer[0] = alphabet[(m_Bits >> 18) & Mask6Bits];
+                        m_Buffer[1] = alphabet[(m_Bits >> 12) & Mask6Bits];
+                        m_Buffer[2] = alphabet[(m_Bits >> 6) & Mask6Bits];
+                        m_Buffer[3] = alphabet[m_Bits & Mask6Bits];
+                        output.Write(m_Buffer);
 
-                            // 3 bytes = 24 bits = 4 * 6 bits
-                            m_Buffer[0] = alphabet[(m_Bits >> 18) & Mask6Bits];
-                            m_Buffer[1] = alphabet[(m_Bits >> 12) & Mask6Bits];
-                            m_Buffer[2] = alphabet[(m_Bits >> 6) & Mask6Bits];
-                            m_Buffer[3] = alphabet[m_Bits & Mask6Bits];
-                            output.Write(m_Buffer);
-
-                            IncrementLinePosition(4);
-                        }
+                        IncrementLinePosition(4);
                     }
                 }
             }
@@ -192,15 +193,19 @@ namespace Gapotchenko.FX.Data.Encoding
 
             readonly byte[] m_Buffer = new byte[3];
 
-            int m_Padding;
-
             public void Decode(ReadOnlySpan<char> input, Stream output)
             {
                 if (m_Eof)
                     return;
 
                 if (input == null)
+                {
                     m_Eof = true;
+                    if ((m_Options & DataEncodingOptions.Padding) != 0)
+                        ValidatePaddingEof();
+                    FlushDecode(output);
+                    return;
+                }
 
                 var alphabet = m_Alphabet;
 
@@ -209,23 +214,10 @@ namespace Gapotchenko.FX.Data.Encoding
                     if (c == PaddingChar)
                     {
                         if ((m_Options & DataEncodingOptions.Padding) != 0)
-                        {
-                            if (m_Padding == 0)
-                            {
-                                if (m_Modulus == 0)
-                                    throw CreateInvalidPaddingException();
-                                m_Padding = m_Modulus;
-                            }
-                            if (++m_Padding == 4)
-                                m_Padding = 0;
-                        }
-
+                            ValidatePaddingChar();
                         FlushDecode(output);
                         continue;
                     }
-
-                    if (m_Padding != 0)
-                        throw CreateInvalidPaddingException();
 
                     int b = alphabet.IndexOf(c);
                     if (b == -1)
@@ -237,6 +229,8 @@ namespace Gapotchenko.FX.Data.Encoding
                         }
                         continue;
                     }
+
+                    ValidatePaddingState();
 
                     // Accumulate data bits.
                     m_Bits = (m_Bits << 6) | b;
@@ -252,28 +246,16 @@ namespace Gapotchenko.FX.Data.Encoding
                         output.Write(m_Buffer, 0, 3);
                     }
                 }
-
-                if (m_Eof)
-                {
-                    if ((m_Options & DataEncodingOptions.Padding) != 0)
-                    {
-                        if (m_Modulus != 0 || m_Padding != 0)
-                            throw CreateInvalidPaddingException();
-                    }
-
-                    FlushDecode(output);
-                }
             }
-
-            static Exception CreateInvalidPaddingException() => new InvalidDataException("Invalid Base64 padding.");
 
             void FlushDecode(Stream output)
             {
-                if (m_Modulus == 0)
-                    return;
-
                 switch (m_Modulus)
                 {
+                    case 0:
+                        // Nothing to do.
+                        return;
+
                     case 1:
                         // 6 bits
                         ValidateIncompleteByte();
@@ -316,6 +298,36 @@ namespace Gapotchenko.FX.Data.Encoding
                     throw new InvalidDataException("The insignificant bits of the last Base64 symbol are expected to be zero.");
                 }
             }
+
+            int m_Padding;
+
+            void ValidatePaddingChar()
+            {
+                if (m_Padding == 0)
+                {
+                    if (m_Modulus == 0)
+                        throw CreateInvalidPaddingException();
+                    m_Padding = m_Modulus;
+                }
+
+                if (++m_Padding == 4)
+                    m_Padding = 0;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            void ValidatePaddingState()
+            {
+                if (m_Padding != 0)
+                    throw CreateInvalidPaddingException();
+            }
+
+            void ValidatePaddingEof()
+            {
+                if (m_Modulus != 0 || m_Padding != 0)
+                    throw CreateInvalidPaddingException();
+            }
+
+            static Exception CreateInvalidPaddingException() => new InvalidDataException("Invalid Base64 padding.");
         }
 
         /// <inheritdoc/>

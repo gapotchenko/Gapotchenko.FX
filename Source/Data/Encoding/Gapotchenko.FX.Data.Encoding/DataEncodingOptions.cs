@@ -24,7 +24,7 @@ namespace Gapotchenko.FX.Data.Encoding
         Unpad = 1 << 0,
 
         /// <summary>
-        /// Instructs to enforce padding validation in decoding operation or its generation in encoding operation.
+        /// Validate padding in decoding operation or enforce padding generation in encoding operation.
         /// </summary>
         Padding = 1 << 1,
 

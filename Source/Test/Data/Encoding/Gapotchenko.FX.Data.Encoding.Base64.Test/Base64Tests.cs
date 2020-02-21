@@ -73,5 +73,11 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             Assert.IsTrue(
                 Base64.GetBytes("SQ=QU0=VEpN", DataEncodingOptions.Padding)
                 .SequenceEqual(Encoding.ASCII.GetBytes("IAMTJM")));
+
+        [TestMethod]
+        public void Base64_PadCon_Relax() =>
+            Assert.IsTrue(
+                Base64.GetBytes("SQ=Я=QU0=VEpN", DataEncodingOptions.Padding | DataEncodingOptions.Relax)
+                .SequenceEqual(Encoding.ASCII.GetBytes("IAMTJM")));
     }
 }
