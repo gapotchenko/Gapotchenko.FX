@@ -303,7 +303,14 @@ namespace Gapotchenko.FX.Data.Encoding
         protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => new EncoderContext(Alphabet, options);
 
         /// <inheritdoc/>
-        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => new DecoderContext(Alphabet, options);
+        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => new DecoderContext(GetDecoderAlphabet(options), options);
+
+        /// <summary>
+        /// Gets decoder alphabet.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <returns>The alphabet.</returns>
+        protected virtual TextDataEncodingAlphabet GetDecoderAlphabet(DataEncodingOptions options) => Alphabet;
 
         /// <inheritdoc/>
         public override bool IsCaseSensitive => true;

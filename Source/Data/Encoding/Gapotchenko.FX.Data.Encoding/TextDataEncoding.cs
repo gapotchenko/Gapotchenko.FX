@@ -60,8 +60,15 @@ namespace Gapotchenko.FX.Data.Encoding
             var ms = new MemoryStream();
 
             var context = CreateDecoderContext(options);
-            context.Decode(s, ms);
-            context.Decode(null, ms);
+            try
+            {
+                context.Decode(s, ms);
+                context.Decode(null, ms);
+            }
+            catch (InvalidDataException e)
+            {
+                throw new FormatException(e.Message);
+            }
 
             return ms.ToArray();
         }
