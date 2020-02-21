@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -44,24 +45,38 @@ namespace Gapotchenko.FX.Data.Encoding
         protected virtual float MinEfficiencyCore => EfficiencyCore;
 
         /// <inheritdoc/>
-        public byte[] EncodeData(ReadOnlySpan<byte> data) => data == null ? null : EncodeDataCore(data);
+        public byte[] EncodeData(ReadOnlySpan<byte> data) => EncodeData(data, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public byte[] EncodeData(ReadOnlySpan<byte> data, DataEncodingOptions options) => data == null ? null : EncodeDataCore(data, options);
 
         /// <summary>
         /// Provides the core implementation of data encoding.
         /// </summary>
         /// <param name="data">The input data.</param>
+        /// <param name="options">The options.</param>
         /// <returns>The encoded output data.</returns>
-        protected abstract byte[] EncodeDataCore(ReadOnlySpan<byte> data);
+        protected abstract byte[] EncodeDataCore(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <inheritdoc/>
-        public byte[] DecodeData(ReadOnlySpan<byte> data) => data == null ? null : DecodeDataCore(data);
+        public byte[] DecodeData(ReadOnlySpan<byte> data) => DecodeData(data, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public byte[] DecodeData(ReadOnlySpan<byte> data, DataEncodingOptions options) => data == null ? null : DecodeDataCore(data, options);
 
         /// <summary>
         /// Provides the core implementation of data decoding.
         /// </summary>
         /// <param name="data">The encoded input data.</param>
+        /// <param name="options">The options.</param>
         /// <returns>The decoded output data.</returns>
-        protected abstract byte[] DecodeDataCore(ReadOnlySpan<byte> data);
+        protected abstract byte[] DecodeDataCore(ReadOnlySpan<byte> data, DataEncodingOptions options);
+
+        /// <inheritdoc/>
+        public abstract Stream CreateEncoder(Stream outputStream, DataEncodingOptions options = DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public abstract Stream CreateDecoder(Stream inputStream, DataEncodingOptions options = DataEncodingOptions.None);
 
         /// <inheritdoc/>
         public int Padding => PaddingCore;

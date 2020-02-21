@@ -67,10 +67,10 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override byte[] EncodeDataCore(ReadOnlySpan<byte> data) => Encoding.UTF8.GetBytes(GetString(data));
+        protected override byte[] EncodeDataCore(ReadOnlySpan<byte> data, DataEncodingOptions options) => Encoding.UTF8.GetBytes(GetString(data, options));
 
         /// <inheritdoc/>
-        protected override byte[] DecodeDataCore(ReadOnlySpan<byte> data) =>
+        protected override byte[] DecodeDataCore(ReadOnlySpan<byte> data, DataEncodingOptions options) =>
             GetBytes(
                 Encoding.UTF8.GetString(
 #if TFF_MEMORY && !TFF_MEMORY_OOB
@@ -79,7 +79,8 @@ namespace Gapotchenko.FX.Data.Encoding
                     data.ToArray()
 #endif
                 )
-                .AsSpan());
+                .AsSpan(),
+                options);
 
         /// <summary>
         /// The encoder context.
@@ -547,6 +548,24 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 m_Buffer.Position = 0;
             }
+        }
+
+        /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override Stream CreateEncoder(Stream outputStream, DataEncodingOptions options = DataEncodingOptions.None)
+        {
+            if (outputStream == null)
+                throw new ArgumentNullException(nameof(outputStream));
+            return CreateEncoder(new StreamWriter(outputStream), options);
+        }
+
+        /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override Stream CreateDecoder(Stream inputStream, DataEncodingOptions options = DataEncodingOptions.None)
+        {
+            if (inputStream == null)
+                throw new ArgumentNullException(nameof(inputStream));
+            return CreateDecoder(new StreamReader(inputStream), options);
         }
 
         /// <inheritdoc/>
