@@ -85,7 +85,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 sb.Append(Alphabet[digit]);
             }
 
-            if ((options & DataEncodingOptions.NoPadding) == 0)
+            if ((options & DataEncodingOptions.Unpad) == 0)
             {
                 int padding = Padding;
                 while (sb.Length % padding != 0)

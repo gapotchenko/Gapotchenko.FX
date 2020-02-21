@@ -121,7 +121,7 @@ namespace Gapotchenko.FX.Data.Encoding
                                 m_Buffer[1] = alphabet[(m_Bits << 4) & Mask6Bits]; // 2 bits
 
                                 int count = 2;
-                                if ((m_Options & DataEncodingOptions.NoPadding) == 0)
+                                if ((m_Options & DataEncodingOptions.Unpad) == 0)
                                 {
                                     m_Buffer[2] = PaddingChar;
                                     m_Buffer[3] = PaddingChar;
@@ -141,7 +141,7 @@ namespace Gapotchenko.FX.Data.Encoding
                                 m_Buffer[2] = alphabet[(m_Bits << 2) & Mask6Bits]; // 4 bits
 
                                 int count = 3;
-                                if ((m_Options & DataEncodingOptions.NoPadding) == 0)
+                                if ((m_Options & DataEncodingOptions.Unpad) == 0)
                                 {
                                     m_Buffer[3] = PaddingChar;
                                     count = 4;
@@ -192,6 +192,8 @@ namespace Gapotchenko.FX.Data.Encoding
 
             readonly byte[] m_Buffer = new byte[3];
 
+            int m_Padding;
+
             public void Decode(ReadOnlySpan<char> input, Stream output)
             {
                 if (m_Eof)
@@ -206,14 +208,29 @@ namespace Gapotchenko.FX.Data.Encoding
                 {
                     if (c == PaddingChar)
                     {
+                        if ((m_Options & DataEncodingOptions.Padding) != 0)
+                        {
+                            if (m_Padding == 0)
+                            {
+                                if (m_Modulus == 0)
+                                    throw CreateInvalidPaddingException();
+                                m_Padding = m_Modulus;
+                            }
+                            if (++m_Padding == 4)
+                                m_Padding = 0;
+                        }
+
                         FlushDecode(output);
                         continue;
                     }
 
+                    if (m_Padding != 0)
+                        throw CreateInvalidPaddingException();
+
                     int b = alphabet.IndexOf(c);
                     if (b == -1)
                     {
-                        if ((m_Options & DataEncodingOptions.Relaxed) == 0)
+                        if ((m_Options & DataEncodingOptions.Relax) == 0)
                         {
                             if (!char.IsWhiteSpace(c))
                                 throw new InvalidDataException("Encountered a non-Base64 character.");
@@ -238,15 +255,17 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 if (m_Eof)
                 {
-                    if ((m_Options & DataEncodingOptions.RequirePadding) != 0)
+                    if ((m_Options & DataEncodingOptions.Padding) != 0)
                     {
-                        if (m_Modulus != 0)
-                            throw new InvalidDataException("Invalid Base64 padding.");
+                        if (m_Modulus != 0 || m_Padding != 0)
+                            throw CreateInvalidPaddingException();
                     }
 
                     FlushDecode(output);
                 }
             }
+
+            static Exception CreateInvalidPaddingException() => new InvalidDataException("Invalid Base64 padding.");
 
             void FlushDecode(Stream output)
             {
@@ -285,13 +304,13 @@ namespace Gapotchenko.FX.Data.Encoding
 
             void ValidateIncompleteByte()
             {
-                if ((m_Options & DataEncodingOptions.Relaxed) == 0)
+                if ((m_Options & DataEncodingOptions.Relax) == 0)
                     throw new InvalidDataException("Cannot decode the last byte due to missing Base64 symbol.");
             }
 
             void ValidateLastSymbol(int zeroMask)
             {
-                if ((m_Options & DataEncodingOptions.Relaxed) == 0 &&
+                if ((m_Options & DataEncodingOptions.Relax) == 0 &&
                     (m_Bits & zeroMask) != 0)
                 {
                     throw new InvalidDataException("The insignificant bits of the last Base64 symbol are expected to be zero.");

@@ -21,28 +21,28 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// Instructs to inhibit padding generation in encoding operation.
         /// </summary>
-        NoPadding = 1 << 0,
+        Unpad = 1 << 0,
 
         /// <summary>
-        /// Instructs to enforce padding generation in encoding operation or its presence validation in decoding operation.
+        /// Instructs to enforce padding validation in decoding operation or its generation in encoding operation.
         /// </summary>
-        RequirePadding = 1 << 1,
+        Padding = 1 << 1,
 
         /// <summary>
-        /// Do not perform the lifetime management of an underlying data object such as <see cref="Stream"/>, <see cref="TextReader"/>, <see cref="TextWriter"/> etc.
+        /// Do not perform the lifetime management of a specified data object such as <see cref="Stream"/>, <see cref="TextReader"/>, <see cref="TextWriter"/> etc.
         /// </summary>
         NoOwnership = 1 << 2,
 
         /// <summary>
-        /// Instructs to produce the indented or formatted output if the encoding natively supports it.
+        /// Instructs to produce the indented or formatted output if the encoding supports it natively.
         /// </summary>
         Indent = 1 << 3,
 
         /// <summary>
-        /// Use relaxed decoding rules.
+        /// Relax decoding rules.
         /// For example, if encoded Base64 string contains an invalid character it gets ignored instead of throwing an exception.
         /// </summary>
-        Relaxed = 1 << 4
+        Relax = 1 << 4
     }
 }
 
