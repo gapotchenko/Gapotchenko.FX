@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Encoding
     public sealed class Base64 : GenericBase64
     {
         private Base64() :
-            base(new DataTextEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"))
+            base(new TextDataEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"))
         {
         }
 

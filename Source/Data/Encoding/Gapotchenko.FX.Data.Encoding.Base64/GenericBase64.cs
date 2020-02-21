@@ -12,13 +12,13 @@ namespace Gapotchenko.FX.Data.Encoding
     /// Provides a generic implementation of Base64 encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public abstract class GenericBase64 : DataTextEncoding, IBase64
+    public abstract class GenericBase64 : TextDataEncoding, IBase64
     {
         /// <summary>
         /// Initializes a new instance of <see cref="GenericBase64"/> class with the specified alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        protected GenericBase64(DataTextEncodingAlphabet alphabet)
+        protected GenericBase64(TextDataEncodingAlphabet alphabet)
         {
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));
@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// The encoding alphabet.
         /// </summary>
-        protected readonly DataTextEncodingAlphabet Alphabet;
+        protected readonly TextDataEncodingAlphabet Alphabet;
 
         /// <inheritdoc/>
         public int Radix => 64;
@@ -52,13 +52,13 @@ namespace Gapotchenko.FX.Data.Encoding
 
         abstract class CodecContextBase
         {
-            public CodecContextBase(DataTextEncodingAlphabet alphabet, DataEncodingOptions options)
+            public CodecContextBase(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
             {
                 m_Alphabet = alphabet;
                 m_Options = options;
             }
 
-            protected readonly DataTextEncodingAlphabet m_Alphabet;
+            protected readonly TextDataEncodingAlphabet m_Alphabet;
             protected readonly DataEncodingOptions m_Options;
 
             protected int m_Bits;
@@ -72,7 +72,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
         sealed class EncoderContext : CodecContextBase, IEncoderContext
         {
-            public EncoderContext(DataTextEncodingAlphabet alphabet, DataEncodingOptions options) :
+            public EncoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
                 base(alphabet, options)
             {
             }
@@ -185,7 +185,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
         sealed class DecoderContext : CodecContextBase, IDecoderContext
         {
-            public DecoderContext(DataTextEncodingAlphabet alphabet, DataEncodingOptions options) :
+            public DecoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
                 base(alphabet, options)
             {
             }

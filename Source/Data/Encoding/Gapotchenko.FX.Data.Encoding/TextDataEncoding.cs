@@ -13,9 +13,9 @@ namespace Gapotchenko.FX.Data.Encoding
     using Encoding = System.Text.Encoding;
 
     /// <summary>
-    /// The base class for <see cref="IDataTextEncoding"/> implementations.
+    /// The base class for <see cref="ITextDataEncoding"/> implementations.
     /// </summary>
-    public abstract class DataTextEncoding : DataEncoding, IDataTextEncoding
+    public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
     {
         /// <inheritdoc/>
         public string GetString(ReadOnlySpan<byte> data) => GetString(data, DataEncodingOptions.None);
@@ -65,14 +65,6 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <inheritdoc/>
         public abstract bool IsCaseSensitive { get; }
-
-        /// <inheritdoc/>
-        public int Padding => PaddingCore;
-
-        /// <summary>
-        /// Gets the number of characters used for padding of an encoded string representation.
-        /// </summary>
-        protected virtual int PaddingCore => 1;
 
         /// <inheritdoc/>
         public string Pad(ReadOnlySpan<char> s) => s == null ? null : PadCore(s);

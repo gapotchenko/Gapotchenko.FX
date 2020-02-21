@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="synonyms">The optional synonyms of alphabet symbols.</param>
         protected CustomBase32(string alphabet, bool caseSensitive = false, IReadOnlyDictionary<char, string> synonyms = null) :
             base(
-                new DataTextEncodingAlphabet(
+                new TextDataEncodingAlphabet(
                     alphabet ?? throw new ArgumentNullException(nameof(alphabet)),
                     caseSensitive,
                     synonyms))

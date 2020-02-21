@@ -11,37 +11,37 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Defines an alphabet and related operations for <see cref="IDataTextEncoding"/> implementations.
+    /// Defines an alphabet and related operations for <see cref="ITextDataEncoding"/> implementations.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public sealed class DataTextEncodingAlphabet
+    public sealed class TextDataEncodingAlphabet
     {
         /// <summary>
-        /// Initializes a new instance of a case-sensitive <see cref="DataTextEncodingAlphabet"/>.
+        /// Initializes a new instance of a case-sensitive <see cref="TextDataEncodingAlphabet"/>.
         /// </summary>
         /// <param name="symbols">The symbols.</param>
-        public DataTextEncodingAlphabet(string symbols) :
+        public TextDataEncodingAlphabet(string symbols) :
             this(symbols, true)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataTextEncodingAlphabet"/>.
+        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/>.
         /// </summary>
         /// <param name="symbols">The symbols.</param>
         /// <param name="caseSensitive">Indicates whether alphabet is case sensitive.</param>
-        public DataTextEncodingAlphabet(string symbols, bool caseSensitive) :
+        public TextDataEncodingAlphabet(string symbols, bool caseSensitive) :
             this(symbols, caseSensitive, null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataTextEncodingAlphabet"/>.
+        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/>.
         /// </summary>
         /// <param name="symbols">The symbols.</param>
         /// <param name="caseSensitive">Indicates whether alphabet is case sensitive.</param>
         /// <param name="synonyms">The synonyms.</param>
-        public DataTextEncodingAlphabet(
+        public TextDataEncodingAlphabet(
             string symbols,
             bool caseSensitive,
             IReadOnlyDictionary<char, string>? synonyms)

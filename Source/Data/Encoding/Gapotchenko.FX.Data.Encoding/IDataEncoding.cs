@@ -47,5 +47,10 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="data">The encoded input data.</param>
         /// <returns>The decoded output data.</returns>
         byte[] DecodeData(ReadOnlySpan<byte> data);
+
+        /// <summary>
+        /// Gets the number of symbols for padding of an encoded data representation.
+        /// </summary>
+        int Padding { get; }
     }
 }

@@ -8,10 +8,10 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Framework
 {
     using Encoding = System.Text.Encoding;
 
-    public static class DataTextEncodingTestServices
+    public static class TextDataEncodingTestServices
     {
         public static void TestVector(
-            IDataTextEncoding dataEncoding,
+            ITextDataEncoding dataEncoding,
             string raw,
             string encoded,
             Encoding textEncoding = null)

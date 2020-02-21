@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             // -----------------------------------------------------------------
 
-            DataTextEncodingTestServices.TestVector(instance, raw, encoded);
+            TextDataEncodingTestServices.TestVector(instance, raw, encoded);
         }
 
         [TestMethod]

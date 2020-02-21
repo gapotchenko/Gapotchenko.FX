@@ -13,13 +13,13 @@ namespace Gapotchenko.FX.Data.Encoding
     /// Provides a generic implementation of Base32 encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public abstract class GenericBase32 : DataTextEncoding, IBase32
+    public abstract class GenericBase32 : TextDataEncoding, IBase32
     {
         /// <summary>
         /// Initializes a new instance of <see cref="GenericBase32"/> class with the specified alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        protected GenericBase32(DataTextEncodingAlphabet alphabet)
+        protected GenericBase32(TextDataEncodingAlphabet alphabet)
         {
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));
@@ -37,7 +37,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// The encoding alphabet.
         /// </summary>
-        protected readonly DataTextEncodingAlphabet Alphabet;
+        protected readonly TextDataEncodingAlphabet Alphabet;
 
         /// <inheritdoc/>
         public int Radix => 32;

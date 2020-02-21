@@ -5,7 +5,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// <summary>
     /// Implements Jochaim Henke's Base91 (basE91) encoding.
     /// </summary>
-    public sealed class HenkeBase91 : DataTextEncoding, IBase91
+    public sealed class HenkeBase91 : TextDataEncoding, IBase91
     {
         /// <inheritdoc/>
         public int Radix => 91;

@@ -4,9 +4,9 @@ using System.IO;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Defines interface of a binary-to-text encoding.
+    /// Defines the interface of a binary-to-text encoding.
     /// </summary>
-    public interface IDataTextEncoding : IDataEncoding
+    public interface ITextDataEncoding : IDataEncoding
     {
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation.
@@ -42,11 +42,6 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Gets a value indicating whether encoding is case-sensitive.
         /// </summary>
         bool IsCaseSensitive { get; }
-
-        /// <summary>
-        /// Gets the number of characters for padding of an encoded string representation.
-        /// </summary>
-        int Padding { get; }
 
         /// <summary>
         /// Pads the encoded string.

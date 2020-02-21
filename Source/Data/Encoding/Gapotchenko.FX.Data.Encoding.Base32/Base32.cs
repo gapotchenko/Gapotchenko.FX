@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Data.Encoding
     public class Base32 : GenericBase32
     {
         private Base32() :
-            base(new DataTextEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", false))
+            base(new TextDataEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", false))
         {
         }
 

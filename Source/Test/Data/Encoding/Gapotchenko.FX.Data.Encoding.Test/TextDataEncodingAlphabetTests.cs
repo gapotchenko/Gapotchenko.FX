@@ -6,12 +6,12 @@ using System.Text;
 namespace Gapotchenko.FX.Data.Encoding.Test
 {
     [TestClass]
-    public class DataTextEncodingAlphabetTests
+    public class TextDataEncodingAlphabetTests
     {
         [TestMethod]
         public void DataTextEncoding_Alphabet_I1()
         {
-            var alphabet = new DataTextEncodingAlphabet("abc");
+            var alphabet = new TextDataEncodingAlphabet("abc");
 
             Assert.AreEqual(3, alphabet.Size);
             Assert.AreEqual("abc", alphabet.Symbols);
@@ -24,7 +24,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void DataTextEncoding_Alphabet_I2()
         {
-            var alphabet = new DataTextEncodingAlphabet("abcA");
+            var alphabet = new TextDataEncodingAlphabet("abcA");
 
             Assert.AreEqual(0, alphabet.IndexOf('a'));
             Assert.AreEqual(3, alphabet.IndexOf('A'));
@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void DataTextEncoding_Alphabet_I3()
         {
-            var alphabet = new DataTextEncodingAlphabet("abc", false);
+            var alphabet = new TextDataEncodingAlphabet("abc", false);
 
             Assert.AreEqual(3, alphabet.Size);
             Assert.AreEqual("abc", alphabet.Symbols);
@@ -46,7 +46,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void DataTextEncoding_Alphabet_I4()
         {
-            var alphabet = new DataTextEncodingAlphabet("stopВодка");
+            var alphabet = new TextDataEncodingAlphabet("stopВодка");
 
             Assert.AreEqual(1, alphabet.IndexOf('t'));
             Assert.AreEqual(-1, alphabet.IndexOf('T'));
@@ -58,7 +58,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void DataTextEncoding_Alphabet_I5()
         {
-            var alphabet = new DataTextEncodingAlphabet("stopВодка", false);
+            var alphabet = new TextDataEncodingAlphabet("stopВодка", false);
 
             Assert.AreEqual('t', alphabet[1]);
             Assert.AreEqual(1, alphabet.IndexOf('t'));
@@ -72,7 +72,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void DataTextEncoding_Alphabet_I6()
         {
-            var alphabet = new DataTextEncodingAlphabet(
+            var alphabet = new TextDataEncodingAlphabet(
                 "abc",
                 true,
                 new Dictionary<char, string>
@@ -102,7 +102,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void DataTextEncoding_Alphabet_I7()
         {
-            var alphabet = new DataTextEncodingAlphabet(
+            var alphabet = new TextDataEncodingAlphabet(
                 "abc",
                 false,
                 new Dictionary<char, string>
@@ -133,14 +133,14 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [ExpectedException(typeof(Exception))]
         public void DataTextEncoding_Alphabet_C1()
         {
-            new DataTextEncodingAlphabet("abca");
+            new TextDataEncodingAlphabet("abca");
         }
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void DataTextEncoding_Alphabet_C2()
         {
-            new DataTextEncodingAlphabet("abcA", false);
+            new TextDataEncodingAlphabet("abcA", false);
         }
     }
 }
