@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Base64 URL (base64url) encoding conforming to RFC 4648.
+    /// Implements Base64 URL (base64url) encoding described in RFC 4648.
     /// </summary>
     public sealed class Base64Url : GenericBase64
     {

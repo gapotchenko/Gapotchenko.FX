@@ -150,7 +150,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if (input == null)
                 {
                     m_Eof = true;
-                    FlushDecode(output);
+                    FlushDecode();
                     return;
                 }
 
@@ -184,7 +184,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 }
             }
 
-            void FlushDecode(Stream output)
+            void FlushDecode()
             {
                 switch (m_Modulus)
                 {
