@@ -97,7 +97,7 @@ namespace Gapotchenko.FX.Harness.Console
                 Console.WriteLine(await tr.ReadLineAsync());
             }
 
-            s = Base16.GetString(Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit"), DataEncodingOptions.Indent);
+            s = Base16.GetString(Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit"), DataEncodingOptions.Indent | DataEncodingOptions.Wrap);
             Console.WriteLine(s);
 
             Console.WriteLine(Encoding.UTF8.GetString(Base16.GetBytes(s)));

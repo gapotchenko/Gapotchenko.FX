@@ -163,7 +163,11 @@ namespace Gapotchenko.FX.Data.Encoding
                     {
                         if ((m_Options & DataEncodingOptions.Relax) == 0)
                         {
-                            if (!char.IsWhiteSpace(c))
+                            bool ok =
+                                c == '-' ||
+                                char.IsWhiteSpace(c);
+
+                            if (!ok)
                                 throw new InvalidDataException("Encountered a non-Base16 character.");
                         }
                         continue;
