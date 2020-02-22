@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16\Gapotchenko.FX.Data.Encoding.Base16.csproj" />
     <ProjectReference Include="..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base32\Gapotchenko.FX.Data.Encoding.Base32.csproj" />
     <ProjectReference Include="..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64\Gapotchenko.FX.Data.Encoding.Base64.csproj" />
     <ProjectReference Include="..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj" />

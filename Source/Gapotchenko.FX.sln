@@ -134,13 +134,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encodin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base91", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base91\Gapotchenko.FX.Data.Encoding.Base91.csproj", "{3F52F9DE-9397-42DF-9E03-A2DA6F9219A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Encoding.Base16", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16\Gapotchenko.FX.Data.Encoding.Base16.csproj", "{E37BD788-E406-4102-B816-9CEC0EB2A7BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base16", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16\Gapotchenko.FX.Data.Encoding.Base16.csproj", "{E37BD788-E406-4102-B816-9CEC0EB2A7BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Encoding.Base85", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base85\Gapotchenko.FX.Data.Encoding.Base85.csproj", "{564E7562-D09A-4C9E-B390-A1B61842D2BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base85", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base85\Gapotchenko.FX.Data.Encoding.Base85.csproj", "{564E7562-D09A-4C9E-B390-A1B61842D2BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Encoding.Base64", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64\Gapotchenko.FX.Data.Encoding.Base64.csproj", "{C44FF569-B8D4-43A0-B84C-66D6403DBE31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base64", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64\Gapotchenko.FX.Data.Encoding.Base64.csproj", "{C44FF569-B8D4-43A0-B84C-66D6403DBE31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Encoding.Base64.Test", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64.Test\Gapotchenko.FX.Data.Encoding.Base64.Test.csproj", "{6E1ACE3E-AE74-44BF-A6DB-655E5C34B636}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base64.Test", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64.Test\Gapotchenko.FX.Data.Encoding.Base64.Test.csproj", "{6E1ACE3E-AE74-44BF-A6DB-655E5C34B636}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Encoding.Base16.Test", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16.Test\Gapotchenko.FX.Data.Encoding.Base16.Test.csproj", "{D862A0D3-0894-45F6-8242-1E888103F6CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -300,6 +302,10 @@ Global
 		{6E1ACE3E-AE74-44BF-A6DB-655E5C34B636}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E1ACE3E-AE74-44BF-A6DB-655E5C34B636}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E1ACE3E-AE74-44BF-A6DB-655E5C34B636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D862A0D3-0894-45F6-8242-1E888103F6CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D862A0D3-0894-45F6-8242-1E888103F6CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D862A0D3-0894-45F6-8242-1E888103F6CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D862A0D3-0894-45F6-8242-1E888103F6CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -353,6 +359,7 @@ Global
 		{564E7562-D09A-4C9E-B390-A1B61842D2BA} = {3FEEE50B-7D21-48C8-9DB2-C410DB674EB5}
 		{C44FF569-B8D4-43A0-B84C-66D6403DBE31} = {3FEEE50B-7D21-48C8-9DB2-C410DB674EB5}
 		{6E1ACE3E-AE74-44BF-A6DB-655E5C34B636} = {DE529E09-D427-41CF-887B-79979CF071C6}
+		{D862A0D3-0894-45F6-8242-1E888103F6CC} = {DE529E09-D427-41CF-887B-79979CF071C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}

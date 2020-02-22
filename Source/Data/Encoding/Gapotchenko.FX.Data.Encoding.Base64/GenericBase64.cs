@@ -83,12 +83,9 @@ namespace Gapotchenko.FX.Data.Encoding
 
             int m_LinePosition;
 
-            void IncrementLinePosition(int delta)
-            {
-                m_LinePosition += delta;
-            }
+            void MoveLinePosition(int delta) => m_LinePosition += delta;
 
-            void InsertLineBreak(TextWriter output)
+            void EmitLineBreak(TextWriter output)
             {
                 if (m_LinePosition >= 76)
                 {
@@ -130,7 +127,7 @@ namespace Gapotchenko.FX.Data.Encoding
                                     count = 4;
                                 }
 
-                                InsertLineBreak(output);
+                                EmitLineBreak(output);
                                 output.Write(m_Buffer, 0, count);
                             }
                             break;
@@ -149,7 +146,7 @@ namespace Gapotchenko.FX.Data.Encoding
                                     count = 4;
                                 }
 
-                                InsertLineBreak(output);
+                                EmitLineBreak(output);
                                 output.Write(m_Buffer, 0, count);
                             }
                             break;
@@ -176,10 +173,10 @@ namespace Gapotchenko.FX.Data.Encoding
                         m_Buffer[2] = alphabet[(m_Bits >> 6) & Mask6Bits];
                         m_Buffer[3] = alphabet[m_Bits & Mask6Bits];
 
-                        InsertLineBreak(output);
+                        EmitLineBreak(output);
                         output.Write(m_Buffer);
 
-                        IncrementLinePosition(4);
+                        MoveLinePosition(4);
                     }
                 }
             }
