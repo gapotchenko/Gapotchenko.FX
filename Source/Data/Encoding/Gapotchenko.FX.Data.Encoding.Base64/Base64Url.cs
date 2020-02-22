@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override DataEncodingOptions GetEncoderOptions(DataEncodingOptions options)
         {
-            if ((options & DataEncodingOptions.Padding) == 0)
+            if ((options & DataEncodingOptions.Pad) == 0)
             {
                 // Produce unpadded strings unless padding is explicitly requested as suggested by RFC 4648.
                 // This is necessary in order to avoid '%' escape symbols in URI for '=' padding chars.

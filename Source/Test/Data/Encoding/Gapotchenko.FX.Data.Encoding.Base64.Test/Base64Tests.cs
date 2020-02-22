@@ -71,13 +71,13 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [ExpectedException(typeof(FormatException))]
         public void Base64_PadCon_Invalid_Check() =>
             Assert.IsTrue(
-                Base64.GetBytes("SQ=QU0=VEpN", DataEncodingOptions.Padding)
+                Base64.GetBytes("SQ=QU0=VEpN", DataEncodingOptions.Pad)
                 .SequenceEqual(Encoding.ASCII.GetBytes("IAMTJM")));
 
         [TestMethod]
         public void Base64_PadCon_Relax() =>
             Assert.IsTrue(
-                Base64.GetBytes("SQ=Я=QU0=VEpN", DataEncodingOptions.Padding | DataEncodingOptions.Relax)
+                Base64.GetBytes("SQ=Я=QU0=VEpN", DataEncodingOptions.Pad | DataEncodingOptions.Relax)
                 .SequenceEqual(Encoding.ASCII.GetBytes("IAMTJM")));
     }
 }

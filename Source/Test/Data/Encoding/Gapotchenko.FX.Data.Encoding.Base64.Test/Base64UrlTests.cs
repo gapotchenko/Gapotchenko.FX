@@ -68,7 +68,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         {
             var data = Encoding.UTF8.GetBytes("1");
             Assert.AreEqual("MQ", Base64Url.GetString(data));
-            Assert.AreEqual("MQ==", Base64Url.GetString(data, DataEncodingOptions.Padding));
+            Assert.AreEqual("MQ==", Base64Url.GetString(data, DataEncodingOptions.Pad));
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         {
             var data = Encoding.UTF8.GetBytes("11");
             Assert.AreEqual("MTE", Base64Url.GetString(data));
-            Assert.AreEqual("MTE=", Base64Url.GetString(data, DataEncodingOptions.Padding));
+            Assert.AreEqual("MTE=", Base64Url.GetString(data, DataEncodingOptions.Pad));
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         {
             var data = Encoding.UTF8.GetBytes("111");
             Assert.AreEqual("MTEx", Base64Url.GetString(data));
-            Assert.AreEqual("MTEx", Base64Url.GetString(data, DataEncodingOptions.Padding));
+            Assert.AreEqual("MTEx", Base64Url.GetString(data, DataEncodingOptions.Pad));
         }
     }
 }

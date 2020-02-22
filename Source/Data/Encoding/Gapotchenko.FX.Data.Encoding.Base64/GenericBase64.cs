@@ -202,7 +202,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if (input == null)
                 {
                     m_Eof = true;
-                    if ((m_Options & DataEncodingOptions.Padding) != 0)
+                    if ((m_Options & DataEncodingOptions.Pad) != 0)
                         ValidatePaddingEof();
                     FlushDecode(output);
                     return;
@@ -214,7 +214,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 {
                     if (c == PaddingChar)
                     {
-                        if ((m_Options & DataEncodingOptions.Padding) != 0)
+                        if ((m_Options & DataEncodingOptions.Pad) != 0)
                             ValidatePaddingChar();
                         FlushDecode(output);
                         continue;

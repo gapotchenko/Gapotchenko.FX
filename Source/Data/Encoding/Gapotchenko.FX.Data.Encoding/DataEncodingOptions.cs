@@ -22,10 +22,10 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// Instructs to validate padding in decoding operation or to enforce its generation in encoding operation.
         /// </summary>
-        Padding = 1 << 1,
+        Pad = 1 << 1,
 
         /// <summary>
-        /// Do not perform the lifetime management of a specified data object such as <see cref="Stream"/>, <see cref="TextReader"/>, <see cref="TextWriter"/> etc.
+        /// Do not perform lifetime management of the specified data object such as <see cref="Stream"/>, <see cref="TextReader"/> or <see cref="TextWriter"/>.
         /// </summary>
         NoOwnership = 1 << 2,
 
@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Data.Encoding
         Indent = 1 << 3,
 
         /// <summary>
-        /// Instructs to wrap the output in order to form human-readable blocks of data if the encoding supports it natively.
+        /// Instructs to produce wrapped output in order to form human-readable blocks of data if the encoding supports it natively.
         /// For example, Base64 handles wrapping by inserting line feed characters every 76 symbols of output.
         /// </summary>
         Wrap = 1 << 4,
@@ -45,6 +45,11 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Relax decoding rules.
         /// For example, if encoded Base64 string contains an invalid character it gets ignored instead of throwing an exception.
         /// </summary>
-        Relax = 1 << 5
+        Relax = 1 << 5,
+
+        /// <summary>
+        /// Instructs to emit checksum if the encoding supports it natively.
+        /// </summary>
+        Checksum = 1 << 6
     }
 }
