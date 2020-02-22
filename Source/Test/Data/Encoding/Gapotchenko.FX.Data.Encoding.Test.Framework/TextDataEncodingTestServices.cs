@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Framework
             ITextDataEncoding dataEncoding,
             string raw,
             string encoded,
-            bool padding = true,
+            bool padded = true,
             Encoding textEncoding = null)
         {
             if (dataEncoding == null)
@@ -55,7 +55,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Framework
             var actualEncodedUnpadded = dataEncoding.Unpad(actualEncoded.AsSpan()).ToString();
             string actualEncodedRepadded = dataEncoding.Pad(actualEncodedUnpadded.AsSpan());
 
-            if (padding)
+            if (padded)
                 Assert.AreEqual(actualEncoded, actualEncodedRepadded);
             Assert.IsTrue(dataEncoding.IsPadded(actualEncodedRepadded.AsSpan()));
 
@@ -66,7 +66,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Framework
             }
 
             string actualEncodedOverpadded = dataEncoding.Pad(actualEncoded.AsSpan());
-            if (padding)
+            if (padded)
                 Assert.AreEqual(actualEncoded, actualEncodedOverpadded);
 
             string actualEncodedUnderpadded = dataEncoding.Unpad(actualEncodedUnpadded.AsSpan()).ToString();
