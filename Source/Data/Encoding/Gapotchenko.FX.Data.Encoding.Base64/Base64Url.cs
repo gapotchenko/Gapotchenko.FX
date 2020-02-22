@@ -1,23 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Implements Base64 encoding described in RFC 4648.
+    /// Base64 URL (base64url) encoding conforming to RFC 4648.
     /// </summary>
-    public sealed class Base64 : GenericBase64
+    public sealed class Base64Url : GenericBase64
     {
-        internal const string Symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-        private Base64() :
-            base(new TextDataEncodingAlphabet(Symbols))
+        private Base64Url() :
+            base(new TextDataEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"))
         {
         }
 
         /// <inheritdoc/>
-        public override string Name => "Base64";
+        public override string Name => "base64url";
+
+        /// <inheritdoc/>
+        protected override DataEncodingOptions GetEncoderOptions(DataEncodingOptions options)
+        {
+            if ((options & DataEncodingOptions.Padding) == 0)
+            {
+                // Produce unpadded strings unless padding is explicitly enabled as suggested in RFC 4648.
+                // This is necessary in order to avoid '%' URI escapes for '=' padding chars.
+                options |= DataEncodingOptions.Unpad;
+            }
+            return options;
+        }
 
         /// <inheritdoc/>
         protected override TextDataEncodingAlphabet GetDecoderAlphabet(DataEncodingOptions options)
@@ -29,59 +43,40 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
-        /// Encodes an array of bytes to its equivalent string representation that is encoded with Base64 symbols.
+        /// Encodes an array of bytes to its equivalent string representation that is encoded with base64url symbols.
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
-        /// <returns>The string representation, in Base64, of the contents of <paramref name="data"/>.</returns>
+        /// <returns>The string representation, in base64url, of the contents of <paramref name="data"/>.</returns>
         public new static string GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
 
         /// <summary>
-        /// Encodes an array of bytes to its equivalent string representation that is encoded with Base64 symbols with specified options.
+        /// Encodes an array of bytes to its equivalent string representation that is encoded with base64url symbols with specified options.
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
         /// <param name="options">The options.</param>
-        /// <returns>The string representation, in Base64, of the contents of <paramref name="data"/>.</returns>
+        /// <returns>The string representation, in base64url, of the contents of <paramref name="data"/>.</returns>
         public new static string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => Instance.GetString(data, options);
 
         /// <summary>
-        /// Decodes the specified string, which represents encoded binary data as Base64 symbols, to an equivalent array of bytes.
+        /// Decodes the specified string, which represents encoded binary data as base64url symbols, to an equivalent array of bytes.
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
         public new static byte[] GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
 
         /// <summary>
-        /// Decodes the specified string, which represents encoded binary data as Base64 symbols, to an equivalent array of bytes with specified options.
+        /// Decodes the specified string, which represents encoded binary data as base64url symbols, to an equivalent array of bytes with specified options.
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <param name="options">The options.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
         public new static byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBytes(s, options);
 
-        /// <summary>
-        /// The number of characters for padding of an encoded string representation.
-        /// </summary>
-        public new const int Padding = 4;
-
-        /// <summary>
-        /// Pads the encoded string.
-        /// </summary>
-        /// <param name="s">The encoded string to pad.</param>
-        /// <returns>The padded encoded string.</returns>
-        public new static string Pad(ReadOnlySpan<char> s) => Instance.Pad(s);
-
-        /// <summary>
-        /// Unpads the encoded string.
-        /// </summary>
-        /// <param name="s">The encoded string to unpad.</param>
-        /// <returns>The unpadded encoded string.</returns>
-        public new static ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => Instance.Unpad(s);
-
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static volatile IBase64 m_Instance;
 
         /// <summary>
-        /// Returns a default instance of <see cref="Base64"/> encoding.
+        /// Returns a default instance of <see cref="Base64Url"/> encoding.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public static IBase64 Instance
@@ -89,7 +84,7 @@ namespace Gapotchenko.FX.Data.Encoding
             get
             {
                 if (m_Instance == null)
-                    m_Instance = new Base64();
+                    m_Instance = new Base64Url();
                 return m_Instance;
             }
         }

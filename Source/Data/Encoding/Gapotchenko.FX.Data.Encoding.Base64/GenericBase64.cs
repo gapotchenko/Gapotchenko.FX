@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -169,13 +165,13 @@ namespace Gapotchenko.FX.Data.Encoding
                     {
                         m_Modulus = 0;
 
-                        InsertLineBreak(output);
-
                         // 3 bytes = 24 bits = 4 * 6 bits
                         m_Buffer[0] = alphabet[(m_Bits >> 18) & Mask6Bits];
                         m_Buffer[1] = alphabet[(m_Bits >> 12) & Mask6Bits];
                         m_Buffer[2] = alphabet[(m_Bits >> 6) & Mask6Bits];
                         m_Buffer[3] = alphabet[m_Bits & Mask6Bits];
+
+                        InsertLineBreak(output);
                         output.Write(m_Buffer);
 
                         IncrementLinePosition(4);
@@ -331,10 +327,17 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => new EncoderContext(Alphabet, options);
+        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => new EncoderContext(Alphabet, GetEncoderOptions(options));
 
         /// <inheritdoc/>
         protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => new DecoderContext(GetDecoderAlphabet(options), options);
+
+        /// <summary>
+        /// Gets encoder options.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <returns>The encoder options.</returns>
+        protected virtual DataEncodingOptions GetEncoderOptions(DataEncodingOptions options) => options;
 
         /// <summary>
         /// Gets decoder alphabet.
