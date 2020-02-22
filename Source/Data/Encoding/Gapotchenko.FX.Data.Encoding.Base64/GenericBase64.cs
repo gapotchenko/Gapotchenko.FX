@@ -74,6 +74,11 @@ namespace Gapotchenko.FX.Data.Encoding
             {
             }
 
+            /// <summary>
+            /// Base64 encoding treats wrapping and indentation interchangeably.
+            /// </summary>
+            const DataEncodingOptions FormatMask = DataEncodingOptions.Wrap | DataEncodingOptions.Indent;
+
             readonly char[] m_Buffer = new char[4];
 
             int m_LinePosition;
@@ -89,7 +94,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 {
                     m_LinePosition = 0;
 
-                    if ((m_Options & DataEncodingOptions.Indent) != 0)
+                    if ((m_Options & FormatMask) != 0)
                         output.WriteLine();
                 }
             }

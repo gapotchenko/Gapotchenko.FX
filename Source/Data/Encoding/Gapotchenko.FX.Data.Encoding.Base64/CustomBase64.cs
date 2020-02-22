@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Data.Encoding
     public class CustomBase64 : GenericBase64
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="CustomBase64"/> class with the specified alphabet.
+        /// Initializes a new instance of <see cref="CustomBase64"/> class with the specified alphabet and synonyms.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
         /// <param name="synonyms">The optional synonyms of alphabet symbols.</param>

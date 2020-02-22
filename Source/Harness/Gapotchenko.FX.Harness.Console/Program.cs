@@ -99,6 +99,7 @@ namespace Gapotchenko.FX.Harness.Console
 
             Console.WriteLine(Base64Url.GetString(Encoding.UTF8.GetBytes("Hello")));
 
+            
             //string e = Base64.GetString(Encoding.UTF8.GetBytes(s), DataEncodingOptions.Indent);
 
             //e = Convert.ToBase64String(Encoding.UTF8.GetBytes(s), Base64FormattingOptions.InsertLineBreaks);

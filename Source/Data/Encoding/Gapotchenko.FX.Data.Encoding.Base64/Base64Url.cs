@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -26,10 +22,11 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             if ((options & DataEncodingOptions.Padding) == 0)
             {
-                // Produce unpadded strings unless padding is explicitly enabled as suggested in RFC 4648.
-                // This is necessary in order to avoid '%' URI escapes for '=' padding chars.
+                // Produce unpadded strings unless padding is explicitly requested as suggested by RFC 4648.
+                // This is necessary in order to avoid '%' escape symbols in URI for '=' padding chars.
                 options |= DataEncodingOptions.Unpad;
             }
+
             return options;
         }
 
