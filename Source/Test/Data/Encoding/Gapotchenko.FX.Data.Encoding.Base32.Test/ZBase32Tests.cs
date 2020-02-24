@@ -12,12 +12,25 @@ namespace Gapotchenko.FX.Data.Encoding.Test
     [TestClass]
     public class ZBase32Tests
     {
-        static void TestVector(byte[] raw, string encoded)
+        static void TestVector(byte[] raw, string encoded, int bits = 0)
         {
-            string actualEncoded = ZBase32.GetString(raw);
-            Assert.AreEqual(encoded, actualEncoded);
+            if (bits == 0)
+                bits = raw.Length * 8;
 
-            var actualDecoded = ZBase32.GetBytes(actualEncoded);
+            bool fullByte = bits % 8 == 0;
+
+            if (fullByte)
+            {
+                string actualEncoded = ZBase32.GetString(raw);
+                Assert.AreEqual(encoded, actualEncoded);
+            }
+            else
+            {
+                string actualEncoded = ZBase32.GetString(raw);
+                Assert.AreEqual(encoded.TrimEnd('y'), actualEncoded.TrimEnd('y'));
+            }
+
+            var actualDecoded = ZBase32.GetBytes(encoded);
             Assert.IsTrue(raw.SequenceEqual(actualDecoded));
 
             // -----------------------------------------------------------------
@@ -28,7 +41,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             // -----------------------------------------------------------------
 
-            TextDataEncodingTestServices.TestVector(instance, raw, encoded, padded: false);
+            if (fullByte)
+                TextDataEncodingTestServices.TestVector(instance, raw, encoded, padded: false);
         }
 
         [TestMethod]
@@ -64,5 +78,38 @@ namespace Gapotchenko.FX.Data.Encoding.Test
                 0x5f, 0xc3, 0xcc, 0x6a, 0xf2, 0x6d, 0x5a, 0xaa
             },
             "ab3sr1ix8fhfnuzaeo75fkn3a7xh8udk6jsiiko");
+
+        [TestMethod]
+        public void ZBase32_Bytes_TV9() => TestVector(new byte[] { 0x10, 0x11, 0x10 }, "nyety");
+
+        [TestMethod]
+        public void ZBase32_Bits_TV1() => TestVector(new byte[] { 0 }, "y", 1);
+
+        [TestMethod]
+        public void ZBase32_Bits_TV2() => TestVector(new byte[] { 128 }, "o", 1);
+
+        [TestMethod]
+        public void ZBase32_Bits_TV3() => TestVector(new byte[] { 64 }, "e", 2);
+
+        [TestMethod]
+        public void ZBase32_Bits_TV4() => TestVector(new byte[] { 192 }, "a", 2);
+
+        [TestMethod]
+        public void ZBase32_Bits_TV5() => TestVector(new byte[] { 0, 0 }, "yy", 10);
+
+        [TestMethod]
+        public void ZBase32_Bits_TV6() => TestVector(new byte[] { 128, 128 }, "on", 10);
+
+        [TestMethod]
+        public void ZBase32_Bits_TV7() => TestVector(new byte[] { 139, 136, 128 }, "tqre", 20);
+
+        [TestMethod]
+        public void ZBase32_Bits_TV8() => TestVector(new byte[] { 245, 87, 189, 12 }, "6im54d", 30);
+
+        [TestMethod]
+        public void ZBase32_Bits_TV9() => TestVector(new byte[] { 0xff, 0xe0 }, "99o", 11);
+
+        [TestMethod]
+        public void ZBase32_Bits_TV10() => TestVector(new byte[] { 0x10, 0x11, 0x10 }, "nyet", 20);
     }
 }

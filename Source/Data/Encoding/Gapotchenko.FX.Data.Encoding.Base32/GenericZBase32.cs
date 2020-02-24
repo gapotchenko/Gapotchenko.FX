@@ -246,10 +246,11 @@ namespace Gapotchenko.FX.Data.Encoding
 
             void ReadBits(Stream output, int bitCount)
             {
-                var lastCount = 1;
-
                 int i = 0;
                 int s = bitCount;
+                var lastCount = 1;
+
+                byte pb = 0;
                 do
                 {
                     s -= 8;
@@ -257,8 +258,10 @@ namespace Gapotchenko.FX.Data.Encoding
                     byte b = (byte)Msr(m_Bits, s); ;
                     m_Buffer[i++] = b;
 
-                    if (b != 0)
+                    if (b != 0 || pb == 0)
                         lastCount = i;
+
+                    pb = b;
                 }
                 while (s > 0);
 
