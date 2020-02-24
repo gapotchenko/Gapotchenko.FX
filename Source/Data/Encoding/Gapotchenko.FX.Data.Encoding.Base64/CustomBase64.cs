@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Provides a customizable implementation of Base32 encoding.
+    /// Customizable Base64 encoding.
     /// </summary>
     public class CustomBase64 : GenericBase64
     {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Provides a customizable implementation of Base16 encoding.
+    /// Customizable Base16 encoding.
     /// </summary>
     public class CustomBase16 : GenericBase16
     {
