@@ -227,6 +227,9 @@ namespace Gapotchenko.FX.Data.Encoding
 
             void ValidateIncompleteByte()
             {
+                if ((m_Options & DataEncodingOptions.Padding) != 0)
+                    throw new InvalidDataException($"Invalid {Name} padding.");
+
                 if ((m_Options & DataEncodingOptions.Relax) == 0)
                     throw new InvalidDataException($"Cannot decode the last byte due to missing {Name} symbol.");
             }
