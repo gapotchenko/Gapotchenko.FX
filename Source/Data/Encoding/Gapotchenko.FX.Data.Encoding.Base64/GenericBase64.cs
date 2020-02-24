@@ -35,14 +35,22 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         protected readonly TextDataEncodingAlphabet Alphabet;
 
+        #region Parameters
+
+        const int BitsPerEncodedByte = 6;
+        const int SymbolsPerEncodedBlock = 4;
+        const int BytesPerUnencodedBlock = 3;
+
+        #endregion
+
         /// <inheritdoc/>
-        public int Radix => 64;
+        public int Radix => 1 << BitsPerEncodedByte;
 
         /// <summary>
         /// Base64 encoding efficiency.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
-        public new const float Efficiency = 0.75f;
+        public new const float Efficiency = (float)BytesPerUnencodedBlock / SymbolsPerEncodedBlock;
 
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
@@ -58,13 +66,19 @@ namespace Gapotchenko.FX.Data.Encoding
             protected readonly TextDataEncodingAlphabet m_Alphabet;
             protected readonly DataEncodingOptions m_Options;
 
+            #region Parameters
+
+            protected const string Name = "Base64";
+
+            protected const int MaskAlphabet = (1 << BitsPerEncodedByte) - 1;
+            protected const int Mask2Bits = (1 << 2) - 1;
+            protected const int Mask4Bits = (1 << 4) - 1;
+
+            #endregion
+
             protected int m_Bits;
             protected int m_Modulus;
             protected bool m_Eof;
-
-            protected const int Mask6Bits = 0x3f;
-            protected const int Mask4Bits = 0x0f;
-            protected const int Mask2Bits = 0x03;
         }
 
         sealed class EncoderContext : CodecContextBase, IEncoderContext
@@ -79,7 +93,7 @@ namespace Gapotchenko.FX.Data.Encoding
             /// </summary>
             const DataEncodingOptions FormatMask = DataEncodingOptions.Wrap | DataEncodingOptions.Indent;
 
-            readonly char[] m_Buffer = new char[4];
+            readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
 
             int m_LinePosition;
 
@@ -116,8 +130,8 @@ namespace Gapotchenko.FX.Data.Encoding
                         case 1:
                             {
                                 // 8 bits = 6 + 2
-                                m_Buffer[0] = alphabet[(m_Bits >> 2) & Mask6Bits]; // 6 bits
-                                m_Buffer[1] = alphabet[(m_Bits << 4) & Mask6Bits]; // 2 bits
+                                m_Buffer[0] = alphabet[(m_Bits >> 2) & MaskAlphabet]; // 6 bits
+                                m_Buffer[1] = alphabet[(m_Bits << 4) & MaskAlphabet]; // 2 bits
 
                                 int count = 2;
                                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
@@ -135,9 +149,9 @@ namespace Gapotchenko.FX.Data.Encoding
                         case 2:
                             {
                                 // 16 bits = 6 + 6 + 4
-                                m_Buffer[0] = alphabet[(m_Bits >> 10) & Mask6Bits]; // 6 bits
-                                m_Buffer[1] = alphabet[(m_Bits >> 4) & Mask6Bits]; // 6 bits
-                                m_Buffer[2] = alphabet[(m_Bits << 2) & Mask6Bits]; // 4 bits
+                                m_Buffer[0] = alphabet[(m_Bits >> 10) & MaskAlphabet]; // 6 bits
+                                m_Buffer[1] = alphabet[(m_Bits >> 4) & MaskAlphabet]; // 6 bits
+                                m_Buffer[2] = alphabet[(m_Bits << 2) & MaskAlphabet]; // 4 bits
 
                                 int count = 3;
                                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
@@ -163,20 +177,20 @@ namespace Gapotchenko.FX.Data.Encoding
                     // Accumulate data bits.
                     m_Bits = (m_Bits << 8) | b;
 
-                    if (++m_Modulus == 3)
+                    if (++m_Modulus == BytesPerUnencodedBlock)
                     {
                         m_Modulus = 0;
 
                         // 3 bytes = 24 bits = 4 * 6 bits
-                        m_Buffer[0] = alphabet[(m_Bits >> 18) & Mask6Bits];
-                        m_Buffer[1] = alphabet[(m_Bits >> 12) & Mask6Bits];
-                        m_Buffer[2] = alphabet[(m_Bits >> 6) & Mask6Bits];
-                        m_Buffer[3] = alphabet[m_Bits & Mask6Bits];
+                        m_Buffer[0] = alphabet[(m_Bits >> 18) & MaskAlphabet];
+                        m_Buffer[1] = alphabet[(m_Bits >> 12) & MaskAlphabet];
+                        m_Buffer[2] = alphabet[(m_Bits >> 6) & MaskAlphabet];
+                        m_Buffer[3] = alphabet[m_Bits & MaskAlphabet];
 
                         EmitLineBreak(output);
                         output.Write(m_Buffer);
 
-                        MoveLinePosition(4);
+                        MoveLinePosition(SymbolsPerEncodedBlock);
                     }
                 }
             }
@@ -189,7 +203,7 @@ namespace Gapotchenko.FX.Data.Encoding
             {
             }
 
-            readonly byte[] m_Buffer = new byte[3];
+            readonly byte[] m_Buffer = new byte[BytesPerUnencodedBlock];
 
             public void Decode(ReadOnlySpan<char> input, Stream output)
             {
@@ -223,7 +237,7 @@ namespace Gapotchenko.FX.Data.Encoding
                         if ((m_Options & DataEncodingOptions.Relax) == 0)
                         {
                             if (!char.IsWhiteSpace(c))
-                                throw new InvalidDataException("Encountered a non-Base64 character.");
+                                throw new InvalidDataException($"Encountered a non-{Name} character.");
                         }
                         continue;
                     }
@@ -231,9 +245,9 @@ namespace Gapotchenko.FX.Data.Encoding
                     ValidatePaddingState();
 
                     // Accumulate data bits.
-                    m_Bits = (m_Bits << 6) | b;
+                    m_Bits = (m_Bits << BitsPerEncodedByte) | b;
 
-                    if (++m_Modulus == 4)
+                    if (++m_Modulus == SymbolsPerEncodedBlock)
                     {
                         m_Modulus = 0;
 
@@ -241,7 +255,7 @@ namespace Gapotchenko.FX.Data.Encoding
                         m_Buffer[1] = (byte)(m_Bits >> 8);
                         m_Buffer[2] = (byte)m_Bits;
 
-                        output.Write(m_Buffer, 0, 3);
+                        output.Write(m_Buffer, 0, BytesPerUnencodedBlock);
                     }
                 }
             }
@@ -266,7 +280,7 @@ namespace Gapotchenko.FX.Data.Encoding
                         break;
 
                     case 3:
-                        // 3 * 6 bits = 18 = 8 + 8 + 2
+                        // 3 * 6 bits = 18 = 2 * 8 + 2
                         ValidateLastSymbol(Mask2Bits);
 
                         m_Buffer[0] = (byte)(m_Bits >> 10);
@@ -285,7 +299,7 @@ namespace Gapotchenko.FX.Data.Encoding
             void ValidateIncompleteByte()
             {
                 if ((m_Options & DataEncodingOptions.Relax) == 0)
-                    throw new InvalidDataException("Cannot decode the last byte due to missing Base64 symbol.");
+                    throw new InvalidDataException($"Cannot decode the last byte due to missing {Name} symbol.");
             }
 
             void ValidateLastSymbol(int zeroMask)
@@ -293,7 +307,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if ((m_Options & DataEncodingOptions.Relax) == 0 &&
                     (m_Bits & zeroMask) != 0)
                 {
-                    throw new InvalidDataException("The insignificant bits of the last Base64 symbol are expected to be zero.");
+                    throw new InvalidDataException($"The insignificant bits of the last {Name} symbol are expected to be zero.");
                 }
             }
 
@@ -308,7 +322,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     m_Padding = m_Modulus;
                 }
 
-                if (++m_Padding == 4)
+                if (++m_Padding == SymbolsPerEncodedBlock)
                     m_Padding = 0;
             }
 
@@ -325,7 +339,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     throw CreateInvalidPaddingException();
             }
 
-            static Exception CreateInvalidPaddingException() => new InvalidDataException("Invalid Base64 padding.");
+            static Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid {Name} padding.");
         }
 
         /// <inheritdoc/>
@@ -352,7 +366,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public override bool IsCaseSensitive => true;
 
         /// <inheritdoc/>
-        protected override int PaddingCore => 4;
+        protected sealed override int PaddingCore => SymbolsPerEncodedBlock;
 
         /// <summary>
         /// The padding character.

@@ -38,7 +38,7 @@ namespace Gapotchenko.FX.Data.Encoding
         #region Parameters
 
         const int BitsPerEncodedByte = 5;
-        const int BytesPerEncodedBlock = 8;
+        const int SymbolsPerEncodedBlock = 8;
         const int BytesPerUnencodedBlock = 5;
 
         #endregion
@@ -50,7 +50,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Base32 encoding efficiency.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
-        public new const float Efficiency = (float)BytesPerUnencodedBlock / BytesPerEncodedBlock;
+        public new const float Efficiency = (float)BytesPerUnencodedBlock / SymbolsPerEncodedBlock;
 
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
@@ -95,7 +95,7 @@ namespace Gapotchenko.FX.Data.Encoding
             /// </summary>
             const DataEncodingOptions FormatMask = DataEncodingOptions.Wrap | DataEncodingOptions.Indent;
 
-            readonly char[] m_Buffer = new char[BytesPerEncodedBlock];
+            readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
 
             int m_LinePosition;
 
@@ -112,8 +112,14 @@ namespace Gapotchenko.FX.Data.Encoding
                 }
             }
 
+            /// <summary>
+            /// Mathematical shift to the right.
+            /// </summary>
+            /// <param name="x">The value.</param>
+            /// <param name="n">The number of bits to shift.</param>
+            /// <returns>The shifted value.</returns>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static ulong ShiftRight(ulong x, int n) =>
+            static ulong Msr(ulong x, int n) =>
                 (n >= 0) ?
                     x >> n :
                     x << -n;
@@ -127,13 +133,13 @@ namespace Gapotchenko.FX.Data.Encoding
                 do
                 {
                     s -= BitsPerEncodedByte;
-                    m_Buffer[i++] = alphabet[(int)ShiftRight(m_Bits, s) & MaskAlphabet];
+                    m_Buffer[i++] = alphabet[(int)Msr(m_Bits, s) & MaskAlphabet];
                 }
                 while (s > 0);
 
                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
                 {
-                    while (i < BytesPerEncodedBlock)
+                    while (i < SymbolsPerEncodedBlock)
                         m_Buffer[i++] = PaddingChar;
                 }
 
@@ -197,7 +203,7 @@ namespace Gapotchenko.FX.Data.Encoding
                         EmitLineBreak(output);
                         output.Write(m_Buffer);
 
-                        MoveLinePosition(8);
+                        MoveLinePosition(SymbolsPerEncodedBlock);
                     }
                 }
             }
@@ -254,7 +260,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     // Accumulate data bits.
                     m_Bits = (m_Bits << BitsPerEncodedByte) | (byte)b;
 
-                    if (++m_Modulus == BytesPerEncodedBlock)
+                    if (++m_Modulus == SymbolsPerEncodedBlock)
                     {
                         m_Modulus = 0;
 
@@ -297,33 +303,45 @@ namespace Gapotchenko.FX.Data.Encoding
                     case 4:
                         // 4 * 5 bits = 20 = 2 * 8 + 4
                         ValidateLastSymbol(Mask4Bits);
-                        output.WriteByte((byte)(m_Bits >> 12));
-                        output.WriteByte((byte)(m_Bits >> 4));
+
+                        m_Buffer[0] = (byte)(m_Bits >> 12);
+                        m_Buffer[1] = (byte)(m_Bits >> 4);
+
+                        output.Write(m_Buffer, 0, 2);
                         break;
 
                     case 5:
                         // 5 * 5 bits = 25 = 3 * 8 + 1
                         ValidateLastSymbol(Mask1Bit);
-                        output.WriteByte((byte)(m_Bits >> 17));
-                        output.WriteByte((byte)(m_Bits >> 9));
-                        output.WriteByte((byte)(m_Bits >> 1));
+
+                        m_Buffer[0] = (byte)(m_Bits >> 17);
+                        m_Buffer[1] = (byte)(m_Bits >> 9);
+                        m_Buffer[2] = (byte)(m_Bits >> 1);
+
+                        output.Write(m_Buffer, 0, 3);
                         break;
 
                     case 6:
                         // 6 * 5 bits = 30 = 3 * 8 + 6
                         ValidateIncompleteByte();
-                        output.WriteByte((byte)(m_Bits >> 22));
-                        output.WriteByte((byte)(m_Bits >> 14));
-                        output.WriteByte((byte)(m_Bits >> 6));
+
+                        m_Buffer[0] = (byte)(m_Bits >> 22);
+                        m_Buffer[1] = (byte)(m_Bits >> 14);
+                        m_Buffer[2] = (byte)(m_Bits >> 6);
+
+                        output.Write(m_Buffer, 0, 3);
                         break;
 
                     case 7:
                         // 7 * 5 bits = 35 = 4 * 8 + 3
                         ValidateLastSymbol(Mask3Bits);
-                        output.WriteByte((byte)(m_Bits >> 27));
-                        output.WriteByte((byte)(m_Bits >> 19));
-                        output.WriteByte((byte)(m_Bits >> 11));
-                        output.WriteByte((byte)(m_Bits >> 3));
+
+                        m_Buffer[0] = (byte)(m_Bits >> 27);
+                        m_Buffer[1] = (byte)(m_Bits >> 19);
+                        m_Buffer[2] = (byte)(m_Bits >> 11);
+                        m_Buffer[3] = (byte)(m_Bits >> 3);
+
+                        output.Write(m_Buffer, 0, 4);
                         break;
 
                     default:
@@ -359,7 +377,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     m_Padding = m_Modulus;
                 }
 
-                if (++m_Padding == BytesPerEncodedBlock)
+                if (++m_Padding == SymbolsPerEncodedBlock)
                     m_Padding = 0;
             }
 
@@ -403,7 +421,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public override bool IsCaseSensitive => false;
 
         /// <inheritdoc/>
-        protected sealed override int PaddingCore => BytesPerEncodedBlock;
+        protected sealed override int PaddingCore => SymbolsPerEncodedBlock;
 
         /// <summary>
         /// The padding character.
