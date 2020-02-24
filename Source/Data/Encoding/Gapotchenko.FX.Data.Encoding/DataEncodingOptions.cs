@@ -50,6 +50,12 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// Instructs to emit checksum if the encoding supports it natively.
         /// </summary>
-        Checksum = 1 << 6
+        Checksum = 1 << 6,
+
+        /// <summary>
+        /// Instructs to compress the data during encoding operation if the codec supports it natively.
+        /// For example, ZBase32 encoding eliminates the insignificant bits from the output when this option is specified.
+        /// </summary>
+        Compress = 1 << 7
     }
 }

@@ -12,23 +12,21 @@ namespace Gapotchenko.FX.Data.Encoding.Test
     [TestClass]
     public class ZBase32Tests
     {
-        static void TestVector(byte[] raw, string encoded, int bits = 0)
+        static void TestVector(byte[] raw, string encoded, int bitCount = 0)
         {
-            if (bits == 0)
-                bits = raw.Length * 8;
+            if (bitCount == 0)
+                bitCount = raw.Length * 8;
+            else if (bitCount > raw.Length * 8)
+                throw new ArgumentException("Bit count is greater than data size.", nameof(bitCount));
 
-            bool fullByte = bits % 8 == 0;
+            bool inByteRegion = bitCount % 8 == 0;
 
-            if (fullByte)
-            {
-                string actualEncoded = ZBase32.GetString(raw);
-                Assert.AreEqual(encoded, actualEncoded);
-            }
-            else
-            {
-                string actualEncoded = ZBase32.GetString(raw);
-                Assert.AreEqual(encoded.TrimEnd('y'), actualEncoded.TrimEnd('y'));
-            }
+            var options = DataEncodingOptions.None;
+            if (!inByteRegion)
+                options |= DataEncodingOptions.Compress;
+
+            string actualEncoded = ZBase32.GetString(raw, options);
+            Assert.AreEqual(encoded, actualEncoded);
 
             var actualDecoded = ZBase32.GetBytes(encoded);
             Assert.IsTrue(raw.SequenceEqual(actualDecoded));
@@ -41,9 +39,10 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             // -----------------------------------------------------------------
 
-            if (fullByte)
-                TextDataEncodingTestServices.TestVector(instance, raw, encoded, padded: false);
+            TextDataEncodingTestServices.TestVector(instance, raw, encoded, padded: false, options: options);
         }
+
+        static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);
 
         [TestMethod]
         public void ZBase32_Empty() => TestVector(new byte[0], "");
@@ -111,5 +110,11 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         public void ZBase32_Bits_TV10() => TestVector(new byte[] { 0x10, 0x11, 0x10 }, "nyet", 20);
+
+        [TestMethod]
+        public void ZBase32_Strings_TV1() => TestVector("hello, world\n", "pb1sa5dxfoo8q551pt1yw");
+
+        //[TestMethod]
+        //public void ZBase32_Strings_TV2() => TestVector("\x0001binary!!!1\x0000", "yftg15ubqjh1nejbgryy");
     }
 }

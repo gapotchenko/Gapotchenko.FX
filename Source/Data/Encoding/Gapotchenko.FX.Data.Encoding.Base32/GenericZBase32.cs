@@ -40,28 +40,12 @@ namespace Gapotchenko.FX.Data.Encoding
             protected const string Name = "ZBase32";
 
             protected const int MaskSymbol = (1 << BitsPerSymbol) - 1;
-            protected const int Mask1Bit = (1 << 1) - 1;
-            protected const int Mask2Bits = (1 << 2) - 1;
-            protected const int Mask3Bits = (1 << 3) - 1;
-            protected const int Mask4Bits = (1 << 4) - 1;
 
             #endregion
 
             protected ulong m_Bits;
             protected int m_Modulus;
             protected bool m_Eof;
-
-            /// <summary>
-            /// Mathematical shift to the right.
-            /// </summary>
-            /// <param name="x">The value.</param>
-            /// <param name="n">The number of bits to shift.</param>
-            /// <returns>The shifted value.</returns>
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            protected static ulong Msr(ulong x, int n) =>
-                (n >= 0) ?
-                    x >> n :
-                    x << -n;
         }
 
         sealed class EncoderContext : CodecContextBase, IEncoderContext
@@ -99,10 +83,21 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 int i = 0;
                 int s = bitCount;
+                int lastCount = 1;
+                int pbi = 0;
+
                 do
                 {
                     s -= BitsPerSymbol;
-                    m_Buffer[i++] = alphabet[(int)Msr(m_Bits, s) & MaskSymbol];
+                    int bi = s >= 0 ? s >> 3 : pbi;
+
+                    int symbolIndex = (int)Msr(m_Bits, s) & MaskSymbol;
+                    m_Buffer[i++] = alphabet[symbolIndex];
+
+                    if (symbolIndex != 0 || bi != pbi)
+                        lastCount = i;
+
+                    pbi = bi;
                 }
                 while (s > 0);
 
@@ -110,6 +105,10 @@ namespace Gapotchenko.FX.Data.Encoding
                 {
                     while (i < SymbolsPerEncodedBlock)
                         m_Buffer[i++] = PaddingChar;
+                }
+                else if ((m_Options & DataEncodingOptions.Compress) != 0)
+                {
+                    i = lastCount;
                 }
 
                 EmitLineBreak(output);
@@ -130,17 +129,8 @@ namespace Gapotchenko.FX.Data.Encoding
                         case 0:
                             // Nothing to do.
                             break;
-                        case 1:
-                            WriteBits(output, 1 * 8);
-                            break;
-                        case 2:
-                            WriteBits(output, 2 * 8);
-                            break;
-                        case 3:
-                            WriteBits(output, 3 * 8);
-                            break;
-                        case 4:
-                            WriteBits(output, 4 * 8);
+                        case var k when k < BytesPerDecodedBlock:
+                            WriteBits(output, k * 8);
                             break;
                         default:
                             throw new InvalidOperationException();

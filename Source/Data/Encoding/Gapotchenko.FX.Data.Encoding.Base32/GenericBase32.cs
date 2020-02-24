@@ -66,6 +66,18 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
 
+        /// <summary>
+        /// Mathematical shift to the right.
+        /// </summary>
+        /// <param name="x">The value.</param>
+        /// <param name="n">The number of bits to shift.</param>
+        /// <returns>The shifted value.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private protected static ulong Msr(ulong x, int n) =>
+            (n >= 0) ?
+                x >> n :
+                x << -n;
+
         abstract class CodecContextBase
         {
             public CodecContextBase(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
@@ -122,18 +134,6 @@ namespace Gapotchenko.FX.Data.Encoding
                         output.WriteLine();
                 }
             }
-
-            /// <summary>
-            /// Mathematical shift to the right.
-            /// </summary>
-            /// <param name="x">The value.</param>
-            /// <param name="n">The number of bits to shift.</param>
-            /// <returns>The shifted value.</returns>
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static ulong Msr(ulong x, int n) =>
-                (n >= 0) ?
-                    x >> n :
-                    x << -n;
 
             void WriteBits(TextWriter output, int bitCount)
             {
