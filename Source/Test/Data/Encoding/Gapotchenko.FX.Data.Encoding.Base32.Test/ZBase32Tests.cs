@@ -1,9 +1,7 @@
 ﻿using Gapotchenko.FX.Data.Encoding.Test.Framework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Gapotchenko.FX.Data.Encoding.Test
 {
@@ -19,10 +17,10 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             else if (bitCount > raw.Length * 8)
                 throw new ArgumentException("Bit count is greater than data size.", nameof(bitCount));
 
-            bool inByteRegion = bitCount % 8 == 0;
+            bool byteBounds = bitCount % 8 == 0;
 
             var options = DataEncodingOptions.None;
-            if (!inByteRegion)
+            if (!byteBounds)
                 options |= DataEncodingOptions.Compress;
 
             string actualEncoded = ZBase32.GetString(raw, options);
