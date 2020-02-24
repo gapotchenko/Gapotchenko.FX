@@ -92,7 +92,7 @@ namespace Gapotchenko.FX.Harness.Console
             using (var tr = new StreamReader(
                 Base64.Instance.CreateDecoder(
                     File.OpenText(filePath),
-                    DataEncodingOptions.Pad)))
+                    DataEncodingOptions.Padding)))
             {
                 Console.WriteLine(await tr.ReadLineAsync());
             }

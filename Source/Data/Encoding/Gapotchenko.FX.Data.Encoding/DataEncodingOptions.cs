@@ -22,7 +22,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// Instructs to validate padding in decoding operation or to enforce its generation in encoding operation.
         /// </summary>
-        Pad = 1 << 1,
+        Padding = 1 << 1,
 
         /// <summary>
         /// Do not perform lifetime management of the specified data object such as <see cref="Stream"/>, <see cref="TextReader"/> or <see cref="TextWriter"/>.
@@ -31,7 +31,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <summary>
         /// Instructs to produce the indented or formatted output if the encoding supports it natively.
-        /// For example, Base16 encoding produces the indented output by emitting whitespace delimiters every 2 symbols of output.
+        /// For example, Base16 encoding produces the indented output by emitting whitespace delimiters every 2 symbols of the output.
         /// </summary>
         Indent = 1 << 3,
 
