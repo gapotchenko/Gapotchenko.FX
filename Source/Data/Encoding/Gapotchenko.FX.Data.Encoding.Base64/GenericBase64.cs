@@ -81,7 +81,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             protected const string Name = "Base64";
 
-            protected const int MaskAlphabet = (1 << BitsPerSymbol) - 1;
+            protected const int MaskSymbol = (1 << BitsPerSymbol) - 1;
             protected const int Mask2Bits = (1 << 2) - 1;
             protected const int Mask4Bits = (1 << 4) - 1;
 
@@ -141,8 +141,8 @@ namespace Gapotchenko.FX.Data.Encoding
                         case 1:
                             {
                                 // 8 bits = 6 + 2
-                                m_Buffer[0] = alphabet[(m_Bits >> 2) & MaskAlphabet]; // 6 bits
-                                m_Buffer[1] = alphabet[(m_Bits << 4) & MaskAlphabet]; // 2 bits
+                                m_Buffer[0] = alphabet[(m_Bits >> 2) & MaskSymbol]; // 6 bits
+                                m_Buffer[1] = alphabet[(m_Bits << 4) & MaskSymbol]; // 2 bits
 
                                 int count = 2;
                                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
@@ -160,9 +160,9 @@ namespace Gapotchenko.FX.Data.Encoding
                         case 2:
                             {
                                 // 16 bits = 6 + 6 + 4
-                                m_Buffer[0] = alphabet[(m_Bits >> 10) & MaskAlphabet]; // 6 bits
-                                m_Buffer[1] = alphabet[(m_Bits >> 4) & MaskAlphabet]; // 6 bits
-                                m_Buffer[2] = alphabet[(m_Bits << 2) & MaskAlphabet]; // 4 bits
+                                m_Buffer[0] = alphabet[(m_Bits >> 10) & MaskSymbol]; // 6 bits
+                                m_Buffer[1] = alphabet[(m_Bits >> 4) & MaskSymbol]; // 6 bits
+                                m_Buffer[2] = alphabet[(m_Bits << 2) & MaskSymbol]; // 4 bits
 
                                 int count = 3;
                                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
@@ -193,10 +193,10 @@ namespace Gapotchenko.FX.Data.Encoding
                         m_Modulus = 0;
 
                         // 3 bytes = 24 bits = 4 * 6 bits
-                        m_Buffer[0] = alphabet[(m_Bits >> 18) & MaskAlphabet];
-                        m_Buffer[1] = alphabet[(m_Bits >> 12) & MaskAlphabet];
-                        m_Buffer[2] = alphabet[(m_Bits >> 6) & MaskAlphabet];
-                        m_Buffer[3] = alphabet[m_Bits & MaskAlphabet];
+                        m_Buffer[0] = alphabet[(m_Bits >> 18) & MaskSymbol];
+                        m_Buffer[1] = alphabet[(m_Bits >> 12) & MaskSymbol];
+                        m_Buffer[2] = alphabet[(m_Bits >> 6) & MaskSymbol];
+                        m_Buffer[3] = alphabet[m_Bits & MaskSymbol];
 
                         EmitLineBreak(output);
                         output.Write(m_Buffer);
@@ -354,24 +354,26 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => new EncoderContext(Alphabet, GetEncoderOptions(options));
+        protected sealed override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => CreateEncoderContextCore(Alphabet, options);
 
         /// <inheritdoc/>
-        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => new DecoderContext(GetDecoderAlphabet(options), options);
+        protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => CreateDecoderContextCore(Alphabet, options);
 
         /// <summary>
-        /// Gets encoder options.
+        /// Creates encoder context with specified alphabet and options.
         /// </summary>
+        /// <param name="alphabet">The alphabet.</param>
         /// <param name="options">The options.</param>
-        /// <returns>The encoder options.</returns>
-        protected virtual DataEncodingOptions GetEncoderOptions(DataEncodingOptions options) => options;
+        /// <returns>The encoder context.</returns>
+        protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new EncoderContext(alphabet, options);
 
         /// <summary>
-        /// Gets decoder alphabet.
+        /// Creates decoder context with specified alphabet and options.
         /// </summary>
+        /// <param name="alphabet">The alphabet.</param>
         /// <param name="options">The options.</param>
-        /// <returns>The alphabet.</returns>
-        protected virtual TextDataEncodingAlphabet GetDecoderAlphabet(DataEncodingOptions options) => Alphabet;
+        /// <returns>The decoder context.</returns>
+        protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new DecoderContext(alphabet, options);
 
         /// <inheritdoc/>
         public override bool IsCaseSensitive => true;

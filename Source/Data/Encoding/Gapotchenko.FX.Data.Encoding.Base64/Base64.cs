@@ -20,12 +20,12 @@ namespace Gapotchenko.FX.Data.Encoding
         public override string Name => "Base64";
 
         /// <inheritdoc/>
-        protected override TextDataEncodingAlphabet GetDecoderAlphabet(DataEncodingOptions options)
+        protected override IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Relax) != 0)
-                return Base64LinguaFranca.Alphabet;
-            else
-                return base.GetDecoderAlphabet(options);
+                alphabet = Base64LinguaFranca.Alphabet;
+
+            return base.CreateDecoderContextCore(alphabet, options);
         }
 
         /// <summary>

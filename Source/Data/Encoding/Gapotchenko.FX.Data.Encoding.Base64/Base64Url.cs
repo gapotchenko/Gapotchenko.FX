@@ -18,7 +18,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public override string Name => "base64url";
 
         /// <inheritdoc/>
-        protected override DataEncodingOptions GetEncoderOptions(DataEncodingOptions options)
+        protected override IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Padding) == 0)
             {
@@ -27,16 +27,16 @@ namespace Gapotchenko.FX.Data.Encoding
                 options |= DataEncodingOptions.Unpad;
             }
 
-            return options;
+            return base.CreateEncoderContextCore(alphabet, options);
         }
 
         /// <inheritdoc/>
-        protected override TextDataEncodingAlphabet GetDecoderAlphabet(DataEncodingOptions options)
+        protected override IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Relax) != 0)
-                return Base64LinguaFranca.Alphabet;
-            else
-                return base.GetDecoderAlphabet(options);
+                alphabet = Base64LinguaFranca.Alphabet;
+
+            return base.CreateDecoderContextCore(alphabet, options);
         }
 
         /// <summary>

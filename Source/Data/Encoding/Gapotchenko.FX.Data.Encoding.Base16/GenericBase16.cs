@@ -80,7 +80,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             protected const string Name = "Base16";
 
-            protected const int MaskAlphabet = (1 << BitsPerSymbol) - 1;
+            protected const int MaskSymbol = (1 << BitsPerSymbol) - 1;
 
             #endregion
 
@@ -142,8 +142,8 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 foreach (var b in input)
                 {
-                    m_Buffer[0] = alphabet[(b >> BitsPerSymbol) & MaskAlphabet];
-                    m_Buffer[1] = alphabet[b & MaskAlphabet];
+                    m_Buffer[0] = alphabet[(b >> BitsPerSymbol) & MaskSymbol];
+                    m_Buffer[1] = alphabet[b & MaskSymbol];
 
                     EmitBreak(output);
                     output.Write(m_Buffer);
@@ -195,7 +195,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     }
 
                     // Accumulate data bits.
-                    m_Bits = (byte)((m_Bits << BitsPerSymbol) | (b & MaskAlphabet));
+                    m_Bits = (byte)((m_Bits << BitsPerSymbol) | (b & MaskSymbol));
 
                     if (++m_Modulus == SymbolsPerEncodedBlock)
                     {
@@ -233,17 +233,26 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => new EncoderContext(Alphabet, options);
+        protected sealed override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => CreateEncoderContextCore(Alphabet, options);
 
         /// <inheritdoc/>
-        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => new DecoderContext(GetDecoderAlphabet(options), options);
+        protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => CreateDecoderContextCore(Alphabet, options);
 
         /// <summary>
-        /// Gets decoder alphabet.
+        /// Creates encoder context with specified alphabet and options.
         /// </summary>
+        /// <param name="alphabet">The alphabet.</param>
         /// <param name="options">The options.</param>
-        /// <returns>The alphabet.</returns>
-        protected virtual TextDataEncodingAlphabet GetDecoderAlphabet(DataEncodingOptions options) => Alphabet;
+        /// <returns>The encoder context.</returns>
+        protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new EncoderContext(alphabet, options);
+
+        /// <summary>
+        /// Creates decoder context with specified alphabet and options.
+        /// </summary>
+        /// <param name="alphabet">The alphabet.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The decoder context.</returns>
+        protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new DecoderContext(alphabet, options);
 
         /// <inheritdoc/>
         public override bool IsCaseSensitive => false;
