@@ -102,6 +102,7 @@ namespace Gapotchenko.FX.Harness.Console
 
             Console.WriteLine(Encoding.UTF8.GetString(Base16.GetBytes(s)));
 
+            Console.WriteLine(Base32.Efficiency);
 
             //string e = Base64.GetString(Encoding.UTF8.GetBytes(s), DataEncodingOptions.Indent);
 

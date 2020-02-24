@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -38,14 +34,22 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         protected readonly TextDataEncodingAlphabet Alphabet;
 
+        #region Parameters
+
+        const int BitsPerEncodedByte = 4;
+        const int SymbolsPerEncodedBlock = 2;
+        const int BytesPerUnencodedBlock = 1;
+
+        #endregion
+
         /// <inheritdoc/>
-        public int Radix => 16;
+        public int Radix => 1 << BitsPerEncodedByte;
 
         /// <summary>
         /// Base64 encoding efficiency.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
-        public new const float Efficiency = 0.5f;
+        public new const float Efficiency = (float)BytesPerUnencodedBlock / SymbolsPerEncodedBlock;
 
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
@@ -61,9 +65,15 @@ namespace Gapotchenko.FX.Data.Encoding
             protected readonly TextDataEncodingAlphabet m_Alphabet;
             protected readonly DataEncodingOptions m_Options;
 
-            protected bool m_Eof;
+            #region Parameters
 
-            protected const int Mask4Bits = 0x0f;
+            protected const string Name = "Base16";
+
+            protected const int MaskAlphabet = (1 << BitsPerEncodedByte) - 1;
+
+            #endregion
+
+            protected bool m_Eof;
         }
 
         sealed class EncoderContext : CodecContextBase, IEncoderContext
@@ -73,12 +83,12 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 m_Width =
                     (m_Options & DataEncodingOptions.Indent) != 0 ?
-                        16 * 2 :
-                        32 * 2;
+                        16 * SymbolsPerEncodedBlock :
+                        32 * SymbolsPerEncodedBlock;
             }
 
             readonly int m_Width;
-            readonly char[] m_Buffer = new char[2];
+            readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
 
             int m_LinePosition;
             bool m_Indent;
@@ -121,13 +131,13 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 foreach (var b in input)
                 {
-                    m_Buffer[0] = alphabet[(b >> 4) & Mask4Bits];
-                    m_Buffer[1] = alphabet[b & Mask4Bits];
+                    m_Buffer[0] = alphabet[(b >> 4) & MaskAlphabet];
+                    m_Buffer[1] = alphabet[b & MaskAlphabet];
 
                     EmitBreak(output);
                     output.Write(m_Buffer);
 
-                    MoveLinePosition(2);
+                    MoveLinePosition(SymbolsPerEncodedBlock);
                 }
             }
         }
@@ -174,9 +184,9 @@ namespace Gapotchenko.FX.Data.Encoding
                     }
 
                     // Accumulate data bits.
-                    m_Bits = (byte)((m_Bits << 4) | (b & Mask4Bits));
+                    m_Bits = (byte)((m_Bits << 4) | (b & MaskAlphabet));
 
-                    if (++m_Modulus == 2)
+                    if (++m_Modulus == SymbolsPerEncodedBlock)
                     {
                         m_Modulus = 0;
                         output.WriteByte(m_Bits);
@@ -207,7 +217,7 @@ namespace Gapotchenko.FX.Data.Encoding
             void ValidateIncompleteByte()
             {
                 if ((m_Options & DataEncodingOptions.Relax) == 0)
-                    throw new InvalidDataException("Cannot decode the last byte due to missing Base16 symbol.");
+                    throw new InvalidDataException($"Cannot decode the last byte due to missing {Name} symbol.");
             }
         }
 
@@ -228,6 +238,6 @@ namespace Gapotchenko.FX.Data.Encoding
         public override bool IsCaseSensitive => false;
 
         /// <inheritdoc/>
-        protected override int PaddingCore => 1;
+        protected sealed override int PaddingCore => SymbolsPerEncodedBlock;
     }
 }
