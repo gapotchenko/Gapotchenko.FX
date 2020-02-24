@@ -36,20 +36,31 @@ namespace Gapotchenko.FX.Data.Encoding
 
         #region Parameters
 
-        const int BitsPerEncodedByte = 4;
-        const int SymbolsPerEncodedBlock = 2;
-        const int BytesPerUnencodedBlock = 1;
+        /// <summary>
+        /// Number of bits per symbol.
+        /// </summary>
+        protected const int BitsPerSymbol = 4;
+
+        /// <summary>
+        /// Number of symbols per encoded block.
+        /// </summary>
+        protected const int SymbolsPerEncodedBlock = 2;
+
+        /// <summary>
+        /// Number of bytes per decoded block.
+        /// </summary>
+        protected const int BytesPerDecodedBlock = 1;
 
         #endregion
 
         /// <inheritdoc/>
-        public int Radix => 1 << BitsPerEncodedByte;
+        public int Radix => 1 << BitsPerSymbol;
 
         /// <summary>
         /// Base64 encoding efficiency.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
-        public new const float Efficiency = (float)BytesPerUnencodedBlock / SymbolsPerEncodedBlock;
+        public new const float Efficiency = (float)BytesPerDecodedBlock / SymbolsPerEncodedBlock;
 
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
@@ -69,7 +80,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             protected const string Name = "Base16";
 
-            protected const int MaskAlphabet = (1 << BitsPerEncodedByte) - 1;
+            protected const int MaskAlphabet = (1 << BitsPerSymbol) - 1;
 
             #endregion
 
@@ -131,7 +142,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 foreach (var b in input)
                 {
-                    m_Buffer[0] = alphabet[(b >> BitsPerEncodedByte) & MaskAlphabet];
+                    m_Buffer[0] = alphabet[(b >> BitsPerSymbol) & MaskAlphabet];
                     m_Buffer[1] = alphabet[b & MaskAlphabet];
 
                     EmitBreak(output);
@@ -184,7 +195,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     }
 
                     // Accumulate data bits.
-                    m_Bits = (byte)((m_Bits << BitsPerEncodedByte) | (b & MaskAlphabet));
+                    m_Bits = (byte)((m_Bits << BitsPerSymbol) | (b & MaskAlphabet));
 
                     if (++m_Modulus == SymbolsPerEncodedBlock)
                     {

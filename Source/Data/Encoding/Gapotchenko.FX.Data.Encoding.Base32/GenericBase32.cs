@@ -37,20 +37,31 @@ namespace Gapotchenko.FX.Data.Encoding
 
         #region Parameters
 
-        const int BitsPerEncodedByte = 5;
-        const int SymbolsPerEncodedBlock = 8;
-        const int BytesPerUnencodedBlock = 5;
+        /// <summary>
+        /// Number of bits per symbol.
+        /// </summary>
+        protected const int BitsPerSymbol = 5;
+
+        /// <summary>
+        /// Number of symbols per encoded block.
+        /// </summary>
+        protected const int SymbolsPerEncodedBlock = 8;
+
+        /// <summary>
+        /// Number of bytes per decoded block.
+        /// </summary>
+        protected const int BytesPerDecodedBlock = 5;
 
         #endregion
 
         /// <inheritdoc/>
-        public int Radix => 1 << BitsPerEncodedByte;
+        public int Radix => 1 << BitsPerSymbol;
 
         /// <summary>
         /// Base32 encoding efficiency.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
-        public new const float Efficiency = (float)BytesPerUnencodedBlock / SymbolsPerEncodedBlock;
+        public new const float Efficiency = (float)BytesPerDecodedBlock / SymbolsPerEncodedBlock;
 
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
@@ -70,7 +81,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             protected const string Name = "Base32";
 
-            protected const int MaskAlphabet = (1 << BitsPerEncodedByte) - 1;
+            protected const int MaskAlphabet = (1 << BitsPerSymbol) - 1;
             protected const int Mask1Bit = (1 << 1) - 1;
             protected const int Mask2Bits = (1 << 2) - 1;
             protected const int Mask3Bits = (1 << 3) - 1;
@@ -132,7 +143,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 int s = bitCount;
                 do
                 {
-                    s -= BitsPerEncodedByte;
+                    s -= BitsPerSymbol;
                     m_Buffer[i++] = alphabet[(int)Msr(m_Bits, s) & MaskAlphabet];
                 }
                 while (s > 0);
@@ -187,7 +198,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     // Accumulate data bits.
                     m_Bits = (m_Bits << 8) | b;
 
-                    if (++m_Modulus == BytesPerUnencodedBlock)
+                    if (++m_Modulus == BytesPerDecodedBlock)
                     {
                         m_Modulus = 0;
 
@@ -216,7 +227,7 @@ namespace Gapotchenko.FX.Data.Encoding
             {
             }
 
-            readonly byte[] m_Buffer = new byte[BytesPerUnencodedBlock];
+            readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
 
             public void Decode(ReadOnlySpan<char> input, Stream output)
             {
@@ -258,7 +269,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     ValidatePaddingState();
 
                     // Accumulate data bits.
-                    m_Bits = (m_Bits << BitsPerEncodedByte) | (byte)b;
+                    m_Bits = (m_Bits << BitsPerSymbol) | (byte)b;
 
                     if (++m_Modulus == SymbolsPerEncodedBlock)
                     {
@@ -270,7 +281,7 @@ namespace Gapotchenko.FX.Data.Encoding
                         m_Buffer[3] = (byte)(m_Bits >> 8);
                         m_Buffer[4] = (byte)m_Bits;
 
-                        output.Write(m_Buffer, 0, BytesPerUnencodedBlock);
+                        output.Write(m_Buffer, 0, BytesPerDecodedBlock);
                     }
                 }
             }
