@@ -73,7 +73,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="n">The number of bits to shift.</param>
         /// <returns>The shifted value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private protected static ulong Msr(ulong x, int n) =>
+        private protected static ulong ShiftRight(ulong x, int n) =>
             (n >= 0) ?
                 x >> n :
                 x << -n;
@@ -144,7 +144,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 do
                 {
                     s -= BitsPerSymbol;
-                    m_Buffer[i++] = alphabet[(int)Msr(m_Bits, s) & MaskSymbol];
+                    m_Buffer[i++] = alphabet[(int)ShiftRight(m_Bits, s) & MaskSymbol];
                 }
                 while (s > 0);
 

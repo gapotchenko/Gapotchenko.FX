@@ -81,34 +81,42 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 var alphabet = m_Alphabet;
 
-                int i = 0;
-                int s = bitCount;
-                int lastCount = 1;
-                int pbi = 0;
+                bool compress = (m_Options & DataEncodingOptions.Compress) != 0;
+
+                int i = 0; // output symbol index
+                int s = bitCount; // shift accumulator
+                int pbi = 0; // previous input byte index
+                int li = 1; // last output symbol index
 
                 do
                 {
                     s -= BitsPerSymbol;
-                    int bi = s >= 0 ? s >> 3 : pbi;
 
-                    int symbolIndex = (int)Msr(m_Bits, s) & MaskSymbol;
-                    m_Buffer[i++] = alphabet[symbolIndex];
+                    int si = (int)ShiftRight(m_Bits, s) & MaskSymbol; // symbol index
+                    m_Buffer[i++] = alphabet[si]; // map symbol
 
-                    if (symbolIndex != 0 || bi != pbi)
-                        lastCount = i;
-
-                    pbi = bi;
+                    if (compress)
+                    {
+                        // bi holds the index of an input byte an output symbol was mapped for.
+                        int bi = Math.Max(s, 0) >> 3;
+                        if (si != 0 ||  // if non-zero symbol or
+                            bi != pbi)  // the symbol encodes a number of input bytes
+                        {
+                            // make it go to the output.
+                            li = i;
+                        }
+                        pbi = bi;
+                    }
                 }
                 while (s > 0);
+
+                if (compress)
+                    i = li;
 
                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
                 {
                     while (i < SymbolsPerEncodedBlock)
                         m_Buffer[i++] = PaddingChar;
-                }
-                else if ((m_Options & DataEncodingOptions.Compress) != 0)
-                {
-                    i = lastCount;
                 }
 
                 EmitLineBreak(output);
@@ -236,26 +244,26 @@ namespace Gapotchenko.FX.Data.Encoding
 
             void ReadBits(Stream output, int bitCount)
             {
-                int i = 0;
-                int s = bitCount;
-                var lastCount = 1;
+                int i = 0; // output byte index
+                int s = bitCount; // shift accumulator
+                var li = 1; // last output byte index
 
-                byte pb = 0;
                 do
                 {
                     s -= 8;
 
-                    byte b = (byte)Msr(m_Bits, s); ;
+                    byte b = (byte)ShiftRight(m_Bits, s);
                     m_Buffer[i++] = b;
 
-                    if (b != 0 || pb == 0)
-                        lastCount = i;
-
-                    pb = b;
+                    if (b != 0 || s >= 0 ||
+                        (m_Options & DataEncodingOptions.Compress) != 0 && i >= 2 && m_Buffer[i - 2] == 0)
+                    {
+                        li = i;
+                    }
                 }
                 while (s > 0);
 
-                output.Write(m_Buffer, 0, lastCount);
+                output.Write(m_Buffer, 0, li);
             }
 
             void FlushDecode(Stream output)
@@ -265,29 +273,16 @@ namespace Gapotchenko.FX.Data.Encoding
                     case 0:
                         // Nothing to do.
                         return;
+
                     case var k when k < SymbolsPerEncodedBlock:
                         ReadBits(output, k * BitsPerSymbol);
                         break;
+
                     default:
                         throw new InvalidOperationException();
                 }
 
                 m_Modulus = 0;
-            }
-
-            void ValidateIncompleteByte()
-            {
-                //    if ((m_Options & DataEncodingOptions.Relax) == 0)
-                //      throw new InvalidDataException($"Cannot decode the last byte due to missing {Name} symbol.");
-            }
-
-            void ValidateLastSymbol(ulong zeroMask)
-            {
-                if ((m_Options & DataEncodingOptions.Relax) == 0 &&
-                    (m_Bits & zeroMask) != 0)
-                {
-                    throw new InvalidDataException($"The insignificant bits of the last {Name} symbol are expected to be zero.");
-                }
             }
 
             int m_Padding;

@@ -28,7 +28,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             string actualEncoded = ZBase32.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded);
 
-            var actualDecoded = ZBase32.GetBytes(encoded);
+            var actualDecoded = ZBase32.GetBytes(encoded, options);
             Assert.IsTrue(raw.SequenceEqual(actualDecoded));
 
             // -----------------------------------------------------------------
@@ -114,7 +114,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void ZBase32_Strings_TV1() => TestVector("hello, world\n", "pb1sa5dxfoo8q551pt1yw");
 
-        //[TestMethod]
-        //public void ZBase32_Strings_TV2() => TestVector("\x0001binary!!!1\x0000", "yftg15ubqjh1nejbgryy");
+        [TestMethod]
+        public void ZBase32_Strings_TV2() => TestVector("\x0001binary!!!1\x0000", "yftg15ubqjh1nejbgryy");
     }
 }
