@@ -131,7 +131,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 foreach (var b in input)
                 {
-                    m_Buffer[0] = alphabet[(b >> 4) & MaskAlphabet];
+                    m_Buffer[0] = alphabet[(b >> BitsPerEncodedByte) & MaskAlphabet];
                     m_Buffer[1] = alphabet[b & MaskAlphabet];
 
                     EmitBreak(output);
@@ -178,13 +178,13 @@ namespace Gapotchenko.FX.Data.Encoding
                                 char.IsWhiteSpace(c);
 
                             if (!ok)
-                                throw new InvalidDataException("Encountered a non-Base16 character.");
+                                throw new InvalidDataException($"Encountered a non-{Name} character.");
                         }
                         continue;
                     }
 
                     // Accumulate data bits.
-                    m_Bits = (byte)((m_Bits << 4) | (b & MaskAlphabet));
+                    m_Bits = (byte)((m_Bits << BitsPerEncodedByte) | (b & MaskAlphabet));
 
                     if (++m_Modulus == SymbolsPerEncodedBlock)
                     {
