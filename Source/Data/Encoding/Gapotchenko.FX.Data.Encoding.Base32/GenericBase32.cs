@@ -431,7 +431,7 @@ namespace Gapotchenko.FX.Data.Encoding
         protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new DecoderContext(alphabet, options);
 
         /// <inheritdoc/>
-        public override bool IsCaseSensitive => false;
+        public sealed override bool IsCaseSensitive => Alphabet.IsCaseSensitive;
 
         /// <inheritdoc/>
         protected sealed override int PaddingCore => SymbolsPerEncodedBlock;

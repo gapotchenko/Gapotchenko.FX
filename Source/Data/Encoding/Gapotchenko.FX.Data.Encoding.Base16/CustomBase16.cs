@@ -25,16 +25,9 @@ namespace Gapotchenko.FX.Data.Encoding
                     caseSensitive,
                     synonyms))
         {
-            m_CaseSensitive = caseSensitive;
         }
 
         /// <inheritdoc/>
         public override string Name => "Custom Base16";
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly bool m_CaseSensitive;
-
-        /// <inheritdoc/>
-        public override bool IsCaseSensitive => m_CaseSensitive;
     }
 }

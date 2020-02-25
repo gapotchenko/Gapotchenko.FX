@@ -14,6 +14,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// Defines an alphabet and related operations for <see cref="ITextDataEncoding"/> implementations.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
+    [ImmutableObject(true)]
     public sealed class TextDataEncodingAlphabet
     {
         /// <summary>
@@ -51,7 +52,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             m_Symbols = symbols;
 
-            m_LookupTable = TryCreateLookupTable(symbols, caseSensitive, synonyms, out m_Canonicalizable);
+            m_LookupTable = TryCreateLookupTable(symbols, caseSensitive, synonyms, out var canonicalizable);
 
             if (m_LookupTable != null)
             {
@@ -60,8 +61,16 @@ namespace Gapotchenko.FX.Data.Encoding
             else
             {
                 m_LookupDictionary = CreateLookupDictionary(symbols, caseSensitive, synonyms);
-                m_Canonicalizable = m_LookupDictionary.Count != symbols.Length;
+                canonicalizable = m_LookupDictionary.Count != symbols.Length;
             }
+
+            var flags = Flags.None;
+            if (caseSensitive)
+                flags |= Flags.CaseSensitive;
+            if (canonicalizable)
+                flags |= Flags.Canonicalizable;
+
+            m_Flags = flags;
         }
 
         static byte[]? TryCreateLookupTable(
@@ -192,8 +201,16 @@ namespace Gapotchenko.FX.Data.Encoding
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly Dictionary<char, int>? m_LookupDictionary;
 
+        [Flags]
+        enum Flags
+        {
+            None = 0,
+            CaseSensitive = 1 << 0,
+            Canonicalizable = 1 << 1
+        }
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly bool m_Canonicalizable;
+        readonly Flags m_Flags;
 
         /// <summary>
         /// Gets the size of this alphabet.
@@ -205,6 +222,11 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Gets the alphabet symbols.
         /// </summary>
         public string Symbols => m_Symbols;
+
+        /// <summary>
+        /// Gets a value indicating whether alphabet is case-sensitive.
+        /// </summary>
+        public bool IsCaseSensitive => (m_Flags & Flags.CaseSensitive) != 0;
 
         /// <summary>
         /// Gets an alphabet symbol at the specified index.
@@ -254,7 +276,7 @@ namespace Gapotchenko.FX.Data.Encoding
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public void Canonicalize(Span<char> s)
         {
-            if (s.IsEmpty || !m_Canonicalizable)
+            if (s.IsEmpty || (m_Flags & Flags.Canonicalizable) == 0)
                 return;
 
             int length = s.Length;
