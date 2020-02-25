@@ -71,23 +71,23 @@ namespace Gapotchenko.FX.Harness.Console
 
             string filePath = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\Temp\base.txt");
 
-            //var stream = Base64.Instance.CreateEncoder(
-            //    File.CreateText(filePath),
-            //    DataEncodingOptions.Indent);
-            //try
-            //{
-            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-            //    await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-            //    await stream.WriteAsync(Encoding.UTF8.GetBytes("h"));
-            //}
-            //finally
-            //{
-            //    await stream.DisposeAsync();
-            //}
+            var stream = Base64.Instance.CreateEncoder(
+                File.CreateText(filePath),
+                DataEncodingOptions.Indent);
+            try
+            {
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
+                await stream.WriteAsync(Encoding.UTF8.GetBytes("h"));
+            }
+            finally
+            {
+                await stream.DisposeAsync();
+            }
 
             using (var tr = new StreamReader(
                 Base64.Instance.CreateDecoder(
@@ -101,9 +101,6 @@ namespace Gapotchenko.FX.Harness.Console
             Console.WriteLine(s);
 
             Console.WriteLine(Encoding.UTF8.GetString(Base16.GetBytes(s)));
-
-            Console.WriteLine(ZBase32.GetString(new byte[] { 240, 191, 199 }));
-            Console.WriteLine(Base16.GetString(ZBase32.GetBytes("tqre"), DataEncodingOptions.Indent));
 
             //string e = Base64.GetString(Encoding.UTF8.GetBytes(s), DataEncodingOptions.Indent);
 

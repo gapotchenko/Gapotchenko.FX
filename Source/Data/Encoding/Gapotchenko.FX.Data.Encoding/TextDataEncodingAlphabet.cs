@@ -268,15 +268,21 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
+        /// Gets the value indicating whether the alphabet contains canonicalizable symbols.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public bool IsCanonicalizable => (m_Flags & Flags.Canonicalizable) != 0;
+
+        /// <summary>
         /// Performs in-place canonicalization of the encoded symbols.
         /// Canonicalization substitutes the encoded symbols with their canonical forms.
         /// Unrecognized and whitespace symbols are left intact.
         /// </summary>
         /// <param name="s">The characters span representing the encoded symbols.</param>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public void Canonicalize(Span<char> s)
+        public void CanonicalizeInPlace(Span<char> s)
         {
-            if (s.IsEmpty || (m_Flags & Flags.Canonicalizable) == 0)
+            if (s.IsEmpty || !IsCanonicalizable)
                 return;
 
             int length = s.Length;
