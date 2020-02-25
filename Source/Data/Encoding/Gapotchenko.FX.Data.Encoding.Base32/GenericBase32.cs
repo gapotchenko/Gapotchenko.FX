@@ -446,5 +446,8 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <inheritdoc/>
         protected override ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => UnpadRight(s, PaddingChar);
+
+        /// <inheritdoc/>
+        public override void CanonicalizeInPlace(Span<char> s) => Alphabet.Canonicalize(s);
     }
 }

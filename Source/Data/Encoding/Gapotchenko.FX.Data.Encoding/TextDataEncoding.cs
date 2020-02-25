@@ -598,6 +598,21 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public bool IsPadded(ReadOnlySpan<char> s) => s.Length % Padding == 0;
 
+        /// <inheritdoc/>
+        public string Canonicalize(ReadOnlySpan<char> s)
+        {
+            if (s == null)
+                return null;
+
+            var array = s.ToArray();
+            CanonicalizeInPlace(array);
+
+            return new string(array);
+        }
+
+        /// <inheritdoc/>
+        public abstract void CanonicalizeInPlace(Span<char> s);
+
         #region Implementation Helpers
 
         string Pad(ReadOnlySpan<char> s, char paddingChar, bool right)

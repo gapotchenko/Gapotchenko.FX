@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 
 namespace Gapotchenko.FX.Data.Encoding
@@ -79,5 +80,23 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The encoded string.</param>
         /// <returns><c>true</c> when specified encoded string is padded; otherwise, <c>false</c>.</returns>
         bool IsPadded(ReadOnlySpan<char> s);
+
+        /// <summary>
+        /// Canonicalizes the encoded string.
+        /// Canonicalization substitutes the encoded symbols with their canonical forms.
+        /// Unrecognized and whitespace symbols are left intact.
+        /// </summary>
+        /// <param name="s">The encoded string.</param>
+        /// <returns>The canonicalized encoded string.</returns>
+        string Canonicalize(ReadOnlySpan<char> s);
+
+        /// <summary>
+        /// Performs in-place canonicalization of the encoded symbols.
+        /// Canonicalization substitutes the encoded symbols with their canonical forms.
+        /// Unrecognized and whitespace symbols are left intact.
+        /// </summary>
+        /// <param name="s">The characters span representing the encoded symbols.</param>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        void CanonicalizeInPlace(Span<char> s);
     }
 }

@@ -102,7 +102,7 @@ namespace Gapotchenko.FX.Harness.Console
 
             Console.WriteLine(Encoding.UTF8.GetString(Base16.GetBytes(s)));
 
-            Console.WriteLine(ZBase32.GetString(new byte[] { 240, 191, 199  }));
+            Console.WriteLine(ZBase32.GetString(new byte[] { 240, 191, 199 }));
             Console.WriteLine(Base16.GetString(ZBase32.GetBytes("tqre"), DataEncodingOptions.Indent));
 
             //string e = Base64.GetString(Encoding.UTF8.GetBytes(s), DataEncodingOptions.Indent);

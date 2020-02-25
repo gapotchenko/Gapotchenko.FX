@@ -51,19 +51,27 @@ namespace Gapotchenko.FX.Data.Encoding
 
             m_Symbols = symbols;
 
-            m_LookupTable = TryCreateLookupTable(symbols, caseSensitive, synonyms);
+            m_LookupTable = TryCreateLookupTable(symbols, caseSensitive, synonyms, out m_Canonicalizable);
 
             if (m_LookupTable != null)
+            {
                 m_LookupDictionary = null;
+            }
             else
+            {
                 m_LookupDictionary = CreateLookupDictionary(symbols, caseSensitive, synonyms);
+                m_Canonicalizable = m_LookupDictionary.Count != symbols.Length;
+            }
         }
 
         static byte[]? TryCreateLookupTable(
             string symbols,
             bool caseSensitive,
-            IReadOnlyDictionary<char, string>? synonyms)
+            IReadOnlyDictionary<char, string>? synonyms,
+            out bool canonicalizable)
         {
+            canonicalizable = false;
+
             if (symbols.Length >= 0xff)
             {
                 // Discard lookup table creation due to inability to represent symbol variety.
@@ -78,6 +86,8 @@ namespace Gapotchenko.FX.Data.Encoding
             for (int i = 0; i < LookupTableSize; ++i)
                 table[i] = 0xff;
 #endif
+
+            int tableEntryCount = 0;
 
             for (int i = 0; i < symbols.Length; ++i)
             {
@@ -100,8 +110,11 @@ namespace Gapotchenko.FX.Data.Encoding
                         throw CreateSymbolClashException(c);
 
                     table[key] = (byte)i;
+                    ++tableEntryCount;
                 }
             }
+
+            canonicalizable = tableEntryCount != symbols.Length;
 
             return table;
         }
@@ -179,6 +192,9 @@ namespace Gapotchenko.FX.Data.Encoding
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly Dictionary<char, int>? m_LookupDictionary;
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly bool m_Canonicalizable;
+
         /// <summary>
         /// Gets the size of this alphabet.
         /// The value is equivalent to radix, which is the number of unique symbols in positional numeral system of the encoding.
@@ -227,6 +243,37 @@ namespace Gapotchenko.FX.Data.Encoding
             }
 
             return Symbols.IndexOf(symbol);
+        }
+
+        /// <summary>
+        /// Performs in-place canonicalization of the encoded symbols.
+        /// Canonicalization substitutes the encoded symbols with their canonical forms.
+        /// Unrecognized and whitespace symbols are left intact.
+        /// </summary>
+        /// <param name="s">The characters span representing the encoded symbols.</param>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public void Canonicalize(Span<char> s)
+        {
+            if (s.IsEmpty || !m_Canonicalizable)
+                return;
+
+            int length = s.Length;
+
+            for (var i = 0; i != length; ++i)
+            {
+                char c = s[i];
+
+                int j = IndexOf(c);
+                if (j == -1)
+                {
+                    // Unrecognized symbol.
+                    continue;
+                }
+
+                char nc = Symbols[j];
+                if (nc != c)
+                    s[i] = nc;
+            }
         }
     }
 }
