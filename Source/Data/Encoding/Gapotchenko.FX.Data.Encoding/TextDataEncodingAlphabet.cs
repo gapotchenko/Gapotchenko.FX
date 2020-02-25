@@ -27,7 +27,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/>.
+        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/> with the specified options.
         /// </summary>
         /// <param name="symbols">The symbols.</param>
         /// <param name="caseSensitive">Indicates whether alphabet is case sensitive.</param>
@@ -37,7 +37,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/>.
+        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/> with the specified options.
         /// </summary>
         /// <param name="symbols">The symbols.</param>
         /// <param name="caseSensitive">Indicates whether alphabet is case sensitive.</param>

@@ -18,7 +18,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="alphabet">The alphabet.</param>
         /// <param name="caseSensitive">Indicates whether alphabet is case sensitive.</param>
         /// <param name="synonyms">The optional synonyms of alphabet symbols.</param>
-        protected CustomBase16(string alphabet, bool caseSensitive = false, IReadOnlyDictionary<char, string> synonyms = null) :
+        public CustomBase16(string alphabet, bool caseSensitive = false, IReadOnlyDictionary<char, string> synonyms = null) :
             base(
                 new TextDataEncodingAlphabet(
                     alphabet ?? throw new ArgumentNullException(nameof(alphabet)),

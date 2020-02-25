@@ -16,7 +16,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
         /// <param name="synonyms">The optional synonyms of alphabet symbols.</param>
-        protected CustomBase64(string alphabet, IReadOnlyDictionary<char, string> synonyms = null) :
+        public CustomBase64(string alphabet, IReadOnlyDictionary<char, string> synonyms = null) :
             base(
                 new TextDataEncodingAlphabet(
                     alphabet ?? throw new ArgumentNullException(nameof(alphabet)),
