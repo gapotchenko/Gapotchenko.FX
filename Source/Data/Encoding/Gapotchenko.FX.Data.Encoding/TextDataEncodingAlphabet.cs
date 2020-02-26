@@ -13,7 +13,6 @@ namespace Gapotchenko.FX.Data.Encoding
     /// <summary>
     /// Defines an alphabet and related operations for <see cref="ITextDataEncoding"/> implementations.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     [ImmutableObject(true)]
     public sealed class TextDataEncodingAlphabet
     {
@@ -213,8 +212,8 @@ namespace Gapotchenko.FX.Data.Encoding
         readonly Flags m_Flags;
 
         /// <summary>
-        /// Gets the size of this alphabet.
-        /// The value is equivalent to radix, which is the number of unique symbols in positional numeral system of the encoding.
+        /// Gets the size of the alphabet.
+        /// The value is usually equivalent to radix, which is the number of unique symbols in positional numeral system of the encoding.
         /// </summary>
         public int Size => m_Symbols.Length;
 
@@ -274,22 +273,36 @@ namespace Gapotchenko.FX.Data.Encoding
         public bool IsCanonicalizable => (m_Flags & Flags.Canonicalizable) != 0;
 
         /// <summary>
-        /// Performs in-place canonicalization of the encoded symbols.
-        /// Canonicalization substitutes the encoded symbols with their canonical forms.
+        /// Canonicalizes the encoded symbols.
+        /// Canonicalization substitutes the encoded symbols from <paramref name="source"/> with their canonical forms and writes the result to <paramref name="destination"/>.
         /// Unrecognized and whitespace symbols are left intact.
         /// </summary>
-        /// <param name="s">The characters span representing the encoded symbols.</param>
+        /// <param name="source">The source characters span.</param>
+        /// <param name="destination">
+        /// The destination characters span.
+        /// Can be the same as <paramref name="source"/>.
+        /// </param>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public void CanonicalizeInPlace(Span<char> s)
+        public void Canonicalize(ReadOnlySpan<char> source, Span<char> destination)
         {
-            if (s.IsEmpty || !IsCanonicalizable)
+            if (source.IsEmpty)
                 return;
 
-            int length = s.Length;
+            if (!IsCanonicalizable)
+            {
+                if (source != destination)
+                    source.CopyTo(destination);
+                return;
+            }
+
+            int length = source.Length;
+
+            if (destination.Length < length)
+                throw new ArgumentException("Destination is too short.", nameof(destination));
 
             for (var i = 0; i != length; ++i)
             {
-                char c = s[i];
+                char c = source[i];
 
                 int j = IndexOf(c);
                 if (j == -1)
@@ -298,9 +311,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     continue;
                 }
 
-                char nc = Symbols[j];
-                if (nc != c)
-                    s[i] = nc;
+                destination[i] = Symbols[j];
             }
         }
     }

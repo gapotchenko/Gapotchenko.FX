@@ -264,6 +264,6 @@ namespace Gapotchenko.FX.Data.Encoding
         protected sealed override int PaddingCore => SymbolsPerEncodedBlock;
 
         /// <inheritdoc/>
-        public override void CanonicalizeInPlace(Span<char> s) => Alphabet.CanonicalizeInPlace(s);
+        protected override void CanonicalizeCore(ReadOnlySpan<char> source, Span<char> destination) => Alphabet.Canonicalize(source, destination);
     }
 }

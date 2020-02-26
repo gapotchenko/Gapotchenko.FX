@@ -603,15 +603,30 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             if (s == null)
                 return null;
+            if (s.IsEmpty)
+                return string.Empty;
 
-            var array = s.ToArray();
-            CanonicalizeInPlace(array);
+            var d = new char[s.Length];
+            CanonicalizeCore(s, d);
 
-            return new string(array);
+            return new string(d);
         }
 
-        /// <inheritdoc/>
-        public abstract void CanonicalizeInPlace(Span<char> s);
+        /// <summary>
+        /// Canonicalizes the encoded symbols.
+        /// Canonicalization substitutes the encoded symbols from <paramref name="source"/> with their canonical forms and writes the result to <paramref name="destination"/>.
+        /// Unrecognized and whitespace symbols are left intact.
+        /// </summary>
+        /// <param name="source">The source characters span.</param>
+        /// <param name="destination">
+        /// The destination characters span.
+        /// Can be the same as <paramref name="source"/>.
+        /// </param>
+        protected virtual void CanonicalizeCore(ReadOnlySpan<char> source, Span<char> destination)
+        {
+            if (source != destination)
+                source.CopyTo(destination);
+        }
 
         #region Implementation Helpers
 

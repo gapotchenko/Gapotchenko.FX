@@ -89,14 +89,5 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The encoded string.</param>
         /// <returns>The canonicalized encoded string.</returns>
         string Canonicalize(ReadOnlySpan<char> s);
-
-        /// <summary>
-        /// Performs in-place canonicalization of the encoded symbols.
-        /// Canonicalization substitutes the encoded symbols with their canonical forms.
-        /// Unrecognized and whitespace symbols are left intact.
-        /// </summary>
-        /// <param name="s">The characters span representing the encoded symbols.</param>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        void CanonicalizeInPlace(Span<char> s);
     }
 }

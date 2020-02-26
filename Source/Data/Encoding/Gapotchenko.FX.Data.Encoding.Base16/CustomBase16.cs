@@ -13,17 +13,20 @@ namespace Gapotchenko.FX.Data.Encoding
     public class CustomBase16 : GenericBase16
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="CustomBase16"/> class with the specified alphabet and options.
+        /// Initializes a new instance of <see cref="CustomBase16"/> class with the specified case-insensitive alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        /// <param name="caseSensitive">Indicates whether alphabet is case sensitive.</param>
-        /// <param name="synonyms">The optional synonyms of alphabet symbols.</param>
-        public CustomBase16(string alphabet, bool caseSensitive = false, IReadOnlyDictionary<char, string> synonyms = null) :
-            base(
-                new TextDataEncodingAlphabet(
-                    alphabet ?? throw new ArgumentNullException(nameof(alphabet)),
-                    caseSensitive,
-                    synonyms))
+        public CustomBase16(string alphabet) :
+            this(new TextDataEncodingAlphabet(alphabet ?? throw new ArgumentNullException(nameof(alphabet)), false))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="CustomBase16"/> class with the specified alphabet.
+        /// </summary>
+        /// <param name="alphabet">The alphabet.</param>
+        public CustomBase16(TextDataEncodingAlphabet alphabet) :
+            base(alphabet)
         {
         }
 

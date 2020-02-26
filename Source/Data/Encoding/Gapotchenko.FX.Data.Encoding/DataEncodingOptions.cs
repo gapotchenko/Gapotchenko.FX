@@ -25,7 +25,8 @@ namespace Gapotchenko.FX.Data.Encoding
         Padding = 1 << 1,
 
         /// <summary>
-        /// Do not perform lifetime management of the specified data object such as <see cref="Stream"/>, <see cref="TextReader"/> or <see cref="TextWriter"/>.
+        /// Do not perform lifetime management of an underlying data object such as <see cref="Stream"/>, <see cref="TextReader"/> or <see cref="TextWriter"/>.
+        /// This option only applies to <see cref="IDataEncoding.CreateEncoder(Stream, DataEncodingOptions)"/>, <see cref="IDataEncoding.CreateDecoder(Stream, DataEncodingOptions)"/> and similar operations.
         /// </summary>
         NoOwnership = 1 << 2,
 
@@ -56,6 +57,13 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Instructs to compress the data during encoding operation if the codec supports it natively.
         /// For example, ZBase32 encoding eliminates the insignificant bits from the output when this option is specified.
         /// </summary>
-        Compress = 1 << 7
+        Compress = 1 << 7,
+
+        /// <summary>
+        /// Instructs to interpret control characters such as EOT (ASCII 0x04, ^D) which indicates the end of transmission.
+        /// Other supported control characters are SOH, STX, ETX, FS, GS, RS and US which are treated as transmission block separators.
+        /// This option only applies to a streaming decoder.
+        /// </summary>
+        Control = 1 << 8
     }
 }
