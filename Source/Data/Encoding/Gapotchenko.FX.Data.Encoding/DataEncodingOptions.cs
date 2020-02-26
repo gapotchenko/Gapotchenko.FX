@@ -57,13 +57,6 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Instructs to compress the data during encoding operation if the codec supports it natively.
         /// For example, ZBase32 encoding eliminates the insignificant bits from the output when this option is specified.
         /// </summary>
-        Compress = 1 << 7,
-
-        /// <summary>
-        /// Instructs to interpret control characters such as EOT (ASCII 0x04, ^D) which indicates the end of transmission.
-        /// Other supported control characters are SOH, STX, ETX, FS, GS, RS and US which are treated as transmission block separators.
-        /// This option only applies to a streaming decoder.
-        /// </summary>
-        Control = 1 << 8
+        Compress = 1 << 7
     }
 }

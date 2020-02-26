@@ -24,7 +24,11 @@ namespace Gapotchenko.FX.Data.Encoding
         public string GetString(ReadOnlySpan<byte> data) => GetString(data, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => data == null ? null : GetStringCore(data, options);
+        public string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options)
+        {
+            ValidateOptions(options);
+            return data == null ? null : GetStringCore(data, options);
+        }
 
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation.
@@ -47,7 +51,11 @@ namespace Gapotchenko.FX.Data.Encoding
         public byte[] GetBytes(ReadOnlySpan<char> s) => GetBytes(s, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => s == null ? null : GetBytesCore(s, options);
+        public byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            ValidateOptions(options);
+            return s == null ? null : GetBytesCore(s, options);
+        }
 
         /// <summary>
         /// Decodes the specified string to an equivalent array of bytes.
@@ -74,11 +82,11 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override byte[] EncodeDataCore(ReadOnlySpan<byte> data, DataEncodingOptions options) => Encoding.UTF8.GetBytes(GetString(data, options));
+        protected override byte[] EncodeDataCore(ReadOnlySpan<byte> data, DataEncodingOptions options) => Encoding.UTF8.GetBytes(GetStringCore(data, options));
 
         /// <inheritdoc/>
         protected override byte[] DecodeDataCore(ReadOnlySpan<byte> data, DataEncodingOptions options) =>
-            GetBytes(
+            GetBytesCore(
                 Encoding.UTF8.GetString(
 #if TFF_MEMORY && !TFF_MEMORY_OOB
                     data
@@ -142,6 +150,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             if (textWriter == null)
                 throw new ArgumentNullException(nameof(textWriter));
+            ValidateOptions(options);
 
             var context = CreateEncoderContext(options);
             return new EncoderStream(textWriter, context, options, StreamBufferSize);
@@ -152,6 +161,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             if (textReader == null)
                 throw new ArgumentNullException(nameof(textReader));
+            ValidateOptions(options);
 
             var context = CreateDecoderContext(options);
             return new DecoderStream(textReader, context, options, StreamBufferSize, MinEfficiency);

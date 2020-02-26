@@ -48,7 +48,11 @@ namespace Gapotchenko.FX.Data.Encoding
         public byte[] EncodeData(ReadOnlySpan<byte> data) => EncodeData(data, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public byte[] EncodeData(ReadOnlySpan<byte> data, DataEncodingOptions options) => data == null ? null : EncodeDataCore(data, options);
+        public byte[] EncodeData(ReadOnlySpan<byte> data, DataEncodingOptions options)
+        {
+            ValidateOptions(options);
+            return data == null ? null : EncodeDataCore(data, options);
+        }
 
         /// <summary>
         /// Provides the core implementation of data encoding.
@@ -62,7 +66,11 @@ namespace Gapotchenko.FX.Data.Encoding
         public byte[] DecodeData(ReadOnlySpan<byte> data) => DecodeData(data, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public byte[] DecodeData(ReadOnlySpan<byte> data, DataEncodingOptions options) => data == null ? null : DecodeDataCore(data, options);
+        public byte[] DecodeData(ReadOnlySpan<byte> data, DataEncodingOptions options)
+        {
+            ValidateOptions(options);
+            return data == null ? null : DecodeDataCore(data, options);
+        }
 
         /// <summary>
         /// Provides the core implementation of data decoding.
@@ -71,6 +79,24 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns>The decoded output data.</returns>
         protected abstract byte[] DecodeDataCore(ReadOnlySpan<byte> data, DataEncodingOptions options);
+
+        /// <summary>
+        /// Validates encoding options.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        protected virtual void ValidateOptions(DataEncodingOptions options)
+        {
+            const DataEncodingOptions PaddingMask = DataEncodingOptions.Padding | DataEncodingOptions.Unpad;
+            if ((options & PaddingMask) == PaddingMask)
+            {
+                throw new ArgumentException(
+                    string.Format(
+                        "{0} and {1} options cannot be specified simultaneously.",
+                        nameof(DataEncodingOptions.Padding),
+                        nameof(DataEncodingOptions.Unpad)),
+                    nameof(options));
+            }
+        }
 
         /// <inheritdoc/>
         public abstract Stream CreateEncoder(Stream outputStream, DataEncodingOptions options = DataEncodingOptions.None);
