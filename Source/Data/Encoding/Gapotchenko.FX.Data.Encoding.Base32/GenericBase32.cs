@@ -77,18 +77,18 @@ namespace Gapotchenko.FX.Data.Encoding
 
         abstract class CodecContextBase
         {
-            public CodecContextBase(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
+            public CodecContextBase(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
             {
+                m_Encoding = encoding;
                 m_Alphabet = alphabet;
                 m_Options = options;
             }
 
+            protected readonly GenericBase32 m_Encoding;
             protected readonly TextDataEncodingAlphabet m_Alphabet;
             protected readonly DataEncodingOptions m_Options;
 
             #region Parameters
-
-            protected const string Name = "Base32";
 
             protected const int MaskSymbol = (1 << BitsPerSymbol) - 1;
             protected const int Mask1Bit = (1 << 1) - 1;
@@ -105,8 +105,8 @@ namespace Gapotchenko.FX.Data.Encoding
 
         sealed class EncoderContext : CodecContextBase, IEncoderContext
         {
-            public EncoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-                base(alphabet, options)
+            public EncoderContext(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
+                base(encoding, alphabet, options)
             {
             }
 
@@ -219,8 +219,8 @@ namespace Gapotchenko.FX.Data.Encoding
 
         sealed class DecoderContext : CodecContextBase, IDecoderContext
         {
-            public DecoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-                base(alphabet, options)
+            public DecoderContext(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
+                base(encoding, alphabet, options)
             {
             }
 
@@ -258,7 +258,7 @@ namespace Gapotchenko.FX.Data.Encoding
                         if ((m_Options & DataEncodingOptions.Relax) == 0)
                         {
                             if (!char.IsWhiteSpace(c))
-                                throw new InvalidDataException($"Encountered a non-{Name} character.");
+                                throw new InvalidDataException($"Encountered a non-{m_Encoding.Name} character.");
                         }
                         continue;
                     }
@@ -285,12 +285,17 @@ namespace Gapotchenko.FX.Data.Encoding
 
             void FlushDecode(Stream output)
             {
-                switch (m_Modulus)
+                if (m_Modulus != 0)
                 {
-                    case 0:
-                        // Nothing to do.
-                        return;
+                    FlushDecodeCore(output, m_Modulus);
+                    m_Modulus = 0;
+                }
+            }
 
+            void FlushDecodeCore(Stream output, int modulus)
+            {
+                switch (modulus)
+                {
                     case 1:
                         // 5 bits
                         ValidateIncompleteByte();
@@ -355,14 +360,12 @@ namespace Gapotchenko.FX.Data.Encoding
                     default:
                         throw new InvalidOperationException();
                 }
-
-                m_Modulus = 0;
             }
 
             void ValidateIncompleteByte()
             {
                 if ((m_Options & DataEncodingOptions.Relax) == 0)
-                    throw new InvalidDataException($"Cannot decode the last byte due to missing {Name} symbol.");
+                    throw new InvalidDataException($"Cannot decode the last byte due to missing {m_Encoding.Name} symbol.");
             }
 
             void ValidateLastSymbol(ulong zeroMask)
@@ -370,7 +373,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if ((m_Options & DataEncodingOptions.Relax) == 0 &&
                     (m_Bits & zeroMask) != 0)
                 {
-                    throw new InvalidDataException($"The insignificant bits of the last {Name} symbol are expected to be zero.");
+                    throw new InvalidDataException($"The insignificant bits of the last {m_Encoding.Name} symbol are expected to be zero.");
                 }
             }
 
@@ -402,7 +405,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     throw CreateInvalidPaddingException();
             }
 
-            static Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid {Name} padding.");
+            Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid {m_Encoding.Name} padding.");
         }
 
         /// <inheritdoc/>
@@ -417,7 +420,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="alphabet">The alphabet.</param>
         /// <param name="options">The options.</param>
         /// <returns>The encoder context.</returns>
-        protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new EncoderContext(alphabet, options);
+        protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new EncoderContext(this, alphabet, options);
 
         /// <summary>
         /// Creates decoder context with specified alphabet and options.
@@ -425,7 +428,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="alphabet">The alphabet.</param>
         /// <param name="options">The options.</param>
         /// <returns>The decoder context.</returns>
-        protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new DecoderContext(alphabet, options);
+        protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new DecoderContext(this, alphabet, options);
 
         /// <inheritdoc/>
         public sealed override bool IsCaseSensitive => Alphabet.IsCaseSensitive;
