@@ -73,10 +73,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="n">The number of bits to shift.</param>
         /// <returns>The shifted value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private protected static ulong ShiftRight(ulong x, int n) =>
-            (n >= 0) ?
-                x >> n :
-                x << -n;
+        private protected static ulong ShiftRight(ulong x, int n) => n >= 0 ? x >> n : x << -n;
 
         abstract class CodecContextBase
         {

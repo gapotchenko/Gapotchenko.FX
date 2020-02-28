@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 #nullable enable
 
@@ -26,7 +24,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/> with the specified options.
+        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/> with the specified symbols and case-sensitivity.
         /// </summary>
         /// <param name="symbols">The symbols.</param>
         /// <param name="caseSensitive">Indicates whether alphabet is case sensitive.</param>
@@ -36,7 +34,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/> with the specified options.
+        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/> with the specified symbols and options.
         /// </summary>
         /// <param name="symbols">The symbols.</param>
         /// <param name="caseSensitive">Indicates whether alphabet is case sensitive.</param>
