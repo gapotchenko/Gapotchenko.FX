@@ -36,6 +36,8 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         const int RestrictedAlphabetSize = 32;
+
+        // The 5 last characters of the alphabet allow to encode a checksum ∈ [0; 37).
         const int ChecksumAlphabetSize = RestrictedAlphabetSize + 5;
 
         /// <summary>
