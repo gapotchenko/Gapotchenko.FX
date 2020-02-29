@@ -432,7 +432,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     // Try get the rest (higher bits) from the next byte.
                     int nbi = bi + 1; // next byte index
                     if (nbi < totalBytes)
-                        si |= (bytes[nbi] << (8 - bs)) & MaskSymbol;
+                        si |= (bytes[nbi] << ab) & MaskSymbol;
                 }
 
                 if (si == 0 && sb.Length == 0)
@@ -445,9 +445,107 @@ namespace Gapotchenko.FX.Data.Encoding
             }
 
             if ((options & DataEncodingOptions.Checksum) != 0)
-                sb.Append(alphabet[(int)(value % 37)]);
+                sb.Append(alphabet[(int)(value % ChecksumAlphabetSize)]);
 
             return sb.ToString();
+        }
+
+        /// <inheritdoc/>
+        public BigInteger GetBigInteger(ReadOnlySpan<char> s) => GetBigInteger(s, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public BigInteger GetBigInteger(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            if (s == null)
+                throw new ArgumentNullException(nameof(s));
+
+            if (!TryGetBigInteger(s, out var value, options))
+                throw new FormatException("Input string was not in a correct format.");
+
+            return value;
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value) => TryGetBigInteger(s, out value, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value, DataEncodingOptions options)
+        {
+            value = 0;
+
+            ValidateOptions(options);
+
+            if (s.IsEmpty)
+                return false;
+
+            bool checksum = (options & DataEncodingOptions.Checksum) != 0;
+
+            BigInteger bits = 0; // accumulated bits
+            int psi = -1; // previous symbol index
+
+            var alphabet = Alphabet;
+
+            foreach (var c in s)
+            {
+                if (c == PaddingChar)
+                    continue;
+
+                int si = alphabet.IndexOf(c); // symbol index lookup
+                if (si == -1)
+                {
+                    if ((options & DataEncodingOptions.Relax) == 0)
+                    {
+                        if (!IsValidSeparator(c))
+                            return false;
+                    }
+                    continue;
+                }
+
+                byte b;
+                if (checksum)
+                {
+                    // Feed the decoder with one symbol delay.
+                    if (psi == -1)
+                    {
+                        psi = si;
+
+                        // No previous symbol to feed.
+                        continue;
+                    }
+                    else
+                    {
+                        // Feed the previous symbol to the decoder.
+                        b = (byte)psi;
+
+                        // The last psi would contain a checksum.
+                        psi = si;
+                    }
+                }
+                else
+                {
+                    if (si >= MainAlphabetSize)
+                        return false; // Cannot contain a symbol from the checksum alphabet when checksum is not used.
+
+                    // Feed the symbol directly to the decoder.
+                    b = (byte)si;
+                }
+
+                // Accumulate symbol bits.
+                bits = (bits << BitsPerSymbol) | b;
+            }
+
+            if (checksum)
+            {
+                if (psi == -1)
+                    return false; // No checksum symbol was read.
+
+                // Verify the checksum.
+                if (bits % ChecksumAlphabetSize != psi)
+                    return false;
+            }
+
+            value = bits;
+            return true;
         }
 
         DataEncodingOptions GetCodecOptions(DataEncodingOptions options)

@@ -120,5 +120,39 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
         string GetString(BigInteger value, DataEncodingOptions options);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="BigInteger"/> value.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <returns>An <see cref="BigInteger"/> value that is equivalent to <paramref name="s"/>.</returns>
+        BigInteger GetBigInteger(ReadOnlySpan<char> s);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="BigInteger"/> value with the specified options.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>An <see cref="BigInteger"/> value that is equivalent to <paramref name="s"/>.</returns>
+        BigInteger GetBigInteger(ReadOnlySpan<char> s, DataEncodingOptions options);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="BigInteger"/> value.
+        /// A return value indicates whether the operation succeeded.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="value">When this method returns, contains the <see cref="BigInteger"/> value equivalent to <paramref name="s"/>.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
+        bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="BigInteger"/> value with the specified options.
+        /// A return value indicates whether the operation succeeded.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="value">When this method returns, contains the <see cref="BigInteger"/> value equivalent to <paramref name="s"/>.</param>
+        /// <param name="options">The options.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
+        bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value, DataEncodingOptions options);
     }
 }
