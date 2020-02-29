@@ -112,9 +112,11 @@ namespace Gapotchenko.FX.Data.Encoding
             return sb.ToString();
         }
 
+        const char Separator = '-';
+
         static bool IsValidSeparator(char c) =>
             char.IsWhiteSpace(c) ||
-            c == '-';
+            c == Separator;
 
         /// <inheritdoc/>
         public int GetInt32(ReadOnlySpan<char> s) => GetInt32(s, DataEncodingOptions.None);
@@ -134,13 +136,14 @@ namespace Gapotchenko.FX.Data.Encoding
         bool TryGetInt32(ReadOnlySpan<char> s, out int value, DataEncodingOptions options)
         {
             value = 0;
-
             ValidateOptions(options);
-
             if (s.IsEmpty)
                 return false;
 
+            const int BitsPerValue = sizeof(int) * 8;
+
             int bits = 0;
+            int bitCount = 0;
 
             var alphabet = Alphabet;
 
@@ -160,31 +163,18 @@ namespace Gapotchenko.FX.Data.Encoding
                     continue;
                 }
 
+                if (bitCount >= BitsPerValue)
+                    return false;
+
                 bits = (bits << BitsPerSymbol) | b;
+                bitCount += BitsPerSymbol;
             }
 
             value = bits;
             return true;
         }
 
-        sealed class CrockfordEncoderContext : EncoderContext
-        {
-            public CrockfordEncoderContext(GenericCrockfordBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-                base(encoding, alphabet, options)
-            {
-            }
-        }
-
-        sealed class CrockfordDecoderContext : DecoderContext
-        {
-            public CrockfordDecoderContext(GenericCrockfordBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-                base(encoding, alphabet, options)
-            {
-                AltSeparator = '-';
-            }
-        }
-
-        DataEncodingOptions PrepareCodecOptions(DataEncodingOptions options)
+        DataEncodingOptions GetCodecOptions(DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Checksum) != 0)
             {
@@ -210,10 +200,15 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new CrockfordEncoderContext(this, alphabet, PrepareCodecOptions(options));
+        protected override IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
+            base.CreateEncoderContextCore(alphabet, GetCodecOptions(options));
 
         /// <inheritdoc/>
-        protected override IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new CrockfordDecoderContext(this, alphabet, PrepareCodecOptions(options));
+        protected override IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
+            new DecoderContext(this, alphabet, GetCodecOptions(options))
+            {
+                Separator = Separator
+            };
 
         /// <inheritdoc/>
         protected override int PaddingCore => 1;
