@@ -51,6 +51,17 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             Assert.AreEqual(encoded, actualEncoded);
         }
 
+        static void TestVector(BigInteger raw, string encoded, DataEncodingOptions options = default)
+        {
+            var instance = CrockfordBase32.Instance;
+
+            //var actualDecoded = instance.GetInt64(encoded, options);
+            //Assert.AreEqual(raw, actualDecoded);
+
+            string actualEncoded = instance.GetString(raw, options);
+            Assert.AreEqual(encoded, actualEncoded);
+        }
+
         [TestMethod]
         public void CrockfordBase32_Empty() => TestVector("", "");
 
@@ -135,8 +146,20 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void CrockfordBase32_Int64_Checksum_TV4() => TestVector(0L, "00", DataEncodingOptions.Checksum);
 
-        //[TestMethod]
-        //public void CrockfordBase32_BigInteger_Main_TV1() => TestVector(BigInteger.Parse("3019140802085400304608040952"), "2E1BZQDAGC4G6TTENZR");
+        [TestMethod]
+        public void CrockfordBase32_BigInteger_Main_TV1() => TestVector(BigInteger.Zero, "0");
+
+        [TestMethod]
+        public void CrockfordBase32_BigInteger_Main_TV2() => TestVector(BigInteger.Parse("1234"), "16J");
+
+        [TestMethod]
+        public void CrockfordBase32_BigInteger_Main_TV3() => TestVector(BigInteger.Parse("3019140802085400304608040952"), "2E1BZQDAGC4G6TTENZR");
+
+        [TestMethod]
+        public void CrockfordBase32_BigInteger_Checksum_TV1() => TestVector(BigInteger.Zero, "00", DataEncodingOptions.Checksum);
+
+        [TestMethod]
+        public void CrockfordBase32_BigInteger_Checksum_TV2() => TestVector(BigInteger.Parse("1234"), "16JD", DataEncodingOptions.Checksum);
 
         //[TestMethod]
         //public void CrockfordBase32_BigInteger_Main_TV1() => TestVector(BigInteger.Parse("10**100"), "02PQHTY5NHH");

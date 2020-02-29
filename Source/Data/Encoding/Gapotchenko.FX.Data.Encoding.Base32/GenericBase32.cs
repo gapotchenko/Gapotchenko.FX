@@ -61,6 +61,11 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         protected const int BytesPerDecodedBlock = 5;
 
+        /// <summary>
+        /// Bit mask of an alphabet symbol index.
+        /// </summary>
+        protected const int MaskSymbol = (1 << BitsPerSymbol) - 1;
+
         #endregion
 
         /// <inheritdoc/>
@@ -99,7 +104,6 @@ namespace Gapotchenko.FX.Data.Encoding
 
             #region Parameters
 
-            protected const int MaskSymbol = (1 << BitsPerSymbol) - 1;
             protected const int Mask1Bit = (1 << 1) - 1;
             protected const int Mask2Bits = (1 << 2) - 1;
             protected const int Mask3Bits = (1 << 3) - 1;

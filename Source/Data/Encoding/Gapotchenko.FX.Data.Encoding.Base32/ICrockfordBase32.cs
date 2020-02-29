@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -104,5 +105,20 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
         bool TryGetInt64(ReadOnlySpan<char> s, out long value, DataEncodingOptions options);
+
+        /// <summary>
+        /// Encodes an <see cref="BigInteger"/> value to its equivalent string representation.
+        /// </summary>
+        /// <param name="value">The <see cref="BigInteger"/> value.</param>
+        /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
+        string GetString(BigInteger value);
+
+        /// <summary>
+        /// Encodes an <see cref="BigInteger"/> value to its equivalent string representation with specified options.
+        /// </summary>
+        /// <param name="value">The <see cref="BigInteger"/> value.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
+        string GetString(BigInteger value, DataEncodingOptions options);
     }
 }
