@@ -34,30 +34,34 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);
 
         [TestMethod]
-        public void CrockfordBase32_TV1() => TestVector("", "");
+        public void CrockfordBase32_Empty() => TestVector("", "");
 
-        [TestMethod]
-        public void CrockfordBase32_TV2() => TestVector("f", "CR");
-
-        [TestMethod]
-        public void CrockfordBase32_TV3() => TestVector("fo", "CSQG");
-
-        [TestMethod]
-        public void CrockfordBase32_TV4() => TestVector("foo", "CSQPY");
-
-        [TestMethod]
-        public void CrockfordBase32_TV5() => TestVector("foob", "CSQPYRG");
-
-        [TestMethod]
-        public void CrockfordBase32_TV6() => TestVector("fooba", "CSQPYRK1");
-
-        [TestMethod]
-        public void CrockfordBase32_TV7() => TestVector("foobar", "CSQPYRK1E8");
-
-        [TestMethod]
-        public void CrockfordBase32_TV8() =>
+        [DataTestMethod]
+        [DataRow("0Oo", "000")]
+        [DataRow("1Ll", "111")]
+        [DataRow("1Ii", "111")]
+        [DataRow("Loi", "101")]
+        public void CrockfordBase32_Canonicilization(string from, string to) =>
             Assert.AreEqual(
-                "foobar",
-                Encoding.UTF8.GetString(CrockfordBase32.GetBytes("CSQP-YRK1-E8")));
+                to,
+                CrockfordBase32.Instance.Canonicalize(from));
+
+        [TestMethod]
+        public void CrockfordBase32_Main_TV1() => TestVector("f", "CR");
+
+        [TestMethod]
+        public void CrockfordBase32_Main_TV2() => TestVector("fo", "CSQG");
+
+        [TestMethod]
+        public void CrockfordBase32_Main_TV3() => TestVector("foo", "CSQPY");
+
+        [TestMethod]
+        public void CrockfordBase32_Main_TV4() => TestVector("foob", "CSQPYRG");
+
+        [TestMethod]
+        public void CrockfordBase32_Main_TV5() => TestVector("fooba", "CSQPYRK1");
+
+        [TestMethod]
+        public void CrockfordBase32_Main_TV6() => TestVector("foobar", "CSQPYRK1E8");
     }
 }
