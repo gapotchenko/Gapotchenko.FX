@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace Gapotchenko.FX.Data.Encoding.Test
@@ -33,6 +34,17 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);
 
+        static void TestVector(int raw, string encoded, DataEncodingOptions options = default)
+        {
+            string actualEncoded = CrockfordBase32.Instance.GetString(raw, options);
+            Assert.AreEqual(encoded, actualEncoded);
+
+            var actualDecoded = CrockfordBase32.Instance.GetInt32(encoded, options);
+            Assert.AreEqual(raw, actualDecoded);
+
+            // TODO
+        }
+
         [TestMethod]
         public void CrockfordBase32_Empty() => TestVector("", "");
 
@@ -47,27 +59,39 @@ namespace Gapotchenko.FX.Data.Encoding.Test
                 CrockfordBase32.Instance.Canonicalize(from));
 
         [TestMethod]
-        public void CrockfordBase32_Main_TV1() => TestVector("f", "CR");
+        public void CrockfordBase32_Text_Main_TV1() => TestVector("f", "CR");
 
         [TestMethod]
-        public void CrockfordBase32_Main_TV2() => TestVector("fo", "CSQG");
+        public void CrockfordBase32_Text_Main_TV2() => TestVector("fo", "CSQG");
 
         [TestMethod]
-        public void CrockfordBase32_Main_TV3() => TestVector("foo", "CSQPY");
+        public void CrockfordBase32_Text_Main_TV3() => TestVector("foo", "CSQPY");
 
         [TestMethod]
-        public void CrockfordBase32_Main_TV4() => TestVector("foob", "CSQPYRG");
+        public void CrockfordBase32_Text_Main_TV4() => TestVector("foob", "CSQPYRG");
 
         [TestMethod]
-        public void CrockfordBase32_Main_TV5() => TestVector("fooba", "CSQPYRK1");
+        public void CrockfordBase32_Text_Main_TV5() => TestVector("fooba", "CSQPYRK1");
 
         [TestMethod]
-        public void CrockfordBase32_Main_TV6() => TestVector("foobar", "CSQPYRK1E8");
+        public void CrockfordBase32_Text_Main_TV6() => TestVector("foobar", "CSQPYRK1E8");
 
         [TestMethod]
-        public void CrockfordBase32_Main_TV7() =>
+        public void CrockfordBase32_Text_Main_TV7() =>
             Assert.AreEqual(
                 "foobar",
                 Encoding.UTF8.GetString(CrockfordBase32.GetBytes("CsQP-YRkL-E8")));
+
+        [TestMethod]
+        public void CrockfordBase32_Int32_Main_TV1() => TestVector(1337, "19S");
+
+        [TestMethod]
+        public void CrockfordBase32_Int32_Main_TV2() => TestVector(1234, "16J");
+
+        [TestMethod]
+        public void CrockfordBase32_Int32_Main_TV3() => TestVector(5111, "4ZQ");
+
+        //[TestMethod]
+        //public void CrockfordBase32_BigInteger_Main_TV1() => TestVector(BigInteger.Parse("3019140802085400304608040952", "2E1BZQDAGC4G6TTENZR"));
     }
 }

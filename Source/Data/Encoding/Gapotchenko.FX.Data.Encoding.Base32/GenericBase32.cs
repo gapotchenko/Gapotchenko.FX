@@ -164,7 +164,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 output.Write(m_Buffer, 0, i);
             }
 
-            public virtual void Encode(ReadOnlySpan<byte> input, TextWriter output)
+            public void Encode(ReadOnlySpan<byte> input, TextWriter output)
             {
                 if (m_Eof)
                     return;
@@ -379,7 +379,7 @@ namespace Gapotchenko.FX.Data.Encoding
             protected void ValidateIncompleteByte()
             {
                 if ((m_Options & DataEncodingOptions.Relax) == 0)
-                    throw new InvalidDataException($"Cannot decode the last byte due to missing {m_Encoding.Name} symbol.");
+                    throw new InvalidDataException($"Cannot decode the last byte of {m_Encoding.Name} encoding due to a missing symbol.");
             }
 
             protected void ValidateLastSymbol(ulong zeroMask)
@@ -387,7 +387,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if ((m_Options & DataEncodingOptions.Relax) == 0 &&
                     (m_Bits & zeroMask) != 0)
                 {
-                    throw new InvalidDataException($"The insignificant bits of the last {m_Encoding.Name} symbol are expected to be zero.");
+                    throw new InvalidDataException($"The insignificant bits of the last symbol in {m_Encoding.Name} encoding are expected to be zero.");
                 }
             }
 

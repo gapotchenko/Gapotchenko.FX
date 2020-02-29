@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -52,7 +53,7 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 throw new ArgumentException(
                     string.Format(
-                        "{0} option cannot be used for {1} encoding because it has a restricted alphabet of {2} symbols, not {3}.",
+                        "'{0}' option cannot be used for {1} encoding because it has a restricted alphabet of {2} symbols, not {3}.",
                         nameof(DataEncodingOptions.Checksum),
                         Name,
                         Alphabet.Size,
@@ -61,74 +62,109 @@ namespace Gapotchenko.FX.Data.Encoding
             }
         }
 
-        /// <summary>
-        /// Iterative modulo calculator for 'x mod 37' checksum.
-        /// </summary>
-        sealed class Checksum
+        /// <inheritdoc/>
+        public string GetString(int value) => GetString(value, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public string GetString(int value, DataEncodingOptions options)
         {
-            /// <summary>
-            /// Checksum divisor.
-            /// </summary>
-            const int Divisor = 37;
+            if (value == 0)
+                return "0";
 
-            /// <summary>
-            /// Bits per checksum symbol.
-            /// </summary>
-            const int BitsPerSymbol = 8;
+            ValidateOptions(options);
 
-            /// <summary>
-            /// Checksum symbol radix.
-            /// </summary>
-            const int Radix = 1 << 8;
+            uint bits = (uint)value;
 
-            /// <summary>
-            /// Checksum accumulator.
-            /// </summary>
-            int m_Accumulator;
+            const int BitsPerValue = sizeof(int) * 8;
+            const int InsignificantBits = BitsPerValue - BitsPerSymbol;
+            const int RestBits = BitsPerValue / BitsPerSymbol * BitsPerSymbol;
+            const int FirstBits = BitsPerValue - RestBits;
+            const uint StopBit = 1U << RestBits;
+            const int Capacity = (BitsPerValue + BitsPerSymbol - 1) / BitsPerSymbol + 1 /* checksum */;
 
-            /// <summary>
-            /// Checksum multiplier.
-            /// </summary>
-            int m_Multiplier = 1;
+            var sb = new StringBuilder(Capacity);
 
-            /// <summary>
-            /// Modulo recalculation limit for multiplier.
-            /// </summary>
-            const int m_MultiplierLimit = int.MaxValue / Radix;
+            var firstBits = (int)(bits >> RestBits);
+            bits = (bits << FirstBits) | 0b1;
 
-            public void WriteSymbol(byte symbol)
+            var alphabet = Alphabet;
+
+            if (firstBits != 0)
             {
-                // Use the fact that
-                //
-                //   c mod m = (a ⋅ b) mod m
-                //
-                // is equivalent to
-                //
-                //   c mod m = [(a mod m) ⋅ (b mod m)] mod m
-                //
-                // in order to avoid the arithmetic overflow during the iterative modulo calculation.
-
-                if (m_Multiplier >= m_MultiplierLimit)
-                {
-                    // Crop multiplier only when there is a risk of an overflow in order to minimize the amount of expensive modulo calculations.
-                    m_Multiplier %= Divisor;
-                }
-
-                int a = symbol * m_Multiplier;
-                if (int.MaxValue - m_Accumulator < a)
-                {
-                    // Crop accumulator only when there is a risk of an overflow in order to minimize the amount of expensive modulo calculations.
-                    m_Accumulator %= Divisor;
-                }
-                m_Accumulator += a;
-
-                m_Multiplier <<= BitsPerSymbol;
+                sb.Append(alphabet[firstBits]);
+            }
+            else
+            {
+                // Skip leading zeros.
+                while (bits >> InsignificantBits == 0)
+                    bits <<= BitsPerSymbol;
             }
 
-            /// <summary>
-            /// Gets checksum value.
-            /// </summary>
-            public int Value => m_Accumulator % Divisor;
+            while (bits != StopBit)
+            {
+                sb.Append(alphabet[(int)(bits >> InsignificantBits)]);
+                bits <<= BitsPerSymbol;
+            }
+
+            if ((options & DataEncodingOptions.Checksum) != 0)
+                sb.Append(alphabet[(int)((uint)value % ChecksumAlphabetSize)]);
+
+            return sb.ToString();
+        }
+
+        static bool IsValidSeparator(char c) =>
+            char.IsWhiteSpace(c) ||
+            c == '-';
+
+        /// <inheritdoc/>
+        public int GetInt32(ReadOnlySpan<char> s) => GetInt32(s, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public int GetInt32(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            if (s == null)
+                throw new ArgumentNullException(nameof(s));
+
+            if (!TryGetInt32(s, out var value, options))
+                throw new FormatException("Input string was not in a correct format.");
+
+            return value;
+        }
+
+        bool TryGetInt32(ReadOnlySpan<char> s, out int value, DataEncodingOptions options)
+        {
+            value = 0;
+
+            ValidateOptions(options);
+
+            if (s.IsEmpty)
+                return false;
+
+            int bits = 0;
+
+            var alphabet = Alphabet;
+
+            foreach (var c in s)
+            {
+                if (c == PaddingChar)
+                    continue;
+
+                int b = alphabet.IndexOf(c);
+                if (b == -1)
+                {
+                    if ((options & DataEncodingOptions.Relax) == 0)
+                    {
+                        if (!IsValidSeparator(c))
+                            return false;
+                    }
+                    continue;
+                }
+
+                bits = (bits << BitsPerSymbol) | b;
+            }
+
+            value = bits;
+            return true;
         }
 
         sealed class CrockfordEncoderContext : EncoderContext
@@ -136,31 +172,6 @@ namespace Gapotchenko.FX.Data.Encoding
             public CrockfordEncoderContext(GenericCrockfordBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
                 base(encoding, alphabet, options)
             {
-                if ((options & DataEncodingOptions.Checksum) != 0)
-                    m_Checksum = new Checksum();
-            }
-
-            Checksum m_Checksum;
-
-            public override void Encode(ReadOnlySpan<byte> input, TextWriter output)
-            {
-                base.Encode(input, output);
-
-                if (m_Checksum != null)
-                {
-                    if (input == null)
-                    {
-                        // Write checksum.
-                        output.Write(m_Alphabet[m_Checksum.Value]);
-                        m_Checksum = null;
-                    }
-                    else
-                    {
-                        // Calculate checksum.
-                        foreach (var b in input)
-                            m_Checksum.WriteSymbol(b);
-                    }
-                }
             }
         }
 
@@ -173,8 +184,16 @@ namespace Gapotchenko.FX.Data.Encoding
             }
         }
 
-        DataEncodingOptions PrepareOptions(DataEncodingOptions options)
+        DataEncodingOptions PrepareCodecOptions(DataEncodingOptions options)
         {
+            if ((options & DataEncodingOptions.Checksum) != 0)
+            {
+                throw new NotSupportedException(
+                    string.Format(
+                        "{0} encoding does not provide checksum operations over arbitrary data blocks.",
+                        Name));
+            }
+
             if (PaddingCore == 1)
             {
                 options =
@@ -191,10 +210,10 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new CrockfordEncoderContext(this, alphabet, PrepareOptions(options));
+        protected override IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new CrockfordEncoderContext(this, alphabet, PrepareCodecOptions(options));
 
         /// <inheritdoc/>
-        protected override IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new CrockfordDecoderContext(this, alphabet, PrepareOptions(options));
+        protected override IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new CrockfordDecoderContext(this, alphabet, PrepareCodecOptions(options));
 
         /// <inheritdoc/>
         protected override int PaddingCore => 1;
