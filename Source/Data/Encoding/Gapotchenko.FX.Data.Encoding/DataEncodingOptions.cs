@@ -49,7 +49,7 @@ namespace Gapotchenko.FX.Data.Encoding
         Relax = 1 << 5,
 
         /// <summary>
-        /// Instructs to emit checksum if the encoding supports it natively.
+        /// Instructs to produce or verify a checksum if the encoding supports it natively.
         /// </summary>
         Checksum = 1 << 6,
 
