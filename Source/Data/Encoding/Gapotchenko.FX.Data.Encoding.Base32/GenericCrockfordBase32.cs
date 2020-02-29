@@ -62,6 +62,11 @@ namespace Gapotchenko.FX.Data.Encoding
             }
         }
 
+        static string GetZeroString(DataEncodingOptions options) =>
+            (options & DataEncodingOptions.Checksum) != 0 ?
+                "00" :
+                "0";
+
         /// <inheritdoc/>
         public string GetString(int value) => GetString(value, DataEncodingOptions.None);
 
@@ -69,7 +74,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public string GetString(int value, DataEncodingOptions options)
         {
             if (value == 0)
-                return "0";
+                return GetZeroString(options);
 
             ValidateOptions(options);
 
@@ -233,7 +238,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public string GetString(long value, DataEncodingOptions options)
         {
             if (value == 0)
-                return "0";
+                return GetZeroString(options);
 
             ValidateOptions(options);
 
