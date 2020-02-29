@@ -73,6 +73,7 @@ namespace Gapotchenko.FX.Data.Encoding
             public CrockfordDecoderContext(GenericCrockfordBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
                 base(encoding, alphabet, options)
             {
+                AltSeparator = '-';
             }
         }
 

@@ -233,6 +233,7 @@ namespace Gapotchenko.FX.Data.Encoding
             {
             }
 
+            protected char? AltSeparator;
             protected readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
 
             public void Decode(ReadOnlySpan<char> input, Stream output)
@@ -266,7 +267,11 @@ namespace Gapotchenko.FX.Data.Encoding
                     {
                         if ((m_Options & DataEncodingOptions.Relax) == 0)
                         {
-                            if (!char.IsWhiteSpace(c))
+                            bool ok =
+                                char.IsWhiteSpace(c) ||
+                                c == AltSeparator;
+
+                            if (!ok)
                                 throw new InvalidDataException($"Encountered a non-{m_Encoding.Name} character.");
                         }
                         continue;
