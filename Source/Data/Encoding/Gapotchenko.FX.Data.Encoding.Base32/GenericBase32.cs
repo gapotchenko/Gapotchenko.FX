@@ -20,14 +20,23 @@ namespace Gapotchenko.FX.Data.Encoding
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));
 
+            ValidateAlphabet(alphabet);
+
+            Alphabet = alphabet;
+        }
+
+        /// <summary>
+        /// Validates alphabet.
+        /// </summary>
+        /// <param name="alphabet">The alphabet.</param>
+        protected virtual void ValidateAlphabet(TextDataEncodingAlphabet alphabet)
+        {
             if (alphabet.Size != Radix)
             {
                 throw new ArgumentException(
                     string.Format("The alphabet size of {0} encoding should be {1}.", Name, Radix),
                     nameof(alphabet));
             }
-
-            Alphabet = alphabet;
         }
 
         /// <summary>
@@ -434,7 +443,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public sealed override bool IsCaseSensitive => Alphabet.IsCaseSensitive;
 
         /// <inheritdoc/>
-        protected sealed override int PaddingCore => SymbolsPerEncodedBlock;
+        protected override int PaddingCore => SymbolsPerEncodedBlock;
 
         /// <summary>
         /// The padding character.
