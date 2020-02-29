@@ -75,7 +75,7 @@ namespace Gapotchenko.FX.Data.Encoding
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private protected static ulong ShiftRight(ulong x, int n) => n >= 0 ? x >> n : x << -n;
 
-        abstract class CodecContextBase
+        private protected abstract class CodecContextBase
         {
             public CodecContextBase(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
             {
@@ -103,7 +103,7 @@ namespace Gapotchenko.FX.Data.Encoding
             protected bool m_Eof;
         }
 
-        sealed class EncoderContext : CodecContextBase, IEncoderContext
+        private protected class EncoderContext : CodecContextBase, IEncoderContext
         {
             public EncoderContext(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
                 base(encoding, alphabet, options)
@@ -115,13 +115,13 @@ namespace Gapotchenko.FX.Data.Encoding
             /// </summary>
             const DataEncodingOptions FormatMask = DataEncodingOptions.Wrap | DataEncodingOptions.Indent;
 
-            readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
+            protected readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
 
             int m_LinePosition;
 
             void MoveLinePosition(int delta) => m_LinePosition += delta;
 
-            void EmitLineBreak(TextWriter output)
+            protected void EmitLineBreak(TextWriter output)
             {
                 if (m_LinePosition >= 72)
                 {
@@ -132,7 +132,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 }
             }
 
-            void WriteBits(TextWriter output, int bitCount)
+            protected virtual void WriteBits(TextWriter output, int bitCount)
             {
                 var alphabet = m_Alphabet;
 
@@ -217,14 +217,14 @@ namespace Gapotchenko.FX.Data.Encoding
             }
         }
 
-        sealed class DecoderContext : CodecContextBase, IDecoderContext
+        private protected class DecoderContext : CodecContextBase, IDecoderContext
         {
             public DecoderContext(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
                 base(encoding, alphabet, options)
             {
             }
 
-            readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
+            protected readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
 
             public void Decode(ReadOnlySpan<char> input, Stream output)
             {
@@ -287,14 +287,14 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 if (m_Modulus != 0)
                 {
-                    FlushDecodeCore(output, m_Modulus);
+                    FlushDecodeCore(output);
                     m_Modulus = 0;
                 }
             }
 
-            void FlushDecodeCore(Stream output, int modulus)
+            protected virtual void FlushDecodeCore(Stream output)
             {
-                switch (modulus)
+                switch (m_Modulus)
                 {
                     case 1:
                         // 5 bits
@@ -362,13 +362,13 @@ namespace Gapotchenko.FX.Data.Encoding
                 }
             }
 
-            void ValidateIncompleteByte()
+            protected void ValidateIncompleteByte()
             {
                 if ((m_Options & DataEncodingOptions.Relax) == 0)
                     throw new InvalidDataException($"Cannot decode the last byte due to missing {m_Encoding.Name} symbol.");
             }
 
-            void ValidateLastSymbol(ulong zeroMask)
+            protected void ValidateLastSymbol(ulong zeroMask)
             {
                 if ((m_Options & DataEncodingOptions.Relax) == 0 &&
                     (m_Bits & zeroMask) != 0)
