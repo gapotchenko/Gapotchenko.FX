@@ -63,5 +63,11 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         public void CrockfordBase32_Main_TV6() => TestVector("foobar", "CSQPYRK1E8");
+
+        [TestMethod]
+        public void CrockfordBase32_Main_TV7() =>
+            Assert.AreEqual(
+                "foobar",
+                Encoding.UTF8.GetString(CrockfordBase32.GetBytes("CsQP-YRkL-E8")));
     }
 }

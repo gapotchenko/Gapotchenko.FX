@@ -164,7 +164,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 output.Write(m_Buffer, 0, i);
             }
 
-            public void Encode(ReadOnlySpan<byte> input, TextWriter output)
+            public virtual void Encode(ReadOnlySpan<byte> input, TextWriter output)
             {
                 if (m_Eof)
                     return;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -60,11 +61,106 @@ namespace Gapotchenko.FX.Data.Encoding
             }
         }
 
+        /// <summary>
+        /// Iterative modulo calculator for 'x mod 37' checksum.
+        /// </summary>
+        sealed class Checksum
+        {
+            /// <summary>
+            /// Checksum divisor.
+            /// </summary>
+            const int Divisor = 37;
+
+            /// <summary>
+            /// Bits per checksum symbol.
+            /// </summary>
+            const int BitsPerSymbol = 8;
+
+            /// <summary>
+            /// Checksum symbol radix.
+            /// </summary>
+            const int Radix = 1 << 8;
+
+            /// <summary>
+            /// Checksum accumulator.
+            /// </summary>
+            int m_Accumulator;
+
+            /// <summary>
+            /// Checksum multiplier.
+            /// </summary>
+            int m_Multiplier = 1;
+
+            /// <summary>
+            /// Modulo recalculation limit for multiplier.
+            /// </summary>
+            const int m_MultiplierLimit = int.MaxValue / Radix;
+
+            public void WriteSymbol(byte symbol)
+            {
+                // Use the fact that
+                //
+                //   c mod m = (a ⋅ b) mod m
+                //
+                // is equivalent to
+                //
+                //   c mod m = [(a mod m) ⋅ (b mod m)] mod m
+                //
+                // in order to avoid the arithmetic overflow during the iterative modulo calculation.
+
+                if (m_Multiplier >= m_MultiplierLimit)
+                {
+                    // Crop multiplier only when there is a risk of an overflow in order to minimize the amount of expensive modulo calculations.
+                    m_Multiplier %= Divisor;
+                }
+
+                int a = symbol * m_Multiplier;
+                if (int.MaxValue - m_Accumulator < a)
+                {
+                    // Crop accumulator only when there is a risk of an overflow in order to minimize the amount of expensive modulo calculations.
+                    m_Accumulator %= Divisor;
+                }
+                m_Accumulator += a;
+
+                m_Multiplier <<= BitsPerSymbol;
+            }
+
+            /// <summary>
+            /// Gets checksum value.
+            /// </summary>
+            public int Value => m_Accumulator % Divisor;
+        }
+
         sealed class CrockfordEncoderContext : EncoderContext
         {
             public CrockfordEncoderContext(GenericCrockfordBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
                 base(encoding, alphabet, options)
             {
+                if ((options & DataEncodingOptions.Checksum) != 0)
+                    m_Checksum = new Checksum();
+            }
+
+            Checksum m_Checksum;
+
+            public override void Encode(ReadOnlySpan<byte> input, TextWriter output)
+            {
+                base.Encode(input, output);
+
+                if (m_Checksum != null)
+                {
+                    if (input == null)
+                    {
+                        // Write checksum.
+                        output.Write(m_Alphabet[m_Checksum.Value]);
+                        m_Checksum = null;
+                    }
+                    else
+                    {
+                        // Calculate checksum.
+                        foreach (var b in input)
+                            m_Checksum.WriteSymbol(b);
+                    }
+                }
             }
         }
 
