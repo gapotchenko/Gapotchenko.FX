@@ -107,14 +107,14 @@ namespace Gapotchenko.FX.Data.Encoding
         bool TryGetInt64(ReadOnlySpan<char> s, out long value, DataEncodingOptions options);
 
         /// <summary>
-        /// Encodes an <see cref="BigInteger"/> value to its equivalent string representation.
+        /// Encodes a <see cref="BigInteger"/> value to its equivalent string representation.
         /// </summary>
         /// <param name="value">The <see cref="BigInteger"/> value.</param>
         /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
         string GetString(BigInteger value);
 
         /// <summary>
-        /// Encodes an <see cref="BigInteger"/> value to its equivalent string representation with specified options.
+        /// Encodes a <see cref="BigInteger"/> value to its equivalent string representation with specified options.
         /// </summary>
         /// <param name="value">The <see cref="BigInteger"/> value.</param>
         /// <param name="options">The options.</param>
@@ -125,7 +125,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Decodes the specified string to an equivalent <see cref="BigInteger"/> value.
         /// </summary>
         /// <param name="s">The string to decode.</param>
-        /// <returns>An <see cref="BigInteger"/> value that is equivalent to <paramref name="s"/>.</returns>
+        /// <returns>A <see cref="BigInteger"/> value that is equivalent to <paramref name="s"/>.</returns>
         BigInteger GetBigInteger(ReadOnlySpan<char> s);
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <param name="options">The options.</param>
-        /// <returns>An <see cref="BigInteger"/> value that is equivalent to <paramref name="s"/>.</returns>
+        /// <returns>A <see cref="BigInteger"/> value that is equivalent to <paramref name="s"/>.</returns>
         BigInteger GetBigInteger(ReadOnlySpan<char> s, DataEncodingOptions options);
 
         /// <summary>

@@ -31,34 +31,28 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         static void TestVector(int raw, string encoded, DataEncodingOptions options = default)
         {
-            var instance = CrockfordBase32.Instance;
-
-            var actualDecoded = instance.GetInt32(encoded, options);
+            var actualDecoded = CrockfordBase32.GetInt32(encoded, options);
             Assert.AreEqual(raw, actualDecoded);
 
-            string actualEncoded = instance.GetString(raw, options);
+            string actualEncoded = CrockfordBase32.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded);
         }
 
         static void TestVector(long raw, string encoded, DataEncodingOptions options = default)
         {
-            var instance = CrockfordBase32.Instance;
-
-            var actualDecoded = instance.GetInt64(encoded, options);
+            var actualDecoded = CrockfordBase32.GetInt64(encoded, options);
             Assert.AreEqual(raw, actualDecoded);
 
-            string actualEncoded = instance.GetString(raw, options);
+            string actualEncoded = CrockfordBase32.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded);
         }
 
         static void TestVector(BigInteger raw, string encoded, DataEncodingOptions options = default)
         {
-            var instance = CrockfordBase32.Instance;
-
-            var actualDecoded = instance.GetBigInteger(encoded, options);
+            var actualDecoded = CrockfordBase32.GetBigInteger(encoded, options);
             Assert.AreEqual(raw, actualDecoded);
 
-            string actualEncoded = instance.GetString(raw, options);
+            string actualEncoded = CrockfordBase32.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded);
         }
 
