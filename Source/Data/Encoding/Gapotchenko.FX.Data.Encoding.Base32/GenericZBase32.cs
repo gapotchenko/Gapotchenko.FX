@@ -41,7 +41,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 {
                     s -= BitsPerSymbol;
 
-                    int si = (int)ShiftRight(m_Bits, s) & MaskSymbol; // symbol index
+                    int si = (int)ShiftRight(m_Bits, s) & SymbolMask; // symbol index
                     m_Buffer[i++] = alphabet[si]; // map symbol
 
                     if (compress)
@@ -119,7 +119,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
+        protected override DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Padding) == 0)
             {
@@ -127,8 +127,12 @@ namespace Gapotchenko.FX.Data.Encoding
                 options |= DataEncodingOptions.Unpad;
             }
 
-            return new ZBase32EncoderContext(this, alphabet, options);
+            return options;
         }
+
+        /// <inheritdoc/>
+        protected override IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
+            new ZBase32EncoderContext(this, alphabet, options);
 
         /// <inheritdoc/>
         protected override IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>

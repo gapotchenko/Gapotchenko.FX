@@ -48,5 +48,17 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        protected override int GetMaxCharCountCore(int byteCount, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        protected override int GetMaxByteCountCore(int charCount, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

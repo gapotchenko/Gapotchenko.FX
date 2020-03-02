@@ -422,7 +422,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if (ab >= BitsPerSymbol)
                 {
                     // Byte has enough bits for a symbol.
-                    si = (bytes[bi] >> bs) & MaskSymbol;
+                    si = (bytes[bi] >> bs) & SymbolMask;
                 }
                 else
                 {
@@ -432,7 +432,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     // Try get the rest (higher bits) from the next byte.
                     int nbi = bi + 1; // next byte index
                     if (nbi < totalBytes)
-                        si |= (bytes[nbi] << ab) & MaskSymbol;
+                        si |= (bytes[nbi] << ab) & SymbolMask;
                 }
 
                 if (si == 0 && sb.Length == 0)
@@ -548,7 +548,8 @@ namespace Gapotchenko.FX.Data.Encoding
             return true;
         }
 
-        DataEncodingOptions GetCodecOptions(DataEncodingOptions options)
+        /// <inheritdoc/>
+        protected override DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Checksum) != 0)
             {
@@ -573,13 +574,10 @@ namespace Gapotchenko.FX.Data.Encoding
             return options;
         }
 
-        /// <inheritdoc/>
-        protected override IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
-            base.CreateEncoderContextCore(alphabet, GetCodecOptions(options));
 
         /// <inheritdoc/>
         protected override IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
-            new DecoderContext(this, alphabet, GetCodecOptions(options))
+            new DecoderContext(this, alphabet, options)
             {
                 Separator = Separator
             };

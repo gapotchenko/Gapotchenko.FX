@@ -52,6 +52,11 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         protected const int BytesPerDecodedBlock = 3;
 
+        /// <summary>
+        /// Bit mask of an alphabet symbol.
+        /// </summary>
+        protected const int SymbolMask = (1 << BitsPerSymbol) - 1;
+
         #endregion
 
         /// <inheritdoc/>
@@ -65,6 +70,13 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
+
+        const int LineWidth = 76;
+
+        /// <summary>
+        /// Base64 encoding treats wrapping and indentation interchangeably.
+        /// </summary>
+        const DataEncodingOptions FormatMask = DataEncodingOptions.Wrap | DataEncodingOptions.Indent;
 
         abstract class CodecContextBase
         {
@@ -81,7 +93,6 @@ namespace Gapotchenko.FX.Data.Encoding
 
             protected const string Name = "Base64";
 
-            protected const int MaskSymbol = (1 << BitsPerSymbol) - 1;
             protected const int Mask2Bits = (1 << 2) - 1;
             protected const int Mask4Bits = (1 << 4) - 1;
 
@@ -99,11 +110,6 @@ namespace Gapotchenko.FX.Data.Encoding
             {
             }
 
-            /// <summary>
-            /// Base64 encoding treats wrapping and indentation interchangeably.
-            /// </summary>
-            const DataEncodingOptions FormatMask = DataEncodingOptions.Wrap | DataEncodingOptions.Indent;
-
             readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
 
             int m_LinePosition;
@@ -112,7 +118,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             void EmitLineBreak(TextWriter output)
             {
-                if (m_LinePosition >= 76)
+                if (m_LinePosition >= LineWidth)
                 {
                     m_LinePosition = 0;
 
@@ -141,8 +147,8 @@ namespace Gapotchenko.FX.Data.Encoding
                         case 1:
                             {
                                 // 8 bits = 6 + 2
-                                m_Buffer[0] = alphabet[(m_Bits >> 2) & MaskSymbol]; // 6 bits
-                                m_Buffer[1] = alphabet[(m_Bits << 4) & MaskSymbol]; // 2 bits
+                                m_Buffer[0] = alphabet[(m_Bits >> 2) & SymbolMask]; // 6 bits
+                                m_Buffer[1] = alphabet[(m_Bits << 4) & SymbolMask]; // 2 bits
 
                                 int count = 2;
                                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
@@ -160,9 +166,9 @@ namespace Gapotchenko.FX.Data.Encoding
                         case 2:
                             {
                                 // 16 bits = 6 + 6 + 4
-                                m_Buffer[0] = alphabet[(m_Bits >> 10) & MaskSymbol]; // 6 bits
-                                m_Buffer[1] = alphabet[(m_Bits >> 4) & MaskSymbol]; // 6 bits
-                                m_Buffer[2] = alphabet[(m_Bits << 2) & MaskSymbol]; // 4 bits
+                                m_Buffer[0] = alphabet[(m_Bits >> 10) & SymbolMask]; // 6 bits
+                                m_Buffer[1] = alphabet[(m_Bits >> 4) & SymbolMask]; // 6 bits
+                                m_Buffer[2] = alphabet[(m_Bits << 2) & SymbolMask]; // 4 bits
 
                                 int count = 3;
                                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
@@ -193,10 +199,10 @@ namespace Gapotchenko.FX.Data.Encoding
                         m_Modulus = 0;
 
                         // 3 bytes = 24 bits = 4 * 6 bits
-                        m_Buffer[0] = alphabet[(m_Bits >> 18) & MaskSymbol];
-                        m_Buffer[1] = alphabet[(m_Bits >> 12) & MaskSymbol];
-                        m_Buffer[2] = alphabet[(m_Bits >> 6) & MaskSymbol];
-                        m_Buffer[3] = alphabet[m_Bits & MaskSymbol];
+                        m_Buffer[0] = alphabet[(m_Bits >> 18) & SymbolMask];
+                        m_Buffer[1] = alphabet[(m_Bits >> 12) & SymbolMask];
+                        m_Buffer[2] = alphabet[(m_Bits >> 6) & SymbolMask];
+                        m_Buffer[3] = alphabet[m_Bits & SymbolMask];
 
                         EmitLineBreak(output);
                         output.Write(m_Buffer);
@@ -353,11 +359,18 @@ namespace Gapotchenko.FX.Data.Encoding
             static Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid {Name} padding.");
         }
 
-        /// <inheritdoc/>
-        protected sealed override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => CreateEncoderContextCore(Alphabet, options);
+        /// <summary>
+        /// Gets effective options.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <returns>The effective options.</returns>
+        protected virtual DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options) => options;
 
         /// <inheritdoc/>
-        protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => CreateDecoderContextCore(Alphabet, options);
+        protected sealed override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => CreateEncoderContextCore(Alphabet, GetEffectiveOptions(options));
+
+        /// <inheritdoc/>
+        protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => CreateDecoderContextCore(Alphabet, GetEffectiveOptions(options));
 
         /// <summary>
         /// Creates encoder context with specified alphabet and options.
@@ -394,5 +407,27 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <inheritdoc/>
         protected override void CanonicalizeCore(ReadOnlySpan<char> source, Span<char> destination) => Alphabet.Canonicalize(source, destination);
+
+        /// <inheritdoc/>
+        protected override int GetMaxCharCountCore(int byteCount, DataEncodingOptions options)
+        {
+            options = GetEffectiveOptions(options);
+
+            int charCount = (byteCount * SymbolsPerEncodedBlock + BytesPerDecodedBlock - 1) / BytesPerDecodedBlock;
+
+            if ((options & DataEncodingOptions.Unpad) == 0)
+                charCount = Pad(charCount);
+
+            int newLineCount =
+                (options & FormatMask) != 0 ?
+                    Math.Max(charCount - 1, 0) / LineWidth :
+                    0;
+
+            return charCount + newLineCount * MaxNewLineCharCount;
+        }
+
+        /// <inheritdoc/>
+        protected override int GetMaxByteCountCore(int charCount, DataEncodingOptions options) =>
+            (charCount * BytesPerDecodedBlock + SymbolsPerEncodedBlock - 1) / SymbolsPerEncodedBlock;
     }
 }

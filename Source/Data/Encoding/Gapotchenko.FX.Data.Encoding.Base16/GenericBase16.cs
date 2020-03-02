@@ -65,6 +65,11 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
 
+        static int GetLineWidth(DataEncodingOptions options) =>
+            (options & DataEncodingOptions.Indent) != 0 ?
+                16 * SymbolsPerEncodedBlock :
+                32 * SymbolsPerEncodedBlock;
+
         abstract class CodecContextBase
         {
             public CodecContextBase(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
@@ -92,15 +97,12 @@ namespace Gapotchenko.FX.Data.Encoding
             public EncoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
                 base(alphabet, options)
             {
-                m_Width =
-                    (m_Options & DataEncodingOptions.Indent) != 0 ?
-                        16 * SymbolsPerEncodedBlock :
-                        32 * SymbolsPerEncodedBlock;
+                m_LineWidth = GetLineWidth(options);
             }
 
-            readonly int m_Width;
             readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
 
+            readonly int m_LineWidth;
             int m_LinePosition;
             bool m_Indent;
 
@@ -108,7 +110,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             void EmitBreak(TextWriter output)
             {
-                if (m_LinePosition >= m_Width)
+                if (m_LinePosition >= m_LineWidth)
                 {
                     m_LinePosition = 0;
                     if ((m_Options & DataEncodingOptions.Wrap) != 0)
@@ -265,5 +267,27 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <inheritdoc/>
         protected override void CanonicalizeCore(ReadOnlySpan<char> source, Span<char> destination) => Alphabet.Canonicalize(source, destination);
+
+        /// <inheritdoc/>
+        protected override int GetMaxCharCountCore(int byteCount, DataEncodingOptions options)
+        {
+            int charCount = (byteCount * SymbolsPerEncodedBlock + BytesPerDecodedBlock - 1) / BytesPerDecodedBlock;
+
+            int newLineCount =
+                (options & DataEncodingOptions.Wrap) != 0 ?
+                    Math.Max(charCount - 1, 0) / GetLineWidth(options) :
+                    0;
+
+            int indentCount =
+                (options & DataEncodingOptions.Indent) != 0 ?
+                    Math.Max(byteCount - 1, 0) - newLineCount :
+                    0;
+
+            return charCount + indentCount + newLineCount * MaxNewLineCharCount;
+        }
+
+        /// <inheritdoc/>
+        protected override int GetMaxByteCountCore(int charCount, DataEncodingOptions options) =>
+            (charCount * BytesPerDecodedBlock + SymbolsPerEncodedBlock - 1) / SymbolsPerEncodedBlock;
     }
 }

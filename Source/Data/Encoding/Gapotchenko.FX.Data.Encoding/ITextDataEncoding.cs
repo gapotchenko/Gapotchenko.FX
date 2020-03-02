@@ -89,5 +89,35 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The encoded string.</param>
         /// <returns>The canonicalized encoded string.</returns>
         string Canonicalize(ReadOnlySpan<char> s);
+
+        /// <summary>
+        /// Calculates the maximum number of characters produced by encoding the specified number of bytes.
+        /// </summary>
+        /// <param name="byteCount">The number of bytes to encode.</param>
+        /// <returns>The maximum number of characters produced by encoding the specified number of bytes.</returns>
+        int GetMaxCharCount(int byteCount);
+
+        /// <summary>
+        /// Calculates the maximum number of characters produced by encoding the specified number of bytes with options.
+        /// </summary>
+        /// <param name="byteCount">The number of bytes to encode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The maximum number of characters produced by encoding the specified number of bytes.</returns>
+        int GetMaxCharCount(int byteCount, DataEncodingOptions options);
+
+        /// <summary>
+        /// Calculates the maximum number of bytes produced by decoding the specified number of characters.
+        /// </summary>
+        /// <param name="charCount">The number of characters to decode.</param>
+        /// <returns>The maximum number of bytes produced by decoding the specified number of characters.</returns>
+        int GetMaxByteCount(int charCount);
+
+        /// <summary>
+        /// Calculates the maximum number of bytes produced by decoding the specified number of characters with options.
+        /// </summary>
+        /// <param name="charCount">The number of characters to decode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The maximum number of bytes produced by decoding the specified number of characters.</returns>
+        int GetMaxByteCount(int charCount, DataEncodingOptions options);
     }
 }

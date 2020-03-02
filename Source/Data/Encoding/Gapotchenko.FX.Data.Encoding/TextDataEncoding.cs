@@ -638,6 +638,42 @@ namespace Gapotchenko.FX.Data.Encoding
                 source.CopyTo(destination);
         }
 
+        /// <inheritdoc/>
+        public int GetMaxCharCount(int byteCount) => GetMaxCharCountCore(byteCount, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public int GetMaxCharCount(int byteCount, DataEncodingOptions options)
+        {
+            ValidateOptions(options);
+            return GetMaxCharCountCore(byteCount, options);
+        }
+
+        /// <summary>
+        /// Calculates the maximum number of characters produced by encoding the specified number of bytes with options.
+        /// </summary>
+        /// <param name="byteCount">The number of bytes to encode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The maximum number of characters produced by encoding the specified number of bytes.</returns>
+        protected abstract int GetMaxCharCountCore(int byteCount, DataEncodingOptions options);
+
+        /// <inheritdoc/>
+        public int GetMaxByteCount(int charCount) => GetMaxByteCountCore(charCount, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public int GetMaxByteCount(int charCount, DataEncodingOptions options)
+        {
+            ValidateOptions(options);
+            return GetMaxByteCountCore(charCount, options);
+        }
+
+        /// <summary>
+        /// Calculates the maximum number of bytes produced by decoding the specified number of characters with options.
+        /// </summary>
+        /// <param name="charCount">The number of characters to decode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The maximum number of bytes produced by decoding the specified number of characters.</returns>
+        protected abstract int GetMaxByteCountCore(int charCount, DataEncodingOptions options);
+
         #region Implementation Helpers
 
         string Pad(ReadOnlySpan<char> s, char paddingChar, bool right)
@@ -646,20 +682,33 @@ namespace Gapotchenko.FX.Data.Encoding
                 return null;
 
             int padding = Padding;
+            if (padding < 2)
+            {
+                // No padding. Pass through.
+                return s.ToString();
+            }
 
-            int width =
-                padding < 2 ?
-                    0 :
-                    (s.Length + padding - 1) / padding * padding;
+            int width = Pad(s.Length);
 
             string output = s.ToString();
-
-            if (width == 0)
-                return output;
-            else if (right)
+            if (right)
                 return output.PadRight(width, paddingChar);
             else
                 return output.PadLeft(width, paddingChar);
+        }
+
+        /// <summary>
+        /// Calculates the number of characters with applied padding.
+        /// </summary>
+        /// <param name="charCount">The number of characters.</param>
+        /// <returns>The number of characters with applied padding.</returns>
+        protected int Pad(int charCount)
+        {
+            int padding = Padding;
+            return
+                padding < 2 ?
+                    charCount :
+                    (charCount + padding - 1) / padding * padding;
         }
 
         /// <summary>
@@ -693,6 +742,11 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="paddingChar">The padding character.</param>
         /// <returns>The unpadded encoded string.</returns>
         protected ReadOnlySpan<char> UnpadLeft(ReadOnlySpan<char> s, char paddingChar) => s.TrimStart(paddingChar);
+
+        /// <summary>
+        /// Maximum number of characters in a line terminator.
+        /// </summary>
+        protected const int MaxNewLineCharCount = 2; // CR LF is the longest line terminator
 
         #endregion
     }

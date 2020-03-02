@@ -121,6 +121,16 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Framework
             Assert.IsTrue(raw.SequenceEqual(actualDecodedBytes));
 
             // -----------------------------------------------------------------
+            // Check maximum count calculations
+            // -----------------------------------------------------------------
+
+            int maxCharCount = dataEncoding.GetMaxCharCount(raw.Length, options);
+            Assert.IsTrue(actualEncoded.Length <= maxCharCount, "GetMaxCharCount returned an invalid value.");
+
+            int maxByteCount = dataEncoding.GetMaxByteCount(actualEncoded.Length, options);
+            Assert.IsTrue(actualDecoded.Length <= maxByteCount, "GetMaxByteCount returned an invalid value.");
+
+            // -----------------------------------------------------------------
             // Check actual encoding efficiency and boundaries
             // -----------------------------------------------------------------
 
