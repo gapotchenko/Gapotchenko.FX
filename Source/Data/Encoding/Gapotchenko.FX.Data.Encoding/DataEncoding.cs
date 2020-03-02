@@ -50,7 +50,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public byte[] EncodeData(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
-            ValidateOptions(options);
+            options = ValidateOptions(options);
             return data == null ? null : EncodeDataCore(data, options);
         }
 
@@ -68,7 +68,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public byte[] DecodeData(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
-            ValidateOptions(options);
+            options = ValidateOptions(options);
             return data == null ? null : DecodeDataCore(data, options);
         }
 
@@ -81,10 +81,11 @@ namespace Gapotchenko.FX.Data.Encoding
         protected abstract byte[] DecodeDataCore(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <summary>
-        /// Validates encoding options.
+        /// Validates the encoding options and returns effective options to use.
         /// </summary>
         /// <param name="options">The options.</param>
-        protected virtual void ValidateOptions(DataEncodingOptions options)
+        /// <returns>The effective encoding options to use.</returns>
+        protected virtual DataEncodingOptions ValidateOptions(DataEncodingOptions options)
         {
             const DataEncodingOptions PaddingConflictMask = DataEncodingOptions.Padding | DataEncodingOptions.Unpad;
             if ((options & PaddingConflictMask) == PaddingConflictMask)
@@ -96,6 +97,8 @@ namespace Gapotchenko.FX.Data.Encoding
                         nameof(DataEncodingOptions.Unpad)),
                     nameof(options));
             }
+
+            return options;
         }
 
         /// <inheritdoc/>

@@ -44,10 +44,8 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override void ValidateOptions(DataEncodingOptions options)
+        protected override DataEncodingOptions ValidateOptions(DataEncodingOptions options)
         {
-            base.ValidateOptions(options);
-
             if ((options & DataEncodingOptions.Checksum) != 0 &&
                 Alphabet.Size != ChecksumAlphabetSize)
             {
@@ -60,6 +58,20 @@ namespace Gapotchenko.FX.Data.Encoding
                         ChecksumAlphabetSize),
                     nameof(options));
             }
+
+            if (PaddingCore == 1)
+            {
+                options =
+                    options & ~DataEncodingOptions.Padding |
+                    DataEncodingOptions.Unpad;
+            }
+            else if ((options & DataEncodingOptions.Padding) == 0)
+            {
+                // Produce unpadded strings unless padding is explicitly requested.
+                options |= DataEncodingOptions.Unpad;
+            }
+
+            return base.ValidateOptions(options);
         }
 
         static string GetZeroString(DataEncodingOptions options) =>
@@ -548,8 +560,7 @@ namespace Gapotchenko.FX.Data.Encoding
             return true;
         }
 
-        /// <inheritdoc/>
-        protected override DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
+        void ValidateCodecOptions(DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Checksum) != 0)
             {
@@ -558,29 +569,26 @@ namespace Gapotchenko.FX.Data.Encoding
                         "{0} encoding does not provide checksum operations over arbitrary data blocks.",
                         Name));
             }
-
-            if (PaddingCore == 1)
-            {
-                options =
-                    options & ~DataEncodingOptions.Padding |
-                    DataEncodingOptions.Unpad;
-            }
-            else if ((options & DataEncodingOptions.Padding) == 0)
-            {
-                // Produce unpadded strings unless padding is explicitly requested.
-                options |= DataEncodingOptions.Unpad;
-            }
-
-            return options;
         }
 
+        /// <inheritdoc/>
+        protected override IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
+        {
+            ValidateCodecOptions(options);
+
+            return base.CreateEncoderContextCore(alphabet, options);
+        }
 
         /// <inheritdoc/>
-        protected override IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
-            new DecoderContext(this, alphabet, options)
+        protected override IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
+        {
+            ValidateCodecOptions(options);
+
+            return new DecoderContext(this, alphabet, options)
             {
                 Separator = Separator
             };
+        }
 
         /// <inheritdoc/>
         protected override int PaddingCore => 1;

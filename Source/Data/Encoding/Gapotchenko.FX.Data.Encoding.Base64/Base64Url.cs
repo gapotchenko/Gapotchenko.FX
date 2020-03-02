@@ -18,7 +18,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public override string Name => "base64url";
 
         /// <inheritdoc/>
-        protected override DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
+        protected override DataEncodingOptions ValidateOptions(DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Padding) == 0)
             {
@@ -27,7 +27,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 options |= DataEncodingOptions.Unpad;
             }
 
-            return options;
+            return base.ValidateOptions(options);
         }
 
         /// <inheritdoc/>

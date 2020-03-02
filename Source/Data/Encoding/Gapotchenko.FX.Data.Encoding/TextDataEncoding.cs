@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
-            ValidateOptions(options);
+            options = ValidateOptions(options);
             return data == null ? null : GetStringCore(data, options);
         }
 
@@ -63,7 +63,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options)
         {
-            ValidateOptions(options);
+            options = ValidateOptions(options);
             return s == null ? null : GetBytesCore(s, options);
         }
 
@@ -160,7 +160,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             if (textWriter == null)
                 throw new ArgumentNullException(nameof(textWriter));
-            ValidateOptions(options);
+            options = ValidateOptions(options);
 
             var context = CreateEncoderContext(options);
             return new EncoderStream(this, textWriter, context, options, StreamBufferSize);
@@ -171,7 +171,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             if (textReader == null)
                 throw new ArgumentNullException(nameof(textReader));
-            ValidateOptions(options);
+            options = ValidateOptions(options);
 
             var context = CreateDecoderContext(options);
             return new DecoderStream(this, textReader, context, options, StreamBufferSize);
@@ -672,11 +672,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public int GetMaxCharCount(int byteCount) => GetMaxCharCountCore(byteCount, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public int GetMaxCharCount(int byteCount, DataEncodingOptions options)
-        {
-            ValidateOptions(options);
-            return GetMaxCharCountCore(byteCount, options);
-        }
+        public int GetMaxCharCount(int byteCount, DataEncodingOptions options) => GetMaxCharCountCore(byteCount, ValidateOptions(options));
 
         /// <summary>
         /// Calculates the maximum number of characters produced by encoding the specified number of bytes with options.
@@ -690,11 +686,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public int GetMaxByteCount(int charCount) => GetMaxByteCountCore(charCount, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public int GetMaxByteCount(int charCount, DataEncodingOptions options)
-        {
-            ValidateOptions(options);
-            return GetMaxByteCountCore(charCount, options);
-        }
+        public int GetMaxByteCount(int charCount, DataEncodingOptions options) => GetMaxByteCountCore(charCount, ValidateOptions(options));
 
         /// <summary>
         /// Calculates the maximum number of bytes produced by decoding the specified number of characters with options.

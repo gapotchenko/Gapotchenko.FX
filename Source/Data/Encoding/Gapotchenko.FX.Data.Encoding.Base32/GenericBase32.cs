@@ -422,18 +422,11 @@ namespace Gapotchenko.FX.Data.Encoding
             Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid {m_Encoding.Name} padding.");
         }
 
-        /// <summary>
-        /// Gets effective options.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        /// <returns>The effective options.</returns>
-        protected virtual DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options) => options;
+        /// <inheritdoc/>
+        protected sealed override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => CreateEncoderContextCore(Alphabet, options);
 
         /// <inheritdoc/>
-        protected sealed override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => CreateEncoderContextCore(Alphabet, GetEffectiveOptions(options));
-
-        /// <inheritdoc/>
-        protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => CreateDecoderContextCore(Alphabet, GetEffectiveOptions(options));
+        protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => CreateDecoderContextCore(Alphabet, options);
 
         /// <summary>
         /// Creates encoder context with specified alphabet and options.
@@ -474,8 +467,6 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override int GetMaxCharCountCore(int byteCount, DataEncodingOptions options)
         {
-            options = GetEffectiveOptions(options);
-
             int charCount = (byteCount * SymbolsPerEncodedBlock + BytesPerDecodedBlock - 1) / BytesPerDecodedBlock;
 
             if ((options & DataEncodingOptions.Unpad) == 0)
