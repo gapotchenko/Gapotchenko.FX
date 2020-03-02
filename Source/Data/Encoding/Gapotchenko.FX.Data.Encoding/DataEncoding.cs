@@ -86,8 +86,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         protected virtual void ValidateOptions(DataEncodingOptions options)
         {
-            const DataEncodingOptions PaddingMask = DataEncodingOptions.Padding | DataEncodingOptions.Unpad;
-            if ((options & PaddingMask) == PaddingMask)
+            const DataEncodingOptions PaddingConflictMask = DataEncodingOptions.Padding | DataEncodingOptions.Unpad;
+            if ((options & PaddingConflictMask) == PaddingConflictMask)
             {
                 throw new ArgumentException(
                     string.Format(
