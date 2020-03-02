@@ -37,8 +37,8 @@ namespace Gapotchenko.FX.Data.Encoding
         Indent = 1 << 3,
 
         /// <summary>
-        /// Instructs to produce wrapped output in order to form human-readable blocks of data if the encoding supports it natively.
-        /// For example, Base64 handles wrapping by inserting line feed characters every 76 symbols of output.
+        /// Instructs to produce wrapped output if the encoding supports it natively.
+        /// For example, Base64 handles wrapping by inserting line termination characters every 76 symbols of output.
         /// </summary>
         Wrap = 1 << 4,
 

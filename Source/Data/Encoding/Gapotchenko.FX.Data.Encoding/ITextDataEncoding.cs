@@ -119,5 +119,17 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns>The maximum number of bytes produced by decoding the specified number of characters.</returns>
         int GetMaxByteCount(int charCount, DataEncodingOptions options);
+
+        /// <summary>
+        /// Gets the maximum number of bytes in a decoded block.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        int BlockByteCount { get; }
+
+        /// <summary>
+        /// Gets the maximum number of characters in an encoded block.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        int BlockCharCount { get; }
     }
 }

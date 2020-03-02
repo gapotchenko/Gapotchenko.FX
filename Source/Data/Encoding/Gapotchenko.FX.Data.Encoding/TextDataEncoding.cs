@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +16,17 @@ namespace Gapotchenko.FX.Data.Encoding
     /// </summary>
     public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="TextDataEncoding"/> class with specified parameters.
+        /// </summary>
+        /// <param name="blockByteCount">The number of bytes in a block.</param>
+        /// <param name="blockCharCount">The number of characters in a block.</param>
+        protected TextDataEncoding(int blockByteCount, int blockCharCount)
+        {
+            BlockByteCount = blockByteCount;
+            BlockCharCount = blockCharCount;
+        }
+
         /// <inheritdoc/>
         public abstract bool IsCaseSensitive { get; }
 
@@ -153,7 +163,7 @@ namespace Gapotchenko.FX.Data.Encoding
             ValidateOptions(options);
 
             var context = CreateEncoderContext(options);
-            return new EncoderStream(textWriter, context, options, StreamBufferSize);
+            return new EncoderStream(this, textWriter, context, options, StreamBufferSize);
         }
 
         /// <inheritdoc/>
@@ -164,18 +174,19 @@ namespace Gapotchenko.FX.Data.Encoding
             ValidateOptions(options);
 
             var context = CreateDecoderContext(options);
-            return new DecoderStream(textReader, context, options, StreamBufferSize, MinEfficiency);
+            return new DecoderStream(this, textReader, context, options, StreamBufferSize);
         }
 
         sealed class EncoderStream : Stream
         {
-            public EncoderStream(TextWriter textWriter, IEncoderContext context, DataEncodingOptions options, int bufferSize)
+            public EncoderStream(TextDataEncoding encoding, TextWriter textWriter, IEncoderContext context, DataEncodingOptions options, int bufferSize)
             {
+                m_Encoding = encoding;
                 m_TextWriter = textWriter;
                 m_Context = context;
-                m_BufferSize = bufferSize;
+                m_Options = options;
 
-                m_OwnsTextWriter = (options & DataEncodingOptions.NoOwnership) == 0;
+                m_BufferSize = bufferSize;
             }
 
             protected override void Dispose(bool disposing)
@@ -184,7 +195,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 {
                     FlushFinalBlock();
 
-                    if (m_OwnsTextWriter)
+                    if ((m_Options & DataEncodingOptions.NoOwnership) == 0)
                         m_TextWriter.Dispose();
                 }
             }
@@ -194,18 +205,20 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 await FlushFinalBlockAsync().ConfigureAwait(false);
 
-                if (m_OwnsTextWriter)
+                if ((m_Options & DataEncodingOptions.NoOwnership) == 0)
                     await m_TextWriter.DisposeAsync().ConfigureAwait(false);
             }
 #endif
 
+            readonly TextDataEncoding m_Encoding;
             readonly TextWriter m_TextWriter;
             readonly IEncoderContext m_Context;
-            readonly bool m_OwnsTextWriter;
+            readonly DataEncodingOptions m_Options;
 
+            readonly int m_BufferSize;
             StringBuilder m_Buffer;
             StringWriter m_BufferWriter;
-            readonly int m_BufferSize;
+            int m_BufferCapacityByteCount;
 
             public override bool CanRead => false;
 
@@ -250,8 +263,27 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 foreach (var chunk in SplitMemoryIntoChunks(buffer, m_BufferSize))
                 {
+                    EnsureBufferByteCapacity(chunk.Length);
+
+#if DEBUG
+                    int capacity = m_Buffer.Capacity;
+#endif
                     m_Context.Encode(chunk.Span, m_BufferWriter);
+#if DEBUG
+                    Debug.Assert(m_Buffer.Length <= capacity, "Invalid buffer capacity.");
+#endif
+
                     await FlushBufferAsync(cancellationToken).ConfigureAwait(false);
+                }
+            }
+
+            void EnsureBufferByteCapacity(int byteCount)
+            {
+                if (byteCount > m_BufferCapacityByteCount)
+                {
+                    int capacity = m_Encoding.GetMaxCharCount(byteCount + m_Encoding.BlockByteCount, m_Options);
+                    m_Buffer.EnsureCapacity(capacity);
+                    m_BufferCapacityByteCount = byteCount;
                 }
             }
 
@@ -347,19 +379,18 @@ namespace Gapotchenko.FX.Data.Encoding
         sealed class DecoderStream : Stream
         {
             public DecoderStream(
+                TextDataEncoding encoding,
                 TextReader textReader,
                 IDecoderContext context,
                 DataEncodingOptions options,
-                int bufferSize,
-                float efficiency)
+                int bufferSize)
             {
+                m_Encoding = encoding;
                 m_TextReader = textReader;
                 m_Context = context;
-                m_Efficiency = efficiency;
+                m_Options = options;
+
                 m_BufferSize = bufferSize;
-
-                m_OwnsTextReader = (options & DataEncodingOptions.NoOwnership) == 0;
-
                 m_Buffer = new MemoryStream();
             }
 
@@ -367,15 +398,15 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 if (disposing)
                 {
-                    if (m_OwnsTextReader)
+                    if ((m_Options & DataEncodingOptions.NoOwnership) == 0)
                         m_TextReader.Dispose();
                 }
             }
 
+            readonly TextDataEncoding m_Encoding;
             readonly TextReader m_TextReader;
             readonly IDecoderContext m_Context;
-            readonly float m_Efficiency;
-            readonly bool m_OwnsTextReader;
+            readonly DataEncodingOptions m_Options;
 
             readonly int m_BufferSize;
             MemoryStream m_Buffer;
@@ -506,6 +537,11 @@ namespace Gapotchenko.FX.Data.Encoding
             {
             }
 
+            int GetMaxCharCount(int byteCount) =>
+                m_Encoding.GetMaxCharCount(
+                    byteCount,
+                    (m_Options & ~DataEncodingOptions.Unpad) | DataEncodingOptions.Padding | DataEncodingOptions.Wrap | DataEncodingOptions.Indent);
+
             void FillBuffer(int count)
             {
                 count = Math.Min(count, m_BufferSize);
@@ -514,10 +550,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 while (m_Buffer.Length < count)
                 {
                     int byteCountToRead = count - (int)m_Buffer.Length;
-
-                    int charCountToRead = Math.Min(
-                        checked((int)Math.Ceiling(byteCountToRead / m_Efficiency * 1.1f)),
-                        text.Length);
+                    int charCountToRead = Math.Min(GetMaxCharCount(byteCountToRead), text.Length);
 
                     int r = m_TextReader.ReadBlock(text, 0, charCountToRead);
                     if (r == 0)
@@ -541,10 +574,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 while (m_Buffer.Length < count)
                 {
                     int byteCountToRead = count - (int)m_Buffer.Length;
-
-                    int charCountToRead = Math.Min(
-                        checked((int)Math.Ceiling(byteCountToRead / m_Efficiency * 1.1f)),
-                        text.Length);
+                    int charCountToRead = Math.Min(GetMaxCharCount(byteCountToRead), text.Length);
 
                     int r;
 #if TFF_TEXT_IO_CANCELLATION
@@ -673,6 +703,14 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns>The maximum number of bytes produced by decoding the specified number of characters.</returns>
         protected abstract int GetMaxByteCountCore(int charCount, DataEncodingOptions options);
+
+        /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public int BlockByteCount { get; }
+
+        /// <inheritdoc/>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public int BlockCharCount { get; }
 
         #region Implementation Helpers
 

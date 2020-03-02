@@ -91,7 +91,7 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 throw new ArgumentException(
                     string.Format(
-                        "'{0}' and '{1}' options cannot be specified simultaneously.",
+                        "'{0}' and '{1}' options cannot be used simultaneously.",
                         nameof(DataEncodingOptions.Padding),
                         nameof(DataEncodingOptions.Unpad)),
                     nameof(options));

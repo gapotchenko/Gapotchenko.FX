@@ -7,6 +7,14 @@ namespace Gapotchenko.FX.Data.Encoding
     /// </summary>
     public sealed class HenkeBase91 : TextDataEncoding, IBase91
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="HenkeBase91"/> class.
+        /// </summary>
+        public HenkeBase91() :
+            base(1, 1)
+        {
+        }
+
         /// <inheritdoc/>
         public int Radix => 91;
 
