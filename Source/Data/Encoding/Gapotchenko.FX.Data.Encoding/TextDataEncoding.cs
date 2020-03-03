@@ -163,7 +163,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             if ((options & DataEncodingOptions.Unpad) == 0)
             {
-                // Encode with a padding unless it is explicitly disabled.
+                // Encode stream with a padding unless it is explicitly disabled.
                 options |= DataEncodingOptions.Padding;
             }
 
