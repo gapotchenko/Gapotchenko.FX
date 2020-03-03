@@ -138,9 +138,9 @@ namespace Gapotchenko.FX.Data.Encoding
                 var alphabet = m_Alphabet;
                 int i = 0;
 
-                float writtenBitCount = 0;
+                float writtenBitCount = BitsPerSymbol;
 
-                uint a = m_Bits;
+                uint a = m_Bits & (uint)((1 << bitCount) - 1);
                 while (i < SymbolsPerEncodedBlock)
                 {
                     var si = (int)(a % Base);
@@ -297,32 +297,21 @@ namespace Gapotchenko.FX.Data.Encoding
                 }
             }
 
-            /// <summary>
-            /// Mathematical shift to the right.
-            /// Shifts the specified value to the right when <paramref name="n"/> is positive or to the left when <paramref name="n"/> is negative.
-            /// </summary>
-            /// <param name="x">The value.</param>
-            /// <param name="n">The number of bits to shift.</param>
-            /// <returns>The shifted value.</returns>
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static uint ShiftRight(uint x, int n) => n >= 0 ? x >> n : x << -n;
-
             void ReadBits(Stream output, float bitCount)
             {
                 int i = 0; // output byte index
                 float s = bitCount; // shift accumulator
 
-                for (; ; )
+                var a = m_Bits;
+                do
                 {
+                    m_Buffer[i++] = (byte)a;
+                    a >>= 8;
                     s -= 8;
-                    int shift = (int)s;
-
-                    byte b = (byte)ShiftRight(m_Bits, shift);
-                    m_Buffer[i++] = b;
-
-                    if (shift <= 0)
-                        break;
                 }
+                while (s >= BitsPerSymbol);
+
+                Array.Reverse(m_Buffer, 0, i);
 
                 output.Write(m_Buffer, 0, i);
             }

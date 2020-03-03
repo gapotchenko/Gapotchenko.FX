@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Data.Encoding.Test
 {
@@ -10,10 +11,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
     [TestClass]
     public class KuonBase24Tests
     {
-        static void TestVector(byte[] raw, string encoded)
+        static void TestVector(ReadOnlySpan<byte> raw, string encoded)
         {
-            // -----------------------------------------------------------------
-
             string actualEncoded = KuonBase24.GetString(raw);
             Assert.AreEqual(encoded, actualEncoded);
 
@@ -33,6 +32,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         }
 
         static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);
+
+        static void RoundTrip(ReadOnlySpan<byte> raw) => TextDataEncodingTestBench.RoundTrip(KuonBase24.Instance, raw);
 
         [TestMethod]
         public void KuonBase24_Empty() => TestVector("", "");
@@ -168,5 +169,44 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         public void KuonBase24_TV44() => TestVector(Base16.GetBytes("80000000"), "53PP634");
+
+        [TestMethod]
+        public void KuonBase24_RT1() => RoundTrip(Base16.GetBytes("00"));
+
+        [TestMethod]
+        public void KuonBase24_RT2() => RoundTrip(Base16.GetBytes("01"));
+
+        [TestMethod]
+        public void KuonBase24_RT3() => RoundTrip(Base16.GetBytes("FF"));
+
+        [TestMethod]
+        public void KuonBase24_RT4() => RoundTrip(Base16.GetBytes("FF 00"));
+
+        [TestMethod]
+        public void KuonBase24_RT5() => RoundTrip(Base16.GetBytes("01 02"));
+
+        [TestMethod]
+        public void KuonBase24_RT6() => RoundTrip(Base16.GetBytes("01 02 03"));
+
+        [TestMethod]
+        public void KuonBase24_RT7() => RoundTrip(Base16.GetBytes("00 90 60"));
+
+        [TestMethod]
+        public void KuonBase24_RT8() => RoundTrip(Base16.GetBytes("82 4A 13 E8 38"));
+
+        [TestMethod]
+        public void KuonBase24_RT_Random()
+        {
+            var buffer = new byte[16];
+
+            for (int i = 0; i < 100000; ++i)
+            {
+                int n = RandomNumberGenerator.GetInt32(buffer.Length + 1);
+                var span = buffer.AsSpan(0, n);
+
+                RandomNumberGenerator.Fill(span);
+                RoundTrip(span);
+            }
+        }
     }
 }
