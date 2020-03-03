@@ -160,6 +160,13 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             if (textWriter == null)
                 throw new ArgumentNullException(nameof(textWriter));
+
+            if ((options & DataEncodingOptions.Unpad) == 0)
+            {
+                // Encode with a padding unless it is explicitly disabled.
+                options |= DataEncodingOptions.Padding;
+            }
+
             options = ValidateOptions(options);
 
             var context = CreateEncoderContext(options);
