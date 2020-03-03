@@ -1,5 +1,5 @@
 ﻿using Gapotchenko.FX.Data.Encoding.Test;
-using Gapotchenko.FX.Data.Encoding.Test.Framework;
+using Gapotchenko.FX.Data.Encoding.Test.Bench;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;

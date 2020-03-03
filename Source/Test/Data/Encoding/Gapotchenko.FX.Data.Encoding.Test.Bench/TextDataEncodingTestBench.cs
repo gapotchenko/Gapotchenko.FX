@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Gapotchenko.FX.Data.Encoding.Test.Framework
+namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 {
     using Encoding = System.Text.Encoding;
 

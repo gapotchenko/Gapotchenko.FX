@@ -218,18 +218,13 @@ namespace Gapotchenko.FX.Data.Encoding
                     {
                         m_Modulus = 0;
 
-                        uint value =
-                            (uint)(((byte)m_Bits << 24) |
-                            ((byte)(m_Bits >> 8) << 16) |
-                            ((byte)(m_Bits >> 16) << 8) |
-                            (byte)(m_Bits >> 24));
-
+                        uint a = m_Bits;
                         for (int i = 0; i < SymbolsPerEncodedBlock; ++i)
                         {
-                            var si = (int)(value % Base);
-                            value /= Base;
+                            var si = (int)(a % Base);
+                            a /= Base;
 
-                            m_Buffer[i] = alphabet[si];
+                            m_Buffer[SymbolsPerEncodedBlock - 1 - i] = alphabet[si];
                         }
 
                         EmitLineBreak(output);
@@ -290,7 +285,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     ValidatePaddingState();
 
                     // Accumulate data bits.
-                    m_Bits += (uint)((byte)b * Base);
+                    m_Bits = m_Bits * Base + (byte)b;
 
                     if (++m_Modulus == SymbolsPerEncodedBlock)
                     {
