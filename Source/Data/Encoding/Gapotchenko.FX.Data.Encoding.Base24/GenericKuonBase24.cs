@@ -128,6 +128,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if (m_LinePosition >= LineWidth)
                 {
                     m_LinePosition = 0;
+
                     if ((m_Options & FormatMask) != 0)
                         output.WriteLine();
                 }
@@ -189,9 +190,11 @@ namespace Gapotchenko.FX.Data.Encoding
                         case 1:
                             WriteBits(output, 1 * 8);
                             break;
+
                         case 2:
                             WriteBits(output, 2 * 8);
                             break;
+
                         case 3:
                             WriteBits(output, 3 * 8);
                             break;
@@ -213,12 +216,12 @@ namespace Gapotchenko.FX.Data.Encoding
                         m_Modulus = 0;
 
                         uint a = m_Bits;
-                        for (int i = 0; i < SymbolsPerEncodedBlock; ++i)
+                        for (int i = SymbolsPerEncodedBlock - 1; i >= 0; --i)
                         {
                             var si = (int)(a % Base);
                             a /= Base;
 
-                            m_Buffer[SymbolsPerEncodedBlock - 1 - i] = alphabet[si];
+                            m_Buffer[i] = alphabet[si];
                         }
 
                         EmitLineBreak(output);
