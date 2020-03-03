@@ -1,8 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 {
@@ -149,6 +147,13 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
                     Assert.IsTrue(actualEfficiencyFloor >= dataEncoding.MinEfficiency, "Min encoding efficiency violated.");
                 }
             }
+        }
+
+        public static void RoundTrip(ITextDataEncoding dataEncoding, byte[] data)
+        {
+            // TODO
+
+            throw new NotImplementedException();
         }
     }
 }

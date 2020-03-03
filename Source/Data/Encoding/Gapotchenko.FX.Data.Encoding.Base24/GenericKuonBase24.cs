@@ -135,35 +135,29 @@ namespace Gapotchenko.FX.Data.Encoding
 
             void WriteBits(TextWriter output, int bitCount)
             {
-                uint value = 0;
-
-                int s = bitCount;
-                do
-                {
-                    s -= 8;
-                    value |= (m_Bits >> (24 - s)) << s;
-                }
-                while (s > 0);
-
                 var alphabet = m_Alphabet;
                 int i = 0;
 
                 float writtenBitCount = 0;
+
+                uint a = m_Bits;
                 while (i < SymbolsPerEncodedBlock)
                 {
-                    var si = (int)(value % Base);
-                    value /= Base;
+                    var si = (int)(a % Base);
+                    a /= Base;
 
                     m_Buffer[i++] = alphabet[si];
                     writtenBitCount += BitsPerSymbol;
 
-                    if (value == 0 && writtenBitCount >= bitCount)
+                    if (a == 0 && writtenBitCount >= bitCount)
                     {
                         // All bits of information are written.
                         // It is necessary to stop now in order to preserve the original message length upon decoding.
                         break;
                     }
                 }
+
+                Array.Reverse(m_Buffer, 0, i);
 
                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
                 {
@@ -317,17 +311,20 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 int i = 0; // output byte index
                 float s = bitCount; // shift accumulator
-                var li = 1; // last output byte index
 
-                do
+                for (; ; )
                 {
                     s -= 8;
-                    byte b = (byte)ShiftRight(m_Bits, (int)s);
-                    m_Buffer[i++] = b;
-                }
-                while (s > 0);
+                    int shift = (int)s;
 
-                output.Write(m_Buffer, 0, li);
+                    byte b = (byte)ShiftRight(m_Bits, shift);
+                    m_Buffer[i++] = b;
+
+                    if (shift <= 0)
+                        break;
+                }
+
+                output.Write(m_Buffer, 0, i);
             }
 
             void FlushDecode(Stream output)
