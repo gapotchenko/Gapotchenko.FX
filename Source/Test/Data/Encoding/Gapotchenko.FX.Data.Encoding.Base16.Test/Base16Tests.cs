@@ -30,7 +30,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             // -----------------------------------------------------------------
 
-            TextDataEncodingTestServices.TestVector(instance, raw, encoded);
+            TextDataEncodingTestBench.TestVector(instance, raw, encoded);
         }
 
         [TestMethod]
