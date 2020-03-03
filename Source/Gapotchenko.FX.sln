@@ -148,6 +148,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encodin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Encoding.Base24.Test", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base24.Test\Gapotchenko.FX.Data.Encoding.Base24.Test.csproj", "{85549320-1841-4629-8684-A565862841CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Encoding.Base58", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base58\Gapotchenko.FX.Data.Encoding.Base58.csproj", "{62D6B37C-C7CE-419D-A94C-65810C171744}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -318,6 +320,10 @@ Global
 		{85549320-1841-4629-8684-A565862841CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85549320-1841-4629-8684-A565862841CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85549320-1841-4629-8684-A565862841CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62D6B37C-C7CE-419D-A94C-65810C171744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62D6B37C-C7CE-419D-A94C-65810C171744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62D6B37C-C7CE-419D-A94C-65810C171744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62D6B37C-C7CE-419D-A94C-65810C171744}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -374,6 +380,7 @@ Global
 		{D862A0D3-0894-45F6-8242-1E888103F6CC} = {DE529E09-D427-41CF-887B-79979CF071C6}
 		{B105686D-CA0C-4B6C-8FDB-A7B70D857D02} = {3FEEE50B-7D21-48C8-9DB2-C410DB674EB5}
 		{85549320-1841-4629-8684-A565862841CD} = {DE529E09-D427-41CF-887B-79979CF071C6}
+		{62D6B37C-C7CE-419D-A94C-65810C171744} = {3FEEE50B-7D21-48C8-9DB2-C410DB674EB5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}
