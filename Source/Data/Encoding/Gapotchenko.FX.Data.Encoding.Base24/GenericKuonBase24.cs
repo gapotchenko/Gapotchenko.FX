@@ -27,6 +27,11 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
+        /// The encoding alphabet.
+        /// </summary>
+        protected readonly TextDataEncodingAlphabet Alphabet;
+
+        /// <summary>
         /// Validates alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
@@ -40,10 +45,17 @@ namespace Gapotchenko.FX.Data.Encoding
             }
         }
 
-        /// <summary>
-        /// The encoding alphabet.
-        /// </summary>
-        protected readonly TextDataEncodingAlphabet Alphabet;
+        /// <inheritdoc/>
+        protected override DataEncodingOptions ValidateOptions(DataEncodingOptions options)
+        {
+            if ((options & DataEncodingOptions.Padding) == 0)
+            {
+                // Produce unpadded strings unless padding is explicitly requested.
+                options |= DataEncodingOptions.Unpad;
+            }
+
+            return base.ValidateOptions(options);
+        }
 
         #region Parameters
 
