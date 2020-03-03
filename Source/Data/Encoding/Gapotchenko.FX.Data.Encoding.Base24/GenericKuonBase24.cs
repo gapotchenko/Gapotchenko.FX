@@ -81,7 +81,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
 
-        const int LineWidth = 77;
+        const int LineWidth = SymbolsPerEncodedBlock * 11;
 
         /// <summary>
         /// Kuon Base24 encoding treats wrapping and indentation interchangeably.
@@ -297,6 +297,8 @@ namespace Gapotchenko.FX.Data.Encoding
                         m_Buffer[3] = (byte)m_Bits;
 
                         output.Write(m_Buffer, 0, BytesPerDecodedBlock);
+
+                        m_Bits = 0;
                     }
                 }
             }
