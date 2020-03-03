@@ -90,6 +90,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <summary>
         /// Mathematical shift to the right.
+        /// Shifts the specified value to the right when <paramref name="n"/> is positive or to the left when <paramref name="n"/> is negative.
         /// </summary>
         /// <param name="x">The value.</param>
         /// <param name="n">The number of bits to shift.</param>
