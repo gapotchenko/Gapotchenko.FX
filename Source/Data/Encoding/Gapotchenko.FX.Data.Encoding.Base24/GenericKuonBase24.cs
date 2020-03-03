@@ -139,7 +139,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 var alphabet = m_Alphabet;
                 int i = 0;
 
-                float writtenBitCount = BitsPerSymbol;
+                float writtenBitCount = 0;
 
                 uint a = m_Bits & (uint)((1 << bitCount) - 1);
                 while (i < SymbolsPerEncodedBlock)
