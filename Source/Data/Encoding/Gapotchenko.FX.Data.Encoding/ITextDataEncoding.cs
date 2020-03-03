@@ -75,13 +75,6 @@ namespace Gapotchenko.FX.Data.Encoding
         ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s);
 
         /// <summary>
-        /// Gets a value indicating whether the specified encoded string is padded.
-        /// </summary>
-        /// <param name="s">The encoded string.</param>
-        /// <returns><c>true</c> when specified encoded string is padded; otherwise, <c>false</c>.</returns>
-        bool IsPadded(ReadOnlySpan<char> s);
-
-        /// <summary>
         /// Canonicalizes the encoded string.
         /// Canonicalization substitutes the encoded symbols with their canonical forms.
         /// Unrecognized and whitespace symbols are left intact.

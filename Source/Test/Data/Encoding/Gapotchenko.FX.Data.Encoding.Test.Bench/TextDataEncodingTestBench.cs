@@ -90,7 +90,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 
             if (padded)
                 Assert.AreEqual(actualEncoded, actualEncodedRepadded);
-            Assert.IsTrue(dataEncoding.IsPadded(actualEncodedRepadded.AsSpan()));
+            Assert.IsTrue(actualEncodedRepadded.Length % dataEncoding.Padding == 0);
 
             if (dataEncoding.Padding == 1)
             {

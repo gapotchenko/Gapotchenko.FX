@@ -636,9 +636,6 @@ namespace Gapotchenko.FX.Data.Encoding
         protected virtual ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => s;
 
         /// <inheritdoc/>
-        public bool IsPadded(ReadOnlySpan<char> s) => s.Length % Padding == 0;
-
-        /// <inheritdoc/>
         public string Canonicalize(ReadOnlySpan<char> s)
         {
             if (s == null)
