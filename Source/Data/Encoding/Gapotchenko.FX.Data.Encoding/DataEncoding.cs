@@ -40,6 +40,27 @@ namespace Gapotchenko.FX.Data.Encoding
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         protected virtual float MinEfficiencyCore => EfficiencyCore;
 
+        /// <summary>
+        /// Validates the encoding options and returns effective options to use.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <returns>The effective encoding options to use.</returns>
+        protected virtual DataEncodingOptions ValidateOptions(DataEncodingOptions options)
+        {
+            const DataEncodingOptions PaddingConflictMask = DataEncodingOptions.Padding | DataEncodingOptions.Unpad;
+            if ((options & PaddingConflictMask) == PaddingConflictMask)
+            {
+                throw new ArgumentException(
+                    string.Format(
+                        "'{0}' and '{1}' options cannot be used simultaneously.",
+                        nameof(DataEncodingOptions.Padding),
+                        nameof(DataEncodingOptions.Unpad)),
+                    nameof(options));
+            }
+
+            return options;
+        }
+
         /// <inheritdoc/>
         public byte[] EncodeData(ReadOnlySpan<byte> data) => EncodeData(data, DataEncodingOptions.None);
 
@@ -76,26 +97,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <returns>The decoded output data.</returns>
         protected abstract byte[] DecodeDataCore(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
-        /// <summary>
-        /// Validates the encoding options and returns effective options to use.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        /// <returns>The effective encoding options to use.</returns>
-        protected virtual DataEncodingOptions ValidateOptions(DataEncodingOptions options)
-        {
-            const DataEncodingOptions PaddingConflictMask = DataEncodingOptions.Padding | DataEncodingOptions.Unpad;
-            if ((options & PaddingConflictMask) == PaddingConflictMask)
-            {
-                throw new ArgumentException(
-                    string.Format(
-                        "'{0}' and '{1}' options cannot be used simultaneously.",
-                        nameof(DataEncodingOptions.Padding),
-                        nameof(DataEncodingOptions.Unpad)),
-                    nameof(options));
-            }
-
-            return options;
-        }
+        /// <inheritdoc/>
+        public virtual bool CanStream => true;
 
         /// <inheritdoc/>
         public abstract Stream CreateEncoder(Stream outputStream, DataEncodingOptions options = DataEncodingOptions.None);
@@ -110,5 +113,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Gets the number of symbols used for padding of an encoded data representation.
         /// </summary>
         protected virtual int PaddingCore => 1;
+
+        /// <inheritdoc/>
+        public bool CanPad => Padding > 1;
     }
 }

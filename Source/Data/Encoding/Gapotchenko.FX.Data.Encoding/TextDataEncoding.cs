@@ -17,14 +17,10 @@ namespace Gapotchenko.FX.Data.Encoding
     public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="TextDataEncoding"/> class with specified parameters.
+        /// Initializes a new instance of <see cref="TextDataEncoding"/> class.
         /// </summary>
-        /// <param name="blockByteCount">The number of bytes in a block.</param>
-        /// <param name="blockCharCount">The number of characters in a block.</param>
-        protected TextDataEncoding(int blockByteCount, int blockCharCount)
+        protected TextDataEncoding()
         {
-            BlockByteCount = blockByteCount;
-            BlockCharCount = blockCharCount;
         }
 
         /// <inheritdoc/>
@@ -288,7 +284,7 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 if (byteCount > m_BufferCapacityByteCount)
                 {
-                    int capacity = m_Encoding.GetMaxCharCount(byteCount + m_Encoding.BlockByteCount, m_Options);
+                    int capacity = m_Encoding.GetMaxCharCount(byteCount, m_Options) + m_Encoding.Padding;
                     m_Buffer.EnsureCapacity(capacity);
                     m_BufferCapacityByteCount = byteCount;
                 }
@@ -699,14 +695,6 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns>The maximum number of bytes produced by decoding the specified number of characters.</returns>
         protected abstract int GetMaxByteCountCore(int charCount, DataEncodingOptions options);
-
-        /// <inheritdoc/>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public int BlockByteCount { get; }
-
-        /// <inheritdoc/>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public int BlockCharCount { get; }
 
         #region Implementation Helpers
 

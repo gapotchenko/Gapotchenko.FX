@@ -16,7 +16,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
         protected GenericBase32(TextDataEncodingAlphabet alphabet) :
-            base(BytesPerDecodedBlock, SymbolsPerEncodedBlock)
+            base()
         {
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));

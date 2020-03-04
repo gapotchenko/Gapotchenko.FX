@@ -63,6 +63,11 @@ namespace Gapotchenko.FX.Data.Encoding
         byte[] DecodeData(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <summary>
+        /// Gets a value indicating whether the current encoding supports streaming.
+        /// </summary>
+        bool CanStream { get; }
+
+        /// <summary>
         /// Creates a streaming encoder.
         /// </summary>
         /// <param name="outputStream">The output stream of an encoder.</param>
@@ -77,6 +82,11 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns>The stream.</returns>
         Stream CreateDecoder(Stream inputStream, DataEncodingOptions options = DataEncodingOptions.None);
+
+        /// <summary>
+        /// Gets a value indicating whether the current encoding supports padding.
+        /// </summary>
+        bool CanPad { get; }
 
         /// <summary>
         /// Gets the number of symbols for padding of an encoded data representation.
