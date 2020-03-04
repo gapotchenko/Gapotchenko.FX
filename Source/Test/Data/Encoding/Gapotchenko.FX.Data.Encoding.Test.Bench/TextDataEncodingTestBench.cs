@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 {
@@ -149,11 +150,11 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             }
         }
 
-        public static void RoundTrip(ITextDataEncoding dataEncoding, ReadOnlySpan<byte> raw, DataEncodingOptions options = default)
+        public static void RoundTrip(ITextDataEncoding encoding, ReadOnlySpan<byte> raw, DataEncodingOptions options = default)
         {
-            string actualEncoded = dataEncoding.GetString(raw, options);
+            string actualEncoded = encoding.GetString(raw, options);
 
-            var actualDecoded = dataEncoding.GetBytes(actualEncoded.AsSpan(), options);
+            var actualDecoded = encoding.GetBytes(actualEncoded.AsSpan(), options);
 
             if (!raw.SequenceEqual(actualDecoded))
             {
@@ -161,6 +162,20 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
                     "Encoding round trip error for data block {0}. Actual decoded data are {1}.",
                     Base16.GetString(raw, DataEncodingOptions.Indent),
                     Base16.GetString(actualDecoded, DataEncodingOptions.Indent));
+            }
+        }
+
+        public static void RandomRoundTrip(ITextDataEncoding encoding, int maxByteCount, int iterations, DataEncodingOptions options = default)
+        {
+            var buffer = new byte[maxByteCount];
+
+            for (int i = 0; i < iterations; ++i)
+            {
+                int n = RandomNumberGenerator.GetInt32(buffer.Length + 1);
+                var span = buffer.AsSpan(0, n);
+
+                RandomNumberGenerator.Fill(span);
+                RoundTrip(encoding, span, options);
             }
         }
     }

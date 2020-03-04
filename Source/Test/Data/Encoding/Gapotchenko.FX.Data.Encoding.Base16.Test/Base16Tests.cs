@@ -54,5 +54,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         public void Base16_Rfc4648_TV7() => TestVector("foobar", "666F6F626172");
+
+        [TestMethod]
+        public void Base16_RT_Random() => TextDataEncodingTestBench.RandomRoundTrip(Base16.Instance, 16, 100000);
     }
 }

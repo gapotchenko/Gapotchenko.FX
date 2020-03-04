@@ -194,19 +194,9 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void KuonBase24_RT8() => RoundTrip(Base16.GetBytes("82 4A 13 E8 38"));
 
-        [TestMethod]
-        public void KuonBase24_RT_Random()
-        {
-            var buffer = new byte[16];
-
-            for (int i = 0; i < 100000; ++i)
-            {
-                int n = RandomNumberGenerator.GetInt32(buffer.Length + 1);
-                var span = buffer.AsSpan(0, n);
-
-                RandomNumberGenerator.Fill(span);
-                RoundTrip(span);
-            }
-        }
+        [DataTestMethod]
+        [DataRow(DataEncodingOptions.None)]
+        [DataRow(DataEncodingOptions.Padding)]
+        public void KuonBase24_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(KuonBase24.Instance, 16, 100000, options);
     }
 }

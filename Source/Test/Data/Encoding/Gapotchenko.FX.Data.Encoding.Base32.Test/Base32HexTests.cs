@@ -55,5 +55,11 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         public void Base32Hex_Rfc4648_TV7() => TestVector("foobar", "CPNMUOJ1E8======");
+
+        [TestMethod]
+        public void Base32Hex_RT_Random() => TextDataEncodingTestBench.RandomRoundTrip(Base32Hex.Instance, 16, 100000);
+
+        [TestMethod]
+        public void Base32Hex_RT_RandomWithoutPadding() => TextDataEncodingTestBench.RandomRoundTrip(Base32Hex.Instance, 16, 100000, DataEncodingOptions.Unpad);
     }
 }

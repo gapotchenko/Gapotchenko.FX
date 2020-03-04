@@ -114,5 +114,11 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         public void ZBase32_Strings_TV2() => TestVector("\x0001binary!!!1\x0000", "yftg15ubqjh1nejbgryy");
+
+        [DataTestMethod]
+        [DataRow(DataEncodingOptions.None)]
+        //[DataRow(DataEncodingOptions.Compress)] // TODO
+        [DataRow(DataEncodingOptions.Padding)]
+        public void ZBase32_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(ZBase32.Instance, 16, 100000, options);
     }
 }
