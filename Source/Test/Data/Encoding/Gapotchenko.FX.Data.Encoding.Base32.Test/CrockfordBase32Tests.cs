@@ -24,7 +24,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             var instance = CrockfordBase32.Instance;
             Assert.AreEqual(CrockfordBase32.Efficiency, instance.Efficiency);
 
-            TextDataEncodingTestBench.TestVector(instance, raw, encoded, options: options);
+            TextDataEncodingTestBench.TestVector(instance, raw, encoded, options);
         }
 
         static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);

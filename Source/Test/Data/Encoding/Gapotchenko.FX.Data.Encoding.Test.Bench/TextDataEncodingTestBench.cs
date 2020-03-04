@@ -13,8 +13,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             ITextDataEncoding dataEncoding,
             string raw,
             string encoded,
-            Encoding textEncoding = null,
-            DataEncodingOptions options = DataEncodingOptions.None)
+            DataEncodingOptions options = DataEncodingOptions.None,
+            Encoding textEncoding = null)
         {
             if (dataEncoding == null)
                 throw new ArgumentNullException(nameof(dataEncoding));
@@ -38,15 +38,15 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 
             // -----------------------------------------------------------------
 
-            TestVector(dataEncoding, rawBytes, encoded, textEncoding, options);
+            TestVector(dataEncoding, rawBytes, encoded, options, textEncoding);
         }
 
         public static void TestVector(
             ITextDataEncoding dataEncoding,
             ReadOnlySpan<byte> raw,
             string encoded,
-            Encoding textEncoding = null,
-            DataEncodingOptions options = DataEncodingOptions.None)
+            DataEncodingOptions options = DataEncodingOptions.None,
+            Encoding textEncoding = null)
         {
             if (dataEncoding == null)
                 throw new ArgumentNullException(nameof(dataEncoding));
