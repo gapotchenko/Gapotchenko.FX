@@ -59,13 +59,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     nameof(options));
             }
 
-            if (PaddingCore == 1)
-            {
-                options =
-                    options & ~DataEncodingOptions.Padding |
-                    DataEncodingOptions.Unpad;
-            }
-            else if ((options & DataEncodingOptions.Padding) == 0)
+            if ((options & DataEncodingOptions.Padding) == 0)
             {
                 // Produce unpadded strings unless padding is explicitly requested.
                 options |= DataEncodingOptions.Unpad;
@@ -74,10 +68,31 @@ namespace Gapotchenko.FX.Data.Encoding
             return base.ValidateOptions(options);
         }
 
-        static string GetZeroString(DataEncodingOptions options) =>
-            (options & DataEncodingOptions.Checksum) != 0 ?
-                "00" :
-                "0";
+        string Epilogue(string s, DataEncodingOptions options)
+        {
+            if ((options & DataEncodingOptions.Unpad) == 0)
+                s = Pad(s.AsSpan());
+            return s;
+        }
+
+        StringBuilder Epilogue(StringBuilder sb, DataEncodingOptions options)
+        {
+            if ((options & DataEncodingOptions.Unpad) == 0)
+            {
+                int padding = Padding;
+                while (sb.Length % padding != 0)
+                    sb.Append(PaddingChar);
+            }
+
+            return sb;
+        }
+
+        string GetZeroString(DataEncodingOptions options) =>
+            Epilogue(
+                (options & DataEncodingOptions.Checksum) != 0 ?
+                    "00" :
+                    "0",
+                options);
 
         /// <inheritdoc/>
         public string GetString(int value) => GetString(value, DataEncodingOptions.None);
@@ -85,7 +100,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(int value, DataEncodingOptions options)
         {
-            ValidateOptions(options);
+            options = ValidateOptions(options);
 
             if (value == 0)
                 return GetZeroString(options);
@@ -126,7 +141,7 @@ namespace Gapotchenko.FX.Data.Encoding
             if ((options & DataEncodingOptions.Checksum) != 0)
                 sb.Append(alphabet[(int)((uint)value % ChecksumAlphabetSize)]);
 
-            return sb.ToString();
+            return Epilogue(sb, options).ToString();
         }
 
         const char Separator = '-';
@@ -158,7 +173,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             value = 0;
 
-            ValidateOptions(options);
+            options = ValidateOptions(options);
 
             if (s.IsEmpty)
                 return false;
@@ -249,7 +264,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(long value, DataEncodingOptions options)
         {
-            ValidateOptions(options);
+            options = ValidateOptions(options);
 
             if (value == 0)
                 return GetZeroString(options);
@@ -290,7 +305,7 @@ namespace Gapotchenko.FX.Data.Encoding
             if ((options & DataEncodingOptions.Checksum) != 0)
                 sb.Append(alphabet[(int)((ulong)value % ChecksumAlphabetSize)]);
 
-            return sb.ToString();
+            return Epilogue(sb, options).ToString();
         }
 
         /// <inheritdoc/>
@@ -316,7 +331,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             value = 0;
 
-            ValidateOptions(options);
+            options = ValidateOptions(options);
 
             if (s.IsEmpty)
                 return false;
@@ -407,7 +422,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(BigInteger value, DataEncodingOptions options)
         {
-            ValidateOptions(options);
+            options = ValidateOptions(options);
 
             if (value.IsZero)
                 return GetZeroString(options);
@@ -459,7 +474,7 @@ namespace Gapotchenko.FX.Data.Encoding
             if ((options & DataEncodingOptions.Checksum) != 0)
                 sb.Append(alphabet[(int)(value % ChecksumAlphabetSize)]);
 
-            return sb.ToString();
+            return Epilogue(sb, options).ToString();
         }
 
         /// <inheritdoc/>
@@ -485,7 +500,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             value = 0;
 
-            ValidateOptions(options);
+            options = ValidateOptions(options);
 
             if (s.IsEmpty)
                 return false;
@@ -589,8 +604,5 @@ namespace Gapotchenko.FX.Data.Encoding
                 Separator = Separator
             };
         }
-
-        /// <inheritdoc/>
-        protected override int PaddingCore => 1;
     }
 }
