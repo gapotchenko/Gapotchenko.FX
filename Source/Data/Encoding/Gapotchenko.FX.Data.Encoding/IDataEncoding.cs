@@ -92,5 +92,10 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Gets the number of symbols for padding of an encoded data representation.
         /// </summary>
         int Padding { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the current encoding prefers to produce the padded output.
+        /// </summary>
+        bool PrefersPadding { get; }
     }
 }

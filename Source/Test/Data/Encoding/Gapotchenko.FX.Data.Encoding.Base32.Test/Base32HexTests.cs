@@ -26,8 +26,9 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             var instance = Base32Hex.Instance;
 
-            Assert.AreEqual(Base32Hex.Padding, instance.Padding);
             Assert.AreEqual(Base32Hex.Efficiency, instance.Efficiency);
+            Assert.AreEqual(Base32Hex.Padding, instance.Padding);
+            Assert.IsTrue(instance.PrefersPadding);
 
             // -----------------------------------------------------------------
 

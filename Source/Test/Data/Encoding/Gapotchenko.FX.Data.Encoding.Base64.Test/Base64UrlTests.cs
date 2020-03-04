@@ -29,11 +29,12 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             var instance = Base64Url.Instance;
 
             Assert.AreEqual(Base64Url.Efficiency, instance.Efficiency);
+            Assert.IsFalse(instance.PrefersPadding);
             Assert.IsFalse(actualEncoded.EndsWith('='));
 
             // -----------------------------------------------------------------
 
-            TextDataEncodingTestBench.TestVector(instance, raw, encoded, padded: false);
+            TextDataEncodingTestBench.TestVector(instance, raw, encoded);
         }
 
         [TestMethod]

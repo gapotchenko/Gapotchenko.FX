@@ -619,6 +619,11 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
+        public override bool PrefersPadding =>
+            CanPad &&
+            (ValidateOptions(DataEncodingOptions.None) & DataEncodingOptions.Unpad) == 0;
+
+        /// <inheritdoc/>
         public string Pad(ReadOnlySpan<char> s) => s == null ? null : PadCore(s);
 
         /// <summary>

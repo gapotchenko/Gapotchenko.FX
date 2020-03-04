@@ -28,6 +28,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             Assert.AreEqual(Base64.Efficiency, instance.Efficiency);
             Assert.AreEqual(Base64.Padding, instance.Padding);
+            Assert.IsTrue(instance.PrefersPadding);
 
             // -----------------------------------------------------------------
 

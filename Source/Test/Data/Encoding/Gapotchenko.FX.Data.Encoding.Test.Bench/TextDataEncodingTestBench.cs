@@ -12,7 +12,6 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             ITextDataEncoding dataEncoding,
             string raw,
             string encoded,
-            bool padded = true,
             Encoding textEncoding = null,
             DataEncodingOptions options = DataEncodingOptions.None)
         {
@@ -38,14 +37,13 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 
             // -----------------------------------------------------------------
 
-            TestVector(dataEncoding, rawBytes, encoded, padded, textEncoding, options);
+            TestVector(dataEncoding, rawBytes, encoded, textEncoding, options);
         }
 
         public static void TestVector(
             ITextDataEncoding dataEncoding,
             ReadOnlySpan<byte> raw,
             string encoded,
-            bool padded = true,
             Encoding textEncoding = null,
             DataEncodingOptions options = DataEncodingOptions.None)
         {
@@ -86,7 +84,9 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             var actualEncodedUnpadded = dataEncoding.Unpad(actualEncoded.AsSpan()).ToString();
             string actualEncodedRepadded = dataEncoding.Pad(actualEncodedUnpadded.AsSpan());
 
-            if (padded)
+            bool prefersPadding = dataEncoding.PrefersPadding;
+
+            if (prefersPadding)
                 Assert.AreEqual(actualEncoded, actualEncodedRepadded);
             Assert.IsTrue(actualEncodedRepadded.Length % dataEncoding.Padding == 0);
 
@@ -97,7 +97,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             }
 
             string actualEncodedOverpadded = dataEncoding.Pad(actualEncoded.AsSpan());
-            if (padded)
+            if (prefersPadding)
                 Assert.AreEqual(actualEncoded, actualEncodedOverpadded);
 
             string actualEncodedUnderpadded = dataEncoding.Unpad(actualEncodedUnpadded.AsSpan()).ToString();

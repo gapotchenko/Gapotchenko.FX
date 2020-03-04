@@ -37,7 +37,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             // -----------------------------------------------------------------
 
-            TextDataEncodingTestBench.TestVector(instance, raw, encoded, padded: false, options: options);
+            TextDataEncodingTestBench.TestVector(instance, raw, encoded, options: options);
         }
 
         static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);

@@ -116,5 +116,8 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <inheritdoc/>
         public bool CanPad => Padding > 1;
+
+        /// <inheritdoc/>
+        public virtual bool PrefersPadding => CanPad;
     }
 }
