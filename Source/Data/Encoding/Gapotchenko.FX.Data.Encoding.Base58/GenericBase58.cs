@@ -17,8 +17,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Initializes a new instance of <see cref="GenericBase58"/> class with the specified alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        protected GenericBase58(TextDataEncodingAlphabet alphabet) :
-            base()
+        protected GenericBase58(TextDataEncodingAlphabet alphabet)
         {
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));
@@ -48,16 +47,6 @@ namespace Gapotchenko.FX.Data.Encoding
         protected readonly TextDataEncodingAlphabet Alphabet;
 
         #region Parameters
-
-        /// <summary>
-        /// Number of symbols per encoded block.
-        /// </summary>
-        protected const int SymbolsPerEncodedBlock = 34;
-
-        /// <summary>
-        /// Number of bytes per decoded block.
-        /// </summary>
-        protected const int BytesPerDecodedBlock = 12;
 
         /// <summary>
         /// The base of the encoding.
