@@ -575,6 +575,20 @@ namespace Gapotchenko.FX.Data.Encoding
             return true;
         }
 
+        /// <inheritdoc/>
+        protected override DataEncodingOptions GetEffectiveStreamingOptions(DataEncodingOptions options)
+        {
+            if ((options & DataEncodingOptions.Checksum) != 0)
+            {
+                throw new NotSupportedException(
+                    string.Format(
+                        "{0} encoding does not support checksum for streaming operations.",
+                        Name));
+            }
+
+            return base.GetEffectiveStreamingOptions(options);
+        }
+
         void ValidateCodecOptions(DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Checksum) != 0)
