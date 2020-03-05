@@ -127,16 +127,17 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void ZBase32_RT2() => TextDataEncodingTestBench.RoundTrip(ZBase32.Instance, Base16.GetBytes("64 BF"), DataEncodingOptions.Compress);
 
-        //[TestMethod]
-        //public void ZBase32_RT3() => TextDataEncodingTestBench.RoundTrip(ZBase32.Instance, Base16.GetBytes("EB 00"), DataEncodingOptions.Compress);
+        [TestMethod]
+        public void ZBase32_RT3() => TextDataEncodingTestBench.RoundTrip(ZBase32.Instance, Base16.GetBytes("EB 00"), DataEncodingOptions.Compress);
 
-        //[TestMethod]
-        //public void ZBase32_RT4() => TextDataEncodingTestBench.RoundTrip(ZBase32.Instance, Base16.GetBytes("01 67 00"), DataEncodingOptions.Compress);
+        [TestMethod]
+        public void ZBase32_RT4() => TextDataEncodingTestBench.RoundTrip(ZBase32.Instance, Base16.GetBytes("01 67 00"), DataEncodingOptions.Compress);
 
         [DataTestMethod]
         [DataRow(DataEncodingOptions.None)]
-        //[DataRow(DataEncodingOptions.Compress)]
+        [DataRow(DataEncodingOptions.Compress)]
         [DataRow(DataEncodingOptions.Padding)]
+        [DataRow(DataEncodingOptions.Padding | DataEncodingOptions.Compress)]
         public void ZBase32_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(ZBase32.Instance, 16, 100000, options);
     }
 }
