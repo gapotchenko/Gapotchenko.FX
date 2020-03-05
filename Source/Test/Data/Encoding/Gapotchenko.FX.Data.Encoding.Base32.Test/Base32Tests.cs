@@ -27,8 +27,9 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             var instance = Base32.Instance;
 
-            Assert.AreEqual(Base32.Padding, instance.Padding);
             Assert.AreEqual(Base32.Efficiency, instance.Efficiency);
+            Assert.AreEqual(Base32.Padding, instance.Padding);
+            Assert.IsTrue(instance.PrefersPadding);
 
             // -----------------------------------------------------------------
 
@@ -55,5 +56,10 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         public void Base32_Rfc4648_TV7() => TestVector("foobar", "MZXW6YTBOI======");
+
+        [DataTestMethod]
+        [DataRow(DataEncodingOptions.None)]
+        [DataRow(DataEncodingOptions.Unpad)]
+        public void Base32_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base32.Instance, 16, 100000, options);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -30,7 +31,11 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 var alphabet = m_Alphabet;
 
-                bool compress = (m_Options & DataEncodingOptions.Compress) != 0;
+                var bits = m_Bits;
+
+                bool compress =
+                    (m_Options & DataEncodingOptions.Compress) != 0 && // compression is only active when it is on and
+                    ((byte)bits != 0 || (bits & ((1UL << bitCount) - 1)) == 0); // the last byte is non-zero or the whole block is filled with zero bits
 
                 int i = 0; // output symbol index
                 int s = bitCount; // shift accumulator
@@ -41,19 +46,21 @@ namespace Gapotchenko.FX.Data.Encoding
                 {
                     s -= BitsPerSymbol;
 
-                    int si = (int)ShiftRight(m_Bits, s) & SymbolMask; // symbol index
+                    int si = (int)ShiftRight(bits, s) & SymbolMask; // symbol index
                     m_Buffer[i++] = alphabet[si]; // map symbol
 
                     if (compress)
                     {
                         // bi holds the index of an input byte an output symbol was mapped for.
                         int bi = Math.Max(s, 0) >> 3;
+
                         if (si != 0 ||  // if non-zero symbol or
                             bi != pbi)  // the symbol encodes a number of input bytes
                         {
                             // make it go to the output.
                             li = i;
                         }
+
                         pbi = bi;
                     }
                 }
@@ -93,8 +100,9 @@ namespace Gapotchenko.FX.Data.Encoding
                     byte b = (byte)ShiftRight(m_Bits, s);
                     m_Buffer[i++] = b;
 
-                    if (b != 0 || s >= 0 ||
-                        (m_Options & DataEncodingOptions.Compress) != 0 && i >= 2 && m_Buffer[i - 2] == 0)
+                    if (b != 0 ||
+                        s >= 0 ||
+                       (m_Options & DataEncodingOptions.Compress) != 0 && (m_Bits & ((1UL << bitCount) - 1)) == 0)
                     {
                         li = i;
                     }

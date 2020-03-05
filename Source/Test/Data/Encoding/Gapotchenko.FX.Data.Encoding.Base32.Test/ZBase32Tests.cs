@@ -24,10 +24,16 @@ namespace Gapotchenko.FX.Data.Encoding.Test
                 options |= DataEncodingOptions.Compress;
 
             string actualEncoded = ZBase32.GetString(raw, options);
-            Assert.AreEqual(encoded, actualEncoded);
+            Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
             var actualDecoded = ZBase32.GetBytes(encoded, options);
-            Assert.IsTrue(raw.SequenceEqual(actualDecoded));
+            if (!raw.SequenceEqual(actualDecoded))
+            {
+                Assert.AreEqual(
+                    Base16.GetString(raw, DataEncodingOptions.Indent),
+                    Base16.GetString(actualDecoded, DataEncodingOptions.Indent),
+                    "Decoding error.");
+            }
 
             // -----------------------------------------------------------------
 
@@ -37,7 +43,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             // -----------------------------------------------------------------
 
-            TextDataEncodingTestBench.TestVector(instance, raw, encoded, padded: false, options: options);
+            TextDataEncodingTestBench.TestVector(instance, raw, encoded, options);
         }
 
         static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);
@@ -110,9 +116,34 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         public void ZBase32_Bits_TV10() => TestVector(new byte[] { 0x10, 0x11, 0x10 }, "nyet", 20);
 
         [TestMethod]
+        public void ZBase32_Bits_TV11() => TestVector(new byte[] { 0, 0, 0 }, "yyyy", 18);
+
+        [TestMethod]
+        public void ZBase32_Bits_TV12() => TestVector(new byte[] { 0, 0, 0, 0 }, "yyyyy", 25);
+
+        [TestMethod]
         public void ZBase32_Strings_TV1() => TestVector("hello, world\n", "pb1sa5dxfoo8q551pt1yw");
 
         [TestMethod]
         public void ZBase32_Strings_TV2() => TestVector("\x0001binary!!!1\x0000", "yftg15ubqjh1nejbgryy");
+
+        [TestMethod]
+        public void ZBase32_RT1() => TextDataEncodingTestBench.RoundTrip(ZBase32.Instance, Base16.GetBytes("90 60 00"), DataEncodingOptions.Compress);
+
+        [TestMethod]
+        public void ZBase32_RT2() => TextDataEncodingTestBench.RoundTrip(ZBase32.Instance, Base16.GetBytes("64 BF"), DataEncodingOptions.Compress);
+
+        [TestMethod]
+        public void ZBase32_RT3() => TextDataEncodingTestBench.RoundTrip(ZBase32.Instance, Base16.GetBytes("EB 00"), DataEncodingOptions.Compress);
+
+        [TestMethod]
+        public void ZBase32_RT4() => TextDataEncodingTestBench.RoundTrip(ZBase32.Instance, Base16.GetBytes("01 67 00"), DataEncodingOptions.Compress);
+
+        [DataTestMethod]
+        [DataRow(DataEncodingOptions.None)]
+        [DataRow(DataEncodingOptions.Compress)]
+        [DataRow(DataEncodingOptions.Padding)]
+        [DataRow(DataEncodingOptions.Padding | DataEncodingOptions.Compress)]
+        public void ZBase32_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(ZBase32.Instance, 16, 100000, options);
     }
 }

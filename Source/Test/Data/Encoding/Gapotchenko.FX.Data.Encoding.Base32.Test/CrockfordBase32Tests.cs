@@ -24,7 +24,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             var instance = CrockfordBase32.Instance;
             Assert.AreEqual(CrockfordBase32.Efficiency, instance.Efficiency);
 
-            TextDataEncodingTestBench.TestVector(instance, raw, encoded, options: options);
+            TextDataEncodingTestBench.TestVector(instance, raw, encoded, options);
         }
 
         static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);
@@ -157,5 +157,11 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         public void CrockfordBase32_BigInteger_Checksum_TV2() => TestVector(BigInteger.Parse("1234"), "16JD", DataEncodingOptions.Checksum);
+
+        [TestMethod]
+        public void CrockfordBase32_RT_Random() => TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 16, 100000);
+
+        [TestMethod]
+        public void CrockfordBase32_RT_RandomWithPadding() => TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 16, 100000, DataEncodingOptions.Padding);
     }
 }

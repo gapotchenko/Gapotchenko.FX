@@ -62,25 +62,6 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
         public static byte[] GetBytes(string s, DataEncodingOptions options) => GetBytes(s.AsSpan(), options);
 
-        /// <summary>
-        /// The number of characters for padding of an encoded string representation.
-        /// </summary>
-        public new const int Padding = SymbolsPerEncodedBlock;
-
-        /// <summary>
-        /// Pads the encoded string.
-        /// </summary>
-        /// <param name="s">The encoded string to pad.</param>
-        /// <returns>The padded encoded string.</returns>
-        public new static string Pad(ReadOnlySpan<char> s) => Instance.Pad(s);
-
-        /// <summary>
-        /// Unpads the encoded string.
-        /// </summary>
-        /// <param name="s">The encoded string to unpad.</param>
-        /// <returns>The unpadded encoded string.</returns>
-        public new static ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => Instance.Unpad(s);
-
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static volatile IBase24 m_Instance;
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 {
@@ -12,9 +13,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             ITextDataEncoding dataEncoding,
             string raw,
             string encoded,
-            bool padded = true,
-            Encoding textEncoding = null,
-            DataEncodingOptions options = DataEncodingOptions.None)
+            DataEncodingOptions options = DataEncodingOptions.None,
+            Encoding textEncoding = null)
         {
             if (dataEncoding == null)
                 throw new ArgumentNullException(nameof(dataEncoding));
@@ -38,16 +38,15 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 
             // -----------------------------------------------------------------
 
-            TestVector(dataEncoding, rawBytes, encoded, padded, textEncoding, options);
+            TestVector(dataEncoding, rawBytes, encoded, options, textEncoding);
         }
 
         public static void TestVector(
             ITextDataEncoding dataEncoding,
             ReadOnlySpan<byte> raw,
             string encoded,
-            bool padded = true,
-            Encoding textEncoding = null,
-            DataEncodingOptions options = DataEncodingOptions.None)
+            DataEncodingOptions options = DataEncodingOptions.None,
+            Encoding textEncoding = null)
         {
             if (dataEncoding == null)
                 throw new ArgumentNullException(nameof(dataEncoding));
@@ -74,10 +73,16 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             // -----------------------------------------------------------------
 
             string actualEncoded = dataEncoding.GetString(raw, options);
-            Assert.AreEqual(encoded, actualEncoded);
+            Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
             var actualDecoded = dataEncoding.GetBytes(actualEncoded.AsSpan(), options);
-            Assert.IsTrue(raw.SequenceEqual(actualDecoded));
+            if (!raw.SequenceEqual(actualDecoded))
+            {
+                Assert.AreEqual(
+                    Base16.GetString(raw, DataEncodingOptions.Indent),
+                    Base16.GetString(actualDecoded, DataEncodingOptions.Indent),
+                    "Decoding error.");
+            }
 
             // -----------------------------------------------------------------
             // Check padding operations
@@ -86,18 +91,20 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             var actualEncodedUnpadded = dataEncoding.Unpad(actualEncoded.AsSpan()).ToString();
             string actualEncodedRepadded = dataEncoding.Pad(actualEncodedUnpadded.AsSpan());
 
-            if (padded)
+            bool prefersPadding = dataEncoding.PrefersPadding;
+
+            if (prefersPadding)
                 Assert.AreEqual(actualEncoded, actualEncodedRepadded);
             Assert.IsTrue(actualEncodedRepadded.Length % dataEncoding.Padding == 0);
 
-            if (dataEncoding.Padding == 1)
+            if (!dataEncoding.CanPad)
             {
                 Assert.AreEqual(actualEncodedUnpadded, actualEncoded);
                 Assert.AreEqual(actualEncodedUnpadded, actualEncodedRepadded);
             }
 
             string actualEncodedOverpadded = dataEncoding.Pad(actualEncoded.AsSpan());
-            if (padded)
+            if (prefersPadding)
                 Assert.AreEqual(actualEncoded, actualEncodedOverpadded);
 
             string actualEncodedUnderpadded = dataEncoding.Unpad(actualEncodedUnpadded.AsSpan()).ToString();
@@ -149,11 +156,11 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             }
         }
 
-        public static void RoundTrip(ITextDataEncoding dataEncoding, ReadOnlySpan<byte> raw, DataEncodingOptions options = default)
+        public static void RoundTrip(ITextDataEncoding encoding, ReadOnlySpan<byte> raw, DataEncodingOptions options = default)
         {
-            string actualEncoded = dataEncoding.GetString(raw, options);
+            string actualEncoded = encoding.GetString(raw, options);
 
-            var actualDecoded = dataEncoding.GetBytes(actualEncoded.AsSpan(), options);
+            var actualDecoded = encoding.GetBytes(actualEncoded.AsSpan(), options);
 
             if (!raw.SequenceEqual(actualDecoded))
             {
@@ -161,6 +168,20 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
                     "Encoding round trip error for data block {0}. Actual decoded data are {1}.",
                     Base16.GetString(raw, DataEncodingOptions.Indent),
                     Base16.GetString(actualDecoded, DataEncodingOptions.Indent));
+            }
+        }
+
+        public static void RandomRoundTrip(ITextDataEncoding encoding, int maxByteCount, int iterations, DataEncodingOptions options = default)
+        {
+            var buffer = new byte[maxByteCount];
+
+            for (int i = 0; i < iterations; ++i)
+            {
+                int n = RandomNumberGenerator.GetInt32(buffer.Length + 1);
+                var span = buffer.AsSpan(0, n);
+
+                RandomNumberGenerator.Fill(span);
+                RoundTrip(encoding, span, options);
             }
         }
     }

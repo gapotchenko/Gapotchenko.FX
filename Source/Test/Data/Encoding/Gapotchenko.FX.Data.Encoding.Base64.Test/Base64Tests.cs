@@ -28,6 +28,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             Assert.AreEqual(Base64.Efficiency, instance.Efficiency);
             Assert.AreEqual(Base64.Padding, instance.Padding);
+            Assert.IsTrue(instance.PrefersPadding);
 
             // -----------------------------------------------------------------
 
@@ -79,5 +80,10 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             Assert.IsTrue(
                 Base64.GetBytes("SQ=Я=QU0=VEpN", DataEncodingOptions.Padding | DataEncodingOptions.Relax)
                 .SequenceEqual(Encoding.ASCII.GetBytes("IAMTJM")));
+
+        [DataTestMethod]
+        [DataRow(DataEncodingOptions.None)]
+        [DataRow(DataEncodingOptions.Unpad)]
+        public void Base64_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base64.Instance, 16, 100000, options);
     }
 }
