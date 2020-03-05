@@ -48,12 +48,14 @@ namespace Gapotchenko.FX.Data.Encoding
                     {
                         // bi holds the index of an input byte an output symbol was mapped for.
                         int bi = Math.Max(s, 0) >> 3;
+
                         if (si != 0 ||  // if non-zero symbol or
                             bi != pbi)  // the symbol encodes a number of input bytes
                         {
                             // make it go to the output.
                             li = i;
                         }
+
                         pbi = bi;
                     }
                 }
@@ -94,7 +96,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     m_Buffer[i++] = b;
 
                     if (b != 0 || s >= 0 ||
-                        (m_Options & DataEncodingOptions.Compress) != 0 && i >= 2 && m_Buffer[i - 2] == 0)
+                       (m_Options & DataEncodingOptions.Compress) != 0 && (m_Bits & SymbolMask) == 0)
                     {
                         li = i;
                     }

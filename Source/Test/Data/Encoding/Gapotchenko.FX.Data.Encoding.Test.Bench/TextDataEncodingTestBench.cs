@@ -73,10 +73,16 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             // -----------------------------------------------------------------
 
             string actualEncoded = dataEncoding.GetString(raw, options);
-            Assert.AreEqual(encoded, actualEncoded);
+            Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
             var actualDecoded = dataEncoding.GetBytes(actualEncoded.AsSpan(), options);
-            Assert.IsTrue(raw.SequenceEqual(actualDecoded));
+            if (!raw.SequenceEqual(actualDecoded))
+            {
+                Assert.AreEqual(
+                    Base16.GetString(raw, DataEncodingOptions.Indent),
+                    Base16.GetString(actualDecoded, DataEncodingOptions.Indent),
+                    "Decoding error.");
+            }
 
             // -----------------------------------------------------------------
             // Check padding operations
