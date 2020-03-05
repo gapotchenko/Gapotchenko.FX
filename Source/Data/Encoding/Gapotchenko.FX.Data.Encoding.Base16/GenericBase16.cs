@@ -14,8 +14,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Initializes a new instance of <see cref="GenericBase16"/> class with the specified alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        protected GenericBase16(TextDataEncodingAlphabet alphabet) :
-            base()
+        protected GenericBase16(TextDataEncodingAlphabet alphabet)
         {
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));

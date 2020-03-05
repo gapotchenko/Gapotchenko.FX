@@ -10,8 +10,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// Initializes a new instance of <see cref="HenkeBase91"/> class.
         /// </summary>
-        public HenkeBase91() :
-            base()
+        public HenkeBase91()
         {
         }
 

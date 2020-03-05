@@ -15,8 +15,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Initializes a new instance of <see cref="GenericKuonBase24"/> class with the specified alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        protected GenericKuonBase24(TextDataEncodingAlphabet alphabet) :
-            base()
+        protected GenericKuonBase24(TextDataEncodingAlphabet alphabet)
         {
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));
@@ -46,7 +45,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override DataEncodingOptions ValidateOptions(DataEncodingOptions options)
+        protected override DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Padding) == 0)
             {
@@ -54,7 +53,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 options |= DataEncodingOptions.Unpad;
             }
 
-            return base.ValidateOptions(options);
+            return base.GetEffectiveOptions(options);
         }
 
         #region Parameters

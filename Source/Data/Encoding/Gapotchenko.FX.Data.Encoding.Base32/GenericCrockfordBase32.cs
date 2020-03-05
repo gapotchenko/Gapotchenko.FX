@@ -44,7 +44,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override DataEncodingOptions ValidateOptions(DataEncodingOptions options)
+        protected override DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Checksum) != 0 &&
                 Alphabet.Size != ChecksumAlphabetSize)
@@ -65,7 +65,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 options |= DataEncodingOptions.Unpad;
             }
 
-            return base.ValidateOptions(options);
+            return base.GetEffectiveOptions(options);
         }
 
         string Epilogue(string s, DataEncodingOptions options)
@@ -100,7 +100,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(int value, DataEncodingOptions options)
         {
-            options = ValidateOptions(options);
+            options = GetEffectiveOptions(options);
 
             if (value == 0)
                 return GetZeroString(options);
@@ -173,7 +173,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             value = 0;
 
-            options = ValidateOptions(options);
+            options = GetEffectiveOptions(options);
 
             if (s.IsEmpty)
                 return false;
@@ -264,7 +264,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(long value, DataEncodingOptions options)
         {
-            options = ValidateOptions(options);
+            options = GetEffectiveOptions(options);
 
             if (value == 0)
                 return GetZeroString(options);
@@ -331,7 +331,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             value = 0;
 
-            options = ValidateOptions(options);
+            options = GetEffectiveOptions(options);
 
             if (s.IsEmpty)
                 return false;
@@ -422,7 +422,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(BigInteger value, DataEncodingOptions options)
         {
-            options = ValidateOptions(options);
+            options = GetEffectiveOptions(options);
 
             if (value.IsZero)
                 return GetZeroString(options);
@@ -500,7 +500,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             value = 0;
 
-            options = ValidateOptions(options);
+            options = GetEffectiveOptions(options);
 
             if (s.IsEmpty)
                 return false;

@@ -41,11 +41,11 @@ namespace Gapotchenko.FX.Data.Encoding
         protected virtual float MinEfficiencyCore => EfficiencyCore;
 
         /// <summary>
-        /// Validates the encoding options and returns effective options to use.
+        /// Validates and returns effective options to use.
         /// </summary>
         /// <param name="options">The options.</param>
         /// <returns>The effective encoding options to use.</returns>
-        protected virtual DataEncodingOptions ValidateOptions(DataEncodingOptions options)
+        protected virtual DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
         {
             const DataEncodingOptions PaddingConflictMask = DataEncodingOptions.Padding | DataEncodingOptions.Unpad;
             if ((options & PaddingConflictMask) == PaddingConflictMask)
@@ -67,7 +67,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public byte[] EncodeData(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
-            options = ValidateOptions(options);
+            options = GetEffectiveOptions(options);
             return data == null ? null : EncodeDataCore(data, options);
         }
 
@@ -85,7 +85,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public byte[] DecodeData(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
-            options = ValidateOptions(options);
+            options = GetEffectiveOptions(options);
             return data == null ? null : DecodeDataCore(data, options);
         }
 
@@ -99,6 +99,24 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <inheritdoc/>
         public virtual bool CanStream => true;
+
+        /// <summary>
+        /// Validates and returns effective streaming options to use.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <returns>The effective encoding options to use.</returns>
+        protected virtual DataEncodingOptions GetEffectiveStreamingOptions(DataEncodingOptions options)
+        {
+            if (!CanStream)
+            {
+                throw new NotSupportedException(
+                    string.Format(
+                        "{0} encoding does not support streaming operations.",
+                        Name));
+            }
+
+            return GetEffectiveOptions(options);
+        }
 
         /// <inheritdoc/>
         public abstract Stream CreateEncoder(Stream outputStream, DataEncodingOptions options = DataEncodingOptions.None);

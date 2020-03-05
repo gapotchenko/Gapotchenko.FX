@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
-            options = ValidateOptions(options);
+            options = GetEffectiveOptions(options);
             return data == null ? null : GetStringCore(data, options);
         }
 
@@ -59,7 +59,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options)
         {
-            options = ValidateOptions(options);
+            options = GetEffectiveOptions(options);
             return s == null ? null : GetBytesCore(s, options);
         }
 
@@ -157,13 +157,13 @@ namespace Gapotchenko.FX.Data.Encoding
             if (textWriter == null)
                 throw new ArgumentNullException(nameof(textWriter));
 
+            options = GetEffectiveStreamingOptions(options);
+
             if ((options & DataEncodingOptions.Unpad) == 0)
             {
                 // Encode stream with a padding unless it is explicitly disabled.
                 options |= DataEncodingOptions.Padding;
             }
-
-            options = ValidateOptions(options);
 
             var context = CreateEncoderContext(options);
             return new EncoderStream(this, textWriter, context, options, StreamBufferSize);
@@ -174,7 +174,8 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             if (textReader == null)
                 throw new ArgumentNullException(nameof(textReader));
-            options = ValidateOptions(options);
+
+            options = GetEffectiveStreamingOptions(options);
 
             var context = CreateDecoderContext(options);
             return new DecoderStream(this, textReader, context, options, StreamBufferSize);
@@ -621,7 +622,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public override bool PrefersPadding =>
             CanPad &&
-            (ValidateOptions(DataEncodingOptions.None) & DataEncodingOptions.Unpad) == 0;
+            (GetEffectiveOptions(DataEncodingOptions.None) & DataEncodingOptions.Unpad) == 0;
 
         /// <inheritdoc/>
         public string Pad(ReadOnlySpan<char> s) => s == null ? null : PadCore(s);
@@ -677,7 +678,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public int GetMaxCharCount(int byteCount) => GetMaxCharCountCore(byteCount, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public int GetMaxCharCount(int byteCount, DataEncodingOptions options) => GetMaxCharCountCore(byteCount, ValidateOptions(options));
+        public int GetMaxCharCount(int byteCount, DataEncodingOptions options) => GetMaxCharCountCore(byteCount, GetEffectiveOptions(options));
 
         /// <summary>
         /// Calculates the maximum number of characters produced by encoding the specified number of bytes with options.
@@ -691,7 +692,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public int GetMaxByteCount(int charCount) => GetMaxByteCountCore(charCount, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public int GetMaxByteCount(int charCount, DataEncodingOptions options) => GetMaxByteCountCore(charCount, ValidateOptions(options));
+        public int GetMaxByteCount(int charCount, DataEncodingOptions options) => GetMaxByteCountCore(charCount, GetEffectiveOptions(options));
 
         /// <summary>
         /// Calculates the maximum number of bytes produced by decoding the specified number of characters with options.
