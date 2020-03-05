@@ -116,6 +116,12 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         public void ZBase32_Bits_TV10() => TestVector(new byte[] { 0x10, 0x11, 0x10 }, "nyet", 20);
 
         [TestMethod]
+        public void ZBase32_Bits_TV11() => TestVector(new byte[] { 0, 0, 0 }, "yyyy", 18);
+
+        [TestMethod]
+        public void ZBase32_Bits_TV12() => TestVector(new byte[] { 0, 0, 0, 0 }, "yyyyy", 25);
+
+        [TestMethod]
         public void ZBase32_Strings_TV1() => TestVector("hello, world\n", "pb1sa5dxfoo8q551pt1yw");
 
         [TestMethod]
