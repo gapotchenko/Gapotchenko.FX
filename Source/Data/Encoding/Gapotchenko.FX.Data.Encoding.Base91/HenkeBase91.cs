@@ -51,6 +51,9 @@ namespace Gapotchenko.FX.Data.Encoding
         public override bool IsCaseSensitive => true;
 
         /// <inheritdoc/>
+        public override bool CanCanonicalize => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         protected override void CanonicalizeCore(ReadOnlySpan<char> source, Span<char> destination)
         {
             throw new NotImplementedException();

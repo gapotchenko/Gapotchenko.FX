@@ -645,12 +645,18 @@ namespace Gapotchenko.FX.Data.Encoding
         protected virtual ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => s;
 
         /// <inheritdoc/>
+        public abstract bool CanCanonicalize { get; }
+
+        /// <inheritdoc/>
         public string Canonicalize(ReadOnlySpan<char> s)
         {
             if (s == null)
                 return null;
             if (s.IsEmpty)
                 return string.Empty;
+
+            if (!CanCanonicalize)
+                return s.ToString();
 
             var d = new char[s.Length];
             CanonicalizeCore(s, d);

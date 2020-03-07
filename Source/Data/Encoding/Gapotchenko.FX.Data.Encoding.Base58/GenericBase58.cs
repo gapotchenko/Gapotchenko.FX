@@ -214,6 +214,9 @@ namespace Gapotchenko.FX.Data.Encoding
         public override bool IsCaseSensitive => Alphabet.IsCaseSensitive;
 
         /// <inheritdoc/>
+        public override bool CanCanonicalize => Alphabet.IsCanonicalizable;
+
+        /// <inheritdoc/>
         protected override void CanonicalizeCore(ReadOnlySpan<char> source, Span<char> destination) => Alphabet.Canonicalize(source, destination);
 
         /// <inheritdoc/>

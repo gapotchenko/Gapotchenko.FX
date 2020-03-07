@@ -74,6 +74,11 @@ namespace Gapotchenko.FX.Data.Encoding
         ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s);
 
         /// <summary>
+        /// Gets a value indicating whether the current encoding supports canonicalization.
+        /// </summary>
+        bool CanCanonicalize { get; }
+
+        /// <summary>
         /// Canonicalizes the encoded string.
         /// Canonicalization substitutes the encoded symbols with their canonical forms.
         /// Unrecognized and whitespace symbols are left intact.
