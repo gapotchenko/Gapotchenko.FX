@@ -90,9 +90,13 @@ namespace Gapotchenko.FX.Data.Encoding
             sb.Append(alphabet[0], leadingZeroCount);
 
 #if TFF_MEMORY_OOB
-            BigInteger value = 0;
+            var bytes = new byte[data.Length + 1];
+
+            int i = data.Length;
             foreach (var b in data)
-                value = value << 8 | b;
+                bytes[--i] = b;
+
+            var value = new BigInteger(bytes);
 #else
             var value = new BigInteger(data, true, true);
 #endif
