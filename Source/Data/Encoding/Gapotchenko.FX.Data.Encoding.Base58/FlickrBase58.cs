@@ -4,23 +4,23 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Provides Base58 and Base58Check encoding implementations according to https://en.bitcoin.it/wiki/Base58Check_encoding.
+    /// Provides Flickr Base58 encoding implementation.
     /// </summary>
-    public sealed class Base58 : GenericBase58
+    public sealed class FlickrBase58 : GenericBase58
     {
-        private Base58() :
-            base(new TextDataEncodingAlphabet("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"))
+        private FlickrBase58() :
+            base(new TextDataEncodingAlphabet("123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"))
         {
         }
 
         /// <inheritdoc/>
-        public override string Name => "Base58";
+        public override string Name => "Flickr Base58";
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static volatile IBase58 m_Instance;
 
         /// <summary>
-        /// Returns a default instance of <see cref="Base58"/> encoding.
+        /// Returns a default instance of <see cref="FlickrBase58"/> encoding.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public static IBase58 Instance
@@ -28,7 +28,7 @@ namespace Gapotchenko.FX.Data.Encoding
             get
             {
                 if (m_Instance == null)
-                    m_Instance = new Base58();
+                    m_Instance = new FlickrBase58();
                 return m_Instance;
             }
         }

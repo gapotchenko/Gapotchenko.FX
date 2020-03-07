@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Provides a generic implementation of Base32 encoding.
+    /// Provides a generic implementation of Base58 encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class GenericBase58 : TextDataEncoding, IBase58
