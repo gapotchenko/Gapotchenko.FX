@@ -150,7 +150,12 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 
                 if (actualEncodedBytesCount > 1)
                 {
-                    float actualEfficiencyFloor = (float)raw.Length / (actualEncodedBytesCount - 1);
+                    int rawBytesCount = raw.Length;
+
+                    if ((options & DataEncodingOptions.Checksum) != 0)
+                        rawBytesCount += 4;
+
+                    float actualEfficiencyFloor = (float)rawBytesCount / (actualEncodedBytesCount - 1);
                     Assert.IsTrue(actualEfficiencyFloor >= dataEncoding.MinEfficiency, "Min encoding efficiency violated.");
                 }
             }

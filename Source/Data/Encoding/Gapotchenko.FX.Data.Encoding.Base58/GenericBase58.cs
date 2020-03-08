@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Gapotchenko.FX.Data.Encoding
@@ -73,6 +74,13 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override string GetStringCore(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
+            if ((options & DataEncodingOptions.Checksum) != 0)
+            {
+                return GetStringCore(
+                    AddChecksum(data),
+                    options & ~DataEncodingOptions.Checksum);
+            }
+
             var alphabet = Alphabet;
 
             int leadingZeroCount = GetLeadingZeroCount(data);
@@ -116,6 +124,13 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options)
         {
+            if ((options & DataEncodingOptions.Checksum) != 0)
+            {
+                return VerifyAndRemoveChecksum(
+                    GetBytesCore(s, options & ~DataEncodingOptions.Checksum))
+                    .ToArray();
+            }
+
             int leadingZeroCount = GetLeadingZeroCount(s);
 
             s = s.Slice(leadingZeroCount);
@@ -202,6 +217,47 @@ namespace Gapotchenko.FX.Data.Encoding
             return count;
         }
 
+        const int ChecksumSize = 4;
+
+        static ReadOnlySpan<byte> GetChecksum(ReadOnlySpan<byte> payload)
+        {
+            byte[] hash;
+
+            using (var sha256 = SHA256.Create())
+                hash = sha256.ComputeHash(sha256.ComputeHash(payload.ToArray()));
+
+            return hash.AsSpan(0, ChecksumSize);
+        }
+
+        static byte[] AddChecksum(ReadOnlySpan<byte> payload)
+        {
+            int j = payload.Length;
+            var data = new byte[j + ChecksumSize];
+
+            payload.CopyTo(data);
+            GetChecksum(payload).CopyTo(data.AsSpan(j));
+
+            return data;
+        }
+
+        static ReadOnlySpan<byte> VerifyAndRemoveChecksum(ReadOnlySpan<byte> data)
+        {
+            int n = data.Length;
+            if (n < ChecksumSize)
+                throw new FormatException("Invalid checksum.");
+
+            int j = n - ChecksumSize;
+
+            var payload = data.Slice(0, j);
+            var checksum = data.Slice(j);
+
+            var actualChecksum = GetChecksum(payload);
+            if (!checksum.SequenceEqual(actualChecksum))
+                throw new FormatException("Invalid checksum.");
+
+            return payload;
+        }
+
         /// <inheritdoc/>
         public override bool CanStream => false;
 
@@ -221,10 +277,24 @@ namespace Gapotchenko.FX.Data.Encoding
         protected override void CanonicalizeCore(ReadOnlySpan<char> source, Span<char> destination) => Alphabet.Canonicalize(source, destination);
 
         /// <inheritdoc/>
-        protected override int GetMaxCharCountCore(int byteCount, DataEncodingOptions options) => (int)Math.Ceiling(byteCount / Efficiency);
+        protected override int GetMaxCharCountCore(int byteCount, DataEncodingOptions options)
+        {
+            if ((options & DataEncodingOptions.Checksum) != 0)
+                byteCount += ChecksumSize;
+
+            return (int)Math.Ceiling(byteCount / Efficiency);
+        }
 
         /// <inheritdoc/>
-        protected override int GetMaxByteCountCore(int charCount, DataEncodingOptions options) => charCount;
+        protected override int GetMaxByteCountCore(int charCount, DataEncodingOptions options)
+        {
+            int byteCount = charCount;
+
+            if ((options & DataEncodingOptions.Checksum) != 0 && byteCount >= ChecksumSize)
+                byteCount -= ChecksumSize;
+
+            return byteCount;
+        }
 
         int GetMaxByteCountCore(int charCount, int leadingZeroCount) =>
             leadingZeroCount +
