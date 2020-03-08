@@ -44,11 +44,16 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <returns>The string representation of the contents of <paramref name="data"/>.</returns>
         protected virtual string GetStringCore(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
-            var sw = new StringWriter();
+            var capacity = GetMaxCharCountCore(data.Length, options);
+
+            var sb = new StringBuilder(capacity);
+            var sw = new StringWriter(sb);
 
             var context = CreateEncoderContext(options);
             context.Encode(data, sw);
             context.Encode(null, sw);
+
+            Debug.Assert(sb.Length <= capacity, "Invalid capacity.");
 
             return sw.ToString();
         }
@@ -71,7 +76,9 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
         protected virtual byte[] GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options)
         {
-            var ms = new MemoryStream();
+            var capacity = GetMaxByteCountCore(s.Length, options);
+
+            var ms = new MemoryStream(capacity);
 
             var context = CreateDecoderContext(options);
             try
@@ -83,6 +90,8 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 throw new FormatException(e.Message);
             }
+
+            Debug.Assert(ms.Length <= capacity, "Invalid capacity.");
 
             return ms.ToArray();
         }
