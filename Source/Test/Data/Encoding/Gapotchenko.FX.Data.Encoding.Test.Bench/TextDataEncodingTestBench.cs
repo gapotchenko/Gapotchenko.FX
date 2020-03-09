@@ -276,6 +276,37 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             Assert.AreEqual(raw, actualDecoded, "Decoding error.");
         }
 
+        public static void RoundTrip(INumericTextDataEncoding encoding, BigInteger raw, DataEncodingOptions options = default)
+        {
+            string actualEncoded = encoding.GetString(raw, options);
+            var actualDecoded = encoding.GetBigInteger(actualEncoded, options);
+            Assert.AreEqual(raw, actualDecoded, "Round trip error.");
+        }
+
+        public static void RandomRoundTrip(INumericTextDataEncoding encoding, BigInteger from, BigInteger to, int iterations, DataEncodingOptions options = default)
+        {
+            int maxByteCount = Math.Max(GetByteCount(from), GetByteCount(to));
+
+            var buffer = new byte[maxByteCount];
+
+            for (int i = 0; i < iterations;)
+            {
+                int n = RandomNumberGenerator.GetInt32(buffer.Length + 1);
+                var span = buffer.AsSpan(0, n);
+
+                RandomNumberGenerator.Fill(span);
+
+                var value = new BigInteger(span, false, false);
+                if (value < from || value > to)
+                    continue;
+                ++i;
+
+                RoundTrip(encoding, value, options);
+            }
+        }
+
+        static int GetByteCount(BigInteger value) => value.ToByteArray().Length;
+
         #endregion
     }
 }

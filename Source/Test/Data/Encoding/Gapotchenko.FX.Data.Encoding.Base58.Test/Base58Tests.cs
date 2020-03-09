@@ -171,6 +171,17 @@ namespace Gapotchenko.FX.Data.Encoding.Test
             BigInteger.Parse("111d38e5fc9071ffcd20b4a763cc9ae4f252bb4e48fd66a835e252ada93ff480d6dd43dc62a641155a5", NumberStyles.HexNumber),
             "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz");
 
+        [DataTestMethod]
+        [DataRow(DataEncodingOptions.None)]
+        [DataRow(DataEncodingOptions.Checksum)]
+        public void Base58_BigInteger_RT(DataEncodingOptions options) =>
+            TextDataEncodingTestBench.RandomRoundTrip(
+                Base58.Instance,
+                -BigInteger.Parse("0fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", NumberStyles.HexNumber),
+                BigInteger.Parse("0fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", NumberStyles.HexNumber),
+                50000,
+                options);
+
         #endregion
     }
 }
