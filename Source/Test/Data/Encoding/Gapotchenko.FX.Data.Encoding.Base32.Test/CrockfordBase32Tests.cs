@@ -84,6 +84,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             string actualEncoded = CrockfordBase32.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded);
+
+            TextDataEncodingTestBench.TestVector(CrockfordBase32.Instance, raw, encoded, options);
         }
 
         [TestMethod]
@@ -122,6 +124,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             string actualEncoded = CrockfordBase32.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded);
+
+            TextDataEncodingTestBench.TestVector(CrockfordBase32.Instance, raw, encoded, options);
         }
 
         [TestMethod]

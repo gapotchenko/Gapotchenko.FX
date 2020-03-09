@@ -198,16 +198,68 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 
         #endregion
 
+        #region Int32
+
+        public static void TestVector(
+            INumericTextDataEncoding encoding,
+            int raw,
+            string encoded,
+            DataEncodingOptions options = DataEncodingOptions.None)
+        {
+            if (encoding == null)
+                throw new ArgumentNullException(nameof(encoding));
+            if (encoded == null)
+                throw new ArgumentNullException(nameof(encoded));
+
+            // -----------------------------------------------------------------
+            // Check text-based numerics encoding API
+            // -----------------------------------------------------------------
+
+            string actualEncoded = encoding.GetString(raw, options);
+            Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
+
+            var actualDecoded = encoding.GetInt32(actualEncoded, options);
+            Assert.AreEqual(raw, actualDecoded, "Decoding error.");
+        }
+
+        #endregion
+
+        #region Int64
+
+        public static void TestVector(
+            INumericTextDataEncoding encoding,
+            long raw,
+            string encoded,
+            DataEncodingOptions options = DataEncodingOptions.None)
+        {
+            if (encoding == null)
+                throw new ArgumentNullException(nameof(encoding));
+            if (encoded == null)
+                throw new ArgumentNullException(nameof(encoded));
+
+            // -----------------------------------------------------------------
+            // Check text-based numerics encoding API
+            // -----------------------------------------------------------------
+
+            string actualEncoded = encoding.GetString(raw, options);
+            Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
+
+            var actualDecoded = encoding.GetInt64(actualEncoded, options);
+            Assert.AreEqual(raw, actualDecoded, "Decoding error.");
+        }
+
+        #endregion
+
         #region BigInteger
 
         public static void TestVector(
-            INumericTextDataEncoding dataEncoding,
+            INumericTextDataEncoding encoding,
             BigInteger raw,
             string encoded,
             DataEncodingOptions options = DataEncodingOptions.None)
         {
-            if (dataEncoding == null)
-                throw new ArgumentNullException(nameof(dataEncoding));
+            if (encoding == null)
+                throw new ArgumentNullException(nameof(encoding));
             if (raw == null)
                 throw new ArgumentNullException(nameof(raw));
             if (encoded == null)
@@ -217,10 +269,10 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             // Check text-based numerics encoding API
             // -----------------------------------------------------------------
 
-            string actualEncoded = dataEncoding.GetString(raw, options);
+            string actualEncoded = encoding.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
-            var actualDecoded = dataEncoding.GetBigInteger(actualEncoded.AsSpan(), options);
+            var actualDecoded = encoding.GetBigInteger(actualEncoded, options);
             Assert.AreEqual(raw, actualDecoded, "Decoding error.");
         }
 
