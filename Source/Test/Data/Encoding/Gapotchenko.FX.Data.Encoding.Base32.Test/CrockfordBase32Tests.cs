@@ -13,6 +13,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
     [TestClass]
     public class CrockfordBase32Tests
     {
+        #region Data
+
         static void TestVector(byte[] raw, string encoded, DataEncodingOptions options = default)
         {
             string actualEncoded = CrockfordBase32.GetString(raw, options);
@@ -29,35 +31,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);
 
-        static void TestVector(int raw, string encoded, DataEncodingOptions options = default)
-        {
-            var actualDecoded = CrockfordBase32.GetInt32(encoded, options);
-            Assert.AreEqual(raw, actualDecoded);
-
-            string actualEncoded = CrockfordBase32.GetString(raw, options);
-            Assert.AreEqual(encoded, actualEncoded);
-        }
-
-        static void TestVector(long raw, string encoded, DataEncodingOptions options = default)
-        {
-            var actualDecoded = CrockfordBase32.GetInt64(encoded, options);
-            Assert.AreEqual(raw, actualDecoded);
-
-            string actualEncoded = CrockfordBase32.GetString(raw, options);
-            Assert.AreEqual(encoded, actualEncoded);
-        }
-
-        static void TestVector(BigInteger raw, string encoded, DataEncodingOptions options = default)
-        {
-            var actualDecoded = CrockfordBase32.GetBigInteger(encoded, options);
-            Assert.AreEqual(raw, actualDecoded);
-
-            string actualEncoded = CrockfordBase32.GetString(raw, options);
-            Assert.AreEqual(encoded, actualEncoded);
-        }
-
         [TestMethod]
-        public void CrockfordBase32_Empty() => TestVector("", "");
+        public void CrockfordBase32_Data_Empty() => TestVector("", "");
 
         [DataTestMethod]
         [DataRow("0Oo", "000")]
@@ -70,28 +45,47 @@ namespace Gapotchenko.FX.Data.Encoding.Test
                 CrockfordBase32.Instance.Canonicalize(from));
 
         [TestMethod]
-        public void CrockfordBase32_Text_Main_TV1() => TestVector("f", "CR");
+        public void CrockfordBase32_Data_TV1() => TestVector("f", "CR");
 
         [TestMethod]
-        public void CrockfordBase32_Text_Main_TV2() => TestVector("fo", "CSQG");
+        public void CrockfordBase32_Data_TV2() => TestVector("fo", "CSQG");
 
         [TestMethod]
-        public void CrockfordBase32_Text_Main_TV3() => TestVector("foo", "CSQPY");
+        public void CrockfordBase32_Data_TV3() => TestVector("foo", "CSQPY");
 
         [TestMethod]
-        public void CrockfordBase32_Text_Main_TV4() => TestVector("foob", "CSQPYRG");
+        public void CrockfordBase32_Data_TV4() => TestVector("foob", "CSQPYRG");
 
         [TestMethod]
-        public void CrockfordBase32_Text_Main_TV5() => TestVector("fooba", "CSQPYRK1");
+        public void CrockfordBase32_Data_TV5() => TestVector("fooba", "CSQPYRK1");
 
         [TestMethod]
-        public void CrockfordBase32_Text_Main_TV6() => TestVector("foobar", "CSQPYRK1E8");
+        public void CrockfordBase32_Data_TV6() => TestVector("foobar", "CSQPYRK1E8");
 
         [TestMethod]
-        public void CrockfordBase32_Text_Main_TV7() =>
+        public void CrockfordBase32_Data_TV7() =>
             Assert.AreEqual(
                 "foobar",
                 Encoding.UTF8.GetString(CrockfordBase32.GetBytes("CsQP-YRkL-E8")));
+
+        [TestMethod]
+        public void CrockfordBase32_Data_RT_Random() => TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 16, 100000);
+
+        [TestMethod]
+        public void CrockfordBase32_Data_RT_RandomWithPadding() => TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 16, 100000, DataEncodingOptions.Padding);
+
+        #endregion
+
+        #region Int32
+
+        static void TestVector(int raw, string encoded, DataEncodingOptions options = default)
+        {
+            var actualDecoded = CrockfordBase32.GetInt32(encoded, options);
+            Assert.AreEqual(raw, actualDecoded);
+
+            string actualEncoded = CrockfordBase32.GetString(raw, options);
+            Assert.AreEqual(encoded, actualEncoded);
+        }
 
         [TestMethod]
         public void CrockfordBase32_Int32_Main_TV1() => TestVector(1337, "19S");
@@ -118,6 +112,19 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void CrockfordBase32_Int32_Checksum_TV4() => TestVector(0, "00", DataEncodingOptions.Checksum);
 
+        #endregion
+
+        #region Int64
+
+        static void TestVector(long raw, string encoded, DataEncodingOptions options = default)
+        {
+            var actualDecoded = CrockfordBase32.GetInt64(encoded, options);
+            Assert.AreEqual(raw, actualDecoded);
+
+            string actualEncoded = CrockfordBase32.GetString(raw, options);
+            Assert.AreEqual(encoded, actualEncoded);
+        }
+
         [TestMethod]
         public void CrockfordBase32_Int64_Main_TV1() => TestVector(1337L, "19S");
 
@@ -140,6 +147,19 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void CrockfordBase32_Int64_Checksum_TV4() => TestVector(0L, "00", DataEncodingOptions.Checksum);
 
+        #endregion
+
+        #region BigInteger
+
+        static void TestVector(BigInteger raw, string encoded, DataEncodingOptions options = default)
+        {
+            var actualDecoded = CrockfordBase32.GetBigInteger(encoded, options);
+            Assert.AreEqual(raw, actualDecoded);
+
+            string actualEncoded = CrockfordBase32.GetString(raw, options);
+            Assert.AreEqual(encoded, actualEncoded);
+        }
+
         [TestMethod]
         public void CrockfordBase32_BigInteger_Main_TV1() => TestVector(BigInteger.Zero, "0");
 
@@ -158,10 +178,6 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void CrockfordBase32_BigInteger_Checksum_TV2() => TestVector(BigInteger.Parse("1234"), "16JD", DataEncodingOptions.Checksum);
 
-        [TestMethod]
-        public void CrockfordBase32_RT_Random() => TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 16, 100000);
-
-        [TestMethod]
-        public void CrockfordBase32_RT_RandomWithPadding() => TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 16, 100000, DataEncodingOptions.Padding);
+        #endregion
     }
 }

@@ -92,17 +92,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             sb.Append(Alphabet[0], leadingZeroCount);
 
-#if !TFF_MEMORY || TFF_MEMORY_OOB
-            var bytes = new byte[data.Length + 1];
-
-            int i = data.Length;
-            foreach (var b in data)
-                bytes[--i] = b;
-
-            var value = new BigInteger(bytes);
-#else
-            var value = new BigInteger(data, true, true);
-#endif
+            var value = GetBigInteger(data, true, true);
 
             Write(sb, value);
 
@@ -112,13 +102,17 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options)
+        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options) => GetBytesCore(s, options, true);
+
+        byte[] GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options, bool throwOnError)
         {
             if ((options & DataEncodingOptions.Checksum) != 0)
             {
-                return VerifyAndRemoveChecksum(
-                    GetBytesCore(s, options & ~DataEncodingOptions.Checksum))
-                    .ToArray();
+                var data = VerifyAndRemoveChecksum(
+                    GetBytesCore(s, options & ~DataEncodingOptions.Checksum, throwOnError),
+                    throwOnError);
+
+                return data == null ? null : data.ToArray();
             }
 
             int leadingZeroCount = GetLeadingZeroCount(s);
@@ -141,7 +135,11 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 int si = alphabet.IndexOf(c);
                 if (si == -1)
-                    throw new FormatException($"Encountered a non-{Name} character.");
+                {
+                    if (throwOnError)
+                        throw new FormatException($"Encountered a non-{Name} character.");
+                    return null;
+                }
 
                 value = value * Base + si;
             }
@@ -196,6 +194,21 @@ namespace Gapotchenko.FX.Data.Encoding
                 i++;
                 j--;
             }
+        }
+
+        static BigInteger GetBigInteger(ReadOnlySpan<byte> value, bool isUnsigned, bool isBigEndian)
+        {
+#if !TFF_MEMORY || TFF_MEMORY_OOB
+            var bytes = new byte[value.Length + (isUnsigned ? 1 : 0)];
+
+            int i = value.Length;
+            foreach (var b in value)
+                bytes[--i] = b;
+
+            return new BigInteger(bytes);
+#else
+            return new BigInteger(value, isUnsigned, isBigEndian);
+#endif
         }
 
         static int GetLeadingZeroCount(ReadOnlySpan<byte> data)
@@ -255,7 +268,7 @@ namespace Gapotchenko.FX.Data.Encoding
             return data;
         }
 
-        static ReadOnlySpan<byte> VerifyAndRemoveChecksum(ReadOnlySpan<byte> data)
+        static ReadOnlySpan<byte> VerifyAndRemoveChecksum(ReadOnlySpan<byte> data, bool throwOnError)
         {
             int n = data.Length;
             if (n < ChecksumSize)
@@ -268,7 +281,11 @@ namespace Gapotchenko.FX.Data.Encoding
 
             var actualChecksum = GetChecksum(payload);
             if (!checksum.SequenceEqual(actualChecksum))
-                throw new FormatException("Invalid checksum.");
+            {
+                if (throwOnError)
+                    throw new FormatException("Invalid checksum.");
+                return null;
+            }
 
             return payload;
         }
@@ -393,36 +410,41 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(BigInteger value, DataEncodingOptions options)
         {
-            if (value.IsZero)
-                return new string(Alphabet[0], 1);
-
-            var sb = new StringBuilder();
-            Write(sb, value);
-            return sb.ToString();
+            var bytes = value.ToByteArray();
+            Array.Reverse(bytes);
+            return GetString(bytes, options);
         }
 
         /// <inheritdoc/>
-        public BigInteger GetBigInteger(ReadOnlySpan<char> s)
-        {
-            throw new NotImplementedException();
-        }
+        public BigInteger GetBigInteger(ReadOnlySpan<char> s) => GetBigInteger(s, DataEncodingOptions.None);
 
         /// <inheritdoc/>
         public BigInteger GetBigInteger(ReadOnlySpan<char> s, DataEncodingOptions options)
         {
-            throw new NotImplementedException();
+            if (s == null)
+                throw new ArgumentNullException(nameof(s));
+
+            if (!TryGetBigInteger(s, out var value, options))
+                throw new FormatException("Input string was not in a correct format.");
+
+            return value;
         }
 
         /// <inheritdoc/>
-        public bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value)
-        {
-            throw new NotImplementedException();
-        }
+        public bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value) => TryGetBigInteger(s, out value, DataEncodingOptions.None);
 
         /// <inheritdoc/>
         public bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value, DataEncodingOptions options)
         {
-            throw new NotImplementedException();
+            var data = GetBytesCore(s, options, false);
+            if (data == null)
+            {
+                value = default;
+                return false;
+            }
+
+            value = GetBigInteger(data, false, true);
+            return true;
         }
     }
 }

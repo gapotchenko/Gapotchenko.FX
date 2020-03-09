@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using System.Numerics;
 using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Data.Encoding.Test.Bench
@@ -9,7 +10,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 
     public static class TextDataEncodingTestBench
     {
-        #region Bytes
+        #region Data
 
         public static void TestVector(
             ITextDataEncoding dataEncoding,
@@ -193,6 +194,34 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
                 RandomNumberGenerator.Fill(span);
                 RoundTrip(encoding, span, options);
             }
+        }
+
+        #endregion
+
+        #region BigInteger
+
+        public static void TestVector(
+            INumericTextDataEncoding dataEncoding,
+            BigInteger raw,
+            string encoded,
+            DataEncodingOptions options = DataEncodingOptions.None)
+        {
+            if (dataEncoding == null)
+                throw new ArgumentNullException(nameof(dataEncoding));
+            if (raw == null)
+                throw new ArgumentNullException(nameof(raw));
+            if (encoded == null)
+                throw new ArgumentNullException(nameof(encoded));
+
+            // -----------------------------------------------------------------
+            // Check text-based numerics encoding API
+            // -----------------------------------------------------------------
+
+            string actualEncoded = dataEncoding.GetString(raw, options);
+            Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
+
+            var actualDecoded = dataEncoding.GetBigInteger(actualEncoded.AsSpan(), options);
+            Assert.AreEqual(raw, actualDecoded, "Decoding error.");
         }
 
         #endregion
