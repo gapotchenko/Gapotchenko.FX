@@ -87,29 +87,29 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         }
 
         [TestMethod]
-        public void CrockfordBase32_Int32_Main_TV1() => TestVector(1337, "19S");
+        public void CrockfordBase32_Int32_TV1() => TestVector(1337, "19S");
 
         [TestMethod]
-        public void CrockfordBase32_Int32_Main_TV2() => TestVector(1234, "16J");
+        public void CrockfordBase32_Int32_TV2() => TestVector(1234, "16J");
 
         [TestMethod]
-        public void CrockfordBase32_Int32_Main_TV3() => TestVector(5111, "4ZQ");
+        public void CrockfordBase32_Int32_TV3() => TestVector(5111, "4ZQ");
 
         [TestMethod]
-        public void CrockfordBase32_Int32_Main_TV4() => TestVector(0, "0");
+        public void CrockfordBase32_Int32_TV4() => TestVector(0, "0");
 
         [TestMethod]
-        public void CrockfordBase32_Int32_Checksum_TV1() => TestVector(32, "10*", DataEncodingOptions.Checksum);
+        public void CrockfordBase32_Int32_TV5() => TestVector(32, "10*", DataEncodingOptions.Checksum);
 
         [TestMethod]
         [ExpectedException(typeof(FormatException))]
-        public void CrockfordBase32_Int32_Checksum_TV2() => TestVector(32, "10~", DataEncodingOptions.Checksum);
+        public void CrockfordBase32_Int32_TV6() => TestVector(32, "10~", DataEncodingOptions.Checksum);
 
         [TestMethod]
-        public void CrockfordBase32_Int32_Checksum_TV3() => TestVector(1234, "16JD", DataEncodingOptions.Checksum);
+        public void CrockfordBase32_Int32_TV7() => TestVector(1234, "16JD", DataEncodingOptions.Checksum);
 
         [TestMethod]
-        public void CrockfordBase32_Int32_Checksum_TV4() => TestVector(0, "00", DataEncodingOptions.Checksum);
+        public void CrockfordBase32_Int32_TV8() => TestVector(0, "00", DataEncodingOptions.Checksum);
 
         #endregion
 
@@ -125,26 +125,26 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         }
 
         [TestMethod]
-        public void CrockfordBase32_Int64_Main_TV1() => TestVector(1337L, "19S");
+        public void CrockfordBase32_Int64_TV1() => TestVector(1337L, "19S");
 
         [TestMethod]
-        public void CrockfordBase32_Int64_Main_TV2() => TestVector(1234L, "16J");
+        public void CrockfordBase32_Int64_TV2() => TestVector(1234L, "16J");
 
         [TestMethod]
-        public void CrockfordBase32_Int64_Main_TV3() => TestVector(5111L, "4ZQ");
+        public void CrockfordBase32_Int64_TV3() => TestVector(5111L, "4ZQ");
 
         [TestMethod]
-        public void CrockfordBase32_Int64_Checksum_TV1() => TestVector(32L, "10*", DataEncodingOptions.Checksum);
+        public void CrockfordBase32_Int64_TV4() => TestVector(32L, "10*", DataEncodingOptions.Checksum);
 
         [TestMethod]
         [ExpectedException(typeof(FormatException))]
-        public void CrockfordBase32_Int64_Checksum_TV2() => TestVector(32L, "10~", DataEncodingOptions.Checksum);
+        public void CrockfordBase32_Int64_TV5() => TestVector(32L, "10~", DataEncodingOptions.Checksum);
 
         [TestMethod]
-        public void CrockfordBase32_Int64_Checksum_TV3() => TestVector(1234L, "16JD", DataEncodingOptions.Checksum);
+        public void CrockfordBase32_Int64_TV6() => TestVector(1234L, "16JD", DataEncodingOptions.Checksum);
 
         [TestMethod]
-        public void CrockfordBase32_Int64_Checksum_TV4() => TestVector(0L, "00", DataEncodingOptions.Checksum);
+        public void CrockfordBase32_Int64_TV7() => TestVector(0L, "00", DataEncodingOptions.Checksum);
 
         #endregion
 
@@ -162,22 +162,22 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         }
 
         [TestMethod]
-        public void CrockfordBase32_BigInteger_Main_TV1() => TestVector(BigInteger.Zero, "0");
+        public void CrockfordBase32_BigInteger_TV1() => TestVector(BigInteger.Zero, "0");
 
         [TestMethod]
-        public void CrockfordBase32_BigInteger_Main_TV2() => TestVector(BigInteger.Parse("1234"), "16J");
+        public void CrockfordBase32_BigInteger_TV2() => TestVector(BigInteger.Parse("1234"), "16J");
 
         [TestMethod]
-        public void CrockfordBase32_BigInteger_Main_TV3() => TestVector(BigInteger.Parse("3019140802085400304608040952"), "2E1BZQDAGC4G6TTENZR");
+        public void CrockfordBase32_BigInteger_TV3() => TestVector(BigInteger.Parse("3019140802085400304608040952"), "2E1BZQDAGC4G6TTENZR");
 
         [TestMethod]
-        public void CrockfordBase32_BigInteger_Main_TV4() => TestVector(BigInteger.Parse("100000000000000000000"), "2PQHTY5NHH0000");
+        public void CrockfordBase32_BigInteger_TV4() => TestVector(BigInteger.Parse("100000000000000000000"), "2PQHTY5NHH0000");
 
         [TestMethod]
-        public void CrockfordBase32_BigInteger_Checksum_TV1() => TestVector(BigInteger.Zero, "00", DataEncodingOptions.Checksum);
+        public void CrockfordBase32_BigInteger_TV5() => TestVector(BigInteger.Zero, "00", DataEncodingOptions.Checksum);
 
         [TestMethod]
-        public void CrockfordBase32_BigInteger_Checksum_TV2() => TestVector(BigInteger.Parse("1234"), "16JD", DataEncodingOptions.Checksum);
+        public void CrockfordBase32_BigInteger_TV6() => TestVector(BigInteger.Parse("1234"), "16JD", DataEncodingOptions.Checksum);
 
         #endregion
     }
