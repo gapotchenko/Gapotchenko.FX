@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
@@ -164,22 +165,18 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             }
         }
 
-        static void AssertRoundTrip(ReadOnlySpan<byte> expected, ReadOnlySpan<byte> actual)
-        {
-            if (!expected.SequenceEqual(actual))
-            {
-                Assert.Fail(
-                    "Encoding round trip error for data block {0}. Actual decoded data are {1}.",
-                    Base16.GetString(expected, DataEncodingOptions.Indent),
-                    Base16.GetString(actual, DataEncodingOptions.Indent));
-            }
-        }
-
         public static void RoundTrip(ITextDataEncoding encoding, ReadOnlySpan<byte> raw, DataEncodingOptions options = default)
         {
             string actualEncoded = encoding.GetString(raw, options);
             var actualDecoded = encoding.GetBytes(actualEncoded, options);
-            AssertRoundTrip(raw, actualDecoded);
+
+            if (!raw.SequenceEqual(actualDecoded))
+            {
+                Assert.Fail(
+                    "Encoding round trip error for data block {0}. Actual decoded data are {1}.",
+                    Base16.GetString(raw, DataEncodingOptions.Indent),
+                    Base16.GetString(actualDecoded, DataEncodingOptions.Indent));
+            }
         }
 
         public static void RandomRoundTrip(ITextDataEncoding encoding, int maxByteCount, int iterations, DataEncodingOptions options = default)
@@ -276,10 +273,24 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             Assert.AreEqual(raw, actualDecoded, "Decoding error.");
         }
 
+        static bool IsContractException(Exception exception) =>
+            exception is FormatException ||
+            exception is InvalidDataException;
+
         public static void RoundTrip(INumericTextDataEncoding encoding, BigInteger raw, DataEncodingOptions options = default)
         {
-            string actualEncoded = encoding.GetString(raw, options);
-            var actualDecoded = encoding.GetBigInteger(actualEncoded, options);
+            BigInteger actualDecoded;
+            try
+            {
+                string actualEncoded = encoding.GetString(raw, options);
+                actualDecoded = encoding.GetBigInteger(actualEncoded, options);
+            }
+            catch (Exception e) when (!IsContractException(e))
+            {
+                throw new Exception(
+                    string.Format("Error occurred during the round trip for value {0}.", raw),
+                    e);
+            }
             Assert.AreEqual(raw, actualDecoded, "Round trip error.");
         }
 
