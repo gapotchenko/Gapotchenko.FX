@@ -94,7 +94,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             sb.Append(alphabet[0], leadingZeroCount);
 
-#if TFF_MEMORY_OOB
+#if !TFF_MEMORY || TFF_MEMORY_OOB
             var bytes = new byte[data.Length + 1];
 
             int i = data.Length;
@@ -224,7 +224,16 @@ namespace Gapotchenko.FX.Data.Encoding
             byte[] hash;
 
             using (var sha256 = SHA256.Create())
+            {
+#if !TFF_MEMORY || TFF_MEMORY_OOB
                 hash = sha256.ComputeHash(sha256.ComputeHash(payload.ToArray()));
+#else
+                hash = new byte[32];
+                if (!(sha256.TryComputeHash(payload, hash, out var hashSize) && sha256.TryComputeHash(hash, hash, out hashSize)))
+                    throw new InvalidOperationException();
+                Debug.Assert(hash.Length == hashSize);
+#endif
+            }
 
             return hash.AsSpan(0, ChecksumSize);
         }
