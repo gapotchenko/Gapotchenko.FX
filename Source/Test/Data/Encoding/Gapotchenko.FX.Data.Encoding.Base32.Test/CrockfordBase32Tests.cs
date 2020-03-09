@@ -68,11 +68,10 @@ namespace Gapotchenko.FX.Data.Encoding.Test
                 "foobar",
                 Encoding.UTF8.GetString(CrockfordBase32.GetBytes("CsQP-YRkL-E8")));
 
-        [TestMethod]
-        public void CrockfordBase32_Data_RT_Random() => TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 16, 100000);
-
-        [TestMethod]
-        public void CrockfordBase32_Data_RT_RandomWithPadding() => TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 16, 100000, DataEncodingOptions.Padding);
+        [DataTestMethod]
+        [DataRow(DataEncodingOptions.None)]
+        [DataRow(DataEncodingOptions.Padding)]
+        public void CrockfordBase32_Data_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 16, 100000, options);
 
         #endregion
 
@@ -158,6 +157,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             string actualEncoded = CrockfordBase32.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded);
+
+            TextDataEncodingTestBench.TestVector(CrockfordBase32.Instance, raw, encoded, options);
         }
 
         [TestMethod]
