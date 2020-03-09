@@ -3,7 +3,7 @@
 
   <!-- NuGet Specification -->
   <PropertyGroup>
-    <Version>2020.1.1-beta</Version>
+    <Version>2020.1.2-beta</Version>
     <Authors>Gapotchenko</Authors>
     <PackageTags>framework platform polyfill rad</PackageTags>
     <PackageIcon>PackageIcon.png</PackageIcon>
