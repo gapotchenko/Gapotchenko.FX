@@ -9,6 +9,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 
     public static class TextDataEncodingTestBench
     {
+        #region Bytes
+
         public static void TestVector(
             ITextDataEncoding dataEncoding,
             string raw,
@@ -161,19 +163,22 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             }
         }
 
-        public static void RoundTrip(ITextDataEncoding encoding, ReadOnlySpan<byte> raw, DataEncodingOptions options = default)
+        static void AssertRoundTrip(ReadOnlySpan<byte> expected, ReadOnlySpan<byte> actual)
         {
-            string actualEncoded = encoding.GetString(raw, options);
-
-            var actualDecoded = encoding.GetBytes(actualEncoded.AsSpan(), options);
-
-            if (!raw.SequenceEqual(actualDecoded))
+            if (!expected.SequenceEqual(actual))
             {
                 Assert.Fail(
                     "Encoding round trip error for data block {0}. Actual decoded data are {1}.",
-                    Base16.GetString(raw, DataEncodingOptions.Indent),
-                    Base16.GetString(actualDecoded, DataEncodingOptions.Indent));
+                    Base16.GetString(expected, DataEncodingOptions.Indent),
+                    Base16.GetString(actual, DataEncodingOptions.Indent));
             }
+        }
+
+        public static void RoundTrip(ITextDataEncoding encoding, ReadOnlySpan<byte> raw, DataEncodingOptions options = default)
+        {
+            string actualEncoded = encoding.GetString(raw, options);
+            var actualDecoded = encoding.GetBytes(actualEncoded, options);
+            AssertRoundTrip(raw, actualDecoded);
         }
 
         public static void RandomRoundTrip(ITextDataEncoding encoding, int maxByteCount, int iterations, DataEncodingOptions options = default)
@@ -189,5 +194,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
                 RoundTrip(encoding, span, options);
             }
         }
+
+        #endregion
     }
 }

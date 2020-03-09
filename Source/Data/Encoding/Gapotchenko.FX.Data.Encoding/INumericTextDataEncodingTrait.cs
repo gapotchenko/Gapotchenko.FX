@@ -4,9 +4,9 @@ using System.Numerics;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Defines the numerical facet of a text data encoding.
+    /// Defines the numeric trait of a text data encoding.
     /// </summary>
-    public interface INumericalTextDataEncodingFacet
+    public interface INumericTextDataEncodingTrait
     {
         /// <summary>
         /// Encodes an <see cref="Int32"/> value to its equivalent string representation.

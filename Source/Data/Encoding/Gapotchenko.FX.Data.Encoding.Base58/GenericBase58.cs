@@ -81,18 +81,16 @@ namespace Gapotchenko.FX.Data.Encoding
                     options & ~DataEncodingOptions.Checksum);
             }
 
-            var alphabet = Alphabet;
-
             int leadingZeroCount = GetLeadingZeroCount(data);
 
             data = data.Slice(leadingZeroCount);
             if (data.IsEmpty)
-                return new string(alphabet[0], leadingZeroCount);
+                return new string(Alphabet[0], leadingZeroCount);
 
             var capacity = GetMaxCharCountCore(data.Length, options) + leadingZeroCount;
             var sb = new StringBuilder(capacity);
 
-            sb.Append(alphabet[0], leadingZeroCount);
+            sb.Append(Alphabet[0], leadingZeroCount);
 
 #if !TFF_MEMORY || TFF_MEMORY_OOB
             var bytes = new byte[data.Length + 1];
@@ -106,17 +104,9 @@ namespace Gapotchenko.FX.Data.Encoding
             var value = new BigInteger(data, true, true);
 #endif
 
-            while (value > 0)
-            {
-                var si = (int)(value % Base);
-                value /= Base;
-
-                sb.Append(alphabet[si]);
-            }
+            Write(sb, value);
 
             Debug.Assert(sb.Length <= capacity, "Invalid capacity.");
-
-            Reverse(sb, leadingZeroCount, sb.Length - leadingZeroCount);
 
             return sb.ToString();
         }
@@ -174,6 +164,22 @@ namespace Gapotchenko.FX.Data.Encoding
             Debug.Assert(stream.Length <= capacity, "Invalid capacity.");
 
             return stream.ToArray();
+        }
+
+        void Write(StringBuilder sb, BigInteger value)
+        {
+            int startIndex = sb.Length;
+            var alphabet = Alphabet;
+
+            while (value > 0)
+            {
+                var si = (int)(value % Base);
+                value /= Base;
+
+                sb.Append(alphabet[si]);
+            }
+
+            Reverse(sb, startIndex, sb.Length - startIndex);
         }
 
         static void Reverse(StringBuilder sb, int index, int length)
@@ -308,5 +314,115 @@ namespace Gapotchenko.FX.Data.Encoding
         int GetMaxByteCountCore(int charCount, int leadingZeroCount) =>
             leadingZeroCount +
             (int)Math.Ceiling(charCount * Efficiency);
+
+        /// <inheritdoc/>
+        public string GetString(int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public string GetString(int value, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public int GetInt32(ReadOnlySpan<char> s)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public int GetInt32(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetInt32(ReadOnlySpan<char> s, out int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetInt32(ReadOnlySpan<char> s, out int value, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public string GetString(long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public string GetString(long value, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public long GetInt64(ReadOnlySpan<char> s)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public long GetInt64(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetInt64(ReadOnlySpan<char> s, out long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetInt64(ReadOnlySpan<char> s, out long value, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public string GetString(BigInteger value) => GetString(value, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public string GetString(BigInteger value, DataEncodingOptions options)
+        {
+            if (value.IsZero)
+                return new string(Alphabet[0], 1);
+
+            var sb = new StringBuilder();
+            Write(sb, value);
+            return sb.ToString();
+        }
+
+        /// <inheritdoc/>
+        public BigInteger GetBigInteger(ReadOnlySpan<char> s)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public BigInteger GetBigInteger(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

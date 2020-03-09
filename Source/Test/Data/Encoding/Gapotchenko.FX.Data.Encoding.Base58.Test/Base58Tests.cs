@@ -9,6 +9,8 @@ namespace Gapotchenko.FX.Data.Encoding.Test
     [TestClass]
     public class Base58Tests
     {
+        #region Bytes
+
         static void TestVector(byte[] raw, string encoded, DataEncodingOptions options = default)
         {
             //string actualEncoded = Base58.GetString(raw, options);
@@ -133,5 +135,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [DataRow(DataEncodingOptions.None)]
         [DataRow(DataEncodingOptions.Checksum)]
         public void Base58_Bytes_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base58.Instance, 32, 100000, options);
+
+        #endregion
     }
 }
