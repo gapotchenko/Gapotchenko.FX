@@ -1,10 +1,9 @@
 ﻿using Gapotchenko.FX.Data.Encoding.Test.Bench;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 
 namespace Gapotchenko.FX.Data.Encoding.Test
 {
@@ -182,6 +181,17 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         public void CrockfordBase32_BigInteger_TV6() => TestVector(BigInteger.Parse("1234"), "16JD", DataEncodingOptions.Checksum);
+
+        //[DataTestMethod]
+        //[DataRow(DataEncodingOptions.None)]
+        //[DataRow(DataEncodingOptions.Checksum)]
+        //public void CrockfordBase32_BigInteger_RT(DataEncodingOptions options) =>
+        //    TextDataEncodingTestBench.RandomRoundTrip(
+        //        CrockfordBase32.Instance,
+        //        BigInteger.Zero,
+        //        BigInteger.Parse("0fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", NumberStyles.HexNumber),
+        //        50000,
+        //        options);
 
         #endregion
     }
