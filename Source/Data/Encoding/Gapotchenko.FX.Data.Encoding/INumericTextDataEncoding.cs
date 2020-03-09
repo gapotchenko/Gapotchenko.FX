@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Defines the interface of a numeric binary-to-text encoding.
+    /// The interface of a numeric binary-to-text encoding.
     /// </summary>
     public interface INumericTextDataEncoding : ITextDataEncoding, INumericTextDataEncodingTrait
     {
