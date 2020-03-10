@@ -164,12 +164,18 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         public void Base58_BigInteger_TV2() => TestVector(BigInteger.One, "2");
 
         [TestMethod]
-        public void Base58_BigInteger_TV3() => TestVector(new BigInteger(3471844090), "16Ho7Hs");
+        public void Base58_BigInteger_TV3() => TestVector(new BigInteger(3471844090), "6Ho7Hs");
 
         [TestMethod]
         public void Base58_BigInteger_TV4() => TestVector(
             BigInteger.Parse("111d38e5fc9071ffcd20b4a763cc9ae4f252bb4e48fd66a835e252ada93ff480d6dd43dc62a641155a5", NumberStyles.HexNumber),
             "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz");
+
+        [TestMethod]
+        public void Base58_BigInteger_TV5() => TextDataEncodingTestBench.TestVector(
+            new CustomBase58("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuv"),
+            new BigInteger(987654321),
+            "1TFvCj");
 
         [DataTestMethod]
         [DataRow(DataEncodingOptions.None)]
@@ -177,7 +183,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         public void Base58_BigInteger_RT(DataEncodingOptions options) =>
             TextDataEncodingTestBench.RandomRoundTrip(
                 Base58.Instance,
-                -BigInteger.Parse("0fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", NumberStyles.HexNumber),
+                BigInteger.Zero,
                 BigInteger.Parse("0fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", NumberStyles.HexNumber),
                 50000,
                 options);

@@ -410,9 +410,24 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(BigInteger value, DataEncodingOptions options)
         {
-            var bytes = value.ToByteArray();
-            Array.Reverse(bytes);
-            return GetString(bytes, options);
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Value cannot be negative.");
+
+            if ((options & DataEncodingOptions.Checksum) != 0)
+            {
+                var bytes = value.ToByteArray();
+                Array.Reverse(bytes);
+
+                int leadingZeroCount = GetLeadingZeroCount(bytes.AsSpan(0, bytes.Length - 1));
+                return GetString(bytes.AsSpan(leadingZeroCount), options);
+            }
+
+            if (value.IsZero)
+                return new string(Alphabet[0], 1);
+
+            var sb = new StringBuilder();
+            Write(sb, value);
+            return sb.ToString();
         }
 
         /// <inheritdoc/>
@@ -443,7 +458,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 return false;
             }
 
-            value = GetBigInteger(data, false, true);
+            value = GetBigInteger(data, true, true);
             return true;
         }
     }
