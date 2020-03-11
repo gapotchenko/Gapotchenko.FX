@@ -182,9 +182,16 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void CrockfordBase32_BigInteger_TV6() => TestVector(BigInteger.Parse("1234"), "16JD", DataEncodingOptions.Checksum);
 
+        [TestMethod]
+        public void CrockfordBase32_BigInteger_RT1() =>
+            TextDataEncodingTestBench.RoundTrip(
+                CrockfordBase32.Instance,
+                BigInteger.Parse("44473186245345"),
+                DataEncodingOptions.Checksum);
+
         [DataTestMethod]
         [DataRow(DataEncodingOptions.None)]
-        //[DataRow(DataEncodingOptions.Checksum)]
+        [DataRow(DataEncodingOptions.Checksum)]
         public void CrockfordBase32_BigInteger_RT_Random(DataEncodingOptions options) =>
             TextDataEncodingTestBench.RandomRoundTrip(
                 CrockfordBase32.Instance,
