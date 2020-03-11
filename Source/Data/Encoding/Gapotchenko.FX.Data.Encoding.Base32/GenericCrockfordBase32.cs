@@ -424,57 +424,43 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             options = GetEffectiveOptions(options);
 
-            if (value.IsZero)
-                return GetZeroString(options);
-
-            var bytes = value.ToByteArray();
-
-            int totalBytes = bytes.Length;
-            int totalBits = totalBytes << 3;
-            int restBits = totalBits / BitsPerSymbol * BitsPerSymbol;
-            int capacity = (totalBits + BitsPerSymbol - 1) / BitsPerSymbol + 1 /* checksum */;
-
-            var sb = new StringBuilder(capacity);
+            var sb = new StringBuilder();
 
             var alphabet = Alphabet;
-
-            for (int bit = restBits; bit >= 0; bit -= BitsPerSymbol)
-            {
-                int bs = bit & 7; // bit shift
-                int bi = bit >> 3; // byte index
-
-                int ab = 8 - bs; // available bits 
-
-                int si; // symbol index
-                if (ab >= BitsPerSymbol)
-                {
-                    // Byte has enough bits for a symbol.
-                    si = (bytes[bi] >> bs) & SymbolMask;
-                }
-                else
-                {
-                    // Byte contains only lower bits of a symbol.
-                    si = bytes[bi] >> bs;
-
-                    // Try get the rest (higher bits) from the next byte.
-                    int nbi = bi + 1; // next byte index
-                    if (nbi < totalBytes)
-                        si |= (bytes[nbi] << ab) & SymbolMask;
-                }
-
-                if (si == 0 && sb.Length == 0)
-                {
-                    // Skip leading zeros.
-                    continue;
-                }
-
-                sb.Append(alphabet[si]);
-            }
 
             if ((options & DataEncodingOptions.Checksum) != 0)
                 sb.Append(alphabet[(int)(value % ChecksumAlphabetSize)]);
 
+            do
+            {
+                var si = (int)(value & SymbolMask);
+                value >>= BitsPerSymbol;
+
+                sb.Append(alphabet[si]);
+            }
+            while (value > 0);
+
+            Reverse(sb);
+
             return Epilogue(sb, options).ToString();
+        }
+
+        static void Reverse(StringBuilder sb) => Reverse(sb, 0, sb.Length);
+
+        static void Reverse(StringBuilder sb, int index, int length)
+        {
+            int i = index;
+            int j = (index + length) - 1;
+
+            while (i < j)
+            {
+                var t = sb[i];
+                sb[i] = sb[j];
+                sb[j] = t;
+
+                i++;
+                j--;
+            }
         }
 
         /// <inheritdoc/>
