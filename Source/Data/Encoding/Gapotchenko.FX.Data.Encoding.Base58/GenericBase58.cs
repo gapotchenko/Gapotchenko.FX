@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Text;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -177,23 +178,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 sb.Append(alphabet[si]);
             }
 
-            Reverse(sb, startIndex, sb.Length - startIndex);
-        }
-
-        static void Reverse(StringBuilder sb, int index, int length)
-        {
-            int i = index;
-            int j = (index + length) - 1;
-
-            while (i < j)
-            {
-                var t = sb[i];
-                sb[i] = sb[j];
-                sb[j] = t;
-
-                i++;
-                j--;
-            }
+            sb.Reverse(startIndex, sb.Length - startIndex);
         }
 
         static BigInteger GetBigInteger(ReadOnlySpan<byte> value, bool isUnsigned, bool isBigEndian)

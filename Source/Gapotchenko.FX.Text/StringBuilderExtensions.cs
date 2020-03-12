@@ -226,5 +226,59 @@ namespace Gapotchenko.FX.Text
             return sb;
 #endif
         }
+
+        /// <summary>
+        /// Reverses the sequence of the elements in this instance of the entire <see cref="StringBuilder"/>.
+        /// </summary>
+        /// <param name="sb">The string builder.</param>
+        /// <returns>A reference to string builder after the reverse operation has completed.</returns>
+        public static StringBuilder Reverse(this StringBuilder sb)
+        {
+            if (sb == null)
+                throw new ArgumentNullException(nameof(sb));
+
+            ReverseCore(sb, 0, sb.Length);
+
+            return sb;
+        }
+
+        /// <summary>
+        /// Reverses the sequence of the elements in a range of elements in this instance of the <see cref="StringBuilder"/>.
+        /// </summary>
+        /// <param name="sb">The string builder.</param>
+        /// <param name="index">The starting index of the section to reverse.</param>
+        /// <param name="length">The number of elements in the section to reverse.</param>
+        /// <returns>A reference to string builder after the reverse operation has completed.</returns>
+        public static StringBuilder Reverse(this StringBuilder sb, int index, int length)
+        {
+            if (sb == null)
+                throw new ArgumentNullException(nameof(sb));
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index), "Non-negative number required.");
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length), "Non-negative number required.");
+            if (sb.Length - index < length)
+                throw new ArgumentException("Index and length represent an out of range section of a collection.");
+
+            ReverseCore(sb, index, length);
+
+            return sb;
+        }
+
+        static void ReverseCore(StringBuilder sb, int index, int length)
+        {
+            int i = index;
+            int j = index + length - 1;
+
+            while (i < j)
+            {
+                var t = sb[i];
+                sb[i] = sb[j];
+                sb[j] = t;
+
+                i++;
+                j--;
+            }
+        }
     }
 }

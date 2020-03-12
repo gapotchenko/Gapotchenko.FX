@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Text;
+using System;
 using System.ComponentModel;
 using System.Numerics;
 using System.Text;
@@ -450,27 +451,9 @@ namespace Gapotchenko.FX.Data.Encoding
             }
             while (value > 0);
 
-            Reverse(sb);
+            sb.Reverse();
 
             return Epilogue(sb, options).ToString();
-        }
-
-        static void Reverse(StringBuilder sb) => Reverse(sb, 0, sb.Length);
-
-        static void Reverse(StringBuilder sb, int index, int length)
-        {
-            int i = index;
-            int j = (index + length) - 1;
-
-            while (i < j)
-            {
-                var t = sb[i];
-                sb[i] = sb[j];
-                sb[j] = t;
-
-                i++;
-                j--;
-            }
         }
 
         /// <inheritdoc/>

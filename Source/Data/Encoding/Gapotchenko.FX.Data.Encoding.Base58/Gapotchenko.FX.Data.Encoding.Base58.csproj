@@ -7,6 +7,7 @@
   <Import Project="$(RepositorySourceDir)\Mastering\OOB\System.Memory.targets" />
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
     <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj" />
   </ItemGroup>
