@@ -64,6 +64,16 @@ namespace Gapotchenko.FX.Data.Encoding
                 // Produce unpadded strings unless padding is explicitly requested.
                 options |= DataEncodingOptions.Unpad;
             }
+            else if ((options & DataEncodingOptions.Checksum) != 0)
+            {
+                throw new ArgumentException(
+                    string.Format(
+                        "'{0}' and '{1}' options cannot be used simultaneously for {2} encoding.",
+                        nameof(DataEncodingOptions.Padding),
+                        nameof(DataEncodingOptions.Checksum),
+                        Name),
+                    nameof(options));
+            }
 
             return base.GetEffectiveOptions(options);
         }
@@ -190,7 +200,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             foreach (var c in s)
             {
-                if (c == PaddingChar)
+                if (!checksum && c == PaddingChar)
                     continue;
 
                 int si = alphabet.IndexOf(c); // symbol index lookup
@@ -348,7 +358,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             foreach (var c in s)
             {
-                if (c == PaddingChar)
+                if (!checksum && c == PaddingChar)
                     continue;
 
                 int si = alphabet.IndexOf(c); // symbol index lookup
@@ -500,7 +510,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
             foreach (var c in s)
             {
-                if (c == PaddingChar)
+                if (!checksum && c == PaddingChar)
                     continue;
 
                 int si = alphabet.IndexOf(c); // symbol index lookup
