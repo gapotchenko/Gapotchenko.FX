@@ -111,6 +111,9 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(int value, DataEncodingOptions options)
         {
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Value cannot be negative.");
+
             options = GetEffectiveOptions(options);
 
             if (value == 0)
@@ -275,6 +278,9 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(long value, DataEncodingOptions options)
         {
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Value cannot be negative.");
+
             options = GetEffectiveOptions(options);
 
             if (value == 0)
@@ -433,6 +439,9 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public string GetString(BigInteger value, DataEncodingOptions options)
         {
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Value cannot be negative.");
+
             options = GetEffectiveOptions(options);
 
             var sb = new StringBuilder();
