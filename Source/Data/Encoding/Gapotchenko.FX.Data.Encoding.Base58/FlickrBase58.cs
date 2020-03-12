@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Encoding
@@ -23,6 +24,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Returns a default instance of <see cref="FlickrBase58"/> encoding.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
+        [CLSCompliant(false)]
         public static IBase58 Instance
         {
             get

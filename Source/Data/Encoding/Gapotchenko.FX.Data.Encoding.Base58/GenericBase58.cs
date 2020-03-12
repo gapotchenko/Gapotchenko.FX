@@ -353,6 +353,54 @@ namespace Gapotchenko.FX.Data.Encoding
             throw new NotImplementedException();
         }
 
+        #region UInt32
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public string GetString(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public string GetString(uint value, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public uint GetUInt32(ReadOnlySpan<char> s)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public uint GetUInt32(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public bool TryGetUInt32(ReadOnlySpan<char> s, out uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public bool TryGetUInt32(ReadOnlySpan<char> s, out uint value, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Int64
+
         /// <inheritdoc/>
         public string GetString(long value)
         {
@@ -388,6 +436,56 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             throw new NotImplementedException();
         }
+
+        #endregion
+
+        #region UInt64
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public string GetString(ulong value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public string GetString(ulong value, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public ulong GetUInt64(ReadOnlySpan<char> s)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public ulong GetUInt64(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region BigInteger
 
         /// <inheritdoc/>
         public string GetString(BigInteger value) => GetString(value, DataEncodingOptions.None);
@@ -442,9 +540,13 @@ namespace Gapotchenko.FX.Data.Encoding
                 value = default;
                 return false;
             }
-
-            value = GetBigInteger(data, true, true);
-            return true;
+            else
+            {
+                value = GetBigInteger(data, true, true);
+                return true;
+            }
         }
+
+        #endregion
     }
 }

@@ -343,6 +343,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Returns a default instance of <see cref="CrockfordBase32"/> encoding.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
+        [CLSCompliant(false)]
         public static ICrockfordBase32 Instance
         {
             get

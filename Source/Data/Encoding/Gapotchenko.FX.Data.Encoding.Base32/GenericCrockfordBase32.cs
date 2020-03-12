@@ -98,12 +98,20 @@ namespace Gapotchenko.FX.Data.Encoding
             return sb;
         }
 
+        const char Separator = '-';
+
+        static bool IsValidSeparator(char c) =>
+            char.IsWhiteSpace(c) ||
+            c == Separator;
+
         string GetZeroString(DataEncodingOptions options) =>
             Epilogue(
                 (options & DataEncodingOptions.Checksum) != 0 ?
                     "00" :
                     "0",
                 options);
+
+        #region Int32
 
         /// <inheritdoc/>
         public string GetString(int value) => GetString(value, DataEncodingOptions.None);
@@ -114,14 +122,63 @@ namespace Gapotchenko.FX.Data.Encoding
             if (value < 0)
                 throw new ArgumentOutOfRangeException(nameof(value), "Value cannot be negative.");
 
+            return GetString((uint)value, options);
+        }
+
+        /// <inheritdoc/>
+        public int GetInt32(ReadOnlySpan<char> s) => GetInt32(s, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public int GetInt32(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            if (s == null)
+                throw new ArgumentNullException(nameof(s));
+
+            if (!TryGetInt32(s, out var value, options))
+                throw new FormatException("Input string was not in a correct format.");
+
+            return value;
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetInt32(ReadOnlySpan<char> s, out int value) => TryGetInt32(s, out value, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public bool TryGetInt32(ReadOnlySpan<char> s, out int value, DataEncodingOptions options)
+        {
+            if (TryGetUInt32(s, out var x, options) &&
+                x <= int.MaxValue)
+            {
+                value = (int)x;
+                return true;
+            }
+            else
+            {
+                value = default;
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region UInt32
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public string GetString(uint value) => GetString(value, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public string GetString(uint value, DataEncodingOptions options)
+        {
             options = GetEffectiveOptions(options);
 
             if (value == 0)
                 return GetZeroString(options);
 
-            uint bits = (uint)value;
+            uint bits = value;
 
-            const int BitsPerValue = sizeof(int) * 8;
+            const int BitsPerValue = sizeof(uint) * 8;
             const int InsignificantBits = BitsPerValue - BitsPerSymbol;
             const int RestBits = BitsPerValue / BitsPerSymbol * BitsPerSymbol;
             const int FirstBits = BitsPerValue - RestBits;
@@ -153,37 +210,35 @@ namespace Gapotchenko.FX.Data.Encoding
             }
 
             if ((options & DataEncodingOptions.Checksum) != 0)
-                sb.Append(alphabet[(int)((uint)value % ChecksumAlphabetSize)]);
+                sb.Append(alphabet[(int)(value % ChecksumAlphabetSize)]);
 
             return Epilogue(sb, options).ToString();
         }
 
-        const char Separator = '-';
-
-        static bool IsValidSeparator(char c) =>
-            char.IsWhiteSpace(c) ||
-            c == Separator;
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public uint GetUInt32(ReadOnlySpan<char> s) => GetUInt32(s, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public int GetInt32(ReadOnlySpan<char> s) => GetInt32(s, DataEncodingOptions.None);
-
-        /// <inheritdoc/>
-        public int GetInt32(ReadOnlySpan<char> s, DataEncodingOptions options)
+        [CLSCompliant(false)]
+        public uint GetUInt32(ReadOnlySpan<char> s, DataEncodingOptions options)
         {
             if (s == null)
                 throw new ArgumentNullException(nameof(s));
 
-            if (!TryGetInt32(s, out var value, options))
+            if (!TryGetUInt32(s, out var value, options))
                 throw new FormatException("Input string was not in a correct format.");
 
             return value;
         }
 
         /// <inheritdoc/>
-        public bool TryGetInt32(ReadOnlySpan<char> s, out int value) => TryGetInt32(s, out value, DataEncodingOptions.None);
+        [CLSCompliant(false)]
+        public bool TryGetUInt32(ReadOnlySpan<char> s, out uint value) => TryGetUInt32(s, out value, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public bool TryGetInt32(ReadOnlySpan<char> s, out int value, DataEncodingOptions options)
+        [CLSCompliant(false)]
+        public bool TryGetUInt32(ReadOnlySpan<char> s, out uint value, DataEncodingOptions options)
         {
             value = 0;
 
@@ -192,11 +247,11 @@ namespace Gapotchenko.FX.Data.Encoding
             if (s.IsEmpty)
                 return false;
 
-            const int BitsPerValue = sizeof(int) * 8;
+            const int BitsPerValue = sizeof(uint) * 8;
 
             bool checksum = (options & DataEncodingOptions.Checksum) != 0;
 
-            int bits = 0; // accumulated bits
+            uint bits = 0; // accumulated bits
             int bitCount = 0; // count of accumulated bits
             int psi = -1; // previous symbol index
 
@@ -271,6 +326,10 @@ namespace Gapotchenko.FX.Data.Encoding
             value = bits;
             return true;
         }
+
+        #endregion
+
+        #region Int64
 
         /// <inheritdoc/>
         public string GetString(long value) => GetString(value, DataEncodingOptions.None);
@@ -433,6 +492,47 @@ namespace Gapotchenko.FX.Data.Encoding
             return true;
         }
 
+        #endregion
+
+        #region UInt64
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public string GetString(ulong value) => GetString(value, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public string GetString(ulong value, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public ulong GetUInt64(ReadOnlySpan<char> s) => GetUInt64(s, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public ulong GetUInt64(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value) => TryGetUInt64(s, out value, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value, DataEncodingOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region BigInteger
+
         /// <inheritdoc/>
         public string GetString(BigInteger value) => GetString(value, DataEncodingOptions.None);
 
@@ -562,6 +662,8 @@ namespace Gapotchenko.FX.Data.Encoding
             value = bits;
             return true;
         }
+
+        #endregion
 
         /// <inheritdoc/>
         protected override DataEncodingOptions GetEffectiveStreamingOptions(DataEncodingOptions options)
