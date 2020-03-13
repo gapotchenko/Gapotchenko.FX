@@ -78,14 +78,14 @@ namespace Gapotchenko.FX.Data.Encoding
         #region Int32
 
         /// <summary>
-        /// Encodes an <see cref="Int32"/> value to its equivalent string representation.
+        /// Encodes specified <see cref="Int32"/> value to its equivalent string representation.
         /// </summary>
         /// <param name="value">The <see cref="Int32"/> value.</param>
         /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
         public new static string GetString(int value) => Instance.GetString(value);
 
         /// <summary>
-        /// Encodes an <see cref="Int32"/> value to its equivalent string representation with specified options.
+        /// Encodes specified <see cref="Int32"/> value to its equivalent string representation with specified options.
         /// </summary>
         /// <param name="value">The <see cref="Int32"/> value.</param>
         /// <param name="options">The options.</param>
@@ -162,17 +162,114 @@ namespace Gapotchenko.FX.Data.Encoding
 
         #endregion
 
+        #region UInt32
+
+        /// <summary>
+        /// Encodes specified <see cref="UInt32"/> value to its equivalent string representation.
+        /// </summary>
+        /// <param name="value">The <see cref="UInt32"/> value.</param>
+        /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
+        [CLSCompliant(false)]
+        public new static string GetString(uint value) => Instance.GetString(value);
+
+        /// <summary>
+        /// Encodes specified <see cref="UInt32"/> value to its equivalent string representation with specified options.
+        /// </summary>
+        /// <param name="value">The <see cref="UInt32"/> value.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
+        [CLSCompliant(false)]
+        public new static string GetString(uint value, DataEncodingOptions options) => Instance.GetString(value, options);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt32"/> value.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <returns>An <see cref="UInt32"/> value that is equivalent to <paramref name="s"/>.</returns>
+        [CLSCompliant(false)]
+        public new static uint GetUInt32(ReadOnlySpan<char> s) => Instance.GetUInt32(s);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt32"/> value.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <returns>An <see cref="UInt32"/> value that is equivalent to <paramref name="s"/>.</returns>
+        [CLSCompliant(false)]
+        public static uint GetUInt32(string s) => GetUInt32(s.AsSpan());
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt32"/> value with the specified options.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>An <see cref="UInt32"/> value that is equivalent to <paramref name="s"/>.</returns>
+        [CLSCompliant(false)]
+        public new static uint GetUInt32(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetUInt32(s, options);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt32"/> value with the specified options.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>An <see cref="UInt32"/> value that is equivalent to <paramref name="s"/>.</returns>
+        [CLSCompliant(false)]
+        public static uint GetUInt32(string s, DataEncodingOptions options) => GetUInt32(s.AsSpan(), options);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt32"/> value.
+        /// A return value indicates whether the operation succeeded.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="value">When this method returns, contains the <see cref="UInt32"/> value equivalent to <paramref name="s"/>.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
+        [CLSCompliant(false)]
+        public new static bool TryGetUInt32(ReadOnlySpan<char> s, out uint value) => Instance.TryGetUInt32(s, out value);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt32"/> value.
+        /// A return value indicates whether the operation succeeded.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="value">When this method returns, contains the <see cref="UInt32"/> value equivalent to <paramref name="s"/>.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
+        [CLSCompliant(false)]
+        public static bool TryGetUInt32(string s, out uint value) => TryGetUInt32(s.AsSpan(), out value);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt32"/> value with the specified options.
+        /// A return value indicates whether the operation succeeded.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="value">When this method returns, contains the <see cref="UInt32"/> value equivalent to <paramref name="s"/>.</param>
+        /// <param name="options">The options.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
+        [CLSCompliant(false)]
+        public new static bool TryGetUInt32(ReadOnlySpan<char> s, out uint value, DataEncodingOptions options) => Instance.TryGetUInt32(s, out value, options);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt32"/> value with the specified options.
+        /// A return value indicates whether the operation succeeded.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="value">When this method returns, contains the <see cref="UInt32"/> value equivalent to <paramref name="s"/>.</param>
+        /// <param name="options">The options.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
+        [CLSCompliant(false)]
+        public static bool TryGetUInt32(string s, out uint value, DataEncodingOptions options) => TryGetUInt32(s.AsSpan(), out value, options);
+
+        #endregion
+
         #region Int64
 
         /// <summary>
-        /// Encodes an <see cref="Int64"/> value to its equivalent string representation.
+        /// Encodes specified <see cref="Int64"/> value to its equivalent string representation.
         /// </summary>
         /// <param name="value">The <see cref="Int64"/> value.</param>
         /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
         public new static string GetString(long value) => Instance.GetString(value);
 
         /// <summary>
-        /// Encodes an <see cref="Int64"/> value to its equivalent string representation with specified options.
+        /// Encodes specified <see cref="Int64"/> value to its equivalent string representation with specified options.
         /// </summary>
         /// <param name="value">The <see cref="Int64"/> value.</param>
         /// <param name="options">The options.</param>
@@ -249,17 +346,114 @@ namespace Gapotchenko.FX.Data.Encoding
 
         #endregion
 
+        #region UInt64
+
+        /// <summary>
+        /// Encodes specified <see cref="UInt64"/> value to its equivalent string representation.
+        /// </summary>
+        /// <param name="value">The <see cref="UInt64"/> value.</param>
+        /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
+        [CLSCompliant(false)]
+        public new static string GetString(ulong value) => Instance.GetString(value);
+
+        /// <summary>
+        /// Encodes specified <see cref="UInt64"/> value to its equivalent string representation with specified options.
+        /// </summary>
+        /// <param name="value">The <see cref="UInt64"/> value.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
+        [CLSCompliant(false)]
+        public new static string GetString(ulong value, DataEncodingOptions options) => Instance.GetString(value, options);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt64"/> value.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <returns>An <see cref="UInt64"/> value that is equivalent to <paramref name="s"/>.</returns>
+        [CLSCompliant(false)]
+        public new static ulong GetUInt64(ReadOnlySpan<char> s) => Instance.GetUInt64(s);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt64"/> value.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <returns>An <see cref="UInt64"/> value that is equivalent to <paramref name="s"/>.</returns>
+        [CLSCompliant(false)]
+        public static ulong GetUInt64(string s) => GetUInt64(s.AsSpan());
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt64"/> value with the specified options.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>An <see cref="UInt64"/> value that is equivalent to <paramref name="s"/>.</returns>
+        [CLSCompliant(false)]
+        public new static ulong GetUInt64(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetUInt64(s, options);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt64"/> value with the specified options.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>An <see cref="UInt64"/> value that is equivalent to <paramref name="s"/>.</returns>
+        [CLSCompliant(false)]
+        public static ulong GetUInt64(string s, DataEncodingOptions options) => GetUInt64(s.AsSpan(), options);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt64"/> value.
+        /// A return value indicates whether the operation succeeded.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="value">When this method returns, contains the <see cref="UInt64"/> value equivalent to <paramref name="s"/>.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
+        [CLSCompliant(false)]
+        public new static bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value) => Instance.TryGetUInt64(s, out value);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt64"/> value.
+        /// A return value indicates whether the operation succeeded.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="value">When this method returns, contains the <see cref="UInt64"/> value equivalent to <paramref name="s"/>.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
+        [CLSCompliant(false)]
+        public static bool TryGetUInt64(string s, out ulong value) => TryGetUInt64(s.AsSpan(), out value);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt64"/> value with the specified options.
+        /// A return value indicates whether the operation succeeded.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="value">When this method returns, contains the <see cref="UInt64"/> value equivalent to <paramref name="s"/>.</param>
+        /// <param name="options">The options.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
+        [CLSCompliant(false)]
+        public new static bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value, DataEncodingOptions options) => Instance.TryGetUInt64(s, out value, options);
+
+        /// <summary>
+        /// Decodes the specified string to an equivalent <see cref="UInt64"/> value with the specified options.
+        /// A return value indicates whether the operation succeeded.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <param name="value">When this method returns, contains the <see cref="UInt64"/> value equivalent to <paramref name="s"/>.</param>
+        /// <param name="options">The options.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
+        [CLSCompliant(false)]
+        public static bool TryGetUInt64(string s, out ulong value, DataEncodingOptions options) => TryGetUInt64(s.AsSpan(), out value, options);
+
+        #endregion
+
         #region BigInteger
 
         /// <summary>
-        /// Encodes a <see cref="BigInteger"/> value to its equivalent string representation.
+        /// Encodes specified <see cref="BigInteger"/> value to its equivalent string representation.
         /// </summary>
         /// <param name="value">The <see cref="BigInteger"/> value.</param>
         /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
         public new static string GetString(BigInteger value) => Instance.GetString(value);
 
         /// <summary>
-        /// Encodes a <see cref="BigInteger"/> value to its equivalent string representation with specified options.
+        /// Encodes specified <see cref="BigInteger"/> value to its equivalent string representation with specified options.
         /// </summary>
         /// <param name="value">The <see cref="BigInteger"/> value.</param>
         /// <param name="options">The options.</param>

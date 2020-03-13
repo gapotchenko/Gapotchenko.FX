@@ -12,14 +12,14 @@ namespace Gapotchenko.FX.Data.Encoding
         #region Int32
 
         /// <summary>
-        /// Encodes an <see cref="Int32"/> value to its equivalent string representation.
+        /// Encodes specified <see cref="Int32"/> value to its equivalent string representation.
         /// </summary>
         /// <param name="value">The <see cref="Int32"/> value.</param>
         /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
         string GetString(int value);
 
         /// <summary>
-        /// Encodes an <see cref="Int32"/> value to its equivalent string representation with specified options.
+        /// Encodes specified <see cref="Int32"/> value to its equivalent string representation with specified options.
         /// </summary>
         /// <param name="value">The <see cref="Int32"/> value.</param>
         /// <param name="options">The options.</param>
@@ -65,14 +65,14 @@ namespace Gapotchenko.FX.Data.Encoding
         #region UInt32
 
         /// <summary>
-        /// Encodes an <see cref="UInt32"/> value to its equivalent string representation.
+        /// Encodes specified <see cref="UInt32"/> value to its equivalent string representation.
         /// </summary>
         /// <param name="value">The <see cref="UInt32"/> value.</param>
         /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
         string GetString(uint value);
 
         /// <summary>
-        /// Encodes an <see cref="UInt32"/> value to its equivalent string representation with specified options.
+        /// Encodes specified <see cref="UInt32"/> value to its equivalent string representation with specified options.
         /// </summary>
         /// <param name="value">The <see cref="UInt32"/> value.</param>
         /// <param name="options">The options.</param>
@@ -118,14 +118,14 @@ namespace Gapotchenko.FX.Data.Encoding
         #region Int64
 
         /// <summary>
-        /// Encodes an <see cref="Int64"/> value to its equivalent string representation.
+        /// Encodes specified <see cref="Int64"/> value to its equivalent string representation.
         /// </summary>
         /// <param name="value">The <see cref="Int64"/> value.</param>
         /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
         string GetString(long value);
 
         /// <summary>
-        /// Encodes an <see cref="Int64"/> value to its equivalent string representation with specified options.
+        /// Encodes specified <see cref="Int64"/> value to its equivalent string representation with specified options.
         /// </summary>
         /// <param name="value">The <see cref="Int64"/> value.</param>
         /// <param name="options">The options.</param>
@@ -171,14 +171,14 @@ namespace Gapotchenko.FX.Data.Encoding
         #region UInt64
 
         /// <summary>
-        /// Encodes an <see cref="UInt64"/> value to its equivalent string representation.
+        /// Encodes specified <see cref="UInt64"/> value to its equivalent string representation.
         /// </summary>
         /// <param name="value">The <see cref="UInt64"/> value.</param>
         /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
         string GetString(ulong value);
 
         /// <summary>
-        /// Encodes an <see cref="UInt64"/> value to its equivalent string representation with specified options.
+        /// Encodes specified <see cref="UInt64"/> value to its equivalent string representation with specified options.
         /// </summary>
         /// <param name="value">The <see cref="UInt64"/> value.</param>
         /// <param name="options">The options.</param>
@@ -224,14 +224,14 @@ namespace Gapotchenko.FX.Data.Encoding
         #region BigInteger
 
         /// <summary>
-        /// Encodes a <see cref="BigInteger"/> value to its equivalent string representation.
+        /// Encodes specified <see cref="BigInteger"/> value to its equivalent string representation.
         /// </summary>
         /// <param name="value">The <see cref="BigInteger"/> value.</param>
         /// <returns>The string representation of the contents of <paramref name="value"/>.</returns>
         string GetString(BigInteger value);
 
         /// <summary>
-        /// Encodes a <see cref="BigInteger"/> value to its equivalent string representation with specified options.
+        /// Encodes specified <see cref="BigInteger"/> value to its equivalent string representation with specified options.
         /// </summary>
         /// <param name="value">The <see cref="BigInteger"/> value.</param>
         /// <param name="options">The options.</param>
