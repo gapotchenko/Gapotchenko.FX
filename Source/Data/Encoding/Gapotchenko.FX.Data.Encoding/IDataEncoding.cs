@@ -10,11 +10,6 @@ namespace Gapotchenko.FX.Data.Encoding
     public interface IDataEncoding
     {
         /// <summary>
-        /// Gets the encoding name.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
         /// Gets the average encoding efficiency.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>

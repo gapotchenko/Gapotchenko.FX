@@ -14,9 +14,6 @@ namespace Gapotchenko.FX.Data.Encoding
         {
         }
 
-        /// <inheritdoc/>
-        public override string Name => "Base58";
-
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static volatile IBase58 m_Instance;
 

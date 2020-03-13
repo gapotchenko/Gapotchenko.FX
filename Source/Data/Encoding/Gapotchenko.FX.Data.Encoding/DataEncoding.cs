@@ -10,9 +10,6 @@ namespace Gapotchenko.FX.Data.Encoding
     public abstract class DataEncoding : IDataEncoding
     {
         /// <inheritdoc/>
-        public abstract string Name { get; }
-
-        /// <inheritdoc/>
         public float Efficiency => EfficiencyCore;
 
         /// <summary>
@@ -112,7 +109,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 throw new NotSupportedException(
                     string.Format(
                         "{0} encoding does not support streaming operations.",
-                        Name));
+                        this));
             }
 
             return GetEffectiveOptions(options);

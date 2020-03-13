@@ -14,9 +14,6 @@ namespace Gapotchenko.FX.Data.Encoding
         {
         }
 
-        /// <inheritdoc/>
-        public override string Name => "z-base-32";
-
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation that is encoded with z-base-32 symbols.
         /// </summary>

@@ -15,9 +15,6 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        public override string Name => "base64url";
-
-        /// <inheritdoc/>
         protected override DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
         {
             if ((options & DataEncodingOptions.Padding) == 0)

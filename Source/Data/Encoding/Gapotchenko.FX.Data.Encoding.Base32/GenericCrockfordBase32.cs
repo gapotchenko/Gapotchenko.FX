@@ -37,7 +37,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 throw new ArgumentException(
                     string.Format(
                         "The alphabet size of {0} encoding should be {1} or {2}.",
-                        Name,
+                        this,
                         ChecksumAlphabetSize,
                         MainAlphabetSize),
                     nameof(alphabet));
@@ -54,7 +54,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     string.Format(
                         "'{0}' option cannot be used for {1} encoding because it has a restricted alphabet of {2} symbols, not {3}.",
                         nameof(DataEncodingOptions.Checksum),
-                        Name,
+                        this,
                         Alphabet.Size,
                         ChecksumAlphabetSize),
                     nameof(options));
@@ -72,7 +72,7 @@ namespace Gapotchenko.FX.Data.Encoding
                         "'{0}' and '{1}' options cannot be used simultaneously for {2} encoding.",
                         nameof(DataEncodingOptions.Padding),
                         nameof(DataEncodingOptions.Checksum),
-                        Name),
+                        this),
                     nameof(options));
             }
 
@@ -687,7 +687,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 throw new NotSupportedException(
                     string.Format(
                         "{0} encoding does not support checksum for streaming operations.",
-                        Name));
+                        this));
             }
 
             return base.GetEffectiveStreamingOptions(options);
@@ -700,7 +700,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 throw new NotSupportedException(
                     string.Format(
                         "{0} encoding does not provide checksum operations over arbitrary data blocks.",
-                        Name));
+                        this));
             }
         }
 

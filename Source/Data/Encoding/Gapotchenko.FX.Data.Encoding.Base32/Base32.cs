@@ -16,9 +16,6 @@ namespace Gapotchenko.FX.Data.Encoding
         {
         }
 
-        /// <inheritdoc/>
-        public override string Name => "Base32";
-
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation that is encoded with Base32 symbols.
         /// </summary>

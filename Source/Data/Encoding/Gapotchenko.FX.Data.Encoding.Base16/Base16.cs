@@ -14,9 +14,6 @@ namespace Gapotchenko.FX.Data.Encoding
         {
         }
 
-        /// <inheritdoc/>
-        public override string Name => "Base16";
-
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation that is encoded with Base16 symbols.
         /// </summary>

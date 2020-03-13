@@ -38,7 +38,7 @@ namespace Gapotchenko.FX.Data.Encoding
             if (alphabet.Size != Base)
             {
                 throw new ArgumentException(
-                    string.Format("The alphabet size of {0} encoding should be {1}.", Name, Base),
+                    string.Format("The alphabet size of {0} encoding should be {1}.", this, Base),
                     nameof(alphabet));
             }
         }
@@ -138,7 +138,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if (si == -1)
                 {
                     if (throwOnError)
-                        throw new FormatException($"Encountered a non-{Name} character.");
+                        throw new FormatException($"Encountered an invalid character for {this} encoding.");
                     return null;
                 }
 

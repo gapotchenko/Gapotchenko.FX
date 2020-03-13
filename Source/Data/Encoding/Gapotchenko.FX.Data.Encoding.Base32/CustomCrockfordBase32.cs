@@ -24,8 +24,5 @@ namespace Gapotchenko.FX.Data.Encoding
             base(alphabet)
         {
         }
-
-        /// <inheritdoc/>
-        public override string Name => "Custom Crockford Base 32";
     }
 }

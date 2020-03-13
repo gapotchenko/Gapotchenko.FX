@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Data.Encoding
             if (alphabet.Size != Radix)
             {
                 throw new ArgumentException(
-                    string.Format("The alphabet size of {0} encoding should be {1}.", Name, Radix),
+                    string.Format("The alphabet size of {0} encoding should be {1}.", this, Radix),
                     nameof(alphabet));
             }
         }
@@ -279,7 +279,7 @@ namespace Gapotchenko.FX.Data.Encoding
                                 c == Separator;
 
                             if (!ok)
-                                throw new InvalidDataException($"Encountered a non-{m_Encoding.Name} character.");
+                                throw new InvalidDataException($"Encountered an invalid character for {m_Encoding} encoding.");
                         }
                         continue;
                     }
@@ -379,7 +379,7 @@ namespace Gapotchenko.FX.Data.Encoding
             protected void ValidateIncompleteByte()
             {
                 if ((m_Options & DataEncodingOptions.Relax) == 0)
-                    throw new InvalidDataException($"Cannot decode the last byte of {m_Encoding.Name} encoding due to a missing symbol.");
+                    throw new InvalidDataException($"Cannot decode the last byte of {m_Encoding} encoding due to a missing symbol.");
             }
 
             protected void ValidateLastSymbol(ulong zeroMask)
@@ -387,7 +387,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 if ((m_Options & DataEncodingOptions.Relax) == 0 &&
                     (m_Bits & zeroMask) != 0)
                 {
-                    throw new InvalidDataException($"The insignificant bits of the last symbol in {m_Encoding.Name} encoding are expected to be zero.");
+                    throw new InvalidDataException($"The insignificant bits of the last symbol in {m_Encoding} encoding are expected to be zero.");
                 }
             }
 
@@ -419,7 +419,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     throw CreateInvalidPaddingException();
             }
 
-            Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid {m_Encoding.Name} padding.");
+            Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid padding for {m_Encoding} encoding.");
         }
 
         /// <inheritdoc/>

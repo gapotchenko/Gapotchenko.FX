@@ -23,9 +23,6 @@ namespace Gapotchenko.FX.Data.Encoding
         {
         }
 
-        /// <inheritdoc/>
-        public override string Name => "Crockford Base 32";
-
         #region Data
 
         /// <summary>

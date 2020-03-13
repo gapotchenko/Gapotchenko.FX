@@ -18,9 +18,6 @@ namespace Gapotchenko.FX.Data.Encoding
         public int Radix => 91;
 
         /// <inheritdoc/>
-        public override string Name => "basE91";
-
-        /// <inheritdoc/>
         protected override float MaxEfficiencyCore => 0.875f;
 
         /// <summary>
