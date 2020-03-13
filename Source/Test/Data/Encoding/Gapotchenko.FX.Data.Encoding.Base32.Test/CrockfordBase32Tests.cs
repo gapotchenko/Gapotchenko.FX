@@ -112,6 +112,22 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [TestMethod]
         public void CrockfordBase32_Int32_TV8() => TestVector(0, "00", DataEncodingOptions.Checksum);
 
+        [DataTestMethod]
+        [DataRow(DataEncodingOptions.None)]
+        [DataRow(DataEncodingOptions.Checksum)]
+        public void CrockfordBase32_Int32_RT_Random(DataEncodingOptions options) =>
+            TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 0, int.MaxValue, 100000, options);
+
+        #endregion
+
+        #region UInt32
+
+        [DataTestMethod]
+        [DataRow(DataEncodingOptions.None)]
+        [DataRow(DataEncodingOptions.Checksum)]
+        public void CrockfordBase32_UInt32_RT_Random(DataEncodingOptions options) =>
+            TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 0, uint.MaxValue, 100000, options);
+
         #endregion
 
         #region Int64
@@ -148,6 +164,22 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         public void CrockfordBase32_Int64_TV7() => TestVector(0L, "00", DataEncodingOptions.Checksum);
+
+        [DataTestMethod]
+        [DataRow(DataEncodingOptions.None)]
+        [DataRow(DataEncodingOptions.Checksum)]
+        public void CrockfordBase32_Int64_RT_Random(DataEncodingOptions options) =>
+            TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 0, Int64.MaxValue, 100000, options);
+
+        #endregion
+
+        #region UInt64
+
+        [DataTestMethod]
+        [DataRow(DataEncodingOptions.None)]
+        [DataRow(DataEncodingOptions.Checksum)]
+        public void CrockfordBase32_UInt64_RT_Random(DataEncodingOptions options) =>
+            TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 0, UInt64.MaxValue, 100000, options);
 
         #endregion
 

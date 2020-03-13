@@ -146,8 +146,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         public bool TryGetInt32(ReadOnlySpan<char> s, out int value, DataEncodingOptions options)
         {
-            if (TryGetUInt32(s, out var x, options) &&
-                x <= int.MaxValue)
+            if (TryGetUInt32(s, out var x, options) && x <= int.MaxValue)
             {
                 value = (int)x;
                 return true;
@@ -340,12 +339,60 @@ namespace Gapotchenko.FX.Data.Encoding
             if (value < 0)
                 throw new ArgumentOutOfRangeException(nameof(value), "Value cannot be negative.");
 
+            return GetString((ulong)value, options);
+        }
+
+        /// <inheritdoc/>
+        public long GetInt64(ReadOnlySpan<char> s) => GetInt64(s, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public long GetInt64(ReadOnlySpan<char> s, DataEncodingOptions options)
+        {
+            if (s == null)
+                throw new ArgumentNullException(nameof(s));
+
+            if (!TryGetInt64(s, out var value, options))
+                throw new FormatException("Input string was not in a correct format.");
+
+            return value;
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetInt64(ReadOnlySpan<char> s, out long value) => TryGetInt64(s, out value, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        public bool TryGetInt64(ReadOnlySpan<char> s, out long value, DataEncodingOptions options)
+        {
+            if (TryGetUInt64(s, out var x, options) && x <= long.MaxValue)
+            {
+                value = (long)x;
+                return true;
+            }
+            else
+            {
+                value = default;
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region UInt64
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public string GetString(ulong value) => GetString(value, DataEncodingOptions.None);
+
+        /// <inheritdoc/>
+        [CLSCompliant(false)]
+        public string GetString(ulong value, DataEncodingOptions options)
+        {
             options = GetEffectiveOptions(options);
 
             if (value == 0)
                 return GetZeroString(options);
 
-            ulong bits = (ulong)value;
+            ulong bits = value;
 
             const int BitsPerValue = sizeof(long) * 8;
             const int InsignificantBits = BitsPerValue - BitsPerSymbol;
@@ -379,31 +426,35 @@ namespace Gapotchenko.FX.Data.Encoding
             }
 
             if ((options & DataEncodingOptions.Checksum) != 0)
-                sb.Append(alphabet[(int)((ulong)value % ChecksumAlphabetSize)]);
+                sb.Append(alphabet[(int)(value % ChecksumAlphabetSize)]);
 
             return Epilogue(sb, options).ToString();
         }
 
         /// <inheritdoc/>
-        public long GetInt64(ReadOnlySpan<char> s) => GetInt64(s, DataEncodingOptions.None);
+        [CLSCompliant(false)]
+        public ulong GetUInt64(ReadOnlySpan<char> s) => GetUInt64(s, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public long GetInt64(ReadOnlySpan<char> s, DataEncodingOptions options)
+        [CLSCompliant(false)]
+        public ulong GetUInt64(ReadOnlySpan<char> s, DataEncodingOptions options)
         {
             if (s == null)
                 throw new ArgumentNullException(nameof(s));
 
-            if (!TryGetInt64(s, out var value, options))
+            if (!TryGetUInt64(s, out var value, options))
                 throw new FormatException("Input string was not in a correct format.");
 
             return value;
         }
 
         /// <inheritdoc/>
-        public bool TryGetInt64(ReadOnlySpan<char> s, out long value) => TryGetInt64(s, out value, DataEncodingOptions.None);
+        [CLSCompliant(false)]
+        public bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value) => TryGetUInt64(s, out value, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public bool TryGetInt64(ReadOnlySpan<char> s, out long value, DataEncodingOptions options)
+        [CLSCompliant(false)]
+        public bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value, DataEncodingOptions options)
         {
             value = 0;
 
@@ -488,45 +539,8 @@ namespace Gapotchenko.FX.Data.Encoding
                     return false;
             }
 
-            value = (long)bits;
+            value = bits;
             return true;
-        }
-
-        #endregion
-
-        #region UInt64
-
-        /// <inheritdoc/>
-        [CLSCompliant(false)]
-        public string GetString(ulong value) => GetString(value, DataEncodingOptions.None);
-
-        /// <inheritdoc/>
-        [CLSCompliant(false)]
-        public string GetString(ulong value, DataEncodingOptions options)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        [CLSCompliant(false)]
-        public ulong GetUInt64(ReadOnlySpan<char> s) => GetUInt64(s, DataEncodingOptions.None);
-
-        /// <inheritdoc/>
-        [CLSCompliant(false)]
-        public ulong GetUInt64(ReadOnlySpan<char> s, DataEncodingOptions options)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        [CLSCompliant(false)]
-        public bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value) => TryGetUInt64(s, out value, DataEncodingOptions.None);
-
-        /// <inheritdoc/>
-        [CLSCompliant(false)]
-        public bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value, DataEncodingOptions options)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion
