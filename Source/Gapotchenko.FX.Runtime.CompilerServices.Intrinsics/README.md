@@ -81,6 +81,7 @@ using System.Runtime.InteropServices;
 
 class BitOperations
 {
+    // Use static constructor to ensure that intrinsic methods are initialized (compiled) before they are called
     static BitOperations() => Intrinsics.InitializeType(typeof(BitOperations));
 
     static readonly int[] m_Log2DeBruijn32 =
@@ -91,6 +92,7 @@ class BitOperations
         19, 27, 23,  6, 26,  5,  4, 31
     };
 
+    // Define machine code intrinsic for the method
     [MachineCodeIntrinsic(Architecture.X64, 0x0f, 0xbd, 0xc1)]  // BSR EAX, ECX
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Log2_Intrinsic(uint value)
