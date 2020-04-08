@@ -91,6 +91,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Reflection.L
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.CompilerServices.Intrinsics", "Gapotchenko.FX.Runtime.CompilerServices.Intrinsics\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj", "{304875A0-365B-4665-9276-0E2FA64F0C91}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Runtime.InteropServices.DllExport", "Gapotchenko.FX.Runtime.InteropServices.DllExport\Gapotchenko.FX.Runtime.InteropServices.DllExport.csproj", "{F2DB67DC-7AB3-4083-9E55-527F5378BD48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -193,6 +195,10 @@ Global
 		{304875A0-365B-4665-9276-0E2FA64F0C91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{304875A0-365B-4665-9276-0E2FA64F0C91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{304875A0-365B-4665-9276-0E2FA64F0C91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2DB67DC-7AB3-4083-9E55-527F5378BD48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2DB67DC-7AB3-4083-9E55-527F5378BD48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2DB67DC-7AB3-4083-9E55-527F5378BD48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2DB67DC-7AB3-4083-9E55-527F5378BD48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -227,6 +233,7 @@ Global
 		{F4F78C5D-816A-4434-ACCB-C8C874BEF459} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
 		{D15DF10F-F35A-4011-A36C-3D12712F1ECC} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
 		{304875A0-365B-4665-9276-0E2FA64F0C91} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
+		{F2DB67DC-7AB3-4083-9E55-527F5378BD48} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}

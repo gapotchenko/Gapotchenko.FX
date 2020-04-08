@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Mastering\Metadata.targets" />
+  <PropertyGroup>
+    <TargetFrameworks>net20;netstandard2.0</TargetFrameworks>
+    <RootNamespace>Gapotchenko.FX.Runtime.InteropServices</RootNamespace>
+    <DevelopmentDependency>true</DevelopmentDependency>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Development version -->
+    <VersionPrefix>0.1.8</VersionPrefix>
+    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+    <VersionSuffix>alpha</VersionSuffix>
+    <Version>$(VersionPrefix)-$(VersionSuffix)</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Build\**">
+      <PackagePath>build/</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.InteropServices.DllExportAttribute" />
+  </ItemGroup>
+</Project>

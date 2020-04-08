@@ -1,0 +1,14 @@
+﻿<!--
+***********************************************************************************************
+Gapotchenko.FX.Runtime.InteropServices.DllExport.targets
+
+WARNING:  DO NOT MODIFY this file. Incorrect changes to this file will make it impossible to
+          load or build your Gapotchenko.FX projects from the command-line or the IDE.
+
+Copyright © 2019-2020 Gapotchenko and Contributors
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+</Project>
