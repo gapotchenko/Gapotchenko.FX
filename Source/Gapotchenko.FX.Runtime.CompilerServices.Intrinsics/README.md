@@ -71,8 +71,8 @@ using just a small fraction of cycles.
 Chances are your machine runs on a descendant of that influential CPU, be it AMD Ryzen or Intel Core.
 So how can we use the `BSR` instruction from .NET?
 
-This is why `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` class was created.
-It allows to provide an intrinsic implementation of a method with `MachineCodeIntrinsicAttribute`. Let's see how:
+This is why `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` class exists.
+It provides an ability to define intrinsic implementation of a method with `MachineCodeIntrinsicAttribute`. Let's see how:
 
 ``` csharp
 using Gapotchenko.FX.Runtime.CompilerServices;
