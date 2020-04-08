@@ -110,7 +110,8 @@ class BitOperations
 `Log2_Intrinsic` method defines a custom attribute that provides a machine code for `BSR EAX, ECX` instruction.
 Machine code is tied to CPU architecture and this is reflected in the attribute as well.
 
-`BitOperations` class now has a static constructor that ensures that intrinsic methods of the type are initialized (compiled) before they are used.
+Please note that besides using `MachineCodeIntrinsicAttribute` to define method intrinsic implementations,
+`BitOperations` class **should** use a static constructor to ensure that corresponding methods are initialized (compiled) before they are called.
 
 Here are the execution times of those implementations (lower is better):
 
