@@ -11,4 +11,8 @@ Copyright © 2019-2020 Gapotchenko and Contributors
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <Target Name="GPFX_DllExport_Trigger" DependsOnTargets="CoreCompile" BeforeTargets="AfterCompile">
+    <GPFX_DllExport_Compile />
+  </Target>
+
 </Project>
