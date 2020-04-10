@@ -7,7 +7,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- Development version -->
-    <VersionPrefix>0.1.12</VersionPrefix>
+    <VersionPrefix>0.1.17</VersionPrefix>
     <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
     <VersionSuffix>alpha</VersionSuffix>
     <Version>$(VersionPrefix)-$(VersionSuffix)</Version>
@@ -22,6 +22,9 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.InteropServices.DllExportAttribute" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Gapotchenko.FX.Tools.DllExport.Build" Version="0.5.3-alpha" />
+    <PackageReference Include="Gapotchenko.FX.Tools.DllExport.Integration.MSBuild" Version="0.5.5-alpha">
+      <!-- Allow build assets to flow transitively -->
+      <PrivateAssets>None</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>
