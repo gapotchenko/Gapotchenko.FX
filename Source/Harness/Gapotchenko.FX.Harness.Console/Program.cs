@@ -1,4 +1,5 @@
 ﻿#region Usings
+using Gapotchenko.FX.AppModel;
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.ComponentModel;
 using Gapotchenko.FX.Data.Encoding;
@@ -35,6 +36,9 @@ namespace Gapotchenko.FX.Harness.Console
         {
             try
             {
+                if (!Console.IsOutputRedirected)
+                    Console.OutputEncoding = Encoding.UTF8;
+
                 _Run();
                 TaskBridge.Execute(_RunAsync);
 
@@ -109,6 +113,12 @@ namespace Gapotchenko.FX.Harness.Console
             //e = Convert.ToBase64String(Encoding.UTF8.GetBytes(s), Base64FormattingOptions.InsertLineBreaks);
 
             //Console.WriteLine(e);
+
+            var appInfo = AppInformation.Current;
+            Console.WriteLine(appInfo.ExecutablePath);
+            Console.WriteLine(appInfo.Copyright);
+            Console.WriteLine(appInfo.ProductName);
+            Console.WriteLine(appInfo.ProductInformationalVersion);
         }
     }
 }
