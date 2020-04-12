@@ -267,8 +267,8 @@ This is done to avoid chicken & egg dilemma.
 In this way, the default .NET assembly loader can always load the assembly despite the possible variety of different NuGet packages that can be used in the given project.
 
 Another point to consider is **how to select a point of assembly loader installation** that is early enough in the assembly lifecycle.
-This tends to be trivial for an app: the first few lines of main entry point are good to go.
-But it may be hard to do, or even totally infeasible for a class library with a wide public API surface.
+This tends to be trivial for an app: the first few lines of the main entry point are good to go.
+But it may be hard to do for a class library. Sometimes it gets totally infeasible when public API surface of a library gets wide enough.
 To overcome that dilemma, assembly loader can be installed at module initializer of a class library.
 
 [Fody/ModuleInit](https://github.com/Fody/ModuleInit) is an example of tool that gives access to .NET module initialization functionality from high-level programming languages like C#/VB.NET.
