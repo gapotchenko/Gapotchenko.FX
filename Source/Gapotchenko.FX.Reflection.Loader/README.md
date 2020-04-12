@@ -271,7 +271,7 @@ This tends to be trivial for an app: the first few lines of the main entry point
 But it may be hard to do for a class library. Sometimes it gets totally infeasible when public API surface of a library gets wide enough.
 To overcome that dilemma, assembly loader can be installed at module initializer of a class library.
 
-[Fody/ModuleInit](https://github.com/Fody/ModuleInit) is an example of tool that gives access to .NET module initialization functionality from high-level programming languages like C#/VB.NET.
+[Fody/ModuleInit](https://github.com/Fody/ModuleInit) is an example of tool that gives access to .NET module initialization functionality from high-level programming languages like C#/VB.NET. Another option is to use more specialized tool like [Eazfuscator.NET](https://www.gapotchenko.com/eazfuscator.net) that provides not only [module initialization functionality](https://help.gapotchenko.com/eazfuscator.net/63/sensei-features/module-initializers), but also intellectual property protectiion.
 
 <hr/>
 
