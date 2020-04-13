@@ -90,7 +90,7 @@ namespace Gapotchenko.FX
         /// </returns>
         public static Type Nullify(Type value)
         {
-            if (value == null || value == Empty.Type)
+            if (value == Empty.Type)
                 return null;
             else
                 return value;
