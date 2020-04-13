@@ -86,7 +86,7 @@ namespace Gapotchenko.FX
         /// <param name="value">The value.</param>
         /// <returns>
         /// The type value or a null if the type is empty or null.
-        /// The type is considered empty when it equals to <see cref="Type"/>
+        /// The type is considered empty when it equals to the value returned by <see cref="Type"/> property of <see cref="Empty"/> class.
         /// </returns>
         public static Type Nullify(Type value)
         {
