@@ -372,10 +372,10 @@ namespace Gapotchenko.FX.AppModel
             if (!string.IsNullOrWhiteSpace(companyName))
                 return companyName.Trim();
 
-            var mainType = EntryType;
-            if (mainType != null)
+            var entryType = EntryType;
+            if (entryType != null)
             {
-                string ns = mainType.Namespace;
+                string ns = entryType.Namespace;
                 if (!string.IsNullOrEmpty(ns))
                 {
                     int j = ns.IndexOf('.');

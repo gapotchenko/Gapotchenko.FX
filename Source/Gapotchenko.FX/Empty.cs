@@ -373,7 +373,7 @@ namespace Gapotchenko.FX
 #endif
 
         /// <summary>
-        /// Returns an empty type.
+        /// Returns a type that is considered empty.
         /// </summary>
         /// <value>The type of <see cref="Empty"/> class.</value>
         public static Type Type { get; } = typeof(Empty);
