@@ -13,28 +13,32 @@ namespace Gapotchenko.FX.AppModel
     public class AppInformation : IAppInformation
     {
         /// <summary>
-        /// Gets current app information.
+        /// Gets information about the current running app.
         /// </summary>
-        public static IAppInformation Current => DefaultAppInformation.Instance;
+        public static IAppInformation Current => CurrentAppInformation.Instance;
+
+        /// <summary>
+        /// Extracts app information from the specified entry type.
+        /// </summary>
+        /// <param name="entryType">The entry type of an app.</param>
+        /// <returns>The app information.</returns>
+        public static IAppInformation ForType(Type entryType)
+        {
+            if (entryType == null)
+                throw new ArgumentNullException(nameof(entryType));
+
+            return new AppInformation
+            {
+                EntryType = entryType,
+                EntryAssembly = entryType.Assembly
+            };
+        }
 
         /// <summary>
         /// Initializes a new instance of <see cref="AppInformation"/> class.
         /// </summary>
         protected AppInformation()
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="AppInformation"/> class with specified app entry type.
-        /// </summary>
-        /// <param name="entryType">The app entry type. Usually "Program" or "Application" class of an app.</param>
-        public AppInformation(Type entryType)
-        {
-            if (entryType == null)
-                throw new ArgumentNullException(nameof(entryType));
-
-            m_EntryType = entryType;
-            m_EntryAssembly = entryType.Assembly;
         }
 
         /// <inheritdoc/>
@@ -130,8 +134,8 @@ namespace Gapotchenko.FX.AppModel
             get
             {
                 if (m_EntryType == null)
-                    m_EntryType = GetEntryType();
-                return m_EntryType;
+                    m_EntryType = GetEntryType() ?? Empty.Type;
+                return Empty.Nullify(m_EntryType);
             }
             set => m_EntryType = value;
         }

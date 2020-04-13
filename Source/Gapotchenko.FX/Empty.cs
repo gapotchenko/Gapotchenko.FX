@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Gapotchenko.FX
@@ -63,6 +62,35 @@ namespace Gapotchenko.FX
         public static string Nullify(string value)
         {
             if (string.IsNullOrEmpty(value))
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
+        /// Nullifies a string when it is empty, or consists only of white-space characters.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The string value or a null if the string is empty, or consists only of white-space characters.</returns>
+        public static string NullifyWhiteSpace(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
+        /// Nullifies an empty type.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>
+        /// The type value or a null if the type is empty or null.
+        /// The type is considered empty when it equals to <see cref="Type"/>
+        /// </returns>
+        public static Type Nullify(Type value)
+        {
+            if (value == null || value == Empty.Type)
                 return null;
             else
                 return value;
@@ -293,19 +321,6 @@ namespace Gapotchenko.FX
         }
 
         /// <summary>
-        /// Nullifies a string when it is empty, or consists only of white-space characters.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The string value or a null if the string is empty, or consists only of white-space characters.</returns>
-        public static string NullifyWhiteSpace(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                return null;
-            else
-                return value;
-        }
-
-        /// <summary>
         /// Nullifies an empty function in terms of lambda calculus provided by <see cref="Fn"/> class.
         /// </summary>
         /// <param name="action">The action.</param>
@@ -357,5 +372,10 @@ namespace Gapotchenko.FX
             Empty<Unit>.Task;
 #endif
 
+        /// <summary>
+        /// Returns an empty type.
+        /// </summary>
+        /// <value>The type of <see cref="Empty"/> class.</value>
+        public static Type Type { get; } = typeof(Empty);
     }
 }

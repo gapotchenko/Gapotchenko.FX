@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.AppModel
 {
-    sealed class DefaultAppInformation : AppInformation
+    sealed class CurrentAppInformation : AppInformation
     {
-        public static readonly DefaultAppInformation Instance = new DefaultAppInformation();
+        public static readonly CurrentAppInformation Instance = new CurrentAppInformation();
 
         protected override Assembly GetEntryAssembly() => Assembly.GetEntryAssembly();
 
