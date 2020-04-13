@@ -126,7 +126,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         /// <summary>
-        /// Gets app entry type.
+        /// Gets or sets app entry type.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected Type EntryType
@@ -150,7 +150,7 @@ namespace Gapotchenko.FX.AppModel
         protected virtual Type GetEntryType() => GetType();
 
         /// <summary>
-        /// Gets app entry assembly.
+        /// Gets or sets app entry assembly.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected Assembly EntryAssembly

@@ -1,13 +1,8 @@
 ﻿using Gapotchenko.FX.Properties;
-using Gapotchenko.FX.Threading;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Security.Permissions;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Threading
 {
@@ -48,25 +43,25 @@ namespace Gapotchenko.FX.Threading
         /// </param>
         public EvaluateOnce(Func<T> valueFactory, object syncLock)
         {
-            _ValueFactory = valueFactory ?? throw new ArgumentNullException(nameof(valueFactory));
-            _SyncLock = syncLock;
-            _Value = default;
+            m_ValueFactory = valueFactory ?? throw new ArgumentNullException(nameof(valueFactory));
+            m_SyncLock = syncLock;
+            m_Value = default;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        T _Value;
+        T m_Value;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object _SyncLock;
+        object m_SyncLock;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Func<T> _ValueFactory;
+        Func<T> m_ValueFactory;
 
         /// <summary>
         /// Gets the lazily evaluated value of the current <see cref="EvaluateOnce{T}"/> instance.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public T Value => LazyInitializerEx.EnsureInitialized(ref _Value, ref _SyncLock, ref _ValueFactory);
+        public T Value => LazyInitializerEx.EnsureInitialized(ref m_Value, ref m_SyncLock, ref m_ValueFactory);
 
         /// <summary>
         /// Gets a value that indicates whether a value has been created for this <see cref="EvaluateOnce{T}"/> instance.
@@ -77,8 +72,8 @@ namespace Gapotchenko.FX.Threading
             {
                 Thread.MemoryBarrier();
                 return
-                    _ValueFactory == null &&
-                    _SyncLock != null; // check for _SyncLock is needed to cover uninitialized struct scenario
+                    m_ValueFactory == null &&
+                    m_SyncLock != null; // check for _SyncLock is needed to cover uninitialized struct scenario
             }
         }
 

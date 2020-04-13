@@ -1,12 +1,7 @@
-﻿using Gapotchenko.FX.Threading;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Security.Permissions;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Threading
 {
@@ -41,24 +36,24 @@ namespace Gapotchenko.FX.Threading
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
 
-            _Action = action;
-            _SyncLock = syncLock;
+            m_Action = action;
+            m_SyncLock = syncLock;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object _SyncLock;
+        object m_SyncLock;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Action _Action;
+        Action m_Action;
 
         /// <summary>
         /// Ensures that the action was executed.
         /// </summary>
-        public void EnsureExecuted() => LazyInitializerEx.EnsureInitialized(ref _SyncLock, ref _Action);
+        public void EnsureExecuted() => LazyInitializerEx.EnsureInitialized(ref m_SyncLock, ref m_Action);
 
         /// <summary>
         /// Gets a value indicating whether the action was executed.
         /// </summary>
-        public bool IsExecuted => Volatile.Read(ref _Action) == null && _SyncLock != null; // check for _SyncLock is needed to cover uninitialized struct scenario
+        public bool IsExecuted => Volatile.Read(ref m_Action) == null && m_SyncLock != null; // check for _SyncLock is needed to cover uninitialized struct scenario
     }
 }
