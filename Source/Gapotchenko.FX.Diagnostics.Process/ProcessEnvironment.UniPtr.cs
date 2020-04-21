@@ -7,7 +7,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// <summary>
         /// Universal pointer.
         /// </summary>
-        struct UniPtr
+        readonly struct UniPtr
         {
             public UniPtr(IntPtr p)
             {
