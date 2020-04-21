@@ -1,6 +1,8 @@
 # What's New in Gapotchenko.FX
 
-## Gapotchenko.FX 2020.1
+## 2020
+
+### Gapotchenko.FX 2020.1
 
 Release date: not released yet
 
@@ -10,7 +12,9 @@ Release date: not released yet
 - Fixed issue with ambiguous match of `IsNullOrEmpty` polyfill method of `HashSet<T>` type that occurred in .NET 4.6+, .NET Standard 2.0+ and .NET Core 2.0+ target frameworks
 - Fixed issue with ambiguous match of `ToHashSet` polyfill method of `IEnumerable<T>` type that occurred in .NET 4.7.2+ target frameworks
 
-## Gapotchenko.FX 2019.3
+## 2019
+
+### Gapotchenko.FX 2019.3
 
 Release date: November 4, 2019
 
@@ -28,7 +32,7 @@ Both primitives constitute drop-in replacements for `System.Threading.Tasks.Para
 - Fixed issue with ambiguous match of `Append` and `Prepend` polyfills for `IEnumerable<T>` type for some target frameworks
 - Fixed issue with binding redirects handling in `Gapotchenko.FX.Reflection.Loader` module that could lead to `StackOverflowException` under specific conditions
 
-## Gapotchenko.FX 2019.2
+### Gapotchenko.FX 2019.2
 
 Release date: August 14, 2019
 
@@ -44,7 +48,7 @@ Release date: August 14, 2019
 - Implemented `ProcessArchitecture` and `OSArchitecture` properties in `System.Runtime.InteropServices.RuntimeInformation` polyfill
 - Improved wording of `ProgramExitException` message
 
-## Gapotchenko.FX 2019.1
+### Gapotchenko.FX 2019.1
 
 Release date: March 29, 2019
 
