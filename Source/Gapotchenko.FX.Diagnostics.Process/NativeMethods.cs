@@ -167,6 +167,5 @@ namespace Gapotchenko.FX.Diagnostics
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool QueryFullProcessImageName(IntPtr hProcess, uint dwFlags, StringBuilder lpExeName, ref uint lpdwSize);
-
     }
 }
