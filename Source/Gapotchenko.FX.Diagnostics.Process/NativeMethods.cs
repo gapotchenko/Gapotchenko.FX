@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics
 {
@@ -157,5 +158,15 @@ namespace Gapotchenko.FX.Diagnostics
 
         [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
         public static extern bool SetConsoleCtrlHandler(HANDLER_ROUTINE HandlerRoutine, bool Add);
+
+        // -------------------------------------------------------------------------------------------------------
+
+        public const int MAX_PATH = 260;
+
+        public const int ERROR_INSUFFICIENT_BUFFER = 0x0000007A;
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool QueryFullProcessImageName(IntPtr hProcess, uint dwFlags, StringBuilder lpExeName, ref uint lpdwSize);
+
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -106,5 +107,70 @@ namespace Gapotchenko.FX.Diagnostics
                 process = parent;
             }
         }
+
+        /// <summary>
+        /// <para>
+        /// Gets file name of a process image.
+        /// </para>
+        /// <para>
+        /// Usually the returned value corresponds to the value of <see cref="ProcessModule.FileName"/> property of a main process module.
+        /// The difference becomes apparent when the current process cannot access the module information due to security restrictions.
+        /// While <see cref="ProcessModule.FileName"/> may not work in that situation, this method always works.
+        /// </para>
+        /// </summary>
+        /// <param name="process">The process to get image file name for.</param>
+        /// <returns>The file name of a process image.</returns>
+        public static string GetImageFileName(Process process)
+        {
+            if (process == null)
+                throw new ArgumentNullException(nameof(process));
+
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return process.MainModule.FileName;
+
+            ProcessModule mainModule = null;
+            try
+            {
+                mainModule = process.MainModule;
+            }
+            catch (InvalidOperationException)
+            {
+            }
+            catch (Win32Exception)
+            {
+            }
+
+            if (mainModule != null)
+                return mainModule.FileName;
+
+            var sb = new StringBuilder(NativeMethods.MAX_PATH);
+            for (; ; )
+            {
+                uint dwSize = (uint)sb.Capacity;
+                var result = NativeMethods.QueryFullProcessImageName(process.Handle, 0, sb, ref dwSize);
+                if (!result)
+                {
+                    int errorCode = Marshal.GetLastWin32Error();
+                    if (errorCode == NativeMethods.ERROR_INSUFFICIENT_BUFFER)
+                    {
+                        const int MaxCapacity = 32768;
+
+                        int capacity = sb.Capacity;
+                        if (capacity < MaxCapacity)
+                        {
+                            sb.Capacity = Math.Min(capacity * 2, MaxCapacity);
+                            continue;
+                        }
+                    }
+
+                    throw new Win32Exception(errorCode);
+                }
+
+                break;
+            }
+
+            return sb.ToString();
+        }
+
     }
 }
