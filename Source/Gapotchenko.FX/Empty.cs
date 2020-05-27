@@ -321,6 +321,21 @@ namespace Gapotchenko.FX
         }
 
         /// <summary>
+        /// Nullifies an empty <see cref="Decimal"/> value.
+        /// </summary>
+        /// <param name="value">The value to nullify.</param>
+        /// <param name="empty">The value to treat as empty.</param>
+        /// <returns>The value or a <c>null</c> if the value is empty.</returns>
+        [CLSCompliant(false)]
+        public static decimal? Nullify(decimal value, decimal empty)
+        {
+            if (value == empty)
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
         /// Nullifies an empty function in terms of lambda calculus provided by <see cref="Fn"/> class.
         /// </summary>
         /// <param name="action">The action.</param>
