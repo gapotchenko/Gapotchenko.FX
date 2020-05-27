@@ -87,7 +87,6 @@ namespace Gapotchenko.FX.Console
         static bool _WillDisappearOnExitCore() =>
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
             WindowsExplorerDetector.WasProbablyStartedByExplorer &&
-            Environment.UserInteractive &&
             WindowsExplorerDetector.IsStartedByExplorer();
 
         static class WindowsExplorerDetector
