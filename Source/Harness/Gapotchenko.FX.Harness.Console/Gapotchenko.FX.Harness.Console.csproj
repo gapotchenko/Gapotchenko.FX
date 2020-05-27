@@ -26,6 +26,7 @@
     <ProjectReference Include="..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64\Gapotchenko.FX.Data.Encoding.Base64.csproj" />
     <ProjectReference Include="..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.AppModel.Information\Gapotchenko.FX.AppModel.Information.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Console\Gapotchenko.FX.Console.csproj" />
     <ProjectReference Include="..\..\Profiles\Gapotchenko.FX.Profiles.Core\Gapotchenko.FX.Profiles.Core.csproj" />
   </ItemGroup>
 

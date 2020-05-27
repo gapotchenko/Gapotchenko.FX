@@ -2,6 +2,7 @@
 using Gapotchenko.FX.AppModel;
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.ComponentModel;
+using Gapotchenko.FX.Console;
 using Gapotchenko.FX.Data.Encoding;
 using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.IO;
@@ -39,8 +40,8 @@ namespace Gapotchenko.FX.Harness.Console
                 if (!Console.IsOutputRedirected)
                     Console.OutputEncoding = Encoding.UTF8;
 
-                _Run();
                 TaskBridge.Execute(_RunAsync);
+                _Run();
 
                 Console.WriteLine();
                 Console.WriteLine("----------------------");
@@ -65,6 +66,11 @@ namespace Gapotchenko.FX.Harness.Console
             var h = source.ToHashSet();
 
             Console.WriteLine(h.IsNullOrEmpty());
+
+            var more = new MoreTextWriter(Console.Out);
+
+            for (int i = 1; i < 100; ++i)
+                more.WriteLine(i.ToString());
         }
 
         static async Task _RunAsync(CancellationToken ct)

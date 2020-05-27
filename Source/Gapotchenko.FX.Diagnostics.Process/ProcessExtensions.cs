@@ -1,14 +1,10 @@
-﻿using Gapotchenko.FX.Threading;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics
 {
@@ -120,7 +116,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         /// <param name="process">The process to get image file name for.</param>
         /// <returns>The file name of a process image.</returns>
-        public static string GetImageFileName(Process process)
+        public static string GetImageFileName(this Process process)
         {
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
