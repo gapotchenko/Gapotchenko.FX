@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Console
         /// For example, a NO_COLOR environment variable can be used to inhibit console colors as described by corresponding <a href="https://no-color.org/">specification</a>.
         /// </para>
         /// </summary>
-        public static bool IsColorInhibited => !(NoColor.IsPresent);
+        public static bool IsColorInhibited => NoColor.IsPresent;
 
         /// <summary>
         /// Implements NO_COLOR specification according to https://no-color.org/.
