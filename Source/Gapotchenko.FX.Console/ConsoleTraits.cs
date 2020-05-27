@@ -64,11 +64,11 @@ namespace Gapotchenko.FX.Console
         /// </summary>
         public static bool IsColorEnabled => IsColorAvailable && !IsColorInhibited;
 
-        // This cache should not be discarded as it is fully static.
+        // This cached value should not be discarded as it is fully static.
         static int m_CachedWillDisappearOnExit;
 
         /// <summary>
-        /// Gets a value indicating whether a console window immediately disappears on program exit.
+        /// Gets a value indicating whether a console window will immediately disappear on program exit.
         /// </summary>
         public static bool WillDisappearOnExit
         {
