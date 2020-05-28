@@ -24,6 +24,15 @@ namespace Gapotchenko.FX.Console
         /// </summary>
         public static bool IsColorAvailable => !(Console.IsOutputRedirected || Console.IsErrorRedirected);
 
+        enum BoolTrait : byte
+        {
+            None,
+            True,
+            False
+        }
+
+        static BoolTrait m_CachedIsColorInhibited;
+
         /// <summary>
         /// <para>
         /// Gets a value indicating whether console color is inhibited.
@@ -33,27 +42,22 @@ namespace Gapotchenko.FX.Console
         /// For example, a NO_COLOR environment variable can be used to inhibit console colors as described by corresponding <a href="https://no-color.org/">specification</a>.
         /// </para>
         /// </summary>
-        public static bool IsColorInhibited => NoColor.IsPresent;
-
-        /// <summary>
-        /// Implements NO_COLOR specification according to https://no-color.org/.
-        /// </summary>
-        static class NoColor
+        public static bool IsColorInhibited
         {
-            static NoColor()
+            get
             {
-                Refresh();
-            }
-
-            public static bool IsPresent { get; private set; }
-
-            static bool IsPresentCore() => Environment.GetEnvironmentVariable("NO_COLOR") != null;
-
-            public static void Refresh()
-            {
-                IsPresent = IsPresentCore();
+                var value = m_CachedIsColorInhibited;
+                if (value == BoolTrait.None)
+                {
+                    value = IsColorInhibitedCore() ? BoolTrait.True : BoolTrait.False;
+                    m_CachedIsColorInhibited = value;
+                }
+                return value == BoolTrait.True;
             }
         }
+
+        static bool IsColorInhibitedCore() =>
+            Environment.GetEnvironmentVariable("NO_COLOR") != null;  // https://no-color.org/
 
         /// <summary>
         /// <para>
@@ -65,8 +69,8 @@ namespace Gapotchenko.FX.Console
         /// </summary>
         public static bool IsColorEnabled => IsColorAvailable && !IsColorInhibited;
 
-        // This cached value should not be discarded as it is fully static.
-        static int m_CachedWillDisappearOnExit;
+        // This cached value should not be discarded as it represents an immutable trait.
+        static BoolTrait m_CachedWillDisappearOnExit;
 
         /// <summary>
         /// Gets a value indicating whether a console window will immediately disappear on program exit.
@@ -75,17 +79,17 @@ namespace Gapotchenko.FX.Console
         {
             get
             {
-                int v = m_CachedWillDisappearOnExit;
-                if (v == 0)
+                var value = m_CachedWillDisappearOnExit;
+                if (value == BoolTrait.None)
                 {
-                    v = _WillDisappearOnExitCore() ? 1 : 2;
-                    m_CachedWillDisappearOnExit = v;
+                    value = WillDisappearOnExitCore() ? BoolTrait.True : BoolTrait.False;
+                    m_CachedWillDisappearOnExit = value;
                 }
-                return v == 1;
+                return value == BoolTrait.True;
             }
         }
 
-        static bool _WillDisappearOnExitCore() =>
+        static bool WillDisappearOnExitCore() =>
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
             WindowsExplorerDetector.IsStartedByExplorer();
 
@@ -96,10 +100,9 @@ namespace Gapotchenko.FX.Console
                 try
                 {
                     var parentProcess = Process.GetCurrentProcess().GetParent();
-                    if (parentProcess == null)
-                        return false;
-
-                    return Path.GetFileName(parentProcess.GetImageFileName()).Equals("explorer.exe", StringComparison.OrdinalIgnoreCase);
+                    return
+                        parentProcess != null &&
+                        Path.GetFileName(parentProcess.GetImageFileName()).Equals("Explorer.EXE", StringComparison.OrdinalIgnoreCase);
                 }
                 catch (Exception e) when (!e.IsControlFlowException())
                 {
@@ -113,7 +116,7 @@ namespace Gapotchenko.FX.Console
         /// </summary>
         public static void Refresh()
         {
-            NoColor.Refresh();
+            m_CachedIsColorInhibited = default;
         }
     }
 }
