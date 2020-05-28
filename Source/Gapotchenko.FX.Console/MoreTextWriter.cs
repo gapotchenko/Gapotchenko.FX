@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Console
@@ -397,12 +398,31 @@ namespace Gapotchenko.FX.Console
         }
 
         /// <summary>
-        /// Shows a prompt with suggestion to continue scrolling.
+        /// Shows a prompt.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         protected virtual void ShowPrompt(TextWriter textWriter)
         {
-            m_BaseTextWriter.Write("(Press <Page Down> to scroll page, <Down Arrow> to scroll line)");
+            textWriter.Write(GetPromptText());
+        }
+
+        /// <summary>
+        /// Asynchronously shows a prompt.
+        /// </summary>
+        /// <param name="textWriter">The text writer.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        protected virtual Task ShowPromptAsync(TextWriter textWriter, CancellationToken cancellationToken)
+        {
+            return textWriter.WriteAsync(GetPromptText());
+        }
+
+        /// <summary>
+        /// Gets a prompt text with suggestion to continue scrolling.
+        /// </summary>
+        /// <returns>The prompt text.</returns>
+        protected virtual string GetPromptText()
+        {
+            return "(Press <Page Down> to scroll page, <Down Arrow> to scroll line)";
         }
 
         /// <summary>
