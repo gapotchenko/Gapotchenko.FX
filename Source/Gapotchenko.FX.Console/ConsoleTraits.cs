@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Console
@@ -86,26 +87,10 @@ namespace Gapotchenko.FX.Console
 
         static bool _WillDisappearOnExitCore() =>
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
-            WindowsExplorerDetector.WasProbablyStartedByExplorer &&
             WindowsExplorerDetector.IsStartedByExplorer();
 
         static class WindowsExplorerDetector
         {
-            static WindowsExplorerDetector()
-            {
-                try
-                {
-                    // http://support.microsoft.com/kb/99115
-                    WasProbablyStartedByExplorer = Console.CursorLeft == 0 && Console.CursorTop == 0;
-                }
-                catch (Exception e) when (!e.IsControlFlowException())
-                {
-                    WasProbablyStartedByExplorer = false;
-                }
-            }
-
-            public static bool WasProbablyStartedByExplorer { get; }
-
             public static bool IsStartedByExplorer()
             {
                 try
@@ -114,7 +99,7 @@ namespace Gapotchenko.FX.Console
                     if (parentProcess == null)
                         return false;
 
-                    return parentProcess.GetImageFileName().Equals("explorer.exe", StringComparison.OrdinalIgnoreCase);
+                    return Path.GetFileName(parentProcess.GetImageFileName()).Equals("explorer.exe", StringComparison.OrdinalIgnoreCase);
                 }
                 catch (Exception e) when (!e.IsControlFlowException())
                 {
