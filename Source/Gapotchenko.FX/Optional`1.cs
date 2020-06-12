@@ -8,8 +8,12 @@ using System.Text;
 namespace Gapotchenko.FX
 {
     /// <summary>
+    /// <para>
     /// Represents an optional value.
-    /// It is similar to <see cref="Nullable{T}"/>, but can also operate with a value of a reference type.
+    /// </para>
+    /// <para>
+    /// <see cref="Optional{T}"/> is similar to <see cref="Nullable{T}"/> but can also operate when <see cref="T"/> is a reference type.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
     [Serializable]
