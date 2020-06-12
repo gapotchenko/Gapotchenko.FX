@@ -255,7 +255,7 @@ namespace MyPlugin
 ```
 
 There are a lot of projects that may need this: T4 templates, MSBuild tasks, plugins, extensions etc.
-Basically everything that gets dynamically loaded and depends on one or more NuGet packages.
+Basically everything that gets dynamically loaded and depends on one or more NuGet packages with mishmash of versions.
 
 <hr/>
 
