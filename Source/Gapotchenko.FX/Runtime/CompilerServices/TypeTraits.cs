@@ -18,6 +18,6 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
         /// <summary>
         /// Gets a value indicating whether the type is a value type.
         /// </summary>
-        public static readonly bool IsValueType;
+        public static bool IsValueType { get; }
     }
 }
