@@ -41,11 +41,11 @@ namespace Gapotchenko.FX.ComponentModel
                 return false;
 
             // Dispose.
-            _RevertibleDispose(grabbedValue, ref value);
+            RevertibleDispose(grabbedValue, ref value);
             return true;
         }
 
-        static void _RevertibleDispose<T>(T value, ref T store) where T : class, IDisposable
+        static void RevertibleDispose<T>(T value, ref T store) where T : class, IDisposable
         {
             // This is a separate method to allow inlining of the caller.
 
@@ -87,15 +87,12 @@ namespace Gapotchenko.FX.ComponentModel
         /// </param>
         /// <returns><c>true</c> when the object has been disposed and the value cleared; <c>false</c> otherwise.</returns>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static bool Clear<T>(ref T value, bool isThreadSafe) where T : class, IDisposable
-        {
-            if (isThreadSafe)
-                return _ClearInterlocked(ref value);
-            else
-                return Clear(ref value);
-        }
+        public static bool Clear<T>(ref T value, bool isThreadSafe) where T : class, IDisposable =>
+            isThreadSafe ?
+                ClearInterlocked(ref value) :
+                Clear(ref value);
 
-        static bool _ClearInterlocked<T>(ref T value) where T : class, IDisposable
+        static bool ClearInterlocked<T>(ref T value) where T : class, IDisposable
         {
             // Load and clear.
             var grabbedValue = Interlocked.Exchange(ref value, null);
@@ -103,12 +100,12 @@ namespace Gapotchenko.FX.ComponentModel
                 return false;
 
             // Dispose.
-            _RevertibleDisposeInterlocked(grabbedValue, ref value);
+            RevertibleDisposeInterlocked(grabbedValue, ref value);
 
             return true;
         }
 
-        static void _RevertibleDisposeInterlocked<T>(T value, ref T store) where T : class, IDisposable
+        static void RevertibleDisposeInterlocked<T>(T value, ref T store) where T : class, IDisposable
         {
             // This is a separate method to allow inlining of the caller.
 
@@ -119,6 +116,54 @@ namespace Gapotchenko.FX.ComponentModel
             catch
             {
                 Interlocked.CompareExchange(ref store, value, null);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Tries to clear an optional disposable object at the specified reference
+        /// by calling <see cref="IDisposable.Dispose"/> method and setting its value to <see cref="Optional{T}.None"/>.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The method does not provide thread safety guarantees.
+        /// </para>
+        /// </remarks>
+        /// <typeparam name="T">The type of disposable object.</typeparam>
+        /// <param name="optional">The reference to an optional disposable value.</param>
+        /// <returns><c>true</c> when the object has been disposed and the value cleared; <c>false</c> otherwise.</returns>
+        public static bool Clear<T>(ref Optional<T> optional) where T : class, IDisposable
+        {
+            if (optional.HasValue)
+            {
+                // Load.
+                var grabbedValue = optional.Value;
+
+                // Clear as soon as possible to minimize the chance of a race condition.
+                optional = Optional<T>.None;
+
+                if (grabbedValue != null)
+                {
+                    // Dispose.
+                    RevertibleDispose(grabbedValue, ref optional);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        static void RevertibleDispose<T>(T value, ref Optional<T> store) where T : class, IDisposable
+        {
+            // This is a separate method to allow inlining of the caller.
+
+            try
+            {
+                value.Dispose();
+            }
+            catch
+            {
+                store = Optional.Some(value);
                 throw;
             }
         }
