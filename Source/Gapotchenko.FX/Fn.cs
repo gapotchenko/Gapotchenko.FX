@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX
 {
@@ -26,5 +27,20 @@ namespace Gapotchenko.FX
         /// Gets a delegate to a pure parameterless function that does nothing.
         /// </summary>
         public static Action Empty { get; } = () => { };
+
+        /// <summary>
+        /// <para>
+        /// Ignores a specified value.
+        /// Useful in languages that do not have a built-in ignore function.
+        /// </para>
+        /// <para>
+        /// A typical usage is to fire and forget a parallel <see cref="System.Threading.Tasks.Task"/> without producing a compiler warning.
+        /// </para>
+        /// </summary>
+        /// <typeparam name="T">The type a function works with.</typeparam>
+        /// <param name="value">The value to ignore.</param>
+        public static void Ignore<T>(T value)
+        {
+        }
     }
 }
