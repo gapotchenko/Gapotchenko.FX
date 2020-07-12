@@ -28,26 +28,26 @@ namespace Gapotchenko.FX.ComponentModel
         /// <returns><c>true</c> when the object has been disposed and the value cleared; <c>false</c> otherwise.</returns>
         public static bool Clear<T>(ref T value) where T : class, IDisposable
         {
-            // Intermediate grabbed value is needed to eliminate the chance of NullReferenceException due to unconscious race condition.
+            // An intermediate loaded value is needed to eliminate the chance of NullReferenceException due to unconscious race condition.
             // This method is thread-safe according to .NET memory model because pointer to an object is guaranteed to be atomic.
 
             // Load.
-            var grabbedValue = value;
+            var loadedValue = value;
 
             // Clear as soon as possible to minimize the chance of a race condition.
             value = null;
 
-            if (grabbedValue == null)
+            if (loadedValue == null)
                 return false;
 
             // Dispose.
-            RevertibleDispose(grabbedValue, ref value);
+            RevertibleDispose(loadedValue, ref value);
             return true;
         }
 
         static void RevertibleDispose<T>(T value, ref T store) where T : class, IDisposable
         {
-            // This is a separate method to allow inlining of the caller.
+            // This method is separate to allow inlining of a caller method.
 
             try
             {
@@ -95,19 +95,19 @@ namespace Gapotchenko.FX.ComponentModel
         static bool ClearInterlocked<T>(ref T value) where T : class, IDisposable
         {
             // Load and clear.
-            var grabbedValue = Interlocked.Exchange(ref value, null);
-            if (grabbedValue == null)
+            var loadedValue = Interlocked.Exchange(ref value, null);
+            if (loadedValue == null)
                 return false;
 
             // Dispose.
-            RevertibleDisposeInterlocked(grabbedValue, ref value);
+            RevertibleDisposeInterlocked(loadedValue, ref value);
 
             return true;
         }
 
         static void RevertibleDisposeInterlocked<T>(T value, ref T store) where T : class, IDisposable
         {
-            // This is a separate method to allow inlining of the caller.
+            // This method is separate to allow inlining of a caller method.
 
             try
             {
@@ -137,15 +137,15 @@ namespace Gapotchenko.FX.ComponentModel
             if (optional.HasValue)
             {
                 // Load.
-                var grabbedValue = optional.Value;
+                var loadedValue = optional.Value;
 
                 // Clear as soon as possible to minimize the chance of a race condition.
                 optional = Optional<T>.None;
 
-                if (grabbedValue != null)
+                if (loadedValue != null)
                 {
                     // Dispose.
-                    RevertibleDispose(grabbedValue, ref optional);
+                    RevertibleDispose(loadedValue, ref optional);
                     return true;
                 }
             }
@@ -155,7 +155,7 @@ namespace Gapotchenko.FX.ComponentModel
 
         static void RevertibleDispose<T>(T value, ref Optional<T> store) where T : class, IDisposable
         {
-            // This is a separate method to allow inlining of the caller.
+            // This method is separate to allow inlining of a caller method.
 
             try
             {
