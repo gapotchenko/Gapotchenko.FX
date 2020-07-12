@@ -12,18 +12,19 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
         public void ProcEnv_Read()
         {
             var process = new Process();
+
             var psi = process.StartInfo;
             psi.FileName = "dotnet";
-            psi.Arguments = "/fsi";
+            psi.Arguments = "fsi";
 
-            string secret = Guid.NewGuid().ToString("D");
-            psi.EnvironmentVariables["PROC_ENV_TEST"] = secret;
+            string value = Guid.NewGuid().ToString("D");
+            psi.EnvironmentVariables["PROC_ENV_TEST"] = value;
 
             Assert.IsTrue(process.Start());
             try
             {
                 var env = process.ReadEnvironmentVariables();
-                Assert.AreEqual(secret, env["PROC_ENV_TEST"]);
+                Assert.AreEqual(value, env["PROC_ENV_TEST"]);
             }
             finally
             {
