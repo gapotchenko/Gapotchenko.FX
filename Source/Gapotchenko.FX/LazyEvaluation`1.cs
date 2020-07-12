@@ -1,10 +1,6 @@
 ﻿using Gapotchenko.FX.Properties;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.Permissions;
-using System.Text;
 
 namespace Gapotchenko.FX
 {

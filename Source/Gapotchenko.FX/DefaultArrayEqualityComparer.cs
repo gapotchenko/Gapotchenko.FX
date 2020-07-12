@@ -25,7 +25,7 @@ namespace Gapotchenko.FX
             if (x == y)
                 return true;
 
-            if (x == null || y == null)
+            if (x is null || y is null)
                 return false;
 
             if (x.Length != y.Length)
@@ -45,7 +45,7 @@ namespace Gapotchenko.FX
         /// <returns>A hash code for the specified array.</returns>
         public override int GetHashCode(T[] obj)
         {
-            if (obj == null)
+            if (obj is null)
                 return 0;
 
             // FNV-1a

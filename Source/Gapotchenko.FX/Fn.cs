@@ -1,6 +1,4 @@
-﻿using Gapotchenko.FX.Runtime.CompilerServices;
-using System;
-using System.Linq;
+﻿using System;
 
 namespace Gapotchenko.FX
 {
