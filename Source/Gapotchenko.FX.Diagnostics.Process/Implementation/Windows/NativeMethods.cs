@@ -2,7 +2,9 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Gapotchenko.FX.Diagnostics
+#nullable enable
+
+namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 {
     static class NativeMethods
     {
@@ -157,7 +159,7 @@ namespace Gapotchenko.FX.Diagnostics
         public delegate bool HANDLER_ROUTINE(int dwCtrlType);
 
         [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-        public static extern bool SetConsoleCtrlHandler(HANDLER_ROUTINE HandlerRoutine, bool Add);
+        public static extern bool SetConsoleCtrlHandler(HANDLER_ROUTINE? HandlerRoutine, bool Add);
 
         // -------------------------------------------------------------------------------------------------------
 

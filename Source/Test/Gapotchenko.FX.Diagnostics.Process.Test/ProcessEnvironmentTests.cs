@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
-using System.Diagnostics;
 
 namespace Gapotchenko.FX.Diagnostics.Process.Test
 {
@@ -11,7 +10,7 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
     public class ProcessEnvironmentTests
     {
         [TestMethod]
-        public void ProcEnv_Read()
+        public void Process_ReadEnvironment()
         {
             var process = new Process();
 
@@ -39,13 +38,8 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             }
         }
 
-        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         [TestMethod]
-        public void ProcEnv_ReadLarge()
+        public void Process_ReadLargeEnvironment()
         {
             var process = new Process();
 

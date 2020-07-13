@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Gapotchenko.FX.Diagnostics
+namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 {
     static partial class ProcessEnvironment
     {

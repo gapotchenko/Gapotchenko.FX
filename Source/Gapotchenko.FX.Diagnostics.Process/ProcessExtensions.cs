@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Gapotchenko.FX.Diagnostics.Implementation;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Diagnostics
 {
@@ -20,22 +21,10 @@ namespace Gapotchenko.FX.Diagnostics
         /// <returns>The environment variables.</returns>
         public static StringDictionary ReadEnvironmentVariables(this Process process)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new PlatformNotSupportedException();
+            if (process == null)
+                throw new ArgumentNullException(nameof(process));
 
-            return ProcessEnvironment.ReadVariables(process);
-        }
-
-        static int _GetParentProcessID(IntPtr handle)
-        {
-            var pbi = new NativeMethods.PROCESS_BASIC_INFORMATION();
-
-            int size = 0;
-            int status = NativeMethods.NtQueryInformationProcess(handle, 0, ref pbi, Marshal.SizeOf(pbi), ref size);
-            if (status != 0)
-                throw new Exception("Unable to get parent process. NtQueryInformationProcess failed.");
-
-            return pbi.InheritedFromUniqueProcessId.ToInt32();
+            return ImplementationServices.Adapter.ReadProcessEnvironmentVariables(process);
         }
 
         /// <summary>
@@ -43,7 +32,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         /// <param name="process">The process to get the parent for.</param>
         /// <returns>The parent process or <c>null</c> if it is no longer running or there is no parent.</returns>
-        public static Process GetParent(this Process process)
+        public static Process? GetParent(this Process process)
         {
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
@@ -51,7 +40,7 @@ namespace Gapotchenko.FX.Diagnostics
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 throw new PlatformNotSupportedException();
 
-            int parentPID = _GetParentProcessID(process.Handle);
+            int parentPID = ImplementationServices.Adapter.GetParentProcessID(process);
             try
             {
                 var parentProcess = Process.GetProcessById(parentPID);
@@ -121,52 +110,11 @@ namespace Gapotchenko.FX.Diagnostics
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
 
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            var adapter = ImplementationServices.AdapterOrDefault;
+            if (adapter != null)
+                return adapter.GetProcessImageFileName(process);
+            else
                 return process.MainModule.FileName;
-
-            ProcessModule mainModule = null;
-            try
-            {
-                mainModule = process.MainModule;
-            }
-            catch (InvalidOperationException)
-            {
-            }
-            catch (Win32Exception)
-            {
-            }
-
-            if (mainModule != null)
-                return mainModule.FileName;
-
-            var sb = new StringBuilder(NativeMethods.MAX_PATH);
-            for (; ; )
-            {
-                uint dwSize = (uint)sb.Capacity;
-                var result = NativeMethods.QueryFullProcessImageName(process.Handle, 0, sb, ref dwSize);
-                if (!result)
-                {
-                    int errorCode = Marshal.GetLastWin32Error();
-                    if (errorCode == NativeMethods.ERROR_INSUFFICIENT_BUFFER)
-                    {
-                        const int MaxCapacity = 32768;
-
-                        int capacity = sb.Capacity;
-                        if (capacity < MaxCapacity)
-                        {
-                            sb.Capacity = Math.Min(capacity * 2, MaxCapacity);
-                            continue;
-                        }
-                    }
-
-                    throw new Win32Exception(errorCode);
-                }
-
-                break;
-            }
-
-            return sb.ToString();
         }
-
     }
 }
