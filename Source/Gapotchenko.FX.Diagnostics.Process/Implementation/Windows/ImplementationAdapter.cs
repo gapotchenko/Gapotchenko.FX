@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
         public static ImplementationAdapter Instance { get; } = new ImplementationAdapter();
 
-        public int GetParentProcessID(Process process)
+        public int GetParentProcessId(Process process)
         {
             var pbi = new NativeMethods.PROCESS_BASIC_INFORMATION();
 

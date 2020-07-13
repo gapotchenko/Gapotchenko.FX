@@ -32,5 +32,12 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
                 process.Kill(true);
             }
         }
+
+        [TestMethod]
+        public void Process_GetImageFileName()
+        {
+            var process = Process.GetCurrentProcess();
+            Assert.AreEqual(process.MainModule.FileName, process.GetImageFileName());
+        }
     }
 }

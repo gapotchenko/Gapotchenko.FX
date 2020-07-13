@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Diagnostics
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
 
-            int parentPID = ImplementationServices.Adapter.GetParentProcessID(process);
+            int parentPID = ImplementationServices.Adapter.GetParentProcessId(process);
             try
             {
                 var parentProcess = Process.GetProcessById(parentPID);
@@ -78,11 +78,11 @@ namespace Gapotchenko.FX.Diagnostics
 
         /// <summary>
         /// <para>
-        /// Gets file name of a process image.
+        /// Gets the file name of a process image.
         /// </para>
         /// <para>
         /// Usually the returned value corresponds to the value of <see cref="ProcessModule.FileName"/> property of a main process module.
-        /// The difference becomes apparent when the current process cannot access the module information due to security restrictions.
+        /// The difference becomes apparent when the current process cannot access the module information due to security restrictions imposed by the host platform.
         /// While <see cref="ProcessModule.FileName"/> may not work in that situation, this method always works.
         /// </para>
         /// </summary>

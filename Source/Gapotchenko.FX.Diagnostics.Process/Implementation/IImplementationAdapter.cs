@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
 {
     interface IImplementationAdapter
     {
-        int GetParentProcessID(Process process);
+        int GetParentProcessId(Process process);
         StringDictionary ReadProcessEnvironmentVariables(Process process);
         Task<bool> TryInterruptProcessAsync(Process process, CancellationToken cancellationToken);
         string GetProcessImageFileName(Process process);
