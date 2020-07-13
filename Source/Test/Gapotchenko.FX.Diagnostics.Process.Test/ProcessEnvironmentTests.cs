@@ -42,10 +42,10 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             psi.FileName = "dotnet";
             psi.Arguments = "fsi";
 
-            var expectedEnv = psi.EnvironmentVariables;
-
             const string envKeyPrefix = "PROC_ENV_TEST_";
-            for (int i = 0; i < 1000; ++i)
+
+            var expectedEnv = psi.EnvironmentVariables;
+            for (int i = 0; i < 1; ++i)
             {
                 string value = Guid.NewGuid().ToString("D");
                 expectedEnv[envKeyPrefix + i] = value;
@@ -55,12 +55,12 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             try
             {
                 var actualEnv = process.ReadEnvironmentVariables();
+
                 foreach (DictionaryEntry i in expectedEnv)
                 {
                     string key = (string)i.Key;
                     if (!key.StartsWith(envKeyPrefix, StringComparison.Ordinal))
                         continue;
-
                     Assert.AreEqual((string)i.Value, actualEnv[key]);
                 }
             }
