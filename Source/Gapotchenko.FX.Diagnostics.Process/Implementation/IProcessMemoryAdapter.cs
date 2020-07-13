@@ -1,0 +1,28 @@
+﻿using System;
+
+#nullable enable
+
+namespace Gapotchenko.FX.Diagnostics.Implementation
+{
+    /// <summary>
+    /// Provides low-level access to the process memory.
+    /// </summary>
+    interface IProcessMemoryAdapter
+    {
+        /// <summary>
+        /// Gets the page size measured in bytes according to the granularity of memory access control.
+        /// </summary>
+        int PageSize { get; }
+
+        /// <summary>
+        /// Reads the process memory.
+        /// </summary>
+        /// <param name="address">The address to start reading at.</param>
+        /// <param name="buffer">The buffer to read to.</param>
+        /// <param name="offset">The buffer offset to start reading to.</param>
+        /// <param name="count">The count of bytes to read.</param>
+        /// <param name="throwOnError">Indicates whether to throw an exception on error.</param>
+        /// <returns>The count of read bytes or -1 on error.</returns>
+        int ReadMemory(UniPtr address, byte[] buffer, int offset, int count, bool throwOnError);
+    }
+}

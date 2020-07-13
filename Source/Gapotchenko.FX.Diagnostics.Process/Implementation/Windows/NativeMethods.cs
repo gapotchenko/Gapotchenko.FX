@@ -73,6 +73,14 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
           IntPtr dwSize,
           ref IntPtr lpNumberOfBytesRead);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static unsafe extern bool ReadProcessMemory(
+            IntPtr hProcess,
+            IntPtr lpBaseAddress,
+            void* lpBuffer,
+            IntPtr dwSize,
+            ref IntPtr lpNumberOfBytesRead);
+
         [DllImport("ntdll.dll", SetLastError = true)]
         public static extern int NtWow64ReadVirtualMemory64(
             IntPtr hProcess,
@@ -86,6 +94,14 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
             IntPtr hProcess,
             long lpBaseAddress,
             [Out] byte[] lpBuffer,
+            long dwSize,
+            ref long lpNumberOfBytesRead);
+
+        [DllImport("ntdll.dll", SetLastError = true)]
+        public static unsafe extern int NtWow64ReadVirtualMemory64(
+            IntPtr hProcess,
+            long lpBaseAddress,
+            void* lpBuffer,
             long dwSize,
             ref long lpNumberOfBytesRead);
 

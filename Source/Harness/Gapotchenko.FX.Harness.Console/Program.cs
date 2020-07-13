@@ -61,16 +61,12 @@ namespace Gapotchenko.FX.Harness.Console
 
             Console.WriteLine(BitOperations.Log2(32));
 
-            IEnumerable<int> source = new[] { 1, 2, 3 };
-
-            var h = source.ToHashSet();
-
-            Console.WriteLine(h.IsNullOrEmpty());
-
-            var more = new MoreTextWriter(Console.Out);
-
-            for (int i = 1; i < 100; ++i)
-                more.WriteLine(i.ToString());
+            var process = Process.GetProcessesByName("notepad2").FirstOrDefault();
+            if (process != null)
+            {
+                var env = process.ReadEnvironmentVariables();
+                Console.WriteLine(env["PATH"]);
+            }
         }
 
         static async Task _RunAsync(CancellationToken ct)

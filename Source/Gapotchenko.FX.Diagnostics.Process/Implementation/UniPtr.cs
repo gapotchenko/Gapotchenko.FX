@@ -1,44 +1,50 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Diagnostics.Implementation
 {
     /// <summary>
-    /// Universal pointer.
+    /// Universal pointer that can hold both 32 and 64 bit values.
     /// </summary>
-    readonly struct UniPtr
+    readonly struct UniPtr : IEquatable<UniPtr>
     {
-        public UniPtr(IntPtr p)
+        public UniPtr(IntPtr value)
         {
-            Value = p.ToInt64();
-            Size = IntPtr.Size;
+            m_Value = value.ToInt64();
+            m_Size = (byte)IntPtr.Size;
         }
 
-        public UniPtr(long p)
+        public UniPtr(long value)
         {
-            Value = p;
-            Size = sizeof(long);
+            m_Value = value;
+            m_Size = sizeof(long);
         }
 
-        public readonly long Value;
-        public readonly int Size;
+        public UniPtr(ulong value) :
+            this((long)value)
+        {
+        }
 
-        public static implicit operator IntPtr(UniPtr p) => new IntPtr(p.Value);
+        readonly long m_Value;
+        readonly byte m_Size;
 
-        public static implicit operator UniPtr(IntPtr p) => new UniPtr(p);
+        public int Size => m_Size;
 
-        public override readonly string ToString() => Value.ToString();
+        public readonly long ToInt64() => m_Value;
 
-        public readonly bool FitsInNativePointer => Size <= IntPtr.Size;
+        public readonly ulong ToUInt64() => (ulong)m_Value;
+
+        public readonly bool FitsInNativePointer => m_Size <= IntPtr.Size;
 
         public readonly bool CanBeRepresentedByNativePointer
         {
             get
             {
-                int actualSize = Size;
+                int actualSize = m_Size;
 
                 if (actualSize == 8)
                 {
-                    if (Value >> 32 == 0)
+                    if (m_Value >> 32 == 0)
                         actualSize = 4;
                 }
 
@@ -46,6 +52,22 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
             }
         }
 
-        public readonly long ToInt64() => Value;
+        public static implicit operator IntPtr(UniPtr p) => new IntPtr(p.ToInt64());
+
+        public static implicit operator UniPtr(IntPtr p) => new UniPtr(p);
+
+        public static UniPtr operator +(UniPtr a, long b) => new UniPtr(a.ToInt64() + b);
+
+        public static bool operator ==(UniPtr a, UniPtr b) => a.ToUInt64() == b.ToUInt64();
+
+        public static bool operator !=(UniPtr a, UniPtr b) => a.ToUInt64() != b.ToUInt64();
+
+        public override int GetHashCode() => m_Value.GetHashCode();
+
+        public override bool Equals(object obj) => obj is UniPtr other ? Equals(other) : false;
+
+        public bool Equals(UniPtr other) => m_Value == other.m_Value;
+
+        public override readonly string ToString() => ((ulong)m_Value).ToString();
     }
 }

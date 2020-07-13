@@ -4,6 +4,7 @@
     <TargetFramework></TargetFramework>
     <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
     <LangVersion>8.0</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <PackageTag Include="process" />
