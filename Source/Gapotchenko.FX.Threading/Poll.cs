@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Threading
 {
@@ -37,11 +36,11 @@ namespace Gapotchenko.FX.Threading
             if (millisecondsTimeout < Timeout.Infinite)
                 throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), "The value needs to be either -1 (signifying an infinite timeout), 0 or a positive integer.");
 
-            Stopwatch sw = null;
+            Stopwatch? sw = null;
 
             int minDispersion = 0;
             int maxDispersion = 0;
-            var random = Optional<Random>.None;
+            var random = Optional<Random?>.None;
 
             for (; ; )
             {
@@ -82,13 +81,7 @@ namespace Gapotchenko.FX.Threading
                     millisecondsDelay += dispersion;
                 }
 
-                await
-#if NET40
-                    TaskEx
-#else
-                    Task
-#endif
-                    .Delay(millisecondsDelay, cancellationToken).ConfigureAwait(false);
+                await Task.Delay(millisecondsDelay, cancellationToken).ConfigureAwait(false);
             }
         }
     }

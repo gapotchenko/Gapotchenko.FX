@@ -1,14 +1,10 @@
 ﻿using Gapotchenko.FX.Runtime.InteropServices;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices
 {
@@ -269,7 +265,6 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
 
         static void ValidateMethod(MethodInfo method)
         {
-#if !NET40
             if ((method.MethodImplementationFlags & MethodImplAttributes.NoInlining) == 0)
             {
                 throw new Exception(
@@ -279,7 +274,6 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                         method.DeclaringType,
                         "NoInlining"));
             }
-#endif
         }
     }
 }

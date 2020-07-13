@@ -153,20 +153,13 @@ namespace Gapotchenko.FX.Threading.Tasks
             return result;
         }
 
-        static Task RunLongTask(Action action, CancellationToken cancellationToken)
-        {
+        static Task RunLongTask(Action action, CancellationToken cancellationToken) =>
             // Running a long task allows to avoid thread pool pollution on a large number of concurrent operations.
-
-            return Task.Factory.StartNew(
+            Task.Factory.StartNew(
                 action,
                 cancellationToken,
-#if NET40
-                TaskCreationOptions.LongRunning,
-#else
                 TaskCreationOptions.LongRunning | TaskCreationOptions.DenyChildAttach,
-#endif
                 TaskScheduler.Default);
-        }
 
         /// <summary>
         /// Asynchronously executes a synchronous long-running action.

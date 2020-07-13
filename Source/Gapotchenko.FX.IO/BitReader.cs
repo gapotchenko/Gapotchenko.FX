@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.IO
 {
@@ -39,7 +36,6 @@ namespace Gapotchenko.FX.IO
             _BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
         }
 
-#if !NET40
         /// <summary>
         /// Initializes a new instance of the <see cref="BitReader"/> class.
         /// </summary>
@@ -53,7 +49,6 @@ namespace Gapotchenko.FX.IO
         {
             _BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
         }
-#endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IBitConverter _BitConverter;

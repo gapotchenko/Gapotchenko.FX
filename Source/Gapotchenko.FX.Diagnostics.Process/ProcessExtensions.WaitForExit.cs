@@ -26,17 +26,7 @@ namespace Gapotchenko.FX.Diagnostics
             // IMPROVE: Needs a more efficient implementation without polling.
 
             return Poll.WaitUntilAsync(
-                () =>
-                {
-                    // This is not a call to Process.HasExited property in order to inherit the desired exception behavior.
-                    return
-#if NET40
-                        TaskEx
-#else
-                        Task
-#endif
-                        .FromResult(process.WaitForExit(0));
-                },
+                () => Task.FromResult(process.WaitForExit(0)), // this is not a call to Process.HasExited property in order to inherit the desired exception behavior
                 100,
                 millisecondsTimeout);
         }
