@@ -3,9 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
 
 namespace Gapotchenko.FX.IO
@@ -16,55 +13,54 @@ namespace Gapotchenko.FX.IO
         {
             public FileEnlistment(string filePath, string transactionKey)
             {
-                _FilePath = filePath;
-                _TransactionKey = transactionKey;
+                m_FilePath = filePath;
+                m_TransactionKey = transactionKey;
 
                 if (File.Exists(filePath))
                 {
-                    _TempFilePath = Path.GetTempFileName();
-                    File.Copy(filePath, _TempFilePath, true);
+                    m_TempFilePath = Path.GetTempFileName();
+                    File.Copy(filePath, m_TempFilePath, true);
                 }
             }
 
-            string _FilePath;
-            string _TempFilePath;
-            string _TransactionKey;
+            string m_FilePath;
+            string m_TempFilePath;
+            string m_TransactionKey;
 
-            void _Forget()
+            void Forget()
             {
-                if (_TempFilePath != null)
+                if (m_TempFilePath != null)
                 {
                     try
                     {
-                        File.Delete(_TempFilePath);
+                        File.Delete(m_TempFilePath);
                     }
                     catch
                     {
                     }
-                    _TempFilePath = null;
+                    m_TempFilePath = null;
                 }
 
-                if (_FilePath != null)
+                if (m_FilePath != null)
                 {
-                    lock (_EnlistedFiles)
+                    lock (m_TransactionEnlistedFiles)
                     {
-                        HashSet<string> files;
-                        if (_EnlistedFiles.TryGetValue(_TransactionKey, out files))
+                        if (m_TransactionEnlistedFiles.TryGetValue(m_TransactionKey, out var enlistedFiles))
                         {
-                            files.Remove(_FilePath);
-                            if (files.Count == 0)
-                                _EnlistedFiles.Remove(_TransactionKey);
+                            enlistedFiles.Remove(m_FilePath);
+                            if (enlistedFiles.Count == 0)
+                                m_TransactionEnlistedFiles.Remove(m_TransactionKey);
                         }
                     }
-                    _FilePath = null;
+                    m_FilePath = null;
                 }
 
-                _TransactionKey = null;
+                m_TransactionKey = null;
             }
 
             public void Commit(Enlistment enlistment)
             {
-                _Forget();
+                Forget();
                 enlistment.Done();
             }
 
@@ -80,19 +76,19 @@ namespace Gapotchenko.FX.IO
 
             public void Rollback(Enlistment enlistment)
             {
-                FileSystem.WaitForFileWriteAccess(_FilePath);
-                if (_TempFilePath != null)
-                    File.Copy(_TempFilePath, _FilePath, true);
+                FileSystem.WaitForFileWriteAccess(m_FilePath);
+                if (m_TempFilePath != null)
+                    File.Copy(m_TempFilePath, m_FilePath, true);
                 else
-                    File.Delete(_FilePath);
+                    File.Delete(m_FilePath);
 
-                _Forget();
+                Forget();
 
                 enlistment.Done();
             }
         }
 
-        static Dictionary<string, HashSet<string>> _EnlistedFiles = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
+        static Dictionary<string, HashSet<string>> m_TransactionEnlistedFiles = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
 
         public static void EnlistFileInTransaction(string path, Transaction transaction)
         {
@@ -100,16 +96,15 @@ namespace Gapotchenko.FX.IO
 
             string transactionKey = transaction.TransactionInformation.LocalIdentifier;
 
-            lock (_EnlistedFiles)
+            lock (m_TransactionEnlistedFiles)
             {
-                HashSet<string> files;
-                if (!_EnlistedFiles.TryGetValue(transactionKey, out files))
+                if (!m_TransactionEnlistedFiles.TryGetValue(transactionKey, out var enlistedFiles))
                 {
-                    files = new HashSet<string>(FileSystem.PathComparer);
-                    _EnlistedFiles.Add(transactionKey, files);
+                    enlistedFiles = new HashSet<string>(FileSystem.PathComparer);
+                    m_TransactionEnlistedFiles.Add(transactionKey, enlistedFiles);
                 }
 
-                if (!files.Add(path))
+                if (!enlistedFiles.Add(path))
                     return;
             }
 

@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.IO
         public BitReader(Stream input, IBitConverter bitConverter) :
             base(input)
         {
-            _BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
+            m_BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.IO
         public BitReader(Stream input, IBitConverter bitConverter, Encoding encoding) :
             base(input, encoding)
         {
-            _BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
+            m_BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
         }
 
         /// <summary>
@@ -47,11 +47,11 @@ namespace Gapotchenko.FX.IO
         public BitReader(Stream input, IBitConverter bitConverter, Encoding encoding, bool leaveOpen) :
             base(input, encoding, leaveOpen)
         {
-            _BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
+            m_BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IBitConverter _BitConverter;
+        IBitConverter m_BitConverter;
 
         /// <summary>
         /// Gets or sets the current bit converter.
@@ -59,12 +59,12 @@ namespace Gapotchenko.FX.IO
         [CLSCompliant(false)]
         public IBitConverter BitConverter
         {
-            get => _BitConverter;
-            set => _BitConverter = value ?? throw new ArgumentNullException(nameof(value));
+            get => m_BitConverter;
+            set => m_BitConverter = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        byte[] _Buffer = new byte[16];
+        byte[] m_Buffer = new byte[16];
 
         void _FillBuffer(int count)
         {
@@ -77,14 +77,14 @@ namespace Gapotchenko.FX.IO
                 int b = stream.ReadByte();
                 if (b == -1)
                     throw new EndOfStreamException();
-                _Buffer[0] = (byte)b;
+                m_Buffer[0] = (byte)b;
             }
             else
             {
                 int offset = 0;
                 do
                 {
-                    int readBytes = stream.Read(_Buffer, offset, count - offset);
+                    int readBytes = stream.Read(m_Buffer, offset, count - offset);
                     if (readBytes == 0)
                         throw new EndOfStreamException();
                     offset += readBytes;
@@ -102,7 +102,7 @@ namespace Gapotchenko.FX.IO
         public override short ReadInt16()
         {
             _FillBuffer(2);
-            return _BitConverter.ToInt16(_Buffer);
+            return m_BitConverter.ToInt16(m_Buffer);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Gapotchenko.FX.IO
         public override ushort ReadUInt16()
         {
             _FillBuffer(2);
-            return _BitConverter.ToUInt16(_Buffer);
+            return m_BitConverter.ToUInt16(m_Buffer);
         }
 
         /// <summary>Reads a 4-byte signed integer from the current stream and advances the current position of the stream by four bytes.</summary>
@@ -123,7 +123,7 @@ namespace Gapotchenko.FX.IO
         public override int ReadInt32()
         {
             _FillBuffer(4);
-            return _BitConverter.ToInt32(_Buffer);
+            return m_BitConverter.ToInt32(m_Buffer);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Gapotchenko.FX.IO
         public override uint ReadUInt32()
         {
             _FillBuffer(4);
-            return _BitConverter.ToUInt32(_Buffer);
+            return m_BitConverter.ToUInt32(m_Buffer);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Gapotchenko.FX.IO
         public override long ReadInt64()
         {
             _FillBuffer(8);
-            return _BitConverter.ToInt64(_Buffer);
+            return m_BitConverter.ToInt64(m_Buffer);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Gapotchenko.FX.IO
         public override ulong ReadUInt64()
         {
             _FillBuffer(8);
-            return _BitConverter.ToUInt64(_Buffer);
+            return m_BitConverter.ToUInt64(m_Buffer);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Gapotchenko.FX.IO
         public override float ReadSingle()
         {
             _FillBuffer(4);
-            return _BitConverter.ToSingle(_Buffer);
+            return m_BitConverter.ToSingle(m_Buffer);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Gapotchenko.FX.IO
         public override double ReadDouble()
         {
             _FillBuffer(8);
-            return _BitConverter.ToDouble(_Buffer);
+            return m_BitConverter.ToDouble(m_Buffer);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace Gapotchenko.FX.IO
         public override decimal ReadDecimal()
         {
             _FillBuffer(16);
-            return _BitConverter.ToDecimal(_Buffer);
+            return m_BitConverter.ToDecimal(m_Buffer);
         }
     }
 }
