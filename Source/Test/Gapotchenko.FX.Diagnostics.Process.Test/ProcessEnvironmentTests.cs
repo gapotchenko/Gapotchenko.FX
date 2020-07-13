@@ -43,12 +43,12 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             psi.Arguments = "fsi";
 
             var expectedEnv = psi.EnvironmentVariables;
-            expectedEnv.Clear();
 
+            const string envKeyPrefix = "PROC_ENV_TEST_";
             for (int i = 0; i < 1000; ++i)
             {
                 string value = Guid.NewGuid().ToString("D");
-                expectedEnv["PROC_ENV_TEST_" + i] = value;
+                expectedEnv[envKeyPrefix + i] = value;
             }
 
             Assert.IsTrue(process.Start());
@@ -56,7 +56,13 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             {
                 var actualEnv = process.ReadEnvironmentVariables();
                 foreach (DictionaryEntry i in expectedEnv)
-                    Assert.AreEqual((string)i.Value, actualEnv[(string)i.Key]);
+                {
+                    string key = (string)i.Key;
+                    if (!key.StartsWith(envKeyPrefix, StringComparison.Ordinal))
+                        continue;
+
+                    Assert.AreEqual((string)i.Value, actualEnv[key]);
+                }
             }
             finally
             {
