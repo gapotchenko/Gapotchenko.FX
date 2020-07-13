@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 
 #nullable enable
@@ -94,10 +95,25 @@ namespace Gapotchenko.FX.Diagnostics
                 throw new ArgumentNullException(nameof(process));
 
             var adapter = ImplementationServices.AdapterOrDefault;
-            if (adapter != null)
-                return adapter.GetProcessImageFileName(process);
-            else
+            if (adapter == null)
                 return process.MainModule.FileName;
+
+            ProcessModule? mainModule = null;
+            try
+            {
+                mainModule = process.MainModule;
+            }
+            catch (InvalidOperationException)
+            {
+            }
+            catch (Win32Exception)
+            {
+            }
+
+            if (mainModule != null)
+                return mainModule.FileName;
+
+            return adapter.GetProcessImageFileName(process);
         }
     }
 }

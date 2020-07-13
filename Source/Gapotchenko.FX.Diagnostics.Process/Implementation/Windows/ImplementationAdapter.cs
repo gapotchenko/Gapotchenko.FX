@@ -113,21 +113,6 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
         public string GetProcessImageFileName(Process process)
         {
-            ProcessModule? mainModule = null;
-            try
-            {
-                mainModule = process.MainModule;
-            }
-            catch (InvalidOperationException)
-            {
-            }
-            catch (Win32Exception)
-            {
-            }
-
-            if (mainModule != null)
-                return mainModule.FileName;
-
             var sb = new StringBuilder(NativeMethods.MAX_PATH);
             for (; ; )
             {
