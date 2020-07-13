@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 #nullable enable
 
@@ -36,9 +35,6 @@ namespace Gapotchenko.FX.Diagnostics
         {
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
-
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                throw new PlatformNotSupportedException();
 
             int parentPID = ImplementationServices.Adapter.GetParentProcessID(process);
             try
