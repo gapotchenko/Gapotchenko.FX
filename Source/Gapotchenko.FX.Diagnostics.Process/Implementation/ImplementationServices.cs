@@ -22,6 +22,19 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
 
         public static bool IsCurrentProcess(Process? process) => ProcessesAreEquivalent(process, Process.GetCurrentProcess());
 
+        public static bool IsValidParentProcess(Process parentProcess, Process childProcess)
+        {
+            if (parentProcess.StartTime > childProcess.StartTime)
+            {
+                // The parent process was started after the child process.
+                // This condition indicates that the real parent process has exited before, and
+                // its process ID has been reused by another unrelated process.
+                return false;
+            }
+
+            return true;
+        }
+
         static class AdapterFactory
         {
             static AdapterFactory()

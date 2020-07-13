@@ -44,7 +44,7 @@ namespace Gapotchenko.FX.Diagnostics
             try
             {
                 var parentProcess = Process.GetProcessById(parentPID);
-                if (!_IsValidParentProcess(parentProcess, process))
+                if (!ImplementationServices.IsValidParentProcess(parentProcess, process))
                     return null;
                 return parentProcess;
             }
@@ -53,19 +53,6 @@ namespace Gapotchenko.FX.Diagnostics
                 // "Process with an Id of NNN is not running."
                 return null;
             }
-        }
-
-        static bool _IsValidParentProcess(Process parentProcess, Process childProcess)
-        {
-            if (parentProcess.StartTime > childProcess.StartTime)
-            {
-                // The parent process was started after the child process.
-                // This condition indicates that the real parent process has exited before, and
-                // its process ID has been reused by another unrelated process.
-                return false;
-            }
-
-            return true;
         }
 
         /// <summary>
