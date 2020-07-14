@@ -73,6 +73,7 @@ namespace Gapotchenko.FX.Harness.Console
         {
             await Task.Yield();
 
+#if false
             string s = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit, lectus et dapibus ultricies, sem nulla finibus dolor, vitae pharetra urna risus eget nunc. Nunc laoreet condimentum magna, a varius massa auctor in. Mauris cursus sodales justo eget faucibus. Nullam nec nisi eget lorem faucibus feugiat. Fusce sed iaculis turpis, ut vestibulum ipsum.";
 
             string filePath = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\Temp\base.txt");
@@ -115,6 +116,7 @@ namespace Gapotchenko.FX.Harness.Console
             //e = Convert.ToBase64String(Encoding.UTF8.GetBytes(s), Base64FormattingOptions.InsertLineBreaks);
 
             //Console.WriteLine(e);
+#endif
 
             var appInfo = AppInformation.Current;
             Console.WriteLine(appInfo.ExecutablePath);

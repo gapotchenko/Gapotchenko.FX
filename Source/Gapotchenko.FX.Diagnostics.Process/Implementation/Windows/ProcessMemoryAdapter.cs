@@ -40,7 +40,11 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
             if (!result)
             {
                 if (throwOnError)
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                {
+                    int error = Marshal.GetLastWin32Error();
+                    if (error != 0)
+                        throw new Win32Exception(error);
+                }
 
                 return -1;
             }

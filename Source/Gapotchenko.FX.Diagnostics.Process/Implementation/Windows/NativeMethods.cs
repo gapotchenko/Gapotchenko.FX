@@ -24,10 +24,10 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
             public ushort wProcessorRevision;
         }
 
-        [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+        [DllImport("kernel32.dll", ExactSpelling = true)]
         public static extern void GetSystemInfo(out SYSTEM_INFO lpSystemInfo);
 
-        [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+        [DllImport("kernel32.dll", ExactSpelling = true)]
         public static extern void GetNativeSystemInfo(out SYSTEM_INFO lpSystemInfo);
 
         // -------------------------------------------------------------------------------------------------------

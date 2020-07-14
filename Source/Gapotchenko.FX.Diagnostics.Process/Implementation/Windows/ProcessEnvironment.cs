@@ -17,47 +17,31 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
         static StringDictionary _ReadVariablesCore(IntPtr hProcess)
         {
+            var stream = _GetEnvStream(hProcess);
+            var reader = new ProcessBinaryReader(new BufferedStream(stream), Encoding.Unicode);
+            var env = _ReadEnv(reader);
+            return env;
+        }
+
+        static Stream _GetEnvStream(IntPtr hProcess)
+        {
             var penv = _GetPenv(hProcess);
-
-            const int maxEnvSize = 32767;
-            byte[] envData;
-
             if (penv.CanBeRepresentedByNativePointer)
             {
                 int dataSize;
                 if (!_HasReadAccess(hProcess, penv, out dataSize))
                     throw new Exception("Unable to read environment block.");
 
-                if (dataSize > maxEnvSize)
-                    dataSize = maxEnvSize;
+                dataSize = _ClampEnvSize(dataSize);
 
                 var adapter = new ProcessMemoryAdapter(hProcess);
-                var stream = new ProcessMemoryStream(adapter, penv, dataSize);
-
-                var br = new ProcessBinaryReader(new BufferedStream(stream), Encoding.Unicode);
-
-                var s = br.ReadCString();
-
-
-
-                envData = new byte[dataSize];
-                var res_len = IntPtr.Zero;
-                bool b = NativeMethods.ReadProcessMemory(
-                    hProcess,
-                    penv,
-                    envData,
-                    new IntPtr(dataSize),
-                    ref res_len);
-
-                if (!b || (int)res_len != dataSize)
-                    throw new Exception("Unable to read environment block data.");
+                return new ProcessMemoryStream(adapter, penv, dataSize);
             }
             else if (penv.Size == 8 && IntPtr.Size == 4)
             {
                 // Accessing a 64-bit process from 32-bit host.
 
                 int dataSize;
-
                 try
                 {
                     if (!_HasReadAccessWow64(hProcess, penv.ToInt64(), out dataSize))
@@ -66,89 +50,57 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
                 catch (EntryPointNotFoundException)
                 {
                     // Windows 10 does not provide NtWow64QueryVirtualMemory64 API call.
-                    dataSize = maxEnvSize;
+                    dataSize = -1;
                 }
 
-                if (dataSize > maxEnvSize)
-                    dataSize = maxEnvSize;
+                dataSize = _ClampEnvSize(dataSize);
 
-                envData = new byte[dataSize];
-                long res_len = 0;
-                int result = NativeMethods.NtWow64ReadVirtualMemory64(
-                    hProcess,
-                    penv.ToInt64(),
-                    envData,
-                    dataSize,
-                    ref res_len);
-
-                if (result != NativeMethods.STATUS_SUCCESS || res_len != dataSize)
-                    throw new Exception("Unable to read environment block data with WOW64 API.");
+                var adapter = new ProcessMemoryAdapterWow64(hProcess);
+                return new ProcessMemoryStream(adapter, penv, dataSize);
             }
             else
             {
                 throw new Exception("Unable to access process memory due to unsupported bitness cardinality.");
             }
-
-            return _EnvToDictionary(envData);
         }
 
-        static StringDictionary _EnvToDictionary(byte[] env)
+        static int _ClampEnvSize(int size)
         {
-            var result = new StringDictionary();
+            int maxSize = EnvironmentInfo.MaxSize;
 
-            int len = env.Length;
-            if (len < 4)
-                return result;
-
-            int n = len - 3;
-            for (int i = 0; i < n; ++i)
+            if (maxSize != -1)
             {
-                byte c1 = env[i];
-                byte c2 = env[i + 1];
-                byte c3 = env[i + 2];
-                byte c4 = env[i + 3];
+                if (size == -1 || size > maxSize)
+                    size = maxSize;
+            }
 
-                if (c1 == 0 && c2 == 0 && c3 == 0 && c4 == 0)
+            return size;
+        }
+
+        static StringDictionary _ReadEnv(ProcessBinaryReader br)
+        {
+            var env = new StringDictionary();
+
+            for (; ; )
+            {
+                var s = br.ReadCString();
+                if (s.Length == 0)
                 {
-                    len = i + 3;
+                    // End of environment block.
                     break;
                 }
+
+                int j = s.IndexOf('=');
+                if (j <= 0)
+                    continue;
+
+                string name = s.Substring(0, j);
+                string value = s.Substring(j + 1);
+
+                env[name] = value;
             }
 
-            char[] environmentCharArray = Encoding.Unicode.GetChars(env, 0, len);
-
-            for (int i = 0; i < environmentCharArray.Length; i++)
-            {
-                int startIndex = i;
-                while ((environmentCharArray[i] != '=') && (environmentCharArray[i] != '\0'))
-                {
-                    i++;
-                }
-                if (environmentCharArray[i] != '\0')
-                {
-                    if ((i - startIndex) == 0)
-                    {
-                        while (environmentCharArray[i] != '\0')
-                        {
-                            i++;
-                        }
-                    }
-                    else
-                    {
-                        string str = new string(environmentCharArray, startIndex, i - startIndex);
-                        i++;
-                        int num3 = i;
-                        while (environmentCharArray[i] != '\0')
-                        {
-                            i++;
-                        }
-                        string str2 = new string(environmentCharArray, num3, i - num3);
-                        result[str] = str2;
-                    }
-                }
-            }
-
-            return result;
+            return env;
         }
 
         static bool _TryReadIntPtr32(IntPtr hProcess, IntPtr ptr, out IntPtr readPtr)
