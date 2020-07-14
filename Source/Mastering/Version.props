@@ -3,11 +3,17 @@
 
   <!-- Version Information -->
   <PropertyGroup>
-    <Version>2020.1.9.4096-beta</Version>
+    <AssemblyVersion>2020.1.9.4096</AssemblyVersion>
+    <VersionSuffix>beta</VersionSuffix>
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- InformationalVersion>$([System.Version]::Parse('$(Version)').ToString(2)) (Release build $(Version))</InformationalVersion -->
+    <VersionPrefix>$([System.Version]::Parse('$(AssemblyVersion)').ToString(3))</VersionPrefix>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <InformationalVersion>$([System.Version]::Parse('$(VersionPrefix)').ToString(2)) (Release build $(AssemblyVersion))</InformationalVersion>
+    <InformationalVersion Condition=" '$(VersionSuffix)' == 'alpha' ">$([System.Version]::Parse('$(VersionPrefix)').ToString(3)) (Alpha Release build $(AssemblyVersion))</InformationalVersion>
+    <InformationalVersion Condition=" '$(VersionSuffix)' == 'beta' ">$([System.Version]::Parse('$(VersionPrefix)').ToString(3)) (Beta Release build $(AssemblyVersion))</InformationalVersion>
+    <InformationalVersion Condition=" '$(VersionSuffix)' == 'preview' ">$([System.Version]::Parse('$(VersionPrefix)').ToString(3)) (Preview Release build $(AssemblyVersion))</InformationalVersion>
   </PropertyGroup>
 
 </Project>
