@@ -112,7 +112,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
                     }
 
                     // Assume EOF.
-                    return 0;
+                    break;
                 }
 
                 count -= r;
