@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -29,6 +30,15 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
                 if (dataSize > maxEnvSize)
                     dataSize = maxEnvSize;
+
+                var adapter = new ProcessMemoryAdapter(hProcess);
+                var stream = new ProcessMemoryStream(adapter, penv, dataSize);
+
+                var br = new ProcessBinaryReader(new BufferedStream(stream), Encoding.Unicode);
+
+                var s = br.ReadCString();
+
+
 
                 envData = new byte[dataSize];
                 var res_len = IntPtr.Zero;

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 {
@@ -11,10 +14,15 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
         IntPtr m_hProcess;
 
-        public int PageSize => 4096;
+        public int PageSize => SystemInfo.Native.PageSize;
 
         public unsafe int ReadMemory(UniPtr address, byte[] buffer, int offset, int count, bool throwOnError)
         {
+            if (buffer == null)
+                throw new ArgumentNullException(nameof(buffer));
+            if (offset + count > buffer.Length)
+                throw new ArgumentException();
+
             long actualCount = 0;
             int result;
 
@@ -29,7 +37,16 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
             }
 
             if (result != NativeMethods.STATUS_SUCCESS)
+            {
+                if (throwOnError)
+                {
+                    var exception = Marshal.GetExceptionForHR(result);
+                    if (exception != null)
+                        throw exception;
+                }
+
                 return -1;
+            }
 
             return (int)actualCount;
         }

@@ -21,7 +21,14 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
         /// <param name="buffer">The buffer to read to.</param>
         /// <param name="offset">The buffer offset to start reading to.</param>
         /// <param name="count">The count of bytes to read.</param>
-        /// <param name="throwOnError">Indicates whether to throw an exception on error.</param>
+        /// <param name="throwOnError">
+        /// <para>
+        /// Indicates whether to throw an exception on error.
+        /// </para>
+        /// <para>
+        /// The support of this flag is optional; an adapter may just prefer to return -1 even when the flag is <c>true</c>.
+        /// </para>
+        /// </param>
         /// <returns>The count of read bytes or -1 on error.</returns>
         int ReadMemory(UniPtr address, byte[] buffer, int offset, int count, bool throwOnError);
     }

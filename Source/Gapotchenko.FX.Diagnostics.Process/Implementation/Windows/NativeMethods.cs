@@ -8,6 +8,30 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 {
     static class NativeMethods
     {
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SYSTEM_INFO
+        {
+            public ushort wProcessorArchitecture;
+            public ushort wReserved;
+            public uint dwPageSize;
+            public IntPtr lpMinimumApplicationAddress;
+            public IntPtr lpMaximumApplicationAddress;
+            public IntPtr dwActiveProcessorMask;
+            public uint dwNumberOfProcessors;
+            public uint dwProcessorType;
+            public uint dwAllocationGranularity;
+            public ushort wProcessorLevel;
+            public ushort wProcessorRevision;
+        }
+
+        [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern void GetSystemInfo(out SYSTEM_INFO lpSystemInfo);
+
+        [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern void GetNativeSystemInfo(out SYSTEM_INFO lpSystemInfo);
+
+        // -------------------------------------------------------------------------------------------------------
+
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct PROCESS_BASIC_INFORMATION
         {
