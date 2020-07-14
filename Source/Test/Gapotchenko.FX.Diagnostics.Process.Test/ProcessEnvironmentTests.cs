@@ -17,8 +17,6 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             var psi = process.StartInfo;
             psi.FileName = "dotnet";
             psi.Arguments = "fsi";
-            psi.RedirectStandardOutput = true;
-            psi.StandardOutputEncoding = CommandLine.OemEncoding;
 
             string value = Guid.NewGuid().ToString("D");
             psi.EnvironmentVariables["PROC_ENV_TEST"] = value;
@@ -26,9 +24,6 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             Assert.IsTrue(process.Start());
             try
             {
-                // Wait until the process is started.
-                process.StandardOutput.ReadLine();
-
                 var env = process.ReadEnvironmentVariables();
                 Assert.AreEqual(value, env["PROC_ENV_TEST"]);
             }
@@ -46,8 +41,6 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             var psi = process.StartInfo;
             psi.FileName = "dotnet";
             psi.Arguments = "fsi";
-            psi.RedirectStandardOutput = true;
-            psi.StandardOutputEncoding = CommandLine.OemEncoding;
 
             const string envKeyPrefix = "PROC_ENV_TEST_";
 
@@ -61,9 +54,6 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             Assert.IsTrue(process.Start());
             try
             {
-                // Wait until the process is started.
-                process.StandardOutput.ReadLine();
-
                 var actualEnv = process.ReadEnvironmentVariables();
 
                 foreach (DictionaryEntry i in expectedEnv)
