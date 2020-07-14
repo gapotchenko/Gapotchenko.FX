@@ -4,7 +4,7 @@
     <TargetFramework></TargetFramework>
   </PropertyGroup>
 
-  <Import Project="$(RepositorySourceDir)\Mastering\OOB\System.Memory.targets" />
+  <Import Project="$(MasteringDir)\OOB\System.Memory.targets" />
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />

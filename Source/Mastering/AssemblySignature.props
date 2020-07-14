@@ -6,7 +6,7 @@
 
   <PropertyGroup>
     <AssemblyOriginatorKeyFile Condition=" Exists('$(MSBuildThisFileDirectory)AssemblyKey.snk') ">$(MSBuildThisFileDirectory)AssemblyKey.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly Condition=" Exists('$(AssemblyOriginatorKeyFile)') ">true</SignAssembly>
+    <SignAssembly Condition=" Exists('$(AssemblyOriginatorKeyFile)') AND $(IsPublicProject) ">true</SignAssembly>
   </PropertyGroup>
 
 </Project>

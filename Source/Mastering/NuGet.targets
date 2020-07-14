@@ -1,43 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <!-- NuGet Specification -->
-  <PropertyGroup>
-    <Version>2020.1.8-beta</Version>
-    <Authors>Gapotchenko</Authors>
-    <PackageTags>framework platform polyfill rad</PackageTags>
-    <PackageIcon>PackageIcon.png</PackageIcon>
-    <PackageProjectUrl>https://gapotchenko.com/fx</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <RepositoryUrl>https://github.com/gapotchenko/Gapotchenko.FX</RepositoryUrl>
-    <IsPackable>$(IsPublicProject)</IsPackable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Resources\PackageIcon.png" Pack="true" PackagePath="" Visible="false" />
-  </ItemGroup>
-
-  <!-- =================================================================== -->
-
-  <PropertyGroup>
-    <PackageOutputPath>bin\$(Configuration)\nuget</PackageOutputPath>
-    <GenerateNuspecDependsOn>PrepareNuspec;$(GenerateNuspecDependsOn)</GenerateNuspecDependsOn>
-  </PropertyGroup>
-
-  <!-- =================================================================== -->
-
-  <!-- Workaround for https://github.com/NuGet/Home/issues/7001 -->
-  <Target Name="DisableNuGetDeterministicPackaging"
-          BeforeTargets="GenerateNuspec"
-          AfterTargets="CoreCompile">
-    <PropertyGroup>
-      <Deterministic>false</Deterministic>
-    </PropertyGroup>
-  </Target>
-
-  <!-- =================================================================== -->
-
   <Target Name="PrepareNuspec">
     <NLP_GeneratePackageRepositoryUrl
         ProjectDirectory="$(MSBuildProjectDirectory)"

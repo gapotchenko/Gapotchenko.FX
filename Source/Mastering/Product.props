@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Product Information -->
+  <PropertyGroup>
+    <Product>Gapotchenko.FX</Product>
+    <Description>.NET polyfill to the future. A versatile RAD framework for .NET platform.</Description>
+    <Company>Gapotchenko</Company>
+    <Copyright>Copyright © 2019-2020 $(Company) and Contributors</Copyright>
+    <!-- Copyright>Copyright © 2019-$([System.Version]::Parse('$(Version)').ToString(1)) $(Company) and Contributors</Copyright -->
+    <Trademark>$(Product)</Trademark>
+  </PropertyGroup>
+
+</Project>

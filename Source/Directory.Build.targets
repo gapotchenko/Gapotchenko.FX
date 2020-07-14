@@ -1,0 +1,3 @@
+<Project>
+  <Import Project="Mastering\Mastering.targets" />
+</Project>

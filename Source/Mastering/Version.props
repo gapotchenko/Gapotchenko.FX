@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Version Information -->
+  <PropertyGroup>
+    <Version>2020.1.9.4096-beta</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- InformationalVersion>$([System.Version]::Parse('$(Version)').ToString(2)) (Release build $(Version))</InformationalVersion -->
+  </PropertyGroup>
+
+</Project>

@@ -10,6 +10,6 @@
     <ProjectReference Include="..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
   </ItemGroup>
 
-  <Import Project="$(RepositorySourceDir)\Mastering\OOB\System.Memory.targets" />
+  <Import Project="$(MasteringDir)\OOB\System.Memory.targets" />
 
 </Project>

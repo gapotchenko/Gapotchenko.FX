@@ -5,7 +5,7 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
-  <Import Project="$(RepositorySourceDir)\Mastering\OOB\System.Memory.targets" />
+  <Import Project="$(MasteringDir)\OOB\System.Memory.targets" />
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
