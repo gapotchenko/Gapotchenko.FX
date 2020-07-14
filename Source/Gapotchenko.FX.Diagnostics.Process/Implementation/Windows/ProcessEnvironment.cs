@@ -17,10 +17,25 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
         static StringDictionary _ReadVariablesCore(IntPtr hProcess)
         {
-            var stream = _GetEnvStream(hProcess);
-            var reader = new ProcessBinaryReader(new BufferedStream(stream), Encoding.Unicode);
-            var env = _ReadEnv(reader);
-            return env;
+            int retryCount = 3;
+
+            Again:
+            try
+            {
+                var stream = _GetEnvStream(hProcess);
+                var reader = new ProcessBinaryReader(new BufferedStream(stream), Encoding.Unicode);
+                var env = _ReadEnv(reader);
+                return env;
+            }
+            catch (EndOfStreamException)
+            {
+                // There may be a race condition on process environment block initialization for just started processes.
+
+                if (--retryCount > 0)
+                    goto Again;
+                else
+                    throw;
+            }
         }
 
         static Stream _GetEnvStream(IntPtr hProcess)
