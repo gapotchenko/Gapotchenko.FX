@@ -37,16 +37,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
             }
 
             if (result != NativeMethods.STATUS_SUCCESS)
-            {
-                if (throwOnError)
-                {
-                    var exception = Marshal.GetExceptionForHR(result);
-                    if (exception != null)
-                        throw exception;
-                }
-
                 return -1;
-            }
 
             return (int)actualCount;
         }
