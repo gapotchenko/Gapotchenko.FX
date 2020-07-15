@@ -1,5 +1,7 @@
 ﻿using System;
 
+#nullable enable
+
 namespace Gapotchenko.FX.AppModel
 {
     /// <summary>
@@ -10,17 +12,17 @@ namespace Gapotchenko.FX.AppModel
         /// <summary>
         /// Gets app title.
         /// </summary>
-        string Title { get; }
+        string? Title { get; }
 
         /// <summary>
         /// Gets app description.
         /// </summary>
-        string Description { get; }
+        string? Description { get; }
 
         /// <summary>
         /// Gets product name.
         /// </summary>
-        string ProductName { get; }
+        string? ProductName { get; }
 
         /// <summary>
         /// Gets product version.
@@ -35,17 +37,17 @@ namespace Gapotchenko.FX.AppModel
         /// <summary>
         /// Gets company name.
         /// </summary>
-        string CompanyName { get; }
+        string? CompanyName { get; }
 
         /// <summary>
         /// Gets app copyright information.
         /// </summary>
-        string Copyright { get; }
+        string? Copyright { get; }
 
         /// <summary>
         /// Gets app trademark information.
         /// </summary>
-        string Trademark { get; }
+        string? Trademark { get; }
 
         /// <summary>
         /// Gets app executable path.

@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Gapotchenko.FX
 {
     /// <summary>
@@ -30,6 +32,7 @@ namespace Gapotchenko.FX
         {
             public static readonly Task<T> Task = FromResult(default);
 
+#nullable disable
             static Task<T> FromResult(T value)
             {
 #if !TFF_TASK_FROMRESULT
@@ -40,6 +43,7 @@ namespace Gapotchenko.FX
                 return System.Threading.Tasks.Task.FromResult(value);
 #endif
             }
+#nullable restore
         }
 
         /// <summary>

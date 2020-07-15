@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Collections.Generic
 {
@@ -19,7 +20,7 @@ namespace Gapotchenko.FX.Collections.Generic
         /// The <see cref="IComparer{T}"/> implementation to use when comparing elements,
         /// or <c>null</c> to use the default comparer.
         /// </param>
-        public static void StableSort<T>(this List<T> list, IComparer<T> comparer)
+        public static void StableSort<T>(this List<T> list, IComparer<T>? comparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));

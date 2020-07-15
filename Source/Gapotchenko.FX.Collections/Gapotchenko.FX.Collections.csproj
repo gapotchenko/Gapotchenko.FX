@@ -1,13 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework></TargetFramework>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Concurrent.ConcurrentHashSet" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Concurrent.ConcurrentHashSet" />
-  </ItemGroup>
+
 </Project>

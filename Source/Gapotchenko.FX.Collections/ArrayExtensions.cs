@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Collections
 {
@@ -11,10 +11,10 @@ namespace Gapotchenko.FX.Collections
     public static class ArrayExtensions
     {
         /// <summary>
-        /// Indicates whether the specified array is null or empty.
+        /// Indicates whether the specified array is <c>null</c> or empty.
         /// </summary>
         /// <param name="value">The array to test.</param>
-        /// <returns><c>true</c> if the <paramref name="value"/> parameter is null or an empty array; otherwise, <c>false</c>.</returns>
-        public static bool IsNullOrEmpty(this Array value) => value == null || value.Length == 0;
+        /// <returns><c>true</c> if the <paramref name="value"/> parameter is null or an empty array; otherwise, <c>false</c>.</returns>        
+        public static bool IsNullOrEmpty([NotNullWhen(false)] this Array? value) => value is null || value.Length == 0;
     }
 }

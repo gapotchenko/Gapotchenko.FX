@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Gapotchenko.FX
 {
     /// <summary>
@@ -18,7 +20,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="TSource">The type of the input collection.</typeparam>
         /// <param name="source">The source collection.</param>
         /// <returns>The source or a null collection if the source is empty or null.</returns>
-        public static TSource Nullify<TSource>(TSource source) where TSource : class, ICollection
+        public static TSource? Nullify<TSource>(TSource? source) where TSource : class, ICollection
         {
             if (source == null || source.Count == 0)
                 return null;
@@ -32,7 +34,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
         /// <param name="source">The source sequence.</param>
         /// <returns>The source or a null sequence if the source is empty or null.</returns>
-        public static IEnumerable<TSource> Nullify<TSource>(IEnumerable<TSource> source)
+        public static IEnumerable<TSource>? Nullify<TSource>(IEnumerable<TSource>? source)
         {
             if (source == null || !source.Any())
                 return null;
@@ -46,7 +48,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="TSource">The type of the elements of the input array.</typeparam>
         /// <param name="source">The source array.</param>
         /// <returns>The source or a null array if the source is empty or null.</returns>
-        public static TSource[] Nullify<TSource>(TSource[] source)
+        public static TSource[]? Nullify<TSource>(TSource[]? source)
         {
             if (source == null || source.Length == 0)
                 return null;
@@ -59,7 +61,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The string value or a null if the string is empty or null.</returns>
-        public static string Nullify(string value)
+        public static string? Nullify(string? value)
         {
             if (string.IsNullOrEmpty(value))
                 return null;
@@ -72,7 +74,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The string value or a null if the string is empty, or consists only of white-space characters.</returns>
-        public static string NullifyWhiteSpace(string value)
+        public static string? NullifyWhiteSpace(string? value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 return null;
@@ -88,7 +90,7 @@ namespace Gapotchenko.FX
         /// The type value or a null if the type is empty or null.
         /// The type is considered empty when it equals to the value returned by <see cref="Type"/> property of <see cref="Empty"/> class.
         /// </returns>
-        public static Type Nullify(Type value)
+        public static Type? Nullify(Type? value)
         {
             if (value == Empty.Type)
                 return null;
@@ -340,7 +342,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="action">The action.</param>
         /// <returns>The value of <paramref name="action"/> or <c>null</c> if it represents an empty function in terms of lambda calculus.</returns>
-        public static Action Nullify(Action action)
+        public static Action? Nullify(Action? action)
         {
             if (action == Fn.Empty)
                 return null;
@@ -353,7 +355,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="func">The function.</param>
         /// <returns>The value of <paramref name="func"/> or <c>null</c> if it represents a default function in terms of lambda calculus.</returns>
-        public static Func<T> Nullify<T>(Func<T> func)
+        public static Func<T>? Nullify<T>(Func<T>? func)
         {
             if (func == Fn<T>.Default)
                 return null;
@@ -366,7 +368,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="func">The function.</param>
         /// <returns>The value of <paramref name="func"/> or <c>null</c> if it represents an identity function in terms of lambda calculus.</returns>
-        public static Func<T, T> Nullify<T>(Func<T, T> func)
+        public static Func<T, T>? Nullify<T>(Func<T, T>? func)
         {
             if (func == Fn<T>.Identity)
                 return null;

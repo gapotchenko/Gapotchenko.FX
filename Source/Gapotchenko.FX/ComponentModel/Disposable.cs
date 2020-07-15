@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Threading;
 
+#nullable enable
+
 namespace Gapotchenko.FX.ComponentModel
 {
     /// <summary>
@@ -26,7 +28,7 @@ namespace Gapotchenko.FX.ComponentModel
         /// <typeparam name="T">The type of disposable object.</typeparam>
         /// <param name="value">The reference to disposable value.</param>
         /// <returns><c>true</c> when the object has been disposed and the value cleared; <c>false</c> otherwise.</returns>
-        public static bool Clear<T>(ref T value) where T : class, IDisposable
+        public static bool Clear<T>(ref T? value) where T : class, IDisposable
         {
             // An intermediate loaded value is needed to eliminate the chance of NullReferenceException due to unconscious race condition.
             // This method is thread-safe according to .NET memory model because pointer to an object is guaranteed to be atomic.
@@ -45,7 +47,7 @@ namespace Gapotchenko.FX.ComponentModel
             return true;
         }
 
-        static void RevertibleDispose<T>(T value, ref T store) where T : class, IDisposable
+        static void RevertibleDispose<T>(T value, ref T? store) where T : class, IDisposable
         {
             // This method is separate to allow inlining of a caller method.
 
@@ -87,12 +89,12 @@ namespace Gapotchenko.FX.ComponentModel
         /// </param>
         /// <returns><c>true</c> when the object has been disposed and the value cleared; <c>false</c> otherwise.</returns>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public static bool Clear<T>(ref T value, bool isThreadSafe) where T : class, IDisposable =>
+        public static bool Clear<T>(ref T? value, bool isThreadSafe) where T : class, IDisposable =>
             isThreadSafe ?
                 ClearInterlocked(ref value) :
                 Clear(ref value);
 
-        static bool ClearInterlocked<T>(ref T value) where T : class, IDisposable
+        static bool ClearInterlocked<T>(ref T? value) where T : class, IDisposable
         {
             // Load and clear.
             var loadedValue = Interlocked.Exchange(ref value, null);
@@ -105,7 +107,7 @@ namespace Gapotchenko.FX.ComponentModel
             return true;
         }
 
-        static void RevertibleDisposeInterlocked<T>(T value, ref T store) where T : class, IDisposable
+        static void RevertibleDisposeInterlocked<T>(T value, ref T? store) where T : class, IDisposable
         {
             // This method is separate to allow inlining of a caller method.
 

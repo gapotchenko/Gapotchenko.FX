@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Collections
 {
@@ -16,6 +15,6 @@ namespace Gapotchenko.FX.Collections
         /// </summary>
         /// <param name="value">The dictionary to test.</param>
         /// <returns><c>true</c> if the <paramref name="value"/> parameter is null or an empty dictionary; otherwise, <c>false</c>.</returns>
-        public static bool IsNullOrEmpty(this IDictionary value) => value == null || value.Count == 0;
+        public static bool IsNullOrEmpty([NotNullWhen(false)] this IDictionary? value) => value is null || value.Count == 0;
     }
 }

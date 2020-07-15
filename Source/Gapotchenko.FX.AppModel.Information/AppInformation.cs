@@ -5,6 +5,8 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace Gapotchenko.FX.AppModel
 {
     /// <summary>
@@ -18,11 +20,11 @@ namespace Gapotchenko.FX.AppModel
         public static IAppInformation Current => CurrentAppInformation.Instance;
 
         /// <summary>
-        /// Extracts app information from the specified entry type.
+        /// Extracts app information for the specified entry type.
         /// </summary>
         /// <param name="entryType">The entry type of an app.</param>
         /// <returns>The app information.</returns>
-        public static IAppInformation ForType(Type entryType)
+        public static IAppInformation For(Type entryType)
         {
             if (entryType == null)
                 throw new ArgumentNullException(nameof(entryType));
@@ -42,25 +44,25 @@ namespace Gapotchenko.FX.AppModel
         }
 
         /// <inheritdoc/>
-        public string Title
+        public string? Title
         {
             get
             {
                 if (m_Title == null)
-                    m_Title = GetTitle() ?? string.Empty;
+                    m_Title = RetrieveTitle() ?? string.Empty;
                 return Empty.Nullify(m_Title);
             }
             protected set => m_Title = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string m_Title;
+        string? m_Title;
 
         /// <summary>
-        /// Gets app title.
+        /// Retrieves app title.
         /// </summary>
         /// <returns>The app title.</returns>
-        protected virtual string GetTitle()
+        protected virtual string? RetrieveTitle()
         {
             string title;
 
@@ -84,25 +86,25 @@ namespace Gapotchenko.FX.AppModel
         }
 
         /// <inheritdoc/>
-        public string Description
+        public string? Description
         {
             get
             {
                 if (m_Description == null)
-                    m_Description = GetDescription() ?? string.Empty;
+                    m_Description = RetrieveDescription() ?? string.Empty;
                 return Empty.Nullify(m_Description);
             }
             protected set => m_Description = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string m_Description;
+        string? m_Description;
 
         /// <summary>
-        /// Gets app description.
+        /// Retrieves app description.
         /// </summary>
         /// <returns>The app description.</returns>
-        protected virtual string GetDescription()
+        protected virtual string? RetrieveDescription()
         {
             string description;
 
@@ -129,56 +131,56 @@ namespace Gapotchenko.FX.AppModel
         /// Gets or sets app entry type.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Type EntryType
+        protected Type? EntryType
         {
             get
             {
                 if (m_EntryType == null)
-                    m_EntryType = GetEntryType() ?? Empty.Type;
+                    m_EntryType = RetrieveEntryType() ?? Empty.Type;
                 return Empty.Nullify(m_EntryType);
             }
             set => m_EntryType = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Type m_EntryType;
+        Type? m_EntryType;
 
         /// <summary>
-        /// Gets app entry type.
+        /// Retrieves app entry type.
         /// </summary>
         /// <returns>The app entry type.</returns>
-        protected virtual Type GetEntryType() => GetType();
+        protected virtual Type? RetrieveEntryType() => GetType();
 
         /// <summary>
         /// Gets or sets app entry assembly.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Assembly EntryAssembly
+        protected Assembly? EntryAssembly
         {
             get
             {
                 if (m_EntryAssembly == null)
-                    m_EntryAssembly = GetEntryAssembly();
+                    m_EntryAssembly = RetrieveEntryAssembly();
                 return m_EntryAssembly;
             }
             set => m_EntryAssembly = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Assembly m_EntryAssembly;
+        Assembly? m_EntryAssembly;
 
         /// <summary>
-        /// Gets app entry assembly.
+        /// Retrieves app entry assembly.
         /// </summary>
         /// <returns>The app entry assembly.</returns>
-        protected virtual Assembly GetEntryAssembly() => EntryType?.Assembly ?? Assembly.GetEntryAssembly();
+        protected virtual Assembly? RetrieveEntryAssembly() => EntryType?.Assembly ?? Assembly.GetEntryAssembly();
 
-        FileVersionInfo EntryFileVersionInfo => LazyInitializerEx.EnsureInitialized(ref m_CachedEntryFileVersionInfo, this, GetEntryFileVersionInfo);
+        FileVersionInfo EntryFileVersionInfo => LazyInitializerEx.EnsureInitialized(ref m_CachedEntryFileVersionInfo, this, RetrieveEntryFileVersionInfo);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        FileVersionInfo m_CachedEntryFileVersionInfo;
+        FileVersionInfo? m_CachedEntryFileVersionInfo;
 
-        FileVersionInfo GetEntryFileVersionInfo()
+        FileVersionInfo RetrieveEntryFileVersionInfo()
         {
             string filePath;
 
@@ -192,25 +194,25 @@ namespace Gapotchenko.FX.AppModel
         }
 
         /// <inheritdoc/>
-        public string ProductName
+        public string? ProductName
         {
             get
             {
                 if (m_ProductName == null)
-                    m_ProductName = GetProductName() ?? string.Empty;
+                    m_ProductName = RetrieveProductName() ?? string.Empty;
                 return Empty.Nullify(m_ProductName);
             }
             protected set => m_ProductName = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string m_ProductName;
+        string? m_ProductName;
 
         /// <summary>
-        /// Gets product name.
+        /// Retrieves product name.
         /// </summary>
         /// <returns>The product name.</returns>
-        protected virtual string GetProductName()
+        protected virtual string? RetrieveProductName()
         {
             string productName;
 
@@ -233,7 +235,7 @@ namespace Gapotchenko.FX.AppModel
             var entryType = EntryType;
             if (entryType != null)
             {
-                string ns = entryType.Namespace;
+                var ns = entryType.Namespace;
                 if (!string.IsNullOrEmpty(ns))
                 {
                     int j = ns.LastIndexOf('.');
@@ -259,20 +261,20 @@ namespace Gapotchenko.FX.AppModel
             get
             {
                 if (m_ProductVersion == null)
-                    m_ProductVersion = GetProductVersion();
+                    m_ProductVersion = RetrieveProductVersion();
                 return m_ProductVersion;
             }
             protected set => m_ProductVersion = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static Version m_ProductVersion;
+        static Version? m_ProductVersion;
 
         /// <summary>
-        /// Gets product version.
+        /// Retrieves product version.
         /// </summary>
         /// <returns>The product version.</returns>
-        protected virtual Version GetProductVersion()
+        protected virtual Version RetrieveProductVersion()
         {
             var entryAssembly = EntryAssembly;
             if (entryAssembly != null)
@@ -297,20 +299,20 @@ namespace Gapotchenko.FX.AppModel
             get
             {
                 if (m_ProductInformationalVersion == null)
-                    m_ProductInformationalVersion = GetProductInformationalVersion();
+                    m_ProductInformationalVersion = RetrieveProductInformationalVersion();
                 return m_ProductInformationalVersion;
             }
             protected set => m_ProductInformationalVersion = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string m_ProductInformationalVersion;
+        string? m_ProductInformationalVersion;
 
         /// <summary>
-        /// Gets product informational version.
+        /// Retrieves product informational version.
         /// </summary>
         /// <returns>The product informational version.</returns>
-        protected virtual string GetProductInformationalVersion()
+        protected virtual string RetrieveProductInformationalVersion()
         {
             string informationalVersion;
 
@@ -334,25 +336,25 @@ namespace Gapotchenko.FX.AppModel
         }
 
         /// <inheritdoc/>
-        public string CompanyName
+        public string? CompanyName
         {
             get
             {
                 if (m_CompanyName == null)
-                    m_CompanyName = GetCompanyName();
-                return m_CompanyName;
+                    m_CompanyName = RetrieveCompanyName() ?? string.Empty;
+                return Empty.Nullify(m_CompanyName);
             }
             protected set => m_CompanyName = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static string m_CompanyName;
+        static string? m_CompanyName;
 
         /// <summary>
-        /// Gets company name.
+        /// Retrieves company name.
         /// </summary>
         /// <returns>The company name.</returns>
-        protected virtual string GetCompanyName()
+        protected virtual string? RetrieveCompanyName()
         {
             string companyName;
 
@@ -375,7 +377,7 @@ namespace Gapotchenko.FX.AppModel
             var entryType = EntryType;
             if (entryType != null)
             {
-                string ns = entryType.Namespace;
+                var ns = entryType.Namespace;
                 if (!string.IsNullOrEmpty(ns))
                 {
                     int j = ns.IndexOf('.');
@@ -391,25 +393,25 @@ namespace Gapotchenko.FX.AppModel
         }
 
         /// <inheritdoc/>
-        public string Copyright
+        public string? Copyright
         {
             get
             {
                 if (m_Copyright == null)
-                    m_Copyright = GetCopyright() ?? string.Empty;
+                    m_Copyright = RetrieveCopyright() ?? string.Empty;
                 return Empty.Nullify(m_Copyright);
             }
             protected set => m_Copyright = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string m_Copyright;
+        string? m_Copyright;
 
         /// <summary>
-        /// Gets app copyright information.
+        /// Retrieves app copyright information.
         /// </summary>
         /// <returns>App copyright information.</returns>
-        protected virtual string GetCopyright()
+        protected virtual string? RetrieveCopyright()
         {
             string copyright;
 
@@ -429,28 +431,32 @@ namespace Gapotchenko.FX.AppModel
             if (!string.IsNullOrWhiteSpace(copyright))
                 return copyright.Trim();
 
-            return "Copyright © " + CompanyName;
+            var companyName = CompanyName;
+            if (companyName != null)
+                return "Copyright © " + companyName;
+
+            return null;
         }
 
         /// <inheritdoc/>
-        public string Trademark
+        public string? Trademark
         {
             get
             {
                 if (m_Trademark == null)
-                    m_Trademark = GetTrademark() ?? string.Empty;
+                    m_Trademark = RetrieveTrademark() ?? string.Empty;
                 return Empty.Nullify(m_Trademark);
             }
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string m_Trademark;
+        string? m_Trademark;
 
         /// <summary>
-        /// Gets app trademark information.
+        /// Retrieves app trademark information.
         /// </summary>
         /// <returns>App trademark information.</returns>
-        protected virtual string GetTrademark()
+        protected virtual string? RetrieveTrademark()
         {
             string trademark;
 
@@ -479,20 +485,20 @@ namespace Gapotchenko.FX.AppModel
             get
             {
                 if (m_ExecutablePath == null)
-                    m_ExecutablePath = GetExecutablePath();
+                    m_ExecutablePath = RetrieveExecutablePath();
                 return m_ExecutablePath;
             }
             protected set => m_ExecutablePath = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string m_ExecutablePath;
+        string? m_ExecutablePath;
 
         /// <summary>
-        /// Gets app executable path.
+        /// Retrieves app executable path.
         /// </summary>
         /// <returns>The app executable path.</returns>
-        protected virtual string GetExecutablePath()
+        protected virtual string RetrieveExecutablePath()
         {
             var entryAssembly = Assembly.GetEntryAssembly();
             if (entryAssembly == null)
@@ -502,38 +508,42 @@ namespace Gapotchenko.FX.AppModel
             }
             else
             {
-                var uri = new Uri(entryAssembly.CodeBase);
-                if (uri.IsFile)
+                var codeBase = entryAssembly.CodeBase;
+                if (codeBase != null)
                 {
-                    string localPath = uri.LocalPath;
+                    var uri = new Uri(codeBase);
+                    if (uri.IsFile)
+                    {
+                        string localPath = uri.LocalPath;
 
 #if NETSTANDARD || NETCOREAPP
-                    if (localPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
-                    {
+                        if (localPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                        {
 #if !NETCOREAPP3_0
                         string frameworkDescription = RuntimeInformation.FrameworkDescription;
                         if (frameworkDescription.StartsWith(".NET Core ", StringComparison.OrdinalIgnoreCase) &&
                             Environment.Version.Major >= 3)
 #endif
-                        {
-                            string exeExtension;
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                                exeExtension = ".exe";
-                            else
-                                exeExtension = null;
+                            {
+                                string? exeExtension;
+                                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                                    exeExtension = ".exe";
+                                else
+                                    exeExtension = null;
 
-                            string exePath = Path.ChangeExtension(localPath, exeExtension);
-                            if (File.Exists(exePath))
-                                localPath = exePath;
+                                string exePath = Path.ChangeExtension(localPath, exeExtension);
+                                if (File.Exists(exePath))
+                                    localPath = exePath;
+                            }
                         }
-                    }
 #endif
 
-                    return localPath + Uri.UnescapeDataString(uri.Fragment);
-                }
-                else
-                {
-                    return uri.ToString();
+                        return localPath + Uri.UnescapeDataString(uri.Fragment);
+                    }
+                    else
+                    {
+                        return uri.ToString();
+                    }
                 }
             }
 

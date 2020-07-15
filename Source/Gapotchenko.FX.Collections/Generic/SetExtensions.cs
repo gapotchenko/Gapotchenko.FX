@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Collections.Generic
 {
@@ -14,11 +17,12 @@ namespace Gapotchenko.FX.Collections.Generic
         /// <param name="value">The set to test.</param>
         /// <returns><c>true</c> if the <paramref name="value"/> parameter is null or an empty set; otherwise, <c>false</c>.</returns>
         public static bool IsNullOrEmpty<T>(
+            [NotNullWhen(false)]
 #if !TFF_HASHSET_IREADONLYCOLLECTION
             this
 #endif
-            ISet<T> value) =>
-            value == null || value.Count == 0;
+            ISet<T>? value) =>
+            value is null || value.Count == 0;
 
         /// <summary>
         /// Adds the elements of the specified collection to the end of the target.

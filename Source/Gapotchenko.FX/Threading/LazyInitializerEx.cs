@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Permissions;
 using System.Text;
@@ -34,20 +35,22 @@ namespace Gapotchenko.FX.Threading
 
         // ------------------------------------------------------------------------------------------------------------
 
+#nullable enable
         /// <summary>
         /// Initializes a target <see cref="Object"/> type with the type's default constructor if it hasn't already been initialized.
         /// </summary>
         /// <param name="target">A reference of <see cref="Object"/> type to initialize if it has not already been initialized.</param>
         /// <returns>The initialized reference of <see cref="Object"/> type.</returns>
-        public static object EnsureInitialized(ref object target)
+        public static object EnsureInitialized(ref object? target)
         {
-            object result = target;
+            var result = target;
             if (result != null)
                 return result;
 
             result = new object();
             return Interlocked.CompareExchange(ref target, result, null) ?? result;
         }
+#nullable restore
 
         // ------------------------------------------------------------------------------------------------------------
 
@@ -140,6 +143,7 @@ namespace Gapotchenko.FX.Threading
 
         // ------------------------------------------------------------------------------------------------------------
 
+        [DoesNotReturn]
         static void _ThrowArgumentNullException_SyncLock()
         {
             // This should be a separate method to avoid performance degradation.
@@ -319,6 +323,8 @@ namespace Gapotchenko.FX.Threading
 
         // ------------------------------------------------------------------------------------------------------------
 
+#nullable enable
+
         /// <summary>
         /// Initializes a target reference by using a specified function if it hasn't already been initialized.
         /// </summary>
@@ -327,7 +333,7 @@ namespace Gapotchenko.FX.Threading
         /// <param name="syncLock">An object used as the mutually exclusive lock for initializing target.</param>
         /// <param name="valueFactory">The function that is called to initialize the reference or value.</param>
         /// <returns>The initialized value of type <typeparamref name="TTarget"/>.</returns>
-        public static TTarget EnsureInitialized<TTarget>(ref TTarget target, object syncLock, Func<TTarget> valueFactory) where TTarget : class
+        public static TTarget EnsureInitialized<TTarget>(ref TTarget? target, object syncLock, Func<TTarget> valueFactory) where TTarget : class
         {
             var result = Volatile.Read(ref target);
             if (result != null)
@@ -345,7 +351,7 @@ namespace Gapotchenko.FX.Threading
         /// <param name="syncLock">A reference to an object used as the mutually exclusive lock for initializing target. If syncLock is null, a new object will be instantiated.</param>
         /// <param name="valueFactory">The function that is called to initialize the reference or value.</param>
         /// <returns>The initialized value of type <typeparamref name="TTarget"/>.</returns>
-        public static TTarget EnsureInitialized<TTarget>(ref TTarget target, ref object syncLock, Func<TTarget> valueFactory) where TTarget : class
+        public static TTarget EnsureInitialized<TTarget>(ref TTarget? target, ref object? syncLock, Func<TTarget> valueFactory) where TTarget : class
         {
             var result = Volatile.Read(ref target);
             if (result != null)
@@ -353,9 +359,9 @@ namespace Gapotchenko.FX.Threading
             return _EnsureInitializedCore(ref target, EnsureInitialized(ref syncLock), valueFactory);
         }
 
-        static TTarget _EnsureInitializedCore<TTarget>(ref TTarget target, object syncLock, Func<TTarget> valueFactory) where TTarget : class
+        static TTarget _EnsureInitializedCore<TTarget>(ref TTarget? target, object syncLock, Func<TTarget> valueFactory) where TTarget : class
         {
-            TTarget result;
+            TTarget? result;
             lock (syncLock)
             {
                 result = Volatile.Read(ref target);
@@ -367,6 +373,8 @@ namespace Gapotchenko.FX.Threading
             }
             return result;
         }
+
+#nullable restore
 
         // ------------------------------------------------------------------------------------------------------------
 
