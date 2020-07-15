@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics
@@ -117,6 +116,14 @@ namespace Gapotchenko.FX.Diagnostics
         /// <returns>The instance of command line builder.</returns>
         [CLSCompliant(false)]
         public CommandLineBuilder AppendArgument(ulong value) => AppendArgument(value.ToString());
+
+        /// <summary>
+        /// Appends a specified <see cref="Object"/> command line argument to this instance.
+        /// The argument text is automatically quoted according to the command line rules.
+        /// </summary>
+        /// <param name="value">The <see cref="Object"/> command line argument to append.</param>
+        /// <returns>The instance of command line builder.</returns>
+        public CommandLineBuilder AppendArgument(object value) => AppendArgument(value?.ToString());
 
         /// <summary>
         /// Appends a specified command line argument that represents a file name.
