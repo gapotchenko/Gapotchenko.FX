@@ -3,6 +3,8 @@ extern alias Testable;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Diagnostics.CommandLine.Test
 {
     using CommandLine = Testable::Gapotchenko.FX.Diagnostics.CommandLine;
@@ -19,7 +21,7 @@ namespace Gapotchenko.FX.Diagnostics.CommandLine.Test
         [TestMethod]
         public void CommandLine_EscapeArgument_Null()
         {
-            string argument = CommandLine.EscapeArgument(null);
+            string? argument = CommandLine.EscapeArgument(null);
             Assert.IsNull(argument);
         }
 
@@ -61,7 +63,7 @@ namespace Gapotchenko.FX.Diagnostics.CommandLine.Test
         [TestMethod]
         public void CommandLine_EscapeFileName_Null()
         {
-            string argument = CommandLine.EscapeFileName(null);
+            string? argument = CommandLine.EscapeFileName(null);
             Assert.IsNull(argument);
         }
 

@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 #nullable enable
@@ -26,7 +25,7 @@ namespace Gapotchenko.FX.Diagnostics
 
             var sb = new StringBuilder();
             bool quoted = false;
-            int backslashCount = 0;
+            int backSlashCount = 0;
 
             for (; ; )
             {
@@ -39,8 +38,8 @@ namespace Gapotchenko.FX.Diagnostics
                 {
                     // A quote.
                     case '"':
-                        sb.Append('\\', backslashCount / 2);
-                        if (backslashCount % 2 == 0)
+                        sb.Append('\\', backSlashCount / 2);
+                        if (backSlashCount % 2 == 0)
                         {
                             // '"' preceded by even number (n) of backslashes generates
                             // n/2 backslashes and is a quoted block delimiter
@@ -52,21 +51,21 @@ namespace Gapotchenko.FX.Diagnostics
                             // (n-1)/2 backslashes and is literal quote.
                             sb.Append('"');
                         }
-                        backslashCount = 0;
+                        backSlashCount = 0;
                         break;
 
                     // A backslash.
                     case '\\':
-                        ++backslashCount;
+                        ++backSlashCount;
                         break;
 
                     // Not a quote nor a backslash.
                     default:
                         // All accumulated backslashes should be added.
-                        if (backslashCount != 0)
+                        if (backSlashCount != 0)
                         {
-                            sb.Append('\\', backslashCount);
-                            backslashCount = 0;
+                            sb.Append('\\', backSlashCount);
+                            backSlashCount = 0;
                         }
 
                         if (!quoted && char.IsWhiteSpace(c))
@@ -87,8 +86,8 @@ namespace Gapotchenko.FX.Diagnostics
             }
 
             // Add the trailing backslashes.
-            if (backslashCount != 0)
-                sb.Append('\\', backslashCount);
+            if (backSlashCount != 0)
+                sb.Append('\\', backSlashCount);
 
             // Flush the last token.
             if (sb.Length != 0 || quoted)

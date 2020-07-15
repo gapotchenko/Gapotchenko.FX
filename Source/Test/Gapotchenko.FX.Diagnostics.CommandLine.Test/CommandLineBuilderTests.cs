@@ -1,4 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Diagnostics.CommandLine.Test
 {
@@ -6,7 +9,7 @@ namespace Gapotchenko.FX.Diagnostics.CommandLine.Test
     public class CommandLineBuilderTests
     {
         [TestMethod]
-        public void CommandLineBuilder_AppendTwoArguments()
+        public void CommandLineBuilder_AppendTwoStrings()
         {
             var clb = new CommandLineBuilder()
                 .AppendArgument("a")
@@ -16,7 +19,7 @@ namespace Gapotchenko.FX.Diagnostics.CommandLine.Test
         }
 
         [TestMethod]
-        public void CommandLineBuilder_AppendTwoArgumentsWithDuplicateDelimeters()
+        public void CommandLineBuilder_AppendTwoStringsWithDuplicateDelimeters()
         {
             var clb = new CommandLineBuilder()
                 .AppendArgument("a")
@@ -25,6 +28,34 @@ namespace Gapotchenko.FX.Diagnostics.CommandLine.Test
                 .AppendArgument("b");
 
             Assert.AreEqual("a b", clb.ToString());
+        }
+
+        [TestMethod]
+        public void CommandLineBuilder_AppendVersion()
+        {
+            var clb = new CommandLineBuilder().AppendArgument(new Version(1, 2, 3));
+            Assert.AreEqual("1.2.3", clb.ToString());
+        }
+
+        [TestMethod]
+        public void CommandLineBuilder_AppendNull()
+        {
+            var clb = new CommandLineBuilder().AppendArgument(null);
+            Assert.AreEqual("", clb.ToString());
+        }
+
+        [TestMethod]
+        public void CommandLineBuilder_AppendNullString()
+        {
+            var clb = new CommandLineBuilder().AppendArgument((string?)null);
+            Assert.AreEqual("", clb.ToString());
+        }
+
+        [TestMethod]
+        public void CommandLineBuilder_AppendNullObject()
+        {
+            var clb = new CommandLineBuilder().AppendArgument((object?)null);
+            Assert.AreEqual("", clb.ToString());
         }
     }
 }
