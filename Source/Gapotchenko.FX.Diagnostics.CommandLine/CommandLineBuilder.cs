@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Diagnostics
 {
     /// <summary>
@@ -25,7 +27,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// The command line used to initialize the value of the instance.
         /// If value is <c>null</c>, the new <see cref="CommandLineBuilder"/> will be empty.
         /// </param>
-        public CommandLineBuilder(string commandLine)
+        public CommandLineBuilder(string? commandLine)
         {
             m_CommandLine = new StringBuilder(commandLine);
         }
@@ -39,13 +41,15 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         /// <param name="value">The <see cref="String"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
-        public CommandLineBuilder AppendArgument(string value)
+        public CommandLineBuilder AppendArgument(string? value)
         {
+#nullable disable
             if (!string.IsNullOrEmpty(value))
             {
                 _DelimitArguments();
                 _AppendTextWithQuoting(value);
             }
+#nullable enable
             return this;
         }
 
@@ -123,7 +127,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         /// <param name="value">The <see cref="Object"/> command line argument to append.</param>
         /// <returns>The instance of command line builder.</returns>
-        public CommandLineBuilder AppendArgument(object value) => AppendArgument(value?.ToString());
+        public CommandLineBuilder AppendArgument(object? value) => AppendArgument(value?.ToString());
 
         /// <summary>
         /// Appends a specified command line argument that represents a file name.
@@ -131,7 +135,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         /// <param name="value">The command line argument that represents a file name to append.</param>
         /// <returns>The instance of command line builder.</returns>
-        public CommandLineBuilder AppendFileName(string value) => AppendArgument(CommandLine.Escape.EncodeFileName(value));
+        public CommandLineBuilder AppendFileName(string? value) => AppendArgument(CommandLine.Escape.EncodeFileName(value));
 
         /// <summary>
         /// Removes all characters from the current <see cref="CommandLineBuilder"/> instance.

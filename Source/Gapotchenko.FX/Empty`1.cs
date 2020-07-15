@@ -43,7 +43,7 @@ namespace Gapotchenko.FX
                 return System.Threading.Tasks.Task.FromResult(value);
 #endif
             }
-#nullable restore
+#nullable enable
         }
 
         /// <summary>
