@@ -294,25 +294,25 @@ namespace Gapotchenko.FX.AppModel
         }
 
         /// <inheritdoc/>
-        public string ProductInformationalVersion
+        public string InformationalVersion
         {
             get
             {
-                if (m_ProductInformationalVersion == null)
-                    m_ProductInformationalVersion = RetrieveProductInformationalVersion();
-                return m_ProductInformationalVersion;
+                if (m_InformationalVersion == null)
+                    m_InformationalVersion = RetrieveInformationalVersion();
+                return m_InformationalVersion;
             }
-            protected set => m_ProductInformationalVersion = value;
+            protected set => m_InformationalVersion = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_ProductInformationalVersion;
+        string? m_InformationalVersion;
 
         /// <summary>
         /// Retrieves product informational version.
         /// </summary>
         /// <returns>The product informational version.</returns>
-        protected virtual string RetrieveProductInformationalVersion()
+        protected virtual string RetrieveInformationalVersion()
         {
             string informationalVersion;
 

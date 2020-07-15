@@ -122,7 +122,7 @@ namespace Gapotchenko.FX.Harness.Console
             Console.WriteLine(appInfo.ExecutablePath);
             Console.WriteLine(appInfo.Copyright);
             Console.WriteLine(appInfo.ProductName);
-            Console.WriteLine(appInfo.ProductInformationalVersion);
+            Console.WriteLine(appInfo.InformationalVersion);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.AppModel
         /// <summary>
         /// Gets product informational version.
         /// </summary>
-        string ProductInformationalVersion { get; }
+        string InformationalVersion { get; }
 
         /// <summary>
         /// Gets company name.
