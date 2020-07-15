@@ -7,7 +7,7 @@
 Release date: not released yet
 
 - Introduced `Gapotchenko.FX.AppModel.Information` module that allows to programmatically retrieve information about the app
-- Introduced `Gapotchenko.FX.Console` module that provides virtual terminal operations, console traits and a powerful `MoreTextWriter` primitive for improved user friendliness of your console apps
+- Introduced `Gapotchenko.FX.Console` module that provides virtual terminal functionality, console traits and a powerful `MoreTextWriter` primitive for improved user friendliness of your console apps
 - Added `System.MathF` polyfill
 - Added polyfills for nullable annotation attributes
 - Added `Fn.Ignore(value)` function that ignores a specified value for languages that do not have a built-in equivalent. A typical usage is to fire and forget a parallel `Task` without producing a compiler warning
