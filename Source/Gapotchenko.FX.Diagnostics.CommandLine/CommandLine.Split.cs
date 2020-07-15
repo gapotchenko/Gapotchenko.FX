@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Diagnostics
 {
     partial class CommandLine

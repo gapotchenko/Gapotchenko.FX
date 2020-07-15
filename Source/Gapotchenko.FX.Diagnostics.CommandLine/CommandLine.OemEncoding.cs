@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Diagnostics
 {
@@ -35,7 +34,7 @@ namespace Gapotchenko.FX.Diagnostics
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static Encoding m_OemEncoding;
+        static Encoding? m_OemEncoding;
 
         static Encoding GetOemEncodingCore()
         {

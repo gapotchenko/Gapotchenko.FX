@@ -2,11 +2,9 @@
 
 using Gapotchenko.FX.Text;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -22,7 +20,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         public CommandLineBuilder()
         {
-            _CommandLine = new StringBuilder();
+            m_CommandLine = new StringBuilder();
         }
 
         /// <summary>
@@ -34,11 +32,11 @@ namespace Gapotchenko.FX.Diagnostics
         /// </param>
         public CommandLineBuilder(string commandLine)
         {
-            _CommandLine = new StringBuilder(commandLine);
+            m_CommandLine = new StringBuilder(commandLine);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        StringBuilder _CommandLine;
+        StringBuilder m_CommandLine;
 
         /// <summary>
         /// Appends a specified <see cref="String"/> command line argument to this instance.
@@ -144,7 +142,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// <returns>The instance of command line builder.</returns>
         public CommandLineBuilder Clear()
         {
-            _CommandLine.Clear();
+            m_CommandLine.Clear();
             return this;
         }
 
@@ -158,7 +156,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public StringBuilder Raw => _CommandLine;
+        public StringBuilder Raw => m_CommandLine;
 
         /// <summary>
         /// <para>
@@ -179,7 +177,7 @@ namespace Gapotchenko.FX.Diagnostics
 
         void _DelimitArguments()
         {
-            var commandLine = _CommandLine;
+            var commandLine = m_CommandLine;
 
             if (commandLine.Length != 0 && commandLine[commandLine.Length - 1] != CommandLine.ArgumentSeparator)
                 commandLine.Append(CommandLine.ArgumentSeparator);
@@ -217,7 +215,7 @@ namespace Gapotchenko.FX.Diagnostics
                 buffer.Append('"');
         }
 
-        void _AppendTextWithQuoting(string textToAppend) => _AppendQuotedTextToBuffer(_CommandLine, textToAppend);
+        void _AppendTextWithQuoting(string textToAppend) => _AppendQuotedTextToBuffer(m_CommandLine, textToAppend);
 
         bool _IsQuotingRequired(string parameter)
         {
@@ -234,38 +232,38 @@ namespace Gapotchenko.FX.Diagnostics
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Regex _CachedAllowedUnquotedRegex;
+        Regex m_CachedAllowedUnquotedRegex;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Regex _AllowedUnquotedRegex
         {
             get
             {
-                if (_CachedAllowedUnquotedRegex == null)
+                if (m_CachedAllowedUnquotedRegex == null)
                 {
-                    _CachedAllowedUnquotedRegex = new Regex(
+                    m_CachedAllowedUnquotedRegex = new Regex(
                         @"^[a-z\\/:0-9\._\-+=]*$",
                         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
                 }
-                return _CachedAllowedUnquotedRegex;
+                return m_CachedAllowedUnquotedRegex;
             }
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Regex _CachedDefinitelyNeedQuotesRegex;
+        Regex m_CachedDefinitelyNeedQuotesRegex;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Regex _DefinitelyNeedQuotesRegex
         {
             get
             {
-                if (_CachedDefinitelyNeedQuotesRegex == null)
+                if (m_CachedDefinitelyNeedQuotesRegex == null)
                 {
-                    _CachedDefinitelyNeedQuotesRegex = new Regex(
+                    m_CachedDefinitelyNeedQuotesRegex = new Regex(
                         "[|><\\s,;\"]+",
                         RegexOptions.CultureInvariant);
                 }
-                return _CachedDefinitelyNeedQuotesRegex;
+                return m_CachedDefinitelyNeedQuotesRegex;
             }
         }
 
@@ -273,6 +271,6 @@ namespace Gapotchenko.FX.Diagnostics
         /// Converts the value of this instance to a <see cref="System.String"/>.
         /// </summary>
         /// <returns>A string whose value is the same as this instance.</returns>
-        public override string ToString() => _CommandLine.ToString();
+        public override string ToString() => m_CommandLine.ToString();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Diagnostics
 {
@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         /// <param name="arg">The argument.</param>
         /// <returns>The command line.</returns>
-        public static string Build(string arg) =>
+        public static string Build(string? arg) =>
             new CommandLineBuilder()
                 .AppendArgument(arg)
                 .ToString();
@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// <param name="arg1">The first argument.</param>
         /// <param name="arg2">The second argument.</param>
         /// <returns>The command line.</returns>
-        public static string Build(string arg1, string arg2) =>
+        public static string Build(string? arg1, string? arg2) =>
             new CommandLineBuilder()
                 .AppendArgument(arg1)
                 .AppendArgument(arg2)
@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// <param name="arg2">The second argument.</param>
         /// <param name="arg3">The third argument.</param>
         /// <returns>The command line.</returns>
-        public static string Build(string arg1, string arg2, string arg3) =>
+        public static string Build(string? arg1, string? arg2, string? arg3) =>
             new CommandLineBuilder()
                 .AppendArgument(arg1)
                 .AppendArgument(arg2)
@@ -51,7 +51,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// <param name="arg3">The third argument.</param>
         /// <param name="arg4">The fourth argument.</param>
         /// <returns>The command line.</returns>
-        public static string Build(string arg1, string arg2, string arg3, string arg4) =>
+        public static string Build(string? arg1, string? arg2, string? arg3, string? arg4) =>
             new CommandLineBuilder()
                 .AppendArgument(arg1)
                 .AppendArgument(arg2)
