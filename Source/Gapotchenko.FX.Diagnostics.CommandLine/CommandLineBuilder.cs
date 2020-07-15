@@ -1,12 +1,8 @@
-﻿// Portions of the code came from MSBuild project authored by Microsoft.
-
-using Gapotchenko.FX.Text;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Gapotchenko.FX.Diagnostics
 {
@@ -128,13 +124,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         /// <param name="value">The command line argument that represents a file name to append.</param>
         /// <returns>The instance of command line builder.</returns>
-        public CommandLineBuilder AppendFileName(string value)
-        {
-            if (!string.IsNullOrEmpty(value) && value[0] == '-')
-                return AppendArgument("." + Path.DirectorySeparatorChar + value);
-            else
-                return AppendArgument(value);
-        }
+        public CommandLineBuilder AppendFileName(string value) => AppendArgument(CommandLine.Escape.EncodeFileName(value));
 
         /// <summary>
         /// Removes all characters from the current <see cref="CommandLineBuilder"/> instance.
@@ -183,89 +173,7 @@ namespace Gapotchenko.FX.Diagnostics
                 commandLine.Append(CommandLine.ArgumentSeparator);
         }
 
-        void _AppendQuotedTextToBuffer(StringBuilder buffer, string unquotedTextToAppend)
-        {
-            if (unquotedTextToAppend == null)
-                return;
-
-            bool quotingRequired = _IsQuotingRequired(unquotedTextToAppend);
-            if (quotingRequired)
-                buffer.Append('"');
-
-            int numberOfQuotes = 0;
-            for (int i = 0; i < unquotedTextToAppend.Length; i++)
-            {
-                if (unquotedTextToAppend[i] == '"')
-                    numberOfQuotes++;
-            }
-
-            if (numberOfQuotes > 0)
-            {
-                if ((numberOfQuotes % 2) != 0)
-                    throw new Exception("Command line parameter cannot contain an odd number of double quotes.");
-                unquotedTextToAppend = unquotedTextToAppend.Replace("\\\"", "\\\\\"").Replace("\"", "\\\"");
-            }
-
-            buffer.Append(unquotedTextToAppend);
-
-            if (quotingRequired && unquotedTextToAppend.EndsWith('\\'))
-                buffer.Append('\\');
-
-            if (quotingRequired)
-                buffer.Append('"');
-        }
-
-        void _AppendTextWithQuoting(string textToAppend) => _AppendQuotedTextToBuffer(m_CommandLine, textToAppend);
-
-        bool _IsQuotingRequired(string parameter)
-        {
-            if (parameter == null)
-                return false;
-
-            if (!_AllowedUnquotedRegex.IsMatch(parameter))
-                return true;
-
-            if (_DefinitelyNeedQuotesRegex.IsMatch(parameter))
-                return true;
-
-            return false;
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Regex m_CachedAllowedUnquotedRegex;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Regex _AllowedUnquotedRegex
-        {
-            get
-            {
-                if (m_CachedAllowedUnquotedRegex == null)
-                {
-                    m_CachedAllowedUnquotedRegex = new Regex(
-                        @"^[a-z\\/:0-9\._\-+=]*$",
-                        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
-                }
-                return m_CachedAllowedUnquotedRegex;
-            }
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Regex m_CachedDefinitelyNeedQuotesRegex;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Regex _DefinitelyNeedQuotesRegex
-        {
-            get
-            {
-                if (m_CachedDefinitelyNeedQuotesRegex == null)
-                {
-                    m_CachedDefinitelyNeedQuotesRegex = new Regex(
-                        "[|><\\s,;\"]+",
-                        RegexOptions.CultureInvariant);
-                }
-                return m_CachedDefinitelyNeedQuotesRegex;
-            }
-        }
+        void _AppendTextWithQuoting(string text) => CommandLine.Escape.AppendQuotedText(m_CommandLine, text);
 
         /// <summary>
         /// Converts the value of this instance to a <see cref="System.String"/>.
