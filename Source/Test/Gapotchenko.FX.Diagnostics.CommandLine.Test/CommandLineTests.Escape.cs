@@ -1,4 +1,4 @@
-extern alias Testable;
+extern alias testable;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Gapotchenko.FX.Diagnostics.CommandLine.Test
 {
-    using CommandLine = Testable::Gapotchenko.FX.Diagnostics.CommandLine;
+    using CommandLine = testable::Gapotchenko.FX.Diagnostics.CommandLine;
 
     partial class CommandLineTests
     {
