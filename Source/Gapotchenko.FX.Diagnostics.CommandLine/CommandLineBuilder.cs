@@ -46,7 +46,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// <returns>The instance of command line builder.</returns>
         public CommandLineBuilder AppendArgument(string value)
         {
-            if (value != null)
+            if (!string.IsNullOrEmpty(value))
             {
                 _DelimitArguments();
                 _AppendTextWithQuoting(value);
