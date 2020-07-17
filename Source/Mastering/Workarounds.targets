@@ -10,4 +10,14 @@
     </PropertyGroup>
   </Target>
 
+  <!-- Workaround for nullable checks under untraceable (not annotated) target frameworks. -->
+  <Target Name="SuppressUntraceableNullableChecks" BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <_NullableSupportLevel>1</_NullableSupportLevel>
+      <_NullableSupportLevel Condition=" $(_NullableSupportLevel) == 1 AND '$(TargetFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '2.1')) ">2</_NullableSupportLevel>
+      <_NullableSupportLevel Condition=" $(_NullableSupportLevel) == 1 AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '3.0')) ">2</_NullableSupportLevel>
+      <NoWarn Condition=" $(_NullableSupportLevel) == 1 " >$(NoWarn),CS8604</NoWarn>
+    </PropertyGroup>
+  </Target>
+
 </Project>

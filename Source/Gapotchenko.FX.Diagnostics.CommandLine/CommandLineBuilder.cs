@@ -43,13 +43,11 @@ namespace Gapotchenko.FX.Diagnostics
         /// <returns>The instance of command line builder.</returns>
         public CommandLineBuilder AppendArgument(string? value)
         {
-#nullable disable
             if (!string.IsNullOrEmpty(value))
             {
                 _DelimitArguments();
                 _AppendTextWithQuoting(value);
             }
-#nullable enable
             return this;
         }
 
