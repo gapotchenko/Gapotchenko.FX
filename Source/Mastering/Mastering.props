@@ -2,9 +2,9 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Import Project="Workarounds.props" />
+
   <Import Project="Version.props" />
   <Import Project="Product.props" />
-  <Import Project="Polyfills.props" />
 
   <!-- =================================================================== -->
 
@@ -31,5 +31,7 @@
   <Import Project="AssemblySignature.props" />
   <Import Project="Optimization.props" Condition=" Exists('Optimization.props') " />
   <Import Project="AuthenticodeSignature.props" />
+
+  <Import Project="Polyfills.props" />
 
 </Project>
