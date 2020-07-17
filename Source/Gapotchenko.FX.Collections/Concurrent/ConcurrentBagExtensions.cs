@@ -2,8 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Collections.Concurrent
 {
     /// <summary>

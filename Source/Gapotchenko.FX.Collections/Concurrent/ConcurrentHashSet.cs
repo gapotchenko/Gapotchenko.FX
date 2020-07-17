@@ -6,8 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace Gapotchenko.FX.Collections.Concurrent
@@ -152,7 +150,7 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// </summary>
         /// <param name="comparer">The <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>
         /// implementation to use when comparing items.</param>
-        public ConcurrentHashSet(IEqualityComparer<T> comparer)
+        public ConcurrentHashSet(IEqualityComparer<T>? comparer)
             : this(DefaultConcurrencyLevel, DefaultCapacity, true, comparer)
         {
         }
@@ -173,7 +171,7 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// <exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is a null reference
         /// (Nothing in Visual Basic).
         /// </exception>
-        public ConcurrentHashSet(IEnumerable<T> collection, IEqualityComparer<T> comparer)
+        public ConcurrentHashSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
             : this(comparer)
         {
             if (collection == null)
@@ -201,8 +199,8 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="concurrencyLevel"/> is less than 1.
         /// </exception>
-        public ConcurrentHashSet(int concurrencyLevel, IEnumerable<T> collection, IEqualityComparer<T> comparer)
-            : this(concurrencyLevel, DefaultCapacity, false, comparer)
+        public ConcurrentHashSet(int concurrencyLevel, IEnumerable<T> collection, IEqualityComparer<T>? comparer) :
+            this(concurrencyLevel, DefaultCapacity, false, comparer)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -227,12 +225,12 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// <paramref name="concurrencyLevel"/> is less than 1. -or-
         /// <paramref name="capacity"/> is less than 0.
         /// </exception>
-        public ConcurrentHashSet(int concurrencyLevel, int capacity, IEqualityComparer<T> comparer)
-            : this(concurrencyLevel, capacity, false, comparer)
+        public ConcurrentHashSet(int concurrencyLevel, int capacity, IEqualityComparer<T>? comparer) :
+            this(concurrencyLevel, capacity, false, comparer)
         {
         }
 
-        ConcurrentHashSet(int concurrencyLevel, int capacity, bool growLockArray, IEqualityComparer<T> comparer)
+        ConcurrentHashSet(int concurrencyLevel, int capacity, bool growLockArray, IEqualityComparer<T>? comparer)
         {
             if (concurrencyLevel < 1)
                 throw new ArgumentOutOfRangeException(nameof(concurrencyLevel));
@@ -340,10 +338,10 @@ namespace Gapotchenko.FX.Collections.Concurrent
                         continue;
                     }
 
-                    Node previous = null;
+                    Node? previous = null;
                     for (var current = tables.Buckets[bucketNo]; current != null; current = current.Next)
                     {
-                        Debug.Assert((previous == null && current == tables.Buckets[bucketNo]) || previous.Next == current);
+                        Debug.Assert((previous == null && current == tables.Buckets[bucketNo]) || previous?.Next == current);
 
                         if (hashcode == current.Hashcode && _comparer.Equals(current.Item, item))
                         {
@@ -468,10 +466,10 @@ namespace Gapotchenko.FX.Collections.Concurrent
                     }
 
                     // Try to find this item in the bucket
-                    Node previous = null;
+                    Node? previous = null;
                     for (var current = tables.Buckets[bucketNo]; current != null; current = current.Next)
                     {
-                        Debug.Assert(previous == null && current == tables.Buckets[bucketNo] || previous.Next == current);
+                        Debug.Assert(previous == null && current == tables.Buckets[bucketNo] || previous?.Next == current);
                         if (hashcode == current.Hashcode && _comparer.Equals(current.Item, item))
                         {
                             return false;

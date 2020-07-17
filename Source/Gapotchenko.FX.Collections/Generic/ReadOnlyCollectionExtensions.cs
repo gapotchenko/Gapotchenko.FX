@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Collections.Generic
 {
     /// <summary>
