@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
 
 namespace Gapotchenko.FX.Diagnostics
 {
@@ -28,7 +25,7 @@ namespace Gapotchenko.FX.Diagnostics
                 else
                     return false;
 
-                string command = _TryGetDefaultBrowserCommand(scheme);
+                string? command = _TryGetDefaultBrowserCommand(scheme);
                 if (command == null)
                     return false;
 
@@ -66,7 +63,7 @@ namespace Gapotchenko.FX.Diagnostics
             }
         }
 
-        static string _TryGetDefaultBrowserCommand(string scheme)
+        static string? _TryGetDefaultBrowserCommand(string scheme)
         {
             var os = Environment.OSVersion;
 
@@ -86,7 +83,7 @@ namespace Gapotchenko.FX.Diagnostics
             return null;
         }
 
-        static void _RunProcess(string fileName, string arguments = null)
+        static void _RunProcess(string fileName, string? arguments = null)
         {
             try
             {
