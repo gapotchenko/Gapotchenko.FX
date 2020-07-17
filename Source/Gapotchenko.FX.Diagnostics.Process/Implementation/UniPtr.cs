@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Diagnostics.Implementation
 {
@@ -64,7 +63,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
 
         public override int GetHashCode() => m_Value.GetHashCode();
 
-        public override bool Equals(object obj) => obj is UniPtr other ? Equals(other) : false;
+        public override bool Equals(object? obj) => obj is UniPtr other && Equals(other);
 
         public bool Equals(UniPtr other) => m_Value == other.m_Value;
 

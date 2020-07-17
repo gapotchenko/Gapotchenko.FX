@@ -2,8 +2,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Diagnostics.Implementation
 {
     static class ImplementationServices

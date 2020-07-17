@@ -369,8 +369,14 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
             size = 0;
 
             NativeMethods.MEMORY_BASIC_INFORMATION_WOW64 memInfo;
+
+#if NET45
             var memInfoType = typeof(NativeMethods.MEMORY_BASIC_INFORMATION_WOW64);
             int memInfoLength = Marshal.SizeOf(memInfoType);
+#else
+            int memInfoLength = memInfoLength = Marshal.SizeOf<NativeMethods.MEMORY_BASIC_INFORMATION_WOW64>();
+#endif
+
             const int memInfoAlign = 8;
 
             long resultLength = 0;
@@ -390,7 +396,11 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
                     memInfoLength,
                     ref resultLength);
 
+#if NET45
                 memInfo = (NativeMethods.MEMORY_BASIC_INFORMATION_WOW64)Marshal.PtrToStructure(hMemInfoAligned, memInfoType);
+#else
+                memInfo = Marshal.PtrToStructure<NativeMethods.MEMORY_BASIC_INFORMATION_WOW64>(hMemInfoAligned);
+#endif
             }
             finally
             {

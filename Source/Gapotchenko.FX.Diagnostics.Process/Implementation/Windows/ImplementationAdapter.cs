@@ -7,8 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 {
     sealed partial class ImplementationAdapter : IImplementationAdapter

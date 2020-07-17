@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
+﻿namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 {
     static class SystemInfo
     {

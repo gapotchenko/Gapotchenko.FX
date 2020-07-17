@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Diagnostics.Implementation
 {
     sealed class ProcessMemoryStream : Stream

@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Text;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Diagnostics.Implementation
 {
     sealed class ProcessBinaryReader : BinaryReader
