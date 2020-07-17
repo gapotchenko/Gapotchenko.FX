@@ -29,7 +29,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
             }
             catch (EndOfStreamException)
             {
-                // There may be a race condition on process environment block initialization for just started processes.
+                // There may be a race condition in environment block initialization of a recently started process.
 
                 if (--retryCount > 0)
                     goto Again;
