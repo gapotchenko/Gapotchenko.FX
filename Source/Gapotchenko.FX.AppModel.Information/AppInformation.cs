@@ -5,8 +5,6 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-#nullable enable
-
 namespace Gapotchenko.FX.AppModel
 {
     /// <summary>
