@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Diagnostics
 {
     partial class CommandLine

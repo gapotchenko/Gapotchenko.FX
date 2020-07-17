@@ -8,8 +8,6 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Diagnostics
 {
     partial class CommandLine

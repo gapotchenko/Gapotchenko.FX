@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Diagnostics
 {
     partial class CommandLine

@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Diagnostics
 {
     /// <summary>

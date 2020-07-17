@@ -4,8 +4,6 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Diagnostics
 {
     partial class CommandLine
