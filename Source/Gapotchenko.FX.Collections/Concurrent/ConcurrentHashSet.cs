@@ -5,6 +5,7 @@ using Gapotchenko.FX.Threading;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 
@@ -119,8 +120,8 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// can contain.</param>
         /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="concurrencyLevel"/> is
         /// less than 1.</exception>
-        /// <exception cref="T:System.ArgumentOutOfRangeException"> <paramref name="capacity"/> is less than
-        /// 0.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"> <paramref name="capacity"/> is less than 0.</exception>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public ConcurrentHashSet(int concurrencyLevel, int capacity)
             : this(concurrencyLevel, capacity, false, null)
         {
@@ -199,6 +200,7 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="concurrencyLevel"/> is less than 1.
         /// </exception>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public ConcurrentHashSet(int concurrencyLevel, IEnumerable<T> collection, IEqualityComparer<T>? comparer) :
             this(concurrencyLevel, DefaultCapacity, false, comparer)
         {
@@ -225,6 +227,7 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// <paramref name="concurrencyLevel"/> is less than 1. -or-
         /// <paramref name="capacity"/> is less than 0.
         /// </exception>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public ConcurrentHashSet(int concurrencyLevel, int capacity, IEqualityComparer<T>? comparer) :
             this(concurrencyLevel, capacity, false, comparer)
         {
