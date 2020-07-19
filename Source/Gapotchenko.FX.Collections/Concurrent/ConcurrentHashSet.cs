@@ -263,7 +263,7 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// successfully; false if it already exists.</returns>
         /// <exception cref="T:System.OverflowException">The <see cref="ConcurrentHashSet{T}"/>
         /// contains too many items.</exception>
-        public bool Add(T item) => AddInternal(item, _comparer.GetHashCode(item), true);
+        public bool Add(T item) => AddInternal(item, InternalGetHashCode(item), true);
 
         /// <summary>
         /// Removes all items from the <see cref="ConcurrentHashSet{T}"/>.
@@ -285,6 +285,8 @@ namespace Gapotchenko.FX.Collections.Concurrent
             }
         }
 
+        int InternalGetHashCode(T value) => value is null ? 0 : _comparer.GetHashCode(value);
+
         /// <summary>
         /// Determines whether the <see cref="ConcurrentHashSet{T}"/> contains the specified item.
         /// </summary>
@@ -292,7 +294,7 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// <returns><c>true</c> if the <see cref="ConcurrentHashSet{T}"/> contains the item; otherwise, <c>false</c>.</returns>
         public bool Contains(T item)
         {
-            var hashcode = _comparer.GetHashCode(item);
+            var hashcode = InternalGetHashCode(item);
 
             // We must capture the _buckets field in a local variable. It is set to a new table on each table resize.
             var tables = _tables;
@@ -322,7 +324,7 @@ namespace Gapotchenko.FX.Collections.Concurrent
         /// <returns><c>true</c> if an item was removed successfully; otherwise, <c>false</c>.</returns>
         public bool TryRemove(T item)
         {
-            var hashcode = _comparer.GetHashCode(item);
+            var hashcode = InternalGetHashCode(item);
             while (true)
             {
                 var tables = _tables;
@@ -433,14 +435,10 @@ namespace Gapotchenko.FX.Collections.Concurrent
         void InitializeFromCollection(IEnumerable<T> collection)
         {
             foreach (var item in collection)
-            {
-                AddInternal(item, _comparer.GetHashCode(item), false);
-            }
+                AddInternal(item, InternalGetHashCode(item), false);
 
             if (_budget == 0)
-            {
                 _budget = _tables.Buckets.Length / _tables.Locks.Length;
-            }
         }
 
         bool AddInternal(T item, int hashcode, bool acquireLock)

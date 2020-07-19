@@ -55,7 +55,6 @@ namespace Gapotchenko.FX.Collections.Test.Concurrent
         }
 
         [TestMethod]
-        [Ignore] // TODO
         public void ConcurrentHashSet_NullStringKey_OicEqualityComparer()
         {
             var hashSet = new ConcurrentHashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -67,9 +66,12 @@ namespace Gapotchenko.FX.Collections.Test.Concurrent
 
             Assert.AreEqual(1, hashSet.Count);
 
-            hashSet.Add("A");
-            hashSet.Add("B");
-            hashSet.Add("C");
+            Assert.IsTrue(hashSet.Add("A"));
+            Assert.IsTrue(hashSet.Add("B"));
+            Assert.IsTrue(hashSet.Add("C"));
+            Assert.IsFalse(hashSet.Add("a"));
+            Assert.IsFalse(hashSet.Add("b"));
+            Assert.IsFalse(hashSet.Add("c"));
 
             Assert.AreEqual(4, hashSet.Count);
 
@@ -78,6 +80,10 @@ namespace Gapotchenko.FX.Collections.Test.Concurrent
             Assert.IsTrue(hashSet.Contains("B"));
             Assert.IsTrue(hashSet.Contains("C"));
             Assert.IsFalse(hashSet.Contains("D"));
+            Assert.IsTrue(hashSet.Contains("a"));
+            Assert.IsTrue(hashSet.Contains("b"));
+            Assert.IsTrue(hashSet.Contains("c"));
+            Assert.IsFalse(hashSet.Contains("d"));
         }
     }
 }
