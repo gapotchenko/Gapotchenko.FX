@@ -2,6 +2,8 @@
 using System.IO;
 using System.Text;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Console.Emulation
 {
     sealed class VirtualTerminalWriter : TextWriter
@@ -37,7 +39,7 @@ namespace Gapotchenko.FX.Console.Emulation
 
         const char EscapeCharacter = '\x1b';
 
-        StringBuilder m_CommandBuilder;
+        StringBuilder? m_CommandBuilder;
 
         void _AppendCommandChar(char c)
         {
@@ -46,7 +48,7 @@ namespace Gapotchenko.FX.Console.Emulation
             m_CommandBuilder.Append(c);
         }
 
-        public override void Write(string value)
+        public override void Write(string? value)
         {
             _EnterBuffer();
             try
@@ -59,7 +61,7 @@ namespace Gapotchenko.FX.Console.Emulation
             }
         }
 
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
             _EnterBuffer();
             try
@@ -103,7 +105,7 @@ namespace Gapotchenko.FX.Console.Emulation
         }
 
         [ThreadStatic]
-        static StringBuilder m_Buffer;
+        static StringBuilder? m_Buffer;
 
         void _EnterBufferCore()
         {
@@ -184,8 +186,12 @@ namespace Gapotchenko.FX.Console.Emulation
                     else if (c >= 0x40 && c <= 0x7E)
                     {
                         // Final byte.
+
+                        if (m_CommandBuilder == null)
+                            throw new InvalidOperationException();
                         _ExecuteCsi(m_CommandBuilder.ToString(), c);
                         m_CommandBuilder = null;
+
                         m_CurrentState = State.Default;
                     }
                     else

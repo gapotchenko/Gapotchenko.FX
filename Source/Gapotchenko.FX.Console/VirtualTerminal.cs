@@ -1,7 +1,10 @@
 ﻿using Gapotchenko.FX.Console.Emulation;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Console
 {
@@ -41,7 +44,8 @@ namespace Gapotchenko.FX.Console
         /// A text writer wrapped by the virtual terminal emulator,
         /// or <paramref name="textWriter"/> if virtual terminal processing is natively supported by the platform.
         /// </returns>
-        public static TextWriter EnableProcessing(TextWriter textWriter) => EnableProcessing(textWriter, VirtualTerminalProcessingMode.Auto);
+        [return: NotNullIfNotNull("textWriter")]
+        public static TextWriter? EnableProcessing(TextWriter? textWriter) => EnableProcessing(textWriter, VirtualTerminalProcessingMode.Auto);
 
         /// <summary>
         /// Enables virtual terminal processing for console output.
@@ -54,7 +58,8 @@ namespace Gapotchenko.FX.Console
         /// A text writer wrapped by the virtual terminal emulator,
         /// or <paramref name="textWriter"/> if virtual terminal processing is natively supported by the platform.
         /// </returns>
-        public static TextWriter EnableProcessing(TextWriter textWriter, VirtualTerminalProcessingMode mode)
+        [return: NotNullIfNotNull("textWriter")]
+        public static TextWriter? EnableProcessing(TextWriter? textWriter, VirtualTerminalProcessingMode mode)
         {
             EnableProcessing(mode);
             return _EmulateVTConsole(textWriter);
@@ -166,8 +171,8 @@ namespace Gapotchenko.FX.Console
         static readonly object m_SyncRoot = new object();
         static bool m_IsEmulated;
         static bool m_NativeVTProcessingPrevState;
-        static TextWriter m_PrevConsoleOut;
-        static TextWriter m_PrevConsoleError;
+        static TextWriter? m_PrevConsoleOut;
+        static TextWriter? m_PrevConsoleError;
 
         static void _EnableProcessingCore(VirtualTerminalProcessingMode mode)
         {
@@ -215,7 +220,8 @@ namespace Gapotchenko.FX.Console
             }
         }
 
-        static TextWriter _EmulateVTConsole(TextWriter textWriter)
+        [return: NotNullIfNotNull("textWriter")]
+        static TextWriter? _EmulateVTConsole(TextWriter? textWriter)
         {
             if (m_IsEmulated)
             {

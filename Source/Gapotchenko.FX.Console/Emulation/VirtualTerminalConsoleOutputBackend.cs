@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Console.Emulation
 {
     using Console = System.Console;

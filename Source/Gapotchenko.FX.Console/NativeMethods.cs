@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Console
 {
     static class NativeMethods

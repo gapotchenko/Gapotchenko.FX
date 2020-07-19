@@ -1,9 +1,10 @@
 ﻿using Gapotchenko.FX.Diagnostics;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Console
 {
