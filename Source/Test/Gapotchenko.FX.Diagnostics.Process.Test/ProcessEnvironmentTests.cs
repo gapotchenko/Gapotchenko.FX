@@ -15,6 +15,7 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             var process = new Process();
 
             var psi = process.StartInfo;
+            psi.UseShellExecute = false;
             psi.FileName = "dotnet";
             psi.Arguments = "fsi";
 
@@ -29,7 +30,7 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             }
             finally
             {
-                process.Kill(true);
+                process.Kill();
             }
         }
 
@@ -39,6 +40,7 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             var process = new Process();
 
             var psi = process.StartInfo;
+            psi.UseShellExecute = false;
             psi.FileName = "dotnet";
             psi.Arguments = "fsi";
 
@@ -66,7 +68,7 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             }
             finally
             {
-                process.Kill(true);
+                process.Kill();
             }
         }
     }

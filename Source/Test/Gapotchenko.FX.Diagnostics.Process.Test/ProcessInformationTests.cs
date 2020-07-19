@@ -29,7 +29,7 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             }
             finally
             {
-                process.Kill(true);
+                process.Kill();
             }
         }
 
