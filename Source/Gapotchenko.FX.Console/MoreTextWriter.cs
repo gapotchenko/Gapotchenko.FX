@@ -180,7 +180,7 @@ namespace Gapotchenko.FX.Console
         /// <param name="buffer">The character array to write to the text stream.</param>
         public override void Write(char[] buffer)
         {
-            if (m_Skip || !Enabled)
+            if (m_Skip || !Enabled || buffer == null)
             {
                 ValidateBaseTextWriter();
                 m_BaseTextWriter.Write(buffer);
@@ -271,7 +271,7 @@ namespace Gapotchenko.FX.Console
         {
             ValidateBaseTextWriter();
 
-            if (m_Skip || !Enabled)
+            if (m_Skip || !Enabled || value == null)
             {
                 m_BaseTextWriter.Write(value);
                 return;
