@@ -1,9 +1,12 @@
 ﻿using Gapotchenko.FX.Text;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Console
 {
@@ -74,27 +77,28 @@ namespace Gapotchenko.FX.Console
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TextWriter m_BaseTextWriter;
+        TextWriter? m_BaseTextWriter;
 
         /// <summary>
         /// Gets or sets the underlying text writer.
         /// </summary>
-        public TextWriter BaseTextWriter
+        [DisallowNull]
+        public TextWriter? BaseTextWriter
         {
-            get
-            {
-                return m_BaseTextWriter;
-            }
+            get => m_BaseTextWriter;
             set
             {
-                if (value == m_BaseTextWriter)
-                    return;
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
 
                 if (m_BaseTextWriter == this)
                     throw new ArgumentException("Cannot set the base text writer to itself.", nameof(value));
 
-                m_BaseTextWriter = value;
-                RecalculateSkipCriteria();
+                if (m_BaseTextWriter != value)
+                {
+                    m_BaseTextWriter = value;
+                    RecalculateSkipCriteria();
+                }
             }
         }
 
@@ -123,7 +127,8 @@ namespace Gapotchenko.FX.Console
             if (m_Skip)
                 return;
 
-            if (m_BaseTextWriter == null)
+            var baseTextWriter = m_BaseTextWriter;
+            if (baseTextWriter == null)
             {
                 m_Skip = true;
                 return;
@@ -135,8 +140,8 @@ namespace Gapotchenko.FX.Console
                 return;
             }
 
-            if (m_BaseTextWriter != Console.Error &&
-                m_BaseTextWriter != Console.Out)
+            if (baseTextWriter != Console.Error &&
+                baseTextWriter != Console.Out)
             {
                 m_Skip = true;
                 return;
@@ -149,13 +154,9 @@ namespace Gapotchenko.FX.Console
         /// <summary>
         /// Returns the character encoding in which the output is written.
         /// </summary>
-        public override Encoding Encoding => m_BaseTextWriter.Encoding;
+        public override Encoding Encoding => GetBaseTextWriter().Encoding;
 
-        void ValidateBaseTextWriter()
-        {
-            if (m_BaseTextWriter == null)
-                throw new InvalidOperationException("Base text writer is not set.");
-        }
+        TextWriter GetBaseTextWriter() => m_BaseTextWriter ?? throw new InvalidOperationException("Base text writer is not set.");
 
         /// <summary>
         /// Writes a character to the text string or stream.
@@ -165,8 +166,7 @@ namespace Gapotchenko.FX.Console
         {
             if (m_Skip || !Enabled)
             {
-                ValidateBaseTextWriter();
-                m_BaseTextWriter.Write(value);
+                GetBaseTextWriter().Write(value);
             }
             else
             {
@@ -178,12 +178,11 @@ namespace Gapotchenko.FX.Console
         /// Writes a character array to the text string or stream.
         /// </summary>
         /// <param name="buffer">The character array to write to the text stream.</param>
-        public override void Write(char[] buffer)
+        public override void Write(char[]? buffer)
         {
             if (m_Skip || !Enabled || buffer == null)
             {
-                ValidateBaseTextWriter();
-                m_BaseTextWriter.Write(buffer);
+                GetBaseTextWriter().Write(buffer);
             }
             else
             {
@@ -201,8 +200,7 @@ namespace Gapotchenko.FX.Console
         {
             if (m_Skip || !Enabled)
             {
-                ValidateBaseTextWriter();
-                m_BaseTextWriter.Write(buffer, index, count);
+                GetBaseTextWriter().Write(buffer, index, count);
             }
             else
             {
@@ -214,12 +212,11 @@ namespace Gapotchenko.FX.Console
         /// Writes a string followed by a line terminator to the text string or stream.
         /// </summary>
         /// <param name="value">The string to write. If value is null, only the line terminator is written.</param>
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
             if (!Enabled)
             {
-                ValidateBaseTextWriter();
-                m_BaseTextWriter.WriteLine(value);
+                GetBaseTextWriter().WriteLine(value);
             }
             else
             {
@@ -228,13 +225,13 @@ namespace Gapotchenko.FX.Console
             }
         }
 
-        void _BaseWrite(string value)
+        void WriteCore(string value)
         {
-            ValidateBaseTextWriter();
+            var baseTextWriter = GetBaseTextWriter();
 
             if (!m_SkipCriteriaNeedsProbing || !Enabled)
             {
-                m_BaseTextWriter.Write(value);
+                baseTextWriter.Write(value);
             }
             else
             {
@@ -248,15 +245,15 @@ namespace Gapotchenko.FX.Console
 
                 if (!canProbeNow)
                 {
-                    m_BaseTextWriter.Write(value);
+                    baseTextWriter.Write(value);
                     return;
                 }
 
                 int top = Console.CursorTop;
                 int left = Console.CursorLeft;
 
-                m_BaseTextWriter.Write(value);
-                m_BaseTextWriter.Flush();
+                baseTextWriter.Write(value);
+                baseTextWriter.Flush();
 
                 bool consoleChanged = Console.CursorTop != top || Console.CursorLeft != left;
 
@@ -269,13 +266,13 @@ namespace Gapotchenko.FX.Console
         /// Writes a string to the text string or stream.
         /// </summary>
         /// <param name="value">The string to write.</param>
-        public override void Write(string value)
+        public override void Write(string? value)
         {
-            ValidateBaseTextWriter();
+            var baseTextWriter = GetBaseTextWriter();
 
             if (m_Skip || !Enabled || value == null)
             {
-                m_BaseTextWriter.Write(value);
+                baseTextWriter.Write(value);
                 return;
             }
 
@@ -287,11 +284,11 @@ namespace Gapotchenko.FX.Console
                 string line = lines[i];
 
                 if (line.Length > 0)
-                    _BaseWrite(line);
+                    WriteCore(line);
 
                 if (i != n - 1)
                 {
-                    _BaseWrite("\n");
+                    WriteCore("\n");
                     OnNewLine();
                 }
             }
@@ -342,11 +339,11 @@ namespace Gapotchenko.FX.Console
 
         void HandleUI()
         {
-            ValidateBaseTextWriter();
+            var baseTextWriter = GetBaseTextWriter();
 
             int left = Console.CursorLeft;
-            ShowPrompt(m_BaseTextWriter);
-            m_BaseTextWriter.Flush();
+            ShowPrompt(baseTextWriter);
+            baseTextWriter.Flush();
             int promptLength = Console.CursorLeft - left;
 
             bool savedCursorVisible = Console.CursorVisible;
@@ -386,11 +383,11 @@ namespace Gapotchenko.FX.Console
                     break;
                 }
 
-                m_BaseTextWriter.Write('\r');
+                baseTextWriter.Write('\r');
                 for (int i = 0; i < promptLength; ++i)
-                    m_BaseTextWriter.Write(' ');
-                m_BaseTextWriter.Write('\r');
-                m_BaseTextWriter.Flush();
+                    baseTextWriter.Write(' ');
+                baseTextWriter.Write('\r');
+                baseTextWriter.Flush();
             }
             finally
             {
