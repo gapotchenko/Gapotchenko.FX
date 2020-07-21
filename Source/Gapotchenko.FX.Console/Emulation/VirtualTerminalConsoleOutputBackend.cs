@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Console.Emulation
 {
     using Console = System.Console;
@@ -18,6 +16,7 @@ namespace Gapotchenko.FX.Console.Emulation
         {
             if (textWriter == null)
                 throw new ArgumentNullException(nameof(textWriter));
+
             Out = textWriter;
         }
 
@@ -42,16 +41,16 @@ namespace Gapotchenko.FX.Console.Emulation
 
         public void ResetForegroundColor()
         {
-            var backgroundColor = Console.BackgroundColor;
+            var bg = Console.BackgroundColor;
             Console.ResetColor();
-            Console.BackgroundColor = backgroundColor;
+            Console.BackgroundColor = bg;
         }
 
         public void ResetBackgroundColor()
         {
-            var foregroundColor = Console.ForegroundColor;
+            var fg = Console.ForegroundColor;
             Console.ResetColor();
-            Console.ForegroundColor = foregroundColor;
+            Console.ForegroundColor = fg;
         }
     }
 }

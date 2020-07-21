@@ -2,8 +2,6 @@
 using System.IO;
 using System.Text;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Console.Emulation
 {
     sealed class VirtualTerminalWriter : TextWriter

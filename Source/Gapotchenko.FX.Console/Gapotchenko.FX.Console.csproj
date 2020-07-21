@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-	<LangVersion>8.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

@@ -6,8 +6,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Console
 {
     using Console = System.Console;
@@ -56,7 +54,7 @@ namespace Gapotchenko.FX.Console
                 int v = m_CachedScreenHeight;
                 if (v == -1)
                 {
-                    v = _GetScreenHeightCore();
+                    v = TryGetScreenHeight() ?? 0;
                     m_CachedScreenHeight = v;
                 }
                 return v;
@@ -64,7 +62,7 @@ namespace Gapotchenko.FX.Console
         }
 
         [DebuggerHidden]
-        static int _GetScreenHeightCore()
+        static int? TryGetScreenHeight()
         {
             try
             {
@@ -72,7 +70,7 @@ namespace Gapotchenko.FX.Console
             }
             catch
             {
-                return 0;
+                return null;
             }
         }
 
@@ -165,13 +163,9 @@ namespace Gapotchenko.FX.Console
         public override void Write(char value)
         {
             if (m_Skip || !Enabled)
-            {
                 GetBaseTextWriter().Write(value);
-            }
             else
-            {
                 Write(new string(value, 1));
-            }
         }
 
         /// <summary>
@@ -181,13 +175,9 @@ namespace Gapotchenko.FX.Console
         public override void Write(char[]? buffer)
         {
             if (m_Skip || !Enabled || buffer == null)
-            {
                 GetBaseTextWriter().Write(buffer);
-            }
             else
-            {
                 Write(new string(buffer));
-            }
         }
 
         /// <summary>
@@ -199,13 +189,9 @@ namespace Gapotchenko.FX.Console
         public override void Write(char[] buffer, int index, int count)
         {
             if (m_Skip || !Enabled)
-            {
                 GetBaseTextWriter().Write(buffer, index, count);
-            }
             else
-            {
                 Write(new string(buffer, index, count));
-            }
         }
 
         /// <summary>
