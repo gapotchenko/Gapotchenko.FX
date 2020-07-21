@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Transactions;
 
+#nullable enable
+
 namespace Gapotchenko.FX.IO
 {
     static class FileSystemTransactionManager
@@ -23,9 +25,9 @@ namespace Gapotchenko.FX.IO
                 }
             }
 
-            string m_FilePath;
-            string m_TempFilePath;
-            string m_TransactionKey;
+            string? m_FilePath;
+            string? m_TransactionKey;
+            string? m_TempFilePath;
 
             void Forget()
             {
@@ -38,20 +40,25 @@ namespace Gapotchenko.FX.IO
                     catch
                     {
                     }
+
                     m_TempFilePath = null;
                 }
 
                 if (m_FilePath != null)
                 {
-                    lock (m_TransactionEnlistedFiles)
+                    if (m_TransactionKey != null)
                     {
-                        if (m_TransactionEnlistedFiles.TryGetValue(m_TransactionKey, out var enlistedFiles))
+                        lock (m_TransactionEnlistedFiles)
                         {
-                            enlistedFiles.Remove(m_FilePath);
-                            if (enlistedFiles.Count == 0)
-                                m_TransactionEnlistedFiles.Remove(m_TransactionKey);
+                            if (m_TransactionEnlistedFiles.TryGetValue(m_TransactionKey, out var enlistedFiles))
+                            {
+                                enlistedFiles.Remove(m_FilePath);
+                                if (enlistedFiles.Count == 0)
+                                    m_TransactionEnlistedFiles.Remove(m_TransactionKey);
+                            }
                         }
                     }
+
                     m_FilePath = null;
                 }
 
@@ -76,11 +83,15 @@ namespace Gapotchenko.FX.IO
 
             public void Rollback(Enlistment enlistment)
             {
-                FileSystem.WaitForFileWriteAccess(m_FilePath);
-                if (m_TempFilePath != null)
-                    File.Copy(m_TempFilePath, m_FilePath, true);
-                else
-                    File.Delete(m_FilePath);
+                if (m_FilePath != null)
+                {
+                    FileSystem.WaitForFileWriteAccess(m_FilePath);
+
+                    if (m_TempFilePath != null)
+                        File.Copy(m_TempFilePath, m_FilePath, true);
+                    else
+                        File.Delete(m_FilePath);
+                }
 
                 Forget();
 

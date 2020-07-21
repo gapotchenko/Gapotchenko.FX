@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -9,6 +10,8 @@ using System.Threading;
 #if TFF_TRANSACTIONS
 using System.Transactions;
 #endif
+
+#nullable enable
 
 namespace Gapotchenko.FX.IO
 {
@@ -74,7 +77,7 @@ namespace Gapotchenko.FX.IO
         /// <param name="a">The file path A.</param>
         /// <param name="b">The file path B.</param>
         /// <returns><c>true</c> when file paths are equivalent; otherwise, <c>false</c>.</returns>
-        public static bool PathsAreEquivalent(string a, string b)
+        public static bool PathsAreEquivalent(string? a, string? b)
         {
             var pathComparison = PathComparison;
 
@@ -104,7 +107,7 @@ namespace Gapotchenko.FX.IO
         /// <param name="path">The path.</param>
         /// <param name="value">The value.</param>
         /// <returns><c>true</c> when the beginning of the path matches the specified value in terms of file system equivalence; otherwise, <c>false</c>.</returns>
-        public static bool PathStartsWith(string path, string value)
+        public static bool PathStartsWith(string? path, string? value)
         {
             var pathComparison = PathComparison;
 
@@ -122,7 +125,8 @@ namespace Gapotchenko.FX.IO
             return path.StartsWith(value, pathComparison);
         }
 
-        static string _NormalizePath(string path, bool? trailingSlash = null)
+        [return: NotNullIfNotNull("path")]
+        static string? _NormalizePath(string? path, bool? trailingSlash = null)
         {
             if (string.IsNullOrEmpty(path))
                 return path;
@@ -147,10 +151,12 @@ namespace Gapotchenko.FX.IO
             return path;
         }
 
-        static string _RemoveAdjacentChars(string value, char c, int startIndex)
+        [return: NotNullIfNotNull("value")]
+        static string? _RemoveAdjacentChars(string? value, char c, int startIndex)
         {
             if (startIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
+
             if (value == null)
                 return null;
 
@@ -186,17 +192,19 @@ namespace Gapotchenko.FX.IO
         /// </summary>
         /// <param name="path">The path.</param>
         /// <returns>The canonicalized path.</returns>
-        public static string CanonicalizePath(string path) => _NormalizePath(path);
+        [return: NotNullIfNotNull("path")]
+        public static string? CanonicalizePath(string? path) => _NormalizePath(path);
 
         /// <summary>
         /// Gets a short version of a specified file path.
         /// </summary>
         /// <param name="filePath">The file path.</param>
         /// <returns>A short version of the file path.</returns>
-        public static string GetShortPath(string filePath)
+        [return: NotNullIfNotNull("filePath")]
+        public static string? GetShortPath(string? filePath)
         {
-            if (filePath == null)
-                throw new ArgumentNullException(nameof(filePath));
+            if (string.IsNullOrEmpty(filePath))
+                return filePath;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -268,7 +276,7 @@ namespace Gapotchenko.FX.IO
             if (!File.Exists(path))
                 return;
 
-            Stopwatch sw = null;
+            Stopwatch? sw = null;
             for (; ; )
             {
                 bool accessAllowed = false;
@@ -330,7 +338,7 @@ namespace Gapotchenko.FX.IO
         /// </summary>
         /// <param name="path">The file path.</param>
         /// <param name="transaction">The transaction. If the value is <c>null</c> then the current transaction is used.</param>
-        public static void EnlistFileInTransaction(string path, Transaction transaction)
+        public static void EnlistFileInTransaction(string path, Transaction? transaction)
         {
             if (path == null)
                 throw new ArgumentNullException(nameof(path));

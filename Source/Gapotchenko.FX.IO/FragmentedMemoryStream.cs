@@ -3,7 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+
+#nullable enable
 
 namespace Gapotchenko.FX.IO
 {
@@ -213,7 +216,8 @@ namespace Gapotchenko.FX.IO
                     offset += copySize;
 
                     Position += copySize;
-                } while (count > 0);
+                }
+                while (count > 0);
             }
             catch
             {
@@ -282,6 +286,9 @@ namespace Gapotchenko.FX.IO
         /// <param name="destination">The destination stream to write the content to.</param>
         public virtual void WriteTo(Stream destination)
         {
+            if (destination == null)
+                throw new ArgumentNullException(nameof(destination));
+
             var savedPosition = Position;
             Position = 0;
 
