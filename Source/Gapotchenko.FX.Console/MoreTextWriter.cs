@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Console
     using Console = System.Console;
 
     /// <summary>
-    /// Automatically manages console behavior when written data exceeds the size of a console area visible to the user.
+    /// Automatically manages console behavior when written data exceeds the height of a console area visible to the user.
     /// The behavior is very similar to 'more' command line utility.
     /// </summary>
     /// <remarks>
