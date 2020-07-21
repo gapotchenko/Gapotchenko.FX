@@ -221,9 +221,11 @@ namespace Gapotchenko.FX.Console
                 ValidateBaseTextWriter();
                 m_BaseTextWriter.WriteLine(value);
             }
-
-            Write(value);
-            Write(CoreNewLine);
+            else
+            {
+                Write(value);
+                Write(CoreNewLine);
+            }
         }
 
         void _BaseWrite(string value)
