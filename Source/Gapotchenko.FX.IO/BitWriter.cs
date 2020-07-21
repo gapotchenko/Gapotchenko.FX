@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-#nullable enable
-
 namespace Gapotchenko.FX.IO
 {
     /// <summary>

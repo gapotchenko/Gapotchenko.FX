@@ -1,8 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 
-#nullable enable
-
 namespace Gapotchenko.FX.IO
 {
     static class NativeMethods

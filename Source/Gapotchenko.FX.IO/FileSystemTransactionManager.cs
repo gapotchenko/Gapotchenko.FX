@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Transactions;
 
-#nullable enable
-
 namespace Gapotchenko.FX.IO
 {
     static class FileSystemTransactionManager

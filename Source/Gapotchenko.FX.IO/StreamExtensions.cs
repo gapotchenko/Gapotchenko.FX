@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Gapotchenko.FX.IO
 {
     /// <summary>

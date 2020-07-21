@@ -11,8 +11,6 @@ using System.Threading;
 using System.Transactions;
 #endif
 
-#nullable enable
-
 namespace Gapotchenko.FX.IO
 {
     /// <summary>
