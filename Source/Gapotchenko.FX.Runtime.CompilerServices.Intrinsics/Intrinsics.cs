@@ -6,8 +6,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Runtime.CompilerServices
 {
     /// <summary>

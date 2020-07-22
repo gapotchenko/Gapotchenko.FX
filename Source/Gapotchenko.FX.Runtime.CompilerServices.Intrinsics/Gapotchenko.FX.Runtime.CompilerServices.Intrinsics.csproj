@@ -4,6 +4,7 @@
     <TargetFramework></TargetFramework>
     <RootNamespace>Gapotchenko.FX.Runtime.CompilerServices</RootNamespace>
     <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   

@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Runtime.CompilerServices
 {
     static class Log
