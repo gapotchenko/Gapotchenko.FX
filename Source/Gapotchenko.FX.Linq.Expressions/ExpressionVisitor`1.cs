@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -8,10 +8,13 @@ namespace Gapotchenko.FX.Linq.Expressions
 {
     abstract class ExpressionVisitor<TResult>
     {
-        protected virtual TResult Visit(Expression expression)
+        // [return: AllowNull] // There is an omission in AllowNullAttribute definition that prevents it from being used on return values.
+        protected virtual TResult Visit(Expression? expression)
         {
             if (expression == null)
+#pragma warning disable CS8603 // Possible null reference return.
                 return default;
+#pragma warning restore CS8603 // Possible null reference return.
 
             TResult result;
 
@@ -111,7 +114,8 @@ namespace Gapotchenko.FX.Linq.Expressions
             return result;
         }
 
-        protected virtual IReadOnlyList<TResult> VisitExpressions(IReadOnlyList<Expression> expressions)
+        [return: NotNullIfNotNull("expressions")]
+        protected virtual IReadOnlyList<TResult>? VisitExpressions(IReadOnlyList<Expression>? expressions)
         {
             if (expressions == null)
                 return null;

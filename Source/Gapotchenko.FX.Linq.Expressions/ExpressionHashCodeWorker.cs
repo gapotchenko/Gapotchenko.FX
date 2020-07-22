@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,7 +11,7 @@ namespace Gapotchenko.FX.Linq.Expressions
 
         readonly ParameterExpressionRegistry _Parameters = new ParameterExpressionRegistry();
 
-        protected override int Visit(Expression e)
+        protected override int Visit(Expression? e)
         {
             if (e == null)
                 return 0;

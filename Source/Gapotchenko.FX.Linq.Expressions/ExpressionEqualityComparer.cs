@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Linq.Expressions
 {
@@ -20,7 +16,7 @@ namespace Gapotchenko.FX.Linq.Expressions
         /// <returns>
         /// <c>true</c> if the specified objects are equal; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(Expression x, Expression y)
+        public override bool Equals(Expression? x, Expression? y)
         {
             if (x == y)
                 return true;

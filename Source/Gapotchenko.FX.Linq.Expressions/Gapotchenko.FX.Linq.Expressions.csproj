@@ -1,14 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-    <LangVersion>7.2</LangVersion>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+  
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Linq.Expressions.ExpressionEqualityComparer" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
   </ItemGroup>
+
 </Project>
