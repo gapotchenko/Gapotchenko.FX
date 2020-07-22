@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Reflection
 {
     /// <summary>
@@ -34,7 +36,7 @@ namespace Gapotchenko.FX.Reflection
         /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
         /// <returns><c>true</c> if the assembly with the specified set of additional probing paths is added; <c>false</c> if the assembly with the specified set of additional probing paths is already added.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
-        public bool AddAssembly(Assembly assembly, params string[] additionalProbingPaths)
+        public bool AddAssembly(Assembly assembly, params string[]? additionalProbingPaths)
         {
             if (assembly == null)
                 throw new ArgumentNullException(nameof(assembly));
@@ -66,7 +68,7 @@ namespace Gapotchenko.FX.Reflection
             if (assembly == null)
                 throw new ArgumentNullException(nameof(assembly));
 
-            AssemblyDescriptor descriptor;
+            AssemblyDescriptor? descriptor;
             lock (m_AssemblyDescriptors)
                 if (!m_AssemblyDescriptors.TryGetValue(assembly, out descriptor))
                     return false;
@@ -115,7 +117,7 @@ namespace Gapotchenko.FX.Reflection
 
             path = Path.GetFullPath(path);
 
-            ProbingPathAssemblyLoaderBackend loader;
+            ProbingPathAssemblyLoaderBackend? loader;
             lock (m_ProbingPathResolvers)
                 if (!m_ProbingPathResolvers.TryGetValue(path, out loader))
                     return false;

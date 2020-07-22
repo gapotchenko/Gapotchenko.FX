@@ -1,14 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Numerics.BitOperations" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
+
 </Project>

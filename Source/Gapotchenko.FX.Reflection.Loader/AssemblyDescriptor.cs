@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Reflection.Loader
 {
     sealed class AssemblyDescriptor : IDisposable
     {
-        public AssemblyDescriptor(Assembly assembly, string[] additionalProbingPaths)
+        public AssemblyDescriptor(Assembly assembly, string[]? additionalProbingPaths)
         {
-            _Assembly = assembly;
             _AssemblyDependencyTracker = new AssemblyDependencyTracker(assembly);
 
             string assemblyFilePath = new Uri(assembly.EscapedCodeBase).LocalPath;
@@ -24,7 +25,11 @@ namespace Gapotchenko.FX.Reflection.Loader
             else
             {
                 var probingPaths = new List<string>();
-                probingPaths.Add(Path.GetDirectoryName(assemblyFilePath));
+
+                var path = Path.GetDirectoryName(assemblyFilePath);
+                if (!string.IsNullOrEmpty(path))
+                    probingPaths.Add(path);
+
                 if (additionalProbingPaths != null)
                     _AccumulateNewProbingPaths(probingPaths, additionalProbingPaths);
 
@@ -32,13 +37,12 @@ namespace Gapotchenko.FX.Reflection.Loader
             }
         }
 
-        Assembly _Assembly;
-        AssemblyDependencyTracker _AssemblyDependencyTracker;
-        IAssemblyLoaderBackend _AssemblyLoaderBackend;
-        bool _HasBindingRedirects;
+        readonly AssemblyDependencyTracker _AssemblyDependencyTracker;
+        readonly IAssemblyLoaderBackend? _AssemblyLoaderBackend;
+        readonly bool _HasBindingRedirects;
 
-        HashSet<string> _ProbingPaths;
-        List<HeuristicAssemblyLoaderBackend> _ProbingPathAssemblyLoaderBackends;
+        HashSet<string>? _ProbingPaths;
+        List<HeuristicAssemblyLoaderBackend>? _ProbingPathAssemblyLoaderBackends;
 
         void _AccumulateNewProbingPaths(List<string> accumulator, string[] probingPaths)
         {
@@ -57,7 +61,7 @@ namespace Gapotchenko.FX.Reflection.Loader
             }
         }
 
-        public bool AddProbingPaths(string[] probingPaths)
+        public bool AddProbingPaths(string[]? probingPaths)
         {
             if (probingPaths == null)
                 return false;

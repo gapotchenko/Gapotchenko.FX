@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Reflection.Loader.Pal
 {
     static class ArrayEqualityComparer
     {
-        public static bool Equals(byte[] a, byte[] b)
+        public static bool Equals(byte[]? a, byte[]? b)
         {
             if (a == b)
                 return true;

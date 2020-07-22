@@ -3,10 +3,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Reflection.Loader.Backends
 {
@@ -15,6 +14,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
         public ProbingPathAssemblyLoaderBackend(params string[] probingPaths)
         {
             _ProbingPaths = probingPaths;
+
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
 
@@ -25,7 +25,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
         public bool StrictVersionMatch { get; set; }
 
-        string[] _ProbingPaths;
+        string[]? _ProbingPaths;
 
         static IEnumerable<string> _EnumerateAssemblies(string path)
         {
@@ -35,7 +35,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
                 yield return i;
         }
 
-        List<KeyValuePair<string, AssemblyName>> _CachedProbingList;
+        List<KeyValuePair<string, AssemblyName>>? _CachedProbingList;
 
         List<KeyValuePair<string, AssemblyName>> _GetProbingList()
         {
@@ -45,40 +45,43 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
                     {
                         _CachedProbingList = new List<KeyValuePair<string, AssemblyName>>();
 
-                        foreach (string path in _ProbingPaths)
+                        if (_ProbingPaths != null)
                         {
-                            if (path == null)
-                                continue;
-
-                            if (!Directory.Exists(path))
-                                continue;
-
-                            foreach (string file in _EnumerateAssemblies(path))
+                            foreach (string path in _ProbingPaths)
                             {
-                                AssemblyName definition;
-                                try
-                                {
-                                    definition = AssemblyName.GetAssemblyName(file);
-                                }
-                                catch
-                                {
+                                if (path == null)
                                     continue;
-                                }
-                                _CachedProbingList.Add(new KeyValuePair<string, AssemblyName>(file, definition));
-                            }
-                        }
 
-                        // Clear probing paths in order to free the memory.
-                        _ProbingPaths = null;
+                                if (!Directory.Exists(path))
+                                    continue;
+
+                                foreach (string file in _EnumerateAssemblies(path))
+                                {
+                                    AssemblyName definition;
+                                    try
+                                    {
+                                        definition = AssemblyName.GetAssemblyName(file);
+                                    }
+                                    catch
+                                    {
+                                        continue;
+                                    }
+                                    _CachedProbingList.Add(new KeyValuePair<string, AssemblyName>(file, definition));
+                                }
+                            }
+
+                            // Clear probing paths in order to free the memory.
+                            _ProbingPaths = null;
+                        }
                     }
 
             return _CachedProbingList;
         }
 
-        readonly ConcurrentDictionary<string, Assembly> _ResolvedAssembliesCache = new ConcurrentDictionary<string, Assembly>(StringComparer.OrdinalIgnoreCase);
+        readonly ConcurrentDictionary<string, Assembly?> _ResolvedAssembliesCache = new ConcurrentDictionary<string, Assembly?>(StringComparer.OrdinalIgnoreCase);
 
         bool _ReferenceMatchesDefinition(AssemblyName reference, AssemblyName definition) =>
-            reference.Name.Equals(definition.Name, StringComparison.OrdinalIgnoreCase) &&
+            StringComparer.OrdinalIgnoreCase.Equals(reference.Name, definition.Name) &&
             _ReferenceMatchesDefinition(reference.Version, definition.Version) &&
             ArrayEqualityComparer.Equals(reference.GetPublicKeyToken(), definition.GetPublicKeyToken()) &&
 #if NET40
@@ -88,20 +91,32 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 #endif
             ;
 
-        bool _ReferenceMatchesDefinition(Version reference, Version definition)
+        bool _ReferenceMatchesDefinition(Version? reference, Version? definition)
         {
             if (StrictVersionMatch)
+            {
                 return reference == definition;
+            }
             else
+            {
+                if (reference == definition)
+                    return true;
+                if (reference is null || definition is null)
+                    return false;
+
                 return reference <= definition;
+            }
         }
 
-        Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
         {
+            var name = args.Name;
+            if (name == null)
+                return null;
+
             if (IsAssemblyResolutionInhibited(args))
                 return null;
 
-            string name = args.Name;
             if (_ResolvedAssembliesCache.TryGetValue(name, out var assembly))
                 return assembly;
 

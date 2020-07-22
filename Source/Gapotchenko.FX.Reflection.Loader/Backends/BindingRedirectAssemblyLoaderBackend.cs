@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Reflection.Loader.Backends
 {
@@ -17,6 +17,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
         {
             _BindingRedirects = bindingRedirects;
             _AssemblyDependencyTracker = assemblyDependencyTracker;
+
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
 
@@ -48,7 +49,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
         readonly Dictionary<string, BindingRedirect> _BindingRedirects;
         readonly AssemblyDependencyTracker _AssemblyDependencyTracker;
 
-        public static bool TryCreate(string assemblyFilePath, AssemblyDependencyTracker assemblyDependencyTracker, out IAssemblyLoaderBackend backend)
+        public static bool TryCreate(string assemblyFilePath, AssemblyDependencyTracker assemblyDependencyTracker, out IAssemblyLoaderBackend? backend)
         {
             backend = null;
 
@@ -63,7 +64,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             return true;
         }
 
-        static Dictionary<string, BindingRedirect> _LoadBindingRedirects(string configFilePath)
+        static Dictionary<string, BindingRedirect>? _LoadBindingRedirects(string configFilePath)
         {
             var xdoc = XDocument.Load(configFilePath);
 
@@ -74,7 +75,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             XNamespace ns = "urn:schemas-microsoft-com:asm.v1";
             var xDependentAssemblies = xRuntime.Elements(ns + "assemblyBinding").SelectMany(x => x.Elements(ns + "dependentAssembly")).ToArray();
 
-            Dictionary<string, BindingRedirect> bindingRedirects = null;
+            Dictionary<string, BindingRedirect>? bindingRedirects = null;
 
             foreach (var xDependentAssembly in xDependentAssemblies)
             {
@@ -86,17 +87,17 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
                 if (xBindingRedirect == null)
                     continue;
 
-                string asmIDName = xAsmID.Attribute("name")?.Value;
-                string asmIDPublicKeyToken = xAsmID.Attribute("publicKeyToken")?.Value;
-                string asmIDCulture = xAsmID.Attribute("culture")?.Value;
+                string? asmIDName = xAsmID.Attribute("name")?.Value;
+                string? asmIDPublicKeyToken = xAsmID.Attribute("publicKeyToken")?.Value;
+                string? asmIDCulture = xAsmID.Attribute("culture")?.Value;
 
                 if (asmIDName == null || asmIDPublicKeyToken == null || asmIDCulture == null)
                     continue;
 
                 string asmName = $"{asmIDName}, Culture={asmIDCulture}, PublicKeyToken={asmIDPublicKeyToken}";
 
-                string oldVersion = xBindingRedirect.Attribute("oldVersion")?.Value;
-                string newVersion = xBindingRedirect.Attribute("newVersion")?.Value;
+                string? oldVersion = xBindingRedirect.Attribute("oldVersion")?.Value;
+                string? newVersion = xBindingRedirect.Attribute("newVersion")?.Value;
 
                 if (oldVersion == null || newVersion == null)
                     continue;
@@ -117,13 +118,20 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             return bindingRedirects;
         }
 
-        Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
         {
-            if (_AssemblyDependencyTracker.IsAssemblyResolutionInhibited(args.RequestingAssembly))
+            if (args.Name == null)
                 return null;
 
             var assemblyName = new AssemblyName(args.Name);
+
             var assemblyVersion = assemblyName.Version;
+            if (assemblyVersion == null)
+                return null;
+
+            if (_AssemblyDependencyTracker.IsAssemblyResolutionInhibited(args.RequestingAssembly))
+                return null;
+
             assemblyName.Version = null;
 
             if (_BindingRedirects.TryGetValue(assemblyName.ToString(), out var bindingRedirect) &&
@@ -134,7 +142,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
                 bool assemblyRegistered = _AssemblyDependencyTracker.RegisterReferencedAssembly(assemblyName);
 
-                Assembly assembly = null;
+                Assembly? assembly = null;
                 try
                 {
                     assembly = Assembly.Load(assemblyName);

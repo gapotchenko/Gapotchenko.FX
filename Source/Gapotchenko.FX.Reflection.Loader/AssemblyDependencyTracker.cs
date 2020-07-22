@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Reflection.Loader
 {
     sealed class AssemblyDependencyTracker
@@ -19,7 +21,7 @@ namespace Gapotchenko.FX.Reflection.Loader
 
         readonly HashSet<AssemblyName> _TrackedAssemblyNames = new HashSet<AssemblyName>();
 
-        public bool IsAssemblyResolutionInhibited(Assembly requestingAssembly)
+        public bool IsAssemblyResolutionInhibited(Assembly? requestingAssembly)
         {
             if (requestingAssembly != null)
             {
@@ -33,18 +35,12 @@ namespace Gapotchenko.FX.Reflection.Loader
 
         public bool RegisterReferencedAssembly(AssemblyName assemblyName)
         {
-            if (assemblyName == null)
-                throw new ArgumentNullException(nameof(assemblyName));
-
             lock (_TrackedAssemblyNames)
                 return _TrackedAssemblyNames.Add(assemblyName);
         }
 
         public void UnregisterReferencedAssembly(AssemblyName assemblyName)
         {
-            if (assemblyName == null)
-                throw new ArgumentNullException(nameof(assemblyName));
-
             lock (_TrackedAssemblyNames)
                 _TrackedAssemblyNames.Remove(assemblyName);
         }

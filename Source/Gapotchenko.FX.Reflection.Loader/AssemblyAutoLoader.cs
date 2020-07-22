@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reflection;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Reflection
 {
     /// <summary>
@@ -29,7 +31,7 @@ namespace Gapotchenko.FX.Reflection
         /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
         /// <returns><c>true</c> if the assembly with the specified set of additional probing paths is added; <c>false</c> if the assembly with the specified set of additional probing paths is already added.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
-        public static bool AddAssembly(Assembly assembly, params string[] additionalProbingPaths) => m_Global.AddAssembly(assembly, additionalProbingPaths);
+        public static bool AddAssembly(Assembly assembly, params string[]? additionalProbingPaths) => m_Global.AddAssembly(assembly, additionalProbingPaths);
 
         /// <summary>
         /// Removes a specified assembly from the list of sources to consider during assembly resolution process for the current app domain.
