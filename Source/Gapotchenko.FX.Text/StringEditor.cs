@@ -22,11 +22,11 @@ namespace Gapotchenko.FX.Text
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            _Value = value;
+            m_Value = value;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string _Value;
+        string m_Value;
 
         sealed class Operation
         {
@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Text
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        List<Operation> _Operations = new List<Operation>();
+        List<Operation> m_Operations = new List<Operation>();
 
         /// <summary>
         /// Validates a string span.
@@ -100,10 +100,10 @@ namespace Gapotchenko.FX.Text
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            if (startIndex < 0 || startIndex > _Value.Length)
+            if (startIndex < 0 || startIndex > m_Value.Length)
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
 
-            _ReplaceCore(new StringSpan(startIndex, 0), value);
+            ReplaceCore(new StringSpan(startIndex, 0), value);
         }
 
         /// <summary>
@@ -116,15 +116,15 @@ namespace Gapotchenko.FX.Text
             if (newValue == null)
                 throw new ArgumentNullException(nameof(newValue));
 
-            ValidateSpan(span, _Value.Length);
+            ValidateSpan(span, m_Value.Length);
 
-            _ReplaceCore(span, newValue);
+            ReplaceCore(span, newValue);
         }
 
-        void _ReplaceCore(StringSpan span, string newValue)
+        void ReplaceCore(StringSpan span, string newValue)
         {
             Operation? compatibleOperation = null;
-            foreach (var i in _Operations)
+            foreach (var i in m_Operations)
             {
                 if (i.Span == span)
                 {
@@ -136,7 +136,7 @@ namespace Gapotchenko.FX.Text
             if (compatibleOperation != null)
                 compatibleOperation.NewValue = newValue;
             else
-                _Operations.Add(new Operation(span, newValue));
+                m_Operations.Add(new Operation(span, newValue));
         }
 
         /// <summary>
@@ -150,9 +150,9 @@ namespace Gapotchenko.FX.Text
             if (newValue == null)
                 throw new ArgumentNullException(nameof(newValue));
 
-            ValidateSpan(startIndex, length, _Value.Length);
+            ValidateSpan(startIndex, length, m_Value.Length);
 
-            _ReplaceCore(new StringSpan(startIndex, length), newValue);
+            ReplaceCore(new StringSpan(startIndex, length), newValue);
         }
 
         /// <summary>
@@ -168,10 +168,10 @@ namespace Gapotchenko.FX.Text
             if (newValue == null)
                 throw new ArgumentNullException(nameof(newValue));
 
-            ValidateCapture(capture, _Value.Length);
+            ValidateCapture(capture, m_Value.Length);
 
             if (!newValue.Equals(capture.Value, StringComparison.Ordinal))
-                _ReplaceCore(capture, newValue);
+                ReplaceCore(capture, newValue);
         }
 
         /// <summary>
@@ -291,13 +291,13 @@ namespace Gapotchenko.FX.Text
             if (s == null)
                 throw new ArgumentNullException(nameof(s));
 
-            if (_Operations.Count == 0)
+            if (m_Operations.Count == 0)
                 return s;
 
             var sb = new StringBuilder(s);
 
             int offset = 0;
-            foreach (var group in _Operations.OrderBy(x => x.Span.StartIndex))
+            foreach (var group in m_Operations.OrderBy(x => x.Span.StartIndex))
             {
                 int spanIndex = group.Span.StartIndex + offset;
                 int spanLength = group.Span.Length;
@@ -320,14 +320,14 @@ namespace Gapotchenko.FX.Text
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            _Operations.Clear();
-            _Value = value;
+            m_Operations.Clear();
+            m_Value = value;
         }
 
         /// <summary>
         /// Applies accumulated editing operations and forms the resulting string.
         /// </summary>
         /// <returns>The resulting string value.</returns>
-        public override string ToString() => ApplyOperations(_Value);
+        public override string ToString() => ApplyOperations(m_Value);
     }
 }
