@@ -3,6 +3,8 @@ using Gapotchenko.FX.Threading.Tasks;
 using System;
 using System.Linq;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Linq
 {
     /// <summary>
@@ -18,7 +20,7 @@ namespace Gapotchenko.FX.Linq
         /// <returns><see cref="ParallelQuery{TSource}"/> representing the same query as <paramref name="source"/>, with the debugging-friendly limit on the degrees of parallelism set.</returns>
         public static ParallelQuery<TSource> AsDebuggable<TSource>(this ParallelQuery<TSource> source) =>
             DebuggableParallel.IsParallel ?
-                source :
+                source ?? throw new ArgumentNullException(nameof(source)) :
                 source.AsParallel().WithDegreeOfParallelism(1);
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace Gapotchenko.FX.Linq
         public static ParallelQuery<TSource> WithMaxDegreeOfParallelism<TSource>(this ParallelQuery<TSource> source, int maxDegreeOfParallelism)
         {
             if (source == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(source));
             if (maxDegreeOfParallelism == 0 || maxDegreeOfParallelism < -1)
                 throw new ArgumentOutOfRangeException(nameof(maxDegreeOfParallelism));
 

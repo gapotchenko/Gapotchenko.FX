@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.ExceptionServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Threading.Tasks
 {
     sealed class ExclusiveSynchronizationContext : SynchronizationContext
     {
-        readonly BlockingCollection<KeyValuePair<SendOrPostCallback, object>> m_Queue = new BlockingCollection<KeyValuePair<SendOrPostCallback, object>>();
+        readonly BlockingCollection<KeyValuePair<SendOrPostCallback, object?>> m_Queue = new BlockingCollection<KeyValuePair<SendOrPostCallback, object?>>();
 
-        public override void Post(SendOrPostCallback d, object state) => m_Queue.Add(new KeyValuePair<SendOrPostCallback, object>(d, state));
+        public override void Post(SendOrPostCallback d, object? state) => m_Queue.Add(new KeyValuePair<SendOrPostCallback, object?>(d, state));
 
-        public override void Send(SendOrPostCallback d, object state) => d(state);
+        public override void Send(SendOrPostCallback d, object? state) => d(state);
 
         public override SynchronizationContext CreateCopy() => this;
 
-        volatile ExceptionDispatchInfo m_ExceptionDispatchInfo;
+        volatile ExceptionDispatchInfo? m_ExceptionDispatchInfo;
 
-        public Func<Exception, bool> ExceptionFilter { get; set; }
+        public Func<Exception, bool>? ExceptionFilter { get; set; }
 
         void Loop()
         {

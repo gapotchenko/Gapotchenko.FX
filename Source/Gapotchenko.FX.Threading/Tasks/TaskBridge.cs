@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Threading.Tasks
 {
     /// <summary>
@@ -62,7 +64,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                 var savedContext = SynchronizationContext.Current;
                 using (var cts = new CancellationTokenSource())
                 {
-                    Task pendingTask = null;
+                    Task? pendingTask = null;
                     var context = new ExclusiveSynchronizationContext();
                     try
                     {
@@ -106,14 +108,16 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
-            var result = default(T);
+            T result = default;
             Execute(
                 async () =>
                 {
                     result = await task().ConfigureAwait(false);
                 });
 
+#pragma warning disable CS8603 // Possible null reference return.
             return result;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         /// <summary>
@@ -143,14 +147,16 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
-            var result = default(T);
+            T result = default;
             Execute(
                 async ct =>
                 {
                     result = await task(ct).ConfigureAwait(false);
                 });
 
+#pragma warning disable CS8603 // Possible null reference return.
             return result;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         static Task RunLongTask(Action action, CancellationToken cancellationToken) =>
@@ -181,7 +187,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
 
-            var result = default(T);
+            T result = default;
             await
                 ExecuteAsync(
                     () =>
@@ -190,7 +196,9 @@ namespace Gapotchenko.FX.Threading.Tasks
                     })
                 .ConfigureAwait(false);
 
+#pragma warning disable CS8603 // Possible null reference return.
             return result;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         /// <summary>
@@ -213,7 +221,7 @@ namespace Gapotchenko.FX.Threading.Tasks
 
         static Task ExecuteAsyncCore(Action action, CancellationToken cancellationToken)
         {
-            Thread taskThread = null;
+            Thread? taskThread = null;
             using (cancellationToken.Register(
                 () =>
                 {
@@ -269,7 +277,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
 
-            var result = default(T);
+            T result = default;
             await
                 ExecuteAsync(
                     () =>
@@ -279,7 +287,9 @@ namespace Gapotchenko.FX.Threading.Tasks
                     cancellationToken)
                 .ConfigureAwait(false);
 
+#pragma warning disable CS8603 // Possible null reference return.
             return result;
+#pragma warning restore CS8603 // Possible null reference return.
         }
     }
 }
