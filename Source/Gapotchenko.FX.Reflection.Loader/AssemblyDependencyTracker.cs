@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Reflection.Loader
 {
     sealed class AssemblyDependencyTracker

@@ -5,8 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Reflection.Loader.Backends
 {
     sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend

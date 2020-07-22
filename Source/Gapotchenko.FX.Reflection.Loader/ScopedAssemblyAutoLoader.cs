@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Reflection
 {
     /// <summary>
@@ -146,15 +144,15 @@ namespace Gapotchenko.FX.Reflection
             {
                 disposables.AddRange(m_AssemblyDescriptors.Values);
                 m_AssemblyDescriptors.Clear();
-                m_Disposed = true;
             }
 
             lock (m_ProbingPathResolvers)
             {
                 disposables.AddRange(m_ProbingPathResolvers.Values);
                 m_ProbingPathResolvers.Clear();
-                m_Disposed = true;
             }
+
+            m_Disposed = true;
 
             foreach (var i in disposables)
                 i.Dispose();

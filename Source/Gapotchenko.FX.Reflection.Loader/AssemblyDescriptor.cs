@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Reflection.Loader
 {
     sealed class AssemblyDescriptor : IDisposable

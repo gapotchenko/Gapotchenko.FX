@@ -1,7 +1,5 @@
 ﻿using System;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Reflection.Loader.Pal
 {
     static class FileSystem
