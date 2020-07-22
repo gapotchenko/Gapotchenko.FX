@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Text.RegularExpressions
 {
     /// <summary>

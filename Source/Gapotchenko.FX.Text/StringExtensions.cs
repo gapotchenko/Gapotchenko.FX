@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Text
 {
     /// <summary>

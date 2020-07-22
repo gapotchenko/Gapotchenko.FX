@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Text
 {
     /// <summary>
@@ -77,6 +75,7 @@ namespace Gapotchenko.FX.Text
         {
             if (capture == null)
                 throw new ArgumentNullException(nameof(capture));
+
             return new StringSpan(capture.Index, capture.Length);
         }
     }

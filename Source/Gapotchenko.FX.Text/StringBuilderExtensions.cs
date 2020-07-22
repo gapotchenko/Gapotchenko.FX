@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Text
 {
     /// <summary>

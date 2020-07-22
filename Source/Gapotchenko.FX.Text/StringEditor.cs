@@ -6,8 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Text
 {
     /// <summary>
