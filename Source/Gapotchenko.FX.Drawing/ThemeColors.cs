@@ -194,7 +194,7 @@ namespace Gapotchenko.FX.Drawing
 
                 _DwmFrameColor = null;
                 _DwmInactiveFrameColor = null;
-                _InactiveFrameColorFromRegistry = false;
+                _DwmInactiveFrameColorGuess = null;
                 _DwmAccentBorderColor = Color.White;
 
                 using (var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\DWM"))
@@ -213,12 +213,11 @@ namespace Gapotchenko.FX.Drawing
                         if (key.TryGetInt32Value("AccentColorInactive", out var accentColorInactive))
                         {
                             _DwmInactiveFrameColor = COLORREFToColor(accentColorInactive);
-                            _InactiveFrameColorFromRegistry = true;
                         }
                         else
                         {
                             // TODO: Is there any other way to get the color?
-                            _DwmInactiveFrameColor = Color.White;
+                            _DwmInactiveFrameColorGuess = Color.White;
                         }
                     }
 
@@ -256,8 +255,7 @@ namespace Gapotchenko.FX.Drawing
             }
 
             Color? _DwmFrameColor;
-            Color? _DwmInactiveFrameColor;
-            bool _InactiveFrameColorFromRegistry;
+            Color? _DwmInactiveFrameColor, _DwmInactiveFrameColorGuess;
             Color _DwmAccentBorderColor;
 
             public override Color GetKnownColor(KnownColor color)
@@ -276,10 +274,12 @@ namespace Gapotchenko.FX.Drawing
 
                         case KnownColor.InactiveCaption:
                             _EnsureInitialized();
-                            if (!_ShouldCustomDrawSystemTitlebar)
-                                return _InactiveFrameColorFromRegistry ? _DwmInactiveFrameColor.Value : Color.White;
                             if (_DwmInactiveFrameColor.HasValue)
                                 return _DwmInactiveFrameColor.Value;
+                            if (!_ShouldCustomDrawSystemTitlebar)
+                                return Color.White;
+                            if (_DwmInactiveFrameColorGuess.HasValue)
+                                return _DwmInactiveFrameColorGuess.Value;
                             break;
 
                         case KnownColor.ActiveBorder:

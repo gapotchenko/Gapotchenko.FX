@@ -1,17 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework></TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Drawing.ThemeColors" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Drawing.ColorMetrics" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
+
   <ItemGroup Condition=" '$(TF_NET_FRAMEWORK)' == 'true' ">
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
+
 </Project>
