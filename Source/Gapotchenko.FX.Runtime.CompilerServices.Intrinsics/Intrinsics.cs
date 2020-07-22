@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Runtime.CompilerServices
 {
     /// <summary>
@@ -13,9 +15,9 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
     /// </summary>
     public static unsafe class Intrinsics
     {
-        static Patcher _Patcher = _CreatePatcher();
+        static Patcher? _Patcher = _CreatePatcher();
 
-        static Patcher _CreatePatcher()
+        static Patcher? _CreatePatcher()
         {
             if (!CodeSafetyStrategy.UnsafeCodeRecommended)
             {

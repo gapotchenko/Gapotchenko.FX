@@ -26,6 +26,8 @@ using System.Threading;
 using System.Threading.Tasks;
 #endregion
 
+#nullable enable
+
 namespace Gapotchenko.FX.Harness.Console
 {
     using Console = System.Console;
@@ -67,6 +69,7 @@ namespace Gapotchenko.FX.Harness.Console
                 var env = process.ReadEnvironmentVariables();
                 Console.WriteLine(env["PATH"]);
             }
+
         }
 
         static async Task _RunAsync(CancellationToken ct)
