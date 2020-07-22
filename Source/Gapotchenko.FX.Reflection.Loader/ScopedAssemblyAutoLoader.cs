@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Reflection
         /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
         /// <returns><c>true</c> if the assembly with the specified set of additional probing paths is added; <c>false</c> if the assembly with the specified set of additional probing paths is already added.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
-        public bool AddAssembly(Assembly assembly, params string[]? additionalProbingPaths)
+        public bool AddAssembly(Assembly assembly, params string?[]? additionalProbingPaths)
         {
             if (assembly == null)
                 throw new ArgumentNullException(nameof(assembly));
@@ -83,6 +83,7 @@ namespace Gapotchenko.FX.Reflection
         /// </summary>
         /// <param name="path">The probing path.</param>
         /// <returns><c>true</c> if the probing path is added; <c>false</c> if the probing path is already added.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> parameter is <c>null</c>.</exception>
         public bool AddProbingPath(string path)
         {
             if (path == null)
@@ -108,6 +109,7 @@ namespace Gapotchenko.FX.Reflection
         /// </summary>
         /// <param name="path">The probing path.</param>
         /// <returns><c>true</c> if the probing path is removed; <c>false</c> if the probing path is already removed.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> parameter is <c>null</c>.</exception>
         public bool RemoveProbingPath(string path)
         {
             if (path == null)
