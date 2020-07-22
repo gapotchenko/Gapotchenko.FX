@@ -3,8 +3,6 @@ using Gapotchenko.FX.Threading.Tasks;
 using System;
 using System.Linq;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Linq
 {
     /// <summary>

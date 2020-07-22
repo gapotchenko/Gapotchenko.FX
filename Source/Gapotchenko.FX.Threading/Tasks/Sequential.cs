@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
+#nullable disable
+
 namespace Gapotchenko.FX.Threading.Tasks
 {
     /// <summary>

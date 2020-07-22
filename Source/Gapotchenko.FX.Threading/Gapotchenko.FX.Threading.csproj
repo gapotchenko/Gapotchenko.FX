@@ -1,18 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework></TargetFramework>
     <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageTag Include="async" />
     <PackageTag Include="bridge" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.TaskBridge" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
   </ItemGroup>
+
 </Project>

@@ -1,7 +1,5 @@
 ﻿using System;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Threading
 {
     /// <summary>
@@ -22,6 +20,7 @@ namespace Gapotchenko.FX.Threading
             get
             {
                 var now = Environment.TickCount;
+
                 if (m_LogicalProcessorCount == 0 ||
                     now - m_LastLogicalProcessorCountRefreshTicks >= LogicalProcessorCountRefreshIntervalMS)
                 {
