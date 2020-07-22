@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Text
 {
     /// <summary>
@@ -123,7 +125,7 @@ namespace Gapotchenko.FX.Text
 
         void _ReplaceCore(StringSpan span, string newValue)
         {
-            Operation compatibleOperation = null;
+            Operation? compatibleOperation = null;
             foreach (var i in _Operations)
             {
                 if (i.Span == span)

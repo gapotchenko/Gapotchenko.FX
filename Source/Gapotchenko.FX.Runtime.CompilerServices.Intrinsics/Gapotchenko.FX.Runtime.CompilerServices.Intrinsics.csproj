@@ -16,4 +16,5 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.CompilerServices.IntrinsicServices" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.CompilerServices.MachineCodeIntrinsicAttribute" />
   </ItemGroup>
+
 </Project>

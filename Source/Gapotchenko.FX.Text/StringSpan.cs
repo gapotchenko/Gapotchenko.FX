@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Text
 {
@@ -46,13 +45,7 @@ namespace Gapotchenko.FX.Text
         /// </summary>
         /// <param name="obj">An object to compare with this <see cref="StringSpan"/>.</param>
         /// <returns><c>true</c> if the specified object is equal to the current <see cref="StringSpan"/>; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object obj)
-        {
-            if (obj is StringSpan ss)
-                return Equals(ss);
-            else
-                return false;
-        }
+        public override bool Equals(object? obj) => obj is StringSpan other && Equals(other);
 
         /// <summary>
         /// Gets a hash code for the current <see cref="StringSpan"/> struct.
