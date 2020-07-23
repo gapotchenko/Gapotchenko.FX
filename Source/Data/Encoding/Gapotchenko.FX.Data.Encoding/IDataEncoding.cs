@@ -1,6 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -32,7 +35,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="data">The input data.</param>
         /// <returns>The encoded output data.</returns>
-        byte[] EncodeData(ReadOnlySpan<byte> data);
+        [return: NotNullIfNotNull("data")]
+        byte[]? EncodeData(ReadOnlySpan<byte> data);
 
         /// <summary>
         /// Encodes the data with specified options.
@@ -40,14 +44,16 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="data">The input data.</param>
         /// <param name="options">The options.</param>
         /// <returns>The encoded output data.</returns>
-        byte[] EncodeData(ReadOnlySpan<byte> data, DataEncodingOptions options);
+        [return: NotNullIfNotNull("data")]
+        byte[]? EncodeData(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <summary>
         /// Decodes the data.
         /// </summary>
         /// <param name="data">The encoded input data.</param>
         /// <returns>The decoded output data.</returns>
-        byte[] DecodeData(ReadOnlySpan<byte> data);
+        [return: NotNullIfNotNull("data")]
+        byte[]? DecodeData(ReadOnlySpan<byte> data);
 
         /// <summary>
         /// Decodes the data with specified options.
@@ -55,7 +61,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="data">The encoded input data.</param>
         /// <param name="options">The options.</param>
         /// <returns>The decoded output data.</returns>
-        byte[] DecodeData(ReadOnlySpan<byte> data, DataEncodingOptions options);
+        [return: NotNullIfNotNull("data")]
+        byte[]? DecodeData(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <summary>
         /// Gets a value indicating whether the current encoding supports streaming.

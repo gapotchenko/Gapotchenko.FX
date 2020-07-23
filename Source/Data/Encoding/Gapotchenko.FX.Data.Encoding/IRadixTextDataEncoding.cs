@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Data.Encoding
+﻿#nullable enable
+
+namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
     /// Defines the interface of a binary-to-text encoding based on positional numeral system.

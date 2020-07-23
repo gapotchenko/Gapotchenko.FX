@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Numerics;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
