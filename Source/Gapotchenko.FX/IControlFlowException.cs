@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 
+#nullable enable
+
 namespace Gapotchenko.FX
 {
     /// <summary>

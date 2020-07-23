@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace Gapotchenko.FX
 {
     [Serializable]
     sealed class OptionalEqualityComparer<T> : IEqualityComparer<Optional<T>>
     {
-        public OptionalEqualityComparer(IEqualityComparer<T> valueComparer)
+        public OptionalEqualityComparer(IEqualityComparer<T>? valueComparer)
         {
-            _ValueComparer = valueComparer ?? EqualityComparer<T>.Default;
+            m_ValueComparer = valueComparer ?? EqualityComparer<T>.Default;
         }
 
-        readonly IEqualityComparer<T> _ValueComparer;
+        readonly IEqualityComparer<T> m_ValueComparer;
 
-        public bool Equals(Optional<T> x, Optional<T> y) => EqualsCore(x, y, _ValueComparer);
+        public bool Equals(Optional<T> x, Optional<T> y) => EqualsCore(x, y, m_ValueComparer);
 
-        public int GetHashCode(Optional<T> obj) => GetHashCodeCore(obj, _ValueComparer);
+        public int GetHashCode(Optional<T> obj) => GetHashCodeCore(obj, m_ValueComparer);
 
-        internal static bool EqualsCore(Optional<T> x, object y, IEqualityComparer<T> valueComparer)
+        internal static bool EqualsCore(Optional<T> x, object? y, IEqualityComparer<T> valueComparer)
         {
             if (!x.HasValue)
             {
@@ -76,7 +78,7 @@ namespace Gapotchenko.FX
             else
             {
                 var value = obj.Value;
-                if (value == null)
+                if (value is null)
                     return 0;
                 else
                     return valueComparer.GetHashCode(value);

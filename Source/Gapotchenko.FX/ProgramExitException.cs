@@ -2,6 +2,8 @@
 using System;
 using System.Runtime.Serialization;
 
+#nullable enable
+
 namespace Gapotchenko.FX
 {
     /// <summary>
@@ -59,9 +61,6 @@ namespace Gapotchenko.FX
         /// <summary>
         /// Gets the exit code.
         /// </summary>
-        public int ExitCode
-        {
-            get;
-        }
+        public int ExitCode { get; }
     }
 }

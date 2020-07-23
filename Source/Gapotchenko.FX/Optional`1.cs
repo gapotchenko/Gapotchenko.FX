@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+
+#nullable enable
 
 namespace Gapotchenko.FX
 {
@@ -43,8 +46,8 @@ namespace Gapotchenko.FX
         }
 
         // A separate method is due to performance/inlining reasons.
-        static void _ThrowMustHaveValueException() =>
-            throw new InvalidOperationException("Optional object must have a value.");
+        [DoesNotReturn]
+        static void _ThrowMustHaveValueException() => throw new InvalidOperationException("Optional object must have a value.");
 
         /// <summary>
         /// Gets a value indicating whether the current <see cref="Optional{T}"/> has a valid value of its underlying type.
@@ -75,7 +78,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="obj">An object.</param>
         /// <returns><c>true</c> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object obj) => OptionalEqualityComparer<T>.EqualsCore(this, obj, EqualityComparer<T>.Default);
+        public override bool Equals(object? obj) => OptionalEqualityComparer<T>.EqualsCore(this, obj, EqualityComparer<T>.Default);
 
         /// <summary>
         /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified optional value.
@@ -107,21 +110,7 @@ namespace Gapotchenko.FX
         /// The text representation of the value of the current <see cref="Optional{T}"/> object if the <see cref="HasValue"/> property is <c>true</c>,
         /// or an empty string ("") if the <see cref="HasValue"/> property is <c>false</c>.
         /// </returns>
-        public override string ToString()
-        {
-            if (!m_HasValue)
-            {
-                return string.Empty;
-            }
-            else
-            {
-                var value = m_Value;
-                if (value == null)
-                    return string.Empty;
-                else
-                    return value.ToString();
-            }
-        }
+        public override string? ToString() => m_HasValue ? m_Value?.ToString() : null;
 
         /// <summary>
         /// Creates a new <see cref="Optional{T}"/> object initialized to a specified value.
@@ -155,16 +144,16 @@ namespace Gapotchenko.FX
         /// <returns>The comparison result.</returns>
         int IComparable<Optional<T>>.CompareTo(Optional<T> other) => Optional.Compare(this, other, null);
 
-        bool _EqualsOp(Optional<T> other)
+        static bool _EqualsOp(Optional<T> value1, Optional<T> value2)
         {
-            var a = _EmptifyNull(this);
-            var b = _EmptifyNull(other);
+            var a = _EmptifyNull(value1);
+            var b = _EmptifyNull(value2);
             return a.Equals(b);
         }
 
         static Optional<T> _EmptifyNull(Optional<T> optional)
         {
-            if (optional.HasValue && optional.Value == null)
+            if (optional.HasValue && optional.Value is null)
                 return None;
             else
                 return optional;
@@ -176,7 +165,7 @@ namespace Gapotchenko.FX
         /// <param name="optional1">The first <see cref="Optional{T}"/> object.</param>
         /// <param name="optional2">The second <see cref="Optional{T}"/> object.</param>
         /// <returns><c>true</c> if <paramref name="optional1"/> equals <paramref name="optional2"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator ==(Optional<T> optional1, Optional<T> optional2) => optional1._EqualsOp(optional2);
+        public static bool operator ==(Optional<T> optional1, Optional<T> optional2) => _EqualsOp(optional1, optional2);
 
         /// <summary>
         /// Determines whether two specified <see cref="Optional{T}"/> objects are not equal.
@@ -184,7 +173,7 @@ namespace Gapotchenko.FX
         /// <param name="optional1">The first <see cref="Optional{T}"/> object.</param>
         /// <param name="optional2">The second <see cref="Optional{T}"/> object.</param>
         /// <returns><c>true</c> if <paramref name="optional1"/> does not equal <paramref name="optional2"/>; otherwise, <c>false</c>.</returns>
-        public static bool operator !=(Optional<T> optional1, Optional<T> optional2) => !optional1._EqualsOp(optional2);
+        public static bool operator !=(Optional<T> optional1, Optional<T> optional2) => !_EqualsOp(optional1, optional2);
 
     }
 }

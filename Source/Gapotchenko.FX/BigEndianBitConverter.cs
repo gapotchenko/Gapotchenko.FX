@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Diagnostics;
 
+#nullable enable
+
 namespace Gapotchenko.FX
 {
     /// <summary>
@@ -635,21 +637,13 @@ namespace Gapotchenko.FX
         #endregion
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static volatile IBitConverter _Instance;
+        static volatile IBitConverter? m_Instance;
 
         /// <summary>
         /// Returns a default bit converter instance for big-endian byte order.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         [CLSCompliant(false)]
-        public static IBitConverter Instance
-        {
-            get
-            {
-                if (_Instance == null)
-                    _Instance = new BigEndianBitConverter();
-                return _Instance;
-            }
-        }
+        public static IBitConverter Instance => m_Instance ??= new BigEndianBitConverter();
     }
 }

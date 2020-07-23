@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace Gapotchenko.FX
 {
     [Serializable]
     sealed class OptionalComparer<T> : IComparer<Optional<T>>
     {
-        public OptionalComparer(IComparer<T> valueComparer)
+        public OptionalComparer(IComparer<T>? valueComparer)
         {
-            _ValueComparer = valueComparer ?? Comparer<T>.Default;
+            m_ValueComparer = valueComparer ?? Comparer<T>.Default;
         }
 
-        readonly IComparer<T> _ValueComparer;
+        readonly IComparer<T> m_ValueComparer;
 
-        public int Compare(Optional<T> x, Optional<T> y) => CompareCore(x, y, _ValueComparer);
+        public int Compare(Optional<T> x, Optional<T> y) => CompareCore(x, y, m_ValueComparer);
 
         static internal int CompareCore(Optional<T> x, Optional<T> y, IComparer<T> valueComparer)
         {

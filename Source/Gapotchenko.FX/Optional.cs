@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
+#nullable enable
 
 namespace Gapotchenko.FX
 {
@@ -48,7 +51,12 @@ namespace Gapotchenko.FX
         /// An <see cref="Optional{T}"/> object without a value when the specified <paramref name="value"/> equals to the <paramref name="noneValue"/> parameter;
         /// otherwise, an <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the <paramref name="value"/> parameter.
         /// </returns>
-        public static Optional<T> Discriminate<T>(T value, T noneValue) => EqualityComparer<T>.Default.Equals(value, noneValue) ? default : Some(value);
+        public static Optional<T> Discriminate<T>(T value, [AllowNull] T noneValue) =>
+#if NETSTANDARD2_1
+#pragma warning disable CS8604 // Possible null reference argument.
+#endif
+            EqualityComparer<T>.Default.Equals(value, noneValue) ? default : Some(value);
+#pragma warning restore CS8604 // Possible null reference argument.
 
         /// <summary>
         /// Either creates a new <see cref="Optional{T}"/> object initialized to a specified value or
@@ -77,7 +85,7 @@ namespace Gapotchenko.FX
         /// <param name="y">The second optional value to compare.</param>
         /// <param name="valueComparer">The value equality comparer.</param>
         /// <returns><c>true</c> if the specified objects are equal; otherwise, <c>false</c>.</returns>
-        public static bool Equals<T>(Optional<T> x, Optional<T> y, IEqualityComparer<T> valueComparer) =>
+        public static bool Equals<T>(Optional<T> x, Optional<T> y, IEqualityComparer<T>? valueComparer) =>
             OptionalEqualityComparer<T>.EqualsCore(x, y, valueComparer ?? EqualityComparer<T>.Default);
 
         /// <summary>
@@ -96,7 +104,7 @@ namespace Gapotchenko.FX
         /// <param name="optional">The optional value.</param>
         /// <param name="valueComparer">The value equality comparer.</param>
         /// <returns>A hash code for the specified optional value.</returns>
-        public static int GetHashCode<T>(Optional<T> optional, IEqualityComparer<T> valueComparer) =>
+        public static int GetHashCode<T>(Optional<T> optional, IEqualityComparer<T>? valueComparer) =>
             OptionalEqualityComparer<T>.GetHashCodeCore(optional, valueComparer ?? EqualityComparer<T>.Default);
 
         /// <summary>
@@ -115,7 +123,7 @@ namespace Gapotchenko.FX
         /// <param name="y">The second optional value to compare.</param>
         /// <param name="valueComparer">The value comparer.</param>
         /// <returns>The comparison result.</returns>
-        public static int Compare<T>(Optional<T> x, Optional<T> y, IComparer<T> valueComparer) =>
+        public static int Compare<T>(Optional<T> x, Optional<T> y, IComparer<T>? valueComparer) =>
             OptionalComparer<T>.CompareCore(x, y, valueComparer ?? Comparer<T>.Default);
 
         /// <summary>
@@ -133,7 +141,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
         /// <param name="valueComparer">The value comparer.</param>
         /// <returns>A new comparer for <see cref="Optional{T}"/> objects.</returns>
-        public static IComparer<Optional<T>> CreateComparer<T>(IComparer<T> valueComparer) =>
+        public static IComparer<Optional<T>> CreateComparer<T>(IComparer<T>? valueComparer) =>
             new OptionalComparer<T>(valueComparer);
 
         /// <summary>
@@ -142,7 +150,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
         /// <param name="valueComparer">The value equality comparer.</param>
         /// <returns>A new equality comparer for <see cref="Optional{T}"/> objects.</returns>
-        public static IEqualityComparer<Optional<T>> CreateEqualityComparer<T>(IEqualityComparer<T> valueComparer) =>
+        public static IEqualityComparer<Optional<T>> CreateEqualityComparer<T>(IEqualityComparer<T>? valueComparer) =>
             new OptionalEqualityComparer<T>(valueComparer);
     }
 }

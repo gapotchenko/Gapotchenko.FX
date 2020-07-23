@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 
+#nullable enable
+
 namespace Gapotchenko.FX
 {
     /// <summary>
@@ -22,11 +24,11 @@ namespace Gapotchenko.FX
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
 
-            _Action = Empty.Nullify(action);
+            m_Action = Empty.Nullify(action);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Action _Action;
+        Action? m_Action;
 
         /// <summary>
         /// Ensures that the action was executed.
@@ -34,16 +36,16 @@ namespace Gapotchenko.FX
         public void EnsureExecuted()
         {
             var emptyAction = Fn.Empty;
-            if (_Action != emptyAction)
+            if (m_Action != emptyAction)
             {
-                _Action?.Invoke();
-                _Action = emptyAction;
+                m_Action?.Invoke();
+                m_Action = emptyAction;
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether the action was executed.
         /// </summary>
-        public bool IsExecuted => _Action == Fn.Empty;
+        public bool IsExecuted => m_Action == Fn.Empty;
     }
 }

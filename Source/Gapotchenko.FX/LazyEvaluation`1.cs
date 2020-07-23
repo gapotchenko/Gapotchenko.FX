@@ -1,6 +1,9 @@
 ﻿using Gapotchenko.FX.Properties;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+
+#nullable enable
 
 namespace Gapotchenko.FX
 {
@@ -29,15 +32,16 @@ namespace Gapotchenko.FX
             if (valueFactory == null)
                 throw new ArgumentNullException(nameof(valueFactory));
 
-            _ValueFactory = Empty.Nullify(valueFactory);
-            _Value = default;
+            m_ValueFactory = Empty.Nullify(valueFactory);
+            m_Value = default;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        T _Value;
+        [AllowNull]
+        T m_Value;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Func<T> _ValueFactory;
+        Func<T>? m_ValueFactory;
 
         /// <summary>
         /// Gets the lazily evaluated value of the current <see cref="LazyEvaluation{T}"/> instance.
@@ -48,21 +52,21 @@ namespace Gapotchenko.FX
             get
             {
                 var defaultFunc = Fn<T>.Default;
-                if (_ValueFactory != defaultFunc)
+                if (m_ValueFactory != defaultFunc)
                 {
-                    var valueFactory = _ValueFactory;
+                    var valueFactory = m_ValueFactory;
                     if (valueFactory != null)
-                        _Value = valueFactory();
-                    _ValueFactory = defaultFunc;
+                        m_Value = valueFactory();
+                    m_ValueFactory = defaultFunc;
                 }
-                return _Value;
+                return m_Value;
             }
         }
 
         /// <summary>
         /// Gets a value that indicates whether a value has been created for this <see cref="LazyEvaluation{T}"/> instance.
         /// </summary>
-        public bool IsValueCreated => _ValueFactory == Fn<T>.Default;
+        public bool IsValueCreated => m_ValueFactory == Fn<T>.Default;
 
         /// <summary>
         /// Creates and returns a string representation of the <see cref="Value"/> property for this instance.
@@ -72,9 +76,13 @@ namespace Gapotchenko.FX
         /// if the value has been created (that is, if the <see cref="IsValueCreated"/> property returns <c>true</c>).
         /// Otherwise, a string indicating that the value has not been created.
         /// </returns>
-        public override string ToString() => IsValueCreated ? Value.ToString() : Resources.ValueNotCreated;
+        public override string? ToString() =>
+            IsValueCreated ?
+                Value?.ToString() :
+                Resources.ValueNotCreated;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [MaybeNull]
         internal T ValueForDebugDisplay => IsValueCreated ? Value : default;
     }
 }
