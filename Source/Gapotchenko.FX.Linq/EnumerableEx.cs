@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Linq
 {
@@ -99,9 +100,9 @@ namespace Gapotchenko.FX.Linq
         /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>A <see cref="HashSet{T}"/> that contains values of type <typeparamref name="TSource"/> retrieved from the <paramref name="source"/>.</returns>
 #if TFF_ENUMERABLE_TOHASHSET
-        public static HashSet<TSource> ToHashSet<TSource>(IEnumerable<TSource> source, IEqualityComparer<TSource> comparer) => Enumerable.ToHashSet(source, comparer);
+        public static HashSet<TSource> ToHashSet<TSource>(IEnumerable<TSource> source, IEqualityComparer<TSource>? comparer) => Enumerable.ToHashSet(source, comparer);
 #else
-        public static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource> comparer)
+        public static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource>? comparer)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -117,6 +118,7 @@ namespace Gapotchenko.FX.Linq
         /// <returns>
         /// The only element of the input sequence, or default value if the sequence is empty or contains several elements.
         /// </returns>
+        [return: MaybeNull]
         public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source)
         {
             if (source == null)
@@ -152,6 +154,7 @@ namespace Gapotchenko.FX.Linq
         /// The only element of the input sequence that satisfies a specified condition,
         /// or default value when no such element exists or more than one element satisfies the condition.
         /// </returns>
+        [return: MaybeNull]
         public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
             if (source == null)
@@ -199,7 +202,7 @@ namespace Gapotchenko.FX.Linq
         /// <param name="keySelector">A function to extract the key for each element.</param>
         /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare values.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that contains distinct elements from the source sequence.</returns>
-        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -364,7 +367,7 @@ namespace Gapotchenko.FX.Linq
         /// <c>true</c> if the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is null.</exception>
-        public static bool Contains<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource> comparer)
+        public static bool Contains<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource>? comparer)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -437,7 +440,7 @@ namespace Gapotchenko.FX.Linq
         /// <param name="value">The value to locate in sequence.</param>
         /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare values.</param>
         /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
-        public static int IndexOf<TSource>(this IEnumerable<TSource> source, TSource value, IEqualityComparer<TSource> comparer)
+        public static int IndexOf<TSource>(this IEnumerable<TSource> source, TSource value, IEqualityComparer<TSource>? comparer)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -496,7 +499,7 @@ namespace Gapotchenko.FX.Linq
         /// <param name="value">The value to locate in the source sequence.</param>
         /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare values.</param>
         /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
-        public static int IndexOf<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource> comparer)
+        public static int IndexOf<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource>? comparer)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -579,7 +582,7 @@ namespace Gapotchenko.FX.Linq
         /// <c>true</c> if <paramref name="value"/> sequence matches the beginning of the <paramref name="source"/> sequence; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is <c>null</c>.</exception>
-        public static bool StartsWith<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource> comparer)
+        public static bool StartsWith<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource>? comparer)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -612,7 +615,8 @@ namespace Gapotchenko.FX.Linq
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
         /// <param name="source">The source sequence.</param>
         /// <returns>A list view of a source sequence.</returns>
-        public static List<TSource> AsList<TSource>(IEnumerable<TSource> source)
+        [return: NotNullIfNotNull("source")]
+        public static List<TSource>? AsList<TSource>(IEnumerable<TSource>? source)
         {
             switch (source)
             {
@@ -634,7 +638,8 @@ namespace Gapotchenko.FX.Linq
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
         /// <param name="source">The source sequence.</param>
         /// <returns>An array view of a source sequence.</returns>
-        public static TSource[] AsArray<TSource>(IEnumerable<TSource> source)
+        [return: NotNullIfNotNull("source")]
+        public static TSource[]? AsArray<TSource>(IEnumerable<TSource>? source)
         {
             switch (source)
             {
@@ -656,7 +661,8 @@ namespace Gapotchenko.FX.Linq
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
         /// <param name="source">The source sequence.</param>
         /// <returns>A read-only view of a source sequence.</returns>
-        public static IReadOnlyList<TSource> AsReadOnly<TSource>(this IEnumerable<TSource> source)
+        [return: NotNullIfNotNull("source")]
+        public static IReadOnlyList<TSource>? AsReadOnly<TSource>(this IEnumerable<TSource>? source)
         {
             switch (source)
             {

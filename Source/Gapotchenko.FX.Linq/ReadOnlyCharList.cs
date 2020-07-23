@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Linq
 {
@@ -8,9 +9,6 @@ namespace Gapotchenko.FX.Linq
     {
         public ReadOnlyCharList(string source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
             m_Source = source;
         }
 

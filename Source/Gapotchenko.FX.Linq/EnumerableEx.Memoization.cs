@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Linq
 {
@@ -16,7 +19,8 @@ namespace Gapotchenko.FX.Linq
         /// <typeparam name="T">The type of the elements of source.</typeparam>
         /// <param name="source">The source sequence.</param>
         /// <returns>The sequence that fully replicates the source with all elements being memoized.</returns>
-        public static IEnumerable<T> Memoize<T>(this IEnumerable<T> source) => Memoize(source, false);
+        [return: NotNullIfNotNull("source")]
+        public static IEnumerable<T>? Memoize<T>(this IEnumerable<T>? source) => Memoize(source, false);
 
         /// <summary>
         /// Memoize all elements of a sequence by ensuring that every element is retrieved only once.
@@ -25,7 +29,8 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">The source sequence.</param>
         /// <param name="isThreadSafe">Indicates whether resulting sequence is thread safe.</param>
         /// <returns>The sequence that fully replicates the source with all elements being memoized.</returns>
-        public static IEnumerable<T> Memoize<T>(this IEnumerable<T> source, bool isThreadSafe)
+        [return: NotNullIfNotNull("source")]
+        public static IEnumerable<T>? Memoize<T>(this IEnumerable<T>? source, bool isThreadSafe)
         {
             switch (source)
             {
@@ -61,10 +66,10 @@ namespace Gapotchenko.FX.Linq
             }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            IEnumerable<T> _Source;
+            IEnumerable<T>? _Source;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            IEnumerator<T> _SourceEnumerator;
+            IEnumerator<T>? _SourceEnumerator;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             protected readonly IList<T> Cache = new List<T>();
@@ -173,7 +178,7 @@ namespace Gapotchenko.FX.Linq
 
         sealed class CachedEnumerator<T> : IEnumerator<T>
         {
-            CachedEnumerable<T> _CachedEnumerable;
+            CachedEnumerable<T>? _CachedEnumerable;
 
             const int InitialIndex = -1;
             const int EofIndex = -2;
@@ -201,7 +206,7 @@ namespace Gapotchenko.FX.Linq
                 }
             }
 
-            object IEnumerator.Current => Current;
+            object? IEnumerator.Current => Current;
 
             public void Dispose()
             {

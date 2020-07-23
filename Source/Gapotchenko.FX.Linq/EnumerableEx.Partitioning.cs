@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Linq
 {
@@ -39,7 +40,7 @@ namespace Gapotchenko.FX.Linq
             if (keySelector == null)
                 throw new ArgumentNullException(nameof(keySelector));
 
-            PartinionedGrouping<TKey, TElement> partition = null;
+            PartinionedGrouping<TKey, TElement>? partition = null;
 
             foreach (var x in source)
             {
