@@ -142,7 +142,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The string to decode.</param>
         /// <param name="value">When this method returns, contains the <see cref="Int32"/> value equivalent to <paramref name="s"/>.</param>
         /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
-        public static bool TryGetInt32(string s, out int value) => TryGetInt32(s.AsSpan(), out value);
+        public static bool TryGetInt32([NotNullWhen(true)] string? s, out int value) => TryGetInt32(s.AsSpan(), out value);
 
         /// <summary>
         /// Decodes the specified string to an equivalent <see cref="Int32"/> value with the specified options.
@@ -162,7 +162,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="value">When this method returns, contains the <see cref="Int32"/> value equivalent to <paramref name="s"/>.</param>
         /// <param name="options">The options.</param>
         /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
-        public static bool TryGetInt32(string s, out int value, DataEncodingOptions options) => TryGetInt32(s.AsSpan(), out value, options);
+        public static bool TryGetInt32([NotNullWhen(true)] string? s, out int value, DataEncodingOptions options) => TryGetInt32(s.AsSpan(), out value, options);
 
         #endregion
 
@@ -237,7 +237,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="value">When this method returns, contains the <see cref="UInt32"/> value equivalent to <paramref name="s"/>.</param>
         /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
         [CLSCompliant(false)]
-        public static bool TryGetUInt32(string s, out uint value) => TryGetUInt32(s.AsSpan(), out value);
+        public static bool TryGetUInt32([NotNullWhen(true)] string? s, out uint value) => TryGetUInt32(s.AsSpan(), out value);
 
         /// <summary>
         /// Decodes the specified string to an equivalent <see cref="UInt32"/> value with the specified options.
@@ -259,7 +259,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
         [CLSCompliant(false)]
-        public static bool TryGetUInt32(string s, out uint value, DataEncodingOptions options) => TryGetUInt32(s.AsSpan(), out value, options);
+        public static bool TryGetUInt32([NotNullWhen(true)] string? s, out uint value, DataEncodingOptions options) => TryGetUInt32(s.AsSpan(), out value, options);
 
         #endregion
 
@@ -326,7 +326,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The string to decode.</param>
         /// <param name="value">When this method returns, contains the <see cref="Int64"/> value equivalent to <paramref name="s"/>.</param>
         /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
-        public static bool TryGetInt64(string s, out long value) => TryGetInt64(s.AsSpan(), out value);
+        public static bool TryGetInt64([NotNullWhen(true)] string? s, out long value) => TryGetInt64(s.AsSpan(), out value);
 
         /// <summary>
         /// Decodes the specified string to an equivalent <see cref="Int64"/> value with the specified options.
@@ -346,7 +346,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="value">When this method returns, contains the <see cref="Int64"/> value equivalent to <paramref name="s"/>.</param>
         /// <param name="options">The options.</param>
         /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
-        public static bool TryGetInt64(string s, out long value, DataEncodingOptions options) => TryGetInt64(s.AsSpan(), out value, options);
+        public static bool TryGetInt64([NotNullWhen(true)] string? s, out long value, DataEncodingOptions options) => TryGetInt64(s.AsSpan(), out value, options);
 
         #endregion
 
@@ -421,7 +421,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="value">When this method returns, contains the <see cref="UInt64"/> value equivalent to <paramref name="s"/>.</param>
         /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
         [CLSCompliant(false)]
-        public static bool TryGetUInt64(string s, out ulong value) => TryGetUInt64(s.AsSpan(), out value);
+        public static bool TryGetUInt64([NotNullWhen(true)] string? s, out ulong value) => TryGetUInt64(s.AsSpan(), out value);
 
         /// <summary>
         /// Decodes the specified string to an equivalent <see cref="UInt64"/> value with the specified options.
@@ -443,7 +443,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
         [CLSCompliant(false)]
-        public static bool TryGetUInt64(string s, out ulong value, DataEncodingOptions options) => TryGetUInt64(s.AsSpan(), out value, options);
+        public static bool TryGetUInt64([NotNullWhen(true)] string? s, out ulong value, DataEncodingOptions options) => TryGetUInt64(s.AsSpan(), out value, options);
 
         #endregion
 
@@ -510,7 +510,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The string to decode.</param>
         /// <param name="value">When this method returns, contains the <see cref="BigInteger"/> value equivalent to <paramref name="s"/>.</param>
         /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
-        public static bool TryGetBigInteger(string s, out BigInteger value) => TryGetBigInteger(s.AsSpan(), out value);
+        public static bool TryGetBigInteger([NotNullWhen(true)] string? s, out BigInteger value) => TryGetBigInteger(s.AsSpan(), out value);
 
         /// <summary>
         /// Decodes the specified string to an equivalent <see cref="BigInteger"/> value with the specified options.
@@ -530,7 +530,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="value">When this method returns, contains the <see cref="BigInteger"/> value equivalent to <paramref name="s"/>.</param>
         /// <param name="options">The options.</param>
         /// <returns><c>true</c> if <paramref name="s"/> was decoded successfully; otherwise, <c>false</c>.</returns>
-        public static bool TryGetBigInteger(string s, out BigInteger value, DataEncodingOptions options) => TryGetBigInteger(s.AsSpan(), out value, options);
+        public static bool TryGetBigInteger([NotNullWhen(true)] string? s, out BigInteger value, DataEncodingOptions options) => TryGetBigInteger(s.AsSpan(), out value, options);
 
         #endregion
 

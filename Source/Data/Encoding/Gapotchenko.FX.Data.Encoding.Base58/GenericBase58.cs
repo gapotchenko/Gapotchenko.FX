@@ -103,9 +103,9 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options) => GetBytesCore(s, options, true);
+        protected override byte[] GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options) => GetBytesCore(s, options, true)!;
 
-        byte[] GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options, bool throwOnError)
+        byte[]? GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options, bool throwOnError)
         {
             if ((options & DataEncodingOptions.Checksum) != 0)
             {

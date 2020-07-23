@@ -15,21 +15,13 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static volatile IBase58 m_Instance;
+        static volatile IBase58? m_Instance;
 
         /// <summary>
         /// Returns a default instance of <see cref="RippleBase58"/> encoding.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         [CLSCompliant(false)]
-        public static IBase58 Instance
-        {
-            get
-            {
-                if (m_Instance == null)
-                    m_Instance = new RippleBase58();
-                return m_Instance;
-            }
-        }
+        public static IBase58 Instance => m_Instance ??= new RippleBase58();
     }
 }
