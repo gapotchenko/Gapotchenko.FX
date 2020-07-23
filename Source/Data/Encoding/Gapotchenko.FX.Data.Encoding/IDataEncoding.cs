@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>

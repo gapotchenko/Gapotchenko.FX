@@ -2,8 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
@@ -38,7 +36,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("data")]
+        [return: NotNullIfNotNull("s")]
         byte[]? GetBytes(ReadOnlySpan<char> s);
 
         /// <summary>
@@ -47,7 +45,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The string to decode.</param>
         /// <param name="options">The options.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("data")]
+        [return: NotNullIfNotNull("s")]
         byte[]? GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options);
 
         /// <summary>
@@ -72,7 +70,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The encoded string to pad.</param>
         /// <returns>The padded encoded string.</returns>
         [return: NotNullIfNotNull("s")]
-        string Pad(ReadOnlySpan<char> s);
+        string? Pad(ReadOnlySpan<char> s);
 
         /// <summary>
         /// Unpads the encoded string.
@@ -95,7 +93,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The encoded string.</param>
         /// <returns>The canonicalized encoded string.</returns>
         [return: NotNullIfNotNull("s")]
-        string Canonicalize(ReadOnlySpan<char> s);
+        string? Canonicalize(ReadOnlySpan<char> s);
 
         /// <summary>
         /// Calculates the maximum number of characters produced by encoding the specified number of bytes.
@@ -126,5 +124,5 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns>The maximum number of bytes produced by decoding the specified number of characters.</returns>
         int GetMaxByteCount(int charCount, DataEncodingOptions options);
-   }
+    }
 }

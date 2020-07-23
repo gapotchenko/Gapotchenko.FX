@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>

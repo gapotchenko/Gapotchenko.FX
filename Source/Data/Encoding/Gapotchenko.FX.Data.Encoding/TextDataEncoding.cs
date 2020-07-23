@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -27,10 +28,12 @@ namespace Gapotchenko.FX.Data.Encoding
         public abstract bool IsCaseSensitive { get; }
 
         /// <inheritdoc/>
-        public string GetString(ReadOnlySpan<byte> data) => GetString(data, DataEncodingOptions.None);
+        [return: NotNullIfNotNull("data")]
+        public string? GetString(ReadOnlySpan<byte> data) => GetString(data, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options)
+        [return: NotNullIfNotNull("data")]
+        public string? GetString(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
             options = GetEffectiveOptions(options);
             return data == null ? null : GetStringCore(data, options);
@@ -59,10 +62,12 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        public byte[] GetBytes(ReadOnlySpan<char> s) => GetBytes(s, DataEncodingOptions.None);
+        [return: NotNullIfNotNull("s")]
+        public byte[]? GetBytes(ReadOnlySpan<char> s) => GetBytes(s, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options)
+        [return: NotNullIfNotNull("s")]
+        public byte[]? GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options)
         {
             options = GetEffectiveOptions(options);
             return s == null ? null : GetBytesCore(s, options);
@@ -223,6 +228,7 @@ namespace Gapotchenko.FX.Data.Encoding
             }
 #endif
 
+#nullable disable
             readonly TextDataEncoding m_Encoding;
             readonly TextWriter m_TextWriter;
             readonly IEncoderContext m_Context;
@@ -387,6 +393,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     m_Buffer.Clear();
                 }
             }
+#nullable enable
         }
 
         sealed class DecoderStream : Stream
@@ -634,7 +641,8 @@ namespace Gapotchenko.FX.Data.Encoding
             (GetEffectiveOptions(DataEncodingOptions.None) & DataEncodingOptions.Unpad) == 0;
 
         /// <inheritdoc/>
-        public string Pad(ReadOnlySpan<char> s) => s == null ? null : PadCore(s);
+        [return: NotNullIfNotNull("s")]
+        public string? Pad(ReadOnlySpan<char> s) => s == null ? null : PadCore(s);
 
         /// <summary>
         /// Pads the encoded string.
@@ -657,7 +665,8 @@ namespace Gapotchenko.FX.Data.Encoding
         public abstract bool CanCanonicalize { get; }
 
         /// <inheritdoc/>
-        public string Canonicalize(ReadOnlySpan<char> s)
+        [return: NotNullIfNotNull("s")]
+        public string? Canonicalize(ReadOnlySpan<char> s)
         {
             if (s == null)
                 return null;
@@ -719,7 +728,8 @@ namespace Gapotchenko.FX.Data.Encoding
 
         #region Implementation Helpers
 
-        string Pad(ReadOnlySpan<char> s, char paddingChar, bool right)
+        [return: NotNullIfNotNull("s")]
+        string? Pad(ReadOnlySpan<char> s, char paddingChar, bool right)
         {
             if (s == null)
                 return null;
@@ -760,7 +770,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The encoded string.</param>
         /// <param name="paddingChar">The padding character.</param>
         /// <returns>The padded encoded string.</returns>
-        protected string PadRight(ReadOnlySpan<char> s, char paddingChar) => Pad(s, paddingChar, true);
+        [return: NotNullIfNotNull("s")]
+        protected string? PadRight(ReadOnlySpan<char> s, char paddingChar) => Pad(s, paddingChar, true);
 
         /// <summary>
         /// Pads the encoded string to the left.
@@ -768,7 +779,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The encoded string.</param>
         /// <param name="paddingChar">The padding character.</param>
         /// <returns>The padded encoded string.</returns>
-        protected string PadLeft(ReadOnlySpan<char> s, char paddingChar) => Pad(s, paddingChar, false);
+        [return: NotNullIfNotNull("s")]
+        protected string? PadLeft(ReadOnlySpan<char> s, char paddingChar) => Pad(s, paddingChar, false);
 
         /// <summary>
         /// Unpads the encoded string from the right side.

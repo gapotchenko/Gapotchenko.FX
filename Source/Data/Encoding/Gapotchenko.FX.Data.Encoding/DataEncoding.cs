@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-
-#nullable enable
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -61,9 +60,11 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
+        [return: NotNullIfNotNull("data")]
         public byte[]? EncodeData(ReadOnlySpan<byte> data) => EncodeData(data, DataEncodingOptions.None);
 
         /// <inheritdoc/>
+        [return: NotNullIfNotNull("data")]
         public byte[]? EncodeData(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
             options = GetEffectiveOptions(options);
@@ -79,9 +80,11 @@ namespace Gapotchenko.FX.Data.Encoding
         protected abstract byte[] EncodeDataCore(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <inheritdoc/>
+        [return: NotNullIfNotNull("data")]
         public byte[]? DecodeData(ReadOnlySpan<byte> data) => DecodeData(data, DataEncodingOptions.None);
 
         /// <inheritdoc/>
+        [return: NotNullIfNotNull("data")]
         public byte[]? DecodeData(ReadOnlySpan<byte> data, DataEncodingOptions options)
         {
             options = GetEffectiveOptions(options);
