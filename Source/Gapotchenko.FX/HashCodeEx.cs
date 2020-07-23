@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace Gapotchenko.FX
 {
     /// <summary>
@@ -14,7 +16,7 @@ namespace Gapotchenko.FX
         /// <typeparam name="T">The sequence element type.</typeparam>
         /// <param name="source">The sequence of elements. The sequence itself can be <c>null</c>, and it can contain elements that are <c>null</c>.</param>
         /// <returns>The combined hash code.</returns>
-        public static int SequenceCombine<T>(IEnumerable<T> source)
+        public static int SequenceCombine<T>(IEnumerable<T>? source)
         {
             var hc = new HashCode();
             hc.AddRange(source);
@@ -28,7 +30,7 @@ namespace Gapotchenko.FX
         /// <param name="source">The sequence of elements. The sequence itself can be <c>null</c>, and it can contain elements that are <c>null</c>.</param>
         /// <param name="comparer">The equality comparer to get element hash codes from.</param>
         /// <returns>The combined hash code.</returns>
-        public static int SequenceCombine<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)
+        public static int SequenceCombine<T>(IEnumerable<T>? source, IEqualityComparer<T>? comparer)
         {
             var hc = new HashCode();
             hc.AddRange(source, comparer);
@@ -42,7 +44,7 @@ namespace Gapotchenko.FX
         /// <param name="hashCode">The hash code.</param>
         /// <param name="source">The sequence of elements. The sequence itself can be <c>null</c>, and it can contain elements that are <c>null</c>.</param>
         /// <returns>The combined hash code.</returns>
-        public static void AddRange<T>(this ref HashCode hashCode, IEnumerable<T> source)
+        public static void AddRange<T>(this ref HashCode hashCode, IEnumerable<T>? source)
         {
             if (source != null)
                 foreach (var i in source)
@@ -57,7 +59,7 @@ namespace Gapotchenko.FX
         /// <param name="source">The sequence of elements. The sequence itself can be <c>null</c>, and it can contain elements that are <c>null</c>.</param>
         /// <param name="comparer">The equality comparer to get element hash codes from.</param>
         /// <returns>The combined hash code.</returns>
-        public static void AddRange<T>(this ref HashCode hashCode, IEnumerable<T> source, IEqualityComparer<T> comparer)
+        public static void AddRange<T>(this ref HashCode hashCode, IEnumerable<T>? source, IEqualityComparer<T>? comparer)
         {
             if (source != null)
                 foreach (var i in source)

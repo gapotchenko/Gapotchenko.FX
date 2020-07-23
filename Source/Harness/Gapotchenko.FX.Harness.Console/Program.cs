@@ -69,6 +69,8 @@ namespace Gapotchenko.FX.Harness.Console
                 var env = process.ReadEnvironmentVariables();
                 Console.WriteLine(env["PATH"]);
             }
+
+            Console.WriteLine(HashCodeEx.SequenceCombine<int>(null));
         }
 
         static async Task _RunAsync(CancellationToken ct)

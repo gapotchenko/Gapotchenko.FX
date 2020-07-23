@@ -42,6 +42,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+#nullable enable
+
 #if !TFF_HASHCODE
 
 namespace System
@@ -429,9 +431,14 @@ namespace System
         /// <typeparam name="T">The type of value.</typeparam>
         /// <param name="value">The value.</param>
         /// <param name="comparer">The equality comparer.</param>
-        public void Add<T>(T value, IEqualityComparer<T> comparer)
+        public void Add<T>(T value, IEqualityComparer<T>? comparer)
         {
-            Add(comparer != null ? comparer.GetHashCode(value) : (value?.GetHashCode() ?? 0));
+            int hashCode;
+            if (value is null)
+                hashCode = 0;
+            else
+                hashCode = comparer?.GetHashCode(value) ?? value.GetHashCode();
+            Add(hashCode);
         }
 
         void Add(int value)
@@ -557,7 +564,7 @@ namespace System
         /// <returns>Always throws <see cref="NotSupportedException"/>.</returns>
         [Obsolete("HashCode is a mutable struct and should not be compared with other HashCodes.", error: true)]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj) => throw new NotSupportedException();
+        public override bool Equals(object? obj) => throw new NotSupportedException();
 #pragma warning restore 0809
     }
 }
