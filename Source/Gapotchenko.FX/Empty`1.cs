@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 #nullable enable
@@ -32,18 +33,19 @@ namespace Gapotchenko.FX
         {
             public static readonly Task<T> Task = FromResult(default);
 
-#nullable disable
-            static Task<T> FromResult(T value)
+            static Task<T> FromResult([AllowNull] T value)
             {
 #if !TFF_TASK_FROMRESULT
                 var tcs = new TaskCompletionSource<T>();
                 tcs.SetResult(value);
                 return tcs.Task;
 #else
-                return System.Threading.Tasks.Task.FromResult(value);
+                return
+#pragma warning disable CS8604 // Possible null reference argument.
+                    System.Threading.Tasks.Task.FromResult(value);
+#pragma warning restore CS8604 // Possible null reference argument.
 #endif
             }
-#nullable enable
         }
 
         /// <summary>

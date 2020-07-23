@@ -1,6 +1,9 @@
 ﻿using Gapotchenko.FX.Runtime.CompilerServices;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+
+#nullable enable
 
 namespace Gapotchenko.FX
 {
@@ -25,6 +28,7 @@ namespace Gapotchenko.FX
             return f(f(val1, val2), val3);
         }
 
+        [DoesNotReturn]
         static void _ThrowArgumentNullException(string paramName)
         {
             // This is a separate method to allow the inlining of a caller method.
@@ -138,7 +142,7 @@ namespace Gapotchenko.FX
         public static T Aggregate<T>(
             Func<T, T, T> f,
             T val1, T val2, T val3, T val4, T val5, T val6, T val7, T val8,
-            params T[] rest)
+            params T[]? rest)
         {
             if (rest == null && TypeTraits<T>.IsValueType)
                 throw new ArgumentNullException(nameof(rest), "The argument cannot be null when T is a value type.");
@@ -148,7 +152,9 @@ namespace Gapotchenko.FX
             if (rest == null)
             {
                 // The automatic disambiguation for a 'rest = null' scenario when T is a reference type and imaginary val9 is meant to be null.
+#pragma warning disable CS8604 // Possible null reference argument.
                 a = f(a, default);
+#pragma warning restore CS8604 // Possible null reference argument.
             }
             else
             {

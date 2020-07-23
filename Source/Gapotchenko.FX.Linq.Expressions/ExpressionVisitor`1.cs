@@ -8,13 +8,11 @@ namespace Gapotchenko.FX.Linq.Expressions
 {
     abstract class ExpressionVisitor<TResult>
     {
-        // [return: AllowNull] // There is an omission in AllowNullAttribute definition that prevents it from being used on return values.
+        [return: MaybeNull]
         protected virtual TResult Visit(Expression? expression)
         {
             if (expression == null)
-#pragma warning disable CS8603 // Possible null reference return.
                 return default;
-#pragma warning restore CS8603 // Possible null reference return.
 
             TResult result;
 

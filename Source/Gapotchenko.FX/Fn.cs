@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+
+#nullable enable
 
 namespace Gapotchenko.FX
 {
@@ -21,6 +23,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <typeparam name="T">The type a function works with.</typeparam>
         /// <returns>The default value of <typeparamref name="T"/>.</returns>
+        [return: MaybeNull]
         public static T Default<T>() => default;
 
         /// <summary>
