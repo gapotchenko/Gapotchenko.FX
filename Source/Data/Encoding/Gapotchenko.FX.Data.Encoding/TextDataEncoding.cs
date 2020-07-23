@@ -393,7 +393,7 @@ namespace Gapotchenko.FX.Data.Encoding
                     m_Buffer.Clear();
                 }
             }
-#nullable enable
+#nullable restore
         }
 
         sealed class DecoderStream : Stream
