@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Linq
 {
     sealed class SelectedEqualityComparer<TSource, TResult> : IEqualityComparer<TSource>

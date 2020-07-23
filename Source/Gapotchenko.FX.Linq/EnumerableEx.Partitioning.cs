@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Linq
 {
     partial class EnumerableEx

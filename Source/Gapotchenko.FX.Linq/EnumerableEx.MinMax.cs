@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Linq
 {
     partial class EnumerableEx

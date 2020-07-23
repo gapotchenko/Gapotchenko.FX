@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Linq
 {
     sealed class ReadOnlyCharList : IReadOnlyList<char>
