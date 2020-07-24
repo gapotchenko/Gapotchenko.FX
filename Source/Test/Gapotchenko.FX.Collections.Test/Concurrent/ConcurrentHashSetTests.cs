@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Collections.Test.Concurrent
         [TestMethod]
         public void ConcurrentHashSet_Ctor_1()
         {
-            var hashSet = new ConcurrentHashSet<string>((IEqualityComparer<string>)null);
+            var hashSet = new ConcurrentHashSet<string>((IEqualityComparer<string>?)null);
             Assert.AreEqual(0, hashSet.Count);
         }
 
@@ -25,7 +25,7 @@ namespace Gapotchenko.FX.Collections.Test.Concurrent
         [TestMethod]
         public void ConcurrentHashSet_NullStringKey_DefaultEqualityComparer()
         {
-            var hashSet = new ConcurrentHashSet<string>();
+            var hashSet = new ConcurrentHashSet<string?>();
 
             Assert.IsFalse(hashSet.Contains(null));
 
@@ -57,7 +57,7 @@ namespace Gapotchenko.FX.Collections.Test.Concurrent
         [TestMethod]
         public void ConcurrentHashSet_NullStringKey_OicEqualityComparer()
         {
-            var hashSet = new ConcurrentHashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var hashSet = new ConcurrentHashSet<string?>(StringComparer.OrdinalIgnoreCase);
 
             Assert.IsFalse(hashSet.Contains(null));
 

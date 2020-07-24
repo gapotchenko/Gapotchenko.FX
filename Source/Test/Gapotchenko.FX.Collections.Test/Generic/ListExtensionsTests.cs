@@ -13,10 +13,12 @@ namespace Gapotchenko.FX.Collections.Test.Generic
         class SortItem : IComparable<SortItem>
         {
             public int SortOrder { get; set; }
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
-            public int CompareTo(SortItem other)
+            public int CompareTo(SortItem? other)
             {
+                if (other is null)
+                    return -1;
                 return SortOrder.CompareTo(other.SortOrder);
             }
         }

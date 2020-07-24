@@ -68,9 +68,9 @@ namespace Gapotchenko.FX.Linq.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void Linq_Enumerable_StartsWith_8()
         {
-            int[] seq1 = null;
+            int[]? seq1 = null;
             int[] seq2 = new int[] { 1, 2, 3 };
-            seq1.StartsWith(seq2);
+            seq1!.StartsWith(seq2);
         }
 
         [TestMethod]
@@ -78,8 +78,8 @@ namespace Gapotchenko.FX.Linq.Test
         public void Linq_Enumerable_StartsWith_9()
         {
             int[] seq1 = new int[] { 1, 2, 3 };
-            int[] seq2 = null;
-            seq1.StartsWith(seq2);
+            int[]? seq2 = null;
+            seq1.StartsWith(seq2!);
         }
 
         [TestMethod]
@@ -150,7 +150,7 @@ namespace Gapotchenko.FX.Linq.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void Linq_Enumerable_ScalarOrDefault_NullArg()
         {
-            EnumerableEx.ScalarOrDefault<int>(null);
+            EnumerableEx.ScalarOrDefault<int>(null!);
         }
 
         [TestMethod]
@@ -189,14 +189,14 @@ namespace Gapotchenko.FX.Linq.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void Linq_Enumerable_ScalarOrDefault_Predicate_NullSeqArg()
         {
-            EnumerableEx.ScalarOrDefault<int>(null, x => true);
+            EnumerableEx.ScalarOrDefault<int>(null!, x => true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Linq_Enumerable_ScalarOrDefault_Predicate_NullPredicateArg()
         {
-            EnumerableEx.ScalarOrDefault(new int[0], null);
+            EnumerableEx.ScalarOrDefault(new int[0], null!);
         }
 
         [TestMethod]
@@ -419,9 +419,9 @@ namespace Gapotchenko.FX.Linq.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void Linq_Enumerable_AnyAndAll_NullArg_1()
         {
-            IEnumerable<int> source = null;
+            IEnumerable<int>? source = null;
             Func<int, bool> predicate = x => false;
-            source.AnyAndAll(predicate);
+            source!.AnyAndAll(predicate);
         }
 
         [TestMethod]
@@ -429,8 +429,8 @@ namespace Gapotchenko.FX.Linq.Test
         public void Linq_Enumerable_AnyAndAll_NullArg_2()
         {
             IEnumerable<int> source = new int[0];
-            Func<int, bool> predicate = null;
-            source.AnyAndAll(predicate);
+            Func<int, bool>? predicate = null;
+            source.AnyAndAll(predicate!);
         }
 
         [TestMethod]

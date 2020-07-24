@@ -18,7 +18,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             string raw,
             string encoded,
             DataEncodingOptions options = DataEncodingOptions.None,
-            Encoding textEncoding = null)
+            Encoding? textEncoding = null)
         {
             if (dataEncoding == null)
                 throw new ArgumentNullException(nameof(dataEncoding));
@@ -50,7 +50,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             ReadOnlySpan<byte> raw,
             string encoded,
             DataEncodingOptions options = DataEncodingOptions.None,
-            Encoding textEncoding = null)
+            Encoding? textEncoding = null)
         {
             if (dataEncoding == null)
                 throw new ArgumentNullException(nameof(dataEncoding));

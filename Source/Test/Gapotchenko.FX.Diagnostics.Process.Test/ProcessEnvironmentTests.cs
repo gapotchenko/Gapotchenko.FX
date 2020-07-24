@@ -58,12 +58,14 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             {
                 var actualEnv = process.ReadEnvironmentVariables();
 
+#pragma warning disable CS8605 // Unboxing a possibly null value.
                 foreach (DictionaryEntry i in expectedEnv)
+#pragma warning restore CS8605 // Unboxing a possibly null value.
                 {
                     string key = (string)i.Key;
                     if (!key.StartsWith(envKeyPrefix, StringComparison.Ordinal))
                         continue;
-                    Assert.AreEqual((string)i.Value, actualEnv[key]);
+                    Assert.AreEqual((string?)i.Value, actualEnv[key]);
                 }
             }
             finally

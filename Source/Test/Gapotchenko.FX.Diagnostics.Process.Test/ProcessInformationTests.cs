@@ -24,7 +24,7 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
                 Assert.IsNotNull(parent);
 
                 var currentProcess = Process.GetCurrentProcess();
-                Assert.AreEqual(currentProcess.Id, parent.Id);
+                Assert.AreEqual(currentProcess.Id, parent!.Id);
                 Assert.AreEqual(currentProcess.StartTime, parent.StartTime);
             }
             finally
