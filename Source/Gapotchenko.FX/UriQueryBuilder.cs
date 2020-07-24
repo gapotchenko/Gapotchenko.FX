@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
+
+#nullable enable
 
 namespace Gapotchenko.FX
 {
@@ -25,18 +28,18 @@ namespace Gapotchenko.FX
         /// </summary>
         public UriQueryBuilder()
         {
-            _SB = new StringBuilder();
+            m_SB = new StringBuilder();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UriQueryBuilder"/> class using the specified string.
         /// </summary>
         /// <param name="query">The query.</param>
-        public UriQueryBuilder(string query)
+        public UriQueryBuilder(string? query)
         {
             if (string.IsNullOrEmpty(query))
             {
-                _SB = new StringBuilder();
+                m_SB = new StringBuilder();
             }
             else
             {
@@ -44,17 +47,17 @@ namespace Gapotchenko.FX
                 {
                     // UriBuilder.Query property getter appends '?' on return result.
                     // Trim it to avoid double query separators in resulting URI.
-                    _SB = new StringBuilder(query, 1, query.Length - 1, 0);
+                    m_SB = new StringBuilder(query, 1, query.Length - 1, 0);
                 }
                 else
                 {
-                    _SB = new StringBuilder(query);
+                    m_SB = new StringBuilder(query);
                 }
             }
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly StringBuilder _SB;
+        readonly StringBuilder m_SB;
 
         /// <summary>
         /// Appends a query parameter to this instance.
@@ -62,14 +65,14 @@ namespace Gapotchenko.FX
         /// <param name="name">The parameter name.</param>
         /// <param name="value">The parameter value.</param>
         /// <returns>The <see cref="UriQueryBuilder"/> instance.</returns>
-        public UriQueryBuilder AppendParameter(string name, string value)
+        public UriQueryBuilder AppendParameter(string name, string? value)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
             if (name.Length == 0)
                 throw new ArgumentException("A query parameter name cannot be empty.", nameof(name));
 
-            var sb = _SB;
+            var sb = m_SB;
 
             if (sb.Length != 0)
                 sb.Append(ParameterSeparator);
@@ -88,7 +91,7 @@ namespace Gapotchenko.FX
         /// <param name="name">The parameter name.</param>
         /// <param name="value">The parameter value.</param>
         /// <returns>The URI with an appended query parameter.</returns>
-        public static string AppendParameter(string uri, string name, string value) => new UriQueryBuilder().AppendParameter(name, value).CombineWithUri(uri);
+        public static string AppendParameter(string? uri, string name, string? value) => new UriQueryBuilder().AppendParameter(name, value).CombineWithUri(uri);
 
         /// <summary>
         /// Appends specified query parameters to the given URI.
@@ -99,7 +102,7 @@ namespace Gapotchenko.FX
         /// <param name="name2">The name of the second parameter.</param>
         /// <param name="value2">The value of the second parameter.</param>
         /// <returns>The URI with an appended query parameter.</returns>
-        public static string AppendParameter(string uri, string name1, string value1, string name2, string value2) =>
+        public static string AppendParameter(string? uri, string name1, string? value1, string name2, string? value2) =>
             new UriQueryBuilder()
                 .AppendParameter(name1, value1)
                 .AppendParameter(name2, value2)
@@ -116,7 +119,7 @@ namespace Gapotchenko.FX
         /// <param name="name3">The name of the third parameter.</param>
         /// <param name="value3">The value of the third parameter.</param>
         /// <returns>The URI with an appended query parameter.</returns>
-        public static string AppendParameter(string uri, string name1, string value1, string name2, string value2, string name3, string value3) =>
+        public static string AppendParameter(string? uri, string name1, string? value1, string name2, string? value2, string name3, string? value3) =>
             new UriQueryBuilder()
                 .AppendParameter(name1, value1)
                 .AppendParameter(name2, value2)
@@ -130,7 +133,13 @@ namespace Gapotchenko.FX
         /// <param name="name">The parameter name.</param>
         /// <param name="value">The parameter value.</param>
         /// <returns>The <see cref="Uri"/> with an appended query parameter.</returns>
-        public static Uri AppendParameter(Uri uri, string name, string value) => new UriQueryBuilder().AppendParameter(name, value).CombineWithUri(uri);
+        public static Uri AppendParameter(Uri uri, string name, string? value)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
+            return new UriQueryBuilder().AppendParameter(name, value).CombineWithUri(uri);
+        }
 
         /// <summary>
         /// Appends specified query parameters to the given URI.
@@ -141,11 +150,16 @@ namespace Gapotchenko.FX
         /// <param name="name2">The name of the second parameter.</param>
         /// <param name="value2">The value of the second parameter.</param>
         /// <returns>The URI with an appended query parameter.</returns>
-        public static Uri AppendParameter(Uri uri, string name1, string value1, string name2, string value2) =>
-            new UriQueryBuilder()
+        public static Uri AppendParameter(Uri uri, string name1, string? value1, string name2, string? value2)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
+            return new UriQueryBuilder()
                 .AppendParameter(name1, value1)
                 .AppendParameter(name2, value2)
                 .CombineWithUri(uri);
+        }
 
         /// <summary>
         /// Appends specified query parameters to the given URI.
@@ -158,12 +172,17 @@ namespace Gapotchenko.FX
         /// <param name="name3">The name of the third parameter.</param>
         /// <param name="value3">The value of the third parameter.</param>
         /// <returns>The URI with an appended query parameter.</returns>
-        public static Uri AppendParameter(Uri uri, string name1, string value1, string name2, string value2, string name3, string value3) =>
-            new UriQueryBuilder()
+        public static Uri AppendParameter(Uri uri, string name1, string? value1, string name2, string? value2, string name3, string? value3)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
+            return new UriQueryBuilder()
                 .AppendParameter(name1, value1)
                 .AppendParameter(name2, value2)
                 .AppendParameter(name3, value3)
                 .CombineWithUri(uri);
+        }
 
         /// <summary>
         /// Checks whether a query in this instance has a parameter with the given name.
@@ -189,27 +208,27 @@ namespace Gapotchenko.FX
         /// <returns>The <see cref="UriQueryBuilder"/> instance.</returns>
         public UriQueryBuilder Clear()
         {
-            _SB.Clear();
+            m_SB.Clear();
             return this;
         }
 
         /// <summary>
         /// Gets the length of a query string in this instance.
         /// </summary>
-        public int Length => _SB.Length;
+        public int Length => m_SB.Length;
 
         /// <summary>
         /// Converts the value of this instance to a <see cref="String"/>.
         /// </summary>
         /// <returns>A string whose value is the same as this instance.</returns>
-        public override string ToString() => _SB.ToString();
+        public override string ToString() => m_SB.ToString();
 
         /// <summary>
         /// Converts the value of this instance to a <see cref="String"/> and combines it with the given URI.
         /// </summary>
         /// <param name="uri">The URI to combine with.</param>
         /// <returns>The combined URI.</returns>
-        public string CombineWithUri(string uri) => CombineWithUri(uri, ToString());
+        public string CombineWithUri(string? uri) => CombineWithUri(uri, ToString());
 
         /// <summary>
         /// Converts the value of this instance to a <see cref="String"/> and combines it with the given <see cref="Uri"/>.
@@ -224,7 +243,9 @@ namespace Gapotchenko.FX
         /// <param name="uri">The URI.</param>
         /// <param name="query">The query.</param>
         /// <returns>The combined URI.</returns>
-        public static string CombineWithUri(string uri, string query)
+        [return: NotNullIfNotNull("uri")]
+        [return: NotNullIfNotNull("query")]
+        public static string? CombineWithUri(string? uri, string? query)
         {
             if (string.IsNullOrEmpty(query))
                 return uri;
@@ -243,16 +264,16 @@ namespace Gapotchenko.FX
 
             if (qsi == ql - 1)
             {
-                return _InsertOrConcat(uri, fsi, query);
+                return InsertOrConcat(uri, fsi, query);
             }
             else
             {
                 char delimeter = qsi == -1 ? QuerySeparator : ParameterSeparator;
-                return _InsertOrConcat(uri, fsi, delimeter + query);
+                return InsertOrConcat(uri, fsi, delimeter + query);
             }
         }
 
-        static string _InsertOrConcat(string s, int startIndex, string value)
+        static string InsertOrConcat(string s, int startIndex, string value)
         {
             if (startIndex == -1)
                 return s + value;
@@ -266,13 +287,15 @@ namespace Gapotchenko.FX
         /// <param name="uri">The URI.</param>
         /// <param name="query">The query.</param>
         /// <returns>The combined URI.</returns>
-        public static Uri CombineWithUri(Uri uri, string query)
+        public static Uri CombineWithUri(Uri uri, string? query)
         {
             if (uri == null)
                 throw new ArgumentNullException(nameof(uri));
+
             if (string.IsNullOrEmpty(query))
                 return uri;
-            return new Uri(CombineWithUri(uri.ToString(), query));
+            else
+                return new Uri(CombineWithUri(uri.ToString(), query));
         }
     }
 }
