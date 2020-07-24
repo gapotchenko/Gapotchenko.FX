@@ -57,6 +57,9 @@ namespace Gapotchenko.FX
             if (arrayX.Rank != 1 && arrayY.Rank != 1)
                 throw new ArgumentException(Resources.Argument_InvalidComparison);
 
+            if (arrayX == arrayY)
+                return true;
+
             if (arrayX.Rank != arrayY.Rank)
                 return false;
 
@@ -118,21 +121,14 @@ namespace Gapotchenko.FX
         /// <typeparam name="T">The type of array elements.</typeparam>
         /// <param name="elementComparer">The equality comparer for array elements.</param>
         /// <returns>A new equality comparer for one-dimensional array with elements of type <typeparamref name="T"/>.</returns>
-        public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer)
-        {
-            var elementType = typeof(T);
-            var elementTypeCode = Type.GetTypeCode(elementType);
-
-            switch (elementTypeCode)
+        public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer) =>
+            Type.GetTypeCode(typeof(T)) switch
             {
-                case TypeCode.Byte when _IsDefaultEqualityComparer(elementComparer):
-                    return (ArrayEqualityComparer<T>)(object)new ByteRank1Comparer();
-            }
+                TypeCode.Byte when IsDefaultEqualityComparer(elementComparer) => (ArrayEqualityComparer<T>)(object)new ByteRank1Comparer(),
+                _ => new DefaultArrayEqualityComparer<T>(elementComparer),
+            };
 
-            return new DefaultArrayEqualityComparer<T>(elementComparer);
-        }
-
-        static bool _IsDefaultEqualityComparer<T>(IEqualityComparer<T>? comparer) =>
+        static bool IsDefaultEqualityComparer<T>(IEqualityComparer<T>? comparer) =>
             comparer is null ||
             comparer == EqualityComparer<T>.Default;
     }
