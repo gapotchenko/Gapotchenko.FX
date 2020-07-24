@@ -2,11 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Text.Test
 {
@@ -17,7 +14,7 @@ namespace Gapotchenko.FX.Text.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void StringBuilder_AJ_E1()
         {
-            StringBuilderExtensions.AppendJoin(null, ", ", Enumerable.Empty<int>());
+            StringBuilderExtensions.AppendJoin(null!, ", ", Enumerable.Empty<int>());
         }
 
         [TestMethod]
@@ -25,7 +22,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_E2()
         {
             var sb = new StringBuilder();
-            StringBuilderExtensions.AppendJoin(sb, ", ", (IEnumerable<int>)null);
+            StringBuilderExtensions.AppendJoin(sb, ", ", (IEnumerable<int>)null!);
         }
 
         [TestMethod]
@@ -68,7 +65,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_E7()
         {
             var sb = new StringBuilder("X");
-            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ",", (IEnumerable<string>)new[] { "A", null, "C" });
+            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ",", (IEnumerable<string?>)new[] { "A", null, "C" });
             Assert.AreSame(sb, returnedSB);
             Assert.AreEqual("XA,,C", sb.ToString());
         }
@@ -77,7 +74,7 @@ namespace Gapotchenko.FX.Text.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void StringBuilder_AJ_A1()
         {
-            StringBuilderExtensions.AppendJoin(null, ", ", new object[0]);
+            StringBuilderExtensions.AppendJoin(null!, ", ", new object[0]);
         }
 
         [TestMethod]
@@ -85,7 +82,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_A2()
         {
             var sb = new StringBuilder();
-            StringBuilderExtensions.AppendJoin(sb, ", ", (object[])null);
+            StringBuilderExtensions.AppendJoin(sb, ", ", (object[])null!);
         }
 
         [TestMethod]
@@ -128,7 +125,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_A7()
         {
             var sb = new StringBuilder("X");
-            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ",", new object[] { "A", null, "C" });
+            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ",", new object?[] { "A", null, "C" });
             Assert.AreSame(sb, returnedSB);
             Assert.AreEqual("XA,,C", sb.ToString());
         }
@@ -137,7 +134,7 @@ namespace Gapotchenko.FX.Text.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void StringBuilder_AJ_SA1()
         {
-            StringBuilderExtensions.AppendJoin(null, ", ", new string[0]);
+            StringBuilderExtensions.AppendJoin(null!, ", ", new string[0]);
         }
 
         [TestMethod]
@@ -145,7 +142,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_SA2()
         {
             var sb = new StringBuilder();
-            StringBuilderExtensions.AppendJoin(sb, ", ", (string[])null);
+            StringBuilderExtensions.AppendJoin(sb, ", ", (string[]?)null!);
         }
 
         [TestMethod]
@@ -188,7 +185,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_SA7()
         {
             var sb = new StringBuilder("X");
-            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ",", new string[] { "A", null, "C" });
+            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ",", new string?[] { "A", null, "C" });
             Assert.AreSame(sb, returnedSB);
             Assert.AreEqual("XA,,C", sb.ToString());
         }
@@ -197,7 +194,7 @@ namespace Gapotchenko.FX.Text.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void StringBuilder_AJ_CS_E1()
         {
-            StringBuilderExtensions.AppendJoin(null, ';', Enumerable.Empty<int>());
+            StringBuilderExtensions.AppendJoin(null!, ';', Enumerable.Empty<int>());
         }
 
         [TestMethod]
@@ -205,7 +202,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_CS_E2()
         {
             var sb = new StringBuilder();
-            StringBuilderExtensions.AppendJoin(sb, ';', (IEnumerable<int>)null);
+            StringBuilderExtensions.AppendJoin(sb, ';', (IEnumerable<int>?)null!);
         }
 
         [TestMethod]
@@ -239,7 +236,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_CS_E6()
         {
             var sb = new StringBuilder("X");
-            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ';', (IEnumerable<string>)new[] { "A", null, "C" });
+            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ';', (IEnumerable<string?>)new[] { "A", null, "C" });
             Assert.AreSame(sb, returnedSB);
             Assert.AreEqual("XA;;C", sb.ToString());
         }
@@ -248,7 +245,7 @@ namespace Gapotchenko.FX.Text.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void StringBuilder_AJ_CS_E7()
         {
-            StringBuilderExtensions.AppendJoin(null, ';', new object[0]);
+            StringBuilderExtensions.AppendJoin(null!, ';', new object[0]);
         }
 
         [TestMethod]
@@ -256,7 +253,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_CS_A1()
         {
             var sb = new StringBuilder();
-            StringBuilderExtensions.AppendJoin(sb, ';', (object[])null);
+            StringBuilderExtensions.AppendJoin(sb, ';', (object[]?)null!);
         }
 
         [TestMethod]
@@ -290,7 +287,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_CS_A5()
         {
             var sb = new StringBuilder("X");
-            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ';', new object[] { "A", null, "C" });
+            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ';', new object?[] { "A", null, "C" });
             Assert.AreSame(sb, returnedSB);
             Assert.AreEqual("XA;;C", sb.ToString());
         }
@@ -299,7 +296,7 @@ namespace Gapotchenko.FX.Text.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void StringBuilder_AJ_CS_SA1()
         {
-            StringBuilderExtensions.AppendJoin(null, ';', new string[0]);
+            StringBuilderExtensions.AppendJoin(null!, ';', new string[0]);
         }
 
         [TestMethod]
@@ -307,7 +304,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_CS_SA2()
         {
             var sb = new StringBuilder();
-            StringBuilderExtensions.AppendJoin(sb, ';', (string[])null);
+            StringBuilderExtensions.AppendJoin(sb, ';', (string[]?)null!);
         }
 
         [TestMethod]
@@ -341,7 +338,7 @@ namespace Gapotchenko.FX.Text.Test
         public void StringBuilder_AJ_CS_SA6()
         {
             var sb = new StringBuilder("X");
-            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ';', new string[] { "A", null, "C" });
+            var returnedSB = StringBuilderExtensions.AppendJoin(sb, ';', new string?[] { "A", null, "C" });
             Assert.AreSame(sb, returnedSB);
             Assert.AreEqual("XA;;C", sb.ToString());
         }

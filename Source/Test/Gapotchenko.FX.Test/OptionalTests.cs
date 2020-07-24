@@ -101,7 +101,7 @@ namespace Gapotchenko.FX.Test
         [TestMethod]
         public void Optional_AR7()
         {
-            var optional = new Optional<string>(null);
+            var optional = new Optional<string?>(null);
             Assert.IsTrue(optional.HasValue);
             Assert.IsNull(optional.Value);
         }
@@ -169,16 +169,16 @@ namespace Gapotchenko.FX.Test
         public void Optional_BR2()
         {
             var optional = Optional<string>.None;
-            Assert.IsFalse(optional.Equals((object)null));
+            Assert.IsFalse(optional.Equals((object?)null));
         }
 
         [TestMethod]
         public void Optional_BR3()
         {
-            var optional = Optional<string>.None;
-            Assert.IsFalse(optional.Equals(Optional.Some<string>(null)));
+            var optional = Optional<string?>.None;
+            Assert.IsFalse(optional.Equals(Optional.Some<string?>(null)));
 
-            Assert.IsTrue(optional.Equals(Optional<string>.None));
+            Assert.IsTrue(optional.Equals(Optional<string?>.None));
             Assert.IsFalse(optional.Equals(Optional<Version>.None));
 
             Assert.IsTrue(optional.Equals((object)Optional<string>.None));
@@ -240,7 +240,7 @@ namespace Gapotchenko.FX.Test
         [TestMethod]
         public void Optional_CR3()
         {
-            var optional = Optional.Some<string>(null);
+            var optional = Optional.Some<string?>(null);
             Assert.AreEqual(0, optional.GetHashCode());
         }
 
@@ -265,7 +265,7 @@ namespace Gapotchenko.FX.Test
         [TestMethod]
         public void Optional_DA3()
         {
-            Assert.AreEqual(Optional<string>.None, Optional.Discriminate<string>(null, string.IsNullOrEmpty));
+            Assert.AreEqual(Optional<string?>.None, Optional.Discriminate<string?>(null, string.IsNullOrEmpty));
             Assert.AreEqual(Optional<string>.None, Optional.Discriminate("", string.IsNullOrEmpty));
             Assert.AreEqual("A", Optional.Discriminate("A", string.IsNullOrEmpty));
         }

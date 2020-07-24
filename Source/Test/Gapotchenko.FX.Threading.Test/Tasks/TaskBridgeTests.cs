@@ -148,7 +148,8 @@ namespace Gapotchenko.FX.Threading.Test.Tasks
 
             TaskBridge.Execute(async () =>
             {
-                SynchronizationContext.Current.Send(_ => { value1 = 100; }, null);
+                Assert.IsNotNull(SynchronizationContext.Current);
+                SynchronizationContext.Current!.Send(_ => { value1 = 100; }, null);
                 await Task.Yield();
                 SynchronizationContext.Current.Send(_ => { value2 = 200; }, null);
             });

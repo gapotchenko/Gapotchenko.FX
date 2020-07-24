@@ -92,7 +92,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="other">A value.</param>
         /// <returns><c>true</c> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <c>false</c>.</returns>
-        public bool Equals(T other) => OptionalEqualityComparer<T>.EqualsCore(this, other, EqualityComparer<T>.Default);
+        public bool Equals([AllowNull] T other) => OptionalEqualityComparer<T>.EqualsCore(this, other, EqualityComparer<T>.Default);
 
         /// <summary>
         /// Retrieves the hash code of the object returned by the <see cref="Value"/> property.

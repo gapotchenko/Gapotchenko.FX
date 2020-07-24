@@ -169,7 +169,7 @@ namespace Gapotchenko.FX.Test
         public void UriQueryBuilder_C1()
         {
             Assert.AreEqual("p=1", UriQueryBuilder.CombineWithUri("", "p=1"));
-            Assert.AreEqual("p=1", UriQueryBuilder.CombineWithUri((string)null, "p=1"));
+            Assert.AreEqual("p=1", UriQueryBuilder.CombineWithUri((string?)null, "p=1"));
         }
 
         [TestMethod]
