@@ -40,10 +40,7 @@ namespace Gapotchenko.FX
                 tcs.SetResult(value);
                 return tcs.Task;
 #else
-                return
-#pragma warning disable CS8604 // Possible null reference argument.
-                    System.Threading.Tasks.Task.FromResult(value);
-#pragma warning restore CS8604 // Possible null reference argument.
+                return System.Threading.Tasks.Task.FromResult(value!);
 #endif
             }
         }
