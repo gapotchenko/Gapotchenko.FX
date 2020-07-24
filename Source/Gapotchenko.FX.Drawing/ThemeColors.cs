@@ -13,8 +13,9 @@ namespace Gapotchenko.FX.Drawing
     /// <summary>
     /// Provides access to theme colors of a host system.
     /// The difference between <see cref="ThemeColors"/> and <see cref="SystemColors"/> is that theme colors are the real colors shown on screen,
-    /// while system colors are at most just a compatible approximation.
+    /// while <see cref="SystemColors"/> provides just a compatible approximation.
     /// </summary>
+    [Obsolete("ThemeColors experimental class may change its API or may be moved to another package in future versions of Gapotchenko.FX.")]
     public static class ThemeColors
     {
         static ThemeColors()
