@@ -235,7 +235,10 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="uri">The URI to combine with.</param>
         /// <returns>The combined URI.</returns>
-        public Uri CombineWithUri(Uri uri) => CombineWithUri(uri, ToString());
+        public Uri CombineWithUri(Uri uri) =>
+            CombineWithUri(
+                uri ?? throw new ArgumentNullException(nameof(uri)),
+                ToString());
 
         /// <summary>
         /// Combines a query with a URI.
