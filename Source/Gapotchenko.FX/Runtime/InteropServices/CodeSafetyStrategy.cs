@@ -1,6 +1,8 @@
 ﻿using Gapotchenko.FX.Threading;
 using System;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Runtime.InteropServices
 {
     /// <summary>
@@ -18,14 +20,14 @@ namespace Gapotchenko.FX.Runtime.InteropServices
         /// </summary>
         public static bool UnsafeCodeAllowed { get; }
 
-        static EvaluateOnce<bool> _UnsafeCodeRecommended = EvaluateOnce.Create(_IsUnsafeCodeRecommendedCore);
+        static EvaluateOnce<bool> m_UnsafeCodeRecommended = EvaluateOnce.Create(IsUnsafeCodeRecommendedCore);
 
         /// <summary>
         /// Indicates whether unsafe code is recommended in the current execution context.
         /// </summary>
-        public static bool UnsafeCodeRecommended => _UnsafeCodeRecommended.Value;
+        public static bool UnsafeCodeRecommended => m_UnsafeCodeRecommended.Value;
 
-        static bool _IsUnsafeCodeRecommendedCore()
+        static bool IsUnsafeCodeRecommendedCore()
         {
             if (!UnsafeCodeAllowed)
                 return false;
