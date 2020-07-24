@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;net472;netcoreapp3.1</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

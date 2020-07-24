@@ -2,21 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework></TargetFramework>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.IO.FileSystem" />
     <CommonlyUsedPart Include="Gapotchenko.FX.IO.BitReader" />
     <CommonlyUsedPart Include="Gapotchenko.FX.IO.BitWriter" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup Condition=" '$(TF_NET_FRAMEWORK)' == 'true' ">
     <Reference Include="System.Transactions" />
   </ItemGroup>

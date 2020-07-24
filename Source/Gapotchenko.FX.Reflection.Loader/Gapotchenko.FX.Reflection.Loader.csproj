@@ -6,9 +6,6 @@
     <!-- Use newer target frameworks in debug to allow more thorough nullable checks. -->
     <TargetFrameworks Condition=" '$(Configuration)' == 'Debug' ">$(TargetFrameworks);netcoreapp3.1</TargetFrameworks>
 
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
-    
     <RootNamespace>Gapotchenko.FX.Reflection</RootNamespace>
   </PropertyGroup>
 

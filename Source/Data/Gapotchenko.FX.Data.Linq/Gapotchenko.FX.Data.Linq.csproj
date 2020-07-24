@@ -3,8 +3,6 @@
   <PropertyGroup>
     <TargetFramework></TargetFramework>
     <TargetFrameworks>net45</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

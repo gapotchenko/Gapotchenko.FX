@@ -15,6 +15,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <NeutralLanguage>en-US</NeutralLanguage>
     <GenerateDocumentationFile>$(IsPublicProject)</GenerateDocumentationFile>
   </PropertyGroup>

@@ -3,8 +3,6 @@
   <PropertyGroup>
     <TargetFramework></TargetFramework>
     <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
