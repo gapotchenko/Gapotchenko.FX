@@ -1,8 +1,11 @@
 ﻿using Gapotchenko.FX.Properties;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Permissions;
 using System.Threading;
+
+#nullable enable
 
 namespace Gapotchenko.FX.Threading
 {
@@ -41,7 +44,7 @@ namespace Gapotchenko.FX.Threading
         /// An object used as the mutually exclusive lock for value evaluation.
         /// When the given value is <c>null</c>, an unique synchronization lock object is used.
         /// </param>
-        public EvaluateOnce(Func<T> valueFactory, object syncLock)
+        public EvaluateOnce(Func<T> valueFactory, object? syncLock)
         {
             m_ValueFactory = valueFactory ?? throw new ArgumentNullException(nameof(valueFactory));
             m_SyncLock = syncLock;
@@ -49,13 +52,14 @@ namespace Gapotchenko.FX.Threading
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [AllowNull]
         T m_Value;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object m_SyncLock;
+        object? m_SyncLock;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Func<T> m_ValueFactory;
+        Func<T>? m_ValueFactory;
 
         /// <summary>
         /// Gets the lazily evaluated value of the current <see cref="EvaluateOnce{T}"/> instance.
@@ -85,9 +89,10 @@ namespace Gapotchenko.FX.Threading
         /// if the value has been created (that is, if the <see cref="IsValueCreated"/> property returns <c>true</c>).
         /// Otherwise, a string indicating that the value has not been created.
         /// </returns>
-        public override string ToString() => IsValueCreated ? Value.ToString() : Resources.ValueNotCreated;
+        public override string? ToString() => IsValueCreated ? Value?.ToString() : Resources.ValueNotCreated;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        internal T ValueForDebugDisplay => IsValueCreated ? Value : default(T);
+        [MaybeNull]
+        internal T ValueForDebugDisplay => IsValueCreated ? Value : default;
     }
 }

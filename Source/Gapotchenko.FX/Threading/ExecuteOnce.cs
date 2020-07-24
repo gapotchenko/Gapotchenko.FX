@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Security.Permissions;
 using System.Threading;
 
+#nullable enable
+
 namespace Gapotchenko.FX.Threading
 {
     /// <summary>
@@ -31,7 +33,7 @@ namespace Gapotchenko.FX.Threading
         /// An object used as the mutually exclusive lock for action execution.
         /// When the given value is null, an unique synchronization lock object is used.
         /// </param>
-        public ExecuteOnce(Action action, object syncLock)
+        public ExecuteOnce(Action action, object? syncLock)
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
@@ -41,10 +43,10 @@ namespace Gapotchenko.FX.Threading
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object m_SyncLock;
+        object? m_SyncLock;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Action m_Action;
+        Action? m_Action;
 
         /// <summary>
         /// Ensures that the action was executed.
