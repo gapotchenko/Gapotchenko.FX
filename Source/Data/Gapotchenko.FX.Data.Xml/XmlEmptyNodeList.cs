@@ -7,7 +7,7 @@ namespace Gapotchenko.FX.Data.Xml
     /// <summary>
     /// Empty XML node list.
     /// </summary>
-    public class XmlEmptyNodeList : XmlNodeList
+    public sealed class XmlEmptyNodeList : XmlNodeList
     {
         /// <summary>
         /// Retrieves a node at the given index.
@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Data.Xml
         /// The <see cref="XmlNode"/> in the collection.
         /// If index is greater than or equal to the number of nodes in the list, this returns <c>null</c>.
         /// </returns>
-        public override XmlNode Item(int index) => null;
+        public override XmlNode Item(int index) => throw new InvalidOperationException();
 
         /// <summary>
         /// Provides a simple "foreach" style iteration over the collection of nodes in the <see cref="XmlNodeList"/>.
