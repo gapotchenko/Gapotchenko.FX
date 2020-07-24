@@ -1,6 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
+#nullable enable
+
 #if !TFF_SWITCHEXPRESSIONEXCEPTION
 
 namespace System.Runtime.CompilerServices
@@ -31,7 +33,7 @@ namespace System.Runtime.CompilerServices
         /// Initializes a new instance of the <see cref="SwitchExpressionException"/> class with a reference to the inner exception that is the cause of this exception.
         /// </summary>
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
-        public SwitchExpressionException(Exception innerException) :
+        public SwitchExpressionException(Exception? innerException) :
             base(Resources.SwitchExpressionException_Message, innerException)
         {
         }
@@ -40,7 +42,7 @@ namespace System.Runtime.CompilerServices
         /// Initializes a new instance of the <see cref="SwitchExpressionException"/> class with an unmatched switch value.
         /// </summary>
         /// <param name="unmatchedValue">The switch value that does not match any switch cases.</param>
-        public SwitchExpressionException(object unmatchedValue) :
+        public SwitchExpressionException(object? unmatchedValue) :
             this()
         {
             UnmatchedValue = unmatchedValue;
@@ -50,7 +52,7 @@ namespace System.Runtime.CompilerServices
         /// Initializes a new instance of the <see cref="SwitchExpressionException"/> class with a specified error message.
         /// </summary>
         /// <param name="message">The error message.</param>
-        public SwitchExpressionException(string message) :
+        public SwitchExpressionException(string? message) :
             base(message)
         {
         }
@@ -60,7 +62,7 @@ namespace System.Runtime.CompilerServices
         /// </summary>
         /// <param name="message">The error message.</param>
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
-        public SwitchExpressionException(string message, Exception innerException) :
+        public SwitchExpressionException(string? message, Exception? innerException) :
             base(message, innerException)
         {
         }
@@ -90,7 +92,7 @@ namespace System.Runtime.CompilerServices
         /// <summary>
         /// Gets the unmatched value associated with the exception.
         /// </summary>
-        public object UnmatchedValue { get; }
+        public object? UnmatchedValue { get; }
 
         /// <summary>
         /// Gets the exception message.
