@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<articleglm>
+  <meta>
+    <id>JORFARTI000020664906</id>
+    <idsir/>
+    <origine>JORF</origine>
+    <nature>Article</nature>
+    <liens/>
+  </meta>
+  <meta_texte_chronicle>
+    <cid>JORFTEXT000020664905</cid>
+    <num>2009-581</num>
+    <num_sequence>3</num_sequence>
+    <nor>MAEJ0811065L</nor>
+    <date_publi>2009-05-26</date_publi>
+    <date_texte>2009-05-25</date_texte>
+    <origine_publi>JORF n°0120 du 26 mai 2009</origine_publi>
+    <page_deb_publi>8705</page_deb_publi>
+    <page_fin_publi>8706</page_fin_publi>
+  </meta_texte_chronicle>
+  <meta_texte_version id="id1">
+    <titrecourt>
+      LOI n°2009-581
+      du 25 mai 2009
+    </titrecourt>
+    <titrefull>
+      LOI n° 2009-581 du 25 mai 2009 autorisant l'approbation de l'accord entre le Gouvernement de la
+      République française et le Gouvernement de la République du Bénin relatif à la gestion concertée des flux
+      migratoires et au codéveloppement (1)
+    </titrefull>
+    <etat xml:id="id5">VIGUEUR</etat>
+    <date_debut/>
+    <date_fin/>
+    <autorite/>
+    <ministere/>
+  </meta_texte_version>
+  <article>
+    <meta_article xml:base="/test/">
+      <num>unique.</num>
+      <etat xml:id="id3">VIGUEUR</etat>
+      <date_debut>2999-01-01</date_debut>
+      <date_fin>2999-01-01</date_fin>
+      <type>AUTONOME</type>
+      <author id="auth1">myself</author>
+      <titre>
+        LOI n°2009-581
+        du 25 mai 2009 art unique.
+      </titre>
+    </meta_article>
+    <contexte xml:id="id1">
+      <texte cid="JORFTEXT000020664905" date_publi="2009-05-26" date_signature="2009-05-25" nature="LOI"
+             nor="MAEJ0811065L" num="2009-581">
+        <titre_txt id="id1" c_titre_court="LOI n°2009-581&#xA; du 25 mai 2009" debut="2999-01-01" fin="2999-01-01"
+                   id_txt="JORFTEXT000020664905">
+          LOI n° 2009-581 du 25 mai 2009 autorisant l'approbation de
+          l'accord entre le Gouvernement de la République française et le Gouvernement de la République du
+          Bénin relatif à la gestion concertée des flux migratoires et au codéveloppement (1)
+        </titre_txt>
+      </texte>
+    </contexte>
+    <versions_art>
+      <lien_art xml:id="id2" debut="2999-01-01" fin="2999-01-01" id="JORFARTI000020664906" num="unique." origine="JORF"
+                etat="VIGUEUR"/>
+    </versions_art>
+    <contenu id="id4" xml:lang="fr">
+      <para>
+        Est autorisée l'approbation de l'accord entre le Gouvernement de la République française et le
+        Gouvernement de la République du Bénin relatif à la gestion concertée des flux migratoires et au
+        codéveloppement (ensemble cinq annexes), signé à Cotonou le 28 novembre 2007, et dont le texte est
+        annexé à la présente loi (2).
+      </para>
+      <para>La présente loi sera exécutée comme loi de l'Etat.</para>
+    </contenu>
+  </article>
+</articleglm>
