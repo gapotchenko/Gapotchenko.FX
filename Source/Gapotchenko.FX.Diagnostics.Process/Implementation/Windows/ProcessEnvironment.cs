@@ -18,20 +18,28 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
         static StringDictionary _ReadVariablesCore(IntPtr hProcess)
         {
             int retryCount = 3;
+            bool RetryPolicy() => --retryCount > 0;
 
-            Again:
+        Again:
             try
             {
                 var stream = _GetEnvStream(hProcess);
                 var reader = new ProcessBinaryReader(new BufferedStream(stream), Encoding.Unicode);
                 var env = _ReadEnv(reader);
+
+                if (env.Count == 0)
+                {
+                    // There may be a race condition in environment block initialization of a recently started process.
+                    if (RetryPolicy())
+                        goto Again;
+                }
+
                 return env;
             }
             catch (EndOfStreamException)
             {
                 // There may be a race condition in environment block initialization of a recently started process.
-
-                if (--retryCount > 0)
+                if (RetryPolicy())
                     goto Again;
                 else
                     throw;
