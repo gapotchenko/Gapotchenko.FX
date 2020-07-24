@@ -53,12 +53,7 @@ namespace Gapotchenko.FX
         {
             if (!x.HasValue)
                 return false;
-
-#if NETSTANDARD2_1
-#pragma warning disable CS8604 // Possible null reference argument.
-#endif
             return valueComparer.Equals(x.Value, y);
-#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         internal static bool EqualsCore(Optional<T> x, Optional<T> y, IEqualityComparer<T> valueComparer)

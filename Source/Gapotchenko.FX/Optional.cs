@@ -52,11 +52,7 @@ namespace Gapotchenko.FX
         /// otherwise, an <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the <paramref name="value"/> parameter.
         /// </returns>
         public static Optional<T> Discriminate<T>(T value, [AllowNull] T noneValue) =>
-#if NETSTANDARD2_1
-#pragma warning disable CS8604 // Possible null reference argument.
-#endif
             EqualityComparer<T>.Default.Equals(value, noneValue) ? default : Some(value);
-#pragma warning restore CS8604 // Possible null reference argument.
 
         /// <summary>
         /// Either creates a new <see cref="Optional{T}"/> object initialized to a specified value or
