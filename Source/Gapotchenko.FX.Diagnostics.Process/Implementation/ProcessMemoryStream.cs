@@ -105,7 +105,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
                 {
                     if (throwOnError)
                     {
-                        // In case process memory adapter disregards a throw on error flag.
+                        // In case if process memory adapter disregards a throw on error flag.
                         throw new IOException();
                     }
 
