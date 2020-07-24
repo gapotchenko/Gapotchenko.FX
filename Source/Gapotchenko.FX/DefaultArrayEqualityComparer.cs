@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace Gapotchenko.FX
 {
     class DefaultArrayEqualityComparer<T> : ArrayEqualityComparer<T>
     {
-        internal DefaultArrayEqualityComparer(IEqualityComparer<T> elementComparer)
+        internal DefaultArrayEqualityComparer(IEqualityComparer<T>? elementComparer)
         {
             _ElementComparer = elementComparer ?? EqualityComparer<T>.Default;
         }
@@ -18,7 +20,7 @@ namespace Gapotchenko.FX
         /// <param name="x">The first array to compare.</param>
         /// <param name="y">The second array to compare.</param>
         /// <returns><c>true</c> if the specified arrays are equal; otherwise, <c>false</c>.</returns>
-        public override bool Equals(T[] x, T[] y)
+        public override bool Equals(T[]? x, T[]? y)
         {
             if (x == y)
                 return true;
@@ -46,11 +48,20 @@ namespace Gapotchenko.FX
             if (obj is null)
                 return 0;
 
+            var elementComparer = _ElementComparer;
+
             // FNV-1a
             uint hash = 2166136261;
             foreach (var i in obj)
-                hash = (hash ^ (uint)_ElementComparer.GetHashCode(i)) * 16777619;
+                hash = (hash ^ (uint)InternalGetHashCode(i, elementComparer)) * 16777619;
             return (int)hash;
+        }
+
+        static int InternalGetHashCode(T value, IEqualityComparer<T> comparer)
+        {
+            if (value is null)
+                return 0;
+            return comparer.GetHashCode(value);
         }
 
         /// <summary>
@@ -61,7 +72,7 @@ namespace Gapotchenko.FX
         /// <c>true</c> if the specified <see cref="Object"/> is equal to the current <see cref="ArrayEqualityComparer{T}"/>;
         /// otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj) => obj is ArrayEqualityComparer<T>;
+        public override bool Equals(object? obj) => obj is ArrayEqualityComparer<T>;
 
         /// <summary>
         /// Returns a hash code for <see cref="ArrayEqualityComparer{T}"/>.

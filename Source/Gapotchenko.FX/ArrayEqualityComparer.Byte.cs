@@ -1,12 +1,14 @@
 ﻿using Gapotchenko.FX.Runtime.InteropServices;
 
+#nullable enable
+
 namespace Gapotchenko.FX
 {
     partial class ArrayEqualityComparer
     {
         internal sealed class ByteRank1Comparer : ArrayEqualityComparer<byte>
         {
-            public override bool Equals(byte[] x, byte[] y)
+            public override bool Equals(byte[]? x, byte[]? y)
             {
                 if (x == y)
                     return true;
@@ -80,7 +82,7 @@ namespace Gapotchenko.FX
                 return (int)hash;
             }
 
-            public override bool Equals(object obj) => obj is ByteRank1Comparer;
+            public override bool Equals(object? obj) => obj is ByteRank1Comparer;
 
             public override int GetHashCode() => GetType().Name.GetHashCode();
         }
