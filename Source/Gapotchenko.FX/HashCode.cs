@@ -42,8 +42,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-#nullable enable
-
 #if !TFF_HASHCODE
 
 namespace System

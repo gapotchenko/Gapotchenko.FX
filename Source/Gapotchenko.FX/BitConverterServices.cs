@@ -1,8 +1,6 @@
 ﻿using Gapotchenko.FX.Properties;
 using System;
 
-#nullable enable
-
 namespace Gapotchenko.FX
 {
     static class BitConverterServices

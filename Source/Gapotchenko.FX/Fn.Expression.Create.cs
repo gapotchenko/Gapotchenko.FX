@@ -2,8 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
-#nullable enable
-
 namespace Gapotchenko.FX
 {
     partial class Fn

@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace Gapotchenko.FX
 {
     /// <summary>

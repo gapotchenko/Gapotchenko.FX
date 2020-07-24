@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-namespace System
+﻿namespace System
 {
     /// <summary>
     /// <para>

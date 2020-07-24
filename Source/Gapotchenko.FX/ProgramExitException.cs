@@ -2,8 +2,6 @@
 using System;
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Gapotchenko.FX
 {
     /// <summary>

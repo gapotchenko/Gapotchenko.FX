@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.Security.Permissions;
 using System.Threading;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Threading
 {
     /// <summary>

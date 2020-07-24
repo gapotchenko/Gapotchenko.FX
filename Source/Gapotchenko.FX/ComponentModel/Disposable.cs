@@ -2,8 +2,6 @@
 using System.ComponentModel;
 using System.Threading;
 
-#nullable enable
-
 namespace Gapotchenko.FX.ComponentModel
 {
     /// <summary>

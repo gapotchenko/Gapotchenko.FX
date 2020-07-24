@@ -5,8 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security.Permissions;
 using System.Threading;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Threading
 {
     /// <summary>

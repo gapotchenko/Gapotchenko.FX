@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-#nullable enable
-
 namespace Gapotchenko.FX
 {
     /// <summary>

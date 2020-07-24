@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading;
 
-#nullable enable
-
 namespace Gapotchenko.FX
 {
     /// <summary>

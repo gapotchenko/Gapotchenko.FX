@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 
-#nullable enable
-
 namespace Gapotchenko.FX
 {
     /// <summary>

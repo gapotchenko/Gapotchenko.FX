@@ -3,8 +3,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-#nullable enable
-
 namespace Gapotchenko.FX
 {
     partial class Fn

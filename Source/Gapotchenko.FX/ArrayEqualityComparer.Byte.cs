@@ -1,7 +1,5 @@
 ﻿using Gapotchenko.FX.Runtime.InteropServices;
 
-#nullable enable
-
 namespace Gapotchenko.FX
 {
     partial class ArrayEqualityComparer

@@ -1,8 +1,6 @@
 ﻿using Gapotchenko.FX.Threading;
 using System;
 
-#nullable enable
-
 namespace Gapotchenko.FX.Runtime.InteropServices
 {
     /// <summary>

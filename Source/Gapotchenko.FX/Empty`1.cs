@@ -2,8 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Gapotchenko.FX
 {
     /// <summary>

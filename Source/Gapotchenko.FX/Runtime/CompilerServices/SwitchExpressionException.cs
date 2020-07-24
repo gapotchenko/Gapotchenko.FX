@@ -1,8 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
-#nullable enable
-
 #if !TFF_SWITCHEXPRESSIONEXCEPTION
 
 namespace System.Runtime.CompilerServices

@@ -3,8 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security.Permissions;
 using System.Threading;
 
-#nullable enable
-
 #if NETFRAMEWORK || NETSTANDARD2_0 || NETSTANDARD2_1 || NETCOREAPP2_0 || NETCOREAPP2_1
 #pragma warning disable CS8601 // Possible null reference assignment.
 #endif

@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Gapotchenko.FX
 {
     /// <summary>
