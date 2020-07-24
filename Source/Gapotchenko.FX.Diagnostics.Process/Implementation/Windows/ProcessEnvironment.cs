@@ -29,7 +29,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
                 if (env.Count == 0)
                 {
-                    // There may be a race condition in environment block initialization of a recently started process.
+                    // Empty environment may indicate that a process environment block has not been initialized yet.
                     if (RetryPolicy())
                         goto Again;
                 }

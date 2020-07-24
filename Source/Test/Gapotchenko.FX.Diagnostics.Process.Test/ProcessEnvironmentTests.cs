@@ -15,9 +15,10 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             var process = new Process();
 
             var psi = process.StartInfo;
-            psi.UseShellExecute = false;
             psi.FileName = "dotnet";
             psi.Arguments = "fsi";
+            psi.UseShellExecute = false;
+            psi.RedirectStandardOutput = true;
 
             string value = Guid.NewGuid().ToString("D");
             psi.EnvironmentVariables["PROC_ENV_TEST"] = value;
@@ -25,6 +26,9 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             Assert.IsTrue(process.Start());
             try
             {
+                // Ensure that the process is fully initialized.
+                process.StandardOutput.ReadLine();
+
                 var env = process.ReadEnvironmentVariables();
                 Assert.AreEqual(value, env["PROC_ENV_TEST"]);
             }
@@ -40,9 +44,10 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             var process = new Process();
 
             var psi = process.StartInfo;
-            psi.UseShellExecute = false;
             psi.FileName = "dotnet";
             psi.Arguments = "fsi";
+            psi.UseShellExecute = false;
+            psi.RedirectStandardOutput = true;
 
             const string envKeyPrefix = "PROC_ENV_TEST_";
 
@@ -56,6 +61,9 @@ namespace Gapotchenko.FX.Diagnostics.Process.Test
             Assert.IsTrue(process.Start());
             try
             {
+                // Ensure that the process is fully initialized.
+                process.StandardOutput.ReadLine();
+
                 var actualEnv = process.ReadEnvironmentVariables();
 
 #pragma warning disable CS8605 // Unboxing a possibly null value.
