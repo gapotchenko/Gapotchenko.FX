@@ -43,8 +43,13 @@ namespace Gapotchenko.FX.Data.Encoding
         Wrap = 1 << 4,
 
         /// <summary>
+        /// <para>
         /// Relax decoding rules.
         /// For example, if encoded Base64 string contains an invalid character it gets ignored instead of throwing an exception.
+        /// </para>
+        /// <para>
+        /// Alternatively, the flag can be used to lift the restrictions imposed by encoding operation.
+        /// </para>
         /// </summary>
         Relax = 1 << 5,
 
