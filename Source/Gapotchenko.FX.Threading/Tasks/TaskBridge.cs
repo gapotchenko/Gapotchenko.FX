@@ -113,9 +113,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                     result = await task().ConfigureAwait(false);
                 });
 
-#pragma warning disable CS8603 // Possible null reference return.
-            return result;
-#pragma warning restore CS8603 // Possible null reference return.
+            return result!;
         }
 
         /// <summary>
@@ -152,9 +150,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                     result = await task(ct).ConfigureAwait(false);
                 });
 
-#pragma warning disable CS8603 // Possible null reference return.
-            return result;
-#pragma warning restore CS8603 // Possible null reference return.
+            return result!;
         }
 
         static Task RunLongTask(Action action, CancellationToken cancellationToken) =>
@@ -194,9 +190,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                     })
                 .ConfigureAwait(false);
 
-#pragma warning disable CS8603 // Possible null reference return.
-            return result;
-#pragma warning restore CS8603 // Possible null reference return.
+            return result!;
         }
 
         /// <summary>
@@ -285,9 +279,7 @@ namespace Gapotchenko.FX.Threading.Tasks
                     cancellationToken)
                 .ConfigureAwait(false);
 
-#pragma warning disable CS8603 // Possible null reference return.
-            return result;
-#pragma warning restore CS8603 // Possible null reference return.
+            return result!;
         }
     }
 }
