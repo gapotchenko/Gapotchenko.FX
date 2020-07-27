@@ -105,26 +105,29 @@ namespace Gapotchenko.FX.Threading.Test.Tasks
         }
 
         [TestMethod]
-        public void TaskBridge_AsyncStringDelay()
+        public void TaskBridge_AsyncSequence()
         {
             if (!Environment.UserInteractive)
                 Assert.Inconclusive();
 
-            static async Task<string> F(string s, int delay)
+            static async Task<string> F(string s)
             {
-                await Task.Delay(delay);
-                return s;
+                int count = 0;
+
+                await Task.Delay(1);
+                ++count;
+
+                await Task.Delay(1);
+                ++count;
+
+                await Task.Delay(1);
+                ++count;
+
+                return s + count;
             }
 
-            const int delay = 100;
-
-            var sw = Stopwatch.StartNew();
-            Assert.AreEqual("abc", TaskBridge.Execute(() => F("abc", delay)));
-            Assert.AreEqual(delay, sw.ElapsedMilliseconds, delay / 2);
-
-            sw = Stopwatch.StartNew();
-            Assert.AreEqual("def", TaskBridge.Execute(F("def", delay)));
-            Assert.AreEqual(delay, sw.ElapsedMilliseconds, delay / 2);
+            Assert.AreEqual("abc3", TaskBridge.Execute(() => F("abc")));
+            Assert.AreEqual("def3", TaskBridge.Execute(F("def")));
         }
 
         [TestMethod]
