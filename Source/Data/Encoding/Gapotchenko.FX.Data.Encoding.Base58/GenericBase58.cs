@@ -116,7 +116,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 return data == null ? null : data.ToArray();
             }
 
-            int leadingZeroCount = GetLeadingZeroCount(s);
+            int leadingZeroCount = GetLeadingZeroCount(s, Alphabet[0]);
 
             s = s.Slice(leadingZeroCount);
             if (s.IsEmpty)
@@ -208,13 +208,12 @@ namespace Gapotchenko.FX.Data.Encoding
             return count;
         }
 
-        int GetLeadingZeroCount(ReadOnlySpan<char> s)
+        static int GetLeadingZeroCount(ReadOnlySpan<char> s, char zeroChar)
         {
-            char zc = Alphabet[0];
             int count = 0;
             foreach (var c in s)
             {
-                if (c != zc)
+                if (c != zeroChar)
                     break;
                 ++count;
             }
