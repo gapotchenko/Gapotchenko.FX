@@ -203,7 +203,7 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 if (b != 0)
                     break;
-                ++count;
+                checked { ++count; }
             }
             return count;
         }
@@ -215,7 +215,7 @@ namespace Gapotchenko.FX.Data.Encoding
             {
                 if (c != zeroChar)
                     break;
-                ++count;
+                checked { ++count; }
             }
             return count;
         }
