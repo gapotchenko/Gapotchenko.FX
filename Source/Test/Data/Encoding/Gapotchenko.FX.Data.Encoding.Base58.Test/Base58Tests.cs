@@ -131,7 +131,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
         [TestMethod]
         [ExpectedException(typeof(FormatException))]
-        public void Base58_Data_TV32() => Base58.Instance.GetBytes("3vQB7B6MrGQZaxCuFg4oH", DataEncodingOptions.Checksum);
+        public void Base58_Data_TV32() => Base58.Instance.GetBytes("3vQB7B6MrGQZaxCuFg4oH".AsSpan(), DataEncodingOptions.Checksum);
 
         [DataTestMethod]
         [DataRow(DataEncodingOptions.None)]

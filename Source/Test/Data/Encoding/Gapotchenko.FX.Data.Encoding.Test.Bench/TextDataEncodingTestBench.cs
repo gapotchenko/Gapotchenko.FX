@@ -168,7 +168,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
         public static void RoundTrip(ITextDataEncoding encoding, ReadOnlySpan<byte> raw, DataEncodingOptions options = default)
         {
             string actualEncoded = encoding.GetString(raw, options);
-            var actualDecoded = encoding.GetBytes(actualEncoded, options);
+            var actualDecoded = encoding.GetBytes(actualEncoded.AsSpan(), options);
 
             if (!raw.SequenceEqual(actualDecoded))
             {
@@ -185,10 +185,10 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 
             for (int i = 0; i < iterations; ++i)
             {
-                int n = RandomNumberGenerator.GetInt32(buffer.Length + 1);
+                int n = RandomNumberGeneratorPolyfill.GetInt32(buffer.Length + 1);
                 var span = buffer.AsSpan(0, n);
 
-                RandomNumberGenerator.Fill(span);
+                RandomNumberGeneratorPolyfill.Fill(span);
                 RoundTrip(encoding, span, options);
             }
         }
@@ -228,7 +228,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             string actualEncoded = encoding.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
-            var actualDecoded = encoding.GetInt32(actualEncoded, options);
+            var actualDecoded = encoding.GetInt32(actualEncoded.AsSpan(), options);
             Assert.AreEqual(raw, actualDecoded, "Decoding error.");
         }
 
@@ -238,7 +238,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             try
             {
                 string actualEncoded = encoding.GetString(raw, options);
-                actualDecoded = encoding.GetInt32(actualEncoded, options);
+                actualDecoded = encoding.GetInt32(actualEncoded.AsSpan(), options);
             }
             catch (Exception e) when (!IsContractException(e))
             {
@@ -291,7 +291,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             string actualEncoded = encoding.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
-            var actualDecoded = encoding.GetUInt32(actualEncoded, options);
+            var actualDecoded = encoding.GetUInt32(actualEncoded.AsSpan(), options);
             Assert.AreEqual(raw, actualDecoded, "Decoding error.");
         }
 
@@ -301,7 +301,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             try
             {
                 string actualEncoded = encoding.GetString(raw, options);
-                actualDecoded = encoding.GetUInt32(actualEncoded, options);
+                actualDecoded = encoding.GetUInt32(actualEncoded.AsSpan(), options);
             }
             catch (Exception e) when (!IsContractException(e))
             {
@@ -354,7 +354,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             string actualEncoded = encoding.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
-            var actualDecoded = encoding.GetInt64(actualEncoded, options);
+            var actualDecoded = encoding.GetInt64(actualEncoded.AsSpan(), options);
             Assert.AreEqual(raw, actualDecoded, "Decoding error.");
         }
 
@@ -364,7 +364,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             try
             {
                 string actualEncoded = encoding.GetString(raw, options);
-                actualDecoded = encoding.GetInt64(actualEncoded, options);
+                actualDecoded = encoding.GetInt64(actualEncoded.AsSpan(), options);
             }
             catch (Exception e) when (!IsContractException(e))
             {
@@ -417,7 +417,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             string actualEncoded = encoding.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
-            var actualDecoded = encoding.GetUInt64(actualEncoded, options);
+            var actualDecoded = encoding.GetUInt64(actualEncoded.AsSpan(), options);
             Assert.AreEqual(raw, actualDecoded, "Decoding error.");
         }
 
@@ -427,7 +427,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             try
             {
                 string actualEncoded = encoding.GetString(raw, options);
-                actualDecoded = encoding.GetUInt64(actualEncoded, options);
+                actualDecoded = encoding.GetUInt64(actualEncoded.AsSpan(), options);
             }
             catch (Exception e) when (!IsContractException(e))
             {
@@ -482,7 +482,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             string actualEncoded = encoding.GetString(raw, options);
             Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
-            var actualDecoded = encoding.GetBigInteger(actualEncoded, options);
+            var actualDecoded = encoding.GetBigInteger(actualEncoded.AsSpan(), options);
             Assert.AreEqual(raw, actualDecoded, "Decoding error.");
         }
 
@@ -492,7 +492,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             try
             {
                 string actualEncoded = encoding.GetString(raw, options);
-                actualDecoded = encoding.GetBigInteger(actualEncoded, options);
+                actualDecoded = encoding.GetBigInteger(actualEncoded.AsSpan(), options);
             }
             catch (Exception e) when (!IsContractException(e))
             {
@@ -514,12 +514,18 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 
             for (int i = 0; i < iterations;)
             {
-                int n = RandomNumberGenerator.GetInt32(buffer.Length + 1);
+                int n = RandomNumberGeneratorPolyfill.GetInt32(buffer.Length + 1);
                 var span = buffer.AsSpan(0, n);
 
-                RandomNumberGenerator.Fill(span);
+                RandomNumberGeneratorPolyfill.Fill(span);
 
-                var value = new BigInteger(span, false, false);
+                BigInteger value;
+#if NETFRAMEWORK
+                value = new BigInteger(span.ToArray());
+#else
+                value = new BigInteger(span, false, false);
+#endif
+
                 if (value < from || value > to)
                     continue;
                 ++i;
