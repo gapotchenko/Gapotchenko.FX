@@ -41,7 +41,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         public void CrockfordBase32_Canonicilization(string from, string to) =>
             Assert.AreEqual(
                 to,
-                CrockfordBase32.Instance.Canonicalize(from));
+                CrockfordBase32.Instance.Canonicalize(from.AsSpan()));
 
         [TestMethod]
         public void CrockfordBase32_Data_TV1() => TestVector("f", "CR");
