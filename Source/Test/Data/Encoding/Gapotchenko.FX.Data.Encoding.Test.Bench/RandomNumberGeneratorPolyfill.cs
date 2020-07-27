@@ -30,10 +30,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
 
 #else
 
-        public static void Fill(Span<byte> data)
-        {
-            RandomNumberGenerator.Fill(data);
-        }
+        public static void Fill(Span<byte> data) => RandomNumberGenerator.Fill(data);
 
 #endif
 
