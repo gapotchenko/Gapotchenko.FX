@@ -49,13 +49,10 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         protected const int Base = 91;
 
-        #endregion
-
-        /// <inheritdoc/>
-        public int Radix => Base;
-
-        /// <inheritdoc/>
-        protected override float MaxEfficiencyCore => 0.875f;
+        /// <summary>
+        /// Maximum efficiency of basE91 encoding.
+        /// </summary>
+        public new const float MaxEfficiency = 0.875f;
 
         /// <summary>
         /// Average efficiency of basE91 encoding.
@@ -63,11 +60,24 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         public new const float Efficiency = 0.8132f;
 
+        /// <summary>
+        /// Minimum efficiency of basE91 encoding.
+        /// </summary>
+        public new const float MinEfficiency = 0.8125f;
+
+        #endregion
+
+        /// <inheritdoc/>
+        public int Radix => Base;
+
+        /// <inheritdoc/>
+        protected override float MaxEfficiencyCore => MaxEfficiency;
+
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
 
         /// <inheritdoc/>
-        protected override float MinEfficiencyCore => 0.8125f;
+        protected override float MinEfficiencyCore => MinEfficiency;
 
         /// <inheritdoc/>
         protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options)

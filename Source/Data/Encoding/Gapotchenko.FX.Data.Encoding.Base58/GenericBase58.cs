@@ -55,16 +55,16 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         protected const int Base = 58;
 
-        #endregion
-
-        /// <inheritdoc/>
-        public int Radix => Base;
-
         /// <summary>
         /// Base58 encoding efficiency.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
         public new const float Efficiency = 4.060443010546419336600504153820088f / 5.545177444479562475337856971665413f;  // log(Base) / log(256) = 0.7322476
+
+        #endregion
+
+        /// <inheritdoc/>
+        public int Radix => Base;
 
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;

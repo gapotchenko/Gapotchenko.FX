@@ -20,10 +20,10 @@ namespace Gapotchenko.FX.Data.Encoding
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));
 
-            if (alphabet.Size != Radix)
+            if (alphabet.Size != Base)
             {
                 throw new ArgumentException(
-                    string.Format("The alphabet size of {0} encoding should be {1}.", this, Radix),
+                    string.Format("The alphabet size of {0} encoding should be {1}.", this, Base),
                     nameof(alphabet));
             }
 
@@ -36,6 +36,11 @@ namespace Gapotchenko.FX.Data.Encoding
         protected readonly TextDataEncodingAlphabet Alphabet;
 
         #region Parameters
+
+        /// <summary>
+        /// The base of the encoding.
+        /// </summary>
+        protected const int Base = 1 << BitsPerSymbol;
 
         /// <summary>
         /// Number of bits per symbol.
@@ -57,16 +62,16 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         protected const int SymbolMask = (1 << BitsPerSymbol) - 1;
 
-        #endregion
-
-        /// <inheritdoc/>
-        public int Radix => 1 << BitsPerSymbol;
-
         /// <summary>
         /// Base64 encoding efficiency.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
         public new const float Efficiency = (float)BytesPerDecodedBlock / SymbolsPerEncodedBlock;
+
+        #endregion
+
+        /// <inheritdoc/>
+        public int Radix => Base;
 
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;

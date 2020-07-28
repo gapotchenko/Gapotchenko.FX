@@ -59,6 +59,11 @@ namespace Gapotchenko.FX.Data.Encoding
         #region Parameters
 
         /// <summary>
+        /// The base of the encoding.
+        /// </summary>
+        protected const int Base = 24;
+
+        /// <summary>
         /// Number of bits per symbol.
         /// </summary>
         protected const float BitsPerSymbol = 4.584962500721156181453738943947816f; // = log2(Base) = log2(24)
@@ -74,20 +79,15 @@ namespace Gapotchenko.FX.Data.Encoding
         protected const int BytesPerDecodedBlock = 4;
 
         /// <summary>
-        /// The base of the encoding.
+        /// Base32 encoding efficiency.
+        /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
-        protected const int Base = 24;
+        public new const float Efficiency = (float)BytesPerDecodedBlock / SymbolsPerEncodedBlock;
 
         #endregion
 
         /// <inheritdoc/>
         public int Radix => Base;
-
-        /// <summary>
-        /// Base32 encoding efficiency.
-        /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
-        /// </summary>
-        public new const float Efficiency = (float)BytesPerDecodedBlock / SymbolsPerEncodedBlock;
 
         /// <inheritdoc/>
         protected override float EfficiencyCore => Efficiency;
