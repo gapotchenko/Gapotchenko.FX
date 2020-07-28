@@ -1,21 +1,58 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Implements Jochaim Henke's Base91 (basE91) encoding.
+    /// Provides a generic implementation of Jochaim Henke's Base91 (basE91) encoding.
     /// </summary>
-    public sealed class HenkeBase91 : TextDataEncoding, IBase91
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public abstract class GenericHenkeBase91 : TextDataEncoding, IBase91
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="HenkeBase91"/> class.
+        /// Initializes a new instance of <see cref="GenericHenkeBase91"/> class with the specified alphabet.
         /// </summary>
-        public HenkeBase91()
+        /// <param name="alphabet">The alphabet.</param>
+        protected GenericHenkeBase91(TextDataEncodingAlphabet alphabet)
         {
+            if (alphabet == null)
+                throw new ArgumentNullException(nameof(alphabet));
+
+            ValidateAlphabet(alphabet);
+
+            Alphabet = alphabet;
         }
 
+        /// <summary>
+        /// The encoding alphabet.
+        /// </summary>
+        protected readonly TextDataEncodingAlphabet Alphabet;
+
+        /// <summary>
+        /// Validates alphabet.
+        /// </summary>
+        /// <param name="alphabet">The alphabet.</param>
+        protected virtual void ValidateAlphabet(TextDataEncodingAlphabet alphabet)
+        {
+            if (alphabet.Size != Base)
+            {
+                throw new ArgumentException(
+                    string.Format("The alphabet size of {0} encoding should be {1}.", this, Base),
+                    nameof(alphabet));
+            }
+        }
+
+        #region Parameters
+
+        /// <summary>
+        /// The base of the encoding.
+        /// </summary>
+        protected const int Base = 91;
+
+        #endregion
+
         /// <inheritdoc/>
-        public int Radix => 91;
+        public int Radix => Base;
 
         /// <inheritdoc/>
         protected override float MaxEfficiencyCore => 0.875f;
