@@ -72,6 +72,12 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [DataRow(DataEncodingOptions.Padding)]
         public void CrockfordBase32_Data_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 16, 100000, options);
 
+        [DataTestMethod]
+        [DataRow(TextDataEncodingTemplates.S1)]
+        [DataRow(TextDataEncodingTemplates.S2)]
+        [DataRow(TextDataEncodingTemplates.S3)]
+        public void CrockfordBase32_RT_S(string s) => TextDataEncodingTestBench.RoundTrip(CrockfordBase32.Instance, s);
+
         #endregion
 
         #region Int32

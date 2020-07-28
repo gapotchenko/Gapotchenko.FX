@@ -179,6 +179,15 @@ namespace Gapotchenko.FX.Data.Encoding.Test.Bench
             }
         }
 
+        public static void RoundTrip(ITextDataEncoding encoding, string s, Encoding stringEncoding, DataEncodingOptions options = default) =>
+            RoundTrip(encoding, stringEncoding.GetBytes(s), options);
+
+        public static void RoundTrip(ITextDataEncoding encoding, string s, DataEncodingOptions options = default)
+        {
+            RoundTrip(encoding, s, Encoding.UTF8, options);
+            RoundTrip(encoding, s, Encoding.Unicode, options);
+        }
+
         public static void RandomRoundTrip(ITextDataEncoding encoding, int maxByteCount, int iterations, DataEncodingOptions options = default)
         {
             var buffer = new byte[maxByteCount];

@@ -138,6 +138,18 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [DataRow(DataEncodingOptions.Checksum)]
         public void Base58_Data_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base58.Instance, 32, 100000, options);
 
+        [DataTestMethod]
+        // S1
+        [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Checksum)]
+        // S2
+        [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.Checksum)]
+        // S3
+        [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.Checksum)]
+        public void Base58_Data_RT_S(string s, DataEncodingOptions options) => TextDataEncodingTestBench.RoundTrip(Base58.Instance, s, options);
+
         #endregion
 
         #region BigInteger

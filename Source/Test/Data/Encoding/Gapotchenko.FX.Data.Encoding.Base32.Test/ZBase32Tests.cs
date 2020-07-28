@@ -145,5 +145,23 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [DataRow(DataEncodingOptions.Padding)]
         [DataRow(DataEncodingOptions.Padding | DataEncodingOptions.Compress)]
         public void ZBase32_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(ZBase32.Instance, 16, 100000, options);
+
+        [DataTestMethod]
+        // S1
+        [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Compress)]
+        [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Padding)]
+        [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Padding | DataEncodingOptions.Compress)]
+        // S2
+        [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.Compress)]
+        [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.Padding)]
+        [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.Padding | DataEncodingOptions.Compress)]
+        // S3
+        [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.Compress)]
+        [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.Padding)]
+        [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.Padding | DataEncodingOptions.Compress)]
+        public void ZBase32_RT_S(string s, DataEncodingOptions options) => TextDataEncodingTestBench.RoundTrip(ZBase32.Instance, s, options);
     }
 }

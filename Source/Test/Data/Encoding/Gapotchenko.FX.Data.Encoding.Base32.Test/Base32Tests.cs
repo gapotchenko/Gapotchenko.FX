@@ -61,5 +61,11 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [DataRow(DataEncodingOptions.None)]
         [DataRow(DataEncodingOptions.Unpad)]
         public void Base32_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base32.Instance, 16, 100000, options);
+
+        [DataTestMethod]
+        [DataRow(TextDataEncodingTemplates.S1)]
+        [DataRow(TextDataEncodingTemplates.S2)]
+        [DataRow(TextDataEncodingTemplates.S3)]
+        public void Base32_RT_S(string s) => TextDataEncodingTestBench.RoundTrip(Base32.Instance, s);
     }
 }

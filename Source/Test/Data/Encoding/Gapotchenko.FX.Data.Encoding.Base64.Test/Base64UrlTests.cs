@@ -91,5 +91,17 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [DataRow(DataEncodingOptions.None)]
         [DataRow(DataEncodingOptions.Padding)]
         public void Base64Url_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base64Url.Instance, 16, 100000, options);
+
+        [DataTestMethod]
+        // S1
+        [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Padding)]
+        // S2
+        [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.Padding)]
+        // S3
+        [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.Padding)]
+        public void Base64Url_RT_S(string s, DataEncodingOptions options) => TextDataEncodingTestBench.RoundTrip(Base64Url.Instance, s, options);
     }
 }

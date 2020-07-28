@@ -198,5 +198,17 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         [DataRow(DataEncodingOptions.None)]
         [DataRow(DataEncodingOptions.Padding)]
         public void KuonBase24_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(KuonBase24.Instance, 16, 100000, options);
+
+        [DataTestMethod]
+        // S1
+        [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Padding)]
+        // S2
+        [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.Padding)]
+        // S3
+        [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.None)]
+        [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.Padding)]
+        public void KuonBase24_RT_S(string s, DataEncodingOptions options) => TextDataEncodingTestBench.RoundTrip(KuonBase24.Instance, s, options);
     }
 }
