@@ -82,7 +82,7 @@ namespace Gapotchenko.FX.Data.Encoding.Test
         // S3
         [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.None)]
         [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.Padding)]
-        public void CrockfordBase32_RT_S(string s, DataEncodingOptions options) => TextDataEncodingTestBench.RoundTrip(CrockfordBase32.Instance, s, options);
+        public void CrockfordBase32_Data_RT_S(string s, DataEncodingOptions options) => TextDataEncodingTestBench.RoundTrip(CrockfordBase32.Instance, s, options);
 
         #endregion
 
