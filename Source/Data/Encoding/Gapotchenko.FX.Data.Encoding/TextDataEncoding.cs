@@ -623,6 +623,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             if (outputStream == null)
                 throw new ArgumentNullException(nameof(outputStream));
+
             return CreateEncoder(new StreamWriter(outputStream), options);
         }
 
@@ -632,6 +633,7 @@ namespace Gapotchenko.FX.Data.Encoding
         {
             if (inputStream == null)
                 throw new ArgumentNullException(nameof(inputStream));
+
             return CreateDecoder(new StreamReader(inputStream), options);
         }
 
@@ -702,7 +704,13 @@ namespace Gapotchenko.FX.Data.Encoding
         public int GetMaxCharCount(int byteCount) => GetMaxCharCountCore(byteCount, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public int GetMaxCharCount(int byteCount, DataEncodingOptions options) => GetMaxCharCountCore(byteCount, GetEffectiveOptions(options));
+        public int GetMaxCharCount(int byteCount, DataEncodingOptions options)
+        {
+            if (byteCount < 0)
+                throw new ArgumentOutOfRangeException(nameof(byteCount), "Byte count cannot be negative.");
+
+            return GetMaxCharCountCore(byteCount, GetEffectiveOptions(options));
+        }
 
         /// <summary>
         /// Calculates the maximum number of characters produced by encoding the specified number of bytes with options.
@@ -716,7 +724,13 @@ namespace Gapotchenko.FX.Data.Encoding
         public int GetMaxByteCount(int charCount) => GetMaxByteCountCore(charCount, DataEncodingOptions.None);
 
         /// <inheritdoc/>
-        public int GetMaxByteCount(int charCount, DataEncodingOptions options) => GetMaxByteCountCore(charCount, GetEffectiveOptions(options));
+        public int GetMaxByteCount(int charCount, DataEncodingOptions options)
+        {
+            if (charCount < 0)
+                throw new ArgumentOutOfRangeException(nameof(charCount), "Character count cannot be negative.");
+
+            return GetMaxByteCountCore(charCount, GetEffectiveOptions(options));
+        }
 
         /// <summary>
         /// Calculates the maximum number of bytes produced by decoding the specified number of characters with options.

@@ -103,13 +103,13 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override int GetMaxCharCountCore(int byteCount, DataEncodingOptions options)
         {
-            throw new NotImplementedException();
+            return (int)Math.Ceiling(byteCount / MinEfficiency);
         }
 
         /// <inheritdoc/>
         protected override int GetMaxByteCountCore(int charCount, DataEncodingOptions options)
         {
-            throw new NotImplementedException();
+            return (int)Math.Ceiling(charCount * MaxEfficiency);
         }
     }
 }
