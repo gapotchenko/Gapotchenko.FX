@@ -196,30 +196,6 @@ namespace Gapotchenko.FX.Data.Encoding
 #endif
         }
 
-        static int GetLeadingZeroCount(ReadOnlySpan<byte> data)
-        {
-            int count = 0;
-            foreach (var b in data)
-            {
-                if (b != 0)
-                    break;
-                checked { ++count; }
-            }
-            return count;
-        }
-
-        static int GetLeadingZeroCount(ReadOnlySpan<char> s, char zeroChar)
-        {
-            int count = 0;
-            foreach (var c in s)
-            {
-                if (c != zeroChar)
-                    break;
-                checked { ++count; }
-            }
-            return count;
-        }
-
         const int ChecksumSize = 4;
 
         static ReadOnlySpan<byte> GetChecksum(ReadOnlySpan<byte> payload)

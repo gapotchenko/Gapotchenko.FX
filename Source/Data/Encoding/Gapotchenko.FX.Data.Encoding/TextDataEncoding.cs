@@ -817,6 +817,24 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         protected const int MaxNewLineCharCount = 2; // CR LF is the longest line terminator
 
+        /// <summary>
+        /// Gets count of leading zero characters.
+        /// </summary>
+        /// <param name="s">The string.</param>
+        /// <param name="zeroChar">The character to treat as zero.</param>
+        /// <returns>The count of leading zero characters.</returns>
+        protected static int GetLeadingZeroCount(ReadOnlySpan<char> s, char zeroChar)
+        {
+            int count = 0;
+            foreach (var c in s)
+            {
+                if (c != zeroChar)
+                    break;
+                checked { ++count; }
+            }
+            return count;
+        }
+
         #endregion
     }
 }

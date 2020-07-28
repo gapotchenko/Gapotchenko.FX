@@ -139,5 +139,22 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <inheritdoc/>
         public virtual bool PrefersPadding => CanPad;
+
+        /// <summary>
+        /// Gets count of leading zeroes.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>The count of leading zeroes in <paramref name="data"/>.</returns>
+        protected static int GetLeadingZeroCount(ReadOnlySpan<byte> data)
+        {
+            int count = 0;
+            foreach (var b in data)
+            {
+                if (b != 0)
+                    break;
+                checked { ++count; }
+            }
+            return count;
+        }
     }
 }
