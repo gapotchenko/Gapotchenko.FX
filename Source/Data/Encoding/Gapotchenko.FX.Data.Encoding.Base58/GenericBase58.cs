@@ -288,7 +288,7 @@ namespace Gapotchenko.FX.Data.Encoding
             return byteCount;
         }
 
-        int GetMaxByteCountCore(int charCount, int leadingZeroCount) =>
+        static int GetMaxByteCountCore(int charCount, int leadingZeroCount) =>
             leadingZeroCount +
             (int)Math.Ceiling(charCount * Efficiency);
 
