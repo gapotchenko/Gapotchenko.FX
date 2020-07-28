@@ -92,16 +92,13 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <inheritdoc/>
-        public override bool IsCaseSensitive => true;
+        public override bool IsCaseSensitive => Alphabet.IsCaseSensitive;
 
         /// <inheritdoc/>
-        public override bool CanCanonicalize => throw new NotImplementedException();
+        public override bool CanCanonicalize => Alphabet.IsCanonicalizable;
 
         /// <inheritdoc/>
-        protected override void CanonicalizeCore(ReadOnlySpan<char> source, Span<char> destination)
-        {
-            throw new NotImplementedException();
-        }
+        protected override void CanonicalizeCore(ReadOnlySpan<char> source, Span<char> destination) => Alphabet.Canonicalize(source, destination);
 
         /// <inheritdoc/>
         protected override int GetMaxCharCountCore(int byteCount, DataEncodingOptions options)
