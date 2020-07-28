@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -15,5 +13,15 @@ namespace Gapotchenko.FX.Data.Encoding
             base(new TextDataEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~\"", true))
         {
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        static volatile IBase91? m_Instance;
+
+        /// <summary>
+        /// Returns a default instance of <see cref="HenkeBase91"/> encoding.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        [CLSCompliant(false)]
+        public static IBase91 Instance => m_Instance ??= new HenkeBase91();
     }
 }
