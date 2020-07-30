@@ -79,6 +79,29 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <inheritdoc/>
         protected override float MinEfficiencyCore => MinEfficiency;
 
+        abstract class CodecContextBase
+        {
+            public CodecContextBase(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
+            {
+                m_Alphabet = alphabet;
+                m_Options = options;
+            }
+
+            protected readonly TextDataEncodingAlphabet m_Alphabet;
+            protected readonly DataEncodingOptions m_Options;
+
+            #region Parameters
+
+            protected const string Name = "Henke Base91";
+
+            #endregion
+
+            protected uint m_Bits;
+            protected int m_Modulus;
+            protected bool m_Eof;
+        }
+
+
         /// <inheritdoc/>
         protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options)
         {
