@@ -186,8 +186,6 @@ namespace Gapotchenko.FX.Data.Encoding
                 if (m_Eof)
                     return;
 
-                var alphabet = m_Alphabet;
-
                 if (input == null)
                 {
                     m_Eof = true;
@@ -216,6 +214,8 @@ namespace Gapotchenko.FX.Data.Encoding
 
                     return;
                 }
+
+                var alphabet = m_Alphabet;
 
                 foreach (var b in input)
                 {
@@ -285,7 +285,7 @@ namespace Gapotchenko.FX.Data.Encoding
                         if ((m_Options & DataEncodingOptions.Relax) == 0)
                         {
                             if (!char.IsWhiteSpace(c))
-                                throw new InvalidDataException($"Encountered a non-{Name} character.");
+                                throw new InvalidDataException($"Encountered an invalid {Name} character.");
                         }
                         continue;
                     }
