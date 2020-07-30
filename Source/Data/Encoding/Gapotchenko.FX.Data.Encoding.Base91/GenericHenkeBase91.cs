@@ -101,6 +101,13 @@ namespace Gapotchenko.FX.Data.Encoding
             protected bool m_Eof;
         }
 
+        //sealed class EncoderContext : CodecContextBase, IEncoderContext
+        //{
+        //    public EncoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
+        //        base(alphabet, options)
+        //    {
+        //    }
+        //}
 
         /// <inheritdoc/>
         protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options)
