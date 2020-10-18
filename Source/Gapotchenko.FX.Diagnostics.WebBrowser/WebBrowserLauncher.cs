@@ -18,42 +18,43 @@ namespace Gapotchenko.FX.Diagnostics
         {
             try
             {
-                string scheme;
                 int j = url.IndexOf(':');
-                if (j != -1)
-                    scheme = url.Substring(0, j);
-                else
+                if (j == -1)
                     return false;
+
+                string scheme = url.Substring(0, j);
 
                 string? command = _TryGetDefaultBrowserCommand(scheme);
                 if (command == null)
                     return false;
 
-                var args = CommandLine.Split(command).ToList();
+                if (command[0] == '"')
+                    j = command.IndexOf('"', 1);
+                else
+                    j = command.IndexOf(' ');
 
-                int argsCount = args.Count;
-                if (argsCount < 2)
-                    return false;
+                if (j == -1)
+                    j = command.Length;
+                else
+                    ++j;
 
-                string filePath = args[0];
+                string args = command.Substring(j).Trim();
+                string filePath = command.Substring(0, j).Trim('"');
 
-                bool urlSet = false;
-                for (int i = 1; i < argsCount; ++i)
+                string pattern = args;
+
+                args = pattern.Replace("%1", url);
+
+                if (args.Equals(pattern, StringComparison.Ordinal))
                 {
-                    if (args[i].Equals("%1", StringComparison.Ordinal))
-                    {
-                        args[i] = url;
-                        urlSet = true;
-                    }
-                }
-
-                if (!urlSet)
+                    // URL is not set.
                     return false;
+                }
 
                 if (!File.Exists(filePath))
                     return false;
 
-                _RunProcess(filePath, CommandLine.Build(args.Skip(1)));
+                _RunProcess(filePath, args);
                 return true;
             }
             catch (Exception e) when (!e.IsControlFlowException())
