@@ -26,7 +26,6 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             var instance = HenkeBase91.Instance;
 
-            //Assert.AreEqual(HenkeBase91.Efficiency, instance.Efficiency);
             //Assert.AreEqual(HenkeBase91.Padding, instance.Padding);
             //Assert.IsFalse(instance.PrefersPadding);
 
@@ -34,6 +33,20 @@ namespace Gapotchenko.FX.Data.Encoding.Test
 
             TextDataEncodingTestBench.TestVector(instance, raw, encoded);
         }
+
+        [TestMethod]
+        public void HenkeBase91_Efficiency()
+        {
+            var instance = HenkeBase91.Instance;
+
+            Assert.AreEqual(0.875f, instance.MaxEfficiency, 0.00001f);
+            Assert.AreEqual(0.8125f, instance.MinEfficiency, 0.00001f);
+
+            Assert.AreEqual(HenkeBase91.MaxEfficiency, instance.MaxEfficiency);
+            Assert.AreEqual(HenkeBase91.Efficiency, instance.Efficiency);
+            Assert.AreEqual(HenkeBase91.MinEfficiency, instance.MinEfficiency);
+        }
+
 
         [TestMethod]
         public void HenkeBase91_TV1() => TestVector("", "");

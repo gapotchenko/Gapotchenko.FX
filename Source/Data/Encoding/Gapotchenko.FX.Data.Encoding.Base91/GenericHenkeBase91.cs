@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -50,12 +51,27 @@ namespace Gapotchenko.FX.Data.Encoding
         protected const int Base = 91;
 
         /// <summary>
-        /// Maximum efficiency of basE91 encoding.
+        /// Number of symbols per encoded block.
         /// </summary>
-        public new const float MaxEfficiency = 0.875f;
+        protected const int SymbolsPerEncodedBlock = 2;
 
         /// <summary>
-        /// Average efficiency of basE91 encoding.
+        /// Maximum number of bits per decoded block.
+        /// </summary>
+        protected const int MaxBitsPerDecodedBlock = 14;
+
+        /// <summary>
+        /// Minimum number of bits per decoded block.
+        /// </summary>
+        protected const int MinBitsPerDecodedBlock = 13;
+
+        /// <summary>
+        /// Maximum efficiency of basE91 encoding.
+        /// </summary>
+        public new const float MaxEfficiency = (float)MaxBitsPerDecodedBlock / 8 / SymbolsPerEncodedBlock; // = 0.875
+
+        /// <summary>
+        /// Typical efficiency of basE91 encoding.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
         public new const float Efficiency = 0.8132f;
@@ -63,7 +79,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// Minimum efficiency of basE91 encoding.
         /// </summary>
-        public new const float MinEfficiency = 0.8125f;
+        public new const float MinEfficiency = (float)MinBitsPerDecodedBlock / 8 / SymbolsPerEncodedBlock; // = 0.8125
 
         #endregion
 
@@ -101,25 +117,70 @@ namespace Gapotchenko.FX.Data.Encoding
             protected bool m_Eof;
         }
 
-        //sealed class EncoderContext : CodecContextBase, IEncoderContext
-        //{
-        //    public EncoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-        //        base(alphabet, options)
-        //    {
-        //    }
-        //}
-
-        /// <inheritdoc/>
-        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options)
+        sealed class EncoderContext : CodecContextBase, IEncoderContext
         {
-            throw new NotImplementedException();
+            public EncoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
+                base(alphabet, options)
+            {
+            }
+
+            public void Encode(ReadOnlySpan<byte> input, TextWriter output)
+            {
+                if (m_Eof)
+                    return;
+
+                var alphabet = m_Alphabet;
+
+                foreach (var b in input)
+                {
+                    // Accumulate data bits.
+                    m_Bits = (m_Bits << 8) | b;
+                    m_Modulus += 8;
+
+                    if (m_Modulus > 13)
+                    {
+                        m_Modulus = 0;
+
+                        //uint a = m_Bits;
+                        //for (int i = SymbolsPerEncodedBlock - 1; i >= 0; --i)
+                        //{
+                        //    var si = (int)(a % Base);
+                        //    a /= Base;
+
+                        //    m_Buffer[i] = alphabet[si];
+                        //}
+
+                        //EmitLineBreak(output);
+                        //output.Write(m_Buffer);
+
+                        //MoveLinePosition(SymbolsPerEncodedBlock);
+                    }
+                }
+
+            }
         }
 
         /// <inheritdoc/>
-        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options)
-        {
-            throw new NotImplementedException();
-        }
+        protected sealed override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => CreateEncoderContextCore(Alphabet, options);
+
+        /// <inheritdoc/>
+        protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => CreateDecoderContextCore(Alphabet, options);
+
+        /// <summary>
+        /// Creates encoder context with specified alphabet and options.
+        /// </summary>
+        /// <param name="alphabet">The alphabet.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The encoder context.</returns>
+        protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new EncoderContext(alphabet, options);
+
+        /// <summary>
+        /// Creates decoder context with specified alphabet and options.
+        /// </summary>
+        /// <param name="alphabet">The alphabet.</param>
+        /// <param name="options">The options.</param>
+        /// <returns>The decoder context.</returns>
+        protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => throw new NotImplementedException(); // new DecoderContext(alphabet, options);
 
         /// <inheritdoc/>
         public override bool IsCaseSensitive => Alphabet.IsCaseSensitive;
