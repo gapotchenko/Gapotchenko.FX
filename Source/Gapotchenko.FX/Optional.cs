@@ -36,7 +36,7 @@ namespace Gapotchenko.FX
         /// An <see cref="Optional{T}"/> object without a value when the specified parameter equals to the default value of type <typeparamref name="T"/>;
         /// otherwise, an <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the <paramref name="value"/> parameter.
         /// </returns>
-        public static Optional<T> Discriminate<T>(T value) => Discriminate(value, default(T));
+        public static Optional<T> Discriminate<T>(T value) => Discriminate(value, default(T)!);
 
         /// <summary>
         /// Either creates a new <see cref="Optional{T}"/> object initialized to a specified value or

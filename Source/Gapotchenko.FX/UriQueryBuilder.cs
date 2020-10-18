@@ -255,7 +255,7 @@ namespace Gapotchenko.FX
 
             int ql = uri.Length;
             if (ql == 0)
-                return query;
+                return query ?? string.Empty;
 
             int fsi = uri.IndexOf('#');
             if (fsi != -1)

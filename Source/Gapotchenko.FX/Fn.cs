@@ -21,8 +21,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <typeparam name="T">The type a function works with.</typeparam>
         /// <returns>The default value of <typeparamref name="T"/>.</returns>
-        [return: MaybeNull]
-        public static T Default<T>() => default;
+        public static T Default<T>() => default!;
 
         /// <summary>
         /// Gets a delegate to a pure parameterless function that does nothing.
