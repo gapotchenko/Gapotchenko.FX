@@ -30,6 +30,7 @@ namespace Gapotchenko.FX.Diagnostics
                 int ch = tr.Read();
                 if (ch == -1)
                     break;
+
                 var c = (char)ch;
 
                 switch (c)
