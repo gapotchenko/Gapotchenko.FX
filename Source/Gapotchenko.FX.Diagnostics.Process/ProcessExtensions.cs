@@ -76,15 +76,13 @@ namespace Gapotchenko.FX.Diagnostics
         }
 
         /// <summary>
-        /// <para>
         /// Gets the file name of a process image.
-        /// </para>
-        /// <para>
-        /// Usually the returned value corresponds to the value of <see cref="ProcessModule.FileName"/> property of a main process module.
+        /// </summary>
+        /// <remarks>
+        /// Usually, the value returned by this method equals to the value returned by <see cref="ProcessModule.FileName"/> property of the main process module.
         /// The difference becomes apparent when the current process cannot access the module information due to security restrictions imposed by the host platform.
         /// While <see cref="ProcessModule.FileName"/> may not work in that situation, this method always works.
-        /// </para>
-        /// </summary>
+        /// </remarks>
         /// <param name="process">The process to get image file name for.</param>
         /// <returns>The file name of a process image.</returns>
         public static string GetImageFileName(this Process process)
