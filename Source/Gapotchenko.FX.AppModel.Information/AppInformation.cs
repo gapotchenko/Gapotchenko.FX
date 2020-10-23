@@ -62,7 +62,7 @@ namespace Gapotchenko.FX.AppModel
         /// <returns>The app title.</returns>
         protected virtual string? RetrieveTitle()
         {
-            string title;
+            string? title;
 
             var entryAssembly = EntryAssembly;
             if (entryAssembly != null)
@@ -104,7 +104,7 @@ namespace Gapotchenko.FX.AppModel
         /// <returns>The app description.</returns>
         protected virtual string? RetrieveDescription()
         {
-            string description;
+            string? description;
 
             var entryAssembly = EntryAssembly;
             if (entryAssembly != null)
@@ -212,7 +212,7 @@ namespace Gapotchenko.FX.AppModel
         /// <returns>The product name.</returns>
         protected virtual string? RetrieveProductName()
         {
-            string productName;
+            string? productName;
 
             var entryAssembly = EntryAssembly;
             if (entryAssembly != null)
@@ -312,7 +312,7 @@ namespace Gapotchenko.FX.AppModel
         /// <returns>The product informational version.</returns>
         protected virtual string RetrieveInformationalVersion()
         {
-            string informationalVersion;
+            string? informationalVersion;
 
             var entryAssembly = EntryAssembly;
             if (entryAssembly != null)
@@ -354,7 +354,7 @@ namespace Gapotchenko.FX.AppModel
         /// <returns>The company name.</returns>
         protected virtual string? RetrieveCompanyName()
         {
-            string companyName;
+            string? companyName;
 
             var entryAssembly = EntryAssembly;
             if (entryAssembly != null)
@@ -411,7 +411,7 @@ namespace Gapotchenko.FX.AppModel
         /// <returns>App copyright information.</returns>
         protected virtual string? RetrieveCopyright()
         {
-            string copyright;
+            string? copyright;
 
             var entryAssembly = EntryAssembly;
             if (entryAssembly != null)
@@ -456,7 +456,7 @@ namespace Gapotchenko.FX.AppModel
         /// <returns>App trademark information.</returns>
         protected virtual string? RetrieveTrademark()
         {
-            string trademark;
+            string? trademark;
 
             var entryAssembly = EntryAssembly;
             if (entryAssembly != null)
@@ -518,9 +518,9 @@ namespace Gapotchenko.FX.AppModel
                         if (localPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                         {
 #if !NETCOREAPP3_0
-                        string frameworkDescription = RuntimeInformation.FrameworkDescription;
-                        if (frameworkDescription.StartsWith(".NET Core ", StringComparison.OrdinalIgnoreCase) &&
-                            Environment.Version.Major >= 3)
+                            string frameworkDescription = RuntimeInformation.FrameworkDescription;
+                            if (frameworkDescription.StartsWith(".NET Core ", StringComparison.OrdinalIgnoreCase) &&
+                                Environment.Version.Major >= 3)
 #endif
                             {
                                 string? exeExtension;
