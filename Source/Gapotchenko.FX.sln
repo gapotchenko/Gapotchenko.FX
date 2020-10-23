@@ -63,7 +63,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Home", "Home", "{886D55E2-1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mastering", "Mastering", "{68BA92DB-7296-463D-9C99-01357420A1A0}"
 	ProjectSection(SolutionItems) = preProject
-		Mastering\AssemblyMetadata.cs = Mastering\AssemblyMetadata.cs
 		Mastering\Metadata.targets = Mastering\Metadata.targets
 		Mastering\NuGet.targets = Mastering\NuGet.targets
 		Mastering\Targeting.targets = Mastering\Targeting.targets
