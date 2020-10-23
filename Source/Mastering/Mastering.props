@@ -32,7 +32,7 @@
   <!-- =================================================================== -->
 
   <Import Project="NuGet.props" />
-  <Import Project="TargetFrameworks.props" />
+  <Import Project="Targeting.props" />
   <Import Project="AssemblySignature.props" />
   <Import Project="Optimization.props" Condition=" Exists('Optimization.props') " />
   <Import Project="AuthenticodeSignature.props" />
