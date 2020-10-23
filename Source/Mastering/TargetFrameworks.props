@@ -1,7 +1,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <PropertyGroup>
-    <TargetFrameworks Condition=" $(IsPublicProject) ">net45;net46;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
+  <PropertyGroup Condition=" $(IsPublicProject) ">
+    <TargetFrameworks>net45;net46;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0;net5.0</TargetFrameworks>    
+    <CheckEolTargetFramework>false</CheckEolTargetFramework> <!-- Disables NETSDK1138 warning -->
   </PropertyGroup>
 
   <!-- ================================================================== -->
@@ -59,6 +60,19 @@
     <!-- .NET Core 3.0 -->
     <GPFX_DefineConstants_NETCore30>$(GPFX_DefineConstants_NETCore21);TFF_ASYNC_DISPOSABLE;TFF_BITOPERATIONS;TFF_DEFAULT_INTERFACE;TFF_NULLABLE_ATTRIBUTES;TFF_SWITCHEXPRESSIONEXCEPTION;TFF_TEXT_IO_STRINGBUILDER</GPFX_DefineConstants_NETCore30>
     <DefineConstants Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">$(DefineConstants);$(GPFX_DefineConstants_NETCore30)</DefineConstants>
+
+    <!-- .NET Core 3.1 -->
+    <GPFX_DefineConstants_NETCore31>$(GPFX_DefineConstants_NETCore30)</GPFX_DefineConstants_NETCore31>
+    <DefineConstants Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">$(DefineConstants);$(GPFX_DefineConstants_NETCore31)</DefineConstants>
+  </PropertyGroup>
+
+  <!-- ================================================================== -->
+  <!-- .NET -->
+  <!-- ================================================================== -->
+  <PropertyGroup>
+    <!-- .NET 5.0 -->
+    <GPFX_DefineConstants_NET50>$(GPFX_DefineConstants_NETCore31);TFF_ISEXTERNALINIT</GPFX_DefineConstants_NET50>
+    <DefineConstants Condition=" '$(TargetFramework)' == 'net5.0' ">$(DefineConstants);$(GPFX_DefineConstants_NET50)</DefineConstants>
   </PropertyGroup>
 
 </Project>
