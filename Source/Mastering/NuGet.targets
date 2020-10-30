@@ -108,15 +108,18 @@ var supportedPlatforms = new List<string>();
 
 var targetFrameworks = new HashSet<string>(TargetFrameworks.Split(';'), StringComparer.OrdinalIgnoreCase);
 
-bool containsNETStandard20 = targetFrameworks.Contains("netstandard2.0");
-if (containsNETStandard20)
-    supportedPlatforms.Add(".NET Standard 2.0+");
+bool supportsNETStandard20 = targetFrameworks.Contains("netstandard2.0");
+bool supportsNETCore20 = targetFrameworks.Contains("netcoreapp2.0") || supportsNETStandard20;
+bool supportsNET50 = targetFrameworks.Contains("net5.0") || supportsNETCore20;
 
+if (supportsNET50)
+    supportedPlatforms.Add(".NET 5.0+");
+if (supportsNETStandard20)
+    supportedPlatforms.Add(".NET Standard 2.0+");
+if (supportsNETCore20)
+    supportedPlatforms.Add(".NET Core 2.0+");
 if (targetFrameworks.Contains("net45"))
     supportedPlatforms.Add(".NET Framework 4.5+");
-
-if (targetFrameworks.Contains("netcoreapp2.0") || containsNETStandard20)
-    supportedPlatforms.Add(".NET Core 2.0+");
 
 if (supportedPlatforms.Count != 0)
 {
@@ -128,6 +131,8 @@ if (supportedPlatforms.Count != 0)
         tw.WriteLine(i);
     }
 }
+
+// ------------------------------
 
 Description = tw.ToString().TrimEnd();
         ]]>
