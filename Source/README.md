@@ -11,9 +11,9 @@ The full list of Gapotchenko.FX modules is presented in the table below.
 ### Table
 
 - [Gapotchenko.FX](Gapotchenko.FX)
-- [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
+- [Gapotchenko.FX.AppModel.Information](Gapotchenko.FX.AppModel.Information)
 - [Gapotchenko.FX.Collections](Gapotchenko.FX.Collections)
-- [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Console](Gapotchenko.FX.Console)
 - [Gapotchenko.FX.Data.Linq](Data/Gapotchenko.FX.Data.Linq) ✱
 - [Gapotchenko.FX.Diagnostics](Gapotchenko.FX.Diagnostics.CommandLine)
   - [Gapotchenko.FX.Diagnostics.CommandLine](Gapotchenko.FX.Diagnostics.CommandLine)
