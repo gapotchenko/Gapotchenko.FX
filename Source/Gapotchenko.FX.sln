@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Threading", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.Process", "Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj", "{C6404A82-9B1F-4A45-BCAD-39D83FCF84B9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Tests", "Test\Gapotchenko.FX.Test\Gapotchenko.FX.Tests.csproj", "{394AB9E5-2AF1-4C7A-936C-43E5DC3351C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Tests", "Tests\Gapotchenko.FX.Tests\Gapotchenko.FX.Tests.csproj", "{394AB9E5-2AF1-4C7A-936C-43E5DC3351C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Framework", "01. Framework", "{223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,14 +18,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Framework", "01. Framew
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03. Tests", "03. Tests", "{C0007571-9A88-4691-AAEA-4D6E2A04CAD6}"
 	ProjectSection(SolutionItems) = preProject
-		Test\README.md = Test\README.md
+		Tests\README.md = Tests\README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Collections", "Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj", "{9CD580F3-FFC0-4071-8CE3-F21E204E5763}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq", "Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj", "{9094EE1A-5940-40BE-A8AB-965BAEF37A44}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Tests", "Test\Gapotchenko.FX.Linq.Test\Gapotchenko.FX.Linq.Tests.csproj", "{2E3E19B9-7262-4CEA-8329-F41C212CE54D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Tests", "Tests\Gapotchenko.FX.Linq.Tests\Gapotchenko.FX.Linq.Tests.csproj", "{2E3E19B9-7262-4CEA-8329-F41C212CE54D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Text", "Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj", "{77FC3FD0-89D7-46B3-BB6B-555A77665738}"
 EndProject
@@ -52,9 +52,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Profiles", "02. Profile
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Profiles.Core", "Profiles\Gapotchenko.FX.Profiles.Core\Gapotchenko.FX.Profiles.Core.csproj", "{0BA201BE-385A-43CC-94B9-B934EBB4514F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Text.Tests", "Test\Gapotchenko.FX.Text.Test\Gapotchenko.FX.Text.Tests.csproj", "{45485C62-828E-47C3-B58A-E89AA5781AAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Text.Tests", "Tests\Gapotchenko.FX.Text.Tests\Gapotchenko.FX.Text.Tests.csproj", "{45485C62-828E-47C3-B58A-E89AA5781AAB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Collections.Tests", "Test\Gapotchenko.FX.Collections.Test\Gapotchenko.FX.Collections.Tests.csproj", "{83E881DB-1419-4145-980D-51DCE3650427}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Collections.Tests", "Tests\Gapotchenko.FX.Collections.Tests\Gapotchenko.FX.Collections.Tests.csproj", "{83E881DB-1419-4145-980D-51DCE3650427}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Home", "Home", "{886D55E2-1640-4D63-AA13-4C562469E669}"
 	ProjectSection(SolutionItems) = preProject
@@ -76,13 +76,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{FE418288-EAB6-41FC-A2B6-6FDEB2473213}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Threading.Tests", "Test\Gapotchenko.FX.Threading.Test\Gapotchenko.FX.Threading.Tests.csproj", "{D4447E26-D520-46C1-8FAE-D6176318F376}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Threading.Tests", "Tests\Gapotchenko.FX.Threading.Tests\Gapotchenko.FX.Threading.Tests.csproj", "{D4447E26-D520-46C1-8FAE-D6176318F376}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Linq", "Data\Gapotchenko.FX.Data.Linq\Gapotchenko.FX.Data.Linq.csproj", "{5C7C60BA-695A-4219-8645-7B32169F74D9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Numerics", "Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj", "{CF4B10ED-B17A-406F-8C5A-8945BD73C663}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Numerics.Tests", "Test\Gapotchenko.FX.Numerics.Test\Gapotchenko.FX.Numerics.Tests.csproj", "{9A39605A-F280-4C5F-AAFB-7F03CDFBF7E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Numerics.Tests", "Tests\Gapotchenko.FX.Numerics.Tests\Gapotchenko.FX.Numerics.Tests.csproj", "{9A39605A-F280-4C5F-AAFB-7F03CDFBF7E2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Drawing", "Gapotchenko.FX.Drawing\Gapotchenko.FX.Drawing.csproj", "{F4F78C5D-816A-4434-ACCB-C8C874BEF459}"
 EndProject
@@ -97,7 +97,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{C2DC67EB-5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{0D07D6F9-E558-4E2F-8DFE-7A295BFB5472}"
 	ProjectSection(SolutionItems) = preProject
-		Test\Data\README.md = Test\Data\README.md
+		Tests\Data\README.md = Tests\Data\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Encoding", "Encoding", "{3FEEE50B-7D21-48C8-9DB2-C410DB674EB5}"
@@ -110,16 +110,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encodin
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Encoding", "Encoding", "{DE529E09-D427-41CF-887B-79979CF071C6}"
 	ProjectSection(SolutionItems) = preProject
-		Test\Data\Encoding\README.md = Test\Data\Encoding\README.md
+		Tests\Data\Encoding\README.md = Tests\Data\Encoding\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Tests", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Test\Gapotchenko.FX.Data.Encoding.Tests.csproj", "{22603866-075E-4D85-9BB4-730D2BD71D15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Tests", "Tests\Data\Encoding\Gapotchenko.FX.Data.Encoding.Tests\Gapotchenko.FX.Data.Encoding.Tests.csproj", "{22603866-075E-4D85-9BB4-730D2BD71D15}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base32", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base32\Gapotchenko.FX.Data.Encoding.Base32.csproj", "{83D53DEA-66B1-491E-A038-5A8FD8DB1ADF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base32.Tests", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base32.Test\Gapotchenko.FX.Data.Encoding.Base32.Tests.csproj", "{91792366-3F60-4444-BFFA-3AB1D1FE0489}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base32.Tests", "Tests\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base32.Tests\Gapotchenko.FX.Data.Encoding.Base32.Tests.csproj", "{91792366-3F60-4444-BFFA-3AB1D1FE0489}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Tests.Bench", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Test.Bench\Gapotchenko.FX.Data.Encoding.Tests.Bench.csproj", "{06B7F74D-1094-4843-A55C-5B577858D464}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Tests.Bench", "Tests\Data\Encoding\Gapotchenko.FX.Data.Encoding.Tests.Bench\Gapotchenko.FX.Data.Encoding.Tests.Bench.csproj", "{06B7F74D-1094-4843-A55C-5B577858D464}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base91", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base91\Gapotchenko.FX.Data.Encoding.Base91.csproj", "{3F52F9DE-9397-42DF-9E03-A2DA6F9219A3}"
 EndProject
@@ -129,23 +129,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encodin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base64", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64\Gapotchenko.FX.Data.Encoding.Base64.csproj", "{C44FF569-B8D4-43A0-B84C-66D6403DBE31}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base64.Tests", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64.Test\Gapotchenko.FX.Data.Encoding.Base64.Tests.csproj", "{6E1ACE3E-AE74-44BF-A6DB-655E5C34B636}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base64.Tests", "Tests\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64.Tests\Gapotchenko.FX.Data.Encoding.Base64.Tests.csproj", "{6E1ACE3E-AE74-44BF-A6DB-655E5C34B636}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base16.Tests", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16.Test\Gapotchenko.FX.Data.Encoding.Base16.Tests.csproj", "{D862A0D3-0894-45F6-8242-1E888103F6CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base16.Tests", "Tests\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16.Tests\Gapotchenko.FX.Data.Encoding.Base16.Tests.csproj", "{D862A0D3-0894-45F6-8242-1E888103F6CC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base24", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base24\Gapotchenko.FX.Data.Encoding.Base24.csproj", "{B105686D-CA0C-4B6C-8FDB-A7B70D857D02}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base24.Tests", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base24.Test\Gapotchenko.FX.Data.Encoding.Base24.Tests.csproj", "{85549320-1841-4629-8684-A565862841CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base24.Tests", "Tests\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base24.Tests\Gapotchenko.FX.Data.Encoding.Base24.Tests.csproj", "{85549320-1841-4629-8684-A565862841CD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base58", "Data\Encoding\Gapotchenko.FX.Data.Encoding.Base58\Gapotchenko.FX.Data.Encoding.Base58.csproj", "{62D6B37C-C7CE-419D-A94C-65810C171744}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base58.Tests", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base58.Test\Gapotchenko.FX.Data.Encoding.Base58.Tests.csproj", "{1E8CD591-B6CC-474D-A74D-2061C4BCA4D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base58.Tests", "Tests\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base58.Tests\Gapotchenko.FX.Data.Encoding.Base58.Tests.csproj", "{1E8CD591-B6CC-474D-A74D-2061C4BCA4D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.AppModel.Information", "Gapotchenko.FX.AppModel.Information\Gapotchenko.FX.AppModel.Information.csproj", "{006DFB7E-052A-4496-B9A0-7AF038058AB7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Console", "Gapotchenko.FX.Console\Gapotchenko.FX.Console.csproj", "{FE72C33E-3065-416D-8431-9884422B4947}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.Process.Tests", "Test\Gapotchenko.FX.Diagnostics.Process.Test\Gapotchenko.FX.Diagnostics.Process.Tests.csproj", "{5D6BD327-9F56-4FCF-A14D-8B95646805FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.Process.Tests", "Tests\Gapotchenko.FX.Diagnostics.Process.Tests\Gapotchenko.FX.Diagnostics.Process.Tests.csproj", "{5D6BD327-9F56-4FCF-A14D-8B95646805FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diagnostics", "Diagnostics", "{EE48EFC8-C94C-4210-897A-769BC8783C6D}"
 EndProject
@@ -153,9 +153,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Linq", "Linq", "{EE6BD3CE-2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diagnostics", "Diagnostics", "{B9F34781-8B2B-4E38-8DCB-1B99EB93F817}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.CommandLine.Tests", "Test\Gapotchenko.FX.Diagnostics.CommandLine.Test\Gapotchenko.FX.Diagnostics.CommandLine.Tests.csproj", "{9ABBEC51-84C6-46E3-A7C4-EA694ED3A8F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.CommandLine.Tests", "Tests\Gapotchenko.FX.Diagnostics.CommandLine.Tests\Gapotchenko.FX.Diagnostics.CommandLine.Tests.csproj", "{9ABBEC51-84C6-46E3-A7C4-EA694ED3A8F1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base91.Tests", "Test\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base91.Test\Gapotchenko.FX.Data.Encoding.Base91.Tests.csproj", "{63E8508D-95D5-4C4D-9073-F74B980806F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base91.Tests", "Tests\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base91.Tests\Gapotchenko.FX.Data.Encoding.Base91.Tests.csproj", "{63E8508D-95D5-4C4D-9073-F74B980806F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

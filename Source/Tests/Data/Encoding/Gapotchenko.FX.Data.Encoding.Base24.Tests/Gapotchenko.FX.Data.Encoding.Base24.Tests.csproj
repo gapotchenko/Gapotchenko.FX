@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net45;netcoreapp3.1</TargetFrameworks>
@@ -13,7 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16\Gapotchenko.FX.Data.Encoding.Base16.csproj" />
-    <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding.Test.Bench\Gapotchenko.FX.Data.Encoding.Tests.Bench.csproj" />
+    <ProjectReference Include="..\..\..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base24\Gapotchenko.FX.Data.Encoding.Base24.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding.Tests.Bench\Gapotchenko.FX.Data.Encoding.Tests.Bench.csproj" />
   </ItemGroup>
 
 </Project>
