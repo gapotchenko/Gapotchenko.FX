@@ -94,13 +94,13 @@ The code above produces the following output:
 
 This is a neat departure from a traditional .NET convention where it always throws `ArgumentNullException`.
 Instead, Gapotchenko.FX uses a slightly different philosophy.
-It does the best possible job under existing conditions by following common-sense expectations of a customer.
+It does the best job possible under existing conditions by following common-sense expectations of a customer.
 
 
 ### Split
 
 `CommandLine.Split` provides the opposite operation to `CommandLine.Build`.
-It allows to split a command line string into a list of arguments:
+It allows to split a command line string into a list of arguments using the rules of a host operating system:
 
 ``` csharp
 using Gapotchenko.FX.Diagnostics;
