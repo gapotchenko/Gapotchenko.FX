@@ -3,7 +3,15 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Console.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Console)
 
-The module provides console control and visualization functionality.
+The module provides virtual terminal functionality, console traits and useful primitives for console apps.
+
+## Virtual Terminal
+
+
+
+## Console Traits
+
+## MoreTextWriter for Paginated Output
 
 ## Usage
 
