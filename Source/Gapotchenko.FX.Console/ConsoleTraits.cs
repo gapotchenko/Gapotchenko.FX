@@ -23,6 +23,9 @@ namespace Gapotchenko.FX.Console
         /// </summary>
         public static bool IsColorAvailable => !(Console.IsOutputRedirected || Console.IsErrorRedirected);
 
+        /// <summary>
+        /// A tristate atomic data type for thread-safe representation of an optional boolean value.
+        /// </summary>
         enum BoolTrait : byte
         {
             None,
