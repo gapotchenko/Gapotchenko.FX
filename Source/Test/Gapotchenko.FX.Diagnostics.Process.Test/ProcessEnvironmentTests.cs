@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 
-namespace Gapotchenko.FX.Diagnostics.Process.Test
+namespace Gapotchenko.FX.Diagnostics.Process.Tests
 {
     using Process = System.Diagnostics.Process;
 

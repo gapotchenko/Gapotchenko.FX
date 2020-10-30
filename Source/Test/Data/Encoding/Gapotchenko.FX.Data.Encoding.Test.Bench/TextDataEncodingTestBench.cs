@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
 
-namespace Gapotchenko.FX.Data.Encoding.Test.Bench
+namespace Gapotchenko.FX.Data.Encoding.Tests.Bench
 {
     using Encoding = System.Text.Encoding;
 

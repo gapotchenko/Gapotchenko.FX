@@ -3,7 +3,7 @@ using System.Buffers;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace Gapotchenko.FX.Data.Encoding.Test.Bench
+namespace Gapotchenko.FX.Data.Encoding.Tests.Bench
 {
     static class RandomNumberGeneratorPolyfill
     {

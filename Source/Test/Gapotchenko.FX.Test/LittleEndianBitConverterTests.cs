@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
-namespace Gapotchenko.FX.Test
+namespace Gapotchenko.FX.Tests
 {
     [TestClass]
     public class LittleEndianBitConverterTests

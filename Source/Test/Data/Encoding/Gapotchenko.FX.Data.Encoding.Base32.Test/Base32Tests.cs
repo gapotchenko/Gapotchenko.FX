@@ -1,10 +1,10 @@
-﻿using Gapotchenko.FX.Data.Encoding.Test;
-using Gapotchenko.FX.Data.Encoding.Test.Bench;
+﻿using Gapotchenko.FX.Data.Encoding.Tests;
+using Gapotchenko.FX.Data.Encoding.Tests.Bench;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 
-namespace Gapotchenko.FX.Data.Encoding.Test
+namespace Gapotchenko.FX.Data.Encoding.Tests
 {
     using Encoding = System.Text.Encoding;
 

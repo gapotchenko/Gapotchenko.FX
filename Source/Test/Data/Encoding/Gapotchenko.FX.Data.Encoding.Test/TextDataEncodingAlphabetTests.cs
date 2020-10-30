@@ -1,9 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Gapotchenko.FX.Data.Encoding.Test
+namespace Gapotchenko.FX.Data.Encoding.Tests
 {
     [TestClass]
     public class TextDataEncodingAlphabetTests

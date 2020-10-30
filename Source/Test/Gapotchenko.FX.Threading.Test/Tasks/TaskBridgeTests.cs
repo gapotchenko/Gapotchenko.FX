@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Threading.Test.Tasks
+namespace Gapotchenko.FX.Threading.Tests.Tasks
 {
     [TestClass]
     public class TaskBridgeTests

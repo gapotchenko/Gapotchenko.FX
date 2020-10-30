@@ -11,7 +11,7 @@
   <PropertyGroup>
     <MasteringDir>$(MSBuildThisFileDirectory)</MasteringDir>
     <IsPublicProject>false</IsPublicProject>
-    <IsPublicProject Condition=" !($(MSBuildProjectName.EndsWith('.Test')) OR $(MSBuildProjectName.Contains('.Test.')) OR $(MSBuildProjectName.EndsWith('.Harness')) OR $(MSBuildProjectName.Contains('.Harness.'))) ">true</IsPublicProject>
+    <IsPublicProject Condition=" !($(MSBuildProjectName.EndsWith('.Test')) OR $(MSBuildProjectName.EndsWith('.Tests')) OR $(MSBuildProjectName.Contains('.Test.')) OR $(MSBuildProjectName.Contains('.Tests.')) OR $(MSBuildProjectName.EndsWith('.Harness')) OR $(MSBuildProjectName.Contains('.Harness.'))) ">true</IsPublicProject>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gapotchenko.FX.Data.Encoding.Test.Bench
+namespace Gapotchenko.FX.Data.Encoding.Tests.Bench
 {
     public static class TextDataEncodingTemplates
     {

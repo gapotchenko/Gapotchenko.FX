@@ -3,9 +3,7 @@ extern alias testable;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 
-#nullable enable
-
-namespace Gapotchenko.FX.Diagnostics.CommandLine.Test
+namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests
 {
     using CommandLine = testable::Gapotchenko.FX.Diagnostics.CommandLine;
 

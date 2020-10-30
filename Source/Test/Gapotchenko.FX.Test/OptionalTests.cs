@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Gapotchenko.FX.Test
+namespace Gapotchenko.FX.Tests
 {
     [TestClass]
     public class OptionalTests

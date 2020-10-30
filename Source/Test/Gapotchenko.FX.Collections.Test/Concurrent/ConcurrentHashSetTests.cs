@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
-namespace Gapotchenko.FX.Collections.Test.Concurrent
+namespace Gapotchenko.FX.Collections.Tests.Concurrent
 {
     [TestClass]
     public class ConcurrentHashSetTests

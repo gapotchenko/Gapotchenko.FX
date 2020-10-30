@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Gapotchenko.FX.Diagnostics.CommandLine.Test
+namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests
 {
     [TestClass]
     public partial class CommandLineTests

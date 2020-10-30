@@ -1,10 +1,7 @@
-﻿using Gapotchenko.FX.Threading;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Gapotchenko.FX.Threading.Test
+namespace Gapotchenko.FX.Threading.Tests
 {
     [TestClass]
     public class ThreadingCapabilitiesTests

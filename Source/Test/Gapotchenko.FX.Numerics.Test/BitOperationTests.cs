@@ -1,10 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
 
-namespace Gapotchenko.FX.Test.Numerics
+namespace Gapotchenko.FX.Numerics.Tests
 {
     [TestClass]
     public class BitOperationTests

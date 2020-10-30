@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Gapotchenko.FX.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Gapotchenko.FX.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Gapotchenko.FX.Collections.Test.Generic
+namespace Gapotchenko.FX.Collections.Tests.Generic
 {
     [TestClass]
     public class ListExtensionsTests

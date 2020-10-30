@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;netcoreapp3.1</TargetFrameworks>
-    <RootNamespace>Gapotchenko.FX.Data.Encoding.Test</RootNamespace>
+    <RootNamespace>Gapotchenko.FX.Data.Encoding.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64\Gapotchenko.FX.Data.Encoding.Base64.csproj" />
+    <ProjectReference Include="..\..\..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base91\Gapotchenko.FX.Data.Encoding.Base91.csproj" />
     <ProjectReference Include="..\..\..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
-    <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding.Test.Bench\Gapotchenko.FX.Data.Encoding.Test.Bench.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding.Test.Bench\Gapotchenko.FX.Data.Encoding.Tests.Bench.csproj" />
   </ItemGroup>
 
 </Project>

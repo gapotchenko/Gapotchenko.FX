@@ -1,9 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-#nullable enable
-
-namespace Gapotchenko.FX.Diagnostics.CommandLine.Test
+namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests
 {
     [TestClass]
     public class CommandLineBuilderTests

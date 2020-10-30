@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Linq.Test
+namespace Gapotchenko.FX.Linq.Tests
 {
     [TestClass]
     public class MemoizationTests
