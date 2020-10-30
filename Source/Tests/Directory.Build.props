@@ -2,6 +2,6 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net45;net472;netcoreapp3.1;net5.0</TargetFrameworks>
   </PropertyGroup>
 </Project>
