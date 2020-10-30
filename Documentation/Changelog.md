@@ -6,12 +6,14 @@
 
 Release date: not released yet
 
+- Added support for .NET 5.0 target framework
 - Introduced `Gapotchenko.FX.AppModel.Information` module that allows to programmatically retrieve information about the app
 - Introduced `Gapotchenko.FX.Console` module that provides virtual terminal functionality, console traits and a powerful `MoreTextWriter` primitive for improved user friendliness of your console apps
 - Added `System.MathF` polyfill
 - Added polyfills for nullable annotation attributes
+- Added polyfill for init-only property setters
 - Added `Fn.Ignore(value)` function that ignores a specified value for languages that do not have a built-in equivalent. A typical usage is to fire and forget a parallel `Task` without producing a compiler warning
-- Added `Process.GetImageFileName()` method that allows to retrieve file name of a running process without security restrictions imposed by the host OS
+- Added `Process.GetImageFileName()` method that allows to retrieve file name of a running process without security limitations imposed by the host OS
 - Added `bool ISet.AddRange(collection)` extension method that allows to add elements to a set in bulk
 - Added `CommandLine.EscapeArgument` and `CommandLine.EscapeFileName` methods
 - .NET Framework 4.0 target is retired. The minimal supported .NET Framework version is 4.5
