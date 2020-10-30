@@ -28,7 +28,7 @@ ANSI escape sequences become handy when the complexity of console output reaches
 
 ![](../../Documentation/Assets/console-eazfuscator.net.png)
 
-It would be a very *involved* program to render such an output with a set of imperative calls.
+It would be a very *involved* code to render such an output with a set of imperative calls.
 
 But we can do better with [ANSI escape sequences](https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences):
 
@@ -38,16 +38,16 @@ using System;
 
 VirtualTerminal.EnableProcessing();
 
-
-
 Console.WriteLine(
 @"
 ");
 ```
 
 Please note that the implementation starts with a call to `VirtualTerminal.EnableProcessing` method.
-It is provided by `Gapotchenko.FX.Console` module and ensures that ANSI escape sequences are supported by console.
-In case when the host OS does not provide a native support for them, the method activates a virtual terminal emulation.
+It is provided by `Gapotchenko.FX.Console` module and ensures that support of ANSI escape sequences is activated for the console.
+In case when the host OS does not provide a native support for them, the method switches to a virtual terminal emulation.
+
+In this way, ANSI X3.64 control language is guaranteed to work on the widest range of host operating systems.
 
 ## Console Traits
 
