@@ -514,13 +514,13 @@ namespace Gapotchenko.FX.AppModel
                     {
                         string localPath = uri.LocalPath;
 
-#if NETSTANDARD || NETCOREAPP
+#if NETSTANDARD || NETCOREAPP || NET
                         if (localPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                         {
-#if !NETCOREAPP3_0
+#if !(NETCOREAPP3_0 || NETCOREAPP3_1 || NET)
                             string frameworkDescription = RuntimeInformation.FrameworkDescription;
-                            if (frameworkDescription.StartsWith(".NET Core ", StringComparison.OrdinalIgnoreCase) &&
-                                Environment.Version.Major >= 3)
+                            if (frameworkDescription.StartsWith(".NET Core ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 3 ||
+                                frameworkDescription.StartsWith(".NET ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 5)
 #endif
                             {
                                 string? exeExtension;
