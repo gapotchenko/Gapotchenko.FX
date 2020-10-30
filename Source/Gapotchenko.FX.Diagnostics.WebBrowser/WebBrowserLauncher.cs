@@ -70,8 +70,8 @@ namespace Gapotchenko.FX.Diagnostics
             if (os.Platform == PlatformID.Win32NT && os.Version.Major >= 6)
             {
                 // Windows Vista and newer versions provide user choice for a default browser.
-                using (var key = Registry.CurrentUser.OpenSubKey($@"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\{scheme}\UserChoice"))
-                    scheme = Empty.NullifyWhiteSpace(key?.GetValue("ProgId") as string) ?? scheme;
+                using var key = Registry.CurrentUser.OpenSubKey($@"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\{scheme}\UserChoice");
+                scheme = Empty.NullifyWhiteSpace(key?.GetValue("ProgId") as string) ?? scheme;
             }
 
             using (var key = Registry.ClassesRoot.OpenSubKey($@"{scheme}\shell\open\command"))
