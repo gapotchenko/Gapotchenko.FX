@@ -3,7 +3,22 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.AppModel.Information.svg)](https://www.nuget.org/packages/Gapotchenko.FX.AppModel.Information)
 
-The module provides functionality for retrieving the information about an app.
+The module provides functionality for getting the information about the app.
+
+## Current App
+
+To get the information about the current app, use `AppInformation.Current` property:
+
+```csharp
+using Gapotchenko.FX.AppModel.Information;
+
+Console.WriteLine("Product: {0}", info.ProductName);
+Console.WriteLine("Version: {0}", info.ProductVersion);
+Console.WriteLine("Company: {0}", info.CompanyName);
+Console.WriteLine("Copyright: {0}", info.Copyright);
+```
+
+This can be useful for purposes like showing an about box in GUI or app information header in console.
 
 ## Usage
 
