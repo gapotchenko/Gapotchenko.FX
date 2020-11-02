@@ -129,6 +129,23 @@ Let's take a look on example:
 ![Console output pagination](../../Documentation/Assets/console-eazfuscator.net-more.png)
 
 By pressing `Page Down` and `Down Arrow` keys it is possible to scroll the console output.
+
+Here is the simplest program that employs `MoreTextWriter` for output pagination:
+
+```csharp
+using Gapotchenko.FX.Console;
+using System;
+
+var more = new MoreTextWriter(Console.Out);
+
+for (int i = 1; i < 100; ++i)
+    more.WriteLine(i);
+```
+
+It produces the following output:
+
+![Console sample output](../../Documentation/Assets/console-more-sample.png)
+
 The keys, colors and styling are fully customizable by class inheritance.
 
 ## Usage
