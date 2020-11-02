@@ -1,5 +1,11 @@
 ﻿# Gapotchenko.FX.AppModel.Information
 
+<!--
+<docmeta>
+	<complexity>advanced</complexity>
+</docmeta>
+-->
+
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.AppModel.Information.svg)](https://www.nuget.org/packages/Gapotchenko.FX.AppModel.Information)
 
@@ -33,14 +39,19 @@ PM> Install-Package Gapotchenko.FX.AppModel.Information
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
-- &#x27B4; [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
+- &#x27B4; [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information) ✱
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data.Linq](../Data/Gapotchenko.FX.Data.Linq) ✱
 - [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Numerics](../Gapotchenko.FX.Numerics) ✱
+- [Gapotchenko.FX.Reflection.Loader](../Gapotchenko.FX.Reflection.Loader) ✱
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 
-Or look at the [full list of modules](..#available-modules).
+Symbol ✱ denotes an advanced module.
+
+Or take a look at the [full list of modules](..#available-modules).

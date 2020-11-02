@@ -6,13 +6,12 @@
 </docmeta>
 -->
 
-`Gapotchenko.FX.Data.Linq` is a complementary module to `System.Data.Linq` library provided as a part of .NET Framework.
-
-The module provides async support for LINQ to SQL technology.
-
-
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Linq.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Linq)
+
+`Gapotchenko.FX.Data.Linq` is a complementary module to `System.Data.Linq` library provided as a part of .NET Framework.
+The module provides async support for LINQ to SQL technology.
+
 
 The async support is provided by two extension methods for `System.Data.Linq.DataContext` class:
 
@@ -52,7 +51,7 @@ PM> Install-Package Gapotchenko.FX.Data.Linq
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 - [Gapotchenko.FX](../../Gapotchenko.FX)
-- [Gapotchenko.FX.AppModel.Information](../../Gapotchenko.FX.AppModel.Information)
+- [Gapotchenko.FX.AppModel.Information](../../Gapotchenko.FX.AppModel.Information) ✱
 - [Gapotchenko.FX.Collections](../../Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Console](../../Gapotchenko.FX.Console)
 - &#x27B4; [Gapotchenko.FX.Data.Linq](../Gapotchenko.FX.Data.Linq) ✱
