@@ -39,11 +39,15 @@ using System;
 VirtualTerminal.EnableProcessing();
 
 Console.WriteLine(
-@"
-");
+@"                 [35m__                     _             [34m_   _ ______ _______ 
+[42;32m██████[49m         [35m / _|                   | |           [34m| \ | |  ____|__   __|
+[42;32m██[49m     __ _ ___[35m| |_ _   _ ___  ___ __ _| |_ ___  _ __[34m|  \| | |__     | |   
+[42;32m█████[49m / _` |_  /[35m  _| | | / __|/ __/ _` | __/ _ \| '__[34m| . ` |  __|    | |   
+[42;32m██[49m   | (_| |/ /[35m| | | |_| \__ \ (_| (_| | || (_) | |[34m_ | |\  | |____   | |   
+[42;32m██████[49m\__,_/___|[35m_|  \__,_|___/\___\__,_/___\___/|_([34m_)|_| \_|______|  |_|[0m");
 ```
 
-Please note that the implementation starts with a call to `VirtualTerminal.EnableProcessing` method.
+Please note that the implementation starts with a call of `VirtualTerminal.EnableProcessing` method.
 It is provided by `Gapotchenko.FX.Console` module and ensures that support of ANSI escape sequences is activated for the console.
 In case when the host OS does not provide a native support for them, the method switches to a virtual terminal emulation.
 
