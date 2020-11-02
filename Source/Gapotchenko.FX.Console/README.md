@@ -1,4 +1,4 @@
-﻿# Gapotchenko.FX.Console
+# Gapotchenko.FX.Console
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Console.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Console)
@@ -39,12 +39,12 @@ using System;
 VirtualTerminal.EnableProcessing();
 
 Console.WriteLine(
-@"                 [35m__                     _             [34m_   _ ______ _______ 
-[42;32m██████[49m         [35m / _|                   | |           [34m| \ | |  ____|__   __|
-[42;32m██[49m     __ _ ___[35m| |_ _   _ ___  ___ __ _| |_ ___  _ __[34m|  \| | |__     | |   
-[42;32m█████[49m / _` |_  /[35m  _| | | / __|/ __/ _` | __/ _ \| '__[34m| . ` |  __|    | |   
-[42;32m██[49m   | (_| |/ /[35m| | | |_| \__ \ (_| (_| | || (_) | |[34m_ | |\  | |____   | |   
-[42;32m██████[49m\__,_/___|[35m_|  \__,_|___/\___\__,_/___\___/|_([34m_)|_| \_|______|  |_|[0m");
+    "                 \x1b[35m__                     _             \x1b[34m_   _ ______ _______ \n" +
+    "\x1b[42;32m██████\x1b[49m         \x1b[35m / _|                   | |           \x1b[34m| \\ | |  ____|__   __|\n" +
+    "\x1b[42;32m██\x1b[49m     __ _ ___\x1b[35m| |_ _   _ ___  ___ __ _| |_ ___  _ __\x1b[34m|  \\| | |__     | |   \n" +
+    "\x1b[42;32m█████\x1b[49m / _` |_  /\x1b[35m  _| | | / __|/ __/ _` | __/ _ \\| '__\x1b[34m| . ` |  __|    | |   \n" +
+    "\x1b[42;32m██[49m   | (_| |/ /\x1b[35m| | | |_| \\__ \\ (_| (_| | || (_) | |\x1b[34m_ | |\\  | |____   | |   \n" +
+    "\x1b[42;32m██████\x1b[49m\\__,_/___|\x1b[35m_|  \\__,_|___/\\___\\__,_/___\\___/|_(\x1b[34m_)|_| \\_|______|  |_|\x1b[0m");
 ```
 
 Please note that the implementation starts with a call of `VirtualTerminal.EnableProcessing` method.
