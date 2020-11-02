@@ -17,6 +17,7 @@ To get the information about the current app, use `AppInformation.Current` prope
 
 ```csharp
 using Gapotchenko.FX.AppModel.Information;
+using System;
 
 Console.WriteLine("Product: {0}", info.ProductName);
 Console.WriteLine("Version: {0}", info.ProductVersion);
