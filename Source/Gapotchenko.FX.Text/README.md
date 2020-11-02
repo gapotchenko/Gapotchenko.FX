@@ -61,9 +61,9 @@ An immediate improvement in expressiveness without duplication.
 
 ## StringBuilder Polyfills
 
-### StringBuilder.AppendJoin
+### AppendJoin
 
-`AppendJoin` is a method that appeared in later versions of .NET platform.
+`StringBuilder.AppendJoin` is a method that appeared in later versions of .NET platform.
 Gapochenko.FX provides a corresponding polyfill that can be used in code targeting older .NET versions.
 
 ## Usage
