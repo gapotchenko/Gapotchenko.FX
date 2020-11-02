@@ -90,11 +90,11 @@ String equality: False
 Path equivalence: True
 ```
 
-Note that file equivalence check is positive despite the different forms of a file path.
+Note that the file equivalence check is positive despite the different forms of a file path.
 
 ### PathStartsWith(string path, string value)
 
-Determines whether the beginning of the path matches the specified value in terms of file system equivalence.
+Determines whether the beginning of the path matches the specified value in terms of the file system equivalence.
 
 Say we have a folder name `Contoso\Reports\2012\Final`.
 How do we know that it starts with `Contoso\Reports`?
