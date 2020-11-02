@@ -11,7 +11,7 @@ From the very beginning, computers used to employ [teletypes](https://en.wikiped
 A teletype usually consisted of a keyboard and printer in a single box.
 
 At later stages of development, teletypes were swapped with specialized computer terminals such as [VT100](https://en.wikipedia.org/wiki/VT100).
-Those electronic devices provided not only basic input/output capabilities,
+Those electronic devices provided not only the basic input/output capabilities,
 but also colors, pseudographics, and a custom control language based around a then-emerging [ANSI X3.64](https://en.wikipedia.org/wiki/ANSI_escape_code) standard.
 
 Unix operating systems have built-in support for ANSI escape sequences that constitute the control language defined by the standard. Windows ignored that practice for a long time, up until Windows 10 version 1511.
