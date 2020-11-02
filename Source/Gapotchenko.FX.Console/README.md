@@ -26,7 +26,7 @@ for controlling the console.
 
 ANSI escape sequences become handy when the complexity of console output reaches a certain level:
 
-![](../../Documentation/Assets/console-eazfuscator.net.png)
+![Advanced console visualization](../../Documentation/Assets/console-eazfuscator.net.png)
 
 It would be a very *involved* code to render such an output with a set of imperative calls.
 
@@ -105,7 +105,7 @@ else
 `ConsoleTraits.WillDisappearOnExit` boolean property indicates whether a console window will immediately disappear on program exit.
 Such situation can occur when a console app is directly launched from a graphical shell. In Windows, you can achieve that by creating a desktop shortcut to a console app.
 
-A program can use the value of `WillDisappearOnExit` property to conveniently hold the console window in a visible state so that the user could read the output.
+A program can use the value of `WillDisappearOnExit` property to hold the console window in a visible state so that the user could read the output.
 Like so:
 
 ```csharp
@@ -117,7 +117,19 @@ if (ConsoleTraits.WillDisappearOnExit)
 }
 ```
 
-## MoreTextWriter for Paginated Output
+## `MoreTextWriter` for Paginated Output
+
+`MoreTextWriter` class from `Gapotchenko.FX.Console` module automatically manages pagination when written text exceeds the height of a console area visible to the user.
+
+The functionality is similar to `more` command line utility but can be used right within a program.
+This allows to provide an additional convenience for the end users.
+
+Let's take a look on example:
+
+![Console output pagination](../../Documentation/Assets/console-eazfuscator.net-more.png)
+
+By pressing `Page Down` and `Down Arrow` keys it is possible to scroll the console output.
+The keys, colors and styling are fully customizable by class inheritance.
 
 ## Usage
 
