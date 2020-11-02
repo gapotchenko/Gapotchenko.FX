@@ -5,7 +5,7 @@
 
 The module provides functionality for getting the information about the app.
 
-## Current App
+## Information About the Current App
 
 To get the information about the current app, use `AppInformation.Current` property:
 
