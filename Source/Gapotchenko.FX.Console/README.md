@@ -14,7 +14,7 @@ At later stages of development, teletypes were swapped with specialized computer
 Those electronic devices provided not only basic input/output capabilities,
 but also colors, pseudographics, and a custom control language based around a then-emerging [ANSI X3.64](https://en.wikipedia.org/wiki/ANSI_escape_code) standard.
 
-Unix operating systems have built-in support of ANSI escape sequences that constitute the control language defined by the standard. Windows ignored that practice for a long time, up until Windows 10 version 1511.
+Unix operating systems have built-in support for ANSI escape sequences that constitute the control language defined by the standard. Windows ignored that practice for a long time, up until Windows 10 version 1511.
 
 ### What ANSI Escape Sequences Are Useful For?
 
@@ -22,7 +22,7 @@ Indeed, .NET base class library already provides
 [`ForegroundColor`](https://docs.microsoft.com/en-us/dotnet/api/system.console.foregroundcolor),
 [`BackroundColor`](https://docs.microsoft.com/en-us/dotnet/api/system.console.backgroundcolor)
 and other properties of [`System.Console`](https://docs.microsoft.com/en-us/dotnet/api/system.console) class
-for controlling the console output.
+for controlling the console.
 
 ANSI escape sequences become handy when the complexity of console output reaches a certain level:
 
@@ -47,13 +47,75 @@ Console.WriteLine(
     "\x1b[42;32m██████\x1b[49m\\__,_/___|\x1b[35m_|  \\__,_|___/\\___\\__,_/___\\___/|_(\x1b[34m_)|_| \\_|______|  |_|\x1b[0m");
 ```
 
-Please note that the implementation starts with a call of `VirtualTerminal.EnableProcessing` method.
+Please note that the implementation starts with a call to `VirtualTerminal.EnableProcessing` method.
 It is provided by `Gapotchenko.FX.Console` module and ensures that support of ANSI escape sequences is activated for the console.
 In case when the host OS does not provide a native support for them, the method switches to a virtual terminal emulation.
 
 In this way, ANSI X3.64 control language is guaranteed to work on the widest range of host operating systems.
 
 ## Console Traits
+
+`Gapotchenko.FX.Console` module provides `ConsoleTraits` class that allows to programmatically retrieve the current console capabilities.
+
+### IsColorAvailable
+
+`ConsoleTraits.IsColorAvailable` boolean property indicates whether console color output is available.
+Console color is usually always available unless program standard output streams are redirected.
+
+### IsColorInhibited
+
+`ConsoleTraits.IsColorInhibited` boolean property indicates whether console color output is inhibited.
+
+Console color may be inhibited by the host system or a user preference.
+For example, a `NO_COLOR` environment variable can be used to inhibit console colors as described by the corresponding [specification](https://no-color.org/).
+
+### IsColorEnabled
+
+`ConsoleTraits.IsColorEnabled` boolean property indicates whether console color output is enabled.
+The console color is enabled when it is available and not inhibited.
+
+The value of the property can be used by a program to automatically tune the output according to the usage context and user preference.
+Like so:
+
+```csharp
+if (ConsoleTraits.IsColorEnabled)
+{
+    Console.WriteLine(
+        "                 \x1b[35m__                     _             \x1b[34m_   _ ______ _______ \n" +
+        "\x1b[42;32m██████\x1b[49m         \x1b[35m / _|                   | |           \x1b[34m| \\ | |  ____|__   __|\n" +
+        "\x1b[42;32m██\x1b[49m     __ _ ___\x1b[35m| |_ _   _ ___  ___ __ _| |_ ___  _ __\x1b[34m|  \\| | |__     | |   \n" +
+        "\x1b[42;32m█████\x1b[49m / _` |_  /\x1b[35m  _| | | / __|/ __/ _` | __/ _ \\| '__\x1b[34m| . ` |  __|    | |   \n" +
+        "\x1b[42;32m██\x1b[49m   | (_| |/ /\x1b[35m| | | |_| \\__ \\ (_| (_| | || (_) | |\x1b[34m_ | |\\  | |____   | |   \n" +
+        "\x1b[42;32m██████\x1b[49m\\__,_/___|\x1b[35m_|  \\__,_|___/\\___\\__,_/___\\___/|_(\x1b[34m_)|_| \\_|______|  |_|\x1b[0m");
+}
+else
+{
+    Console.WriteLine(
+@" ______           __                     _             _   _ ______ _______ 
+|  ____|         / _|                   | |           | \ | |  ____|__   __|
+| |__   __ _ ___| |_ _   _ ___  ___ __ _| |_ ___  _ __|  \| | |__     | |   
+|  __| / _` |_  /  _| | | / __|/ __/ _` | __/ _ \| '__| . ` |  __|    | |   
+| |___| (_| |/ /| | | |_| \__ \ (_| (_| | || (_) | |_ | |\  | |____   | |   
+|______\__,_/___|_|  \__,_|___/\___\__,_/___\___/|_(_)|_| \_|______|  |_|");
+}
+```
+
+### WillDisappearOnExit
+
+`ConsoleTraits.WillDisappearOnExit` boolean property indicates whether a console window will immediately disappear on program exit.
+Such situation can occur when a console app is directly launched from a graphical shell. In Windows, you can achieve that by creating a desktop shortcut to a console app.
+
+A program can use the value of `WillDisappearOnExit` property to conveniently hold the console window in a visible state so that the user could read the output.
+Like so:
+
+```csharp
+if (ConsoleTraits.WillDisappearOnExit)
+{
+    Console.WriteLine();
+    Console.WriteLine("Press any key to exit . . .");
+    Console.ReadKey(true);
+}
+```
 
 ## MoreTextWriter for Paginated Output
 

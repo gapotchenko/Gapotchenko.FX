@@ -15,10 +15,10 @@ namespace Gapotchenko.FX.Console
     {
         /// <summary>
         /// <para>
-        /// Gets a value indicating whether console color is available.
+        /// Gets a value indicating whether console color output is available.
         /// </para>
         /// <para>
-        /// Console color is usually always available unless program output streams are redirected.
+        /// Console color is usually always available unless program standard output streams are redirected.
         /// </para>
         /// </summary>
         public static bool IsColorAvailable => !(Console.IsOutputRedirected || Console.IsErrorRedirected);
@@ -37,10 +37,10 @@ namespace Gapotchenko.FX.Console
 
         /// <summary>
         /// <para>
-        /// Gets a value indicating whether console color is inhibited.
+        /// Gets a value indicating whether console color output is inhibited.
         /// </para>
         /// <para>
-        /// Console color can be inhibited by the host system or a user preference.
+        /// Console color may be inhibited by the host system or a user preference.
         /// For example, a NO_COLOR environment variable can be used to inhibit console colors as described by corresponding <a href="https://no-color.org/">specification</a>.
         /// </para>
         /// </summary>
@@ -63,7 +63,7 @@ namespace Gapotchenko.FX.Console
 
         /// <summary>
         /// <para>
-        /// Gets a value indicating whether console color is enabled.
+        /// Gets a value indicating whether console color output is enabled.
         /// </para>
         /// <para>
         /// The console color is enabled when it is <see cref="IsColorAvailable">available</see> and not <see cref="IsColorInhibited">inhibited</see>.
