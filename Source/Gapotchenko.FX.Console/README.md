@@ -131,7 +131,7 @@ Let's take a look on example:
 
 By pressing `Page Down` and `Down Arrow` keys it is possible to scroll the console output.
 
-Here is the simplest program that employs `MoreTextWriter` for output pagination:
+Below is a simple program that demonstrates the use of `MoreTextWriter`:
 
 ```csharp
 using Gapotchenko.FX.Console;
