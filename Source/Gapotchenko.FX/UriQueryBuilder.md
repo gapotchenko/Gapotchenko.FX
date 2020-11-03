@@ -102,7 +102,7 @@ ub.Query = uqb.ToString();
 Console.WriteLine(ub.Uri);
 ```
 
-This code produces the following output:
+The code produces the following output:
 
 ```
 https://example.com/?key=abc&mode=flow&complexity=easy

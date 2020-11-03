@@ -310,6 +310,10 @@ In that case, Gapotchenko.FX provides so called "Ex" classes, where "Ex" is an a
  - `HashCodeEx`
  - `LazyInitializerEx`
 
+## Functionality From the Future, Now!
+
+TODO
+
 ## Summary
 
 As you can see, there are many little things that shape the productive environment into one you can immediately employ, and reap the benefit in no-time.
