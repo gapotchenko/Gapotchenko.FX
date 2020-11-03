@@ -21,7 +21,7 @@ Console.WriteLine("Company: {0}", info.CompanyName);
 Console.WriteLine("Copyright: {0}", info.Copyright);
 ```
 
-This can be useful for purposes like showing an about box in GUI or copyright banner in console.
+This can be useful for purposes like showing an about box in GUI or a copyright banner in console.
 
 ## Usage
 
