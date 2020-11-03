@@ -78,7 +78,7 @@ https://example.com/?a=1&rad=productivity
 
 ## Usage in Conjunction With `System.UriBuilder`
 
-`UriQueryBuilder` can be used in conjunction with [`System.UriBuilder`](https://docs.microsoft.com/en-us/dotnet/api/system.uribuilder) to modify the query part of a URI:
+`UriQueryBuilder` can be used in conjunction with [`System.UriBuilder`](https://docs.microsoft.com/en-us/dotnet/api/system.uribuilder) to build the query part of a URI:
 
 ```csharp
 using Gapotchenko.FX;
