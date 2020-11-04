@@ -9,6 +9,7 @@ Release date: not released yet
 - Added support for .NET 5.0 target framework
 - Introduced `Gapotchenko.FX.AppModel.Information` module that allows to programmatically retrieve information about the app
 - Introduced `Gapotchenko.FX.Console` module that provides virtual terminal functionality, console traits and a powerful `MoreTextWriter` primitive for improved user friendliness of your console apps
+- Added nullability annotations for public module APIs
 - Added `System.MathF` polyfill
 - Added polyfills for nullable annotation attributes
 - Added polyfill for init-only property setters
