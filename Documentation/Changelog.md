@@ -14,7 +14,7 @@ Release date: not released yet
 - Added polyfills for nullable annotation attributes
 - Added polyfill for init-only property setters
 - Added `Fn.Ignore(value)` function that ignores a specified value for languages that do not have a built-in equivalent. A typical usage is to fire and forget a parallel `Task` without producing a compiler warning
-- Added `Process.GetImageFileName()` method that allows to retrieve file name of a running process without security limitations imposed by the host OS
+- Added `Process.GetImageFileName()` method that allows to retrieve the file name of a running process without security limitations imposed by the host OS
 - Added `bool ISet.AddRange(collection)` extension method that allows to add elements to a set in bulk
 - Added `CommandLine.EscapeArgument` and `CommandLine.EscapeFileName` methods
 - .NET Framework 4.0 target is retired. The minimal supported .NET Framework version is 4.5
@@ -32,7 +32,7 @@ Release date: November 4, 2019
 Both primitives constitute drop-in replacements for `System.Threading.Tasks.Parallel` and are useful for debugging purposes
 - Added `CommandLine.OemEncoding` property that gets OEM encoding used by Windows command line and console applications
 - Added ability to create LINQ expressions from functions via `Gapotchenko.FX.Fn` primitive
-- Added `IndexOf(IEnumerable<T> source, IEnumerable<T> value)` and `IndexOf(IEnumerable<T> source, IEnumerable<T> value, IEqualityComparer<T>)` LINQ methods
+- Added `IndexOf(IEnumerable<T> source, IEnumerable<T> value)` and `IndexOf(IEnumerable<T> source, IEnumerable<T> value, IEqualityComparer<T> comparer)` LINQ methods
 - Implemented polyfill for `Enumerable.ToHashSet<T>` operation
 - Implemented polyfills for `BitConverter.SingleToInt32Bits` and `Int32BitsToSingle` operations
 - Implemented polyfills to the future for `WaitForExit(CancellationToken)` and `WaitForExit(int, CancellationToken)` methods of `System.Diagnostics.Process` type

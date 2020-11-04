@@ -30,7 +30,7 @@ class BitOperations
 }
 ```
 
-log<sub>2</sub> seems to be a trivial operation but it often becomes a serious bottleneck in path-finding and cryptographic algorithms.
+log<sub>2</sub> seems to be a trivial operation but it often becomes a serious bottleneck in path-finding or cryptographic algorithms.
 We can do better here if we switch to a table lookup:
 
 ``` csharp
