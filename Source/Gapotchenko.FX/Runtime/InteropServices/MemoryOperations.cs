@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Runtime.InteropServices
 {
@@ -16,6 +17,9 @@ namespace Gapotchenko.FX.Runtime.InteropServices
         [CLSCompliant(false)]
         public static unsafe void BlockCopy(void* source, void* destination, int size)
         {
+#if TFF_UNSAFE
+            Unsafe.CopyBlockUnaligned(destination, source, (uint)size);
+#else
             var s = (byte*)source;
             var d = (byte*)destination;
             var n = (uint)size;
@@ -61,6 +65,7 @@ namespace Gapotchenko.FX.Runtime.InteropServices
                 if ((n & 1) != 0)
                     *d = *s;
             }
+#endif
         }
 
         /// <summary>

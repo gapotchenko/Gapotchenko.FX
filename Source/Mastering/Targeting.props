@@ -58,7 +58,7 @@
     <DefineConstants Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">$(DefineConstants);$(GPFX_DefineConstants_NETCore21)</DefineConstants>
 
     <!-- .NET Core 3.0 -->
-    <GPFX_DefineConstants_NETCore30>$(GPFX_DefineConstants_NETCore21);TFF_ASYNC_DISPOSABLE;TFF_BITOPERATIONS;TFF_DEFAULT_INTERFACE;TFF_NULLABLE_ATTRIBUTES;TFF_SWITCHEXPRESSIONEXCEPTION;TFF_TEXT_IO_STRINGBUILDER</GPFX_DefineConstants_NETCore30>
+    <GPFX_DefineConstants_NETCore30>$(GPFX_DefineConstants_NETCore21);TFF_ASYNC_DISPOSABLE;TFF_BITOPERATIONS;TFF_DEFAULT_INTERFACE;TFF_NULLABLE_ATTRIBUTES;TFF_UNSAFE;TFF_SWITCHEXPRESSIONEXCEPTION;TFF_TEXT_IO_STRINGBUILDER</GPFX_DefineConstants_NETCore30>
     <DefineConstants Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">$(DefineConstants);$(GPFX_DefineConstants_NETCore30)</DefineConstants>
 
     <!-- .NET Core 3.1 -->
