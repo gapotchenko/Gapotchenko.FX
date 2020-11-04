@@ -72,7 +72,7 @@ namespace Gapotchenko.FX
             if (n == 0)
                 return true;
 
-            // Signed element types are covered by implicit cast to an array of corresponding unsigned element types.
+            // Signed element types are covered by implicit cast to an array of matched unsigned types.
             //
             // E.g. the following is possible:
             //     short[] x = new { 1, 2, 3 };
