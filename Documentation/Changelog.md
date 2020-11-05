@@ -4,7 +4,7 @@
 
 ### Gapotchenko.FX 2020.1
 
-Release date: not released yet
+Release date: November 5, 2020
 
 - Added support for .NET 5.0 target framework
 - Introduced `Gapotchenko.FX.AppModel.Information` module that allows to programmatically retrieve information about the app
