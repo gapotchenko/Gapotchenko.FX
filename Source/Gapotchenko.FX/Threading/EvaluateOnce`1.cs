@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Threading;
 
@@ -19,10 +20,11 @@ namespace Gapotchenko.FX.Threading
     /// <see cref="EvaluateOnce{T}"/> is thread-safe.
     /// </para>
     /// </remarks>
-    [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
+    [Serializable]
 #if TFF_HOST_PROTECTION
     [HostProtection(Synchronization = true, ExternalThreading = true)]
 #endif
+    [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
     public struct EvaluateOnce<T>
     {
         /// <summary>
@@ -53,9 +55,11 @@ namespace Gapotchenko.FX.Threading
         [AllowNull]
         T m_Value;
 
+        [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object? m_SyncLock;
 
+        [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Func<T>? m_ValueFactory;
 
@@ -88,6 +92,13 @@ namespace Gapotchenko.FX.Threading
         /// Otherwise, a string indicating that the value has not been created.
         /// </returns>
         public override string? ToString() => IsValueCreated ? Value?.ToString() : Resources.ValueNotCreated;
+
+        [OnSerializing]
+        void OnSerializing(StreamingContext context)
+        {
+            // Force evaluation before the value is serialized.
+            Fn.Ignore(Value);
+        }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [MaybeNull]
