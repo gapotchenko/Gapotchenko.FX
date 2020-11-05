@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace Gapotchenko.FX
 {
@@ -18,6 +19,7 @@ namespace Gapotchenko.FX
     /// For thread-safe lazy evaluation, please use <see cref="Threading.EvaluateOnce{T}"/> struct.
     /// </para>
     /// </remarks>
+    [Serializable]
     [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
     public struct LazyEvaluation<T>
     {
@@ -38,6 +40,7 @@ namespace Gapotchenko.FX
         [AllowNull]
         T m_Value;
 
+        [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Func<T>? m_ValueFactory;
 
@@ -78,6 +81,13 @@ namespace Gapotchenko.FX
             IsValueCreated ?
                 Value?.ToString() :
                 Resources.ValueNotCreated;
+
+        [OnSerializing]
+        void OnSerializing(StreamingContext context)
+        {
+            // Force evaluation before the value is serialized.
+            Fn.Ignore(Value);
+        }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [MaybeNull]
