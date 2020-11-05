@@ -21,6 +21,7 @@ namespace Gapotchenko.FX
     /// </remarks>
     [Serializable]
     [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
+    [DebuggerTypeProxy(typeof(LazyEvaluation<>.DebugView))]
     public struct LazyEvaluation<T>
     {
         /// <summary>
@@ -89,8 +90,22 @@ namespace Gapotchenko.FX
             Fn.Ignore(Value);
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [MaybeNull]
-        internal T ValueForDebugDisplay => IsValueCreated ? Value : default;
+        T ValueForDebugDisplay => IsValueCreated ? Value : default;
+
+        internal sealed class DebugView
+        {
+            public DebugView(LazyEvaluation<T> instance)
+            {
+                m_Instance = instance;
+            }
+
+            LazyEvaluation<T> m_Instance;
+
+            public bool IsValueCreated => m_Instance.IsValueCreated;
+
+            [MaybeNull]
+            public T Value => m_Instance.ValueForDebugDisplay;
+        }
     }
 }
