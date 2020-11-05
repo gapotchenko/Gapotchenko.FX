@@ -25,6 +25,7 @@ namespace Gapotchenko.FX.Threading
     [HostProtection(Synchronization = true, ExternalThreading = true)]
 #endif
     [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
+    [DebuggerTypeProxy(typeof(EvaluateOnce<>.DebugView))]
     public struct EvaluateOnce<T>
     {
         /// <summary>
@@ -100,8 +101,22 @@ namespace Gapotchenko.FX.Threading
             Fn.Ignore(Value);
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [MaybeNull]
-        internal T ValueForDebugDisplay => IsValueCreated ? Value : default;
+        T ValueForDebugDisplay => IsValueCreated ? Value : default;
+
+        internal sealed class DebugView
+        {
+            public DebugView(EvaluateOnce<T> instance)
+            {
+                m_Instance = instance;
+            }
+
+            EvaluateOnce<T> m_Instance;
+
+            public bool IsValueCreated => m_Instance.IsValueCreated;
+
+            [MaybeNull]
+            public T Value => m_Instance.ValueForDebugDisplay;
+        }
     }
 }
