@@ -6,7 +6,7 @@
 
 Release date: not released yet
 
-- Improved LINQ memoization operation by avoiding the sync lock when the whole collection is fully retrieved
+- Improved performance of LINQ memoization in thread-safe mode
 
 ### Gapotchenko.FX 2020.1
 
