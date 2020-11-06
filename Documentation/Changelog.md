@@ -2,6 +2,12 @@
 
 ## 2020
 
+### Gapotchenko FX 2020.2
+
+Release date: not released yet
+
+- Improved LINQ memoization operation by avoiding the sync lock when the whole collection is fully retrieved
+
 ### Gapotchenko.FX 2020.1
 
 Release date: November 5, 2020
