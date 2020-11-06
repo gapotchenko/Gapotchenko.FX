@@ -3,8 +3,8 @@
 
   <!-- Version Information -->
   <PropertyGroup>
-    <AssemblyVersion>2020.1.15.4096</AssemblyVersion>
-    <VersionSuffix></VersionSuffix>
+    <AssemblyVersion>2020.2.1.4096</AssemblyVersion>
+    <VersionSuffix>beta</VersionSuffix>
   </PropertyGroup>
 
   <PropertyGroup>
