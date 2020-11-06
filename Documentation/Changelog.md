@@ -47,7 +47,7 @@ Both primitives constitute drop-in replacements for `System.Threading.Tasks.Para
 
 Release date: August 14, 2019
 
-- Added support for .NET Standard 2.1 target
+- Added support for .NET Standard 2.1 target framework
 - Added `System.Numerics.BitOperations` polyfill with `Log2` and `PopCount` hardware-accelerated operations
 - Added ability to nullify specific integer values in `Empty` functional primitive
 - Added ability to canonicalize a file path with `FileSystem.CanonicalizePath` method. It works as follows: the alternative directory separators are replaced with native ones; the duplicate adjacent separators are removed
