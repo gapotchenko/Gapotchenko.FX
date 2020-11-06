@@ -684,5 +684,103 @@ namespace Gapotchenko.FX.Linq
 #endif
             }
         }
+
+        /// <summary>
+        /// Determines whether any elements of a sequence satisfy the specified conditions.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">An <see cref="IEnumerable{T}"/> whose elements to apply the predicates to.</param>
+        /// <param name="predicate1">The first function to test each element for a condition.</param>
+        /// <param name="predicate2">The second function to test each element for a condition.</param>
+        /// <returns>A value tuple whose items signify whether any elements in the source sequence pass the test in the corresponding predicate.</returns>
+        public static ValueTuple<bool, bool> Any<TSource>(
+            this IEnumerable<TSource> source,
+            Func<TSource, bool> predicate1,
+            Func<TSource, bool> predicate2)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate1 == null)
+                throw new ArgumentNullException(nameof(predicate1));
+            if (predicate2 == null)
+                throw new ArgumentNullException(nameof(predicate2));
+
+            bool result1 = false;
+            bool result2 = false;
+
+            foreach (var i in source)
+            {
+                if (!result1 && predicate1(i))
+                {
+                    result1 = true;
+                    if (result2)
+                        break;
+                }
+
+                if (!result2 && predicate2(i))
+                {
+                    result2 = true;
+                    if (result1)
+                        break;
+                }
+            }
+
+            return (result1, result2);
+        }
+
+        /// <summary>
+        /// Determines whether any elements of a sequence satisfy the specified conditions.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">An <see cref="IEnumerable{T}"/> whose elements to apply the predicates to.</param>
+        /// <param name="predicate1">The first function to test each element for a condition.</param>
+        /// <param name="predicate2">The second function to test each element for a condition.</param>
+        /// <param name="predicate3">The third function to test each element for a condition.</param>
+        /// <returns>A value tuple whose items signify whether any elements in the source sequence pass the test in the corresponding predicate.</returns>
+        public static ValueTuple<bool, bool, bool> Any<TSource>(
+            this IEnumerable<TSource> source,
+            Func<TSource, bool> predicate1,
+            Func<TSource, bool> predicate2,
+            Func<TSource, bool> predicate3)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate1 == null)
+                throw new ArgumentNullException(nameof(predicate1));
+            if (predicate2 == null)
+                throw new ArgumentNullException(nameof(predicate2));
+            if (predicate3 == null)
+                throw new ArgumentNullException(nameof(predicate3));
+
+            bool result1 = false;
+            bool result2 = false;
+            bool result3 = false;
+
+            foreach (var i in source)
+            {
+                if (!result1 && predicate1(i))
+                {
+                    result1 = true;
+                    if (result2 && result3)
+                        break;
+                }
+
+                if (!result2 && predicate2(i))
+                {
+                    result2 = true;
+                    if (result1 && result3)
+                        break;
+                }
+
+                if (!result3 && predicate3(i))
+                {
+                    result3 = true;
+                    if (result1 && result2)
+                        break;
+                }
+            }
+
+            return (result1, result2, result3);
+        }
     }
 }

@@ -1,0 +1,16 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TFF_VALUETUPLE_OOB Condition=" '$(TargetFramework)' == 'net45' ">true</TFF_VALUETUPLE_OOB>
+    <TFF_VALUETUPLE_OOB Condition=" '$(TargetFramework)' == 'net46' ">true</TFF_VALUETUPLE_OOB>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TFF_VALUETUPLE_OOB)' == 'true' ">
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TFF_VALUETUPLE_OOB)' == 'true' ">
+    <DefineConstants>$(DefineConstants);TFF_VALUETUPLE_OOB</DefineConstants>
+  </PropertyGroup>
+
+</Project>

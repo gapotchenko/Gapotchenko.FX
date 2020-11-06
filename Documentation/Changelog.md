@@ -7,6 +7,7 @@
 Release date: not released yet
 
 - Improved performance of LINQ memoization in thread-safe mode
+- Added LINQ functions that determine whether any elements of a sequence satisfy the specified 2 or 3 conditions
 
 ### Gapotchenko.FX 2020.1
 
