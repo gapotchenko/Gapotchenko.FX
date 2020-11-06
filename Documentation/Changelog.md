@@ -27,6 +27,7 @@ Release date: November 5, 2020
 - .NET Framework 4.0 target is retired. The minimal supported .NET Framework version is 4.5
 - Fixed issue with ambiguous match of `IsNullOrEmpty` polyfill method of `HashSet<T>` type that occurred in .NET 4.6+, .NET Standard 2.0+ and .NET Core 2.0+ target frameworks
 - Fixed issue with ambiguous match of `ToHashSet` polyfill method of `IEnumerable<T>` type that occurred in .NET 4.7.2+ target frameworks
+- Fixed issue in `Process.ReadEnvironmentVariables()` method with environment variable blocks longer than 32768 bytes
 
 ## 2019
 
