@@ -14,7 +14,7 @@ At later stages of development, teletypes were swapped with specialized computer
 Those electronic devices provided not only the basic input/output capabilities,
 but also colors, pseudographics, and a custom control language based around a then-emerging [ANSI X3.64](https://en.wikipedia.org/wiki/ANSI_escape_code) standard.
 
-Unix operating systems have built-in support for ANSI escape sequences that constitute the control language defined by the standard. Windows ignored that practice for a long time, up until Windows 10 version 1511.
+Unix operating systems have a built-in support for ANSI escape sequences that constitute the control language defined by the standard. Windows ignored that practice for a long time, up until Windows 10 version 1511.
 
 ### What ANSI Escape Sequences Are Useful For?
 
