@@ -10,6 +10,11 @@
     <ProjectReference Include="..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Console.VirtualTerminal" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Console.ConsoleTraits" />
+  </ItemGroup>
+
   <Import Project="$(MasteringDir)\OOB\System.Memory.targets" />
 
 </Project>
