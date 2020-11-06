@@ -14,11 +14,7 @@ namespace Gapotchenko.FX.Linq
                 Key = key;
             }
 
-            public TKey Key
-            {
-                get;
-                private set;
-            }
+            public TKey Key { get; }
         }
 
         /// <summary>
