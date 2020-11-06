@@ -34,6 +34,8 @@ namespace Gapotchenko.FX.Linq
             if (keySelector == null)
                 throw new ArgumentNullException(nameof(keySelector));
 
+            var keyEqualityComparer = EqualityComparer<TKey>.Default;
+
             PartitionedGrouping<TKey, TElement>? partition = null;
 
             foreach (var x in source)
@@ -41,7 +43,8 @@ namespace Gapotchenko.FX.Linq
                 if (partition != null)
                 {
                     var newKey = keySelector(x);
-                    if (!EqualityComparer<TKey>.Default.Equals(newKey, partition.Key))
+
+                    if (!keyEqualityComparer.Equals(newKey, partition.Key))
                     {
                         yield return partition;
                         partition = null;
