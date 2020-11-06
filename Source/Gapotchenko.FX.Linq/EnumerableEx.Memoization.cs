@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 
 namespace Gapotchenko.FX.Linq
 {
@@ -81,20 +82,26 @@ namespace Gapotchenko.FX.Linq
                 }
             }
 
+            protected bool CacheIsBuilt => _Source == null && _SourceEnumerator == null;
+
             bool _TryCacheElementNoLock()
             {
-                if (_SourceEnumerator == null && _Source != null)
-                {
-                    _SourceEnumerator = _Source.GetEnumerator();
-                    _Source = null;
-                }
-
                 if (_SourceEnumerator == null)
                 {
-                    // Source enumerator already reached the end.
-                    return false;
+                    if (_Source != null)
+                    {
+                        // The first access.
+                        _SourceEnumerator = _Source.GetEnumerator();
+                        _Source = null;
+                    }
+                    else
+                    {
+                        // Source enumerator already reached the end.
+                        return false;
+                    }
                 }
-                else if (_SourceEnumerator.MoveNext())
+
+                if (_SourceEnumerator.MoveNext())
                 {
                     Cache.Add(_SourceEnumerator.Current);
                     return true;
@@ -103,9 +110,14 @@ namespace Gapotchenko.FX.Linq
                 {
                     // Source enumerator has reached the end, so it is no longer needed.
                     _SourceEnumerator.Dispose();
-                    _SourceEnumerator = null;
+                    ClearSourceEnumerator();
                     return false;
                 }
+            }
+
+            protected virtual void ClearSourceEnumerator()
+            {
+                _SourceEnumerator = null;
             }
 
             public virtual T this[int index]
@@ -147,8 +159,15 @@ namespace Gapotchenko.FX.Linq
             {
                 get
                 {
-                    lock (Cache)
-                        return base.Count;
+                    if (CacheIsBuilt)
+                    {
+                        return Cache.Count;
+                    }
+                    else
+                    {
+                        lock (Cache)
+                            return base.Count;
+                    }
                 }
             }
 
@@ -156,21 +175,50 @@ namespace Gapotchenko.FX.Linq
             {
                 get
                 {
-                    lock (Cache)
-                        return base[index];
+                    if (CacheIsBuilt)
+                        return Cache[index];
+                    else
+                        return _GetItemWithLock(index);
                 }
             }
 
-            internal override bool EnsureItemIsCached(int index)
+            // A separate method to allow the inlining opportunities for this[index] getter.
+            T _GetItemWithLock(int index)
             {
                 lock (Cache)
+                    return base[index];
+            }
+
+            internal override bool EnsureItemIsCached(int index)
+            {                
+                if (CacheIsBuilt)
+                {
                     return base.EnsureItemIsCached(index);
+                }
+                else
+                {
+                    lock (Cache)
+                        return base.EnsureItemIsCached(index);
+                }
             }
 
             internal override T GetCacheItem(int index)
             {
-                lock (Cache)
+                if (CacheIsBuilt)
+                {
                     return base.GetCacheItem(index);
+                }
+                else
+                {
+                    lock (Cache)
+                        return base.GetCacheItem(index);
+                }
+            }
+
+            protected override void ClearSourceEnumerator()
+            {
+                Thread.MemoryBarrier();
+                base.ClearSourceEnumerator();
             }
         }
 
