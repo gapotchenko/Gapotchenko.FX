@@ -316,7 +316,6 @@ namespace Gapotchenko.FX.Linq
             return true;
         }
 
-#if TFF_READONLY_LIST
         /// <summary>
         /// Determines whether two lists are equal by comparing their elements with a specified <paramref name="predicate"/>.
         /// </summary>
@@ -351,7 +350,6 @@ namespace Gapotchenko.FX.Linq
 
             return true;
         }
-#endif
 
         /// <summary>
         /// Determines whether the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence
@@ -677,11 +675,7 @@ namespace Gapotchenko.FX.Linq
                     return (IReadOnlyList<TSource>)(object)new ReadOnlyCharList(s);
 
                 default:
-#if TFF_READONLY_COLLECTION
                     return AsList(source).AsReadOnly();
-#else
-                    return new ReadOnlyCollection<TSource>(AsList(source));
-#endif
             }
         }
 
