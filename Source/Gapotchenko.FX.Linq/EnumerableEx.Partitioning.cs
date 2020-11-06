@@ -7,9 +7,9 @@ namespace Gapotchenko.FX.Linq
 {
     partial class EnumerableEx
     {
-        sealed class PartinionedGrouping<TKey, TElement> : Collection<TElement>, IGrouping<TKey, TElement>
+        sealed class PartitionedGrouping<TKey, TElement> : Collection<TElement>, IGrouping<TKey, TElement>
         {
-            public PartinionedGrouping(TKey key)
+            public PartitionedGrouping(TKey key)
             {
                 Key = key;
             }
@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Linq
             if (keySelector == null)
                 throw new ArgumentNullException(nameof(keySelector));
 
-            PartinionedGrouping<TKey, TElement>? partition = null;
+            PartitionedGrouping<TKey, TElement>? partition = null;
 
             foreach (var x in source)
             {
@@ -49,7 +49,7 @@ namespace Gapotchenko.FX.Linq
                 }
 
                 if (partition == null)
-                    partition = new PartinionedGrouping<TKey, TElement>(keySelector(x));
+                    partition = new PartitionedGrouping<TKey, TElement>(keySelector(x));
 
                 partition.Add(x);
             }
