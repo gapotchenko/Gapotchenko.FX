@@ -80,7 +80,7 @@ namespace Gapotchenko.FX.Threading
                 Thread.MemoryBarrier();
                 return
                     m_ValueFactory == null &&
-                    m_SyncLock != null; // check for _SyncLock is needed to cover uninitialized struct scenario
+                    m_SyncLock != null; // check for m_SyncLock is needed to cover uninitialized struct scenario
             }
         }
 
