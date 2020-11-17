@@ -96,10 +96,8 @@ namespace System.Numerics
         /// Any value outside the range [0..31] is treated as congruent mod 32.
         /// </param>
         /// <returns>The rotated value.</returns>
-#if TFF_AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [CLSCompliant(false)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint RotateLeft(uint value, int offset) => (value << offset) | (value >> (32 - offset));
 
         /// <summary>
@@ -116,10 +114,8 @@ namespace System.Numerics
         /// Any value outside the range [0..63] is treated as congruent mod 64.
         /// </param>
         /// <returns>The rotated value.</returns>
-#if TFF_AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [CLSCompliant(false)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong RotateLeft(ulong value, int offset) => (value << offset) | (value >> (64 - offset));
 
         /// <summary>
@@ -136,10 +132,8 @@ namespace System.Numerics
         /// Any value outside the range [0..31] is treated as congruent mod 32.
         /// </param>
         /// <returns>The rotated value.</returns>
-#if TFF_AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [CLSCompliant(false)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint RotateRight(uint value, int offset) => (value >> offset) | (value << (32 - offset));
 
         /// <summary>
@@ -156,10 +150,8 @@ namespace System.Numerics
         /// Any value outside the range [0..63] is treated as congruent mod 64.
         /// </param>
         /// <returns>The rotated value.</returns>
-#if TFF_AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [CLSCompliant(false)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong RotateRight(ulong value, int offset) => (value >> offset) | (value << (64 - offset));
     }
 }
