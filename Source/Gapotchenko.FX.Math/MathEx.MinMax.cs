@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Math
 {
@@ -13,7 +14,9 @@ namespace Gapotchenko.FX.Math
         /// <returns>
         /// Parameter <paramref name="val1"/> or <paramref name="val2"/>, whichever is smaller.
         /// </returns>
-        public static T Min<T>(T val1, T val2)
+        [return: NotNullIfNotNull("val1")]
+        [return: NotNullIfNotNull("val2")]
+        public static T? Min<T>(T? val1, T? val2)
         {
             if (val1 == null)
                 return val2;
@@ -37,7 +40,9 @@ namespace Gapotchenko.FX.Math
         /// <returns>
         /// Parameter <paramref name="val1"/> or <paramref name="val2"/>, whichever is larger.
         /// </returns>
-        public static T Max<T>(T val1, T val2)
+        [return: NotNullIfNotNull("val1")]
+        [return: NotNullIfNotNull("val2")]
+        public static T? Max<T>(T? val1, T? val2)
         {
             if (val1 == null)
                 return val2;
@@ -62,7 +67,10 @@ namespace Gapotchenko.FX.Math
         /// <returns>
         /// Parameter <paramref name="val1"/>, <paramref name="val2"/> or <paramref name="val3"/>, whichever is smaller.
         /// </returns>
-        public static T Min<T>(T val1, T val2, T val3) => Min(Min(val1, val2), val3);
+        [return: NotNullIfNotNull("val1")]
+        [return: NotNullIfNotNull("val2")]
+        [return: NotNullIfNotNull("val3")]
+        public static T? Min<T>(T? val1, T? val2, T? val3) => Min(Min(val1, val2), val3);
 
         /// <summary>
         /// Returns the larger of three values.
@@ -74,6 +82,9 @@ namespace Gapotchenko.FX.Math
         /// <returns>
         /// Parameter <paramref name="val1"/>, <paramref name="val2"/> or <paramref name="val3"/>, whichever is larger.
         /// </returns>
-        public static T Max<T>(T val1, T val2, T val3) => Max(Max(val1, val2), val3);
+        [return: NotNullIfNotNull("val1")]
+        [return: NotNullIfNotNull("val2")]
+        [return: NotNullIfNotNull("val3")]
+        public static T? Max<T>(T? val1, T? val2, T? val3) => Max(Max(val1, val2), val3);
     }
 }
