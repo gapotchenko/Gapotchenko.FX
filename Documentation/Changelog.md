@@ -8,6 +8,7 @@ Release date: not released yet
 
 - Improved performance of LINQ memoization in thread-safe mode
 - Added LINQ functions that determine whether any elements of a sequence satisfy the specified 2 or 3 conditions
+- Added `MathEx.Lerp` function that performs linear interpolation between two values by a coefficient
 
 ### Gapotchenko.FX 2020.1
 
