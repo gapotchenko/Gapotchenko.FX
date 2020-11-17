@@ -39,6 +39,7 @@ namespace Gapotchenko.FX.Math
             return value;
         }
 
+        [DoesNotReturn]
         static void ThrowMinCannotBeGreaterThanMaxException<T>(T min, T max) =>
             throw new ArgumentException(string.Format(Properties.Resources.MinCannotBeGreaterThanMax, min, max));
     }
