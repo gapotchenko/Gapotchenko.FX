@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Math
@@ -16,7 +16,7 @@ namespace Gapotchenko.FX.Math
         /// </returns>
         [return: NotNullIfNotNull("val1")]
         [return: NotNullIfNotNull("val2")]
-        public static T? Min<T>(T? val1, T? val2)
+        public static T? Min<T>(T? val1, T? val2) where T : IComparable<T>
         {
             if (val1 == null)
                 return val2;
@@ -25,7 +25,7 @@ namespace Gapotchenko.FX.Math
 
             // Give a preference to the first value when both values are equal.
             // This is important for reference types and composite value types.
-            if (Comparer<T>.Default.Compare(val1, val2) <= 0)
+            if (val1.CompareTo(val2) <= 0)
                 return val1;
             else
                 return val2;
@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Math
         /// </returns>
         [return: NotNullIfNotNull("val1")]
         [return: NotNullIfNotNull("val2")]
-        public static T? Max<T>(T? val1, T? val2)
+        public static T? Max<T>(T? val1, T? val2) where T : IComparable<T>
         {
             if (val1 == null)
                 return val2;
@@ -51,7 +51,7 @@ namespace Gapotchenko.FX.Math
 
             // Give a preference to the first value when both values are equal.
             // This is important for reference types and composite value types.
-            if (Comparer<T>.Default.Compare(val1, val2) >= 0)
+            if (val1.CompareTo(val2) >= 0)
                 return val1;
             else
                 return val2;
@@ -70,7 +70,8 @@ namespace Gapotchenko.FX.Math
         [return: NotNullIfNotNull("val1")]
         [return: NotNullIfNotNull("val2")]
         [return: NotNullIfNotNull("val3")]
-        public static T? Min<T>(T? val1, T? val2, T? val3) => Min(Min(val1, val2), val3);
+        public static T? Min<T>(T? val1, T? val2, T? val3) where T : IComparable<T> =>
+            Min(Min(val1, val2), val3);
 
         /// <summary>
         /// Returns the larger of three values.
@@ -85,6 +86,7 @@ namespace Gapotchenko.FX.Math
         [return: NotNullIfNotNull("val1")]
         [return: NotNullIfNotNull("val2")]
         [return: NotNullIfNotNull("val3")]
-        public static T? Max<T>(T? val1, T? val2, T? val3) => Max(Max(val1, val2), val3);
+        public static T? Max<T>(T? val1, T? val2, T? val3) where T : IComparable<T> =>
+            Max(Max(val1, val2), val3);
     }
 }
