@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Prefer32Bit>true</Prefer32Bit>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
