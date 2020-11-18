@@ -116,6 +116,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Math", "Math", "{9BF93356-2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Math.Geometry", "Gapotchenko.FX.Math.Geometry\Gapotchenko.FX.Math.Geometry.csproj", "{97B91925-D964-4F55-AFA3-56FF2E93CE64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Math.Combinatorics", "Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj", "{D33CFE2E-FB3F-4B93-9CD1-8CC86A9EE077}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -234,6 +236,10 @@ Global
 		{97B91925-D964-4F55-AFA3-56FF2E93CE64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97B91925-D964-4F55-AFA3-56FF2E93CE64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97B91925-D964-4F55-AFA3-56FF2E93CE64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D33CFE2E-FB3F-4B93-9CD1-8CC86A9EE077}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D33CFE2E-FB3F-4B93-9CD1-8CC86A9EE077}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D33CFE2E-FB3F-4B93-9CD1-8CC86A9EE077}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D33CFE2E-FB3F-4B93-9CD1-8CC86A9EE077}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -278,6 +284,7 @@ Global
 		{9ABBEC51-84C6-46E3-A7C4-EA694ED3A8F1} = {B9F34781-8B2B-4E38-8DCB-1B99EB93F817}
 		{9BF93356-2C42-4B31-AEB1-7E394D27F500} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
 		{97B91925-D964-4F55-AFA3-56FF2E93CE64} = {9BF93356-2C42-4B31-AEB1-7E394D27F500}
+		{D33CFE2E-FB3F-4B93-9CD1-8CC86A9EE077} = {9BF93356-2C42-4B31-AEB1-7E394D27F500}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}

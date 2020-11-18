@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
+  </ItemGroup>
+
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.targets" />
+
+</Project>

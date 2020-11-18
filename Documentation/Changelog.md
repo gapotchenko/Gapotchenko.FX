@@ -7,8 +7,9 @@
 Release date: not released yet
 
 - Introduced `Gapotchenko.FX.Math.Geometry` module
-- Improved performance of LINQ memoization in thread-safe mode
-- Added LINQ functions that determine whether any elements of a sequence satisfy the specified 2 or 3 conditions
+- Introduced `Gapotchenko.FX.Math.Combinatorics` module
+- Improved performance of thread-safe LINQ memoization
+- Added LINQ functions that determine whether any elements of a sequence satisfy the specified conditions
 - Added `MathEx.Clamp` function that clamps a value to the specified [min; max] range
 - Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
