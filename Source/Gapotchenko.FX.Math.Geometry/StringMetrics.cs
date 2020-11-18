@@ -36,8 +36,8 @@ namespace Gapotchenko.FX.Math.Geometry
             if (ReferenceEquals(a, b))
                 return 0;
 
-            var sRow = EnumerableEx.AsReadOnly(b);
-            var sCol = EnumerableEx.AsReadOnly(a);
+            var sRow = b.AsReadOnly();
+            var sCol = a.AsReadOnly();
 
             int rowLen = sRow.Count;
             int colLen = sCol.Count;
