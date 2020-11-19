@@ -210,34 +210,6 @@ namespace Gapotchenko.FX.Linq
         }
 
         /// <summary>
-        /// Checks whether the number of elements in a sequence is greater or equal to a specified <paramref name="value"/>.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">A sequence that contains elements to be counted.</param>
-        /// <param name="value">The value to compare the count of elements in a sequence with.</param>
-        /// <returns><c>true</c> if the number of elements in a sequence is greater or equal to a specified <paramref name="value"/>; otherwise, <c>false</c>.</returns>
-        public static bool CountIsAtLeast<TSource>(this IEnumerable<TSource> source, int value)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            if (value <= 0)
-                return true;
-
-            using var enumerator = source.GetEnumerator();
-
-            int i = 0;
-            while (enumerator.MoveNext())
-            {
-                ++i;
-                if (i >= value)
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Determines whether a sequence contains any elements and all of them satisfy a specified condition.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
