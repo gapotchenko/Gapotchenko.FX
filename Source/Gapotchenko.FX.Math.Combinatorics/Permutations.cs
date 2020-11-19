@@ -10,10 +10,10 @@ namespace Gapotchenko.FX.Math.Combinatorics
     public static class Permutations
     {
         /// <summary>
-        /// Calculates the count of permutations for the specified sequence length.
+        /// Calculates the count of multiset permutations for the specified sequence length.
         /// </summary>
         /// <param name="length">The length of a sequence.</param>
-        /// <returns>The calculated count of permutations.</returns>
+        /// <returns>The calculated count of multiset permutations.</returns>
         public static int Cardinality(int length) => MathEx.Factorial(length);
 
         /// <summary>
