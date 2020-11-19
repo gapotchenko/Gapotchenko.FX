@@ -19,10 +19,10 @@ Unix operating systems have a built-in support for ANSI escape sequences that co
 ### What ANSI Escape Sequences Are Useful For?
 
 Indeed, .NET base class library already provides
+[`System.Console`](https://docs.microsoft.com/en-us/dotnet/api/system.console) class with
 [`ForegroundColor`](https://docs.microsoft.com/en-us/dotnet/api/system.console.foregroundcolor),
 [`BackroundColor`](https://docs.microsoft.com/en-us/dotnet/api/system.console.backgroundcolor)
-and other properties of [`System.Console`](https://docs.microsoft.com/en-us/dotnet/api/system.console) class
-for controlling the console.
+and other properties for controlling the console.
 
 ANSI escape sequences become handy when the complexity of console output reaches a certain level:
 
