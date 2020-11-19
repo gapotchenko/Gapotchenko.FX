@@ -11,10 +11,10 @@ namespace Gapotchenko.FX.Math.Combinatorics
     public static class CartesianProduct
     {
         /// <summary>
-        /// Calculates Cartesian product cardinality for the specified factor lengths.
+        /// Returns Cartesian product cardinality for specified factor lengths.
         /// </summary>
         /// <param name="factorLengths">The factor lengths.</param>
-        /// <returns>Calculated Cartesian product cardinality for the specified factor lengths.</returns>
+        /// <returns>The Cartesian product cardinality.</returns>
         public static int Cardinality(IEnumerable<int> factorLengths)
         {
             if (factorLengths == null)
@@ -39,14 +39,49 @@ namespace Gapotchenko.FX.Math.Combinatorics
         }
 
         /// <summary>
-        /// Calculates Cartesian product cardinality for the specified factor lengths.
+        /// Returns Cartesian product cardinality for specified factor lengths.
         /// </summary>
         /// <param name="factorLengths">The factor lengths.</param>
-        /// <returns>Calculated Cartesian product cardinality for specified factor lengths.</returns>
+        /// <returns>The Cartesian product cardinality.</returns>
         public static int Cardinality(params int[] factorLengths) => Cardinality((IEnumerable<int>)factorLengths);
 
         /// <summary>
-        /// Generates Cartesian product of the specified factors.
+        /// Returns Cartesian product cardinality for specified factor lengths.
+        /// </summary>
+        /// <param name="factorLengths">The factor lengths.</param>
+        /// <returns>The Cartesian product cardinality.</returns>
+        public static long Cardinality(IEnumerable<long> factorLengths)
+        {
+            if (factorLengths == null)
+                throw new ArgumentNullException(nameof(factorLengths));
+
+            bool hasFactor = false;
+            long cardinality = 1;
+
+            foreach (var length in factorLengths)
+            {
+                if (length == 0)
+                    return 0;
+
+                cardinality *= length;
+                hasFactor = true;
+            }
+
+            if (!hasFactor)
+                return 0;
+
+            return cardinality;
+        }
+
+        /// <summary>
+        /// Returns Cartesian product cardinality for specified factor lengths.
+        /// </summary>
+        /// <param name="factorLengths">The factor lengths.</param>
+        /// <returns>The Cartesian product cardinality.</returns>
+        public static long Cardinality(params long[] factorLengths) => Cardinality((IEnumerable<long>)factorLengths);
+
+        /// <summary>
+        /// Generates Cartesian product of specified factors.
         /// </summary>
         /// <typeparam name="T">The factor type.</typeparam>
         /// <param name="factors">The factors.</param>

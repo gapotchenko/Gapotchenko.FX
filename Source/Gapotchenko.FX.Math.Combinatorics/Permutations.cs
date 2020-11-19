@@ -7,55 +7,53 @@ namespace Gapotchenko.FX.Math.Combinatorics
     /// <summary>
     /// Defines permutation operations.
     /// </summary>
-    public static class Permutations
+    public static partial class Permutations
     {
         /// <summary>
-        /// Calculates the count of multiset permutations for the specified sequence length.
+        /// Returns the number of multiset permutations for a specified sequence length.
         /// </summary>
         /// <param name="length">The length of a sequence.</param>
-        /// <returns>The calculated count of multiset permutations.</returns>
+        /// <returns>The number of multiset permutations.</returns>
         public static int Cardinality(int length) => MathEx.Factorial(length);
 
         /// <summary>
-        /// Generates permutations from the source sequence.
+        /// Returns a <see cref="long"/> that represents the total number of multiset permutations for a specified sequence length.
         /// </summary>
-        /// <typeparam name="T">Type of items to permute.</typeparam>
-        /// <param name="source">The source sequence.</param>
-        /// <returns>Permutations of elements from the source sequence.</returns>
-        public static IEnumerable<IEnumerable<T>> Of<T>(IEnumerable<T> source) => Of(source, null);
+        /// <param name="length">The length of a sequence.</param>
+        /// <returns>The number of multiset permutations.</returns>
+        public static long Cardinality(long length) => MathEx.Factorial(length);
 
         /// <summary>
         /// Generates permutations from the source sequence.
         /// </summary>
         /// <typeparam name="T">Type of items to permute.</typeparam>
         /// <param name="source">The source sequence.</param>
-        /// <param name="comparer">
-        /// Optional comparer to use.
-        /// If supplied <paramref name="comparer"/> is not <c>null</c>
-        /// then permutations are ordered according to the  <paramref name="comparer"/>.
-        /// </param>
         /// <returns>Permutations of elements from the source sequence.</returns>
-        public static IEnumerable<IEnumerable<T>> Of<T>(IEnumerable<T> source, IComparer<T>? comparer)
+        public static Enumerable<T> Of<T>(IEnumerable<T> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return Generate(source.AsReadOnly(), comparer);
+            return new Enumerable<T>(source.AsReadOnly(), null);
         }
 
-        static IEnumerable<IEnumerable<T>> Generate<T>(IReadOnlyList<T> items, IComparer<T>? comparer)
+        static IEnumerable<IEnumerable<T>> Permute<T>(IReadOnlyList<T> items, IComparer<T>? comparer)
         {
             int length = items.Count;
             var transform = new (int First, int Second)[length];
 
             if (comparer == null)
             {
-                // No comparer. Start with an identity transform.
+                // Multiset permutation.
+
+                // Start with an identity transform.
                 for (int i = 0; i < length; i++)
                     transform[i] = (i, i);
             }
             else
             {
+                // Set permutation.
+
                 // Figure out where we are in the sequence of all permutations.
                 var initialOrder = new int[length];
                 for (int i = 0; i < length; i++)
