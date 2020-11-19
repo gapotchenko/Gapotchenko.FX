@@ -122,24 +122,23 @@ namespace Gapotchenko.FX.Linq
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            using (var enumerator = source.GetEnumerator())
+            using var enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
             {
-                if (!enumerator.MoveNext())
-                {
-                    // The sequence is empty.
-                    return default;
-                }
-
-                var scalar = enumerator.Current;
-
-                if (enumerator.MoveNext())
-                {
-                    // The sequence contains several elements.
-                    return default;
-                }
-
-                return scalar;
+                // The sequence is empty.
+                return default;
             }
+
+            var scalar = enumerator.Current;
+
+            if (enumerator.MoveNext())
+            {
+                // The sequence contains several elements.
+                return default;
+            }
+
+            return scalar;
         }
 
         /// <summary>
@@ -225,15 +224,14 @@ namespace Gapotchenko.FX.Linq
             if (value <= 0)
                 return true;
 
-            using (var enumerator = source.GetEnumerator())
+            using var enumerator = source.GetEnumerator();
+
+            int i = 0;
+            while (enumerator.MoveNext())
             {
-                int i = 0;
-                while (enumerator.MoveNext())
-                {
-                    ++i;
-                    if (i >= value)
-                        return true;
-                }
+                ++i;
+                if (i >= value)
+                    return true;
             }
 
             return false;
@@ -257,21 +255,20 @@ namespace Gapotchenko.FX.Linq
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            using (var enumerator = source.GetEnumerator())
-            {
-                if (!enumerator.MoveNext())
-                {
-                    // Sequence is empty.
-                    return false;
-                }
+            using var enumerator = source.GetEnumerator();
 
-                do
-                {
-                    if (!predicate(enumerator.Current))
-                        return false;
-                }
-                while (enumerator.MoveNext());
+            if (!enumerator.MoveNext())
+            {
+                // Sequence is empty.
+                return false;
             }
+
+            do
+            {
+                if (!predicate(enumerator.Current))
+                    return false;
+            }
+            while (enumerator.MoveNext());
 
             return true;
         }
@@ -299,18 +296,25 @@ namespace Gapotchenko.FX.Linq
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            using (var e1 = first.GetEnumerator())
-            using (var e2 = second.GetEnumerator())
+            using var e1 = first.GetEnumerator();
+            using var e2 = second.GetEnumerator();
+
+            while (e1.MoveNext())
             {
-                while (e1.MoveNext())
+                if (!e2.MoveNext())
                 {
-                    if (!e2.MoveNext())
-                        return false;
-                    if (!predicate(e1.Current, e2.Current))
-                        return false;
-                }
-                if (e2.MoveNext())
+                    // The second sequence is shorter than the first.
                     return false;
+                }
+
+                if (!predicate(e1.Current, e2.Current))
+                    return false;
+            }
+
+            if (e2.MoveNext())
+            {
+                // The second sequence is longer than the first.
+                return false;
             }
 
             return true;
@@ -379,27 +383,26 @@ namespace Gapotchenko.FX.Linq
             value = value.Memoize();
             bool match = true;
 
-            using (var e2 = value.GetEnumerator())
+            using var e2 = value.GetEnumerator();
+
+            foreach (var e1Current in source)
             {
-                foreach (var e1Current in source)
+                if (!e2.MoveNext())
+                    return match;
+
+                if (comparer.Equals(e1Current, e2.Current))
                 {
-                    if (!e2.MoveNext())
-                        return match;
-
-                    if (comparer.Equals(e1Current, e2.Current))
-                    {
-                        match = true;
-                    }
-                    else
-                    {
-                        match = false;
-                        e2.Reset();
-                    }
+                    match = true;
                 }
-
-                if (match)
-                    return !e2.MoveNext();
+                else
+                {
+                    match = false;
+                    e2.Reset();
+                }
             }
+
+            if (match)
+                return !e2.MoveNext();
 
             return false;
         }
@@ -444,15 +447,14 @@ namespace Gapotchenko.FX.Linq
             if (comparer == null)
                 comparer = EqualityComparer<TSource>.Default;
 
-            using (var enumerator = source.GetEnumerator())
+            using var enumerator = source.GetEnumerator();
+
+            int index = 0;
+            while (enumerator.MoveNext())
             {
-                int index = 0;
-                while (enumerator.MoveNext())
-                {
-                    if (comparer.Equals(enumerator.Current, value))
-                        return index;
-                    ++index;
-                }
+                if (comparer.Equals(enumerator.Current, value))
+                    return index;
+                ++index;
             }
 
             return -1;
@@ -472,15 +474,14 @@ namespace Gapotchenko.FX.Linq
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            using (var enumerator = source.GetEnumerator())
+            using var enumerator = source.GetEnumerator();
+
+            int index = 0;
+            while (enumerator.MoveNext())
             {
-                int index = 0;
-                while (enumerator.MoveNext())
-                {
-                    if (predicate(enumerator.Current))
-                        return index;
-                    ++index;
-                }
+                if (predicate(enumerator.Current))
+                    return index;
+                ++index;
             }
 
             return -1;
@@ -505,41 +506,39 @@ namespace Gapotchenko.FX.Linq
             if (ReferenceEquals(source, value))
                 return 0;
 
-            if (comparer == null)
-                comparer = EqualityComparer<TSource>.Default;
+            comparer ??= EqualityComparer<TSource>.Default;
 
             value = value.Memoize();
             int match = 0;
 
-            using (var e2 = value.GetEnumerator())
+            using var e2 = value.GetEnumerator();
+
+            int index = 0;
+            foreach (var e1Current in source)
             {
-                int index = 0;
-                foreach (var e1Current in source)
+                if (!e2.MoveNext())
+                    return match;
+
+                if (comparer.Equals(e1Current, e2.Current))
                 {
-                    if (!e2.MoveNext())
-                        return match;
-
-                    if (comparer.Equals(e1Current, e2.Current))
-                    {
-                        if (match == -1)
-                            match = index;
-                    }
-                    else
-                    {
-                        match = -1;
-                        e2.Reset();
-                    }
-
-                    ++index;
+                    if (match == -1)
+                        match = index;
+                }
+                else
+                {
+                    match = -1;
+                    e2.Reset();
                 }
 
-                if (match != -1)
-                {
-                    if (!e2.MoveNext())
-                        return match;
-                    else
-                        return -1;
-                }
+                ++index;
+            }
+
+            if (match != -1)
+            {
+                if (!e2.MoveNext())
+                    return match;
+                else
+                    return -1;
             }
 
             return -1;
@@ -588,17 +587,15 @@ namespace Gapotchenko.FX.Linq
             if (ReferenceEquals(source, value))
                 return true;
 
-            if (comparer == null)
-                comparer = EqualityComparer<TSource>.Default;
+            comparer ??= EqualityComparer<TSource>.Default;
 
-            using (var e1 = source.GetEnumerator())
-            using (var e2 = value.GetEnumerator())
+            using var e1 = source.GetEnumerator();
+            using var e2 = value.GetEnumerator();
+
+            while (e2.MoveNext())
             {
-                while (e2.MoveNext())
-                {
-                    if (!(e1.MoveNext() && comparer.Equals(e1.Current, e2.Current)))
-                        return false;
-                }
+                if (!(e1.MoveNext() && comparer.Equals(e1.Current, e2.Current)))
+                    return false;
             }
 
             return true;
@@ -612,20 +609,13 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">The source sequence.</param>
         /// <returns>A list view of a source sequence.</returns>
         [return: NotNullIfNotNull("source")]
-        public static List<TSource>? AsList<TSource>(IEnumerable<TSource>? source)
-        {
-            switch (source)
+        public static List<TSource>? AsList<TSource>(IEnumerable<TSource>? source) =>
+            source switch
             {
-                case null:
-                    return null;
-
-                case List<TSource> list:
-                    return list;
-
-                default:
-                    return source.ToList();
-            }
-        }
+                null => null,
+                List<TSource> list => list,
+                _ => source.ToList()
+            };
 
         /// <summary>
         /// Returns an array view of a source sequence.
@@ -635,49 +625,35 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">The source sequence.</param>
         /// <returns>An array view of a source sequence.</returns>
         [return: NotNullIfNotNull("source")]
-        public static TSource[]? AsArray<TSource>(IEnumerable<TSource>? source)
-        {
-            switch (source)
+        public static TSource[]? AsArray<TSource>(IEnumerable<TSource>? source) =>
+            source switch
             {
-                case null:
-                    return null;
-
-                case TSource[] array:
-                    return array;
-
-                default:
-                    return source.ToArray();
-            }
-        }
+                null => null,
+                TSource[] array => array,
+                _ => source.ToArray()
+            };
 
         /// <summary>
+        /// <para>
         /// Returns a read-only view of a source sequence.
+        /// </para>
+        /// <para>
         /// Depending on a source sequence kind, the result is either a read-only wrapper, a directly casted instance or a copied in-memory list.
+        /// </para>
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
         /// <param name="source">The source sequence.</param>
         /// <returns>A read-only view of a source sequence.</returns>
         [return: NotNullIfNotNull("source")]
-        public static IReadOnlyList<TSource>? AsReadOnly<TSource>(this IEnumerable<TSource>? source)
-        {
-            switch (source)
+        public static IReadOnlyList<TSource>? AsReadOnly<TSource>(this IEnumerable<TSource>? source) =>
+            source switch
             {
-                case null:
-                    return null;
-
-                case IList<TSource> list:
-                    return new ReadOnlyCollection<TSource>(list);
-
-                case IReadOnlyList<TSource> readOnlyList:
-                    return readOnlyList;
-
-                case string s:
-                    return (IReadOnlyList<TSource>)(object)new ReadOnlyCharList(s);
-
-                default:
-                    return AsList(source).AsReadOnly();
-            }
-        }
+                null => null,
+                IReadOnlyList<TSource> readOnlyList => readOnlyList,
+                IList<TSource> list => new ReadOnlyCollection<TSource>(list),
+                string s => (IReadOnlyList<TSource>)(object)new ReadOnlyCharList(s),
+                _ => AsList(source).AsReadOnly()
+            };
 
         /// <summary>
         /// Determines whether any elements of a sequence satisfy the specified conditions.

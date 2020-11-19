@@ -56,7 +56,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             if (factors == null)
                 throw new ArgumentNullException(nameof(factors));
 
-            var sourceArray = EnumerableEx.AsReadOnly(factors);
+            var sourceArray = factors.AsReadOnly();
             if (sourceArray.Count == 0)
                 yield break;
 
