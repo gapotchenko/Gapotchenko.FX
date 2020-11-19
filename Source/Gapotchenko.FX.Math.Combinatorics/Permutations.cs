@@ -22,7 +22,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <typeparam name="T">Type of items to permute.</typeparam>
         /// <param name="source">The source sequence.</param>
         /// <returns>Permutations of elements from the source sequence.</returns>
-        public static IEnumerable<IEnumerable<T>> Generate<T>(IEnumerable<T> source) => Generate(source, null);
+        public static IEnumerable<IEnumerable<T>> Of<T>(IEnumerable<T> source) => Of(source, null);
 
         /// <summary>
         /// Generates permutations from the source sequence.
@@ -35,15 +35,15 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// then permutations are ordered according to the  <paramref name="comparer"/>.
         /// </param>
         /// <returns>Permutations of elements from the source sequence.</returns>
-        public static IEnumerable<IEnumerable<T>> Generate<T>(IEnumerable<T> source, IComparer<T>? comparer)
+        public static IEnumerable<IEnumerable<T>> Of<T>(IEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return GenerateCore(source.AsReadOnly(), comparer);
+            return Generate(source.AsReadOnly(), comparer);
         }
 
-        static IEnumerable<IEnumerable<T>> GenerateCore<T>(IReadOnlyList<T> items, IComparer<T>? comparer)
+        static IEnumerable<IEnumerable<T>> Generate<T>(IReadOnlyList<T> items, IComparer<T>? comparer)
         {
             int length = items.Count;
             var transform = new (int First, int Second)[length];

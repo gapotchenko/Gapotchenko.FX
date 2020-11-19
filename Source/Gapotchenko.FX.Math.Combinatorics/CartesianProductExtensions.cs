@@ -16,6 +16,6 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <param name="source">The source sequence.</param>
         /// <returns>Cartesian product of source sequence elements.</returns>
         public static IEnumerable<IEnumerable<T>> CartesianProduct<T>(this IEnumerable<IEnumerable<T>> source) =>
-            Combinatorics.CartesianProduct.Generate(source);
+            Combinatorics.CartesianProduct.Of(source);
     }
 }

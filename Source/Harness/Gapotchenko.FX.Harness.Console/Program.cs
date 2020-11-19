@@ -9,6 +9,7 @@ using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Linq.Expressions;
 using Gapotchenko.FX.Math;
+using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Threading.Tasks;

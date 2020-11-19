@@ -51,7 +51,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <typeparam name="T">The factor type.</typeparam>
         /// <param name="factors">The factors.</param>
         /// <returns>Cartesian product of the specified factors.</returns>
-        public static IEnumerable<IEnumerable<T>> Generate<T>(IEnumerable<IEnumerable<T>> factors)
+        public static IEnumerable<IEnumerable<T>> Of<T>(IEnumerable<IEnumerable<T>> factors)
         {
             if (factors == null)
                 throw new ArgumentNullException(nameof(factors));
@@ -102,6 +102,6 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <typeparam name="T">Type of factor items.</typeparam>
         /// <param name="factors">The factors.</param>
         /// <returns>Cartesian product of specified factors.</returns>
-        public static IEnumerable<IEnumerable<T>> Generate<T>(params IEnumerable<T>[] factors) => Generate((IEnumerable<IEnumerable<T>>)factors);
+        public static IEnumerable<IEnumerable<T>> Of<T>(params IEnumerable<T>[] factors) => Of((IEnumerable<IEnumerable<T>>)factors);
     }
 }

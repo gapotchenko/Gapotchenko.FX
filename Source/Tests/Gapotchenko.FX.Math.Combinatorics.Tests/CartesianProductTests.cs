@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = CartesianProduct.Cardinality(factors.Select(x => x.Length));
             Assert.AreEqual(6, cardinality);
 
-            var p = CartesianProduct.Generate(factors).AsReadOnly();
+            var p = CartesianProduct.Of(factors).AsReadOnly();
 
             Assert.AreEqual(cardinality, p.Count);
 
@@ -43,7 +43,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = CartesianProduct.Cardinality(factors.Select(x => x.Length));
             Assert.AreEqual(0, cardinality);
 
-            var p = CartesianProduct.Generate(factors);
+            var p = CartesianProduct.Of(factors);
             Assert.AreEqual(cardinality, p.Count());
         }
     }

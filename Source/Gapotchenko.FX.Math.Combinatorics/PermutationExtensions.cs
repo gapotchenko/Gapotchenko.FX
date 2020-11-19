@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <typeparam name="T">Type of items to permute.</typeparam>
         /// <param name="source">The source sequence.</param>
         /// <returns>Permutations of elements from the source sequence.</returns>
-        public static IEnumerable<IEnumerable<T>> Permute<T>(this IEnumerable<T> source) => Permutations.Generate(source);
+        public static IEnumerable<IEnumerable<T>> Permute<T>(this IEnumerable<T> source) => Permutations.Of(source);
 
         /// <summary>
         /// Generates permutations from the source sequence.
@@ -28,6 +28,6 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// then permutations are ordered according to the <paramref name="comparer"/>.
         /// </param>
         /// <returns>Permutations of elements from the source sequence.</returns>
-        public static IEnumerable<IEnumerable<T>> Permute<T>(this IEnumerable<T> source, IComparer<T>? comparer) => Permutations.Generate(source, comparer);
+        public static IEnumerable<IEnumerable<T>> Permute<T>(this IEnumerable<T> source, IComparer<T>? comparer) => Permutations.Of(source, comparer);
     }
 }

@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(2, cardinality);
 
-            var p = Permutations.Generate(source).AsReadOnly();
+            var p = Permutations.Of(source).AsReadOnly();
             Assert.AreEqual(cardinality, p.Count);
 
             var s = p
@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(6, cardinality);
 
-            var p = Permutations.Generate(source).AsReadOnly();
+            var p = Permutations.Of(source).AsReadOnly();
             Assert.AreEqual(cardinality, p.Count);
 
             var s = p
