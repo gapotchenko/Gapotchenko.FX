@@ -309,7 +309,7 @@ namespace Gapotchenko.FX.Console
                 Console.CancelKeyPress += Console_CancelKeyPress;
             }
 
-            static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+            static void Console_CancelKeyPress(object? sender, ConsoleCancelEventArgs e)
             {
                 Console.CursorVisible = true;
             }

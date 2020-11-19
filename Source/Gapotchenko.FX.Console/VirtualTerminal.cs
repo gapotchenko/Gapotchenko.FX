@@ -204,8 +204,8 @@ namespace Gapotchenko.FX.Console
             {
                 if (m_IsEmulated)
                 {
-                    Console.SetOut(m_PrevConsoleOut);
-                    Console.SetError(m_PrevConsoleError);
+                    Console.SetOut(m_PrevConsoleOut!);
+                    Console.SetError(m_PrevConsoleError!);
 
                     m_IsEmulated = false;
                     m_PrevConsoleOut = null;
