@@ -112,11 +112,14 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 {
                 }
 
+                transform = ((int, int)[])transform.Clone();
+
                 // Swap the two.
                 MathEx.Swap(ref transform[decreasingPart], ref transform[greater]);
 
                 // Reverse the decreasing partition.
                 Array.Reverse(transform, decreasingPart + 1, length - decreasingPart - 1);
+
                 yield return ApplyTransform(items, transform);
             }
         }
