@@ -1,10 +1,10 @@
-﻿using Gapotchenko.FX.Threading;
+﻿using Gapotchenko.FX.Linq;
+using Gapotchenko.FX.Threading;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Gapotchenko.FX.Math.Combinatorics
 {
@@ -15,22 +15,24 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// </summary>
         /// <typeparam name="T">The type of objects to enumerate.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public sealed class Enumerable<T> : IEnumerable<IEnumerable<T>>
+        public sealed class Enumerable<T> : IReadOnlyCollection<IEnumerable<T>>
         {
-            internal Enumerable(IReadOnlyList<T> items, IComparer<T>? comparer)
+            internal Enumerable(IEnumerable<T> source, IComparer<T>? comparer)
             {
-                m_Items = items;
+                m_Source = source;
                 m_Comparer = comparer;
             }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            readonly IReadOnlyList<T> m_Items;
+            readonly IEnumerable<T> m_Source;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly IComparer<T>? m_Comparer;
 
+            IEnumerable<IEnumerable<T>> Enumerate() => Permute(m_Source, m_Comparer);
+
             /// <inheritdoc/>
-            public IEnumerator<IEnumerable<T>> GetEnumerator() => Permute(m_Items, m_Comparer).GetEnumerator();
+            public IEnumerator<IEnumerable<T>> GetEnumerator() => Enumerate().GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -53,10 +55,12 @@ namespace Gapotchenko.FX.Math.Combinatorics
                             return checked((int)LongCount());
 
                         if (m_Comparer == null)
-                            return Cardinality(m_Items.Count);
+                            return Cardinality(EnumerableEx.Count(m_Source));
                         else
-                            return Enumerable.Count(this);
+                            return EnumerableEx.Count(Enumerate());
                     });
+
+            int IReadOnlyCollection<IEnumerable<T>>.Count => Count();
 
             Optional<long> m_CachedLongCount;
 
@@ -74,23 +78,38 @@ namespace Gapotchenko.FX.Math.Combinatorics
                             return Count();
 
                         if (m_Comparer == null)
-                            return Cardinality((long)m_Items.Count);
+                            return Cardinality(EnumerableEx.LongCount(m_Source));
                         else
-                            return Enumerable.LongCount(this);
+                            return EnumerableEx.LongCount(Enumerate());
                     });
 
             /// <summary>
             /// Returns distinct elements from a sequence of permutations by using the default equality comparer to compare values.
             /// </summary>
-            /// <returns>An <see cref="IEnumerable{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
-            public IEnumerable<IEnumerable<T>> Distinct() => Distinct(null);
+            /// <returns>An <see cref="Enumerable{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
+            public Enumerable<T> Distinct() => Distinct(null);
 
             /// <summary>
             /// Returns distinct elements from a sequence of permutations by using a specified <see cref="IEqualityComparer{T}"/> to compare values.
             /// </summary>
-            /// <returns>An <see cref="IEnumerable{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
-            public IEnumerable<IEnumerable<T>> Distinct(IComparer<T>? comparer) =>
-                new Enumerable<T>(m_Items, comparer ?? Comparer<T>.Default);
+            /// <returns>An <see cref="Enumerable{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
+            public Enumerable<T> Distinct(IComparer<T>? comparer)
+            {
+                if (IsSet(m_Source))
+                {
+                    // The permutations are already distinct.
+                    return this;
+                }
+
+                comparer ??= Comparer<T>.Default;
+
+                if (m_Comparer == null)
+                    return new Enumerable<T>(m_Source, comparer);
+                else if (ReferenceEquals(comparer, m_Comparer))
+                    return this;
+                else
+                    throw new NotSupportedException("Cannot produce distinct permutations by using different comparers.");
+            }
         }
     }
 }

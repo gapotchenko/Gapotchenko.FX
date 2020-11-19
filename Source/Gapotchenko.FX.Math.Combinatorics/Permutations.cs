@@ -37,23 +37,27 @@ namespace Gapotchenko.FX.Math.Combinatorics
             return new Enumerable<T>(source.AsReadOnly(), null);
         }
 
-        static IEnumerable<IEnumerable<T>> Permute<T>(IReadOnlyList<T> items, IComparer<T>? comparer)
+        static bool IsSet<T>(IEnumerable<T> source) =>
+#if TFF_IREADONLYSET
+            source is IReadOnlySet<T> ||
+#endif
+            source is ISet<T>;
+
+        static IEnumerable<IEnumerable<T>> Permute<T>(IEnumerable<T> source, IComparer<T>? comparer)
         {
+            var items = source.AsReadOnly();
+
             int length = items.Count;
             var transform = new (int First, int Second)[length];
 
-            if (comparer == null)
+            if (comparer == null || IsSet(source))
             {
-                // Multiset permutation.
-
                 // Start with an identity transform.
                 for (int i = 0; i < length; i++)
                     transform[i] = (i, i);
             }
             else
             {
-                // Set permutation.
-
                 // Figure out where we are in the sequence of all permutations.
                 var initialOrder = new int[length];
                 for (int i = 0; i < length; i++)

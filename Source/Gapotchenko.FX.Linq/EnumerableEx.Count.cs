@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,6 +42,7 @@ namespace Gapotchenko.FX.Linq
             {
                 IReadOnlyCollection<TSource> roc => roc.Count,
                 ICollection<TSource> c => c.Count,
+                ICollection c => c.Count,
                 _ => null
             };
 
