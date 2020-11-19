@@ -4,6 +4,7 @@ using System.Security.Permissions;
 using System.Threading;
 
 #if NETFRAMEWORK || NETSTANDARD2_0 || NETSTANDARD2_1 || NETCOREAPP2_0 || NETCOREAPP2_1
+// Older target frameworks have weaker nullability annotations. That leads to false positive warnings.
 #pragma warning disable CS8601 // Possible null reference assignment.
 #endif
 
@@ -32,6 +33,7 @@ namespace Gapotchenko.FX.Threading
         {
             if (syncLock == null)
                 _ThrowArgumentNullException_SyncLock();
+
             return LazyInitializer.EnsureInitialized(ref target, ref initialized, ref syncLock, valueFactory);
         }
 
@@ -64,6 +66,7 @@ namespace Gapotchenko.FX.Threading
         {
             if (Volatile.Read(ref initialized))
                 return;
+
             _EnsureInitializedCore(ref initialized, EnsureInitialized(ref syncLock), action);
         }
 
@@ -90,8 +93,10 @@ namespace Gapotchenko.FX.Threading
         {
             if (Volatile.Read(ref initialized))
                 return;
+
             if (syncLock == null)
                 _ThrowArgumentNullException_SyncLock();
+
             _EnsureInitializedCore(ref initialized, syncLock, action);
         }
 
@@ -109,6 +114,7 @@ namespace Gapotchenko.FX.Threading
         {
             if (Volatile.Read(ref initialized))
                 return;
+
             _EnsureInitializedCore(ref initialized, EnsureInitialized(ref syncLock), action, state);
         }
 
@@ -136,8 +142,10 @@ namespace Gapotchenko.FX.Threading
         {
             if (Volatile.Read(ref initialized))
                 return;
+
             if (syncLock == null)
                 _ThrowArgumentNullException_SyncLock();
+
             _EnsureInitializedCore(ref initialized, syncLock, action, state);
         }
 
@@ -166,6 +174,7 @@ namespace Gapotchenko.FX.Threading
         {
             if (Volatile.Read(ref initialized))
                 return target!;
+
             return _EnsureInitializedCore(ref target, ref initialized, EnsureInitialized(ref syncLock), valueFactory, state);
         }
 
@@ -196,8 +205,10 @@ namespace Gapotchenko.FX.Threading
         {
             if (Volatile.Read(ref initialized))
                 return target!;
+
             if (syncLock == null)
                 _ThrowArgumentNullException_SyncLock();
+
             return _EnsureInitializedCore(ref target, ref initialized, syncLock, valueFactory, state);
         }
 
@@ -217,6 +228,7 @@ namespace Gapotchenko.FX.Threading
         {
             if (Volatile.Read(ref action) == null)
                 return;
+
             _EnsureInitializedCore(ref syncLock, ref action);
         }
 
@@ -249,6 +261,7 @@ namespace Gapotchenko.FX.Threading
         {
             if (Volatile.Read(ref valueFactory) == null)
                 return target!;
+
             return _EnsureInitializedCore(ref target, ref syncLock, ref valueFactory);
         }
 
@@ -283,8 +296,10 @@ namespace Gapotchenko.FX.Threading
             var result = Volatile.Read(ref target);
             if (result != null)
                 return result;
+
             if (syncLock == null)
                 _ThrowArgumentNullException_SyncLock();
+
             return _EnsureInitializedCore(ref target, syncLock, valueFactory, state);
         }
 
@@ -303,6 +318,7 @@ namespace Gapotchenko.FX.Threading
             var result = Volatile.Read(ref target);
             if (result != null)
                 return result;
+
             return _EnsureInitializedCore(ref target, EnsureInitialized(ref syncLock), valueFactory, state);
         }
 
@@ -336,8 +352,10 @@ namespace Gapotchenko.FX.Threading
             var result = Volatile.Read(ref target);
             if (result != null)
                 return result;
+
             if (syncLock == null)
                 _ThrowArgumentNullException_SyncLock();
+
             return _EnsureInitializedCore(ref target, syncLock, valueFactory);
         }
 
@@ -354,6 +372,7 @@ namespace Gapotchenko.FX.Threading
             var result = Volatile.Read(ref target);
             if (result != null)
                 return result;
+
             return _EnsureInitializedCore(ref target, EnsureInitialized(ref syncLock), valueFactory);
         }
 
@@ -386,6 +405,7 @@ namespace Gapotchenko.FX.Threading
         {
             if (syncLock == null)
                 _ThrowArgumentNullException_SyncLock();
+
             return LazyInitializer.EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory);
         }
 
@@ -397,9 +417,7 @@ namespace Gapotchenko.FX.Threading
         /// <param name="syncLock">A reference to an object used as the mutually exclusive lock for initializing target. If syncLock is null, a new object will be instantiated.</param>
         /// <param name="valueFactory">The function that is called to initialize the reference or value.</param>
         /// <returns>The initialized value of type <typeparamref name="TTarget"/>.</returns>
-        public static TTarget EnsureInitialized<TTarget>(ref Optional<TTarget> target, ref object syncLock, Func<TTarget> valueFactory)
-        {
-            return LazyInitializer.EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory);
-        }
+        public static TTarget EnsureInitialized<TTarget>(ref Optional<TTarget> target, [NotNull] ref object? syncLock, Func<TTarget> valueFactory) =>
+            LazyInitializer.EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory);
     }
 }

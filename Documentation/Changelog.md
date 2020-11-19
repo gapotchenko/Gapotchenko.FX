@@ -13,6 +13,7 @@ Release date: not released yet
 - Added `MathEx.Clamp` function that clamps a value to the specified range
 - Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
+- Fixed nullability annotations for `LazyInitializerEx` class
 
 ### Gapotchenko.FX 2020.1
 
