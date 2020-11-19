@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// Calculates Cartesian product cardinality for the specified factor lengths.
         /// </summary>
         /// <param name="factorLengths">The factor lengths.</param>
-        /// <returns>Cartesian product cardinality for the specified factor lengths.</returns>
+        /// <returns>Calculated Cartesian product cardinality for the specified factor lengths.</returns>
         public static int Cardinality(IEnumerable<int> factorLengths)
         {
             if (factorLengths == null)
@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// Calculates Cartesian product cardinality for the specified factor lengths.
         /// </summary>
         /// <param name="factorLengths">The factor lengths.</param>
-        /// <returns>Cartesian product cardinality for specified factor lengths.</returns>
+        /// <returns>Calculated Cartesian product cardinality for specified factor lengths.</returns>
         public static int Cardinality(params int[] factorLengths) => Cardinality((IEnumerable<int>)factorLengths);
 
         /// <summary>
