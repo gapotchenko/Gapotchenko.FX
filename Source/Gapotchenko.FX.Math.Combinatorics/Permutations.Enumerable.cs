@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// </summary>
         /// <typeparam name="T">The type of objects to enumerate.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public sealed class Enumerable<T> : IReadOnlyCollection<IEnumerable<T>>
+        public sealed class Enumerable<T> : IReadOnlyCollection<Row<T>>
         {
             internal Enumerable(IEnumerable<T> source, IComparer<T>? comparer)
             {
@@ -29,10 +29,10 @@ namespace Gapotchenko.FX.Math.Combinatorics
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly IComparer<T>? m_Comparer;
 
-            IEnumerable<IEnumerable<T>> Enumerate() => Permute(m_Source, m_Comparer);
+            IEnumerable<Row<T>> Enumerate() => Permute(m_Source, m_Comparer);
 
             /// <inheritdoc/>
-            public IEnumerator<IEnumerable<T>> GetEnumerator() => Enumerate().GetEnumerator();
+            public IEnumerator<Row<T>> GetEnumerator() => Enumerate().GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -60,7 +60,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                             return EnumerableEx.Count(Enumerate());
                     });
 
-            int IReadOnlyCollection<IEnumerable<T>>.Count => Count();
+            int IReadOnlyCollection<Row<T>>.Count => Count();
 
             Optional<long> m_CachedLongCount;
 

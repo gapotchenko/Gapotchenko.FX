@@ -1,6 +1,7 @@
 ﻿using Gapotchenko.FX.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gapotchenko.FX.Math.Combinatorics
 {
@@ -43,7 +44,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
 #endif
             source is ISet<T>;
 
-        static IEnumerable<IEnumerable<T>> Permute<T>(IEnumerable<T> source, IComparer<T>? comparer)
+        static IEnumerable<Row<T>> Permute<T>(IEnumerable<T> source, IComparer<T>? comparer)
         {
             var items = source.AsReadOnly();
 
@@ -82,13 +83,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 }
             }
 
-            static IEnumerable<T> ApplyTransform(IReadOnlyList<T> items, (int, int)[] transform)
-            {
-                for (int i = 0; i < transform.Length; i++)
-                    yield return items[transform[i].Item2];
-            }
-
-            yield return ApplyTransform(items, transform);
+            yield return new Row<T>(items, transform.Select(x => x.Item2).ToArray());
 
             for (; ; )
             {
@@ -122,7 +117,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 // Reverse the decreasing partition.
                 Array.Reverse(transform, decreasingPart + 1, length - decreasingPart - 1);
 
-                yield return ApplyTransform(items, transform);
+                yield return new Row<T>(items, transform.Select(x => x.Item2).ToArray());
             }
         }
     }
