@@ -21,6 +21,9 @@ namespace Gapotchenko.FX.Memory
                 if (y.Length != n)
                     return false;
 
+                if (x.Equals(y))
+                    return true;
+
                 var xs = x.Span;
                 var ys = y.Span;
 
