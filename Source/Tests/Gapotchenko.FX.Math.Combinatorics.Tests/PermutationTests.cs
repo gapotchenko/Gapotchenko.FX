@@ -238,5 +238,28 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int count = Permutations.Of(source).Distinct().Count();
             Assert.AreEqual(cardinality, count);
         }
+
+        [TestMethod]
+        public void Permutations_Of1UniqueAnd2DuplicateElements_Distinct_NoAcceleration()
+        {
+            var source = new[] { 1, 2, 2 };
+            const int countOfDuplicateElements = 2;
+
+            int cardinality = Permutations.Cardinality(source.Length) / countOfDuplicateElements;
+            Assert.AreEqual(3, cardinality);
+
+            var p = Enumerable.Distinct(Permutations.Of(source)).AsReadOnly();
+            Assert.AreEqual(cardinality, p.Count);
+
+            var s = p
+                .Select(x => x.ToArray())
+                .ToHashSet(ArrayEqualityComparer<int>.Default);
+
+            Assert.AreEqual(cardinality, s.Count);
+
+            Assert.IsTrue(s.Contains(new[] { 1, 2, 2 }));
+            Assert.IsTrue(s.Contains(new[] { 2, 1, 2 }));
+            Assert.IsTrue(s.Contains(new[] { 2, 2, 1 }));
+        }
     }
 }
