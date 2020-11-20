@@ -37,8 +37,8 @@ namespace Gapotchenko.FX.Math.Combinatorics
             /// <inheritdoc/>
             public IEnumerator<T> GetEnumerator()
             {
-                for (int i = 0; i < m_Transform.Length; i++)
-                    yield return m_Source[m_Transform[i]];
+                for (int i = 0, n = Count; i < n; i++)
+                    yield return this[i];
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
