@@ -59,7 +59,7 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _Run()
         {
-            Console.WriteLine("A = {0}", Permutations.Of(new[] { 1, 1, 2 }).Count());
+            Console.WriteLine("A = {0}", Enumerable.Distinct(Permutations.Of(new[] { 1, 1, 2 })).Count());
 
             Console.WriteLine("Process: {0}", RuntimeInformation.ProcessArchitecture);
             Console.WriteLine("OS: {0}", RuntimeInformation.OSArchitecture);
