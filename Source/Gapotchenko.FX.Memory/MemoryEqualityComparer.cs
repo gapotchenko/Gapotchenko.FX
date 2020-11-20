@@ -26,18 +26,18 @@ namespace Gapotchenko.FX.Memory
         public static int GetHashCode<T>(in ReadOnlyMemory<T> memory) => MemoryEqualityComparer<T>.Default.GetHashCode(memory);
 
         /// <summary>
-        /// Creates a new equality comparer for contiguous region of memory with a specified comparer for elements.
+        /// Creates a new equality comparer for contiguous regions of memory with a specified comparer for memory elements.
         /// </summary>
-        /// <typeparam name="T">The type of array elements.</typeparam>
-        /// <param name="elementComparer">The equality comparer for array elements.</param>
-        /// <returns>A new equality comparer for one-dimensional array with elements of type <typeparamref name="T"/>.</returns>
+        /// <typeparam name="T">The type of memory elements.</typeparam>
+        /// <param name="elementComparer">The equality comparer for memory elements.</param>
+        /// <returns>A new equality comparer for contiguous regions of memory with elements of type <typeparamref name="T"/>.</returns>
         public static MemoryEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer)
         {
             var type = typeof(T);
             return Type.GetTypeCode(type) switch
             {
                 TypeCode.Byte when IsDefaultEqualityComparer(elementComparer) => (new ByteComparer() as MemoryEqualityComparer<T>)!,
-                _ when typeof(IEquatable<T>).IsAssignableFrom(type) => (MemoryEqualityComparer<T>)Activator.CreateInstance(typeof(EquatableComparer<>).MakeGenericType(type))!,
+                _ when typeof(IEquatable<T>).IsAssignableFrom(type) && IsDefaultEqualityComparer(elementComparer) => (MemoryEqualityComparer<T>)Activator.CreateInstance(typeof(EquatableComparer<>).MakeGenericType(type))!,
                 _ => new DefaultComparer<T>(elementComparer)
             };
         }

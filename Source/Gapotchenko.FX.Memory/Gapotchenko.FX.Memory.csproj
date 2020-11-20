@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Memory.MemoryEqualityComparer" />
+  </ItemGroup>
+
   <Import Project="$(MasteringDir)\OOB\System.Memory.targets" />
 
 </Project>
