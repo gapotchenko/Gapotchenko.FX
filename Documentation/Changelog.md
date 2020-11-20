@@ -10,6 +10,7 @@ Release date: not released yet
 - Introduced `Gapotchenko.FX.Math.Combinatorics` module
 - Improved performance of thread-safe LINQ memoization
 - Added LINQ functions that determine whether any elements of a sequence satisfy the specified conditions
+- Added `ConsoleEx.ReadPassword` function for reading a password from console
 - Added `MathEx.Clamp` function that clamps a value to the specified range
 - Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
