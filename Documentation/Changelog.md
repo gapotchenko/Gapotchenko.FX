@@ -6,6 +6,7 @@
 
 Release date: not released yet
 
+- Introduced `Gapotchenko.FX.Memory` module
 - Introduced `Gapotchenko.FX.Math.Geometry` module
 - Introduced `Gapotchenko.FX.Math.Combinatorics` module
 - Improved performance of thread-safe LINQ memoization
