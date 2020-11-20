@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-  </PropertyGroup>
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Geometry.StringMetrics" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
