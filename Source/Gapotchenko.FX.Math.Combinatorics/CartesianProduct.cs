@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
     /// <summary>
     /// Defines Cartesian product operations.
     /// </summary>
-    public static class CartesianProduct
+    public static partial class CartesianProduct
     {
         /// <summary>
         /// Returns Cartesian product cardinality for specified factor lengths.
@@ -86,11 +86,24 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <typeparam name="T">The factor type.</typeparam>
         /// <param name="factors">The factors.</param>
         /// <returns>Cartesian product of the specified factors.</returns>
-        public static IEnumerable<IEnumerable<T>> Of<T>(IEnumerable<IEnumerable<T>> factors)
+        public static Enumerable<T> Of<T>(IEnumerable<IEnumerable<T>> factors)
         {
             if (factors == null)
                 throw new ArgumentNullException(nameof(factors));
 
+            return new Enumerable<T>(factors);
+        }
+
+        /// <summary>
+        /// Generates Cartesian product of specified factors.
+        /// </summary>
+        /// <typeparam name="T">Type of factor items.</typeparam>
+        /// <param name="factors">The factors.</param>
+        /// <returns>Cartesian product of specified factors.</returns>
+        public static IEnumerable<IEnumerable<T>> Of<T>(params IEnumerable<T>[] factors) => Of((IEnumerable<IEnumerable<T>>)factors);
+
+        static IEnumerable<Row<T>> Multiply<T>(IEnumerable<IEnumerable<T>> factors)
+        {
             var sourceArray = factors.AsReadOnly();
             if (sourceArray.Count == 0)
                 yield break;
@@ -111,7 +124,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 for (int i = 0; i != n; i++)
                     result[i] = enumerators[i].Current;
 
-                yield return result;
+                yield return new Row<T>(result);
 
                 for (int i = 0; i != n; i++)
                 {
@@ -130,13 +143,5 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 }
             }
         }
-
-        /// <summary>
-        /// Generates Cartesian product of specified factors.
-        /// </summary>
-        /// <typeparam name="T">Type of factor items.</typeparam>
-        /// <param name="factors">The factors.</param>
-        /// <returns>Cartesian product of specified factors.</returns>
-        public static IEnumerable<IEnumerable<T>> Of<T>(params IEnumerable<T>[] factors) => Of((IEnumerable<IEnumerable<T>>)factors);
     }
 }
