@@ -10,17 +10,17 @@ namespace Gapotchenko.FX.Math.Combinatorics
     public static partial class Permutations
     {
         /// <summary>
-        /// Returns the number of multiset permutations for a specified sequence length.
+        /// Returns the number of permutations for a multiset of a specified length.
         /// </summary>
-        /// <param name="length">The length of a sequence.</param>
-        /// <returns>The number of multiset permutations.</returns>
+        /// <param name="length">The length of a multiset.</param>
+        /// <returns>The number of permutations.</returns>
         public static int Cardinality(int length) => MathEx.Factorial(length);
 
         /// <summary>
-        /// Returns a <see cref="long"/> that represents the total number of multiset permutations for a specified sequence length.
+        /// Returns a <see cref="long"/> that represents the total number of permutations for a multiset of a specified length.
         /// </summary>
         /// <param name="length">The length of a sequence.</param>
-        /// <returns>The number of multiset permutations.</returns>
+        /// <returns>The number of permutations.</returns>
         public static long Cardinality(long length) => MathEx.Factorial(length);
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return new Enumerable<T>(source.AsReadOnly(), null);
+            return new Enumerable<T>(source, null);
         }
 
         static bool IsSet<T>(IEnumerable<T> source) =>
