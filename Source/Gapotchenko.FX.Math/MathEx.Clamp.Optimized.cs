@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Math
         // They are made invisible in editor but compiler catches them up.
 
         /// <summary>
-        /// Returns a 8-bit unsigned integer <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a 8-bit unsigned integer <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <param name="value">The value to clamp.</param>
         /// <param name="min">The lower bound of the range.</param>
@@ -44,7 +44,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Returns a 8-bit signed integer <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a 8-bit signed integer <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <param name="value">The value to clamp.</param>
         /// <param name="min">The lower bound of the range.</param>
@@ -77,7 +77,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Returns a 16-bit signed integer <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a 16-bit signed integer <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <param name="value">The value to clamp.</param>
         /// <param name="min">The lower bound of the range.</param>
@@ -109,7 +109,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Returns a 16-bit unsigned integer <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a 16-bit unsigned integer <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <param name="value">The value to clamp.</param>
         /// <param name="min">The lower bound of the range.</param>
@@ -142,7 +142,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Returns a 32-bit signed integer <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a 32-bit signed integer <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <param name="value">The value to clamp.</param>
         /// <param name="min">The lower bound of the range.</param>
@@ -174,7 +174,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Returns a 32-bit unsigned integer <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a 32-bit unsigned integer <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <param name="value">The value to clamp.</param>
         /// <param name="min">The lower bound of the range.</param>
@@ -207,7 +207,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Returns a 64-bit signed integer <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a 64-bit signed integer <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <param name="value">The value to clamp.</param>
         /// <param name="min">The lower bound of the range.</param>
@@ -239,7 +239,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Returns a 64-bit unsigned integer <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a 64-bit unsigned integer <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <param name="value">The value to clamp.</param>
         /// <param name="min">The lower bound of the range.</param>
@@ -272,7 +272,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Returns a <see cref="decimal"/> <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a <see cref="decimal"/> <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <param name="value">The value to clamp.</param>
         /// <param name="min">The lower bound of the range.</param>
@@ -304,7 +304,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Returns a <see cref="float"/> <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a <see cref="float"/> <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <param name="value">The value to clamp.</param>
         /// <param name="min">The lower bound of the range.</param>
@@ -336,7 +336,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Returns a <see cref="double"/> <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a <see cref="double"/> <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <param name="value">The value to clamp.</param>
         /// <param name="min">The lower bound of the range.</param>

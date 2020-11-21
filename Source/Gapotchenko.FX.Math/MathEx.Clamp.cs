@@ -7,7 +7,7 @@ namespace Gapotchenko.FX.Math
     partial class MathEx
     {
         /// <summary>
-        /// Returns a <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <typeparam name="T">The type of value to clamp.</typeparam>
         /// <param name="value">The value to clamp.</param>
@@ -41,7 +41,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Returns a <paramref name="value"/> clamped to the inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
+        /// Returns a <paramref name="value"/> clamped to specified inclusive [<paramref name="min"/>; <paramref name="max"/>] range.
         /// </summary>
         /// <typeparam name="T">The type of value to clamp.</typeparam>
         /// <param name="value">The value to clamp.</param>
