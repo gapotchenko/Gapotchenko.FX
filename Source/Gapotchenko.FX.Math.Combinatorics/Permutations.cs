@@ -25,33 +25,33 @@ namespace Gapotchenko.FX.Math.Combinatorics
         public static long Cardinality(long length) => MathEx.Factorial(length);
 
         /// <summary>
-        /// Generates permutations from the source sequence.
+        /// Generates permutations from a sequence.
         /// </summary>
-        /// <typeparam name="T">Type of items to permute.</typeparam>
-        /// <param name="source">The source sequence.</param>
-        /// <returns>Permutations of elements from the source sequence.</returns>
-        public static Enumerable<T> Of<T>(IEnumerable<T> source)
+        /// <typeparam name="T">Type of elements to permute.</typeparam>
+        /// <param name="sequence">The sequence of elements.</param>
+        /// <returns>Permutations of elements from the sequence.</returns>
+        public static Enumerable<T> Of<T>(IEnumerable<T> sequence)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            if (sequence == null)
+                throw new ArgumentNullException(nameof(sequence));
 
-            return new Enumerable<T>(source, null);
+            return new Enumerable<T>(sequence, null);
         }
 
-        static bool IsSet<T>(IEnumerable<T> source) =>
+        static bool IsSet<T>(IEnumerable<T> sequence) =>
 #if TFF_IREADONLYSET
-            source is IReadOnlySet<T> ||
+            sequence is IReadOnlySet<T> ||
 #endif
-            source is ISet<T>;
+            sequence is ISet<T>;
 
-        static IEnumerable<Row<T>> Permute<T>(IEnumerable<T> source, IComparer<T>? comparer)
+        static IEnumerable<Row<T>> Permute<T>(IEnumerable<T> sequence, IComparer<T>? comparer)
         {
-            var items = source.AsReadOnly();
+            var items = sequence.AsReadOnly();
 
             int length = items.Count;
             var transform = new (int First, int Second)[length];
 
-            if (comparer == null || IsSet(source))
+            if (comparer == null || IsSet(sequence))
             {
                 // Start with an identity transform.
                 for (int i = 0; i < length; i++)

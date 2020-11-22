@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
     public static class PermutationExtensions
     {
         /// <summary>
-        /// Generates permutations from the source sequence.
+        /// Generates permutations from a source sequence.
         /// </summary>
         /// <typeparam name="T">Type of items to permute.</typeparam>
         /// <param name="source">The source sequence.</param>
