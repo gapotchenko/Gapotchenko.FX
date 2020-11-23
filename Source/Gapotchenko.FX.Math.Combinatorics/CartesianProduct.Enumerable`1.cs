@@ -14,13 +14,13 @@ namespace Gapotchenko.FX.Math.Combinatorics
         [EditorBrowsable(EditorBrowsableState.Never)]
         public sealed class Enumerable<T> : IEnumerable<Row<T>>
         {
-            internal Enumerable(IEnumerable<IEnumerable<T>> factors)
+            internal Enumerable(IEnumerable<IEnumerable<T>?> factors)
             {
                 m_Factors = factors;
             }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            readonly IEnumerable<IEnumerable<T>> m_Factors;
+            readonly IEnumerable<IEnumerable<T>?> m_Factors;
 
             IEnumerable<Row<T>> Enumerate() => Multiply(m_Factors);
 

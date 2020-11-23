@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
     public static partial class CartesianProduct
     {
         /// <summary>
-        /// Returns Cartesian product cardinality for specified factor lengths.
+        /// Returns a Cartesian product cardinality for specified factor lengths.
         /// </summary>
         /// <param name="factorLengths">The factor lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>
@@ -39,14 +39,14 @@ namespace Gapotchenko.FX.Math.Combinatorics
         }
 
         /// <summary>
-        /// Returns Cartesian product cardinality for specified factor lengths.
+        /// Returns a Cartesian product cardinality for specified factor lengths.
         /// </summary>
         /// <param name="factorLengths">The factor lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>
         public static int Cardinality(params int[] factorLengths) => Cardinality((IEnumerable<int>)factorLengths);
 
         /// <summary>
-        /// Returns Cartesian product cardinality for specified factor lengths.
+        /// Returns a Cartesian product cardinality for specified factor lengths.
         /// </summary>
         /// <param name="factorLengths">The factor lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>
@@ -74,19 +74,19 @@ namespace Gapotchenko.FX.Math.Combinatorics
         }
 
         /// <summary>
-        /// Returns Cartesian product cardinality for specified factor lengths.
+        /// Returns a Cartesian product cardinality for specified factor lengths.
         /// </summary>
         /// <param name="factorLengths">The factor lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>
         public static long Cardinality(params long[] factorLengths) => Cardinality((IEnumerable<long>)factorLengths);
 
         /// <summary>
-        /// Generates Cartesian product of specified factors.
+        /// Calculates a Cartesian product of specified factors.
         /// </summary>
         /// <typeparam name="T">The factor type.</typeparam>
         /// <param name="factors">The factors.</param>
         /// <returns>The Cartesian product of the specified factors.</returns>
-        public static Enumerable<T> Of<T>(IEnumerable<IEnumerable<T>> factors)
+        public static Enumerable<T> Of<T>(IEnumerable<IEnumerable<T>?> factors)
         {
             if (factors == null)
                 throw new ArgumentNullException(nameof(factors));
@@ -95,16 +95,29 @@ namespace Gapotchenko.FX.Math.Combinatorics
         }
 
         /// <summary>
-        /// Generates Cartesian product of specified factors.
+        /// Calculates a Cartesian product of specified factors.
         /// </summary>
         /// <typeparam name="T">Type of factor items.</typeparam>
-        /// <param name="factors">The factors.</param>
+        /// <param name="first">The first factor.</param>
+        /// <param name="second">The second factor.</param>
+        /// <param name="rest">The rest of factors.</param>
         /// <returns>The Cartesian product of the specified factors.</returns>
-        public static IEnumerable<IEnumerable<T>> Of<T>(params IEnumerable<T>[] factors) => Of((IEnumerable<IEnumerable<T>>)factors);
-
-        static IEnumerable<Row<T>> Multiply<T>(IEnumerable<IEnumerable<T>> factors)
+        public static IEnumerable<IEnumerable<T>> Of<T>(IEnumerable<T>? first, IEnumerable<T>? second, params IEnumerable<T>?[] rest)
         {
-            var items = SelectExceptLast(factors, EnumerableEx.Memoize).AsReadOnly();
+            if (rest == null)
+                throw new ArgumentNullException(nameof(rest));
+
+            return Of(new[] { first, second }.Concat(rest));
+        }
+
+        static IEnumerable<Row<T>> Multiply<T>(IEnumerable<IEnumerable<T>?> factors)
+        {
+            IReadOnlyList<IEnumerable<T>> items =
+                SelectExceptLast(
+                    factors.Where(x => x != null),
+                    EnumerableEx.Memoize)
+                .AsReadOnly()!;
+
             if (items.Count == 0)
                 yield break;
 
@@ -155,7 +168,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             {
                 if (slot.HasValue)
                     yield return selector(slot.Value);
-                
+
                 slot = item;
             }
 
