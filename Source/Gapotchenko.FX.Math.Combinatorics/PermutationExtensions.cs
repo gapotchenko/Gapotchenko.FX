@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Gapotchenko.FX.Math.Combinatorics
@@ -10,11 +11,17 @@ namespace Gapotchenko.FX.Math.Combinatorics
     public static class PermutationExtensions
     {
         /// <summary>
-        /// Generates permutations from a source sequence.
+        /// Returns all possible permutations of elements from a source sequence.
         /// </summary>
-        /// <typeparam name="T">Type of items to permute.</typeparam>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">The source sequence.</param>
-        /// <returns>Permutations of elements from the source sequence.</returns>
-        public static Permutations.Enumerable<T> Permute<T>(this IEnumerable<T> source) => Permutations.Of(source);
+        /// <returns>All possible permutations of elements from the source sequence.</returns>
+        public static Permutations.Enumerable<TSource> Permute<TSource>(this IEnumerable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return Permutations.PermuteAccelerated(source);
+        }
     }
 }

@@ -111,5 +111,13 @@ namespace Gapotchenko.FX.Math.Combinatorics
                     throw new NotSupportedException("Cannot produce distinct permutations by using different comparers.");
             }
         }
+
+        internal static Enumerable<T> PermuteAccelerated<T>(IEnumerable<T> sequence)
+        {
+            if (!IsSet(sequence))
+                sequence = sequence.AsReadOnly();
+
+            return new Enumerable<T>(sequence, null);
+        }
     }
 }
