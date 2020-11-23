@@ -70,7 +70,7 @@ namespace Gapotchenko.FX.Linq
             int i = 0;
             while (enumerator.MoveNext())
             {
-                checked { ++i; }
+                ++i;
                 if (i >= value)
                     return true;
             }
