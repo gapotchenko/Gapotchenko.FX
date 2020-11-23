@@ -7,19 +7,16 @@ namespace Gapotchenko.FX.Math.Combinatorics
 {
     partial class CartesianProduct
     {
-        static IEnumerable<Row<T>> Multiply<T>(IEnumerable<IEnumerable<T>?> factors)
+        static IEnumerable<Row<T>> Multiply<T>(IEnumerable<IEnumerable<T>> factors)
         {
-            IReadOnlyList<IEnumerable<T>> items = factors
-                .Where(x => x != null)
-                .SelectExceptLast(EnumerableEx.Memoize)
-                .AsReadOnly()!;
+            var items = factors.SelectExceptLast(EnumerableEx.Memoize).AsReadOnly();
 
-            if (items.Count == 0)
+            int rank = items.Count;
+
+            if (rank == 0)
                 yield break;
 
             var enumerators = items.Select(x => x.GetEnumerator()).ToArray();
-
-            int rank = enumerators.Length;
 
             foreach (var i in enumerators)
             {
@@ -56,7 +53,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             }
         }
 
-        static IEnumerable<TResult> Multiply<TFirst, TSecond, TResult>(
+        internal static IEnumerable<TResult> Multiply<TFirst, TSecond, TResult>(
             IEnumerable<TFirst> first,
             IEnumerable<TSecond> second,
             Func<TFirst, TSecond, TResult> resultSelector)

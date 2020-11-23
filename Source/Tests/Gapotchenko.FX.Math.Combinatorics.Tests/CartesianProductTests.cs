@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Gapotchenko.FX.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -8,7 +9,23 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
     public class CartesianProductTests
     {
         [TestMethod]
-        public void CartesianProduct_Of2x3Elements()
+        public void CartesianProduct_Of_2x0()
+        {
+            var factors = new[]
+            {
+                new[] { 1, 2 },
+                new int[] { }
+            };
+
+            int cardinality = CartesianProduct.Cardinality(factors.Select(x => x.Length));
+            Assert.AreEqual(0, cardinality);
+
+            var p = CartesianProduct.Of(factors);
+            Assert.AreEqual(cardinality, p.Count());
+        }
+
+        [TestMethod]
+        public void CartesianProduct_Of_2x3()
         {
             var factors = new[]
             {
@@ -32,19 +49,29 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
         }
 
         [TestMethod]
-        public void CartesianProduct_Of2x0Elements()
+        public void CartesianProduct_Of_2x3_Projection()
         {
-            var factors = new[]
-            {
-                new[] { 1, 2 },
-                new int[] { }
-            };
+            const int l1 = 2;
+            const int l2 = 3;
 
-            int cardinality = CartesianProduct.Cardinality(factors.Select(x => x.Length));
-            Assert.AreEqual(0, cardinality);
+            int cardinality = CartesianProduct.Cardinality(new[] { l1, l2 });
+            Assert.AreEqual(6, cardinality);
 
-            var p = CartesianProduct.Of(factors);
-            Assert.AreEqual(cardinality, p.Count());
+            var p =
+                CartesianProduct.Of(
+                    new int[l1] { 1, 2 },
+                    new string[l2] { "A", "B", "C" },
+                    ValueTuple.Create)
+                .AsReadOnly();
+
+            Assert.AreEqual(cardinality, p.Count);
+
+            Assert.AreEqual((1, "A"), p[0]);
+            Assert.AreEqual((2, "A"), p[1]);
+            Assert.AreEqual((1, "B"), p[2]);
+            Assert.AreEqual((2, "B"), p[3]);
+            Assert.AreEqual((1, "C"), p[4]);
+            Assert.AreEqual((2, "C"), p[5]);
         }
     }
 }

@@ -59,6 +59,8 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _Run()
         {
+            var res = new[] { 1, 1, 2 }.CrossJoin(new[] { "A", "B" }, ValueTuple.Create).Distinct();
+
             Console.WriteLine("A = {0}", Enumerable.Distinct(Permutations.Of(new[] { 1, 1, 2 })).Count());
 
             Console.WriteLine("Process: {0}", RuntimeInformation.ProcessArchitecture);

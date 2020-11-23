@@ -21,7 +21,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             if (factors == null)
                 throw new ArgumentNullException(nameof(factors));
 
-            return MultiplyAccelerated(factors);
+            return MultiplyAccelerated(factors.Where(x => x != null)!);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <param name="second">The second factor.</param>
         /// <param name="rest">The rest of factors.</param>
         /// <returns>The Cartesian product of the specified factors.</returns>
-        public static IEnumerable<IEnumerable<T>> Of<T>(IEnumerable<T>? first, IEnumerable<T>? second, params IEnumerable<T>?[] rest)
+        public static Enumerable<T> Of<T>(IEnumerable<T>? first, IEnumerable<T>? second, params IEnumerable<T>?[] rest)
         {
             if (rest == null)
                 throw new ArgumentNullException(nameof(rest));
@@ -42,11 +42,11 @@ namespace Gapotchenko.FX.Math.Combinatorics
 
         /// <summary>
         /// Returns a Cartesian product of two sequences by enumerating all possible combinations of sequence elements,
-        /// and applying a user-defined projection function to each combination.
+        /// and applying a user-defined projection to each combination.
         /// </summary>
         /// <typeparam name="TFirst">The type of the elements of the first input sequence.</typeparam>
         /// <typeparam name="TSecond">The type of the elements of the second input sequence.</typeparam>
-        /// <typeparam name="TResult">The type of the elements of the resulting sequence.</typeparam>
+        /// <typeparam name="TResult">The type of the elements of resulting sequence.</typeparam>
         /// <param name="first">The first input sequence of elements.</param>
         /// <param name="second">The second input sequence of elements.</param>
         /// <param name="resultSelector">The projection function that maps a combination of input sequence elements to an element of a resulting sequence.</param>
