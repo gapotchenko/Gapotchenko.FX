@@ -7,12 +7,6 @@ namespace Gapotchenko.FX.Math.Combinatorics
 {
     partial class Permutations
     {
-        static bool IsSet<T>(IEnumerable<T> sequence) =>
-#if TFF_IREADONLYSET
-            sequence is IReadOnlySet<T> ||
-#endif
-            sequence is ISet<T>;
-
         static IEnumerable<Row<T>> Permute<T>(IEnumerable<T> sequence, IEqualityComparer<T>? comparer)
         {
             var items = sequence.AsReadOnly();
@@ -102,5 +96,11 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 yield return new Row<T>(items, transform.Select(x => x.Item2).ToArray());
             }
         }
+
+        static bool IsSet<T>(IEnumerable<T> sequence) =>
+#if TFF_IREADONLYSET
+            sequence is IReadOnlySet<T> ||
+#endif
+            sequence is ISet<T>;
     }
 }
