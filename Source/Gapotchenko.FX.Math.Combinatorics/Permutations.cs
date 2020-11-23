@@ -35,6 +35,9 @@ namespace Gapotchenko.FX.Math.Combinatorics
             if (sequence == null)
                 throw new ArgumentNullException(nameof(sequence));
 
+            if (!IsSet(sequence))
+                sequence = sequence.AsReadOnly();
+
             return new Enumerable<T>(sequence, null);
         }
 
