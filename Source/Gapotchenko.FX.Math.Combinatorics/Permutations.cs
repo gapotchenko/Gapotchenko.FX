@@ -83,7 +83,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                     list.Add(i);
                 }
 
-                IEnumerable<List<int>> lists = map.Values;
+                var lists = map.Values.AsEnumerable();
                 if (nullList != null)
                     lists = lists.Prepend(nullList);
 
