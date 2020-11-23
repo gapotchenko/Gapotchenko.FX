@@ -56,7 +56,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
 
             if (comparer == null || IsSet(sequence))
             {
-                // Start with an identity transform.
+                // Identity transform.
                 for (int i = 0; i < length; i++)
                     transform[i] = (i, i);
             }
@@ -90,8 +90,8 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 if (nullList != null)
                     lists = lists.Prepend(nullList);
 
-                int elementIndex = 0;
                 int transformIndex = 0;
+                int elementIndex = 0;
 
                 foreach (var list in lists)
                 {
