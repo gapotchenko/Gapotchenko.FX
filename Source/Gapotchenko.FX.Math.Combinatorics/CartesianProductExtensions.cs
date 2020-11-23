@@ -15,6 +15,6 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <typeparam name="T">Type of source sequence elements.</typeparam>
         /// <param name="source">The source sequence.</param>
         /// <returns>The Cartesian product of the source sequence elements.</returns>
-        public static CartesianProduct.Enumerable<T> CartesianProduct<T>(this IEnumerable<IEnumerable<T>> source) => Combinatorics.CartesianProduct.Of(source);
+        public static CartesianProduct.Enumerable<T> CrossJoin<T>(this IEnumerable<IEnumerable<T>> source) => CartesianProduct.Of(source);
     }
 }
