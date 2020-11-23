@@ -104,18 +104,21 @@ namespace Gapotchenko.FX.Math.Combinatorics
 
         static IEnumerable<Row<T>> Multiply<T>(IEnumerable<IEnumerable<T>> factors)
         {
-            var sourceArray = factors.AsReadOnly();
-            if (sourceArray.Count == 0)
+            var items = SelectExceptLast(factors, EnumerableEx.Memoize).AsReadOnly();
+            if (items.Count == 0)
                 yield break;
 
-            var enumerators = sourceArray.Select(x => x.GetEnumerator()).ToArray();
+            var enumerators = items.Select(x => x.GetEnumerator()).ToArray();
 
             int n = enumerators.Length;
 
             foreach (var i in enumerators)
             {
                 if (!i.MoveNext())
+                {
+                    // At least one multiplier is empty.
                     yield break;
+                }
             }
 
             for (; ; )
@@ -132,7 +135,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                     if (enumerator.MoveNext())
                         break;
 
-                    var newEnumerator = sourceArray[i].GetEnumerator();
+                    var newEnumerator = items[i].GetEnumerator();
                     if (!newEnumerator.MoveNext())
                         throw new InvalidOperationException("Cartesian product pool has been emptied unexpectedly.");
 
@@ -142,6 +145,23 @@ namespace Gapotchenko.FX.Math.Combinatorics
                         yield break;
                 }
             }
+        }
+
+        static IEnumerable<T> SelectExceptLast<T>(IEnumerable<T> source, Func<T, T> selector)
+        {
+            Optional<T> slot = default;
+
+            foreach (var item in source)
+            {
+                if (slot.HasValue)
+                    yield return selector(slot.Value);
+                
+                slot = item;
+            }
+
+            // Flush the last item as is.
+            if (slot.HasValue)
+                yield return slot.Value;
         }
     }
 }
