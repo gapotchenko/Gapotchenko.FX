@@ -27,6 +27,25 @@ namespace Gapotchenko.FX.Math.Combinatorics
         }
 
         /// <summary>
+        /// Returns a Cartesian product of two sequences by enumerating all possible combinations of sequence elements.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="first">The first input sequence of elements.</param>
+        /// <param name="second">The second input sequence of elements.</param>
+        /// <returns>The Cartesian product of two input sequences.</returns>
+        public static CartesianProduct.Enumerable<TSource> CrossJoin<TSource>(
+            this IEnumerable<TSource> first,
+            IEnumerable<TSource> second)
+        {
+            if (first == null)
+                throw new ArgumentNullException(nameof(first));
+            if (second == null)
+                throw new ArgumentNullException(nameof(second));
+
+            return CartesianProduct.MultiplyAccelerated(new[] { first, second });
+        }
+
+        /// <summary>
         /// Returns a Cartesian product of two sequences by enumerating all possible combinations of sequence elements,
         /// and applying a user-defined projection to each combination.
         /// </summary>
@@ -50,25 +69,6 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 throw new ArgumentNullException(nameof(resultSelector));
 
             return CartesianProduct.Multiply(first, second, resultSelector);
-        }
-
-        /// <summary>
-        /// Returns a Cartesian product of two sequences by enumerating all possible combinations of sequence elements.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="first">The first input sequence of elements.</param>
-        /// <param name="second">The second input sequence of elements.</param>
-        /// <returns>The Cartesian product of two input sequences.</returns>
-        public static CartesianProduct.Enumerable<TSource> CrossJoin<TSource>(
-            this IEnumerable<TSource> first,
-            IEnumerable<TSource> second)
-        {
-            if (first == null)
-                throw new ArgumentNullException(nameof(first));
-            if (second == null)
-                throw new ArgumentNullException(nameof(second));
-
-            return CartesianProduct.MultiplyAccelerated(new[] { first, second });
         }
     }
 }
