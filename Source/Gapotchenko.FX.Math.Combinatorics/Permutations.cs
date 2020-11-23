@@ -127,8 +127,6 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 {
                 }
 
-                transform = ((int, int)[])transform.Clone();
-
                 // Swap the two.
                 MathEx.Swap(ref transform[decreasingPart], ref transform[greater]);
 
