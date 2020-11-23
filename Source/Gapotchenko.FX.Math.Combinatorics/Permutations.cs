@@ -44,7 +44,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
 #endif
             sequence is ISet<T>;
 
-        static IEnumerable<Row<T>> Permute<T>(IEnumerable<T> sequence, IComparer<T>? comparer)
+        static IEnumerable<Row<T>> Permute<T>(IEnumerable<T> sequence, IEqualityComparer<T>? comparer)
         {
             var items = sequence.AsReadOnly();
 
@@ -59,27 +59,42 @@ namespace Gapotchenko.FX.Math.Combinatorics
             }
             else
             {
-                // Figure out where we are in the sequence of all permutations.
-                var initialOrder = new int[length];
-                for (int i = 0; i < length; i++)
-                    initialOrder[i] = i;
+#pragma warning disable CS8714
+                var map = new Dictionary<T, List<int>>(comparer);
+#pragma warning restore CS8714
+                List<int>? nullList = null;
 
-                Array.Sort(
-                    initialOrder,
-                    (x, y) => comparer.Compare(items[x], items[y]));
-
-                for (int i = 0; i < length; i++)
-                    transform[i] = (initialOrder[i], i);
-
-                // Handle duplicates.
-                for (int i = 1; i < length; i++)
+                for (int i = 0; i < length; ++i)
                 {
-                    if (comparer.Compare(
-                        items[transform[i - 1].Second],
-                        items[transform[i].Second]) == 0)
+                    var item = items[i];
+
+                    List<int>? list;
+                    if (item is null)
                     {
-                        transform[i].First = transform[i - 1].First;
+                        nullList ??= new List<int>();
+                        list = nullList;
                     }
+                    else if (!map.TryGetValue(item, out list))
+                    {
+                        list = new List<int>();
+                        map.Add(item, list);
+                    }
+
+                    list.Add(i);
+                }
+
+                IEnumerable<List<int>> lists = map.Values;
+                if (nullList != null)
+                    lists = lists.Prepend(nullList);
+
+                int elementIndex = 0;
+                int transformIndex = 0;
+
+                foreach (var list in lists)
+                {
+                    foreach (var i in list)
+                        transform[transformIndex++] = (elementIndex, i);
+                    elementIndex += list.Count;
                 }
             }
 

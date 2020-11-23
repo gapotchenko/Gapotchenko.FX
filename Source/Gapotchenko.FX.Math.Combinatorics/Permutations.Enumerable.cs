@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         [EditorBrowsable(EditorBrowsableState.Never)]
         public sealed class Enumerable<T> : IReadOnlyCollection<Row<T>>
         {
-            internal Enumerable(IEnumerable<T> source, IComparer<T>? comparer)
+            internal Enumerable(IEnumerable<T> source, IEqualityComparer<T>? comparer)
             {
                 m_Source = source;
                 m_Comparer = comparer;
@@ -27,7 +27,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             readonly IEnumerable<T> m_Source;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            readonly IComparer<T>? m_Comparer;
+            readonly IEqualityComparer<T>? m_Comparer;
 
             IEnumerable<Row<T>> Enumerate() => Permute(m_Source, m_Comparer);
 
@@ -93,7 +93,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             /// Returns distinct elements from a sequence of permutations by using a specified <see cref="IEqualityComparer{T}"/> to compare values.
             /// </summary>
             /// <returns>An <see cref="Enumerable{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
-            public Enumerable<T> Distinct(IComparer<T>? comparer)
+            public Enumerable<T> Distinct(IEqualityComparer<T>? comparer)
             {
                 if (IsSet(m_Source))
                 {
@@ -101,7 +101,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                     return this;
                 }
 
-                comparer ??= Comparer<T>.Default;
+                comparer ??= EqualityComparer<T>.Default;
 
                 if (m_Comparer == null)
                     return new Enumerable<T>(m_Source, comparer);

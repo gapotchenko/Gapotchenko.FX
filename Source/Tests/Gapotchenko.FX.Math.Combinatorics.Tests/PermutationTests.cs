@@ -179,10 +179,12 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             Assert.AreEqual(cardinality, count);
         }
 
-        [TestMethod]
-        public void Permutations_Of1UniqueAnd2DuplicateElements()
+        [DataTestMethod]
+        [DataRow(new[] { 1, 2, 2 })]
+        [DataRow(new[] { 2, 1, 2 })]
+        [DataRow(new[] { 2, 2, 1 })]
+        public void Permutations_Of1UniqueAnd2DuplicateElements(int[] source)
         {
-            var source = new[] { 1, 2, 2 };
             const int countOfDuplicateElements = 2;
 
             int cardinality = Permutations.Cardinality(source.Length);
@@ -203,10 +205,12 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             { Assert.IsTrue(s.TryGetValue(new[] { 2, 2, 1 }, out var count) && count == 2); }
         }
 
-        [TestMethod]
-        public void Permutations_Of1UniqueAnd2DuplicateElements_Distinct()
+        [DataTestMethod]
+        [DataRow(new[] { 1, 2, 2 })]
+        [DataRow(new[] { 2, 1, 2 })]
+        [DataRow(new[] { 2, 2, 1 })]
+        public void Permutations_Of1UniqueAnd2DuplicateElements_Distinct(int[] source)
         {
-            var source = new[] { 1, 2, 2 };
             const int countOfDuplicateElements = 2;
 
             int cardinality = Permutations.Cardinality(source.Length) / countOfDuplicateElements;
@@ -226,10 +230,12 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             Assert.IsTrue(s.Contains(new[] { 2, 2, 1 }));
         }
 
-        [TestMethod]
-        public void Permutations_Of1UniqueAnd2DuplicateElements_Distinct_Count()
+        [DataTestMethod]
+        [DataRow(new[] { 1, 2, 2 })]
+        [DataRow(new[] { 2, 1, 2 })]
+        [DataRow(new[] { 2, 2, 1 })]
+        public void Permutations_Of1UniqueAnd2DuplicateElements_Distinct_Count(int[] source)
         {
-            var source = new[] { 1, 2, 2 };
             const int countOfDuplicateElements = 2;
 
             int cardinality = Permutations.Cardinality(source.Length) / countOfDuplicateElements;
@@ -239,10 +245,12 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             Assert.AreEqual(cardinality, count);
         }
 
-        [TestMethod]
-        public void Permutations_Of1UniqueAnd2DuplicateElements_Distinct_NoAcceleration()
+        [DataTestMethod]
+        [DataRow(new[] { 1, 2, 2 })]
+        [DataRow(new[] { 2, 1, 2 })]
+        [DataRow(new[] { 2, 2, 1 })]
+        public void Permutations_Of1UniqueAnd2DuplicateElements_Distinct_NoAcceleration(int[] source)
         {
-            var source = new[] { 1, 2, 2 };
             const int countOfDuplicateElements = 2;
 
             int cardinality = Permutations.Cardinality(source.Length) / countOfDuplicateElements;
