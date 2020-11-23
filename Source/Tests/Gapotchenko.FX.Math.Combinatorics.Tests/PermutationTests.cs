@@ -7,11 +7,11 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
     [TestClass]
     public class PermutationTests
     {
-        [TestMethod]
-        public void Permutations_Of2UniqueElements()
+        [DataTestMethod]
+        [DataRow(new[] { 1, 2 })]
+        [DataRow(new[] { 2, 1 })]
+        public void Permutations_Of2UniqueElements(int[] source)
         {
-            var source = new[] { 1, 2 };
-
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(2, cardinality);
 
@@ -28,11 +28,11 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             Assert.IsTrue(s.Contains(new[] { 2, 1 }));
         }
 
-        [TestMethod]
-        public void Permutations_Of2UniqueElements_Distinct()
+        [DataTestMethod]
+        [DataRow(new[] { 1, 2 })]
+        [DataRow(new[] { 2, 1 })]
+        public void Permutations_Of2UniqueElements_Distinct(int[] source)
         {
-            var source = new[] { 1, 2 };
-
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(2, cardinality);
 
@@ -49,11 +49,11 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             Assert.IsTrue(s.Contains(new[] { 2, 1 }));
         }
 
-        [TestMethod]
-        public void Permutations_Of2UniqueElements_Count()
+        [DataTestMethod]
+        [DataRow(new[] { 1, 2 })]
+        [DataRow(new[] { 2, 1 })]
+        public void Permutations_Of2UniqueElements_Count(int[] source)
         {
-            var source = new[] { 1, 2 };
-
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(2, cardinality);
 
@@ -117,11 +117,15 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             Assert.AreEqual(cardinality, count);
         }
 
-        [TestMethod]
-        public void Permutations_Of3UniqueElements()
+        [DataTestMethod]
+        [DataRow(new[] { 1, 2, 3 })]
+        [DataRow(new[] { 1, 3, 2 })]
+        [DataRow(new[] { 2, 1, 3 })]
+        [DataRow(new[] { 2, 3, 1 })]
+        [DataRow(new[] { 3, 1, 2 })]
+        [DataRow(new[] { 3, 2, 1 })]
+        public void Permutations_Of3UniqueElements(int[] source)
         {
-            var source = new[] { 1, 2, 3 };
-
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(6, cardinality);
 
@@ -142,11 +146,15 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             Assert.IsTrue(s.Contains(new[] { 3, 2, 1 }));
         }
 
-        [TestMethod]
-        public void Permutations_Of3UniqueElements_Distinct()
+        [DataTestMethod]
+        [DataRow(new[] { 1, 2, 3 })]
+        [DataRow(new[] { 1, 3, 2 })]
+        [DataRow(new[] { 2, 1, 3 })]
+        [DataRow(new[] { 2, 3, 1 })]
+        [DataRow(new[] { 3, 1, 2 })]
+        [DataRow(new[] { 3, 2, 1 })]
+        public void Permutations_Of3UniqueElements_Distinct(int[] source)
         {
-            var source = new[] { 1, 2, 3 };
-
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(6, cardinality);
 
@@ -167,11 +175,15 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             Assert.IsTrue(s.Contains(new[] { 3, 2, 1 }));
         }
 
-        [TestMethod]
-        public void Permutations_Of3UniqueElements_Count()
+        [DataTestMethod]
+        [DataRow(new[] { 1, 2, 3 })]
+        [DataRow(new[] { 1, 3, 2 })]
+        [DataRow(new[] { 2, 1, 3 })]
+        [DataRow(new[] { 2, 3, 1 })]
+        [DataRow(new[] { 3, 1, 2 })]
+        [DataRow(new[] { 3, 2, 1 })]
+        public void Permutations_Of3UniqueElements_Count(int[] source)
         {
-            var source = new[] { 1, 2, 3 };
-
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(6, cardinality);
 
