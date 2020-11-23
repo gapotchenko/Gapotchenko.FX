@@ -11,77 +11,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
     public static partial class CartesianProduct
     {
         /// <summary>
-        /// Returns a Cartesian product cardinality for specified factor lengths.
-        /// </summary>
-        /// <param name="factorLengths">The factor lengths.</param>
-        /// <returns>The Cartesian product cardinality.</returns>
-        public static int Cardinality(IEnumerable<int> factorLengths)
-        {
-            if (factorLengths == null)
-                throw new ArgumentNullException(nameof(factorLengths));
-
-            bool hasFactor = false;
-            int cardinality = 1;
-
-            foreach (var length in factorLengths)
-            {
-                if (length == 0)
-                    return 0;
-
-                cardinality *= length;
-                hasFactor = true;
-            }
-
-            if (!hasFactor)
-                return 0;
-
-            return cardinality;
-        }
-
-        /// <summary>
-        /// Returns a Cartesian product cardinality for specified factor lengths.
-        /// </summary>
-        /// <param name="factorLengths">The factor lengths.</param>
-        /// <returns>The Cartesian product cardinality.</returns>
-        public static int Cardinality(params int[] factorLengths) => Cardinality((IEnumerable<int>)factorLengths);
-
-        /// <summary>
-        /// Returns a Cartesian product cardinality for specified factor lengths.
-        /// </summary>
-        /// <param name="factorLengths">The factor lengths.</param>
-        /// <returns>The Cartesian product cardinality.</returns>
-        public static long Cardinality(IEnumerable<long> factorLengths)
-        {
-            if (factorLengths == null)
-                throw new ArgumentNullException(nameof(factorLengths));
-
-            bool hasFactor = false;
-            long cardinality = 1;
-
-            foreach (var length in factorLengths)
-            {
-                if (length == 0)
-                    return 0;
-
-                cardinality *= length;
-                hasFactor = true;
-            }
-
-            if (!hasFactor)
-                return 0;
-
-            return cardinality;
-        }
-
-        /// <summary>
-        /// Returns a Cartesian product cardinality for specified factor lengths.
-        /// </summary>
-        /// <param name="factorLengths">The factor lengths.</param>
-        /// <returns>The Cartesian product cardinality.</returns>
-        public static long Cardinality(params long[] factorLengths) => Cardinality((IEnumerable<long>)factorLengths);
-
-        /// <summary>
-        /// Calculates a Cartesian product of specified factors.
+        /// Returns a Cartesian product of specified factors.
         /// </summary>
         /// <typeparam name="T">The factor type.</typeparam>
         /// <param name="factors">The factors.</param>
@@ -91,11 +21,11 @@ namespace Gapotchenko.FX.Math.Combinatorics
             if (factors == null)
                 throw new ArgumentNullException(nameof(factors));
 
-            return new Enumerable<T>(factors);
+            return MultiplyAccelerated(factors);
         }
 
         /// <summary>
-        /// Calculates a Cartesian product of specified factors.
+        /// Returns a Cartesian product of specified factors.
         /// </summary>
         /// <typeparam name="T">Type of factor items.</typeparam>
         /// <param name="first">The first factor.</param>
@@ -110,71 +40,32 @@ namespace Gapotchenko.FX.Math.Combinatorics
             return Of(new[] { first, second }.Concat(rest));
         }
 
-        static IEnumerable<Row<T>> Multiply<T>(IEnumerable<IEnumerable<T>?> factors)
+        /// <summary>
+        /// Returns a Cartesian product of two sequences by enumerating all possible combinations of sequence elements,
+        /// and applying a user-defined projection function to each combination.
+        /// </summary>
+        /// <typeparam name="TFirst">The type of the elements of the first input sequence.</typeparam>
+        /// <typeparam name="TSecond">The type of the elements of the second input sequence.</typeparam>
+        /// <typeparam name="TResult">The type of the elements of the resulting sequence.</typeparam>
+        /// <param name="first">The first input sequence of elements.</param>
+        /// <param name="second">The second input sequence of elements.</param>
+        /// <param name="resultSelector">The projection function that maps a combination of input sequence elements to an element of a resulting sequence.</param>
+        /// <returns>The Cartesian product of two input sequences with user-defined projection applied.</returns>
+        public static IEnumerable<TResult> Of<TFirst, TSecond, TResult>(
+            IEnumerable<TFirst>? first,
+            IEnumerable<TSecond>? second,
+            Func<TFirst, TSecond, TResult> resultSelector)
         {
-            IReadOnlyList<IEnumerable<T>> items =
-                SelectExceptLast(
-                    factors.Where(x => x != null),
-                    EnumerableEx.Memoize)
-                .AsReadOnly()!;
+            if (resultSelector == null)
+                throw new ArgumentNullException(nameof(resultSelector));
 
-            if (items.Count == 0)
-                yield break;
-
-            var enumerators = items.Select(x => x.GetEnumerator()).ToArray();
-
-            int n = enumerators.Length;
-
-            foreach (var i in enumerators)
+            if (first == null ||
+                second == null)
             {
-                if (!i.MoveNext())
-                {
-                    // At least one multiplier is empty.
-                    yield break;
-                }
+                return Enumerable.Empty<TResult>();
             }
 
-            for (; ; )
-            {
-                var result = new T[n];
-                for (int i = 0; i != n; i++)
-                    result[i] = enumerators[i].Current;
-
-                yield return new Row<T>(result);
-
-                for (int i = 0; i != n; i++)
-                {
-                    var enumerator = enumerators[i];
-                    if (enumerator.MoveNext())
-                        break;
-
-                    var newEnumerator = items[i].GetEnumerator();
-                    if (!newEnumerator.MoveNext())
-                        throw new InvalidOperationException("Cartesian product pool has been emptied unexpectedly.");
-
-                    enumerators[i] = newEnumerator;
-
-                    if (i == n - 1)
-                        yield break;
-                }
-            }
-        }
-
-        static IEnumerable<T> SelectExceptLast<T>(IEnumerable<T> source, Func<T, T> selector)
-        {
-            Optional<T> slot = default;
-
-            foreach (var item in source)
-            {
-                if (slot.HasValue)
-                    yield return selector(slot.Value);
-
-                slot = item;
-            }
-
-            // Flush the last item as is.
-            if (slot.HasValue)
-                yield return slot.Value;
+            return Multiply(first, second, resultSelector);
         }
     }
 }
