@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// </summary>
         /// <typeparam name="T">The type of elements that the row contains.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public sealed class Row<T> : IReadOnlyList<T>, IEquatable<Row<T>>
+        public sealed class Row<T> : IReadOnlyCollection<T>, IEquatable<Row<T>>
         {
             internal Row(IReadOnlyList<T> source)
             {
@@ -23,9 +23,6 @@ namespace Gapotchenko.FX.Math.Combinatorics
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly IReadOnlyList<T> m_Source;
-
-            /// <inheritdoc/>
-            public T this[int index] => m_Source[index];
 
             /// <inheritdoc/>
             public int Count => m_Source.Count;
