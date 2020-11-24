@@ -12,9 +12,9 @@ namespace Gapotchenko.FX.Math.Combinatorics
     {
         /// <summary>
         /// Represents the result of permutations.
-        /// Exposes accelerated operations and the enumerator for the rows.
+        /// Exposes accelerated LINQ operations and the enumerator for the rows.
         /// </summary>
-        /// <typeparam name="T">The type of objects to enumerate.</typeparam>
+        /// <typeparam name="T">The type of elements that the row contains.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public interface IResult<T> : IReadOnlyCollection<IRow<T>>
         {

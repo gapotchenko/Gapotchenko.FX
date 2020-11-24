@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <typeparam name="T">Type of sequence elements.</typeparam>
         /// <param name="sequences">The sequences.</param>
         /// <returns>The Cartesian product of the specified sequences.</returns>
-        public static Enumerable<T> Of<T>(IEnumerable<IEnumerable<T>?> sequences)
+        public static IResult<T> Of<T>(IEnumerable<IEnumerable<T>?> sequences)
         {
             if (sequences == null)
                 throw new ArgumentNullException(nameof(sequences));
@@ -31,7 +31,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <param name="second">The second factor.</param>
         /// <param name="rest">The rest of factors.</param>
         /// <returns>The Cartesian product of the specified factors.</returns>
-        public static Enumerable<T> Of<T>(IEnumerable<T>? first, IEnumerable<T>? second, params IEnumerable<T>?[] rest)
+        public static IResult<T> Of<T>(IEnumerable<T>? first, IEnumerable<T>? second, params IEnumerable<T>?[] rest)
         {
             if (rest == null)
                 throw new ArgumentNullException(nameof(rest));

@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
     partial class Permutations
     {
         /// <summary>
-        /// Represents a row in the resulting sequence of permutations.
+        /// Represents a row in sequence of permutation results.
         /// </summary>
         /// <typeparam name="T">The type of elements that the row contains.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -48,7 +48,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 ReferenceEquals(this, other) ||
                 other is Row<T> otherRow &&
                 ReferenceEquals(m_Source, otherRow.m_Source) &&
-                this.SequenceEqual(other);
+                this.SequenceEqual(otherRow);
 
             public override bool Equals(object? obj) =>
                 obj switch

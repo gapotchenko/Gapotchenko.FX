@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <typeparam name="T">Type of sequence elements.</typeparam>
         /// <param name="factors">The sequences.</param>
         /// <returns>The Cartesian product of the sequences.</returns>
-        public static CartesianProduct.Enumerable<T> CrossJoin<T>(this IEnumerable<IEnumerable<T>> factors)
+        public static CartesianProduct.IResult<T> CrossJoin<T>(this IEnumerable<IEnumerable<T>> factors)
         {
             if (factors == null)
                 throw new ArgumentNullException(nameof(factors));
@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <param name="first">The first input sequence of elements.</param>
         /// <param name="second">The second input sequence of elements.</param>
         /// <returns>The Cartesian product of two input sequences.</returns>
-        public static CartesianProduct.Enumerable<TSource> CrossJoin<TSource>(
+        public static CartesianProduct.IResult<TSource> CrossJoin<TSource>(
             this IEnumerable<TSource> first,
             IEnumerable<TSource> second)
         {

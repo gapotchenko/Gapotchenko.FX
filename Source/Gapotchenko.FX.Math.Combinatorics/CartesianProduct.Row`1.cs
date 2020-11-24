@@ -14,7 +14,11 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// </summary>
         /// <typeparam name="T">The type of elements that the row contains.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public sealed class Row<T> : IReadOnlyCollection<T>, IEquatable<Row<T>>
+        public interface IRow<T> : IReadOnlyCollection<T>, IEquatable<IRow<T>>
+        {
+        }
+
+        sealed class Row<T> : IRow<T>
         {
             internal Row(IReadOnlyList<T> source)
             {
@@ -24,27 +28,17 @@ namespace Gapotchenko.FX.Math.Combinatorics
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly IReadOnlyList<T> m_Source;
 
-            /// <inheritdoc/>
             public int Count => m_Source.Count;
 
-            /// <inheritdoc/>
             public IEnumerator<T> GetEnumerator() => m_Source.GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            /// <inheritdoc/>
-            public bool Equals(Row<T>? other)
-            {
-                if (ReferenceEquals(this, other))
-                    return true;
-
-                if (other is null)
-                    return false;
-
-                return
-                    ReferenceEquals(m_Source, other.m_Source) &&
-                    this.SequenceEqual(other);
-            }
+            public bool Equals(IRow<T>? other) =>
+                ReferenceEquals(this, other) ||
+                other is Row<T> otherRow &&
+                ReferenceEquals(m_Source, otherRow.m_Source) &&
+                this.SequenceEqual(otherRow);
 
             /// <inheritdoc/>
             public override bool Equals(object? obj) =>
