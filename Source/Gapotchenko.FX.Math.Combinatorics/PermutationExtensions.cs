@@ -11,11 +11,11 @@ namespace Gapotchenko.FX.Math.Combinatorics
     public static class PermutationExtensions
     {
         /// <summary>
-        /// Returns all possible permutations of elements from a source sequence.
+        /// Returns all possible permutations of elements from a sequence.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">The source sequence.</param>
-        /// <returns>All possible permutations of elements from the source sequence.</returns>
+        /// <returns>An enumerable that contains all possible permutations of elements from the source sequence.</returns>
         public static Permutations.Enumerable<TSource> Permute<TSource>(this IEnumerable<TSource> source)
         {
             if (source == null)

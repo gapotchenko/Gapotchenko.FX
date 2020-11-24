@@ -11,9 +11,9 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <summary>
         /// Returns all possible permutations of elements from a sequence.
         /// </summary>
-        /// <typeparam name="T">Type of elements to permute.</typeparam>
-        /// <param name="sequence">The sequence of elements.</param>
-        /// <returns>All possible permutations of elements from the sequence.</returns>
+        /// <typeparam name="T">The type of the elements of sequence.</typeparam>
+        /// <param name="sequence">The sequence.</param>
+        /// <returns>An enumerable that contains all possible permutations of elements from the sequence.</returns>
         public static Enumerable<T> Of<T>(IEnumerable<T> sequence)
         {
             if (sequence == null)

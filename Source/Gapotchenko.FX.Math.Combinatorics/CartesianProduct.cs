@@ -1,5 +1,4 @@
-﻿using Gapotchenko.FX.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,17 +10,17 @@ namespace Gapotchenko.FX.Math.Combinatorics
     public static partial class CartesianProduct
     {
         /// <summary>
-        /// Returns a Cartesian product of specified factors.
+        /// Returns a Cartesian product of specified sequences.
         /// </summary>
-        /// <typeparam name="T">The factor type.</typeparam>
-        /// <param name="factors">The factors.</param>
-        /// <returns>The Cartesian product of the specified factors.</returns>
-        public static Enumerable<T> Of<T>(IEnumerable<IEnumerable<T>?> factors)
+        /// <typeparam name="T">Type of sequence elements.</typeparam>
+        /// <param name="sequences">The sequences.</param>
+        /// <returns>The Cartesian product of the specified sequences.</returns>
+        public static Enumerable<T> Of<T>(IEnumerable<IEnumerable<T>?> sequences)
         {
-            if (factors == null)
-                throw new ArgumentNullException(nameof(factors));
+            if (sequences == null)
+                throw new ArgumentNullException(nameof(sequences));
 
-            return MultiplyAccelerated(factors.Where(x => x != null)!);
+            return MultiplyAccelerated(sequences.Where(x => x != null)!);
         }
 
         /// <summary>

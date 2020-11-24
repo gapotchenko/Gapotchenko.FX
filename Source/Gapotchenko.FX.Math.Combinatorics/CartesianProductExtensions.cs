@@ -12,11 +12,11 @@ namespace Gapotchenko.FX.Math.Combinatorics
     public static class CartesianProductExtensions
     {
         /// <summary>
-        /// Returns a Cartesian product of factor sequences.
+        /// Returns a Cartesian product of sequences.
         /// </summary>
-        /// <typeparam name="T">Type of factor sequence elements.</typeparam>
-        /// <param name="factors">The factor sequences.</param>
-        /// <returns>The Cartesian product of the factor sequences.</returns>
+        /// <typeparam name="T">Type of sequence elements.</typeparam>
+        /// <param name="factors">The sequences.</param>
+        /// <returns>The Cartesian product of the sequences.</returns>
         public static CartesianProduct.Enumerable<T> CrossJoin<T>(this IEnumerable<IEnumerable<T>> factors)
         {
             if (factors == null)

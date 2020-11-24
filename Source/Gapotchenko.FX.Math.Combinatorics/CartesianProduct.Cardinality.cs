@@ -6,19 +6,19 @@ namespace Gapotchenko.FX.Math.Combinatorics
     partial class CartesianProduct
     {
         /// <summary>
-        /// Returns a Cartesian product cardinality for specified factor lengths.
+        /// Returns a Cartesian product cardinality for specified sequence lengths.
         /// </summary>
-        /// <param name="factorLengths">The factor lengths.</param>
+        /// <param name="lengths">The sequence lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>
-        public static int Cardinality(IEnumerable<int> factorLengths)
+        public static int Cardinality(IEnumerable<int> lengths)
         {
-            if (factorLengths == null)
-                throw new ArgumentNullException(nameof(factorLengths));
+            if (lengths == null)
+                throw new ArgumentNullException(nameof(lengths));
 
             bool hasFactor = false;
             int cardinality = 1;
 
-            foreach (var length in factorLengths)
+            foreach (var length in lengths)
             {
                 if (length == 0)
                     return 0;
@@ -34,26 +34,26 @@ namespace Gapotchenko.FX.Math.Combinatorics
         }
 
         /// <summary>
-        /// Returns a Cartesian product cardinality for specified factor lengths.
+        /// Returns a Cartesian product cardinality for specified sequence lengths.
         /// </summary>
-        /// <param name="factorLengths">The factor lengths.</param>
+        /// <param name="lengths">The sequence lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>
-        public static int Cardinality(params int[] factorLengths) => Cardinality((IEnumerable<int>)factorLengths);
+        public static int Cardinality(params int[] lengths) => Cardinality((IEnumerable<int>)lengths);
 
         /// <summary>
-        /// Returns a Cartesian product cardinality for specified factor lengths.
+        /// Returns a Cartesian product cardinality for specified sequence lengths.
         /// </summary>
-        /// <param name="factorLengths">The factor lengths.</param>
+        /// <param name="lengths">The sequence lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>
-        public static long Cardinality(IEnumerable<long> factorLengths)
+        public static long Cardinality(IEnumerable<long> lengths)
         {
-            if (factorLengths == null)
-                throw new ArgumentNullException(nameof(factorLengths));
+            if (lengths == null)
+                throw new ArgumentNullException(nameof(lengths));
 
             bool hasFactor = false;
             long cardinality = 1;
 
-            foreach (var length in factorLengths)
+            foreach (var length in lengths)
             {
                 if (length == 0)
                     return 0;
@@ -69,10 +69,10 @@ namespace Gapotchenko.FX.Math.Combinatorics
         }
 
         /// <summary>
-        /// Returns a Cartesian product cardinality for specified factor lengths.
+        /// Returns a Cartesian product cardinality for specified sequence lengths.
         /// </summary>
-        /// <param name="factorLengths">The factor lengths.</param>
+        /// <param name="lengths">The sequence lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>
-        public static long Cardinality(params long[] factorLengths) => Cardinality((IEnumerable<long>)factorLengths);
+        public static long Cardinality(params long[] lengths) => Cardinality((IEnumerable<long>)lengths);
     }
 }
