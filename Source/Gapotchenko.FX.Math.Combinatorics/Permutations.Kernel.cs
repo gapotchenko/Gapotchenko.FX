@@ -7,7 +7,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
 {
     partial class Permutations
     {
-        static IEnumerable<Row<T>> Permute<T>(IEnumerable<T> sequence, IEqualityComparer<T>? comparer)
+        static IEnumerable<IRow<T>> Permute<T>(IEnumerable<T> sequence, IEqualityComparer<T>? comparer)
         {
             var items = sequence.AsReadOnly();
 

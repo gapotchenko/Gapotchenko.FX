@@ -11,13 +11,41 @@ namespace Gapotchenko.FX.Math.Combinatorics
     partial class Permutations
     {
         /// <summary>
-        /// Exposes the enumerator for permutations.
+        /// Represents the result of permutations.
+        /// Exposes accelerated operations and the enumerator for the rows.
         /// </summary>
         /// <typeparam name="T">The type of objects to enumerate.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public sealed class Enumerable<T> : IReadOnlyCollection<Row<T>>
+        public interface IResult<T> : IReadOnlyCollection<IRow<T>>
         {
-            internal Enumerable(IEnumerable<T> source, IEqualityComparer<T>? comparer)
+            /// <summary>
+            /// Returns the number of permutations in a sequence.
+            /// </summary>
+            /// <returns>The number of permutations in the sequence.</returns>
+            new int Count();
+
+            /// <summary>
+            /// Returns a <see cref="long"/> that represents the total number of permutations in a sequence.
+            /// </summary>
+            /// <returns>The number of permutations in the sequence.</returns>
+            long LongCount();
+
+            /// <summary>
+            /// Returns distinct elements from a sequence of permutations by using the default equality comparer to compare values.
+            /// </summary>
+            /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
+            IResult<T> Distinct();
+
+            /// <summary>
+            /// Returns distinct elements from a sequence of permutations by using a specified <see cref="IEqualityComparer{T}"/> to compare values.
+            /// </summary>
+            /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
+            IResult<T> Distinct(IEqualityComparer<T>? comparer);
+        }
+
+        sealed class Result<T> : IResult<T>
+        {
+            internal Result(IEnumerable<T> source, IEqualityComparer<T>? comparer)
             {
                 m_Source = source;
                 m_Comparer = comparer;
@@ -29,22 +57,18 @@ namespace Gapotchenko.FX.Math.Combinatorics
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly IEqualityComparer<T>? m_Comparer;
 
-            IEnumerable<Row<T>> Enumerate() => Permute(m_Source, m_Comparer);
+            IEnumerable<IRow<T>> Enumerate() => Permute(m_Source, m_Comparer);
 
-            /// <inheritdoc/>
-            public IEnumerator<Row<T>> GetEnumerator() => Enumerate().GetEnumerator();
+            public IEnumerator<IRow<T>> GetEnumerator() => Enumerate().GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             object? m_SyncLock;
 
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             Optional<int> m_CachedCount;
 
-            /// <summary>
-            /// Returns the number of permutations in a sequence.
-            /// </summary>
-            /// <returns>The number of permutations in the sequence.</returns>
             public int Count() =>
                 LazyInitializerEx.EnsureInitialized(
                     ref m_CachedCount,
@@ -60,14 +84,11 @@ namespace Gapotchenko.FX.Math.Combinatorics
                             return EnumerableEx.Count(Enumerate());
                     });
 
-            int IReadOnlyCollection<Row<T>>.Count => Count();
+            int IReadOnlyCollection<IRow<T>>.Count => Count();
 
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             Optional<long> m_CachedLongCount;
 
-            /// <summary>
-            /// Returns a <see cref="long"/> that represents the total number of permutations in a sequence.
-            /// </summary>
-            /// <returns>The number of permutations in the sequence.</returns>
             public long LongCount() =>
                 LazyInitializerEx.EnsureInitialized(
                     ref m_CachedLongCount,
@@ -83,17 +104,9 @@ namespace Gapotchenko.FX.Math.Combinatorics
                             return EnumerableEx.LongCount(Enumerate());
                     });
 
-            /// <summary>
-            /// Returns distinct elements from a sequence of permutations by using the default equality comparer to compare values.
-            /// </summary>
-            /// <returns>An <see cref="Enumerable{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
-            public Enumerable<T> Distinct() => Distinct(null);
+            public IResult<T> Distinct() => Distinct(null);
 
-            /// <summary>
-            /// Returns distinct elements from a sequence of permutations by using a specified <see cref="IEqualityComparer{T}"/> to compare values.
-            /// </summary>
-            /// <returns>An <see cref="Enumerable{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
-            public Enumerable<T> Distinct(IEqualityComparer<T>? comparer)
+            public IResult<T> Distinct(IEqualityComparer<T>? comparer)
             {
                 if (IsSet(m_Source))
                 {
@@ -104,7 +117,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 comparer ??= EqualityComparer<T>.Default;
 
                 if (m_Comparer == null)
-                    return new Enumerable<T>(m_Source, comparer);
+                    return new Result<T>(m_Source, comparer);
                 else if (ReferenceEquals(comparer, m_Comparer))
                     return this;
                 else
@@ -112,12 +125,12 @@ namespace Gapotchenko.FX.Math.Combinatorics
             }
         }
 
-        internal static Enumerable<T> PermuteAccelerated<T>(IEnumerable<T> sequence)
+        internal static IResult<T> PermuteAccelerated<T>(IEnumerable<T> sequence)
         {
             if (!IsSet(sequence))
                 sequence = sequence.AsReadOnly();
 
-            return new Enumerable<T>(sequence, null);
+            return new Result<T>(sequence, null);
         }
     }
 }
