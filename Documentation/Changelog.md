@@ -9,11 +9,12 @@ Release date: not released yet
 - Introduced `Gapotchenko.FX.Memory` module
 - Introduced `Gapotchenko.FX.Math.Geometry` module
 - Introduced `Gapotchenko.FX.Math.Combinatorics` module
-- Improved performance of thread-safe LINQ memoization
-- Added LINQ functions that determine whether any elements of a sequence satisfy the specified conditions
-- Added `ConsoleEx.ReadPassword` function for reading a password from console
 - Added `MathEx.Clamp` function that clamps a value to the specified range
 - Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
+- Added LINQ functions that determine whether any elements of a sequence satisfy multiple specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> firstPredicate, Func<T, bool> secondPredicate)` and others)
+- Added `ConsoleEx.ReadPassword` function for reading a password from console
+- Implemented polyfill for `System.Collections.Generic.ReferenceEqualityComparer`
+- Improved performance of a thread-safe LINQ memoization
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
 - Fixed nullability annotations for `LazyInitializerEx` class
 
