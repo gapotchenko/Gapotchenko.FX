@@ -123,7 +123,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
 
             public IResult<T> Distinct(IEqualityComparer<T>? comparer)
             {
-                if (IsSet(m_Source))
+                if (Utility.IsSet(m_Source))
                 {
                     // The permutations are already distinct.
                     return this;
@@ -142,7 +142,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
 
         internal static IResult<T> PermuteAccelerated<T>(IEnumerable<T> sequence)
         {
-            if (!IsSet(sequence))
+            if (!Utility.IsSet(sequence))
                 sequence = sequence.AsReadOnly();
 
             return new Result<T>(sequence, null);

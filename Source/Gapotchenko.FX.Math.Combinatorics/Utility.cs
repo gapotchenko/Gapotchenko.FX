@@ -14,6 +14,12 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 return comparer;
         }
 
+        public static bool IsSet<T>(IEnumerable<T> sequence) =>
+#if TFF_IREADONLYSET
+            sequence is IReadOnlySet<T> ||
+#endif
+            sequence is ISet<T>;
+
         public static bool IsCompatibleSet<T>(IEnumerable<T> sequence, IEqualityComparer<T>? comparer) =>
             sequence switch
             {

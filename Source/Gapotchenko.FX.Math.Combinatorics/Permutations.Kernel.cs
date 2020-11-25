@@ -96,11 +96,5 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 yield return new Row<T>(items, transform.Select(x => x.Item2).ToArray());
             }
         }
-
-        static bool IsSet<T>(IEnumerable<T> sequence) =>
-#if TFF_IREADONLYSET
-            sequence is IReadOnlySet<T> ||
-#endif
-            sequence is ISet<T>;
     }
 }
