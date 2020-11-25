@@ -782,7 +782,6 @@ namespace Gapotchenko.FX.Linq
                 }
 
                 // Flush the queue.
-                Debug.Assert(queue.Count <= count);
                 do
                 {
                     yield return queue.Dequeue();
