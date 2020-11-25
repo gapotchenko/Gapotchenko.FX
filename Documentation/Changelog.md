@@ -9,12 +9,12 @@ Release date: not released yet
 - Introduced `Gapotchenko.FX.Memory` module
 - Introduced `Gapotchenko.FX.Math.Geometry` module
 - Introduced `Gapotchenko.FX.Math.Combinatorics` module
+- Added `SkipLast` and `TakeLast` LINQ polyfills
+- Added `System.Collections.Generic.ReferenceEqualityComparer` polyfill
 - Added `MathEx.Clamp` function that clamps a value to the specified range
 - Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
-- Added LINQ functions that determine whether any elements of a sequence satisfy multiple specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` and others)
-- Added `ConsoleEx.ReadPassword` function for reading a password from console
-- Implemented `SkipLast` and `TakeLast` LINQ polyfills
-- Implemented polyfill for `System.Collections.Generic.ReferenceEqualityComparer`
+- Added LINQ function that determines whether any elements of a sequence satisfy multiple specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` and overloads)
+- Added `ConsoleEx.ReadPassword` function for reading a password from the console
 - Improved performance of a thread-safe LINQ memoization
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
 - Fixed nullability annotations for `LazyInitializerEx` class
@@ -37,7 +37,7 @@ Release date: November 5, 2020
 - .NET Framework 4.0 target is retired. The minimal supported .NET Framework version is 4.5
 - Fixed issue with ambiguous match of `IsNullOrEmpty` polyfill method of `HashSet<T>` type that occurred in .NET 4.6+, .NET Standard 2.0+ and .NET Core 2.0+ target frameworks
 - Fixed issue with ambiguous match of `ToHashSet` polyfill method of `IEnumerable<T>` type that occurred in .NET 4.7.2+ target frameworks
-- Fixed issue in `Process.ReadEnvironmentVariables()` method with environment variable blocks longer than 32768 bytes
+- Fixed issue in `Process.ReadEnvironmentVariables()` method with environment variable blocks longer than 32,768 bytes
 - Fixed issue in `WebBrowser.Launch(url)` method that might cause an erroneous interpretation of `?` and `&` URL symbols by a web browser on Windows hosts
 
 ## 2019
