@@ -104,5 +104,38 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 foreach (var i1 in first)
                     yield return resultSelector(i1, i2);
         }
+
+        internal static IEnumerable<TResult> Multiply<TFirst, TSecond, TThird, TResult>(
+            IEnumerable<TFirst> first,
+            IEnumerable<TSecond> second,
+            IEnumerable<TThird> third,
+            Func<TFirst, TSecond, TThird, TResult> resultSelector)
+        {
+            first = first.Memoize();
+            second = second.Memoize();
+
+            foreach (var i3 in third)
+                foreach (var i2 in second)
+                    foreach (var i1 in first)
+                        yield return resultSelector(i1, i2, i3);
+        }
+
+        internal static IEnumerable<TResult> Multiply<TFirst, TSecond, TThird, TFourth, TResult>(
+            IEnumerable<TFirst> first,
+            IEnumerable<TSecond> second,
+            IEnumerable<TThird> third,
+            IEnumerable<TFourth> fourth,
+            Func<TFirst, TSecond, TThird, TFourth, TResult> resultSelector)
+        {
+            first = first.Memoize();
+            second = second.Memoize();
+            third = third.Memoize();
+
+            foreach (var i4 in fourth)
+                foreach (var i3 in third)
+                    foreach (var i2 in second)
+                        foreach (var i1 in first)
+                            yield return resultSelector(i1, i2, i3, i4);
+        }
     }
 }
