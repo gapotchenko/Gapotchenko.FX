@@ -7,14 +7,14 @@ namespace Gapotchenko.FX.Math.Combinatorics
 {
     partial class Permutations
     {
-        static IEnumerable<IRow<T>> Permute<T>(IEnumerable<T> sequence, IEqualityComparer<T>? comparer)
+        static IEnumerable<IRow<T>> Permute<T>(IEnumerable<T> sequence, bool distinct, IEqualityComparer<T>? comparer)
         {
             var items = sequence.AsReadOnly();
 
             int length = items.Count;
             var transform = new (int First, int Second)[length];
 
-            if (comparer == null || IsSet(sequence))
+            if (!distinct || IsSet(sequence))
             {
                 // Identity transform.
                 for (int i = 0; i < length; i++)

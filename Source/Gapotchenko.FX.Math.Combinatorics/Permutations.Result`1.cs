@@ -72,7 +72,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly IEqualityComparer<T>? m_Comparer;
 
-            IEnumerable<IRow<T>> Enumerate() => Permute(m_Source, m_Comparer);
+            IEnumerable<IRow<T>> Enumerate() => Permute(m_Source, m_Comparer != null, m_Comparer);
 
             public IEnumerator<IRow<T>> GetEnumerator() => Enumerate().GetEnumerator();
 
