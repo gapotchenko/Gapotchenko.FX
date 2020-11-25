@@ -59,6 +59,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
             /// </para>
             /// </summary>
+            /// <param name="comparer">The comparer.</param>
             /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
             IResult<T> Distinct(IEqualityComparer<T>? comparer);
         }
