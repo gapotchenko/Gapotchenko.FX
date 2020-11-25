@@ -31,11 +31,11 @@ namespace Gapotchenko.FX.Math.Combinatorics
 
             for (; ; )
             {
-                var result = new T[rank];
+                var row = new T[rank];
                 for (int i = 0; i != rank; i++)
-                    result[i] = enumerators[i].Current;
+                    row[i] = enumerators[i].Current;
 
-                yield return new Row<T>(result);
+                yield return new Row<T>(row);
 
                 for (int i = 0; i != rank; i++)
                 {
