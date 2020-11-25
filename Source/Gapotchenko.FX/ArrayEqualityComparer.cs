@@ -122,12 +122,10 @@ namespace Gapotchenko.FX
         public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer) =>
             Type.GetTypeCode(typeof(T)) switch
             {
-                TypeCode.Byte when IsDefaultEqualityComparer(elementComparer) => (ArrayEqualityComparer<T>)(object)new ByteRank1Comparer(),
+                TypeCode.Byte when IsDefaultComparer(elementComparer) => (ArrayEqualityComparer<T>)(object)new ByteRank1Comparer(),
                 _ => new DefaultArrayEqualityComparer<T>(elementComparer),
             };
 
-        static bool IsDefaultEqualityComparer<T>(IEqualityComparer<T>? comparer) =>
-            comparer is null ||
-            comparer == EqualityComparer<T>.Default;
+        static bool IsDefaultComparer<T>(IEqualityComparer<T>? comparer) => Empty.Nullify(comparer) == null;
     }
 }

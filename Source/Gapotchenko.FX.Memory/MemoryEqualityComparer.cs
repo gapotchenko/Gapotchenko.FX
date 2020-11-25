@@ -36,14 +36,12 @@ namespace Gapotchenko.FX.Memory
             var type = typeof(T);
             return Type.GetTypeCode(type) switch
             {
-                TypeCode.Byte when IsDefaultEqualityComparer(elementComparer) => (new ByteComparer() as MemoryEqualityComparer<T>)!,
-                _ when typeof(IEquatable<T>).IsAssignableFrom(type) && IsDefaultEqualityComparer(elementComparer) => (MemoryEqualityComparer<T>)Activator.CreateInstance(typeof(EquatableComparer<>).MakeGenericType(type))!,
+                TypeCode.Byte when IsDefaultComparer(elementComparer) => (new ByteComparer() as MemoryEqualityComparer<T>)!,
+                _ when typeof(IEquatable<T>).IsAssignableFrom(type) && IsDefaultComparer(elementComparer) => (MemoryEqualityComparer<T>)Activator.CreateInstance(typeof(EquatableComparer<>).MakeGenericType(type))!,
                 _ => new DefaultComparer<T>(elementComparer)
             };
         }
 
-        static bool IsDefaultEqualityComparer<T>(IEqualityComparer<T>? comparer) =>
-            comparer is null ||
-            comparer == EqualityComparer<T>.Default;
+        static bool IsDefaultComparer<T>(IEqualityComparer<T>? comparer) => Empty.Nullify(comparer) == null;
     }
 }
