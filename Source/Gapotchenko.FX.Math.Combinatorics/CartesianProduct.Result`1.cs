@@ -21,7 +21,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             /// Returns distinct elements from a sequence of Cartesian product results by using the default equality comparer to compare values.
             /// </para>
             /// <para>
-            /// This is a computationally accelerated LINQ operation provided by Cartesian product kernel to automatically reduce the complexity of the algorithm.
+            /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
             /// </para>
             /// </summary>
             /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of Cartesian product results.</returns>
@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             /// Returns distinct elements from a sequence of Cartesian product results by using a specified <see cref="IEqualityComparer{T}"/> to compare values.
             /// </para>
             /// <para>
-            /// This is a computationally accelerated LINQ operation provided by Cartesian product kernel to automatically reduce the complexity of the algorithm.
+            /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
             /// </para>
             /// </summary>
             /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of Cartesian product results.</returns>

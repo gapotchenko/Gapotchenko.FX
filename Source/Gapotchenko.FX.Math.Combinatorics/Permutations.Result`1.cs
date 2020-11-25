@@ -23,14 +23,19 @@ namespace Gapotchenko.FX.Math.Combinatorics
             /// Returns the number of permutations in a sequence.
             /// </para>
             /// <para>
-            /// This is a computationally accelerated LINQ operation provided by the permutation kernel to automatically reduce the complexity of the algorithm.
+            /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
             /// </para>
             /// </summary>
             /// <returns>The number of permutations in the sequence.</returns>
             new int Count();
 
             /// <summary>
+            /// <para>
             /// Returns a <see cref="long"/> that represents the total number of permutations in a sequence.
+            /// </para>
+            /// <para>
+            /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
+            /// </para>
             /// </summary>
             /// <returns>The number of permutations in the sequence.</returns>
             long LongCount();
@@ -40,7 +45,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             /// Returns distinct elements from a sequence of permutations by using the default equality comparer to compare values.
             /// </para>
             /// <para>
-            /// This is a computationally accelerated LINQ operation provided by the permutation kernel to automatically reduce the complexity of the algorithm.
+            /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
             /// </para>
             /// </summary>
             /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
@@ -51,7 +56,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             /// Returns distinct elements from a sequence of permutations by using a specified <see cref="IEqualityComparer{T}"/> to compare values.
             /// </para>
             /// <para>
-            /// This is a computationally accelerated LINQ operation provided by the permutation kernel to automatically reduce the complexity of the algorithm.
+            /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
             /// </para>
             /// </summary>
             /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
