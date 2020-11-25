@@ -40,7 +40,6 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 ReferenceEquals(m_Source, otherRow.m_Source) &&
                 this.SequenceEqual(otherRow);
 
-            /// <inheritdoc/>
             public override bool Equals(object? obj) =>
                 obj switch
                 {
@@ -48,7 +47,6 @@ namespace Gapotchenko.FX.Math.Combinatorics
                     _ => false
                 };
 
-            /// <inheritdoc/>
             public override int GetHashCode() =>
                 HashCode.Combine(
                     m_Source.GetHashCode(),

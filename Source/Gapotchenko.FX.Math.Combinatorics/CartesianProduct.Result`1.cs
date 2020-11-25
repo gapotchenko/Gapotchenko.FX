@@ -29,7 +29,6 @@ namespace Gapotchenko.FX.Math.Combinatorics
 
             IEnumerable<IRow<T>> Enumerate() => Multiply(m_Factors);
 
-            /// <inheritdoc/>
             public IEnumerator<IRow<T>> GetEnumerator() => Enumerate().GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
