@@ -76,7 +76,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                             comparer);
 
                     case ResultMode.Distinct:
-                        if (Utility.NullifyDefault(comparer) == Utility.NullifyDefault(m_Comparer))
+                        if (Empty.Nullify(comparer) == Empty.Nullify(m_Comparer))
                             return this;
                         else
                             throw new NotSupportedException("Cannot produce distinct Cartesian product results by using different comparers.");
