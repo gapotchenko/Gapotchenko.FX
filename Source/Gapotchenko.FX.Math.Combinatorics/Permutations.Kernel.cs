@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             int length = items.Count;
             var transform = new (int First, int Second)[length];
 
-            if (!distinct || IsSet(sequence))
+            if (!distinct || Utility.IsCompatibleSet(sequence, comparer))
             {
                 // Identity transform.
                 for (int i = 0; i < length; i++)
