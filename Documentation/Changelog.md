@@ -11,8 +11,9 @@ Release date: not released yet
 - Introduced `Gapotchenko.FX.Math.Combinatorics` module
 - Added `MathEx.Clamp` function that clamps a value to the specified range
 - Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
-- Added LINQ functions that determine whether any elements of a sequence satisfy multiple specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> firstPredicate, Func<T, bool> secondPredicate)` and others)
+- Added LINQ functions that determine whether any elements of a sequence satisfy multiple specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` and others)
 - Added `ConsoleEx.ReadPassword` function for reading a password from console
+- Implemented `SkipLast` and `TakeLast` LINQ polyfills
 - Implemented polyfill for `System.Collections.Generic.ReferenceEqualityComparer`
 - Improved performance of a thread-safe LINQ memoization
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
