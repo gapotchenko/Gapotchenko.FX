@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+  
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Combinatorics.Permutations" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Combinatorics.CartesianProduct" />

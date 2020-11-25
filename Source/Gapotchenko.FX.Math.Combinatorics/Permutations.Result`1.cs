@@ -65,11 +65,15 @@ namespace Gapotchenko.FX.Math.Combinatorics
 
         sealed class Result<T> : IResult<T>
         {
-            internal Result(IEnumerable<T> source, IEqualityComparer<T>? comparer)
+            internal Result(ResultMode mode, IEnumerable<T> source, IEqualityComparer<T>? comparer)
             {
+                m_Mode = mode;
                 m_Source = source;
                 m_Comparer = comparer;
             }
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            readonly ResultMode m_Mode;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly IEnumerable<T> m_Source;
@@ -77,7 +81,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly IEqualityComparer<T>? m_Comparer;
 
-            IEnumerable<IRow<T>> Enumerate() => Permute(m_Source, m_Comparer != null, m_Comparer);
+            IEnumerable<IRow<T>> Enumerate() => Permute(m_Source, m_Mode == ResultMode.Distinct, m_Comparer);
 
             public IEnumerator<IRow<T>> GetEnumerator() => Enumerate().GetEnumerator();
 
@@ -98,10 +102,11 @@ namespace Gapotchenko.FX.Math.Combinatorics
                         if (m_CachedLongCount.HasValue)
                             return checked((int)LongCount());
 
-                        if (m_Comparer == null)
-                            return Cardinality(EnumerableEx.Count(m_Source));
-                        else
-                            return EnumerableEx.Count(Enumerate());
+                        return m_Mode switch
+                        {
+                            ResultMode.Default or ResultMode.DistinctView => Cardinality(EnumerableEx.Count(m_Source)),
+                            _ => EnumerableEx.Count(Enumerate())
+                        };
                     });
 
             int IReadOnlyCollection<IRow<T>>.Count => Count();
@@ -118,30 +123,40 @@ namespace Gapotchenko.FX.Math.Combinatorics
                         if (m_CachedCount.HasValue)
                             return Count();
 
-                        if (m_Comparer == null)
-                            return Cardinality(EnumerableEx.LongCount(m_Source));
-                        else
-                            return EnumerableEx.LongCount(Enumerate());
+                        return m_Mode switch
+                        {
+                            ResultMode.Default or ResultMode.DistinctView => Cardinality(EnumerableEx.LongCount(m_Source)),
+                            _ => EnumerableEx.LongCount(Enumerate())
+                        };
                     });
 
             public IResult<T> Distinct() => Distinct(null);
 
             public IResult<T> Distinct(IEqualityComparer<T>? comparer)
             {
-                if (Utility.IsSet(m_Source))
+                switch (m_Mode)
                 {
-                    // The permutations are already distinct.
-                    return this;
+                    case ResultMode.Default:
+                        if (Utility.IsCompatibleSet(m_Source, comparer))
+                        {
+                            // The permutations are already distinct.
+                            return this;
+                        }
+                        else
+                        {
+                            return new Result<T>(ResultMode.Distinct, m_Source, comparer);
+                        }
+
+                    case ResultMode.Distinct:
+                    case ResultMode.DistinctView:
+                        if (Empty.Nullify(comparer) == Empty.Nullify(m_Comparer))
+                            return this;
+                        else
+                            throw new NotSupportedException("Cannot produce distinct permutations by using different comparers.");
+
+                    default:
+                        throw new InvalidOperationException();
                 }
-
-                comparer ??= EqualityComparer<T>.Default;
-
-                if (m_Comparer == null)
-                    return new Result<T>(m_Source, comparer);
-                else if (ReferenceEquals(comparer, m_Comparer))
-                    return this;
-                else
-                    throw new NotSupportedException("Cannot produce distinct permutations by using different comparers.");
             }
         }
 
@@ -150,7 +165,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             if (!Utility.IsSet(sequence))
                 sequence = sequence.AsReadOnly();
 
-            return new Result<T>(sequence, null);
+            return new Result<T>(ResultMode.Default, sequence, null);
         }
     }
 }
