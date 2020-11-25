@@ -7,7 +7,7 @@ namespace System.Collections.Generic
 {
     /// <summary>
     /// <para>
-    /// An <see cref="IEqualityComparer{Object}"/> that uses reference equality (<see cref = "object.ReferenceEquals(object?, object?)" />)
+    /// An <see cref="IEqualityComparer{T}"/> that uses reference equality (<see cref="object.ReferenceEquals(object?, object?)" />)
     /// instead of value equality (<see cref="object.Equals(object?)"/>) when comparing two object instances.
     /// </para>
     /// <para>
@@ -41,8 +41,8 @@ namespace System.Collections.Generic
         public new bool Equals(object? x, object? y) => ReferenceEquals(x, y);
 
         /// <summary>
-        /// Returns a hash code for the specified object. The returned hash code is based on the object
-        /// identity, not on the contents of the object.
+        /// Returns a hash code for the specified object.
+        /// The returned hash code is based on the object identity, not on the contents of the object.
         /// </summary>
         /// <param name="obj">The object for which to retrieve the hash code.</param>
         /// <returns>A hash code for the identity of <paramref name="obj"/>.</returns>
