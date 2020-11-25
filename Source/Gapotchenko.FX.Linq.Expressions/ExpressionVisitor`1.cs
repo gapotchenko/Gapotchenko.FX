@@ -6,114 +6,35 @@ using System.Linq.Expressions;
 
 namespace Gapotchenko.FX.Linq.Expressions
 {
-    abstract class ExpressionVisitor<TResult>
+    abstract class ExpressionVisitor<TResult> where TResult : struct
     {
-        [return: MaybeNull]
         protected virtual TResult Visit(Expression? expression)
         {
             if (expression == null)
                 return default;
 
-            TResult result;
-
-            switch (expression.NodeType)
+            return expression.NodeType switch
             {
-                case ExpressionType.Add:
-                case ExpressionType.AddChecked:
-                case ExpressionType.And:
-                case ExpressionType.AndAlso:
-                case ExpressionType.ArrayIndex:
-                case ExpressionType.Coalesce:
-                case ExpressionType.Divide:
-                case ExpressionType.Equal:
-                case ExpressionType.ExclusiveOr:
-                case ExpressionType.GreaterThan:
-                case ExpressionType.GreaterThanOrEqual:
-                case ExpressionType.LeftShift:
-                case ExpressionType.LessThan:
-                case ExpressionType.LessThanOrEqual:
-                case ExpressionType.Modulo:
-                case ExpressionType.Multiply:
-                case ExpressionType.MultiplyChecked:
-                case ExpressionType.NotEqual:
-                case ExpressionType.Or:
-                case ExpressionType.OrElse:
-                case ExpressionType.RightShift:
-                case ExpressionType.Subtract:
-                case ExpressionType.SubtractChecked:
-                    result = VisitBinary((BinaryExpression)expression);
-                    break;
-
-                case ExpressionType.ArrayLength:
-                case ExpressionType.Convert:
-                case ExpressionType.ConvertChecked:
-                case ExpressionType.Negate:
-                case ExpressionType.NegateChecked:
-                case ExpressionType.Not:
-                case ExpressionType.Quote:
-                case ExpressionType.TypeAs:
-                    result = VisitUnary((UnaryExpression)expression);
-                    break;
-
-                case ExpressionType.Call:
-                    result = VisitMethodCall((MethodCallExpression)expression);
-                    break;
-
-                case ExpressionType.Conditional:
-                    result = VisitConditional((ConditionalExpression)expression);
-                    break;
-
-                case ExpressionType.Constant:
-                    result = VisitConstant((ConstantExpression)expression);
-                    break;
-
-                case ExpressionType.Invoke:
-                    result = VisitInvocation((InvocationExpression)expression);
-                    break;
-
-                case ExpressionType.Lambda:
-                    result = VisitLambda((LambdaExpression)expression);
-                    break;
-
-                case ExpressionType.ListInit:
-                    result = VisitListInit((ListInitExpression)expression);
-                    break;
-
-                case ExpressionType.MemberAccess:
-                    result = VisitMemberAccess((MemberExpression)expression);
-                    break;
-
-                case ExpressionType.MemberInit:
-                    result = VisitMemberInit((MemberInitExpression)expression);
-                    break;
-
-                case ExpressionType.New:
-                    result = VisitNew((NewExpression)expression);
-                    break;
-
-                case ExpressionType.NewArrayInit:
-                case ExpressionType.NewArrayBounds:
-                    result = VisitNewArray((NewArrayExpression)expression);
-                    break;
-
-                case ExpressionType.Parameter:
-                    result = VisitParameter((ParameterExpression)expression);
-                    break;
-
-                case ExpressionType.TypeIs:
-                    result = VisitTypeIs((TypeBinaryExpression)expression);
-                    break;
-
-                default:
-                    result = VisitOther(expression);
-                    break;
-            }
-
-            return result;
+                ExpressionType.Add or ExpressionType.AddChecked or ExpressionType.And or ExpressionType.AndAlso or ExpressionType.ArrayIndex or ExpressionType.Coalesce or ExpressionType.Divide or ExpressionType.Equal or ExpressionType.ExclusiveOr or ExpressionType.GreaterThan or ExpressionType.GreaterThanOrEqual or ExpressionType.LeftShift or ExpressionType.LessThan or ExpressionType.LessThanOrEqual or ExpressionType.Modulo or ExpressionType.Multiply or ExpressionType.MultiplyChecked or ExpressionType.NotEqual or ExpressionType.Or or ExpressionType.OrElse or ExpressionType.RightShift or ExpressionType.Subtract or ExpressionType.SubtractChecked => VisitBinary((BinaryExpression)expression),
+                ExpressionType.ArrayLength or ExpressionType.Convert or ExpressionType.ConvertChecked or ExpressionType.Negate or ExpressionType.NegateChecked or ExpressionType.Not or ExpressionType.Quote or ExpressionType.TypeAs => VisitUnary((UnaryExpression)expression),
+                ExpressionType.Call => VisitMethodCall((MethodCallExpression)expression),
+                ExpressionType.Conditional => VisitConditional((ConditionalExpression)expression),
+                ExpressionType.Constant => VisitConstant((ConstantExpression)expression),
+                ExpressionType.Invoke => VisitInvocation((InvocationExpression)expression),
+                ExpressionType.Lambda => VisitLambda((LambdaExpression)expression),
+                ExpressionType.ListInit => VisitListInit((ListInitExpression)expression),
+                ExpressionType.MemberAccess => VisitMemberAccess((MemberExpression)expression),
+                ExpressionType.MemberInit => VisitMemberInit((MemberInitExpression)expression),
+                ExpressionType.New => VisitNew((NewExpression)expression),
+                ExpressionType.NewArrayInit or ExpressionType.NewArrayBounds => VisitNewArray((NewArrayExpression)expression),
+                ExpressionType.Parameter => VisitParameter((ParameterExpression)expression),
+                ExpressionType.TypeIs => VisitTypeIs((TypeBinaryExpression)expression),
+                _ => VisitOther(expression),
+            };
         }
 
         [return: NotNullIfNotNull("expressions")]
-        protected virtual IReadOnlyList<TResult>? VisitExpressions(IReadOnlyList<Expression>? expressions)
+        protected virtual IReadOnlyList<TResult>? VisitExpressions(IReadOnlyList<Expression?>? expressions)
         {
             if (expressions == null)
                 return null;

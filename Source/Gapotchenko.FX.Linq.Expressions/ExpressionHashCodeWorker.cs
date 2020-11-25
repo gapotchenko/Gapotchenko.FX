@@ -102,25 +102,14 @@ namespace Gapotchenko.FX.Linq.Expressions
 
         protected override int VisitOther(Expression e) => HashCode.Combine(e);
 
-        int _GetPrimitiveHashCode(object obj)
-        {
-            switch (obj)
+        int _GetPrimitiveHashCode(object? obj) =>
+            obj switch
             {
-                case null:
-                    return 0;
-
-                case IEnumerable<object> e:
-                    return HashCodeEx.SequenceCombine(e.Select(_GetPrimitiveHashCode));
-
-                case string s:
-                    return StringComparer.Ordinal.GetHashCode(s);
-
-                case Expression expr:
-                    return Visit(expr);
-
-                default:
-                    return obj.GetHashCode();
-            }
-        }
+                null => 0,
+                IEnumerable<object> e => HashCodeEx.SequenceCombine(e.Select(_GetPrimitiveHashCode)),
+                string s => StringComparer.Ordinal.GetHashCode(s),
+                Expression expr => Visit(expr),
+                _ => obj.GetHashCode(),
+            };
     }
 }

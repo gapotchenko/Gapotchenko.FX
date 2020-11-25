@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Linq.Expressions
         readonly ParameterExpressionRegistry _XParameters = new ParameterExpressionRegistry();
         readonly ParameterExpressionRegistry _YParameters = new ParameterExpressionRegistry();
 
-        bool _Visit(Expression x, Expression y)
+        bool _Visit(Expression? x, Expression? y)
         {
             if (x == y)
                 return true;
@@ -238,7 +238,7 @@ namespace Gapotchenko.FX.Linq.Expressions
         bool _ExpressionsEqual<T>(ReadOnlyCollection<T> x, ReadOnlyCollection<T> y) where T : Expression =>
             x.SequenceEqual(y, _Visit);
 
-        bool _PrimitivesEqual(object x, object y)
+        bool _PrimitivesEqual(object? x, object? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
