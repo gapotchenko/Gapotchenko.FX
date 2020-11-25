@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
 
         sealed class Result<T> : IResult<T>
         {
-            internal Result(ResultMode mode, IEnumerable<IEnumerable<T>> factors, IEqualityComparer<T>? comparer)
+            public Result(ResultMode mode, IEnumerable<IEnumerable<T>> factors, IEqualityComparer<T>? comparer)
             {
                 m_Mode = mode;
                 m_Factors = factors;

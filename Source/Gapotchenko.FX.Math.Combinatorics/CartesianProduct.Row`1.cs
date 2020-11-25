@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
 
         sealed class Row<T> : IRow<T>, IReadOnlyList<T>
         {
-            internal Row(IReadOnlyList<T> source)
+            public Row(IReadOnlyList<T> source)
             {
                 m_Source = source;
             }
