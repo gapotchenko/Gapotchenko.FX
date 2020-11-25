@@ -19,7 +19,12 @@ namespace Gapotchenko.FX.Math.Combinatorics
         public interface IResult<T> : IReadOnlyCollection<IRow<T>>
         {
             /// <summary>
+            /// <para>
             /// Returns the number of permutations in a sequence.
+            /// </para>
+            /// <para>
+            /// This is a computationally accelerated LINQ operation provided by the permutation kernel to automatically reduce the complexity of the algorithm.
+            /// </para>
             /// </summary>
             /// <returns>The number of permutations in the sequence.</returns>
             new int Count();
@@ -31,13 +36,23 @@ namespace Gapotchenko.FX.Math.Combinatorics
             long LongCount();
 
             /// <summary>
+            /// <para>
             /// Returns distinct elements from a sequence of permutations by using the default equality comparer to compare values.
+            /// </para>
+            /// <para>
+            /// This is a computationally accelerated LINQ operation provided by the permutation kernel to automatically reduce the complexity of the algorithm.
+            /// </para>
             /// </summary>
             /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
             IResult<T> Distinct();
 
             /// <summary>
+            /// <para>
             /// Returns distinct elements from a sequence of permutations by using a specified <see cref="IEqualityComparer{T}"/> to compare values.
+            /// </para>
+            /// <para>
+            /// This is a computationally accelerated LINQ operation provided by the permutation kernel to automatically reduce the complexity of the algorithm.
+            /// </para>
             /// </summary>
             /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
             IResult<T> Distinct(IEqualityComparer<T>? comparer);
