@@ -11,14 +11,17 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
         [TestMethod]
         public void CartesianProduct_Of_2x0()
         {
+            const int l1 = 2;
+            const int l2 = 0;
+
             var factors = new[]
             {
-                new[] { 1, 2 },
-                new int[] { }
+                new int[l1] { 1, 2 },
+                new int[l2] { }
             };
 
             int cardinality = CartesianProduct.Cardinality(factors.Select(x => x.Length));
-            Assert.AreEqual(0, cardinality);
+            Assert.AreEqual(l1 * l2, cardinality);
 
             var p = CartesianProduct.Of(factors);
             Assert.AreEqual(cardinality, p.Count());
@@ -27,14 +30,17 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
         [TestMethod]
         public void CartesianProduct_Of_2x3()
         {
+            const int l1 = 2;
+            const int l2 = 3;
+
             var factors = new[]
             {
-                new[] { 1, 2 },
-                new[] { 5, 6, 7 }
+                new int[l1] { 1, 2 },
+                new int[l2] { 5, 6, 7 }
             };
 
             int cardinality = CartesianProduct.Cardinality(factors.Select(x => x.Length));
-            Assert.AreEqual(6, cardinality);
+            Assert.AreEqual(l1 * l2, cardinality);
 
             var p = CartesianProduct.Of(factors).AsReadOnly();
 
@@ -55,7 +61,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             const int l2 = 3;
 
             int cardinality = CartesianProduct.Cardinality(new[] { l1, l2 });
-            Assert.AreEqual(6, cardinality);
+            Assert.AreEqual(l1 * l2, cardinality);
 
             var p =
                 CartesianProduct.Of(

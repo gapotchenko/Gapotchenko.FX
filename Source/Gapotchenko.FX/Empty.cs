@@ -404,6 +404,22 @@ namespace Gapotchenko.FX
         }
 
         /// <summary>
+        /// Nullifies a default equality comparer for type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of objects compared by a comparer.</typeparam>
+        /// <param name="comparer">The comparer.</param>
+        /// <returns>The value of <paramref name="comparer"/> or <c>null</c> if it represents a default equality comparer for type <typeparamref name="T"/>.</returns>
+        public static IEqualityComparer<T>? Nullify<T>(IEqualityComparer<T>? comparer)
+        {
+            if (comparer == null)
+                return null;
+            else if (comparer == EqualityComparer<T>.Default)
+                return null;
+            else
+                return comparer;
+        }
+
+        /// <summary>
         /// Returns an empty <see cref="System.Threading.Tasks.Task"/> that has already completed successfully.
         /// </summary>
 #if TFF_COMPLETED_TASK

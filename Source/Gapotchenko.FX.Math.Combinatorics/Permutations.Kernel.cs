@@ -7,14 +7,14 @@ namespace Gapotchenko.FX.Math.Combinatorics
 {
     partial class Permutations
     {
-        static IEnumerable<IRow<T>> Permute<T>(IEnumerable<T> sequence, IEqualityComparer<T>? comparer)
+        static IEnumerable<IRow<T>> Permute<T>(IEnumerable<T> sequence, bool distinct, IEqualityComparer<T>? comparer)
         {
             var items = sequence.AsReadOnly();
 
             int length = items.Count;
             var transform = new (int First, int Second)[length];
 
-            if (comparer == null || IsSet(sequence))
+            if (!distinct || Utility.IsCompatibleSet(sequence, comparer))
             {
                 // Identity transform.
                 for (int i = 0; i < length; i++)
@@ -96,11 +96,5 @@ namespace Gapotchenko.FX.Math.Combinatorics
                 yield return new Row<T>(items, transform.Select(x => x.Item2).ToArray());
             }
         }
-
-        static bool IsSet<T>(IEnumerable<T> sequence) =>
-#if TFF_IREADONLYSET
-            sequence is IReadOnlySet<T> ||
-#endif
-            sequence is ISet<T>;
     }
 }

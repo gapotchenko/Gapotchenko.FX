@@ -23,14 +23,19 @@ namespace Gapotchenko.FX.Math.Combinatorics
             /// Returns the number of permutations in a sequence.
             /// </para>
             /// <para>
-            /// This is a computationally accelerated LINQ operation provided by the permutation kernel to automatically reduce the complexity of the algorithm.
+            /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
             /// </para>
             /// </summary>
             /// <returns>The number of permutations in the sequence.</returns>
             new int Count();
 
             /// <summary>
+            /// <para>
             /// Returns a <see cref="long"/> that represents the total number of permutations in a sequence.
+            /// </para>
+            /// <para>
+            /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
+            /// </para>
             /// </summary>
             /// <returns>The number of permutations in the sequence.</returns>
             long LongCount();
@@ -40,7 +45,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             /// Returns distinct elements from a sequence of permutations by using the default equality comparer to compare values.
             /// </para>
             /// <para>
-            /// This is a computationally accelerated LINQ operation provided by the permutation kernel to automatically reduce the complexity of the algorithm.
+            /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
             /// </para>
             /// </summary>
             /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
@@ -51,20 +56,25 @@ namespace Gapotchenko.FX.Math.Combinatorics
             /// Returns distinct elements from a sequence of permutations by using a specified <see cref="IEqualityComparer{T}"/> to compare values.
             /// </para>
             /// <para>
-            /// This is a computationally accelerated LINQ operation provided by the permutation kernel to automatically reduce the complexity of the algorithm.
+            /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
             /// </para>
             /// </summary>
+            /// <param name="comparer">The comparer.</param>
             /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
             IResult<T> Distinct(IEqualityComparer<T>? comparer);
         }
 
         sealed class Result<T> : IResult<T>
         {
-            internal Result(IEnumerable<T> source, IEqualityComparer<T>? comparer)
+            public Result(ResultMode mode, IEnumerable<T> source, IEqualityComparer<T>? comparer)
             {
+                m_Mode = mode;
                 m_Source = source;
                 m_Comparer = comparer;
             }
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            readonly ResultMode m_Mode;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly IEnumerable<T> m_Source;
@@ -72,7 +82,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly IEqualityComparer<T>? m_Comparer;
 
-            IEnumerable<IRow<T>> Enumerate() => Permute(m_Source, m_Comparer);
+            IEnumerable<IRow<T>> Enumerate() => Permute(m_Source, m_Mode == ResultMode.Distinct, m_Comparer);
 
             public IEnumerator<IRow<T>> GetEnumerator() => Enumerate().GetEnumerator();
 
@@ -93,10 +103,11 @@ namespace Gapotchenko.FX.Math.Combinatorics
                         if (m_CachedLongCount.HasValue)
                             return checked((int)LongCount());
 
-                        if (m_Comparer == null)
-                            return Cardinality(EnumerableEx.Count(m_Source));
-                        else
-                            return EnumerableEx.Count(Enumerate());
+                        return m_Mode switch
+                        {
+                            ResultMode.Default or ResultMode.DistinctView => Cardinality(EnumerableEx.Count(m_Source)),
+                            _ => EnumerableEx.Count(Enumerate())
+                        };
                     });
 
             int IReadOnlyCollection<IRow<T>>.Count => Count();
@@ -113,39 +124,49 @@ namespace Gapotchenko.FX.Math.Combinatorics
                         if (m_CachedCount.HasValue)
                             return Count();
 
-                        if (m_Comparer == null)
-                            return Cardinality(EnumerableEx.LongCount(m_Source));
-                        else
-                            return EnumerableEx.LongCount(Enumerate());
+                        return m_Mode switch
+                        {
+                            ResultMode.Default or ResultMode.DistinctView => Cardinality(EnumerableEx.LongCount(m_Source)),
+                            _ => EnumerableEx.LongCount(Enumerate())
+                        };
                     });
 
             public IResult<T> Distinct() => Distinct(null);
 
             public IResult<T> Distinct(IEqualityComparer<T>? comparer)
             {
-                if (IsSet(m_Source))
+                switch (m_Mode)
                 {
-                    // The permutations are already distinct.
-                    return this;
+                    case ResultMode.Default:
+                        if (Utility.IsCompatibleSet(m_Source, comparer))
+                        {
+                            // The permutations are already distinct.
+                            return this;
+                        }
+                        else
+                        {
+                            return new Result<T>(ResultMode.Distinct, m_Source, comparer);
+                        }
+
+                    case ResultMode.Distinct:
+                    case ResultMode.DistinctView:
+                        if (Empty.Nullify(comparer) == Empty.Nullify(m_Comparer))
+                            return this;
+                        else
+                            throw new NotSupportedException("Cannot produce distinct permutations by using different comparers.");
+
+                    default:
+                        throw new InvalidOperationException();
                 }
-
-                comparer ??= EqualityComparer<T>.Default;
-
-                if (m_Comparer == null)
-                    return new Result<T>(m_Source, comparer);
-                else if (ReferenceEquals(comparer, m_Comparer))
-                    return this;
-                else
-                    throw new NotSupportedException("Cannot produce distinct permutations by using different comparers.");
             }
         }
 
         internal static IResult<T> PermuteAccelerated<T>(IEnumerable<T> sequence)
         {
-            if (!IsSet(sequence))
+            if (!Utility.IsSet(sequence))
                 sequence = sequence.AsReadOnly();
 
-            return new Result<T>(sequence, null);
+            return new Result<T>(ResultMode.Default, sequence, null);
         }
     }
 }

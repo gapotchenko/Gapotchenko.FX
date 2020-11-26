@@ -14,13 +14,13 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// </summary>
         /// <typeparam name="T">The type of elements that the row contains.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public interface IRow<T> : IReadOnlyCollection<T>, IEquatable<IRow<T>>
+        public interface IRow<T> : IEnumerable<T>, IEquatable<IRow<T>>
         {
         }
 
-        sealed class Row<T> : IRow<T>
+        sealed class Row<T> : IRow<T>, IReadOnlyList<T>
         {
-            internal Row(IReadOnlyList<T> source)
+            public Row(IReadOnlyList<T> source)
             {
                 m_Source = source;
             }
@@ -29,6 +29,8 @@ namespace Gapotchenko.FX.Math.Combinatorics
             readonly IReadOnlyList<T> m_Source;
 
             public int Count => m_Source.Count;
+
+            public T this[int index] => m_Source[index];
 
             public IEnumerator<T> GetEnumerator() => m_Source.GetEnumerator();
 
