@@ -200,19 +200,19 @@ namespace Gapotchenko.FX.Threading.Tasks
         /// <param name="action">The cancelable synchronous action to execute.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        public static Task ExecuteAsync(Action action, CancellationToken cancellationToken)
-        {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
-
-            if (!cancellationToken.CanBeCanceled)
-                return ExecuteAsyncCore(action);
-            else
-                return ExecuteAsyncCore(action, cancellationToken);
-        }
+        public static Task ExecuteAsync(Action action, CancellationToken cancellationToken) =>
+            ExecuteAsyncCore(
+                action ?? throw new ArgumentNullException(nameof(action)),
+                cancellationToken);
 
         static Task ExecuteAsyncCore(Action action, CancellationToken cancellationToken)
         {
+#if NETCOREAPP || NET
+            return RunLongTask(action, cancellationToken);
+#else
+            if (!cancellationToken.CanBeCanceled)
+                return ExecuteAsyncCore(action);
+
             Thread? taskThread = null;
             using (cancellationToken.Register(
                 () =>
@@ -223,6 +223,9 @@ namespace Gapotchenko.FX.Threading.Tasks
                         try
                         {
                             thread.Abort();
+                        }
+                        catch (PlatformNotSupportedException)
+                        {
                         }
                         catch (ThreadStateException)
                         {
@@ -249,12 +252,19 @@ namespace Gapotchenko.FX.Threading.Tasks
                         }
                         catch (ThreadAbortException)
                         {
-                            Thread.ResetAbort();
+                            try
+                            {
+                                Thread.ResetAbort();
+                            }
+                            catch (PlatformNotSupportedException)
+                            {
+                            }
                             throw new TaskCanceledException();
                         }
                     },
                     cancellationToken);
             }
+#endif
         }
 
         /// <summary>
