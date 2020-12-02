@@ -35,6 +35,25 @@ namespace Gapotchenko.FX.AppModel
         }
 
         /// <summary>
+        /// Extracts app information for the specified assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>The app information.</returns>
+        public static IAppInformation For(Assembly assembly)
+        {
+            if (assembly == null)
+                throw new ArgumentNullException(nameof(assembly));
+
+            var entryType = assembly.EntryPoint?.ReflectedType;
+
+            return new AppInformation
+            {
+                EntryType = entryType ?? Empty.Type,
+                EntryAssembly = assembly
+            };
+        }
+
+        /// <summary>
         /// Initializes a new instance of <see cref="AppInformation"/> class.
         /// </summary>
         protected AppInformation()

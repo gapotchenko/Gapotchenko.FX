@@ -15,6 +15,7 @@ Release date: not released yet
 - Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
 - Added LINQ function that determines whether any elements of a sequence satisfy multiple specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` and overloads)
 - Added `ConsoleEx.ReadPassword` function for reading a password from the console
+- Added `AppInformation.For(assembly)` static function that retrieves app information for a specified assembly
 - Improved performance of a thread-safe LINQ memoization
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
 - Fixed nullability annotations for `LazyInitializerEx` class
