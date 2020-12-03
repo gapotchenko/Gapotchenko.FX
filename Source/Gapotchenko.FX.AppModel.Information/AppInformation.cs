@@ -73,7 +73,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_Title;
+        volatile string? m_Title;
 
         /// <summary>
         /// Retrieves app title.
@@ -115,7 +115,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_Description;
+        volatile string? m_Description;
 
         /// <summary>
         /// Retrieves app description.
@@ -160,7 +160,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Type? m_EntryType;
+        volatile Type? m_EntryType;
 
         /// <summary>
         /// Retrieves app entry type.
@@ -184,7 +184,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Assembly? m_EntryAssembly;
+        volatile Assembly? m_EntryAssembly;
 
         /// <summary>
         /// Retrieves app entry assembly.
@@ -223,7 +223,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_ProductName;
+        volatile string? m_ProductName;
 
         /// <summary>
         /// Retrieves product name.
@@ -285,7 +285,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static Version? m_ProductVersion;
+        volatile Version? m_ProductVersion;
 
         /// <summary>
         /// Retrieves product version.
@@ -323,7 +323,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_InformationalVersion;
+        volatile string? m_InformationalVersion;
 
         /// <summary>
         /// Retrieves product informational version.
@@ -365,7 +365,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static string? m_CompanyName;
+        volatile string? m_CompanyName;
 
         /// <summary>
         /// Retrieves company name.
@@ -422,7 +422,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_Copyright;
+        volatile string? m_Copyright;
 
         /// <summary>
         /// Retrieves app copyright information.
@@ -467,7 +467,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_Trademark;
+        volatile string? m_Trademark;
 
         /// <summary>
         /// Retrieves app trademark information.
@@ -509,7 +509,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_ExecutablePath;
+        volatile string? m_ExecutablePath;
 
         /// <summary>
         /// Retrieves app executable path.
