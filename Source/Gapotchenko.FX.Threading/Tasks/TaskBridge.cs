@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,7 +43,10 @@ namespace Gapotchenko.FX.Threading.Tasks
 
             // Use a short path when possible.
             if (task.Status == TaskStatus.RanToCompletion)
+            {
+                // Task.Status property issues an acquire memory barrier internally.
                 return;
+            }
 
             Execute(() => task);
         }
@@ -96,6 +100,23 @@ namespace Gapotchenko.FX.Threading.Tasks
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static T VolatileRead<T>(ref T location)
+        {
+            var value = location;
+            if (MemoryModel.WritesCanBeReordered)
+                Thread.MemoryBarrier();
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static void VolatileWrite<T>(ref T location, T value)
+        {
+            if (MemoryModel.WritesCanBeReordered)
+                Thread.MemoryBarrier();
+            location = value;
+        }
+
         /// <summary>
         /// Synchronously executes an async task with a return value of type <typeparamref name="T"/>.
         /// </summary>
@@ -110,10 +131,10 @@ namespace Gapotchenko.FX.Threading.Tasks
             Execute(
                 async () =>
                 {
-                    result = await task().ConfigureAwait(false);
+                    VolatileWrite(ref result, await task().ConfigureAwait(false));
                 });
 
-            return result!;
+            return VolatileRead(ref result)!;
         }
 
         /// <summary>
@@ -126,8 +147,12 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
+            // Use a short path when possible.
             if (task.Status == TaskStatus.RanToCompletion)
+            {
+                // Task.Status property issues an acquire memory barrier internally.
                 return task.Result;
+            }
 
             return Execute(() => task);
         }
@@ -147,10 +172,10 @@ namespace Gapotchenko.FX.Threading.Tasks
             Execute(
                 async ct =>
                 {
-                    result = await task(ct).ConfigureAwait(false);
+                    VolatileWrite(ref result, await task(ct).ConfigureAwait(false));
                 });
 
-            return result!;
+            return VolatileRead(ref result)!;
         }
 
         static Task RunLongTask(Action action, CancellationToken cancellationToken) =>
@@ -186,11 +211,11 @@ namespace Gapotchenko.FX.Threading.Tasks
                 ExecuteAsync(
                     () =>
                     {
-                        result = func();
+                        VolatileWrite(ref result, func());
                     })
                 .ConfigureAwait(false);
 
-            return result!;
+            return VolatileRead(ref result)!;
         }
 
         /// <summary>
@@ -284,12 +309,12 @@ namespace Gapotchenko.FX.Threading.Tasks
                 ExecuteAsync(
                     () =>
                     {
-                        result = func();
+                        VolatileWrite(ref result, func());
                     },
                     cancellationToken)
                 .ConfigureAwait(false);
 
-            return result!;
+            return VolatileRead(ref result)!;
         }
     }
 }
