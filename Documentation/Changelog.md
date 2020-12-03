@@ -19,6 +19,7 @@ Release date: not released yet
 - Improved performance of a thread-safe LINQ memoization
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
 - Fixed nullability annotations for `LazyInitializerEx` class
+- Fixed thread safety issues that could occur on architectures with weaker memory model
 
 ### Gapotchenko.FX 2020.1
 
