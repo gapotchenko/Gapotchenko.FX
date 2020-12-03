@@ -42,9 +42,32 @@ namespace Gapotchenko.FX.Threading.Tasks
 
             // Use a short path when possible.
             if (task.Status == TaskStatus.RanToCompletion)
+            {
+                // Task.Status property issues an acquire memory barrier internally.
                 return;
+            }
 
             Execute(() => task);
+        }
+
+        /// <summary>
+        /// Synchronously completes execution of an already started async task that returns a value of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <param name="task">The async task to execute.</param>
+        /// <returns>The return value.</returns>
+        public static T Execute<T>(Task<T> task)
+        {
+            if (task == null)
+                throw new ArgumentNullException(nameof(task));
+
+            // Use a short path when possible.
+            if (task.Status == TaskStatus.RanToCompletion)
+            {
+                // Task.Status property issues an acquire memory barrier internally.
+                return task.Result;
+            }
+
+            return Execute(() => task);
         }
 
         /// <summary>
@@ -114,22 +137,6 @@ namespace Gapotchenko.FX.Threading.Tasks
                 });
 
             return result!;
-        }
-
-        /// <summary>
-        /// Synchronously completes execution of an already started async task that returns a value of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <param name="task">The async task to execute.</param>
-        /// <returns>The return value.</returns>
-        public static T Execute<T>(Task<T> task)
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            if (task.Status == TaskStatus.RanToCompletion)
-                return task.Result;
-
-            return Execute(() => task);
         }
 
         /// <summary>
