@@ -11,9 +11,10 @@ Release date: not released yet
 - Introduced `Gapotchenko.FX.Math.Combinatorics` module
 - Added `SkipLast` and `TakeLast` LINQ polyfills
 - Added `System.Collections.Generic.ReferenceEqualityComparer` polyfill
+- Added `MemberNotNullAttribute` and `MemberNotNullWhenAttribute` nullability annotation polyfills
 - Added `MathEx.Clamp` function that clamps a value to the specified range
 - Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
-- Added LINQ function that determines whether any elements of a sequence satisfy multiple specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` and overloads)
+- Added LINQ function that determines whether any elements of a sequence satisfy multiple specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` with higher dimensional overloads)
 - Added `ConsoleEx.ReadPassword` function for reading a password from the console
 - Added `AppInformation.For(assembly)` static function that retrieves app information for a specified assembly
 - Improved performance of a thread-safe LINQ memoization
