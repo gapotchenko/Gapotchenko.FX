@@ -13,6 +13,8 @@ namespace Gapotchenko.FX.IO
         {
             public FileEnlistment(string filePath, string transactionKey)
             {
+                filePath = Path.GetFullPath(filePath);
+
                 m_FilePath = filePath;
                 m_TransactionKey = transactionKey;
 
@@ -50,8 +52,7 @@ namespace Gapotchenko.FX.IO
                         {
                             if (m_TransactionEnlistedFiles.TryGetValue(m_TransactionKey, out var enlistedFiles))
                             {
-                                enlistedFiles.Remove(m_FilePath);
-                                if (enlistedFiles.Count == 0)
+                                if (enlistedFiles.Remove(m_FilePath) && enlistedFiles.Count == 0)
                                     m_TransactionEnlistedFiles.Remove(m_TransactionKey);
                             }
                         }
@@ -85,10 +86,17 @@ namespace Gapotchenko.FX.IO
                 {
                     FileSystem.WaitForFileWriteAccess(m_FilePath);
 
-                    if (m_TempFilePath != null)
-                        File.Copy(m_TempFilePath, m_FilePath, true);
-                    else
-                        File.Delete(m_FilePath);
+                    try
+                    {
+                        if (m_TempFilePath != null)
+                            File.Copy(m_TempFilePath, m_FilePath, true);
+                        else
+                            File.Delete(m_FilePath);
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        // Target directory of a file does not exist anymore.
+                    }
                 }
 
                 Forget();
