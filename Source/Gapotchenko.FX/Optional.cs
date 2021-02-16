@@ -133,7 +133,10 @@ namespace Gapotchenko.FX
         /// Creates a new comparer for <see cref="Optional{T}"/> values with a specified comparer for <typeparamref name="T"/> values.
         /// </summary>
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
-        /// <param name="valueComparer">The value comparer.</param>
+        /// <param name="valueComparer">
+        /// The value comparer.
+        /// If the passed comparer is <c>null</c> then a default comparer for type <typeparamref name="T"/> is used.
+        /// </param>
         /// <returns>A new comparer for <see cref="Optional{T}"/> objects.</returns>
         public static IComparer<Optional<T>> CreateComparer<T>(IComparer<T>? valueComparer) =>
             new OptionalComparer<T>(valueComparer);
@@ -142,7 +145,10 @@ namespace Gapotchenko.FX
         /// Creates a new equality comparer for <see cref="Optional{T}"/> values with a specified comparer for <typeparamref name="T"/> values.
         /// </summary>
         /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
-        /// <param name="valueComparer">The value equality comparer.</param>
+        /// <param name="valueComparer">
+        /// The value equality comparer.
+        /// If the passed comparer is <c>null</c> then a default equality comparer for type <typeparamref name="T"/> is used.
+        /// </param>
         /// <returns>A new equality comparer for <see cref="Optional{T}"/> objects.</returns>
         public static IEqualityComparer<Optional<T>> CreateEqualityComparer<T>(IEqualityComparer<T>? valueComparer) =>
             new OptionalEqualityComparer<T>(valueComparer);
