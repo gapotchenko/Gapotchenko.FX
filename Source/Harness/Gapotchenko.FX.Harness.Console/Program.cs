@@ -57,6 +57,44 @@ namespace Gapotchenko.FX.Harness.Console
             }
         }
 
+        struct MyInterval<T2> : IInterval<T2>
+        {
+            public T2 LowerBound => throw new NotImplementedException();
+
+            public T2 UpperBound => throw new NotImplementedException();
+
+            public bool InclusiveLowerBound => throw new NotImplementedException();
+
+            public bool InclusiveUpperBound => throw new NotImplementedException();
+
+            public bool HasLowerBound => throw new NotImplementedException();
+
+            public bool HasUpperBound => throw new NotImplementedException();
+
+            public IInterval<T2> Interior => throw new NotImplementedException();
+
+            public IInterval<T2> Enclosure => throw new NotImplementedException();
+
+            public bool IsEmpty => throw new NotImplementedException();
+
+            public bool IsSingleton => throw new NotImplementedException();
+
+            public IInterval<T2> Clamp(IInterval<T2> limits)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Contains(T2 item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Overlaps(IInterval<T2> other)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         static void _Run()
         {
             var res = new[] { 1, 1, 2 }.CrossJoin(new[] { "A", "B" }, ValueTuple.Create).Distinct();
@@ -74,6 +112,11 @@ namespace Gapotchenko.FX.Harness.Console
                 var env = process.ReadEnvironmentVariables();
                 Console.WriteLine(env["PATH"]);
             }
+
+            //var a = new Interval<int>(10, 20, , , );
+
+            //var i2 = new MyInterval<int>();
+            //a.Clamp(i2);
         }
 
         static async Task _RunAsync(CancellationToken ct)
