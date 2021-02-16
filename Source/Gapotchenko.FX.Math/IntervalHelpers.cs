@@ -11,11 +11,11 @@ namespace Gapotchenko.FX.Math
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBounded<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.IsBoundedFrom && interval.IsBoundedTo;
+            interval.IsLeftBounded && interval.IsRightBounded;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHalfBounded<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.IsBoundedFrom ^ interval.IsBoundedTo;
+            interval.IsLeftBounded ^ interval.IsRightBounded;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsOpen<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
@@ -44,7 +44,7 @@ namespace Gapotchenko.FX.Math
             constructor(
                 interval.From, interval.To,
                 inclusive, inclusive,
-                interval.IsBoundedFrom, interval.IsBoundedTo);
+                interval.IsLeftBounded, interval.IsRightBounded);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TInterval Interior<TInterval, TValue>(TInterval interval, Constructor<TInterval, TValue> constructor) where TInterval : IInterval<TValue> =>
@@ -76,13 +76,13 @@ namespace Gapotchenko.FX.Math
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Contains<TInterval, TValue>(TInterval interval, TValue item, IComparer<TValue> comparer) where TInterval : IInterval<TValue>
         {
-            if (interval.IsBoundedFrom)
+            if (interval.IsLeftBounded)
             {
                 if (comparer.Compare(interval.From, item) > BoundLimit(interval.IncludesFrom))
                     return false;
             }
 
-            if (interval.IsBoundedTo)
+            if (interval.IsRightBounded)
             {
                 if (comparer.Compare(item, interval.To) > BoundLimit(interval.IncludesTo))
                     return false;
@@ -119,14 +119,14 @@ namespace Gapotchenko.FX.Math
             else
                 sb.Append('(');
 
-            if (interval.IsBoundedFrom)
+            if (interval.IsLeftBounded)
                 sb.Append(interval.From);
             else
                 sb.Append("-inf");
 
             sb.Append(',');
 
-            if (interval.IsBoundedTo)
+            if (interval.IsRightBounded)
                 sb.Append(interval.To);
             else
                 sb.Append("inf");

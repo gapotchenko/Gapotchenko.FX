@@ -7,41 +7,41 @@
     public interface IInterval<T>
     {
         /// <summary>
-        /// Gets the lower bound of the interval.
+        /// Gets the left bound of the interval.
         /// </summary>
         public T From { get; }
 
         /// <summary>
-        /// Gets the upper bound of the interval.
+        /// Gets the right bound of the interval.
         /// </summary>
         public T To { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the lower bound limit point is included in the interval.
+        /// Gets a value indicating whether the left bound limit point is included in the interval.
         /// </summary>
         public bool IncludesFrom { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the upper bound limit point is included in the interval.
+        /// Gets a value indicating whether the right bound limit point is included in the interval.
         /// </summary>
         public bool IncludesTo { get; }
 
         /// <summary>
         /// Gets a value indicating whether the interval is left-bounded.
         /// </summary>
-        public bool IsBoundedFrom { get; }
+        public bool IsLeftBounded { get; }
 
         /// <summary>
         /// Gets a value indicating whether the interval is right-bounded.
         /// </summary>
-        public bool IsBoundedTo { get; }
+        public bool IsRightBounded { get; }
 
         /// <summary>
         /// <para>
         /// Gets a value indicating whether the interval is bounded.
         /// </para>
         /// <para>
-        /// The bounded interval has both left (from) and right (to) bounds.
+        /// A bounded interval is both left- and right-bounded.
         /// </para>
         /// </summary>
         public bool IsBounded

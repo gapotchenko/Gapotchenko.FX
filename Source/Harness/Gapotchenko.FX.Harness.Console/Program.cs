@@ -57,44 +57,6 @@ namespace Gapotchenko.FX.Harness.Console
             }
         }
 
-        struct MyInterval<T2> : IInterval<T2>
-        {
-            public T2 From => throw new NotImplementedException();
-
-            public T2 To => throw new NotImplementedException();
-
-            public bool IncludesFrom => throw new NotImplementedException();
-
-            public bool IncludesTo => throw new NotImplementedException();
-
-            public bool IsBoundedFrom => throw new NotImplementedException();
-
-            public bool IsBoundedTo => throw new NotImplementedException();
-
-            public IInterval<T2> Interior => throw new NotImplementedException();
-
-            public IInterval<T2> Enclosure => throw new NotImplementedException();
-
-            public bool IsEmpty => throw new NotImplementedException();
-
-            public bool IsSingleton => throw new NotImplementedException();
-
-            public IInterval<T2> Clamp(IInterval<T2> limits)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool Contains(T2 item)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool Overlaps(IInterval<T2> other)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         static void _Run()
         {
             var res = new[] { 1, 1, 2 }.CrossJoin(new[] { "A", "B" }, ValueTuple.Create).Distinct();
@@ -114,7 +76,6 @@ namespace Gapotchenko.FX.Harness.Console
             }
 
             var a = new Interval<int>(10, 20, true, false);
-            a.IsHalfBounded
 
 
             //var i2 = new MyInterval<int>();

@@ -55,10 +55,10 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         /// <param name="from">The left bound of the interval.</param>
         /// <param name="to">The right bound of the interval.</param>
-        /// <param name="includesFrom">Indicates whether the left limit point is included in the interval.</param>
-        /// <param name="includesTo">Indicates whether the upper bound limit point is included in the interval.</param>
-        /// <param name="boundedFrom">Indicates whether the interval is left-bounded.</param>
-        /// <param name="boundedTo">Indicates whether the interval is right-bounded.</param>
+        /// <param name="includesFrom">Indicates whether the left bound limit point is included in the interval.</param>
+        /// <param name="includesTo">Indicates whether the right bound limit point is included in the interval.</param>
+        /// <param name="leftBounded">Indicates whether the interval is left-bounded.</param>
+        /// <param name="rightBounded">Indicates whether the interval is right-bounded.</param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
@@ -66,7 +66,7 @@ namespace Gapotchenko.FX.Math
         public Interval(
             T from, T to,
             bool includesFrom, bool includesTo,
-            bool boundedFrom, bool boundedTo,
+            bool leftBounded, bool rightBounded,
             IComparer<T>? comparer = null)
         {
             From = from;
@@ -77,9 +77,9 @@ namespace Gapotchenko.FX.Math
                 flags |= IntervalFlags.InclusiveLeft;
             if (includesTo)
                 flags |= IntervalFlags.InclusiveRight;
-            if (boundedFrom)
+            if (leftBounded)
                 flags |= IntervalFlags.LeftBounded;
-            if (boundedTo)
+            if (rightBounded)
                 flags |= IntervalFlags.RightBounded;
 
             m_Flags = flags;
@@ -87,12 +87,12 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// The lower bound.
+        /// The left bound of the interval.
         /// </summary>
         public T From { get; init; }
 
         /// <summary>
-        /// The upper bound.
+        /// The right bound of the interval.
         /// </summary>
         public T To { get; init; }
 
@@ -100,7 +100,7 @@ namespace Gapotchenko.FX.Math
         readonly IntervalFlags m_Flags;
 
         /// <summary>
-        /// Indicates whether the lower bound limit point is included in the interval.
+        /// Indicates whether the left bound limit point is included in the interval.
         /// </summary>
         public bool IncludesFrom
         {
@@ -109,7 +109,7 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
-        /// Indicates whether the upper bound limit point is included in the interval.
+        /// Indicates whether the right bound limit point is included in the interval.
         /// </summary>
         public bool IncludesTo
         {
@@ -120,7 +120,7 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Indicates whether the interval is left-bounded.
         /// </summary>
-        public bool IsBoundedFrom
+        public bool IsLeftBounded
         {
             get => (m_Flags & IntervalFlags.LeftBounded) != 0;
             init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.LeftBounded, value);
@@ -129,7 +129,7 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Indicates whether the interval is right-bounded.
         /// </summary>
-        public bool IsBoundedTo
+        public bool IsRightBounded
         {
             get => (m_Flags & IntervalFlags.RightBounded) != 0;
             init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.RightBounded, value);
@@ -172,7 +172,7 @@ namespace Gapotchenko.FX.Math
             new Interval<T>(
                 From, To,
                 inclusiveLowerBound, inclusiveUpperBound,
-                IsBoundedFrom, IsBoundedTo,
+                IsLeftBounded, IsRightBounded,
                 m_Comparer);
 
         /// <summary>
