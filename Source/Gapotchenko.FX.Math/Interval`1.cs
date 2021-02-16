@@ -14,73 +14,73 @@ namespace Gapotchenko.FX.Math
     public sealed record Interval<T> : IInterval<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified lower and upper bounds.
+        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds.
         /// </summary>
-        /// <param name="lowerBound">The lower bound of the interval.</param>
-        /// <param name="upperBound">The upper bound of the interval.</param>
+        /// <param name="from">The lower bound of the interval.</param>
+        /// <param name="to">The upper bound of the interval.</param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
-        public Interval(T lowerBound, T upperBound, IComparer<T>? comparer = null) :
-            this(lowerBound, upperBound, true, false, comparer)
+        public Interval(T from, T to, IComparer<T>? comparer = null) :
+            this(from, to, true, false, comparer)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified lower and upper bounds and their limit point inclusions.
+        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds and their limit point inclusions.
         /// </summary>
-        /// <param name="lowerBound">The lower bound of the interval.</param>
-        /// <param name="upperBound">The upper bound of the interval.</param>
-        /// <param name="inclusiveLowerBound">Indicates whether the lower bound limit point is included in the interval.</param>
-        /// <param name="inclusiveUpperBound">Indicates whether the upper bound limit point is included in the interval.</param>
+        /// <param name="from">The lower bound of the interval.</param>
+        /// <param name="to">The upper bound of the interval.</param>
+        /// <param name="includesFrom">Indicates whether the lower bound limit point is included in the interval.</param>
+        /// <param name="includesTo">Indicates whether the upper bound limit point is included in the interval.</param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
         public Interval(
-            T lowerBound, T upperBound,
-            bool inclusiveLowerBound, bool inclusiveUpperBound,
+            T from, T to,
+            bool includesFrom, bool includesTo,
             IComparer<T>? comparer = null) :
             this(
-                lowerBound, upperBound,
-                inclusiveLowerBound, inclusiveUpperBound,
-                lowerBound is not null, upperBound is not null,
+                from, to,
+                includesFrom, includesTo,
+                from is not null, to is not null,
                 comparer)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified lower and upper bounds, their limit point inclusions and boundedness.
+        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds, their limit point inclusions and boundedness.
         /// </summary>
-        /// <param name="lowerBound">The lower bound of the interval.</param>
-        /// <param name="upperBound">The upper bound of the interval.</param>
-        /// <param name="inclusiveLowerBound">Indicates whether the lower bound limit point is included in the interval.</param>
-        /// <param name="inclusiveUpperBound">Indicates whether the upper bound limit point is included in the interval.</param>
-        /// <param name="hasLowerBound">Indicates whether the interval is lower-bounded.</param>
-        /// <param name="hasUpperBound">Indicates whether the interval is upper-bounded.</param>
+        /// <param name="from">The left bound of the interval.</param>
+        /// <param name="to">The right bound of the interval.</param>
+        /// <param name="includesFrom">Indicates whether the left limit point is included in the interval.</param>
+        /// <param name="includesTo">Indicates whether the upper bound limit point is included in the interval.</param>
+        /// <param name="boundedFrom">Indicates whether the interval is left-bounded.</param>
+        /// <param name="boundedTo">Indicates whether the interval is right-bounded.</param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
         public Interval(
-            T lowerBound, T upperBound,
-            bool inclusiveLowerBound, bool inclusiveUpperBound,
-            bool hasLowerBound, bool hasUpperBound,
+            T from, T to,
+            bool includesFrom, bool includesTo,
+            bool boundedFrom, bool boundedTo,
             IComparer<T>? comparer = null)
         {
-            LowerBound = lowerBound;
-            UpperBound = upperBound;
+            From = from;
+            To = to;
 
             var flags = IntervalFlags.None;
-            if (inclusiveLowerBound)
-                flags |= IntervalFlags.InclusiveLowerBound;
-            if (inclusiveUpperBound)
-                flags |= IntervalFlags.InclusiveUpperBound;
-            if (hasLowerBound)
-                flags |= IntervalFlags.HasLowerBound;
-            if (hasUpperBound)
-                flags |= IntervalFlags.HasUpperBound;
+            if (includesFrom)
+                flags |= IntervalFlags.InclusiveLeft;
+            if (includesTo)
+                flags |= IntervalFlags.InclusiveRight;
+            if (boundedFrom)
+                flags |= IntervalFlags.LeftBounded;
+            if (boundedTo)
+                flags |= IntervalFlags.RightBounded;
 
             m_Flags = flags;
             Comparer = comparer;
@@ -89,12 +89,12 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// The lower bound.
         /// </summary>
-        public T LowerBound { get; init; }
+        public T From { get; init; }
 
         /// <summary>
         /// The upper bound.
         /// </summary>
-        public T UpperBound { get; init; }
+        public T To { get; init; }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly IntervalFlags m_Flags;
@@ -102,37 +102,37 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Indicates whether the lower bound limit point is included in the interval.
         /// </summary>
-        public bool InclusiveLowerBound
+        public bool IncludesFrom
         {
-            get => (m_Flags & IntervalFlags.InclusiveLowerBound) != 0;
-            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.InclusiveLowerBound, value);
+            get => (m_Flags & IntervalFlags.InclusiveLeft) != 0;
+            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.InclusiveLeft, value);
         }
 
         /// <summary>
         /// Indicates whether the upper bound limit point is included in the interval.
         /// </summary>
-        public bool InclusiveUpperBound
+        public bool IncludesTo
         {
-            get => (m_Flags & IntervalFlags.InclusiveUpperBound) != 0;
-            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.InclusiveUpperBound, value);
+            get => (m_Flags & IntervalFlags.InclusiveRight) != 0;
+            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.InclusiveRight, value);
         }
 
         /// <summary>
-        /// Indicates whether the interval is lower-bounded.
+        /// Indicates whether the interval is left-bounded.
         /// </summary>
-        public bool HasLowerBound
+        public bool IsBoundedFrom
         {
-            get => (m_Flags & IntervalFlags.HasLowerBound) != 0;
-            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.HasLowerBound, value);
+            get => (m_Flags & IntervalFlags.LeftBounded) != 0;
+            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.LeftBounded, value);
         }
 
         /// <summary>
-        /// Indicates whether the interval is upper-bounded.
+        /// Indicates whether the interval is right-bounded.
         /// </summary>
-        public bool HasUpperBound
+        public bool IsBoundedTo
         {
-            get => (m_Flags & IntervalFlags.HasUpperBound) != 0;
-            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.HasUpperBound, value);
+            get => (m_Flags & IntervalFlags.RightBounded) != 0;
+            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.RightBounded, value);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -170,9 +170,9 @@ namespace Gapotchenko.FX.Math
             bool inclusiveLowerBound, bool inclusiveUpperBound,
             bool hasLowerBound, bool hasUpperBound) =>
             new Interval<T>(
-                LowerBound, UpperBound,
+                From, To,
                 inclusiveLowerBound, inclusiveUpperBound,
-                HasLowerBound, HasUpperBound,
+                IsBoundedFrom, IsBoundedTo,
                 m_Comparer);
 
         /// <summary>

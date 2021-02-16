@@ -11,23 +11,23 @@ namespace Gapotchenko.FX.Math
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBounded<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.HasLowerBound && interval.HasUpperBound;
+            interval.IsBoundedFrom && interval.IsBoundedTo;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHalfBounded<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.HasLowerBound ^ interval.HasUpperBound;
+            interval.IsBoundedFrom ^ interval.IsBoundedTo;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsOpen<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            !(interval.InclusiveLowerBound || interval.InclusiveUpperBound);
+            !(interval.IncludesFrom || interval.IncludesTo);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsClosed<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.InclusiveLowerBound && interval.InclusiveUpperBound;
+            interval.IncludesFrom && interval.IncludesTo;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHalfOpen<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.InclusiveLowerBound ^ interval.InclusiveUpperBound;
+            interval.IncludesFrom ^ interval.IncludesTo;
 
         public delegate TInterval Constructor<out TInterval, in TValue>(
             TValue lowerBound, TValue upperBound,
@@ -42,9 +42,9 @@ namespace Gapotchenko.FX.Math
             Constructor<TInterval, TValue> constructor)
             where TInterval : IInterval<TValue> =>
             constructor(
-                interval.LowerBound, interval.UpperBound,
+                interval.From, interval.To,
                 inclusive, inclusive,
-                interval.HasLowerBound, interval.HasUpperBound);
+                interval.IsBoundedFrom, interval.IsBoundedTo);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TInterval Interior<TInterval, TValue>(TInterval interval, Constructor<TInterval, TValue> constructor) where TInterval : IInterval<TValue> =>
@@ -60,7 +60,7 @@ namespace Gapotchenko.FX.Math
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool IsDegenerate<TInterval, TValue>(TInterval interval, IComparer<TValue> comparer) where TInterval : IInterval<TValue> =>
-            comparer.Compare(interval.LowerBound, interval.UpperBound) == 0;
+            comparer.Compare(interval.From, interval.To) == 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmpty<TInterval, TValue>(TInterval interval, IComparer<TValue> comparer) where TInterval : IInterval<TValue> =>
@@ -76,15 +76,15 @@ namespace Gapotchenko.FX.Math
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Contains<TInterval, TValue>(TInterval interval, TValue item, IComparer<TValue> comparer) where TInterval : IInterval<TValue>
         {
-            if (interval.HasLowerBound)
+            if (interval.IsBoundedFrom)
             {
-                if (comparer.Compare(interval.LowerBound, item) > BoundLimit(interval.InclusiveLowerBound))
+                if (comparer.Compare(interval.From, item) > BoundLimit(interval.IncludesFrom))
                     return false;
             }
 
-            if (interval.HasUpperBound)
+            if (interval.IsBoundedTo)
             {
-                if (comparer.Compare(item, interval.UpperBound) > BoundLimit(interval.InclusiveUpperBound))
+                if (comparer.Compare(item, interval.To) > BoundLimit(interval.IncludesTo))
                     return false;
             }
 
@@ -114,24 +114,24 @@ namespace Gapotchenko.FX.Math
         public static string ToString<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue>
         {
             var sb = new StringBuilder();
-            if (interval.InclusiveLowerBound)
+            if (interval.IncludesFrom)
                 sb.Append('[');
             else
                 sb.Append('(');
 
-            if (interval.HasLowerBound)
-                sb.Append(interval.LowerBound);
+            if (interval.IsBoundedFrom)
+                sb.Append(interval.From);
             else
                 sb.Append("-inf");
 
             sb.Append(',');
 
-            if (interval.HasUpperBound)
-                sb.Append(interval.UpperBound);
+            if (interval.IsBoundedTo)
+                sb.Append(interval.To);
             else
                 sb.Append("inf");
 
-            if (interval.InclusiveUpperBound)
+            if (interval.IncludesTo)
                 sb.Append(']');
             else
                 sb.Append(')');

@@ -6,9 +6,9 @@ namespace Gapotchenko.FX.Math
     enum IntervalFlags : byte
     {
         None = 0,
-        InclusiveLowerBound = 1 << 0,
-        InclusiveUpperBound = 1 << 1,
-        HasLowerBound = 1 << 2,
-        HasUpperBound = 1 << 3
+        InclusiveLeft = 1 << 0,
+        InclusiveRight = 1 << 1,
+        LeftBounded = 1 << 2,
+        RightBounded = 1 << 3
     }
 }

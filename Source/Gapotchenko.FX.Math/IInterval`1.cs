@@ -7,38 +7,42 @@
     public interface IInterval<T>
     {
         /// <summary>
-        /// Gets the lower bound.
+        /// Gets the lower bound of the interval.
         /// </summary>
-        public T LowerBound { get; }
+        public T From { get; }
 
         /// <summary>
-        /// Gets the upper bound.
+        /// Gets the upper bound of the interval.
         /// </summary>
-        public T UpperBound { get; }
+        public T To { get; }
 
         /// <summary>
         /// Gets a value indicating whether the lower bound limit point is included in the interval.
         /// </summary>
-        public bool InclusiveLowerBound { get; }
+        public bool IncludesFrom { get; }
 
         /// <summary>
         /// Gets a value indicating whether the upper bound limit point is included in the interval.
         /// </summary>
-        public bool InclusiveUpperBound { get; }
+        public bool IncludesTo { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the interval is lower-bounded.
+        /// Gets a value indicating whether the interval is left-bounded.
         /// </summary>
-        public bool HasLowerBound { get; }
+        public bool IsBoundedFrom { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the interval is upper-bounded.
+        /// Gets a value indicating whether the interval is right-bounded.
         /// </summary>
-        public bool HasUpperBound { get; }
+        public bool IsBoundedTo { get; }
 
         /// <summary>
+        /// <para>
         /// Gets a value indicating whether the interval is bounded.
-        /// A bounded interval has both lower and upper bounds.
+        /// </para>
+        /// <para>
+        /// The bounded interval has both left (from) and right (to) bounds.
+        /// </para>
         /// </summary>
         public bool IsBounded
 #if TFF_DEFAULT_INTERFACE
@@ -52,7 +56,7 @@
         /// Gets a value indicating whether the interval is half-bounded.
         /// </para>
         /// <para>
-        /// A half-bounded interval has either lower or upper bound.
+        /// A half-bounded interval is either left- or right-bounded.
         /// </para>
         /// </summary>
         public bool IsHalfBounded

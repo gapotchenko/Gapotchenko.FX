@@ -59,17 +59,17 @@ namespace Gapotchenko.FX.Harness.Console
 
         struct MyInterval<T2> : IInterval<T2>
         {
-            public T2 LowerBound => throw new NotImplementedException();
+            public T2 From => throw new NotImplementedException();
 
-            public T2 UpperBound => throw new NotImplementedException();
+            public T2 To => throw new NotImplementedException();
 
-            public bool InclusiveLowerBound => throw new NotImplementedException();
+            public bool IncludesFrom => throw new NotImplementedException();
 
-            public bool InclusiveUpperBound => throw new NotImplementedException();
+            public bool IncludesTo => throw new NotImplementedException();
 
-            public bool HasLowerBound => throw new NotImplementedException();
+            public bool IsBoundedFrom => throw new NotImplementedException();
 
-            public bool HasUpperBound => throw new NotImplementedException();
+            public bool IsBoundedTo => throw new NotImplementedException();
 
             public IInterval<T2> Interior => throw new NotImplementedException();
 
@@ -113,7 +113,9 @@ namespace Gapotchenko.FX.Harness.Console
                 Console.WriteLine(env["PATH"]);
             }
 
-            //var a = new Interval<int>(10, 20, , , );
+            var a = new Interval<int>(10, 20, true, false);
+            a.IsHalfBounded
+
 
             //var i2 = new MyInterval<int>();
             //a.Clamp(i2);
