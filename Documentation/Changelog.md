@@ -20,7 +20,8 @@ Release date: not released yet
 - Improved performance of a thread-safe LINQ memoization
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
 - Fixed nullability annotations for `LazyInitializerEx` class
-- Fixed issue with UTF-8 BOM encoding returned by `CommandLine.OemEncoding` on Windows
+- Fixed issue with UTF-8 BOM encoding returned by `CommandLine.OemEncoding` on Windows when system locale was set to UTF-8
+  (cmd.exe cannot consume UTF-8 with BOM)
 - Fixed thread safety issues that could occur on architectures with weaker memory models
 
 ### Gapotchenko.FX 2020.1

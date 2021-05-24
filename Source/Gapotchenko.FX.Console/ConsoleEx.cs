@@ -15,10 +15,7 @@ namespace Gapotchenko.FX.Console
         /// Reads a password.
         /// </summary>
         /// <returns>The password.</returns>
-        public static SecureString ReadPassword()
-        {
-            return ReadPassword(default);
-        }
+        public static SecureString ReadPassword() => ReadPassword(default);
 
         /// <summary>
         /// Reads a password by using a specified masking character.
