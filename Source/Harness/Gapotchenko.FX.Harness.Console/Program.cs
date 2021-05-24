@@ -74,6 +74,13 @@ namespace Gapotchenko.FX.Harness.Console
                 var env = process.ReadEnvironmentVariables();
                 Console.WriteLine(env["PATH"]);
             }
+
+            var a = new Interval<int>(10, 20, true, false);
+            
+            Console.WriteLine(a.ToString());
+
+            //var i2 = new MyInterval<int>();
+            //a.Clamp(i2);
         }
 
         static async Task _RunAsync(CancellationToken ct)
