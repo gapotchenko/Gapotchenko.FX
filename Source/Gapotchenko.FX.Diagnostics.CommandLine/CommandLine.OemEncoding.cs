@@ -43,7 +43,19 @@ namespace Gapotchenko.FX.Diagnostics
                     int lcid = NativeMethods.GetSystemDefaultLCID();
                     var ci = CultureInfo.GetCultureInfo(lcid);
                     var page = ci.TextInfo.OEMCodePage;
-                    return Encoding.GetEncoding(page);
+
+                    Encoding encoding;
+                    if (page == 65001)
+                    {
+                        // cmd.exe cannot interpret UTF-8-with-BOM encoding, so instantiate a UTF-8 encoding without BOM.
+                        encoding = new UTF8Encoding(false);
+                    }
+                    else
+                    {
+                        encoding = Encoding.GetEncoding(page);
+                    }
+
+                    return encoding;
                 }
                 catch (Exception e) when (!e.IsControlFlowException())
                 {
