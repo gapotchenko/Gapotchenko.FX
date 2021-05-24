@@ -10,6 +10,7 @@ using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Linq.Expressions;
 using Gapotchenko.FX.Math;
 using Gapotchenko.FX.Math.Combinatorics;
+using Gapotchenko.FX.Math.Geometry;
 using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Threading.Tasks;
@@ -74,6 +75,8 @@ namespace Gapotchenko.FX.Harness.Console
                 var env = process.ReadEnvironmentVariables();
                 Console.WriteLine(env["PATH"]);
             }
+
+            Console.WriteLine("Distance is {0}.", StringMetrics.LevenshteinDistance("ABC", "BAC"));
         }
 
         static async Task _RunAsync(CancellationToken ct)
