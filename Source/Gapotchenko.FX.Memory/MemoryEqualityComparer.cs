@@ -42,6 +42,6 @@ namespace Gapotchenko.FX.Memory
             };
         }
 
-        static bool IsDefaultComparer<T>(IEqualityComparer<T>? comparer) => Empty.Nullify(comparer) == null;
+        static bool IsDefaultComparer<T>(IEqualityComparer<T>? comparer) => Empty.Nullify(comparer) is null;
     }
 }
