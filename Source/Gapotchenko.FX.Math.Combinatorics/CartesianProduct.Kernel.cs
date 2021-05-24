@@ -49,7 +49,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                     // Reset the enumerator by retrieving a new one.
                     var newEnumerator = items[i].GetEnumerator();
                     if (!newEnumerator.MoveNext())
-                        throw new InvalidOperationException("Cartesian product pool is prematurely exhausted.");
+                        throw new InvalidOperationException("Cartesian product pool is exhausted prematurely.");
                     enumerators[i] = newEnumerator;
                 }
             }

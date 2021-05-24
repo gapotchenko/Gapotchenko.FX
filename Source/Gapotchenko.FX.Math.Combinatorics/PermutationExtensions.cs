@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
     /// Permutation LINQ extensions.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class PermutationsExtensions
+    public static class PermutationExtensions
     {
         /// <summary>
         /// Returns all possible permutations of elements from a sequence.
