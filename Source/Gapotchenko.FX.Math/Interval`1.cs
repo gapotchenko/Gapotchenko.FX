@@ -16,8 +16,8 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds.
         /// </summary>
-        /// <param name="from">The lower bound of the interval.</param>
-        /// <param name="to">The upper bound of the interval.</param>
+        /// <param name="from">The left bound of the interval.</param>
+        /// <param name="to">The right bound of the interval.</param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
@@ -30,21 +30,21 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds and their limit point inclusions.
         /// </summary>
-        /// <param name="from">The lower bound of the interval.</param>
-        /// <param name="to">The upper bound of the interval.</param>
-        /// <param name="includesFrom">Indicates whether the lower bound limit point is included in the interval.</param>
-        /// <param name="includesTo">Indicates whether the upper bound limit point is included in the interval.</param>
+        /// <param name="from">The left bound of the interval.</param>
+        /// <param name="to">The right bound of the interval.</param>
+        /// <param name="includeFrom">Indicates whether the left bound limit point should be included in the interval.</param>
+        /// <param name="includeTo">Indicates whether the right bound limit point should be included in the interval.</param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
         public Interval(
             T from, T to,
-            bool includesFrom, bool includesTo,
+            bool includeFrom, bool includeTo,
             IComparer<T>? comparer = null) :
             this(
                 from, to,
-                includesFrom, includesTo,
+                includeFrom, includeTo,
                 from is not null, to is not null,
                 comparer)
         {
@@ -166,13 +166,13 @@ namespace Gapotchenko.FX.Math
         public bool IsHalfOpen => IntervalHelpers.IsHalfOpen<Interval<T>, T>(this);
 
         Interval<T> Construct(
-            T lowerBound, T upperBound,
-            bool inclusiveLowerBound, bool inclusiveUpperBound,
-            bool hasLowerBound, bool hasUpperBound) =>
+            T from, T to,
+            bool includeFrom, bool includeTo,
+            bool leftBounded, bool rightBounded) =>
             new Interval<T>(
-                From, To,
-                inclusiveLowerBound, inclusiveUpperBound,
-                IsLeftBounded, IsRightBounded,
+                from, to,
+                includeFrom, includeTo,
+                leftBounded, rightBounded,
                 m_Comparer);
 
         /// <summary>

@@ -76,7 +76,8 @@ namespace Gapotchenko.FX.Harness.Console
             }
 
             var a = new Interval<int>(10, 20, true, false);
-
+            
+            Console.WriteLine(a.ToString());
 
             //var i2 = new MyInterval<int>();
             //a.Clamp(i2);
