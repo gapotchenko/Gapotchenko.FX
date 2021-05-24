@@ -76,7 +76,11 @@ namespace Gapotchenko.FX.Harness.Console
                 Console.WriteLine(env["PATH"]);
             }
 
-            Console.WriteLine("Distance is {0}.", StringMetrics.LevenshteinDistance("ABC", "BAC"));
+            var seq1 = new[] { "1", "2" };
+            var seq2 = new[] { "A", "B", "C" };
+
+            foreach (var i in CartesianProduct.Of(seq1, seq2))
+                Console.WriteLine(string.Join(" ", i));
         }
 
         static async Task _RunAsync(CancellationToken ct)

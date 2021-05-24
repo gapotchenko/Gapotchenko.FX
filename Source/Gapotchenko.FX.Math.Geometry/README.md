@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.Geometry.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math.Geometry)
 
-The module provides geometry math primitives and operations.
+The module provides primitives and operations for geometry math.
 
 ## StringMetrics
 
@@ -11,7 +11,7 @@ The module provides geometry math primitives and operations.
 
 The notion of a string is purely abstract.
 It is not limited to the string of characters such as `System.String`; it can be a string of anything.
-In this way, `Gapotchenko.FX.Math.Geometry` module achieves the right degree of abstraction which is so desirable when it comes to a versatile math framework you can rely on.
+In this way, `Gapotchenko.FX.Math.Geometry` module achieves the right degree of abstraction which is desirable when it comes to a versatile math framework.
 
 ### StringMetrics.LevenshteinDistance
 
