@@ -10,8 +10,8 @@ The module provides primitives and operations for geometry math.
 `StringMetrics` static class provides a variety of metric functions for measuring the distance between two strings of symbols.
 
 The notion of a string is purely abstract.
-It is not limited to the string of characters such as `System.String`; it can be a string of anything.
-In this way, `Gapotchenko.FX.Math.Geometry` module achieves the right degree of abstraction which is desirable when it comes to a versatile math framework.
+So it is not limited by the characters like `System.String`; it can be a string of anything.
+In this way, `Gapotchenko.FX.Math.Geometry` module tries to achieve the right degree of abstraction desirable in a versatile math framework.
 
 ### StringMetrics.LevenshteinDistance
 
