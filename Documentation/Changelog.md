@@ -19,10 +19,12 @@ Release date: not released yet
 - Added `ConsoleEx.ReadPassword` function for reading a password from the console
 - Added `AppInformation.For(assembly)` static function that retrieves app information for a specified assembly
 - Added `System.Runtime.CompilerServices.ModuleInitializerAttribute` polyfill
+- Added `GetValueOrDefault` polyfills for `IReadOnlyDictionary<TKey, TValue>`
+- Added `TryAdd` and `Remove(key, out value)` polyfills for `IDictionary<TKey, TValue>`
 - Improved performance of a thread-safe LINQ memoization
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
 - Fixed nullability annotations for `LazyInitializerEx` class
-- Fixed issue with UTF-8 BOM encoding returned by `CommandLine.OemEncoding` on Windows when system locale was set to UTF-8
+- Fixed issue with UTF-8 BOM encoding returned by `CommandLine.OemEncoding` on Windows when system locale is set to UTF-8
   (cmd.exe cannot consume UTF-8 with BOM)
 - Fixed potential thread safety issues that could occur on architectures with weaker memory models
 
