@@ -8,4 +8,10 @@
     </AssemblyAttribute>
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(CLSCompliant)' == 'true' ">
+    <AssemblyAttribute Include="System.CLSCompliantAttribute">
+      <_Parameter1>true</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
 </Project>
