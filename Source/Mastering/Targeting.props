@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup Condition=" $(IsPublicProject) ">
-    <TargetFrameworks>net45;net46;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0;net5.0</TargetFrameworks>    
+    <TargetFrameworks>net45;net46;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0;net5.0;net6.0</TargetFrameworks>    
     <CheckEolTargetFramework>false</CheckEolTargetFramework> <!-- Disables NETSDK1138 warning -->
   </PropertyGroup>
 
@@ -73,6 +73,10 @@
     <!-- .NET 5.0 -->
     <GPFX_DefineConstants_NET50>$(GPFX_DefineConstants_NETCore31);TFF_IREADONLYSET;TFF_ISEXTERNALINIT;TFF_REFERENCEEQUALITYCOMPARER;TFF_MEMBERNOTNULLATTRIBUTE;TFF_MODULEINITIALIZERATTRIBUTE</GPFX_DefineConstants_NET50>
     <DefineConstants Condition=" '$(TargetFramework)' == 'net5.0' ">$(DefineConstants);$(GPFX_DefineConstants_NET50)</DefineConstants>
+
+    <!-- .NET 6.0 -->
+    <GPFX_DefineConstants_NET60>$(GPFX_DefineConstants_NET50)</GPFX_DefineConstants_NET60>
+    <DefineConstants Condition=" '$(TargetFramework)' == 'net6.0' ">$(DefineConstants);$(GPFX_DefineConstants_NET60)</DefineConstants>
   </PropertyGroup>
 
 </Project>

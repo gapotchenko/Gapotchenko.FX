@@ -6,6 +6,7 @@
 
 Release date: not released yet
 
+- Added support for .NET 6.0 target framework
 - Introduced `Gapotchenko.FX.Memory` module
 - Introduced `Gapotchenko.FX.Math.Geometry` module
 - Introduced `Gapotchenko.FX.Math.Combinatorics` module
@@ -23,7 +24,7 @@ Release date: not released yet
 - Fixed nullability annotations for `LazyInitializerEx` class
 - Fixed issue with UTF-8 BOM encoding returned by `CommandLine.OemEncoding` on Windows when system locale was set to UTF-8
   (cmd.exe cannot consume UTF-8 with BOM)
-- Fixed thread safety issues that could occur on architectures with weaker memory models
+- Fixed potential thread safety issues that could occur on architectures with weaker memory models
 
 ### Gapotchenko.FX 2020.1
 
