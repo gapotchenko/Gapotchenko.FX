@@ -71,7 +71,7 @@
   <!-- ================================================================== -->
   <PropertyGroup>
     <!-- .NET 5.0 -->
-    <GPFX_DefineConstants_NET50>$(GPFX_DefineConstants_NETCore31);TFF_IREADONLYSET;TFF_ISEXTERNALINIT;TFF_REFERENCEEQUALITYCOMPARER;TFF_MEMBERNOTNULLATTRIBUTE</GPFX_DefineConstants_NET50>
+    <GPFX_DefineConstants_NET50>$(GPFX_DefineConstants_NETCore31);TFF_IREADONLYSET;TFF_ISEXTERNALINIT;TFF_REFERENCEEQUALITYCOMPARER;TFF_MEMBERNOTNULLATTRIBUTE;TFF_MODULEINITIALIZERATTRIBUTE</GPFX_DefineConstants_NET50>
     <DefineConstants Condition=" '$(TargetFramework)' == 'net5.0' ">$(DefineConstants);$(GPFX_DefineConstants_NET50)</DefineConstants>
   </PropertyGroup>
 
