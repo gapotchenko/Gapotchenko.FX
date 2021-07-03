@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Collections.Generic
@@ -22,6 +23,9 @@ namespace Gapotchenko.FX.Collections.Generic
         /// <c>false</c> when the dictionary already contains the specified key, in which case nothing gets added.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
+#if TFF_DICTIONARY_TRYADD
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static bool TryAdd<TKey, TValue>(
 #if !TFF_DICTIONARY_TRYADD
             this
@@ -63,6 +67,9 @@ namespace Gapotchenko.FX.Collections.Generic
         /// <c>false</c> when the dictionary cannot find a value associated with the specified key.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
+#if TFF_DICTIONARY_REMOVEANDGETVALUE
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static bool Remove<TKey, TValue>(
 #if !TFF_DICTIONARY_REMOVEANDGETVALUE
             this

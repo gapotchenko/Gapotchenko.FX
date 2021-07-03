@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Collections.Generic
@@ -22,6 +23,9 @@ namespace Gapotchenko.FX.Collections.Generic
         /// When the method fails, it returns the default value for <typeparamref name="TValue"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
+#if TFF_DICTIONARY_GETVALUEORDEFAULT
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         public static TValue? GetValueOrDefault<TKey, TValue>(
 #if !TFF_DICTIONARY_GETVALUEORDEFAULT
             this
@@ -53,6 +57,9 @@ namespace Gapotchenko.FX.Collections.Generic
         /// When the method fails, it returns <paramref name="defaultValue"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
+#if TFF_DICTIONARY_GETVALUEORDEFAULT
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
 #if NETCOREAPP3_0
         [return: MaybeNull]
 #endif
