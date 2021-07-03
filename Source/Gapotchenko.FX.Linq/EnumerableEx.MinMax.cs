@@ -1,14 +1,15 @@
 ﻿using Gapotchenko.FX.Linq.Properties;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Gapotchenko.FX.Linq
 {
     partial class EnumerableEx
     {
-        [return: MaybeNull]
-        static TSource _MinMaxCore<TSource>(IEnumerable<TSource> source, IComparer<TSource>? comparer, bool isMax, bool throwWhenEmpty)
+        static TSource? _MinMaxCore<TSource>(IEnumerable<TSource> source, IComparer<TSource>? comparer, bool isMax, bool throwWhenEmpty)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -57,7 +58,12 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">A sequence of values to determine the minimum value of.</param>
         /// <param name="comparer">The comparer.</param>
         /// <returns>The minimum value in the sequence.</returns>
+#if TFF_ENUMERABLE_MIN_COMPARER
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static TSource Min<TSource>(IEnumerable<TSource> source, IComparer<TSource>? comparer) => Enumerable.Min(source, comparer)!;
+#else
         public static TSource Min<TSource>(this IEnumerable<TSource> source, IComparer<TSource>? comparer) => _MinMaxCore(source, comparer, false, true)!;
+#endif
 
         /// <summary>
         /// Returns the maximum value in a sequence by using a specified comparer.
@@ -66,7 +72,11 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">A sequence of values to determine the maximum value of.</param>
         /// <param name="comparer">The comparer.</param>
         /// <returns>The maximum value in the sequence.</returns>
+#if TFF_ENUMERABLE_MAX_COMPARER
+        public static TSource Max<TSource>(IEnumerable<TSource> source, IComparer<TSource>? comparer) => Enumerable.Max(source, comparer)!;
+#else
         public static TSource Max<TSource>(this IEnumerable<TSource> source, IComparer<TSource>? comparer) => _MinMaxCore(source, comparer, true, true)!;
+#endif
 
         /// <summary>
         /// Returns the minimum value in a sequence, or a default value if the sequence is empty by using a specified comparer.
