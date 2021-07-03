@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 #if !TFF_MODULEINITIALIZERATTRIBUTE
 
@@ -23,5 +24,9 @@ namespace System.Runtime.CompilerServices
         }
     }
 }
+
+#else
+
+[assembly: TypeForwardedTo(typeof(ModuleInitializerAttribute))]
 
 #endif
