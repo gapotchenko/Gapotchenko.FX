@@ -113,6 +113,7 @@ namespace Gapotchenko.FX.Linq
         /// <summary>
         /// Returns the only element of a sequence, or a default value if the sequence is empty or contains several elements.
         /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
         /// <returns>
         /// The only element of the input sequence, or default value if the sequence is empty or contains several elements.
@@ -146,6 +147,7 @@ namespace Gapotchenko.FX.Linq
         /// Returns the only element of a sequence that satisfies a specified condition,
         /// or default value when no such element exists or more than one element satisfies the condition.
         /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
         /// <param name="predicate">A function to test an element for a condition.</param>
         /// <returns>
@@ -189,7 +191,12 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">The sequence to remove duplicate elements from.</param>
         /// <param name="keySelector">A function to extract the key for each element.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that contains distinct elements from the source sequence.</returns>
+#if TFF_ENUMERABLE_DISTINCTBY
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector) => Enumerable.DistinctBy(source, keySelector);
+#else
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) => source.DistinctBy(keySelector, null);
+#endif
 
         /// <summary>
         /// Returns distinct elements from a sequence by using a specified <see cref="IEqualityComparer{T}"/> on the keys extracted by a specified selector function.
@@ -200,6 +207,10 @@ namespace Gapotchenko.FX.Linq
         /// <param name="keySelector">A function to extract the key for each element.</param>
         /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare values.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that contains distinct elements from the source sequence.</returns>
+#if TFF_ENUMERABLE_DISTINCTBY
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer) => Enumerable.DistinctBy(source, keySelector, comparer);
+#else
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
         {
             if (source == null)
@@ -209,6 +220,7 @@ namespace Gapotchenko.FX.Linq
 
             return source.Distinct(new SelectedEqualityComparer<TSource, TKey>(keySelector, comparer));
         }
+#endif
 
         /// <summary>
         /// Determines whether a sequence contains any elements and all of them satisfy a specified condition.

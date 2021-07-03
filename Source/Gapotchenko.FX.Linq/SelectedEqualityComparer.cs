@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
+#if !TFF_ENUMERABLE_DISTINCTBY
+
 namespace Gapotchenko.FX.Linq
 {
     sealed class SelectedEqualityComparer<TSource, TResult> : IEqualityComparer<TSource>
@@ -30,3 +32,5 @@ namespace Gapotchenko.FX.Linq
         }
     }
 }
+
+#endif

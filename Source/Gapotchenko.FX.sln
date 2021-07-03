@@ -63,9 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Home", "Home", "{886D55E2-1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mastering", "Mastering", "{68BA92DB-7296-463D-9C99-01357420A1A0}"
 	ProjectSection(SolutionItems) = preProject
-		Mastering\Metadata.targets = Mastering\Metadata.targets
 		Mastering\NuGet.targets = Mastering\NuGet.targets
-		Mastering\Targeting.targets = Mastering\Targeting.targets
+		Mastering\Targeting.props = Mastering\Targeting.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{0EC93163-AEB9-4D7B-ADC2-F665157CE38C}"
@@ -122,9 +121,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Math", "Math", "{8A1F0ADA-4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Combinatorics.Tests", "Tests\Gapotchenko.FX.Math.Combinatorics.Tests\Gapotchenko.FX.Math.Combinatorics.Tests.csproj", "{BA06591F-0688-4D24-A931-431D7E943CCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Memory", "Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj", "{53F33EF9-71DF-4F06-8E4E-0E190B6733D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory", "Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj", "{53F33EF9-71DF-4F06-8E4E-0E190B6733D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Memory.Tests", "Tests\Gapotchenko.FX.Memory.Tests\Gapotchenko.FX.Memory.Tests.csproj", "{69636576-F657-4629-B6B3-D8D4A568B6D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory.Tests", "Tests\Gapotchenko.FX.Memory.Tests\Gapotchenko.FX.Memory.Tests.csproj", "{69636576-F657-4629-B6B3-D8D4A568B6D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

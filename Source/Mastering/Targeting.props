@@ -75,7 +75,7 @@
     <DefineConstants Condition=" '$(TargetFramework)' == 'net5.0' ">$(DefineConstants);$(GPFX_DefineConstants_NET50)</DefineConstants>
 
     <!-- .NET 6.0 -->
-    <GPFX_DefineConstants_NET60>$(GPFX_DefineConstants_NET50)</GPFX_DefineConstants_NET60>
+    <GPFX_DefineConstants_NET60>$(GPFX_DefineConstants_NET50);TFF_ENUMERABLE_DISTINCTBY</GPFX_DefineConstants_NET60>
     <DefineConstants Condition=" '$(TargetFramework)' == 'net6.0' ">$(DefineConstants);$(GPFX_DefineConstants_NET60)</DefineConstants>
   </PropertyGroup>
 
