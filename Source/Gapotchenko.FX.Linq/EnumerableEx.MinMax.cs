@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Gapotchenko.FX.Linq
@@ -14,34 +13,32 @@ namespace Gapotchenko.FX.Linq
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+
+            if (!e.MoveNext())
             {
-                if (!e.MoveNext())
-                {
-                    if (throwWhenEmpty)
-                        throw new InvalidOperationException(Resources.NoElements);
-                    else
-                        return default;
-                }
-
-                var value = e.Current;
-
-                if (e.MoveNext())
-                {
-                    if (comparer == null)
-                        comparer = Comparer<TSource>.Default;
-
-                    do
-                    {
-                        var candidateValue = e.Current;
-                        if (_IsMatch(candidateValue, value, isMax, comparer))
-                            value = candidateValue;
-                    }
-                    while (e.MoveNext());
-                }
-
-                return value;
+                if (throwWhenEmpty)
+                    throw new InvalidOperationException(Resources.NoElements);
+                else
+                    return default;
             }
+
+            var value = e.Current;
+
+            if (e.MoveNext())
+            {
+                comparer ??= Comparer<TSource>.Default;
+
+                do
+                {
+                    var candidateValue = e.Current;
+                    if (_IsMatch(candidateValue, value, isMax, comparer))
+                        value = candidateValue;
+                }
+                while (e.MoveNext());
+            }
+
+            return value;
         }
 
         static bool _IsMatch<T>(T candidateValue, T value, bool isMax, IComparer<T> comparer)
@@ -124,41 +121,38 @@ namespace Gapotchenko.FX.Linq
             if (keySelector == null)
                 throw new ArgumentNullException(nameof(keySelector));
 
-            using (var e = source.GetEnumerator())
+            using var e = source.GetEnumerator();
+
+            if (!e.MoveNext())
             {
-                if (!e.MoveNext())
-                {
-                    if (throwWhenEmpty)
-                        throw new InvalidOperationException(Resources.NoElements);
-                    else
-                        return default;
-                }
-
-                var value = e.Current;
-
-                if (e.MoveNext())
-                {
-                    var key = keySelector(value);
-
-                    if (comparer == null)
-                        comparer = Comparer<TKey>.Default;
-
-                    do
-                    {
-                        var candidateValue = e.Current;
-                        var candidateKey = keySelector(candidateValue);
-
-                        if (_IsMatch(candidateKey, key, isMax, comparer))
-                        {
-                            value = candidateValue;
-                            key = candidateKey;
-                        }
-                    }
-                    while (e.MoveNext());
-                }
-
-                return value;
+                if (throwWhenEmpty)
+                    throw new InvalidOperationException(Resources.NoElements);
+                else
+                    return default;
             }
+
+            var value = e.Current;
+
+            if (e.MoveNext())
+            {
+                var key = keySelector(value);
+                comparer ??= Comparer<TKey>.Default;
+
+                do
+                {
+                    var candidateValue = e.Current;
+                    var candidateKey = keySelector(candidateValue);
+
+                    if (_IsMatch(candidateKey, key, isMax, comparer))
+                    {
+                        value = candidateValue;
+                        key = candidateKey;
+                    }
+                }
+                while (e.MoveNext());
+            }
+
+            return value;
         }
 
         /// <summary>
