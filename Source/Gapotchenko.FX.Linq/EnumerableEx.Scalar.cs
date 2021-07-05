@@ -37,7 +37,7 @@ namespace Gapotchenko.FX.Linq
                 return defaultValue;
             }
 
-            var scalar = enumerator.Current;
+            var result = enumerator.Current;
 
             if (enumerator.MoveNext())
             {
@@ -45,7 +45,7 @@ namespace Gapotchenko.FX.Linq
                 return defaultValue;
             }
 
-            return scalar;
+            return result;
         }
 
         /// <summary>
@@ -80,25 +80,25 @@ namespace Gapotchenko.FX.Linq
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            Optional<TSource> scalar = default;
+            Optional<TSource> result = default;
 
             foreach (var element in source)
             {
                 if (predicate(element))
                 {
-                    if (scalar.HasValue)
+                    if (result.HasValue)
                     {
                         // More than one element satisfies the condition.
                         return defaultValue;
                     }
                     else
                     {
-                        scalar = element;
+                        result = element;
                     }
                 }
             }
 
-            return scalar.GetValueOrDefault(defaultValue);
+            return result.GetValueOrDefault(defaultValue);
         }
     }
 }

@@ -61,6 +61,24 @@ namespace Gapotchenko.FX.Linq.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sequence contains more than one element..
+        /// </summary>
+        internal static string MoreThanOneElement {
+            get {
+                return ResourceManager.GetString("MoreThanOneElement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sequence contains more than one matching element..
+        /// </summary>
+        internal static string MoreThanOneMatchingElement {
+            get {
+                return ResourceManager.GetString("MoreThanOneMatchingElement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sequence contains no elements..
         /// </summary>
         internal static string NoElements {
