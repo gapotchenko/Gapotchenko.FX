@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Linq.Tests
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Linq_Enumerable_FirstOrDefault_Value_NullArg()
+        public void Linq_Enumerable_FirstOrDefault_Value_NullSourceArg()
         {
             EnumerableEx.FirstOrDefault<int>(null!, 0);
         }

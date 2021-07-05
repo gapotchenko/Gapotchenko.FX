@@ -7,14 +7,14 @@ namespace Gapotchenko.FX.Linq.Tests
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Linq_Enumerable_ScalarOrDefault_NullSource()
+        public void Linq_Enumerable_ScalarOrDefault_NullSourceArg()
         {
             EnumerableEx.ScalarOrDefault<int>(null!);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Linq_Enumerable_ScalarOrDefault_Value_NullSource()
+        public void Linq_Enumerable_ScalarOrDefault_Value_NullSourceArg()
         {
             EnumerableEx.ScalarOrDefault(null!, "X");
         }
