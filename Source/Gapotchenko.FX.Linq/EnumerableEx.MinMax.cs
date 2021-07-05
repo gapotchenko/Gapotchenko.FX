@@ -30,6 +30,7 @@ namespace Gapotchenko.FX.Linq
         /// <param name="comparer">The comparer.</param>
         /// <returns>The maximum value in the sequence.</returns>
 #if TFF_ENUMERABLE_MAX_COMPARER
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static TSource? Max<TSource>(IEnumerable<TSource> source, IComparer<TSource>? comparer) => Enumerable.Max(source, comparer);
 #else
         public static TSource? Max<TSource>(this IEnumerable<TSource> source, IComparer<TSource>? comparer) => MaxBy(source, Fn.Identity, comparer);
@@ -138,8 +139,14 @@ namespace Gapotchenko.FX.Linq
         /// <param name="keySelector">A function to extract a key from an element.</param>
         /// <param name="comparer">The key comparer.</param>
         /// <returns>The minimum value in the sequence according to a specified key selector function.</returns>
+#if TFF_ENUMERABLE_MINBY
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static TSource? MinBy<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
+            Enumerable.MinBy(source, keySelector, comparer);
+#else
         public static TSource? MinBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
             _MinMaxCore(source, keySelector, comparer, false, Optional<TSource?>.None);
+#endif
 
         /// <summary>
         /// Returns the minimum value in a sequence according to a specified key selector function.
@@ -149,7 +156,12 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">A sequence of values to determine the minimum value of.</param>
         /// <param name="keySelector">A function to extract a key from an element.</param>
         /// <returns>The minimum value in the sequence according to a specified key selector function.</returns>
+#if TFF_ENUMERABLE_MINBY
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static TSource? MinBy<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector) => Enumerable.MinBy(source, keySelector);
+#else
         public static TSource? MinBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) => MinBy(source, keySelector, null);
+#endif
 
         /// <summary>
         /// Returns the maximum value in a sequence according to a specified key selector function.
@@ -160,8 +172,14 @@ namespace Gapotchenko.FX.Linq
         /// <param name="keySelector">A function to extract a key from an element.</param>
         /// <param name="comparer">The key comparer.</param>
         /// <returns>The maximum value in the sequence according to a specified key selector function.</returns>
+#if TFF_ENUMERABLE_MAXBY
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static TSource? MaxBy<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
+            Enumerable.MaxBy(source, keySelector, comparer);
+#else
         public static TSource? MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
             _MinMaxCore(source, keySelector, comparer, true, Optional<TSource?>.None);
+#endif
 
         /// <summary>
         /// Returns the maximum value in a sequence according to a specified key selector function.
@@ -171,7 +189,12 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">A sequence of values to determine the maximum value of.</param>
         /// <param name="keySelector">A function to extract a key from an element.</param>
         /// <returns>The maximum value in the sequence according to a specified key selector function.</returns>
+#if TFF_ENUMERABLE_MAXBY
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static TSource? MaxBy<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector) => Enumerable.MaxBy(source, keySelector);
+#else
         public static TSource? MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) => MaxBy(source, keySelector, null);
+#endif
 
         /// <summary>
         /// Returns the minimum value in a sequence according to a specified key selector function, or a default value if the sequence is empty.
