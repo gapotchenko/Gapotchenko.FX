@@ -7,9 +7,16 @@ namespace Gapotchenko.FX.Linq.Tests
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Linq_Enumerable_ScalarOrDefault_NullArg()
+        public void Linq_Enumerable_ScalarOrDefault_NullSource()
         {
             EnumerableEx.ScalarOrDefault<int>(null!);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Linq_Enumerable_ScalarOrDefault_Value_NullSource()
+        {
+            EnumerableEx.ScalarOrDefault(null!, "X");
         }
 
         [TestMethod]
@@ -42,6 +49,38 @@ namespace Gapotchenko.FX.Linq.Tests
             var seq = new[] { "ABC", "ABC" };
             var scalar = seq.ScalarOrDefault();
             Assert.IsNull(scalar);
+        }
+
+        [TestMethod]
+        public void Linq_Enumerable_ScalarOrDefault_Value_Empty()
+        {
+            var seq = new string[0];
+            var scalar = seq.ScalarOrDefault("X");
+            Assert.AreEqual("X", scalar);
+        }
+
+        [TestMethod]
+        public void Linq_Enumerable_ScalarOrDefault_Value_Single()
+        {
+            var seq = new[] { "ABC" };
+            var scalar = seq.ScalarOrDefault("X");
+            Assert.AreEqual("ABC", scalar);
+        }
+
+        [TestMethod]
+        public void Linq_Enumerable_ScalarOrDefault_Value_MultipleDiff()
+        {
+            var seq = new[] { "ABC", "DEF" };
+            var scalar = seq.ScalarOrDefault("X");
+            Assert.AreEqual("X", scalar);
+        }
+
+        [TestMethod]
+        public void Linq_Enumerable_ScalarOrDefault_Value_MultipleSame()
+        {
+            var seq = new[] { "ABC", "ABC" };
+            var scalar = seq.ScalarOrDefault("X");
+            Assert.AreEqual("X", scalar);
         }
 
         [TestMethod]
