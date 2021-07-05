@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gapotchenko.FX.Linq.Tests
 {
@@ -470,10 +471,26 @@ namespace Gapotchenko.FX.Linq.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Linq_Enumerable_Min_0_ValueType()
+        {
+            var seq = new int[0];
+            seq.Min(comparer: null);
+        }
+
+        [TestMethod]
+        public void Linq_Enumerable_Min_0_ReferenceType()
+        {
+            var seq = new string[0];
+            var result = seq.Min(comparer: null);
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
         public void Linq_Enumerable_Min_1()
         {
             var seq = new[] { 3, 2, 1, 4, 7, 5 };
-            var result = seq.Min(null);
+            var result = seq.Min(comparer: null);
             Assert.AreEqual(1, result);
         }
 
@@ -498,14 +515,30 @@ namespace Gapotchenko.FX.Linq.Tests
         public void Linq_Enumerable_Min_4()
         {
             var seq = new int[0];
-            seq.Min(null);
+            seq.Min(comparer: null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Linq_Enumerable_Max_0_ValueType()
+        {
+            var seq = new int[0];
+            seq.Max(comparer: null);
+        }
+
+        [TestMethod]
+        public void Linq_Enumerable_Max_0_ReferenceType()
+        {
+            var seq = new string[0];
+            var result = seq.Max(comparer: null);
+            Assert.IsNull(result);
         }
 
         [TestMethod]
         public void Linq_Enumerable_Max_1()
         {
             var seq = new[] { 3, 2, 1, 4, 7, 5 };
-            var result = seq.Max(null);
+            var result = seq.Max(comparer: null);
             Assert.AreEqual(7, result);
         }
 
@@ -523,14 +556,6 @@ namespace Gapotchenko.FX.Linq.Tests
             var seq = new[] { 3, 2, 1, 4, 7, 5 };
             var result = seq.Max(Comparer<int>.Create((x, y) => -Comparer<int>.Default.Compare(x, y)));
             Assert.AreEqual(1, result);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void Linq_Enumerable_Max_4()
-        {
-            var seq = new int[0];
-            seq.Max(null);
         }
 
         [TestMethod]
