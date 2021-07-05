@@ -7,8 +7,7 @@ using System.Linq;
 
 namespace Gapotchenko.FX.Linq.Tests
 {
-    [TestClass]
-    public class MemoizationTests
+    partial class EnumerableExTests
     {
         static IEnumerable<int> _LazyGen(TextWriter tw)
         {
