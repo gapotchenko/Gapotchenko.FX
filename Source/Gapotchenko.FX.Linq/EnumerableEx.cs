@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -118,8 +117,7 @@ namespace Gapotchenko.FX.Linq
         /// <returns>
         /// The only element of the input sequence, or default value if the sequence is empty or contains several elements.
         /// </returns>
-        [return: MaybeNull]
-        public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source)
+        public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -154,8 +152,7 @@ namespace Gapotchenko.FX.Linq
         /// The only element of the input sequence that satisfies a specified condition,
         /// or default value when no such element exists or more than one element satisfies the condition.
         /// </returns>
-        [return: MaybeNull]
-        public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

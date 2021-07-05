@@ -110,14 +110,14 @@ namespace Gapotchenko.FX.Linq
                     if (referenceType && candidateKey == null)
                         continue;
 
-                    static bool _IsMatch<T>(T candidateValue, T value, bool isMax, IComparer<T> comparer)
+                    static bool IsMatch<T>(T candidateValue, T value, bool isMax, IComparer<T> comparer)
                     {
                         int d = comparer.Compare(candidateValue, value);
                         bool match = isMax ? d > 0 : d < 0;
                         return match;
                     }
 
-                    if (_IsMatch(candidateKey, key, isMax, comparer))
+                    if (IsMatch(candidateKey, key, isMax, comparer))
                     {
                         value = candidateValue;
                         key = candidateKey;
