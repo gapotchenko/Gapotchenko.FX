@@ -75,7 +75,7 @@
     <DefineConstants Condition=" '$(TargetFramework)' == 'net5.0' ">$(DefineConstants);$(GPFX_DefineConstants_NET50)</DefineConstants>
 
     <!-- .NET 6.0 -->
-    <GPFX_DefineConstants_NET60>$(GPFX_DefineConstants_NET50);TFF_ENUMERABLE_DISTINCTBY;TFF_ENUMERABLE_MINBY;TFF_ENUMERABLE_MAXBY;TFF_ENUMERABLE_MIN_COMPARER;TFF_ENUMERABLE_MAX_COMPARER</GPFX_DefineConstants_NET60>
+    <GPFX_DefineConstants_NET60>$(GPFX_DefineConstants_NET50);TFF_ENUMERABLE_DISTINCTBY;TFF_ENUMERABLE_MINBY;TFF_ENUMERABLE_MAXBY;TFF_ENUMERABLE_MIN_COMPARER;TFF_ENUMERABLE_MAX_COMPARER;TFF_ENUMERABLE_FIRSTORDEFAULT_VALUE</GPFX_DefineConstants_NET60>
     <DefineConstants Condition=" '$(TargetFramework)' == 'net6.0' ">$(DefineConstants);$(GPFX_DefineConstants_NET60)</DefineConstants>
   </PropertyGroup>
 
