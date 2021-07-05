@@ -37,15 +37,6 @@ namespace Gapotchenko.FX.Linq
 #endif
 
         /// <summary>
-        /// Returns the minimum value in a sequence, or a default value if the sequence is empty by using a specified comparer.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">A sequence of values to determine the minimum value of.</param>
-        /// <param name="comparer">The comparer.</param>
-        /// <returns>The minimum value in the sequence, or a default value if the sequence is empty.</returns>
-        public static TSource? MinOrDefault<TSource>(this IEnumerable<TSource> source, IComparer<TSource>? comparer) => MinOrDefaultBy(source, Fn.Identity, comparer);
-
-        /// <summary>
         /// Returns the minimum value in a sequence, or a default value if the sequence is empty.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
@@ -54,13 +45,35 @@ namespace Gapotchenko.FX.Linq
         public static TSource? MinOrDefault<TSource>(this IEnumerable<TSource> source) => MinOrDefault(source, comparer: null);
 
         /// <summary>
-        /// Returns the maximum value in a sequence, or a default value if the sequence is empty by using a specified comparer.
+        /// Returns the minimum value in a sequence, or a default value if the sequence is empty by using a specified comparer.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">A sequence of values to determine the maximum value of.</param>
+        /// <param name="source">A sequence of values to determine the minimum value of.</param>
         /// <param name="comparer">The comparer.</param>
-        /// <returns>The maximum value in the sequence, or a default value if the sequence is empty.</returns>
-        public static TSource? MaxOrDefault<TSource>(this IEnumerable<TSource> source, IComparer<TSource>? comparer) => MaxOrDefaultBy(source, Fn.Identity, comparer);
+        /// <returns>The minimum value in the sequence, or a default value if the sequence is empty.</returns>
+        public static TSource? MinOrDefault<TSource>(this IEnumerable<TSource> source, IComparer<TSource>? comparer) =>
+            MinOrDefault(source, default!, comparer);
+
+        /// <summary>
+        /// Returns the minimum value in a sequence, or the specified default value if the sequence is empty.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">A sequence of values to determine the minimum value of.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>The minimum value in the sequence, or <paramref name="defaultValue"/> if the sequence is empty.</returns>
+        public static TSource MinOrDefault<TSource>(this IEnumerable<TSource> source, TSource defaultValue) =>
+            MinOrDefault(source, defaultValue, null);
+
+        /// <summary>
+        /// Returns the minimum value in a sequence, or the specified default value if the sequence is empty by using a specified comparer.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">A sequence of values to determine the minimum value of.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <param name="comparer">The comparer.</param>
+        /// <returns>The minimum value in the sequence, or <paramref name="defaultValue"/> if the sequence is empty.</returns>
+        public static TSource MinOrDefault<TSource>(this IEnumerable<TSource> source, TSource defaultValue, IComparer<TSource>? comparer) =>
+            MinOrDefaultBy(source, Fn.Identity, defaultValue, comparer);
 
         /// <summary>
         /// Returns the maximum value in a sequence, or a default value if the sequence is empty.
@@ -70,12 +83,43 @@ namespace Gapotchenko.FX.Linq
         /// <returns>The maximum value in the sequence, or a default value if the sequence is empty.</returns>
         public static TSource? MaxOrDefault<TSource>(this IEnumerable<TSource> source) => MaxOrDefault(source, comparer: null);
 
+        /// <summary>
+        /// Returns the maximum value in a sequence, or a default value if the sequence is empty by using a specified comparer.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">A sequence of values to determine the maximum value of.</param>
+        /// <param name="comparer">The comparer.</param>
+        /// <returns>The maximum value in the sequence, or a default value if the sequence is empty.</returns>
+        public static TSource? MaxOrDefault<TSource>(this IEnumerable<TSource> source, IComparer<TSource>? comparer) =>
+            MaxOrDefault(source, default!, comparer);
+
+        /// <summary>
+        /// Returns the maximum value in a sequence, or the specified default value if the sequence is empty.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">A sequence of values to determine the maximum value of.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>The maximum value in the sequence, or <paramref name="defaultValue"/> value if the sequence is empty.</returns>
+        public static TSource MaxOrDefault<TSource>(this IEnumerable<TSource> source, TSource defaultValue) =>
+            MaxOrDefault(source, defaultValue, null);
+
+        /// <summary>
+        /// Returns the maximum value in a sequence, or the specified default value if the sequence is empty by using a specified comparer.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">A sequence of values to determine the maximum value of.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <param name="comparer">The comparer.</param>
+        /// <returns>The maximum value in the sequence, or <paramref name="defaultValue"/> value if the sequence is empty.</returns>
+        public static TSource MaxOrDefault<TSource>(this IEnumerable<TSource> source, TSource defaultValue, IComparer<TSource>? comparer) =>
+            MaxOrDefaultBy(source, Fn.Identity, defaultValue, comparer);
+
         static TSource? _MinMaxCore<TSource, TKey>(
             IEnumerable<TSource> source,
             Func<TSource, TKey> keySelector,
             IComparer<TKey>? comparer,
             bool isMax,
-            Optional<TSource?> defaultValue)
+            Optional<TSource> defaultValue)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -145,7 +189,7 @@ namespace Gapotchenko.FX.Linq
             Enumerable.MinBy(source, keySelector, comparer);
 #else
         public static TSource? MinBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
-            _MinMaxCore(source, keySelector, comparer, false, Optional<TSource?>.None);
+            _MinMaxCore(source, keySelector, comparer, false, Optional<TSource>.None);
 #endif
 
         /// <summary>
@@ -178,7 +222,7 @@ namespace Gapotchenko.FX.Linq
             Enumerable.MaxBy(source, keySelector, comparer);
 #else
         public static TSource? MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
-            _MinMaxCore(source, keySelector, comparer, true, Optional<TSource?>.None);
+            _MinMaxCore(source, keySelector, comparer, true, Optional<TSource>.None);
 #endif
 
         /// <summary>
@@ -203,10 +247,9 @@ namespace Gapotchenko.FX.Linq
         /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
         /// <param name="source">A sequence of values to determine the minimum value of.</param>
         /// <param name="keySelector">A function to extract a key from an element.</param>
-        /// <param name="comparer">The key comparer.</param>
         /// <returns>The minimum value in the sequence according to a specified key selector function, or a default value if the sequence is empty.</returns>
-        public static TSource? MinOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
-            _MinMaxCore(source, keySelector, comparer, false, Optional.Some(default(TSource)));
+        public static TSource? MinOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) =>
+            MinOrDefaultBy(source, keySelector, comparer: null);
 
         /// <summary>
         /// Returns the minimum value in a sequence according to a specified key selector function, or a default value if the sequence is empty.
@@ -215,8 +258,49 @@ namespace Gapotchenko.FX.Linq
         /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
         /// <param name="source">A sequence of values to determine the minimum value of.</param>
         /// <param name="keySelector">A function to extract a key from an element.</param>
+        /// <param name="comparer">The key comparer.</param>
         /// <returns>The minimum value in the sequence according to a specified key selector function, or a default value if the sequence is empty.</returns>
-        public static TSource? MinOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) => MinOrDefaultBy(source, keySelector, comparer: null);
+        public static TSource? MinOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
+            MinOrDefaultBy(source, keySelector, default!, comparer);
+
+        /// <summary>
+        /// Returns the minimum value in a sequence according to a key selector function, or the specified default value if the sequence is empty.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">A sequence of values to determine the minimum value of.</param>
+        /// <param name="keySelector">A function to extract a key from an element.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns>The minimum value in the sequence according to a specified key selector function, or a default value if the sequence is empty.</returns>
+        public static TSource MinOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, TSource defaultValue) =>
+            MinOrDefaultBy(source, keySelector, defaultValue, null);
+
+        /// <summary>
+        /// Returns the minimum value in a sequence according to a key selector function, or the specified default value if the sequence is empty.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">A sequence of values to determine the minimum value of.</param>
+        /// <param name="keySelector">A function to extract a key from an element.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <param name="comparer">The key comparer.</param>
+        /// <returns>
+        /// The minimum value in the sequence according to a specified key selector function,
+        /// or <paramref name="defaultValue"/> if the sequence is empty.
+        /// </returns>
+        public static TSource MinOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, TSource defaultValue, IComparer<TKey>? comparer) =>
+            _MinMaxCore(source, keySelector, comparer, false, Optional.Some(defaultValue))!;
+
+        /// <summary>
+        /// Returns the maximum value in a sequence according to a specified key selector function, or a default value if the sequence is empty.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">A sequence of values to determine the maximum value of.</param>
+        /// <param name="keySelector">A function to extract a key from an element.</param>
+        /// <returns>The maximum value in the sequence according to a specified key selector function, or a default value if the sequence is empty.</returns>
+        public static TSource? MaxOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) =>
+            MaxOrDefaultBy(source, keySelector, comparer: null);
 
         /// <summary>
         /// Returns the maximum value in a sequence according to a specified key selector function, or a default value if the sequence is empty.
@@ -228,16 +312,34 @@ namespace Gapotchenko.FX.Linq
         /// <param name="comparer">The key comparer.</param>
         /// <returns>The maximum value in the sequence according to a specified key selector function, or a default value if the sequence is empty.</returns>
         public static TSource? MaxOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
-            _MinMaxCore(source, keySelector, comparer, true, Optional.Some(default(TSource)));
+            MaxOrDefaultBy(source, keySelector, default!, comparer);
 
         /// <summary>
-        /// Returns the maximum value in a sequence according to a specified key selector function, or a default value if the sequence is empty.
+        /// Returns the maximum value in a sequence according to a key selector function, or the specified default value if the sequence is empty.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
         /// <param name="source">A sequence of values to determine the maximum value of.</param>
         /// <param name="keySelector">A function to extract a key from an element.</param>
+        /// <param name="defaultValue">The default value.</param>
         /// <returns>The maximum value in the sequence according to a specified key selector function, or a default value if the sequence is empty.</returns>
-        public static TSource? MaxOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) => MaxOrDefaultBy(source, keySelector, comparer: null);
+        public static TSource MaxOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, TSource defaultValue) =>
+            MaxOrDefaultBy(source, keySelector, defaultValue, null);
+
+        /// <summary>
+        /// Returns the maximum value in a sequence according to a key selector function, or the specified default value if the sequence is empty.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">A sequence of values to determine the maximum value of.</param>
+        /// <param name="keySelector">A function to extract a key from an element.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <param name="comparer">The key comparer.</param>
+        /// <returns>
+        /// The maximum value in the sequence according to a specified key selector function,
+        /// or <paramref name="defaultValue"/> if the sequence is empty.
+        /// </returns>
+        public static TSource MaxOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, TSource defaultValue, IComparer<TKey>? comparer) =>
+            _MinMaxCore(source, keySelector, comparer, true, Optional.Some(defaultValue))!;
     }
 }

@@ -127,7 +127,7 @@ namespace Gapotchenko.FX.Linq.Tests
             Assert.AreEqual(0, result);
 
             var seq2 = new string[0];
-            var result2 = seq2.MinOrDefault(null);
+            var result2 = seq2.MinOrDefault(comparer: null);
             Assert.IsNull(result2);
         }
 
@@ -163,7 +163,7 @@ namespace Gapotchenko.FX.Linq.Tests
             Assert.AreEqual(0, result);
 
             var seq2 = new string[0];
-            var result2 = seq2.MaxOrDefault(null);
+            var result2 = seq2.MaxOrDefault(comparer: null);
             Assert.IsNull(result2);
         }
 
