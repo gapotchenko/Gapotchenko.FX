@@ -277,7 +277,7 @@ Please note that some .NET languages provide the out of the box support for modu
 For example, C# starting with version 9.0 treats all static methods marked with [`ModuleInitializerAttribute`](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.moduleinitializerattribute) as module initializers.
 
 While `ModuleInitializerAttribute` is only available in .NET 5.0 and newer, the whole concept is perfectly functional with any .NET version once attribute definition is in place.
-That's why `Gapotchenko.FX` module provides a ready to use [polyfill for that attribute](../Gapotchenko.FX/Runtime/CompilerServices/ModuleInitializerAttribute.cs).
+That's why [`Gapotchenko.FX`](../Gapotchenko.FX) module provides a ready to use [polyfill for that attribute](../Gapotchenko.FX/Runtime/CompilerServices/ModuleInitializerAttribute.cs).
 
 <hr/>
 
