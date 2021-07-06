@@ -4,7 +4,7 @@
 
 ### Gapotchenko FX 2021.1
 
-Release date: not released yet
+Release date: July 6, 2021
 
 - Added support for .NET 6.0 target framework
 - Introduced `Gapotchenko.FX.Memory` module
