@@ -23,6 +23,9 @@ The full list of Gapotchenko.FX modules is presented in the table below.
 - [Gapotchenko.FX.Linq](Gapotchenko.FX.Linq)
   - [Gapotchenko.FX.Linq.Expressions](Gapotchenko.FX.Linq.Expressions) ✱
 - [Gapotchenko.FX.Math](Gapotchenko.FX.Math)
+  - [Gapotchenko.FX.Math.Combinatorics](Gapotchenko.FX.Math.Combinatorics)
+  - [Gapotchenko.FX.Math.Geometry](Gapotchenko.FX.Math.Geometry)
+- [Gapotchenko.FX.Memory](Gapotchenko.FX.Memory)
 - [Gapotchenko.FX.Numerics](Gapotchenko.FX.Numerics) ✱
 - [Gapotchenko.FX.Reflection.Loader](Gapotchenko.FX.Reflection.Loader) ✱
 - [Gapotchenko.FX.Runtime.CompilerServices.Intrinsics](Gapotchenko.FX.Runtime.CompilerServices.Intrinsics) ✱✱
