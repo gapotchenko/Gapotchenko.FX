@@ -59,6 +59,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../../Gapotchenko.FX.Memory)
 - [Gapotchenko.FX.Numerics](../../Gapotchenko.FX.Numerics) ✱
 - [Gapotchenko.FX.Reflection.Loader](../../Gapotchenko.FX.Reflection.Loader) ✱
 - [Gapotchenko.FX.Text](../../Gapotchenko.FX.Text)
