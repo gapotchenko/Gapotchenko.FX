@@ -273,6 +273,12 @@ To overcome that dilemma, assembly loader can be installed at module initializer
 
 [Fody/ModuleInit](https://github.com/Fody/ModuleInit) is an example of tool that gives access to .NET module initialization functionality from high-level programming languages like C#/VB.NET. Another option is to use more specialized tool like [Eazfuscator.NET](https://www.gapotchenko.com/eazfuscator.net) that provides not only [module initialization functionality](https://help.gapotchenko.com/eazfuscator.net/63/sensei-features/module-initializers), but also intellectual property protection.
 
+Please note that some .NET languages provide the out of the box support for module initializers.
+For example, C# starting with version 9.0 treats all static methods marked with [`ModuleInitializerAttribute`](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.moduleinitializerattribute) as module initializers.
+
+While `ModuleInitializerAttribute` is only available in .NET 5.0 and newer, the whole concept is perfectly functional with any .NET version once attribute definition is in place.
+That's why `Gapotchenko.FX` module provides a ready to use [polyfill for that attribute](../Gapotchenko.FX/Runtime/CompilerServices/ModuleInitializerAttribute.cs).
+
 <hr/>
 
 ## Usage
