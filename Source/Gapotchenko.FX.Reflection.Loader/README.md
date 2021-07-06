@@ -19,7 +19,7 @@ Assembly loading plays a crucial role in .NET apps.
 Once the app is started, .NET runtime ensures that all required assemblies are gradually loaded.
 
 Whenever the code hits the point where a type from another assembly is used, it raises `AppDomain.AssemblyResolve` event.
-The good thing is .NET comes pre-equipped with default assembly loader which does a sensible job for most applications.
+The good thing is .NET comes pre-equipped with a default assembly loader which does a sensible job for most applications.
 
 However, there are situations when having a default assembly loader is just not enough.
 This is where `Gapotchenko.FX.Reflection.Loader` module becomes extremely handy.
@@ -36,14 +36,14 @@ The folder contains a single `ContosoApp.exe` assembly which represents the main
 `C:\Program Files\Common Files\Contoso\Engine` folder.
 It so happens ContosoApp uses a common engine developed by the company.
 
-Now when `ContosoApp.exe` is run it bails out with the following exception:
+Now when `ContosoApp.exe` is run, it bails out with the following exception:
 
 ```
 System.IO.FileNotFoundException: Could not load file or assembly 'ContosoEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null' or one of its dependencies. The system cannot find the file specified.
 ```
 
 It occurs because `ContoseEngine.dll` assembly is located at the outside folder,
-and the default .NET assembly loader does not provide a way to cover scenarios like this.
+and the default .NET assembly loader does not provide an easy way to cover scenarios like this.
 
 In order to cover that scenario, a developer would subscribe to `AppDomain.CurrentDomain.AssemblyResolve` event.
 Then he would come up with a custom assembly lookup and loading logic.
