@@ -40,6 +40,15 @@ namespace Gapotchenko.FX.IO
                 StringComparer.InvariantCultureIgnoreCase;
 
         /// <summary>
+        /// Gets file path equivalence comparer.
+        /// </summary>
+        /// <remarks>
+        /// The returned comparer instance applies path normalization and equivalence checks.
+        /// </remarks>
+        /// <value>File path equivalence comparer.</value>
+        public static StringComparer PathEquivalenceComparer => IO.PathEquivalenceComparer.Instance;
+
+        /// <summary>
         /// Gets a value indicating whether the file system under current operating system is case sensitive.
         /// </summary>
         /// <value>
@@ -84,8 +93,8 @@ namespace Gapotchenko.FX.IO
             if (a == null || b == null)
                 return false;
 
-            a = _NormalizePath(a, false);
-            b = _NormalizePath(b, false);
+            a = NormalizePath(a, false);
+            b = NormalizePath(b, false);
 
             if (a.Equals(b, pathComparison))
             {
@@ -114,8 +123,8 @@ namespace Gapotchenko.FX.IO
             if (path == null || value == null)
                 return false;
 
-            path = _NormalizePath(path, true);
-            value = _NormalizePath(value, true);
+            path = NormalizePath(path, true);
+            value = NormalizePath(value, true);
 
             path = Path.GetFullPath(path);
             value = Path.GetFullPath(value);
@@ -124,13 +133,37 @@ namespace Gapotchenko.FX.IO
         }
 
         [return: NotNullIfNotNull("path")]
-        static string? _NormalizePath(string? path, bool? trailingSlash = null)
+        internal static string? NormalizePath(string? path, bool? trailingSlash = null)
         {
             if (string.IsNullOrEmpty(path))
                 return path;
 
             path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            path = _RemoveAdjacentChars(path, Path.DirectorySeparatorChar, 1);
+
+            static string RemoveAdjacentChars(string value, char c, int startIndex)
+            {
+                int n = value.Length;
+
+                ++startIndex;
+                if (startIndex >= n)
+                    return value;
+
+                var sb = new StringBuilder(value, 0, startIndex, n);
+
+                char prevChar = value[startIndex - 1];
+                for (int i = startIndex; i != n; ++i)
+                {
+                    char ch = value[i];
+                    if (ch == c && ch == prevChar)
+                        continue;
+                    prevChar = ch;
+                    sb.Append(ch);
+                }
+
+                return sb.ToString();
+            }
+
+            path = RemoveAdjacentChars(path, Path.DirectorySeparatorChar, 1);
 
             if (trailingSlash.HasValue)
             {
@@ -149,36 +182,6 @@ namespace Gapotchenko.FX.IO
             return path;
         }
 
-        [return: NotNullIfNotNull("value")]
-        static string? _RemoveAdjacentChars(string? value, char c, int startIndex)
-        {
-            if (startIndex < 0)
-                throw new ArgumentOutOfRangeException(nameof(startIndex));
-
-            if (value == null)
-                return null;
-
-            int n = value.Length;
-
-            ++startIndex;
-            if (startIndex >= n)
-                return value;
-
-            var sb = new StringBuilder(value, 0, startIndex, n);
-
-            char prevChar = value[startIndex - 1];
-            for (int i = startIndex; i != n; ++i)
-            {
-                char ch = value[i];
-                if (ch == c && ch == prevChar)
-                    continue;
-                prevChar = ch;
-                sb.Append(ch);
-            }
-
-            return sb.ToString();
-        }
-
         /// <summary>
         /// <para>
         /// Canonicalizes a specified path.
@@ -191,7 +194,7 @@ namespace Gapotchenko.FX.IO
         /// <param name="path">The path.</param>
         /// <returns>The canonicalized path.</returns>
         [return: NotNullIfNotNull("path")]
-        public static string? CanonicalizePath(string? path) => _NormalizePath(path);
+        public static string? CanonicalizePath(string? path) => NormalizePath(path);
 
         /// <summary>
         /// Gets a short version of a specified file path.

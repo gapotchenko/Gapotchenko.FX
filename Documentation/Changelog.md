@@ -2,6 +2,12 @@
 
 ## 2021
 
+### Gapotchenko FX 2021.2
+
+Release date: not released yet.
+
+- New `FileSystem.PathEquivalenceComparer` property returns the file path string comparer that takes into account path normalization and equivalence rules of the host environment
+
 ### Gapotchenko FX 2021.1
 
 Release date: July 6, 2021
