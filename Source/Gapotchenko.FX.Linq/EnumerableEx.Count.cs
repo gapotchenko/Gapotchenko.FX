@@ -67,12 +67,15 @@ namespace Gapotchenko.FX.Linq
 
             using var enumerator = source.GetEnumerator();
 
-            int i = 0;
-            while (enumerator.MoveNext())
+            int count = 0;
+            checked
             {
-                ++i;
-                if (i >= value)
-                    return true;
+                while (enumerator.MoveNext())
+                {
+                    ++count;
+                    if (count >= value)
+                        return true;
+                }
             }
 
             return false;

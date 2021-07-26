@@ -29,17 +29,61 @@ namespace Gapotchenko.FX.Linq
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            if (comparer == null)
-                comparer = EqualityComparer<TSource>.Default;
+            comparer ??= EqualityComparer<TSource>.Default;
 
             using var enumerator = source.GetEnumerator();
 
             int index = 0;
-            while (enumerator.MoveNext())
+            checked
             {
-                if (comparer.Equals(enumerator.Current, value))
-                    return index;
-                ++index;
+                while (enumerator.MoveNext())
+                {
+                    if (comparer.Equals(enumerator.Current, value))
+                        return index;
+                    ++index;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Searches for the specified value and returns the index of the first occurrence within the entire sequence
+        /// by using the default equality comparer to compare values.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="value">The value to locate in sequence.</param>
+        /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
+        public static long LongIndexOf<TSource>(this IEnumerable<TSource> source, TSource value) => LongIndexOf(source, value, null);
+
+        /// <summary>
+        /// Searches for the specified value and returns the index of the first occurrence within the entire sequence
+        /// by using a specified <see cref="IEqualityComparer{T}"/> to compare values.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="value">The value to locate in sequence.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare values.</param>
+        /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
+        public static long LongIndexOf<TSource>(this IEnumerable<TSource> source, TSource value, IEqualityComparer<TSource>? comparer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            comparer ??= EqualityComparer<TSource>.Default;
+
+            using var enumerator = source.GetEnumerator();
+
+            long index = 0;
+            checked
+            {
+                while (enumerator.MoveNext())
+                {
+                    if (comparer.Equals(enumerator.Current, value))
+                        return index;
+                    ++index;
+                }
             }
 
             return -1;
@@ -99,34 +143,37 @@ namespace Gapotchenko.FX.Linq
             using var e2 = value.GetEnumerator();
 
             int index = 0;
-            foreach (var e1Current in source)
+            checked
             {
-                if (!e2.MoveNext())
-                    return match;
-
-                if (comparer.Equals(e1Current, e2.Current))
+                foreach (var e1Current in source)
                 {
-                    if (match == -1)
-                        match = index;
+                    if (!e2.MoveNext())
+                        return match;
+
+                    if (comparer.Equals(e1Current, e2.Current))
+                    {
+                        if (match == -1)
+                            match = index;
+                    }
+                    else
+                    {
+                        match = -1;
+                        e2.Reset();
+                    }
+
+                    ++index;
                 }
-                else
+
+                if (match != -1)
                 {
-                    match = -1;
-                    e2.Reset();
+                    if (!e2.MoveNext())
+                        return match;
+                    else
+                        return -1;
                 }
 
-                ++index;
+                return -1;
             }
-
-            if (match != -1)
-            {
-                if (!e2.MoveNext())
-                    return match;
-                else
-                    return -1;
-            }
-
-            return -1;
         }
 
         /// <summary>
