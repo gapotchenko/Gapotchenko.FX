@@ -1,32 +1,41 @@
 # What's New in Gapotchenko.FX
 
-## 2020
+## 2021
 
-### Gapotchenko FX 2020.2
+### Gapotchenko FX 2021.2
 
-Release date: not released yet
+Release date: not released yet.
+
+- New `FileSystem.PathEquivalenceComparer` property returns the file path string comparer that takes into account path normalization and equivalence rules of the host environment
+
+### Gapotchenko FX 2021.1
+
+Release date: July 6, 2021
 
 - Added support for .NET 6.0 target framework
 - Introduced `Gapotchenko.FX.Memory` module
 - Introduced `Gapotchenko.FX.Math.Geometry` module
 - Introduced `Gapotchenko.FX.Math.Combinatorics` module
+- Added `MathEx.Clamp` function that clamps a value to the specified range
+- Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
+- Added `AppInformation.For(assembly)` static function that retrieves app information for a specified assembly
+- Added LINQ function that simultaneously determines whether any elements of a sequence satisfy the specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` with higher dimensional overloads)
+- Added `ConsoleEx.ReadPassword` function for reading a password from the console
+- Added `System.Runtime.CompilerServices.ModuleInitializerAttribute` polyfill
 - Added `SkipLast` and `TakeLast` LINQ polyfills
 - Added `System.Collections.Generic.ReferenceEqualityComparer` polyfill
 - Added `MemberNotNullAttribute` and `MemberNotNullWhenAttribute` nullability annotation polyfills
-- Added `MathEx.Clamp` function that clamps a value to the specified range
-- Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
-- Added LINQ function that simultaneously determines whether any elements of a sequence satisfy the specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` with higher dimensional overloads)
-- Added `ConsoleEx.ReadPassword` function for reading a password from the console
-- Added `AppInformation.For(assembly)` static function that retrieves app information for a specified assembly
-- Added `System.Runtime.CompilerServices.ModuleInitializerAttribute` polyfill
 - Added `GetValueOrDefault` polyfills for `IReadOnlyDictionary<TKey, TValue>`
 - Added `TryAdd` and `Remove(key, out value)` polyfills for `IDictionary<TKey, TValue>`
+- Added `System.Numerics.BitOperations.PopCount(ulong)` polyfill
 - Improved performance of a thread-safe LINQ memoization
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
 - Fixed nullability annotations for `LazyInitializerEx` class
 - Fixed issue with UTF-8 BOM encoding returned by `CommandLine.OemEncoding` on Windows when system locale is set to UTF-8
   (cmd.exe cannot consume UTF-8 with BOM)
 - Fixed potential thread safety issues that could occur on architectures with weaker memory models
+
+## 2020
 
 ### Gapotchenko.FX 2020.1
 

@@ -10,7 +10,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Linq.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Linq)
 
 `Gapotchenko.FX.Data.Linq` is a complementary module to `System.Data.Linq` library provided as a part of .NET Framework.
-The module provides async support for LINQ to SQL technology.
+The module provides async support for LINQ2SQL technology.
 
 
 The async support is provided by two extension methods for `System.Data.Linq.DataContext` class:
@@ -59,6 +59,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../../Gapotchenko.FX.Memory)
 - [Gapotchenko.FX.Numerics](../../Gapotchenko.FX.Numerics) ✱
 - [Gapotchenko.FX.Reflection.Loader](../../Gapotchenko.FX.Reflection.Loader) ✱
 - [Gapotchenko.FX.Text](../../Gapotchenko.FX.Text)

@@ -1,4 +1,4 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
 
   <PropertyGroup Condition=" $(IsPublicProject) ">
     <TargetFrameworks>net45;net46;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0;net5.0;net6.0</TargetFrameworks>    
@@ -75,7 +75,7 @@
     <DefineConstants Condition=" '$(TargetFramework)' == 'net5.0' ">$(DefineConstants);$(GPFX_DefineConstants_NET50)</DefineConstants>
 
     <!-- .NET 6.0 -->
-    <GPFX_DefineConstants_NET60>$(GPFX_DefineConstants_NET50);TFF_ENUMERABLE_DISTINCTBY;TFF_ENUMERABLE_MINBY;TFF_ENUMERABLE_MAXBY;TFF_ENUMERABLE_MIN_COMPARER;TFF_ENUMERABLE_MAX_COMPARER</GPFX_DefineConstants_NET60>
+    <GPFX_DefineConstants_NET60>$(GPFX_DefineConstants_NET50);TFF_ENUMERABLE_DISTINCTBY;TFF_ENUMERABLE_MINBY;TFF_ENUMERABLE_MAXBY;TFF_ENUMERABLE_MIN_COMPARER;TFF_ENUMERABLE_MAX_COMPARER;TFF_ENUMERABLE_FIRSTORDEFAULT_VALUE;TFF_ENUMERABLE_LASTORDEFAULT_VALUE;TFF_ENUMERABLE_SINGLEORDEFAULT_VALUE</GPFX_DefineConstants_NET60>
     <DefineConstants Condition=" '$(TargetFramework)' == 'net6.0' ">$(DefineConstants);$(GPFX_DefineConstants_NET60)</DefineConstants>
   </PropertyGroup>
 

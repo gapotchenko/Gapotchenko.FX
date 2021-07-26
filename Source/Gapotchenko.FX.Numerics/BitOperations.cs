@@ -58,13 +58,8 @@ namespace System.Numerics
         }
 
         /// <summary>
-        /// <para>
         /// Returns the bit population count for a specified value.
         /// The result corresponds to the number of bits set to <c>1</c>.
-        /// </para>
-        /// <para>
-        /// The behavior corresponds to <c>POPCNT</c> instruction from Intel x86 instruction set.
-        /// </para>
         /// </summary>
         /// <param name="value">The value.</param>
         [CLSCompliant(false)]
@@ -80,6 +75,23 @@ namespace System.Numerics
             x += x >> 8;
             x += x >> 16;
             return (int)(x & 0x3f);
+        }
+
+        /// <summary>
+        /// Returns the bit population count for a specified value.
+        /// The result corresponds to the number of bits set to <c>1</c>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        [CLSCompliant(false)]
+        public static int PopCount(ulong value)
+        {
+            const ulong Mask01010101 = 0x5555555555555555UL;
+            const ulong Mask00110011 = 0x3333333333333333UL;
+            const ulong Mask00001111 = 0x0F0F0F0F0F0F0F0FUL;
+            const ulong Mask00000001 = 0x0101010101010101UL;
+            value -= ((value >> 1) & Mask01010101);
+            value = (value & Mask00110011) + ((value >> 2) & Mask00110011);
+            return (int)(unchecked(((value + (value >> 4)) & Mask00001111) * Mask00000001) >> 56);
         }
 
         /// <summary>

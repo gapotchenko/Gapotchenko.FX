@@ -80,6 +80,7 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">An <see cref="IEnumerable{T}"/> to create a <see cref="HashSet{T}"/> from.</param>
         /// <returns>A <see cref="HashSet{T}"/> that contains values of type <typeparamref name="TSource"/> retrieved from the <paramref name="source"/>.</returns>
 #if TFF_ENUMERABLE_TOHASHSET
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static HashSet<TSource> ToHashSet<TSource>(IEnumerable<TSource> source) => Enumerable.ToHashSet(source);
 #else
         public static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source) => ToHashSet(source, null);
@@ -98,6 +99,7 @@ namespace Gapotchenko.FX.Linq
         /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>A <see cref="HashSet{T}"/> that contains values of type <typeparamref name="TSource"/> retrieved from the <paramref name="source"/>.</returns>
 #if TFF_ENUMERABLE_TOHASHSET
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static HashSet<TSource> ToHashSet<TSource>(IEnumerable<TSource> source, IEqualityComparer<TSource>? comparer) => Enumerable.ToHashSet(source, comparer);
 #else
         public static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource>? comparer)
@@ -108,77 +110,6 @@ namespace Gapotchenko.FX.Linq
             return new HashSet<TSource>(source, comparer);
         }
 #endif
-
-        /// <summary>
-        /// Returns the only element of a sequence, or a default value if the sequence is empty or contains several elements.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
-        /// <returns>
-        /// The only element of the input sequence, or default value if the sequence is empty or contains several elements.
-        /// </returns>
-        public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            using var enumerator = source.GetEnumerator();
-
-            if (!enumerator.MoveNext())
-            {
-                // The sequence is empty.
-                return default;
-            }
-
-            var scalar = enumerator.Current;
-
-            if (enumerator.MoveNext())
-            {
-                // The sequence contains several elements.
-                return default;
-            }
-
-            return scalar;
-        }
-
-        /// <summary>
-        /// Returns the only element of a sequence that satisfies a specified condition,
-        /// or default value when no such element exists or more than one element satisfies the condition.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
-        /// <param name="predicate">A function to test an element for a condition.</param>
-        /// <returns>
-        /// The only element of the input sequence that satisfies a specified condition,
-        /// or default value when no such element exists or more than one element satisfies the condition.
-        /// </returns>
-        public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
-
-            Optional<TSource> scalar = default;
-
-            foreach (var element in source)
-            {
-                if (predicate(element))
-                {
-                    if (scalar.HasValue)
-                    {
-                        // More than one element satisfies the condition.
-                        return default;
-                    }
-                    else
-                    {
-                        scalar = element;
-                    }
-                }
-            }
-
-            return scalar.GetValueOrDefault();
-        }
 
         /// <summary>
         /// Returns distinct elements from a sequence by using the default equality comparer on the keys extracted by a specified selector function.
@@ -251,88 +182,6 @@ namespace Gapotchenko.FX.Linq
                     return false;
             }
             while (enumerator.MoveNext());
-
-            return true;
-        }
-
-        /// <summary>
-        /// Determines whether two sequences are equal by comparing their elements with a specified <paramref name="predicate"/>.
-        /// </summary>
-        /// <typeparam name="TFirst">The type of the elements of the first input sequence.</typeparam>
-        /// <typeparam name="TSecond">The type of the elements of the second input sequence.</typeparam>
-        /// <param name="first">An <see cref="IEnumerable{T}"/> to compare to the second sequence.</param>
-        /// <param name="second">An <see cref="IEnumerable{T}"/> to compare to the first sequence.</param>
-        /// <param name="predicate">The equality predicate for sequence elements.</param>
-        /// <returns>
-        /// <c>true</c> if both input sequences are of equal length and
-        /// their corresponding elements are equal according to a specified <paramref name="predicate"/>;
-        /// otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException"><paramref name="first"/>, <paramref name="second"/> or <paramref name="predicate"/> is null.</exception>
-        public static bool SequenceEqual<TFirst, TSecond>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, bool> predicate)
-        {
-            if (first == null)
-                throw new ArgumentNullException(nameof(first));
-            if (second == null)
-                throw new ArgumentNullException(nameof(second));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
-
-            using var e1 = first.GetEnumerator();
-            using var e2 = second.GetEnumerator();
-
-            while (e1.MoveNext())
-            {
-                if (!e2.MoveNext())
-                {
-                    // The second sequence is shorter than the first.
-                    return false;
-                }
-
-                if (!predicate(e1.Current, e2.Current))
-                    return false;
-            }
-
-            if (e2.MoveNext())
-            {
-                // The second sequence is longer than the first.
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Determines whether two lists are equal by comparing their elements with a specified <paramref name="predicate"/>.
-        /// </summary>
-        /// <typeparam name="TFirst">The type of the elements of the first input list.</typeparam>
-        /// <typeparam name="TSecond">The type of the elements of the second input list.</typeparam>
-        /// <param name="first">An <see cref="IList{T}"/> to compare to the second list.</param>
-        /// <param name="second">An <see cref="IList{T}"/> to compare to the first list.</param>
-        /// <param name="predicate">The equality predicate for sequence elements.</param>
-        /// <returns>
-        /// <c>true</c> if both input lists are of equal length and
-        /// their corresponding elements are equal according to a specified <paramref name="predicate"/>;
-        /// otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException"><paramref name="first"/>, <paramref name="second"/> or <paramref name="predicate"/> is null.</exception>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static bool SequenceEqual<TFirst, TSecond>(this IReadOnlyList<TFirst> first, IReadOnlyList<TSecond> second, Func<TFirst, TSecond, bool> predicate)
-        {
-            if (first == null)
-                throw new ArgumentNullException(nameof(first));
-            if (second == null)
-                throw new ArgumentNullException(nameof(second));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
-
-            int count = first.Count;
-            if (second.Count != count)
-                return false;
-
-            for (int i = 0; i < count; ++i)
-                if (!predicate(first[i], second[i]))
-                    return false;
 
             return true;
         }
@@ -601,126 +450,5 @@ namespace Gapotchenko.FX.Linq
             return (result1, result2, result3);
         }
 
-        /// <summary>
-        /// <para>
-        /// Returns a new enumerable collection that contains the last count elements from source.
-        /// </para>
-        /// <para>
-        /// This is a polyfill provided by Gapotchenko.FX.
-        /// </para>
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements in the enumerable collection.</typeparam>
-        /// <param name="source">An enumerable collection instance.</param>
-        /// <param name="count">The number of elements to take from the end of the collection.</param>
-        /// <returns>A new enumerable collection that contains the last count elements from source.</returns>
-#if TFF_ENUMERABLE_TAKELAST
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static IEnumerable<TSource> TakeLast<TSource>(IEnumerable<TSource> source, int count) => Enumerable.TakeLast(source, count);
-#else
-        public static IEnumerable<TSource> TakeLast<TSource>(this IEnumerable<TSource> source, int count)
-        {
-            if (source == null)
-                throw new ArgumentException(nameof(source));
-
-            static IEnumerable<TSource> Iterator(IEnumerable<TSource> source, int count)
-            {
-                Queue<TSource> queue;
-
-                using (var e = source.GetEnumerator())
-                {
-                    if (!e.MoveNext())
-                        yield break;
-
-                    queue = new Queue<TSource>();
-                    queue.Enqueue(e.Current);
-
-                    while (e.MoveNext())
-                    {
-                        if (queue.Count < count)
-                        {
-                            // Fill the queue.
-                            queue.Enqueue(e.Current);
-                        }
-                        else
-                        {
-                            // Swap old queue elements with the new ones.
-                            do
-                            {
-                                queue.Dequeue();
-                                queue.Enqueue(e.Current);
-                            }
-                            while (e.MoveNext());
-
-                            break;
-                        }
-                    }
-                }
-
-                // Flush the queue.
-                do
-                {
-                    yield return queue.Dequeue();
-                }
-                while (queue.Count > 0);
-            }
-
-            return count <= 0 ?
-                Enumerable.Empty<TSource>() :
-                Iterator(source, count);
-        }
-#endif
-
-        /// <summary>
-        /// <para>
-        /// Returns a new enumerable collection that contains the elements from source
-        /// with the last count elements of the source collection omitted.
-        /// </para>
-        /// <para>
-        /// This is a polyfill provided by Gapotchenko.FX.
-        /// </para>
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements in the enumerable collection.</typeparam>
-        /// <param name="source">An enumerable collection instance.</param>
-        /// <param name="count">The number of elements to omit from the end of the collection.</param>
-        /// <returns>A new enumerable collection that contains the elements from source minus count elements from the end of the collection.</returns>
-#if TFF_ENUMERABLE_SKIPLAST
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static IEnumerable<TSource> SkipLast<TSource>(IEnumerable<TSource> source, int count) => Enumerable.SkipLast(source, count);
-#else
-        public static IEnumerable<TSource> SkipLast<TSource>(this IEnumerable<TSource> source, int count)
-        {
-            if (source == null)
-                throw new ArgumentException(nameof(source));
-
-            static IEnumerable<TSource> Iterator(IEnumerable<TSource> source, int count)
-            {
-                var queue = new Queue<TSource>();
-                using var e = source.GetEnumerator();
-
-                while (e.MoveNext())
-                {
-                    if (queue.Count == count)
-                    {
-                        do
-                        {
-                            yield return queue.Dequeue();
-                            queue.Enqueue(e.Current);
-                        }
-                        while (e.MoveNext());
-
-                        break;
-                    }
-                    else
-                    {
-                        queue.Enqueue(e.Current);
-                    }
-                }
-            }
-
-            return count <= 0 ?
-                source.Skip(0) :
-                Iterator(source, count);
-        }
-#endif
     }
 }
