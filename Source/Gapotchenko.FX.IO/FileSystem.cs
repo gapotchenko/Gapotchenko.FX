@@ -363,19 +363,8 @@ namespace Gapotchenko.FX.IO
         /// <returns>The sequence of bytes representing the content of a binary file.</returns>
         public static IEnumerable<byte> EnumerateFileBytes(string path)
         {
-            using (var stream = File.OpenRead(path))
-            {
-                for (; ; )
-                {
-                    int b = stream.ReadByte();
-                    if (b == -1)
-                    {
-                        // EOF
-                        break;
-                    }
-                    yield return (byte)b;
-                }
-            }
+            using var stream = File.OpenRead(path);
+            return stream.AsEnumerable();
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -114,5 +115,25 @@ namespace Gapotchenko.FX.IO
             source.CopyBlockToAsync(destination, count, DefaultBlockCopyBufferSize);
 
 #endif
+
+        /// <summary>
+        /// Enumerates the content of a stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns>The sequence of bytes representing the content of a stream.</returns>
+        public static IEnumerable<byte> AsEnumerable(this Stream stream)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            for (; ; )
+            {
+                int b = stream.ReadByte();
+                if (b == -1)
+                    break;
+
+                yield return (byte)b;
+            }
+        }
     }
 }

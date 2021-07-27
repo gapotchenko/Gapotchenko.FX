@@ -7,6 +7,7 @@
 Release date: not released yet.
 
 - New `FileSystem.PathEquivalenceComparer` property returns the file path string comparer that takes into account path normalization and equivalence rules of the host environment
+- Added `AsEnumerable()` polyfill for `System.IO.Stream`
 
 ### Gapotchenko FX 2021.1
 
