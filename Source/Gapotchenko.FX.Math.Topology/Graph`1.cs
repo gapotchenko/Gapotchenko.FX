@@ -362,6 +362,10 @@ namespace Gapotchenko.FX.Math.Topology
             return graph;
         }
 
+        IGraph<T> ICloneable<IGraph<T>>.Clone() => Clone();
+
+        IReadOnlyGraph<T> ICloneable<IReadOnlyGraph<T>>.Clone() => Clone();
+
         object ICloneable.Clone() => Clone();
     }
 }

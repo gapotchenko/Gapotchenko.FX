@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Math.Topology
+﻿using System;
+
+namespace Gapotchenko.FX.Math.Topology
 {
     /// <summary>
     /// <para>
@@ -10,7 +12,7 @@
     /// </para>
     /// </summary>
     /// <typeparam name="T">Type of graph vertices.</typeparam>
-    public interface IGraph<T> : IReadOnlyGraph<T>
+    public interface IGraph<T> : IReadOnlyGraph<T>, ICloneable<IGraph<T>>
     {
         /// <summary>
         /// Adds the specified vertex.

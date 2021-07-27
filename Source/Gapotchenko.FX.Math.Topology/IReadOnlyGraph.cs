@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Math.Topology
     /// </para>
     /// </summary>
     /// <typeparam name="T">Vertex type.</typeparam>
-    public interface IReadOnlyGraph<T> : ICloneable
+    public interface IReadOnlyGraph<T> : ICloneable<IReadOnlyGraph<T>>
     {
         /// <summary>
         /// Gets vertices.
