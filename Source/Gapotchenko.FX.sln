@@ -125,6 +125,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory", "Ga
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory.Tests", "Tests\Gapotchenko.FX.Memory.Tests\Gapotchenko.FX.Memory.Tests.csproj", "{69636576-F657-4629-B6B3-D8D4A568B6D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Math.Topology", "Gapotchenko.FX.Math.Topology\Gapotchenko.FX.Math.Topology.csproj", "{3DC3319C-595A-4336-AF43-71785AE86D11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -259,6 +261,10 @@ Global
 		{69636576-F657-4629-B6B3-D8D4A568B6D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69636576-F657-4629-B6B3-D8D4A568B6D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69636576-F657-4629-B6B3-D8D4A568B6D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DC3319C-595A-4336-AF43-71785AE86D11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DC3319C-595A-4336-AF43-71785AE86D11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DC3319C-595A-4336-AF43-71785AE86D11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DC3319C-595A-4336-AF43-71785AE86D11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -308,6 +314,7 @@ Global
 		{BA06591F-0688-4D24-A931-431D7E943CCD} = {8A1F0ADA-4897-47C7-96E2-E2941AF29C4E}
 		{53F33EF9-71DF-4F06-8E4E-0E190B6733D1} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
 		{69636576-F657-4629-B6B3-D8D4A568B6D8} = {C0007571-9A88-4691-AAEA-4D6E2A04CAD6}
+		{3DC3319C-595A-4336-AF43-71785AE86D11} = {9BF93356-2C42-4B31-AEB1-7E394D27F500}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}
