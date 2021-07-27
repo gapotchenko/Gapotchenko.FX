@@ -55,8 +55,10 @@ namespace Gapotchenko.FX.Threading.Tasks
                     {
                         m_ExceptionDispatchInfo = ExceptionDispatchInfo.Capture(e);
 
+#if !NETCOREAPP
                         if (e is ThreadAbortException)
                             Thread.ResetAbort();
+#endif
                     }
                     finally
                     {
