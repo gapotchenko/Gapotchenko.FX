@@ -9,32 +9,32 @@ namespace Gapotchenko.FX.Math.Topology
     {
         public CountedEnumerableView(IEnumerable<T> source)
         {
-            _Source = source;
+            m_Source = source;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<T> _Source;
+        readonly IEnumerable<T> m_Source;
 
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-        public T[] Items => _Source.ToArray();
+        public T[] Items => m_Source.ToArray();
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public int Count => _Source.Count();
+        public int Count => m_Source.Count();
     }
 
     sealed class GraphDebugView<T> where T : notnull
     {
         public GraphDebugView(Graph<T> graph)
         {
-            _Graph = graph;
+            m_Graph = graph;
         }
 
-        readonly Graph<T> _Graph;
+        readonly Graph<T> m_Graph;
 
-        public object Vertices => new CountedEnumerableView<T>(_Graph.Vertices);
+        public object Vertices => new CountedEnumerableView<T>(m_Graph.Vertices);
 
-        public object Edges => new CountedEnumerableView<(T A, T B)>(_Graph.Edges);
+        public object Edges => new CountedEnumerableView<(T A, T B)>(m_Graph.Edges);
 
-        public object AdjacencyList => _Graph.AdjacencyList;
+        public object AdjacencyList => m_Graph.AdjacencyList;
     }
 }

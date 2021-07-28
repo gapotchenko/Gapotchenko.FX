@@ -27,13 +27,17 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         public IEqualityComparer<T> Comparer => m_AdjacencyList.Comparer;
 
+        /// <summary>
+        /// Graph adjacency row represents a set of vertices that relate to another vertex.
+        /// </summary>
         protected internal sealed class AdjacencyRow : HashSet<T>
         {
-            public AdjacencyRow(IEqualityComparer<T> comparer) :
+            public AdjacencyRow(IEqualityComparer<T>? comparer) :
                 base(comparer)
             {
             }
 
+            /// <inheritdoc/>
             public override string ToString()
             {
                 var sb = new StringBuilder();
@@ -56,17 +60,27 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Dictionary<T, AdjacencyRow?> m_AdjacencyList;
+        readonly Dictionary<T, AdjacencyRow?> m_AdjacencyList;
 
+        /// <summary>
+        /// <para>
+        /// Gets the graph adjacency list.
+        /// </para>
+        /// <para>
+        /// The list consists of a number of rows, each of them representing a set of vertices that relate to another vertex.
+        /// </para>
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected internal IDictionary<T, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
 
+        /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<T> Vertices =>
             AdjacencyList
             .SelectMany(x => (x.Value ?? Enumerable.Empty<T>()).Append(x.Key))
             .Distinct(Comparer);
 
+        /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<(T A, T B)> Edges
         {
@@ -85,23 +99,13 @@ namespace Gapotchenko.FX.Math.Topology
             }
         }
 
-        /// <summary>
-        /// <para>
-        /// Gets the order.
-        /// </para>
-        /// <para>
-        /// The order of a graph is |V|, the number of its vertices.
-        /// </para>
-        /// </summary>
+        /// <inheritdoc/>
         public int Order => Vertices.Count();
 
+        /// <inheritdoc/>
         public int Size => AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
 
-        /// <summary>
-        /// Adds the specified vertex.
-        /// </summary>
-        /// <param name="v">The vertex.</param>
-        /// <returns><c>true</c> if the vertex is added to the <see cref="Graph{T}"/> object; <c>false</c> if the vertex is already present.</returns>
+        /// <inheritdoc/>
         public bool AddVertex(T v)
         {
             if (ContainsVertex(v))
@@ -110,11 +114,7 @@ namespace Gapotchenko.FX.Math.Topology
             return true;
         }
 
-        /// <summary>
-        /// Removes the specified vertex.
-        /// </summary>
-        /// <param name="v">The vertex.</param>
-        /// <returns><c>true</c> if the vertex was removed from the <see cref="Graph{T}"/>; otherwise, <c>false</c>.</returns>
+        /// <inheritdoc/>
         public bool RemoveVertex(T v)
         {
             bool hit = false;
@@ -170,7 +170,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a value indicating whether specified vertices are adjacent.
         /// </para>
         /// <para>
-        /// Adjacent vertices are those connected by an edge.
+        /// Adjacent vertices are those connected by the edge without intermediary vertices.
         /// </para>
         /// </summary>
         /// <param name="a">The vertex A.</param>
@@ -232,7 +232,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a value indicating whether specified vertices are transitive.
         /// </para>
         /// <para>
-        /// Transitive vertices are those connected by at least one intermediate vertex.
+        /// Transitive vertices are those connected by two or more edges with at least one intermediate vertex.
         /// </para>
         /// </summary>
         /// <param name="a">The vertex A.</param>
@@ -241,7 +241,12 @@ namespace Gapotchenko.FX.Math.Topology
         public bool AreTransitive(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
 
         /// <summary>
+        /// <para>
         /// Gets a value indicating whether specified vertices are reachable.
+        /// </para>
+        /// <para>
+        /// Reachable vertices are those connected by one or more edges with or without intermediate vertices.
+        /// </para>
         /// </summary>
         /// <param name="a">The vertex A.</param>
         /// <param name="b">The vertex B.</param>
@@ -264,7 +269,7 @@ namespace Gapotchenko.FX.Math.Topology
             return adjRow ?? Enumerable.Empty<T>();
         }
 
-        Graph<T> NewGraph() => new Graph<T>(Comparer);
+        Graph<T> NewGraph() => new(Comparer);
 
         /// <summary>
         /// Performs a transitive reduction of the graph.
