@@ -21,15 +21,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// If a host OS has no notion of OEM encoding then <see cref="Encoding.Default"/> value is returned instead.
         /// </para>
         /// </summary>
-        public static Encoding OemEncoding
-        {
-            get
-            {
-                if (m_OemEncoding == null)
-                    m_OemEncoding = GetOemEncodingCore();
-                return m_OemEncoding;
-            }
-        }
+        public static Encoding OemEncoding => m_OemEncoding ??= GetOemEncodingCore();
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static Encoding? m_OemEncoding;
@@ -47,7 +39,7 @@ namespace Gapotchenko.FX.Diagnostics
                     Encoding encoding;
                     if (page == 65001)
                     {
-                        // cmd.exe cannot interpret UTF-8-with-BOM encoding, so instantiate a UTF-8 encoding without BOM.
+                        // cmd.exe cannot interpret UTF-8-with-BOM encoding, so use UTF-8 encoding without BOM.
                         encoding = new UTF8Encoding(false);
                     }
                     else
