@@ -11,8 +11,12 @@ namespace Gapotchenko.FX.Math.Combinatorics
     partial class Permutations
     {
         /// <summary>
+        /// <para>
         /// Represents the result of permutations.
+        /// </para>
+        /// <para>
         /// Exposes accelerated LINQ operations and the enumerator for the rows.
+        /// </para>
         /// </summary>
         /// <typeparam name="T">The type of elements that the row contains.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
