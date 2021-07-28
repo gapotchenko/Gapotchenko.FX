@@ -6,7 +6,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
     partial class CartesianProduct
     {
         /// <summary>
-        /// Returns a Cartesian product cardinality for specified sequence lengths.
+        /// Returns a Cartesian product cardinality for the specified sequence lengths.
         /// </summary>
         /// <param name="lengths">The sequence lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>
@@ -34,14 +34,14 @@ namespace Gapotchenko.FX.Math.Combinatorics
         }
 
         /// <summary>
-        /// Returns a Cartesian product cardinality for specified sequence lengths.
+        /// Returns a Cartesian product cardinality for the specified sequence lengths.
         /// </summary>
         /// <param name="lengths">The sequence lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>
         public static int Cardinality(params int[] lengths) => Cardinality((IEnumerable<int>)lengths);
 
         /// <summary>
-        /// Returns a Cartesian product cardinality for specified sequence lengths.
+        /// Returns a Cartesian product cardinality for the specified sequence lengths.
         /// </summary>
         /// <param name="lengths">The sequence lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>
@@ -69,7 +69,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         }
 
         /// <summary>
-        /// Returns a Cartesian product cardinality for specified sequence lengths.
+        /// Returns a Cartesian product cardinality for the specified sequence lengths.
         /// </summary>
         /// <param name="lengths">The sequence lengths.</param>
         /// <returns>The Cartesian product cardinality.</returns>

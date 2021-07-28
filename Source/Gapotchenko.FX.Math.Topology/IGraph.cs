@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Math.Topology
     /// </para>
     /// <para>
     /// Graph is a set of vertices and edges.
-    /// Vertices represent the objects and edges represents the relations between them.
+    /// Vertices represent the objects and edges represent the relations between them.
     /// </para>
     /// </summary>
     /// <typeparam name="T">Type of graph vertices.</typeparam>

@@ -16,12 +16,12 @@ namespace Gapotchenko.FX.Math.Topology
     public interface IReadOnlyGraph<T> : ICloneable<IReadOnlyGraph<T>>
     {
         /// <summary>
-        /// Gets vertices.
+        /// Gets vertices of the graph.
         /// </summary>
         IEnumerable<T> Vertices { get; }
 
         /// <summary>
-        /// Gets edges.
+        /// Gets edges of the graph.
         /// </summary>
         IEnumerable<(T A, T B)> Edges { get; }
 

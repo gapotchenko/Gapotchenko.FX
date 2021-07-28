@@ -7,16 +7,35 @@ using System.Text;
 
 namespace Gapotchenko.FX.Math.Topology
 {
+    /// <summary>
+    /// <para>
+    /// Represents a strongly-typed directional graph of objects.
+    /// </para>
+    /// <para>
+    /// Graph is a set of vertices and edges.
+    /// Vertices represent the objects and edges represent the relations between them.
+    /// </para>
+    /// </summary>
+    /// <typeparam name="T">The type of vertices in the graph.</typeparam>
     [DebuggerDisplay("Order = {Order}")]
     [DebuggerTypeProxy(typeof(GraphDebugView<>))]
     public class Graph<T> : IGraph<T>
         where T : notnull
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for <typeparamref name="T"/>.
+        /// </summary>
         public Graph() :
             this(null)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for <typeparamref name="T"/>.
+        /// </summary>
+        /// <param name="comparer">
+        /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
+        /// or <c>null</c> to use the default <see cref="IEqualityComparer{T}"/> implementation.</param>
         public Graph(IEqualityComparer<T>? comparer)
         {
             m_AdjacencyList = new(comparer);
@@ -32,6 +51,10 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         protected internal sealed class AdjacencyRow : HashSet<T>
         {
+            /// <summary>
+            /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for <typeparamref name="T"/>.
+            /// </summary>
+            /// <param name="comparer">The comparer.</param>
             public AdjacencyRow(IEqualityComparer<T>? comparer) :
                 base(comparer)
             {
@@ -153,12 +176,12 @@ namespace Gapotchenko.FX.Math.Topology
 
             if (!adjList.TryGetValue(a, out var adjRow))
             {
-                adjRow = new AdjacencyRow(Comparer);
+                adjRow = NewAdjacencyRow();
                 adjList.Add(a, adjRow);
             }
             else if (adjRow == null)
             {
-                adjRow = new AdjacencyRow(Comparer);
+                adjRow = NewAdjacencyRow();
                 adjList[a] = adjRow;
             }
 
@@ -238,6 +261,12 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <returns>The new graph instance.</returns>
         protected Graph<T> NewGraph() => new(Comparer);
+
+        /// <summary>
+        /// Creates a new adjacency row instance inheriting parent class settings such as comparer.
+        /// </summary>
+        /// <returns>The new adjacency row instance.</returns>
+        protected AdjacencyRow NewAdjacencyRow() => new(Comparer);
 
         /// <inheritdoc/>
         public void Reduce()

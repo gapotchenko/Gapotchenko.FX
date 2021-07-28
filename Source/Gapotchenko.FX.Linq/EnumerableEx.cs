@@ -335,7 +335,7 @@ namespace Gapotchenko.FX.Linq
         /// Returns a read-only view of a source sequence.
         /// </para>
         /// <para>
-        /// Depending on a source sequence kind, the result is either a read-only wrapper, a directly casted instance or a copied in-memory list.
+        /// Depending on a source sequence kind, the result is either a read-only wrapper, a directly casted instance, or a copied in-memory list.
         /// </para>
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>

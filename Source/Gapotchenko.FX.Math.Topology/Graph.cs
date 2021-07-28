@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Gapotchenko.FX.Linq;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Gapotchenko.FX.Math.Topology
 {
@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Math.Topology
             if (df == null)
                 throw new ArgumentNullException(nameof(df));
 
-            var list = source.ToList();
+            var list = source.AsReadOnly();
 
             var graph = new Graph<T>(comparer);
 
