@@ -79,7 +79,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="a">The vertex A.</param>
         /// <param name="b">The vertex B.</param>
         /// <returns><c>true</c> when a specified vertex <paramref name="a">A</paramref> can reach vertex <paramref name="b">B</paramref> via one or more intermediate vertices; otherwise, <c>false</c>.</returns>
-        bool AreVerticesTransitive(T a, T b);
+        bool AreTransitiveVertices(T a, T b);
 
         /// <summary>
         /// <para>
@@ -92,7 +92,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="a">The vertex A.</param>
         /// <param name="b">The vertex B.</param>
         /// <returns><c>true</c> when a specified vertex <paramref name="a">A</paramref> can reach vertex <paramref name="b">B</paramref>; otherwise, <c>false</c>.</returns>
-        bool AreVerticesReachable(T a, T b);
+        bool AreReachableVertices(T a, T b);
 
         /// <summary>
         /// Gets the vertices adjacent to a specified vertex.

@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Math.Topology
         where T : notnull
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for <typeparamref name="T"/>.
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for graph vertices.
         /// </summary>
         public Graph() :
             this(null)
@@ -31,7 +31,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for <typeparamref name="T"/>.
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for graph vertices.
         /// </summary>
         /// <param name="comparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
@@ -52,7 +52,7 @@ namespace Gapotchenko.FX.Math.Topology
         protected internal sealed class AdjacencyRow : HashSet<T>
         {
             /// <summary>
-            /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for <typeparamref name="T"/>.
+            /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices.
             /// </summary>
             /// <param name="comparer">The comparer.</param>
             public AdjacencyRow(IEqualityComparer<T>? comparer) :
@@ -241,10 +241,10 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool AreVerticesTransitive(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
+        public bool AreTransitiveVertices(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
 
         /// <inheritdoc/>
-        public bool AreVerticesReachable(T a, T b) => ContainsEdge(a, b) || AreVerticesTransitive(a, b);
+        public bool AreReachableVertices(T a, T b) => ContainsEdge(a, b) || AreTransitiveVertices(a, b);
 
         /// <inheritdoc/>
         public void Clear() => AdjacencyList.Clear();
@@ -283,7 +283,7 @@ namespace Gapotchenko.FX.Math.Topology
 
                 foreach (var b in adjRow)
                 {
-                    if (adjRow.Contains(b) && AreVerticesTransitive(a, b))
+                    if (adjRow.Contains(b) && AreTransitiveVertices(a, b))
                         removeList.Add(b);
                 }
 
