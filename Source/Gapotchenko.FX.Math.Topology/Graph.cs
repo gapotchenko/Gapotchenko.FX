@@ -26,7 +26,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Initializes a new instance of <see cref="Graph{T}"/> class that is empty and uses the default equality comparer for graph vertices.
         /// </summary>
         public Graph() :
-            this(null)
+            this((IEqualityComparer<T>?)null)
         {
         }
 
@@ -35,10 +35,43 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <param name="comparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
-        /// or <c>null</c> to use the default <see cref="IEqualityComparer{T}"/> implementation.</param>
+        /// or <c>null</c> to use the default <see cref="IEqualityComparer{T}"/> implementation.
+        /// </param>
         public Graph(IEqualityComparer<T>? comparer)
         {
             m_AdjacencyList = new(comparer);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for vertices
+        /// and contains vertices and edges copied from the specified <see cref="IReadOnlyGraph{T}"/>.
+        /// </summary>
+        /// <param name="graph">The <see cref="IReadOnlyGraph{T}"/> whole vertices and edges are copied to the new <see cref="Graph{T}"/>.</param>
+        public Graph(IReadOnlyGraph<T> graph) :
+            this(graph, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices
+        /// and contains vertices and edges copied from the specified <see cref="IReadOnlyGraph{T}"/>.
+        /// </summary>
+        /// <param name="graph">The <see cref="IReadOnlyGraph{T}"/> whole vertices and edges are copied to the new <see cref="Graph{T}"/>.</param>
+        /// <param name="comparer">
+        /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
+        /// or <c>null</c> to use the default <see cref="IEqualityComparer{T}"/> implementation.
+        /// </param>
+        public Graph(IReadOnlyGraph<T> graph, IEqualityComparer<T>? comparer) :
+            this(comparer)
+        {
+            if (graph == null)
+                throw new ArgumentNullException(nameof(graph));
+
+            foreach (var edge in graph.Edges)
+                AddEdge(edge.A, edge.B);
+
+            foreach (var vertex in graph.Vertices)
+                AddVertex(vertex);
         }
 
         /// <summary>
@@ -360,7 +393,6 @@ namespace Gapotchenko.FX.Math.Topology
             var vertices = Vertices.ToList();
 
             Clear();
-
             TransposeCore(this, edges, vertices);
         }
 
@@ -371,9 +403,7 @@ namespace Gapotchenko.FX.Math.Topology
         public Graph<T> GetTransposition()
         {
             var graph = NewGraph();
-
             TransposeCore(graph, Edges, Vertices);
-
             return graph;
         }
 
@@ -394,18 +424,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Clones a graph.
         /// </summary>
         /// <returns>The new graph.</returns>
-        public Graph<T> Clone()
-        {
-            var graph = NewGraph();
-
-            foreach (var edge in Edges)
-                graph.AddEdge(edge.A, edge.B);
-
-            foreach (var vertex in Vertices)
-                graph.AddVertex(vertex);
-
-            return graph;
-        }
+        public Graph<T> Clone() => new(this, Comparer);
 
         IGraph<T> ICloneable<IGraph<T>>.Clone() => Clone();
 
