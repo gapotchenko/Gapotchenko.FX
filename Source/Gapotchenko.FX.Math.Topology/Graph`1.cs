@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Math.Topology
         where T : notnull
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for graph vertices.
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that is empty and uses the default equality comparer for graph vertices.
         /// </summary>
         public Graph() :
             this(null)
@@ -31,7 +31,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for graph vertices.
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that is empty and uses the specified equality comparer for graph vertices.
         /// </summary>
         /// <param name="comparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
@@ -39,6 +39,53 @@ namespace Gapotchenko.FX.Math.Topology
         public Graph(IEqualityComparer<T>? comparer)
         {
             m_AdjacencyList = new(comparer);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for vertices,
+        /// contains vertices copied from the specified collection
+        /// and edges representing the relations between the vertices defined by the specified dependency function.
+        /// </summary>
+        public Graph(IEnumerable<T> collection, DependencyFunction<T> df) :
+            this(collection, df, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices,
+        /// contains vertices copied from the specified collection
+        /// and edges representing the relations between the vertices defined by the specified dependency function.
+        /// </summary>
+        public Graph(IEnumerable<T> collection, DependencyFunction<T> df, IEqualityComparer<T>? comparer) :
+            this(comparer)
+        {
+            if (collection == null)
+                throw new ArgumentNullException(nameof(collection));
+            if (df == null)
+                throw new ArgumentNullException(nameof(df));
+
+            var list = collection.AsReadOnly();
+            int count = list.Count;
+
+            for (int i = 0; i < count; ++i)
+            {
+                var ei = list[i];
+                bool edge = false;
+
+                for (int j = 0; j < count; ++j)
+                {
+                    var ej = list[j];
+
+                    if (df(ei, ej))
+                    {
+                        AddEdge(ei, ej);
+                        edge = true;
+                    }
+                }
+
+                if (!edge)
+                    AddVertex(ei);
+            }
         }
 
         /// <summary>
