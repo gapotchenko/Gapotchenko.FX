@@ -49,7 +49,7 @@ namespace Gapotchenko.FX.Math.Geometry
 
             equalityComparer ??= EqualityComparer<T>.Default;
 
-            // Create the two vectors.
+            // Create two vectors.
             var v0 = new int[rowLen + 1];
             var v1 = new int[rowLen + 1];
 
@@ -60,7 +60,7 @@ namespace Gapotchenko.FX.Math.Geometry
             // For each column.
             for (int colIdx = 1; colIdx <= colLen; colIdx++)
             {
-                // Set the 0'th element to the column number.
+                // Set the first element to the column number.
                 v1[0] = colIdx;
 
                 var col_j = sCol[colIdx - 1];
