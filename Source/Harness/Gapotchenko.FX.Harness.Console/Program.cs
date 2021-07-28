@@ -83,7 +83,7 @@ namespace Gapotchenko.FX.Harness.Console
             foreach (var i in CartesianProduct.Of(seq1, seq2))
                 Console.WriteLine(string.Join(" ", i));
 
-            //var g = new Graph<int>();
+            var g = new Graph<int>();
         }
 
         static async Task _RunAsync(CancellationToken ct)

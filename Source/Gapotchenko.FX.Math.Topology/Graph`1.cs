@@ -189,7 +189,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool AreAdjacent(T a, T b) =>
+        public bool AreAdjacentVertices(T a, T b) =>
             AdjacencyList.TryGetValue(a, out var adjRow) &&
             adjRow != null &&
             adjRow.Contains(b);
@@ -241,10 +241,10 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool AreTransitive(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
+        public bool AreTransitiveVertices(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
 
         /// <inheritdoc/>
-        public bool AreReachable(T a, T b) => AreAdjacent(a, b) || AreTransitive(a, b);
+        public bool AreReachableVertices(T a, T b) => AreAdjacentVertices(a, b) || AreTransitiveVertices(a, b);
 
         /// <inheritdoc/>
         public void Clear() => AdjacencyList.Clear();
@@ -283,7 +283,7 @@ namespace Gapotchenko.FX.Math.Topology
 
                 foreach (var b in adjRow)
                 {
-                    if (adjRow.Contains(b) && AreTransitive(a, b))
+                    if (adjRow.Contains(b) && AreTransitiveVertices(a, b))
                         removeList.Add(b);
                 }
 
@@ -291,7 +291,10 @@ namespace Gapotchenko.FX.Math.Topology
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets a transitively reduced graph.
+        /// </summary>
+        /// <returns>The transitively reduced graph.</returns>
         public Graph<T> GetReduction()
         {
             var graph = Clone();
@@ -314,7 +317,10 @@ namespace Gapotchenko.FX.Math.Topology
             TransposeCore(this, edges, vertices);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets a graph transposition by reversing edge directions.
+        /// </summary>
+        /// <returns>The transposed graph.</returns>
         public Graph<T> GetTransposition()
         {
             var graph = NewGraph();

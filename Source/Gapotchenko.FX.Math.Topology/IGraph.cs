@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Math.Topology
         void Clear();
 
         /// <summary>
-        /// Transposes the graph by reversing edge directions.
+        /// Transposes the current graph by reversing its edge directions in place.
         /// </summary>
         void Transpose();
 
@@ -53,7 +53,7 @@ namespace Gapotchenko.FX.Math.Topology
         new IGraph<T> GetTransposition();
 
         /// <summary>
-        /// Performs a transitive reduction of the graph.
+        /// Performs in-place transitive reduction of the current graph.
         /// </summary>
         void Reduce();
 
