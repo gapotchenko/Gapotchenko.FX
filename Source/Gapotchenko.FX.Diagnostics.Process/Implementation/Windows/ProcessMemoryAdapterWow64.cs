@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
             m_hProcess = hProcess;
         }
 
-        IntPtr m_hProcess;
+        readonly IntPtr m_hProcess;
 
         public int PageSize => SystemInfo.Native.PageSize;
 
