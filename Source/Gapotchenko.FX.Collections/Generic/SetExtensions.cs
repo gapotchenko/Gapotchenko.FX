@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Collections.Generic
             value is null || value.Count == 0;
 
         /// <summary>
-        /// Adds the elements of the specified collection to the end of the target.
+        /// Adds the elements of the specified collection to the target set.
         /// </summary>
         /// <typeparam name="T">The type of the elements of collection.</typeparam>
         /// <param name="target">The set where the elements should be added to.</param>
@@ -46,7 +46,7 @@ namespace Gapotchenko.FX.Collections.Generic
         }
 
         /// <summary>
-        /// Adds the elements of the specified collection to the end of the target.
+        /// Adds the elements of the specified collection to the target set.
         /// </summary>
         /// <typeparam name="T">The type of the elements of collection.</typeparam>
         /// <param name="target">The set where the elements should be added to.</param>
