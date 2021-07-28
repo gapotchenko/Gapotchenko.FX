@@ -189,7 +189,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool AreAdjacentVertices(T a, T b) =>
+        public bool ContainsEdge(T a, T b) =>
             AdjacencyList.TryGetValue(a, out var adjRow) &&
             adjRow != null &&
             adjRow.Contains(b);
@@ -241,10 +241,10 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool AreTransitiveVertices(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
+        public bool AreVerticesTransitive(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
 
         /// <inheritdoc/>
-        public bool AreReachableVertices(T a, T b) => AreAdjacentVertices(a, b) || AreTransitiveVertices(a, b);
+        public bool AreVerticesReachable(T a, T b) => ContainsEdge(a, b) || AreVerticesTransitive(a, b);
 
         /// <inheritdoc/>
         public void Clear() => AdjacencyList.Clear();
@@ -283,7 +283,7 @@ namespace Gapotchenko.FX.Math.Topology
 
                 foreach (var b in adjRow)
                 {
-                    if (adjRow.Contains(b) && AreTransitiveVertices(a, b))
+                    if (adjRow.Contains(b) && AreVerticesTransitive(a, b))
                         removeList.Add(b);
                 }
 

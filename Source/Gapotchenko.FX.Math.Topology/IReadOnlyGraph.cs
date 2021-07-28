@@ -54,16 +54,19 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <summary>
         /// <para>
-        /// Gets a value indicating whether specified vertices are adjacent.
+        /// Determines whether the graph contains a specified edge.
         /// </para>
         /// <para>
-        /// Adjacent vertices are those connected by the edge without intermediary vertices.
+        /// The presence of an edge in the graph signifies that corresponding vertices are adjacent.
+        /// </para>
+        /// <para>
+        /// Adjacent vertices are those connected by one edge without intermediary vertices.
         /// </para>
         /// </summary>
         /// <param name="a">The vertex A.</param>
         /// <param name="b">The vertex B.</param>
         /// <returns><c>true</c> when a specified vertex <paramref name="a">A</paramref> is adjacent to vertex <paramref name="b">B</paramref>; otherwise, <c>false</c>.</returns>
-        bool AreAdjacentVertices(T a, T b);
+        bool ContainsEdge(T a, T b);
 
         /// <summary>
         /// <para>
@@ -76,7 +79,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="a">The vertex A.</param>
         /// <param name="b">The vertex B.</param>
         /// <returns><c>true</c> when a specified vertex <paramref name="a">A</paramref> can reach vertex <paramref name="b">B</paramref> via one or more intermediate vertices; otherwise, <c>false</c>.</returns>
-        bool AreTransitiveVertices(T a, T b);
+        bool AreVerticesTransitive(T a, T b);
 
         /// <summary>
         /// <para>
@@ -89,7 +92,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="a">The vertex A.</param>
         /// <param name="b">The vertex B.</param>
         /// <returns><c>true</c> when a specified vertex <paramref name="a">A</paramref> can reach vertex <paramref name="b">B</paramref>; otherwise, <c>false</c>.</returns>
-        bool AreReachableVertices(T a, T b);
+        bool AreVerticesReachable(T a, T b);
 
         /// <summary>
         /// Gets the vertices adjacent to a specified vertex.
