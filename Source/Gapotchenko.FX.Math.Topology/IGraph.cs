@@ -47,7 +47,7 @@ namespace Gapotchenko.FX.Math.Topology
         void Transpose();
 
         /// <summary>
-        /// Gets a graph transposition by reversing edge directions.
+        /// Gets a graph transposition by reversing its edge directions.
         /// </summary>
         /// <returns>The transposed graph.</returns>
         new IGraph<T> GetTransposition();

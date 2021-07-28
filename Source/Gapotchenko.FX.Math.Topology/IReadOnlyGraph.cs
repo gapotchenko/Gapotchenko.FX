@@ -99,7 +99,7 @@ namespace Gapotchenko.FX.Math.Topology
         IEnumerable<T> VerticesAdjacentTo(T v);
 
         /// <summary>
-        /// Gets a graph transposition by reversing edge directions.
+        /// Gets a graph transposition by reversing its edge directions.
         /// </summary>
         /// <returns>The transposed graph.</returns>
         IReadOnlyGraph<T> GetTransposition();

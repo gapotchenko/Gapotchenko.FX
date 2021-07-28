@@ -318,7 +318,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Gets a graph transposition by reversing edge directions.
+        /// Gets a graph transposition by reversing its edge directions.
         /// </summary>
         /// <returns>The transposed graph.</returns>
         public Graph<T> GetTransposition()
