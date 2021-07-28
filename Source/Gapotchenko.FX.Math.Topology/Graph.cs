@@ -235,21 +235,12 @@ namespace Gapotchenko.FX.Math.Topology
             return hit;
         }
 
-        /// <summary>
-        /// Determines whether the graph contains a specified vertex.
-        /// </summary>
-        /// <param name="v">The vertex.</param>
-        /// <returns><c>true</c> when the graph contains a specified vertex; otherwise, <c>false</c>.</returns>
+        /// <inheritdoc/>
         public bool ContainsVertex(T v) =>
             AdjacencyList.ContainsKey(v) ||
             AdjacencyList.Any(x => x.Value?.Contains(v) ?? false);
 
-        /// <summary>
-        /// Adds the specified edge.
-        /// </summary>
-        /// <param name="a">The A vertex of the edge.</param>
-        /// <param name="b">The B vertex of the edge.</param>
-        /// <returns><c>true</c> if the edge is added to the <see cref="Graph{T}"/> object; <c>false</c> if the edge is already present.</returns>
+        /// <inheritdoc/>
         public bool AddEdge(T a, T b)
         {
             var adjList = AdjacencyList;
@@ -421,7 +412,7 @@ namespace Gapotchenko.FX.Math.Topology
         IReadOnlyGraph<T> IReadOnlyGraph<T>.GetTransposition() => GetTransposition();
 
         /// <summary>
-        /// Clones a graph.
+        /// Clones the graph.
         /// </summary>
         /// <returns>The new graph.</returns>
         public Graph<T> Clone() => new(this, Comparer);
