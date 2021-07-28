@@ -47,8 +47,7 @@ namespace Gapotchenko.FX.Math.Geometry
             if (colLen == 0)
                 return rowLen;
 
-            if (equalityComparer == null)
-                equalityComparer = EqualityComparer<T>.Default;
+            equalityComparer ??= EqualityComparer<T>.Default;
 
             // Create the two vectors.
             var v0 = new int[rowLen + 1];
