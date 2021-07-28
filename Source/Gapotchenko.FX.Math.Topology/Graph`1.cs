@@ -165,17 +165,7 @@ namespace Gapotchenko.FX.Math.Topology
             return adjRow.Add(b);
         }
 
-        /// <summary>
-        /// <para>
-        /// Gets a value indicating whether specified vertices are adjacent.
-        /// </para>
-        /// <para>
-        /// Adjacent vertices are those connected by the edge without intermediary vertices.
-        /// </para>
-        /// </summary>
-        /// <param name="a">The vertex A.</param>
-        /// <param name="b">The vertex B.</param>
-        /// <returns><c>true</c> when a specified vertex <paramref name="a">A</paramref> is adjacent to vertex <paramref name="b">B</paramref>; otherwise, <c>false</c>.</returns>
+        /// <inheritdoc/>
         public bool AreAdjacent(T a, T b) =>
             AdjacencyList.TryGetValue(a, out var adjRow) &&
             adjRow != null &&
@@ -227,53 +217,29 @@ namespace Gapotchenko.FX.Math.Topology
             }
         }
 
-        /// <summary>
-        /// <para>
-        /// Gets a value indicating whether specified vertices are transitive.
-        /// </para>
-        /// <para>
-        /// Transitive vertices are those connected by two or more edges with at least one intermediate vertex.
-        /// </para>
-        /// </summary>
-        /// <param name="a">The vertex A.</param>
-        /// <param name="b">The vertex B.</param>
-        /// <returns><c>true</c> when a specified vertex <paramref name="a">A</paramref> can reach vertex <paramref name="b">B</paramref> via one or more intermediate vertices; otherwise, <c>false</c>.</returns>
+        /// <inheritdoc/>
         public bool AreTransitive(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
 
-        /// <summary>
-        /// <para>
-        /// Gets a value indicating whether specified vertices are reachable.
-        /// </para>
-        /// <para>
-        /// Reachable vertices are those connected by one or more edges with or without intermediate vertices.
-        /// </para>
-        /// </summary>
-        /// <param name="a">The vertex A.</param>
-        /// <param name="b">The vertex B.</param>
-        /// <returns><c>true</c> when a specified vertex <paramref name="a">A</paramref> can reach vertex <paramref name="b">B</paramref>; otherwise, <c>false</c>.</returns>
+        /// <inheritdoc/>
         public bool AreReachable(T a, T b) => AreAdjacent(a, b) || AreTransitive(a, b);
 
-        /// <summary>
-        /// Clears the graph.
-        /// </summary>
+        /// <inheritdoc/>
         public void Clear() => AdjacencyList.Clear();
 
-        /// <summary>
-        /// Gets the adjacent vertices of a specified vertex.
-        /// </summary>
-        /// <param name="v">The vertex.</param>
-        /// <returns>Sequence of adjacent vertices.</returns>
+        /// <inheritdoc/>
         public IEnumerable<T> AdjacentVertices(T v)
         {
             AdjacencyList.TryGetValue(v, out var adjRow);
             return adjRow ?? Enumerable.Empty<T>();
         }
 
-        Graph<T> NewGraph() => new(Comparer);
-
         /// <summary>
-        /// Performs a transitive reduction of the graph.
+        /// Creates a new graph instance inheriting parent class settings such as comparer.
         /// </summary>
+        /// <returns>The new graph instance.</returns>
+        protected Graph<T> NewGraph() => new(Comparer);
+
+        /// <inheritdoc/>
         public void Reduce()
         {
             foreach (var i in AdjacencyList)
@@ -296,10 +262,7 @@ namespace Gapotchenko.FX.Math.Topology
             }
         }
 
-        /// <summary>
-        /// Gets a transitively reduced graph.
-        /// </summary>
-        /// <returns>The transitively reduced graph.</returns>
+        /// <inheritdoc/>
         public Graph<T> GetReduction()
         {
             var graph = Clone();
@@ -307,13 +270,11 @@ namespace Gapotchenko.FX.Math.Topology
             return graph;
         }
 
-        IReadOnlyGraph<T> IReadOnlyGraph<T>.GetReduction() => GetReduction();
-
         IGraph<T> IGraph<T>.GetReduction() => GetReduction();
 
-        /// <summary>
-        /// Transposes the graph by reversing edge directions.
-        /// </summary>
+        IReadOnlyGraph<T> IReadOnlyGraph<T>.GetReduction() => GetReduction();
+
+        /// <inheritdoc/>
         public void Transpose()
         {
             var edges = Edges.ToList();
@@ -324,10 +285,7 @@ namespace Gapotchenko.FX.Math.Topology
             TransposeCore(this, edges, vertices);
         }
 
-        /// <summary>
-        /// Gets a graph transposition by reversing edge directions.
-        /// </summary>
-        /// <returns>The transposed graph.</returns>
+        /// <inheritdoc/>
         public Graph<T> GetTransposition()
         {
             var graph = NewGraph();
@@ -346,9 +304,9 @@ namespace Gapotchenko.FX.Math.Topology
                 graph.AddVertex(vertex);
         }
 
-        IReadOnlyGraph<T> IReadOnlyGraph<T>.GetTransposition() => GetTransposition();
-
         IGraph<T> IGraph<T>.GetTransposition() => GetTransposition();
+
+        IReadOnlyGraph<T> IReadOnlyGraph<T>.GetTransposition() => GetTransposition();
 
         /// <summary>
         /// Clones a graph.

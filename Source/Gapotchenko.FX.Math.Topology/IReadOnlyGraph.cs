@@ -57,7 +57,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a value indicating whether specified vertices are adjacent.
         /// </para>
         /// <para>
-        /// Adjacent vertices are those connected by an edge.
+        /// Adjacent vertices are those connected by the edge without intermediary vertices.
         /// </para>
         /// </summary>
         /// <param name="a">The vertex A.</param>
@@ -70,7 +70,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a value indicating whether specified vertices are transitive.
         /// </para>
         /// <para>
-        /// Transitive vertices are those connected by at least one intermediate vertex.
+        /// Transitive vertices are those connected by two or more edges with at least one intermediate vertex.
         /// </para>
         /// </summary>
         /// <param name="a">The vertex A.</param>
@@ -79,7 +79,12 @@ namespace Gapotchenko.FX.Math.Topology
         bool AreTransitive(T a, T b);
 
         /// <summary>
+        /// <para>
         /// Gets a value indicating whether specified vertices are reachable.
+        /// </para>
+        /// <para>
+        /// Reachable vertices are those connected by one or more edges with or without intermediate vertices.
+        /// </para>
         /// </summary>
         /// <param name="a">The vertex A.</param>
         /// <param name="b">The vertex B.</param>
@@ -90,7 +95,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets the adjacent vertices of a specified vertex.
         /// </summary>
         /// <param name="v">The vertex.</param>
-        /// <returns>Sequence of adjacent vertices.</returns>
+        /// <returns>Sequence of vertices adjacent to vertex <paramref name="v"/>.</returns>
         IEnumerable<T> AdjacentVertices(T v);
 
         /// <summary>

@@ -47,15 +47,15 @@ namespace Gapotchenko.FX.Math.Topology
         void Transpose();
 
         /// <summary>
-        /// Performs a transitive reduction of the graph.
-        /// </summary>
-        void Reduce();
-
-        /// <summary>
         /// Gets a graph transposition by reversing edge directions.
         /// </summary>
         /// <returns>The transposed graph.</returns>
         new IGraph<T> GetTransposition();
+
+        /// <summary>
+        /// Performs a transitive reduction of the graph.
+        /// </summary>
+        void Reduce();
 
         /// <summary>
         /// Gets a transitively reduced graph.
