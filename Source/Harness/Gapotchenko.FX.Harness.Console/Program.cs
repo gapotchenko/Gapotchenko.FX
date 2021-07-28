@@ -11,6 +11,7 @@ using Gapotchenko.FX.Linq.Expressions;
 using Gapotchenko.FX.Math;
 using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Math.Geometry;
+using Gapotchenko.FX.Math.Topology;
 using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Threading.Tasks;
@@ -81,6 +82,8 @@ namespace Gapotchenko.FX.Harness.Console
 
             foreach (var i in CartesianProduct.Of(seq1, seq2))
                 Console.WriteLine(string.Join(" ", i));
+
+            var g = new Graph<int>();
         }
 
         static async Task _RunAsync(CancellationToken ct)

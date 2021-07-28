@@ -227,7 +227,7 @@ namespace Gapotchenko.FX.Math.Topology
         public void Clear() => AdjacencyList.Clear();
 
         /// <inheritdoc/>
-        public IEnumerable<T> AdjacentVertices(T v)
+        public IEnumerable<T> VerticesAdjacentTo(T v)
         {
             AdjacencyList.TryGetValue(v, out var adjRow);
             return adjRow ?? Enumerable.Empty<T>();

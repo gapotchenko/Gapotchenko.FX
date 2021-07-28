@@ -16,6 +16,7 @@
     <ProjectReference Include="..\..\Gapotchenko.FX.Console\Gapotchenko.FX.Console.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Math.Geometry\Gapotchenko.FX.Math.Geometry.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Math.Topology\Gapotchenko.FX.Math.Topology.csproj" />
     <ProjectReference Include="..\..\Profiles\Gapotchenko.FX.Profiles.Core\Gapotchenko.FX.Profiles.Core.csproj" />
   </ItemGroup>
 

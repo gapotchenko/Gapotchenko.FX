@@ -27,7 +27,7 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <summary>
         /// <para>
-        /// Gets the order.
+        /// Gets the order of the graph.
         /// </para>
         /// <para>
         /// The order of a graph is |V|, the number of its vertices.
@@ -37,7 +37,7 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <summary>
         /// <para>
-        /// Gets the size.
+        /// Gets the size of the graph.
         /// </para>
         /// <para>
         /// The size of a graph is |E|, the number of its edges.
@@ -92,11 +92,11 @@ namespace Gapotchenko.FX.Math.Topology
         bool AreReachable(T a, T b);
 
         /// <summary>
-        /// Gets the adjacent vertices of a specified vertex.
+        /// Gets the vertices adjacent to a specified vertex.
         /// </summary>
-        /// <param name="v">The vertex.</param>
+        /// <param name="v">The vertex to find the adjacent vertices for.</param>
         /// <returns>Sequence of vertices adjacent to vertex <paramref name="v"/>.</returns>
-        IEnumerable<T> AdjacentVertices(T v);
+        IEnumerable<T> VerticesAdjacentTo(T v);
 
         /// <summary>
         /// Gets a graph transposition by reversing edge directions.
