@@ -84,6 +84,8 @@ namespace Gapotchenko.FX.Harness.Console
                 Console.WriteLine(string.Join(" ", i));
 
             var g = new Graph<int>();
+            g.AddEdge(1, 2);
+            Console.WriteLine(g.ToString("D"));
         }
 
         static async Task _RunAsync(CancellationToken ct)

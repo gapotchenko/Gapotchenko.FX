@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.Math.Topology
     /// <typeparam name="T">The type of vertices in the graph.</typeparam>
     [DebuggerDisplay("Order = {Order}")]
     [DebuggerTypeProxy(typeof(GraphDebugView<>))]
-    public class Graph<T> : IGraph<T>
+    public partial class Graph<T> : IGraph<T>
         where T : notnull
     {
         /// <summary>
