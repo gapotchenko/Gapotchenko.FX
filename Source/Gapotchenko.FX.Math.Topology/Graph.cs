@@ -13,11 +13,11 @@ namespace Gapotchenko.FX.Math.Topology
     /// </para>
     /// <para>
     /// Graph is a set of vertices and edges.
-    /// Vertices represent the objects and edges represent the relations between them.
+    /// Vertices represent the objects, and edges represent the relations between them.
     /// </para>
     /// </summary>
     /// <typeparam name="T">The type of vertices in the graph.</typeparam>
-    [DebuggerDisplay("Order = {Order}")]
+    [DebuggerDisplay("Order = {Order}, Size = {Size}")]
     [DebuggerTypeProxy(typeof(GraphDebugView<>))]
     public partial class Graph<T> : IGraph<T>
         where T : notnull
