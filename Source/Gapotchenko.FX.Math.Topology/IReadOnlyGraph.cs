@@ -69,11 +69,16 @@ namespace Gapotchenko.FX.Math.Topology
         bool ContainsEdge(T a, T b);
 
         /// <summary>
+        /// <para>
         /// Gets a value indicating whether there is a path from a specified source vertex to target.
+        /// </para>
+        /// <para>
+        /// A path consists of one or more edges with or without intermediate vertices.
+        /// </para>
         /// </summary>
         /// <param name="from">The source vertex.</param>
         /// <param name="to">The target vertex.</param>
-        /// <returns><c>true</c> when there is a path from the specified source vertex to target; otherwise, <c>false</c>.</returns>
+        /// <returns><c>true</c> when the specified source vertex can reach the target; otherwise, <c>false</c>.</returns>
         bool HasPath(T from, T to);
 
         /// <summary>
@@ -81,7 +86,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a value indicating whether there is a transitive path from a specified source vertex to target.
         /// </para>
         /// <para>
-        /// Transitive path consists of two or more edges with at least one intermediate vertex.
+        /// A transitive path consists of two or more edges with at least one intermediate vertex.
         /// </para>
         /// </summary>
         /// <param name="from">The source vertex.</param>
