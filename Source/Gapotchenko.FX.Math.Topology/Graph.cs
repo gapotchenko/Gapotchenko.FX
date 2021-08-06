@@ -340,7 +340,7 @@ namespace Gapotchenko.FX.Math.Topology
         protected AdjacencyRow NewAdjacencyRow() => new(Comparer);
 
         /// <inheritdoc/>
-        public void Reduce()
+        public void ReduceTransitions()
         {
             foreach (var i in AdjacencyList)
             {
@@ -366,16 +366,44 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a transitively reduced graph.
         /// </summary>
         /// <returns>The transitively reduced graph.</returns>
-        public Graph<T> GetReduction()
+        public Graph<T> GetTransitiveReduction()
         {
             var graph = Clone();
-            graph.Reduce();
+            graph.ReduceTransitions();
             return graph;
         }
 
-        IGraph<T> IGraph<T>.GetReduction() => GetReduction();
+        IGraph<T> IGraph<T>.GetTransitiveReduction() => GetTransitiveReduction();
 
-        IReadOnlyGraph<T> IReadOnlyGraph<T>.GetReduction() => GetReduction();
+        IReadOnlyGraph<T> IReadOnlyGraph<T>.GetTransitiveReduction() => GetTransitiveReduction();
+
+        /// <inheritdoc/>
+        public void ReduceReflexes()
+        {
+            foreach (var i in AdjacencyList)
+            {
+                var adjRow = i.Value;
+                if (adjRow == null)
+                    continue;
+
+                adjRow.Remove(i.Key);
+            }
+        }
+
+        /// <summary>
+        /// Gets a reflexively reduced graph.
+        /// </summary>
+        /// <returns>The reflexively reduced graph.</returns>
+        public Graph<T> GetReflexiveReduction()
+        {
+            var graph = Clone();
+            graph.ReduceReflexes();
+            return graph;
+        }
+
+        IGraph<T> IGraph<T>.GetReflexiveReduction() => GetReflexiveReduction();
+
+        IReadOnlyGraph<T> IReadOnlyGraph<T>.GetReflexiveReduction() => GetReflexiveReduction();
 
         /// <inheritdoc/>
         public void Transpose()

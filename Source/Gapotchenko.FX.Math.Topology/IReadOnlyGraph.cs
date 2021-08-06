@@ -106,6 +106,12 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a transitively reduced graph.
         /// </summary>
         /// <returns>The transitively reduced graph.</returns>
-        IReadOnlyGraph<T> GetReduction();
+        IReadOnlyGraph<T> GetTransitiveReduction();
+
+        /// <summary>
+        /// Gets a reflexively reduced graph.
+        /// </summary>
+        /// <returns>The reflexively reduced graph.</returns>
+        IReadOnlyGraph<T> GetReflexiveReduction();
     }
 }
