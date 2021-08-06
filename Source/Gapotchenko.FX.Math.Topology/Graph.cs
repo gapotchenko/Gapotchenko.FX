@@ -312,10 +312,10 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool AreTransitiveVertices(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
+        public bool HasTransitivePath(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
 
         /// <inheritdoc/>
-        public bool ContainsPath(T a, T b) => ContainsEdge(a, b) || AreTransitiveVertices(a, b);
+        public bool HasPath(T a, T b) => ContainsEdge(a, b) || HasTransitivePath(a, b);
 
         /// <inheritdoc/>
         public void Clear() => AdjacencyList.Clear();

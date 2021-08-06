@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.Math.Topology
 
                 foreach (var b in adjRow)
                 {
-                    if (adjRow.Contains(b) && AreTransitiveVertices(a, b))
+                    if (adjRow.Contains(b) && HasTransitivePath(a, b))
                         removeList.Add(b);
                 }
 
