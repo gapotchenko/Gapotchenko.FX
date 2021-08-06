@@ -315,7 +315,7 @@ namespace Gapotchenko.FX.Math.Topology
         public bool AreTransitiveVertices(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
 
         /// <inheritdoc/>
-        public bool AreReachableVertices(T a, T b) => ContainsEdge(a, b) || AreTransitiveVertices(a, b);
+        public bool ContainsPath(T a, T b) => ContainsEdge(a, b) || AreTransitiveVertices(a, b);
 
         /// <inheritdoc/>
         public void Clear() => AdjacencyList.Clear();
