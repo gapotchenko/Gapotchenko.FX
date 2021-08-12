@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Reflection.Loader
             //    _TrackedAssemblyNames.Add(i);
         }
 
-        readonly HashSet<AssemblyName> _TrackedAssemblyNames = new HashSet<AssemblyName>();
+        readonly HashSet<AssemblyName> _TrackedAssemblyNames = new();
 
         public bool IsAssemblyResolutionInhibited(Assembly? requestingAssembly)
         {

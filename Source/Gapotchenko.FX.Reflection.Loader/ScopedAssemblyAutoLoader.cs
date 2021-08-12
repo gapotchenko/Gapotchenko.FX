@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Reflection
     /// </summary>
     public sealed class ScopedAssemblyAutoLoader : IAssemblyAutoLoader, IDisposable
     {
-        readonly Dictionary<Assembly, AssemblyDescriptor> m_AssemblyDescriptors = new Dictionary<Assembly, AssemblyDescriptor>();
+        readonly Dictionary<Assembly, AssemblyDescriptor> m_AssemblyDescriptors = new();
 
         /// <summary>
         /// Adds a specified assembly to the list of sources to consider during assembly resolution process for the current app domain.
@@ -75,7 +75,7 @@ namespace Gapotchenko.FX.Reflection
             return true;
         }
 
-        readonly Dictionary<string, ProbingPathAssemblyLoaderBackend> m_ProbingPathResolvers = new Dictionary<string, ProbingPathAssemblyLoaderBackend>(FileSystem.PathComparer);
+        readonly Dictionary<string, ProbingPathAssemblyLoaderBackend> m_ProbingPathResolvers = new(FileSystem.PathComparer);
 
         /// <summary>
         /// Adds a specified probing path for the current app domain.

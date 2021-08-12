@@ -104,8 +104,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
                 if (parts.Count == 0)
                     continue;
 
-                if (bindingRedirects == null)
-                    bindingRedirects = new Dictionary<string, BindingRedirect>(StringComparer.OrdinalIgnoreCase);
+                bindingRedirects ??= new(StringComparer.OrdinalIgnoreCase);
 
                 bindingRedirects[asmName] = new BindingRedirect(
                     Version.Parse(parts[0]),

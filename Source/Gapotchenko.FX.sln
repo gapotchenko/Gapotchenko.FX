@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Tests", "Tests\Gapotchenko.FX.Tests\Gapotchenko.FX.Tests.csproj", "{394AB9E5-2AF1-4C7A-936C-43E5DC3351C3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Framework", "01. Framework", "{223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Modules", "01. Modules", "{223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
@@ -125,7 +125,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory", "Ga
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory.Tests", "Tests\Gapotchenko.FX.Memory.Tests\Gapotchenko.FX.Memory.Tests.csproj", "{69636576-F657-4629-B6B3-D8D4A568B6D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Math.Topology", "Gapotchenko.FX.Math.Topology\Gapotchenko.FX.Math.Topology.csproj", "{3DC3319C-595A-4336-AF43-71785AE86D11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Topology", "Gapotchenko.FX.Math.Topology\Gapotchenko.FX.Math.Topology.csproj", "{3DC3319C-595A-4336-AF43-71785AE86D11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

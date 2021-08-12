@@ -70,8 +70,7 @@ namespace Gapotchenko.FX.Reflection.Loader
             if (newProbingPaths.Count == 0)
                 return false;
 
-            if (_ProbingPathAssemblyLoaderBackends == null)
-                _ProbingPathAssemblyLoaderBackends = new List<HeuristicAssemblyLoaderBackend>();
+            _ProbingPathAssemblyLoaderBackends ??= new();
 
             _ProbingPathAssemblyLoaderBackends.Add(
                 new HeuristicAssemblyLoaderBackend(_AssemblyDependencyTracker, newProbingPaths.ToArray())
