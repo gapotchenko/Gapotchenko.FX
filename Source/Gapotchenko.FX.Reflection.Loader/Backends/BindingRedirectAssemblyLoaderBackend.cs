@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Reflection.Pal;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,12 +17,12 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             _BindingRedirects = bindingRedirects;
             _AssemblyDependencyTracker = assemblyDependencyTracker;
 
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+            AssemblyResolver.Default.Resolving += AssemblyResolver_Resolving;
         }
 
         public void Dispose()
         {
-            AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
+            AssemblyResolver.Default.Resolving -= AssemblyResolver_Resolving;
         }
 
         struct BindingRedirect
@@ -115,9 +116,9 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             return bindingRedirects;
         }
 
-        Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
+        Assembly? AssemblyResolver_Resolving(AssemblyResolver sender, AssemblyResolver.ResolvingEventArgs args)
         {
-            var assemblyName = new AssemblyName(args.Name);
+            var assemblyName = args.Name;
 
             var assemblyVersion = assemblyName.Version;
             if (assemblyVersion == null)

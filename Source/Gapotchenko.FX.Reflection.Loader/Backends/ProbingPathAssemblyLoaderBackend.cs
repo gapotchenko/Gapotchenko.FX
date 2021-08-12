@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Reflection.Loader.Pal;
+using Gapotchenko.FX.Reflection.Pal;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -13,12 +14,12 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
         {
             _ProbingPaths = probingPaths;
 
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+            AssemblyResolver.Default.Resolving += AssemblyResolver_Resolving;
         }
 
         public void Dispose()
         {
-            AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
+            AssemblyResolver.Default.Resolving -= AssemblyResolver_Resolving;
         }
 
         public bool StrictVersionMatch { get; set; }
@@ -103,17 +104,17 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             }
         }
 
-        Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
+        Assembly? AssemblyResolver_Resolving(AssemblyResolver sender, AssemblyResolver.ResolvingEventArgs args)
         {
             if (IsAssemblyResolutionInhibited(args))
                 return null;
 
-            var name = args.Name;
+            var name = args.FullName;
 
             if (_ResolvedAssembliesCache.TryGetValue(name, out var assembly))
                 return assembly;
 
-            var reference = new AssemblyName(name);
+            var reference = args.Name;
 
             foreach (var i in _GetProbingList())
             {
@@ -129,7 +130,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             return assembly;
         }
 
-        protected virtual bool IsAssemblyResolutionInhibited(ResolveEventArgs args) => false;
+        protected virtual bool IsAssemblyResolutionInhibited(AssemblyResolver.ResolvingEventArgs args) => false;
 
         protected virtual Assembly LoadAssembly(string filePath, AssemblyName name) => Assembly.LoadFrom(filePath);
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Reflection.Pal;
+using System;
 using System.Reflection;
 
 namespace Gapotchenko.FX.Reflection.Loader.Backends
@@ -13,7 +14,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
         readonly AssemblyDependencyTracker _AssemblyDependencyTracker;
 
-        protected override bool IsAssemblyResolutionInhibited(ResolveEventArgs args) =>
+        protected override bool IsAssemblyResolutionInhibited(AssemblyResolver.ResolvingEventArgs args) =>
             _AssemblyDependencyTracker.IsAssemblyResolutionInhibited(args.RequestingAssembly);
 
         protected override Assembly LoadAssembly(string filePath, AssemblyName name)

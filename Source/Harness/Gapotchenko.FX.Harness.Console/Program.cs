@@ -12,6 +12,7 @@ using Gapotchenko.FX.Math;
 using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Math.Geometry;
 using Gapotchenko.FX.Math.Topology;
+using Gapotchenko.FX.Reflection;
 using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Threading.Tasks;
@@ -86,6 +87,9 @@ namespace Gapotchenko.FX.Harness.Console
             var g = new Graph<int>();
             g.AddEdge(1, 2);
             Console.WriteLine(g.ToString("D"));
+
+            AssemblyAutoLoader.AddProbingPath(@"C:\");
+            AssemblyAutoLoader.RemoveProbingPath(@"C:\");
         }
 
         static async Task _RunAsync(CancellationToken ct)
