@@ -117,9 +117,6 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
         Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
         {
-            if (args.Name == null)
-                return null;
-
             var assemblyName = new AssemblyName(args.Name);
 
             var assemblyVersion = assemblyName.Version;
