@@ -119,8 +119,16 @@ namespace Gapotchenko.FX.Reflection
 
             ProbingPathAssemblyLoaderBackend? loader;
             lock (m_ProbingPathResolvers)
+            {
+#if NETCOREAPP
+                if (!m_ProbingPathResolvers.Remove(path, out loader))
+                    return false;
+#else
                 if (!m_ProbingPathResolvers.TryGetValue(path, out loader))
                     return false;
+                m_ProbingPathResolvers.Remove(path);
+#endif
+            }
 
             loader.Dispose();
             return true;
