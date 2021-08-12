@@ -47,9 +47,6 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
                         {
                             foreach (string path in _ProbingPaths)
                             {
-                                if (path == null)
-                                    continue;
-
                                 if (!Directory.Exists(path))
                                     continue;
 
@@ -108,12 +105,10 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
         Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
         {
-            var name = args.Name;
-            if (name == null)
-                return null;
-
             if (IsAssemblyResolutionInhibited(args))
                 return null;
+
+            var name = args.Name;
 
             if (_ResolvedAssembliesCache.TryGetValue(name, out var assembly))
                 return assembly;
