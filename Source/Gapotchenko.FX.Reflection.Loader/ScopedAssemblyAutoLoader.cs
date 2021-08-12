@@ -1,6 +1,7 @@
 ﻿using Gapotchenko.FX.Reflection.Loader;
 using Gapotchenko.FX.Reflection.Loader.Backends;
 using Gapotchenko.FX.Reflection.Loader.Pal;
+using Gapotchenko.FX.Reflection.Pal;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -68,7 +69,7 @@ namespace Gapotchenko.FX.Reflection
 
             AssemblyDescriptor? descriptor;
             lock (m_AssemblyDescriptors)
-                if (!m_AssemblyDescriptors.TryGetValue(assembly, out descriptor))
+                if (!m_AssemblyDescriptors.Remove(assembly, out descriptor))
                     return false;
 
             descriptor.Dispose();
@@ -119,16 +120,8 @@ namespace Gapotchenko.FX.Reflection
 
             ProbingPathAssemblyLoaderBackend? loader;
             lock (m_ProbingPathResolvers)
-            {
-#if NETCOREAPP
                 if (!m_ProbingPathResolvers.Remove(path, out loader))
                     return false;
-#else
-                if (!m_ProbingPathResolvers.TryGetValue(path, out loader))
-                    return false;
-                m_ProbingPathResolvers.Remove(path);
-#endif
-            }
 
             loader.Dispose();
             return true;
