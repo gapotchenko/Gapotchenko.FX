@@ -41,7 +41,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
                 lock (this)
                     if (_CachedProbingList == null)
                     {
-                        _CachedProbingList = new List<KeyValuePair<string, AssemblyName>>();
+                        _CachedProbingList = new();
 
                         if (_ProbingPaths != null)
                         {
@@ -61,7 +61,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
                                     {
                                         continue;
                                     }
-                                    _CachedProbingList.Add(new KeyValuePair<string, AssemblyName>(file, definition));
+                                    _CachedProbingList.Add(new(file, definition));
                                 }
                             }
 
@@ -73,7 +73,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             return _CachedProbingList;
         }
 
-        readonly ConcurrentDictionary<string, Assembly?> _ResolvedAssembliesCache = new ConcurrentDictionary<string, Assembly?>(StringComparer.OrdinalIgnoreCase);
+        readonly ConcurrentDictionary<string, Assembly?> _ResolvedAssembliesCache = new(StringComparer.OrdinalIgnoreCase);
 
         bool _ReferenceMatchesDefinition(AssemblyName reference, AssemblyName definition) =>
             StringComparer.OrdinalIgnoreCase.Equals(reference.Name, definition.Name) &&
