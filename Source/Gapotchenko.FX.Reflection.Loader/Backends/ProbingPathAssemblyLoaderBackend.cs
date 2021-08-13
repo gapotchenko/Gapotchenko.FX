@@ -1,5 +1,4 @@
-﻿using Gapotchenko.FX.Reflection.Loader.Pal;
-using Gapotchenko.FX.Reflection.Pal;
+﻿using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

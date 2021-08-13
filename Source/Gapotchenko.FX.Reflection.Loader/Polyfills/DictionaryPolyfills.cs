@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Gapotchenko.FX.Reflection.Pal
+namespace Gapotchenko.FX.Reflection.Loader.Polyfills
 {
     static class DictionaryPolyfills
     {

@@ -5,10 +5,10 @@ using System.Reflection;
 using System.Runtime.Loader;
 #endif
 
-namespace Gapotchenko.FX.Reflection.Pal
+namespace Gapotchenko.FX.Reflection
 {
     /// <summary>
-    /// Platform abstraction layer for assembly loader.
+    /// Platform abstraction layer for assembly loading functionality of a host environment.
     /// </summary>
     sealed class AssemblyLoaderPal
     {
@@ -38,7 +38,7 @@ namespace Gapotchenko.FX.Reflection.Pal
 #endif
 
 #if TFF_ASSEMBLYLOADCONTEXT
-        readonly AssemblyLoadContext? m_AssemblyLoadContext;
+        readonly AssemblyLoadContext m_AssemblyLoadContext;
 #endif
         readonly AppDomain? m_AppDomain;
 
@@ -113,7 +113,7 @@ namespace Gapotchenko.FX.Reflection.Pal
                 m_AppDomain.AssemblyResolve += AppDomain_AssemblyResolve;
 
 #if TFF_ASSEMBLYLOADCONTEXT
-            if (m_AssemblyLoadContext != null && m_AppDomain == null)
+            if (m_AppDomain == null)
                 m_AssemblyLoadContext.Resolving += AssemblyLoadContext_Resolving;
 #endif
         }
@@ -121,7 +121,7 @@ namespace Gapotchenko.FX.Reflection.Pal
         void TeardownResolving()
         {
 #if TFF_ASSEMBLYLOADCONTEXT
-            if (m_AssemblyLoadContext != null && m_AppDomain == null)
+            if (m_AppDomain == null)
                 m_AssemblyLoadContext.Resolving -= AssemblyLoadContext_Resolving;
 #endif
 
@@ -150,6 +150,15 @@ namespace Gapotchenko.FX.Reflection.Pal
                 }
             }
             return null;
+        }
+
+        public Assembly LoadFrom(string assemblyFile)
+        {
+#if TFF_ASSEMBLYLOADCONTEXT
+            return m_AssemblyLoadContext.LoadFromAssemblyPath(assemblyFile);
+#else
+            return Assembly.LoadFrom(assemblyFile);
+#endif
         }
     }
 }

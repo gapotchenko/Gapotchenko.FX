@@ -1,4 +1,4 @@
-﻿using Gapotchenko.FX.Reflection.Pal;
+﻿using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System;
 using System.Reflection;
 

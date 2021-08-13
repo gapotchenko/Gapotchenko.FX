@@ -1,7 +1,6 @@
 ﻿using Gapotchenko.FX.Reflection.Loader;
 using Gapotchenko.FX.Reflection.Loader.Backends;
-using Gapotchenko.FX.Reflection.Loader.Pal;
-using Gapotchenko.FX.Reflection.Pal;
+using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System;
 using System.Collections.Generic;
 using System.IO;
