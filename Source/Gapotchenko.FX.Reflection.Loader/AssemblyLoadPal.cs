@@ -10,31 +10,31 @@ namespace Gapotchenko.FX.Reflection
     /// <summary>
     /// Platform abstraction layer for assembly loading functionality of a host environment.
     /// </summary>
-    sealed class AssemblyLoaderPal
+    sealed class AssemblyLoadPal
     {
 #if TFF_ASSEMBLYLOADCONTEXT
-        public AssemblyLoaderPal(AssemblyLoadContext assemblyLoadContext)
+        public AssemblyLoadPal(AssemblyLoadContext assemblyLoadContext)
         {
             m_AssemblyLoadContext = assemblyLoadContext;
         }
 
-        AssemblyLoaderPal(AppDomain appDomain, AssemblyLoadContext assemblyLoadContext)
+        AssemblyLoadPal(AppDomain appDomain, AssemblyLoadContext assemblyLoadContext)
         {
             m_AppDomain = appDomain;
             m_AssemblyLoadContext = assemblyLoadContext;
         }
 #else
-        public AssemblyLoaderPal(AppDomain appDomain)
+        public AssemblyLoadPal(AppDomain appDomain)
         {
             m_AppDomain = appDomain;
         }
 #endif
 
-        public static AssemblyLoaderPal Default { get; } =
+        public static AssemblyLoadPal Default { get; } =
 #if TFF_ASSEMBLYLOADCONTEXT
-            new AssemblyLoaderPal(AppDomain.CurrentDomain, AssemblyLoadContext.Default);
+            new AssemblyLoadPal(AppDomain.CurrentDomain, AssemblyLoadContext.Default);
 #else
-            new AssemblyLoaderPal(AppDomain.CurrentDomain);
+            new AssemblyLoadPal(AppDomain.CurrentDomain);
 #endif
 
 #if TFF_ASSEMBLYLOADCONTEXT
@@ -79,7 +79,7 @@ namespace Gapotchenko.FX.Reflection
             public AssemblyName Name => m_Name ??= new AssemblyName(m_FullName ?? throw new InvalidOperationException());
         }
 
-        public delegate Assembly? ResolvingEventHandler(AssemblyLoaderPal sender, ResolvingEventArgs args);
+        public delegate Assembly? ResolvingEventHandler(AssemblyLoadPal sender, ResolvingEventArgs args);
 
         ResolvingEventHandler? m_Resolving;
 
@@ -158,6 +158,15 @@ namespace Gapotchenko.FX.Reflection
             return m_AssemblyLoadContext.LoadFromAssemblyPath(assemblyFile);
 #else
             return Assembly.LoadFrom(assemblyFile);
+#endif
+        }
+
+        public Assembly Load(AssemblyName assemblyName)
+        {
+#if TFF_ASSEMBLYLOADCONTEXT
+            return m_AssemblyLoadContext.LoadFromAssemblyName(assemblyName);
+#else
+            return Assembly.Load(assemblyName);
 #endif
         }
     }

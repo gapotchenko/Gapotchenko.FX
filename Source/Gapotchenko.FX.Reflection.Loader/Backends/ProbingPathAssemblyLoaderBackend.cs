@@ -9,20 +9,22 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 {
     class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
     {
-        public ProbingPathAssemblyLoaderBackend(params string[] probingPaths)
+        public ProbingPathAssemblyLoaderBackend(AssemblyLoadPal assemblyLoadPal, params string[] probingPaths)
         {
+            AssemblyLoadPal = assemblyLoadPal;
             _ProbingPaths = probingPaths;
 
-            AssemblyLoaderPal.Default.Resolving += AssemblyResolver_Resolving;
+            AssemblyLoadPal.Resolving += AssemblyResolver_Resolving;
         }
 
         public void Dispose()
         {
-            AssemblyLoaderPal.Default.Resolving -= AssemblyResolver_Resolving;
+            AssemblyLoadPal.Resolving -= AssemblyResolver_Resolving;
         }
 
         public bool StrictVersionMatch { get; set; }
 
+        protected readonly AssemblyLoadPal AssemblyLoadPal;
         string[]? _ProbingPaths;
 
         static IEnumerable<string> _EnumerateAssemblies(string path)
@@ -103,7 +105,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             }
         }
 
-        Assembly? AssemblyResolver_Resolving(AssemblyLoaderPal sender, AssemblyLoaderPal.ResolvingEventArgs args)
+        Assembly? AssemblyResolver_Resolving(AssemblyLoadPal sender, AssemblyLoadPal.ResolvingEventArgs args)
         {
             if (IsAssemblyResolutionInhibited(args))
                 return null;
@@ -129,8 +131,8 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             return assembly;
         }
 
-        protected virtual bool IsAssemblyResolutionInhibited(AssemblyLoaderPal.ResolvingEventArgs args) => false;
+        protected virtual bool IsAssemblyResolutionInhibited(AssemblyLoadPal.ResolvingEventArgs args) => false;
 
-        protected virtual Assembly LoadAssembly(string filePath, AssemblyName name) => Assembly.LoadFrom(filePath);
+        protected virtual Assembly LoadAssembly(string filePath, AssemblyName name) => AssemblyLoadPal.LoadFrom(filePath);
     }
 }

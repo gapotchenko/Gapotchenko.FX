@@ -2,7 +2,7 @@
 
 namespace Gapotchenko.FX.Reflection.Loader.Polyfills
 {
-    static class DictionaryPolyfills
+    static class DictionaryExtensions
     {
 #if !NETCOREAPP
         public static bool Remove<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, out TValue value)

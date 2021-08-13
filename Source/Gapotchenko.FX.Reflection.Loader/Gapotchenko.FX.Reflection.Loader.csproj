@@ -7,7 +7,6 @@
     <TargetFrameworks Condition=" '$(Configuration)' == 'Debug' ">$(TargetFrameworks);net5.0</TargetFrameworks>
 
     <CLSCompliant>true</CLSCompliant>
-    <RootNamespace>Gapotchenko.FX.Reflection</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

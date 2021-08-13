@@ -1,5 +1,4 @@
-﻿using Gapotchenko.FX.Reflection.Loader.Polyfills;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,17 +11,19 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
     {
         private BindingRedirectAssemblyLoaderBackend(
             Dictionary<string, BindingRedirect> bindingRedirects,
+            AssemblyLoadPal assemblyLoadPal,
             AssemblyDependencyTracker assemblyDependencyTracker)
         {
-            _BindingRedirects = bindingRedirects;
-            _AssemblyDependencyTracker = assemblyDependencyTracker;
+            m_BindingRedirects = bindingRedirects;
+            m_AssemblyLoadPal = assemblyLoadPal;
+            m_AssemblyDependencyTracker = assemblyDependencyTracker;
 
-            AssemblyLoaderPal.Default.Resolving += AssemblyResolver_Resolving;
+            m_AssemblyLoadPal.Resolving += AssemblyResolver_Resolving;
         }
 
         public void Dispose()
         {
-            AssemblyLoaderPal.Default.Resolving -= AssemblyResolver_Resolving;
+            m_AssemblyLoadPal.Resolving -= AssemblyResolver_Resolving;
         }
 
         struct BindingRedirect
@@ -45,10 +46,15 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             public bool Matches(Version version) => version >= FromA && version <= FromB;
         }
 
-        readonly Dictionary<string, BindingRedirect> _BindingRedirects;
-        readonly AssemblyDependencyTracker _AssemblyDependencyTracker;
+        readonly AssemblyLoadPal m_AssemblyLoadPal;
+        readonly Dictionary<string, BindingRedirect> m_BindingRedirects;
+        readonly AssemblyDependencyTracker m_AssemblyDependencyTracker;
 
-        public static bool TryCreate(string assemblyFilePath, AssemblyDependencyTracker assemblyDependencyTracker, out IAssemblyLoaderBackend? backend)
+        public static bool TryCreate(
+            string assemblyFilePath,
+            AssemblyLoadPal assemblyLoadPal,
+            AssemblyDependencyTracker assemblyDependencyTracker,
+            out IAssemblyLoaderBackend? backend)
         {
             backend = null;
 
@@ -58,7 +64,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
             var bindingRedirects = _LoadBindingRedirects(configFilePath);
             if (bindingRedirects != null)
-                backend = new BindingRedirectAssemblyLoaderBackend(bindingRedirects, assemblyDependencyTracker);
+                backend = new BindingRedirectAssemblyLoaderBackend(bindingRedirects, assemblyLoadPal, assemblyDependencyTracker);
 
             return true;
         }
@@ -116,7 +122,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             return bindingRedirects;
         }
 
-        Assembly? AssemblyResolver_Resolving(AssemblyLoaderPal sender, AssemblyLoaderPal.ResolvingEventArgs args)
+        Assembly? AssemblyResolver_Resolving(AssemblyLoadPal sender, AssemblyLoadPal.ResolvingEventArgs args)
         {
             var assemblyName = args.Name;
 
@@ -124,28 +130,28 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             if (assemblyVersion == null)
                 return null;
 
-            if (_AssemblyDependencyTracker.IsAssemblyResolutionInhibited(args.RequestingAssembly))
+            if (m_AssemblyDependencyTracker.IsAssemblyResolutionInhibited(args.RequestingAssembly))
                 return null;
 
             assemblyName.Version = null;
 
-            if (_BindingRedirects.TryGetValue(assemblyName.ToString(), out var bindingRedirect) &&
+            if (m_BindingRedirects.TryGetValue(assemblyName.ToString(), out var bindingRedirect) &&
                 bindingRedirect.Matches(assemblyVersion) &&
                 assemblyVersion != bindingRedirect.To)
             {
                 assemblyName.Version = bindingRedirect.To;
 
-                bool assemblyRegistered = _AssemblyDependencyTracker.RegisterReferencedAssembly(assemblyName);
+                bool assemblyRegistered = m_AssemblyDependencyTracker.RegisterReferencedAssembly(assemblyName);
 
                 Assembly? assembly = null;
                 try
                 {
-                    assembly = Assembly.Load(assemblyName);
+                    assembly = m_AssemblyLoadPal.Load(assemblyName);
                 }
                 finally
                 {
                     if (assembly == null && assemblyRegistered)
-                        _AssemblyDependencyTracker.UnregisterReferencedAssembly(assemblyName);
+                        m_AssemblyDependencyTracker.UnregisterReferencedAssembly(assemblyName);
                 }
 
                 return assembly;

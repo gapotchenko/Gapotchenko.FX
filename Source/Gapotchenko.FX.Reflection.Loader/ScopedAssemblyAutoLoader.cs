@@ -13,6 +13,8 @@ namespace Gapotchenko.FX.Reflection
     /// </summary>
     public sealed class ScopedAssemblyAutoLoader : IAssemblyAutoLoader, IDisposable
     {
+        readonly AssemblyLoadPal m_AssemblyLoadPal = AssemblyLoadPal.Default;
+
         readonly Dictionary<Assembly, AssemblyDescriptor> m_AssemblyDescriptors = new();
 
         /// <summary>
@@ -49,7 +51,7 @@ namespace Gapotchenko.FX.Reflection
                 }
                 else
                 {
-                    m_AssemblyDescriptors.Add(assembly, new AssemblyDescriptor(assembly, additionalProbingPaths));
+                    m_AssemblyDescriptors.Add(assembly, new AssemblyDescriptor(assembly, additionalProbingPaths, m_AssemblyLoadPal));
                     return true;
                 }
             }
@@ -98,7 +100,7 @@ namespace Gapotchenko.FX.Reflection
                 if (m_ProbingPathResolvers.ContainsKey(path))
                     return false;
 
-                m_ProbingPathResolvers.Add(path, new ProbingPathAssemblyLoaderBackend(path));
+                m_ProbingPathResolvers.Add(path, new ProbingPathAssemblyLoaderBackend(m_AssemblyLoadPal, path));
                 return true;
             }
         }
