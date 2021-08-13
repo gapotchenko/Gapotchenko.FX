@@ -8,34 +8,39 @@ using System.Runtime.Loader;
 namespace Gapotchenko.FX.Reflection.Pal
 {
     /// <summary>
-    /// Platform abstraction for assembly resolver API.
+    /// Platform abstraction layer for assembly loader.
     /// </summary>
-    sealed class AssemblyResolver
+    sealed class AssemblyLoaderPal
     {
 #if TFF_ASSEMBLYLOADCONTEXT
-        public AssemblyResolver(AppDomain appDomain, AssemblyLoadContext? assemblyLoadContext)
+        public AssemblyLoaderPal(AssemblyLoadContext assemblyLoadContext)
+        {
+            m_AssemblyLoadContext = assemblyLoadContext;
+        }
+
+        AssemblyLoaderPal(AppDomain appDomain, AssemblyLoadContext assemblyLoadContext)
         {
             m_AppDomain = appDomain;
             m_AssemblyLoadContext = assemblyLoadContext;
         }
 #else
-        public AssemblyResolver(AppDomain appDomain)
+        public AssemblyLoaderPal(AppDomain appDomain)
         {
             m_AppDomain = appDomain;
         }
 #endif
 
-        public static AssemblyResolver Default { get; } =
+        public static AssemblyLoaderPal Default { get; } =
 #if TFF_ASSEMBLYLOADCONTEXT
-            new AssemblyResolver(AppDomain.CurrentDomain, null /*AssemblyLoadContext.Default*/);
+            new AssemblyLoaderPal(AppDomain.CurrentDomain, AssemblyLoadContext.Default);
 #else
-            new AssemblyResolver(AppDomain.CurrentDomain);
+            new AssemblyLoaderPal(AppDomain.CurrentDomain);
 #endif
 
 #if TFF_ASSEMBLYLOADCONTEXT
         readonly AssemblyLoadContext? m_AssemblyLoadContext;
 #endif
-        readonly AppDomain m_AppDomain;
+        readonly AppDomain? m_AppDomain;
 
         public sealed class ResolvingEventArgs : EventArgs
         {
@@ -74,7 +79,7 @@ namespace Gapotchenko.FX.Reflection.Pal
             public AssemblyName Name => m_Name ??= new AssemblyName(m_FullName ?? throw new InvalidOperationException());
         }
 
-        public delegate Assembly? ResolvingEventHandler(AssemblyResolver sender, ResolvingEventArgs args);
+        public delegate Assembly? ResolvingEventHandler(AssemblyLoaderPal sender, ResolvingEventArgs args);
 
         ResolvingEventHandler? m_Resolving;
 
@@ -104,10 +109,11 @@ namespace Gapotchenko.FX.Reflection.Pal
 
         void SetupResolving()
         {
-            m_AppDomain.AssemblyResolve += AppDomain_AssemblyResolve;
+            if (m_AppDomain != null)
+                m_AppDomain.AssemblyResolve += AppDomain_AssemblyResolve;
 
 #if TFF_ASSEMBLYLOADCONTEXT
-            if (m_AssemblyLoadContext != null)
+            if (m_AssemblyLoadContext != null && m_AppDomain == null)
                 m_AssemblyLoadContext.Resolving += AssemblyLoadContext_Resolving;
 #endif
         }
@@ -115,11 +121,12 @@ namespace Gapotchenko.FX.Reflection.Pal
         void TeardownResolving()
         {
 #if TFF_ASSEMBLYLOADCONTEXT
-            if (m_AssemblyLoadContext != null)
+            if (m_AssemblyLoadContext != null && m_AppDomain == null)
                 m_AssemblyLoadContext.Resolving -= AssemblyLoadContext_Resolving;
 #endif
 
-            m_AppDomain.AssemblyResolve -= AppDomain_AssemblyResolve;
+            if (m_AppDomain != null)
+                m_AppDomain.AssemblyResolve -= AppDomain_AssemblyResolve;
         }
 
         Assembly? AppDomain_AssemblyResolve(object? sender, ResolveEventArgs args) =>

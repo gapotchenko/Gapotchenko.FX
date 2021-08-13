@@ -17,12 +17,12 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             _BindingRedirects = bindingRedirects;
             _AssemblyDependencyTracker = assemblyDependencyTracker;
 
-            AssemblyResolver.Default.Resolving += AssemblyResolver_Resolving;
+            AssemblyLoaderPal.Default.Resolving += AssemblyResolver_Resolving;
         }
 
         public void Dispose()
         {
-            AssemblyResolver.Default.Resolving -= AssemblyResolver_Resolving;
+            AssemblyLoaderPal.Default.Resolving -= AssemblyResolver_Resolving;
         }
 
         struct BindingRedirect
@@ -116,7 +116,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             return bindingRedirects;
         }
 
-        Assembly? AssemblyResolver_Resolving(AssemblyResolver sender, AssemblyResolver.ResolvingEventArgs args)
+        Assembly? AssemblyResolver_Resolving(AssemblyLoaderPal sender, AssemblyLoaderPal.ResolvingEventArgs args)
         {
             var assemblyName = args.Name;
 
