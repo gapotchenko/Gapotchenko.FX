@@ -88,8 +88,8 @@ namespace Gapotchenko.FX.Harness.Console
             g.AddEdge(1, 2);
             Console.WriteLine(g.ToString("D"));
 
-            AssemblyAutoLoader.AddProbingPath(@"C:\");
-            AssemblyAutoLoader.RemoveProbingPath(@"C:\");
+            AssemblyAutoLoader.Default.AddProbingPath(@"C:\");
+            AssemblyAutoLoader.Default.RemoveProbingPath(@"C:\");
         }
 
         static async Task _RunAsync(CancellationToken ct)

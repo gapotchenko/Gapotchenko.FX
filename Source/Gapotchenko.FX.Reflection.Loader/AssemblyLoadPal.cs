@@ -12,9 +12,20 @@ namespace Gapotchenko.FX.Reflection
     /// </summary>
     sealed class AssemblyLoadPal
     {
+        public AssemblyLoadPal(AppDomain appDomain)
+        {
+            if (appDomain == null)
+                throw new ArgumentNullException(nameof(appDomain));
+
+            m_AppDomain = appDomain;
+        }
+
 #if TFF_ASSEMBLYLOADCONTEXT
         public AssemblyLoadPal(AssemblyLoadContext assemblyLoadContext)
         {
+            if (assemblyLoadContext == null)
+                throw new ArgumentNullException(nameof(assemblyLoadContext));
+
             m_AssemblyLoadContext = assemblyLoadContext;
         }
 
@@ -22,11 +33,6 @@ namespace Gapotchenko.FX.Reflection
         {
             m_AppDomain = appDomain;
             m_AssemblyLoadContext = assemblyLoadContext;
-        }
-#else
-        public AssemblyLoadPal(AppDomain appDomain)
-        {
-            m_AppDomain = appDomain;
         }
 #endif
 
@@ -38,7 +44,7 @@ namespace Gapotchenko.FX.Reflection
 #endif
 
 #if TFF_ASSEMBLYLOADCONTEXT
-        readonly AssemblyLoadContext m_AssemblyLoadContext;
+        readonly AssemblyLoadContext? m_AssemblyLoadContext;
 #endif
         readonly AppDomain? m_AppDomain;
 
@@ -113,7 +119,7 @@ namespace Gapotchenko.FX.Reflection
                 m_AppDomain.AssemblyResolve += AppDomain_AssemblyResolve;
 
 #if TFF_ASSEMBLYLOADCONTEXT
-            if (m_AppDomain == null)
+            if (m_AppDomain == null && m_AssemblyLoadContext != null)
                 m_AssemblyLoadContext.Resolving += AssemblyLoadContext_Resolving;
 #endif
         }
@@ -121,7 +127,7 @@ namespace Gapotchenko.FX.Reflection
         void TeardownResolving()
         {
 #if TFF_ASSEMBLYLOADCONTEXT
-            if (m_AppDomain == null)
+            if (m_AppDomain == null && m_AssemblyLoadContext != null)
                 m_AssemblyLoadContext.Resolving -= AssemblyLoadContext_Resolving;
 #endif
 
@@ -130,7 +136,7 @@ namespace Gapotchenko.FX.Reflection
         }
 
         Assembly? AppDomain_AssemblyResolve(object? sender, ResolveEventArgs args) =>
-            InvokeResolving(new ResolvingEventArgs(args.RequestingAssembly, args.Name));
+            InvokeResolving(new ResolvingEventArgs(args.RequestingAssembly, args.Name!));
 
 #if TFF_ASSEMBLYLOADCONTEXT
         Assembly? AssemblyLoadContext_Resolving(AssemblyLoadContext assemblyLoadContext, AssemblyName name) =>
@@ -155,19 +161,27 @@ namespace Gapotchenko.FX.Reflection
         public Assembly LoadFrom(string assemblyFile)
         {
 #if TFF_ASSEMBLYLOADCONTEXT
-            return m_AssemblyLoadContext.LoadFromAssemblyPath(assemblyFile);
-#else
-            return Assembly.LoadFrom(assemblyFile);
+            if (m_AssemblyLoadContext != null)
+                return m_AssemblyLoadContext.LoadFromAssemblyPath(assemblyFile);
 #endif
+
+            if (m_AppDomain != null)
+                return Assembly.LoadFrom(assemblyFile);  // TODO: change to AppDomain method
+
+            throw new InvalidOperationException();
         }
 
         public Assembly Load(AssemblyName assemblyName)
         {
 #if TFF_ASSEMBLYLOADCONTEXT
-            return m_AssemblyLoadContext.LoadFromAssemblyName(assemblyName);
-#else
-            return Assembly.Load(assemblyName);
+            if (m_AssemblyLoadContext != null)
+                return m_AssemblyLoadContext.LoadFromAssemblyName(assemblyName);
 #endif
+
+            if (m_AppDomain != null)
+                return Assembly.Load(assemblyName);  // TODO: change to AppDomain method
+
+            throw new InvalidOperationException();
         }
     }
 }
