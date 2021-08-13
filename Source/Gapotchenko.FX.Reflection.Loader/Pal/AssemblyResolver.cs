@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Reflection.Pal
     sealed class AssemblyResolver
     {
 #if TFF_ASSEMBLYLOADCONTEXT
-        public AssemblyResolver(AppDomain appDomain, AssemblyLoadContext assemblyLoadContext)
+        public AssemblyResolver(AppDomain appDomain, AssemblyLoadContext? assemblyLoadContext)
         {
             m_AppDomain = appDomain;
             m_AssemblyLoadContext = assemblyLoadContext;
@@ -27,15 +27,15 @@ namespace Gapotchenko.FX.Reflection.Pal
 
         public static AssemblyResolver Default { get; } =
 #if TFF_ASSEMBLYLOADCONTEXT
-            new AssemblyResolver(AppDomain.CurrentDomain, AssemblyLoadContext.Default);
+            new AssemblyResolver(AppDomain.CurrentDomain, null /*AssemblyLoadContext.Default*/);
 #else
             new AssemblyResolver(AppDomain.CurrentDomain);
 #endif
 
 #if TFF_ASSEMBLYLOADCONTEXT
-        AssemblyLoadContext m_AssemblyLoadContext;
+        readonly AssemblyLoadContext? m_AssemblyLoadContext;
 #endif
-        AppDomain m_AppDomain;
+        readonly AppDomain m_AppDomain;
 
         public sealed class ResolvingEventArgs : EventArgs
         {
@@ -105,16 +105,20 @@ namespace Gapotchenko.FX.Reflection.Pal
         void SetupResolving()
         {
             m_AppDomain.AssemblyResolve += AppDomain_AssemblyResolve;
+
 #if TFF_ASSEMBLYLOADCONTEXT
-            m_AssemblyLoadContext.Resolving += AssemblyLoadContext_Resolving;
+            if (m_AssemblyLoadContext != null)
+                m_AssemblyLoadContext.Resolving += AssemblyLoadContext_Resolving;
 #endif
         }
 
         void TeardownResolving()
         {
 #if TFF_ASSEMBLYLOADCONTEXT
-            m_AssemblyLoadContext.Resolving -= AssemblyLoadContext_Resolving;
+            if (m_AssemblyLoadContext != null)
+                m_AssemblyLoadContext.Resolving -= AssemblyLoadContext_Resolving;
 #endif
+
             m_AppDomain.AssemblyResolve -= AppDomain_AssemblyResolve;
         }
 
