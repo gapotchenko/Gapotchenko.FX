@@ -12,6 +12,9 @@ namespace Gapotchenko.FX.Reflection
     /// </summary>
     sealed class AssemblyLoadPal
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssemblyAutoLoader"/> class for the specified app domain.
+        /// </summary>
         public AssemblyLoadPal(AppDomain appDomain)
         {
             if (appDomain == null)
@@ -21,6 +24,9 @@ namespace Gapotchenko.FX.Reflection
         }
 
 #if TFF_ASSEMBLYLOADCONTEXT
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssemblyAutoLoader"/> class for the specified assembly load context.
+        /// </summary>
         public AssemblyLoadPal(AssemblyLoadContext assemblyLoadContext)
         {
             if (assemblyLoadContext == null)
@@ -36,6 +42,17 @@ namespace Gapotchenko.FX.Reflection
         }
 #endif
 
+#if TFF_ASSEMBLYLOADCONTEXT
+        /// <summary>
+        /// Gets the default instance of <see cref="AssemblyLoadPal"/>.
+        /// The instance handles the default assembly load context.
+        /// </summary>
+#else
+        /// <summary>
+        /// Gets the default instance of <see cref="AssemblyLoadPal"/>.
+        /// The default instance handles the current app domain.
+        /// </summary>
+#endif
         public static AssemblyLoadPal Default { get; } =
 #if TFF_ASSEMBLYLOADCONTEXT
             new AssemblyLoadPal(AppDomain.CurrentDomain, AssemblyLoadContext.Default);
@@ -57,7 +74,7 @@ namespace Gapotchenko.FX.Reflection
             }
 
 #if TFF_ASSEMBLYLOADCONTEXT
-            public ResolvingEventArgs(AssemblyName name)
+            internal ResolvingEventArgs(AssemblyName name)
             {
                 m_Name = name;
             }
@@ -85,10 +102,19 @@ namespace Gapotchenko.FX.Reflection
             public AssemblyName Name => m_Name ??= new AssemblyName(m_FullName ?? throw new InvalidOperationException());
         }
 
+        /// <summary>
+        /// Represents a method that handles the <see cref="Resolving"/> event of an <see cref="AssemblyLoadPal"/>.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns>The resolved assembly or null if the assembly cannot be resolved.</returns>
         public delegate Assembly? ResolvingEventHandler(AssemblyLoadPal sender, ResolvingEventArgs args);
 
         ResolvingEventHandler? m_Resolving;
 
+        /// <summary>
+        /// Occurs when the resolution of an assembly fails.
+        /// </summary>
         public event ResolvingEventHandler Resolving
         {
             add
