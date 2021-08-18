@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Reflection.Loader
             AssemblyLoadContext.GetLoadContext(typeof(AssemblyLoadContexts).Assembly) ??
             AssemblyLoadContext.Default;
 
-        public static AssemblyLoadContext Effective =>
+        public static AssemblyLoadContext Current =>
 #if NETCOREAPP3_0_OR_GREATER
             AssemblyLoadContext.CurrentContextualReflectionContext ??
 #endif

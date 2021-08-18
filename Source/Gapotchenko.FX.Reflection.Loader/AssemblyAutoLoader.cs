@@ -28,7 +28,7 @@ namespace Gapotchenko.FX.Reflection
         /// </summary>
 #if TFF_ASSEMBLYLOADCONTEXT
         public AssemblyAutoLoader() :
-            this(AssemblyLoadContexts.Effective)
+            this(AssemblyLoadContexts.Current)
         {
         }
 #else
@@ -80,7 +80,7 @@ namespace Gapotchenko.FX.Reflection
 
         /// <summary>
         /// Unregisters all added probing paths and assemblies.
-        /// Releases all resources used by the <see cref="ScopedAssemblyAutoLoader"/>.
+        /// Releases all resources used by the <see cref="AssemblyAutoLoader"/>.
         /// </summary>
         public void Dispose()
         {

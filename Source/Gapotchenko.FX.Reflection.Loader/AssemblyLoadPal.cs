@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 #if TFF_ASSEMBLYLOADCONTEXT
@@ -10,6 +11,7 @@ namespace Gapotchenko.FX.Reflection
     /// <summary>
     /// Platform abstraction layer for assembly loading functionality of a host environment.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Advanced)]
     public sealed class AssemblyLoadPal
     {
         /// <summary>
@@ -212,7 +214,7 @@ namespace Gapotchenko.FX.Reflection
 #endif
 
             if (m_AppDomain != null)
-                return Assembly.LoadFrom(assemblyFile);  // TODO: change to AppDomain method, set CodeBase of AssemblyName.
+                return Assembly.LoadFrom(assemblyFile);  // TODO: change to AppDomain method for non-current domains, set AssemblyName.CodeBase to cause loading from a file.
 
             throw new InvalidOperationException();
         }

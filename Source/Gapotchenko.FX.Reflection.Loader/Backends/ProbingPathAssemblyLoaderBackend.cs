@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Gapotchenko.FX.Reflection.Loader.Backends
@@ -27,13 +28,9 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
         protected readonly AssemblyLoadPal AssemblyLoadPal;
         string[]? _ProbingPaths;
 
-        static IEnumerable<string> _EnumerateAssemblies(string path)
-        {
-            foreach (var i in Directory.EnumerateFiles(path, "*.dll"))
-                yield return i;
-            foreach (var i in Directory.EnumerateFiles(path, "*.exe"))
-                yield return i;
-        }
+        static IEnumerable<string> _EnumerateAssemblies(string path) =>
+            Directory.EnumerateFiles(path, "*.dll")
+            .Concat(Directory.EnumerateFiles(path, "*.exe"));
 
         List<KeyValuePair<string, AssemblyName>>? _CachedProbingList;
 
