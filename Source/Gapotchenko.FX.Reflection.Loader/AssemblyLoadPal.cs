@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Reflection
     public sealed class AssemblyLoadPal
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AssemblyAutoLoader"/> class for the specified app domain.
+        /// Initializes a new instance of the <see cref="AssemblyLoadPal"/> class for the specified app domain.
         /// </summary>
         public AssemblyLoadPal(AppDomain appDomain)
         {
@@ -25,7 +25,7 @@ namespace Gapotchenko.FX.Reflection
 
 #if TFF_ASSEMBLYLOADCONTEXT
         /// <summary>
-        /// Initializes a new instance of the <see cref="AssemblyAutoLoader"/> class for the specified assembly load context.
+        /// Initializes a new instance of the <see cref="AssemblyLoadPal"/> class for the specified assembly load context.
         /// </summary>
         public AssemblyLoadPal(AssemblyLoadContext assemblyLoadContext)
         {
