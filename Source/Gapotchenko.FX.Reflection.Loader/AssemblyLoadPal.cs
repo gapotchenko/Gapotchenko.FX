@@ -42,22 +42,20 @@ namespace Gapotchenko.FX.Reflection
         }
 #endif
 
-#if TFF_ASSEMBLYLOADCONTEXT
+        /// <summary>
+        /// Gets instance of <see cref="AssemblyLoadPal"/> for the current app domain.
+        /// </summary>
+        public static AssemblyLoadPal ForCurrentAppDomain { get; } = new AssemblyLoadPal(AppDomain.CurrentDomain);
+
         /// <summary>
         /// Gets the default instance of <see cref="AssemblyLoadPal"/>.
-        /// The instance handles the default assembly load context.
+        /// The default instance handles the current app domain and/or the default assembly load context depending on a host environment.
         /// </summary>
-#else
-        /// <summary>
-        /// Gets the default instance of <see cref="AssemblyLoadPal"/>.
-        /// The default instance handles the current app domain.
-        /// </summary>
-#endif
         public static AssemblyLoadPal Default { get; } =
 #if TFF_ASSEMBLYLOADCONTEXT
             new AssemblyLoadPal(AppDomain.CurrentDomain, AssemblyLoadContext.Default);
 #else
-            new AssemblyLoadPal(AppDomain.CurrentDomain);
+            ForCurrentAppDomain;
 #endif
 
 #if TFF_ASSEMBLYLOADCONTEXT
