@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Reflection
     /// <summary>
     /// Platform abstraction layer for assembly loading functionality of a host environment.
     /// </summary>
-    sealed class AssemblyLoadPal
+    public sealed class AssemblyLoadPal
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyAutoLoader"/> class for the specified app domain.
@@ -63,12 +63,20 @@ namespace Gapotchenko.FX.Reflection
 #endif
         readonly AppDomain? m_AppDomain;
 
+        /// <summary>
+        /// Provides data for assembly loader resolution event.
+        /// </summary>
         public sealed class ResolvingEventArgs : EventArgs
         {
-            public ResolvingEventArgs(Assembly? requestingAssembly, string name)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ResolvingEventArgs"/> class.
+            /// </summary>
+            /// <param name="requestingAssembly">The assembly whose dependency is being resolved.</param>
+            /// <param name="fullName">The full name of the assembly to resolve.</param>
+            public ResolvingEventArgs(Assembly? requestingAssembly, string fullName)
             {
                 RequestingAssembly = requestingAssembly;
-                m_FullName = name;
+                m_FullName = fullName;
             }
 
 #if TFF_ASSEMBLYLOADCONTEXT
@@ -78,6 +86,9 @@ namespace Gapotchenko.FX.Reflection
             }
 #endif
 
+            /// <summary>
+            /// Gets the assembly whose dependency is being resolved.
+            /// </summary>
             public Assembly? RequestingAssembly { get; }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -87,6 +98,9 @@ namespace Gapotchenko.FX.Reflection
             string m_FullName;
 #endif
 
+            /// <summary>
+            /// Gets the full name of the assembly to resolve.
+            /// </summary>
             public string FullName =>
 #if TFF_ASSEMBLYLOADCONTEXT
                 m_FullName ??= (m_Name ?? throw new InvalidOperationException()).FullName;
@@ -97,6 +111,9 @@ namespace Gapotchenko.FX.Reflection
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             AssemblyName? m_Name;
 
+            /// <summary>
+            /// Gets the strongly-typed name of the assembly to resolve.
+            /// </summary>
             public AssemblyName Name => m_Name ??= new AssemblyName(m_FullName ?? throw new InvalidOperationException());
         }
 
@@ -182,6 +199,11 @@ namespace Gapotchenko.FX.Reflection
             return null;
         }
 
+        /// <summary>
+        /// Loads an assembly given its file path.
+        /// </summary>
+        /// <param name="assemblyFile">The assembly file path.</param>
+        /// <returns>The loaded assembly.</returns>
         public Assembly LoadFrom(string assemblyFile)
         {
 #if TFF_ASSEMBLYLOADCONTEXT
@@ -190,11 +212,16 @@ namespace Gapotchenko.FX.Reflection
 #endif
 
             if (m_AppDomain != null)
-                return Assembly.LoadFrom(assemblyFile);  // TODO: change to AppDomain method
+                return Assembly.LoadFrom(assemblyFile);  // TODO: change to AppDomain method, set CodeBase of AssemblyName.
 
             throw new InvalidOperationException();
         }
 
+        /// <summary>
+        /// Loads an assembly given its <see cref="AssemblyName"/>.
+        /// </summary>
+        /// <param name="assemblyName">The assembly name.</param>
+        /// <returns>The loaded assembly.</returns>
         public Assembly Load(AssemblyName assemblyName)
         {
 #if TFF_ASSEMBLYLOADCONTEXT
@@ -203,7 +230,12 @@ namespace Gapotchenko.FX.Reflection
 #endif
 
             if (m_AppDomain != null)
-                return Assembly.Load(assemblyName);  // TODO: change to AppDomain method
+            {
+                if (m_AppDomain == AppDomain.CurrentDomain)
+                    return Assembly.Load(assemblyName);
+                else
+                    return m_AppDomain.Load(assemblyName);
+            }
 
             throw new InvalidOperationException();
         }

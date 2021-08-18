@@ -88,15 +88,10 @@ namespace Gapotchenko.FX.Reflection
             GC.SuppressFinalize(this);
         }
 
-#if TFF_ASSEMBLYLOADCONTEXT
         /// <summary>
-        /// Gets <see cref="AssemblyAutoLoader"/> instance for the default <see cref="AssemblyLoadContext"/>.
+        /// Gets the default instance of <see cref="AssemblyAutoLoader"/>.
+        /// The default instance handles the current app domain and/or the effective assembly load context depending on a host environment.
         /// </summary>
-#else
-        /// <summary>
-        /// Gets default <see cref="AssemblyAutoLoader"/> instance for the current app domain.
-        /// </summary>
-#endif
         public static AssemblyAutoLoader Default => DefaultAssemblyAutoLoader.Instance;
 
         readonly AssemblyLoadPal m_AssemblyLoadPal;
