@@ -43,7 +43,7 @@ namespace Gapotchenko.FX.Reflection
 #endif
 
         /// <summary>
-        /// Gets instance of <see cref="AssemblyLoadPal"/> for the current app domain.
+        /// Gets the instance of <see cref="AssemblyLoadPal"/> for the current app domain.
         /// </summary>
         public static AssemblyLoadPal ForCurrentAppDomain { get; } = new AssemblyLoadPal(AppDomain.CurrentDomain);
 
