@@ -215,5 +215,17 @@ namespace Gapotchenko.FX.Reflection
             foreach (var i in disposables)
                 i.Dispose();
         }
+
+        /// <inheritdoc/>
+        public string? ResolveAssemblyPath(AssemblyName assemblyName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public string? ResolveUnmanagedDllPath(string unmanagedDllName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

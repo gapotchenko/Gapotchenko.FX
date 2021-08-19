@@ -53,9 +53,7 @@ namespace Gapotchenko.FX.Reflection.Loader
 
                 string probingPath = Path.GetFullPath(i);
 
-                if (m_ProbingPaths == null)
-                    m_ProbingPaths = new HashSet<string>(FileSystem.PathComparer);
-
+                m_ProbingPaths ??= new HashSet<string>(FileSystem.PathComparer);
                 if (m_ProbingPaths.Add(probingPath))
                     accumulator.Add(probingPath);
             }

@@ -54,5 +54,19 @@ namespace Gapotchenko.FX.Reflection
         /// <returns><c>true</c> if the probing path is removed; <c>false</c> if the probing path is already removed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="path"/> parameter is <c>null</c>.</exception>
         bool RemoveProbingPath(string path);
+
+        /// <summary>
+        /// Resolves the assembly file path.
+        /// </summary>
+        /// <param name="assemblyName">The assembly name.</param>
+        /// <returns>The assembly file path or <c>null</c> if the assembly cannot be resolved.</returns>
+        string? ResolveAssemblyPath(AssemblyName assemblyName);
+
+        /// <summary>
+        /// Resolves the file path of an unmanaged DLL.
+        /// </summary>
+        /// <param name="unmanagedDllName">The name of unmanaged DLL.</param>
+        /// <returns>The DLL file path or <c>null</c> if the DLL cannot be resolved.</returns>
+        string? ResolveUnmanagedDllPath(string unmanagedDllName);
     }
 }
