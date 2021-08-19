@@ -92,7 +92,7 @@ namespace Gapotchenko.FX.Reflection
         /// Gets the default instance of <see cref="AssemblyAutoLoader"/>.
         /// The default instance handles the current app domain and/or the effective assembly load context depending on a host environment.
         /// </summary>
-        public static AssemblyAutoLoader Default => DefaultAssemblyAutoLoader.Instance;
+        public static IAssemblyAutoLoader Default => DefaultAssemblyAutoLoader.Instance;
 
         readonly AssemblyLoadPal m_AssemblyLoadPal;
         readonly Dictionary<Assembly, AssemblyDescriptor> m_AssemblyDescriptors = new();
