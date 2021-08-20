@@ -10,10 +10,12 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
     sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
     {
         private BindingRedirectAssemblyLoaderBackend(
+            AssemblyAutoLoader assemblyAutoLoader,
             Dictionary<string, BindingRedirect> bindingRedirects,
             AssemblyLoadPal assemblyLoadPal,
             AssemblyDependencyTracker assemblyDependencyTracker)
         {
+            m_AssemblyAutoLoader = assemblyAutoLoader;
             m_BindingRedirects = bindingRedirects;
             m_AssemblyLoadPal = assemblyLoadPal;
             m_AssemblyDependencyTracker = assemblyDependencyTracker;
@@ -25,6 +27,8 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
         {
             m_AssemblyLoadPal.Resolving -= AssemblyResolver_Resolving;
         }
+
+        readonly AssemblyAutoLoader m_AssemblyAutoLoader;
 
         struct BindingRedirect
         {
@@ -52,6 +56,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
         public static bool TryCreate(
             string assemblyFilePath,
+            AssemblyAutoLoader assemblyAutoLoader,
             AssemblyLoadPal assemblyLoadPal,
             AssemblyDependencyTracker assemblyDependencyTracker,
             out IAssemblyLoaderBackend? backend)
@@ -64,7 +69,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
             var bindingRedirects = _LoadBindingRedirects(configFilePath);
             if (bindingRedirects != null)
-                backend = new BindingRedirectAssemblyLoaderBackend(bindingRedirects, assemblyLoadPal, assemblyDependencyTracker);
+                backend = new BindingRedirectAssemblyLoaderBackend(assemblyAutoLoader, bindingRedirects, assemblyLoadPal, assemblyDependencyTracker);
 
             return true;
         }
@@ -122,16 +127,13 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             return bindingRedirects;
         }
 
-        Assembly? AssemblyResolver_Resolving(AssemblyLoadPal sender, AssemblyLoadPal.ResolvingEventArgs args)
+        AssemblyName? TryRedirectAssembly(AssemblyName assemblyName)
         {
-            var assemblyName = args.Name;
-
             var assemblyVersion = assemblyName.Version;
             if (assemblyVersion == null)
                 return null;
 
-            if (m_AssemblyDependencyTracker.IsAssemblyResolutionInhibited(args.RequestingAssembly))
-                return null;
+            assemblyName = (AssemblyName)assemblyName.Clone();
 
             assemblyName.Version = null;
 
@@ -140,24 +142,46 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
                 assemblyVersion != bindingRedirect.To)
             {
                 assemblyName.Version = bindingRedirect.To;
-
-                bool assemblyRegistered = m_AssemblyDependencyTracker.RegisterReferencedAssembly(assemblyName);
-
-                Assembly? assembly = null;
-                try
-                {
-                    assembly = m_AssemblyLoadPal.Load(assemblyName);
-                }
-                finally
-                {
-                    if (assembly == null && assemblyRegistered)
-                        m_AssemblyDependencyTracker.UnregisterReferencedAssembly(assemblyName);
-                }
-
-                return assembly;
+                return assemblyName;
             }
 
             return null;
         }
+
+        Assembly? AssemblyResolver_Resolving(AssemblyLoadPal sender, AssemblyLoadPal.ResolvingEventArgs args)
+        {
+            if (m_AssemblyDependencyTracker.IsAssemblyResolutionInhibited(args.RequestingAssembly))
+                return null;
+
+            var assemblyName = TryRedirectAssembly(args.Name);
+            if (assemblyName == null)
+                return null;
+
+            bool assemblyRegistered = m_AssemblyDependencyTracker.RegisterReferencedAssembly(assemblyName);
+
+            Assembly? assembly = null;
+            try
+            {
+                assembly = m_AssemblyLoadPal.Load(assemblyName);
+            }
+            finally
+            {
+                if (assembly == null && assemblyRegistered)
+                    m_AssemblyDependencyTracker.UnregisterReferencedAssembly(assemblyName);
+            }
+
+            return assembly;
+        }
+
+        public string? ResolveAssemblyPath(AssemblyName assemblyName)
+        {
+            var redirectedAssemblyName = TryRedirectAssembly(assemblyName);
+            if (redirectedAssemblyName == null)
+                return null;
+
+            return m_AssemblyAutoLoader.ResolveAssemblyPath(redirectedAssemblyName);
+        }
+
+        public string? ResolveUnmanagedDllPath(string unmanagedDllName) => null;
     }
 }

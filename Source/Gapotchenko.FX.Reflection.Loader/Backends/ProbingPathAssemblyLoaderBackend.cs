@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
         public ProbingPathAssemblyLoaderBackend(AssemblyLoadPal assemblyLoadPal, params string[] probingPaths)
         {
             AssemblyLoadPal = assemblyLoadPal;
-            _ProbingPaths = probingPaths;
+            m_ProbingPaths = probingPaths;
 
             AssemblyLoadPal.Resolving += AssemblyResolver_Resolving;
         }
@@ -26,7 +26,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
         public bool StrictVersionMatch { get; set; }
 
         protected readonly AssemblyLoadPal AssemblyLoadPal;
-        string[]? _ProbingPaths;
+        readonly string[] m_ProbingPaths;
 
         static IEnumerable<string> _EnumerateAssemblies(string path) =>
             Directory.EnumerateFiles(path, "*.dll")
@@ -42,30 +42,24 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
                     {
                         _CachedProbingList = new();
 
-                        if (_ProbingPaths != null)
+                        foreach (string path in m_ProbingPaths)
                         {
-                            foreach (string path in _ProbingPaths)
+                            if (!Directory.Exists(path))
+                                continue;
+
+                            foreach (string file in _EnumerateAssemblies(path))
                             {
-                                if (!Directory.Exists(path))
-                                    continue;
-
-                                foreach (string file in _EnumerateAssemblies(path))
+                                AssemblyName definition;
+                                try
                                 {
-                                    AssemblyName definition;
-                                    try
-                                    {
-                                        definition = AssemblyName.GetAssemblyName(file);
-                                    }
-                                    catch
-                                    {
-                                        continue;
-                                    }
-                                    _CachedProbingList.Add(new(file, definition));
+                                    definition = AssemblyName.GetAssemblyName(file);
                                 }
+                                catch
+                                {
+                                    continue;
+                                }
+                                _CachedProbingList.Add(new(file, definition));
                             }
-
-                            // Clear probing paths in order to free the memory.
-                            _ProbingPaths = null;
                         }
                     }
 
@@ -104,7 +98,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
         Assembly? AssemblyResolver_Resolving(AssemblyLoadPal sender, AssemblyLoadPal.ResolvingEventArgs args)
         {
-            if (IsAssemblyResolutionInhibited(args))
+            if (IsAssemblyResolutionInhibited(args.RequestingAssembly))
                 return null;
 
             var name = args.FullName;
@@ -116,7 +110,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
             foreach (var i in _GetProbingList())
             {
-                AssemblyName definition = i.Value;
+                var definition = i.Value;
                 if (_ReferenceMatchesDefinition(reference, definition))
                 {
                     assembly = LoadAssembly(i.Key, definition);
@@ -128,8 +122,56 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             return assembly;
         }
 
-        protected virtual bool IsAssemblyResolutionInhibited(AssemblyLoadPal.ResolvingEventArgs args) => false;
+        protected virtual bool IsAssemblyResolutionInhibited(Assembly? requestingAssembly) => false;
 
         protected virtual Assembly LoadAssembly(string filePath, AssemblyName name) => AssemblyLoadPal.LoadFrom(filePath);
+
+        public string? ResolveAssemblyPath(AssemblyName assemblyName)
+        {
+            if (_ResolvedAssembliesCache.TryGetValue(assemblyName.FullName, out var assembly))
+                return assembly?.Location;
+
+            var reference = assemblyName;
+
+            foreach (var i in _GetProbingList())
+            {
+                var definition = i.Value;
+                if (_ReferenceMatchesDefinition(reference, definition))
+                    return i.Key;
+            }
+
+            return null;
+        }
+
+        public string? ResolveUnmanagedDllPath(string unmanagedDllName) =>
+            m_ProbingPaths
+            .Select(x => ResolveUnmanagedDllPath(x, unmanagedDllName))
+            .FirstOrDefault();
+
+        static string? ResolveUnmanagedDllPath(string basePath, string unmanagedDllName)
+        {
+            string filePath = Path.Combine(basePath, unmanagedDllName);
+            if (File.Exists(filePath))
+                return filePath;
+
+            if (filePath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
+                filePath.EndsWith(".so", StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+
+            var platform = Environment.OSVersion.Platform;
+            if (platform == PlatformID.Unix)
+                filePath += ".so";
+            else if (platform == PlatformID.Win32NT)
+                filePath += ".dll";
+            else
+                return null;
+
+            if (File.Exists(filePath))
+                return filePath;
+
+            return null;
+        }
     }
 }

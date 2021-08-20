@@ -3,20 +3,21 @@ using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Gapotchenko.FX.Reflection.Loader
 {
     sealed class AssemblyDescriptor : IDisposable
     {
-        public AssemblyDescriptor(Assembly assembly, string?[]? additionalProbingPaths, AssemblyLoadPal assemblyLoadPal)
+        public AssemblyDescriptor(Assembly assembly, string?[]? additionalProbingPaths, AssemblyLoadPal assemblyLoadPal, AssemblyAutoLoader assemblyAutoLoader)
         {
             m_AssemblyLoadPal = assemblyLoadPal;
             m_AssemblyDependencyTracker = new AssemblyDependencyTracker(assembly);
 
             string assemblyFilePath = new Uri(assembly.EscapedCodeBase).LocalPath;
 
-            if (BindingRedirectAssemblyLoaderBackend.TryCreate(assemblyFilePath, m_AssemblyLoadPal, m_AssemblyDependencyTracker, out m_AssemblyLoaderBackend))
+            if (BindingRedirectAssemblyLoaderBackend.TryCreate(assemblyFilePath, assemblyAutoLoader, m_AssemblyLoadPal, m_AssemblyDependencyTracker, out m_AssemblyLoaderBackend))
             {
                 m_HasBindingRedirects = m_AssemblyLoaderBackend != null;
                 AddProbingPaths(additionalProbingPaths);
@@ -43,6 +44,19 @@ namespace Gapotchenko.FX.Reflection.Loader
 
         HashSet<string>? m_ProbingPaths;
         List<HeuristicAssemblyLoaderBackend>? m_ProbingPathAssemblyLoaderBackends;
+
+        public IEnumerable<IAssemblyLoaderBackend> AssemblyLoaderBackends
+        {
+            get
+            {
+                if (m_AssemblyLoaderBackend != null)
+                    yield return m_AssemblyLoaderBackend;
+
+                if (m_ProbingPathAssemblyLoaderBackends != null)
+                    foreach (var i in m_ProbingPathAssemblyLoaderBackends)
+                        yield return i;
+            }
+        }
 
         void _AccumulateNewProbingPaths(List<string> accumulator, string?[] probingPaths)
         {

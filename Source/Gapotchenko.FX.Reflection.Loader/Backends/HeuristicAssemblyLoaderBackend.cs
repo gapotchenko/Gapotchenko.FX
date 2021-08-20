@@ -12,8 +12,8 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
         readonly AssemblyDependencyTracker _AssemblyDependencyTracker;
 
-        protected override bool IsAssemblyResolutionInhibited(AssemblyLoadPal.ResolvingEventArgs args) =>
-            _AssemblyDependencyTracker.IsAssemblyResolutionInhibited(args.RequestingAssembly);
+        protected override bool IsAssemblyResolutionInhibited(Assembly? requstingAssembly) =>
+            _AssemblyDependencyTracker.IsAssemblyResolutionInhibited(requstingAssembly);
 
         protected override Assembly LoadAssembly(string filePath, AssemblyName name)
         {

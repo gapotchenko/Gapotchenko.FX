@@ -4,6 +4,7 @@ using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 #if TFF_ASSEMBLYLOADCONTEXT
 using System.Runtime.Loader;
@@ -116,7 +117,7 @@ namespace Gapotchenko.FX.Reflection
                 }
                 else
                 {
-                    m_AssemblyDescriptors.Add(assembly, new AssemblyDescriptor(assembly, additionalProbingPaths, m_AssemblyLoadPal));
+                    m_AssemblyDescriptors.Add(assembly, new AssemblyDescriptor(assembly, additionalProbingPaths, m_AssemblyLoadPal, this));
                     return true;
                 }
             }
@@ -216,16 +217,41 @@ namespace Gapotchenko.FX.Reflection
                 i.Dispose();
         }
 
+        IEnumerable<IAssemblyLoaderBackend> AssemblyLoaderBackends
+        {
+            get
+            {
+                lock (m_AssemblyDescriptors)
+                    foreach (var i in m_AssemblyDescriptors)
+                        foreach (var j in i.Value.AssemblyLoaderBackends)
+                            yield return j;
+
+                lock (m_ProbingPathResolvers)
+                    foreach (var i in m_ProbingPathResolvers)
+                        yield return i.Value;
+            }
+        }
+
         /// <inheritdoc/>
         public string? ResolveAssemblyPath(AssemblyName assemblyName)
         {
-            throw new NotImplementedException();
+            if (assemblyName == null)
+                throw new ArgumentNullException(nameof(assemblyName));
+
+            return AssemblyLoaderBackends
+                .Select(x => x.ResolveAssemblyPath(assemblyName))
+                .FirstOrDefault(x => x != null);
         }
 
         /// <inheritdoc/>
         public string? ResolveUnmanagedDllPath(string unmanagedDllName)
         {
-            throw new NotImplementedException();
+            if (unmanagedDllName == null)
+                throw new ArgumentNullException(nameof(unmanagedDllName));
+
+            return AssemblyLoaderBackends
+                .Select(x => x.ResolveUnmanagedDllPath(unmanagedDllName))
+                .FirstOrDefault(x => x != null);
         }
     }
 }
