@@ -143,33 +143,25 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             return null;
         }
 
-        public string? ResolveUnmanagedDllPath(string unmanagedDllName) =>
-            m_ProbingPaths
-            .Select(x => ResolveUnmanagedDllPath(x, unmanagedDllName))
-            .FirstOrDefault();
-
-        static string? ResolveUnmanagedDllPath(string basePath, string unmanagedDllName)
+        public string? ResolveUnmanagedDllPath(string unmanagedDllName)
         {
-            string filePath = Path.Combine(basePath, unmanagedDllName);
-            if (File.Exists(filePath))
-                return filePath;
+            bool isRelativePath =
+#if NETCOREAPP2_1_OR_GREATER
+                !Path.IsPathFullyQualified(unmanagedDllName);
+#else
+                !Path.IsPathRooted(unmanagedDllName);
+#endif
 
-            if (filePath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
-                filePath.EndsWith(".so", StringComparison.OrdinalIgnoreCase))
+            foreach (LibraryNameVariation libraryNameVariation in LibraryNameVariation.Enumerate(unmanagedDllName, isRelativePath))
             {
-                return null;
+                string libraryName = libraryNameVariation.Prefix + unmanagedDllName + libraryNameVariation.Suffix;
+                foreach (string probingPath in m_ProbingPaths)
+                {
+                    string libraryPath = Path.Combine(probingPath, libraryName);
+                    if (File.Exists(libraryPath))
+                        return libraryPath;
+                }
             }
-
-            var platform = Environment.OSVersion.Platform;
-            if (platform == PlatformID.Unix)
-                filePath += ".so";
-            else if (platform == PlatformID.Win32NT)
-                filePath += ".dll";
-            else
-                return null;
-
-            if (File.Exists(filePath))
-                return filePath;
 
             return null;
         }
