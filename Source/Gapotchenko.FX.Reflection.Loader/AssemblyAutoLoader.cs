@@ -21,7 +21,6 @@ namespace Gapotchenko.FX.Reflection
 #pragma warning disable CS0618
         _CompatibleAssemblyAutoLoader,
 #pragma warning restore CS0618
-        IAssemblyAutoLoader,
         IDisposable
     {
         /// <summary>
@@ -93,15 +92,30 @@ namespace Gapotchenko.FX.Reflection
         /// Gets the default instance of <see cref="AssemblyAutoLoader"/>.
         /// The default instance handles the current app domain and/or the effective assembly load context depending on a host environment.
         /// </summary>
-        public static IAssemblyAutoLoader Default => DefaultAssemblyAutoLoader.Instance;
+        public static AssemblyAutoLoader Default => DefaultAssemblyAutoLoader.Instance;
 
         readonly AssemblyLoadPal m_AssemblyLoadPal;
         readonly Dictionary<Assembly, AssemblyDescriptor> m_AssemblyDescriptors = new();
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a specified assembly to the list of sources to consider during assembly resolution process for the current app domain.
+        /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
+        /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns><c>true</c> if the assembly is added; <c>false</c> if the assembly is already added.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
         public new bool AddAssembly(Assembly assembly) => AddAssembly(assembly, null);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a specified assembly to the list of sources to consider during assembly resolution process for the current app domain.
+        /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
+        /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
+        /// <returns><c>true</c> if the assembly with the specified set of additional probing paths is added; <c>false</c> if the assembly with the specified set of additional probing paths is already added.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
         public new bool AddAssembly(Assembly assembly, params string?[]? additionalProbingPaths)
         {
             if (assembly == null)
@@ -123,7 +137,12 @@ namespace Gapotchenko.FX.Reflection
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Removes a specified assembly from the list of sources to consider during assembly resolution process for the current app domain.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns><c>true</c> if the assembly is removed; <c>false</c> if the assembly already removed.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
         public new bool RemoveAssembly(Assembly assembly)
         {
             if (assembly == null)
@@ -140,7 +159,13 @@ namespace Gapotchenko.FX.Reflection
 
         readonly Dictionary<string, ProbingPathAssemblyLoaderBackend> m_ProbingPathResolvers = new(FileSystem.PathComparer);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Adds a specified probing path for the current app domain.
+        /// Once added, establishes the specified directory path as the location of assemblies to probe during assembly resolution process.
+        /// </summary>
+        /// <param name="path">The probing path.</param>
+        /// <returns><c>true</c> if the probing path is added; <c>false</c> if the probing path is already added.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> parameter is <c>null</c>.</exception>
         public new bool AddProbingPath(string path)
         {
             if (path == null)
@@ -160,7 +185,13 @@ namespace Gapotchenko.FX.Reflection
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Removes a specified probing path for the current app domain.
+        /// Once removed, ceases to treat the specified directory path as the location of assemblies to probe during assembly resolution process.
+        /// </summary>
+        /// <param name="path">The probing path.</param>
+        /// <returns><c>true</c> if the probing path is removed; <c>false</c> if the probing path is already removed.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> parameter is <c>null</c>.</exception>
         public new bool RemoveProbingPath(string path)
         {
             if (path == null)
@@ -232,7 +263,11 @@ namespace Gapotchenko.FX.Reflection
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Resolves the assembly file path.
+        /// </summary>
+        /// <param name="assemblyName">The assembly name.</param>
+        /// <returns>The assembly file path or <c>null</c> if the assembly cannot be resolved.</returns>
         public string? ResolveAssemblyPath(AssemblyName assemblyName)
         {
             if (assemblyName == null)
@@ -243,7 +278,11 @@ namespace Gapotchenko.FX.Reflection
                 .FirstOrDefault(x => x != null);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Resolves the file path of an unmanaged DLL.
+        /// </summary>
+        /// <param name="unmanagedDllName">The name of unmanaged DLL.</param>
+        /// <returns>The DLL file path or <c>null</c> if the DLL cannot be resolved.</returns>
         public string? ResolveUnmanagedDllPath(string unmanagedDllName)
         {
             if (unmanagedDllName == null)
