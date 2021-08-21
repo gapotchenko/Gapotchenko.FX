@@ -73,13 +73,13 @@ namespace Gapotchenko.FX.Reflection
 #if TFF_ASSEMBLYLOADCONTEXT
         /// <summary>
         /// Gets or configures the value indicating whether this <see cref="AssemblyAutoLoader"/> is attached
-        /// to the associated <see cref="AppDomain"/> or <see cref="AssemblyLoadContext"/>
+        /// to the associated <see cref="System.AppDomain"/> or <see cref="System.Runtime.Loader.AssemblyLoadContext"/>
         /// as the assembly resolution handler.
         /// </summary>
 #else
         /// <summary>
         /// Gets or configures the value indicating whether this <see cref="AssemblyAutoLoader"/> is attached
-        /// to the associated <see cref="AppDomain"/>
+        /// to the associated <see cref="System.AppDomain"/>
         /// as the assembly resolution handler.
         /// </summary>
 #endif
