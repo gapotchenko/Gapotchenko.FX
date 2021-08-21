@@ -71,24 +71,6 @@ namespace Gapotchenko.FX.Reflection
 #endif
 
         /// <summary>
-        /// Finalizes the instance of <see cref="AssemblyAutoLoader"/> class.
-        /// </summary>
-        ~AssemblyAutoLoader()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Unregisters all added probing paths and assemblies.
-        /// Releases all resources used by the <see cref="AssemblyAutoLoader"/>.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
         /// Gets the default instance of <see cref="AssemblyAutoLoader"/>.
         /// The default instance handles the current app domain and/or the effective assembly load context depending on a host environment.
         /// </summary>
@@ -220,46 +202,6 @@ namespace Gapotchenko.FX.Reflection
             return true;
         }
 
-        bool m_Disposed;
-
-        void EnsureNotDisposed()
-        {
-            if (m_Disposed)
-                throw new ObjectDisposedException(null);
-        }
-
-        /// <summary>
-        /// Releases the unmanaged resources and optionally releases the managed resources.
-        /// </summary>
-        /// <param name="disposing">
-        /// <c>true</c> to release both managed and unmanaged resources;
-        /// <c>false</c> to release only unmanaged resources.
-        /// </param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing)
-                return;
-
-            var disposables = new List<IDisposable>();
-
-            lock (m_AssemblyDescriptors)
-            {
-                disposables.AddRange(m_AssemblyDescriptors.Values);
-                m_AssemblyDescriptors.Clear();
-            }
-
-            lock (m_ProbingPathResolvers)
-            {
-                disposables.AddRange(m_ProbingPathResolvers.Values);
-                m_ProbingPathResolvers.Clear();
-            }
-
-            m_Disposed = true;
-
-            foreach (var i in disposables)
-                i.Dispose();
-        }
-
         IEnumerable<IAssemblyLoaderBackend> AssemblyLoaderBackends
         {
             get
@@ -303,6 +245,64 @@ namespace Gapotchenko.FX.Reflection
             return AssemblyLoaderBackends
                 .Select(x => x.ResolveUnmanagedDllPath(unmanagedDllName))
                 .FirstOrDefault(x => x != null);
+        }
+
+        bool m_Disposed;
+
+        void EnsureNotDisposed()
+        {
+            if (m_Disposed)
+                throw new ObjectDisposedException(null);
+        }
+
+        /// <summary>
+        /// Releases the unmanaged resources and optionally releases the managed resources.
+        /// </summary>
+        /// <param name="disposing">
+        /// <c>true</c> to release both managed and unmanaged resources;
+        /// <c>false</c> to release only unmanaged resources.
+        /// </param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+                return;
+
+            var disposables = new List<IDisposable>();
+
+            lock (m_AssemblyDescriptors)
+            {
+                disposables.AddRange(m_AssemblyDescriptors.Values);
+                m_AssemblyDescriptors.Clear();
+            }
+
+            lock (m_ProbingPathResolvers)
+            {
+                disposables.AddRange(m_ProbingPathResolvers.Values);
+                m_ProbingPathResolvers.Clear();
+            }
+
+            m_Disposed = true;
+
+            foreach (var i in disposables)
+                i.Dispose();
+        }
+
+        /// <summary>
+        /// Finalizes the instance of <see cref="AssemblyAutoLoader"/> class.
+        /// </summary>
+        ~AssemblyAutoLoader()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Unregisters all added probing paths and assemblies.
+        /// Releases all resources used by the <see cref="AssemblyAutoLoader"/>.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
