@@ -66,6 +66,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             }
         }
 
+#if NETCOREAPP
         static IEnumerable<LibraryNameVariation> Enumerate_Unix(string libName, bool isRelativePath, bool forOSLoader, string libraryNameSuffix = ".so")
         {
             // This is a copy of the logic in DetermineLibNameVariations in dllimport.cpp in CoreCLR
@@ -119,5 +120,6 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
         static IEnumerable<LibraryNameVariation> Enumerate_OSX(string libName, bool isRelativePath, bool forOSLoader) =>
             Enumerate_Unix(libName, isRelativePath, forOSLoader, ".dylib");
+#endif
     }
 }

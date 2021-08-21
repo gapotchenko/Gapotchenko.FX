@@ -24,7 +24,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             AssemblyLoadPal.Resolving -= AssemblyResolver_Resolving;
         }
 
-        public bool StrictVersionMatch { get; set; }
+        public bool StrictVersionMatch { get; init; }
 
         protected readonly AssemblyLoadPal AssemblyLoadPal;
         readonly string[] m_ProbingPaths;
@@ -153,7 +153,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
                 !Path.IsPathRooted(unmanagedDllName);
 #endif
 
-            foreach (LibraryNameVariation libraryNameVariation in LibraryNameVariation.Enumerate(unmanagedDllName, isRelativePath))
+            foreach (var libraryNameVariation in LibraryNameVariation.Enumerate(unmanagedDllName, isRelativePath))
             {
                 string libraryName = libraryNameVariation.Prefix + unmanagedDllName + libraryNameVariation.Suffix;
                 foreach (string probingPath in m_ProbingPaths)
