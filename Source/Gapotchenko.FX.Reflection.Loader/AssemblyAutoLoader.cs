@@ -70,17 +70,51 @@ namespace Gapotchenko.FX.Reflection
         }
 #endif
 
+#if TFF_ASSEMBLYLOADCONTEXT
+        /// <summary>
+        /// Gets or configures the value indicating whether this <see cref="AssemblyAutoLoader"/> is attached
+        /// to the associated <see cref="AppDomain"/> or <see cref="AssemblyLoadContext"/>
+        /// as the assembly resolution handler.
+        /// </summary>
+#else
+        /// <summary>
+        /// Gets or configures the value indicating whether this <see cref="AssemblyAutoLoader"/> is attached
+        /// to the associated <see cref="AppDomain"/>
+        /// as the assembly resolution handler.
+        /// </summary>
+#endif
+        public bool IsAttached { get; init; } = true;
+
+#if TFF_ASSEMBLYLOADCONTEXT
         /// <summary>
         /// Gets the default instance of <see cref="AssemblyAutoLoader"/>.
-        /// The default instance handles the current app domain and/or the effective assembly load context depending on a host environment.
+        /// The default instance handles the current app domain and <see cref="AssemblyLoadContext"/>.
         /// </summary>
+#else
+        /// <summary>
+        /// Gets the default instance of <see cref="AssemblyAutoLoader"/>.
+        /// The default instance handles the current app domain.
+        /// </summary>
+#endif
         public static AssemblyAutoLoader Default => DefaultAssemblyAutoLoader.Instance;
 
         readonly AssemblyLoadPal m_AssemblyLoadPal;
         readonly Dictionary<Assembly, AssemblyDescriptor> m_AssemblyDescriptors = new();
 
         /// <summary>
-        /// Adds a specified assembly to the list of sources to consider during assembly resolution process for the current app domain.
+        /// Gets the associated app domain.
+        /// </summary>
+        public AppDomain AppDomain => m_AssemblyLoadPal.AppDomain ?? AppDomain.CurrentDomain;
+
+#if TFF_ASSEMBLYLOADCONTEXT
+        /// <summary>
+        /// Gets the associated assembly load context.
+        /// </summary>
+        public AssemblyLoadContext? AssemblyLoadContext => m_AssemblyLoadPal.AssemblyLoadContaxt;
+#endif
+
+        /// <summary>
+        /// Adds a specified assembly to the list of sources to consider during assembly resolution process for the associated app domain.
         /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
         /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
         /// </summary>
@@ -90,7 +124,7 @@ namespace Gapotchenko.FX.Reflection
         public new bool AddAssembly(Assembly assembly) => AddAssembly(assembly, (IEnumerable<string?>?)null);
 
         /// <summary>
-        /// Adds a specified assembly to the list of sources to consider during assembly resolution process for the current app domain.
+        /// Adds a specified assembly to the list of sources to consider during assembly resolution process for the associated app domain.
         /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
         /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
         /// </summary>
@@ -102,7 +136,7 @@ namespace Gapotchenko.FX.Reflection
             AddAssembly(assembly, (IEnumerable<string?>?)additionalProbingPaths);
 
         /// <summary>
-        /// Adds a specified assembly to the list of sources to consider during assembly resolution process for the current app domain.
+        /// Adds a specified assembly to the list of sources to consider during assembly resolution process for the associated app domain.
         /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
         /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
         /// </summary>
@@ -132,7 +166,7 @@ namespace Gapotchenko.FX.Reflection
         }
 
         /// <summary>
-        /// Removes a specified assembly from the list of sources to consider during assembly resolution process for the current app domain.
+        /// Removes a specified assembly from the list of sources to consider during assembly resolution process for the associated app domain.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <returns><c>true</c> if the assembly is removed; <c>false</c> if the assembly already removed.</returns>
@@ -154,7 +188,7 @@ namespace Gapotchenko.FX.Reflection
         readonly Dictionary<string, ProbingPathAssemblyLoaderBackend> m_ProbingPathResolvers = new(FileSystem.PathComparer);
 
         /// <summary>
-        /// Adds a specified probing path for the current app domain.
+        /// Adds a specified probing path for the associated app domain.
         /// Once added, establishes the specified directory path as the location of assemblies to probe during assembly resolution process.
         /// </summary>
         /// <param name="path">The probing path.</param>
@@ -174,13 +208,13 @@ namespace Gapotchenko.FX.Reflection
                 if (m_ProbingPathResolvers.ContainsKey(path))
                     return false;
 
-                m_ProbingPathResolvers.Add(path, new ProbingPathAssemblyLoaderBackend(m_AssemblyLoadPal, path));
+                m_ProbingPathResolvers.Add(path, new ProbingPathAssemblyLoaderBackend(IsAttached, m_AssemblyLoadPal, path));
                 return true;
             }
         }
 
         /// <summary>
-        /// Removes a specified probing path for the current app domain.
+        /// Removes a specified probing path for the associated app domain.
         /// Once removed, ceases to treat the specified directory path as the location of assemblies to probe during assembly resolution process.
         /// </summary>
         /// <param name="path">The probing path.</param>
@@ -218,10 +252,10 @@ namespace Gapotchenko.FX.Reflection
         }
 
         /// <summary>
-        /// Resolves the assembly file path.
+        /// Resolves the file path of an assembly with specified name.
         /// </summary>
         /// <param name="assemblyName">The assembly name.</param>
-        /// <returns>The assembly file path or <c>null</c> if the assembly cannot be resolved.</returns>
+        /// <returns>The assembly file path or <c>null</c> if the assembly is unresolved.</returns>
         public string? ResolveAssemblyPath(AssemblyName assemblyName)
         {
             if (assemblyName == null)
@@ -233,10 +267,10 @@ namespace Gapotchenko.FX.Reflection
         }
 
         /// <summary>
-        /// Resolves the file path of an unmanaged DLL.
+        /// Resolves the file path of an unmanaged DLL with specified name.
         /// </summary>
         /// <param name="unmanagedDllName">The name of unmanaged DLL.</param>
-        /// <returns>The DLL file path or <c>null</c> if the DLL cannot be resolved.</returns>
+        /// <returns>The DLL file path or <c>null</c> if the DLL is unresolved.</returns>
         public string? ResolveUnmanagedDllPath(string unmanagedDllName)
         {
             if (unmanagedDllName == null)

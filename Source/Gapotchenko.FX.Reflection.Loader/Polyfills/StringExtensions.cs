@@ -2,7 +2,7 @@
 
 namespace Gapotchenko.FX.Reflection.Loader.Polyfills
 {
-#if !NETCOREAPP
+#if !TFF_STRING_OPWITH_CHAR
     static class StringExtensions
     {
         public static bool EndsWith(this string s, char value)

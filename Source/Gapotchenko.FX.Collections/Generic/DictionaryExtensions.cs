@@ -87,14 +87,10 @@ namespace Gapotchenko.FX.Collections.Generic
             if (dictionary == null)
                 throw new ArgumentNullException(nameof(dictionary));
 
-            if (dictionary.TryGetValue(key, out value))
-            {
-                dictionary.Remove(key);
-                return true;
-            }
-
-            value = default;
-            return false;
+            if (!dictionary.TryGetValue(key, out value))
+                return false;
+            dictionary.Remove(key);
+            return true;
         }
 #endif
     }

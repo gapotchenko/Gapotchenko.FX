@@ -10,6 +10,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
     sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
     {
         private BindingRedirectAssemblyLoaderBackend(
+            bool isAttached,
             AssemblyAutoLoader assemblyAutoLoader,
             Dictionary<string, BindingRedirect> bindingRedirects,
             AssemblyLoadPal assemblyLoadPal,
@@ -20,7 +21,8 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             m_AssemblyLoadPal = assemblyLoadPal;
             m_AssemblyDependencyTracker = assemblyDependencyTracker;
 
-            m_AssemblyLoadPal.Resolving += AssemblyResolver_Resolving;
+            if (isAttached)
+                m_AssemblyLoadPal.Resolving += AssemblyResolver_Resolving;
         }
 
         public void Dispose()
@@ -69,7 +71,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 
             var bindingRedirects = _LoadBindingRedirects(configFilePath);
             if (bindingRedirects != null)
-                backend = new BindingRedirectAssemblyLoaderBackend(assemblyAutoLoader, bindingRedirects, assemblyLoadPal, assemblyDependencyTracker);
+                backend = new BindingRedirectAssemblyLoaderBackend(assemblyAutoLoader.IsAttached, assemblyAutoLoader, bindingRedirects, assemblyLoadPal, assemblyDependencyTracker);
 
             return true;
         }

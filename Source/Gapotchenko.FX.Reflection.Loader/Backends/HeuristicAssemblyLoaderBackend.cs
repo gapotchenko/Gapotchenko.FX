@@ -4,8 +4,12 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 {
     sealed class HeuristicAssemblyLoaderBackend : ProbingPathAssemblyLoaderBackend
     {
-        public HeuristicAssemblyLoaderBackend(AssemblyLoadPal assemblyLoadPal, AssemblyDependencyTracker assemblyDependencyTracker, params string[] probingPaths) :
-            base(assemblyLoadPal, probingPaths)
+        public HeuristicAssemblyLoaderBackend(
+            bool isAttached,
+            AssemblyLoadPal assemblyLoadPal,
+            AssemblyDependencyTracker assemblyDependencyTracker,
+            params string[] probingPaths) :
+            base(isAttached, assemblyLoadPal, probingPaths)
         {
             _AssemblyDependencyTracker = assemblyDependencyTracker;
         }

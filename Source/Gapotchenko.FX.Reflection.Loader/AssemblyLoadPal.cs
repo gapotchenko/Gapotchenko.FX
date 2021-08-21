@@ -60,10 +60,23 @@ namespace Gapotchenko.FX.Reflection
             ForCurrentAppDomain;
 #endif
 
-#if TFF_ASSEMBLYLOADCONTEXT
-        readonly AssemblyLoadContext? m_AssemblyLoadContext;
-#endif
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly AppDomain? m_AppDomain;
+
+        /// <summary>
+        /// Gets the associated app domain.
+        /// </summary>
+        public AppDomain? AppDomain => m_AppDomain;
+
+#if TFF_ASSEMBLYLOADCONTEXT
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly AssemblyLoadContext? m_AssemblyLoadContext;
+
+        /// <summary>
+        /// Gets the associated assembly load context.
+        /// </summary>
+        public AssemblyLoadContext? AssemblyLoadContaxt => m_AssemblyLoadContext;
+#endif
 
         /// <summary>
         /// Provides data for assembly loader resolution event.
@@ -214,8 +227,14 @@ namespace Gapotchenko.FX.Reflection
 #endif
 
             if (m_AppDomain != null)
-                return Assembly.LoadFrom(assemblyFile);  // TODO: change to AppDomain method for non-current domains, set AssemblyName.CodeBase to cause loading from a file.
+            {
+#if !TFF_SINGLE_APPDOMAIN
+                // TODO: handle non-current domains by calling a corresponding app domain's method, set AssemblyName.CodeBase to cause loading from the file.
+#endif
+                return Assembly.LoadFrom(assemblyFile);
+            }
 
+            // Never reached because m_AppDomain and m_AssemblyLoadContext cannot be null simultaneously.
             throw new InvalidOperationException();
         }
 
@@ -233,12 +252,14 @@ namespace Gapotchenko.FX.Reflection
 
             if (m_AppDomain != null)
             {
-                if (m_AppDomain == AppDomain.CurrentDomain)
-                    return Assembly.Load(assemblyName);
-                else
+#if !TFF_SINGLE_APPDOMAIN
+                if (m_AppDomain != AppDomain.CurrentDomain)
                     return m_AppDomain.Load(assemblyName);
+#endif
+                return Assembly.Load(assemblyName);
             }
 
+            // Never reached because m_AppDomain and m_AssemblyLoadContext cannot be null simultaneously.
             throw new InvalidOperationException();
         }
     }

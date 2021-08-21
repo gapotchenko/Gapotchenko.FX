@@ -10,12 +10,13 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
 {
     class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
     {
-        public ProbingPathAssemblyLoaderBackend(AssemblyLoadPal assemblyLoadPal, params string[] probingPaths)
+        public ProbingPathAssemblyLoaderBackend(bool isAttached, AssemblyLoadPal assemblyLoadPal, params string[] probingPaths)
         {
             AssemblyLoadPal = assemblyLoadPal;
             m_ProbingPaths = probingPaths;
 
-            AssemblyLoadPal.Resolving += AssemblyResolver_Resolving;
+            if (isAttached)
+                AssemblyLoadPal.Resolving += AssemblyResolver_Resolving;
         }
 
         public void Dispose()

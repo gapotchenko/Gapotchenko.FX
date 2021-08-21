@@ -12,6 +12,7 @@ namespace Gapotchenko.FX.Reflection.Loader
     {
         public AssemblyDescriptor(Assembly assembly, IEnumerable<string?>? additionalProbingPaths, AssemblyLoadPal assemblyLoadPal, AssemblyAutoLoader assemblyAutoLoader)
         {
+            m_IsAttached = assemblyAutoLoader.IsAttached;
             m_AssemblyLoadPal = assemblyLoadPal;
             m_AssemblyDependencyTracker = new AssemblyDependencyTracker(assembly);
 
@@ -33,10 +34,11 @@ namespace Gapotchenko.FX.Reflection.Loader
                 if (additionalProbingPaths != null)
                     _AccumulateNewProbingPaths(probingPaths, additionalProbingPaths);
 
-                m_AssemblyLoaderBackend = new HeuristicAssemblyLoaderBackend(m_AssemblyLoadPal, m_AssemblyDependencyTracker, probingPaths.ToArray());
+                m_AssemblyLoaderBackend = new HeuristicAssemblyLoaderBackend(m_IsAttached, m_AssemblyLoadPal, m_AssemblyDependencyTracker, probingPaths.ToArray());
             }
         }
 
+        readonly bool m_IsAttached;
         readonly AssemblyLoadPal m_AssemblyLoadPal;
         readonly AssemblyDependencyTracker m_AssemblyDependencyTracker;
         readonly IAssemblyLoaderBackend? m_AssemblyLoaderBackend;
@@ -87,7 +89,7 @@ namespace Gapotchenko.FX.Reflection.Loader
             m_ProbingPathAssemblyLoaderBackends ??= new();
 
             m_ProbingPathAssemblyLoaderBackends.Add(
-                new HeuristicAssemblyLoaderBackend(m_AssemblyLoadPal, m_AssemblyDependencyTracker, newProbingPaths.ToArray())
+                new HeuristicAssemblyLoaderBackend(m_IsAttached, m_AssemblyLoadPal, m_AssemblyDependencyTracker, newProbingPaths.ToArray())
                 {
                     StrictVersionMatch = m_HasBindingRedirects
                 });
