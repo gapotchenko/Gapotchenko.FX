@@ -88,7 +88,7 @@ namespace Gapotchenko.FX.Reflection
 #if TFF_ASSEMBLYLOADCONTEXT
         /// <summary>
         /// Gets the default instance of <see cref="AssemblyAutoLoader"/>.
-        /// The default instance handles the current app domain and <see cref="AssemblyLoadContext"/>.
+        /// The default instance handles the current app domain and <see cref="System.Runtime.Loader.AssemblyLoadContext"/>.
         /// </summary>
 #else
         /// <summary>
@@ -114,7 +114,7 @@ namespace Gapotchenko.FX.Reflection
 #endif
 
         /// <summary>
-        /// Adds a specified assembly to the list of sources to consider during assembly resolution process.
+        /// Adds a specified assembly to the list of sources to consider during assembly resolution.
         /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
         /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
         /// </summary>
@@ -124,7 +124,7 @@ namespace Gapotchenko.FX.Reflection
         public new bool AddAssembly(Assembly assembly) => AddAssembly(assembly, (IEnumerable<string?>?)null);
 
         /// <summary>
-        /// Adds a specified assembly to the list of sources to consider during assembly resolution process.
+        /// Adds a specified assembly to the list of sources to consider during assembly resolution.
         /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
         /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
         /// </summary>
@@ -136,7 +136,7 @@ namespace Gapotchenko.FX.Reflection
             AddAssembly(assembly, (IEnumerable<string?>?)additionalProbingPaths);
 
         /// <summary>
-        /// Adds a specified assembly to the list of sources to consider during assembly resolution process.
+        /// Adds a specified assembly to the list of sources to consider during assembly resolution.
         /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
         /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
         /// </summary>
@@ -166,7 +166,7 @@ namespace Gapotchenko.FX.Reflection
         }
 
         /// <summary>
-        /// Removes a specified assembly from the list of sources to consider during assembly resolution process.
+        /// Removes a specified assembly from the list of sources to consider during assembly resolution.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <returns><c>true</c> if the assembly is removed; <c>false</c> if the assembly already removed.</returns>
@@ -189,7 +189,7 @@ namespace Gapotchenko.FX.Reflection
 
         /// <summary>
         /// Adds a specified probing path.
-        /// Once added, establishes the specified directory path as the location of assemblies to probe during assembly resolution process.
+        /// Once added, establishes the specified directory path as the location of assemblies to probe during assembly resolution.
         /// </summary>
         /// <param name="path">The probing path.</param>
         /// <returns><c>true</c> if the probing path is added; <c>false</c> if the probing path is already added.</returns>
@@ -215,7 +215,7 @@ namespace Gapotchenko.FX.Reflection
 
         /// <summary>
         /// Removes a specified probing path.
-        /// Once removed, ceases to treat the specified directory path as the location of assemblies to probe during assembly resolution process.
+        /// Once removed, ceases to treat the specified directory path as the location of assemblies to probe during assembly resolution.
         /// </summary>
         /// <param name="path">The probing path.</param>
         /// <returns><c>true</c> if the probing path is removed; <c>false</c> if the probing path is already removed.</returns>
