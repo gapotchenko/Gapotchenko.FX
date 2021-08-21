@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Reflection.Loader
 {
     sealed class AssemblyDescriptor : IDisposable
     {
-        public AssemblyDescriptor(Assembly assembly, string?[]? additionalProbingPaths, AssemblyLoadPal assemblyLoadPal, AssemblyAutoLoader assemblyAutoLoader)
+        public AssemblyDescriptor(Assembly assembly, IEnumerable<string?>? additionalProbingPaths, AssemblyLoadPal assemblyLoadPal, AssemblyAutoLoader assemblyAutoLoader)
         {
             m_AssemblyLoadPal = assemblyLoadPal;
             m_AssemblyDependencyTracker = new AssemblyDependencyTracker(assembly);
@@ -58,7 +58,7 @@ namespace Gapotchenko.FX.Reflection.Loader
             }
         }
 
-        void _AccumulateNewProbingPaths(List<string> accumulator, string?[] probingPaths)
+        void _AccumulateNewProbingPaths(List<string> accumulator, IEnumerable<string?> probingPaths)
         {
             foreach (var i in probingPaths)
             {
@@ -73,7 +73,7 @@ namespace Gapotchenko.FX.Reflection.Loader
             }
         }
 
-        public bool AddProbingPaths(string?[]? probingPaths)
+        public bool AddProbingPaths(IEnumerable<string?>? probingPaths)
         {
             if (probingPaths == null)
                 return false;

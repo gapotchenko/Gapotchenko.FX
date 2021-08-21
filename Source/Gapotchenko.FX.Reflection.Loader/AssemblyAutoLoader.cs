@@ -105,7 +105,7 @@ namespace Gapotchenko.FX.Reflection
         /// <param name="assembly">The assembly.</param>
         /// <returns><c>true</c> if the assembly is added; <c>false</c> if the assembly is already added.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
-        public new bool AddAssembly(Assembly assembly) => AddAssembly(assembly, null);
+        public new bool AddAssembly(Assembly assembly) => AddAssembly(assembly, (IEnumerable<string?>?)null);
 
         /// <summary>
         /// Adds a specified assembly to the list of sources to consider during assembly resolution process for the current app domain.
@@ -116,7 +116,19 @@ namespace Gapotchenko.FX.Reflection
         /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
         /// <returns><c>true</c> if the assembly with the specified set of additional probing paths is added; <c>false</c> if the assembly with the specified set of additional probing paths is already added.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
-        public new bool AddAssembly(Assembly assembly, params string?[]? additionalProbingPaths)
+        public new bool AddAssembly(Assembly assembly, params string?[]? additionalProbingPaths) =>
+            AddAssembly(assembly, (IEnumerable<string?>?)additionalProbingPaths);
+
+        /// <summary>
+        /// Adds a specified assembly to the list of sources to consider during assembly resolution process for the current app domain.
+        /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
+        /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
+        /// <returns><c>true</c> if the assembly with the specified set of additional probing paths is added; <c>false</c> if the assembly with the specified set of additional probing paths is already added.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
+        public bool AddAssembly(Assembly assembly, IEnumerable<string?>? additionalProbingPaths)
         {
             if (assembly == null)
                 throw new ArgumentNullException(nameof(assembly));

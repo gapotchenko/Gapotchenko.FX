@@ -37,7 +37,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return Enumerate_MacOS(libName, isRelativePath, forOSLoader);
+                return Enumerate_OSX(libName, isRelativePath, forOSLoader);
             }
             else
             {
@@ -117,7 +117,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends
             }
         }
 
-        static IEnumerable<LibraryNameVariation> Enumerate_MacOS(string libName, bool isRelativePath, bool forOSLoader) =>
+        static IEnumerable<LibraryNameVariation> Enumerate_OSX(string libName, bool isRelativePath, bool forOSLoader) =>
             Enumerate_Unix(libName, isRelativePath, forOSLoader, ".dylib");
     }
 }
