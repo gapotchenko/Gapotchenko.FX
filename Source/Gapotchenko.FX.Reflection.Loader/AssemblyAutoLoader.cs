@@ -57,7 +57,7 @@ namespace Gapotchenko.FX.Reflection
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyAutoLoader"/> class for the specified assembly load context.
         /// </summary>
-        /// <param name="assemblyLoadContext">The app domain.</param>
+        /// <param name="assemblyLoadContext">The assembly load context.</param>
         public AssemblyAutoLoader(AssemblyLoadContext assemblyLoadContext)
         {
             if (assemblyLoadContext == null)

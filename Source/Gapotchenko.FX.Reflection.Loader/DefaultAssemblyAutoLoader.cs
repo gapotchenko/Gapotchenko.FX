@@ -29,7 +29,7 @@ namespace Gapotchenko.FX.Reflection.Loader
                 if (!m_Instances.TryGetValue(assemblyLoadContext, out var instance))
                 {
                     // AssemblyLoadContexts.Current is AsyncLocal and thus can have the same value in several threads simultaneously.
-                    // This leads to race conditions which should be avoided by providing a strong one to one AssemblyLoadContext <-> AssemblyAutoLoader mapping.
+                    // This may lead to race conditions which should be avoided by providing a strong one to one AssemblyLoadContext <-> AssemblyAutoLoader mapping.
                     lock (m_Instances)
                     {
                         if (!m_Instances.TryGetValue(assemblyLoadContext, out instance))
