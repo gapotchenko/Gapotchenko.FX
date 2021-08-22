@@ -69,7 +69,7 @@ namespace ContosoApp
             // The statement below instructs Gapotchenko.FX assembly loader to use
             // 'C:\Program Files\Common Files\Contoso\Engine' folder as a probing path for
             // dependent assemblies.
-            AssemblyAutoLoader.AddProbingPath(
+            AssemblyAutoLoader.Default.AddProbingPath(
                 Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles),
                     @"Contoso\Engine"));
@@ -181,7 +181,7 @@ namespace ContosoApp.Integration.AutoCAD
             // The statement below instructs Gapotchenko.FX assembly loader to use
             // 'C:\Program Files\Common Files\Contoso\Engine' folder as a probing path for
             // resolution of 'ContosoApp.Integration.AutoCAD.dll' assembly dependencies.
-            AssemblyAutoLoader.AddAssembly(
+            AssemblyAutoLoader.Default.AddAssembly(
                 typeof(AssemblyLoader).Assembly,
                 Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles),
@@ -201,14 +201,14 @@ Smart.
 
 But even if Alberto did not create a singleton, `AssemblyAutoLoader` is sophisticated enough to do the right job out of the box.
 
-Now why did Alberto call `AssemblyAutoLoader.AddAssembly` method instead of `AssemblyAutoLoader.AddProbingPath`?
+Now why did Alberto call `AddAssembly` method instead of `AddProbingPath`?
 Both would work, actually. There is a subtle but very important difference.
 
-`AssemblyAutoLoader.AddProbingPath` is a coarse "catch-all" method.
+`AddProbingPath` is a coarse "catch-all" method.
 It would serve not only the dependencies of a given plugin assembly but would also cover the whole app domain.
 Sometimes this is a beneficial behavior, like in case with the root `ContosoApp.exe` assembly.
 
-In contrast, `AssemblyAutoLoader.AddAssembly` method provides a finer control.
+In contrast, `AddAssembly` method provides a finer control.
 It only serves the dependencies of a _specified assembly_.
 It turns out to be a much saner choice for plugins where app domain is shared among a lot of things.
 In this way, assembly loaders from different plugins would not clash with each other, even when they look at a conflicting assembly dependency (it's easy to imagine that a lot of plugins would use the "same" but subtly different version of `Newtonsoft.Json`).
@@ -244,7 +244,7 @@ namespace MyPlugin
             // The loader automatically handles binding redirects according to a corresponding assembly
             // configuration (.config) file. If configuration file is missing then binding redirects are
             // automatically deducted according to the assembly compatibility heuristics.
-            AssemblyAutoLoader.AddAssembly(typeof(AssemblyLoader).Assembly);
+            AssemblyAutoLoader.Default.AddAssembly(typeof(AssemblyLoader).Assembly);
         }
 
         public static void Activate()

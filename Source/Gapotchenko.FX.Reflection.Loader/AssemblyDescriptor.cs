@@ -1,23 +1,26 @@
 ﻿using Gapotchenko.FX.Reflection.Loader.Backends;
-using Gapotchenko.FX.Reflection.Loader.Pal;
+using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Gapotchenko.FX.Reflection.Loader
 {
     sealed class AssemblyDescriptor : IDisposable
     {
-        public AssemblyDescriptor(Assembly assembly, string?[]? additionalProbingPaths)
+        public AssemblyDescriptor(Assembly assembly, IEnumerable<string?>? additionalProbingPaths, AssemblyLoadPal assemblyLoadPal, AssemblyAutoLoader assemblyAutoLoader)
         {
-            _AssemblyDependencyTracker = new AssemblyDependencyTracker(assembly);
+            m_IsAttached = assemblyAutoLoader.IsAttached;
+            m_AssemblyLoadPal = assemblyLoadPal;
+            m_AssemblyDependencyTracker = new AssemblyDependencyTracker(assembly);
 
             string assemblyFilePath = new Uri(assembly.EscapedCodeBase).LocalPath;
 
-            if (BindingRedirectAssemblyLoaderBackend.TryCreate(assemblyFilePath, _AssemblyDependencyTracker, out _AssemblyLoaderBackend))
+            if (BindingRedirectAssemblyLoaderBackend.TryCreate(assemblyFilePath, assemblyAutoLoader, m_AssemblyLoadPal, m_AssemblyDependencyTracker, out m_AssemblyLoaderBackend))
             {
-                _HasBindingRedirects = _AssemblyLoaderBackend != null;
+                m_HasBindingRedirects = m_AssemblyLoaderBackend != null;
                 AddProbingPaths(additionalProbingPaths);
             }
             else
@@ -31,18 +34,33 @@ namespace Gapotchenko.FX.Reflection.Loader
                 if (additionalProbingPaths != null)
                     _AccumulateNewProbingPaths(probingPaths, additionalProbingPaths);
 
-                _AssemblyLoaderBackend = new HeuristicAssemblyLoaderBackend(_AssemblyDependencyTracker, probingPaths.ToArray());
+                m_AssemblyLoaderBackend = new HeuristicAssemblyLoaderBackend(m_IsAttached, m_AssemblyLoadPal, m_AssemblyDependencyTracker, probingPaths.ToArray());
             }
         }
 
-        readonly AssemblyDependencyTracker _AssemblyDependencyTracker;
-        readonly IAssemblyLoaderBackend? _AssemblyLoaderBackend;
-        readonly bool _HasBindingRedirects;
+        readonly bool m_IsAttached;
+        readonly AssemblyLoadPal m_AssemblyLoadPal;
+        readonly AssemblyDependencyTracker m_AssemblyDependencyTracker;
+        readonly IAssemblyLoaderBackend? m_AssemblyLoaderBackend;
+        readonly bool m_HasBindingRedirects;
 
-        HashSet<string>? _ProbingPaths;
-        List<HeuristicAssemblyLoaderBackend>? _ProbingPathAssemblyLoaderBackends;
+        HashSet<string>? m_ProbingPaths;
+        List<HeuristicAssemblyLoaderBackend>? m_ProbingPathAssemblyLoaderBackends;
 
-        void _AccumulateNewProbingPaths(List<string> accumulator, string?[] probingPaths)
+        public IEnumerable<IAssemblyLoaderBackend> AssemblyLoaderBackends
+        {
+            get
+            {
+                if (m_AssemblyLoaderBackend != null)
+                    yield return m_AssemblyLoaderBackend;
+
+                if (m_ProbingPathAssemblyLoaderBackends != null)
+                    foreach (var i in m_ProbingPathAssemblyLoaderBackends)
+                        yield return i;
+            }
+        }
+
+        void _AccumulateNewProbingPaths(List<string> accumulator, IEnumerable<string?> probingPaths)
         {
             foreach (var i in probingPaths)
             {
@@ -51,15 +69,13 @@ namespace Gapotchenko.FX.Reflection.Loader
 
                 string probingPath = Path.GetFullPath(i);
 
-                if (_ProbingPaths == null)
-                    _ProbingPaths = new HashSet<string>(FileSystem.PathComparer);
-
-                if (_ProbingPaths.Add(probingPath))
+                m_ProbingPaths ??= new HashSet<string>(FileSystem.PathComparer);
+                if (m_ProbingPaths.Add(probingPath))
                     accumulator.Add(probingPath);
             }
         }
 
-        public bool AddProbingPaths(string?[]? probingPaths)
+        public bool AddProbingPaths(IEnumerable<string?>? probingPaths)
         {
             if (probingPaths == null)
                 return false;
@@ -70,13 +86,12 @@ namespace Gapotchenko.FX.Reflection.Loader
             if (newProbingPaths.Count == 0)
                 return false;
 
-            if (_ProbingPathAssemblyLoaderBackends == null)
-                _ProbingPathAssemblyLoaderBackends = new List<HeuristicAssemblyLoaderBackend>();
+            m_ProbingPathAssemblyLoaderBackends ??= new();
 
-            _ProbingPathAssemblyLoaderBackends.Add(
-                new HeuristicAssemblyLoaderBackend(_AssemblyDependencyTracker, newProbingPaths.ToArray())
+            m_ProbingPathAssemblyLoaderBackends.Add(
+                new HeuristicAssemblyLoaderBackend(m_IsAttached, m_AssemblyLoadPal, m_AssemblyDependencyTracker, newProbingPaths.ToArray())
                 {
-                    StrictVersionMatch = _HasBindingRedirects
+                    StrictVersionMatch = m_HasBindingRedirects
                 });
 
             return true;
@@ -84,10 +99,10 @@ namespace Gapotchenko.FX.Reflection.Loader
 
         public void Dispose()
         {
-            _AssemblyLoaderBackend?.Dispose();
+            m_AssemblyLoaderBackend?.Dispose();
 
-            if (_ProbingPathAssemblyLoaderBackends != null)
-                foreach (var backend in _ProbingPathAssemblyLoaderBackends)
+            if (m_ProbingPathAssemblyLoaderBackends != null)
+                foreach (var backend in m_ProbingPathAssemblyLoaderBackends)
                     backend.Dispose();
         }
     }

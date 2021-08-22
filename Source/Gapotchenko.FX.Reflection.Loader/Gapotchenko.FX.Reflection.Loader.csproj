@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0;netcoreapp2.0;netcoreapp3.0</TargetFrameworks>
 
     <!-- Use newer target frameworks in debug to allow more thorough nullable checks. -->
     <TargetFrameworks Condition=" '$(Configuration)' == 'Debug' ">$(TargetFrameworks);net5.0</TargetFrameworks>
 
     <CLSCompliant>true</CLSCompliant>
-    <RootNamespace>Gapotchenko.FX.Reflection</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

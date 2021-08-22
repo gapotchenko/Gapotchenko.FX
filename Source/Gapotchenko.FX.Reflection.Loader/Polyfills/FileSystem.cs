@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gapotchenko.FX.Reflection.Loader.Pal
+namespace Gapotchenko.FX.Reflection.Loader.Polyfills
 {
     static class FileSystem
     {
