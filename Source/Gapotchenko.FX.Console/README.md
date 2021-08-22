@@ -14,15 +14,15 @@ At later stages of development, teletypes were swapped with specialized computer
 Those electronic devices provided not only the basic input/output capabilities,
 but also colors, pseudographics, and a custom control language based around a then-emerging [ANSI X3.64](https://en.wikipedia.org/wiki/ANSI_escape_code) standard.
 
-Unix operating systems have built-in support for ANSI escape sequences that constitute the control language defined by the standard. Windows ignored that practice for a long time, up until Windows 10 version 1511.
+Unix operating systems have a built-in support for ANSI escape sequences that constitute the control language defined by the standard. Windows ignored that practice for a long time, up until Windows 10 version 1511.
 
 ### What ANSI Escape Sequences Are Useful For?
 
 Indeed, .NET base class library already provides
+[`System.Console`](https://docs.microsoft.com/en-us/dotnet/api/system.console) class with
 [`ForegroundColor`](https://docs.microsoft.com/en-us/dotnet/api/system.console.foregroundcolor),
 [`BackroundColor`](https://docs.microsoft.com/en-us/dotnet/api/system.console.backgroundcolor)
-and other properties of [`System.Console`](https://docs.microsoft.com/en-us/dotnet/api/system.console) class
-for controlling the console.
+and other properties for controlling the console.
 
 ANSI escape sequences become handy when the complexity of console output reaches a certain level:
 

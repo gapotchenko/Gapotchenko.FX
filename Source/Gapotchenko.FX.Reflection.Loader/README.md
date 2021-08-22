@@ -19,7 +19,7 @@ Assembly loading plays a crucial role in .NET apps.
 Once the app is started, .NET runtime ensures that all required assemblies are gradually loaded.
 
 Whenever the code hits the point where a type from another assembly is used, it raises `AppDomain.AssemblyResolve` event.
-The good thing is .NET comes pre-equipped with a default assembly loader which does a sensible job for most applications.
+The good thing is .NET comes pre-equipped with a default assembly loader, which does a sensible job for most applications.
 
 However, there are situations when having a default assembly loader is just not enough.
 This is where `Gapotchenko.FX.Reflection.Loader` module becomes extremely handy.
@@ -216,7 +216,7 @@ In this way, assembly loaders from different plugins would not clash with each o
 ## Scenario #4. Automatic handling of binding redirects for a .DLL assembly
 
 Assembly binding redirects allow to "remap" specific ranges of assembly versions.
-The redirects are automatically created by build tools, and then put to corresponding `.config` files of resulting assemblies.
+The redirects are automatically created by build tools, and then being put to corresponding `.config` files of resulting assemblies.
 [(Learn more)](https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/how-to-enable-and-disable-automatic-binding-redirection)
 
 Assembly binding redirects work well for apps, but get completely broken if you want to employ them for dynamically loaded assemblies like plugins.
