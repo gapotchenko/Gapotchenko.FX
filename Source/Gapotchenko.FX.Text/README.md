@@ -46,7 +46,7 @@ If a string function takes a `StringComparison` parameter then it may become a s
 
 That's why `Gapotchenko.FX.Text` module provides a set of so called regex trampoline functions.
 They look exactly like `Equals`, `StartsWith`, `EndsWith`, `IndexOf` but work with regex patterns instead of raw strings.
-They also end with `Regex` suffix in their names, so `Equals` becomes `EqualsRegex`, `StartsWith` correspondingly becomes `StartsWithRegex` and so on.
+They also end with `Regex` suffix in their names, so `Equals` becomes `EqualsRegex`, `StartsWith` correspondingly becomes `StartsWithRegex`, and so on.
 
 This is how a regex trampoline can be used for the given sample in order to meet the new requirements by a single line change:
 
