@@ -95,7 +95,7 @@ Of course, you can do that manually, for example, by changing `Parallel.ForEach`
 But this is a lot of manual and error-prone work.
 That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, an anotogonist to `Parallel`.
 It allows to make the switch by changing just the class name from `Parallel` to `Sequential` in a corresponding function call.
-So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now executed sequentially, allowing you to isolate that pesky multithreading bug.
+So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now executed sequentially allowing you to isolate that pesky multithreading bug.
 
 ## Usage
 
