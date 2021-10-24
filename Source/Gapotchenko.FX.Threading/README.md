@@ -86,7 +86,7 @@ void SyncMethod()
 As you can see, `TaskBridge` has a lot of chances to become your tool #1,
 as it elegantly solves a world-class problem of bridging sync and async models together.
 
-## Sequential, an Antogonist to Parallel
+## `Sequential`, an Antogonist to `Parallel`
 
 .NET platform provides `System.Threading.Tasks.Parallel` class that contains a bunch of static methods allowing to execute the tasks in parallel.
 But what if you want to temporarily switch them to a sequential execution mode?
