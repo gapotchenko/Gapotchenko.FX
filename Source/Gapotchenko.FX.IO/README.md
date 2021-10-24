@@ -106,7 +106,7 @@ bool IsContosoReportsFolder(string path) => path.StartsWith(@"Contoso\Reports");
 ```
 
 It kind of works, until we try to pass something like `Contoso\ReportsBackup`.
-The problem is `ReportsBackup` is a very different folder than `Reports`, but the provided function returns `true`.
+The problem is that `ReportsBackup` is a very different folder than `Reports`, but the provided function returns `true` nevertheless.
 
 We can cheat here, and try to use an updated function that adds a trailing slash:
 
