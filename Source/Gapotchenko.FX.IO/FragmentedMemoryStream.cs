@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.IO
     /// </summary>
     /// <remarks>
     /// <see cref="FragmentedMemoryStream"/> is similar to <see cref="MemoryStream"/> but uses a dynamic list of byte arrays as a backing store.
-    /// This allows to use the memory address space more efficiently, as there is no need to allocate a contiguous memory block for the whole stream.
+    /// This allows it to use the memory address space more efficiently, as there is no need to allocate a contiguous memory block for the whole stream.
     /// </remarks>
     public class FragmentedMemoryStream : Stream
     {
