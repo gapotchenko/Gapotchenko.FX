@@ -160,7 +160,7 @@ As you can see, despite a simple-looking signature, the End(…) method gives en
 ### EndAsync()
 
 The method is similar to `End()` but has an async implementation.
-If was created in order to efficiently handle a lot of processes in bulk.
+It can be used to efficiently handle a lot of processes in bulk.
 
 ## Usage
 
