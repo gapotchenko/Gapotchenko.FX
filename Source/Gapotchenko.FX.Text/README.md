@@ -66,6 +66,8 @@ An immediate improvement in expressiveness without duplication.
 `StringBuilder.AppendJoin` is a method that appeared in later versions of .NET platform.
 Gapochenko.FX provides a corresponding polyfill that can be used in code targeting older .NET versions.
 
+The benefit of this method is that it combines `string.Join` and `StringBuilder.Append` operations into one method using the underlying efficiency of `StringBuilder`.
+
 ## Usage
 
 `Gapotchenko.FX.Text` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Text):
