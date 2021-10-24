@@ -37,7 +37,7 @@ if (name.Equals("[mscorlib]System.Object", StringComparison.Ordinal) ||
 ```
 
 It does the job but such mechanical changes may put a toll on code maintainability when they accumulate.
-You can also spot some amount of code duplication there.
+You can also spot some amount of code duplication here.
 
 Another approach would be to use `Regex` class which is readily available in .NET.
 But that might destroy the expressiveness of string manipulation functions like `Equals`.
