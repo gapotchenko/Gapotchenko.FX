@@ -15,7 +15,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.Win32.Registry" Condition=" '$(TF_NET_FRAMEWORK)' != 'true' ">
+    <PackageReference Include="Microsoft.Win32.Registry" Condition=" '$(TargetFrameworkIdentifier)' != '.NETFramework' ">
       <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>

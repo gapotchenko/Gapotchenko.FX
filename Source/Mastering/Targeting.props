@@ -5,12 +5,15 @@
     <CheckEolTargetFramework>false</CheckEolTargetFramework> <!-- Disables NETSDK1138 warning -->
   </PropertyGroup>
 
+  <PropertyGroup>
+    <MasteringFrameworkIdentifier>$([MSBuild]::GetTargetFrameworkIdentifier($(TargetFramework)))</MasteringFrameworkIdentifier>
+    <MasteringFrameworkVersion>$([MSBuild]::GetTargetFrameworkVersion($(TargetFramework)))</MasteringFrameworkVersion>
+  </PropertyGroup>
+
   <!-- ================================================================== -->
   <!-- .NET Framework -->
   <!-- ================================================================== -->
   <PropertyGroup>
-    <TF_NET_FRAMEWORK Condition=" $(TargetFramework.StartsWith('net4', StringComparison.OrdinalIgnoreCase)) ">true</TF_NET_FRAMEWORK>
-
     <!-- .NET Framework 4.0 -->
     <GPFX_DefineConstants_NET40>TF_NET_FRAMEWORK;TFF_HOST_PROTECTION;TFF_TRANSACTIONS</GPFX_DefineConstants_NET40>
     <DefineConstants Condition=" '$(TargetFramework)' == 'net40' ">$(DefineConstants);$(GPFX_DefineConstants_NET40)</DefineConstants>

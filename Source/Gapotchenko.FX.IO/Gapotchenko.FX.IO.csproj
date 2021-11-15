@@ -15,7 +15,7 @@
     <ProjectReference Include="..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TF_NET_FRAMEWORK)' == 'true' ">
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
     <Reference Include="System.Transactions" />
   </ItemGroup>
 
