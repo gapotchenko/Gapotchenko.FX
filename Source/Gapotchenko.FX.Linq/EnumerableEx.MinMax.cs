@@ -128,13 +128,11 @@ namespace Gapotchenko.FX.Linq
 
             using var e = source.GetEnumerator();
 
-            bool referenceType = default(TKey) == null;
-
             if (!e.MoveNext())
             {
                 if (defaultValue.HasValue)
                     return defaultValue.Value;
-                else if (referenceType)
+                else if (default(TSource) == null)
                     return default;
                 else
                     throw new InvalidOperationException(Resources.NoElements);
@@ -152,7 +150,7 @@ namespace Gapotchenko.FX.Linq
                     var candidateValue = e.Current;
                     var candidateKey = keySelector(candidateValue);
 
-                    if (referenceType && candidateKey == null)
+                    if (candidateKey == null)
                         continue;
 
                     static bool IsMatch<T>(T candidateValue, T value, bool isMax, IComparer<T> comparer)

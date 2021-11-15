@@ -192,11 +192,11 @@ namespace Gapotchenko.FX.Linq.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void Linq_Enumerable_MinBy_4()
         {
             var seq = new string[0];
-            seq.MinBy(int.Parse);
+            var result = seq.MinBy(int.Parse);
+            Assert.IsNull(result);
         }
 
         [TestMethod]
@@ -240,11 +240,11 @@ namespace Gapotchenko.FX.Linq.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void Linq_Enumerable_MaxBy_4()
         {
             var seq = new string[0];
-            seq.MaxBy(int.Parse);
+            var result = seq.MaxBy(int.Parse);
+            Assert.IsNull(result);
         }
 
         [TestMethod]
