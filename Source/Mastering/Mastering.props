@@ -14,11 +14,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <NeutralLanguage>en-US</NeutralLanguage>
     <GenerateDocumentationFile>$(IsPublicProject)</GenerateDocumentationFile>
   </PropertyGroup>
@@ -30,6 +25,7 @@
 
   <!-- =================================================================== -->
 
+  <Import Project="Language.props" />
   <Import Project="NuGet.props" />
   <Import Project="Targeting.props" />
   <Import Project="AssemblySignature.props" />
