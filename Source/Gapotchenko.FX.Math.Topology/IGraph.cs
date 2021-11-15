@@ -53,23 +53,43 @@ namespace Gapotchenko.FX.Math.Topology
         new IGraph<T> GetTransposition();
 
         /// <summary>
+        /// <para>
         /// Performs in-place transitive reduction of the current graph.
+        /// </para>
+        /// <para>
+        /// Transitive reduction prunes the transitive relations that have shorter paths.
+        /// </para>
         /// </summary>
         void ReduceTransitions();
 
         /// <summary>
+        /// <para>
         /// Gets a transitively reduced graph.
+        /// </para>
+        /// <para>
+        /// Transitive reduction prunes the transitive relations that have shorter paths.
+        /// </para>
         /// </summary>
         /// <returns>The transitively reduced graph.</returns>
         new IGraph<T> GetTransitiveReduction();
 
         /// <summary>
+        /// <para>
         /// Performs in-place reflexive reduction of the current graph.
+        /// </para>
+        /// <para>
+        /// Reflexive reduction prunes the reflexive relations.
+        /// </para>
         /// </summary>
         void ReduceReflexes();
 
         /// <summary>
+        /// <para>
         /// Gets a reflexively reduced graph.
+        /// </para>
+        /// <para>
+        /// Reflexive reduction prunes the reflexive relations.
+        /// </para>
         /// </summary>
         /// <returns>The reflexively reduced graph.</returns>
         new IGraph<T> GetReflexiveReduction();
