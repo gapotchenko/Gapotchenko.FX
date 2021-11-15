@@ -129,11 +129,13 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
         static bool _TryReadIntPtr32(IntPtr hProcess, IntPtr ptr, out IntPtr readPtr)
         {
             bool result;
+#if TFF_CER
             RuntimeHelpers.PrepareConstrainedRegions();
             try
             {
             }
             finally
+#endif
             {
                 int dataSize = sizeof(Int32);
                 var data = Marshal.AllocHGlobal(dataSize);
@@ -157,11 +159,13 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
         static bool _TryReadIntPtr(IntPtr hProcess, IntPtr ptr, out IntPtr readPtr)
         {
             bool result;
+#if TFF_CER
             RuntimeHelpers.PrepareConstrainedRegions();
             try
             {
             }
             finally
+#endif
             {
                 int dataSize = IntPtr.Size;
                 var data = Marshal.AllocHGlobal(dataSize);
@@ -185,11 +189,13 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
         static bool _TryReadIntPtrWow64(IntPtr hProcess, long ptr, out long readPtr)
         {
             bool result;
+#if TFF_CER
             RuntimeHelpers.PrepareConstrainedRegions();
             try
             {
             }
             finally
+#endif
             {
                 int dataSize = sizeof(long);
                 var data = Marshal.AllocHGlobal(dataSize);
