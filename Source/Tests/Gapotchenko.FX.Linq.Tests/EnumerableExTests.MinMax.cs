@@ -208,6 +208,14 @@ namespace Gapotchenko.FX.Linq.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Linq_Enumerable_MinBy_6()
+        {
+            var seq = new int[0];
+            seq.MinBy(Fn.Identity);
+        }
+
+        [TestMethod]
         public void Linq_Enumerable_MaxBy_1()
         {
             var seq = new[] { "3", "2", "1", "4", "7", "5" };
@@ -245,6 +253,14 @@ namespace Gapotchenko.FX.Linq.Tests
             var seq = new[] { "3", "2", " 1 ", "4", " 7 ", "5" };
             var result = seq.MaxBy(int.Parse);
             Assert.AreEqual(" 7 ", result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Linq_Enumerable_MaxBy_6()
+        {
+            var seq = new int[0];
+            seq.MaxBy(Fn.Identity);
         }
 
         [TestMethod]
