@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-[assembly: TypeForwardedTo(typeof(Gapotchenko.FX.Collections.Generic.KeyValuePair))]
-
 #if TFF_KEYVALUEPAIR
 [assembly: TypeForwardedTo(typeof(System.Collections.Generic.KeyValuePair))]
 #endif
