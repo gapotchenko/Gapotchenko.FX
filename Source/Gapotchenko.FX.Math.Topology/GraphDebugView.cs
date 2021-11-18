@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Math.Topology
 
         public object Vertices => new CountedEnumerableView<T>(m_Graph.Vertices);
 
-        public object Edges => new CountedEnumerableView<(T A, T B)>(m_Graph.Edges);
+        public object Edges => new CountedEnumerableView<GraphEdge<T>>(m_Graph.Edges);
 
         public object AdjacencyList => m_Graph.AdjacencyList;
     }

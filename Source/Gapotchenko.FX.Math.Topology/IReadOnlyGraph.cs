@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <summary>
         /// Gets edges of the graph.
         /// </summary>
-        IEnumerable<(T A, T B)> Edges { get; }
+        IEnumerable<GraphEdge<T>> Edges { get; }
 
         /// <summary>
         /// <para>
@@ -48,9 +48,9 @@ namespace Gapotchenko.FX.Math.Topology
         /// <summary>
         /// Determines whether the graph contains a specified vertex.
         /// </summary>
-        /// <param name="v">The vertex.</param>
+        /// <param name="vertex">The vertex.</param>
         /// <returns><c>true</c> when the graph contains a specified vertex; otherwise, <c>false</c>.</returns>
-        bool ContainsVertex(T v);
+        bool ContainsVertex(T vertex);
 
         /// <summary>
         /// <para>
@@ -63,10 +63,10 @@ namespace Gapotchenko.FX.Math.Topology
         /// Adjacent vertices are those connected by one edge without intermediary vertices.
         /// </para>
         /// </summary>
-        /// <param name="a">The vertex A.</param>
-        /// <param name="b">The vertex B.</param>
-        /// <returns><c>true</c> when a specified vertex <paramref name="a">A</paramref> is adjacent to vertex <paramref name="b">B</paramref>; otherwise, <c>false</c>.</returns>
-        bool ContainsEdge(T a, T b);
+        /// <param name="from">The source vertex of the edge.</param>
+        /// <param name="to">The destination vertex of the edge.</param>
+        /// <returns><c>true</c> when a specified vertex <paramref name="from">A</paramref> is adjacent to vertex <paramref name="to">B</paramref>; otherwise, <c>false</c>.</returns>
+        bool ContainsEdge(T from, T to);
 
         /// <summary>
         /// <para>
@@ -97,9 +97,9 @@ namespace Gapotchenko.FX.Math.Topology
         /// <summary>
         /// Gets the vertices adjacent to a specified vertex.
         /// </summary>
-        /// <param name="v">The vertex to find the adjacent vertices for.</param>
-        /// <returns>Sequence of vertices adjacent to vertex <paramref name="v"/>.</returns>
-        IEnumerable<T> VerticesAdjacentTo(T v);
+        /// <param name="vertex">The vertex to find the adjacent vertices for.</param>
+        /// <returns>Sequence of vertices adjacent to vertex <paramref name="vertex"/>.</returns>
+        IEnumerable<T> VerticesAdjacentTo(T vertex);
 
         /// <summary>
         /// Gets a graph transposition by reversing its edge directions.

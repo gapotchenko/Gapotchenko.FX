@@ -68,7 +68,7 @@ namespace Gapotchenko.FX.Math.Topology
                 throw new ArgumentNullException(nameof(graph));
 
             foreach (var edge in graph.Edges)
-                AddEdge(edge.A, edge.B);
+                AddEdge(edge.From, edge.To);
 
             foreach (var vertex in graph.Vertices)
                 AddVertex(vertex);
@@ -185,7 +185,7 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<(T A, T B)> Edges
+        public IEnumerable<GraphEdge<T>> Edges
         {
             get
             {
@@ -196,7 +196,7 @@ namespace Gapotchenko.FX.Math.Topology
                     {
                         var a = i.Key;
                         foreach (var b in adjRow)
-                            yield return (a, b);
+                            yield return new GraphEdge<T>(a, b);
                     }
                 }
             }

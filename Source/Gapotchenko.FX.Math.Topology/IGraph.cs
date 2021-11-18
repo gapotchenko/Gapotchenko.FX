@@ -17,24 +17,24 @@ namespace Gapotchenko.FX.Math.Topology
         /// <summary>
         /// Adds the specified vertex.
         /// </summary>
-        /// <param name="v">The vertex.</param>
+        /// <param name="vertex">The vertex.</param>
         /// <returns><c>true</c> if the vertex is added to the graph; <c>false</c> if the vertex is already present.</returns>
-        bool AddVertex(T v);
+        bool AddVertex(T vertex);
 
         /// <summary>
         /// Removes the specified vertex.
         /// </summary>
-        /// <param name="v">The vertex.</param>
+        /// <param name="vertex">The vertex.</param>
         /// <returns><c>true</c> if the vertex was removed from the graph; otherwise, <c>false</c>.</returns>
-        bool RemoveVertex(T v);
+        bool RemoveVertex(T vertex);
 
         /// <summary>
         /// Adds the specified edge.
         /// </summary>
-        /// <param name="a">The A vertex of the edge.</param>
-        /// <param name="b">The B vertex of the edge.</param>
+        /// <param name="from">The source vertex of the edge.</param>
+        /// <param name="to">The destination vertex of the edge.</param>
         /// <returns><c>true</c> if the edge is added to the graph; <c>false</c> if the edge is already present.</returns>
-        bool AddEdge(T a, T b);
+        bool AddEdge(T from, T to);
 
         /// <summary>
         /// Clears the graph.
