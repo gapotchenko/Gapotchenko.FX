@@ -102,6 +102,11 @@ namespace Gapotchenko.FX.Math.Topology
         IEnumerable<T> VerticesAdjacentTo(T vertex);
 
         /// <summary>
+        /// Gets a value indicating whether the graph contains a cycle.
+        /// </summary>
+        bool IsCyclic { get; }
+
+        /// <summary>
         /// Gets a graph transposition by reversing its edge directions.
         /// </summary>
         /// <returns>The transposed graph.</returns>
