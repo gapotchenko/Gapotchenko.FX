@@ -209,61 +209,61 @@ namespace Gapotchenko.FX.Math.Topology
         public int Size => AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
 
         /// <inheritdoc/>
-        public bool AddVertex(T v)
+        public bool AddVertex(T vertex)
         {
-            if (ContainsVertex(v))
+            if (ContainsVertex(vertex))
                 return false;
-            AdjacencyList.Add(v, null);
+            AdjacencyList.Add(vertex, null);
             return true;
         }
 
         /// <inheritdoc/>
-        public bool RemoveVertex(T v)
+        public bool RemoveVertex(T vertex)
         {
             bool hit = false;
             var adjList = AdjacencyList;
 
-            hit |= adjList.Remove(v);
+            hit |= adjList.Remove(vertex);
 
             foreach (var i in adjList)
             {
                 var adjRow = i.Value;
                 if (adjRow != null)
-                    hit |= adjRow.Remove(v);
+                    hit |= adjRow.Remove(vertex);
             }
 
             return hit;
         }
 
         /// <inheritdoc/>
-        public bool ContainsVertex(T v) =>
-            AdjacencyList.ContainsKey(v) ||
-            AdjacencyList.Any(x => x.Value?.Contains(v) ?? false);
+        public bool ContainsVertex(T vertex) =>
+            AdjacencyList.ContainsKey(vertex) ||
+            AdjacencyList.Any(x => x.Value?.Contains(vertex) ?? false);
 
         /// <inheritdoc/>
-        public bool AddEdge(T a, T b)
+        public bool AddEdge(T from, T to)
         {
             var adjList = AdjacencyList;
 
-            if (!adjList.TryGetValue(a, out var adjRow))
+            if (!adjList.TryGetValue(from, out var adjRow))
             {
                 adjRow = NewAdjacencyRow();
-                adjList.Add(a, adjRow);
+                adjList.Add(from, adjRow);
             }
             else if (adjRow == null)
             {
                 adjRow = NewAdjacencyRow();
-                adjList[a] = adjRow;
+                adjList[from] = adjRow;
             }
 
-            return adjRow.Add(b);
+            return adjRow.Add(to);
         }
 
         /// <inheritdoc/>
-        public bool ContainsEdge(T a, T b) =>
-            AdjacencyList.TryGetValue(a, out var adjRow) &&
+        public bool ContainsEdge(T from, T to) =>
+            AdjacencyList.TryGetValue(from, out var adjRow) &&
             adjRow != null &&
-            adjRow.Contains(b);
+            adjRow.Contains(to);
 
         struct ReachibilityTraverser
         {
@@ -312,18 +312,18 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool HasTransitivePath(T a, T b) => new ReachibilityTraverser(this, b, false).CanBeReachedFrom(a);
+        public bool HasTransitivePath(T from, T to) => new ReachibilityTraverser(this, to, false).CanBeReachedFrom(from);
 
         /// <inheritdoc/>
-        public bool HasPath(T a, T b) => ContainsEdge(a, b) || HasTransitivePath(a, b);
+        public bool HasPath(T from, T to) => ContainsEdge(from, to) || HasTransitivePath(from, to);
 
         /// <inheritdoc/>
         public void Clear() => AdjacencyList.Clear();
 
         /// <inheritdoc/>
-        public IEnumerable<T> VerticesAdjacentTo(T v)
+        public IEnumerable<T> VerticesAdjacentTo(T vertex)
         {
-            AdjacencyList.TryGetValue(v, out var adjRow);
+            AdjacencyList.TryGetValue(vertex, out var adjRow);
             return adjRow ?? Enumerable.Empty<T>();
         }
 

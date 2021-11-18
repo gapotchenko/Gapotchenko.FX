@@ -70,7 +70,7 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <summary>
         /// <para>
-        /// Gets a value indicating whether there is a path from a specified source vertex to target.
+        /// Gets a value indicating whether there is a path from a specified source vertex to a destination.
         /// </para>
         /// <para>
         /// A path consists of one or more edges with or without intermediate vertices.
@@ -83,7 +83,7 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <summary>
         /// <para>
-        /// Gets a value indicating whether there is a transitive path from a specified source vertex to target.
+        /// Gets a value indicating whether there is a transitive path from a specified source vertex to a destination.
         /// </para>
         /// <para>
         /// A transitive path consists of two or more edges with at least one intermediate vertex.

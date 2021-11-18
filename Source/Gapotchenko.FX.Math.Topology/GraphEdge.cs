@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Math.Topology
+﻿using System.ComponentModel;
+
+namespace Gapotchenko.FX.Math.Topology
 {
     /// <summary>
     /// Represents an edge of a graph.
@@ -29,5 +31,17 @@
 
         /// <inheritdoc/>
         public override string ToString() => $"{From} -> {To}";
+
+        /// <summary>
+        /// Deconstructs the current <see cref="GraphEdge{T}"/>.
+        /// </summary>
+        /// <param name="from">The source vertex of the current <see cref="GraphEdge{T}"/>.</param>
+        /// <param name="to">The destination vertex of the current <see cref="GraphEdge{T}"/>.</param>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void Deconstruct(out T from, out T to)
+        {
+            from = From;
+            to = To;
+        }
     }
 }
