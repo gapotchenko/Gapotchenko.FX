@@ -5,14 +5,19 @@
         /// <inheritdoc/>
         public void ReduceReflexes()
         {
-            foreach (var i in AdjacencyList)
+            bool hasChanges = false;
+
+            foreach (var i in m_AdjacencyList)
             {
                 var adjRow = i.Value;
                 if (adjRow == null)
                     continue;
 
-                adjRow.Remove(i.Key);
+                hasChanges |= adjRow.Remove(i.Key);
             }
+
+            if (hasChanges)
+                InvalidateCache();
         }
 
         /// <summary>

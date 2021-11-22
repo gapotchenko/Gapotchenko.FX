@@ -31,7 +31,7 @@ namespace Gapotchenko.FX.Math.Topology
             /// The order of a graph is |V|, the number of its vertices.
             /// </para>
             /// </summary>
-            public int Count => GetEnumerator().Rest().Count();
+            public int Count => m_Graph.m_CachedOrder ??= GetEnumerator().Rest().Count();
 
             bool ICollection<T>.IsReadOnly => false;
 
@@ -44,7 +44,8 @@ namespace Gapotchenko.FX.Math.Topology
             {
                 if (Contains(vertex))
                     return false;
-                m_Graph.AdjacencyList.Add(vertex, null);
+                m_Graph.m_AdjacencyList.Add(vertex, null);
+                ++m_Graph.m_CachedOrder;
                 return true;
             }
 
@@ -152,6 +153,9 @@ namespace Gapotchenko.FX.Math.Topology
                     if (adjacencyRow != null)
                         hit |= adjacencyRow.Remove(vertex);
                 }
+
+                if (hit)
+                    --m_Graph.m_CachedOrder;
 
                 return hit;
             }

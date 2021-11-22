@@ -86,7 +86,7 @@ namespace Gapotchenko.FX.Harness.Console
 
             var g = new Graph<int>();
             g.AddEdge(1, 2);
-            
+
             Console.WriteLine(g.ToString("D"));
 
             AssemblyAutoLoader.Default.AddProbingPath(@"C:\");

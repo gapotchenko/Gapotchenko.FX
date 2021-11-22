@@ -182,9 +182,23 @@ namespace Gapotchenko.FX.Math.Topology
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public VertexSet Vertices => new(this);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISet<T> IGraph<T>.Vertices => Vertices;
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlySet<T> IReadOnlyGraph<T>.Vertices => Vertices;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        int? m_CachedOrder = 0;
+
+        /// <summary>
+        /// Invalidates the cache.
+        /// This method should be called if <see cref="AdjacencyList"/> is manipulated directly.
+        /// </summary>
+        protected void InvalidateCache()
+        {
+            m_CachedOrder = null;
+        }
 
         /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -192,7 +206,7 @@ namespace Gapotchenko.FX.Math.Topology
         {
             get
             {
-                foreach (var i in AdjacencyList)
+                foreach (var i in m_AdjacencyList)
                 {
                     var adjRow = i.Value;
                     if (adjRow != null)
@@ -206,12 +220,12 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public int Size => AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
+        public int Size => m_AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
 
         /// <inheritdoc/>
         public bool AddEdge(T from, T to)
         {
-            var adjList = AdjacencyList;
+            var adjList = m_AdjacencyList;
 
             if (!adjList.TryGetValue(from, out var adjRow))
             {
@@ -224,12 +238,20 @@ namespace Gapotchenko.FX.Math.Topology
                 adjList[from] = adjRow;
             }
 
-            return adjRow.Add(to);
+            if (adjRow.Add(to))
+            {
+                m_CachedOrder = null;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <inheritdoc/>
         public bool ContainsEdge(T from, T to) =>
-            AdjacencyList.TryGetValue(from, out var adjRow) &&
+            m_AdjacencyList.TryGetValue(from, out var adjRow) &&
             adjRow != null &&
             adjRow.Contains(to);
 
@@ -255,7 +277,7 @@ namespace Gapotchenko.FX.Math.Topology
                 if (!m_VisitedNodes.Add(source))
                     return false;
 
-                if (m_Graph.AdjacencyList.TryGetValue(source, out var adjRow) &&
+                if (m_Graph.m_AdjacencyList.TryGetValue(source, out var adjRow) &&
                     adjRow != null)
                 {
                     if (m_Adjacent)
@@ -286,12 +308,16 @@ namespace Gapotchenko.FX.Math.Topology
         public bool HasPath(T from, T to) => ContainsEdge(from, to) || HasTransitivePath(from, to);
 
         /// <inheritdoc/>
-        public void Clear() => AdjacencyList.Clear();
+        public void Clear()
+        {
+            m_AdjacencyList.Clear();
+            m_CachedOrder = 0;
+        }
 
         /// <inheritdoc/>
         public IEnumerable<T> VerticesAdjacentTo(T vertex)
         {
-            AdjacencyList.TryGetValue(vertex, out var adjRow);
+            m_AdjacencyList.TryGetValue(vertex, out var adjRow);
             return adjRow ?? Enumerable.Empty<T>();
         }
 

@@ -7,7 +7,9 @@ namespace Gapotchenko.FX.Math.Topology
         /// <inheritdoc/>
         public void ReduceTransitions()
         {
-            foreach (var i in AdjacencyList)
+            bool hasChanges = false;
+
+            foreach (var i in m_AdjacencyList)
             {
                 var adjRow = i.Value;
                 if (adjRow == null)
@@ -23,8 +25,15 @@ namespace Gapotchenko.FX.Math.Topology
                         removeList.Add(b);
                 }
 
-                adjRow.ExceptWith(removeList);
+                if (removeList.Count != 0)
+                {
+                    adjRow.ExceptWith(removeList);
+                    hasChanges = true;
+                }
             }
+
+            if (hasChanges)
+                InvalidateCache();
         }
 
         /// <summary>
