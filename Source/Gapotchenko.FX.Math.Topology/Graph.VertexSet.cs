@@ -50,10 +50,7 @@ namespace Gapotchenko.FX.Math.Topology
             }
 
             /// <inheritdoc/>
-            public void UnionWith(IEnumerable<T> other)
-            {
-                throw new NotImplementedException();
-            }
+            public void UnionWith(IEnumerable<T> other) => SetImplUtil.UnionWith(this, other);
 
             /// <inheritdoc/>
             public void IntersectWith(IEnumerable<T> other)
@@ -130,10 +127,7 @@ namespace Gapotchenko.FX.Math.Topology
             }
 
             /// <inheritdoc/>
-            public void CopyTo(T[] array, int arrayIndex)
-            {
-                throw new NotImplementedException();
-            }
+            public void CopyTo(T[] array, int arrayIndex) => SetImplUtil.CopyTo(this, array, arrayIndex);
 
             /// <summary>
             /// Removes the specified vertex from the graph.
@@ -163,7 +157,7 @@ namespace Gapotchenko.FX.Math.Topology
             /// <inheritdoc/>
             public IEnumerator<T> GetEnumerator() =>
                 m_Graph.m_AdjacencyList
-                .SelectMany(x => (x.Value ?? Enumerable.Empty<T>()).Append(x.Key))
+                .SelectMany(x => (x.Value ?? Enumerable.Empty<T>()).Prepend(x.Key))
                 .Distinct(m_Graph.Comparer)
                 .GetEnumerator();
 
