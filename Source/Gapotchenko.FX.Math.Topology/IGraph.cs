@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Math.Topology
 {
@@ -15,18 +16,9 @@ namespace Gapotchenko.FX.Math.Topology
     public interface IGraph<T> : IReadOnlyGraph<T>, ICloneable<IGraph<T>>
     {
         /// <summary>
-        /// Adds the specified vertex.
+        /// Gets a set containing the vertices of the graph.
         /// </summary>
-        /// <param name="vertex">The vertex.</param>
-        /// <returns><c>true</c> if the vertex is added to the graph; <c>false</c> if the vertex is already present.</returns>
-        bool AddVertex(T vertex);
-
-        /// <summary>
-        /// Removes the specified vertex.
-        /// </summary>
-        /// <param name="vertex">The vertex.</param>
-        /// <returns><c>true</c> if the vertex was removed from the graph; otherwise, <c>false</c>.</returns>
-        bool RemoveVertex(T vertex);
+        new ISet<T> Vertices { get; }
 
         /// <summary>
         /// Adds the specified edge.
@@ -37,7 +29,7 @@ namespace Gapotchenko.FX.Math.Topology
         bool AddEdge(T from, T to);
 
         /// <summary>
-        /// Clears the graph.
+        /// Removes all vertices and edges from the graph.
         /// </summary>
         void Clear();
 

@@ -16,24 +16,14 @@ namespace Gapotchenko.FX.Math.Topology
     public interface IReadOnlyGraph<T> : ICloneable<IReadOnlyGraph<T>>
     {
         /// <summary>
-        /// Gets vertices of the graph.
+        /// Gets a set containing the vertices of the graph.
         /// </summary>
-        IEnumerable<T> Vertices { get; }
+        IReadOnlySet<T> Vertices { get; }
 
         /// <summary>
         /// Gets edges of the graph.
         /// </summary>
         IEnumerable<GraphEdge<T>> Edges { get; }
-
-        /// <summary>
-        /// <para>
-        /// Gets the order of the graph.
-        /// </para>
-        /// <para>
-        /// The order of a graph is |V|, the number of its vertices.
-        /// </para>
-        /// </summary>
-        int Order { get; }
 
         /// <summary>
         /// <para>
@@ -44,13 +34,6 @@ namespace Gapotchenko.FX.Math.Topology
         /// </para>
         /// </summary>
         int Size { get; }
-
-        /// <summary>
-        /// Determines whether the graph contains a specified vertex.
-        /// </summary>
-        /// <param name="vertex">The vertex.</param>
-        /// <returns><c>true</c> when the graph contains a specified vertex; otherwise, <c>false</c>.</returns>
-        bool ContainsVertex(T vertex);
 
         /// <summary>
         /// <para>

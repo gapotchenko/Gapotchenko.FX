@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Math.Topology
                 graph.AddEdge(edge.To, edge.From);
 
             foreach (var vertex in vertices)
-                graph.AddVertex(vertex);
+                graph.Vertices.Add(vertex);
         }
 
         IGraph<T> IGraph<T>.GetTransposition() => GetTransposition();

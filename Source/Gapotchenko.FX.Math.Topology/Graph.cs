@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Math.Topology
     /// </para>
     /// </summary>
     /// <typeparam name="T">The type of vertices in the graph.</typeparam>
-    [DebuggerDisplay("Order = {Order}, Size = {Size}")]
+    [DebuggerDisplay("Order = {Vertices.Count}, Size = {Size}")]
     [DebuggerTypeProxy(typeof(GraphDebugView<>))]
     public partial class Graph<T> : IGraph<T>
         where T : notnull
@@ -71,7 +71,7 @@ namespace Gapotchenko.FX.Math.Topology
                 AddEdge(edge.From, edge.To);
 
             foreach (var vertex in graph.Vertices)
-                AddVertex(vertex);
+                Vertices.Add(vertex);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Gapotchenko.FX.Math.Topology
                 }
 
                 if (!edge)
-                    AddVertex(ei);
+                    Vertices.Add(ei);
             }
         }
 
@@ -176,12 +176,15 @@ namespace Gapotchenko.FX.Math.Topology
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected internal IDictionary<T, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets a set containing the vertices of the graph.
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<T> Vertices =>
-            AdjacencyList
-            .SelectMany(x => (x.Value ?? Enumerable.Empty<T>()).Append(x.Key))
-            .Distinct(Comparer);
+        public VertexSet Vertices => new(this);
+
+        ISet<T> IGraph<T>.Vertices => Vertices;
+
+        IReadOnlySet<T> IReadOnlyGraph<T>.Vertices => Vertices;
 
         /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -203,42 +206,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public int Order => Vertices.Count();
-
-        /// <inheritdoc/>
         public int Size => AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
-
-        /// <inheritdoc/>
-        public bool AddVertex(T vertex)
-        {
-            if (ContainsVertex(vertex))
-                return false;
-            AdjacencyList.Add(vertex, null);
-            return true;
-        }
-
-        /// <inheritdoc/>
-        public bool RemoveVertex(T vertex)
-        {
-            bool hit = false;
-            var adjList = AdjacencyList;
-
-            hit |= adjList.Remove(vertex);
-
-            foreach (var i in adjList)
-            {
-                var adjRow = i.Value;
-                if (adjRow != null)
-                    hit |= adjRow.Remove(vertex);
-            }
-
-            return hit;
-        }
-
-        /// <inheritdoc/>
-        public bool ContainsVertex(T vertex) =>
-            AdjacencyList.ContainsKey(vertex) ||
-            AdjacencyList.Any(x => x.Value?.Contains(vertex) ?? false);
 
         /// <inheritdoc/>
         public bool AddEdge(T from, T to)
