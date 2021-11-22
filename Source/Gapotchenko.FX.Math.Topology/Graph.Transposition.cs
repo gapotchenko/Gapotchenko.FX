@@ -29,7 +29,7 @@ namespace Gapotchenko.FX.Math.Topology
         static void TransposeCore(Graph<T> graph, IEnumerable<GraphEdge<T>> edges, IEnumerable<T> vertices)
         {
             foreach (var edge in edges)
-                graph.AddEdge(edge.To, edge.From);
+                graph.Edges.Add(edge.Reverse());
 
             foreach (var vertex in vertices)
                 graph.Vertices.Add(vertex);

@@ -85,7 +85,8 @@ namespace Gapotchenko.FX.Harness.Console
                 Console.WriteLine(string.Join(" ", i));
 
             var g = new Graph<int>();
-            g.AddEdge(1, 2);
+            g.Edges.Add(1, 2);
+            g.Vertices.Add(3);
 
             Console.WriteLine(g.ToString("D"));
 

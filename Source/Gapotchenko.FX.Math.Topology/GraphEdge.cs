@@ -6,7 +6,7 @@ namespace Gapotchenko.FX.Math.Topology
     /// Represents an edge of a graph.
     /// </summary>
     /// <typeparam name="T">The type of vertices in the graph.</typeparam>
-    public struct GraphEdge<T>
+    public readonly struct GraphEdge<T>
     {
         /// <summary>
         /// Initializes a new instance of <see cref="GraphEdge{T}"/> struct with source and destination vertices.
@@ -43,5 +43,11 @@ namespace Gapotchenko.FX.Math.Topology
             from = From;
             to = To;
         }
+
+        /// <summary>
+        /// Reverses the edge direction by swapping source and destination vertices.
+        /// </summary>
+        /// <returns>The edge with reversed direction.</returns>
+        public GraphEdge<T> Reverse() => new(To, From);
     }
 }

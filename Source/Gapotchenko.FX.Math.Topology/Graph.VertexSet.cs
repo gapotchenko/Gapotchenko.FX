@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Represents a set of graph vertices.
         /// </summary>
         [DebuggerDisplay("Count = {Count}")]
-        public struct VertexSet : ISet<T>, IReadOnlySet<T>
+        public sealed class VertexSet : ISet<T>, IReadOnlySet<T>
         {
             internal VertexSet(Graph<T> graph)
             {

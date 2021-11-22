@@ -21,12 +21,9 @@ namespace Gapotchenko.FX.Math.Topology
         new ISet<T> Vertices { get; }
 
         /// <summary>
-        /// Adds the specified edge.
+        /// Gets a set containing the edges of the graph.
         /// </summary>
-        /// <param name="from">The source vertex of the edge.</param>
-        /// <param name="to">The destination vertex of the edge.</param>
-        /// <returns><c>true</c> if the edge is added to the graph; <c>false</c> if the edge is already present.</returns>
-        bool AddEdge(T from, T to);
+        new ISet<GraphEdge<T>> Edges { get; }
 
         /// <summary>
         /// Removes all vertices and edges from the graph.

@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Math.Topology
     /// </para>
     /// </summary>
     /// <typeparam name="T">The type of vertices in the graph.</typeparam>
-    [DebuggerDisplay("Order = {Vertices.Count}, Size = {Size}")]
+    [DebuggerDisplay("Order = {Vertices.Count}, Size = {Edges.Count}")]
     [DebuggerTypeProxy(typeof(GraphDebugView<>))]
     public partial class Graph<T> : IGraph<T>
         where T : notnull
@@ -67,11 +67,13 @@ namespace Gapotchenko.FX.Math.Topology
             if (graph == null)
                 throw new ArgumentNullException(nameof(graph));
 
+            var edges = Edges;
             foreach (var edge in graph.Edges)
-                AddEdge(edge.From, edge.To);
+                edges.Add(edge);
 
+            var vertices = Vertices;
             foreach (var vertex in graph.Vertices)
-                Vertices.Add(vertex);
+                vertices.Add(vertex);
         }
 
         /// <summary>
@@ -111,7 +113,7 @@ namespace Gapotchenko.FX.Math.Topology
 
                     if (df(ei, ej))
                     {
-                        AddEdge(ei, ej);
+                        Edges.Add(ei, ej);
                         edge = true;
                     }
                 }
@@ -165,22 +167,14 @@ namespace Gapotchenko.FX.Math.Topology
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly Dictionary<T, AdjacencyRow?> m_AdjacencyList;
 
-        /// <summary>
-        /// <para>
-        /// Gets the graph adjacency list.
-        /// </para>
-        /// <para>
-        /// The list consists of a number of rows, each of them representing a set of vertices that relate to another vertex.
-        /// </para>
-        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected internal IDictionary<T, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
+        VertexSet? m_CachedVertices;
 
         /// <summary>
         /// Gets a set containing the vertices of the graph.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public VertexSet Vertices => new(this);
+        public VertexSet Vertices => m_CachedVertices ??= new(this);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISet<T> IGraph<T>.Vertices => Vertices;
@@ -189,71 +183,25 @@ namespace Gapotchenko.FX.Math.Topology
         IReadOnlySet<T> IReadOnlyGraph<T>.Vertices => Vertices;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        int? m_CachedOrder = 0;
+        EdgeSet? m_CachedEdges;
 
         /// <summary>
-        /// Invalidates the cache.
-        /// This method should be called if <see cref="AdjacencyList"/> is manipulated directly.
+        /// Gets a set containing edges of the graph.
         /// </summary>
-        protected void InvalidateCache()
-        {
-            m_CachedOrder = null;
-        }
-
-        /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<GraphEdge<T>> Edges
-        {
-            get
-            {
-                foreach (var i in m_AdjacencyList)
-                {
-                    var adjRow = i.Value;
-                    if (adjRow != null)
-                    {
-                        var a = i.Key;
-                        foreach (var b in adjRow)
-                            yield return new GraphEdge<T>(a, b);
-                    }
-                }
-            }
-        }
+        public EdgeSet Edges => m_CachedEdges ??= new(this);
 
-        /// <inheritdoc/>
-        public int Size => m_AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISet<GraphEdge<T>> IGraph<T>.Edges => Edges;
 
-        /// <inheritdoc/>
-        public bool AddEdge(T from, T to)
-        {
-            var adjList = m_AdjacencyList;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlySet<GraphEdge<T>> IReadOnlyGraph<T>.Edges => Edges;
 
-            if (!adjList.TryGetValue(from, out var adjRow))
-            {
-                adjRow = NewAdjacencyRow();
-                adjList.Add(from, adjRow);
-            }
-            else if (adjRow == null)
-            {
-                adjRow = NewAdjacencyRow();
-                adjList[from] = adjRow;
-            }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        int? m_CachedOrder = 0;
 
-            if (adjRow.Add(to))
-            {
-                m_CachedOrder = null;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <inheritdoc/>
-        public bool ContainsEdge(T from, T to) =>
-            m_AdjacencyList.TryGetValue(from, out var adjRow) &&
-            adjRow != null &&
-            adjRow.Contains(to);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        int? m_CachedSize = 0;
 
         struct ReachibilityTraverser
         {
@@ -305,13 +253,14 @@ namespace Gapotchenko.FX.Math.Topology
         public bool HasTransitivePath(T from, T to) => new ReachibilityTraverser(this, to, false).CanBeReachedFrom(from);
 
         /// <inheritdoc/>
-        public bool HasPath(T from, T to) => ContainsEdge(from, to) || HasTransitivePath(from, to);
+        public bool HasPath(T from, T to) => Edges.Contains(from, to) || HasTransitivePath(from, to);
 
         /// <inheritdoc/>
         public void Clear()
         {
             m_AdjacencyList.Clear();
             m_CachedOrder = 0;
+            m_CachedSize = 0;
         }
 
         /// <inheritdoc/>
@@ -328,9 +277,30 @@ namespace Gapotchenko.FX.Math.Topology
         protected Graph<T> NewGraph() => new(Comparer);
 
         /// <summary>
+        /// <para>
+        /// Gets the graph adjacency list.
+        /// </para>
+        /// <para>
+        /// The list consists of a number of rows, each of them representing a set of vertices that relate to another vertex.
+        /// </para>
+        /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected internal IDictionary<T, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
+
+        /// <summary>
         /// Creates a new adjacency row instance inheriting parent class settings such as comparer.
         /// </summary>
         /// <returns>The new adjacency row instance.</returns>
         protected AdjacencyRow NewAdjacencyRow() => new(Comparer);
+
+        /// <summary>
+        /// Invalidates the cache.
+        /// This method should be called if <see cref="AdjacencyList"/> is manipulated directly.
+        /// </summary>
+        protected void InvalidateCache()
+        {
+            m_CachedOrder = null;
+            m_CachedSize = null;
+        }
     }
 }

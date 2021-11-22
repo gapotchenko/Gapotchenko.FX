@@ -21,35 +21,9 @@ namespace Gapotchenko.FX.Math.Topology
         IReadOnlySet<T> Vertices { get; }
 
         /// <summary>
-        /// Gets edges of the graph.
+        /// Gets a set containing the edges of the graph.
         /// </summary>
-        IEnumerable<GraphEdge<T>> Edges { get; }
-
-        /// <summary>
-        /// <para>
-        /// Gets the size of the graph.
-        /// </para>
-        /// <para>
-        /// The size of a graph is |E|, the number of its edges.
-        /// </para>
-        /// </summary>
-        int Size { get; }
-
-        /// <summary>
-        /// <para>
-        /// Determines whether the graph contains a specified edge.
-        /// </para>
-        /// <para>
-        /// The presence of an edge in the graph signifies that corresponding vertices are adjacent.
-        /// </para>
-        /// <para>
-        /// Adjacent vertices are those connected by one edge without intermediary vertices.
-        /// </para>
-        /// </summary>
-        /// <param name="from">The source vertex of the edge.</param>
-        /// <param name="to">The destination vertex of the edge.</param>
-        /// <returns><c>true</c> when a specified vertex <paramref name="from">A</paramref> is adjacent to vertex <paramref name="to">B</paramref>; otherwise, <c>false</c>.</returns>
-        bool ContainsEdge(T from, T to);
+        IReadOnlySet<GraphEdge<T>> Edges { get; }
 
         /// <summary>
         /// <para>
