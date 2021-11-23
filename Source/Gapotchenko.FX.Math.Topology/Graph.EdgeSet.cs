@@ -35,6 +35,7 @@ namespace Gapotchenko.FX.Math.Topology
             /// </summary>
             public int Count => m_Graph.m_CachedSize ??= m_Graph.m_AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
 
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             bool ICollection<GraphEdge<T>>.IsReadOnly => false;
 
             /// <summary>

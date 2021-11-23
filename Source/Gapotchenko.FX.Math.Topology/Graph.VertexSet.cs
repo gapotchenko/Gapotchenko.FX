@@ -33,6 +33,7 @@ namespace Gapotchenko.FX.Math.Topology
             /// </summary>
             public int Count => m_Graph.m_CachedOrder ??= GetEnumerator().Rest().Count();
 
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             bool ICollection<T>.IsReadOnly => false;
 
             /// <summary>

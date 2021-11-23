@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="from">The source vertex of the edge.</param>
         /// <param name="to">The destination vertex of the edge.</param>
         /// <returns><c>true</c> when a specified vertex <paramref name="from">A</paramref> is adjacent to vertex <paramref name="to">B</paramref>; otherwise, <c>false</c>.</returns>
-        public static bool Contains<T>(this IReadOnlySet<GraphEdge<T>> edgeSet, T from, T to) =>
+        public static bool Contains<T>(this ISet<GraphEdge<T>> edgeSet, T from, T to) =>
             (edgeSet ?? throw new ArgumentNullException(nameof(edgeSet))).Contains(new GraphEdge<T>(from, to));
     }
 }

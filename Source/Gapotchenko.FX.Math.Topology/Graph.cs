@@ -170,32 +170,28 @@ namespace Gapotchenko.FX.Math.Topology
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         VertexSet? m_CachedVertices;
 
-        /// <summary>
-        /// Gets a set containing the vertices of the graph.
-        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public VertexSet Vertices => m_CachedVertices ??= new(this);
+        VertexSet VerticesCore => m_CachedVertices ??= new(this);
+
+        /// <inheritdoc/>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public ISet<T> Vertices => VerticesCore;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISet<T> IGraph<T>.Vertices => Vertices;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySet<T> IReadOnlyGraph<T>.Vertices => Vertices;
+        IReadOnlySet<T> IReadOnlyGraph<T>.Vertices => VerticesCore;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         EdgeSet? m_CachedEdges;
 
-        /// <summary>
-        /// Gets a set containing edges of the graph.
-        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public EdgeSet Edges => m_CachedEdges ??= new(this);
+        EdgeSet EdgesCore => m_CachedEdges ??= new(this);
+
+        /// <inheritdoc/>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public ISet<GraphEdge<T>> Edges => EdgesCore;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISet<GraphEdge<T>> IGraph<T>.Edges => Edges;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySet<GraphEdge<T>> IReadOnlyGraph<T>.Edges => Edges;
+        IReadOnlySet<GraphEdge<T>> IReadOnlyGraph<T>.Edges => EdgesCore;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int? m_CachedOrder = 0;
