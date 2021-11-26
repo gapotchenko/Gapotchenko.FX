@@ -9,11 +9,8 @@ namespace Gapotchenko.FX.Math.Topology
 {
     partial class Graph<T>
     {
-        /// <summary>
-        /// Represents a set of graph vertices.
-        /// </summary>
         [DebuggerDisplay("Count = {Count}")]
-        public sealed class VertexSet : ISet<T>, IReadOnlySet<T>
+        sealed class VertexSet : ISet<T>, IReadOnlySet<T>
         {
             internal VertexSet(Graph<T> graph)
             {
@@ -23,24 +20,11 @@ namespace Gapotchenko.FX.Math.Topology
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly Graph<T> m_Graph;
 
-            /// <summary>
-            /// <para>
-            /// Gets the order of the graph.
-            /// </para>
-            /// <para>
-            /// The order of a graph is |V|, the number of its vertices.
-            /// </para>
-            /// </summary>
             public int Count => m_Graph.m_CachedOrder ??= GetEnumerator().Rest().Count();
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             bool ICollection<T>.IsReadOnly => false;
 
-            /// <summary>
-            /// Adds the specified vertex to the graph.
-            /// </summary>
-            /// <param name="vertex">The vertex.</param>
-            /// <returns><c>true</c> if the vertex is added to the graph; <c>false</c> if the vertex is already present.</returns>
             public bool Add(T vertex)
             {
                 if (Contains(vertex))
@@ -50,58 +34,48 @@ namespace Gapotchenko.FX.Math.Topology
                 return true;
             }
 
-            /// <inheritdoc/>
             public void UnionWith(IEnumerable<T> other) => SetImplUtil.UnionWith(this, other);
 
-            /// <inheritdoc/>
             public void IntersectWith(IEnumerable<T> other)
             {
                 throw new NotImplementedException();
             }
 
-            /// <inheritdoc/>
             public void ExceptWith(IEnumerable<T> other)
             {
                 throw new NotImplementedException();
             }
 
-            /// <inheritdoc/>
             public void SymmetricExceptWith(IEnumerable<T> other)
             {
                 throw new NotImplementedException();
             }
 
-            /// <inheritdoc/>
             public bool IsSubsetOf(IEnumerable<T> other)
             {
                 throw new NotImplementedException();
             }
 
-            /// <inheritdoc/>
             public bool IsSupersetOf(IEnumerable<T> other)
             {
                 throw new NotImplementedException();
             }
 
-            /// <inheritdoc/>
             public bool IsProperSupersetOf(IEnumerable<T> other)
             {
                 throw new NotImplementedException();
             }
 
-            /// <inheritdoc/>
             public bool IsProperSubsetOf(IEnumerable<T> other)
             {
                 throw new NotImplementedException();
             }
 
-            /// <inheritdoc/>
             public bool Overlaps(IEnumerable<T> other)
             {
                 throw new NotImplementedException();
             }
 
-            /// <inheritdoc/>
             public bool SetEquals(IEnumerable<T> other)
             {
                 throw new NotImplementedException();
@@ -109,16 +83,8 @@ namespace Gapotchenko.FX.Math.Topology
 
             void ICollection<T>.Add(T item) => Add(item);
 
-            /// <summary>
-            /// Removes all vertices from the graph.
-            /// </summary>
             public void Clear() => m_Graph.Clear();
 
-            /// <summary>
-            /// Determines whether the graph contains a specified vertex.
-            /// </summary>
-            /// <param name="vertex">The vertex.</param>
-            /// <returns><c>true</c> when the graph contains a specified vertex; otherwise, <c>false</c>.</returns>
             public bool Contains(T vertex)
             {
                 var adjacencyList = m_Graph.m_AdjacencyList;
@@ -127,14 +93,8 @@ namespace Gapotchenko.FX.Math.Topology
                     adjacencyList.Any(x => x.Value?.Contains(vertex) ?? false);
             }
 
-            /// <inheritdoc/>
             public void CopyTo(T[] array, int arrayIndex) => SetImplUtil.CopyTo(this, array, arrayIndex);
 
-            /// <summary>
-            /// Removes the specified vertex from the graph.
-            /// </summary>
-            /// <param name="vertex">The vertex.</param>
-            /// <returns><c>true</c> if the vertex was removed from the graph; otherwise, <c>false</c>.</returns>
             public bool Remove(T vertex)
             {
                 bool hit = false;
@@ -155,7 +115,6 @@ namespace Gapotchenko.FX.Math.Topology
                 return hit;
             }
 
-            /// <inheritdoc/>
             public IEnumerator<T> GetEnumerator() =>
                 m_Graph.m_AdjacencyList
                 .SelectMany(x => (x.Value ?? Enumerable.Empty<T>()).Prepend(x.Key))
