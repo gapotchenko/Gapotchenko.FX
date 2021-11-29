@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="from">The source vertex.</param>
         /// <param name="to">The target vertex.</param>
         /// <returns><c>true</c> when the specified source vertex can reach the target; otherwise, <c>false</c>.</returns>
-        bool HasPath(T from, T to);
+        bool ContainsPath(T from, T to);
 
         /// <summary>
         /// <para>
