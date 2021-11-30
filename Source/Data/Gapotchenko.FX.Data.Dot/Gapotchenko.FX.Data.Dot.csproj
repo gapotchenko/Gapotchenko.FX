@@ -4,4 +4,17 @@
     <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Serialization\DotLexFrame.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dom\" />
+    <Folder Include="ParserToolkit\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Serialization\DotLexFrame.cs" />
+  </ItemGroup>
+
 </Project>

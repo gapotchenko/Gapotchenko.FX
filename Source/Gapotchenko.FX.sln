@@ -136,7 +136,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Topolog
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Topology.Serialization.Tests", "Tests\Gapotchenko.FX.Math.Topology.Serialization.Tests\Gapotchenko.FX.Math.Topology.Serialization.Tests.csproj", "{13237E5E-E6BD-4D3F-AB65-C3E2C3010EA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Dot", "Data\Gapotchenko.FX.Data.Dot\Gapotchenko.FX.Data.Dot.csproj", "{F31B8C4A-2FB8-4AEC-9F4E-AF211A739DED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Dot", "Data\Gapotchenko.FX.Data.Dot\Gapotchenko.FX.Data.Dot.csproj", "{F31B8C4A-2FB8-4AEC-9F4E-AF211A739DED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Dot.Tests", "Tests\Data\Gapotchenko.FX.Data.Dot.Tests\Gapotchenko.FX.Data.Dot.Tests.csproj", "{99D75E47-29A0-4A95-B14C-A9A7F74A285F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -288,6 +290,10 @@ Global
 		{F31B8C4A-2FB8-4AEC-9F4E-AF211A739DED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F31B8C4A-2FB8-4AEC-9F4E-AF211A739DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F31B8C4A-2FB8-4AEC-9F4E-AF211A739DED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99D75E47-29A0-4A95-B14C-A9A7F74A285F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99D75E47-29A0-4A95-B14C-A9A7F74A285F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99D75E47-29A0-4A95-B14C-A9A7F74A285F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99D75E47-29A0-4A95-B14C-A9A7F74A285F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -341,6 +347,7 @@ Global
 		{BD33AE8B-1845-459E-8EA7-5793AEFF7102} = {9BF93356-2C42-4B31-AEB1-7E394D27F500}
 		{13237E5E-E6BD-4D3F-AB65-C3E2C3010EA9} = {8A1F0ADA-4897-47C7-96E2-E2941AF29C4E}
 		{F31B8C4A-2FB8-4AEC-9F4E-AF211A739DED} = {C2DC67EB-5194-432D-A088-2EA90951DF87}
+		{99D75E47-29A0-4A95-B14C-A9A7F74A285F} = {0D07D6F9-E558-4E2F-8DFE-7A295BFB5472}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}
