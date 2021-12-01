@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     public class DotEdgeSyntax : DotStatementSyntax
     {
-        public DotSyntaxList<DotAttributeListSyntax> Attributes { get; }
-        public SeparatedDotSyntaxList<DotSyntaxNode> Elements { get; }
+        public SeparatedDotSyntaxList<DotSyntaxNode> Elements { get; set; }
+        public DotSyntaxList<DotAttributeListSyntax> Attributes { get; set; }
     }
 }

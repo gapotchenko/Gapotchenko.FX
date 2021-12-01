@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     public class AttachedDotAttributesSyntax : DotStatementSyntax
     {
-        public DotSyntaxToken TargetKeyword { get; }
-        public DotSyntaxList<DotAttributeListSyntax> Attributes { get; }
+        public DotSyntaxToken TargetKeyword { get; set; }
+        public DotSyntaxList<DotAttributeListSyntax> Attributes { get; set; }
     }
 }

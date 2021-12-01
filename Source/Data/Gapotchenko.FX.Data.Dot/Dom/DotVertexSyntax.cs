@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     public class DotVertexSyntax : DotStatementSyntax
     {
-        public DotVertexIdentifierSyntax Identifier { get; }
-        public DotSyntaxList<DotAttributeListSyntax> Attributes { get; }
+        public DotVertexIdentifierSyntax Identifier { get; set; }
+        public DotSyntaxList<DotAttributeListSyntax> Attributes { get; set; }
     }
 }

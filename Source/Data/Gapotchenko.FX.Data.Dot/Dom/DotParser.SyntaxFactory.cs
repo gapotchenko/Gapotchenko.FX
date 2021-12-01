@@ -13,13 +13,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotToken tokenType,
             string value)
         {
-            throw new NotImplementedException();
+            return new DotSyntaxTrivia(tokenType, value);
         }
 
         static DotSyntaxTrivia CreateWhitespaceTrivia(
             string value)
         {
-            throw new NotImplementedException();
+            return new DotSyntaxTrivia(DotToken.WHITESPACE, value);
         }
 
         static DotVertexIdentifierSyntax CreateVertexIdentifierSyntax(
@@ -29,7 +29,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotSyntaxToken colon2,
             DotSyntaxToken compassPoint)
         {
-            throw new NotImplementedException();
+            return new DotVertexIdentifierSyntax
+            {
+                Identifier = identifier,
+                PortColonToken = colon1,
+                PortIdentifier = portIdentifier,
+                CompassPointColonToken = colon2,
+                CompassPointToken = compassPoint
+            };
         }
 
         static DotAttributeSyntax CreateAttributeSyntax(
@@ -38,7 +45,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotSyntaxToken rhs,
             DotSyntaxToken terminator)
         {
-            throw new NotImplementedException();
+            return new DotAttributeSyntax
+            {
+                LHS = lhs,
+                EqualToken = equal,
+                RHS = rhs,
+                SemicolonOrCommaToken = terminator
+            };
         }
 
         static DotSyntaxList<DotAttributeListSyntax> CreateAttributeListSyntaxList(
@@ -46,10 +59,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotSyntaxList<DotAttributeSyntax> attributes,
             DotSyntaxToken closeBraceToken)
         {
-            return new DotSyntaxList<DotAttributeListSyntax>
-            {
-                CreateAttributeListSyntax(openBraceToken, attributes, closeBraceToken)
-            };
+            var list = new DotSyntaxList<DotAttributeListSyntax>();
+            var syntax = CreateAttributeListSyntax(openBraceToken, attributes, closeBraceToken);
+            list.Append(syntax);
+            return list;
         }
 
         static DotAttributeListSyntax CreateAttributeListSyntax(
@@ -69,21 +82,33 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotSyntaxToken targetKeyword,
             DotSyntaxList<DotAttributeListSyntax> attributes)
         {
-            throw new NotImplementedException();
+            return new AttachedDotAttributesSyntax
+            {
+                TargetKeyword = targetKeyword,
+                Attributes = attributes
+            };
         }
 
         static DotEdgeSyntax CreateEdgeSyntax(
             SeparatedDotSyntaxList<DotSyntaxNode> elements,
             DotSyntaxList<DotAttributeListSyntax> attributes)
         {
-            throw new NotImplementedException();
+            return new DotEdgeSyntax
+            {
+                Elements = elements,
+                Attributes = attributes,
+            };
         }
 
         static DotVertexSyntax CreateVertexSyntax(
             DotVertexIdentifierSyntax identifier,
             DotSyntaxList<DotAttributeListSyntax> attributes)
         {
-            throw new NotImplementedException();
+            return new DotVertexSyntax
+            {
+                Identifier = identifier,
+                Attributes = attributes
+            };
         }
 
         static DotAliasSyntax CreateAliasSyntax(
@@ -91,7 +116,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotSyntaxToken equalToken,
             DotSyntaxToken rhs)
         {
-            throw new NotImplementedException();
+            return new DotAliasSyntax
+            {
+                LHS = lhs,
+                EqualToken = equalToken,
+                RHS = rhs
+            };
         }
 
         static DotSyntaxToken CreateToken(
@@ -113,7 +143,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotSyntaxToken identifier,
             DotStatementListSyntax statements)
         {
-            throw new NotImplementedException();
+            return new DotGraphSyntax
+            {
+                StrictKeyword = strictKeyword,
+                GraphKindKeyword = graphKind,
+                Identifier = identifier,
+                Statements = statements
+            };
         }
 
         static DotStatementListSyntax CreateStatementListSyntax(
@@ -121,14 +157,19 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotSyntaxList<DotStatementSyntax> statements,
             DotSyntaxToken closeBrace)
         {
-            throw new NotImplementedException();
+            return new DotStatementListSyntax
+            {
+                OpenBraceToken = openBrace,
+                Statements = statements,
+                CloseBraceToken = closeBrace
+            };
         }
 
         static void Prepend<T>(
             DotSyntaxList<T> syntaxList,
             T node)
         {
-            throw new NotImplementedException();
+            syntaxList.Prepend(node);
         }
 
         static void Prepend<TNode>(
@@ -136,7 +177,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             TNode node)
             where TNode : DotSyntaxNode
         {
-            throw new NotImplementedException();
+            syntaxList.Prepend(node);
         }
     }
 }

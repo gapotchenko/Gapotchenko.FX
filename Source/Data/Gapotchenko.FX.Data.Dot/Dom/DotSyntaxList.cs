@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -9,9 +10,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         IEnumerable,
         IReadOnlyCollection<TNode>
     {
-        List<TNode> _nodes = new();
+        LinkedList<TNode> _nodes = new();
 
-        public TNode this[int index] => _nodes[index];
+        public TNode this[int index] => _nodes.ElementAt(index);
 
         public int Count => _nodes.Count;
 
@@ -19,6 +20,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         IEnumerator IEnumerable.GetEnumerator() => _nodes.GetEnumerator();
 
-        public void Add(TNode node) => _nodes.Add(node);
+        public void Append(TNode node) => _nodes.AddLast(node);
+        public void Prepend(TNode node) => _nodes.AddFirst(node);
     }
 }

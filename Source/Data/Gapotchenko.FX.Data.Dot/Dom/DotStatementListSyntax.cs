@@ -2,10 +2,10 @@
 {
     public class DotStatementListSyntax : DotSyntaxNode
     {
-        public DotSyntaxToken OpenBraceToken { get; }
+        public DotSyntaxToken OpenBraceToken { get; set; }
 
-        public DotSyntaxList<DotStatementSyntax> Statements { get; }
+        public DotSyntaxList<DotStatementSyntax> Statements { get; set; }
 
-        public DotSyntaxToken CloseBraceToken { get; }
+        public DotSyntaxToken CloseBraceToken { get; set; }
     }
 }

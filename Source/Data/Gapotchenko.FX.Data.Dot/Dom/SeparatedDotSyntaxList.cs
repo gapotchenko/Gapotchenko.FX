@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         where TNode : DotSyntaxNode
     {
         List<TNode> _nodes = new();
-        List<DotSyntaxToken> _separators = new();
+        List<DotSyntaxNodeOrToken> _nodesAndTokens = new();
 
         public TNode this[int index] => _nodes[index];
 
@@ -25,22 +25,26 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         IEnumerator IEnumerable.GetEnumerator() => _nodes.GetEnumerator();
 
-        public void Add(TNode node)
+        public void Append(TNode node)
         {
             _nodes.Add(node);
-            if (_separators.Count + 1 < _nodes.Count)
-            {
-                _separators.Add(default);
-            }
+            _nodesAndTokens.Add(node);
         }
 
-        public void Add(DotSyntaxToken separator)
+        public void Append(DotSyntaxToken separator)
         {
-            _separators.Add(separator);
-            if (_nodes.Count < _separators.Count)
-            {
-                throw new InvalidOperationException("Invalid nodes count.");
-            }
+            _nodesAndTokens.Add(separator);
+        }
+
+        public void Prepend(TNode node)
+        {
+            _nodes.Insert(0, node);
+            _nodesAndTokens.Insert(0, node);
+        }
+
+        public void Prepend(DotSyntaxToken separator)
+        {
+            _nodesAndTokens.Insert(0, separator);
         }
     }
 }

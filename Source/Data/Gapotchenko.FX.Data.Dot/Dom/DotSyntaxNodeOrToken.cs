@@ -8,22 +8,48 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     public struct DotSyntaxNodeOrToken
     {
-        public bool IsDefault { get; }
+        readonly DotSyntaxToken? _token;
+        readonly DotSyntaxNode? _node;
+
+        public DotSyntaxNodeOrToken(DotSyntaxToken token)
+        {
+            _token = token;
+            IsToken = true;
+
+            _node = null;
+            IsNode = false;
+        }
+
+        public DotSyntaxNodeOrToken(DotSyntaxNode node)
+        {
+            _token = null;
+            IsToken = false;
+
+            _node = node;
+            IsNode = true;
+        }
+
+        public static implicit operator DotSyntaxNodeOrToken(DotSyntaxToken token) =>
+            new DotSyntaxNodeOrToken(token);
+        public static implicit operator DotSyntaxNodeOrToken(DotSyntaxNode node) =>
+            new DotSyntaxNodeOrToken(node);
+
+        public bool IsDefault => !IsNode && !IsToken;
 
         public bool IsNode { get; }
         public bool IsToken { get; }
 
-        public DotSyntaxToken AsToken()
-        {
-            throw new NotImplementedException();
-        }
+        public DotSyntaxToken? AsToken() => _token;
 
-        public DotSyntaxNode AsNode()
-        {
-            throw new NotImplementedException();
-        }
+        public DotSyntaxNode? AsNode() => _node;
 
-        public List<DotSyntaxTrivia> LeadingTrivia { get; }
-        public List<DotSyntaxTrivia> TrailingTrivia { get; }
+        public List<DotSyntaxTrivia>? LeadingTrivia =>
+            IsToken ? _token!.LeadingTrivia :
+            IsNode ? _node!.LeadingTrivia :
+            default;
+        public List<DotSyntaxTrivia>? TrailingTrivia =>
+            IsToken ? _token!.TrailingTrivia :
+            IsNode ? _node!.TrailingTrivia :
+            default;
     }
 }

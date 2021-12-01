@@ -72,11 +72,11 @@ endpoint  : node_id  { $$ = $1; }
 		  ;
 
 edgeRHS   : ARROW endpoint          { var list = new SeparatedDotSyntaxList<DotSyntaxNode>(); 
-                                      list.Add($1);
-                                      list.Add($2);
+                                      list.Append($1);
+                                      list.Append($2);
                                       $$ = list; }
-          | edgeRHS ARROW endpoint  { $1.Add($2);
-                                      $1.Add($3);
+          | edgeRHS ARROW endpoint  { $1.Append($2);
+                                      $1.Append($3);
                                       $$ = $1; }
           ;
 
@@ -99,7 +99,7 @@ attr_list : '[' ']'        { $$ = CreateAttributeListSyntaxList(CreateToken($1),
           | '[' a_list ']' { $$ = CreateAttributeListSyntaxList(CreateToken($1), $2, CreateToken($3)); }
           ;
 
-a_list    : avPair            { $$ = new(); $$.Add((DotAttributeSyntax)$1); }
+a_list    : avPair            { $$ = new(); $$.Append((DotAttributeSyntax)$1); }
           | avPair a_list     { $$ = $2; Prepend($2, (DotAttributeSyntax)$1); }
           | avPair ',' a_list { $$ = $3;
                                 var attr = (DotAttributeSyntax)$1;
