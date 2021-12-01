@@ -16,20 +16,6 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
     abstract class ShiftReduceParser<TValue, TSpan>
         where TSpan : IMerge<TSpan>, new()
     {
-        /// <summary>
-        /// The abstract scanner for this parser.
-        /// </summary>
-        protected AbstractScanner<TValue, TSpan> Scanner { get; set; }
-
-        /// <summary>
-        /// Constructor for base class
-        /// </summary>
-        /// <param name="scanner">Scanner instance for this parser</param>
-        protected ShiftReduceParser(AbstractScanner<TValue, TSpan> scanner)
-        {
-            Scanner = scanner;
-        }
-
         protected abstract State[] States { get; }
         protected abstract Rule[] Rules { get; }
         protected abstract string[] NonTerms { get; }
@@ -177,8 +163,8 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
                         // We save the last token span, so that the location span
                         // of production right hand sides that begin or end with a
                         // nullable production will be correct.
-                        LastSpan = Scanner.yylloc;
-                        NextToken = Scanner.yylex();
+                        LastSpan = yylloc;
+                        NextToken = yylex();
                     }
 
                     if (FsaState.ParserTable.ContainsKey(NextToken))
@@ -220,9 +206,9 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
         {
             FsaState = States![stateIndex];
 
-            ValueStack.Push(Scanner.yylval);
+            ValueStack.Push(yylval);
             StateStack.Push(FsaState);
-            LocationStack.Push(Scanner.yylloc);
+            LocationStack.Push(yylloc);
 
             if (_recovering)
             {
@@ -258,8 +244,8 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
                 // beginning of the next lexeme, and end with the finish of the
                 // previous lexeme.  This gives the correct behaviour when this
                 // nonsense value is used in later Merge operations.
-                CurrentLocationSpan = (Scanner.yylloc != null && LastSpan != null ?
-                    Scanner.yylloc.Merge(LastSpan) :
+                CurrentLocationSpan = (yylloc != null && LastSpan != null ?
+                    yylloc.Merge(LastSpan) :
                     default(TSpan));
             }
             else
@@ -340,7 +326,7 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
                     first = false;
                 }
             }
-            Scanner.yyerror(errorMsg.ToString());
+            yyerror(errorMsg.ToString());
         }
 
         void ShiftErrorToken()
@@ -394,7 +380,7 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
                 {
                     if (NextToken == 0)
                     {
-                        NextToken = Scanner.yylex();
+                        NextToken = yylex();
                     }
                     if (NextToken == _endOfFileToken)
                         return false;
@@ -487,5 +473,10 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
                 _ => string.Format(CultureInfo.InvariantCulture, "'{0}'", input),
             };
         }
+
+        protected abstract TSpan? yylloc { get; }
+        protected abstract TValue yylval { get; }
+        protected abstract int yylex();
+        protected abstract void yyerror(string message);
     }
 }

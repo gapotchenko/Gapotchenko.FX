@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Data\Gapotchenko.FX.Data.Dot\Gapotchenko.FX.Data.Dot.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.AppModel.Information\Gapotchenko.FX.AppModel.Information.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Console\Gapotchenko.FX.Console.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj" />

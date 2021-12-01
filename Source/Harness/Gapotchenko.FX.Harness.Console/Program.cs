@@ -3,6 +3,7 @@ using Gapotchenko.FX.AppModel;
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.ComponentModel;
 using Gapotchenko.FX.Console;
+using Gapotchenko.FX.Data.Dot.Serialization;
 //using Gapotchenko.FX.Data.Encoding;
 using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.IO;
@@ -26,6 +27,7 @@ using System.Linq.Expressions;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 #endregion
@@ -46,7 +48,6 @@ namespace Gapotchenko.FX.Harness.Console
                 if (!Console.IsOutputRedirected)
                     Console.OutputEncoding = Encoding.UTF8;
 
-                TaskBridge.Execute(_RunAsync);
                 _Run();
 
                 Console.WriteLine();
@@ -62,98 +63,47 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _Run()
         {
-            var res = new[] { 1, 1, 2 }.CrossJoin(new[] { "A", "B" }, ValueTuple.Create).Distinct();
+            var assetPath = @"C:\Sources\graphviz\rtest\graphs\a.gv";
 
-            Console.WriteLine("A = {0}", Enumerable.Distinct(Permutations.Of(new[] { 1, 1, 2 })).Count());
+            using var textReader = new StreamReader(assetPath);
+            using var dotReader = DotReader.Create(textReader);
 
-            Console.WriteLine("Process: {0}", RuntimeInformation.ProcessArchitecture);
-            Console.WriteLine("OS: {0}", RuntimeInformation.OSArchitecture);
+            using var textWriter = new StringWriter();
+            using var dotWriter = DotWriter.Create(textWriter);
 
-            Console.WriteLine(BitOperations.Log2(32));
-
-            var process = Process.GetProcessesByName("notepad2").FirstOrDefault();
-            if (process != null)
+            while (dotReader.Read())
             {
-                var env = process.ReadEnvironmentVariables();
-                Console.WriteLine(env["PATH"]);
+                var tok = dotReader.TokenType;
+                var val = dotReader.Value ?? string.Empty;
+
+                var tokStr = Enum.IsDefined(tok) ? tok.ToString() : ((char)tok).ToString();
+
+                var valEsc = val
+                    .Replace("\"", "\\\"")
+                    .Replace("\r", "\\r")
+                    .Replace("\n", "\\n");
+
+                Console.WriteLine($"[{tokStr}] \"{valEsc}\"");
+
+                dotWriter.Write(tok, val);
             }
 
-            var seq1 = new[] { "1", "2" };
-            var seq2 = new[] { "A", "B", "C" };
+            Console.WriteLine();
 
-            foreach (var i in CartesianProduct.Of(seq1, seq2))
-                Console.WriteLine(string.Join(" ", i));
-
-            var g = new Graph<int>();
-            g.Edges.Add(1, 2);
-            g.Vertices.Add(3);
-
-            
-
-            foreach (var i in g.Vertices)
+            var outputText = textWriter.ToString();
+            var consoleColor = Console.ForegroundColor;
+            if (outputText == File.ReadAllText(assetPath))
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("OK");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("NOT OK");
             }
 
-            Console.WriteLine(g.ToString("D"));
-
-            AssemblyAutoLoader.Default.AddProbingPath(@"C:\");
-            AssemblyAutoLoader.Default.RemoveProbingPath(@"C:\");
-        }
-
-        static async Task _RunAsync(CancellationToken ct)
-        {
-            await Task.Yield();
-
-#if false
-            string s = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit, lectus et dapibus ultricies, sem nulla finibus dolor, vitae pharetra urna risus eget nunc. Nunc laoreet condimentum magna, a varius massa auctor in. Mauris cursus sodales justo eget faucibus. Nullam nec nisi eget lorem faucibus feugiat. Fusce sed iaculis turpis, ut vestibulum ipsum.";
-
-            string filePath = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\Temp\base.txt");
-
-            var stream = Base64.Instance.CreateEncoder(
-                File.CreateText(filePath),
-                DataEncodingOptions.Indent);
-            try
-            {
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-                await stream.WriteAsync(Encoding.UTF8.GetBytes(s));
-                await stream.WriteAsync(Encoding.UTF8.GetBytes("h"));
-            }
-            finally
-            {
-                await stream.DisposeAsync();
-            }
-
-            using (var tr = new StreamReader(
-                Base64.Instance.CreateDecoder(
-                    File.OpenText(filePath),
-                    DataEncodingOptions.None)))
-            {
-                Console.WriteLine(await tr.ReadLineAsync());
-            }
-
-            s = Base16.GetString(Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit"), DataEncodingOptions.Indent | DataEncodingOptions.Wrap);
-            Console.WriteLine(s);
-
-            Console.WriteLine(Encoding.UTF8.GetString(Base16.GetBytes(s)));
-
-            Console.WriteLine(Base58.Efficiency);
-
-            //string e = Base64.GetString(Encoding.UTF8.GetBytes(s), DataEncodingOptions.Indent);
-
-            //e = Convert.ToBase64String(Encoding.UTF8.GetBytes(s), Base64FormattingOptions.InsertLineBreaks);
-
-            //Console.WriteLine(e);
-#endif
-
-            var appInfo = AppInformation.Current;
-            Console.WriteLine(appInfo.ExecutablePath);
-            Console.WriteLine(appInfo.Copyright);
-            Console.WriteLine(appInfo.ProductName);
-            Console.WriteLine(appInfo.InformationalVersion);
+            Console.ForegroundColor = consoleColor;
         }
     }
 }

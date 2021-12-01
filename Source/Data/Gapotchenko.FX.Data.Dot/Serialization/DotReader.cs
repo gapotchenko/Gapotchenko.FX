@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Data.Dot.ParserToolkit;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -47,6 +48,9 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         /// </summary>
         public string Value =>
             _lexer.yylval ?? string.Empty;
+
+        public (int Line, int Column) Location =>
+            (_lexer.Line, _lexer.Col);
 
         /// <summary>
         /// Creates a reader instance by used the specified text reader.

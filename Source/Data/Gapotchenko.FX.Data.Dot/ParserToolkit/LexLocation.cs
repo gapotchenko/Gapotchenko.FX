@@ -1,12 +1,9 @@
 ﻿namespace Gapotchenko.FX.Data.Dot.ParserToolkit
 {
     /// <summary>
-    /// This is the default class that carries location
-    /// information from the scanner to the parser.
-    /// If you don't declare "%YYLTYPE Foo" the parser
-    /// will expect to deal with this type.
+    /// Represents the location information.
     /// </summary>
-    sealed class LexLocation : IMerge<LexLocation>
+    public sealed class LexLocation : IMerge<LexLocation>
     {
         /// <summary>
         /// The line at which the text span starts.
@@ -43,6 +40,6 @@
 
         /// <inheritdoc />
         public LexLocation Merge(LexLocation last) =>
-            new LexLocation(StartLine, StartColumn, last.EndLine, last.EndColumn);
+            new(StartLine, StartColumn, last.EndLine, last.EndColumn);
     }
 }

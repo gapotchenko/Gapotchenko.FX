@@ -5,7 +5,7 @@
 //  See accompanying file GPLEXcopyright.rtf.
 //
 //  GPLEX Version:  1.2.2
-//  GPLEX input file <Serialization\Dot.lex - 30.11.2021 16:27:21>
+//  GPLEX input file <Serialization\Dot.lex - 30.11.2021 21:21:31>
 //  GPLEX frame file <SERIALIZATION\DOTLEXFRAME.CS>
 //
 //  Option settings: parser, minimize

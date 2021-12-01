@@ -8,15 +8,13 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
     /// </summary>
     sealed class State
     {
-        static readonly Dictionary<int, int> _emptyTable = new();
-
         /// <summary>
         /// The number of states in the automaton.
         /// </summary>
         public int number;
 
-        public Dictionary<int, int> ParserTable;   // Terminal -> ParseAction
-        public Dictionary<int, int> Goto;          // NonTerminal -> State;
+        public Dictionary<int, int>? ParserTable;   // Terminal -> ParseAction
+        public Dictionary<int, int>? Goto;          // NonTerminal -> State;
         public int defaultAction; // = 0;		     // ParseAction
 
         /// <summary>
@@ -45,7 +43,6 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
             ParserTable = new Dictionary<int, int>();
             for (int i = 0; i < actions.Length; i += 2)
                 ParserTable.Add(actions[i], actions[i + 1]);
-            Goto = _emptyTable;
         }
 
         /// <summary>
@@ -55,7 +52,6 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
         public State(int defaultAction)
         {
             this.defaultAction = defaultAction;
-            ParserTable = Goto = _emptyTable;
         }
 
         /// <summary>
@@ -69,7 +65,6 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
             Goto = new Dictionary<int, int>();
             for (int i = 0; i < goToList.Length; i += 2)
                 Goto.Add(goToList[i], goToList[i + 1]);
-            ParserTable = _emptyTable;
         }
     }
 }
