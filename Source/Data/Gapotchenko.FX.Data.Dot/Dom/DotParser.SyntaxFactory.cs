@@ -22,12 +22,19 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             return new DotSyntaxTrivia(DotToken.WHITESPACE, value);
         }
 
+        static DotSyntaxTrivia CreateTrivia(
+            DotValueType value)
+        {
+            var token = value.token;
+            return new DotSyntaxTrivia(token.Token, token.Value);
+        }
+
         static DotVertexIdentifierSyntax CreateVertexIdentifierSyntax(
             DotSyntaxToken identifier,
-            DotSyntaxToken colon1,
-            DotSyntaxToken portIdentifier,
-            DotSyntaxToken colon2,
-            DotSyntaxToken compassPoint)
+            DotSyntaxToken? colon1,
+            DotSyntaxToken? portIdentifier,
+            DotSyntaxToken? colon2,
+            DotSyntaxToken? compassPoint)
         {
             return new DotVertexIdentifierSyntax
             {
@@ -41,9 +48,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static DotAttributeSyntax CreateAttributeSyntax(
             DotSyntaxToken lhs,
-            DotSyntaxToken equal,
-            DotSyntaxToken rhs,
-            DotSyntaxToken terminator)
+            DotSyntaxToken? equal,
+            DotSyntaxToken? rhs,
+            DotSyntaxToken? terminator)
         {
             return new DotAttributeSyntax
             {
@@ -56,7 +63,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static DotSyntaxList<DotAttributeListSyntax> CreateAttributeListSyntaxList(
             DotSyntaxToken openBraceToken,
-            DotSyntaxList<DotAttributeSyntax> attributes,
+            DotSyntaxList<DotAttributeSyntax>? attributes,
             DotSyntaxToken closeBraceToken)
         {
             var list = new DotSyntaxList<DotAttributeListSyntax>();
@@ -138,10 +145,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         static DotGraphSyntax CreateGraphSyntax(
-            DotSyntaxToken strictKeyword,
-            DotSyntaxToken graphKind,
-            DotSyntaxToken identifier,
-            DotStatementListSyntax statements)
+            DotSyntaxToken? strictKeyword,
+            DotSyntaxToken? graphKind,
+            DotSyntaxToken? identifier,
+            DotStatementListSyntax? statements)
         {
             return new DotGraphSyntax
             {

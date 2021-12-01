@@ -3,6 +3,7 @@ using Gapotchenko.FX.AppModel;
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.ComponentModel;
 using Gapotchenko.FX.Console;
+using Gapotchenko.FX.Data.Dot.Dom;
 using Gapotchenko.FX.Data.Dot.Serialization;
 //using Gapotchenko.FX.Data.Encoding;
 using Gapotchenko.FX.Diagnostics;
@@ -65,6 +66,17 @@ namespace Gapotchenko.FX.Harness.Console
         {
             var assetPath = @"C:\Sources\graphviz\rtest\graphs\a.gv";
 
+            //RTTokens(assetPath);
+
+            using var textReader = new StreamReader(assetPath);
+            using var dotReader = DotReader.Create(textReader);
+
+            var dotDocument = DotDocument.Load(dotReader);
+
+        }
+
+        static void RTTokens(string assetPath)
+        {
             using var textReader = new StreamReader(assetPath);
             using var dotReader = DotReader.Create(textReader);
 
@@ -89,10 +101,19 @@ namespace Gapotchenko.FX.Harness.Console
             }
 
             Console.WriteLine();
+            Console.WriteLine("----------------------");
+            Console.WriteLine();
 
             var outputText = textWriter.ToString();
+            var result = outputText == File.ReadAllText(assetPath);
+
+            PrintConsoleBoolean(result);
+        }
+
+        static void PrintConsoleBoolean(bool result)
+        {
             var consoleColor = Console.ForegroundColor;
-            if (outputText == File.ReadAllText(assetPath))
+            if (result)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("OK");

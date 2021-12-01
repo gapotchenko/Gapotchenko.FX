@@ -2,7 +2,6 @@
 using Gapotchenko.FX.Data.Dot.Serialization;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +10,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     partial class DotParser
     {
+        public DotGraphSyntax Root { get; private set; }
+
         protected override State[] States => states;
         protected override Rule[] Rules => rules;
         protected override string[] NonTerms => nonTerms;
@@ -24,8 +25,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         DotValueType _yylval;
 
-        DotSyntaxNodeOrToken _currentEntity;
         List<DotSyntaxTrivia> _pendingTrivia = new();
+        DotSyntaxToken _lastToken;
 
         protected override int yylex()
         {
@@ -41,8 +42,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                         break;
                     default:
                         var trivia = CreateTrivia(_scanner.TokenType, _scanner.Value);
-                        if (!_currentEntity.IsDefault)
-                            _currentEntity.TrailingTrivia.Add(trivia);
+                        if (_lastToken is not null)
+                            _lastToken.TrailingTrivia.Add(trivia);
                         else
                             _pendingTrivia.Add(trivia);
                         break;
@@ -50,9 +51,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 _scanner.Read();
             }
 
+            _lastToken = CreateToken(_scanner.TokenType, _scanner.Value);
             _yylval = new DotValueType
             {
-                token = CreateToken(_scanner.TokenType, _scanner.Value)
+                token = _lastToken
             };
 
             return MapToken(_scanner.TokenType);
@@ -100,11 +102,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         void ProcessPendingTrivia()
         {
-            if (!_currentEntity.IsDefault)
+            if (_lastToken != null)
             {
                 if (_pendingTrivia.Count > 0)
                 {
-                    _currentEntity.LeadingTrivia.InsertRange(0, _pendingTrivia);
+                    _lastToken.LeadingTrivia.InsertRange(0, _pendingTrivia);
                     _pendingTrivia.Clear();
                 }
             }
@@ -112,7 +114,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         void ProcessWhitespace(string value)
         {
-            if (_currentEntity.IsDefault)
+            if (_lastToken is null)
             {
                 var trivia = CreateWhitespaceTrivia(value);
                 _pendingTrivia.Add(trivia);
@@ -121,7 +123,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             {
                 var (init, last) = SplitWhitespace(value);
                 var trivia = CreateWhitespaceTrivia(init);
-                _currentEntity.TrailingTrivia.Add(trivia);
+                _lastToken.TrailingTrivia.Add(trivia);
                 if (last is not null)
                 {
                     trivia = CreateWhitespaceTrivia(last);

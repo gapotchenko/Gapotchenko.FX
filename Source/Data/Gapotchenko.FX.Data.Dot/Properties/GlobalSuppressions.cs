@@ -5,4 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0040:Add accessibility modifiers", Scope = "type", Target = "~T:Gapotchenko.FX.Data.Dot.Serialization.DotScanner")]
+[assembly: SuppressMessage("Style", "IDE0040:Add accessibility modifiers", Scope = "type", Target = "~T:Gapotchenko.FX.Data.Dot.Serialization.DotLex")]
+[assembly: SuppressMessage("Style", "IDE0040:Add accessibility modifiers", Scope = "type", Target = "~T:Gapotchenko.FX.Data.Dot.Dom.DotParser")]
+[assembly: SuppressMessage("Style", "IDE0040:Add accessibility modifiers", Scope = "type", Target = "~T:Gapotchenko.FX.Data.Dot.Dom.DotValueType")]
+[assembly: SuppressMessage("Style", "IDE0040:Add accessibility modifiers", Scope = "type", Target = "~T:Gapotchenko.FX.Data.Dot.Dom.DotTokens")]

@@ -19,7 +19,7 @@
 
 %token <token> DIGRAPH GRAPH ARROW SUBGRAPH NODE EDGE ID
 
-%type <token> graphType graphName
+%type <token> graphType graphName id
 %type <entity> graph subgraph stmt stmt node_stmt edge_stmt endpoint stmts node_id
 %type <entity> attr_stmt opt_attr_list avPair
 %type <statementSyntaxList> stmt_list
@@ -31,8 +31,8 @@
 
 %%
 
-graph     : graphType graphName stmts    { $$ = CreateGraphSyntax(default, $1, $2, (DotStatementListSyntax)$3); }
-          | ID graphType graphName stmts { $$ = CreateGraphSyntax($1, $2, $3, (DotStatementListSyntax)$4); }
+graph     : graphType graphName stmts    { Root = CreateGraphSyntax(default, $1, $2, (DotStatementListSyntax)$3); }
+          | id graphType graphName stmts { Root = CreateGraphSyntax($1, $2, $3, (DotStatementListSyntax)$4); }
           ;
           
 stmts     : '{' stmt_list '}' { $$ = CreateStatementListSyntax(CreateToken($1), $2, CreateToken($3)); }
@@ -42,7 +42,7 @@ graphType : DIGRAPH { $$ = $1; }
           | GRAPH   { $$ = $1; }
           ;
  
-graphName : ID { $$ = $1; } 
+graphName : id { $$ = $1; } 
           |    { }
           ;
 
@@ -54,7 +54,7 @@ stmt_list : { $$ = new(); }
                                  $$ = $3; }
           ;
 
-stmt      : ID '=' ID { $$ = CreateAliasSyntax($1, CreateToken($2), $3); } 
+stmt      : id '=' id { $$ = CreateAliasSyntax($1, CreateToken($2), $3); } 
           | node_stmt { $$ = $1; }
           | edge_stmt { $$ = $1; }
           | attr_stmt { $$ = $1; }
@@ -82,7 +82,7 @@ edgeRHS   : ARROW endpoint          { var list = new SeparatedDotSyntaxList<DotS
 
 subgraph  : stmts              { $$ = CreateGraphSyntax(default, default, default, (DotStatementListSyntax)$1); }
           | SUBGRAPH stmts     { $$ = CreateGraphSyntax(default, $1, default, (DotStatementListSyntax)$2); }
-          | SUBGRAPH ID stmts  { $$ = CreateGraphSyntax(default, $1, $2, (DotStatementListSyntax)$3); }
+          | SUBGRAPH id stmts  { $$ = CreateGraphSyntax(default, $1, $2, (DotStatementListSyntax)$3); }
           | SUBGRAPH           { $$ = CreateGraphSyntax(default, $1, default, default); }
           ;
 
@@ -111,13 +111,19 @@ a_list    : avPair            { $$ = new(); $$.Append((DotAttributeSyntax)$1); }
                                 Prepend($3, attr); }
           ;
 
-avPair    : ID '=' ID { $$ = CreateAttributeSyntax($1, CreateToken($2), $3, default); }
-          | ID        { $$ = CreateAttributeSyntax($1, default, default, default); }
+avPair    : id '=' id { $$ = CreateAttributeSyntax($1, CreateToken($2), $3, default); }
+          | id        { $$ = CreateAttributeSyntax($1, default, default, default); }
           ;
 
-node_id   : ID               { $$ = CreateVertexIdentifierSyntax($1, default, default, default, default); }
-          | ID ':' ID        { $$ = CreateVertexIdentifierSyntax($1, CreateToken($2), $3, default, default); }
-          | ID ':' ID ':' ID { $$ = CreateVertexIdentifierSyntax($1, CreateToken($2), $3, CreateToken($4), $5); }
+node_id   : id               { $$ = CreateVertexIdentifierSyntax($1, default, default, default, default); }
+          | id ':' id        { $$ = CreateVertexIdentifierSyntax($1, CreateToken($2), $3, default, default); }
+          | id ':' id ':' id { $$ = CreateVertexIdentifierSyntax($1, CreateToken($2), $3, CreateToken($4), $5); }
+          ;
+          
+id        : ID          { $$ = $1; }
+          | '"' ID '"'  { $$ = $2; 
+                          $2.LeadingTrivia.Add(CreateTrivia($1));
+                          $2.LeadingTrivia.Insert(0, CreateTrivia($3)); }
           ;
 
 %%
