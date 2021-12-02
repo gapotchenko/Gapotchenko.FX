@@ -122,8 +122,8 @@ node_id   : id               { $$ = CreateVertexIdentifierSyntax($1, default, de
           
 id        : ID          { $$ = $1; }
           | '"' ID '"'  { $$ = $2; 
-                          $2.LeadingTrivia.Add(CreateTrivia($1));
-                          $2.LeadingTrivia.Insert(0, CreateTrivia($3)); }
+                          AppendLeadingTrivia($2, $1);
+                          PrependTrailingTrivia($2, $3); }
           ;
 
 %%

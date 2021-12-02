@@ -2,7 +2,7 @@
 // Copyright (c) Wayne Kelly, John Gough, QUT 2005-2014
 // (see accompanying GPPGcopyright.rtf)
 
-// Input file <Dom\Dot.y - 01.12.2021 20:37:35>
+// Input file <Dom\Dot.y - 02.12.2021 18:45:11>
 
 // options: no-lines
 
@@ -317,8 +317,8 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
         break;
       case 44: // id -> '"', ID, '"'
 { CurrentSemanticValue.token = ValueStack[ValueStack.Depth-2].token; 
-                          ValueStack[ValueStack.Depth-2].token.LeadingTrivia.Add(CreateTrivia(ValueStack[ValueStack.Depth-3]));
-                          ValueStack[ValueStack.Depth-2].token.LeadingTrivia.Insert(0, CreateTrivia(ValueStack[ValueStack.Depth-1])); }
+                          AppendLeadingTrivia(ValueStack[ValueStack.Depth-2].token, ValueStack[ValueStack.Depth-3]);
+                          PrependTrailingTrivia(ValueStack[ValueStack.Depth-2].token, ValueStack[ValueStack.Depth-1]); }
         break;
     }
 #pragma warning restore 162, 1522

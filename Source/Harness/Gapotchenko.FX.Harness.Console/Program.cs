@@ -71,8 +71,20 @@ namespace Gapotchenko.FX.Harness.Console
             using var textReader = new StreamReader(assetPath);
             using var dotReader = DotReader.Create(textReader);
 
+            using var textWriter = new StringWriter();
+            using var dotWriter = DotWriter.Create(textWriter);
+
             var dotDocument = DotDocument.Load(dotReader);
 
+            dotDocument.Save(dotWriter);
+
+            Console.WriteLine(File.ReadAllText(assetPath));
+
+            Console.WriteLine();
+            Console.WriteLine("----------------------");
+            Console.WriteLine();
+
+            Console.WriteLine(textWriter.ToString());
         }
 
         static void RTTokens(string assetPath)

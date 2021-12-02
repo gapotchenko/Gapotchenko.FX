@@ -25,39 +25,58 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         DotValueType _yylval;
 
-        List<DotSyntaxTrivia> _pendingTrivia = new();
-        DotSyntaxToken _lastToken;
+        (DotToken kind, string value) _pendingToken;
 
         protected override int yylex()
         {
-            ProcessPendingTrivia();
-
-            _scanner.Read();
-            while (IsTriviaToken(_scanner.TokenType))
+            static (DotToken kind, string value) NextToken(DotReader scanner)
             {
-                switch (_scanner.TokenType)
-                {
-                    case DotToken.WHITESPACE:
-                        ProcessWhitespace(_scanner.Value);
-                        break;
-                    default:
-                        var trivia = CreateTrivia(_scanner.TokenType, _scanner.Value);
-                        if (_lastToken is not null)
-                            _lastToken.TrailingTrivia.Add(trivia);
-                        else
-                            _pendingTrivia.Add(trivia);
-                        break;
-                }
-                _scanner.Read();
+                scanner.Read();
+                return (scanner.TokenType, scanner.Value);
             }
 
-            _lastToken = CreateToken(_scanner.TokenType, _scanner.Value);
+            var token = _pendingToken;
+            if (token.value is null)
+            {
+                token = NextToken(_scanner);
+            }
+            else
+            {
+                _pendingToken = default;
+            }
+
+            List<DotSyntaxTrivia>? leadingTrivia = null;
+
+            while (IsTriviaToken(token.kind))
+            {
+                var trivia = CreateTrivia(token.kind, token.value);
+                (leadingTrivia ??= new()).Add(trivia);
+                token = NextToken(_scanner);
+            }
+
+            var syntaxToken = CreateToken(token.kind, token.value);
             _yylval = new DotValueType
             {
-                token = _lastToken
+                token = syntaxToken
             };
 
-            return MapToken(_scanner.TokenType);
+            if (leadingTrivia is not null)
+            {
+                foreach (var trivia in leadingTrivia)
+                {
+                    syntaxToken.LeadingTrivia.Add(trivia);
+                }
+            }
+
+            _pendingToken = NextToken(_scanner);
+            while (IsTriviaToken(_pendingToken.kind))
+            {
+                var trivia = CreateTrivia(_pendingToken.kind, _pendingToken.value);
+                syntaxToken.TrailingTrivia.Add(trivia);
+                _pendingToken = NextToken(_scanner);
+            }
+
+            return MapToken(token.kind);
         }
 
         int MapToken(DotToken token) => token switch
@@ -99,38 +118,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotToken.MLINECOMMENT => true,
             _ => false
         };
-
-        void ProcessPendingTrivia()
-        {
-            if (_lastToken != null)
-            {
-                if (_pendingTrivia.Count > 0)
-                {
-                    _lastToken.LeadingTrivia.InsertRange(0, _pendingTrivia);
-                    _pendingTrivia.Clear();
-                }
-            }
-        }
-
-        void ProcessWhitespace(string value)
-        {
-            if (_lastToken is null)
-            {
-                var trivia = CreateWhitespaceTrivia(value);
-                _pendingTrivia.Add(trivia);
-            }
-            else
-            {
-                var (init, last) = SplitWhitespace(value);
-                var trivia = CreateWhitespaceTrivia(init);
-                _lastToken.TrailingTrivia.Add(trivia);
-                if (last is not null)
-                {
-                    trivia = CreateWhitespaceTrivia(last);
-                    _pendingTrivia.Add(trivia);
-                }
-            }
-        }
 
         static (string init, string? last) SplitWhitespace(string value)
         {

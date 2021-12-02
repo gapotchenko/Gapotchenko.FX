@@ -29,6 +29,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             return new DotSyntaxTrivia(token.Kind, token.Value);
         }
 
+        static DotSyntaxTrivia CreateTrivia(
+            DotSyntaxToken token)
+        {
+            return new DotSyntaxTrivia(token.Kind, token.Value);
+        }
+
         static DotVertexIdentifierSyntax CreateVertexIdentifierSyntax(
             DotSyntaxToken identifier,
             DotSyntaxToken? colon1,
@@ -185,6 +191,47 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             where TNode : DotSyntaxNode
         {
             syntaxList.Prepend(node);
+        }
+
+        IEnumerable<DotSyntaxTrivia> TokenToTrivia(DotSyntaxToken token)
+        {
+            if (token.HasLeadingTrivia)
+            {
+                foreach (var trivia in token.LeadingTrivia)
+                {
+                    yield return trivia;
+                }
+            }
+
+            yield return CreateTrivia(token);
+
+            if (token.HasTrailingTrivia)
+            {
+                foreach (var trivia in token.TrailingTrivia)
+                {
+                    yield return trivia;
+                }
+            }
+        }
+
+        void AppendLeadingTrivia(DotSyntaxToken destination, DotValueType source)
+        {
+            destination.LeadingTrivia.AddRange(TokenToTrivia(source.token));
+        }
+
+        void PrependLeadingTrivia(DotSyntaxToken destination, DotValueType source)
+        {
+            destination.LeadingTrivia.InsertRange(0, TokenToTrivia(source.token));
+        }
+
+        void AppendTrailingTrivia(DotSyntaxToken destination, DotValueType source)
+        {
+            destination.TrailingTrivia.AddRange(TokenToTrivia(source.token));
+        }
+
+        void PrependTrailingTrivia(DotSyntaxToken destination, DotValueType source)
+        {
+            destination.TrailingTrivia.InsertRange(0, TokenToTrivia(source.token));
         }
     }
 }
