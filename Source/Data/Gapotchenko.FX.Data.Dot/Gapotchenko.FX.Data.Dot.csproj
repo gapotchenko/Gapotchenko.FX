@@ -5,10 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="gp\**" />
+    <None Remove="*.cmd" />
     <Compile Remove="Serialization\DotLexFrame.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Serialization\DotLexFrame.cs" />
   </ItemGroup>
 
