@@ -11,7 +11,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         IReadOnlyList<TNode>,
         IEnumerable<TNode>,
         IEnumerable,
-        IReadOnlyCollection<TNode>
+        IReadOnlyCollection<TNode>,
+        ISyntaxSlotProvider
         where TNode : DotSyntaxNode
     {
         List<TNode> _nodes = new();
@@ -46,5 +47,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             _nodesAndTokens.Insert(0, separator);
         }
+
+        int ISyntaxSlotProvider.SlotCount =>
+            _nodesAndTokens.Count;
+
+        SyntaxSlot ISyntaxSlotProvider.GetSlot(int i) =>
+            _nodesAndTokens[i];
     }
 }

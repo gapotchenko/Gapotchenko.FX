@@ -10,15 +10,15 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents a token in the syntax tree.
     /// </summary>
-    public class DotSyntaxToken
+    public sealed class DotSyntaxToken
     {
-        public DotSyntaxToken(DotToken token, string value)
+        public DotSyntaxToken(DotToken kind, string value)
         {
-            Token = token;
+            Kind = kind;
             Value = value;
         }
 
-        public DotToken Token { get; }
+        public DotToken Kind { get; }
         public string Value { get; }
 
         List<DotSyntaxTrivia>? _leadingTrivia;

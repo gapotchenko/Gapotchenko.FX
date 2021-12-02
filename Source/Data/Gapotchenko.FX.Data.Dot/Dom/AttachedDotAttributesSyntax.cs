@@ -6,9 +6,18 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
-    public class AttachedDotAttributesSyntax : DotStatementSyntax
+    public sealed class AttachedDotAttributesSyntax : DotStatementSyntax
     {
         public DotSyntaxToken TargetKeyword { get; set; }
         public DotSyntaxList<DotAttributeListSyntax> Attributes { get; set; }
+
+        internal override int SlotCount => 2;
+
+        internal override SyntaxSlot GetSlot(int i) => i switch
+        {
+            0 => TargetKeyword,
+            1 => new SyntaxSlot(Attributes),
+            _ => throw new ArgumentOutOfRangeException(nameof(i))
+        };
     }
 }

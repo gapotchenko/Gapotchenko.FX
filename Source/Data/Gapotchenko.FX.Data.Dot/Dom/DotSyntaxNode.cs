@@ -6,19 +6,27 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
-    public abstract class DotSyntaxNode
+    public abstract class DotSyntaxNode : ISyntaxSlotProvider
     {
-        List<DotSyntaxTrivia>? _leadingTrivia;
-        List<DotSyntaxTrivia>? _trailingTrivia;
-
         public List<DotSyntaxTrivia> LeadingTrivia =>
-            _leadingTrivia ??= new();
+            SyntaxNavigator.GetFirstToken(this).LeadingTrivia;
 
         public List<DotSyntaxTrivia> TrailingTrivia =>
-            _trailingTrivia ??= new();
+            SyntaxNavigator.GetLastToken(this).TrailingTrivia;
 
-        public bool HasLeadingTrivia => _leadingTrivia?.Count > 0;
+        public bool HasLeadingTrivia =>
+            SyntaxNavigator.GetFirstToken(this).HasLeadingTrivia;
 
-        public bool HasTrailingTrivia => _trailingTrivia?.Count > 0;
+        public bool HasTrailingTrivia =>
+            SyntaxNavigator.GetLastToken(this).HasTrailingTrivia;
+
+        public DotChildSyntaxList ChildNodesAndTokens()
+            => new(this);
+
+        internal abstract int SlotCount { get; }
+        internal abstract SyntaxSlot GetSlot(int i);
+
+        int ISyntaxSlotProvider.SlotCount => SlotCount;
+        SyntaxSlot ISyntaxSlotProvider.GetSlot(int i) => GetSlot(i);
     }
 }

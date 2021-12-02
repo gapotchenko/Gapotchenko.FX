@@ -26,7 +26,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotValueType value)
         {
             var token = value.token;
-            return new DotSyntaxTrivia(token.Token, token.Value);
+            return new DotSyntaxTrivia(token.Kind, token.Value);
         }
 
         static DotVertexIdentifierSyntax CreateVertexIdentifierSyntax(

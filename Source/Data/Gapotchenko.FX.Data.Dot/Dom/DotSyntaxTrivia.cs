@@ -12,13 +12,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// </summary>
     public readonly struct DotSyntaxTrivia
     {
-        public DotSyntaxTrivia(DotToken token, string value)
+        public DotSyntaxTrivia(DotToken kind, string value)
         {
-            Token = token;
+            Kind = kind;
             Value = value;
         }
 
-        public DotToken Token { get; }
+        public DotToken Kind { get; }
         public string Value { get; }
     }
 }

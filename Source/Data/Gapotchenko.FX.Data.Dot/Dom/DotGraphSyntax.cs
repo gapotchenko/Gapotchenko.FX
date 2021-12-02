@@ -6,11 +6,22 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
-    public class DotGraphSyntax : DotStatementSyntax
+    public sealed class DotGraphSyntax : DotStatementSyntax
     {
         public DotSyntaxToken StrictKeyword { get; set; }
         public DotSyntaxToken GraphKindKeyword { get; set; }
         public DotSyntaxToken Identifier { get; set; }
         public DotStatementListSyntax Statements { get; set; }
+
+        internal override int SlotCount => 4;
+
+        internal override SyntaxSlot GetSlot(int i) => i switch
+        {
+            0 => StrictKeyword,
+            1 => GraphKindKeyword,
+            2 => Identifier,
+            3 => Statements,
+            _ => throw new ArgumentOutOfRangeException(nameof(i))
+        };
     }
 }
