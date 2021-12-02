@@ -19,5 +19,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             1 => new SyntaxSlot(Attributes),
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
+
+        public override void Accept(DotSyntaxVisitor visitor)
+        {
+            visitor.VisitAttachedDotAttributesSyntax(this);
+        }
     }
 }

@@ -25,5 +25,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             4 => CompassPointToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
+
+        public override void Accept(DotSyntaxVisitor visitor)
+        {
+            visitor.VisitDotVertexIdentifierSyntax(this);
+        }
     }
 }

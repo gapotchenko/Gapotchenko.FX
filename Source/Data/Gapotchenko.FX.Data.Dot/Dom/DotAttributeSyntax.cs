@@ -23,5 +23,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             3 => SemicolonOrCommaToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
+
+        public override void Accept(DotSyntaxVisitor visitor)
+        {
+            visitor.VisitDotAttributeSyntax(this);
+        }
     }
 }

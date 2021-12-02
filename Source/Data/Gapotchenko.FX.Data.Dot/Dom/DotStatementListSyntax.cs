@@ -19,5 +19,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             2 => CloseBraceToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
+
+        public override void Accept(DotSyntaxVisitor visitor)
+        {
+            visitor.VisitDotStatementListSyntax(this);
+        }
     }
 }

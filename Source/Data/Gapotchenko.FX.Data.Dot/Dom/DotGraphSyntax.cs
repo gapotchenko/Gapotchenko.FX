@@ -23,5 +23,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             3 => Statements,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
+
+        public override void Accept(DotSyntaxVisitor visitor)
+        {
+            visitor.VisitDotGraphSyntax(this);
+        }
     }
 }

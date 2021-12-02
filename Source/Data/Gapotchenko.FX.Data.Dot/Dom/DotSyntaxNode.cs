@@ -28,5 +28,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         int ISyntaxSlotProvider.SlotCount => SlotCount;
         SyntaxSlot ISyntaxSlotProvider.GetSlot(int i) => GetSlot(i);
+
+        public abstract void Accept(DotSyntaxVisitor visitor);
     }
 }
