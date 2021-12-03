@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public DotSyntaxToken? Identifier { get; set; }
         public DotStatementListSyntax? Statements { get; set; }
 
-        internal override int SlotCount => 4;
+        internal override int SlotCount => 5;
 
         internal override SyntaxSlot GetSlot(int i) => i switch
         {
@@ -21,6 +21,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             1 => GraphKindKeyword,
             2 => Identifier,
             3 => Statements,
+            4 => SemicolonToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
 

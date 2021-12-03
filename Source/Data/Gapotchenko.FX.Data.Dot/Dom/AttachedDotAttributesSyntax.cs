@@ -11,12 +11,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public DotSyntaxToken? TargetKeyword { get; set; }
         public DotSyntaxList<DotAttributeListSyntax>? Attributes { get; set; }
 
-        internal override int SlotCount => 2;
+        internal override int SlotCount => 3;
 
         internal override SyntaxSlot GetSlot(int i) => i switch
         {
             0 => TargetKeyword,
             1 => new SyntaxSlot(Attributes),
+            2 => SemicolonToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
 

@@ -12,13 +12,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public DotSyntaxToken? EqualToken { get; set; }
         public DotSyntaxToken? RHS { get; set; }
 
-        internal override int SlotCount => 3;
+        internal override int SlotCount => 4;
 
         internal override SyntaxSlot GetSlot(int i) => i switch
         {
             0 => LHS,
             1 => EqualToken,
             2 => RHS,
+            3 => SemicolonToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
 

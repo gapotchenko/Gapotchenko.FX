@@ -11,12 +11,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public DotVertexIdentifierSyntax? Identifier { get; set; }
         public DotSyntaxList<DotAttributeListSyntax>? Attributes { get; set; }
 
-        internal override int SlotCount => 2;
+        internal override int SlotCount => 3;
 
         internal override SyntaxSlot GetSlot(int i) => i switch
         {
             0 => Identifier,
             1 => new SyntaxSlot(Attributes),
+            2 => SemicolonToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
 
