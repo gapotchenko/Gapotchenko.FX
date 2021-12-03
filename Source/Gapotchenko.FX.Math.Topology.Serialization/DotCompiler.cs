@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Math.Topology.Serialization
 {
     sealed class DotCompiler<TVertex>
+        where TVertex : notnull
     {
         readonly Func<TVertex, IDotVertex> _vertexSerializer;
 
@@ -102,7 +103,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
 
         static bool HasAttributes(IdVertex v)
         {
-            return v.Vertex.Attributes.Any() ||
+            return v.Vertex.Attributes?.Any() == true ||
                 v.Label != null;
         }
 
@@ -144,7 +145,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
 
             var hasLabelAttribute = mappedVertex.Attributes?.ContainsKey("label") == true;
 
-            var stringId = mappedVertex.Identifier;
+            var stringId = mappedVertex.Identifier ?? string.Empty;
 
             string? label = null;
             if (!stringIdSet.Add(stringId))

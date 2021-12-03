@@ -21,6 +21,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         /// <param name="graph">The graph to serialize.</param>
         /// <returns>DOT document representing the specified graph.</returns>
         public string Serialize<T>(IReadOnlyGraph<T> graph)
+            where T : notnull
         {
             if (graph is null)
                 throw new ArgumentNullException(nameof(graph));
@@ -37,6 +38,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         /// <param name="graph">The graph to serialize.</param>
         /// <param name="textWriter">The <see cref="TextWriter"/> used to write the XML document</param>
         public void Serialize<T>(IReadOnlyGraph<T> graph, TextWriter textWriter)
+            where T : notnull
         {
             if (graph is null)
                 throw new ArgumentNullException(nameof(graph));
@@ -57,6 +59,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         /// <param name="graph">Destination graph.</param>
         /// <param name="document">DOT document to deserialize.</param>
         public void Deserialize<T>(IGraph<T> graph, string document)
+            where T : notnull
         {
             if (graph is null)
                 throw new ArgumentNullException(nameof(graph));
@@ -74,6 +77,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         /// <param name="graph">Destination graph.</param>
         /// <param name="textReader">The <see cref="TextReader"/> that contains the DOT document to deserialize.</param>
         public void Deserialize<T>(IGraph<T> graph, TextReader textReader)
+            where T : notnull
         {
             if (graph is null)
                 throw new ArgumentNullException(nameof(graph));
@@ -185,6 +189,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         /// <param name="vertex">Vertex to serialize.</param>
         /// <returns>Serialized vertex.</returns>
         protected virtual IDotVertex SerializeVertex<T>(T vertex)
+            where T : notnull
         {
             var converter = GetVertexToStringConverter(typeof(T));
             var identifier = converter(vertex, null);
@@ -194,8 +199,12 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         IReadOnlyGraph<DotDocumentVertex> CreateIntermediateGraph(DotDocument document)
         {
             var root = document.Root;
+            if (root is null)
+            {
+                return new Graph<DotDocumentVertex>();
+            }
 
-            var directed = string.Equals("digraph", root.GraphKindKeyword.Value, StringComparison.OrdinalIgnoreCase);
+            var directed = string.Equals("digraph", root.GraphKindKeyword?.Value, StringComparison.OrdinalIgnoreCase);
 
             var builder = new IntermediateGraphBuilder(directed);
             builder.Visit(root);

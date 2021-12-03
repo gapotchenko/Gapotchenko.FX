@@ -56,7 +56,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
 
         public override void VisitDotVertexIdentifierSyntax(DotVertexIdentifierSyntax node)
         {
-            var vertex = GetVertex(node.Identifier.Value);
+            var vertex = GetVertex(node.Identifier?.Value);
             if (_edgeElementsStack.Count != 0)
             {
                 _edgeElementsStack.Peek().Add(vertex);
@@ -76,7 +76,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             base.VisitDotVertexSyntax(node);
             _acceptVertexAttributes = false;
 
-            var vertex = GetVertex(node.Identifier.Identifier.Value);
+            var vertex = GetVertex(node.Identifier?.Identifier?.Value);
             foreach (var kv in _vertexAttributes)
             {
                 vertex.Attributes[kv.Key] = kv.Value;
@@ -87,16 +87,18 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         {
             if (_acceptVertexAttributes)
             {
-                var key = node.LHS.Value;
-                var value = node.RHS.Value;
+                var key = node.LHS?.Value ?? string.Empty;
+                var value = node.RHS?.Value ?? string.Empty;
                 _vertexAttributes[key] = value;
             }
 
             base.VisitDotAttributeSyntax(node);
         }
 
-        DotDocumentVertex GetVertex(string id)
+        DotDocumentVertex GetVertex(string? id)
         {
+            id ??= string.Empty;
+
             if (!_vertices.TryGetValue(id, out var vertex))
             {
                 vertex = new DotDocumentVertex(id, _vertices.Count);
