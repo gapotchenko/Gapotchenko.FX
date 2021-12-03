@@ -4,11 +4,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     public sealed class DotStatementListSyntax : DotSyntaxNode
     {
-        public DotSyntaxToken OpenBraceToken { get; set; }
+        public DotSyntaxToken? OpenBraceToken { get; set; }
 
-        public DotSyntaxList<DotStatementSyntax> Statements { get; set; }
+        public DotSyntaxList<DotStatementSyntax>? Statements { get; set; }
 
-        public DotSyntaxToken CloseBraceToken { get; set; }
+        public DotSyntaxToken? CloseBraceToken { get; set; }
 
         internal override int SlotCount => 3;
 

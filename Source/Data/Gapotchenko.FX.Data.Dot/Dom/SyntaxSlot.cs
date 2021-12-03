@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +13,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         readonly DotSyntaxNode? _node;
         readonly IReadOnlyList<DotSyntaxNode>? _list;
 
-        public SyntaxSlot(DotSyntaxToken token)
+        public SyntaxSlot(DotSyntaxToken? token)
             : this(token, null, null)
         { }
 
-        public SyntaxSlot(DotSyntaxNode node)
+        public SyntaxSlot(DotSyntaxNode? node)
             : this(null, node, null)
         { }
 
@@ -27,7 +28,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                   null)
         { }
 
-        public SyntaxSlot(IReadOnlyList<DotSyntaxNode> list)
+        public SyntaxSlot(IReadOnlyList<DotSyntaxNode>? list)
             : this(null, null, list)
         { }
 
@@ -70,9 +71,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        public static implicit operator SyntaxSlot(DotSyntaxToken token) =>
+        public static implicit operator SyntaxSlot(DotSyntaxToken? token) =>
             new SyntaxSlot(token);
-        public static implicit operator SyntaxSlot(DotSyntaxNode node) =>
+        public static implicit operator SyntaxSlot(DotSyntaxNode? node) =>
             new SyntaxSlot(node);
         public static implicit operator SyntaxSlot(DotSyntaxNodeOrToken nodeOrToken) =>
             new SyntaxSlot(nodeOrToken);
@@ -83,8 +84,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public bool IsToken { get; }
         public bool IsList { get; }
 
+        [MemberNotNullWhen(true, nameof(_token))]
         public DotSyntaxToken? AsToken() => _token;
 
+        [MemberNotNullWhen(true, nameof(_node))]
         public DotSyntaxNode? AsNode() => _node;
 
         public IReadOnlyList<DotSyntaxNode>? AsList() => _list;
@@ -94,8 +97,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             get
             {
                 return
-                    IsNode ? _node.SlotCount :
-                    IsList ? _list is ISyntaxSlotProvider slotProvider ? slotProvider.SlotCount : _list.Count :
+                    IsNode ? _node!.SlotCount :
+                    IsList ? _list is ISyntaxSlotProvider slotProvider ? slotProvider.SlotCount : _list!.Count :
                     0;
             }
         }
@@ -103,8 +106,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public SyntaxSlot GetSlot(int index)
         {
             return
-                IsNode ? _node.GetSlot(index) :
-                IsList ? _list is ISyntaxSlotProvider slotProvider ? slotProvider.GetSlot(index) : _list[index] :
+                IsNode ? _node!.GetSlot(index) :
+                IsList ? _list is ISyntaxSlotProvider slotProvider ? slotProvider.GetSlot(index) : _list![index] :
                 throw new InvalidOperationException("A current slot has no child slots.");
         }
     }

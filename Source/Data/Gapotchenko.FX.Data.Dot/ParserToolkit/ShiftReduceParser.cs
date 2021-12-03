@@ -269,7 +269,7 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
             }
             FsaState = StateStack.TopElement();
 
-            if (FsaState.Goto.ContainsKey(rule.LeftHandSide))
+            if (FsaState.Goto?.ContainsKey(rule.LeftHandSide) == true)
                 FsaState = States[FsaState.Goto[rule.LeftHandSide]];
 
             StateStack.Push(FsaState);
@@ -310,7 +310,7 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
             StringBuilder errorMsg = new StringBuilder();
             errorMsg.AppendFormat("Syntax error, unexpected {0}", TerminalToString(NextToken));
 
-            Debug.Assert(FsaState is not null);
+            Debug.Assert(FsaState?.ParserTable is not null);
 
             if (FsaState.ParserTable.Count < 7)
             {
@@ -334,7 +334,7 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
             int old_next = NextToken;
             NextToken = _errorToken;
 
-            Debug.Assert(FsaState is not null);
+            Debug.Assert(FsaState?.ParserTable is not null);
 
             Shift(FsaState.ParserTable[NextToken]);
 

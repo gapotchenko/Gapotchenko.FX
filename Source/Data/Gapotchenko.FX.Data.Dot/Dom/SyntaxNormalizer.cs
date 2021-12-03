@@ -82,7 +82,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        void PlaceEndOfLine(DotSyntaxNode node)
+        void PlaceEndOfLine(DotSyntaxNode? node)
         {
             if (node is not null)
             {
@@ -91,7 +91,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        void PlaceEndOfLine(DotSyntaxToken token)
+        void PlaceEndOfLine(DotSyntaxToken? token)
         {
             if (token is not null)
             {

@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     partial class DotParser
     {
-        public DotGraphSyntax Root { get; private set; }
+        public DotGraphSyntax? Root { get; private set; }
 
         protected override State[] States => states;
         protected override Rule[] Rules => rules;

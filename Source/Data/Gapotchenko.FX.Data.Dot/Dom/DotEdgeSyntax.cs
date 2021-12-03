@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     public sealed class DotEdgeSyntax : DotStatementSyntax
     {
-        public SeparatedDotSyntaxList<DotSyntaxNode> Elements { get; set; }
+        public SeparatedDotSyntaxList<DotSyntaxNode>? Elements { get; set; }
         public DotSyntaxList<DotAttributeListSyntax>? Attributes { get; set; }
 
         internal override int SlotCount => 2;

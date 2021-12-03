@@ -18,7 +18,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 }
                 else if (child.IsNode)
                 {
-                    var token = GetFirstToken(child.AsNode());
+                    var token = GetFirstToken(child.AsNode()!);
                     if (token is not null)
                     {
                         return token;
@@ -39,7 +39,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 }
                 else if (child.IsNode)
                 {
-                    var token = GetLastToken(child.AsNode());
+                    var token = GetLastToken(child.AsNode()!);
                     if (token is not null)
                     {
                         return token;

@@ -107,9 +107,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             if (!childSlot.IsList)
             {
                 if (childSlot.IsToken)
-                    return childSlot.AsToken();
+                    return childSlot.AsToken()!;
                 else if (childSlot.IsNode)
-                    return childSlot.AsNode();
+                    return childSlot.AsNode()!;
                 else
                     throw new InvalidOperationException();
             }
@@ -122,9 +122,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         static DotSyntaxNodeOrToken Unwrap(SyntaxSlot slot)
         {
             if (slot.IsToken)
-                return slot.AsToken();
+                return slot.AsToken()!;
             else if (slot.IsNode)
-                return slot.AsNode();
+                return slot.AsNode()!;
             else
                 throw new ArgumentException("Cannot unwrap the given slot.", nameof(slot));
         }
@@ -231,7 +231,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
             /// <summary>Advances the enumerator to the next element of the <see cref="DotChildSyntaxList" />.</summary>
             /// <returns>true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.</returns>
-            [MemberNotNullWhen(true, nameof(_node))]
             public bool MoveNext()
             {
                 var newIndex = _childIndex + 1;
@@ -270,7 +269,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                     return false;
                 }
 
-                current = ItemInternal(_node, _childIndex);
+                current = ItemInternal(_node!, _childIndex);
                 return true;
             }
         }

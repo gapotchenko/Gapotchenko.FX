@@ -8,6 +8,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     public abstract class DotStatementSyntax : DotSyntaxNode
     {
-        public DotSyntaxToken SemicolonToken { get; set; }
+        public DotSyntaxToken? SemicolonToken { get; set; }
     }
 }

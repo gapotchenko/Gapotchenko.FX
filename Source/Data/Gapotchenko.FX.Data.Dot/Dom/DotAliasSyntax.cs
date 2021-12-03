@@ -8,9 +8,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     public sealed class DotAliasSyntax : DotStatementSyntax
     {
-        public DotSyntaxToken LHS { get; set; }
-        public DotSyntaxToken EqualToken { get; set; }
-        public DotSyntaxToken RHS { get; set; }
+        public DotSyntaxToken? LHS { get; set; }
+        public DotSyntaxToken? EqualToken { get; set; }
+        public DotSyntaxToken? RHS { get; set; }
 
         internal override int SlotCount => 3;
 

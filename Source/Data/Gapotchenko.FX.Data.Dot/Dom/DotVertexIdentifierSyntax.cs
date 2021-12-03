@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     public sealed class DotVertexIdentifierSyntax : DotSyntaxNode
     {
-        public DotSyntaxToken Identifier { get; set; }
+        public DotSyntaxToken? Identifier { get; set; }
         public DotSyntaxToken? PortColonToken { get; set; }
         public DotSyntaxToken? PortIdentifier { get; set; }
         public DotSyntaxToken? CompassPointColonToken { get; set; }

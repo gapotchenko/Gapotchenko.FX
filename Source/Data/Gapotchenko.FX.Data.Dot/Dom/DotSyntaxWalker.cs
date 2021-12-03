@@ -35,7 +35,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 i++;
 
                 var asNode = child.AsNode();
-                if (asNode != null)
+                if (asNode is not null)
                 {
                     if (Depth >= SyntaxWalkerDepth.Node)
                     {
@@ -46,7 +46,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 {
                     if (Depth >= SyntaxWalkerDepth.Token)
                     {
-                        VisitToken(child.AsToken());
+                        var token = child.AsToken();
+                        if (token is not null)
+                        {
+                            VisitToken(token);
+                        }
                     }
                 }
             } while (i < childCnt);

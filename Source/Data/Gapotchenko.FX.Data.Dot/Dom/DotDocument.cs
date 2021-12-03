@@ -20,7 +20,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             var parser = new DotParser(reader);
             parser.Parse();
-            return new DotDocument(parser.Root);
+            var root = parser.Root;
+            if (root is null)
+            {
+                throw new InvalidOperationException("Cannot parse DOT document.");
+            }
+
+            return new DotDocument(root);
         }
 
         public void Save(DotWriter writer)
@@ -79,7 +85,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 }
                 else if (child.IsNode)
                 {
-                    foreach (var token in EnumerateTokens(child.AsNode()))
+                    foreach (var token in EnumerateTokens(child.AsNode()!))
                     {
                         yield return token;
                     }

@@ -9,16 +9,18 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     public abstract class DotSyntaxNode : ISyntaxSlotProvider
     {
         public List<DotSyntaxTrivia> LeadingTrivia =>
-            SyntaxNavigator.GetFirstToken(this).LeadingTrivia;
+            (SyntaxNavigator.GetFirstToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
+            .LeadingTrivia;
 
         public List<DotSyntaxTrivia> TrailingTrivia =>
-            SyntaxNavigator.GetLastToken(this).TrailingTrivia;
+            (SyntaxNavigator.GetLastToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
+            .TrailingTrivia;
 
         public bool HasLeadingTrivia =>
-            SyntaxNavigator.GetFirstToken(this).HasLeadingTrivia;
+            SyntaxNavigator.GetFirstToken(this)?.HasLeadingTrivia == true;
 
         public bool HasTrailingTrivia =>
-            SyntaxNavigator.GetLastToken(this).HasTrailingTrivia;
+            SyntaxNavigator.GetLastToken(this)?.HasTrailingTrivia == true;
 
         public DotChildSyntaxList ChildNodesAndTokens()
             => new(this);

@@ -80,7 +80,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static DotAttributeListSyntax CreateAttributeListSyntax(
             DotSyntaxToken openBraceToken,
-            DotSyntaxList<DotAttributeSyntax> attributes,
+            DotSyntaxList<DotAttributeSyntax>? attributes,
             DotSyntaxToken closeBraceToken)
         {
             return new DotAttributeListSyntax()

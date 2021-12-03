@@ -8,8 +8,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     public sealed class AttachedDotAttributesSyntax : DotStatementSyntax
     {
-        public DotSyntaxToken TargetKeyword { get; set; }
-        public DotSyntaxList<DotAttributeListSyntax> Attributes { get; set; }
+        public DotSyntaxToken? TargetKeyword { get; set; }
+        public DotSyntaxList<DotAttributeListSyntax>? Attributes { get; set; }
 
         internal override int SlotCount => 2;
 
