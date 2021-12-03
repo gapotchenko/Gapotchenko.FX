@@ -1,185 +1,252 @@
-﻿using System;
-using System.CodeDom.Compiler;
+﻿using Gapotchenko.FX.Data.Dot.Dom;
+using Gapotchenko.FX.Data.Dot.Serialization;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Math.Topology.Serialization
 {
-    sealed class DotCompiler
+    sealed class DotCompiler<TVertex>
     {
-        static readonly Regex ValidIdentifierPattern = new(
-            @"^(([a-zA-Z\200-\377_][0-9a-zA-Z\200-\377_]*)|(-?(\.[0-9]+|[0-9]+(\.[0-9]*)?)))$",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant);
+        readonly Func<TVertex, IDotVertex> _vertexSerializer;
 
-        struct IdVertex<T>
+        public DotCompiler(Func<TVertex, IDotVertex> serializeVertex)
         {
-            public IdVertex(int id, T value)
+            _vertexSerializer = serializeVertex;
+        }
+
+        sealed class IdVertex
+        {
+            public IdVertex(int index, IDotVertex vertex, TVertex originalVertex, string stringId, string? label)
             {
-                Id = id;
-                Value = value;
+                Index = index;
+                Vertex = vertex;
+                OriginalVertex = originalVertex;
+                StringId = stringId;
+                Label = label;
             }
 
-            public readonly int Id;
-            public readonly T Value;
+            public readonly int Index;
+            public readonly IDotVertex Vertex;
+            public readonly TVertex OriginalVertex;
+            public readonly string StringId;
+            public readonly string? Label;
+        }
+
+        sealed class DotDocumentModel
+        {
+            public List<IReadOnlyList<IReadOnlyList<string>>> Edges { get; } = new();
+            public List<(string vertex, IReadOnlyList<(string attributeName, string attributeValue)> attributes)> Vertices { get; } = new();
         }
 
         /// <summary>
         /// Converts given graph into the dot language.
         /// </summary>
-        public void Serialize<T>(
-            IReadOnlyGraph<T> graph,
-            TextWriter writer)
+        public DotDocument Serialize(IReadOnlyGraph<TVertex> graph)
         {
-            var indentedWriter = new IndentedTextWriter(writer);
+            HashSet<string> stringIdSet = new();
 
-            indentedWriter.WriteLine("digraph {");
+            var idGraph = new Graph<IdVertex>(
+                graph.Vertices.Select((v, index) => CreateIdVertex(v, index, stringIdSet)),
+                (from, to) => graph.Edges.Contains(new GraphEdge<TVertex>(from.OriginalVertex, to.OriginalVertex)));
 
-            indentedWriter.Indent++;
+            var model = CreateDocumentModel(idGraph);
 
-            HashSet<string> idSet = new();
-            Dictionary<int, string> idMap = new();
-            Dictionary<int, string> labelsMap = new();
+            return Serialize(model);
+        }
 
-            string GetVertexId(IdVertex<T> v)
-            {
-                if (!idMap.TryGetValue(v.Id, out var stringId))
-                {
-                    var label = GetVertexLabel(v.Value) ?? string.Empty;
-                    label = EscapeLabel(label);
-                    if (string.IsNullOrEmpty(label) ||
-                        !ValidIdentifierPattern.IsMatch(label))
-                    {
-                        label = "\"" + label + "\"";
-                    }
-
-                    if (idSet.Add(label))
-                    {
-                        stringId = label;
-                    }
-                    else
-                    {
-                        stringId = $"v{v.Id}";
-                        int duplicateCounter = 0;
-                        while (!idSet.Add(stringId))
-                        {
-                            stringId = $"v{v.Id}_{++duplicateCounter}";
-                        }
-
-                        labelsMap[v.Id] = label;
-                    }
-
-                    idMap[v.Id] = stringId;
-                }
-
-                return stringId;
-            }
-
-            void WriteVertexId(IdVertex<T> v)
-            {
-                var stringId = GetVertexId(v);
-                indentedWriter.Write(stringId);
-            }
-
-            var idGraph = new Graph<IdVertex<T>>(
-                graph.Vertices.Select((v, id) => new IdVertex<T>(id, v)),
-                (from, to) => graph.Edges.Contains(new GraphEdge<T>(from.Value, to.Value)));
+        DotDocumentModel CreateDocumentModel(IReadOnlyGraph<IdVertex> idGraph)
+        {
+            var model = new DotDocumentModel();
 
             var transposedIdGraph = idGraph.GetTransposition();
+            HashSet<IdVertex> isolatedVertices = new();
 
             foreach (var v in idGraph.Vertices)
             {
                 var adjacentTo = idGraph.VerticesAdjacentTo(v);
                 if (adjacentTo.Any())
                 {
-                    WriteVertexId(v);
+                    var from = new[] { v.StringId };
 
-                    indentedWriter.Write(" -> ");
+                    var to = adjacentTo
+                        .Select(w => w.StringId)
+                        .ToList();
 
-                    var twoOrMore = adjacentTo.Skip(1).Any();
-                    if (twoOrMore)
-                    {
-                        indentedWriter.Write("{ ");
-                    }
-
-                    bool first = true;
-                    foreach (var w in adjacentTo)
-                    {
-                        if (first)
-                        {
-                            first = false;
-                        }
-                        else
-                        {
-                            indentedWriter.Write(' ');
-                        }
-
-                        WriteVertexId(w);
-                    }
-
-                    if (twoOrMore)
-                    {
-                        indentedWriter.Write(" }");
-                    }
-
-                    indentedWriter.WriteLine();
+                    model.Edges.Add(new IReadOnlyList<string>[] { from, to });
                 }
                 else if (!transposedIdGraph.VerticesAdjacentTo(v).Any())
                 {
-                    WriteVertexId(v);
-                    indentedWriter.WriteLine();
+                    isolatedVertices.Add(v);
                 }
             }
 
-            if (labelsMap.Count != 0)
+            foreach (var v in isolatedVertices)
             {
-                indentedWriter.WriteLine();
+                AddVertex(model, v);
+            }
 
-                foreach (var kv in labelsMap)
+            foreach (var v in idGraph.Vertices)
+            {
+                if (HasAttributes(v) &&
+                    !isolatedVertices.Contains(v))
                 {
-                    var id = idMap[kv.Key];
-                    var label = labelsMap[kv.Key];
-                    indentedWriter.WriteLine($"{id} [label={label}]");
+                    AddVertex(model, v);
                 }
             }
 
-            indentedWriter.Indent--;
-
-            indentedWriter.Write("}");
+            return model;
         }
 
-        static string EscapeLabel(string label)
+        static bool HasAttributes(IdVertex v)
         {
-            return label
-                .Replace("\\", "\\\\")
-                .Replace("\"", "\\\"")
-                .Replace("\r\n", "\\r\\n")
-                .Replace("\n", "\\n");
+            return v.Vertex.Attributes.Any() ||
+                v.Label != null;
         }
 
-        string? GetVertexLabel(object? obj)
+        static void AddVertex(DotDocumentModel model, IdVertex v)
         {
-            switch (obj)
+            var attributes = v.Vertex.Attributes;
+            var label = v.Label;
+
+            IReadOnlyList<(string, string)> attrs;
+            if (attributes is null && label is null)
             {
-                case null:
-                    return null;
-                case string s:
-                    return s;
-                case IConvertible:
-                    return (string)Convert.ChangeType(obj, typeof(string));
+                attrs = Empty<(string, string)>.Array;
+            }
+            else
+            {
+                var list = new List<(string, string)>();
+                if (attributes is not null)
+                {
+                    foreach (var kv in attributes)
+                    {
+                        list.Add((kv.Key, kv.Value));
+                    }
+                }
+
+                if (label is not null)
+                {
+                    list.Add(("label", label));
+                }
+
+                attrs = list;
             }
 
-            var converter = TypeDescriptor.GetConverter(obj);
-            if (converter.CanConvertTo(typeof(string)))
+            model.Vertices.Add((v.StringId, attrs));
+        }
+
+        IdVertex CreateIdVertex(TVertex v, int index, HashSet<string> stringIdSet)
+        {
+            var mappedVertex = _vertexSerializer(v);
+
+            var hasLabelAttribute = mappedVertex.Attributes?.ContainsKey("label") == true;
+
+            var stringId = mappedVertex.Identifier;
+
+            string? label = null;
+            if (!stringIdSet.Add(stringId))
             {
-                return converter.ConvertToString(obj);
+                if (!hasLabelAttribute)
+                {
+                    label = stringId;
+                }
+
+                stringId = $"v{index}";
+                int duplicateCounter = 0;
+                while (!stringIdSet.Add(stringId))
+                {
+                    stringId = $"v{index}_{++duplicateCounter}";
+                }
             }
 
-            return obj.ToString();
+            return new IdVertex(index, mappedVertex, v, stringId, label);
+        }
+
+        static DotDocument Serialize(DotDocumentModel model)
+        {
+            return new DotDocument(DotSyntaxFactory.Graph(
+                strict: default,
+                kind: DotSyntaxFactory.Token(DotToken.Digraph),
+                identifier: default,
+                statements: CreateStatements(model)));
+        }
+
+        static DotStatementListSyntax CreateStatements(DotDocumentModel model)
+        {
+            List<DotStatementSyntax> statements = new();
+
+            foreach (var edge in model.Edges)
+            {
+                statements.Add(CreateEdgeStatement(edge));
+            }
+
+            foreach (var vertex in model.Vertices)
+            {
+                statements.Add(CreateVertexStatement(vertex.vertex, vertex.attributes));
+            }
+
+            return DotSyntaxFactory.StatementList(
+                DotSyntaxFactory.List(statements));
+        }
+
+        static DotVertexSyntax CreateVertexStatement(string vertex, IEnumerable<(string attributeName, string attributeValue)>? attributes)
+        {
+            return DotSyntaxFactory.VertexStatement(
+                identifier: CreateIdentifier(vertex),
+                attributes: CreateAttributesList(attributes));
+        }
+
+        static DotVertexIdentifierSyntax CreateIdentifier(string identifier)
+        {
+            return DotSyntaxFactory.Identifier(identifier);
+        }
+
+        static DotSyntaxList<DotAttributeListSyntax>? CreateAttributesList(IEnumerable<(string attributeName, string attributeValue)>? attributes)
+        {
+            if (attributes?.Any() != true)
+                return null;
+
+            var attributesList = attributes.Select(attr => DotSyntaxFactory.Attribute(
+                name: attr.attributeName,
+                value: attr.attributeValue));
+
+            return DotSyntaxFactory.List(new[]
+            {
+                DotSyntaxFactory.AttributeList(
+                    DotSyntaxFactory.List(attributesList))
+            });
+        }
+
+        static DotEdgeSyntax CreateEdgeStatement(IEnumerable<IEnumerable<string>> edge)
+        {
+            return DotSyntaxFactory.Edge(
+                elements: DotSyntaxFactory.SeparatedList(
+                    edge.Select(CreateEdgeElement),
+                    DotSyntaxFactory.Token(DotToken.Arrow, "->")),
+                attributes: default);
+
+            static DotSyntaxNode CreateEdgeElement(IEnumerable<string> edgeElement)
+            {
+                if (edgeElement.Skip(1).Any())
+                {
+                    var subgraphStatements = DotSyntaxFactory.List(
+                        edgeElement.Select(v => (DotStatementSyntax)CreateVertexStatement(v, default)));
+
+                    return DotSyntaxFactory.Graph(
+                        default,
+                        default,
+                        default,
+                        DotSyntaxFactory.StatementList(subgraphStatements));
+                }
+                else
+                {
+                    var vertex = edgeElement.Single();
+                    return CreateVertexStatement(vertex, default);
+                }
+            }
         }
     }
 }

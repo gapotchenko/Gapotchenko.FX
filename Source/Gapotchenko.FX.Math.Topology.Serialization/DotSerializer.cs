@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Gapotchenko.FX.Data.Dot.Dom;
+using Gapotchenko.FX.Data.Dot.Serialization;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,8 +43,11 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             if (textWriter is null)
                 throw new ArgumentNullException(nameof(textWriter));
 
-            var dotCompiler = new DotCompiler();
-            dotCompiler.Serialize(graph, textWriter);
+            var document = new DotCompiler<T>(SerializeVertex).Serialize(graph);
+            DotFormatter.NormalizeWhitespace(document.Root);
+
+            var dotWriter = DotWriter.Create(textWriter);
+            document.Save(dotWriter);
         }
 
         /// <summary>
@@ -75,7 +80,9 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             if (textReader is null)
                 throw new ArgumentNullException(nameof(textReader));
 
-            var intermediateGraph = DotParser.Parse(textReader);
+            var dotReader = DotReader.Create(textReader);
+            var document = DotDocument.Load(dotReader);
+            var intermediateGraph = CreateIntermediateGraph(document);
             ConvertGraph(intermediateGraph, graph);
         }
 
@@ -133,7 +140,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
                 new InvalidOperationException("Vertex string representation cannot be null.");
         }
 
-        void ConvertGraph<T>(Graph<DotDocumentVertex> source, IGraph<T> destination)
+        void ConvertGraph<T>(IReadOnlyGraph<DotDocumentVertex> source, IGraph<T> destination)
         {
             var verticesMap =
                 source.Vertices
@@ -178,11 +185,22 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         /// <param name="vertex">Vertex to serialize.</param>
         /// <returns>Serialized vertex.</returns>
         protected virtual IDotVertex SerializeVertex<T>(T vertex)
-            where T : notnull
         {
             var converter = GetVertexToStringConverter(typeof(T));
             var identifier = converter(vertex, null);
             return new DotVertex(identifier, null);
+        }
+
+        IReadOnlyGraph<DotDocumentVertex> CreateIntermediateGraph(DotDocument document)
+        {
+            var root = document.Root;
+
+            var directed = string.Equals("digraph", root.GraphKindKeyword.Value, StringComparison.OrdinalIgnoreCase);
+
+            var builder = new IntermediateGraphBuilder(directed);
+            builder.Visit(root);
+
+            return builder.Graph;
         }
     }
 }

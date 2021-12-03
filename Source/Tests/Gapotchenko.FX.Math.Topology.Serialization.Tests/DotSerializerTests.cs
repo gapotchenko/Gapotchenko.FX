@@ -227,14 +227,10 @@ digraph {
             var expected = @"
 digraph {
     a
-    v1
-    v2
+    v1 [label = a]
+    v2 [label = a]
     v4
-    v4_1
-    
-    v1 [label=a]
-    v2 [label=a]
-    v4_1 [label=v4]
+    v4_1 [label = v4]
 }";
 
             var normalizedExpectedDocument = Utilities.NormalizeDotDocument(expected);
@@ -260,8 +256,7 @@ digraph {
             var expected = @"
 digraph {
     ""Class!""
-    v1
-    v1 [label=""Class!""]
+    v1 [label = ""Class!""]
 }";
 
             var normalizedExpectedDocument = Utilities.NormalizeDotDocument(expected);
