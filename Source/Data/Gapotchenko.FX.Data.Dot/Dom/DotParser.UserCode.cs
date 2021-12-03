@@ -82,17 +82,17 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         int MapToken(DotToken token) => token switch
         {
             DotToken.EOF => (int)DotTokens.EOF,
-            DotToken.DIGRAPH => (int)DotTokens.DIGRAPH,
-            DotToken.GRAPH => (int)DotTokens.GRAPH,
-            DotToken.ARROW => (int)DotTokens.ARROW,
-            DotToken.SUBGRAPH => (int)DotTokens.SUBGRAPH,
-            DotToken.NODE => (int)DotTokens.NODE,
-            DotToken.EDGE => (int)DotTokens.EDGE,
-            DotToken.ID => (int)DotTokens.ID,
+            DotToken.Digraph => (int)DotTokens.DIGRAPH,
+            DotToken.Graph => (int)DotTokens.GRAPH,
+            DotToken.Arrow => (int)DotTokens.ARROW,
+            DotToken.Subgraph => (int)DotTokens.SUBGRAPH,
+            DotToken.Node => (int)DotTokens.NODE,
+            DotToken.Edge => (int)DotTokens.EDGE,
+            DotToken.Id => (int)DotTokens.ID,
 
-            DotToken.LINECOMMENT => throw new InvalidOperationException(),
-            DotToken.MLINECOMMENT => throw new InvalidOperationException(),
-            DotToken.WHITESPACE => throw new InvalidOperationException(),
+            DotToken.Comment => throw new InvalidOperationException(),
+            DotToken.MultilineComment => throw new InvalidOperationException(),
+            DotToken.Whitespace => throw new InvalidOperationException(),
 
             _ => (int)token
         };
@@ -113,9 +113,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static bool IsTriviaToken(DotToken token) => token switch
         {
-            DotToken.WHITESPACE => true,
-            DotToken.LINECOMMENT => true,
-            DotToken.MLINECOMMENT => true,
+            DotToken.Whitespace => true,
+            DotToken.Comment => true,
+            DotToken.MultilineComment => true,
             _ => false
         };
 

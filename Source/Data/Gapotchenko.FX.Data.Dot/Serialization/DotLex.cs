@@ -466,7 +466,7 @@ Error(yytext);
             break;
         case 2:
         case 3:
-return (int)DotToken.WHITESPACE;
+return (int)DotToken.Whitespace;
             break;
         case 4:
         case 20:
@@ -522,14 +522,14 @@ BEGIN(MLINECOMMENT);
 BEGIN(LINECOMMENT);
             break;
         case 25:
-return (int) DotToken.ARROW;
+return (int) DotToken.Arrow;
             break;
         case 26:
         case 28:
-return (int) DotToken.ID;
+return (int) DotToken.Id;
             break;
         case 27:
-return (int) DotToken.ARROW;
+return (int) DotToken.Arrow;
             break;
         case 29:
 BEGIN(LINECOMMENT);
@@ -541,7 +541,7 @@ BEGIN(LINECOMMENT);
 stringId += yytext;
             break;
         case 32:
-_yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotToken.ID;
+_yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotToken.Id;
             break;
         case 34:
 stringId += yytext; stringId = TrimString(stringId);
@@ -559,20 +559,20 @@ BEGIN(INITIAL); return (int)'"';
 nesting++;
             break;
         case 40:
-nesting--; if (nesting == 0) { BEGIN(INITIAL); return (int)DotToken.ID; }
+nesting--; if (nesting == 0) { BEGIN(INITIAL); return (int)DotToken.Id; }
             break;
         case 41:
 {}
             break;
         case 42:
-BEGIN(INITIAL); return (int)DotToken.LINECOMMENT;
+BEGIN(INITIAL); return (int)DotToken.Comment;
             break;
         case 43:
         case 44:
 {}
             break;
         case 45:
-BEGIN(INITIAL); return (int)DotToken.MLINECOMMENT;
+BEGIN(INITIAL); return (int)DotToken.MultilineComment;
             break;
         default:
             break;

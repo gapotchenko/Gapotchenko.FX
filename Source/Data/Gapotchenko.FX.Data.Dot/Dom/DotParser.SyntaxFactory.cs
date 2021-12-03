@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         static DotSyntaxTrivia CreateWhitespaceTrivia(
             string value)
         {
-            return new DotSyntaxTrivia(DotToken.WHITESPACE, value);
+            return new DotSyntaxTrivia(DotToken.Whitespace, value);
         }
 
         static DotSyntaxTrivia CreateTrivia(

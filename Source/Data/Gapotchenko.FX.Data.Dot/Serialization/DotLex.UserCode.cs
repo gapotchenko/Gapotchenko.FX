@@ -35,12 +35,12 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
 
         public static DotToken MkId(string txt) => txt.ToLower() switch
         {
-            "graph" => DotToken.GRAPH,
-            "digraph" => DotToken.DIGRAPH,
-            "subgraph" => DotToken.SUBGRAPH,
-            "node" => DotToken.NODE,
-            "edge" => DotToken.EDGE,
-            _ => DotToken.ID,
+            "graph" => DotToken.Graph,
+            "digraph" => DotToken.Digraph,
+            "subgraph" => DotToken.Subgraph,
+            "node" => DotToken.Node,
+            "edge" => DotToken.Edge,
+            _ => DotToken.Id,
         };
 
         static string TrimString(string stringId)

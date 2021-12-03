@@ -8,10 +8,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     public sealed class DotGraphSyntax : DotStatementSyntax
     {
-        public DotSyntaxToken StrictKeyword { get; set; }
-        public DotSyntaxToken GraphKindKeyword { get; set; }
-        public DotSyntaxToken Identifier { get; set; }
-        public DotStatementListSyntax Statements { get; set; }
+        public DotSyntaxToken? StrictKeyword { get; set; }
+        public DotSyntaxToken? GraphKindKeyword { get; set; }
+        public DotSyntaxToken? Identifier { get; set; }
+        public DotStatementListSyntax? Statements { get; set; }
 
         internal override int SlotCount => 4;
 

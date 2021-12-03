@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     public sealed class DotVertexSyntax : DotStatementSyntax
     {
         public DotVertexIdentifierSyntax Identifier { get; set; }
-        public DotSyntaxList<DotAttributeListSyntax> Attributes { get; set; }
+        public DotSyntaxList<DotAttributeListSyntax>? Attributes { get; set; }
 
         internal override int SlotCount => 2;
 

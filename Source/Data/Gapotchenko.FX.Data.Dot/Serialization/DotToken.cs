@@ -9,15 +9,15 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
     public enum DotToken
     {
         EOF = 128,
-        DIGRAPH,
-        GRAPH,
-        ARROW,
-        SUBGRAPH,
-        NODE,
-        EDGE,
-        ID,
-        LINECOMMENT,
-        MLINECOMMENT,
-        WHITESPACE,
+        Digraph,
+        Graph,
+        Arrow,
+        Subgraph,
+        Node,
+        Edge,
+        Id,
+        Comment,
+        MultilineComment,
+        Whitespace,
     }
 }

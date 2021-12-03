@@ -25,16 +25,16 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
             {
                 case DotToken.EOF:
                     break;
-                case DotToken.DIGRAPH:
+                case DotToken.Digraph:
                     _writer.Write("digraph");
                     break;
-                case DotToken.GRAPH:
+                case DotToken.Graph:
                     _writer.Write("graph");
                     break;
-                case DotToken.ARROW:
+                case DotToken.Arrow:
                     _writer.Write("->");
                     break;
-                case DotToken.WHITESPACE:
+                case DotToken.Whitespace:
                     _writer.Write(' ');
                     break;
                 default:
