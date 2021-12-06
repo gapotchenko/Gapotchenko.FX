@@ -178,9 +178,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
-        static void Prepend<T>(
-            DotSyntaxList<T> syntaxList,
-            T node)
+        static void Prepend<TNode>(
+            DotSyntaxList<TNode> syntaxList,
+            TNode node)
+            where TNode : DotSyntaxNode
         {
             syntaxList.Prepend(node);
         }
@@ -193,7 +194,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             syntaxList.Prepend(node);
         }
 
-        IEnumerable<DotSyntaxTrivia> TokenToTrivia(DotSyntaxToken token)
+        static IEnumerable<DotSyntaxTrivia> TokenToTrivia(DotSyntaxToken token)
         {
             if (token.HasLeadingTrivia)
             {
@@ -214,22 +215,22 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        void AppendLeadingTrivia(DotSyntaxToken destination, DotValueType source)
+        static void AppendLeadingTrivia(DotSyntaxToken destination, DotValueType source)
         {
             destination.LeadingTrivia.AddRange(TokenToTrivia(source.token));
         }
 
-        void PrependLeadingTrivia(DotSyntaxToken destination, DotValueType source)
+        static void PrependLeadingTrivia(DotSyntaxToken destination, DotValueType source)
         {
             destination.LeadingTrivia.InsertRange(0, TokenToTrivia(source.token));
         }
 
-        void AppendTrailingTrivia(DotSyntaxToken destination, DotValueType source)
+        static void AppendTrailingTrivia(DotSyntaxToken destination, DotValueType source)
         {
             destination.TrailingTrivia.AddRange(TokenToTrivia(source.token));
         }
 
-        void PrependTrailingTrivia(DotSyntaxToken destination, DotValueType source)
+        static void PrependTrailingTrivia(DotSyntaxToken destination, DotValueType source)
         {
             destination.TrailingTrivia.InsertRange(0, TokenToTrivia(source.token));
         }

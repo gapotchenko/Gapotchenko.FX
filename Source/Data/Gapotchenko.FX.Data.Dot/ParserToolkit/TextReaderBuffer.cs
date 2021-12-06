@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.ParserToolkit
 {
-    sealed class TextReaderBuffer : ScanBuff, IDisposable
+    sealed class TextReaderBuffer : ScanBuff
     {
         TextReader _reader;
 
-        public void Dispose()
+        public override void Dispose()
         {
             if (_reader is not null)
             {
@@ -105,7 +105,7 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
             }
         }
 
-        BufferElement _data = new();
+        readonly BufferElement _data = new();
         int _position;
 
         public TextReaderBuffer(TextReader reader)

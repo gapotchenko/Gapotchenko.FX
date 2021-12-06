@@ -58,7 +58,7 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
         bool _recovering;
         int _tokensSinceLastError;
 
-        PushdownPrefixState<State> StateStack = new PushdownPrefixState<State>();
+        readonly PushdownPrefixState<State> StateStack = new();
 
         /// <summary>
         /// The stack of semantic value (YYSTYPE) values.
@@ -239,14 +239,14 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
             {
                 // Create a new blank value.
                 // Explicit semantic action may mutate this value
-                CurrentSemanticValue = default(TValue);
+                CurrentSemanticValue = default;
                 // The location span for an empty production will start with the
                 // beginning of the next lexeme, and end with the finish of the
                 // previous lexeme.  This gives the correct behaviour when this
                 // nonsense value is used in later Merge operations.
-                CurrentLocationSpan = (yylloc != null && LastSpan != null ?
+                CurrentLocationSpan = yylloc != null && LastSpan != null ?
                     yylloc.Merge(LastSpan) :
-                    default(TSpan));
+                    default;
             }
             else
             {
@@ -256,7 +256,7 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
                 var at1 = LocationStack[LocationStack.Depth - rhLen];
                 var atN = LocationStack[LocationStack.Depth - 1];
                 CurrentLocationSpan =
-                    ((at1 != null && atN != null) ? at1.Merge(atN) : default(TSpan));
+                    (at1 != null && atN != null) ? at1.Merge(atN) : default;
             }
 
             DoAction(ruleNumber);

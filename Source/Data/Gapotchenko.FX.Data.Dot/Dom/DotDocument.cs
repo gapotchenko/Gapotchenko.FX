@@ -7,15 +7,19 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
+    /// <summary>
+    /// Represents a DOT document.
+    /// </summary>
     public class DotDocument
     {
-        public DotDocument(DotGraphSyntax root)
-        {
-            Root = root;
-        }
+        /// <summary>
+        /// Gets or sets a document root.
+        /// </summary>
+        public DotGraphSyntax? Root { get; set; }
 
-        public DotGraphSyntax Root { get; set; }
-
+        /// <summary>
+        /// Loads a DOT document from the given <see cref="DotReader" />.
+        /// </summary>
         public static DotDocument Load(DotReader reader)
         {
             var parser = new DotParser(reader);
@@ -26,12 +30,22 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 throw new InvalidOperationException("Cannot parse DOT document.");
             }
 
-            return new DotDocument(root);
+            return new DotDocument
+            {
+                Root = root,
+            };
         }
 
+        /// <summary>
+        /// Saves a DOT document to the given <see cref="DotWriter"/>.
+        /// </summary>
+        /// <param name="writer"></param>
         public void Save(DotWriter writer)
         {
-            Save(writer, Root);
+            if (Root is not null)
+            {
+                Save(writer, Root);
+            }
         }
 
         static void Save(DotWriter writer, DotGraphSyntax node)

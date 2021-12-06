@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
+    /// <summary>
+    /// Represents syntax node children list.
+    /// </summary>
     public struct DotChildSyntaxList : IReadOnlyList<DotSyntaxNodeOrToken>
     {
         readonly DotSyntaxNode? _node;
@@ -129,6 +132,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 throw new ArgumentException("Cannot unwrap the given slot.", nameof(slot));
         }
 
+        /// <summary>
+        /// Determines whether any child exists.
+        /// </summary>
         public bool Any()
         {
             return _count != 0;
@@ -331,6 +337,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             { }
         }
 
+        /// <summary>
+        /// Represents reversed syntax node children list.
+        /// </summary>
         public readonly partial struct Reversed : IEnumerable<DotSyntaxNodeOrToken>
         {
             readonly DotSyntaxNode? _node;
@@ -342,6 +351,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 _count = count;
             }
 
+            /// <summary>
+            /// Returns an enumerator that iterates through the collection.
+            /// </summary>
             public Enumerator GetEnumerator()
             {
                 Debug.Assert(_node is object);
@@ -368,6 +380,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 return new EnumeratorImpl(_node, _count);
             }
 
+            /// <summary>
+            /// A reversed collection enumerator.
+            /// </summary>
             public struct Enumerator
             {
                 readonly DotSyntaxNode? _node;
@@ -381,12 +396,18 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                     _childIndex = count;
                 }
 
+                /// <summary>
+                /// Advances the enumerator to the next element of the collection.
+                /// </summary>
                 [MemberNotNullWhen(true, nameof(_node))]
                 public bool MoveNext()
                 {
                     return --_childIndex >= 0;
                 }
 
+                /// <summary>
+                /// Gets the element in the collection at the current position of the enumerator.
+                /// </summary>
                 public DotSyntaxNodeOrToken Current
                 {
                     get
@@ -396,6 +417,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                     }
                 }
 
+                /// <summary>
+                /// Sets the enumerator to its initial position, which is before the first element in the collection.
+                /// </summary>
                 public void Reset()
                 {
                     _childIndex = _count;

@@ -46,7 +46,11 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
                 throw new ArgumentNullException(nameof(textWriter));
 
             var document = new DotCompiler<T>(SerializeVertex).Serialize(graph);
-            DotFormatter.NormalizeWhitespace(document.Root);
+            var documentRoot = document.Root;
+            if (documentRoot is not null)
+            {
+                DotFormatter.NormalizeWhitespace(documentRoot);
+            }
 
             var dotWriter = DotWriter.Create(textWriter);
             document.Save(dotWriter);

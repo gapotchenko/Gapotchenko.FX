@@ -2,12 +2,24 @@
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
+    /// <summary>
+    /// Represents DOT document statement list.
+    /// </summary>
     public sealed class DotStatementListSyntax : DotSyntaxNode
     {
+        /// <summary>
+        /// Gets or sets <c>{</c> token.
+        /// </summary>
         public DotSyntaxToken? OpenBraceToken { get; set; }
 
+        /// <summary>
+        /// Gets or sets a list of statements.
+        /// </summary>
         public DotSyntaxList<DotStatementSyntax>? Statements { get; set; }
 
+        /// <summary>
+        /// Gets or sets <c>}</c> token.
+        /// </summary>
         public DotSyntaxToken? CloseBraceToken { get; set; }
 
         internal override int SlotCount => 3;
@@ -20,6 +32,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
 
+        /// <inheritdoc />
         public override void Accept(DotSyntaxVisitor visitor)
         {
             visitor.VisitDotStatementListSyntax(this);

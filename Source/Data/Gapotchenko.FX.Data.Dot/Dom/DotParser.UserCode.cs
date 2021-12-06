@@ -16,7 +16,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         protected override Rule[] Rules => rules;
         protected override string[] NonTerms => nonTerms;
 
-        DotReader _scanner;
+        readonly DotReader _scanner;
 
         public DotParser(DotReader scanner)
         {
@@ -79,7 +79,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             return MapToken(token.kind);
         }
 
-        int MapToken(DotToken token) => token switch
+        static int MapToken(DotToken token) => token switch
         {
             DotToken.EOF => (int)DotTokens.EOF,
             DotToken.Digraph => (int)DotTokens.DIGRAPH,
@@ -107,10 +107,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             throw new Exception($"Cannot parse document. {message} at {line}:{col}.");
         }
 
-        /**********************/
-        /**********************/
-        /**********************/
-
         static bool IsTriviaToken(DotToken token) => token switch
         {
             DotToken.Whitespace => true,
@@ -118,18 +114,5 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotToken.MultilineComment => true,
             _ => false
         };
-
-        static (string init, string? last) SplitWhitespace(string value)
-        {
-            var bound = value.LastIndexOf('\n');
-            if (bound is -1 || bound == value.Length - 1)
-            {
-                return (value, null);
-            }
-            else
-            {
-                return (value.Substring(0, bound + 1), value.Substring(bound + 1));
-            }
-        }
     }
 }

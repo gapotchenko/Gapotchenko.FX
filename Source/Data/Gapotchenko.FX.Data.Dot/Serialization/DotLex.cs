@@ -5,7 +5,7 @@
 //  See accompanying file GPLEXcopyright.rtf.
 //
 //  GPLEX Version:  1.2.2
-//  GPLEX input file <Serialization\Dot.lex - 30.11.2021 21:21:31>
+//  GPLEX input file <Serialization\Dot.lex - 06.12.2021 18:48:37>
 //  GPLEX frame file <SERIALIZATION\DOTLEXFRAME.CS>
 //
 //  Option settings: parser, minimize
@@ -37,7 +37,7 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
     
     // If the compiler can't find the scanner base class maybe you
     // need to run GPPG with the /gplex option, or GPLEX with /noparser
-     internal sealed partial class DotLex : ScanBase
+     internal sealed partial class DotLex : ScanBase, IDisposable
     {
         ScanBuff buffer;
         int currentScOrd;  // start condition ordinal
@@ -615,6 +615,15 @@ BEGIN(INITIAL); return (int)DotToken.MultilineComment;
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal void ECHO() { Console.Out.Write(yytext); }
+
+        public void Dispose()
+        {
+            if (buffer is not null)
+            {
+                buffer.Dispose();
+                buffer = null!;
+            }
+        }
         
         } // end class DotLex
 } // end namespace

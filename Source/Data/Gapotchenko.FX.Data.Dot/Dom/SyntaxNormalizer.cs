@@ -69,7 +69,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             if (shouldIndent)
             {
                 _nestedStatement = false;
-                node.LeadingTrivia.InsertRange(0, CreateIndentation());
+                node.GetLeadingTrivia().InsertRange(0, CreateIndentation());
                 PlaceEndOfLine(node);
             }
         }
@@ -86,8 +86,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             if (node is not null)
             {
-                node.TrailingTrivia.RemoveAll(t => t.Kind is DotToken.Whitespace);
-                node.TrailingTrivia.Add(DotSyntaxFactory.Whitespace(_eol));
+                var trailingTrivia = node.GetTrailingTrivia();
+                trailingTrivia.RemoveAll(t => t.Kind is DotToken.Whitespace);
+                trailingTrivia.Add(DotSyntaxFactory.Whitespace(_eol));
             }
         }
 
@@ -100,7 +101,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        void TrimStart(DotSyntaxToken token)
+        static void TrimStart(DotSyntaxToken token)
         {
             if (token.HasLeadingTrivia)
             {
@@ -108,7 +109,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        void TrimEnd(DotSyntaxToken token)
+        static void TrimEnd(DotSyntaxToken token)
         {
             if (token.HasTrailingTrivia)
             {

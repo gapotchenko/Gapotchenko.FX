@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
+    /// <summary>
+    /// DOT syntax factory.
+    /// </summary>
     public static class DotSyntaxFactory
     {
+        /// <summary>
+        /// Creates a token.
+        /// </summary>
         public static DotSyntaxToken Token(
             DotToken kind,
             string? text = default)
@@ -28,6 +34,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             return new DotSyntaxToken(kind, text);
         }
 
+        /// <summary>
+        /// Creates a whitespace trivia.
+        /// </summary>
         public static DotSyntaxTrivia Whitespace(string whitespace)
         {
             return new DotSyntaxTrivia(
@@ -35,6 +44,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 whitespace);
         }
 
+        /// <summary>
+        /// Creates a graph syntax node.
+        /// </summary>
         public static DotGraphSyntax Graph(
             DotSyntaxToken? strict,
             DotSyntaxToken? kind,
@@ -50,6 +62,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
+        /// <summary>
+        /// Creates a statement list syntax node.
+        /// </summary>
         public static DotStatementListSyntax StatementList(
             DotSyntaxList<DotStatementSyntax> statements)
         {
@@ -61,6 +76,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
+        /// <summary>
+        /// Creates a vertes statement syntax node.
+        /// </summary>
         public static DotVertexSyntax VertexStatement(
             DotVertexIdentifierSyntax identifier,
             DotSyntaxList<DotAttributeListSyntax>? attributes)
@@ -72,6 +90,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
+        /// <summary>
+        /// Creates a vertex identifier syntax node.
+        /// </summary>
         public static DotVertexIdentifierSyntax Identifier(
             string identifier,
             string? port = null,
@@ -87,6 +108,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
+        /// <summary>
+        /// Creates an attribute syntax node.
+        /// </summary>
         public static DotAttributeSyntax Attribute(
             string name,
             string value)
@@ -99,6 +123,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
+        /// <summary>
+        /// Creates an attribute list syntax node.
+        /// </summary>
         public static DotAttributeListSyntax AttributeList(
             DotSyntaxList<DotAttributeSyntax> attributes)
         {
@@ -110,8 +137,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
+        /// <summary>
+        /// Creates a list of syntax nodes.
+        /// </summary>
         public static DotSyntaxList<TNode> List<TNode>(
             IEnumerable<TNode> items)
+            where TNode : DotSyntaxNode
         {
             var list = new DotSyntaxList<TNode>();
 
@@ -123,6 +154,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             return list;
         }
 
+        /// <summary>
+        /// Creates a separated list of syntax nodes.
+        /// </summary>
         public static SeparatedDotSyntaxList<TNode> SeparatedList<TNode>(
             IEnumerable<TNode> items,
             DotSyntaxToken separator)
@@ -148,6 +182,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             return list;
         }
 
+        /// <summary>
+        /// Creates an edge syntax node.
+        /// </summary>
         public static DotEdgeSyntax Edge(
             SeparatedDotSyntaxList<DotSyntaxNode> elements,
             DotSyntaxList<DotAttributeListSyntax>? attributes)

@@ -6,11 +6,29 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
+    /// <summary>
+    /// Represents DOT document attribute.
+    /// </summary>
     public sealed class DotAttributeSyntax : DotSyntaxNode
     {
+        /// <summary>
+        /// Gets or sets a left-hand side of an attribute.
+        /// </summary>
         public DotSyntaxToken? LHS { get; set; }
+
+        /// <summary>
+        /// Gets or sets a <c>=</c> token.
+        /// </summary>
         public DotSyntaxToken? EqualToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets a right-hand side of an attribute.
+        /// </summary>
         public DotSyntaxToken? RHS { get; set; }
+
+        /// <summary>
+        /// Gets or sets an attribute terminator token.
+        /// </summary>
         public DotSyntaxToken? SemicolonOrCommaToken { get; set; }
 
         internal override int SlotCount => 4;
@@ -24,6 +42,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
 
+        /// <inheritdoc />
         public override void Accept(DotSyntaxVisitor visitor)
         {
             visitor.VisitDotAttributeSyntax(this);

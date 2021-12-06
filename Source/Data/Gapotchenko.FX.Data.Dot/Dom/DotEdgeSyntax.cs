@@ -6,9 +6,19 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
+    /// <summary>
+    /// Represents DOT document edge.
+    /// </summary>
     public sealed class DotEdgeSyntax : DotStatementSyntax
     {
+        /// <summary>
+        /// Gets or sets elements list.
+        /// </summary>
         public SeparatedDotSyntaxList<DotSyntaxNode>? Elements { get; set; }
+
+        /// <summary>
+        /// Gets or sets attributes list.
+        /// </summary>
         public DotSyntaxList<DotAttributeListSyntax>? Attributes { get; set; }
 
         internal override int SlotCount => 3;
@@ -21,6 +31,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
 
+        /// <inheritdoc />
         public override void Accept(DotSyntaxVisitor visitor)
         {
             visitor.VisitDotEdgeSyntax(this);

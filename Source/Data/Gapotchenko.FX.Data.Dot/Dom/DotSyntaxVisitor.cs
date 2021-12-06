@@ -11,6 +11,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// </summary>
     public abstract class DotSyntaxVisitor
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
         public virtual void Visit(DotSyntaxNode? node)
         {
             node?.Accept(this);
@@ -64,5 +66,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             DefaultVisit(node);
         }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

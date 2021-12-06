@@ -13,7 +13,6 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
     /// </summary>
     public class DotReader : IDisposable
     {
-        TextReader _reader;
         DotLex _lexer;
 
         DotToken _currentToken;
@@ -23,8 +22,9 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         /// </summary>
         protected DotReader(TextReader reader)
         {
-            _reader = reader ?? throw new ArgumentNullException(nameof(reader));
-            _lexer = new DotLex(_reader);
+            if (reader is null)
+                throw new ArgumentNullException(nameof(reader));
+            _lexer = new DotLex(reader);
         }
 
         /// <summary>
@@ -49,6 +49,9 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         public string Value =>
             _lexer.yylval ?? string.Empty;
 
+        /// <summary>
+        /// Gets the current node location.
+        /// </summary>
         public (int Line, int Column) Location =>
             (_lexer.Line, _lexer.Col);
 
@@ -74,10 +77,10 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
             {
                 if (disposing)
                 {
-                    if (_reader is not null)
+                    if (_lexer is not null)
                     {
-                        _reader.Dispose();
-                        _reader = null!;
+                        _lexer.Dispose();
+                        _lexer = null!;
                     }
                 }
 

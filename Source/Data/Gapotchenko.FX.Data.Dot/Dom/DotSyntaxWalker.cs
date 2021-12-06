@@ -12,17 +12,53 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// </summary>
     public abstract class DotSyntaxWalker : DotSyntaxVisitor
     {
+        /// <summary>
+        /// Syntax the <see cref="DotSyntaxWalker"/> should descend into.
+        /// </summary>
         protected SyntaxWalkerDepth Depth { get; }
 
+        /// <summary>
+        /// Creates a new walker instance.
+        /// </summary>
+        /// <param name="depth">Syntax the <see cref="DotSyntaxWalker"/> should descend into.</param>
         protected DotSyntaxWalker(SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node)
         {
             Depth = depth;
         }
 
+        /// <summary>
+        /// Called when the walker visits a node.
+        /// </summary>
+        /// <remarks>
+        /// This method may be overridden if subclasses want
+        /// to handle the node. Overrides should call back into this base method if they want the
+        /// children of this node to be visited.
+        /// </remarks>
+        /// <param name="node">The current node that the walker is visiting.</param>
         public override void Visit(DotSyntaxNode? node)
         {
             node?.Accept(this);
         }
+
+        /// <summary>
+        /// Called when the walker visits a token.
+        /// </summary>
+        /// <remarks>
+        /// This method may be overridden if subclasses want
+        /// to handle the token. Overrides should call back into this base method if they want the 
+        /// trivia of this token to be visited.
+        /// </remarks>
+        /// <param name="token">The current token that the walker is visiting.</param>
+        public virtual void VisitToken(DotSyntaxToken token)
+        {
+            if (Depth >= SyntaxWalkerDepth.Trivia)
+            {
+                VisitLeadingTrivia(token);
+                VisitTrailingTrivia(token);
+            }
+        }
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
         public override void DefaultVisit(DotSyntaxNode node)
         {
@@ -56,15 +92,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             } while (i < childCnt);
         }
 
-        public virtual void VisitToken(DotSyntaxToken token)
-        {
-            if (Depth >= SyntaxWalkerDepth.Trivia)
-            {
-                VisitLeadingTrivia(token);
-                VisitTrailingTrivia(token);
-            }
-        }
-
         public virtual void VisitLeadingTrivia(DotSyntaxToken token)
         {
             if (token.HasLeadingTrivia)
@@ -90,5 +117,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public virtual void VisitTrivia(DotSyntaxTrivia trivia)
         {
         }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

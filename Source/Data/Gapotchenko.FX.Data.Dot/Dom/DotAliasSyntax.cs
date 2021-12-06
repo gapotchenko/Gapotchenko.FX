@@ -6,10 +6,24 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
+    /// <summary>
+    /// Represents DOT document alias.
+    /// </summary>
     public sealed class DotAliasSyntax : DotStatementSyntax
     {
+        /// <summary>
+        /// Gets or sets a left-hand side of a statement.
+        /// </summary>
         public DotSyntaxToken? LHS { get; set; }
+
+        /// <summary>
+        /// Gets or sets a <c>=</c> token.
+        /// </summary>
         public DotSyntaxToken? EqualToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets a right-hand side of a statement.
+        /// </summary>
         public DotSyntaxToken? RHS { get; set; }
 
         internal override int SlotCount => 4;
@@ -23,6 +37,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
 
+        /// <inheritdoc />
         public override void Accept(DotSyntaxVisitor visitor)
         {
             visitor.VisitDotAliasSyntax(this);

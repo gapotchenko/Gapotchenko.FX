@@ -168,11 +168,16 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
 
         static DotDocument Serialize(DotDocumentModel model)
         {
-            return new DotDocument(DotSyntaxFactory.Graph(
+            var graph = DotSyntaxFactory.Graph(
                 strict: default,
                 kind: DotSyntaxFactory.Token(DotToken.Digraph),
                 identifier: default,
-                statements: CreateStatements(model)));
+                statements: CreateStatements(model));
+
+            return new DotDocument
+            {
+                Root = graph
+            };
         }
 
         static DotStatementListSyntax CreateStatements(DotDocumentModel model)

@@ -25,7 +25,7 @@ using System.Diagnostics.CodeAnalysis;
     
     // If the compiler can't find the scanner base class maybe you
     // need to run GPPG with the /gplex option, or GPLEX with /noparser
-##-->translate $public sealed partial class $Scanner : $ScanBase
+##-->translate $public sealed partial class $Scanner : $ScanBase, IDisposable
     {
         ScanBuff buffer;
         int currentScOrd;  // start condition ordinal
@@ -302,6 +302,15 @@ using System.Diagnostics.CodeAnalysis;
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal void ECHO() { Console.Out.Write(yytext); }
+
+        public void Dispose()
+        {
+            if (buffer is not null)
+            {
+                buffer.Dispose();
+                buffer = null!;
+            }
+        }
         
 ##-->userCode
 ##-->translate    } // end class $Scanner

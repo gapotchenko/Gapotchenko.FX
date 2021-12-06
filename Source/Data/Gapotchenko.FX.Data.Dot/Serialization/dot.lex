@@ -30,11 +30,11 @@ whitespace [ \t\r\f\v\n]
 %%  // Start of rules
 // =============================================================
 
-\-\>               { return (int) DotToken.ARROW; }
+\-\>               { return (int) DotToken.Arrow; }
 {alphaplain}{alphaplain}* { return (int) MkId(yytext); }
 {alphaplain}{alphaplus}*{alphaplain} { return (int) MkId(yytext); }
-{num}              { return (int) DotToken.ID; }
-\-\-               { return (int) DotToken.ARROW; }
+{num}              { return (int) DotToken.Id; }
+\-\-               { return (int) DotToken.Arrow; }
 \"                 { BEGIN(STRING); stringId = ""; return '"'; }
 \[                 { return (int)'['; }
 \]                 { return (int)']'; }
@@ -49,25 +49,25 @@ whitespace [ \t\r\f\v\n]
 \@                 { return (int)'@'; }
 \<                 { BEGIN(HTML); nesting = 1; }
 \n\#               { BEGIN(LINECOMMENT); }
-{whitespace}+      { return (int)DotToken.WHITESPACE; }
+{whitespace}+      { return (int)DotToken.Whitespace; }
 \/\/               { BEGIN(LINECOMMENT); } 
 \/\*               { BEGIN(MLINECOMMENT); }
 .                  { Error(yytext); }
 
 <HTML>\<           { nesting++; }
-<HTML>\>           { nesting--; if (nesting == 0) { BEGIN(INITIAL); return (int)DotToken.ID; } }
+<HTML>\>           { nesting--; if (nesting == 0) { BEGIN(INITIAL); return (int)DotToken.Id; } }
 <HTML>.            { }
 
-<LINECOMMENT>\n    { BEGIN(INITIAL); return (int)DotToken.LINECOMMENT; }
+<LINECOMMENT>\n    { BEGIN(INITIAL); return (int)DotToken.Comment; }
 <LINECOMMENT>.     {} 
 
-<MLINECOMMENT>\*\/ { BEGIN(INITIAL); return (int)DotToken.MLINECOMMENT; }
+<MLINECOMMENT>\*\/ { BEGIN(INITIAL); return (int)DotToken.MultilineComment; }
 <MLINECOMMENT>.    {}
 
 <STRING>([^\n"]*)(\\\r?\n)    { stringId += yytext; stringId = TrimString(stringId); }
 <STRING>([^\n"]*)(\\\")     { stringId += yytext; }
 <STRING>([^\n"]*)+          { stringId += yytext;} 
-<STRING>\"                  { _yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotToken.ID; }
+<STRING>\"                  { _yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotToken.Id; }
 <STRINGQ>\"                 { BEGIN(INITIAL); return (int)'"'; }
 
 

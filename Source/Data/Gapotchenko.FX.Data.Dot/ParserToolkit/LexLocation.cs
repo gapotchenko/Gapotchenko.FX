@@ -26,16 +26,22 @@
         /// </summary>
         public int EndColumn { get; }
 
+        /// <summary>
+        /// Creates a new <see cref="LexLocation"/> instance with default content.
+        /// </summary>
         public LexLocation()
         {
         }
 
-        public LexLocation(int sl, int sc, int el, int ec)
+        /// <summary>
+        /// Creates a new <see cref="LexLocation"/> instance with provided content.
+        /// </summary>
+        public LexLocation(int startLine, int startColumn, int endLine, int endColumn)
         {
-            StartLine = sl;
-            StartColumn = sc;
-            EndLine = el;
-            EndColumn = ec;
+            StartLine = startLine;
+            StartColumn = startColumn;
+            EndLine = endLine;
+            EndColumn = endColumn;
         }
 
         /// <inheritdoc />

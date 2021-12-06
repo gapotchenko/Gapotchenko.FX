@@ -7,18 +7,25 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Serialization
 {
+    /// <summary>
+    /// A forward-only DOT document data writer.
+    /// </summary>
     public class DotWriter : IDisposable
     {
         TextWriter _writer;
 
         /// <summary>
-        /// Creates a writer instance.
+        /// Creates a <see cref="DotWriter"/> instance.
         /// </summary>
         protected DotWriter(TextWriter reader)
         {
             _writer = reader ?? throw new ArgumentNullException(nameof(reader));
         }
 
+        /// <summary>
+        /// Writes a token with its default value.
+        /// </summary>
+        /// <param name="token">Token kind.</param>
         public void Write(DotToken token)
         {
             switch (token)
@@ -48,6 +55,11 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
             }
         }
 
+        /// <summary>
+        /// Writes a token with a provided value.
+        /// </summary>
+        /// <param name="token">Token kind.</param>
+        /// <param name="value">Token value.</param>
         public void Write(DotToken token, string value)
         {
             _writer.Write(value);
