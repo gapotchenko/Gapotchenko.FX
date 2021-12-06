@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     {
         public static DotToken? GetFirstToken(DotNode current)
         {
-            foreach (var child in current.ChildNodesAndTokens())
+            foreach (var child in current.ChildNodesAndTokens)
             {
                 if (child.IsToken)
                 {
@@ -31,7 +31,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         public static DotToken? GetLastToken(DotNode current)
         {
-            foreach (var child in current.ChildNodesAndTokens().Reverse())
+            foreach (var child in current.ChildNodesAndTokens.Reverse())
             {
                 if (child.IsToken)
                 {

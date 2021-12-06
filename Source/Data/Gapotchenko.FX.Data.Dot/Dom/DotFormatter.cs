@@ -24,8 +24,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             string eol = DefaultEOL)
             where TNode : DotNode
         {
-            new WhitespaceEraser().Visit(node);
-            new SyntaxNormalizer(indentation, eol).Visit(node);
+            node.Accept(new WhitespaceEraser());
+            node.Accept(new SyntaxNormalizer(indentation, eol));
         }
 
         sealed class WhitespaceEraser : DotSyntaxWalker

@@ -91,7 +91,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static IEnumerable<DotToken> EnumerateTokens(DotNode node)
         {
-            foreach (var child in node.ChildNodesAndTokens())
+            foreach (var child in node.ChildNodesAndTokens)
             {
                 if (child.IsToken)
                 {

@@ -13,11 +13,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-        public virtual void Visit(DotNode? node)
-        {
-            node?.Accept(this);
-        }
-
         public virtual void DefaultVisit(DotNode node)
         {
         }

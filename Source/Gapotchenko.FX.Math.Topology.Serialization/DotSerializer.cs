@@ -211,7 +211,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             var directed = string.Equals("digraph", root.GraphKindKeyword?.Value, StringComparison.OrdinalIgnoreCase);
 
             var builder = new IntermediateGraphBuilder(directed);
-            builder.Visit(root);
+            root.Accept(builder);
 
             return builder.Graph;
         }

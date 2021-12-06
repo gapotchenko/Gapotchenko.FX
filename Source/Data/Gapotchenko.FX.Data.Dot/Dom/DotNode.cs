@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// The list of child nodes and tokens of this node.
         /// </summary>
-        public DotChildNodeList ChildNodesAndTokens()
+        public DotChildNodeList ChildNodesAndTokens
             => new(this);
 
         internal abstract int SlotCount { get; }

@@ -27,20 +27,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         /// <summary>
-        /// Called when the walker visits a node.
-        /// </summary>
-        /// <remarks>
-        /// This method may be overridden if subclasses want
-        /// to handle the node. Overrides should call back into this base method if they want the
-        /// children of this node to be visited.
-        /// </remarks>
-        /// <param name="node">The current node that the walker is visiting.</param>
-        public override void Visit(DotNode? node)
-        {
-            node?.Accept(this);
-        }
-
-        /// <summary>
         /// Called when the walker visits a token.
         /// </summary>
         /// <remarks>
@@ -62,7 +48,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         public override void DefaultVisit(DotNode node)
         {
-            var childCnt = node.ChildNodesAndTokens().Count;
+            var childCnt = node.ChildNodesAndTokens.Count;
             int i = 0;
 
             do
@@ -75,7 +61,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 {
                     if (Depth >= SyntaxWalkerDepth.Node)
                     {
-                        Visit(asNode);
+                        asNode.Accept(this);
                     }
                 }
                 else

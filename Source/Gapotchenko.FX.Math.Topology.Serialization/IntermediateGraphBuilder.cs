@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
 
                 foreach (var element in elements)
                 {
-                    Visit(element);
+                    element.Accept(this);
 
                     if (previousList is not null)
                     {
