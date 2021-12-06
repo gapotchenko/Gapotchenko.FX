@@ -22,7 +22,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             this TNode node,
             string indentation = DefaultIndentation,
             string eol = DefaultEOL)
-            where TNode : DotSyntaxNode
+            where TNode : DotNode
         {
             new WhitespaceEraser().Visit(node);
             new SyntaxNormalizer(indentation, eol).Visit(node);
@@ -33,16 +33,16 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             public WhitespaceEraser() : base(SyntaxWalkerDepth.Token)
             { }
 
-            public override void VisitToken(DotSyntaxToken token)
+            public override void VisitToken(DotToken token)
             {
                 if (token.HasLeadingTrivia)
                 {
-                    token.LeadingTrivia.RemoveAll(t => t.Kind is DotToken.Whitespace);
+                    token.LeadingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
                 }
 
                 if (token.HasTrailingTrivia)
                 {
-                    token.TrailingTrivia.RemoveAll(t => t.Kind is DotToken.Whitespace);
+                    token.TrailingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
                 }
             }
         }

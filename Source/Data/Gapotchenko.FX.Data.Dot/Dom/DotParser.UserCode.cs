@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     partial class DotParser
     {
-        public DotGraphSyntax? Root { get; private set; }
+        public DotGraphNode? Root { get; private set; }
 
         protected override State[] States => states;
         protected override Rule[] Rules => rules;
@@ -25,11 +25,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         DotValueType _yylval;
 
-        (DotToken kind, string value) _pendingToken;
+        (DotTokenKind kind, string value) _pendingToken;
 
         protected override int yylex()
         {
-            static (DotToken kind, string value) NextToken(DotReader scanner)
+            static (DotTokenKind kind, string value) NextToken(DotReader scanner)
             {
                 scanner.Read();
                 return (scanner.TokenType, scanner.Value);
@@ -45,7 +45,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 _pendingToken = default;
             }
 
-            List<DotSyntaxTrivia>? leadingTrivia = null;
+            List<DotTrivia>? leadingTrivia = null;
 
             while (IsTriviaToken(token.kind))
             {
@@ -79,20 +79,20 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             return MapToken(token.kind);
         }
 
-        static int MapToken(DotToken token) => token switch
+        static int MapToken(DotTokenKind token) => token switch
         {
-            DotToken.EOF => (int)DotTokens.EOF,
-            DotToken.Digraph => (int)DotTokens.DIGRAPH,
-            DotToken.Graph => (int)DotTokens.GRAPH,
-            DotToken.Arrow => (int)DotTokens.ARROW,
-            DotToken.Subgraph => (int)DotTokens.SUBGRAPH,
-            DotToken.Node => (int)DotTokens.NODE,
-            DotToken.Edge => (int)DotTokens.EDGE,
-            DotToken.Id => (int)DotTokens.ID,
+            DotTokenKind.EOF => (int)DotTokens.EOF,
+            DotTokenKind.Digraph => (int)DotTokens.DIGRAPH,
+            DotTokenKind.Graph => (int)DotTokens.GRAPH,
+            DotTokenKind.Arrow => (int)DotTokens.ARROW,
+            DotTokenKind.Subgraph => (int)DotTokens.SUBGRAPH,
+            DotTokenKind.Node => (int)DotTokens.NODE,
+            DotTokenKind.Edge => (int)DotTokens.EDGE,
+            DotTokenKind.Id => (int)DotTokens.ID,
 
-            DotToken.Comment => throw new InvalidOperationException(),
-            DotToken.MultilineComment => throw new InvalidOperationException(),
-            DotToken.Whitespace => throw new InvalidOperationException(),
+            DotTokenKind.Comment => throw new InvalidOperationException(),
+            DotTokenKind.MultilineComment => throw new InvalidOperationException(),
+            DotTokenKind.Whitespace => throw new InvalidOperationException(),
 
             _ => (int)token
         };
@@ -107,11 +107,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             throw new Exception($"Cannot parse document. {message} at {line}:{col}.");
         }
 
-        static bool IsTriviaToken(DotToken token) => token switch
+        static bool IsTriviaToken(DotTokenKind token) => token switch
         {
-            DotToken.Whitespace => true,
-            DotToken.Comment => true,
-            DotToken.MultilineComment => true,
+            DotTokenKind.Whitespace => true,
+            DotTokenKind.Comment => true,
+            DotTokenKind.MultilineComment => true,
             _ => false
         };
     }

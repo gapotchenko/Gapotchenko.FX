@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
     /// <summary>
     /// DOT document tokens.
     /// </summary>
-    public enum DotToken
+    public enum DotTokenKind
     {
         /// <summary>
         /// Represents <c>EOF</c> token.

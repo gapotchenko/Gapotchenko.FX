@@ -9,11 +9,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents DOT document statement.
     /// </summary>
-    public abstract class DotStatementSyntax : DotSyntaxNode
+    public abstract class DotStatementNode : DotNode
     {
         /// <summary>
         /// Gets or sets a statement terminator token.
         /// </summary>
-        public DotSyntaxToken? SemicolonToken { get; set; }
+        public DotToken? SemicolonToken { get; set; }
     }
 }

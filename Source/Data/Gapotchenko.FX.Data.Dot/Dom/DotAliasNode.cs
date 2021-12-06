@@ -7,29 +7,24 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
-    /// Represents DOT document attribute.
+    /// Represents DOT document alias.
     /// </summary>
-    public sealed class DotAttributeSyntax : DotSyntaxNode
+    public sealed class DotAliasNode : DotStatementNode
     {
         /// <summary>
-        /// Gets or sets a left-hand side of an attribute.
+        /// Gets or sets a left-hand side of a statement.
         /// </summary>
-        public DotSyntaxToken? LHS { get; set; }
+        public DotToken? LHS { get; set; }
 
         /// <summary>
         /// Gets or sets a <c>=</c> token.
         /// </summary>
-        public DotSyntaxToken? EqualToken { get; set; }
+        public DotToken? EqualToken { get; set; }
 
         /// <summary>
-        /// Gets or sets a right-hand side of an attribute.
+        /// Gets or sets a right-hand side of a statement.
         /// </summary>
-        public DotSyntaxToken? RHS { get; set; }
-
-        /// <summary>
-        /// Gets or sets an attribute terminator token.
-        /// </summary>
-        public DotSyntaxToken? SemicolonOrCommaToken { get; set; }
+        public DotToken? RHS { get; set; }
 
         internal override int SlotCount => 4;
 
@@ -38,14 +33,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             0 => LHS,
             1 => EqualToken,
             2 => RHS,
-            3 => SemicolonOrCommaToken,
+            3 => SemicolonToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
 
         /// <inheritdoc />
         public override void Accept(DotSyntaxVisitor visitor)
         {
-            visitor.VisitDotAttributeSyntax(this);
+            visitor.VisitDotAliasNode(this);
         }
     }
 }

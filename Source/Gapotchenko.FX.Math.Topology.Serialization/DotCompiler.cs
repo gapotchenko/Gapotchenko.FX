@@ -170,9 +170,9 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         {
             var graph = DotSyntaxFactory.Graph(
                 strict: default,
-                kind: DotSyntaxFactory.Token(DotToken.Digraph),
+                kind: DotSyntaxFactory.Token(Data.Dot.Serialization.DotTokenKind.Digraph),
                 identifier: default,
-                statements: CreateStatements(model));
+                statements: DotCompiler<TVertex>.CreateStatements(model));
 
             return new DotDocument
             {
@@ -180,9 +180,9 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             };
         }
 
-        static DotStatementListSyntax CreateStatements(DotDocumentModel model)
+        static DotStatementListNode CreateStatements(DotDocumentModel model)
         {
-            List<DotStatementSyntax> statements = new();
+            List<DotStatementNode> statements = new();
 
             foreach (var edge in model.Edges)
             {
@@ -198,19 +198,19 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
                 DotSyntaxFactory.List(statements));
         }
 
-        static DotVertexSyntax CreateVertexStatement(string vertex, IEnumerable<(string attributeName, string attributeValue)>? attributes)
+        static DotVertexNode CreateVertexStatement(string vertex, IEnumerable<(string attributeName, string attributeValue)>? attributes)
         {
             return DotSyntaxFactory.VertexStatement(
                 identifier: CreateIdentifier(vertex),
                 attributes: CreateAttributesList(attributes));
         }
 
-        static DotVertexIdentifierSyntax CreateIdentifier(string identifier)
+        static DotVertexIdentifierNode CreateIdentifier(string identifier)
         {
             return DotSyntaxFactory.Identifier(identifier);
         }
 
-        static DotSyntaxList<DotAttributeListSyntax>? CreateAttributesList(IEnumerable<(string attributeName, string attributeValue)>? attributes)
+        static DotNodeList<DotAttributeListNode>? CreateAttributesList(IEnumerable<(string attributeName, string attributeValue)>? attributes)
         {
             if (attributes?.Any() != true)
                 return null;
@@ -226,20 +226,20 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             });
         }
 
-        static DotEdgeSyntax CreateEdgeStatement(IEnumerable<IEnumerable<string>> edge)
+        static DotEdgeNode CreateEdgeStatement(IEnumerable<IEnumerable<string>> edge)
         {
             return DotSyntaxFactory.Edge(
                 elements: DotSyntaxFactory.SeparatedList(
                     edge.Select(CreateEdgeElement),
-                    DotSyntaxFactory.Token(DotToken.Arrow, "->")),
+                    DotSyntaxFactory.Token(DotTokenKind.Arrow, "->")),
                 attributes: default);
 
-            static DotSyntaxNode CreateEdgeElement(IEnumerable<string> edgeElement)
+            static DotNode CreateEdgeElement(IEnumerable<string> edgeElement)
             {
                 if (edgeElement.Skip(1).Any())
                 {
                     var subgraphStatements = DotSyntaxFactory.List(
-                        edgeElement.Select(v => (DotStatementSyntax)CreateVertexStatement(v, default)));
+                        edgeElement.Select(v => (DotStatementNode)CreateVertexStatement(v, default)));
 
                     return DotSyntaxFactory.Graph(
                         default,

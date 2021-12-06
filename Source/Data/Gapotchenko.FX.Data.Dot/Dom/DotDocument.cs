@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets a document root.
         /// </summary>
-        public DotGraphSyntax? Root { get; set; }
+        public DotGraphNode? Root { get; set; }
 
         /// <summary>
         /// Loads a DOT document from the given <see cref="DotReader" />.
@@ -48,7 +48,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        static void Save(DotWriter writer, DotGraphSyntax node)
+        static void Save(DotWriter writer, DotGraphNode node)
         {
             var tokens = EnumerateTokens(node);
             foreach (var token in tokens)
@@ -57,7 +57,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        static void Save(DotWriter writer, DotSyntaxToken token)
+        static void Save(DotWriter writer, DotToken token)
         {
             if (token.HasLeadingTrivia)
             {
@@ -81,7 +81,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        static void Save(DotWriter writer, DotSyntaxTrivia trivia)
+        static void Save(DotWriter writer, DotTrivia trivia)
         {
             if (!string.IsNullOrEmpty(trivia.Value))
             {
@@ -89,7 +89,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        static IEnumerable<DotSyntaxToken> EnumerateTokens(DotSyntaxNode node)
+        static IEnumerable<DotToken> EnumerateTokens(DotNode node)
         {
             foreach (var child in node.ChildNodesAndTokens())
             {

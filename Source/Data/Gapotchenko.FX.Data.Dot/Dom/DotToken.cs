@@ -10,15 +10,26 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents a token in the syntax tree.
     /// </summary>
-    public sealed class DotSyntaxToken
+    public sealed class DotToken
     {
         /// <summary>
-        /// Creates a new <see cref="DotSyntaxTrivia"/> instance.
+        /// Creates a new <see cref="DotTrivia"/> instance.
         /// </summary>
         /// <param name="kind">Token kind.</param>
         /// <param name="value">Token value.</param>
-        public DotSyntaxToken(DotToken kind, string value)
+        public DotToken(DotTokenKind kind, string? value)
         {
+            if (value is null)
+            {
+                value = kind switch
+                {
+                    DotTokenKind.Digraph => "digraph",
+                    DotTokenKind.Graph => "graph",
+                    DotTokenKind.Arrow => "->",
+                    _ => throw new ArgumentException("Value cannot deducted from the kind.", nameof(value))
+                };
+            }
+
             Kind = kind;
             Value = value;
         }
@@ -26,26 +37,26 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Token kind.
         /// </summary>
-        public DotToken Kind { get; }
+        public DotTokenKind Kind { get; }
 
         /// <summary>
         /// Token value.
         /// </summary>
         public string Value { get; }
 
-        List<DotSyntaxTrivia>? _leadingTrivia;
-        List<DotSyntaxTrivia>? _trailingTrivia;
+        List<DotTrivia>? _leadingTrivia;
+        List<DotTrivia>? _trailingTrivia;
 
         /// <summary>
         /// The list of trivia that appear before this token.
         /// </summary>
-        public List<DotSyntaxTrivia> LeadingTrivia =>
+        public List<DotTrivia> LeadingTrivia =>
             _leadingTrivia ??= new();
 
         /// <summary>
         /// The list of trivia that appear after this token.
         /// </summary>
-        public List<DotSyntaxTrivia> TrailingTrivia =>
+        public List<DotTrivia> TrailingTrivia =>
             _trailingTrivia ??= new();
 
         /// <summary>

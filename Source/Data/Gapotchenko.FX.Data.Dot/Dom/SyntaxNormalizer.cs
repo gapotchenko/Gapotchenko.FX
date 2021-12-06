@@ -21,7 +21,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         int _indents = 0;
 
-        public override void VisitToken(DotSyntaxToken token)
+        public override void VisitToken(DotToken token)
         {
             base.VisitToken(token);
 
@@ -31,7 +31,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         int _depth = -1;
 
-        public override void VisitDotStatementListSyntax(DotStatementListSyntax node)
+        public override void VisitDotStatementListNode(DotStatementListNode node)
         {
             _depth++;
 
@@ -40,7 +40,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 _indents++;
             }
 
-            base.VisitDotStatementListSyntax(node);
+            base.VisitDotStatementListNode(node);
 
             if (_depth is 0)
             {
@@ -55,9 +55,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         bool _nestedStatement = false;
 
-        public override void DefaultVisit(DotSyntaxNode node)
+        public override void DefaultVisit(DotNode node)
         {
-            var shouldIndent = !_nestedStatement && node is DotStatementSyntax && _indents != 0;
+            var shouldIndent = !_nestedStatement && node is DotStatementNode && _indents != 0;
 
             if (shouldIndent)
             {
@@ -74,7 +74,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        IEnumerable<DotSyntaxTrivia> CreateIndentation()
+        IEnumerable<DotTrivia> CreateIndentation()
         {
             for (int i = 0; i < _indents; i++)
             {
@@ -82,17 +82,17 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        void PlaceEndOfLine(DotSyntaxNode? node)
+        void PlaceEndOfLine(DotNode? node)
         {
             if (node is not null)
             {
                 var trailingTrivia = node.GetTrailingTrivia();
-                trailingTrivia.RemoveAll(t => t.Kind is DotToken.Whitespace);
+                trailingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
                 trailingTrivia.Add(DotSyntaxFactory.Whitespace(_eol));
             }
         }
 
-        void PlaceEndOfLine(DotSyntaxToken? token)
+        void PlaceEndOfLine(DotToken? token)
         {
             if (token is not null)
             {
@@ -101,25 +101,25 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        static void TrimStart(DotSyntaxToken token)
+        static void TrimStart(DotToken token)
         {
             if (token.HasLeadingTrivia)
             {
-                token.LeadingTrivia.RemoveAll(t => t.Kind is DotToken.Whitespace);
+                token.LeadingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
             }
         }
 
-        static void TrimEnd(DotSyntaxToken token)
+        static void TrimEnd(DotToken token)
         {
             if (token.HasTrailingTrivia)
             {
-                token.TrailingTrivia.RemoveAll(t => t.Kind is DotToken.Whitespace);
+                token.TrailingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
             }
         }
 
-        public override void VisitDotAttributeListSyntax(DotAttributeListSyntax node)
+        public override void VisitDotAttributeListNode(DotAttributeListNode node)
         {
-            base.VisitDotAttributeListSyntax(node);
+            base.VisitDotAttributeListNode(node);
 
             if (node.OpenBraceToken?.HasTrailingTrivia == true)
             {

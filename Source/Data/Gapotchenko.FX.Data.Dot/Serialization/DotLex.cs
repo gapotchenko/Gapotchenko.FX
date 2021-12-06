@@ -5,7 +5,7 @@
 //  See accompanying file GPLEXcopyright.rtf.
 //
 //  GPLEX Version:  1.2.2
-//  GPLEX input file <Serialization\Dot.lex - 06.12.2021 18:48:37>
+//  GPLEX input file <Serialization\Dot.lex - 06.12.2021 19:51:55>
 //  GPLEX frame file <SERIALIZATION\DOTLEXFRAME.CS>
 //
 //  Option settings: parser, minimize
@@ -457,7 +457,7 @@ int NextState() {
     {
         case eofNum:
             if (yywrap())
-                return (int)DotToken.EOF;
+                return (int)DotTokenKind.EOF;
             break;
         case 1:
         case 9:
@@ -466,7 +466,7 @@ Error(yytext);
             break;
         case 2:
         case 3:
-return (int)DotToken.Whitespace;
+return (int)DotTokenKind.Whitespace;
             break;
         case 4:
         case 20:
@@ -522,14 +522,14 @@ BEGIN(MLINECOMMENT);
 BEGIN(LINECOMMENT);
             break;
         case 25:
-return (int) DotToken.Arrow;
+return (int) DotTokenKind.Arrow;
             break;
         case 26:
         case 28:
-return (int) DotToken.Id;
+return (int) DotTokenKind.Id;
             break;
         case 27:
-return (int) DotToken.Arrow;
+return (int) DotTokenKind.Arrow;
             break;
         case 29:
 BEGIN(LINECOMMENT);
@@ -541,7 +541,7 @@ BEGIN(LINECOMMENT);
 stringId += yytext;
             break;
         case 32:
-_yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotToken.Id;
+_yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotTokenKind.Id;
             break;
         case 34:
 stringId += yytext; stringId = TrimString(stringId);
@@ -559,20 +559,20 @@ BEGIN(INITIAL); return (int)'"';
 nesting++;
             break;
         case 40:
-nesting--; if (nesting == 0) { BEGIN(INITIAL); return (int)DotToken.Id; }
+nesting--; if (nesting == 0) { BEGIN(INITIAL); return (int)DotTokenKind.Id; }
             break;
         case 41:
 {}
             break;
         case 42:
-BEGIN(INITIAL); return (int)DotToken.Comment;
+BEGIN(INITIAL); return (int)DotTokenKind.Comment;
             break;
         case 43:
         case 44:
 {}
             break;
         case 45:
-BEGIN(INITIAL); return (int)DotToken.MultilineComment;
+BEGIN(INITIAL); return (int)DotTokenKind.MultilineComment;
             break;
         default:
             break;

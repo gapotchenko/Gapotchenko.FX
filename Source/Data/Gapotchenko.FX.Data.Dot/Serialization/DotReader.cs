@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
     {
         DotLex _lexer;
 
-        DotToken _currentToken;
+        DotTokenKind _currentToken;
 
         /// <summary>
         /// Creates a reader instance.
@@ -33,14 +33,14 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         /// <returns>true if the next node was read successfully; otherwise, false.</returns>
         public bool Read()
         {
-            _currentToken = (DotToken)_lexer.yylex();
-            return _currentToken != DotToken.EOF;
+            _currentToken = (DotTokenKind)_lexer.yylex();
+            return _currentToken != DotTokenKind.EOF;
         }
 
         /// <summary>
         /// Gets the type of the current token.
         /// </summary>
-        public DotToken TokenType =>
+        public DotTokenKind TokenType =>
             _currentToken;
 
         /// <summary>

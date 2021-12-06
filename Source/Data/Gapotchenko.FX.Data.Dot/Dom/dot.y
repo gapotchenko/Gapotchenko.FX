@@ -9,12 +9,12 @@
 %start graph
 
 %union {
-    public DotSyntaxToken token;
-    public DotSyntaxNode entity;
-    public SeparatedDotSyntaxList<DotSyntaxNode> separatedSyntaxList;
-    public DotSyntaxList<DotAttributeSyntax> attributeSyntaxList;
-    public DotSyntaxList<DotAttributeListSyntax> attributeListSyntaxList;
-    public DotSyntaxList<DotStatementSyntax> statementSyntaxList;
+    public DotToken token;
+    public DotNode entity;
+    public SeparatedDotNodeList<DotNode> separatedSyntaxList;
+    public DotNodeList<DotAttributeNode> attributeSyntaxList;
+    public DotNodeList<DotAttributeListNode> attributeListSyntaxList;
+    public DotNodeList<DotStatementNode> statementSyntaxList;
 }
 
 %token <token> DIGRAPH GRAPH ARROW SUBGRAPH NODE EDGE ID
@@ -31,8 +31,8 @@
 
 %%
 
-graph     : graphType graphName stmts    { Root = CreateGraphSyntax(default, $1, $2, (DotStatementListSyntax)$3); }
-          | id graphType graphName stmts { Root = CreateGraphSyntax($1, $2, $3, (DotStatementListSyntax)$4); }
+graph     : graphType graphName stmts    { Root = CreateGraphSyntax(default, $1, $2, (DotStatementListNode)$3); }
+          | id graphType graphName stmts { Root = CreateGraphSyntax($1, $2, $3, (DotStatementListNode)$4); }
           ;
           
 stmts     : '{' stmt_list '}' { $$ = CreateStatementListSyntax(CreateToken($1), $2, CreateToken($3)); }
@@ -47,10 +47,10 @@ graphName : id { $$ = $1; }
           ;
 
 stmt_list : { $$ = new(); }
-          | stmt stmt_list { Prepend($2, (DotStatementSyntax)$1); $$ = $2; }
-          | stmt ';' stmt_list { var statement = (DotStatementSyntax)$1;
+          | stmt stmt_list { Prepend($2, (DotStatementNode)$1); $$ = $2; }
+          | stmt ';' stmt_list { var statement = (DotStatementNode)$1;
                                  statement.SemicolonToken = CreateToken($2); 
-                                 Prepend($3, (DotStatementSyntax)$1);
+                                 Prepend($3, (DotStatementNode)$1);
                                  $$ = $3; }
           ;
 
@@ -61,7 +61,7 @@ stmt      : id '=' id { $$ = CreateAliasSyntax($1, CreateToken($2), $3); }
           | subgraph  { $$ = $1; }
           ;
 
-node_stmt : node_id opt_attr_list { $$ = CreateVertexSyntax((DotVertexIdentifierSyntax)$1, $2); }
+node_stmt : node_id opt_attr_list { $$ = CreateVertexSyntax((DotVertexIdentifierNode)$1, $2); }
           ;
 
 edge_stmt : endpoint edgeRHS opt_attr_list { Prepend($2, $1); $$ = CreateEdgeSyntax($2, $3);} 
@@ -71,7 +71,7 @@ endpoint  : node_id  { $$ = $1; }
           | subgraph { $$ = $1; }
 		  ;
 
-edgeRHS   : ARROW endpoint          { var list = new SeparatedDotSyntaxList<DotSyntaxNode>(); 
+edgeRHS   : ARROW endpoint          { var list = new SeparatedDotNodeList<DotNode>(); 
                                       list.Append($1);
                                       list.Append($2);
                                       $$ = list; }
@@ -80,9 +80,9 @@ edgeRHS   : ARROW endpoint          { var list = new SeparatedDotSyntaxList<DotS
                                       $$ = $1; }
           ;
 
-subgraph  : stmts              { $$ = CreateGraphSyntax(default, default, default, (DotStatementListSyntax)$1); }
-          | SUBGRAPH stmts     { $$ = CreateGraphSyntax(default, $1, default, (DotStatementListSyntax)$2); }
-          | SUBGRAPH id stmts  { $$ = CreateGraphSyntax(default, $1, $2, (DotStatementListSyntax)$3); }
+subgraph  : stmts              { $$ = CreateGraphSyntax(default, default, default, (DotStatementListNode)$1); }
+          | SUBGRAPH stmts     { $$ = CreateGraphSyntax(default, $1, default, (DotStatementListNode)$2); }
+          | SUBGRAPH id stmts  { $$ = CreateGraphSyntax(default, $1, $2, (DotStatementListNode)$3); }
           | SUBGRAPH           { $$ = CreateGraphSyntax(default, $1, default, default); }
           ;
 
@@ -99,14 +99,14 @@ attr_list : '[' ']'        { $$ = CreateAttributeListSyntaxList(CreateToken($1),
           | '[' a_list ']' { $$ = CreateAttributeListSyntaxList(CreateToken($1), $2, CreateToken($3)); }
           ;
 
-a_list    : avPair            { $$ = new(); $$.Append((DotAttributeSyntax)$1); }
-          | avPair a_list     { $$ = $2; Prepend($2, (DotAttributeSyntax)$1); }
+a_list    : avPair            { $$ = new(); $$.Append((DotAttributeNode)$1); }
+          | avPair a_list     { $$ = $2; Prepend($2, (DotAttributeNode)$1); }
           | avPair ',' a_list { $$ = $3;
-                                var attr = (DotAttributeSyntax)$1;
+                                var attr = (DotAttributeNode)$1;
                                 attr.SemicolonOrCommaToken = CreateToken($2); 
                                 Prepend($3, attr); }
           | avPair ';' a_list { $$ = $3; 
-                                var attr = (DotAttributeSyntax)$1;
+                                var attr = (DotAttributeNode)$1;
                                 attr.SemicolonOrCommaToken = CreateToken($2); 
                                 Prepend($3, attr); }
           ;

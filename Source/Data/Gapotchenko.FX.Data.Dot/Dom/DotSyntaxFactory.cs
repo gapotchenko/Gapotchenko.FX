@@ -16,44 +16,44 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Creates a token.
         /// </summary>
-        public static DotSyntaxToken Token(
-            DotToken kind,
+        public static DotToken Token(
+            DotTokenKind kind,
             string? text = default)
         {
             if (text is null)
             {
                 text = kind switch
                 {
-                    DotToken.Digraph => "digraph",
-                    DotToken.Graph => "graph",
-                    DotToken.Arrow => "->",
-                    _ => throw new ArgumentException("Text expected.", nameof(text))
+                    DotTokenKind.Digraph => "digraph",
+                    DotTokenKind.Graph => "graph",
+                    DotTokenKind.Arrow => "->",
+                    _ => throw new ArgumentException("Value cannot deducted from the kind.", nameof(text))
                 };
             }
 
-            return new DotSyntaxToken(kind, text);
+            return new DotToken(kind, text);
         }
 
         /// <summary>
         /// Creates a whitespace trivia.
         /// </summary>
-        public static DotSyntaxTrivia Whitespace(string whitespace)
+        public static DotTrivia Whitespace(string whitespace)
         {
-            return new DotSyntaxTrivia(
-                DotToken.Whitespace,
+            return new DotTrivia(
+                DotTokenKind.Whitespace,
                 whitespace);
         }
 
         /// <summary>
         /// Creates a graph syntax node.
         /// </summary>
-        public static DotGraphSyntax Graph(
-            DotSyntaxToken? strict,
-            DotSyntaxToken? kind,
-            DotSyntaxToken? identifier,
-            DotStatementListSyntax? statements)
+        public static DotGraphNode Graph(
+            DotToken? strict,
+            DotToken? kind,
+            DotToken? identifier,
+            DotStatementListNode? statements)
         {
-            return new DotGraphSyntax
+            return new DotGraphNode
             {
                 StrictKeyword = strict,
                 GraphKindKeyword = kind,
@@ -65,10 +65,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Creates a statement list syntax node.
         /// </summary>
-        public static DotStatementListSyntax StatementList(
-            DotSyntaxList<DotStatementSyntax> statements)
+        public static DotStatementListNode StatementList(
+            DotNodeList<DotStatementNode> statements)
         {
-            return new DotStatementListSyntax
+            return new DotStatementListNode
             {
                 OpenBraceToken = Separator('{'),
                 Statements = statements,
@@ -79,11 +79,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Creates a vertes statement syntax node.
         /// </summary>
-        public static DotVertexSyntax VertexStatement(
-            DotVertexIdentifierSyntax identifier,
-            DotSyntaxList<DotAttributeListSyntax>? attributes)
+        public static DotVertexNode VertexStatement(
+            DotVertexIdentifierNode identifier,
+            DotNodeList<DotAttributeListNode>? attributes)
         {
-            return new DotVertexSyntax
+            return new DotVertexNode
             {
                 Identifier = identifier,
                 Attributes = attributes,
@@ -93,12 +93,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Creates a vertex identifier syntax node.
         /// </summary>
-        public static DotVertexIdentifierSyntax Identifier(
+        public static DotVertexIdentifierNode Identifier(
             string identifier,
             string? port = null,
             string? compassPoint = null)
         {
-            return new DotVertexIdentifierSyntax
+            return new DotVertexIdentifierNode
             {
                 Identifier = Id(identifier),
                 PortColonToken = port is not null ? Separator(':') : default,
@@ -111,11 +111,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Creates an attribute syntax node.
         /// </summary>
-        public static DotAttributeSyntax Attribute(
+        public static DotAttributeNode Attribute(
             string name,
             string value)
         {
-            return new DotAttributeSyntax
+            return new DotAttributeNode
             {
                 LHS = Id(name),
                 EqualToken = Separator('='),
@@ -126,10 +126,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Creates an attribute list syntax node.
         /// </summary>
-        public static DotAttributeListSyntax AttributeList(
-            DotSyntaxList<DotAttributeSyntax> attributes)
+        public static DotAttributeListNode AttributeList(
+            DotNodeList<DotAttributeNode> attributes)
         {
-            return new DotAttributeListSyntax
+            return new DotAttributeListNode
             {
                 OpenBraceToken = Separator('['),
                 Attributes = attributes,
@@ -140,11 +140,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Creates a list of syntax nodes.
         /// </summary>
-        public static DotSyntaxList<TNode> List<TNode>(
+        public static DotNodeList<TNode> List<TNode>(
             IEnumerable<TNode> items)
-            where TNode : DotSyntaxNode
+            where TNode : DotNode
         {
-            var list = new DotSyntaxList<TNode>();
+            var list = new DotNodeList<TNode>();
 
             foreach (var item in items)
             {
@@ -157,12 +157,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Creates a separated list of syntax nodes.
         /// </summary>
-        public static SeparatedDotSyntaxList<TNode> SeparatedList<TNode>(
+        public static SeparatedDotNodeList<TNode> SeparatedList<TNode>(
             IEnumerable<TNode> items,
-            DotSyntaxToken separator)
-            where TNode : DotSyntaxNode
+            DotToken separator)
+            where TNode : DotNode
         {
-            var list = new SeparatedDotSyntaxList<TNode>();
+            var list = new SeparatedDotNodeList<TNode>();
 
             bool isFirst = true;
             foreach (var item in items)
@@ -185,28 +185,28 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Creates an edge syntax node.
         /// </summary>
-        public static DotEdgeSyntax Edge(
-            SeparatedDotSyntaxList<DotSyntaxNode> elements,
-            DotSyntaxList<DotAttributeListSyntax>? attributes)
+        public static DotEdgeNode Edge(
+            SeparatedDotNodeList<DotNode> elements,
+            DotNodeList<DotAttributeListNode>? attributes)
         {
-            return new DotEdgeSyntax
+            return new DotEdgeNode
             {
                 Elements = elements,
                 Attributes = attributes,
             };
         }
 
-        static DotSyntaxToken Separator(char separator)
+        static DotToken Separator(char separator)
         {
-            return new DotSyntaxToken(
-                (DotToken)separator,
+            return new DotToken(
+                (DotTokenKind)separator,
                 separator.ToString());
         }
 
-        static DotSyntaxTrivia Trivia(char trivia)
+        static DotTrivia Trivia(char trivia)
         {
-            return new DotSyntaxTrivia(
-                (DotToken)trivia,
+            return new DotTrivia(
+                (DotTokenKind)trivia,
                 trivia.ToString());
         }
 
@@ -214,12 +214,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             @"^(([a-zA-Z\200-\377_][0-9a-zA-Z\200-\377_]*)|(-?(\.[0-9]+|[0-9]+(\.[0-9]*)?)))$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant);
 
-        static DotSyntaxToken Id(string? identifier)
+        static DotToken Id(string? identifier)
         {
             identifier ??= string.Empty;
             identifier = EscapeIdentifier(identifier);
 
-            var token = new DotSyntaxToken(DotToken.Id, identifier);
+            var token = new DotToken(DotTokenKind.Id, identifier);
 
             if (string.IsNullOrEmpty(identifier) ||
                 !ValidIdentifierPattern.IsMatch(identifier))

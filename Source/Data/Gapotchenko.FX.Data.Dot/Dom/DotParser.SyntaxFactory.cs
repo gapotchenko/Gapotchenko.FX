@@ -9,40 +9,40 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     partial class DotParser
     {
-        static DotSyntaxTrivia CreateTrivia(
-            DotToken tokenType,
+        static DotTrivia CreateTrivia(
+            DotTokenKind tokenType,
             string value)
         {
-            return new DotSyntaxTrivia(tokenType, value);
+            return new DotTrivia(tokenType, value);
         }
 
-        static DotSyntaxTrivia CreateWhitespaceTrivia(
+        static DotTrivia CreateWhitespaceTrivia(
             string value)
         {
-            return new DotSyntaxTrivia(DotToken.Whitespace, value);
+            return new DotTrivia(DotTokenKind.Whitespace, value);
         }
 
-        static DotSyntaxTrivia CreateTrivia(
+        static DotTrivia CreateTrivia(
             DotValueType value)
         {
             var token = value.token;
-            return new DotSyntaxTrivia(token.Kind, token.Value);
+            return new DotTrivia(token.Kind, token.Value);
         }
 
-        static DotSyntaxTrivia CreateTrivia(
-            DotSyntaxToken token)
+        static DotTrivia CreateTrivia(
+            DotToken token)
         {
-            return new DotSyntaxTrivia(token.Kind, token.Value);
+            return new DotTrivia(token.Kind, token.Value);
         }
 
-        static DotVertexIdentifierSyntax CreateVertexIdentifierSyntax(
-            DotSyntaxToken identifier,
-            DotSyntaxToken? colon1,
-            DotSyntaxToken? portIdentifier,
-            DotSyntaxToken? colon2,
-            DotSyntaxToken? compassPoint)
+        static DotVertexIdentifierNode CreateVertexIdentifierSyntax(
+            DotToken identifier,
+            DotToken? colon1,
+            DotToken? portIdentifier,
+            DotToken? colon2,
+            DotToken? compassPoint)
         {
-            return new DotVertexIdentifierSyntax
+            return new DotVertexIdentifierNode
             {
                 Identifier = identifier,
                 PortColonToken = colon1,
@@ -52,13 +52,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
-        static DotAttributeSyntax CreateAttributeSyntax(
-            DotSyntaxToken lhs,
-            DotSyntaxToken? equal,
-            DotSyntaxToken? rhs,
-            DotSyntaxToken? terminator)
+        static DotAttributeNode CreateAttributeSyntax(
+            DotToken lhs,
+            DotToken? equal,
+            DotToken? rhs,
+            DotToken? terminator)
         {
-            return new DotAttributeSyntax
+            return new DotAttributeNode
             {
                 LHS = lhs,
                 EqualToken = equal,
@@ -67,23 +67,23 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
-        static DotSyntaxList<DotAttributeListSyntax> CreateAttributeListSyntaxList(
-            DotSyntaxToken openBraceToken,
-            DotSyntaxList<DotAttributeSyntax>? attributes,
-            DotSyntaxToken closeBraceToken)
+        static DotNodeList<DotAttributeListNode> CreateAttributeListSyntaxList(
+            DotToken openBraceToken,
+            DotNodeList<DotAttributeNode>? attributes,
+            DotToken closeBraceToken)
         {
-            var list = new DotSyntaxList<DotAttributeListSyntax>();
+            var list = new DotNodeList<DotAttributeListNode>();
             var syntax = CreateAttributeListSyntax(openBraceToken, attributes, closeBraceToken);
             list.Append(syntax);
             return list;
         }
 
-        static DotAttributeListSyntax CreateAttributeListSyntax(
-            DotSyntaxToken openBraceToken,
-            DotSyntaxList<DotAttributeSyntax>? attributes,
-            DotSyntaxToken closeBraceToken)
+        static DotAttributeListNode CreateAttributeListSyntax(
+            DotToken openBraceToken,
+            DotNodeList<DotAttributeNode>? attributes,
+            DotToken closeBraceToken)
         {
-            return new DotAttributeListSyntax()
+            return new DotAttributeListNode()
             {
                 OpenBraceToken = openBraceToken,
                 Attributes = attributes,
@@ -91,45 +91,45 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
-        static AttachedDotAttributesSyntax CreateAttachedAttributesSyntax(
-            DotSyntaxToken targetKeyword,
-            DotSyntaxList<DotAttributeListSyntax> attributes)
+        static AttachedDotAttributesNode CreateAttachedAttributesSyntax(
+            DotToken targetKeyword,
+            DotNodeList<DotAttributeListNode> attributes)
         {
-            return new AttachedDotAttributesSyntax
+            return new AttachedDotAttributesNode
             {
                 TargetKeyword = targetKeyword,
                 Attributes = attributes
             };
         }
 
-        static DotEdgeSyntax CreateEdgeSyntax(
-            SeparatedDotSyntaxList<DotSyntaxNode> elements,
-            DotSyntaxList<DotAttributeListSyntax> attributes)
+        static DotEdgeNode CreateEdgeSyntax(
+            SeparatedDotNodeList<DotNode> elements,
+            DotNodeList<DotAttributeListNode> attributes)
         {
-            return new DotEdgeSyntax
+            return new DotEdgeNode
             {
                 Elements = elements,
                 Attributes = attributes,
             };
         }
 
-        static DotVertexSyntax CreateVertexSyntax(
-            DotVertexIdentifierSyntax identifier,
-            DotSyntaxList<DotAttributeListSyntax> attributes)
+        static DotVertexNode CreateVertexSyntax(
+            DotVertexIdentifierNode identifier,
+            DotNodeList<DotAttributeListNode> attributes)
         {
-            return new DotVertexSyntax
+            return new DotVertexNode
             {
                 Identifier = identifier,
                 Attributes = attributes
             };
         }
 
-        static DotAliasSyntax CreateAliasSyntax(
-            DotSyntaxToken lhs,
-            DotSyntaxToken equalToken,
-            DotSyntaxToken rhs)
+        static DotAliasNode CreateAliasSyntax(
+            DotToken lhs,
+            DotToken equalToken,
+            DotToken rhs)
         {
-            return new DotAliasSyntax
+            return new DotAliasNode
             {
                 LHS = lhs,
                 EqualToken = equalToken,
@@ -137,26 +137,26 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
-        static DotSyntaxToken CreateToken(
-            DotToken tokenType,
+        static DotToken CreateToken(
+            DotTokenKind tokenType,
             string value)
         {
-            return new DotSyntaxToken(tokenType, value);
+            return new DotToken(tokenType, value);
         }
 
-        static DotSyntaxToken CreateToken(
+        static DotToken CreateToken(
             DotValueType value)
         {
             return value.token;
         }
 
-        static DotGraphSyntax CreateGraphSyntax(
-            DotSyntaxToken? strictKeyword,
-            DotSyntaxToken? graphKind,
-            DotSyntaxToken? identifier,
-            DotStatementListSyntax? statements)
+        static DotGraphNode CreateGraphSyntax(
+            DotToken? strictKeyword,
+            DotToken? graphKind,
+            DotToken? identifier,
+            DotStatementListNode? statements)
         {
-            return new DotGraphSyntax
+            return new DotGraphNode
             {
                 StrictKeyword = strictKeyword,
                 GraphKindKeyword = graphKind,
@@ -165,12 +165,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
-        static DotStatementListSyntax CreateStatementListSyntax(
-            DotSyntaxToken openBrace,
-            DotSyntaxList<DotStatementSyntax> statements,
-            DotSyntaxToken closeBrace)
+        static DotStatementListNode CreateStatementListSyntax(
+            DotToken openBrace,
+            DotNodeList<DotStatementNode> statements,
+            DotToken closeBrace)
         {
-            return new DotStatementListSyntax
+            return new DotStatementListNode
             {
                 OpenBraceToken = openBrace,
                 Statements = statements,
@@ -179,22 +179,22 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         static void Prepend<TNode>(
-            DotSyntaxList<TNode> syntaxList,
+            DotNodeList<TNode> syntaxList,
             TNode node)
-            where TNode : DotSyntaxNode
+            where TNode : DotNode
         {
             syntaxList.Prepend(node);
         }
 
         static void Prepend<TNode>(
-            SeparatedDotSyntaxList<TNode> syntaxList,
+            SeparatedDotNodeList<TNode> syntaxList,
             TNode node)
-            where TNode : DotSyntaxNode
+            where TNode : DotNode
         {
             syntaxList.Prepend(node);
         }
 
-        static IEnumerable<DotSyntaxTrivia> TokenToTrivia(DotSyntaxToken token)
+        static IEnumerable<DotTrivia> TokenToTrivia(DotToken token)
         {
             if (token.HasLeadingTrivia)
             {
@@ -215,22 +215,22 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        static void AppendLeadingTrivia(DotSyntaxToken destination, DotValueType source)
+        static void AppendLeadingTrivia(DotToken destination, DotValueType source)
         {
             destination.LeadingTrivia.AddRange(TokenToTrivia(source.token));
         }
 
-        static void PrependLeadingTrivia(DotSyntaxToken destination, DotValueType source)
+        static void PrependLeadingTrivia(DotToken destination, DotValueType source)
         {
             destination.LeadingTrivia.InsertRange(0, TokenToTrivia(source.token));
         }
 
-        static void AppendTrailingTrivia(DotSyntaxToken destination, DotValueType source)
+        static void AppendTrailingTrivia(DotToken destination, DotValueType source)
         {
             destination.TrailingTrivia.AddRange(TokenToTrivia(source.token));
         }
 
-        static void PrependTrailingTrivia(DotSyntaxToken destination, DotValueType source)
+        static void PrependTrailingTrivia(DotToken destination, DotValueType source)
         {
             destination.TrailingTrivia.InsertRange(0, TokenToTrivia(source.token));
         }

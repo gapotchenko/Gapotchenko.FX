@@ -8,12 +8,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// Represents a list of syntax nodes.
     /// </summary>
     /// <typeparam name="TNode">Syntax node type.</typeparam>
-    public class DotSyntaxList<TNode> :
+    public class DotNodeList<TNode> :
         IReadOnlyList<TNode>,
         IEnumerable<TNode>,
         IEnumerable,
         IReadOnlyCollection<TNode>
-        where TNode : DotSyntaxNode
+        where TNode : DotNode
     {
         readonly LinkedList<TNode> _nodes = new();
 

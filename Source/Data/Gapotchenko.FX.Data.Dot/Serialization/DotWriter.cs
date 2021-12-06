@@ -26,26 +26,26 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         /// Writes a token with its default value.
         /// </summary>
         /// <param name="token">Token kind.</param>
-        public void Write(DotToken token)
+        public void Write(DotTokenKind token)
         {
             switch (token)
             {
-                case DotToken.EOF:
+                case DotTokenKind.EOF:
                     break;
-                case DotToken.Digraph:
+                case DotTokenKind.Digraph:
                     _writer.Write("digraph");
                     break;
-                case DotToken.Graph:
+                case DotTokenKind.Graph:
                     _writer.Write("graph");
                     break;
-                case DotToken.Arrow:
+                case DotTokenKind.Arrow:
                     _writer.Write("->");
                     break;
-                case DotToken.Whitespace:
+                case DotTokenKind.Whitespace:
                     _writer.Write(' ');
                     break;
                 default:
-                    if (token < DotToken.EOF)
+                    if (token < DotTokenKind.EOF)
                     {
                         _writer.Write((char)token);
                         break;
@@ -60,7 +60,7 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         /// </summary>
         /// <param name="token">Token kind.</param>
         /// <param name="value">Token value.</param>
-        public void Write(DotToken token, string value)
+        public void Write(DotTokenKind token, string value)
         {
             _writer.Write(value);
         }

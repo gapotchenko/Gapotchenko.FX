@@ -9,32 +9,32 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents DOT document vertex identifier.
     /// </summary>
-    public sealed class DotVertexIdentifierSyntax : DotSyntaxNode
+    public sealed class DotVertexIdentifierNode : DotNode
     {
         /// <summary>
         /// Gets or sets a vertex identifier token.
         /// </summary>
-        public DotSyntaxToken? Identifier { get; set; }
+        public DotToken? Identifier { get; set; }
 
         /// <summary>
         /// Gets or sets a port <c>:</c> token.
         /// </summary>
-        public DotSyntaxToken? PortColonToken { get; set; }
+        public DotToken? PortColonToken { get; set; }
 
         /// <summary>
         /// Gets or sets a port identifier token.
         /// </summary>
-        public DotSyntaxToken? PortIdentifier { get; set; }
+        public DotToken? PortIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets a compass point <c>:</c> token.
         /// </summary>
-        public DotSyntaxToken? CompassPointColonToken { get; set; }
+        public DotToken? CompassPointColonToken { get; set; }
 
         /// <summary>
         /// Gets or sets a compass point token.
         /// </summary>
-        public DotSyntaxToken? CompassPointToken { get; set; }
+        public DotToken? CompassPointToken { get; set; }
 
         internal override int SlotCount => 5;
 
@@ -51,7 +51,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <inheritdoc />
         public override void Accept(DotSyntaxVisitor visitor)
         {
-            visitor.VisitDotVertexIdentifierSyntax(this);
+            visitor.VisitDotVertexIdentifierNode(this);
         }
     }
 }

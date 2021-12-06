@@ -9,13 +9,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents a non-terminal node in the syntax tree.
     /// </summary>
-    public abstract class DotSyntaxNode : ISyntaxSlotProvider
+    public abstract class DotNode : ISyntaxSlotProvider
     {
         /// <summary>
         /// The list of trivia that appear before this node and are attached to 
         /// a token that is a descendant of this node.
         /// </summary>
-        public List<DotSyntaxTrivia> GetLeadingTrivia() =>
+        public List<DotTrivia> GetLeadingTrivia() =>
             (SyntaxNavigator.GetFirstToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .LeadingTrivia;
 
@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// The list of trivia that appear after this node and are attached to 
         /// a token that is a descendant of this node.
         /// </summary>
-        public List<DotSyntaxTrivia> GetTrailingTrivia() =>
+        public List<DotTrivia> GetTrailingTrivia() =>
             (SyntaxNavigator.GetLastToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .TrailingTrivia;
 
@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// The list of child nodes and tokens of this node.
         /// </summary>
-        public DotChildSyntaxList ChildNodesAndTokens()
+        public DotChildNodeList ChildNodesAndTokens()
             => new(this);
 
         internal abstract int SlotCount { get; }

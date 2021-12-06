@@ -9,33 +9,33 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     struct SyntaxSlot
     {
-        readonly DotSyntaxToken? _token;
-        readonly DotSyntaxNode? _node;
-        readonly IReadOnlyList<DotSyntaxNode>? _list;
+        readonly DotToken? _token;
+        readonly DotNode? _node;
+        readonly IReadOnlyList<DotNode>? _list;
 
-        public SyntaxSlot(DotSyntaxToken? token)
+        public SyntaxSlot(DotToken? token)
             : this(token, null, null)
         { }
 
-        public SyntaxSlot(DotSyntaxNode? node)
+        public SyntaxSlot(DotNode? node)
             : this(null, node, null)
         { }
 
-        public SyntaxSlot(DotSyntaxNodeOrToken nodeOrToken)
+        public SyntaxSlot(DotNodeOrToken nodeOrToken)
             : this(
                   nodeOrToken.IsToken ? nodeOrToken.AsToken() : null,
                   nodeOrToken.IsNode ? nodeOrToken.AsNode() : null,
                   null)
         { }
 
-        public SyntaxSlot(IReadOnlyList<DotSyntaxNode>? list)
+        public SyntaxSlot(IReadOnlyList<DotNode>? list)
             : this(null, null, list)
         { }
 
         SyntaxSlot(
-            DotSyntaxToken? token,
-            DotSyntaxNode? node,
-            IReadOnlyList<DotSyntaxNode>? list)
+            DotToken? token,
+            DotNode? node,
+            IReadOnlyList<DotNode>? list)
         {
             if (token is not null)
             {
@@ -71,11 +71,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        public static implicit operator SyntaxSlot(DotSyntaxToken? token) =>
+        public static implicit operator SyntaxSlot(DotToken? token) =>
             new SyntaxSlot(token);
-        public static implicit operator SyntaxSlot(DotSyntaxNode? node) =>
+        public static implicit operator SyntaxSlot(DotNode? node) =>
             new SyntaxSlot(node);
-        public static implicit operator SyntaxSlot(DotSyntaxNodeOrToken nodeOrToken) =>
+        public static implicit operator SyntaxSlot(DotNodeOrToken nodeOrToken) =>
             new SyntaxSlot(nodeOrToken);
 
         public bool IsDefault => !IsNode && !IsToken && !IsList;
@@ -85,12 +85,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public bool IsList { get; }
 
         [MemberNotNullWhen(true, nameof(_token))]
-        public DotSyntaxToken? AsToken() => _token;
+        public DotToken? AsToken() => _token;
 
         [MemberNotNullWhen(true, nameof(_node))]
-        public DotSyntaxNode? AsNode() => _node;
+        public DotNode? AsNode() => _node;
 
-        public IReadOnlyList<DotSyntaxNode>? AsList() => _list;
+        public IReadOnlyList<DotNode>? AsList() => _list;
 
         public int SlotCount
         {

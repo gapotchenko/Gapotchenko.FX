@@ -12,23 +12,23 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents syntax node children list.
     /// </summary>
-    public struct DotChildSyntaxList : IReadOnlyList<DotSyntaxNodeOrToken>
+    public struct DotChildNodeList : IReadOnlyList<DotNodeOrToken>
     {
-        readonly DotSyntaxNode? _node;
+        readonly DotNode? _node;
         readonly int _count;
 
-        internal DotChildSyntaxList(DotSyntaxNode node)
+        internal DotChildNodeList(DotNode node)
         {
             _node = node;
             _count = CountNodes(node);
         }
 
         /// <summary>
-        /// Gets the number of children contained in the <see cref="DotChildSyntaxList"/>.
+        /// Gets the number of children contained in the <see cref="DotChildNodeList"/>.
         /// </summary>
         public int Count => _count;
 
-        internal static int CountNodes(DotSyntaxNode node)
+        internal static int CountNodes(DotNode node)
         {
             int n = 0;
 
@@ -53,9 +53,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         /// <summary>Gets the child at the specified index.</summary>
         /// <param name="index">The zero-based index of the child to get.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">
-        ///   <paramref name="index"/> is less than 0.-or-<paramref name="index" /> is equal to or greater than <see cref="DotChildSyntaxList.Count"/>. </exception>
-        public DotSyntaxNodeOrToken this[int index]
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="index"/> is less than 0.-or-<paramref name="index" /> is equal to or greater than <see cref="Count"/>. </exception>
+        public DotNodeOrToken this[int index]
         {
             get
             {
@@ -68,7 +68,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        internal DotSyntaxNode? Node => _node;
+        internal DotNode? Node => _node;
 
         static int Occupancy(SyntaxSlot slot)
         {
@@ -79,7 +79,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// Internal indexer that does not verify index.
         /// Used when caller has already ensured that index is within bounds.
         /// </summary>
-        internal static DotSyntaxNodeOrToken ItemInternal(DotSyntaxNode node, int index)
+        internal static DotNodeOrToken ItemInternal(DotNode node, int index)
         {
             SyntaxSlot childSlot;
             var idx = index;
@@ -122,7 +122,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        static DotSyntaxNodeOrToken Unwrap(SyntaxSlot slot)
+        static DotNodeOrToken Unwrap(SyntaxSlot slot)
         {
             if (slot.IsToken)
                 return slot.AsToken()!;
@@ -144,8 +144,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// Returns the first child in the list.
         /// </summary>
         /// <returns>The first child in the list.</returns>
-        /// <exception cref="System.InvalidOperationException">The list is empty.</exception>    
-        public DotSyntaxNodeOrToken First()
+        /// <exception cref="InvalidOperationException">The list is empty.</exception>    
+        public DotNodeOrToken First()
         {
             if (Any())
             {
@@ -159,8 +159,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// Returns the last child in the list.
         /// </summary>
         /// <returns>The last child in the list.</returns>
-        /// <exception cref="System.InvalidOperationException">The list is empty.</exception>    
-        public DotSyntaxNodeOrToken Last()
+        /// <exception cref="InvalidOperationException">The list is empty.</exception>    
+        public DotNodeOrToken Last()
         {
             if (Any())
             {
@@ -171,17 +171,17 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         /// <summary>
-        /// Returns a list which contains all children of <see cref="DotChildSyntaxList"/> in reversed order.
+        /// Returns a list which contains all children of <see cref="DotChildNodeList"/> in reversed order.
         /// </summary>
-        /// <returns><see cref="Reversed"/> which contains all children of <see cref="DotChildSyntaxList"/> in reversed order</returns>
+        /// <returns><see cref="Reversed"/> which contains all children of <see cref="DotChildNodeList"/> in reversed order</returns>
         public Reversed Reverse()
         {
             Debug.Assert(_node is object);
             return new Reversed(_node, _count);
         }
 
-        /// <summary>Returns an enumerator that iterates through the <see cref="DotChildSyntaxList"/>.</summary>
-        /// <returns>A <see cref="Enumerator"/> for the <see cref="DotChildSyntaxList"/>.</returns>
+        /// <summary>Returns an enumerator that iterates through the <see cref="DotChildNodeList"/>.</summary>
+        /// <returns>A <see cref="Enumerator"/> for the <see cref="DotChildNodeList"/>.</returns>
         public Enumerator GetEnumerator()
         {
             if (_node == null)
@@ -192,11 +192,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             return new Enumerator(_node, _count);
         }
 
-        IEnumerator<DotSyntaxNodeOrToken> IEnumerable<DotSyntaxNodeOrToken>.GetEnumerator()
+        IEnumerator<DotNodeOrToken> IEnumerable<DotNodeOrToken>.GetEnumerator()
         {
             if (_node == null)
             {
-                return Enumerable.Empty<DotSyntaxNodeOrToken>().GetEnumerator();
+                return Enumerable.Empty<DotNodeOrToken>().GetEnumerator();
             }
 
             return new EnumeratorImpl(_node, _count);
@@ -206,20 +206,20 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             if (_node == null)
             {
-                return Enumerable.Empty<DotSyntaxNodeOrToken>().GetEnumerator();
+                return Enumerable.Empty<DotNodeOrToken>().GetEnumerator();
             }
 
             return new EnumeratorImpl(_node, _count);
         }
 
-        /// <summary>Enumerates the elements of a <see cref="DotChildSyntaxList" />.</summary>
+        /// <summary>Enumerates the elements of a <see cref="DotChildNodeList" />.</summary>
         public struct Enumerator
         {
-            DotSyntaxNode? _node;
+            DotNode? _node;
             int _count;
             int _childIndex;
 
-            internal Enumerator(DotSyntaxNode node, int count)
+            internal Enumerator(DotNode node, int count)
             {
                 _node = node;
                 _count = count;
@@ -228,14 +228,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
             // PERF: Initialize an Enumerator directly from a DotSyntaxNode without going
             // via ChildNodesAndTokens. This saves constructing an intermediate DotChildSyntaxList
-            internal void InitializeFrom(DotSyntaxNode node)
+            internal void InitializeFrom(DotNode node)
             {
                 _node = node;
                 _count = CountNodes(node);
                 _childIndex = -1;
             }
 
-            /// <summary>Advances the enumerator to the next element of the <see cref="DotChildSyntaxList" />.</summary>
+            /// <summary>Advances the enumerator to the next element of the <see cref="DotChildNodeList" />.</summary>
             /// <returns>true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.</returns>
             public bool MoveNext()
             {
@@ -251,8 +251,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
 
             /// <summary>Gets the element at the current position of the enumerator.</summary>
-            /// <returns>The element in the <see cref="DotChildSyntaxList" /> at the current position of the enumerator.</returns>
-            public DotSyntaxNodeOrToken Current
+            /// <returns>The element in the <see cref="DotChildNodeList" /> at the current position of the enumerator.</returns>
+            public DotNodeOrToken Current
             {
                 get
                 {
@@ -267,7 +267,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 _childIndex = -1;
             }
 
-            internal bool TryMoveNextAndGetCurrent(out DotSyntaxNodeOrToken current)
+            internal bool TryMoveNextAndGetCurrent(out DotNodeOrToken current)
             {
                 if (!MoveNext())
                 {
@@ -280,11 +280,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        sealed class EnumeratorImpl : IEnumerator<DotSyntaxNodeOrToken>
+        sealed class EnumeratorImpl : IEnumerator<DotNodeOrToken>
         {
             Enumerator _enumerator;
 
-            internal EnumeratorImpl(DotSyntaxNode node, int count)
+            internal EnumeratorImpl(DotNode node, int count)
             {
                 _enumerator = new Enumerator(node, count);
             }
@@ -295,7 +295,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             ///   </returns>
-            public DotSyntaxNodeOrToken Current
+            public DotNodeOrToken Current
             {
                 get { return _enumerator.Current; }
             }
@@ -340,12 +340,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Represents reversed syntax node children list.
         /// </summary>
-        public readonly partial struct Reversed : IEnumerable<DotSyntaxNodeOrToken>
+        public readonly partial struct Reversed : IEnumerable<DotNodeOrToken>
         {
-            readonly DotSyntaxNode? _node;
+            readonly DotNode? _node;
             readonly int _count;
 
-            internal Reversed(DotSyntaxNode node, int count)
+            internal Reversed(DotNode node, int count)
             {
                 _node = node;
                 _count = count;
@@ -360,11 +360,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 return new Enumerator(_node, _count);
             }
 
-            IEnumerator<DotSyntaxNodeOrToken> IEnumerable<DotSyntaxNodeOrToken>.GetEnumerator()
+            IEnumerator<DotNodeOrToken> IEnumerable<DotNodeOrToken>.GetEnumerator()
             {
                 if (_node == null)
                 {
-                    return Enumerable.Empty<DotSyntaxNodeOrToken>().GetEnumerator();
+                    return Enumerable.Empty<DotNodeOrToken>().GetEnumerator();
                 }
 
                 return new EnumeratorImpl(_node, _count);
@@ -374,7 +374,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             {
                 if (_node == null)
                 {
-                    return Enumerable.Empty<DotSyntaxNodeOrToken>().GetEnumerator();
+                    return Enumerable.Empty<DotNodeOrToken>().GetEnumerator();
                 }
 
                 return new EnumeratorImpl(_node, _count);
@@ -385,11 +385,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             /// </summary>
             public struct Enumerator
             {
-                readonly DotSyntaxNode? _node;
+                readonly DotNode? _node;
                 readonly int _count;
                 int _childIndex;
 
-                internal Enumerator(DotSyntaxNode node, int count)
+                internal Enumerator(DotNode node, int count)
                 {
                     _node = node;
                     _count = count;
@@ -408,7 +408,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 /// <summary>
                 /// Gets the element in the collection at the current position of the enumerator.
                 /// </summary>
-                public DotSyntaxNodeOrToken Current
+                public DotNodeOrToken Current
                 {
                     get
                     {
@@ -426,11 +426,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 }
             }
 
-            sealed class EnumeratorImpl : IEnumerator<DotSyntaxNodeOrToken>
+            sealed class EnumeratorImpl : IEnumerator<DotNodeOrToken>
             {
                 readonly Enumerator _enumerator;
 
-                internal EnumeratorImpl(DotSyntaxNode node, int count)
+                internal EnumeratorImpl(DotNode node, int count)
                 {
                     _enumerator = new Enumerator(node, count);
                 }
@@ -441,7 +441,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 /// <returns>
                 /// The element in the collection at the current position of the enumerator.
                 ///   </returns>
-                public DotSyntaxNodeOrToken Current => _enumerator.Current;
+                public DotNodeOrToken Current => _enumerator.Current;
 
                 /// <summary>
                 /// Gets the element in the collection at the current position of the enumerator.

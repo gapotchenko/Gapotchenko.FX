@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 {
     static class SyntaxNavigator
     {
-        public static DotSyntaxToken? GetFirstToken(DotSyntaxNode current)
+        public static DotToken? GetFirstToken(DotNode current)
         {
             foreach (var child in current.ChildNodesAndTokens())
             {
@@ -29,7 +29,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             return default;
         }
 
-        public static DotSyntaxToken? GetLastToken(DotSyntaxNode current)
+        public static DotToken? GetLastToken(DotNode current)
         {
             foreach (var child in current.ChildNodesAndTokens().Reverse())
             {

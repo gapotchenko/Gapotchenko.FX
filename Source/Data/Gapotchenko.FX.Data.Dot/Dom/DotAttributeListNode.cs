@@ -3,31 +3,31 @@
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
-    /// Represents DOT document statement list.
+    /// Represents DOT document attribute list.
     /// </summary>
-    public sealed class DotStatementListSyntax : DotSyntaxNode
+    public sealed class DotAttributeListNode : DotNode
     {
         /// <summary>
-        /// Gets or sets <c>{</c> token.
+        /// Gets or sets a <c>[</c> token.
         /// </summary>
-        public DotSyntaxToken? OpenBraceToken { get; set; }
+        public DotToken? OpenBraceToken { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of statements.
+        /// Gets or sets an attribute list.
         /// </summary>
-        public DotSyntaxList<DotStatementSyntax>? Statements { get; set; }
+        public DotNodeList<DotAttributeNode>? Attributes { get; set; }
 
         /// <summary>
-        /// Gets or sets <c>}</c> token.
+        /// Gets or sets a <c>]</c> token.
         /// </summary>
-        public DotSyntaxToken? CloseBraceToken { get; set; }
+        public DotToken? CloseBraceToken { get; set; }
 
         internal override int SlotCount => 3;
 
         internal override SyntaxSlot GetSlot(int i) => i switch
         {
             0 => OpenBraceToken,
-            1 => new SyntaxSlot(Statements),
+            1 => new SyntaxSlot(Attributes),
             2 => CloseBraceToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };
@@ -35,7 +35,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <inheritdoc />
         public override void Accept(DotSyntaxVisitor visitor)
         {
-            visitor.VisitDotStatementListSyntax(this);
+            visitor.VisitDotAttributeListNode(this);
         }
     }
 }

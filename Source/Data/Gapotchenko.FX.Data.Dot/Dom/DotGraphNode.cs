@@ -9,27 +9,27 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents DOT document graph.
     /// </summary>
-    public sealed class DotGraphSyntax : DotStatementSyntax
+    public sealed class DotGraphNode : DotStatementNode
     {
         /// <summary>
         /// Gets or sets <c>strict</c> keyword token.
         /// </summary>
-        public DotSyntaxToken? StrictKeyword { get; set; }
+        public DotToken? StrictKeyword { get; set; }
 
         /// <summary>
         /// Gets or sets a graph kind token.
         /// </summary>
-        public DotSyntaxToken? GraphKindKeyword { get; set; }
+        public DotToken? GraphKindKeyword { get; set; }
 
         /// <summary>
         /// Gets or sets a graph identifier token.
         /// </summary>
-        public DotSyntaxToken? Identifier { get; set; }
+        public DotToken? Identifier { get; set; }
 
         /// <summary>
         /// Gets or sets a graph statements list.
         /// </summary>
-        public DotStatementListSyntax? Statements { get; set; }
+        public DotStatementListNode? Statements { get; set; }
 
         internal override int SlotCount => 5;
 
@@ -46,7 +46,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <inheritdoc />
         public override void Accept(DotSyntaxVisitor visitor)
         {
-            visitor.VisitDotGraphSyntax(this);
+            visitor.VisitDotGraphNode(this);
         }
     }
 }

@@ -10,14 +10,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents a trivia in the syntax tree.
     /// </summary>
-    public readonly struct DotSyntaxTrivia
+    public readonly struct DotTrivia
     {
         /// <summary>
-        /// Creates <see cref="DotSyntaxTrivia"/> instance.
+        /// Initializes a new <see cref="DotTrivia"/> instance.
         /// </summary>
         /// <param name="kind">Trivia kind.</param>
         /// <param name="value">Trivia value.</param>
-        public DotSyntaxTrivia(DotToken kind, string value)
+        public DotTrivia(DotTokenKind kind, string value)
         {
             Kind = kind;
             Value = value;
@@ -26,7 +26,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Trivia kind.
         /// </summary>
-        public DotToken Kind { get; }
+        public DotTokenKind Kind { get; }
 
         /// <summary>
         /// Trivia value.

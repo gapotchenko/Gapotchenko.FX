@@ -11,16 +11,16 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// Represents a list of syntax nodes with separators.
     /// </summary>
     /// <typeparam name="TNode">Syntax node type.</typeparam>
-    public class SeparatedDotSyntaxList<TNode> :
+    public class SeparatedDotNodeList<TNode> :
         IReadOnlyList<TNode>,
         IEnumerable<TNode>,
         IEnumerable,
         IReadOnlyCollection<TNode>,
         ISyntaxSlotProvider
-        where TNode : DotSyntaxNode
+        where TNode : DotNode
     {
         readonly List<TNode> _nodes = new();
-        readonly List<DotSyntaxNodeOrToken> _nodesAndTokens = new();
+        readonly List<DotNodeOrToken> _nodesAndTokens = new();
 
         /// <summary>
         /// Gets the node at the specified index.
@@ -53,7 +53,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the separator to the end of the list.
         /// </summary>
-        public void Append(DotSyntaxToken separator)
+        public void Append(DotToken separator)
         {
             _nodesAndTokens.Add(separator);
         }
@@ -70,7 +70,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the separator to the beginning of the list.
         /// </summary>
-        public void Prepend(DotSyntaxToken separator)
+        public void Prepend(DotToken separator)
         {
             _nodesAndTokens.Insert(0, separator);
         }

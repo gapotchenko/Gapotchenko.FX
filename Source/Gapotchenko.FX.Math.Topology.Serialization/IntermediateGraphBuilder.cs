@@ -21,7 +21,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
 
         public IReadOnlyGraph<DotDocumentVertex> Graph => _graph;
 
-        public override void VisitDotEdgeSyntax(DotEdgeSyntax node)
+        public override void VisitDotEdgeNode(DotEdgeNode node)
         {
             var elements = node.Elements;
             if (elements is not null)
@@ -54,7 +54,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             }
         }
 
-        public override void VisitDotVertexIdentifierSyntax(DotVertexIdentifierSyntax node)
+        public override void VisitDotVertexIdentifierNode(DotVertexIdentifierNode node)
         {
             var vertex = GetVertex(node.Identifier?.Value);
             if (_edgeElementsStack.Count != 0)
@@ -62,18 +62,18 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
                 _edgeElementsStack.Peek().Add(vertex);
             }
 
-            base.VisitDotVertexIdentifierSyntax(node);
+            base.VisitDotVertexIdentifierNode(node);
         }
 
         Dictionary<string, string> _vertexAttributes = new();
         bool _acceptVertexAttributes = false;
 
-        public override void VisitDotVertexSyntax(DotVertexSyntax node)
+        public override void VisitDotVertexNode(DotVertexNode node)
         {
             _vertexAttributes.Clear();
 
             _acceptVertexAttributes = true;
-            base.VisitDotVertexSyntax(node);
+            base.VisitDotVertexNode(node);
             _acceptVertexAttributes = false;
 
             var vertex = GetVertex(node.Identifier?.Identifier?.Value);
@@ -83,7 +83,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             }
         }
 
-        public override void VisitDotAttributeSyntax(DotAttributeSyntax node)
+        public override void VisitDotAttributeNode(DotAttributeNode node)
         {
             if (_acceptVertexAttributes)
             {
@@ -92,7 +92,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
                 _vertexAttributes[key] = value;
             }
 
-            base.VisitDotAttributeSyntax(node);
+            base.VisitDotAttributeNode(node);
         }
 
         DotDocumentVertex GetVertex(string? id)

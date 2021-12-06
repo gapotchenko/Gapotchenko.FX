@@ -7,25 +7,25 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
-    /// Represents DOT document attached attribute.
+    /// Represents DOT document edge.
     /// </summary>
-    public sealed class AttachedDotAttributesSyntax : DotStatementSyntax
+    public sealed class DotEdgeNode : DotStatementNode
     {
         /// <summary>
-        /// Gets or sets an attribute target.
+        /// Gets or sets elements list.
         /// </summary>
-        public DotSyntaxToken? TargetKeyword { get; set; }
+        public SeparatedDotNodeList<DotNode>? Elements { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of attributes.
+        /// Gets or sets attributes list.
         /// </summary>
-        public DotSyntaxList<DotAttributeListSyntax>? Attributes { get; set; }
+        public DotNodeList<DotAttributeListNode>? Attributes { get; set; }
 
         internal override int SlotCount => 3;
 
         internal override SyntaxSlot GetSlot(int i) => i switch
         {
-            0 => TargetKeyword,
+            0 => new SyntaxSlot(Elements),
             1 => new SyntaxSlot(Attributes),
             2 => SemicolonToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <inheritdoc />
         public override void Accept(DotSyntaxVisitor visitor)
         {
-            visitor.VisitAttachedDotAttributesSyntax(this);
+            visitor.VisitDotEdgeNode(this);
         }
     }
 }

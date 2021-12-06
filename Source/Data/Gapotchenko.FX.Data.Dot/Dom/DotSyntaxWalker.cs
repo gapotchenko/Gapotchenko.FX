@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
-    /// Represents a <see cref="DotSyntaxVisitor"/> that descends an entire <see cref="DotSyntaxNode"/> graph
+    /// Represents a <see cref="DotSyntaxVisitor"/> that descends an entire <see cref="DotNode"/> graph
     /// visiting each node and its child nodes and tokens in depth-first order.
     /// </summary>
     public abstract class DotSyntaxWalker : DotSyntaxVisitor
@@ -35,7 +35,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// children of this node to be visited.
         /// </remarks>
         /// <param name="node">The current node that the walker is visiting.</param>
-        public override void Visit(DotSyntaxNode? node)
+        public override void Visit(DotNode? node)
         {
             node?.Accept(this);
         }
@@ -49,7 +49,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// trivia of this token to be visited.
         /// </remarks>
         /// <param name="token">The current token that the walker is visiting.</param>
-        public virtual void VisitToken(DotSyntaxToken token)
+        public virtual void VisitToken(DotToken token)
         {
             if (Depth >= SyntaxWalkerDepth.Trivia)
             {
@@ -60,14 +60,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-        public override void DefaultVisit(DotSyntaxNode node)
+        public override void DefaultVisit(DotNode node)
         {
             var childCnt = node.ChildNodesAndTokens().Count;
             int i = 0;
 
             do
             {
-                var child = DotChildSyntaxList.ItemInternal(node, i);
+                var child = DotChildNodeList.ItemInternal(node, i);
                 i++;
 
                 var asNode = child.AsNode();
@@ -92,7 +92,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             } while (i < childCnt);
         }
 
-        public virtual void VisitLeadingTrivia(DotSyntaxToken token)
+        public virtual void VisitLeadingTrivia(DotToken token)
         {
             if (token.HasLeadingTrivia)
             {
@@ -103,7 +103,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        public virtual void VisitTrailingTrivia(DotSyntaxToken token)
+        public virtual void VisitTrailingTrivia(DotToken token)
         {
             if (token.HasTrailingTrivia)
             {
@@ -114,7 +114,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        public virtual void VisitTrivia(DotSyntaxTrivia trivia)
+        public virtual void VisitTrivia(DotTrivia trivia)
         {
         }
 
