@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,6 +17,27 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         where TNode : DotNode
     {
         readonly LinkedList<TNode> _nodes = new();
+
+        /// <summary>
+        /// Creates a new <see cref="DotNodeList{TNode}"/> instance.
+        /// </summary>
+        public DotNodeList()
+        {
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DotNodeList{TNode}"/> instance.
+        /// </summary>
+        public DotNodeList(IEnumerable<TNode> nodes)
+        {
+            if (nodes is null)
+                throw new ArgumentNullException(nameof(nodes));
+
+            foreach (var node in nodes)
+            {
+                Add(node);
+            }
+        }
 
         /// <summary>
         /// Gets the node at the specified index.
@@ -39,11 +61,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the node to the end of the list.
         /// </summary>
-        public void Append(TNode node) => _nodes.AddLast(node);
+        public void Add(TNode node) => _nodes.AddLast(node);
 
         /// <summary>
         /// Adds the node to the beginning of the list.
         /// </summary>
-        public void Prepend(TNode node) => _nodes.AddFirst(node);
+        public void AddFirst(TNode node) => _nodes.AddFirst(node);
     }
 }

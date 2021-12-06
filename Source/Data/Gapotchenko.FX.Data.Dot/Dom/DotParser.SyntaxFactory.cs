@@ -74,7 +74,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             var list = new DotNodeList<DotAttributeListNode>();
             var syntax = CreateAttributeListSyntax(openBraceToken, attributes, closeBraceToken);
-            list.Append(syntax);
+            list.Add(syntax);
             return list;
         }
 
@@ -183,7 +183,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             TNode node)
             where TNode : DotNode
         {
-            syntaxList.Prepend(node);
+            syntaxList.AddFirst(node);
         }
 
         static void Prepend<TNode>(
@@ -191,7 +191,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             TNode node)
             where TNode : DotNode
         {
-            syntaxList.Prepend(node);
+            syntaxList.AddFirst(node);
         }
 
         static IEnumerable<DotTrivia> TokenToTrivia(DotToken token)

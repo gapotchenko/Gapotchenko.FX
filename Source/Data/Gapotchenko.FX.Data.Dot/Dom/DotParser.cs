@@ -2,7 +2,7 @@
 // Copyright (c) Wayne Kelly, John Gough, QUT 2005-2014
 // (see accompanying GPPGcopyright.rtf)
 
-// Input file <Dom\Dot.y - 06.12.2021 19:53:58>
+// Input file <Dom\Dot.y - 06.12.2021 20:56:51>
 
 // options: no-lines
 
@@ -236,14 +236,11 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
 { CurrentSemanticValue.entity = ValueStack[ValueStack.Depth-1].entity; }
         break;
       case 21: // edgeRHS -> ARROW, endpoint
-{ var list = new SeparatedDotNodeList<DotNode>(); 
-                                      list.Append(ValueStack[ValueStack.Depth-2].token);
-                                      list.Append(ValueStack[ValueStack.Depth-1].entity);
-                                      CurrentSemanticValue.separatedSyntaxList = list; }
+{ CurrentSemanticValue.separatedSyntaxList = new SeparatedDotNodeList<DotNode>() { ValueStack[ValueStack.Depth-2].token, ValueStack[ValueStack.Depth-1].entity }; }
         break;
       case 22: // edgeRHS -> edgeRHS, ARROW, endpoint
-{ ValueStack[ValueStack.Depth-3].separatedSyntaxList.Append(ValueStack[ValueStack.Depth-2].token);
-                                      ValueStack[ValueStack.Depth-3].separatedSyntaxList.Append(ValueStack[ValueStack.Depth-1].entity);
+{ ValueStack[ValueStack.Depth-3].separatedSyntaxList.Add(ValueStack[ValueStack.Depth-2].token);
+                                      ValueStack[ValueStack.Depth-3].separatedSyntaxList.Add(ValueStack[ValueStack.Depth-1].entity);
                                       CurrentSemanticValue.separatedSyntaxList = ValueStack[ValueStack.Depth-3].separatedSyntaxList; }
         break;
       case 23: // subgraph -> stmts
@@ -280,7 +277,7 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
 { CurrentSemanticValue.attributeListSyntaxList = CreateAttributeListSyntaxList(CreateToken(ValueStack[ValueStack.Depth-3]), ValueStack[ValueStack.Depth-2].attributeSyntaxList, CreateToken(ValueStack[ValueStack.Depth-1])); }
         break;
       case 34: // a_list -> avPair
-{ CurrentSemanticValue.attributeSyntaxList = new(); CurrentSemanticValue.attributeSyntaxList.Append((DotAttributeNode)ValueStack[ValueStack.Depth-1].entity); }
+{ CurrentSemanticValue.attributeSyntaxList = new(); CurrentSemanticValue.attributeSyntaxList.Add((DotAttributeNode)ValueStack[ValueStack.Depth-1].entity); }
         break;
       case 35: // a_list -> avPair, a_list
 { CurrentSemanticValue.attributeSyntaxList = ValueStack[ValueStack.Depth-1].attributeSyntaxList; Prepend(ValueStack[ValueStack.Depth-1].attributeSyntaxList, (DotAttributeNode)ValueStack[ValueStack.Depth-2].entity); }

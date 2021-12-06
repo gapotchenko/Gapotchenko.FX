@@ -24,6 +24,16 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         /// <summary>
+        /// Initializes a new <see cref="DotTrivia"/> instance.
+        /// </summary>
+        /// <param name="value">Trivia value.</param>
+        public DotTrivia(char value)
+        {
+            Kind = (DotTokenKind)value;
+            Value = value.ToString();
+        }
+
+        /// <summary>
         /// Trivia kind.
         /// </summary>
         public DotTokenKind Kind { get; }

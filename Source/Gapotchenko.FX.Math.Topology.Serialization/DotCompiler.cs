@@ -168,11 +168,11 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
 
         static DotDocument Serialize(DotDocumentModel model)
         {
-            var graph = DotSyntaxFactory.Graph(
-                strict: default,
-                kind: DotSyntaxFactory.Token(Data.Dot.Serialization.DotTokenKind.Digraph),
-                identifier: default,
-                statements: DotCompiler<TVertex>.CreateStatements(model));
+            var graph = new DotGraphNode
+            {
+                GraphKindKeyword = new DotToken(DotTokenKind.Digraph),
+                Statements = DotCompiler<TVertex>.CreateStatements(model)
+            };
 
             return new DotDocument
             {
@@ -194,20 +194,33 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
                 statements.Add(CreateVertexStatement(vertex.vertex, vertex.attributes));
             }
 
-            return DotSyntaxFactory.StatementList(
-                DotSyntaxFactory.List(statements));
+            var listOfStatements = new DotNodeList<DotStatementNode>(statements);
+            return CreateStatementList(listOfStatements);
         }
+
+        static DotStatementListNode CreateStatementList(DotNodeList<DotStatementNode> listOfStatements) =>
+            new DotStatementListNode
+            {
+                OpenBraceToken = new DotToken('{'),
+                Statements = listOfStatements,
+                CloseBraceToken = new DotToken('}'),
+            };
 
         static DotVertexNode CreateVertexStatement(string vertex, IEnumerable<(string attributeName, string attributeValue)>? attributes)
         {
-            return DotSyntaxFactory.VertexStatement(
-                identifier: CreateIdentifier(vertex),
-                attributes: CreateAttributesList(attributes));
+            return new DotVertexNode
+            {
+                Identifier = CreateIdentifier(vertex),
+                Attributes = CreateAttributesList(attributes),
+            };
         }
 
         static DotVertexIdentifierNode CreateIdentifier(string identifier)
         {
-            return DotSyntaxFactory.Identifier(identifier);
+            return new DotVertexIdentifierNode
+            {
+                Identifier = DotToken.CreateIdentifierToken(identifier),
+            };
         }
 
         static DotNodeList<DotAttributeListNode>? CreateAttributesList(IEnumerable<(string attributeName, string attributeValue)>? attributes)
@@ -215,37 +228,46 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             if (attributes?.Any() != true)
                 return null;
 
-            var attributesList = attributes.Select(attr => DotSyntaxFactory.Attribute(
-                name: attr.attributeName,
-                value: attr.attributeValue));
-
-            return DotSyntaxFactory.List(new[]
+            var attributeList = new DotNodeList<DotAttributeNode>(attributes.Select(attr => new DotAttributeNode
             {
-                DotSyntaxFactory.AttributeList(
-                    DotSyntaxFactory.List(attributesList))
-            });
+                LHS = DotToken.CreateIdentifierToken(attr.attributeName),
+                EqualToken = new DotToken('='),
+                RHS = DotToken.CreateIdentifierToken(attr.attributeValue)
+            }));
+
+            var attributeListNode = new DotAttributeListNode
+            {
+                OpenBraceToken = new DotToken('['),
+                Attributes = attributeList,
+                CloseBraceToken = new DotToken(']'),
+            };
+
+            return new DotNodeList<DotAttributeListNode>()
+            {
+                attributeListNode
+            };
         }
 
         static DotEdgeNode CreateEdgeStatement(IEnumerable<IEnumerable<string>> edge)
         {
-            return DotSyntaxFactory.Edge(
-                elements: DotSyntaxFactory.SeparatedList(
+            return new DotEdgeNode
+            {
+                Elements = new SeparatedDotNodeList<DotNode>(
                     edge.Select(CreateEdgeElement),
-                    DotSyntaxFactory.Token(DotTokenKind.Arrow, "->")),
-                attributes: default);
+                    new DotToken(DotTokenKind.Arrow, "->"))
+            };
 
             static DotNode CreateEdgeElement(IEnumerable<string> edgeElement)
             {
                 if (edgeElement.Skip(1).Any())
                 {
-                    var subgraphStatements = DotSyntaxFactory.List(
+                    var subgraphStatements = new DotNodeList<DotStatementNode>(
                         edgeElement.Select(v => (DotStatementNode)CreateVertexStatement(v, default)));
 
-                    return DotSyntaxFactory.Graph(
-                        default,
-                        default,
-                        default,
-                        DotSyntaxFactory.StatementList(subgraphStatements));
+                    return new DotGraphNode
+                    {
+                        Statements = CreateStatementList(subgraphStatements)
+                    };
                 }
                 else
                 {

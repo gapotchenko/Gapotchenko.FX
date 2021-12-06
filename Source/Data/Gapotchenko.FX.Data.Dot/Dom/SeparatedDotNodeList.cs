@@ -23,6 +23,39 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         readonly List<DotNodeOrToken> _nodesAndTokens = new();
 
         /// <summary>
+        /// Creates a new <see cref="SeparatedDotNodeList{TNode}"/> instance.
+        /// </summary>
+        public SeparatedDotNodeList()
+        {
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="SeparatedDotNodeList{TNode}"/> instance.
+        /// </summary>
+        public SeparatedDotNodeList(IEnumerable<TNode> nodes, DotToken separator)
+        {
+            if (nodes is null)
+                throw new ArgumentNullException(nameof(nodes));
+            if (separator is null)
+                throw new ArgumentNullException(nameof(separator));
+
+            bool isFirst = true;
+            foreach (var item in nodes)
+            {
+                if (isFirst)
+                {
+                    isFirst = false;
+                }
+                else
+                {
+                    Add(separator);
+                }
+
+                Add(item);
+            }
+        }
+
+        /// <summary>
         /// Gets the node at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index of the node to get.</param>
@@ -44,7 +77,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the node to the end of the list.
         /// </summary>
-        public void Append(TNode node)
+        public void Add(TNode node)
         {
             _nodes.Add(node);
             _nodesAndTokens.Add(node);
@@ -53,7 +86,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the separator to the end of the list.
         /// </summary>
-        public void Append(DotToken separator)
+        public void Add(DotToken separator)
         {
             _nodesAndTokens.Add(separator);
         }
@@ -61,7 +94,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the node to the beginning of the list.
         /// </summary>
-        public void Prepend(TNode node)
+        public void AddFirst(TNode node)
         {
             _nodes.Insert(0, node);
             _nodesAndTokens.Insert(0, node);
@@ -70,7 +103,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the separator to the beginning of the list.
         /// </summary>
-        public void Prepend(DotToken separator)
+        public void AddFirst(DotToken separator)
         {
             _nodesAndTokens.Insert(0, separator);
         }

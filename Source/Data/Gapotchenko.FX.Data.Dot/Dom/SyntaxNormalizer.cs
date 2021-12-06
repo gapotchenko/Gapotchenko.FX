@@ -26,7 +26,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             base.VisitToken(token);
 
             TrimEnd(token);
-            token.TrailingTrivia.Add(DotSyntaxFactory.Whitespace(" "));
+            token.TrailingTrivia.Add(new DotTrivia(DotTokenKind.Whitespace, " "));
         }
 
         int _depth = -1;
@@ -78,7 +78,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             for (int i = 0; i < _indents; i++)
             {
-                yield return DotSyntaxFactory.Whitespace(_indentation);
+                yield return new DotTrivia(DotTokenKind.Whitespace, _indentation);
             }
         }
 
@@ -88,7 +88,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             {
                 var trailingTrivia = node.GetTrailingTrivia();
                 trailingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
-                trailingTrivia.Add(DotSyntaxFactory.Whitespace(_eol));
+                trailingTrivia.Add(new DotTrivia(DotTokenKind.Whitespace, _eol));
             }
         }
 
@@ -97,7 +97,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             if (token is not null)
             {
                 TrimEnd(token);
-                token.TrailingTrivia.Add(DotSyntaxFactory.Whitespace(_eol));
+                token.TrailingTrivia.Add(new DotTrivia(DotTokenKind.Whitespace, _eol));
             }
         }
 
