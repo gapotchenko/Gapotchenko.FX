@@ -1,6 +1,6 @@
 ﻿namespace Gapotchenko.FX.Data.Dot.Dom
 {
-    static class SyntaxNavigator
+    static class DotDomNavigator
     {
         public static DotToken? TryGetFirstToken(DotNode current)
         {

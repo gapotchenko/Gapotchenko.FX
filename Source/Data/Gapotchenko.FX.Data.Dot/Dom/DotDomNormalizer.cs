@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
-    sealed class SyntaxNormalizer : DotDomWalker
+    sealed class DotDomNormalizer : DotDomWalker
     {
         readonly string _indentation;
         readonly string _eol;
 
-        public SyntaxNormalizer(string indentation, string eol)
+        public DotDomNormalizer(string indentation, string eol)
             : base(DotDomWalkerDepth.NodesAndTokens)
         {
             _indentation = indentation;
@@ -128,7 +128,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             var lastAttribute = node.Attributes?.LastOrDefault();
             if (lastAttribute is not null)
             {
-                var lastToken = SyntaxNavigator.TryGetLastToken(lastAttribute);
+                var lastToken = DotDomNavigator.TryGetLastToken(lastAttribute);
                 if (lastToken is not null)
                 {
                     TrimEnd(lastToken);
