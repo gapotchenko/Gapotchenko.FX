@@ -21,8 +21,17 @@ namespace Gapotchenko.FX.Collections.Generic
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
 
-            foreach (var i in collection)
-                target.Add(i);
+            if (target is List<T> list)
+            {
+                // Optimized implementation for List<T>.
+                list.AddRange(collection);
+            }
+            else
+            {
+                // Generic implementation.
+                foreach (var i in collection)
+                    target.Add(i);
+            }
         }
 
         /// <summary>
