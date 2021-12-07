@@ -1,49 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gapotchenko.FX.Data.Dot.Dom
+﻿namespace Gapotchenko.FX.Data.Dot.Dom
 {
     static class SyntaxNavigator
     {
-        public static DotToken? GetFirstToken(DotNode current)
+        public static DotToken? TryGetFirstToken(DotNode current)
         {
             foreach (var child in current.ChildNodesAndTokens)
             {
-                if (child.IsToken)
+                if (child is DotToken t)
                 {
-                    return child.AsToken();
+                    return t;
                 }
-                else if (child.IsNode)
+                else if (child is DotNode n)
                 {
-                    var token = GetFirstToken(child.AsNode()!);
+                    var token = TryGetFirstToken(n);
                     if (token is not null)
-                    {
                         return token;
-                    }
                 }
             }
 
             return default;
         }
 
-        public static DotToken? GetLastToken(DotNode current)
+        public static DotToken? TryGetLastToken(DotNode current)
         {
             foreach (var child in current.ChildNodesAndTokens.Reverse())
             {
-                if (child.IsToken)
+                if (child is DotToken t)
                 {
-                    return child.AsToken();
+                    return t;
                 }
-                else if (child.IsNode)
+                else if (child is DotNode n)
                 {
-                    var token = GetLastToken(child.AsNode()!);
+                    var token = TryGetLastToken(n);
                     if (token is not null)
-                    {
                         return token;
-                    }
                 }
             }
 

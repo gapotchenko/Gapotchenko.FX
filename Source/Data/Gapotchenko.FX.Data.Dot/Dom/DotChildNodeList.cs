@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents syntax node children list.
     /// </summary>
-    public struct DotChildNodeList : IReadOnlyList<DotNodeOrToken>
+    public struct DotChildNodeList : IReadOnlyList<DotElement>
     {
         readonly DotNode? _node;
         readonly int _count;
@@ -53,7 +53,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <param name="index">The zero-based index of the child to get.</param>
         /// <exception cref="ArgumentOutOfRangeException">
         ///   <paramref name="index"/> is less than 0.-or-<paramref name="index" /> is equal to or greater than <see cref="Count"/>. </exception>
-        public DotNodeOrToken this[int index]
+        public DotElement this[int index]
         {
             get
             {
@@ -77,7 +77,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// Internal indexer that does not verify index.
         /// Used when caller has already ensured that index is within bounds.
         /// </summary>
-        internal static DotNodeOrToken ItemInternal(DotNode node, int index)
+        internal static DotElement ItemInternal(DotNode node, int index)
         {
             SyntaxSlot childSlot;
             var idx = index;
@@ -120,7 +120,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        static DotNodeOrToken Unwrap(SyntaxSlot slot)
+        static DotElement Unwrap(SyntaxSlot slot)
         {
             if (slot.IsToken)
                 return slot.AsToken()!;
@@ -143,7 +143,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// </summary>
         /// <returns>The first child in the list.</returns>
         /// <exception cref="InvalidOperationException">The list is empty.</exception>    
-        public DotNodeOrToken First()
+        public DotElement First()
         {
             if (Any())
             {
@@ -158,7 +158,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// </summary>
         /// <returns>The last child in the list.</returns>
         /// <exception cref="InvalidOperationException">The list is empty.</exception>    
-        public DotNodeOrToken Last()
+        public DotElement Last()
         {
             if (Any())
             {
@@ -190,11 +190,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             return new Enumerator(_node, _count);
         }
 
-        IEnumerator<DotNodeOrToken> IEnumerable<DotNodeOrToken>.GetEnumerator()
+        IEnumerator<DotElement> IEnumerable<DotElement>.GetEnumerator()
         {
             if (_node == null)
             {
-                return Enumerable.Empty<DotNodeOrToken>().GetEnumerator();
+                return Enumerable.Empty<DotElement>().GetEnumerator();
             }
 
             return new EnumeratorImpl(_node, _count);
@@ -204,7 +204,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             if (_node == null)
             {
-                return Enumerable.Empty<DotNodeOrToken>().GetEnumerator();
+                return Enumerable.Empty<DotElement>().GetEnumerator();
             }
 
             return new EnumeratorImpl(_node, _count);
@@ -250,7 +250,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
             /// <summary>Gets the element at the current position of the enumerator.</summary>
             /// <returns>The element in the <see cref="DotChildNodeList" /> at the current position of the enumerator.</returns>
-            public DotNodeOrToken Current
+            public DotElement Current
             {
                 get
                 {
@@ -265,7 +265,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 _childIndex = -1;
             }
 
-            internal bool TryMoveNextAndGetCurrent(out DotNodeOrToken current)
+            internal bool TryMoveNextAndGetCurrent([NotNullWhen(true)] out DotElement? current)
             {
                 if (!MoveNext())
                 {
@@ -278,7 +278,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        sealed class EnumeratorImpl : IEnumerator<DotNodeOrToken>
+        sealed class EnumeratorImpl : IEnumerator<DotElement>
         {
             Enumerator _enumerator;
 
@@ -293,7 +293,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             ///   </returns>
-            public DotNodeOrToken Current
+            public DotElement Current
             {
                 get { return _enumerator.Current; }
             }
@@ -338,7 +338,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Represents reversed syntax node children list.
         /// </summary>
-        public readonly partial struct Reversed : IEnumerable<DotNodeOrToken>
+        public readonly partial struct Reversed : IEnumerable<DotElement>
         {
             readonly DotNode? _node;
             readonly int _count;
@@ -358,11 +358,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 return new Enumerator(_node, _count);
             }
 
-            IEnumerator<DotNodeOrToken> IEnumerable<DotNodeOrToken>.GetEnumerator()
+            IEnumerator<DotElement> IEnumerable<DotElement>.GetEnumerator()
             {
                 if (_node == null)
                 {
-                    return Enumerable.Empty<DotNodeOrToken>().GetEnumerator();
+                    return Enumerable.Empty<DotElement>().GetEnumerator();
                 }
 
                 return new EnumeratorImpl(_node, _count);
@@ -372,7 +372,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             {
                 if (_node == null)
                 {
-                    return Enumerable.Empty<DotNodeOrToken>().GetEnumerator();
+                    return Enumerable.Empty<DotElement>().GetEnumerator();
                 }
 
                 return new EnumeratorImpl(_node, _count);
@@ -406,7 +406,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 /// <summary>
                 /// Gets the element in the collection at the current position of the enumerator.
                 /// </summary>
-                public DotNodeOrToken Current
+                public DotElement Current
                 {
                     get
                     {
@@ -424,7 +424,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 }
             }
 
-            sealed class EnumeratorImpl : IEnumerator<DotNodeOrToken>
+            sealed class EnumeratorImpl : IEnumerator<DotElement>
             {
                 readonly Enumerator _enumerator;
 
@@ -439,7 +439,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 /// <returns>
                 /// The element in the collection at the current position of the enumerator.
                 ///   </returns>
-                public DotNodeOrToken Current => _enumerator.Current;
+                public DotElement Current => _enumerator.Current;
 
                 /// <summary>
                 /// Gets the element in the collection at the current position of the enumerator.

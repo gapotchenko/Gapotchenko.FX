@@ -49,26 +49,21 @@
                 var child = DotChildNodeList.ItemInternal(node, i);
                 i++;
 
-                var asNode = child.AsNode();
-                if (asNode is not null)
+                if (child is DotNode asNode)
                 {
                     if (Depth >= DotDomWalkerDepth.Nodes)
-                    {
                         asNode.Accept(this);
-                    }
                 }
                 else
                 {
                     if (Depth >= DotDomWalkerDepth.NodesAndTokens)
                     {
-                        var token = child.AsToken();
-                        if (token is not null)
-                        {
+                        if (child is DotToken token)
                             VisitToken(token);
-                        }
                     }
                 }
-            } while (i < childCnt);
+            }
+            while (i < childCnt);
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

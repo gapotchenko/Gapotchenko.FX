@@ -93,16 +93,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             foreach (var child in node.ChildNodesAndTokens)
             {
-                if (child.IsToken)
+                if (child is DotToken t)
                 {
-                    yield return child.AsToken()!;
+                    yield return t;
                 }
-                else if (child.IsNode)
+                else if (child is DotNode n)
                 {
-                    foreach (var token in EnumerateTokens(child.AsNode()!))
-                    {
-                        yield return token;
-                    }
+                    foreach (var i in EnumerateTokens(n))
+                        yield return i;
                 }
             }
         }

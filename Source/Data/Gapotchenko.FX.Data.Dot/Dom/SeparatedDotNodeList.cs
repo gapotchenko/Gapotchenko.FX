@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         where TNode : DotNode
     {
         readonly List<TNode> _nodes = new();
-        readonly List<DotNodeOrToken> _nodesAndTokens = new();
+        readonly List<DotElement> _nodesAndTokens = new();
 
         /// <summary>
         /// Creates a new <see cref="SeparatedDotNodeList{TNode}"/> instance.

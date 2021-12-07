@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -21,10 +18,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             : this(null, node, null)
         { }
 
-        public SyntaxSlot(DotNodeOrToken nodeOrToken)
+        public SyntaxSlot(DotElement nodeOrToken)
             : this(
-                  nodeOrToken.IsToken ? nodeOrToken.AsToken() : null,
-                  nodeOrToken.IsNode ? nodeOrToken.AsNode() : null,
+                  nodeOrToken is DotToken t ? t : null,
+                  nodeOrToken is DotNode n ? n : null,
                   null)
         { }
 
@@ -75,7 +72,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             new SyntaxSlot(token);
         public static implicit operator SyntaxSlot(DotNode? node) =>
             new SyntaxSlot(node);
-        public static implicit operator SyntaxSlot(DotNodeOrToken nodeOrToken) =>
+        public static implicit operator SyntaxSlot(DotElement nodeOrToken) =>
             new SyntaxSlot(nodeOrToken);
 
         public bool IsDefault => !IsNode && !IsToken && !IsList;

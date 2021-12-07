@@ -10,19 +10,19 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     {
         /// <inheritdoc/>
         public override IList<DotTrivia> LeadingTrivia =>
-            (SyntaxNavigator.GetFirstToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
+            (SyntaxNavigator.TryGetFirstToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .LeadingTrivia;
 
         /// <inheritdoc/>
         public override IList<DotTrivia> TrailingTrivia =>
-            (SyntaxNavigator.GetLastToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
+            (SyntaxNavigator.TryGetLastToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .TrailingTrivia;
 
         /// <inheritdoc/>
-        public override bool HasLeadingTrivia => SyntaxNavigator.GetFirstToken(this)?.HasLeadingTrivia == true;
+        public override bool HasLeadingTrivia => SyntaxNavigator.TryGetFirstToken(this)?.HasLeadingTrivia == true;
 
         /// <inheritdoc/>
-        public override bool HasTrailingTrivia => SyntaxNavigator.GetLastToken(this)?.HasTrailingTrivia == true;
+        public override bool HasTrailingTrivia => SyntaxNavigator.TryGetLastToken(this)?.HasTrailingTrivia == true;
 
         /// <summary>
         /// The list of child nodes and tokens of this node.

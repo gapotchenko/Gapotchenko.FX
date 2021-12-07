@@ -128,7 +128,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             var lastAttribute = node.Attributes?.LastOrDefault();
             if (lastAttribute is not null)
             {
-                var lastToken = SyntaxNavigator.GetLastToken(lastAttribute);
+                var lastToken = SyntaxNavigator.TryGetLastToken(lastAttribute);
                 if (lastToken is not null)
                 {
                     TrimEnd(lastToken);
