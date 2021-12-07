@@ -58,11 +58,6 @@ namespace Gapotchenko.FX.Collections.Generic
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
-            if (collection == null)
-                throw new ArgumentNullException(nameof(collection));
-
-            if (index > list.Count)
-                throw new ArgumentOutOfRangeException(nameof(index));
 
             if (list is List<T> l)
             {
@@ -71,10 +66,90 @@ namespace Gapotchenko.FX.Collections.Generic
             }
             else
             {
-                // Generic implementation.
+                if (collection == null)
+                    throw new ArgumentNullException(nameof(collection));
+                if (index > list.Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+
                 foreach (var i in collection)
                     list.Insert(index++, i);
             }
+        }
+
+        /// <summary>
+        /// Removes a range of elements from the <see cref="IList{T}"/>.
+        /// </summary>
+        /// <param name="list">The list where the elements should be removed from.</param>
+        /// <param name="index">The zero-based starting index of the range of elements to remove.</param>
+        /// <param name="count">The number of elements to remove.</param>
+        public static void RemoveRange<T>(this IList<T> list, int index, int count)
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
+            if (list is List<T> l)
+            {
+                // Optimized implementation for List<T>.
+                l.RemoveRange(index, count);
+            }
+            else
+            {
+                if (index < 0)
+                    throw new ArgumentOutOfRangeException(nameof(index), "The argument value cannot be negative.");
+                if (count < 0)
+                    throw new ArgumentOutOfRangeException(nameof(index), "The argument value cannot be negative.");
+                if (list.Count - index < count)
+                    throw new ArgumentException("Invalid offset and length.");
+
+                for (int i = 0; i < count; ++i)
+                    list.RemoveAt(index);
+            }
+        }
+
+        /// <summary>
+        /// Removes all the elements that match the conditions defined by the specified predicate.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the list.</typeparam>
+        /// <param name="list">The list where the elements should be removed from.</param>
+        /// <param name="match">The <see cref="Predicate{T}"/> delegate that defines the conditions of the elements to remove.</param>
+        /// <returns>The number of elements removed from the <see cref="IList{T}"/>.</returns>
+        public static int RemoveAll<T>(this IList<T> list, Predicate<T> match)
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
+            if (list is List<T> l)
+            {
+                // Optimized implementation for List<T>.
+                l.RemoveAll(match);
+            }
+            else
+            {
+                if (match == null)
+                    throw new ArgumentNullException(nameof(match));
+
+                int count = list.Count;
+                int index = 0;
+                while (index < count && !match(list[index]))
+                    ++index;
+                if (index >= count)
+                    return 0;
+
+                for (int i = index + 1; ;)
+                {
+                    while (i < count && match(list[i]))
+                        ++i;
+                    if (i >= count)
+                        break;
+                    list[index++] = list[i++];
+                }
+
+                int removedElementsCount = count - index;
+                list.RemoveRange(index, removedElementsCount);
+                return removedElementsCount;
+            }
+
+            return 0;
         }
     }
 }
