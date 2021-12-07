@@ -95,7 +95,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// </summary>
         public IList<DotTrivia>? GetTrailingTrivia() =>
             IsToken ? _token!.TrailingTrivia :
-            IsNode ? _node!.GetTrailingTrivia() :
+            IsNode ? _node!.TrailingTrivia :
             default;
     }
 }

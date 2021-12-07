@@ -1,10 +1,7 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Data.Dot.Serialization;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -88,7 +85,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             if (node is not null)
             {
-                var trailingTrivia = node.GetTrailingTrivia();
+                var trailingTrivia = node.TrailingTrivia;
                 trailingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
                 trailingTrivia.Add(new DotTrivia(DotTokenKind.Whitespace, _eol));
             }

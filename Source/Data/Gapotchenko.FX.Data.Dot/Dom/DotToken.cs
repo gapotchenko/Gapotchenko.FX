@@ -1,17 +1,14 @@
 ﻿using Gapotchenko.FX.Data.Dot.Serialization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
     /// Represents a token in the syntax tree.
     /// </summary>
-    public sealed class DotToken
+    public sealed class DotToken : DotElement
     {
         /// <summary>
         /// Creates a new <see cref="DotTrivia"/> instance.
@@ -56,40 +53,28 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         List<DotTrivia>? _leadingTrivia;
         List<DotTrivia>? _trailingTrivia;
 
-        /// <summary>
-        /// The list of trivia that appear before this token.
-        /// </summary>
-        public IList<DotTrivia> LeadingTrivia =>
-            _leadingTrivia ??= new();
+        /// <inheritdoc/>
+        public override IList<DotTrivia> LeadingTrivia => _leadingTrivia ??= new();
 
-        /// <summary>
-        /// The list of trivia that appear after this token.
-        /// </summary>
-        public IList<DotTrivia> TrailingTrivia =>
-            _trailingTrivia ??= new();
+        /// <inheritdoc/>
+        public override IList<DotTrivia> TrailingTrivia => _trailingTrivia ??= new();
 
-        /// <summary>
-        /// Determines whether this token has any leading trivia.
-        /// </summary>
-        public bool HasLeadingTrivia => _leadingTrivia?.Count > 0;
+        /// <inheritdoc/>
+        public override bool HasLeadingTrivia => _leadingTrivia?.Count > 0;
 
-        /// <summary>
-        /// Determines whether this token has any trailing trivia.
-        /// </summary>
-        public bool HasTrailingTrivia => _trailingTrivia?.Count > 0;
+        /// <inheritdoc/>
+        public override bool HasTrailingTrivia => _trailingTrivia?.Count > 0;
 
         static readonly Regex ValidIdentifierPattern = new(
             @"^(([a-zA-Z\200-\377_][0-9a-zA-Z\200-\377_]*)|(-?(\.[0-9]+|[0-9]+(\.[0-9]*)?)))$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant);
 
-        static string EscapeIdentifier(string identifier)
-        {
-            return identifier
+        static string EscapeIdentifier(string identifier) =>
+            identifier
                 .Replace("\\", "\\\\")
                 .Replace("\"", "\\\"")
                 .Replace("\r\n", "\\r\\n")
                 .Replace("\n", "\\n");
-        }
 
         /// <summary>
         /// Escapes the given identifier and wraps it into a new token.
