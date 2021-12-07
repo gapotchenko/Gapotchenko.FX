@@ -16,7 +16,19 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="a">The first sequence.</param>
         /// <param name="b">The second sequence.</param>
         /// <returns>The Levenshtein distance.</returns>
-        public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b) => LevenshteinDistance(a, b, null);
+        public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
+            LevenshteinDistance(a, b, null, null);
+
+        /// <summary>
+        /// Calculates Levenshtein distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
+        /// <returns>The Levenshtein distance.</returns>
+        public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
+            LevenshteinDistance(a, b, maxDistance, null);
 
         /// <summary>
         /// Calculates Levenshtein distance between two sequences.
@@ -26,13 +38,29 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="b">The second sequence.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The Levenshtein distance.</returns>
-        public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer)
+        public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
+            LevenshteinDistance(a, b, null, equalityComparer);
+
+        /// <summary>
+        /// Calculates Levenshtein distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
+        /// <param name="equalityComparer">The equality comparer.</param>
+        /// <returns>The Levenshtein distance.</returns>
+        public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer)
         {
             if (a == null)
                 throw new ArgumentNullException(nameof(a));
             if (b == null)
                 throw new ArgumentNullException(nameof(b));
+            if (maxDistance < 0)
+                throw new ArgumentOutOfRangeException(nameof(maxDistance));
 
+            if (maxDistance == 0)
+                return 0;
             if (ReferenceEquals(a, b))
                 return 0;
 
@@ -65,6 +93,8 @@ namespace Gapotchenko.FX.Math.Geometry
 
                 var col_j = sCol[colIdx - 1];
 
+                var bestAtRow = v1[0];
+
                 // For each row.
                 for (int rowIdx = 1; rowIdx <= rowLen; rowIdx++)
                 {
@@ -77,11 +107,19 @@ namespace Gapotchenko.FX.Math.Geometry
                         cost = 1;
 
                     // Find minimum.
-                    v1[rowIdx] = MathEx.Min(
+                    var currentDistance = MathEx.Min(
                         v0[rowIdx] + 1,
                         v1[rowIdx - 1] + 1,
                         v0[rowIdx - 1] + cost);
+                    v1[rowIdx] = currentDistance;
+
+                    bestAtRow = System.Math.Min(
+                        bestAtRow,
+                        currentDistance);
                 }
+
+                if (bestAtRow >= maxDistance)
+                    return maxDistance.Value;
 
                 // Swap the vectors.
                 MathEx.Swap(ref v0, ref v1);
