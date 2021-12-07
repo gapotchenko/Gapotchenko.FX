@@ -4,20 +4,20 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
-    struct SyntaxSlot
+    struct DotSyntaxSlot
     {
         readonly DotElement? _element;
         readonly IReadOnlyList<DotNode>? _list;
 
-        public SyntaxSlot(DotElement? element)
+        public DotSyntaxSlot(DotElement? element)
             : this(element, null)
         { }
 
-        public SyntaxSlot(IReadOnlyList<DotNode>? list)
+        public DotSyntaxSlot(IReadOnlyList<DotNode>? list)
             : this(null, list)
         { }
 
-        SyntaxSlot(
+        DotSyntaxSlot(
             DotElement? element,
             IReadOnlyList<DotNode>? list)
         {
@@ -25,7 +25,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             _list = list;
         }
 
-        public static implicit operator SyntaxSlot(DotElement? element) => new(element);
+        public static implicit operator DotSyntaxSlot(DotElement? element) => new(element);
 
         public bool IsDefault => !IsElement && !IsList;
 
@@ -41,12 +41,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         public int SlotCount =>
             _element is DotNode node ? node.SlotCount :
-            _list != null ? _list is ISyntaxSlotProvider slotProvider ? slotProvider.SlotCount : _list.Count :
+            _list != null ? _list is IDotSyntaxSlotProvider slotProvider ? slotProvider.SlotCount : _list.Count :
             0;
 
-        public SyntaxSlot GetSlot(int index) =>
+        public DotSyntaxSlot GetSlot(int index) =>
             _element is DotNode node ? node.GetSlot(index) :
-            _list != null ? _list is ISyntaxSlotProvider slotProvider ? slotProvider.GetSlot(index) : _list[index] :
+            _list != null ? _list is IDotSyntaxSlotProvider slotProvider ? slotProvider.GetSlot(index) : _list[index] :
             throw new InvalidOperationException("A current slot has no child slots.");
     }
 }

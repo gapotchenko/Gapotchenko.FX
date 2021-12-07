@@ -68,7 +68,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         internal DotNode? Node => _node;
 
-        static int Occupancy(SyntaxSlot slot)
+        static int Occupancy(DotSyntaxSlot slot)
         {
             return slot.IsList ? slot.SlotCount : 1;
         }
@@ -79,7 +79,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// </summary>
         internal static DotElement ItemInternal(DotNode node, int index)
         {
-            SyntaxSlot childSlot;
+            DotSyntaxSlot childSlot;
             var idx = index;
             var slotIndex = 0;
 
@@ -108,7 +108,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             return childSlot.Element ?? Unwrap(childSlot.GetSlot(idx));
         }
 
-        static DotElement Unwrap(SyntaxSlot slot) =>
+        static DotElement Unwrap(DotSyntaxSlot slot) =>
             slot.Element ??
             throw new ArgumentException("Cannot unwrap the given slot.", nameof(slot));
 

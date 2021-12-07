@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -14,7 +10,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets elements list.
         /// </summary>
-        public SeparatedDotNodeList<DotNode>? Elements { get; set; }
+        public SeparatedDotNodeList<DotNode>? Elements { get; init; }
 
         /// <summary>
         /// Gets or sets attributes list.
@@ -23,18 +19,16 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         internal override int SlotCount => 3;
 
-        internal override SyntaxSlot GetSlot(int i) => i switch
-        {
-            0 => new SyntaxSlot(Elements),
-            1 => new SyntaxSlot(Attributes),
-            2 => SemicolonToken,
-            _ => throw new ArgumentOutOfRangeException(nameof(i))
-        };
+        internal override DotSyntaxSlot GetSlot(int index) =>
+            index switch
+            {
+                0 => new DotSyntaxSlot(Elements),
+                1 => new DotSyntaxSlot(Attributes),
+                2 => SemicolonToken,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
         /// <inheritdoc />
-        public override void Accept(DotDomVisitor visitor)
-        {
-            visitor.VisitDotEdgeNode(this);
-        }
+        public override void Accept(DotDomVisitor visitor) => visitor.VisitDotEdgeNode(this);
     }
 }

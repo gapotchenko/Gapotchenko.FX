@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         internal override int SlotCount => 5;
 
-        internal override SyntaxSlot GetSlot(int i) => i switch
+        internal override DotSyntaxSlot GetSlot(int i) => i switch
         {
             0 => StrictKeyword,
             1 => GraphKindKeyword,

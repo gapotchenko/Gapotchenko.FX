@@ -1,9 +1,6 @@
 ﻿using Gapotchenko.FX.Data.Dot.Serialization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -26,9 +23,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             parser.Parse();
             var root = parser.Root;
             if (root is null)
-            {
                 throw new InvalidOperationException("Cannot parse DOT document.");
-            }
 
             return new DotDocument
             {
@@ -43,18 +38,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public void Save(DotWriter writer)
         {
             if (Root is not null)
-            {
                 Save(writer, Root);
-            }
         }
 
         static void Save(DotWriter writer, DotGraphNode node)
         {
             var tokens = EnumerateTokens(node);
             foreach (var token in tokens)
-            {
                 Save(writer, token);
-            }
         }
 
         static void Save(DotWriter writer, DotToken token)
@@ -62,31 +53,23 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             if (token.HasLeadingTrivia)
             {
                 foreach (var trivia in token.LeadingTrivia)
-                {
                     Save(writer, trivia);
-                }
             }
 
             if (!string.IsNullOrEmpty(token.Value))
-            {
                 writer.Write(token.Kind, token.Value);
-            }
 
             if (token.HasTrailingTrivia)
             {
                 foreach (var trivia in token.TrailingTrivia)
-                {
                     Save(writer, trivia);
-                }
             }
         }
 
         static void Save(DotWriter writer, DotTrivia trivia)
         {
             if (!string.IsNullOrEmpty(trivia.Value))
-            {
                 writer.Write(trivia.Kind, trivia.Value);
-            }
         }
 
         static IEnumerable<DotToken> EnumerateTokens(DotNode node)

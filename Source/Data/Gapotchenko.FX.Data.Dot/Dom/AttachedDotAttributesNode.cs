@@ -23,10 +23,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         internal override int SlotCount => 3;
 
-        internal override SyntaxSlot GetSlot(int i) => i switch
+        internal override DotSyntaxSlot GetSlot(int i) => i switch
         {
             0 => TargetKeyword,
-            1 => new SyntaxSlot(Attributes),
+            1 => new DotSyntaxSlot(Attributes),
             2 => SemicolonToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };

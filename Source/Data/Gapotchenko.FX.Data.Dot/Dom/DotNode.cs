@@ -6,7 +6,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents a non-terminal node in the syntax tree.
     /// </summary>
-    public abstract class DotNode : DotElement, ISyntaxSlotProvider
+    public abstract class DotNode : DotElement, IDotSyntaxSlotProvider
     {
         /// <inheritdoc/>
         public override IList<DotTrivia> LeadingTrivia =>
@@ -30,10 +30,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public DotChildNodeList ChildNodesAndTokens => new(this);
 
         internal abstract int SlotCount { get; }
-        internal abstract SyntaxSlot GetSlot(int i);
+        internal abstract DotSyntaxSlot GetSlot(int i);
 
-        int ISyntaxSlotProvider.SlotCount => SlotCount;
-        SyntaxSlot ISyntaxSlotProvider.GetSlot(int i) => GetSlot(i);
+        int IDotSyntaxSlotProvider.SlotCount => SlotCount;
+        DotSyntaxSlot IDotSyntaxSlotProvider.GetSlot(int i) => GetSlot(i);
 
         /// <summary>
         /// Accepts <see cref="DotDomVisitor"/> visitor.
