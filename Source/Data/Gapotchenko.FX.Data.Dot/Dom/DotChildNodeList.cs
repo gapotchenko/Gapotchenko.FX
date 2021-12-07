@@ -105,38 +105,17 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 slotIndex++;
             }
 
-            if (!childSlot.IsList)
-            {
-                if (childSlot.IsToken)
-                    return childSlot.AsToken()!;
-                else if (childSlot.IsNode)
-                    return childSlot.AsNode()!;
-                else
-                    throw new InvalidOperationException();
-            }
-            else
-            {
-                return Unwrap(childSlot.GetSlot(idx));
-            }
+            return childSlot.Element ?? Unwrap(childSlot.GetSlot(idx));
         }
 
-        static DotElement Unwrap(SyntaxSlot slot)
-        {
-            if (slot.IsToken)
-                return slot.AsToken()!;
-            else if (slot.IsNode)
-                return slot.AsNode()!;
-            else
-                throw new ArgumentException("Cannot unwrap the given slot.", nameof(slot));
-        }
+        static DotElement Unwrap(SyntaxSlot slot) =>
+            slot.Element ??
+            throw new ArgumentException("Cannot unwrap the given slot.", nameof(slot));
 
         /// <summary>
         /// Determines whether any child exists.
         /// </summary>
-        public bool Any()
-        {
-            return _count != 0;
-        }
+        public bool Any() => _count != 0;
 
         /// <summary>
         /// Returns the first child in the list.
