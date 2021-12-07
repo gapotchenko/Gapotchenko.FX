@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gapotchenko.FX.Data.Dot.Dom
+﻿namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
     /// Represents a <see cref="DotNode"/> visitor that visits only the single node passed into its Visit method.
     /// </summary>
-    public abstract class DotSyntaxVisitor
+    public abstract class DotDomVisitor
     {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-        public virtual void DefaultVisit(DotNode node)
+        protected virtual void DefaultVisit(DotNode node)
         {
         }
 

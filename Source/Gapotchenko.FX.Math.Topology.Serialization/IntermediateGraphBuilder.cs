@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Math.Topology.Serialization
 {
-    sealed class IntermediateGraphBuilder : DotSyntaxWalker
+    sealed class IntermediateGraphBuilder : DotDomWalker
     {
         public IntermediateGraphBuilder(bool directedGraph)
         {

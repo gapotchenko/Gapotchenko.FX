@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         };
 
         /// <inheritdoc />
-        public override void Accept(DotSyntaxVisitor visitor)
+        public override void Accept(DotDomVisitor visitor)
         {
             visitor.VisitDotStatementListNode(this);
         }

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
-    sealed class SyntaxNormalizer : DotSyntaxWalker
+    sealed class SyntaxNormalizer : DotDomWalker
     {
         readonly string _indentation;
         readonly string _eol;
 
         public SyntaxNormalizer(string indentation, string eol)
-            : base(SyntaxWalkerDepth.Token)
+            : base(DotDomWalkerDepth.NodesAndTokens)
         {
             _indentation = indentation;
             _eol = eol;
@@ -55,7 +55,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         bool _nestedStatement = false;
 
-        public override void DefaultVisit(DotNode node)
+        /// <inheritdoc/>
+        protected override void DefaultVisit(DotNode node)
         {
             var shouldIndent = !_nestedStatement && node is DotStatementNode && _indents != 0;
 
@@ -69,7 +70,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             if (shouldIndent)
             {
                 _nestedStatement = false;
-                node.GetLeadingTrivia().InsertRange(0, CreateIndentation());
+                node.LeadingTrivia.InsertRange(0, CreateIndentation());
                 PlaceEndOfLine(node);
             }
         }

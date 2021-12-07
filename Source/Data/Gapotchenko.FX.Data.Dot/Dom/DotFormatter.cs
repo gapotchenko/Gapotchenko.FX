@@ -28,9 +28,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             node.Accept(new SyntaxNormalizer(indentation, eol));
         }
 
-        sealed class WhitespaceEraser : DotSyntaxWalker
+        sealed class WhitespaceEraser : DotDomWalker
         {
-            public WhitespaceEraser() : base(SyntaxWalkerDepth.Token)
+            public WhitespaceEraser() : base(DotDomWalkerDepth.NodesAndTokens)
             { }
 
             public override void VisitToken(DotToken token)

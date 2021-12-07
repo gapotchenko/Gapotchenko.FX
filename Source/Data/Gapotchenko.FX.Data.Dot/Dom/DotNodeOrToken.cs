@@ -84,16 +84,16 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// The list of trivia that appear before the underlying node or token and are attached to a
         /// token that is a descendant of the underlying node or token.
         /// </summary>
-        public List<DotTrivia>? GetLeadingTrivia() =>
+        public IList<DotTrivia>? GetLeadingTrivia() =>
             IsToken ? _token!.LeadingTrivia :
-            IsNode ? _node!.GetLeadingTrivia() :
+            IsNode ? _node!.LeadingTrivia :
             default;
 
         /// <summary>
         /// The list of trivia that appear after the underlying node or token and are attached to a
         /// token that is a descendant of the underlying node or token.
         /// </summary>
-        public List<DotTrivia>? GetTrailingTrivia() =>
+        public IList<DotTrivia>? GetTrailingTrivia() =>
             IsToken ? _token!.TrailingTrivia :
             IsNode ? _node!.GetTrailingTrivia() :
             default;

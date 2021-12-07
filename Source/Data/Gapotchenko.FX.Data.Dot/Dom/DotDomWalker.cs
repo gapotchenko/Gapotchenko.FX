@@ -1,27 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gapotchenko.FX.Data.Dot.Dom
+﻿namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
-    /// Represents a <see cref="DotSyntaxVisitor"/> that descends an entire <see cref="DotNode"/> graph
-    /// visiting each node and its child nodes and tokens in depth-first order.
+    /// Represents a <see cref="DotDomVisitor"/> that descends into an entire <see cref="DotNode"/> hierarchy
+    /// visiting each node and its children in depth-first order.
     /// </summary>
-    public abstract class DotSyntaxWalker : DotSyntaxVisitor
+    public abstract class DotDomWalker : DotDomVisitor
     {
         /// <summary>
-        /// Syntax the <see cref="DotSyntaxWalker"/> should descend into.
+        /// Gets a value indicating how deep <see cref="DotDomWalker"/> should descend.
         /// </summary>
-        protected SyntaxWalkerDepth Depth { get; }
+        public DotDomWalkerDepth Depth { get; }
 
         /// <summary>
         /// Creates a new walker instance.
         /// </summary>
-        /// <param name="depth">Syntax the <see cref="DotSyntaxWalker"/> should descend into.</param>
-        protected DotSyntaxWalker(SyntaxWalkerDepth depth = SyntaxWalkerDepth.Node)
+        /// <param name="depth">The value indicating how deep <see cref="DotDomWalker"/> should descend.</param>
+        protected DotDomWalker(DotDomWalkerDepth depth = DotDomWalkerDepth.Nodes)
         {
             Depth = depth;
         }
@@ -37,16 +31,15 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <param name="token">The current token that the walker is visiting.</param>
         public virtual void VisitToken(DotToken token)
         {
-            if (Depth >= SyntaxWalkerDepth.Trivia)
+            if (Depth >= DotDomWalkerDepth.NodesTokensAndTrivia)
             {
                 VisitLeadingTrivia(token);
                 VisitTrailingTrivia(token);
             }
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-        public override void DefaultVisit(DotNode node)
+        /// <inheritdoc/>
+        protected override void DefaultVisit(DotNode node)
         {
             var childCnt = node.ChildNodesAndTokens.Count;
             int i = 0;
@@ -59,14 +52,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 var asNode = child.AsNode();
                 if (asNode is not null)
                 {
-                    if (Depth >= SyntaxWalkerDepth.Node)
+                    if (Depth >= DotDomWalkerDepth.Nodes)
                     {
                         asNode.Accept(this);
                     }
                 }
                 else
                 {
-                    if (Depth >= SyntaxWalkerDepth.Token)
+                    if (Depth >= DotDomWalkerDepth.NodesAndTokens)
                     {
                         var token = child.AsToken();
                         if (token is not null)
@@ -77,6 +70,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 }
             } while (i < childCnt);
         }
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
         public virtual void VisitLeadingTrivia(DotToken token)
         {

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -12,10 +9,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     public abstract class DotNode : ISyntaxSlotProvider
     {
         /// <summary>
-        /// The list of trivia that appear before this node and are attached to 
-        /// a token that is a descendant of this node.
+        /// The list of trivia appearing before this node.
+        /// Trivia can only be attached to a token.
         /// </summary>
-        public List<DotTrivia> GetLeadingTrivia() =>
+        public List<DotTrivia> LeadingTrivia =>
             (SyntaxNavigator.GetFirstToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .LeadingTrivia;
 
@@ -52,9 +49,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         SyntaxSlot ISyntaxSlotProvider.GetSlot(int i) => GetSlot(i);
 
         /// <summary>
-        /// Accepts <see cref="DotSyntaxVisitor"/> visitor.
+        /// Accepts <see cref="DotDomVisitor"/> visitor.
         /// </summary>
-        /// <param name="visitor"></param>
-        public abstract void Accept(DotSyntaxVisitor visitor);
+        /// <param name="visitor">The visitor.</param>
+        public abstract void Accept(DotDomVisitor visitor);
     }
 }
