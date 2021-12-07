@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents the location information.
     /// </summary>
-    public sealed class LexLocation : IMerge<LexLocation>
+    sealed class LexLocation : IMerge<LexLocation>
     {
         /// <summary>
         /// The line at which the text span starts.

@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// The list of trivia appearing before this node.
         /// Trivia can only be attached to a token.
         /// </summary>
-        public List<DotTrivia> LeadingTrivia =>
+        public IList<DotTrivia> LeadingTrivia =>
             (SyntaxNavigator.GetFirstToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .LeadingTrivia;
 
@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// The list of trivia that appear after this node and are attached to 
         /// a token that is a descendant of this node.
         /// </summary>
-        public List<DotTrivia> GetTrailingTrivia() =>
+        public IList<DotTrivia> GetTrailingTrivia() =>
             (SyntaxNavigator.GetLastToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .TrailingTrivia;
 

@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         /// <summary>
-        /// Creates a new <see cref="DotTrivia"/> instance.
+        /// Creates a new <see cref="DotToken"/> instance.
         /// </summary>
         /// <param name="value">Token value.</param>
         public DotToken(char value)
@@ -59,13 +59,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// The list of trivia that appear before this token.
         /// </summary>
-        public List<DotTrivia> LeadingTrivia =>
+        public IList<DotTrivia> LeadingTrivia =>
             _leadingTrivia ??= new();
 
         /// <summary>
         /// The list of trivia that appear after this token.
         /// </summary>
-        public List<DotTrivia> TrailingTrivia =>
+        public IList<DotTrivia> TrailingTrivia =>
             _trailingTrivia ??= new();
 
         /// <summary>

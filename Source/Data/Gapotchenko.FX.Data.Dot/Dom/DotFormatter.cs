@@ -1,9 +1,5 @@
-﻿using Gapotchenko.FX.Data.Dot.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Data.Dot.Serialization;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {

@@ -1,4 +1,5 @@
-﻿using Gapotchenko.FX.Data.Dot.Serialization;
+﻿using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Data.Dot.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
