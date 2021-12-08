@@ -44,35 +44,35 @@ whitespace [ \t\r\f\v\n]
 \;                 { return (int)DotTokenKind.Semicolon; }
 \:                 { return (int)DotTokenKind.Colon; }
 \=                 { return (int)DotTokenKind.Equal; }
-\<                 { BEGIN(HTML); nesting = 1; InitHtmlId(); AppendHtmlId(); }
-\n\#               { BEGIN(LINECOMMENT); }
+\<                 { BEGIN(HTML); nesting = 1; BuilderInit(); BuilderAppend(); }
+\#                 { BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend(); }
 {whitespace}+      { return (int)DotTokenKind.Whitespace; }
-\/\/               { BEGIN(LINECOMMENT); } 
-\/\*               { BEGIN(MLINECOMMENT); }
+\/\/               { BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend(); } 
+\/\*               { BEGIN(MLINECOMMENT); BuilderInit(); BuilderAppend(); }
 .                  { Error(yytext); }
 
 <HTML>\<           { nesting++; 
-                     AppendHtmlId(); }
+                     BuilderAppend(); }
 <HTML>\>           { nesting--; 
-                     AppendHtmlId(); 
+                     BuilderAppend(); 
                      if (nesting == 0) {
                         BEGIN(INITIAL);
-                        tokTxt = GetHtmlId();
+                        tokTxt = BuilderBuild();
                         return (int)DotTokenKind.Id;
                      } 
                    }
-<HTML>[^<>]        { AppendHtmlId(); }
+<HTML>[^<>]        { BuilderAppend(); }
 
-<LINECOMMENT>\n    { BEGIN(INITIAL); return (int)DotTokenKind.Comment; }
-<LINECOMMENT>.     {} 
+<LINECOMMENT>(\r|\n)    { _yytrunc(1); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKind.Comment; }
+<LINECOMMENT>[^\r\n]    { BuilderAppend(); } 
 
-<MLINECOMMENT>\*\/ { BEGIN(INITIAL); return (int)DotTokenKind.MultilineComment; }
-<MLINECOMMENT>.    {}
+<MLINECOMMENT>\*\/      { BuilderAppend(); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKind.MultilineComment; }
+<MLINECOMMENT>(.|\n)    { BuilderAppend(); }
 
-<STRING>([^"]*)(\\\")     { stringId += yytext; }
-<STRING>([^"]*)+          { stringId += yytext;} 
-<STRING>\"                  { _yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotTokenKind.Id; }
-<STRINGQ>\"                 { BEGIN(INITIAL); return (int)DotTokenKind.Quote; }
+<STRING>([^"]*)(\\\")   { stringId += yytext; }
+<STRING>([^"]*)+        { stringId += yytext;} 
+<STRING>\"              { _yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotTokenKind.Id; }
+<STRINGQ>\"             { BEGIN(INITIAL); return (int)DotTokenKind.Quote; }
 
 
 %{

@@ -285,6 +285,16 @@ digraph {
   >];
 }");
 
+        [TestMethod]
+        public void DotRoundtrip_032() =>
+            ExecuteRoundtripTest(@"
+#directive
+digraph {
+  // Comment 1
+  /* Comment 2 */
+  v # Comment 3
+}");
+
         static void ExecuteRoundtripTest(string document)
         {
             ExecuteLexerRoundtripTest(document);

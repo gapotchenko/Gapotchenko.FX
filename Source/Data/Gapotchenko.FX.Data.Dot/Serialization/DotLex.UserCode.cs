@@ -50,7 +50,7 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
 
         StringBuilder? _htmlIdBuilder;
 
-        void InitHtmlId()
+        void BuilderInit()
         {
             if (_htmlIdBuilder is null)
                 _htmlIdBuilder = new();
@@ -58,12 +58,12 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
                 _htmlIdBuilder.Clear();
         }
 
-        void AppendHtmlId()
+        void BuilderAppend()
         {
             _htmlIdBuilder.Append(yytext);
         }
 
-        string GetHtmlId()
+        string BuilderBuild()
         {
             return _htmlIdBuilder.ToString();
         }

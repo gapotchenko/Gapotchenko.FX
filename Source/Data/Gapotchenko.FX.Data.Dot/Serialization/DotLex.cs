@@ -5,7 +5,7 @@
 //  See accompanying file GPLEXcopyright.rtf.
 //
 //  GPLEX Version:  1.2.2
-//  GPLEX input file <Serialization\Dot.lex - 08.12.2021 19:57:32>
+//  GPLEX input file <Serialization\Dot.lex - 08.12.2021 20:17:36>
 //  GPLEX frame file <SERIALIZATION\DOTLEXFRAME.CS>
 //
 //  Option settings: parser, minimize
@@ -48,8 +48,8 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public ScanBuff Buffer => buffer;
 
-        const int maxAccept = 40;
-        const int initial = 41;
+        const int maxAccept = 39;
+        const int initial = 40;
         const int eofNum = 0;
         const int goStart = -1;
         const int INITIAL = 0;
@@ -94,30 +94,28 @@ int nesting = 0;
         }
     };
 
-    static int[] startState = new int[] {41, 27, 44, 45, 46, 47, 
+    static int[] startState = new int[] {40, 26, 43, 44, 45, 46, 
         0};
 
-    static Table[] NxS = new Table[48] {
+    static Table[] NxS = new Table[47] {
 /* NxS[   0] */ new Table(0, 0, 0, null),
 /* NxS[   1] */ new Table(0, 0, -1, null),
 /* NxS[   2] */ new Table(9, 24, -1, new sbyte[] {2, 2, 2, 2, 2, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
           -1, 2}),
-/* NxS[   3] */ new Table(9, 27, -1, new sbyte[] {2, 2, 2, 2, 2, -1, 
+/* NxS[   3] */ new Table(0, 128, 3, new sbyte[] {-1, -1, -1, -1, -1, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-          -1, 2, -1, -1, 26}),
-/* NxS[   4] */ new Table(0, 128, 4, new sbyte[] {-1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4, -1, -1, -1, -1, 
-          -1, 4, -1, -1, 17, -1, -1, 42, 4, -1, 4, 4, 4, 4, 4, 4, 
-          4, 4, 4, 4, -1, -1, -1, -1, -1, 4, -1, 4, 4, 4, 4, 4, 
-          4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
-          4, 4, 4, 4, 4, -1, -1, -1, -1, 4, -1, 4, 4, 4, 4, 4, 
-          4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
-          4, 4, 4, 4, 4, -1, -1, -1, -1, -1}),
+          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, -1, 
+          -1, 3, -1, -1, 17, -1, -1, 41, 3, -1, 3, 3, 3, 3, 3, 3, 
+          3, 3, 3, 3, -1, -1, -1, -1, -1, 3, -1, 3, 3, 3, 3, 3, 
+          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+          3, 3, 3, 3, 3, -1, -1, -1, -1, 3, -1, 3, 3, 3, 3, 3, 
+          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+          3, 3, 3, 3, 3, -1, -1, -1, -1, -1}),
+/* NxS[   4] */ new Table(0, 0, -1, null),
 /* NxS[   5] */ new Table(0, 0, -1, null),
 /* NxS[   6] */ new Table(0, 0, -1, null),
-/* NxS[   7] */ new Table(45, 18, -1, new sbyte[] {22, 43, -1, 23, 23, 23, 
+/* NxS[   7] */ new Table(45, 18, -1, new sbyte[] {22, 42, -1, 23, 23, 23, 
           23, 23, 23, 23, 23, 23, 23, -1, -1, -1, -1, 24}),
 /* NxS[   8] */ new Table(42, 6, -1, new sbyte[] {20, -1, -1, -1, -1, 21}),
 /* NxS[   9] */ new Table(0, 0, -1, null),
@@ -140,7 +138,7 @@ int nesting = 0;
 /* NxS[  18] */ new Table(0, 128, 18, new sbyte[] {-1, -1, -1, -1, -1, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, -1, 
-          -1, 18, -1, -1, 19, -1, -1, 42, 18, -1, 18, 18, 18, 18, 18, 18, 
+          -1, 18, -1, -1, 19, -1, -1, 41, 18, -1, 18, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, -1, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
@@ -155,23 +153,23 @@ int nesting = 0;
 /* NxS[  24] */ new Table(0, 0, -1, null),
 /* NxS[  25] */ new Table(48, 10, -1, new sbyte[] {25, 25, 25, 25, 25, 25, 
           25, 25, 25, 25}),
-/* NxS[  26] */ new Table(0, 0, -1, null),
-/* NxS[  27] */ new Table(34, 59, 28, new sbyte[] {29, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 30}),
-/* NxS[  28] */ new Table(34, 59, 28, new sbyte[] {-1, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 30}),
-/* NxS[  29] */ new Table(0, 0, -1, null),
-/* NxS[  30] */ new Table(34, 59, 28, new sbyte[] {31, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 
-          28, 28, 28, 28, 30}),
+/* NxS[  26] */ new Table(34, 59, 27, new sbyte[] {28, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 29}),
+/* NxS[  27] */ new Table(34, 59, 27, new sbyte[] {-1, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 29}),
+/* NxS[  28] */ new Table(0, 0, -1, null),
+/* NxS[  29] */ new Table(34, 59, 27, new sbyte[] {30, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 
+          27, 27, 27, 27, 29}),
+/* NxS[  30] */ new Table(0, 0, -1, null),
 /* NxS[  31] */ new Table(0, 0, -1, null),
 /* NxS[  32] */ new Table(0, 0, -1, null),
 /* NxS[  33] */ new Table(0, 0, -1, null),
@@ -179,35 +177,32 @@ int nesting = 0;
 /* NxS[  35] */ new Table(0, 0, -1, null),
 /* NxS[  36] */ new Table(0, 0, -1, null),
 /* NxS[  37] */ new Table(0, 0, -1, null),
-/* NxS[  38] */ new Table(0, 0, -1, null),
-/* NxS[  39] */ new Table(47, 1, -1, new sbyte[] {40}),
-/* NxS[  40] */ new Table(0, 0, -1, null),
-/* NxS[  41] */ new Table(0, 128, 4, new sbyte[] {1, 1, 1, 1, 1, 1, 
-          1, 1, 1, 2, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 5, 1, 1, 1, 
-          1, 4, 1, 1, 4, 1, 6, 7, 4, 8, 4, 4, 4, 4, 4, 4, 
-          4, 4, 4, 4, 9, 10, 11, 12, 1, 4, 1, 4, 4, 4, 4, 4, 
-          4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
-          4, 4, 4, 4, 4, 13, 1, 14, 1, 4, 1, 4, 4, 4, 4, 4, 
-          4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
-          4, 4, 4, 4, 4, 15, 1, 16, 1, 1}),
-/* NxS[  42] */ new Table(0, 128, 18, new sbyte[] {-1, -1, -1, -1, -1, -1, 
+/* NxS[  38] */ new Table(47, 1, -1, new sbyte[] {39}),
+/* NxS[  39] */ new Table(0, 0, -1, null),
+/* NxS[  40] */ new Table(0, 128, 3, new sbyte[] {1, 1, 1, 1, 1, 1, 
+          1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 5, 1, 1, 
+          1, 3, 1, 1, 3, 1, 6, 7, 3, 8, 3, 3, 3, 3, 3, 3, 
+          3, 3, 3, 3, 9, 10, 11, 12, 1, 3, 1, 3, 3, 3, 3, 3, 
+          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+          3, 3, 3, 3, 3, 13, 1, 14, 1, 3, 1, 3, 3, 3, 3, 3, 
+          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+          3, 3, 3, 3, 3, 15, 1, 16, 1, 1}),
+/* NxS[  41] */ new Table(0, 128, 18, new sbyte[] {-1, -1, -1, -1, -1, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, -1, 
-          -1, 18, -1, -1, 19, -1, -1, 42, 18, -1, 18, 18, 18, 18, 18, 18, 
+          -1, 18, -1, -1, 19, -1, -1, 41, 18, -1, 18, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, -1, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, -1, -1, -1, -1, -1}),
-/* NxS[  43] */ new Table(48, 10, -1, new sbyte[] {25, 25, 25, 25, 25, 25, 
+/* NxS[  42] */ new Table(48, 10, -1, new sbyte[] {25, 25, 25, 25, 25, 25, 
           25, 25, 25, 25}),
-/* NxS[  44] */ new Table(34, 1, -1, new sbyte[] {32}),
-/* NxS[  45] */ new Table(60, 3, 33, new sbyte[] {34, 33, 35}),
-/* NxS[  46] */ new Table(10, 1, 36, new sbyte[] {37}),
-/* NxS[  47] */ new Table(10, 33, 38, new sbyte[] {-1, 38, 38, 38, 38, 38, 
-          38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 
-          38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 39}),
+/* NxS[  43] */ new Table(34, 1, -1, new sbyte[] {31}),
+/* NxS[  44] */ new Table(60, 3, 32, new sbyte[] {33, 32, 34}),
+/* NxS[  45] */ new Table(10, 4, 35, new sbyte[] {36, 35, 35, 36}),
+/* NxS[  46] */ new Table(42, 1, 37, new sbyte[] {38}),
     };
 
 int NextState() {
@@ -449,15 +444,17 @@ int NextState() {
 Error(yytext);
             break;
         case 2:
-        case 3:
 return (int)DotTokenKind.Whitespace;
             break;
-        case 4:
+        case 3:
         case 17:
 return (int) MkId(yytext);
             break;
-        case 5:
+        case 4:
 BEGIN(STRING); stringId = ""; return (int)DotTokenKind.Quote;
+            break;
+        case 5:
+BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend();
             break;
         case 6:
 return (int)DotTokenKind.Comma;
@@ -469,7 +466,7 @@ return (int)DotTokenKind.Colon;
 return (int)DotTokenKind.Semicolon;
             break;
         case 11:
-BEGIN(HTML); nesting = 1; InitHtmlId(); AppendHtmlId();
+BEGIN(HTML); nesting = 1; BuilderInit(); BuilderAppend();
             break;
         case 12:
 return (int)DotTokenKind.Equal;
@@ -491,10 +488,10 @@ return (int)DotTokenKind.ScopeEnd;
 return (int) MkId(yytext);
             break;
         case 20:
-BEGIN(MLINECOMMENT);
+BEGIN(MLINECOMMENT); BuilderInit(); BuilderAppend();
             break;
         case 21:
-BEGIN(LINECOMMENT);
+BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend();
             break;
         case 22:
 return (int) DotTokenKind.Arrow;
@@ -507,50 +504,47 @@ return (int) DotTokenKind.Id;
 return (int) DotTokenKind.Arrow;
             break;
         case 26:
-BEGIN(LINECOMMENT);
-            break;
         case 27:
+        case 29:
+stringId += yytext;
+            break;
         case 28:
+_yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotTokenKind.Id;
+            break;
         case 30:
 stringId += yytext;
             break;
-        case 29:
-_yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotTokenKind.Id;
-            break;
         case 31:
-stringId += yytext;
-            break;
-        case 32:
 BEGIN(INITIAL); return (int)DotTokenKind.Quote;
             break;
+        case 32:
+BuilderAppend();
+            break;
         case 33:
-AppendHtmlId();
+nesting++; 
+                     BuilderAppend();
             break;
         case 34:
-nesting++; 
-                     AppendHtmlId();
-            break;
-        case 35:
 nesting--; 
-                     AppendHtmlId(); 
+                     BuilderAppend(); 
                      if (nesting == 0) {
                         BEGIN(INITIAL);
-                        tokTxt = GetHtmlId();
+                        tokTxt = BuilderBuild();
                         return (int)DotTokenKind.Id;
                      }
             break;
+        case 35:
+BuilderAppend();
+            break;
         case 36:
-{}
+_yytrunc(1); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKind.Comment;
             break;
         case 37:
-BEGIN(INITIAL); return (int)DotTokenKind.Comment;
-            break;
         case 38:
-        case 39:
-{}
+BuilderAppend();
             break;
-        case 40:
-BEGIN(INITIAL); return (int)DotTokenKind.MultilineComment;
+        case 39:
+BuilderAppend(); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKind.MultilineComment;
             break;
         default:
             break;
