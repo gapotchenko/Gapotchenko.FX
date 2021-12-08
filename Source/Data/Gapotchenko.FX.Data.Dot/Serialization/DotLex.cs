@@ -5,7 +5,7 @@
 //  See accompanying file GPLEXcopyright.rtf.
 //
 //  GPLEX Version:  1.2.2
-//  GPLEX input file <Serialization\Dot.lex - 08.12.2021 19:17:50>
+//  GPLEX input file <Serialization\Dot.lex - 08.12.2021 19:57:32>
 //  GPLEX frame file <SERIALIZATION\DOTLEXFRAME.CS>
 //
 //  Option settings: parser, minimize
@@ -203,10 +203,7 @@ int nesting = 0;
 /* NxS[  43] */ new Table(48, 10, -1, new sbyte[] {25, 25, 25, 25, 25, 25, 
           25, 25, 25, 25}),
 /* NxS[  44] */ new Table(34, 1, -1, new sbyte[] {32}),
-/* NxS[  45] */ new Table(10, 53, 33, new sbyte[] {-1, 33, 33, 33, 33, 33, 
-          33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 
-          33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 
-          33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 34, 33, 35}),
+/* NxS[  45] */ new Table(60, 3, 33, new sbyte[] {34, 33, 35}),
 /* NxS[  46] */ new Table(10, 1, 36, new sbyte[] {37}),
 /* NxS[  47] */ new Table(10, 33, 38, new sbyte[] {-1, 38, 38, 38, 38, 38, 
           38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 
@@ -472,7 +469,7 @@ return (int)DotTokenKind.Colon;
 return (int)DotTokenKind.Semicolon;
             break;
         case 11:
-BEGIN(HTML); nesting = 1;
+BEGIN(HTML); nesting = 1; InitHtmlId(); AppendHtmlId();
             break;
         case 12:
 return (int)DotTokenKind.Equal;
@@ -527,13 +524,20 @@ stringId += yytext;
 BEGIN(INITIAL); return (int)DotTokenKind.Quote;
             break;
         case 33:
-{ }
+AppendHtmlId();
             break;
         case 34:
-nesting++;
+nesting++; 
+                     AppendHtmlId();
             break;
         case 35:
-nesting--; if (nesting == 0) { BEGIN(INITIAL); return (int)DotTokenKind.Id; }
+nesting--; 
+                     AppendHtmlId(); 
+                     if (nesting == 0) {
+                        BEGIN(INITIAL);
+                        tokTxt = GetHtmlId();
+                        return (int)DotTokenKind.Id;
+                     }
             break;
         case 36:
 {}

@@ -44,16 +44,24 @@ whitespace [ \t\r\f\v\n]
 \;                 { return (int)DotTokenKind.Semicolon; }
 \:                 { return (int)DotTokenKind.Colon; }
 \=                 { return (int)DotTokenKind.Equal; }
-\<                 { BEGIN(HTML); nesting = 1; }
+\<                 { BEGIN(HTML); nesting = 1; InitHtmlId(); AppendHtmlId(); }
 \n\#               { BEGIN(LINECOMMENT); }
 {whitespace}+      { return (int)DotTokenKind.Whitespace; }
 \/\/               { BEGIN(LINECOMMENT); } 
 \/\*               { BEGIN(MLINECOMMENT); }
 .                  { Error(yytext); }
 
-<HTML>\<           { nesting++; }
-<HTML>\>           { nesting--; if (nesting == 0) { BEGIN(INITIAL); return (int)DotTokenKind.Id; } }
-<HTML>.            { }
+<HTML>\<           { nesting++; 
+                     AppendHtmlId(); }
+<HTML>\>           { nesting--; 
+                     AppendHtmlId(); 
+                     if (nesting == 0) {
+                        BEGIN(INITIAL);
+                        tokTxt = GetHtmlId();
+                        return (int)DotTokenKind.Id;
+                     } 
+                   }
+<HTML>[^<>]        { AppendHtmlId(); }
 
 <LINECOMMENT>\n    { BEGIN(INITIAL); return (int)DotTokenKind.Comment; }
 <LINECOMMENT>.     {} 

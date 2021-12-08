@@ -47,5 +47,25 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         {
             EOF = -1,
         }
+
+        StringBuilder? _htmlIdBuilder;
+
+        void InitHtmlId()
+        {
+            if (_htmlIdBuilder is null)
+                _htmlIdBuilder = new();
+            else
+                _htmlIdBuilder.Clear();
+        }
+
+        void AppendHtmlId()
+        {
+            _htmlIdBuilder.Append(yytext);
+        }
+
+        string GetHtmlId()
+        {
+            return _htmlIdBuilder.ToString();
+        }
     }
 }

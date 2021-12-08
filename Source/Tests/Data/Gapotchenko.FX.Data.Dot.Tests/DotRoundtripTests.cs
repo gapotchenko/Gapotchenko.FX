@@ -266,6 +266,25 @@ cadabra""
   ""abra \"" \\ cadabra""
 }");
 
+        [TestMethod]
+        public void DotRoundtrip_030() =>
+            ExecuteRoundtripTest(@"
+digraph {
+  <htmlTag1></htmlTag1>
+  <htmlTag2>
+}");
+
+        [TestMethod]
+        public void DotRoundtrip_031() =>
+            ExecuteRoundtripTest(@"
+digraph {
+  aHtmlTable [
+   shape=plaintext
+   label=<
+     <table border='1' cellborder='0' />
+  >];
+}");
+
         static void ExecuteRoundtripTest(string document)
         {
             ExecuteLexerRoundtripTest(document);
