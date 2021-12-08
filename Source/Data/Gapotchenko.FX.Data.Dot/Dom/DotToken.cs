@@ -28,16 +28,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         /// <summary>
-        /// Creates a new <see cref="DotToken"/> instance.
-        /// </summary>
-        /// <param name="value">Token value.</param>
-        public DotToken(char value)
-        {
-            Kind = (DotTokenKind)value;
-            Value = value.ToString();
-        }
-
-        /// <summary>
         /// Token kind.
         /// </summary>
         public DotTokenKind Kind { get; }
@@ -87,8 +77,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             if (string.IsNullOrEmpty(identifier) ||
                 !ValidIdentifierPattern.IsMatch(identifier))
             {
-                token.LeadingTrivia.Add(new DotTrivia('"'));
-                token.TrailingTrivia.Add(new DotTrivia('"'));
+                token.LeadingTrivia.Add(new DotTrivia(DotTokenKind.Quote));
+                token.TrailingTrivia.Add(new DotTrivia(DotTokenKind.Quote));
             }
 
             return token;

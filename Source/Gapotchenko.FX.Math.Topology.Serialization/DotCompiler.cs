@@ -201,9 +201,9 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         static DotStatementListNode CreateStatementList(DotNodeList<DotStatementNode> listOfStatements) =>
             new DotStatementListNode
             {
-                OpenBraceToken = new DotToken('{'),
+                OpenBraceToken = new DotToken(DotTokenKind.ScopeStart),
                 Statements = listOfStatements,
-                CloseBraceToken = new DotToken('}'),
+                CloseBraceToken = new DotToken(DotTokenKind.ScopeEnd),
             };
 
         static DotVertexNode CreateVertexStatement(string vertex, IEnumerable<(string attributeName, string attributeValue)>? attributes)
@@ -231,15 +231,15 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             var attributeList = new DotNodeList<DotAttributeNode>(attributes.Select(attr => new DotAttributeNode
             {
                 LHS = DotToken.CreateIdentifierToken(attr.attributeName),
-                EqualToken = new DotToken('='),
+                EqualToken = new DotToken(DotTokenKind.Equal),
                 RHS = DotToken.CreateIdentifierToken(attr.attributeValue)
             }));
 
             var attributeListNode = new DotAttributeListNode
             {
-                OpenBraceToken = new DotToken('['),
+                OpenBraceToken = new DotToken(DotTokenKind.ListStart),
                 Attributes = attributeList,
-                CloseBraceToken = new DotToken(']'),
+                CloseBraceToken = new DotToken(DotTokenKind.ListEnd),
             };
 
             return new DotNodeList<DotAttributeListNode>()

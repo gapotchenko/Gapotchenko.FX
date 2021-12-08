@@ -17,20 +17,16 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// </summary>
         /// <param name="kind">Trivia kind.</param>
         /// <param name="value">Trivia value.</param>
-        public DotTrivia(DotTokenKind kind, string value)
+        public DotTrivia(DotTokenKind kind, string? value = default)
         {
+            if (value is null &&
+                !kind.TryGetDefaultValue(out value))
+            {
+                throw new ArgumentException("Value cannot deducted from the kind.", nameof(value));
+            }
+
             Kind = kind;
             Value = value;
-        }
-
-        /// <summary>
-        /// Initializes a new <see cref="DotTrivia"/> instance.
-        /// </summary>
-        /// <param name="value">Trivia value.</param>
-        public DotTrivia(char value)
-        {
-            Kind = (DotTokenKind)value;
-            Value = value.ToString();
         }
 
         /// <summary>
