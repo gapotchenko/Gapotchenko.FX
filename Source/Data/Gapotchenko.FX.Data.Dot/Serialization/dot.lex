@@ -61,9 +61,8 @@ whitespace [ \t\r\f\v\n]
 <MLINECOMMENT>\*\/ { BEGIN(INITIAL); return (int)DotTokenKind.MultilineComment; }
 <MLINECOMMENT>.    {}
 
-<STRING>([^\n"]*)(\\\r?\n)    { stringId += yytext; stringId = TrimString(stringId); }
-<STRING>([^\n"]*)(\\\")     { stringId += yytext; }
-<STRING>([^\n"]*)+          { stringId += yytext;} 
+<STRING>([^"]*)(\\\")     { stringId += yytext; }
+<STRING>([^"]*)+          { stringId += yytext;} 
 <STRING>\"                  { _yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotTokenKind.Id; }
 <STRINGQ>\"                 { BEGIN(INITIAL); return (int)DotTokenKind.Quote; }
 

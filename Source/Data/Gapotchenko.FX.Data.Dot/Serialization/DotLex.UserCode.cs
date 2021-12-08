@@ -43,15 +43,6 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
             _ => DotTokenKind.Id,
         };
 
-        static string TrimString(string stringId)
-        {
-            if (stringId.EndsWith("\\\r\n"))
-                stringId = stringId.Substring(0, stringId.Length - 3);
-            else if (stringId.EndsWith("\\\n"))
-                stringId = stringId.Substring(0, stringId.Length - 2);
-            return stringId;
-        }
-
         public enum Tokens
         {
             EOF = -1,

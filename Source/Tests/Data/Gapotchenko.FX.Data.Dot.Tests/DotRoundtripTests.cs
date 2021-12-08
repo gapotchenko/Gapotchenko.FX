@@ -257,6 +257,15 @@ digraph {
   2 -> { 1 3 4 }
 }");
 
+        [TestMethod]
+        public void DotRoundtrip_029() =>
+            ExecuteRoundtripTest(@"
+digraph {
+  ""abra\
+cadabra""
+  ""abra \"" \\ cadabra""
+}");
+
         static void ExecuteRoundtripTest(string document)
         {
             ExecuteLexerRoundtripTest(document);
