@@ -17,10 +17,10 @@ namespace Gapotchenko.FX.Linq
         /// arrays, lists, dictionaries, sets and others.
         /// </para>
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" />.</typeparam>
         /// <param name="source">A sequence that contains elements to be counted.</param>
         /// <returns>The number of elements in the input sequence.</returns>
-        public static int Count<TSource>(IEnumerable<TSource> source) => TryGetOptimizedCount(source) ?? Enumerable.Count(source);
+        public static int Count<TSource>(IEnumerable<TSource> source) => TryGetNonEnumeratedCount(source) ?? Enumerable.Count(source);
 
         /// <summary>
         /// <para>
@@ -32,24 +32,15 @@ namespace Gapotchenko.FX.Linq
         /// arrays, lists, dictionaries, sets and others.
         /// </para>
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" />.</typeparam>
         /// <param name="source">A sequence that contains elements to be counted.</param>
         /// <returns>The number of elements in the source sequence.</returns>
-        public static long LongCount<TSource>(IEnumerable<TSource> source) => TryGetOptimizedCount(source) ?? Enumerable.LongCount(source);
-
-        static int? TryGetOptimizedCount<TSource>(IEnumerable<TSource>? source) =>
-            source switch
-            {
-                IReadOnlyCollection<TSource> roc => roc.Count,
-                ICollection<TSource> c => c.Count,
-                ICollection c => c.Count,
-                _ => null
-            };
+        public static long LongCount<TSource>(IEnumerable<TSource> source) => TryGetNonEnumeratedCount(source) ?? Enumerable.LongCount(source);
 
         /// <summary>
         /// Checks whether the number of elements in a sequence is greater or equal to a specified <paramref name="value"/>.
         /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" />.</typeparam>
         /// <param name="source">A sequence that contains elements to be counted.</param>
         /// <param name="value">The value to compare the count of elements in a sequence with.</param>
         /// <returns><c>true</c> if the number of elements in a sequence is greater or equal to a specified <paramref name="value"/>; otherwise, <c>false</c>.</returns>
@@ -61,9 +52,8 @@ namespace Gapotchenko.FX.Linq
             if (value <= 0)
                 return true;
 
-            var optimizedCount = TryGetOptimizedCount(source);
-            if (optimizedCount.HasValue)
-                return optimizedCount.Value >= value;
+            if (TryGetNonEnumeratedCount(source, out var optimizedCount))
+                return optimizedCount >= value;
 
             using var enumerator = source.GetEnumerator();
 
@@ -79,6 +69,61 @@ namespace Gapotchenko.FX.Linq
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Attempts to determine the number of elements in a sequence without forcing an enumeration.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" />.</typeparam>
+        /// <param name="source">A sequence that contains elements to be counted.</param>
+        /// <param name="count">
+        /// When this method returns,
+        /// contains the count of <paramref name="source" /> if successful,
+        /// or zero if the method failed to determine the count.
+        /// </param>
+        /// <returns>
+        /// <see langword="true" /> if the count of <paramref name="source"/> can be determined without enumeration;
+        /// otherwise, <see langword="false" />.
+        /// </returns>
+        public static bool TryGetNonEnumeratedCount<TSource>(
+#if !TFF_ENUMERABLE_TRYGETNONENUMERATEDCOUNT
+            this
+#endif
+            IEnumerable<TSource> source,
+            out int count)
+        {
+            var result = TryGetNonEnumeratedCount(source);
+            count = result.GetValueOrDefault();
+            return result.HasValue;
+        }
+
+        /// <summary>
+        /// Attempts to determine the number of elements in a sequence without forcing an enumeration.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source" />.</typeparam>
+        /// <param name="source">A sequence that contains elements to be counted.</param>
+        /// <returns>
+        /// The number of elements in <paramref name="source" /> sequence,
+        /// or <c>null</c> if the number cannot be determined without enumeration.
+        /// </returns>
+        public static int? TryGetNonEnumeratedCount<TSource>(this IEnumerable<TSource> source)
+        {
+            int? count =
+                source switch
+                {
+                    null => throw new ArgumentNullException(nameof(source)),
+                    IReadOnlyCollection<TSource> roc => roc.Count,
+                    ICollection<TSource> c => c.Count,
+                    ICollection c => c.Count,
+                    _ => null
+                };
+
+#if TFF_ENUMERABLE_TRYGETNONENUMERATEDCOUNT
+            if (source.TryGetNonEnumeratedCount(out var n))
+                count = n;
+#endif
+
+            return count;
         }
     }
 }
