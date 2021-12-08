@@ -48,24 +48,24 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
             EOF = -1,
         }
 
-        StringBuilder? _htmlIdBuilder;
+        StringBuilder? _yytextBuilder;
 
         void BuilderInit()
         {
-            if (_htmlIdBuilder is null)
-                _htmlIdBuilder = new();
+            if (_yytextBuilder is null)
+                _yytextBuilder = new();
             else
-                _htmlIdBuilder.Clear();
+                _yytextBuilder.Clear();
         }
 
         void BuilderAppend()
         {
-            _htmlIdBuilder.Append(yytext);
+            _yytextBuilder.Append(yytext);
         }
 
         string BuilderBuild()
         {
-            return _htmlIdBuilder.ToString();
+            return _yytextBuilder.ToString();
         }
     }
 }
