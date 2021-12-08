@@ -24,12 +24,16 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         (DotTokenKind kind, string value) _pendingToken;
 
+        const DotTokenKind EOF = (DotTokenKind)DotTokens.EOF;
+
         protected override int yylex()
         {
             static (DotTokenKind kind, string value) NextToken(DotReader scanner)
             {
-                scanner.Read();
-                return (scanner.TokenType, scanner.Value);
+                if (scanner.Read())
+                    return (scanner.TokenType, scanner.Value);
+                else
+                    return (EOF, string.Empty);
             }
 
             var token = _pendingToken;
@@ -78,7 +82,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static int MapToken(DotTokenKind token) => token switch
         {
-            DotTokenKind.EOF => (int)DotTokens.EOF,
+            EOF => (int)DotTokens.EOF,
             DotTokenKind.Digraph => (int)DotTokens.DIGRAPH,
             DotTokenKind.Graph => (int)DotTokens.GRAPH,
             DotTokenKind.Arrow => (int)DotTokens.ARROW,
@@ -87,11 +91,21 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotTokenKind.Edge => (int)DotTokens.EDGE,
             DotTokenKind.Id => (int)DotTokens.ID,
 
+            DotTokenKind.ScopeStart => '{',
+            DotTokenKind.ScopeEnd => '}',
+            DotTokenKind.Semicolon => ';',
+            DotTokenKind.Equal => '=',
+            DotTokenKind.ListStart => '[',
+            DotTokenKind.ListEnd => ']',
+            DotTokenKind.Comma => ',',
+            DotTokenKind.Colon => ':',
+            DotTokenKind.Quote => '"',
+
             DotTokenKind.Comment => throw new InvalidOperationException(),
             DotTokenKind.MultilineComment => throw new InvalidOperationException(),
             DotTokenKind.Whitespace => throw new InvalidOperationException(),
 
-            _ => (int)token
+            _ => throw new ArgumentOutOfRangeException(nameof(token))
         };
 
         protected override LexLocation? yylloc => null;

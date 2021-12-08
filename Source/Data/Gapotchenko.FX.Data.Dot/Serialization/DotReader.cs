@@ -28,8 +28,9 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         /// <returns>true if the next node was read successfully; otherwise, false.</returns>
         public bool Read()
         {
-            _currentToken = (DotTokenKind)_lexer.yylex();
-            return _currentToken != DotTokenKind.EOF;
+            var token = _lexer.yylex();
+            _currentToken = (DotTokenKind)token;
+            return token != (int)DotLex.Tokens.EOF;
         }
 
         /// <summary>

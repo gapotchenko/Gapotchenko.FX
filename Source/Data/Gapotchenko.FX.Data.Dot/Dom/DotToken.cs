@@ -17,14 +17,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <param name="value">Token value.</param>
         public DotToken(DotTokenKind kind, string? value = default)
         {
-            value ??= kind switch
+            if (value is null &&
+                !kind.TryGetDefaultValue(out value))
             {
-                DotTokenKind.Digraph => "digraph",
-                DotTokenKind.Graph => "graph",
-                DotTokenKind.Arrow => "->",
-                < DotTokenKind.EOF => ((char)kind).ToString(),
-                _ => throw new ArgumentException("Value cannot deducted from the kind.", nameof(value))
-            };
+                throw new ArgumentException("Value cannot deducted from the kind.", nameof(value));
+            }
 
             Kind = kind;
             Value = value;

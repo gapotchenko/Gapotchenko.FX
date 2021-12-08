@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gapotchenko.FX.Data.Dot.Serialization
+﻿namespace Gapotchenko.FX.Data.Dot.Serialization
 {
     /// <summary>
     /// DOT document tokens.
     /// </summary>
     public enum DotTokenKind
     {
-        /// <summary>
-        /// Represents <c>EOF</c> token.
-        /// </summary>
-        EOF = 128,
-
         /// <summary>
         /// Represents <c>digraph</c> token.
         /// </summary>
@@ -65,5 +54,50 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         /// Represents a whitespace token.
         /// </summary>
         Whitespace,
+
+        /// <summary>
+        /// Represents <c>{</c> token.
+        /// </summary>
+        ScopeStart,
+
+        /// <summary>
+        /// Represents <c>}</c> token.
+        /// </summary>
+        ScopeEnd,
+
+        /// <summary>
+        /// Represents <c>;</c> token.
+        /// </summary>
+        Semicolon,
+
+        /// <summary>
+        /// Represents <c>=</c> token.
+        /// </summary>
+        Equal,
+
+        /// <summary>
+        /// Represents <c>[</c> token.
+        /// </summary>
+        ListStart,
+
+        /// <summary>
+        /// Represents <c>]</c> token.
+        /// </summary>
+        ListEnd,
+
+        /// <summary>
+        /// Represents <c>,</c> token.
+        /// </summary>
+        Comma,
+
+        /// <summary>
+        /// Represents <c>:</c> token.
+        /// </summary>
+        Colon,
+
+        /// <summary>
+        /// Represents <c>"</c> token.
+        /// </summary>
+        Quote,
     }
 }

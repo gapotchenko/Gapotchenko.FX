@@ -2,7 +2,7 @@
 %namespace Gapotchenko.FX.Data.Dot.Serialization
 %visibility internal
 %scannertype DotLex
-%tokentype DotTokenKind
+%tokentype Tokens
 
 %{
     int nesting = 0;
@@ -35,18 +35,15 @@ whitespace [ \t\r\f\v\n]
 {alphaplain}{alphaplus}*{alphaplain} { return (int) MkId(yytext); }
 {num}              { return (int) DotTokenKind.Id; }
 \-\-               { return (int) DotTokenKind.Arrow; }
-\"                 { BEGIN(STRING); stringId = ""; return '"'; }
-\[                 { return (int)'['; }
-\]                 { return (int)']'; }
-\{                 { return (int)'{'; }
-\}                 { return (int)'}'; }
-\(                 { return (int)'('; }
-\)                 { return (int)')'; }
-\,                 { return (int)','; }
-\;                 { return (int)';'; }
-\:                 { return (int)':'; }
-\=                 { return (int)'='; }
-\@                 { return (int)'@'; }
+\"                 { BEGIN(STRING); stringId = ""; return (int)DotTokenKind.Quote; }
+\[                 { return (int)DotTokenKind.ListStart; }
+\]                 { return (int)DotTokenKind.ListEnd; }
+\{                 { return (int)DotTokenKind.ScopeStart; }
+\}                 { return (int)DotTokenKind.ScopeEnd; }
+\,                 { return (int)DotTokenKind.Comma; }
+\;                 { return (int)DotTokenKind.Semicolon; }
+\:                 { return (int)DotTokenKind.Colon; }
+\=                 { return (int)DotTokenKind.Equal; }
 \<                 { BEGIN(HTML); nesting = 1; }
 \n\#               { BEGIN(LINECOMMENT); }
 {whitespace}+      { return (int)DotTokenKind.Whitespace; }
@@ -68,7 +65,7 @@ whitespace [ \t\r\f\v\n]
 <STRING>([^\n"]*)(\\\")     { stringId += yytext; }
 <STRING>([^\n"]*)+          { stringId += yytext;} 
 <STRING>\"                  { _yytrunc(1); BEGIN(STRINGQ); tokTxt = stringId; return (int)DotTokenKind.Id; }
-<STRINGQ>\"                 { BEGIN(INITIAL); return (int)'"'; }
+<STRINGQ>\"                 { BEGIN(INITIAL); return (int)DotTokenKind.Quote; }
 
 
 %{

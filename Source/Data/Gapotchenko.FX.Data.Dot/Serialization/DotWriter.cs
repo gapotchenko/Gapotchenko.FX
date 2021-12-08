@@ -28,31 +28,9 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         /// <param name="token">Token kind.</param>
         public void Write(DotTokenKind token)
         {
-            switch (token)
-            {
-                case DotTokenKind.EOF:
-                    break;
-                case DotTokenKind.Digraph:
-                    _writer.Write("digraph");
-                    break;
-                case DotTokenKind.Graph:
-                    _writer.Write("graph");
-                    break;
-                case DotTokenKind.Arrow:
-                    _writer.Write("->");
-                    break;
-                case DotTokenKind.Whitespace:
-                    _writer.Write(' ');
-                    break;
-                default:
-                    if (token < DotTokenKind.EOF)
-                    {
-                        _writer.Write((char)token);
-                        break;
-                    }
-
-                    throw new ArgumentException("Unexpected token.", nameof(token));
-            }
+            if (!token.TryGetDefaultValue(out var value))
+                throw new ArgumentException("Unexpected token.", nameof(token));
+            _writer.Write(value);
         }
 
         /// <summary>
