@@ -1,85 +1,129 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
-using Xunit;
 
 namespace Gapotchenko.FX.Math.Topology.Serialization.Tests
 {
+    [TestClass]
     public class DotSerializerTests
     {
-        public static IEnumerable<object[]> RoundtripTestData =>
-            new List<object[]>
-            {
-                new object[] { "RoundtripTest001", @"
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_001()
+        {
+            var input = @"
 digraph G {
   a
-}",
-                @"
+}";
+            var expected = @"
 digraph {
   a
-}"},
+}";
 
-                new object[] { "RoundtripTest002", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_002()
+        {
+            var input = @"
 digraph G {
   a [style=filled]
   a -> b
-}",
-                @"
+}";
+            var expected = @"
 digraph {
   a -> b
-}"},
+}";
 
-                new object[] { "RoundtripTest003", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_003()
+        {
+            var input = @"
 digraph G {
   a -> b
-}",
-                @"
+}";
+
+            var expected = @"
 digraph {
   a -> b
-}"},
+}";
 
-                new object[] { "RoundtripTest004", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_004()
+        {
+            var input = @"
 digraph G {
   a -> { b c}
-}",
-                @"
+}";
+            var expected = @"
 digraph {
   a -> { b c }
-}"},
+}";
 
-                new object[] { "RoundtripTest005", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_005()
+        {
+            var input = @"
 digraph G {
   a -> b -> c
-}",
-                @"
+}";
+            var expected = @"
 digraph {
   a -> b
   b -> c
-}"},
+}";
 
-                new object[] { "RoundtripTest006", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_006()
+        {
+            var input = @"
 digraph G {
   n [label=""""]
-}" ,
-                @"
+}";
+            var expected = @"
 digraph {
   """"
-}"},
+}";
 
-                new object[] { "RoundtripTest007", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_007()
+        {
+            var input = @"
 digraph G {
   node [shape=box]
   aaa -> bbb
   aaa -> BBB
   AAA -> BBB
   AAA -> bbb
-}" ,
-                @"
+}";
+            var expected = @"
 digraph {
   aaa -> { bbb BBB }
   AAA -> { bbb BBB }
-}"},
+}";
 
-                new object[] { "RoundtripTest008", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_008()
+        {
+            var input = @"
 digraph automata_0 {
 	0;
 	2;
@@ -90,22 +134,28 @@ digraph automata_0 {
 	2 -> 2 [ label = ""a "" ];
 	2 -> 1 [ label = ""other "" ];
 	""Machine: a"";
-}" ,
-                @"
+}";
+            var expected = @"
 digraph {
   0 -> { 2 1 }
   1 -> { 2 1 }
   2 -> { 2 1 }
   ""Machine: a""
-}"},
+}";
 
-                new object[] { "RoundtripTest009", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_009()
+        {
+            var input = @"
 graph S {
   1 -- 6;
   2 -- 3 -- 6;
   4 -- 5 -- 6;
-}" ,
-                @"
+}";
+            var expected = @"
 digraph {
   1 -> 6
   6 -> { 1 3 5 }
@@ -113,15 +163,21 @@ digraph {
   3 -> { 6 2 }
   4 -> 5
   5 -> { 6 4 }
-}"},
+}";
 
-                new object[] { "RoundtripTest010", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_010()
+        {
+            var input = @"
 graph G {
   a -- b -- c -- a
   a -- B -- C -- a
   a -- 1 -- 2 -- a
-}" ,
-                @"
+}";
+            var expected = @"
 digraph {
   a -> { b c B C 1 2 }
   b -> { a c }
@@ -130,21 +186,33 @@ digraph {
   C -> { a B }
   1 -> { a 2 }
   2 -> { a 1 }
-}"},
+}";
 
-                new object[] { "RoundtripTest011", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_011()
+        {
+            var input = @"
 digraph G {
   subgraph cluster0 {
     a->{c b};
     label = ""cluster0"";
   }
-}" ,
-                @"
+}";
+            var expected = @"
 digraph {
   a -> { c b }
-}"},
+}";
 
-                new object[] { "RoundtripTest012", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_012()
+        {
+            var input = @"
 digraph G {
 	subgraph cluster_c0 {a0 -> a1 -> a2 -> a3;}
 	subgraph cluster_c1 {b0 -> b1 -> b2 -> b3;}
@@ -153,8 +221,8 @@ digraph G {
 	a1 -> a3;
 	a3 -> a0;
 }
-" ,
-                @"
+";
+            var expected = @"
 digraph {
   a0 -> a1
   a1 -> { a2 a3 }
@@ -164,39 +232,47 @@ digraph {
   b1 -> b2
   b2 -> b3
   x -> { a0 b0 }
-}"},
+}";
 
-                new object[] { "RoundtripTest013", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_013()
+        {
+            var input = @"
 digraph G {
   a
   a
   b
   b [label=b]
-}",
-                @"
+}";
+            var expected = @"
 digraph {
   a
   b
-}"},
+}";
 
-                new object[] { "RoundtripTest014", @"
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        [TestMethod]
+        public void DotSerializer_RoundtripTest_014()
+        {
+            var input = @"
 digraph G {
   { 1 2 } -> { 1 3 4 }
-}",
-                @"
+}";
+            var expected = @"
 digraph {
   1 -> { 1 3 4 }
   2 -> { 1 3 4 }
-}"},
-            };
+}";
 
-        [Theory]
-        [MemberData(nameof(RoundtripTestData))]
-#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-#pragma warning disable IDE0060 // Remove unused parameter
-        public void DotSerializer_RoundtripTest(string title, string inputDocument, string expectedDocument)
-#pragma warning restore IDE0060 // Remove unused parameter
-#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
+            ExecuteRoundtripTest(input, expected);
+        }
+
+        static void ExecuteRoundtripTest(string inputDocument, string expectedDocument)
         {
             var graph = new Graph<string>();
             var serializer = new DotSerializer();
@@ -206,11 +282,10 @@ digraph {
             var normalizedExpectedDocument = Utilities.NormalizeDotDocument(expectedDocument);
             var normalizedActualDocument = Utilities.NormalizeDotDocument(actualDocument);
 
-            Assert.Equal(normalizedExpectedDocument, normalizedActualDocument);
+            Assert.AreEqual(normalizedExpectedDocument, normalizedActualDocument);
         }
 
-
-        [Fact]
+        [TestMethod]
         public void DotSerializer_Test001_DuplicateLabel()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -236,7 +311,7 @@ digraph {
             var normalizedExpectedDocument = Utilities.NormalizeDotDocument(expected);
             var normalizedActualDocument = Utilities.NormalizeDotDocument(actual);
 
-            Assert.Equal(normalizedExpectedDocument, normalizedActualDocument);
+            Assert.AreEqual(normalizedExpectedDocument, normalizedActualDocument);
         }
 
         sealed class DotSerializer_Test002_Class
@@ -244,7 +319,7 @@ digraph {
             public override string ToString() => "Class!";
         }
 
-        [Fact]
+        [TestMethod]
         public void DotSerializer_Test002_CustomVertexType()
         {
             var graph = new Graph<DotSerializer_Test002_Class>();
@@ -262,11 +337,11 @@ digraph {
             var normalizedExpectedDocument = Utilities.NormalizeDotDocument(expected);
             var normalizedActualDocument = Utilities.NormalizeDotDocument(actual);
 
-            Assert.Equal(normalizedExpectedDocument, normalizedActualDocument);
+            Assert.AreEqual(normalizedExpectedDocument, normalizedActualDocument);
         }
 
 #if NET5_0_OR_GREATER
-        [Fact]
+        [TestMethod]
         public void DotSerializer_Test003_VersionRoundtrip()
         {
             var v1 = new Version(1, 0);
@@ -285,14 +360,14 @@ digraph {
             var normalizedExpectedDocument = Utilities.NormalizeDotDocument(expected);
             var normalizedActualDocument = Utilities.NormalizeDotDocument(serialized);
 
-            Assert.Equal(normalizedExpectedDocument, normalizedActualDocument);
+            Assert.AreEqual(normalizedExpectedDocument, normalizedActualDocument);
 
             graph = new();
             new DotSerializer().Deserialize(graph, serialized);
 
             var actualVertices = new HashSet<Version>(graph.Vertices);
             var expectedVertices = new HashSet<Version>() { v1, v2 };
-            Assert.True(actualVertices.SetEquals(expectedVertices));
+            Assert.IsTrue(actualVertices.SetEquals(expectedVertices));
         }
 #endif
 
@@ -312,7 +387,7 @@ digraph {
             }
         }
 
-        [Fact]
+        [TestMethod]
         public void DotSerializer_Test004_VerticesOrder()
         {
             var source = @"
@@ -329,7 +404,7 @@ digraph {
             var graph = new Graph<string>();
             serializer.Deserialize(graph, source);
             var verticesString = string.Join(" ", vertices);
-            Assert.Equal("a b c d e f g h i j k l", verticesString);
+            Assert.AreEqual("a b c d e f g h i j k l", verticesString);
         }
     }
 }
