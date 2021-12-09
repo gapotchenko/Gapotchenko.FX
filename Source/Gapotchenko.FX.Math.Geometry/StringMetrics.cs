@@ -51,7 +51,7 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The Levenshtein distance.</returns>
         public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
-            EditDistance(a, b, maxDistance, allowReplacements: true, equalityComparer);
+            InsertDeleteReplaceDistance(a, b, maxDistance, allowReplacements: true, equalityComparer);
 
         /// <summary>
         /// Calculates longest common subsequence distance between two sequences.
@@ -95,9 +95,9 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The longest common subsequence distance.</returns>
         public static int LongestCommonSubsequenceDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
-            EditDistance(a, b, maxDistance, allowReplacements: false, equalityComparer);
+            InsertDeleteReplaceDistance(a, b, maxDistance, allowReplacements: false, equalityComparer);
 
-        static int EditDistance<T>(
+        static int InsertDeleteReplaceDistance<T>(
             IEnumerable<T> a,
             IEnumerable<T> b,
             int? maxDistance,
@@ -194,6 +194,97 @@ namespace Gapotchenko.FX.Math.Geometry
             var distance = row[rowLen];
             if (distance >= maxDistance)
                 return maxDistance.Value;
+            return distance;
+        }
+
+        /// <summary>
+        /// Calculates Hamming distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <returns>The Hamming distance.</returns>
+        public static int HammingDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
+            HammingDistance(a, b, null, null);
+
+        /// <summary>
+        /// Calculates Hamming distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
+        /// <returns>The Hamming distance.</returns>
+        public static int HammingDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
+            HammingDistance(a, b, maxDistance, null);
+
+        /// <summary>
+        /// Calculates Hamming distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="equalityComparer">The equality comparer.</param>
+        /// <returns>The Hamming distance.</returns>
+        public static int HammingDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
+            HammingDistance(a, b, null, equalityComparer);
+
+        /// <summary>
+        /// Calculates Hamming distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
+        /// <param name="equalityComparer">The equality comparer.</param>
+        /// <returns>The Hamming distance.</returns>
+        public static int HammingDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer)
+        {
+            if (a == null)
+                throw new ArgumentNullException(nameof(a));
+            if (b == null)
+                throw new ArgumentNullException(nameof(b));
+            if (maxDistance < 0)
+                throw new ArgumentOutOfRangeException(nameof(maxDistance));
+
+            if (maxDistance == 0)
+                return 0;
+            if (ReferenceEquals(a, b))
+                return 0;
+
+            equalityComparer ??= EqualityComparer<T>.Default;
+
+            int distance = 0;
+
+            using (var aEnumerator = a.GetEnumerator())
+            using (var bEnumerator = b.GetEnumerator())
+            {
+                while (true)
+                {
+                    var aNext = aEnumerator.MoveNext();
+                    var bNext = bEnumerator.MoveNext();
+
+                    if (aNext && bNext)
+                    {
+                        if (!equalityComparer.Equals(aEnumerator.Current, bEnumerator.Current))
+                        {
+                            distance++;
+
+                            if (distance >= maxDistance)
+                                return maxDistance.Value;
+                        }
+                    }
+                    else if (aNext || bNext)
+                    {
+                        throw new ArgumentException("Hamming distance applies to sequences of the same length only.");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
             return distance;
         }
     }
