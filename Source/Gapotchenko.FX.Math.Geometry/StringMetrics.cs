@@ -50,7 +50,59 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The Levenshtein distance.</returns>
-        public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer)
+        public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
+            EditDistance(a, b, maxDistance, allowReplacements: true, equalityComparer);
+
+        /// <summary>
+        /// Calculates longest common subsequence distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <returns>The longest common subsequence distance.</returns>
+        public static int LongestCommonSubsequenceDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
+            LongestCommonSubsequenceDistance(a, b, null, null);
+
+        /// <summary>
+        /// Calculates longest common subsequence distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
+        /// <returns>The longest common subsequence distance.</returns>
+        public static int LongestCommonSubsequenceDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
+            LongestCommonSubsequenceDistance(a, b, maxDistance, null);
+
+        /// <summary>
+        /// Calculates longest common subsequence distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="equalityComparer">The equality comparer.</param>
+        /// <returns>The longest common subsequence distance.</returns>
+        public static int LongestCommonSubsequenceDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
+            LongestCommonSubsequenceDistance(a, b, null, equalityComparer);
+
+        /// <summary>
+        /// Calculates longest common subsequence distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
+        /// <param name="equalityComparer">The equality comparer.</param>
+        /// <returns>The longest common subsequence distance.</returns>
+        public static int LongestCommonSubsequenceDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
+            EditDistance(a, b, maxDistance, allowReplacements: false, equalityComparer);
+
+        static int EditDistance<T>(
+            IEnumerable<T> a,
+            IEnumerable<T> b,
+            int? maxDistance,
+            bool allowReplacements,
+            IEqualityComparer<T>? equalityComparer)
         {
             if (a == null)
                 throw new ArgumentNullException(nameof(a));
@@ -106,16 +158,27 @@ namespace Gapotchenko.FX.Math.Geometry
                     var row_i = sRow[rowIdx - 1];
                     var sameValue = equalityComparer.Equals(row_i, col_j);
 
+                    int currentDistance;
                     int topDistance = row[rowIdx];
                     int leftDistance = row[rowIdx - 1];
 
-                    var replacementCost = sameValue ? 0 : 1;
-
                     // Find minimum.
-                    var currentDistance = MathEx.Min(
-                        topDistance + 1,
-                        leftDistance + 1,
-                        topLeftDistance + replacementCost);
+                    if (allowReplacements)
+                    {
+                        var replacementCost = sameValue ? 0 : 1;
+
+                        currentDistance = MathEx.Min(
+                            topDistance + 1,
+                            leftDistance + 1,
+                            topLeftDistance + replacementCost);
+                    }
+                    else
+                    {
+                        if (sameValue)
+                            currentDistance = topLeftDistance;
+                        else
+                            currentDistance = System.Math.Min(leftDistance, topDistance) + 1;
+                    }
 
                     row[rowIdx] = currentDistance;
 
@@ -128,7 +191,10 @@ namespace Gapotchenko.FX.Math.Geometry
                     return maxDistance.Value;
             }
 
-            return row[rowLen];
+            var distance = row[rowLen];
+            if (distance >= maxDistance)
+                return maxDistance.Value;
+            return distance;
         }
     }
 }
