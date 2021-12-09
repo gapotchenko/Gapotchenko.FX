@@ -77,55 +77,58 @@ namespace Gapotchenko.FX.Math.Geometry
 
             equalityComparer ??= EqualityComparer<T>.Default;
 
-            // Create two vectors.
-            var v0 = new int[rowLen + 1];
-            var v1 = new int[rowLen + 1];
+            // Although the algorithm is typically described using an colLen x rowLen
+            // array, only one row plus one element are used at a time, so this
+            // implementation just keeps one vector for the row.
+            // To update one entry, only the entries to the left, top, and top-left
+            // are needed. The left entry is in row[rowIdx - 1], the top entry is what's in
+            // row[rowIdx] from the last iteration, and the top-left entry is stored
+            // in topLeftDistance.
 
-            // Initialize the first vector.
+            // Create and initialize the row vector.
+            var row = new int[rowLen + 1];
             for (int rowIdx = 1; rowIdx <= rowLen; rowIdx++)
-                v0[rowIdx] = rowIdx;
+                row[rowIdx] = rowIdx;
 
             // For each column.
             for (int colIdx = 1; colIdx <= colLen; colIdx++)
             {
                 // Set the first element to the column number.
-                v1[0] = colIdx;
+                row[0] = colIdx;
 
                 var col_j = sCol[colIdx - 1];
-
-                var bestAtRow = v1[0];
+                int bestAtRow = colIdx;
+                int topLeftDistance = colIdx - 1;
 
                 // For each row.
                 for (int rowIdx = 1; rowIdx <= rowLen; rowIdx++)
                 {
                     var row_i = sRow[rowIdx - 1];
+                    var sameValue = equalityComparer.Equals(row_i, col_j);
 
-                    int cost;
-                    if (equalityComparer.Equals(row_i, col_j))
-                        cost = 0;
-                    else
-                        cost = 1;
+                    int topDistance = row[rowIdx];
+                    int leftDistance = row[rowIdx - 1];
+
+                    var replacementCost = sameValue ? 0 : 1;
 
                     // Find minimum.
                     var currentDistance = MathEx.Min(
-                        v0[rowIdx] + 1,
-                        v1[rowIdx - 1] + 1,
-                        v0[rowIdx - 1] + cost);
-                    v1[rowIdx] = currentDistance;
+                        topDistance + 1,
+                        leftDistance + 1,
+                        topLeftDistance + replacementCost);
 
-                    bestAtRow = System.Math.Min(
-                        bestAtRow,
-                        currentDistance);
+                    row[rowIdx] = currentDistance;
+
+                    bestAtRow = System.Math.Min(bestAtRow, currentDistance);
+
+                    topLeftDistance = topDistance;
                 }
 
                 if (bestAtRow >= maxDistance)
                     return maxDistance.Value;
-
-                // Swap the vectors.
-                MathEx.Swap(ref v0, ref v1);
             }
 
-            return v0[rowLen];
+            return row[rowLen];
         }
     }
 }
