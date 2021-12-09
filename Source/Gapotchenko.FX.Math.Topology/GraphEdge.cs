@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Gapotchenko.FX.Math.Topology
 {
@@ -49,5 +50,13 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <returns>The edge with reversed direction.</returns>
         public GraphEdge<T> Reverse() => new(To, From);
+
+        /// <summary>
+        /// Creates graph edge equality comparer with specified vertex comparer.
+        /// </summary>
+        /// <param name="vertexComparer">The vertex comparer.</param>
+        /// <returns>A new instance of graph edge equality comparer.</returns>
+        public static IEqualityComparer<GraphEdge<T>> CreateEqualityComparer(IEqualityComparer<T> vertexComparer) =>
+            new GraphEdgeEqualityComparer<T>(vertexComparer);
     }
 }

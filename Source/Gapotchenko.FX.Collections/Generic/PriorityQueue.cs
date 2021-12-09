@@ -10,7 +10,12 @@ using System.Linq;
 namespace System.Collections.Generic
 {
     /// <summary>
-    ///  Represents a min priority queue.
+    /// <para>
+    /// Represents a min priority queue.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </summary>
     /// <typeparam name="TElement">Specifies the type of elements in the queue.</typeparam>
     /// <typeparam name="TPriority">Specifies the type of priority associated with enqueued elements.</typeparam>
