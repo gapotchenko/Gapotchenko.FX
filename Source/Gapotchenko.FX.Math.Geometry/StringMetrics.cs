@@ -52,7 +52,7 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The Levenshtein distance.</returns>
         public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
-            InsertDeleteReplaceDistance(a, b, maxDistance, allowReplacements: true, equalityComparer);
+            OptimalStringAlignmentDistance(a, b, maxDistance, allowReplacements: true, allowTranspositions: false, equalityComparer);
 
         /// <summary>
         /// Calculates longest common subsequence distance between two sequences.
@@ -96,13 +96,58 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The longest common subsequence distance.</returns>
         public static int LongestCommonSubsequenceDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
-            InsertDeleteReplaceDistance(a, b, maxDistance, allowReplacements: false, equalityComparer);
+            OptimalStringAlignmentDistance(a, b, maxDistance, allowReplacements: false, allowTranspositions: false, equalityComparer);
 
-        static int InsertDeleteReplaceDistance<T>(
+        /// <summary>
+        /// Calculates optimal string alignment distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <returns>The optimal string alignment distance.</returns>
+        public static int OptimalStringAlignmentDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
+            OptimalStringAlignmentDistance(a, b, null, null);
+
+        /// <summary>
+        /// Calculates optimal string alignment distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
+        /// <returns>The optimal string alignment distance.</returns>
+        public static int OptimalStringAlignmentDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
+            OptimalStringAlignmentDistance(a, b, maxDistance, null);
+
+        /// <summary>
+        /// Calculates optimal string alignment distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="equalityComparer">The equality comparer.</param>
+        /// <returns>The optimal string alignment distance.</returns>
+        public static int OptimalStringAlignmentDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
+            OptimalStringAlignmentDistance(a, b, null, equalityComparer);
+
+        /// <summary>
+        /// Calculates optimal string alignment distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
+        /// <param name="equalityComparer">The equality comparer.</param>
+        /// <returns>The optimal string alignment distance.</returns>
+        public static int OptimalStringAlignmentDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
+            OptimalStringAlignmentDistance(a, b, maxDistance, allowReplacements: true, allowTranspositions: true, equalityComparer);
+
+        static int OptimalStringAlignmentDistance<T>(
             IEnumerable<T> a,
             IEnumerable<T> b,
             int? maxDistance,
             bool allowReplacements,
+            bool allowTranspositions,
             IEqualityComparer<T>? equalityComparer)
         {
             if (a == null)
@@ -130,18 +175,15 @@ namespace Gapotchenko.FX.Math.Geometry
 
             equalityComparer ??= EqualityComparer<T>.Default;
 
-            // Although the algorithm is typically described using an colLen x rowLen
-            // array, only one row plus one element are used at a time, so this
-            // implementation just keeps one vector for the row.
-            // To update one entry, only the entries to the left, top, and top-left
-            // are needed. The left entry is in row[rowIdx - 1], the top entry is what's in
-            // row[rowIdx] from the last iteration, and the top-left entry is stored
-            // in topLeftDistance.
-
             // Create and initialize the row vector.
             var row = new int[rowLen + 1];
+            var preRow = new int[rowLen + 1];
+            int[]? prePreRow = null;
+            if (allowTranspositions)
+                prePreRow = new int[rowLen + 1];
+
             for (int rowIdx = 1; rowIdx <= rowLen; rowIdx++)
-                row[rowIdx] = rowIdx;
+                preRow[rowIdx] = rowIdx;
 
             // For each column.
             for (int colIdx = 1; colIdx <= colLen; colIdx++)
@@ -151,48 +193,52 @@ namespace Gapotchenko.FX.Math.Geometry
 
                 var col_j = sCol[colIdx - 1];
                 int bestAtRow = colIdx;
-                int topLeftDistance = colIdx - 1;
 
                 // For each row.
                 for (int rowIdx = 1; rowIdx <= rowLen; rowIdx++)
                 {
                     var row_i = sRow[rowIdx - 1];
-                    var sameValue = equalityComparer.Equals(row_i, col_j);
 
                     int currentDistance;
-                    int topDistance = row[rowIdx];
-                    int leftDistance = row[rowIdx - 1];
-
-                    // Find minimum.
-                    if (allowReplacements)
+                    if (equalityComparer.Equals(row_i, col_j))
                     {
-                        var replacementCost = sameValue ? 0 : 1;
-
-                        currentDistance = MathEx.Min(
-                            topDistance + 1,
-                            leftDistance + 1,
-                            topLeftDistance + replacementCost);
+                        currentDistance = preRow[rowIdx - 1];
                     }
                     else
                     {
-                        if (sameValue)
-                            currentDistance = topLeftDistance;
-                        else
-                            currentDistance = System.Math.Min(leftDistance, topDistance) + 1;
+                        // Find minimum.
+                        currentDistance = System.Math.Min(preRow[rowIdx] + 1, row[rowIdx - 1] + 1);
+
+                        if (allowReplacements)
+                        {
+                            currentDistance = System.Math.Min(currentDistance, preRow[rowIdx - 1] + 1);
+                        }
+
+                        if (allowTranspositions &&
+                            rowIdx > 1 && colIdx > 1 &&
+                            equalityComparer.Equals(row_i, sCol[colIdx - 2]) &&
+                            equalityComparer.Equals(sRow[rowIdx - 2], col_j))
+                        {
+                            currentDistance = System.Math.Min(currentDistance, prePreRow![rowIdx - 2] + 1);
+                        }
                     }
 
                     row[rowIdx] = currentDistance;
 
                     bestAtRow = System.Math.Min(bestAtRow, currentDistance);
-
-                    topLeftDistance = topDistance;
                 }
 
                 if (bestAtRow >= maxDistance)
                     return maxDistance.Value;
+
+                // Swap the vectors.
+                MathEx.Swap(ref preRow, ref row);
+
+                if (allowTranspositions)
+                    MathEx.Swap(ref prePreRow!, ref row);
             }
 
-            var distance = row[rowLen];
+            var distance = preRow[rowLen];
             if (distance >= maxDistance)
                 return maxDistance.Value;
             return distance;
@@ -386,7 +432,7 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="a">The first sequence.</param>
         /// <param name="b">The second sequence.</param>
         /// <returns>The Damerau–Levenshtein distance.</returns>
-        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
+        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b) where T : notnull =>
             DamerauLevenshteinDistance(a, b, null, null);
 
         /// <summary>
@@ -397,7 +443,7 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="b">The second sequence.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <returns>The Damerau–Levenshtein distance.</returns>
-        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
+        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) where T : notnull =>
             DamerauLevenshteinDistance(a, b, maxDistance, null);
 
         /// <summary>
@@ -408,7 +454,7 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="b">The second sequence.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The Damerau–Levenshtein distance.</returns>
-        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
+        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) where T : notnull =>
             DamerauLevenshteinDistance(a, b, null, equalityComparer);
 
         /// <summary>
@@ -421,6 +467,7 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The Damerau–Levenshtein distance.</returns>
         public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer)
+            where T : notnull
         {
             if (a == null)
                 throw new ArgumentNullException(nameof(a));
