@@ -1,6 +1,5 @@
-﻿using Gapotchenko.FX.Linq;
-using System;
-using System.Collections;
+﻿using Gapotchenko.FX.Collections.Generic.Kit;
+using Gapotchenko.FX.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,7 +9,7 @@ namespace Gapotchenko.FX.Math.Topology
     partial class Graph<T>
     {
         [DebuggerDisplay("Count = {Count}")]
-        sealed class VertexSet : ISet<T>, IReadOnlySet<T>
+        sealed class VertexSet : SetBase<T>
         {
             internal VertexSet(Graph<T> graph)
             {
@@ -20,12 +19,11 @@ namespace Gapotchenko.FX.Math.Topology
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly Graph<T> m_Graph;
 
-            public int Count => m_Graph.m_CachedOrder ??= GetEnumerator().Rest().Count();
+            public override IEqualityComparer<T> Comparer => m_Graph.Comparer;
 
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            bool ICollection<T>.IsReadOnly => false;
+            public override int Count => m_Graph.m_CachedOrder ??= GetEnumerator().Rest().Count();
 
-            public bool Add(T vertex)
+            public override bool Add(T vertex)
             {
                 if (Contains(vertex))
                     return false;
@@ -34,58 +32,9 @@ namespace Gapotchenko.FX.Math.Topology
                 return true;
             }
 
-            public void UnionWith(IEnumerable<T> other) => SetImplUtil.UnionWith(this, other);
+            public override void Clear() => m_Graph.Clear();
 
-            public void IntersectWith(IEnumerable<T> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void ExceptWith(IEnumerable<T> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void SymmetricExceptWith(IEnumerable<T> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsSubsetOf(IEnumerable<T> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsSupersetOf(IEnumerable<T> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsProperSupersetOf(IEnumerable<T> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsProperSubsetOf(IEnumerable<T> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool Overlaps(IEnumerable<T> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool SetEquals(IEnumerable<T> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            void ICollection<T>.Add(T item) => Add(item);
-
-            public void Clear() => m_Graph.Clear();
-
-            public bool Contains(T vertex)
+            public override bool Contains(T vertex)
             {
                 var adjacencyList = m_Graph.m_AdjacencyList;
                 return
@@ -93,9 +42,7 @@ namespace Gapotchenko.FX.Math.Topology
                     adjacencyList.Any(x => x.Value?.Contains(vertex) ?? false);
             }
 
-            public void CopyTo(T[] array, int arrayIndex) => SetImplUtil.CopyTo(this, array, arrayIndex);
-
-            public bool Remove(T vertex)
+            public override bool Remove(T vertex)
             {
                 bool hit = false;
                 var adjacencyList = m_Graph.m_AdjacencyList;
@@ -115,13 +62,11 @@ namespace Gapotchenko.FX.Math.Topology
                 return hit;
             }
 
-            public IEnumerator<T> GetEnumerator() =>
+            public override IEnumerator<T> GetEnumerator() =>
                 m_Graph.m_AdjacencyList
                 .SelectMany(x => (x.Value ?? Enumerable.Empty<T>()).Prepend(x.Key))
                 .Distinct(m_Graph.Comparer)
                 .GetEnumerator();
-
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }
 }

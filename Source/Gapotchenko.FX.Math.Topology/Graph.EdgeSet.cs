@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using Gapotchenko.FX.Collections.Generic.Kit;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,8 +8,7 @@ namespace Gapotchenko.FX.Math.Topology
 {
     partial class Graph<T>
     {
-        [DebuggerDisplay("Count = {Count}")]
-        sealed class EdgeSet : ISet<GraphEdge<T>>, IReadOnlySet<GraphEdge<T>>
+        sealed class EdgeSet : SetBase<GraphEdge<T>>
         {
             internal EdgeSet(Graph<T> graph)
             {
@@ -19,12 +18,14 @@ namespace Gapotchenko.FX.Math.Topology
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly Graph<T> m_Graph;
 
-            public int Count => m_Graph.m_CachedSize ??= m_Graph.m_AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
-
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            bool ICollection<GraphEdge<T>>.IsReadOnly => false;
+            IEqualityComparer<GraphEdge<T>>? m_Comparer;
 
-            public bool Add(GraphEdge<T> edge)
+            public override IEqualityComparer<GraphEdge<T>> Comparer => m_Comparer ??= GraphEdge<T>.CreateEqualityComparer(m_Graph.Comparer);
+
+            public override int Count => m_Graph.m_CachedSize ??= m_Graph.m_AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
+
+            public override bool Add(GraphEdge<T> edge)
             {
                 var from = edge.From;
 
@@ -53,75 +54,24 @@ namespace Gapotchenko.FX.Math.Topology
                 }
             }
 
-            public void Clear()
+            public override bool Remove(GraphEdge<T> item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void Clear()
             {
                 foreach (var i in m_Graph.AdjacencyList)
                     i.Value?.Clear();
                 m_Graph.m_CachedSize = 0;
             }
 
-            public bool Contains(GraphEdge<T> edge) =>
+            public override bool Contains(GraphEdge<T> edge) =>
                 m_Graph.m_AdjacencyList.TryGetValue(edge.From, out var adjRow) &&
                 adjRow != null &&
                 adjRow.Contains(edge.To);
 
-            public void CopyTo(GraphEdge<T>[] array, int arrayIndex) => SetImplUtil.CopyTo(this, array, arrayIndex);
-
-            public void ExceptWith(IEnumerable<GraphEdge<T>> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void IntersectWith(IEnumerable<GraphEdge<T>> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsProperSubsetOf(IEnumerable<GraphEdge<T>> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsProperSupersetOf(IEnumerable<GraphEdge<T>> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsSubsetOf(IEnumerable<GraphEdge<T>> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool IsSupersetOf(IEnumerable<GraphEdge<T>> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool Overlaps(IEnumerable<GraphEdge<T>> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool Remove(GraphEdge<T> item)
-            {
-                throw new NotImplementedException();
-            }
-
-            public bool SetEquals(IEnumerable<GraphEdge<T>> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void SymmetricExceptWith(IEnumerable<GraphEdge<T>> other)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void UnionWith(IEnumerable<GraphEdge<T>> other) => SetImplUtil.UnionWith(this, other);
-
-            void ICollection<GraphEdge<T>>.Add(GraphEdge<T> item) => Add(item);
-
-            public IEnumerator<GraphEdge<T>> GetEnumerator()
+            public override IEnumerator<GraphEdge<T>> GetEnumerator()
             {
                 foreach (var i in m_Graph.m_AdjacencyList)
                 {
@@ -134,8 +84,6 @@ namespace Gapotchenko.FX.Math.Topology
                     }
                 }
             }
-
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }
 }
