@@ -1,5 +1,6 @@
 ﻿using Gapotchenko.FX.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Math.Geometry
@@ -286,6 +287,96 @@ namespace Gapotchenko.FX.Math.Geometry
             }
 
             return distance;
+        }
+
+        /// <summary>
+        /// Calculates Jaro distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <returns>The Jaro distance.</returns>
+        public static double JaroDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
+            JaroDistance(a, b, null);
+
+        /// <summary>
+        /// Calculates Jaro distance between two sequences.
+        /// </summary>
+        /// <typeparam name="T">The type of the sequence elements.</typeparam>
+        /// <param name="a">The first sequence.</param>
+        /// <param name="b">The second sequence.</param>
+        /// <param name="equalityComparer">The equality comparer.</param>
+        /// <returns>The Jaro distance.</returns>
+        public static double JaroDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer)
+        {
+            if (a == null)
+                throw new ArgumentNullException(nameof(a));
+            if (b == null)
+                throw new ArgumentNullException(nameof(b));
+
+            if (ReferenceEquals(a, b))
+                return 0;
+
+            var aList = a.AsReadOnly();
+            var bList = b.AsReadOnly();
+
+            if (aList.Count == 0)
+            {
+                if (bList.Count == 0)
+                    return 0;
+                return 1;
+            }
+
+            equalityComparer ??= EqualityComparer<T>.Default;
+
+            if (bList.Count > aList.Count)
+                MathEx.Swap(ref aList, ref bList);
+
+            int matchingRange = System.Math.Max(aList.Count / 2 - 1, 0);
+
+            // Determine the count of matches.
+            var machedElements = new List<T>();
+            var aMatches = new BitArray(aList.Count);
+            for (int bIdx = 0; bIdx < bList.Count; bIdx++)
+            {
+                var aWindowStart = System.Math.Max(bIdx - matchingRange, 0);
+                var aWindowEnd = System.Math.Min(bIdx + matchingRange + 1, aList.Count);
+                var bElement = bList[bIdx];
+                for (int aIdx = aWindowStart; aIdx < aWindowEnd; aIdx++)
+                {
+                    if (!aMatches[aIdx] &&
+                        equalityComparer.Equals(bElement, aList[aIdx]))
+                    {
+                        machedElements.Add(bElement);
+                        aMatches[aIdx] = true;
+                        break;
+                    }
+                }
+            }
+
+            if (machedElements.Count == 0)
+                return 1;
+
+            // Determine the count of transpositions.
+            int transpositions = 0;
+            for (int aIdx = 0, matchIdx = 0; matchIdx < machedElements.Count; aIdx++)
+            {
+                if (aMatches[aIdx])
+                {
+                    if (!equalityComparer.Equals(aList[aIdx], machedElements[matchIdx]))
+                        transpositions += 1;
+                    matchIdx += 1;
+                }
+            }
+
+            transpositions /= 2;
+
+            double matches = machedElements.Count;
+            double jaroSimilarity =
+                (matches / aList.Count + matches / bList.Count + (matches - transpositions) / matches)
+                / 3;
+
+            return 1 - jaroSimilarity;
         }
     }
 }
