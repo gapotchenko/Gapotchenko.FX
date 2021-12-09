@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Math.Geometry.Tests
 
         static int EditDistance(string a, string b, int? maxDistance = default)
         {
-            return StringMetrics.LongestCommonSubsequenceDistance(a, b, maxDistance);
+            return StringMetrics.LcsDistance(a, b, maxDistance);
         }
     }
 }

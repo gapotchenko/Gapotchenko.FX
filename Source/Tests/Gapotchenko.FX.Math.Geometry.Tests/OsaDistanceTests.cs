@@ -48,7 +48,7 @@ namespace Gapotchenko.FX.Math.Geometry.Tests
 
         static int EditDistance(string a, string b, int? maxDistance = default)
         {
-            return StringMetrics.OptimalStringAlignmentDistance(a, b, maxDistance);
+            return StringMetrics.OsaDistance(a, b, maxDistance);
         }
     }
 }

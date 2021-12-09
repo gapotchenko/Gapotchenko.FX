@@ -52,7 +52,7 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The Levenshtein distance.</returns>
         public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
-            OptimalStringAlignmentDistance(a, b, maxDistance, allowReplacements: true, allowTranspositions: false, equalityComparer);
+            OsaDistance(a, b, maxDistance, allowReplacements: true, allowTranspositions: false, equalityComparer);
 
         /// <summary>
         /// Calculates longest common subsequence distance between two sequences.
@@ -61,8 +61,8 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="a">The first sequence.</param>
         /// <param name="b">The second sequence.</param>
         /// <returns>The longest common subsequence distance.</returns>
-        public static int LongestCommonSubsequenceDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
-            LongestCommonSubsequenceDistance(a, b, null, null);
+        public static int LcsDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
+            LcsDistance(a, b, null, null);
 
         /// <summary>
         /// Calculates longest common subsequence distance between two sequences.
@@ -72,8 +72,8 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="b">The second sequence.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <returns>The longest common subsequence distance.</returns>
-        public static int LongestCommonSubsequenceDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
-            LongestCommonSubsequenceDistance(a, b, maxDistance, null);
+        public static int LcsDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
+            LcsDistance(a, b, maxDistance, null);
 
         /// <summary>
         /// Calculates longest common subsequence distance between two sequences.
@@ -83,8 +83,8 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="b">The second sequence.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The longest common subsequence distance.</returns>
-        public static int LongestCommonSubsequenceDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
-            LongestCommonSubsequenceDistance(a, b, null, equalityComparer);
+        public static int LcsDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
+            LcsDistance(a, b, null, equalityComparer);
 
         /// <summary>
         /// Calculates longest common subsequence distance between two sequences.
@@ -95,8 +95,8 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The longest common subsequence distance.</returns>
-        public static int LongestCommonSubsequenceDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
-            OptimalStringAlignmentDistance(a, b, maxDistance, allowReplacements: false, allowTranspositions: false, equalityComparer);
+        public static int LcsDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
+            OsaDistance(a, b, maxDistance, allowReplacements: false, allowTranspositions: false, equalityComparer);
 
         /// <summary>
         /// Calculates optimal string alignment distance between two sequences.
@@ -105,8 +105,8 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="a">The first sequence.</param>
         /// <param name="b">The second sequence.</param>
         /// <returns>The optimal string alignment distance.</returns>
-        public static int OptimalStringAlignmentDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
-            OptimalStringAlignmentDistance(a, b, null, null);
+        public static int OsaDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
+            OsaDistance(a, b, null, null);
 
         /// <summary>
         /// Calculates optimal string alignment distance between two sequences.
@@ -116,8 +116,8 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="b">The second sequence.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <returns>The optimal string alignment distance.</returns>
-        public static int OptimalStringAlignmentDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
-            OptimalStringAlignmentDistance(a, b, maxDistance, null);
+        public static int OsaDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
+            OsaDistance(a, b, maxDistance, null);
 
         /// <summary>
         /// Calculates optimal string alignment distance between two sequences.
@@ -127,8 +127,8 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="b">The second sequence.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The optimal string alignment distance.</returns>
-        public static int OptimalStringAlignmentDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
-            OptimalStringAlignmentDistance(a, b, null, equalityComparer);
+        public static int OsaDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
+            OsaDistance(a, b, null, equalityComparer);
 
         /// <summary>
         /// Calculates optimal string alignment distance between two sequences.
@@ -139,10 +139,10 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The optimal string alignment distance.</returns>
-        public static int OptimalStringAlignmentDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
-            OptimalStringAlignmentDistance(a, b, maxDistance, allowReplacements: true, allowTranspositions: true, equalityComparer);
+        public static int OsaDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
+            OsaDistance(a, b, maxDistance, allowReplacements: true, allowTranspositions: true, equalityComparer);
 
-        static int OptimalStringAlignmentDistance<T>(
+        static int OsaDistance<T>(
             IEnumerable<T> a,
             IEnumerable<T> b,
             int? maxDistance,
