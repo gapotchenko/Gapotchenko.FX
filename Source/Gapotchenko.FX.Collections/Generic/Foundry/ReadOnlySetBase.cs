@@ -45,6 +45,9 @@ namespace Gapotchenko.FX.Collections.Generic.Foundry
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
+            if (other == this)
+                return false;
+
             int count = Count;
 
             if (count == 0)
@@ -94,6 +97,9 @@ namespace Gapotchenko.FX.Collections.Generic.Foundry
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
+            if (other == this)
+                return false;
+
             int count = Count;
             if (count == 0)
                 return false;
@@ -132,6 +138,9 @@ namespace Gapotchenko.FX.Collections.Generic.Foundry
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
+
+            if (other == this)
+                return true;
 
             int count = Count;
             if (count == 0)
@@ -174,6 +183,9 @@ namespace Gapotchenko.FX.Collections.Generic.Foundry
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
+
+            if (other == this)
+                return true;
 
             if (EnumerableEx.TryGetNonEnumeratedCount(other, out var otherCount))
             {
@@ -219,6 +231,9 @@ namespace Gapotchenko.FX.Collections.Generic.Foundry
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
+
+            if (other == this)
+                return true;
 
             int expectedCount = Count;
 
@@ -319,8 +334,15 @@ namespace Gapotchenko.FX.Collections.Generic.Foundry
             if (count > array.Length - arrayIndex)
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
 
+            if (count == 0)
+                return;
+
             foreach (var i in this)
+            {
                 array[arrayIndex++] = i;
+                if (--count == 0)
+                    break;
+            }
         }
     }
 }
