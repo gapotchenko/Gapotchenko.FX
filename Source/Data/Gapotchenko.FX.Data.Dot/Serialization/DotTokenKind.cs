@@ -94,20 +94,5 @@
         /// Represents <c>:</c> token.
         /// </summary>
         Colon,
-
-        /// <summary>
-        /// Represents <c>"</c> token.
-        /// </summary>
-        Quote,
-
-        /// <summary>
-        /// Represents <c>&lt;</c> token.
-        /// </summary>
-        HtmlStringStart,
-
-        /// <summary>
-        /// Represents <c>&gt;</c> token.
-        /// </summary>
-        HtmlStringEnd,
     }
 }

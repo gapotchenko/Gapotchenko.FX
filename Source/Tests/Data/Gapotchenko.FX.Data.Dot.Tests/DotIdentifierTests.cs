@@ -43,9 +43,7 @@ namespace Gapotchenko.FX.Data.Dot.Tests
         {
             var identifierToken = GetIdentifierToken(text);
 
-            var expectedText = RemoveEnclosingChars(text);
-
-            Assert.AreEqual(expectedText, identifierToken?.Text);
+            Assert.AreEqual(text, identifierToken?.Text);
             Assert.AreEqual(expectedValue, identifierToken?.Value);
         }
 
@@ -55,19 +53,6 @@ namespace Gapotchenko.FX.Data.Dot.Tests
             var document = ParseDot(dot);
             var vertexStatement = (DotVertexNode?)document?.Root?.Statements?.Statements?.Single();
             return vertexStatement?.Identifier?.Identifier;
-        }
-
-        static string RemoveEnclosingChars(string text)
-        {
-            if (text.Length >= 2)
-            {
-                if (text.StartsWith("\"") && text.EndsWith("\""))
-                    text = text.Substring(1, text.Length - 2);
-                else if (text.StartsWith("<") && text.EndsWith(">"))
-                    text = text.Substring(1, text.Length - 2);
-            }
-
-            return text;
         }
 
         static DotDocument ParseDot(string sourceText)

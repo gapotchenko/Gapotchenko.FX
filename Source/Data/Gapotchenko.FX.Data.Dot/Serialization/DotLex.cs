@@ -5,7 +5,7 @@
 //  See accompanying file GPLEXcopyright.rtf.
 //
 //  GPLEX Version:  1.2.2
-//  GPLEX input file <Serialization\Dot.lex - 10.12.2021 21:52:14>
+//  GPLEX input file <Serialization\Dot.lex - 10.12.2021 22:20:18>
 //  GPLEX frame file <SERIALIZATION\DOTLEXFRAME.CS>
 //
 //  Option settings: parser, minimize
@@ -48,17 +48,15 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public ScanBuff Buffer => buffer;
 
-        const int maxAccept = 40;
-        const int initial = 41;
+        const int maxAccept = 38;
+        const int initial = 39;
         const int eofNum = 0;
         const int goStart = -1;
         const int INITIAL = 0;
         const int QSTRING = 1;
-        const int QSTRING_END = 2;
-        const int HTML = 3;
-        const int HTML_END = 4;
-        const int LINECOMMENT = 5;
-        const int MLINECOMMENT = 6;
+        const int HTML = 2;
+        const int LINECOMMENT = 3;
+        const int MLINECOMMENT = 4;
 
 #region user code
 int nesting = 0;
@@ -94,10 +92,9 @@ int nesting = 0;
         }
     };
 
-    static int[] startState = new int[] {41, 44, 45, 46, 47, 48, 
-        49, 0};
+    static int[] startState = new int[] {39, 42, 43, 44, 45, 0};
 
-    static Table[] NxS = new Table[50] {
+    static Table[] NxS = new Table[46] {
 /* NxS[   0] */ new Table(0, 0, 0, null),
 /* NxS[   1] */ new Table(0, 0, -1, null),
 /* NxS[   2] */ new Table(9, 24, -1, new sbyte[] {2, 2, 2, 2, 2, -1, 
@@ -106,7 +103,7 @@ int nesting = 0;
 /* NxS[   3] */ new Table(0, 128, 3, new sbyte[] {-1, -1, -1, -1, -1, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, -1, 
-          -1, 3, -1, -1, 17, -1, -1, 42, 3, -1, 3, 3, 3, 3, 3, 3, 
+          -1, 3, -1, -1, 17, -1, -1, 40, 3, -1, 3, 3, 3, 3, 3, 3, 
           3, 3, 3, 3, -1, -1, -1, -1, -1, 3, -1, 3, 3, 3, 3, 3, 
           3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
           3, 3, 3, 3, 3, -1, -1, -1, -1, 3, -1, 3, 3, 3, 3, 3, 
@@ -115,7 +112,7 @@ int nesting = 0;
 /* NxS[   4] */ new Table(0, 0, -1, null),
 /* NxS[   5] */ new Table(0, 0, -1, null),
 /* NxS[   6] */ new Table(0, 0, -1, null),
-/* NxS[   7] */ new Table(45, 18, -1, new sbyte[] {22, 43, -1, 23, 23, 23, 
+/* NxS[   7] */ new Table(45, 18, -1, new sbyte[] {22, 41, -1, 23, 23, 23, 
           23, 23, 23, 23, 23, 23, 23, -1, -1, -1, -1, 24}),
 /* NxS[   8] */ new Table(42, 6, -1, new sbyte[] {20, -1, -1, -1, -1, 21}),
 /* NxS[   9] */ new Table(0, 0, -1, null),
@@ -138,7 +135,7 @@ int nesting = 0;
 /* NxS[  18] */ new Table(0, 128, 18, new sbyte[] {-1, -1, -1, -1, -1, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, -1, 
-          -1, 18, -1, -1, 19, -1, -1, 42, 18, -1, 18, 18, 18, 18, 18, 18, 
+          -1, 18, -1, -1, 19, -1, -1, 40, 18, -1, 18, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, -1, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
@@ -172,11 +169,9 @@ int nesting = 0;
 /* NxS[  34] */ new Table(0, 0, -1, null),
 /* NxS[  35] */ new Table(0, 0, -1, null),
 /* NxS[  36] */ new Table(0, 0, -1, null),
-/* NxS[  37] */ new Table(0, 0, -1, null),
+/* NxS[  37] */ new Table(47, 1, -1, new sbyte[] {38}),
 /* NxS[  38] */ new Table(0, 0, -1, null),
-/* NxS[  39] */ new Table(47, 1, -1, new sbyte[] {40}),
-/* NxS[  40] */ new Table(0, 0, -1, null),
-/* NxS[  41] */ new Table(0, 128, 3, new sbyte[] {1, 1, 1, 1, 1, 1, 
+/* NxS[  39] */ new Table(0, 128, 3, new sbyte[] {1, 1, 1, 1, 1, 1, 
           1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 
           1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 5, 1, 1, 
           1, 3, 1, 1, 3, 1, 6, 7, 3, 8, 3, 3, 3, 3, 3, 3, 
@@ -185,27 +180,25 @@ int nesting = 0;
           3, 3, 3, 3, 3, 13, 1, 14, 1, 3, 1, 3, 3, 3, 3, 3, 
           3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
           3, 3, 3, 3, 3, 15, 1, 16, 1, 1}),
-/* NxS[  42] */ new Table(0, 128, 18, new sbyte[] {-1, -1, -1, -1, -1, -1, 
+/* NxS[  40] */ new Table(0, 128, 18, new sbyte[] {-1, -1, -1, -1, -1, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
           -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, -1, 
-          -1, 18, -1, -1, 19, -1, -1, 42, 18, -1, 18, 18, 18, 18, 18, 18, 
+          -1, 18, -1, -1, 19, -1, -1, 40, 18, -1, 18, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, -1, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 
           18, 18, 18, 18, 18, -1, -1, -1, -1, -1}),
-/* NxS[  43] */ new Table(48, 10, -1, new sbyte[] {25, 25, 25, 25, 25, 25, 
+/* NxS[  41] */ new Table(48, 10, -1, new sbyte[] {25, 25, 25, 25, 25, 25, 
           25, 25, 25, 25}),
-/* NxS[  44] */ new Table(34, 59, 26, new sbyte[] {27, 26, 26, 26, 26, 26, 
+/* NxS[  42] */ new Table(34, 59, 26, new sbyte[] {27, 26, 26, 26, 26, 26, 
           26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 
           26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 
           26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 
           26, 26, 26, 26, 28}),
-/* NxS[  45] */ new Table(34, 1, -1, new sbyte[] {31}),
-/* NxS[  46] */ new Table(60, 3, 32, new sbyte[] {33, 32, 34}),
-/* NxS[  47] */ new Table(62, 1, -1, new sbyte[] {35}),
-/* NxS[  48] */ new Table(10, 4, 36, new sbyte[] {37, 36, 36, 37}),
-/* NxS[  49] */ new Table(42, 1, 38, new sbyte[] {39}),
+/* NxS[  43] */ new Table(60, 3, 31, new sbyte[] {32, 31, 33}),
+/* NxS[  44] */ new Table(10, 4, 34, new sbyte[] {35, 34, 34, 35}),
+/* NxS[  45] */ new Table(42, 1, 36, new sbyte[] {37}),
     };
 
 int NextState() {
@@ -454,7 +447,7 @@ return (int)DotTokenKind.Whitespace;
 return (int) MkId(yytext);
             break;
         case 4:
-BEGIN(QSTRING); BuilderInit(); return (int)DotTokenKind.Quote;
+BEGIN(QSTRING); BuilderInit(); BuilderAppend();
             break;
         case 5:
 BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend();
@@ -469,7 +462,7 @@ return (int)DotTokenKind.Colon;
 return (int)DotTokenKind.Semicolon;
             break;
         case 11:
-BEGIN(HTML); nesting = 1; BuilderInit(); return (int)DotTokenKind.HtmlStringStart;
+BEGIN(HTML); nesting = 1; BuilderInit(); BuilderAppend();
             break;
         case 12:
 return (int)DotTokenKind.Equal;
@@ -511,7 +504,7 @@ return (int) DotTokenKind.Arrow;
 BuilderAppend();
             break;
         case 27:
-_yytrunc(1); BEGIN(QSTRING_END); tokTxt = BuilderBuild(); return (int)DotTokenKind.Id;
+BEGIN(INITIAL); BuilderAppend(); tokTxt = BuilderBuild(); return (int)DotTokenKind.Id;
             break;
         case 29:
 BuilderAppend();
@@ -520,40 +513,32 @@ BuilderAppend();
 BuilderAppend();
             break;
         case 31:
-BEGIN(INITIAL); return (int)DotTokenKind.Quote;
-            break;
-        case 32:
 BuilderAppend();
             break;
-        case 33:
+        case 32:
 nesting++; 
                      BuilderAppend();
             break;
-        case 34:
+        case 33:
 nesting--; 
+                     BuilderAppend();
                      if (nesting == 0) {
-                       _yytrunc(1);
-                       BEGIN(HTML_END);
+                       BEGIN(INITIAL);
                        tokTxt = BuilderBuild();
                        return (int)DotTokenKind.Id;
-                     } else {
-                       BuilderAppend(); 
                      }
             break;
-        case 35:
-BEGIN(INITIAL); return (int)DotTokenKind.HtmlStringEnd;
-            break;
-        case 36:
+        case 34:
 BuilderAppend();
             break;
-        case 37:
+        case 35:
 _yytrunc(1); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKind.Comment;
             break;
-        case 38:
-        case 39:
+        case 36:
+        case 37:
 BuilderAppend();
             break;
-        case 40:
+        case 38:
 BuilderAppend(); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKind.MultilineComment;
             break;
         default:

@@ -28,9 +28,6 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
                 DotTokenKind.ListEnd => "]",
                 DotTokenKind.Comma => ",",
                 DotTokenKind.Colon => ":",
-                DotTokenKind.Quote => "\"",
-                DotTokenKind.HtmlStringStart => "<",
-                DotTokenKind.HtmlStringEnd => ">",
                 _ => null,
             };
 

@@ -99,9 +99,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotTokenKind.ListEnd => ']',
             DotTokenKind.Comma => ',',
             DotTokenKind.Colon => ':',
-            DotTokenKind.Quote => '"',
-            DotTokenKind.HtmlStringStart => '<',
-            DotTokenKind.HtmlStringEnd => '>',
 
             DotTokenKind.Comment => throw new InvalidOperationException(),
             DotTokenKind.MultilineComment => throw new InvalidOperationException(),

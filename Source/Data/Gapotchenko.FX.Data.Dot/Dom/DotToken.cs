@@ -80,9 +80,25 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         static string? ComputeValue(DotTokenKind kind, string text) =>
             kind switch
             {
-                DotTokenKind.Id => UnescapeIdentifier(text),
+                DotTokenKind.Id => ParseStringLiteral(text),
                 _ => null,
             };
+
+        static string ParseStringLiteral(string text)
+        {
+            if (text.Length >= 2)
+            {
+                switch ((text[0], text[text.Length - 1]))
+                {
+                    case ('"', '"'):
+                    case ('<', '>'):
+                        text = text.Substring(1, text.Length - 2);
+                        break;
+                }
+            }
+
+            return UnescapeIdentifier(text);
+        }
 
         [return: NotNullIfNotNull("identifier")]
         static string? UnescapeIdentifier(string? identifier, bool strict = true)
@@ -171,16 +187,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             identifier ??= string.Empty;
             identifier = EscapeIdentifier(identifier);
 
-            var token = new DotToken(DotTokenKind.Id, identifier);
-
             if (string.IsNullOrEmpty(identifier) ||
                 !ValidIdentifierPattern.IsMatch(identifier))
             {
-                token.LeadingTrivia.Add(new DotTrivia(DotTokenKind.Quote));
-                token.TrailingTrivia.Add(new DotTrivia(DotTokenKind.Quote));
+                identifier = '"' + identifier + '"';
             }
 
-            return token;
+            return new DotToken(DotTokenKind.Id, identifier);
         }
     }
 }

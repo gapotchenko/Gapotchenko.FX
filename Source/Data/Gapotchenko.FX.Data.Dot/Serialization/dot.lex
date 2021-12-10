@@ -20,9 +20,7 @@ num [\-]?(\.([0-9]+)|([0-9]+)(\.([0-9]*))?)
 whitespace [ \t\r\f\v\n]
 
 %x QSTRING
-%x QSTRING_END
 %x HTML
-%x HTML_END
 %x LINECOMMENT
 %x MLINECOMMENT
 
@@ -35,7 +33,7 @@ whitespace [ \t\r\f\v\n]
 {alphaplain}{alphaplus}*{alphaplain} { return (int) MkId(yytext); }
 {num}              { return (int) DotTokenKind.Id; }
 \-\-               { return (int) DotTokenKind.Arrow; }
-\"                 { BEGIN(QSTRING); BuilderInit(); return (int)DotTokenKind.Quote; }
+\"                 { BEGIN(QSTRING); BuilderInit(); BuilderAppend(); }
 \[                 { return (int)DotTokenKind.ListStart; }
 \]                 { return (int)DotTokenKind.ListEnd; }
 \{                 { return (int)DotTokenKind.ScopeStart; }
@@ -44,7 +42,7 @@ whitespace [ \t\r\f\v\n]
 \;                 { return (int)DotTokenKind.Semicolon; }
 \:                 { return (int)DotTokenKind.Colon; }
 \=                 { return (int)DotTokenKind.Equal; }
-\<                 { BEGIN(HTML); nesting = 1; BuilderInit(); return (int)DotTokenKind.HtmlStringStart; }
+\<                 { BEGIN(HTML); nesting = 1; BuilderInit(); BuilderAppend(); }
 \#                 { BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend(); }
 {whitespace}+      { return (int)DotTokenKind.Whitespace; }
 \/\/               { BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend(); } 
@@ -54,17 +52,14 @@ whitespace [ \t\r\f\v\n]
 <HTML>\<           { nesting++; 
                      BuilderAppend(); }
 <HTML>\>           { nesting--; 
+                     BuilderAppend();
                      if (nesting == 0) {
-                       _yytrunc(1);
-                       BEGIN(HTML_END);
+                       BEGIN(INITIAL);
                        tokTxt = BuilderBuild();
                        return (int)DotTokenKind.Id;
-                     } else {
-                       BuilderAppend(); 
                      }
                    }
 <HTML>[^<>]        { BuilderAppend(); }
-<HTML_END>\>       { BEGIN(INITIAL); return (int)DotTokenKind.HtmlStringEnd; }
 
 <LINECOMMENT>(\r|\n)    { _yytrunc(1); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKind.Comment; }
 <LINECOMMENT>[^\r\n]    { BuilderAppend(); } 
@@ -75,8 +70,7 @@ whitespace [ \t\r\f\v\n]
 <QSTRING>\\\\            { BuilderAppend(); }
 <QSTRING>\\\"            { BuilderAppend(); }
 <QSTRING>([^"\\]+|[\\])  { BuilderAppend(); }
-<QSTRING>\"              { _yytrunc(1); BEGIN(QSTRING_END); tokTxt = BuilderBuild(); return (int)DotTokenKind.Id; }
-<QSTRING_END>\"          { BEGIN(INITIAL); return (int)DotTokenKind.Quote; }
+<QSTRING>\"              { BEGIN(INITIAL); BuilderAppend(); tokTxt = BuilderBuild(); return (int)DotTokenKind.Id; }
 
 
 %{
