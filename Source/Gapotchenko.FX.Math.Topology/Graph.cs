@@ -35,7 +35,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <param name="comparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
-        /// or <c>null</c> to use the default <see cref="IEqualityComparer{T}"/> implementation.
+        /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
         public Graph(IEqualityComparer<T>? comparer)
         {
@@ -46,7 +46,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for vertices
         /// and contains vertices and edges copied from the specified <see cref="IReadOnlyGraph{T}"/>.
         /// </summary>
-        /// <param name="graph">The <see cref="IReadOnlyGraph{T}"/> whole vertices and edges are copied to the new <see cref="Graph{T}"/>.</param>
+        /// <param name="graph">The <see cref="IReadOnlyGraph{T}"/> whose vertices and edges are copied to the new <see cref="Graph{T}"/>.</param>
         public Graph(IReadOnlyGraph<T> graph) :
             this(graph, null)
         {
@@ -56,10 +56,10 @@ namespace Gapotchenko.FX.Math.Topology
         /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices
         /// and contains vertices and edges copied from the specified <see cref="IReadOnlyGraph{T}"/>.
         /// </summary>
-        /// <param name="graph">The <see cref="IReadOnlyGraph{T}"/> whole vertices and edges are copied to the new <see cref="Graph{T}"/>.</param>
+        /// <param name="graph">The <see cref="IReadOnlyGraph{T}"/> whose vertices and edges are copied to the new <see cref="Graph{T}"/>.</param>
         /// <param name="comparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
-        /// or <c>null</c> to use the default <see cref="IEqualityComparer{T}"/> implementation.
+        /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
         public Graph(IReadOnlyGraph<T> graph, IEqualityComparer<T>? comparer) :
             this(comparer)
@@ -67,59 +67,62 @@ namespace Gapotchenko.FX.Math.Topology
             if (graph == null)
                 throw new ArgumentNullException(nameof(graph));
 
-            var edges = Edges;
-            foreach (var edge in graph.Edges)
-                edges.Add(edge);
-
-            var vertices = Vertices;
-            foreach (var vertex in graph.Vertices)
-                vertices.Add(vertex);
+            Edges.UnionWith(graph.Edges);
+            Vertices.UnionWith(graph.Vertices);
         }
 
         /// <summary>
         /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for vertices,
         /// contains vertices copied from the specified collection
-        /// and edges representing the relations between the vertices defined by the specified dependency function.
+        /// and edges defined by the specified incidence function.
         /// </summary>
-        public Graph(IEnumerable<T> collection, DependencyFunction<T> df) :
-            this(collection, df, null)
+        /// <param name="vertices">The collection of graph vertices.</param>
+        /// <param name="incidence">The graph incidence function.</param>
+        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidence) :
+            this(vertices, incidence, null)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices,
         /// contains vertices copied from the specified collection
-        /// and edges representing the relations between the vertices defined by the specified dependency function.
+        /// and edges defined by the specified incidence function.
         /// </summary>
-        public Graph(IEnumerable<T> collection, DependencyFunction<T> df, IEqualityComparer<T>? comparer) :
+        /// <param name="vertices">The collection of graph vertices.</param>
+        /// <param name="incidence">The graph incidence function.</param>
+        /// <param name="comparer">
+        /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
+        /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
+        /// </param>
+        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidence, IEqualityComparer<T>? comparer) :
             this(comparer)
         {
-            if (collection == null)
-                throw new ArgumentNullException(nameof(collection));
-            if (df == null)
-                throw new ArgumentNullException(nameof(df));
+            if (vertices == null)
+                throw new ArgumentNullException(nameof(vertices));
+            if (incidence == null)
+                throw new ArgumentNullException(nameof(incidence));
 
-            var list = collection.AsReadOnlyList();
+            var list = vertices.AsReadOnlyList();
             int count = list.Count;
 
             for (int i = 0; i < count; ++i)
             {
-                var ei = list[i];
-                bool edge = false;
+                var from = list[i];
 
+                bool edge = false;
                 for (int j = 0; j < count; ++j)
                 {
-                    var ej = list[j];
+                    var to = list[j];
 
-                    if (df(ei, ej))
+                    if (incidence(from, to))
                     {
-                        Edges.Add(ei, ej);
+                        Edges.Add(from, to);
                         edge = true;
                     }
                 }
 
                 if (!edge)
-                    Vertices.Add(ei);
+                    Vertices.Add(from);
             }
         }
 

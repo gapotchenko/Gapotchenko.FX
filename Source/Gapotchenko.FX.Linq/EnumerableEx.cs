@@ -303,7 +303,7 @@ namespace Gapotchenko.FX.Linq
         /// Returns a list view of a source sequence.
         /// </para>
         /// <para>
-        /// Depending on a source sequence kind, the result is either a directly-casted instance or a copied in-memory list.
+        /// Depending on a source sequence type, the result is either a directly-casted instance or a copied in-memory list.
         /// </para>
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
@@ -323,7 +323,7 @@ namespace Gapotchenko.FX.Linq
         /// Returns an array view of a source sequence.
         /// </para>
         /// <para>
-        /// Depending on a source sequence kind, the result is either a directly-casted instance or a copied in-memory array.
+        /// Depending on a source sequence type, the result is either a directly-casted instance or a copied in-memory array.
         /// </para>
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
@@ -340,10 +340,10 @@ namespace Gapotchenko.FX.Linq
 
         /// <summary>
         /// <para>
-        /// Returns a read-only view of a source sequence.
+        /// Returns a read-only list view of a source sequence.
         /// </para>
         /// <para>
-        /// Depending on a source sequence kind, the result is either a read-only wrapper, a directly-casted instance, or a copied in-memory list.
+        /// Depending on a source sequence type, the result is either a read-only wrapper, a directly-casted instance, or a copied in-memory list.
         /// </para>
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
@@ -362,10 +362,10 @@ namespace Gapotchenko.FX.Linq
 
         /// <summary>
         /// <para>
-        /// Returns a read-only view of a source sequence.
+        /// Returns a read-only list view of a source sequence.
         /// </para>
         /// <para>
-        /// Depending on a source sequence kind, the result is either a read-only wrapper, a directly-casted instance, or a copied in-memory list.
+        /// Depending on a source sequence type, the result is either a read-only wrapper, a directly-casted instance, or a copied in-memory list.
         /// </para>
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
