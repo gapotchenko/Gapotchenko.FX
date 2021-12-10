@@ -38,53 +38,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public void Save(DotWriter writer)
         {
             if (Root is not null)
-                Save(writer, Root);
-        }
-
-        static void Save(DotWriter writer, DotGraphNode node)
-        {
-            var tokens = EnumerateTokens(node);
-            foreach (var token in tokens)
-                Save(writer, token);
-        }
-
-        static void Save(DotWriter writer, DotToken token)
-        {
-            if (token.HasLeadingTrivia)
             {
-                foreach (var trivia in token.LeadingTrivia)
-                    Save(writer, trivia);
-            }
-
-            if (!string.IsNullOrEmpty(token.Text))
-                writer.Write(token.Kind, token.Text);
-
-            if (token.HasTrailingTrivia)
-            {
-                foreach (var trivia in token.TrailingTrivia)
-                    Save(writer, trivia);
-            }
-        }
-
-        static void Save(DotWriter writer, DotTrivia trivia)
-        {
-            if (!string.IsNullOrEmpty(trivia.Value))
-                writer.Write(trivia.Kind, trivia.Value);
-        }
-
-        static IEnumerable<DotToken> EnumerateTokens(DotNode node)
-        {
-            foreach (var child in node.ChildNodesAndTokens)
-            {
-                if (child is DotToken t)
-                {
-                    yield return t;
-                }
-                else if (child is DotNode n)
-                {
-                    foreach (var i in EnumerateTokens(n))
-                        yield return i;
-                }
+                var domWriter = new DotDomWriter(writer);
+                Root.Accept(domWriter);
             }
         }
     }
