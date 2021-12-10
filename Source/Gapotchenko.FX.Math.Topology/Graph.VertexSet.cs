@@ -8,10 +8,9 @@ namespace Gapotchenko.FX.Math.Topology
 {
     partial class Graph<T>
     {
-        [DebuggerDisplay("Count = {Count}")]
         sealed class VertexSet : SetBase<T>
         {
-            internal VertexSet(Graph<T> graph)
+            public VertexSet(Graph<T> graph)
             {
                 m_Graph = graph;
             }
@@ -33,16 +32,6 @@ namespace Gapotchenko.FX.Math.Topology
                 return true;
             }
 
-            public override void Clear() => m_Graph.Clear();
-
-            public override bool Contains(T vertex)
-            {
-                var adjacencyList = m_Graph.m_AdjacencyList;
-                return
-                    adjacencyList.ContainsKey(vertex) ||
-                    adjacencyList.Any(x => x.Value?.Contains(vertex) ?? false);
-            }
-
             public override bool Remove(T vertex)
             {
                 bool hit = false;
@@ -61,6 +50,16 @@ namespace Gapotchenko.FX.Math.Topology
                     --m_Graph.m_CachedOrder;
 
                 return hit;
+            }
+
+            public override void Clear() => m_Graph.Clear();
+
+            public override bool Contains(T vertex)
+            {
+                var adjacencyList = m_Graph.m_AdjacencyList;
+                return
+                    adjacencyList.ContainsKey(vertex) ||
+                    adjacencyList.Any(x => x.Value?.Contains(vertex) ?? false);
             }
 
             public override IEnumerator<T> GetEnumerator() =>

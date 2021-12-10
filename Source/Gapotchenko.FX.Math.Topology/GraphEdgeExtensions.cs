@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Gapotchenko.FX.Math.Topology
 {
     /// <summary>
     /// Extensions for <see cref="GraphEdge{T}"/> struct.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class GraphEdgeExtensions
     {
         /// <summary>
@@ -17,6 +19,16 @@ namespace Gapotchenko.FX.Math.Topology
         /// <returns><c>true</c> if the edge is added to the graph; <c>false</c> if the edge is already present.</returns>
         public static bool Add<T>(this ISet<GraphEdge<T>> edgeSet, T from, T to) =>
             (edgeSet ?? throw new ArgumentNullException(nameof(edgeSet))).Add(new GraphEdge<T>(from, to));
+
+        /// <summary>
+        /// Removes the specified edge from the graph.
+        /// </summary>
+        /// <param name="edgeSet">The set of graph edges.</param>
+        /// <param name="from">The source vertex of the edge.</param>
+        /// <param name="to">The destination vertex of the edge.</param>
+        /// <returns><c>true</c> if the edge was removed from the graph; <c>false</c> if the edge is was not found.</returns>
+        public static bool Remove<T>(this ISet<GraphEdge<T>> edgeSet, T from, T to) =>
+            (edgeSet ?? throw new ArgumentNullException(nameof(edgeSet))).Remove(new GraphEdge<T>(from, to));
 
         /// <summary>
         /// <para>

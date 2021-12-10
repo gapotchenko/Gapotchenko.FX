@@ -193,9 +193,15 @@ namespace Gapotchenko.FX.Math.Topology
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlySet<GraphEdge<T>> IReadOnlyGraph<T>.Edges => EdgesCore;
 
+        /// <summary>
+        /// Cached number of vertices.
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int? m_CachedOrder = 0;
 
+        /// <summary>
+        /// Cached number of edges.
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int? m_CachedSize = 0;
 

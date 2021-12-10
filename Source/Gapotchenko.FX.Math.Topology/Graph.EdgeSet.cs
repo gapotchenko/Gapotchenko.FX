@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Math.Topology
     {
         sealed class EdgeSet : SetBase<GraphEdge<T>>
         {
-            internal EdgeSet(Graph<T> graph)
+            public EdgeSet(Graph<T> graph)
             {
                 m_Graph = graph;
             }
@@ -57,7 +57,24 @@ namespace Gapotchenko.FX.Math.Topology
 
             public override bool Remove(GraphEdge<T> item)
             {
-                throw new NotImplementedException();
+                var adjList = m_Graph.m_AdjacencyList;
+
+                if (!adjList.TryGetValue(item.From, out var adjRow))
+                    return false;
+
+                if (adjRow == null)
+                    return false;
+
+                if (!adjRow.Remove(item.To))
+                    return false;
+
+                --m_Graph.m_CachedSize;
+
+                // Preserve the vertex.
+                if (!adjList.ContainsKey(item.To))
+                    adjList.Add(item.To, null);
+
+                return true;
             }
 
             public override void Clear()
