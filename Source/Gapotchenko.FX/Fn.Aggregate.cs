@@ -123,7 +123,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <remarks>
         /// To aggregate the values of any enumerable sequence,
-        /// use <see cref="Enumerable.Aggregate{TSource}(System.Collections.Generic.IEnumerable{TSource}, Func{TSource, TSource, TSource})"/> method.
+        /// use <see cref="Enumerable.Aggregate{TSource}(System.Collections.Generic.IEnumerable{TSource}, Func{TSource, TSource, TSource})"/> extension method.
         /// </remarks>
         /// <typeparam name="T">The type of values to aggregate.</typeparam>
         /// <param name="f">The accumulator function.</param>
@@ -150,9 +150,7 @@ namespace Gapotchenko.FX
             if (rest == null)
             {
                 // The automatic disambiguation for a 'rest = null' scenario when T is a reference type and imaginary val9 is meant to be null.
-#pragma warning disable CS8604 // Possible null reference argument.
-                a = f(a, default);
-#pragma warning restore CS8604 // Possible null reference argument.
+                a = f(a, default!);
             }
             else
             {

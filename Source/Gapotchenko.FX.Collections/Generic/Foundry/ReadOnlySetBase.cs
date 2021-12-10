@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gapotchenko.FX.Collections.Generic.Kit
+namespace Gapotchenko.FX.Collections.Generic.Foundry
 {
     /// <summary>
     /// Provides the implementation base for <see cref="IReadOnlySet{T}"/>.
@@ -84,8 +84,8 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
                 }
             }
 
-            var presence = CalculatePresenceOf(other, false);
-            return presence.UniqueCount == count && presence.UnfoundCount > 0;
+            var inclusivity = CalculateInclusivityOf(other);
+            return inclusivity.PresentCount == count && inclusivity.HasAbsent;
         }
 
         /// <inheritdoc/>
@@ -123,8 +123,8 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
                 }
             }
 
-            var presence = CalculatePresenceOf(other, true);
-            return presence.UnfoundCount < count && presence.UnfoundCount == 0;
+            var inclusivity = CalculateInclusivityOf(other, true);
+            return inclusivity.PresentCount < count && !inclusivity.HasAbsent;
         }
 
         /// <inheritdoc/>
@@ -166,7 +166,7 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
                 }
             }
 
-            return CalculatePresenceOf(other, false).UniqueCount == count;
+            return CalculateInclusivityOf(other).PresentCount == count;
         }
 
         /// <inheritdoc/>
@@ -245,29 +245,30 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
             }
         }
 
-        (int UniqueCount, int UnfoundCount) CalculatePresenceOf(IEnumerable<T> other, bool stopOnUnfound)
+        (int PresentCount, bool HasAbsent) CalculateInclusivityOf(IEnumerable<T> other, bool stopOnAbsent = false)
         {
-            if (Count == 0)
-                return (0, other.Any() ? 1 : 0);
+            int count = Count;
+            if (count == 0)
+                return (0, other.Any());
 
-            var unique = new HashSet<T>(Comparer);
-            int unfoundCount = 0;
+            var present = new HashSet<T>(Comparer);
+            bool hasAbsent = false;
 
             foreach (var i in other)
             {
                 if (Contains(i))
                 {
-                    unique.Add(i);
+                    present.Add(i);
                 }
                 else
                 {
-                    ++unfoundCount;
-                    if (stopOnUnfound)
+                    hasAbsent = true;
+                    if (stopOnAbsent)
                         break;
                 }
             }
 
-            return (unique.Count, unfoundCount);
+            return (present.Count, hasAbsent);
         }
 
         bool ContainsAllElements(IEnumerable<T> other)

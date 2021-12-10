@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Gapotchenko.FX.Collections.Generic.Kit
+namespace Gapotchenko.FX.Collections.Generic.Foundry
 {
     /// <summary>
     /// Provides the implementation base for <see cref="ISet{T}"/>.
