@@ -11,134 +11,134 @@ namespace Gapotchenko.FX.Math.Geometry
     public static class StringMetrics
     {
         /// <summary>
-        /// Calculates Levenshtein distance between two sequences.
+        /// Calculates Levenshtein distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
-        /// <returns>The Levenshtein distance.</returns>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
+        /// <returns>The Levenshtein distance between the specified sequences of elements.</returns>
         public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
             LevenshteinDistance(a, b, null, null);
 
         /// <summary>
-        /// Calculates Levenshtein distance between two sequences.
+        /// Calculates Levenshtein distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
-        /// <returns>The Levenshtein distance.</returns>
+        /// <returns>The Levenshtein distance between the specified sequences of elements.</returns>
         public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
             LevenshteinDistance(a, b, maxDistance, null);
 
         /// <summary>
-        /// Calculates Levenshtein distance between two sequences.
+        /// Calculates Levenshtein distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
-        /// <returns>The Levenshtein distance.</returns>
+        /// <returns>The Levenshtein distance between the specified sequences of elements.</returns>
         public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
             LevenshteinDistance(a, b, null, equalityComparer);
 
         /// <summary>
-        /// Calculates Levenshtein distance between two sequences.
+        /// Calculates Levenshtein distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
-        /// <returns>The Levenshtein distance.</returns>
+        /// <returns>The Levenshtein distance between the specified sequences of elements.</returns>
         public static int LevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
             OsaDistance(a, b, maxDistance, allowReplacements: true, allowTranspositions: false, equalityComparer);
 
         /// <summary>
-        /// Calculates longest common subsequence distance between two sequences.
+        /// Calculates longest common subsequence distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
-        /// <returns>The longest common subsequence distance.</returns>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
+        /// <returns>The longest common subsequence distance between the specified sequences of elements.</returns>
         public static int LcsDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
             LcsDistance(a, b, null, null);
 
         /// <summary>
-        /// Calculates longest common subsequence distance between two sequences.
+        /// Calculates longest common subsequence distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
-        /// <returns>The longest common subsequence distance.</returns>
+        /// <returns>The longest common subsequence distance between the specified sequences of elements.</returns>
         public static int LcsDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
             LcsDistance(a, b, maxDistance, null);
 
         /// <summary>
-        /// Calculates longest common subsequence distance between two sequences.
+        /// Calculates longest common subsequence distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
-        /// <returns>The longest common subsequence distance.</returns>
+        /// <returns>The longest common subsequence distance between the specified sequences of elements.</returns>
         public static int LcsDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
             LcsDistance(a, b, null, equalityComparer);
 
         /// <summary>
-        /// Calculates longest common subsequence distance between two sequences.
+        /// Calculates longest common subsequence distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
-        /// <returns>The longest common subsequence distance.</returns>
+        /// <returns>The longest common subsequence distance between the specified sequences of elements.</returns>
         public static int LcsDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
             OsaDistance(a, b, maxDistance, allowReplacements: false, allowTranspositions: false, equalityComparer);
 
         /// <summary>
-        /// Calculates optimal string alignment distance between two sequences.
+        /// Calculates optimal string alignment distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
-        /// <returns>The optimal string alignment distance.</returns>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
+        /// <returns>The optimal string alignment distance between the specified sequences of elements.</returns>
         public static int OsaDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
             OsaDistance(a, b, null, null);
 
         /// <summary>
-        /// Calculates optimal string alignment distance between two sequences.
+        /// Calculates optimal string alignment distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
-        /// <returns>The optimal string alignment distance.</returns>
+        /// <returns>The optimal string alignment distance between the specified sequences of elements.</returns>
         public static int OsaDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
             OsaDistance(a, b, maxDistance, null);
 
         /// <summary>
-        /// Calculates optimal string alignment distance between two sequences.
+        /// Calculates optimal string alignment distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
-        /// <returns>The optimal string alignment distance.</returns>
+        /// <returns>The optimal string alignment distance between the specified sequences of elements.</returns>
         public static int OsaDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
             OsaDistance(a, b, null, equalityComparer);
 
         /// <summary>
-        /// Calculates optimal string alignment distance between two sequences.
+        /// Calculates optimal string alignment distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
-        /// <returns>The optimal string alignment distance.</returns>
+        /// <returns>The optimal string alignment distance between the specified sequences of elements.</returns>
         public static int OsaDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer) =>
             OsaDistance(a, b, maxDistance, allowReplacements: true, allowTranspositions: true, equalityComparer);
 
@@ -245,46 +245,46 @@ namespace Gapotchenko.FX.Math.Geometry
         }
 
         /// <summary>
-        /// Calculates Hamming distance between two sequences.
+        /// Calculates Hamming distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
-        /// <returns>The Hamming distance.</returns>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
+        /// <returns>The Hamming distance between the specified sequences of elements.</returns>
         public static int HammingDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
             HammingDistance(a, b, null, null);
 
         /// <summary>
-        /// Calculates Hamming distance between two sequences.
+        /// Calculates Hamming distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
-        /// <returns>The Hamming distance.</returns>
+        /// <returns>The Hamming distance between the specified sequences of elements.</returns>
         public static int HammingDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
             HammingDistance(a, b, maxDistance, null);
 
         /// <summary>
-        /// Calculates Hamming distance between two sequences.
+        /// Calculates Hamming distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
-        /// <returns>The Hamming distance.</returns>
+        /// <returns>The Hamming distance between the specified sequences of elements.</returns>
         public static int HammingDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
             HammingDistance(a, b, null, equalityComparer);
 
         /// <summary>
-        /// Calculates Hamming distance between two sequences.
+        /// Calculates Hamming distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
-        /// <returns>The Hamming distance.</returns>
+        /// <returns>The Hamming distance between the specified sequences of elements.</returns>
         public static int HammingDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer)
         {
             if (a == null)
@@ -336,23 +336,23 @@ namespace Gapotchenko.FX.Math.Geometry
         }
 
         /// <summary>
-        /// Calculates Jaro distance between two sequences.
+        /// Calculates Jaro distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
-        /// <returns>The Jaro distance.</returns>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
+        /// <returns>The Jaro distance between the specified sequences of elements.</returns>
         public static double JaroDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
             JaroDistance(a, b, null);
 
         /// <summary>
-        /// Calculates Jaro distance between two sequences.
+        /// Calculates Jaro distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
-        /// <returns>The Jaro distance.</returns>
+        /// <returns>The Jaro distance between the specified sequences of elements.</returns>
         public static double JaroDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer)
         {
             if (a == null)
@@ -426,46 +426,46 @@ namespace Gapotchenko.FX.Math.Geometry
         }
 
         /// <summary>
-        /// Calculates Damerau–Levenshtein distance between two sequences.
+        /// Calculates Damerau–Levenshtein distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
-        /// <returns>The Damerau–Levenshtein distance.</returns>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
+        /// <returns>The Damerau–Levenshtein distance between the specified sequences of elements.</returns>
         public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b) where T : notnull =>
             DamerauLevenshteinDistance(a, b, null, null);
 
         /// <summary>
-        /// Calculates Damerau–Levenshtein distance between two sequences.
+        /// Calculates Damerau–Levenshtein distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
-        /// <returns>The Damerau–Levenshtein distance.</returns>
+        /// <returns>The Damerau–Levenshtein distance between the specified sequences of elements.</returns>
         public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) where T : notnull =>
             DamerauLevenshteinDistance(a, b, maxDistance, null);
 
         /// <summary>
-        /// Calculates Damerau–Levenshtein distance between two sequences.
+        /// Calculates Damerau–Levenshtein distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
-        /// <returns>The Damerau–Levenshtein distance.</returns>
+        /// <returns>The Damerau–Levenshtein distance between the specified sequences of elements.</returns>
         public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) where T : notnull =>
             DamerauLevenshteinDistance(a, b, null, equalityComparer);
 
         /// <summary>
-        /// Calculates Damerau–Levenshtein distance between two sequences.
+        /// Calculates Damerau–Levenshtein distance between two specified sequences of elements.
         /// </summary>
         /// <typeparam name="T">The type of the sequence elements.</typeparam>
-        /// <param name="a">The first sequence.</param>
-        /// <param name="b">The second sequence.</param>
+        /// <param name="a">The first sequence of elements.</param>
+        /// <param name="b">The second sequence of elements.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
-        /// <returns>The Damerau–Levenshtein distance.</returns>
+        /// <returns>The Damerau–Levenshtein distance between the specified sequences of elements.</returns>
         public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer)
             where T : notnull
         {
