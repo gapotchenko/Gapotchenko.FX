@@ -1,11 +1,11 @@
-﻿using Gapotchenko.FX.Collections.Generic.Foundry;
+﻿using Gapotchenko.FX.Collections.Generic.Kit;
 using Gapotchenko.FX.Math.Combinatorics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gapotchenko.FX.Collections.Tests.Concurrent.Foundry
+namespace Gapotchenko.FX.Collections.Tests.Generic.Kit
 {
     [TestClass]
     public class ReadOnlySetBaseTests
@@ -110,7 +110,7 @@ namespace Gapotchenko.FX.Collections.Tests.Concurrent.Foundry
             foreach (var s in Sets(new[] { 1, 2, 3 }))
                 Assert.IsFalse(s1.IsProperSupersetOf(s));
 
-            foreach (var s in Sets(new[] { 1, 2, 3, 4, 5 }))
+            foreach (var s in Sets(new[] { 1, 2, 3, 4 }))
                 Assert.IsFalse(s1.IsProperSupersetOf(s));
 
             foreach (var s in SetsEnumerable(s1))
@@ -133,7 +133,7 @@ namespace Gapotchenko.FX.Collections.Tests.Concurrent.Foundry
         {
             var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 3, 2, 1 });
 
-            foreach (var s in Sets(new[] { 1, 2, 3, 4, 5 }))
+            foreach (var s in Sets(new[] { 1, 2, 3, 4 }))
                 Assert.IsTrue(s1.IsSubsetOf(s));
 
             foreach (var s in Sets(new[] { 1, 2, 3 }))
@@ -171,7 +171,7 @@ namespace Gapotchenko.FX.Collections.Tests.Concurrent.Foundry
             foreach (var s in Sets(new[] { 1, 2, 3 }))
                 Assert.IsTrue(s1.IsSupersetOf(s));
 
-            foreach (var s in Sets(new[] { 1, 2, 3, 4, 5 }))
+            foreach (var s in Sets(new[] { 1, 2, 3, 4 }))
                 Assert.IsFalse(s1.IsSupersetOf(s));
 
             foreach (var s in SetsEnumerable(s1))

@@ -1,4 +1,4 @@
-﻿using Gapotchenko.FX.Collections.Generic.Foundry;
+﻿using Gapotchenko.FX.Collections.Generic.Kit;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

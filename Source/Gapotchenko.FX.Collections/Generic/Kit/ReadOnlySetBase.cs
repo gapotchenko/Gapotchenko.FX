@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gapotchenko.FX.Collections.Generic.Foundry
+namespace Gapotchenko.FX.Collections.Generic.Kit
 {
     /// <summary>
     /// Provides the implementation base for <see cref="IReadOnlySet{T}"/>.
