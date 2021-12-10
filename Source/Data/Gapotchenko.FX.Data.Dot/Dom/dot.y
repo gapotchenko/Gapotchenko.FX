@@ -121,6 +121,9 @@ id        : ID          { $$ = $1; }
           | '"' ID '"'  { $$ = $2; 
                           AppendLeadingTrivia($2, $1);
                           PrependTrailingTrivia($2, $3); }
+          | '<' ID '>'  { $$ = $2; 
+                          AppendLeadingTrivia($2, $1);
+                          PrependTrailingTrivia($2, $3); }
           ;
 
 %%

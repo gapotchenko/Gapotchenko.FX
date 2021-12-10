@@ -27,13 +27,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             DotValueType value)
         {
             var token = value.token;
-            return new DotTrivia(token.Kind, token.Value);
+            return new DotTrivia(token.Kind, token.Text);
         }
 
         static DotTrivia CreateTrivia(
             DotToken token)
         {
-            return new DotTrivia(token.Kind, token.Value);
+            return new DotTrivia(token.Kind, token.Text);
         }
 
         static DotVertexIdentifierNode CreateVertexIdentifierSyntax(

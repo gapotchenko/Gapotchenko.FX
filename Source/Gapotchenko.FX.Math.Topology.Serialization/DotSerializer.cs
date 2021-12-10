@@ -208,7 +208,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
                 return new Graph<DotDocumentVertex>();
             }
 
-            var directed = string.Equals("digraph", root.GraphKindKeyword?.Value, StringComparison.OrdinalIgnoreCase);
+            var directed = string.Equals("digraph", root.GraphKindKeyword?.Text, StringComparison.OrdinalIgnoreCase);
 
             var builder = new IntermediateGraphBuilder(directed);
             root.Accept(builder);

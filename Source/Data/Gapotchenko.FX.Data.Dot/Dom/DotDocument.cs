@@ -56,8 +56,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                     Save(writer, trivia);
             }
 
-            if (!string.IsNullOrEmpty(token.Value))
-                writer.Write(token.Kind, token.Value);
+            if (!string.IsNullOrEmpty(token.Text))
+                writer.Write(token.Kind, token.Text);
 
             if (token.HasTrailingTrivia)
             {

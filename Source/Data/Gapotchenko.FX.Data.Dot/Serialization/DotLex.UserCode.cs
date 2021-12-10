@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         public override void yyerror(string format, params object[] args)
         {
             if (args.Length > 0)
-                message = String.Format(format, args);
+                message = string.Format(format, args);
             else
                 message = format;
         }
@@ -29,7 +30,7 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         {
             if (txt != null)
             {
-                message = String.Format("Unexpected {0}", txt);
+                message = string.Format("Unexpected {0}", txt);
             }
         }
 
@@ -60,11 +61,13 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
 
         void BuilderAppend()
         {
+            Debug.Assert(_yytextBuilder is not null);
             _yytextBuilder.Append(yytext);
         }
 
         string BuilderBuild()
         {
+            Debug.Assert(_yytextBuilder is not null);
             return _yytextBuilder.ToString();
         }
     }
