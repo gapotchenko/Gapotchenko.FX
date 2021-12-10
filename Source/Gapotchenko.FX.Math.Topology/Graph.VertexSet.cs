@@ -19,6 +19,7 @@ namespace Gapotchenko.FX.Math.Topology
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly Graph<T> m_Graph;
 
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             public override IEqualityComparer<T> Comparer => m_Graph.Comparer;
 
             public override int Count => m_Graph.m_CachedOrder ??= GetEnumerator().Rest().Count();

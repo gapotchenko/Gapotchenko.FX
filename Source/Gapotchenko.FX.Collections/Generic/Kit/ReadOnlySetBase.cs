@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Gapotchenko.FX.Collections.Generic.Kit
@@ -9,6 +10,8 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
     /// <summary>
     /// Provides the implementation base for <see cref="IReadOnlySet{T}"/>.
     /// </summary>
+    [DebuggerDisplay("Count = {Count}")]
+    [DebuggerTypeProxy(typeof(CollectionDebugView<>))]
     public abstract class ReadOnlySetBase<T> : IReadOnlySet<T>
     {
         /// <summary>

@@ -21,6 +21,7 @@ namespace Gapotchenko.FX.Math.Topology
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             IEqualityComparer<GraphEdge<T>>? m_Comparer;
 
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             public override IEqualityComparer<GraphEdge<T>> Comparer => m_Comparer ??= GraphEdge<T>.CreateComparer(m_Graph.Comparer);
 
             public override int Count => m_Graph.m_CachedSize ??= m_Graph.m_AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
