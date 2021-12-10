@@ -299,8 +299,12 @@ namespace Gapotchenko.FX.Linq
         }
 
         /// <summary>
+        /// <para>
         /// Returns a list view of a source sequence.
-        /// Depending on a source sequence kind, the result is either a directly casted instance or a copied in-memory list.
+        /// </para>
+        /// <para>
+        /// Depending on a source sequence kind, the result is either a directly-casted instance or a copied in-memory list.
+        /// </para>
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
         /// <param name="source">The source sequence.</param>
@@ -315,8 +319,12 @@ namespace Gapotchenko.FX.Linq
             };
 
         /// <summary>
+        /// <para>
         /// Returns an array view of a source sequence.
-        /// Depending on a source sequence kind, the result is either a directly casted instance or a copied in-memory array.
+        /// </para>
+        /// <para>
+        /// Depending on a source sequence kind, the result is either a directly-casted instance or a copied in-memory array.
+        /// </para>
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
         /// <param name="source">The source sequence.</param>
@@ -335,14 +343,14 @@ namespace Gapotchenko.FX.Linq
         /// Returns a read-only view of a source sequence.
         /// </para>
         /// <para>
-        /// Depending on a source sequence kind, the result is either a read-only wrapper, a directly casted instance, or a copied in-memory list.
+        /// Depending on a source sequence kind, the result is either a read-only wrapper, a directly-casted instance, or a copied in-memory list.
         /// </para>
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
         /// <param name="source">The source sequence.</param>
         /// <returns>A read-only view of a source sequence.</returns>
         [return: NotNullIfNotNull("source")]
-        public static IReadOnlyList<TSource>? AsReadOnly<TSource>(this IEnumerable<TSource>? source) =>
+        public static IReadOnlyList<TSource>? AsReadOnlyList<TSource>(this IEnumerable<TSource>? source) =>
             source switch
             {
                 null => null,
@@ -351,6 +359,22 @@ namespace Gapotchenko.FX.Linq
                 string s => (IReadOnlyList<TSource>)(object)new ReadOnlyCharList(s),
                 _ => AsList(source).AsReadOnly()
             };
+
+        /// <summary>
+        /// <para>
+        /// Returns a read-only view of a source sequence.
+        /// </para>
+        /// <para>
+        /// Depending on a source sequence kind, the result is either a read-only wrapper, a directly-casted instance, or a copied in-memory list.
+        /// </para>
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <returns>A read-only view of a source sequence.</returns>
+        [Obsolete("Use AsReadOnlyList method instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [return: NotNullIfNotNull("source")]
+        public static IReadOnlyList<TSource>? AsReadOnly<TSource>(this IEnumerable<TSource>? source) => AsReadOnlyList(source);
 
         /// <summary>
         /// Determines whether any elements of a sequence satisfy the specified conditions.

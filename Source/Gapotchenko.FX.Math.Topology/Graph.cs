@@ -99,7 +99,7 @@ namespace Gapotchenko.FX.Math.Topology
             if (df == null)
                 throw new ArgumentNullException(nameof(df));
 
-            var list = collection.AsReadOnly();
+            var list = collection.AsReadOnlyList();
             int count = list.Count;
 
             for (int i = 0; i < count; ++i)

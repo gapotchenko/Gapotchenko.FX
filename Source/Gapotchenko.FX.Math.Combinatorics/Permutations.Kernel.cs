@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
     {
         static IEnumerable<IRow<T>> Permute<T>(IEnumerable<T> sequence, bool distinct, IEqualityComparer<T>? comparer)
         {
-            var items = sequence.AsReadOnly();
+            var items = sequence.AsReadOnlyList();
 
             int length = items.Count;
             var transform = new (int First, int Second)[length];

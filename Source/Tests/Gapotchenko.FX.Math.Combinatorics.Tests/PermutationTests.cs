@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(2, cardinality);
 
-            var p = Permutations.Of(source).AsReadOnly();
+            var p = Permutations.Of(source).AsReadOnlyList();
             Assert.AreEqual(cardinality, p.Count);
 
             var s = p
@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(2, cardinality);
 
-            var p = Permutations.Of(source).Distinct().AsReadOnly();
+            var p = Permutations.Of(source).Distinct().AsReadOnlyList();
             Assert.AreEqual(cardinality, p.Count);
 
             var s = p
@@ -70,7 +70,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(2, cardinality);
 
-            var p = Permutations.Of(source).AsReadOnly();
+            var p = Permutations.Of(source).AsReadOnlyList();
             Assert.AreEqual(cardinality, p.Count);
 
             var s = p
@@ -92,7 +92,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = Permutations.Cardinality(source.Length) / countOfDuplicateElements;
             Assert.AreEqual(1, cardinality);
 
-            var p = Permutations.Of(source).Distinct().AsReadOnly();
+            var p = Permutations.Of(source).Distinct().AsReadOnlyList();
             Assert.AreEqual(cardinality, p.Count);
 
             var s = p
@@ -129,7 +129,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(6, cardinality);
 
-            var p = Permutations.Of(source).AsReadOnly();
+            var p = Permutations.Of(source).AsReadOnlyList();
             Assert.AreEqual(cardinality, p.Count);
 
             var s = p
@@ -158,7 +158,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(6, cardinality);
 
-            var p = Permutations.Of(source).Distinct().AsReadOnly();
+            var p = Permutations.Of(source).Distinct().AsReadOnlyList();
             Assert.AreEqual(cardinality, p.Count);
 
             var s = p
@@ -202,7 +202,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = Permutations.Cardinality(source.Length);
             Assert.AreEqual(6, cardinality);
 
-            var p = Permutations.Of(source).AsReadOnly();
+            var p = Permutations.Of(source).AsReadOnlyList();
             Assert.AreEqual(cardinality, p.Count);
 
             var s = p
@@ -228,7 +228,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = Permutations.Cardinality(source.Length) / countOfDuplicateElements;
             Assert.AreEqual(3, cardinality);
 
-            var p = Permutations.Of(source).Distinct().AsReadOnly();
+            var p = Permutations.Of(source).Distinct().AsReadOnlyList();
             Assert.AreEqual(cardinality, p.Count);
 
             var s = p
@@ -268,7 +268,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = Permutations.Cardinality(source.Length) / countOfDuplicateElements;
             Assert.AreEqual(3, cardinality);
 
-            var p = Enumerable.Distinct(Permutations.Of(source)).AsReadOnly();
+            var p = Enumerable.Distinct(Permutations.Of(source)).AsReadOnlyList();
             Assert.AreEqual(cardinality, p.Count);
 
             var s = p

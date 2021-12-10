@@ -168,7 +168,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         internal static IResult<T> PermuteAccelerated<T>(IEnumerable<T> sequence)
         {
             if (!Utility.IsSet(sequence))
-                sequence = sequence.AsReadOnly();
+                sequence = sequence.AsReadOnlyList();
 
             return new Result<T>(ResultMode.Default, sequence, null);
         }

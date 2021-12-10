@@ -162,8 +162,8 @@ namespace Gapotchenko.FX.Math.Geometry
             if (ReferenceEquals(a, b))
                 return 0;
 
-            var sRow = b.AsReadOnly();
-            var sCol = a.AsReadOnly();
+            var sRow = b.AsReadOnlyList();
+            var sCol = a.AsReadOnlyList();
 
             int rowLen = sRow.Count;
             int colLen = sCol.Count;
@@ -363,8 +363,8 @@ namespace Gapotchenko.FX.Math.Geometry
             if (ReferenceEquals(a, b))
                 return 0;
 
-            var aList = a.AsReadOnly();
-            var bList = b.AsReadOnly();
+            var aList = a.AsReadOnlyList();
+            var bList = b.AsReadOnlyList();
 
             if (aList.Count == 0)
             {
@@ -481,8 +481,8 @@ namespace Gapotchenko.FX.Math.Geometry
             if (ReferenceEquals(a, b))
                 return 0;
 
-            var aList = a.AsReadOnly();
-            var bList = b.AsReadOnly();
+            var aList = a.AsReadOnlyList();
+            var bList = b.AsReadOnlyList();
 
             int aLength = aList.Count;
             int bLength = bList.Count;
