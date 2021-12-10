@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Gapotchenko.FX.Data.Dot.Serialization;
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -40,5 +42,17 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// </summary>
         /// <param name="visitor">The visitor.</param>
         public abstract void Accept(DotDomVisitor visitor);
+
+        /// <summary>
+        /// Returns the string representation of this node.
+        /// </summary>
+        public override string ToString()
+        {
+            using var stringWriter = new StringWriter();
+            using var dotWriter = DotWriter.Create(stringWriter);
+            using var domWriter = new DotDomWriter(dotWriter);
+            Accept(domWriter);
+            return stringWriter.ToString();
+        }
     }
 }

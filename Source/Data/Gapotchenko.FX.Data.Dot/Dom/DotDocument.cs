@@ -43,5 +43,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 Root.Accept(domWriter);
             }
         }
+
+        /// <summary>
+        /// Returns the string representation of this document.
+        /// </summary>
+        public override string ToString()
+        {
+            return Root?.ToString() ?? string.Empty;
+        }
     }
 }

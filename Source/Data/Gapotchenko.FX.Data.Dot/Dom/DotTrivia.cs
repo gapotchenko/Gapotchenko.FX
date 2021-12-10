@@ -16,17 +16,17 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// Initializes a new <see cref="DotTrivia"/> instance.
         /// </summary>
         /// <param name="kind">Trivia kind.</param>
-        /// <param name="value">Trivia value.</param>
-        public DotTrivia(DotTokenKind kind, string? value = default)
+        /// <param name="text">Trivia text.</param>
+        public DotTrivia(DotTokenKind kind, string? text = default)
         {
-            if (value is null &&
-                !kind.TryGetDefaultValue(out value))
+            if (text is null &&
+                !kind.TryGetDefaultValue(out text))
             {
-                throw new ArgumentException("Value cannot deducted from the kind.", nameof(value));
+                throw new ArgumentException("Value cannot deducted from the kind.", nameof(text));
             }
 
             Kind = kind;
-            Value = value;
+            Text = text;
         }
 
         /// <summary>
@@ -35,8 +35,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public DotTokenKind Kind { get; }
 
         /// <summary>
-        /// Trivia value.
+        /// Trivia text.
         /// </summary>
-        public string Value { get; }
+        public string Text { get; }
+
+        /// <summary>
+        /// Returns the string representation of this trivia.
+        /// </summary>
+        public override string ToString() =>
+            Text ?? string.Empty;
     }
 }

@@ -19,9 +19,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             {
                 foreach (var trivia in token.LeadingTrivia)
                 {
-                    if (!string.IsNullOrEmpty(trivia.Value))
+                    if (!string.IsNullOrEmpty(trivia.Text))
                     {
-                        _writer.Write(trivia.Kind, trivia.Value);
+                        _writer.Write(trivia.Kind, trivia.Text);
                     }
                 }
             }
@@ -35,9 +35,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             {
                 foreach (var trivia in token.TrailingTrivia)
                 {
-                    if (!string.IsNullOrEmpty(trivia.Value))
+                    if (!string.IsNullOrEmpty(trivia.Text))
                     {
-                        _writer.Write(trivia.Kind, trivia.Value);
+                        _writer.Write(trivia.Kind, trivia.Text);
                     }
                 }
             }

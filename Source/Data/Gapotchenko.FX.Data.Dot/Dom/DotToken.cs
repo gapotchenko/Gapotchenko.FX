@@ -1,6 +1,7 @@
 ﻿using Gapotchenko.FX.Data.Dot.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -39,7 +40,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// </summary>
         public string Text { get; }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string? _value;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         bool _valueInitialized;
 
         /// <summary>
@@ -62,7 +66,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         List<DotTrivia>? _leadingTrivia;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         List<DotTrivia>? _trailingTrivia;
 
         /// <inheritdoc/>
@@ -195,5 +202,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
             return new DotToken(DotTokenKind.Id, identifier);
         }
+
+        /// <summary>
+        /// Returns the string representation of this token.
+        /// </summary>
+        public override string ToString() =>
+            Text ?? string.Empty;
     }
 }
