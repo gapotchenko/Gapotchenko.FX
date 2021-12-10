@@ -219,6 +219,9 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
+            if (Count == 0)
+                return false;
+
             foreach (var i in other)
                 if (Contains(i))
                     return true;
