@@ -56,7 +56,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <param name="vertexComparer">The vertex comparer.</param>
         /// <returns>A new instance of graph edge equality comparer.</returns>
-        public static IEqualityComparer<GraphEdge<T>> CreateEqualityComparer(IEqualityComparer<T> vertexComparer) =>
+        public static IEqualityComparer<GraphEdge<T>> CreateComparer(IEqualityComparer<T> vertexComparer) =>
             new GraphEdgeEqualityComparer<T>(vertexComparer);
     }
 }
