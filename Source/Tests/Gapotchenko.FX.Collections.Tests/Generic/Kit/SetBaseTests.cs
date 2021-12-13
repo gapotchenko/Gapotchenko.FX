@@ -34,9 +34,12 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Kit
         [TestMethod]
         public void SetBase_ExceptWith()
         {
-            var s1 = new SetChimera<int>(new HashSet<int> { 1, 2, 3 });
+            var s1 = new SetChimera<int>(new HashSet<int> { 1, 2, 3, 4, 5 });
             s1.ExceptWith(new[] { 1, 3 });
-            s1.SetEquals(new[] { 2 });
+            s1.SetEquals(new[] { 2, 4, 5 });
+
+            s1.ExceptWith(s1);
+            Assert.AreEqual(0, s1.Count);
         }
 
         [TestMethod]

@@ -8,6 +8,7 @@
     /// <param name="b">The argument B.</param>
     /// <returns>
     /// <see langword="true"/> if the argument <paramref name="a"/> depends on <paramref name="b"/>;
-    /// otherwise, <see langword="false"/>.</returns>
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
     public delegate bool DependencyFunction<in T>(T a, T b);
 }

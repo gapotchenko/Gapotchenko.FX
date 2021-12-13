@@ -90,7 +90,7 @@ namespace Gapotchenko.FX.Harness.Console
 
             foreach (var i in g.Vertices)
             {
-            }
+            }            
 
             Console.WriteLine(g.ToString("D"));
 
