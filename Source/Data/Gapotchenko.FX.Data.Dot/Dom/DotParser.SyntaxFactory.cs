@@ -224,13 +224,5 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             syntaxList.AddFirst(node);
         }
-
-        static void Prepend<TNode>(
-            SeparatedDotNodeList<TNode> syntaxList,
-            TNode node)
-            where TNode : DotNode
-        {
-            syntaxList.AddFirst(node);
-        }
     }
 }

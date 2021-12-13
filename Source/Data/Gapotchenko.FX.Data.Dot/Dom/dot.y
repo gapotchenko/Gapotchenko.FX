@@ -23,7 +23,7 @@
 %type <entity> graph subgraph stmt stmt node_stmt edge_stmt endpoint stmts node_id
 %type <entity> attr_stmt opt_attr_list avPair
 %type <statementSyntaxList> stmt_list
-%type <separatedSyntaxList> edgeRHS
+%type <separatedSyntaxList> edgeLHS
 %type <attributeSyntaxList> a_list
 %type <attributeListSyntaxList> attr_list opt_attr_list
 
@@ -64,17 +64,15 @@ stmt      : id '=' id { $$ = CreateAliasSyntax($1, $2.token, $3); }
 node_stmt : node_id opt_attr_list { $$ = CreateVertexSyntax((DotVertexIdentifierNode)$1, $2); }
           ;
 
-edge_stmt : endpoint edgeRHS opt_attr_list { Prepend($2, $1); $$ = CreateEdgeSyntax($2, $3);} 
+edge_stmt : edgeLHS endpoint opt_attr_list { $1.Add($2); $$ = CreateEdgeSyntax($1, $3);} 
           ;
 
 endpoint  : node_id  { $$ = $1; }
           | subgraph { $$ = $1; }
 		  ;
 
-edgeRHS   : ARROW endpoint          { $$ = new SeparatedDotNodeList<DotNode>() { CreateArrowToken($1), $2 }; }
-          | edgeRHS ARROW endpoint  { $1.Add(CreateArrowToken($2));
-                                      $1.Add($3);
-                                      $$ = $1; }
+edgeLHS   : endpoint ARROW          { $$ = new SeparatedDotNodeList<DotNode>(CreateArrowToken($2)) { $1 }; }
+          | edgeLHS endpoint ARROW  { $1.Add($2, CreateArrowToken($3)); $$ = $1; }
           ;
 
 subgraph  : stmts              { $$ = CreateGraphSyntax(default, default, default, (DotStatementListNode)$1); }

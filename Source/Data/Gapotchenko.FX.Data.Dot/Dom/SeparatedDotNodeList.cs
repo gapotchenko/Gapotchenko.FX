@@ -18,12 +18,17 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     {
         readonly List<TNode> _nodes = new();
         readonly List<DotElement> _nodesAndTokens = new();
+        readonly DotSignificantToken _defaultSeparator;
 
         /// <summary>
         /// Creates a new <see cref="SeparatedDotNodeList{TNode}"/> instance.
         /// </summary>
-        public SeparatedDotNodeList()
+        public SeparatedDotNodeList(DotSignificantToken separator)
         {
+            if (separator is null)
+                throw new ArgumentNullException(nameof(separator));
+
+            _defaultSeparator = separator;
         }
 
         /// <summary>
@@ -36,19 +41,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             if (separator is null)
                 throw new ArgumentNullException(nameof(separator));
 
-            bool isFirst = true;
+            _defaultSeparator = separator;
+
             foreach (var item in nodes)
             {
-                if (isFirst)
-                {
-                    isFirst = false;
-                }
-                else
-                {
-                    Add(separator);
-                }
-
-                Add(item);
+                Add(item, separator);
             }
         }
 
@@ -65,7 +62,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public int Count => _nodes.Count;
 
         /// <summary>
-        /// Returns an enumerator that iterates through the list.
+        /// Returns an enumerator that iterates through the nodes.
         /// </summary>
         public IEnumerator<TNode> GetEnumerator() => _nodes.GetEnumerator();
 
@@ -74,35 +71,31 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the node to the end of the list.
         /// </summary>
-        public void Add(TNode node)
+        public void Add(TNode node, DotSignificantToken? separator = default)
         {
-            _nodes.Add(node);
-            _nodesAndTokens.Add(node);
-        }
+            if (node is null)
+                throw new ArgumentNullException(nameof(node));
 
-        /// <summary>
-        /// Adds the separator to the end of the list.
-        /// </summary>
-        public void Add(DotSignificantToken separator)
-        {
-            _nodesAndTokens.Add(separator);
+            _nodes.Add(node);
+
+            if (_nodes.Count > 1)
+                _nodesAndTokens.Add(separator ?? _defaultSeparator);
+
+            _nodesAndTokens.Add(node);
+
         }
 
         /// <summary>
         /// Adds the node to the beginning of the list.
         /// </summary>
-        public void AddFirst(TNode node)
+        public void AddFirst(TNode node, DotSignificantToken? separator = default)
         {
             _nodes.Insert(0, node);
-            _nodesAndTokens.Insert(0, node);
-        }
 
-        /// <summary>
-        /// Adds the separator to the beginning of the list.
-        /// </summary>
-        public void AddFirst(DotSignificantToken separator)
-        {
-            _nodesAndTokens.Insert(0, separator);
+            if (_nodes.Count > 1)
+                _nodesAndTokens.Insert(0, separator ?? _defaultSeparator);
+
+            _nodesAndTokens.Insert(0, node);
         }
 
         int IDotSyntaxSlotProvider.SlotCount =>
