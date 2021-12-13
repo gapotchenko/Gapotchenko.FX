@@ -254,8 +254,18 @@ namespace Gapotchenko.FX.Math.Topology
             }
         }
 
-        /// <inheritdoc/>
-        public bool HasTransitivePath(T from, T to) => new ReachibilityTraverser(this, to, false).CanBeReachedFrom(from);
+        /// <summary>
+        /// <para>
+        /// Gets a value indicating whether there is a transitive path from a specified source vertex to a destination.
+        /// </para>
+        /// <para>
+        /// A transitive path consists of two or more edges with at least one intermediate vertex.
+        /// </para>
+        /// </summary>
+        /// <param name="from">The source vertex.</param>
+        /// <param name="to">The target vertex.</param>
+        /// <returns><c>true</c> when the specified source vertex can reach the target via one or more intermediate vertices; otherwise, <c>false</c>.</returns>
+        bool HasTransitivePath(T from, T to) => new ReachibilityTraverser(this, to, false).CanBeReachedFrom(from);
 
         /// <inheritdoc/>
         public bool ContainsPath(T from, T to) => Edges.Contains(from, to) || HasTransitivePath(from, to);

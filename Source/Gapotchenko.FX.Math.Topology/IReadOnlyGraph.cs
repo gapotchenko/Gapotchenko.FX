@@ -39,19 +39,6 @@ namespace Gapotchenko.FX.Math.Topology
         bool ContainsPath(T from, T to);
 
         /// <summary>
-        /// <para>
-        /// Gets a value indicating whether there is a transitive path from a specified source vertex to a destination.
-        /// </para>
-        /// <para>
-        /// A transitive path consists of two or more edges with at least one intermediate vertex.
-        /// </para>
-        /// </summary>
-        /// <param name="from">The source vertex.</param>
-        /// <param name="to">The target vertex.</param>
-        /// <returns><c>true</c> when the specified source vertex can reach the target via one or more intermediate vertices; otherwise, <c>false</c>.</returns>
-        bool HasTransitivePath(T from, T to);
-
-        /// <summary>
         /// Gets the vertices adjacent to a specified vertex.
         /// </summary>
         /// <param name="vertex">The vertex to find the adjacent vertices for.</param>
