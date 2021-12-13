@@ -67,5 +67,13 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <returns>The reflexively reduced graph.</returns>
         IReadOnlyGraph<T> GetReflexiveReduction();
+
+        /// <summary>
+        /// Determines whether the current graph and the specified graph contain the same vertices and edges.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current graph.</param>
+        /// <returns><see langword="true"/> if the current graph is equal to other; otherwise, <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null"/>.</exception>
+        bool GraphEquals(IReadOnlyGraph<T> other);
     }
 }
