@@ -47,11 +47,11 @@ graphName : id { $$ = $1; }
           ;
 
 stmt_list : { $$ = new(); }
-          | stmt stmt_list { Prepend($2, (DotStatementNode)$1); $$ = $2; }
-          | stmt ';' stmt_list { var statement = (DotStatementNode)$1;
-                                 statement.SemicolonToken = CreatePunctuationToken($2.token);
-                                 Prepend($3, (DotStatementNode)$1);
-                                 $$ = $3; }
+          | stmt_list stmt     { $1.Add((DotStatementNode)$2); $$ = $1; }
+          | stmt_list stmt ';' { var statement = (DotStatementNode)$2;
+                                 statement.SemicolonToken = CreatePunctuationToken($3.token);
+                                 $1.Add((DotStatementNode)$2);
+                                 $$ = $1; }
           ;
 
 stmt      : id '=' id { $$ = CreateAliasSyntax($1, $2.token, $3); } 
@@ -95,15 +95,15 @@ attr_list : '[' ']'        { $$ = CreateAttributeListSyntaxList($1.token, defaul
           ;
 
 a_list    : avPair            { $$ = new(); $$.Add((DotAttributeNode)$1); }
-          | avPair a_list     { $$ = $2; Prepend($2, (DotAttributeNode)$1); }
-          | avPair ',' a_list { $$ = $3;
-                                var attr = (DotAttributeNode)$1;
-                                attr.SemicolonOrCommaToken = CreatePunctuationToken($2.token); 
-                                Prepend($3, attr); }
-          | avPair ';' a_list { $$ = $3; 
-                                var attr = (DotAttributeNode)$1;
-                                attr.SemicolonOrCommaToken = CreatePunctuationToken($2.token); 
-                                Prepend($3, attr); }
+          | a_list avPair     { $$ = $1; $1.Add((DotAttributeNode)$2); }
+          | a_list avPair ',' { $$ = $1;
+                                var attr = (DotAttributeNode)$2;
+                                attr.SemicolonOrCommaToken = CreatePunctuationToken($3.token); 
+                                $1.Add(attr); }
+          | a_list avPair ';' { $$ = $1; 
+                                var attr = (DotAttributeNode)$2;
+                                attr.SemicolonOrCommaToken = CreatePunctuationToken($3.token); 
+                                $1.Add(attr); }
           ;
 
 avPair    : id '=' id { $$ = CreateAttributeSyntax($1, $2.token, $3, default); }
