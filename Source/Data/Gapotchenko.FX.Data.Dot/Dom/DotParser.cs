@@ -2,7 +2,7 @@
 // Copyright (c) Wayne Kelly, John Gough, QUT 2005-2014
 // (see accompanying GPPGcopyright.rtf)
 
-// Input file <Dom\Dot.y - 10.12.2021 22:06:07>
+// Input file <Dom\Dot.y - 13.12.2021 18:20:35>
 
 // options: no-lines
 
@@ -21,7 +21,7 @@ internal enum DotTokens {
 
 internal partial struct DotValueType
 {
-    public DotToken token;
+    public DotParser.DotToken token;
     public DotNode entity;
     public SeparatedDotNodeList<DotNode> separatedSyntaxList;
     public DotNodeList<DotAttributeNode> attributeSyntaxList;
@@ -178,7 +178,7 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
 { Root = CreateGraphSyntax(ValueStack[ValueStack.Depth-4].token, ValueStack[ValueStack.Depth-3].token, ValueStack[ValueStack.Depth-2].token, (DotStatementListNode)ValueStack[ValueStack.Depth-1].entity); }
         break;
       case 4: // stmts -> '{', stmt_list, '}'
-{ CurrentSemanticValue.entity = CreateStatementListSyntax(CreateToken(ValueStack[ValueStack.Depth-3]), ValueStack[ValueStack.Depth-2].statementSyntaxList, CreateToken(ValueStack[ValueStack.Depth-1])); }
+{ CurrentSemanticValue.entity = CreateStatementListSyntax(ValueStack[ValueStack.Depth-3].token, ValueStack[ValueStack.Depth-2].statementSyntaxList, ValueStack[ValueStack.Depth-1].token); }
         break;
       case 5: // graphType -> DIGRAPH
 { CurrentSemanticValue.token = ValueStack[ValueStack.Depth-1].token; }
@@ -200,12 +200,12 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
         break;
       case 11: // stmt_list -> stmt, ';', stmt_list
 { var statement = (DotStatementNode)ValueStack[ValueStack.Depth-3].entity;
-                                 statement.SemicolonToken = CreateToken(ValueStack[ValueStack.Depth-2]); 
+                                 statement.SemicolonToken = CreatePunctuationToken(ValueStack[ValueStack.Depth-2].token);
                                  Prepend(ValueStack[ValueStack.Depth-1].statementSyntaxList, (DotStatementNode)ValueStack[ValueStack.Depth-3].entity);
                                  CurrentSemanticValue.statementSyntaxList = ValueStack[ValueStack.Depth-1].statementSyntaxList; }
         break;
       case 12: // stmt -> id, '=', id
-{ CurrentSemanticValue.entity = CreateAliasSyntax(ValueStack[ValueStack.Depth-3].token, CreateToken(ValueStack[ValueStack.Depth-2]), ValueStack[ValueStack.Depth-1].token); }
+{ CurrentSemanticValue.entity = CreateAliasSyntax(ValueStack[ValueStack.Depth-3].token, ValueStack[ValueStack.Depth-2].token, ValueStack[ValueStack.Depth-1].token); }
         break;
       case 13: // stmt -> node_stmt
 { CurrentSemanticValue.entity = ValueStack[ValueStack.Depth-1].entity; }
@@ -232,10 +232,10 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
 { CurrentSemanticValue.entity = ValueStack[ValueStack.Depth-1].entity; }
         break;
       case 21: // edgeRHS -> ARROW, endpoint
-{ CurrentSemanticValue.separatedSyntaxList = new SeparatedDotNodeList<DotNode>() { ValueStack[ValueStack.Depth-2].token, ValueStack[ValueStack.Depth-1].entity }; }
+{ CurrentSemanticValue.separatedSyntaxList = new SeparatedDotNodeList<DotNode>() { CreateArrowToken(ValueStack[ValueStack.Depth-2].token), ValueStack[ValueStack.Depth-1].entity }; }
         break;
       case 22: // edgeRHS -> edgeRHS, ARROW, endpoint
-{ ValueStack[ValueStack.Depth-3].separatedSyntaxList.Add(ValueStack[ValueStack.Depth-2].token);
+{ ValueStack[ValueStack.Depth-3].separatedSyntaxList.Add(CreateArrowToken(ValueStack[ValueStack.Depth-2].token));
                                       ValueStack[ValueStack.Depth-3].separatedSyntaxList.Add(ValueStack[ValueStack.Depth-1].entity);
                                       CurrentSemanticValue.separatedSyntaxList = ValueStack[ValueStack.Depth-3].separatedSyntaxList; }
         break;
@@ -267,10 +267,10 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
 { CurrentSemanticValue.attributeListSyntaxList = ValueStack[ValueStack.Depth-1].attributeListSyntaxList; }
         break;
       case 32: // attr_list -> '[', ']'
-{ CurrentSemanticValue.attributeListSyntaxList = CreateAttributeListSyntaxList(CreateToken(ValueStack[ValueStack.Depth-2]), default, CreateToken(ValueStack[ValueStack.Depth-1])); }
+{ CurrentSemanticValue.attributeListSyntaxList = CreateAttributeListSyntaxList(ValueStack[ValueStack.Depth-2].token, default, ValueStack[ValueStack.Depth-1].token); }
         break;
       case 33: // attr_list -> '[', a_list, ']'
-{ CurrentSemanticValue.attributeListSyntaxList = CreateAttributeListSyntaxList(CreateToken(ValueStack[ValueStack.Depth-3]), ValueStack[ValueStack.Depth-2].attributeSyntaxList, CreateToken(ValueStack[ValueStack.Depth-1])); }
+{ CurrentSemanticValue.attributeListSyntaxList = CreateAttributeListSyntaxList(ValueStack[ValueStack.Depth-3].token, ValueStack[ValueStack.Depth-2].attributeSyntaxList, ValueStack[ValueStack.Depth-1].token); }
         break;
       case 34: // a_list -> avPair
 { CurrentSemanticValue.attributeSyntaxList = new(); CurrentSemanticValue.attributeSyntaxList.Add((DotAttributeNode)ValueStack[ValueStack.Depth-1].entity); }
@@ -281,17 +281,17 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
       case 36: // a_list -> avPair, ',', a_list
 { CurrentSemanticValue.attributeSyntaxList = ValueStack[ValueStack.Depth-1].attributeSyntaxList;
                                 var attr = (DotAttributeNode)ValueStack[ValueStack.Depth-3].entity;
-                                attr.SemicolonOrCommaToken = CreateToken(ValueStack[ValueStack.Depth-2]); 
+                                attr.SemicolonOrCommaToken = CreatePunctuationToken(ValueStack[ValueStack.Depth-2].token); 
                                 Prepend(ValueStack[ValueStack.Depth-1].attributeSyntaxList, attr); }
         break;
       case 37: // a_list -> avPair, ';', a_list
 { CurrentSemanticValue.attributeSyntaxList = ValueStack[ValueStack.Depth-1].attributeSyntaxList; 
                                 var attr = (DotAttributeNode)ValueStack[ValueStack.Depth-3].entity;
-                                attr.SemicolonOrCommaToken = CreateToken(ValueStack[ValueStack.Depth-2]); 
+                                attr.SemicolonOrCommaToken = CreatePunctuationToken(ValueStack[ValueStack.Depth-2].token); 
                                 Prepend(ValueStack[ValueStack.Depth-1].attributeSyntaxList, attr); }
         break;
       case 38: // avPair -> id, '=', id
-{ CurrentSemanticValue.entity = CreateAttributeSyntax(ValueStack[ValueStack.Depth-3].token, CreateToken(ValueStack[ValueStack.Depth-2]), ValueStack[ValueStack.Depth-1].token, default); }
+{ CurrentSemanticValue.entity = CreateAttributeSyntax(ValueStack[ValueStack.Depth-3].token, ValueStack[ValueStack.Depth-2].token, ValueStack[ValueStack.Depth-1].token, default); }
         break;
       case 39: // avPair -> id
 { CurrentSemanticValue.entity = CreateAttributeSyntax(ValueStack[ValueStack.Depth-1].token, default, default, default); }
@@ -300,10 +300,10 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
 { CurrentSemanticValue.entity = CreateVertexIdentifierSyntax(ValueStack[ValueStack.Depth-1].token, default, default, default, default); }
         break;
       case 41: // node_id -> id, ':', id
-{ CurrentSemanticValue.entity = CreateVertexIdentifierSyntax(ValueStack[ValueStack.Depth-3].token, CreateToken(ValueStack[ValueStack.Depth-2]), ValueStack[ValueStack.Depth-1].token, default, default); }
+{ CurrentSemanticValue.entity = CreateVertexIdentifierSyntax(ValueStack[ValueStack.Depth-3].token, ValueStack[ValueStack.Depth-2].token, ValueStack[ValueStack.Depth-1].token, default, default); }
         break;
       case 42: // node_id -> id, ':', id, ':', id
-{ CurrentSemanticValue.entity = CreateVertexIdentifierSyntax(ValueStack[ValueStack.Depth-5].token, CreateToken(ValueStack[ValueStack.Depth-4]), ValueStack[ValueStack.Depth-3].token, CreateToken(ValueStack[ValueStack.Depth-2]), ValueStack[ValueStack.Depth-1].token); }
+{ CurrentSemanticValue.entity = CreateVertexIdentifierSyntax(ValueStack[ValueStack.Depth-5].token, ValueStack[ValueStack.Depth-4].token, ValueStack[ValueStack.Depth-3].token, ValueStack[ValueStack.Depth-2].token, ValueStack[ValueStack.Depth-1].token); }
         break;
       case 43: // id -> ID
 { CurrentSemanticValue.token = ValueStack[ValueStack.Depth-1].token; }

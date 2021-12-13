@@ -11,12 +11,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     public abstract class DotNode : DotElement, IDotSyntaxSlotProvider
     {
         /// <inheritdoc/>
-        public override IList<DotTrivia> LeadingTrivia =>
+        public override IList<DotInsignificantToken> LeadingTrivia =>
             (DotDomNavigator.TryGetFirstToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .LeadingTrivia;
 
         /// <inheritdoc/>
-        public override IList<DotTrivia> TrailingTrivia =>
+        public override IList<DotInsignificantToken> TrailingTrivia =>
             (DotDomNavigator.TryGetLastToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .TrailingTrivia;
 

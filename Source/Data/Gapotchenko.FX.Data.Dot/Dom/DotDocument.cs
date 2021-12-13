@@ -1,6 +1,5 @@
 ﻿using Gapotchenko.FX.Data.Dot.Serialization;
 using System;
-using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {

@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.Data.Dot.Serialization;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -29,13 +28,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             public WhitespaceEraser() : base(DotDomWalkerDepth.NodesAndTokens)
             { }
 
-            public override void VisitToken(DotToken token)
+            public override void VisitToken(DotSignificantToken token)
             {
                 if (token.HasLeadingTrivia)
-                    token.LeadingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
+                    token.LeadingTrivia.RemoveAll(t => t.Kind is DotInsignificantTokenKind.Whitespace);
 
                 if (token.HasTrailingTrivia)
-                    token.TrailingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
+                    token.TrailingTrivia.RemoveAll(t => t.Kind is DotInsignificantTokenKind.Whitespace);
             }
         }
     }

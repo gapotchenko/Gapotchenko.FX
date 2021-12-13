@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.Data.Dot.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,12 +18,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         int _indents = 0;
 
-        public override void VisitToken(DotToken token)
+        public override void VisitToken(DotSignificantToken token)
         {
             base.VisitToken(token);
 
             TrimEnd(token);
-            token.TrailingTrivia.Add(new DotTrivia(DotTokenKind.Whitespace, " "));
+            token.TrailingTrivia.Add(new DotInsignificantToken(DotInsignificantTokenKind.Whitespace, " "));
         }
 
         int _depth = -1;
@@ -73,11 +72,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        IEnumerable<DotTrivia> CreateIndentation()
+        IEnumerable<DotInsignificantToken> CreateIndentation()
         {
             for (int i = 0; i < _indents; i++)
             {
-                yield return new DotTrivia(DotTokenKind.Whitespace, _indentation);
+                yield return new DotInsignificantToken(DotInsignificantTokenKind.Whitespace, _indentation);
             }
         }
 
@@ -86,33 +85,33 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             if (node is not null)
             {
                 var trailingTrivia = node.TrailingTrivia;
-                trailingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
-                trailingTrivia.Add(new DotTrivia(DotTokenKind.Whitespace, _eol));
+                trailingTrivia.RemoveAll(t => t.Kind is DotInsignificantTokenKind.Whitespace);
+                trailingTrivia.Add(new DotInsignificantToken(DotInsignificantTokenKind.Whitespace, _eol));
             }
         }
 
-        void PlaceEndOfLine(DotToken? token)
+        void PlaceEndOfLine(DotSignificantToken? token)
         {
             if (token is not null)
             {
                 TrimEnd(token);
-                token.TrailingTrivia.Add(new DotTrivia(DotTokenKind.Whitespace, _eol));
+                token.TrailingTrivia.Add(new DotInsignificantToken(DotInsignificantTokenKind.Whitespace, _eol));
             }
         }
 
-        static void TrimStart(DotToken token)
+        static void TrimStart(DotSignificantToken token)
         {
             if (token.HasLeadingTrivia)
             {
-                token.LeadingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
+                token.LeadingTrivia.RemoveAll(t => t.Kind is DotInsignificantTokenKind.Whitespace);
             }
         }
 
-        static void TrimEnd(DotToken token)
+        static void TrimEnd(DotSignificantToken token)
         {
             if (token.HasTrailingTrivia)
             {
-                token.TrailingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
+                token.TrailingTrivia.RemoveAll(t => t.Kind is DotInsignificantTokenKind.Whitespace);
             }
         }
 

@@ -29,7 +29,7 @@
         /// trivia of this token to be visited.
         /// </remarks>
         /// <param name="token">The current token that the walker is visiting.</param>
-        public virtual void VisitToken(DotToken token)
+        public virtual void VisitToken(DotSignificantToken token)
         {
             if (Depth >= DotDomWalkerDepth.NodesTokensAndTrivia)
             {
@@ -58,7 +58,7 @@
                 {
                     if (Depth >= DotDomWalkerDepth.NodesAndTokens)
                     {
-                        if (child is DotToken token)
+                        if (child is DotSignificantToken token)
                             VisitToken(token);
                     }
                 }
@@ -68,7 +68,7 @@
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-        public virtual void VisitLeadingTrivia(DotToken token)
+        public virtual void VisitLeadingTrivia(DotSignificantToken token)
         {
             if (token.HasLeadingTrivia)
             {
@@ -79,7 +79,7 @@
             }
         }
 
-        public virtual void VisitTrailingTrivia(DotToken token)
+        public virtual void VisitTrailingTrivia(DotSignificantToken token)
         {
             if (token.HasTrailingTrivia)
             {
@@ -90,7 +90,7 @@
             }
         }
 
-        public virtual void VisitTrivia(DotTrivia trivia)
+        public virtual void VisitTrivia(DotInsignificantToken trivia)
         {
         }
 

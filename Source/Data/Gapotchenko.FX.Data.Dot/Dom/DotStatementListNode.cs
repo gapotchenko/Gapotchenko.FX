@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets <c>{</c> token.
         /// </summary>
-        public DotToken? OpenBraceToken { get; set; }
+        public DotPunctuationToken? OpenBraceToken { get; set; }
 
         /// <summary>
         /// Gets or sets a list of statements.
@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets <c>}</c> token.
         /// </summary>
-        public DotToken? CloseBraceToken { get; set; }
+        public DotPunctuationToken? CloseBraceToken { get; set; }
 
         internal override int SlotCount => 3;
 

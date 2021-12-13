@@ -1,39 +1,90 @@
-﻿using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.Data.Dot.Serialization;
+﻿using Gapotchenko.FX.Data.Dot.Serialization;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
     partial class DotParser
     {
-        static DotTrivia CreateTrivia(
+        static DotStringLiteral? CreateStringLiteral(DotToken? token)
+        {
+            if (token?.IsDefault == false)
+                return CreateStringLiteral(token.Value);
+            return default;
+        }
+
+        static DotStringLiteral CreateStringLiteral(DotToken token)
+        {
+            var result = DotStringLiteral.Parse(token.Text);
+            ApplyTrivia(result, token);
+            return result;
+        }
+
+        static DotPunctuationToken? CreatePunctuationToken(DotToken? token)
+        {
+            if (token?.IsDefault == false)
+                return CreatePunctuationToken(token.Value);
+            return default;
+        }
+
+        static DotPunctuationToken CreatePunctuationToken(DotToken token)
+        {
+            var result = new DotPunctuationToken(token.Kind.ToDotPunctuationTokenKind(), token.Text);
+            ApplyTrivia(result, token);
+            return result;
+        }
+
+        static DotKeywordToken? CreateKeywordToken(DotToken? token)
+        {
+            if (token?.IsDefault == false)
+                return CreateKeywordToken(token.Value);
+            return default;
+        }
+
+        static DotKeywordToken CreateKeywordToken(DotToken token)
+        {
+            var result = new DotKeywordToken(token.Kind.ToDotKeywordTokenKind(), token.Text);
+            ApplyTrivia(result, token);
+            return result;
+        }
+
+        static DotArrowToken CreateArrowToken(DotToken token)
+        {
+            Debug.Assert(token.Kind is DotTokenKind.Arrow);
+            var result = new DotArrowToken(token.Text switch
+            {
+                "->" => DotArrowTokenKind.LeftToRight,
+                "--" => DotArrowTokenKind.Bidirectional,
+                _ => throw new ArgumentOutOfRangeException($"Unknown arrow kind: {token.Text}.")
+            }, token.Text);
+            ApplyTrivia(result, token);
+            return result;
+        }
+
+        static void ApplyTrivia(DotSignificantToken destination, DotToken source)
+        {
+            foreach (var trivia in source.LeadingTrivia)
+            {
+                destination.LeadingTrivia.Add(trivia);
+            }
+
+            foreach (var trivia in source.TrailingTrivia)
+            {
+                destination.TrailingTrivia.Add(trivia);
+            }
+        }
+
+        static DotInsignificantToken CreateTrivia(
             DotTokenKind tokenType,
             string value)
         {
-            return new DotTrivia(tokenType, value);
+            return new DotInsignificantToken(tokenType.ToDotTriviaKind(), value);
         }
 
-        static DotTrivia CreateWhitespaceTrivia(
-            string value)
-        {
-            return new DotTrivia(DotTokenKind.Whitespace, value);
-        }
-
-        static DotTrivia CreateTrivia(
-            DotValueType value)
-        {
-            var token = value.token;
-            return new DotTrivia(token.Kind, token.Text);
-        }
-
-        static DotTrivia CreateTrivia(
+        static DotInsignificantToken CreateTrivia(
             DotToken token)
         {
-            return new DotTrivia(token.Kind, token.Text);
+            return new DotInsignificantToken(token.Kind.ToDotTriviaKind(), token.Text);
         }
 
         static DotVertexIdentifierNode CreateVertexIdentifierSyntax(
@@ -45,11 +96,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             return new DotVertexIdentifierNode
             {
-                Identifier = identifier,
-                PortColonToken = colon1,
-                PortIdentifier = portIdentifier,
-                CompassPointColonToken = colon2,
-                CompassPointToken = compassPoint
+                Identifier = CreateStringLiteral(identifier),
+                PortColonToken = CreatePunctuationToken(colon1),
+                PortIdentifier = CreateStringLiteral(portIdentifier),
+                CompassPointColonToken = CreatePunctuationToken(colon2),
+                CompassPointToken = CreateStringLiteral(compassPoint)
             };
         }
 
@@ -61,10 +112,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             return new DotAttributeNode
             {
-                LHS = lhs,
-                EqualToken = equal,
-                RHS = rhs,
-                SemicolonOrCommaToken = terminator
+                LHS = CreateStringLiteral(lhs),
+                EqualToken = CreatePunctuationToken(equal),
+                RHS = CreateStringLiteral(rhs),
+                SemicolonOrCommaToken = CreatePunctuationToken(terminator)
             };
         }
 
@@ -86,9 +137,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             return new DotAttributeListNode()
             {
-                OpenBraceToken = openBraceToken,
+                OpenBraceToken = CreatePunctuationToken(openBraceToken),
                 Attributes = attributes,
-                CloseBraceToken = closeBraceToken,
+                CloseBraceToken = CreatePunctuationToken(closeBraceToken),
             };
         }
 
@@ -98,7 +149,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             return new AttachedDotAttributesNode
             {
-                TargetKeyword = targetKeyword,
+                TargetKeyword = CreateKeywordToken(targetKeyword),
                 Attributes = attributes
             };
         }
@@ -132,23 +183,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             return new DotAliasNode
             {
-                LHS = lhs,
-                EqualToken = equalToken,
-                RHS = rhs
+                LHS = CreateStringLiteral(lhs),
+                EqualToken = CreatePunctuationToken(equalToken),
+                RHS = CreateStringLiteral(rhs)
             };
-        }
-
-        static DotToken CreateToken(
-            DotTokenKind tokenType,
-            string value)
-        {
-            return new DotToken(tokenType, value);
-        }
-
-        static DotToken CreateToken(
-            DotValueType value)
-        {
-            return value.token;
         }
 
         static DotGraphNode CreateGraphSyntax(
@@ -159,9 +197,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             return new DotGraphNode
             {
-                StrictKeyword = strictKeyword,
-                GraphKindKeyword = graphKind,
-                Identifier = identifier,
+                StrictKeyword = CreateKeywordToken(strictKeyword),
+                GraphKindKeyword = CreateKeywordToken(graphKind),
+                Identifier = CreateStringLiteral(identifier),
                 Statements = statements
             };
         }
@@ -173,9 +211,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             return new DotStatementListNode
             {
-                OpenBraceToken = openBrace,
+                OpenBraceToken = CreatePunctuationToken(openBrace),
                 Statements = statements,
-                CloseBraceToken = closeBrace
+                CloseBraceToken = CreatePunctuationToken(closeBrace)
             };
         }
 
@@ -193,47 +231,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             where TNode : DotNode
         {
             syntaxList.AddFirst(node);
-        }
-
-        static IEnumerable<DotTrivia> TokenToTrivia(DotToken token)
-        {
-            if (token.HasLeadingTrivia)
-            {
-                foreach (var trivia in token.LeadingTrivia)
-                {
-                    yield return trivia;
-                }
-            }
-
-            yield return CreateTrivia(token);
-
-            if (token.HasTrailingTrivia)
-            {
-                foreach (var trivia in token.TrailingTrivia)
-                {
-                    yield return trivia;
-                }
-            }
-        }
-
-        static void AppendLeadingTrivia(DotToken destination, DotValueType source)
-        {
-            destination.LeadingTrivia.AddRange(TokenToTrivia(source.token));
-        }
-
-        static void PrependLeadingTrivia(DotToken destination, DotValueType source)
-        {
-            destination.LeadingTrivia.InsertRange(0, TokenToTrivia(source.token));
-        }
-
-        static void AppendTrailingTrivia(DotToken destination, DotValueType source)
-        {
-            destination.TrailingTrivia.AddRange(TokenToTrivia(source.token));
-        }
-
-        static void PrependTrailingTrivia(DotToken destination, DotValueType source)
-        {
-            destination.TrailingTrivia.InsertRange(0, TokenToTrivia(source.token));
         }
     }
 }

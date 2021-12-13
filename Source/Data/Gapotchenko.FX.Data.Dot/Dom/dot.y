@@ -9,7 +9,7 @@
 %start graph
 
 %union {
-    public DotToken token;
+    public DotParser.DotToken token;
     public DotNode entity;
     public SeparatedDotNodeList<DotNode> separatedSyntaxList;
     public DotNodeList<DotAttributeNode> attributeSyntaxList;
@@ -35,7 +35,7 @@ graph     : graphType graphName stmts    { Root = CreateGraphSyntax(default, $1,
           | id graphType graphName stmts { Root = CreateGraphSyntax($1, $2, $3, (DotStatementListNode)$4); }
           ;
           
-stmts     : '{' stmt_list '}' { $$ = CreateStatementListSyntax(CreateToken($1), $2, CreateToken($3)); }
+stmts     : '{' stmt_list '}' { $$ = CreateStatementListSyntax($1.token, $2, $3.token); }
           ;
 
 graphType : DIGRAPH { $$ = $1; }
@@ -49,12 +49,12 @@ graphName : id { $$ = $1; }
 stmt_list : { $$ = new(); }
           | stmt stmt_list { Prepend($2, (DotStatementNode)$1); $$ = $2; }
           | stmt ';' stmt_list { var statement = (DotStatementNode)$1;
-                                 statement.SemicolonToken = CreateToken($2); 
+                                 statement.SemicolonToken = CreatePunctuationToken($2.token);
                                  Prepend($3, (DotStatementNode)$1);
                                  $$ = $3; }
           ;
 
-stmt      : id '=' id { $$ = CreateAliasSyntax($1, CreateToken($2), $3); } 
+stmt      : id '=' id { $$ = CreateAliasSyntax($1, $2.token, $3); } 
           | node_stmt { $$ = $1; }
           | edge_stmt { $$ = $1; }
           | attr_stmt { $$ = $1; }
@@ -71,8 +71,8 @@ endpoint  : node_id  { $$ = $1; }
           | subgraph { $$ = $1; }
 		  ;
 
-edgeRHS   : ARROW endpoint          { $$ = new SeparatedDotNodeList<DotNode>() { $1, $2 }; }
-          | edgeRHS ARROW endpoint  { $1.Add($2);
+edgeRHS   : ARROW endpoint          { $$ = new SeparatedDotNodeList<DotNode>() { CreateArrowToken($1), $2 }; }
+          | edgeRHS ARROW endpoint  { $1.Add(CreateArrowToken($2));
                                       $1.Add($3);
                                       $$ = $1; }
           ;
@@ -92,29 +92,29 @@ opt_attr_list :       { }
           | attr_list { $$ = $1; }
           ;
 
-attr_list : '[' ']'        { $$ = CreateAttributeListSyntaxList(CreateToken($1), default, CreateToken($2)); }
-          | '[' a_list ']' { $$ = CreateAttributeListSyntaxList(CreateToken($1), $2, CreateToken($3)); }
+attr_list : '[' ']'        { $$ = CreateAttributeListSyntaxList($1.token, default, $2.token); }
+          | '[' a_list ']' { $$ = CreateAttributeListSyntaxList($1.token, $2, $3.token); }
           ;
 
 a_list    : avPair            { $$ = new(); $$.Add((DotAttributeNode)$1); }
           | avPair a_list     { $$ = $2; Prepend($2, (DotAttributeNode)$1); }
           | avPair ',' a_list { $$ = $3;
                                 var attr = (DotAttributeNode)$1;
-                                attr.SemicolonOrCommaToken = CreateToken($2); 
+                                attr.SemicolonOrCommaToken = CreatePunctuationToken($2.token); 
                                 Prepend($3, attr); }
           | avPair ';' a_list { $$ = $3; 
                                 var attr = (DotAttributeNode)$1;
-                                attr.SemicolonOrCommaToken = CreateToken($2); 
+                                attr.SemicolonOrCommaToken = CreatePunctuationToken($2.token); 
                                 Prepend($3, attr); }
           ;
 
-avPair    : id '=' id { $$ = CreateAttributeSyntax($1, CreateToken($2), $3, default); }
+avPair    : id '=' id { $$ = CreateAttributeSyntax($1, $2.token, $3, default); }
           | id        { $$ = CreateAttributeSyntax($1, default, default, default); }
           ;
 
 node_id   : id               { $$ = CreateVertexIdentifierSyntax($1, default, default, default, default); }
-          | id ':' id        { $$ = CreateVertexIdentifierSyntax($1, CreateToken($2), $3, default, default); }
-          | id ':' id ':' id { $$ = CreateVertexIdentifierSyntax($1, CreateToken($2), $3, CreateToken($4), $5); }
+          | id ':' id        { $$ = CreateVertexIdentifierSyntax($1, $2.token, $3, default, default); }
+          | id ':' id ':' id { $$ = CreateVertexIdentifierSyntax($1, $2.token, $3, $4.token, $5); }
           ;
           
 id        : ID          { $$ = $1; }

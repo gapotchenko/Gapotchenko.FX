@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -14,22 +10,22 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets a left-hand side of an attribute.
         /// </summary>
-        public DotToken? LHS { get; set; }
+        public DotStringLiteral? LHS { get; set; }
 
         /// <summary>
         /// Gets or sets a <c>=</c> token.
         /// </summary>
-        public DotToken? EqualToken { get; set; }
+        public DotPunctuationToken? EqualToken { get; set; }
 
         /// <summary>
         /// Gets or sets a right-hand side of an attribute.
         /// </summary>
-        public DotToken? RHS { get; set; }
+        public DotStringLiteral? RHS { get; set; }
 
         /// <summary>
         /// Gets or sets an attribute terminator token.
         /// </summary>
-        public DotToken? SemicolonOrCommaToken { get; set; }
+        public DotPunctuationToken? SemicolonOrCommaToken { get; set; }
 
         internal override int SlotCount => 4;
 

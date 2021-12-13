@@ -10,12 +10,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets the list of trivia appearing before the element.
         /// </summary>
-        public abstract IList<DotTrivia> LeadingTrivia { get; }
+        public abstract IList<DotInsignificantToken> LeadingTrivia { get; }
 
         /// <summary>
         /// Gets the list of trivia appearing after the element.
         /// </summary>
-        public abstract IList<DotTrivia> TrailingTrivia { get; }
+        public abstract IList<DotInsignificantToken> TrailingTrivia { get; }
 
         /// <summary>
         /// Gets a value indicating whether the element has any leading trivia.

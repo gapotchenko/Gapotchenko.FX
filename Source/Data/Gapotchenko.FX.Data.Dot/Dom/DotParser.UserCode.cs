@@ -2,12 +2,45 @@
 using Gapotchenko.FX.Data.Dot.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
     partial class DotParser
     {
         public DotGraphNode? Root { get; private set; }
+
+        public struct DotToken
+        {
+            public DotToken(DotTokenKind kind, string text)
+            {
+                Kind = kind;
+                Text = text;
+                _leadingTrivia = null;
+                _trailingTrivia = null;
+            }
+
+            public DotTokenKind Kind { get; }
+            public string Text { get; }
+            public bool IsDefault => Text is null;
+
+            List<DotInsignificantToken>? _leadingTrivia;
+            List<DotInsignificantToken>? _trailingTrivia;
+
+            public IEnumerable<DotInsignificantToken> LeadingTrivia => _leadingTrivia ?? Enumerable.Empty<DotInsignificantToken>();
+
+            public IEnumerable<DotInsignificantToken> TrailingTrivia => _trailingTrivia ?? Enumerable.Empty<DotInsignificantToken>();
+
+            public void AddLeadingTrivia(DotInsignificantToken trivia)
+            {
+                (_leadingTrivia ??= new()).Add(trivia);
+            }
+
+            public void AddTrailingTrivia(DotInsignificantToken trivia)
+            {
+                (_trailingTrivia ??= new()).Add(trivia);
+            }
+        }
 
         protected override State[] States => states;
         protected override Rule[] Rules => rules;
@@ -22,22 +55,22 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         DotValueType _yylval;
 
-        (DotTokenKind kind, string value) _pendingToken;
+        DotToken _pendingToken;
 
         const DotTokenKind EOF = (DotTokenKind)DotTokens.EOF;
 
         protected override int yylex()
         {
-            static (DotTokenKind kind, string value) NextToken(DotReader scanner)
+            static DotToken NextToken(DotReader scanner)
             {
                 if (scanner.Read())
-                    return (scanner.TokenType, scanner.Value);
+                    return new DotToken(scanner.TokenType, scanner.Value);
                 else
-                    return (EOF, string.Empty);
+                    return new DotToken(EOF, string.Empty);
             }
 
             var token = _pendingToken;
-            if (token.value is null)
+            if (token.Text is null)
             {
                 token = NextToken(_scanner);
             }
@@ -46,38 +79,37 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 _pendingToken = default;
             }
 
-            List<DotTrivia>? leadingTrivia = null;
+            List<DotInsignificantToken>? leadingTrivia = null;
 
-            while (IsTriviaToken(token.kind))
+            while (IsTriviaToken(token.Kind))
             {
-                var trivia = CreateTrivia(token.kind, token.value);
+                var trivia = CreateTrivia(token);
                 (leadingTrivia ??= new()).Add(trivia);
                 token = NextToken(_scanner);
             }
-
-            var syntaxToken = CreateToken(token.kind, token.value);
-            _yylval = new DotValueType
-            {
-                token = syntaxToken
-            };
 
             if (leadingTrivia is not null)
             {
                 foreach (var trivia in leadingTrivia)
                 {
-                    syntaxToken.LeadingTrivia.Add(trivia);
+                    token.AddLeadingTrivia(trivia);
                 }
             }
 
             _pendingToken = NextToken(_scanner);
-            while (IsTriviaToken(_pendingToken.kind))
+            while (IsTriviaToken(_pendingToken.Kind))
             {
-                var trivia = CreateTrivia(_pendingToken.kind, _pendingToken.value);
-                syntaxToken.TrailingTrivia.Add(trivia);
+                var trivia = CreateTrivia(_pendingToken);
+                token.AddTrailingTrivia(trivia);
                 _pendingToken = NextToken(_scanner);
             }
 
-            return MapToken(token.kind);
+            _yylval = new DotValueType
+            {
+                token = token
+            };
+
+            return MapToken(token.Kind);
         }
 
         static int MapToken(DotTokenKind token) => token switch

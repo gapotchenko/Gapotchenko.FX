@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -14,7 +10,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets an attribute target.
         /// </summary>
-        public DotToken? TargetKeyword { get; set; }
+        public DotKeywordToken? TargetKeyword { get; set; }
 
         /// <summary>
         /// Gets or sets a list of attributes.

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -14,27 +10,27 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets a vertex identifier token.
         /// </summary>
-        public DotToken? Identifier { get; set; }
+        public DotStringLiteral? Identifier { get; set; }
 
         /// <summary>
         /// Gets or sets a port <c>:</c> token.
         /// </summary>
-        public DotToken? PortColonToken { get; set; }
+        public DotPunctuationToken? PortColonToken { get; set; }
 
         /// <summary>
         /// Gets or sets a port identifier token.
         /// </summary>
-        public DotToken? PortIdentifier { get; set; }
+        public DotStringLiteral? PortIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets a compass point <c>:</c> token.
         /// </summary>
-        public DotToken? CompassPointColonToken { get; set; }
+        public DotPunctuationToken? CompassPointColonToken { get; set; }
 
         /// <summary>
         /// Gets or sets a compass point token.
         /// </summary>
-        public DotToken? CompassPointToken { get; set; }
+        public DotStringLiteral? CompassPointToken { get; set; }
 
         internal override int SlotCount => 5;
 

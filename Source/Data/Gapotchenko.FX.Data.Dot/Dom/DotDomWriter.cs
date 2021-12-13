@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             _writer = dotWriter ?? throw new ArgumentNullException(nameof(dotWriter));
         }
 
-        public override void VisitToken(DotToken token)
+        public override void VisitToken(DotSignificantToken token)
         {
             if (token.HasLeadingTrivia)
             {
@@ -21,14 +21,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 {
                     if (!string.IsNullOrEmpty(trivia.Text))
                     {
-                        _writer.Write(trivia.Kind, trivia.Text);
+                        _writer.Write(trivia.Kind.ToDotTokenKind(), trivia.Text);
                     }
                 }
             }
 
             if (!string.IsNullOrEmpty(token.Text))
             {
-                _writer.Write(token.Kind, token.Text);
+                _writer.Write(DotTokenKind.Id, token.Text);
             }
 
             if (token.HasTrailingTrivia)
@@ -37,7 +37,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 {
                     if (!string.IsNullOrEmpty(trivia.Text))
                     {
-                        _writer.Write(trivia.Kind, trivia.Text);
+                        _writer.Write(trivia.Kind.ToDotTokenKind(), trivia.Text);
                     }
                 }
             }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gapotchenko.FX.Data.Dot.Dom
+﻿namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
     /// Represents DOT document statement.
@@ -14,6 +8,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets a statement terminator token.
         /// </summary>
-        public DotToken? SemicolonToken { get; set; }
+        public DotPunctuationToken? SemicolonToken { get; set; }
     }
 }

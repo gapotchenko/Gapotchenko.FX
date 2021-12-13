@@ -2,11 +2,11 @@
 {
     static class DotDomNavigator
     {
-        public static DotToken? TryGetFirstToken(DotNode current)
+        public static DotSignificantToken? TryGetFirstToken(DotNode current)
         {
             foreach (var child in current.ChildNodesAndTokens)
             {
-                if (child is DotToken t)
+                if (child is DotSignificantToken t)
                 {
                     return t;
                 }
@@ -21,11 +21,11 @@
             return default;
         }
 
-        public static DotToken? TryGetLastToken(DotNode current)
+        public static DotSignificantToken? TryGetLastToken(DotNode current)
         {
             foreach (var child in current.ChildNodesAndTokens.Reverse())
             {
-                if (child is DotToken t)
+                if (child is DotSignificantToken t)
                 {
                     return t;
                 }

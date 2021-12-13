@@ -47,7 +47,7 @@ namespace Gapotchenko.FX.Data.Dot.Tests
             Assert.AreEqual(expectedValue, identifierToken?.Value);
         }
 
-        static DotToken? GetIdentifierToken(string text)
+        static DotStringLiteral? GetIdentifierToken(string text)
         {
             var dot = $"digraph {{ {text} }}";
             var document = ParseDot(dot);

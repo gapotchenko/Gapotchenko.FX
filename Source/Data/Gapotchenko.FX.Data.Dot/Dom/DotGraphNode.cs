@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -14,17 +10,17 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets <c>strict</c> keyword token.
         /// </summary>
-        public DotToken? StrictKeyword { get; set; }
+        public DotKeywordToken? StrictKeyword { get; set; }
 
         /// <summary>
         /// Gets or sets a graph kind token.
         /// </summary>
-        public DotToken? GraphKindKeyword { get; set; }
+        public DotKeywordToken? GraphKindKeyword { get; set; }
 
         /// <summary>
         /// Gets or sets a graph identifier token.
         /// </summary>
-        public DotToken? Identifier { get; set; }
+        public DotStringLiteral? Identifier { get; set; }
 
         /// <summary>
         /// Gets or sets a graph statements list.

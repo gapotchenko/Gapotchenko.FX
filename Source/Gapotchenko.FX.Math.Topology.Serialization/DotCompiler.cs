@@ -170,7 +170,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         {
             var graph = new DotGraphNode
             {
-                GraphKindKeyword = new DotToken(DotTokenKind.Digraph),
+                GraphKindKeyword = new DotKeywordToken(DotKeywordTokenKind.Digraph),
                 Statements = DotCompiler<TVertex>.CreateStatements(model)
             };
 
@@ -201,9 +201,9 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         static DotStatementListNode CreateStatementList(DotNodeList<DotStatementNode> listOfStatements) =>
             new DotStatementListNode
             {
-                OpenBraceToken = new DotToken(DotTokenKind.ScopeStart),
+                OpenBraceToken = new DotPunctuationToken(DotPunctuationTokenKind.ScopeStart),
                 Statements = listOfStatements,
-                CloseBraceToken = new DotToken(DotTokenKind.ScopeEnd),
+                CloseBraceToken = new DotPunctuationToken(DotPunctuationTokenKind.ScopeEnd),
             };
 
         static DotVertexNode CreateVertexStatement(string vertex, IEnumerable<(string attributeName, string attributeValue)>? attributes)
@@ -219,7 +219,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         {
             return new DotVertexIdentifierNode
             {
-                Identifier = DotToken.CreateIdentifierToken(identifier),
+                Identifier = new DotStringLiteral(identifier),
             };
         }
 
@@ -230,16 +230,16 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
 
             var attributeList = new DotNodeList<DotAttributeNode>(attributes.Select(attr => new DotAttributeNode
             {
-                LHS = DotToken.CreateIdentifierToken(attr.attributeName),
-                EqualToken = new DotToken(DotTokenKind.Equal),
-                RHS = DotToken.CreateIdentifierToken(attr.attributeValue)
+                LHS = new DotStringLiteral(attr.attributeName),
+                EqualToken = new DotPunctuationToken(DotPunctuationTokenKind.Equal),
+                RHS = new DotStringLiteral(attr.attributeValue)
             }));
 
             var attributeListNode = new DotAttributeListNode
             {
-                OpenBraceToken = new DotToken(DotTokenKind.ListStart),
+                OpenBraceToken = new DotPunctuationToken(DotPunctuationTokenKind.ListStart),
                 Attributes = attributeList,
-                CloseBraceToken = new DotToken(DotTokenKind.ListEnd),
+                CloseBraceToken = new DotPunctuationToken(DotPunctuationTokenKind.ListEnd),
             };
 
             return new DotNodeList<DotAttributeListNode>()
@@ -254,7 +254,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             {
                 Elements = new SeparatedDotNodeList<DotNode>(
                     edge.Select(CreateEdgeElement),
-                    new DotToken(DotTokenKind.Arrow, "->"))
+                    new DotArrowToken(DotArrowTokenKind.LeftToRight))
             };
 
             static DotNode CreateEdgeElement(IEnumerable<string> edgeElement)

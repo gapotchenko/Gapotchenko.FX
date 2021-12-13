@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -32,7 +29,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Creates a new <see cref="SeparatedDotNodeList{TNode}"/> instance.
         /// </summary>
-        public SeparatedDotNodeList(IEnumerable<TNode> nodes, DotToken separator)
+        public SeparatedDotNodeList(IEnumerable<TNode> nodes, DotSignificantToken separator)
         {
             if (nodes is null)
                 throw new ArgumentNullException(nameof(nodes));
@@ -86,7 +83,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the separator to the end of the list.
         /// </summary>
-        public void Add(DotToken separator)
+        public void Add(DotSignificantToken separator)
         {
             _nodesAndTokens.Add(separator);
         }
@@ -103,7 +100,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the separator to the beginning of the list.
         /// </summary>
-        public void AddFirst(DotToken separator)
+        public void AddFirst(DotSignificantToken separator)
         {
             _nodesAndTokens.Insert(0, separator);
         }
