@@ -12,9 +12,9 @@
     public DotParser.DotToken token;
     public DotNode entity;
     public SeparatedDotNodeList<DotNode> separatedSyntaxList;
-    public DotNodeList<DotAttributeNode> attributeSyntaxList;
-    public DotNodeList<DotAttributeListNode> attributeListSyntaxList;
-    public DotNodeList<DotStatementNode> statementSyntaxList;
+    public IList<DotAttributeNode> attributeSyntaxList;
+    public IList<DotAttributeListNode> attributeListSyntaxList;
+    public IList<DotStatementNode> statementSyntaxList;
 }
 
 %token <token> DIGRAPH GRAPH ARROW SUBGRAPH NODE EDGE ID
@@ -46,7 +46,7 @@ graphName : id { $$ = $1; }
           |    { }
           ;
 
-stmt_list : { $$ = new(); }
+stmt_list : { $$ = new List<DotStatementNode>(); }
           | stmt_list stmt     { $1.Add((DotStatementNode)$2); $$ = $1; }
           | stmt_list stmt ';' { var statement = (DotStatementNode)$2;
                                  statement.SemicolonToken = CreatePunctuationToken($3.token);
@@ -94,7 +94,7 @@ attr_list : '[' ']'        { $$ = CreateAttributeListSyntaxList($1.token, defaul
           | '[' a_list ']' { $$ = CreateAttributeListSyntaxList($1.token, $2, $3.token); }
           ;
 
-a_list    : avPair            { $$ = new(); $$.Add((DotAttributeNode)$1); }
+a_list    : avPair            { $$ = new List<DotAttributeNode>(); $$.Add((DotAttributeNode)$1); }
           | a_list avPair     { $$ = $1; $1.Add((DotAttributeNode)$2); }
           | a_list avPair ',' { $$ = $1;
                                 var attr = (DotAttributeNode)$2;

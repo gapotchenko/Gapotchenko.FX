@@ -1,5 +1,6 @@
 ﻿using Gapotchenko.FX.Data.Dot.Serialization;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
@@ -119,12 +120,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
-        static DotNodeList<DotAttributeListNode> CreateAttributeListSyntaxList(
+        static IList<DotAttributeListNode> CreateAttributeListSyntaxList(
             DotToken openBraceToken,
-            DotNodeList<DotAttributeNode>? attributes,
+            IList<DotAttributeNode>? attributes,
             DotToken closeBraceToken)
         {
-            var list = new DotNodeList<DotAttributeListNode>();
+            var list = new List<DotAttributeListNode>();
             var syntax = CreateAttributeListSyntax(openBraceToken, attributes, closeBraceToken);
             list.Add(syntax);
             return list;
@@ -132,7 +133,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static DotAttributeListNode CreateAttributeListSyntax(
             DotToken openBraceToken,
-            DotNodeList<DotAttributeNode>? attributes,
+            IList<DotAttributeNode>? attributes,
             DotToken closeBraceToken)
         {
             return new DotAttributeListNode()
@@ -145,7 +146,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static AttachedDotAttributesNode CreateAttachedAttributesSyntax(
             DotToken targetKeyword,
-            DotNodeList<DotAttributeListNode> attributes)
+            IList<DotAttributeListNode> attributes)
         {
             return new AttachedDotAttributesNode
             {
@@ -156,7 +157,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static DotEdgeNode CreateEdgeSyntax(
             SeparatedDotNodeList<DotNode> elements,
-            DotNodeList<DotAttributeListNode> attributes)
+            IList<DotAttributeListNode> attributes)
         {
             return new DotEdgeNode
             {
@@ -167,7 +168,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static DotVertexNode CreateVertexSyntax(
             DotVertexIdentifierNode identifier,
-            DotNodeList<DotAttributeListNode> attributes)
+            IList<DotAttributeListNode> attributes)
         {
             return new DotVertexNode
             {
@@ -206,7 +207,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static DotStatementListNode CreateStatementListSyntax(
             DotToken openBrace,
-            DotNodeList<DotStatementNode> statements,
+            IList<DotStatementNode> statements,
             DotToken closeBrace)
         {
             return new DotStatementListNode
@@ -215,14 +216,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 Statements = statements,
                 CloseBraceToken = CreatePunctuationToken(closeBrace)
             };
-        }
-
-        static void Prepend<TNode>(
-            DotNodeList<TNode> syntaxList,
-            TNode node)
-            where TNode : DotNode
-        {
-            syntaxList.AddFirst(node);
         }
     }
 }

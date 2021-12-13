@@ -3,6 +3,6 @@
     interface IDotSyntaxSlotProvider
     {
         int SlotCount { get; }
-        DotSyntaxSlot GetSlot(int index);
+        IDotSyntaxSlotProvider? GetSlot(int index);
     }
 }

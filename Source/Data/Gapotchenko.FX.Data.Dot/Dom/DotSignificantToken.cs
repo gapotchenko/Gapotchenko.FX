@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
@@ -6,7 +7,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents a significant token in the syntax tree.
     /// </summary>
-    public abstract class DotSignificantToken : DotElement
+    public abstract class DotSignificantToken : DotElement, IDotSyntaxSlotProvider
     {
         /// <summary>
         /// Token text.
@@ -28,20 +29,23 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         List<DotInsignificantToken>? _trailingTrivia;
 
         /// <inheritdoc/>
-        public override IList<DotInsignificantToken> LeadingTrivia => _leadingTrivia ??= new();
+        public IList<DotInsignificantToken> LeadingTrivia => _leadingTrivia ??= new();
 
         /// <inheritdoc/>
-        public override IList<DotInsignificantToken> TrailingTrivia => _trailingTrivia ??= new();
+        public IList<DotInsignificantToken> TrailingTrivia => _trailingTrivia ??= new();
 
         /// <inheritdoc/>
-        public override bool HasLeadingTrivia => _leadingTrivia?.Count > 0;
+        public bool HasLeadingTrivia => _leadingTrivia?.Count > 0;
 
         /// <inheritdoc/>
-        public override bool HasTrailingTrivia => _trailingTrivia?.Count > 0;
+        public bool HasTrailingTrivia => _trailingTrivia?.Count > 0;
 
         /// <summary>
         /// Returns the string representation of this token.
         /// </summary>
         public override string ToString() => Text;
+
+        int IDotSyntaxSlotProvider.SlotCount => 0;
+        IDotSyntaxSlotProvider IDotSyntaxSlotProvider.GetSlot(int i) => throw new ArgumentOutOfRangeException(nameof(i));
     }
 }

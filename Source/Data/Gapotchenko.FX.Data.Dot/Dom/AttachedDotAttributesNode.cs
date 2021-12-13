@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -15,14 +16,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets a list of attributes.
         /// </summary>
-        public DotNodeList<DotAttributeListNode>? Attributes { get; set; }
+        public IList<DotAttributeListNode>? Attributes { get; set; }
 
         internal override int SlotCount => 3;
 
-        internal override DotSyntaxSlot GetSlot(int i) => i switch
+        internal override IDotSyntaxSlotProvider? GetSlot(int i) => i switch
         {
             0 => TargetKeyword,
-            1 => new DotSyntaxSlot(Attributes),
+            1 => ListDotSyntaxSlotProvider.Create(Attributes),
             2 => SemicolonToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };

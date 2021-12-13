@@ -33,20 +33,25 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             for (int i = 0, s = node.SlotCount; i < s; i++)
             {
                 var child = node.GetSlot(i);
-                if (!child.IsDefault)
-                {
-                    if (!child.IsList)
-                    {
-                        n++;
-                    }
-                    else
-                    {
-                        n += child.SlotCount;
-                    }
-                }
+                n += GetOccupancy(child);
             }
 
             return n;
+        }
+
+        static int GetOccupancy(IDotSyntaxSlotProvider? child)
+        {
+            if (child is DotElement)
+            {
+                return 1;
+            }
+            else if (child is not null)
+            {
+                // Dynamic node.
+                return child.SlotCount;
+            }
+
+            return 0;
         }
 
         /// <summary>Gets the child at the specified index.</summary>
@@ -68,18 +73,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         internal DotNode? Node => _node;
 
-        static int Occupancy(DotSyntaxSlot slot)
-        {
-            return slot.IsList ? slot.SlotCount : 1;
-        }
-
         /// <summary>
         /// Internal indexer that does not verify index.
         /// Used when caller has already ensured that index is within bounds.
         /// </summary>
         internal static DotElement ItemInternal(DotNode node, int index)
         {
-            DotSyntaxSlot childSlot;
+            IDotSyntaxSlotProvider? childSlot;
             var idx = index;
             var slotIndex = 0;
 
@@ -91,26 +91,23 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             while (true)
             {
                 childSlot = node.GetSlot(slotIndex);
-                if (!childSlot.IsDefault)
-                {
-                    int currentOccupancy = Occupancy(childSlot);
-                    if (idx < currentOccupancy)
-                    {
-                        break;
-                    }
 
-                    idx -= currentOccupancy;
+                int currentOccupancy = GetOccupancy(childSlot);
+                if (idx < currentOccupancy)
+                {
+                    break;
                 }
+
+                idx -= currentOccupancy;
 
                 slotIndex++;
             }
 
-            return childSlot.Element ?? Unwrap(childSlot.GetSlot(idx));
+            return childSlot is DotElement element ?
+                element :
+                // A current slot is dynamic (list), go deeper.
+                childSlot?.GetSlot(idx) as DotElement ?? throw new ArgumentException("Cannot get element at slot.");
         }
-
-        static DotElement Unwrap(DotSyntaxSlot slot) =>
-            slot.Element ??
-            throw new ArgumentException("Cannot unwrap the given slot.", nameof(slot));
 
         /// <summary>
         /// Determines whether any child exists.

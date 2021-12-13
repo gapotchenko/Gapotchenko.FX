@@ -194,11 +194,11 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
                 statements.Add(CreateVertexStatement(vertex.vertex, vertex.attributes));
             }
 
-            var listOfStatements = new DotNodeList<DotStatementNode>(statements);
+            var listOfStatements = new List<DotStatementNode>(statements);
             return CreateStatementList(listOfStatements);
         }
 
-        static DotStatementListNode CreateStatementList(DotNodeList<DotStatementNode> listOfStatements) =>
+        static DotStatementListNode CreateStatementList(List<DotStatementNode> listOfStatements) =>
             new DotStatementListNode
             {
                 OpenBraceToken = new DotPunctuationToken(DotPunctuationTokenKind.ScopeStart),
@@ -223,12 +223,12 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             };
         }
 
-        static DotNodeList<DotAttributeListNode>? CreateAttributesList(IEnumerable<(string attributeName, string attributeValue)>? attributes)
+        static IList<DotAttributeListNode>? CreateAttributesList(IEnumerable<(string attributeName, string attributeValue)>? attributes)
         {
             if (attributes?.Any() != true)
                 return null;
 
-            var attributeList = new DotNodeList<DotAttributeNode>(attributes.Select(attr => new DotAttributeNode
+            var attributeList = new List<DotAttributeNode>(attributes.Select(attr => new DotAttributeNode
             {
                 LHS = new DotStringLiteral(attr.attributeName),
                 EqualToken = new DotPunctuationToken(DotPunctuationTokenKind.Equal),
@@ -242,7 +242,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
                 CloseBraceToken = new DotPunctuationToken(DotPunctuationTokenKind.ListEnd),
             };
 
-            return new DotNodeList<DotAttributeListNode>()
+            return new List<DotAttributeListNode>()
             {
                 attributeListNode
             };
@@ -261,7 +261,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
             {
                 if (edgeElement.Skip(1).Any())
                 {
-                    var subgraphStatements = new DotNodeList<DotStatementNode>(
+                    var subgraphStatements = new List<DotStatementNode>(
                         edgeElement.Select(v => (DotStatementNode)CreateVertexStatement(v, default)));
 
                     return new DotGraphNode

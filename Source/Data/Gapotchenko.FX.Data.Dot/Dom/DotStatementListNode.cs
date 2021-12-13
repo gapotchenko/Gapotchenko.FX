@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -15,7 +16,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets a list of statements.
         /// </summary>
-        public DotNodeList<DotStatementNode>? Statements { get; set; }
+        public IList<DotStatementNode>? Statements { get; set; }
 
         /// <summary>
         /// Gets or sets <c>}</c> token.
@@ -24,10 +25,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         internal override int SlotCount => 3;
 
-        internal override DotSyntaxSlot GetSlot(int i) => i switch
+        internal override IDotSyntaxSlotProvider? GetSlot(int i) => i switch
         {
             0 => OpenBraceToken,
-            1 => new DotSyntaxSlot(Statements),
+            1 => ListDotSyntaxSlotProvider.Create(Statements),
             2 => CloseBraceToken,
             _ => throw new ArgumentOutOfRangeException(nameof(i))
         };

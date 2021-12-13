@@ -11,31 +11,25 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     public abstract class DotNode : DotElement, IDotSyntaxSlotProvider
     {
         /// <inheritdoc/>
-        public override IList<DotInsignificantToken> LeadingTrivia =>
+        public IList<DotInsignificantToken> LeadingTrivia =>
             (DotDomNavigator.TryGetFirstToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .LeadingTrivia;
 
         /// <inheritdoc/>
-        public override IList<DotInsignificantToken> TrailingTrivia =>
+        public IList<DotInsignificantToken> TrailingTrivia =>
             (DotDomNavigator.TryGetLastToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .TrailingTrivia;
 
         /// <inheritdoc/>
-        public override bool HasLeadingTrivia => DotDomNavigator.TryGetFirstToken(this)?.HasLeadingTrivia == true;
+        public bool HasLeadingTrivia => DotDomNavigator.TryGetFirstToken(this)?.HasLeadingTrivia == true;
 
         /// <inheritdoc/>
-        public override bool HasTrailingTrivia => DotDomNavigator.TryGetLastToken(this)?.HasTrailingTrivia == true;
+        public bool HasTrailingTrivia => DotDomNavigator.TryGetLastToken(this)?.HasTrailingTrivia == true;
 
         /// <summary>
         /// The list of child nodes and tokens of this node.
         /// </summary>
         public DotChildNodeList ChildNodesAndTokens => new(this);
-
-        internal abstract int SlotCount { get; }
-        internal abstract DotSyntaxSlot GetSlot(int i);
-
-        int IDotSyntaxSlotProvider.SlotCount => SlotCount;
-        DotSyntaxSlot IDotSyntaxSlotProvider.GetSlot(int i) => GetSlot(i);
 
         /// <summary>
         /// Accepts <see cref="DotDomVisitor"/> visitor.
@@ -54,5 +48,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             Accept(domWriter);
             return stringWriter.ToString();
         }
+
+        internal abstract int SlotCount { get; }
+        internal abstract IDotSyntaxSlotProvider? GetSlot(int i);
+
+        int IDotSyntaxSlotProvider.SlotCount => SlotCount;
+        IDotSyntaxSlotProvider? IDotSyntaxSlotProvider.GetSlot(int i) => GetSlot(i);
     }
 }
