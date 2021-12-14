@@ -294,6 +294,16 @@ digraph {
   /* Comment 2 */
   v # Comment 3
 }");
+        
+        [TestMethod]
+        public void DotRoundtrip_033() =>
+            ExecuteRoundtripTest(@"
+digraph {
+  v1 [a;b;c];
+  v2 [a;b;c;];
+  v3 [a,b,c];
+  v4 [a,b,c,];
+}");
 
         static void ExecuteRoundtripTest(string document)
         {

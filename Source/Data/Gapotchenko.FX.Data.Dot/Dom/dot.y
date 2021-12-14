@@ -19,7 +19,7 @@
 
 %token <token> DIGRAPH GRAPH ARROW SUBGRAPH NODE EDGE ID
 
-%type <token> graphType graphName id
+%type <token> graphType graphName id avPairTerminator
 %type <entity> graph subgraph stmt stmt node_stmt edge_stmt endpoint stmts node_id
 %type <entity> attr_stmt opt_attr_list avPair
 %type <statementSyntaxList> stmt_list
@@ -96,19 +96,16 @@ attr_list : '[' ']'        { $$ = CreateAttributeListSyntaxList($1.token, defaul
 
 a_list    : avPair            { $$ = new List<DotAttributeNode>(); $$.Add((DotAttributeNode)$1); }
           | a_list avPair     { $$ = $1; $1.Add((DotAttributeNode)$2); }
-          | a_list avPair ',' { $$ = $1;
-                                var attr = (DotAttributeNode)$2;
-                                attr.SemicolonOrCommaToken = CreatePunctuationToken($3.token); 
-                                $1.Add(attr); }
-          | a_list avPair ';' { $$ = $1; 
-                                var attr = (DotAttributeNode)$2;
-                                attr.SemicolonOrCommaToken = CreatePunctuationToken($3.token); 
-                                $1.Add(attr); }
           ;
 
-avPair    : id '=' id { $$ = CreateAttributeSyntax($1, $2.token, $3, default); }
-          | id        { $$ = CreateAttributeSyntax($1, default, default, default); }
+avPair    : id '=' id avPairTerminator { $$ = CreateAttributeSyntax($1, $2.token, $3, $4); }
+          | id  avPairTerminator       { $$ = CreateAttributeSyntax($1, default, default, $2); }
           ;
+
+avPairTerminator :      { }
+                 | ','  { $$ = $1.token; }
+                 | ';'  { $$ = $1.token; }
+                 ;
 
 node_id   : id               { $$ = CreateVertexIdentifierSyntax($1, default, default, default, default); }
           | id ':' id        { $$ = CreateVertexIdentifierSyntax($1, $2.token, $3, default, default); }
