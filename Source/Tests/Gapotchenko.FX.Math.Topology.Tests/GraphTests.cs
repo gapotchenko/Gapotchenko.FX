@@ -281,5 +281,52 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                     ('d', 'e'),
                 }));
         }
+
+        [TestMethod]
+        public void Graph_GraphEquals()
+        {
+            var g = new Graph<int>()
+            {
+                Vertices = { 5 },
+                Edges = { (1, 2), (2, 3) }
+            };
+
+            IReadOnlyGraph<int> g0 = g.Clone();
+            Assert.IsTrue(g.GraphEquals(g0));
+
+            Assert.IsTrue(g.Vertices.Remove(5));
+            Assert.IsFalse(g.GraphEquals(g0));
+
+            Assert.IsTrue(g.Vertices.Add(5));
+            Assert.IsTrue(g.Vertices.Add(6));
+            Assert.IsFalse(g.GraphEquals(g0));
+
+            Assert.IsTrue(g.Vertices.Remove(6));
+            Assert.IsTrue(g.GraphEquals(g0));
+
+            Assert.IsTrue(g.Edges.Remove(2, 3));
+            Assert.IsFalse(g.GraphEquals(g0));
+
+            Assert.IsTrue(g.Edges.Add(2, 3));
+            Assert.IsTrue(g.Edges.Add(3, 5));
+            Assert.IsFalse(g.GraphEquals(g0));
+
+            Assert.IsTrue(g.Edges.Remove(3, 5));
+            Assert.IsTrue(g.GraphEquals(g0));
+
+            Assert.IsTrue(g.Vertices.Remove(5));
+            Assert.IsTrue(g.Edges.Remove(2, 3));
+            Assert.IsFalse(g.GraphEquals(g0));
+
+            Assert.IsTrue(g.Vertices.Add(5));
+            Assert.IsTrue(g.Vertices.Add(6));
+            Assert.IsTrue(g.Edges.Add(2, 3));
+            Assert.IsTrue(g.Edges.Add(3, 5));
+            Assert.IsFalse(g.GraphEquals(g0));
+
+            Assert.IsTrue(g.Vertices.Remove(6));
+            Assert.IsTrue(g.Edges.Remove(3, 5));
+            Assert.IsTrue(g.GraphEquals(g0));
+        }
     }
 }
