@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace Gapotchenko.FX.Math.Topology.Tests
 {
@@ -54,6 +53,23 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
 
             g.Vertices.Clear();
+            Assert.AreEqual(0, g.Vertices.Count);
+            Assert.AreEqual(0, g.Edges.Count);
+        }
+
+        [TestMethod]
+        public void Graph_Clear()
+        {
+            var g = new Graph<int>()
+            {
+                Vertices = { 1, 2 },
+                Edges = { (1, 2), (2, 3) }
+            };
+
+            Assert.AreEqual(3, g.Vertices.Count);
+            Assert.AreEqual(2, g.Edges.Count);
+
+            g.Clear();
             Assert.AreEqual(0, g.Vertices.Count);
             Assert.AreEqual(0, g.Edges.Count);
         }
@@ -137,15 +153,13 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { (1, 2), (2, 3) }
             };
 
-            var g2 = g.GetTransposition();
+            var g0 = g.Clone();
+            var h = g.GetTransposition();
+            Assert.IsTrue(g.GraphEquals(g0), "Original graph instance should not be modified.");
 
-            Assert.AreNotSame(g, g2);
-            Assert.IsTrue(g2.Vertices.SetEquals(new[] { 1, 2, 3 }));
-            Assert.IsTrue(g2.Edges.SetEquals(new[] { (2, 1), (3, 2) }));
-
-            // Ensure that original instance is not modified.
-            Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
-            Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
+            Assert.AreNotSame(g, h);
+            Assert.IsTrue(h.Vertices.SetEquals(new[] { 1, 2, 3 }));
+            Assert.IsTrue(h.Edges.SetEquals(new[] { (2, 1), (3, 2) }));
         }
 
         [TestMethod]
@@ -157,11 +171,11 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { (1, 2), (2, 3) }
             };
 
-            var g2 = g.Clone();
+            var h = g.Clone();
 
-            Assert.AreNotSame(g, g2);
-            Assert.IsTrue(g2.Vertices.SetEquals(new[] { 1, 2, 3, 5 }));
-            Assert.IsTrue(g2.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
+            Assert.AreNotSame(g, h);
+            Assert.IsTrue(h.Vertices.SetEquals(new[] { 1, 2, 3, 5 }));
+            Assert.IsTrue(h.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
         }
 
         [TestMethod]
@@ -201,15 +215,71 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { (1, 1), (1, 2), (2, 3), (3, 3) }
             };
 
-            var g2 = g.GetReflexiveReduction();
+            var g0 = g.Clone();
+            var h = g.GetReflexiveReduction();
+            Assert.IsTrue(g.GraphEquals(g0), "Original graph instance should not be modified.");
 
-            Assert.AreNotSame(g, g2);
-            Assert.IsTrue(g2.Vertices.SetEquals(new[] { 1, 2, 3, 5 }));
-            Assert.IsTrue(g2.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
+            Assert.AreNotSame(g, h);
+            Assert.IsTrue(h.Vertices.SetEquals(new[] { 1, 2, 3, 5 }));
+            Assert.IsTrue(h.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
+        }
 
-            // Ensure that original instance is not modified.
-            Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3, 5 }));
-            Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 1), (1, 2), (2, 3), (3, 3) }));
+        [TestMethod]
+        public void Graph_ReduceTransitions()
+        {
+            var g = new Graph<char>()
+            {
+                Vertices = { 'f' },
+                Edges =
+                {
+                    ('a', 'b'), ('a', 'd'), ('a', 'c'), ('a', 'e'),
+                    ('b', 'd'),
+                    ('c', 'd'), ('c', 'e'),
+                    ('d', 'e')
+                }
+            };
+
+            g.ReduceTransitions();
+
+            Assert.IsTrue(g.Vertices.SetEquals("abcdef"));
+            Assert.IsTrue(g.Edges.SetEquals(
+                new[]
+                {
+                    ('a', 'b'), ('a', 'c'),
+                    ('b', 'd'),
+                    ('c', 'd'),
+                    ('d', 'e'),
+                }));
+        }
+
+        [TestMethod]
+        public void Graph_GetTransitiveReduction()
+        {
+            var g = new Graph<char>()
+            {
+                Vertices = { 'f' },
+                Edges =
+                {
+                    ('a', 'b'), ('a', 'd'), ('a', 'c'), ('a', 'e'),
+                    ('b', 'd'),
+                    ('c', 'd'), ('c', 'e'),
+                    ('d', 'e')
+                }
+            };
+
+            var g0 = g.Clone();
+            var h = g.GetTransitiveReduction();
+            Assert.IsTrue(g.GraphEquals(g0), "Original graph instance should not be modified.");
+
+            Assert.IsTrue(h.Vertices.SetEquals("abcdef"));
+            Assert.IsTrue(h.Edges.SetEquals(
+                new[]
+                {
+                    ('a', 'b'), ('a', 'c'),
+                    ('b', 'd'),
+                    ('c', 'd'),
+                    ('d', 'e'),
+                }));
         }
     }
 }
