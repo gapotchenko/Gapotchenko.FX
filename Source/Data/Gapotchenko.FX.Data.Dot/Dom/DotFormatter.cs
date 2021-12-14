@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Data.Dot.Serialization;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -31,10 +32,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             public override void VisitToken(DotSignificantToken token)
             {
                 if (token.HasLeadingTrivia)
-                    token.LeadingTrivia.RemoveAll(t => t.Kind is DotInsignificantTokenKind.Whitespace);
+                    token.LeadingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
 
                 if (token.HasTrailingTrivia)
-                    token.TrailingTrivia.RemoveAll(t => t.Kind is DotInsignificantTokenKind.Whitespace);
+                    token.TrailingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
             }
         }
     }

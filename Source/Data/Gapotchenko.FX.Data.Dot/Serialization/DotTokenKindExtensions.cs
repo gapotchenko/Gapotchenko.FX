@@ -9,6 +9,13 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
 {
     static class DotTokenKindExtensions
     {
+        public static string GetDefaultValue(this DotTokenKind token)
+        {
+            if (!TryGetDefaultValue(token, out var defaultValue))
+                throw new ArgumentException("Token text cannot deducted from the kind.", nameof(token));
+            return defaultValue;
+        }
+
         public static bool TryGetDefaultValue(this DotTokenKind token, [NotNullWhen(true)] out string? value)
         {
             value = token switch

@@ -5,17 +5,17 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents an element in the syntax tree.
     /// </summary>
-    public interface DotElement
+    public interface IDotElement
     {
         /// <summary>
         /// Gets the list of trivia appearing before the element.
         /// </summary>
-        IList<DotInsignificantToken> LeadingTrivia { get; }
+        IList<DotTrivia> LeadingTrivia { get; }
 
         /// <summary>
         /// Gets the list of trivia appearing after the element.
         /// </summary>
-        IList<DotInsignificantToken> TrailingTrivia { get; }
+        IList<DotTrivia> TrailingTrivia { get; }
 
         /// <summary>
         /// Gets a value indicating whether the element has any leading trivia.

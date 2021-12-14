@@ -1,24 +1,32 @@
-﻿namespace Gapotchenko.FX.Data.Dot.Dom
+﻿using Gapotchenko.FX.Data.Dot.Serialization;
+using System;
+
+namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
     /// Represents a keyword token in DOT document.
     /// </summary>
-    public sealed class DotKeywordToken : DotPrimitiveToken
+    public sealed class DotKeywordToken : DotSignificantToken
     {
         /// <summary>
         /// Initializes a new <see cref="DotKeywordToken"/> instance.
         /// </summary>
         /// <param name="kind">Token kind.</param>
         /// <param name="text">Token text.</param>
-        public DotKeywordToken(DotKeywordTokenKind kind, string? text = default)
-            : base(kind.ToDotTokenKind(), text)
+        public DotKeywordToken(DotTokenKind kind, string? text = default)
+            : base(kind, text ?? kind.GetDefaultValue())
         {
-            Kind = kind;
+            switch (kind)
+            {
+                case DotTokenKind.Digraph:
+                case DotTokenKind.Graph:
+                case DotTokenKind.Subgraph:
+                case DotTokenKind.Node:
+                case DotTokenKind.Edge:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(kind));
+            }
         }
-
-        /// <summary>
-        /// Keyword kind.
-        /// </summary>
-        public DotKeywordTokenKind Kind { get; }
     }
 }

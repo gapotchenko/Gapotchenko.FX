@@ -8,15 +8,15 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// <summary>
     /// Represents a non-terminal node in the syntax tree.
     /// </summary>
-    public abstract class DotNode : DotElement, IDotSyntaxSlotProvider
+    public abstract class DotNode : IDotElement, IDotSyntaxSlotProvider
     {
         /// <inheritdoc/>
-        public IList<DotInsignificantToken> LeadingTrivia =>
+        public IList<DotTrivia> LeadingTrivia =>
             (DotDomNavigator.TryGetFirstToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .LeadingTrivia;
 
         /// <inheritdoc/>
-        public IList<DotInsignificantToken> TrailingTrivia =>
+        public IList<DotTrivia> TrailingTrivia =>
             (DotDomNavigator.TryGetLastToken(this) ?? throw new InvalidOperationException("A node contains no tokens."))
             .TrailingTrivia;
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Data.Dot.Serialization;
+using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -11,27 +12,20 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// </summary>
     public sealed class DotStringLiteral : DotSignificantToken
     {
-        DotStringLiteral(string? value, string text)
-        {
-            _value = value;
-            _text = text;
-        }
-
         /// <summary>
         /// Creates a new <see cref="DotStringLiteral"/> instance.
         /// </summary>
         /// <param name="value">String literal value.</param>
         public DotStringLiteral(string value)
+            : this(value, ValueToText(value))
         {
-            if (value is null)
-                throw new ArgumentNullException(nameof(value));
-
-            _text = ValueToText(value);
-            _value = value;
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string _text;
+        DotStringLiteral(string? value, string text)
+            : base(DotTokenKind.Id, text)
+        {
+            _value = value;
+        }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string? _value;
@@ -39,10 +33,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <inheritdoc />
         public override string Text
         {
-            get => _text;
+            get => base.Text;
             set
             {
-                _text = value ?? throw new ArgumentNullException(nameof(value));
+                base.Text = value ?? throw new ArgumentNullException(nameof(value));
                 _value = null;
             }
         }
@@ -50,11 +44,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <inheritdoc />
         public override string Value
         {
-            get => _value ??= TextToValue(_text);
+            get => _value ??= TextToValue(Text);
             set
             {
                 _value = value ?? throw new ArgumentNullException(nameof(value));
-                _text = ValueToText(_value);
+                base.Text = ValueToText(_value);
             }
         }
 
@@ -88,6 +82,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static string ValueToText(string value)
         {
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
             var text = EscapeStringLiteral(value);
 
             if (string.IsNullOrEmpty(text) ||

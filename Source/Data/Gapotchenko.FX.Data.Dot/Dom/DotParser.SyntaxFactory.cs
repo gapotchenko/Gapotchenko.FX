@@ -30,7 +30,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static DotPunctuationToken CreatePunctuationToken(DotToken token)
         {
-            var result = new DotPunctuationToken(token.Kind.ToDotPunctuationTokenKind(), token.Text);
+            var result = new DotPunctuationToken(token.Kind, token.Text);
             ApplyTrivia(result, token);
             return result;
         }
@@ -44,7 +44,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         static DotKeywordToken CreateKeywordToken(DotToken token)
         {
-            var result = new DotKeywordToken(token.Kind.ToDotKeywordTokenKind(), token.Text);
+            var result = new DotKeywordToken(token.Kind, token.Text);
             ApplyTrivia(result, token);
             return result;
         }
@@ -52,12 +52,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         static DotArrowToken CreateArrowToken(DotToken token)
         {
             Debug.Assert(token.Kind is DotTokenKind.Arrow);
-            var result = new DotArrowToken(token.Text switch
-            {
-                "->" => DotArrowTokenKind.LeftToRight,
-                "--" => DotArrowTokenKind.Bidirectional,
-                _ => throw new ArgumentOutOfRangeException($"Unknown arrow kind: {token.Text}.")
-            }, token.Text);
+            var result = new DotArrowToken(token.Text);
             ApplyTrivia(result, token);
             return result;
         }
@@ -75,17 +70,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        static DotInsignificantToken CreateTrivia(
-            DotTokenKind tokenType,
-            string value)
-        {
-            return new DotInsignificantToken(tokenType.ToDotTriviaKind(), value);
-        }
-
-        static DotInsignificantToken CreateTrivia(
+        static DotTrivia CreateTrivia(
             DotToken token)
         {
-            return new DotInsignificantToken(token.Kind.ToDotTriviaKind(), token.Text);
+            return new DotTrivia(token.Kind, token.Text);
         }
 
         static DotVertexIdentifierNode CreateVertexIdentifierSyntax(

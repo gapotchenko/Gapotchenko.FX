@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Data.Dot.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +24,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             base.VisitToken(token);
 
             TrimEnd(token);
-            token.TrailingTrivia.Add(new DotInsignificantToken(DotInsignificantTokenKind.Whitespace, " "));
+            token.TrailingTrivia.Add(new DotTrivia(DotTokenKind.Whitespace, " "));
         }
 
         int _depth = -1;
@@ -72,11 +73,11 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             }
         }
 
-        IEnumerable<DotInsignificantToken> CreateIndentation()
+        IEnumerable<DotTrivia> CreateIndentation()
         {
             for (int i = 0; i < _indents; i++)
             {
-                yield return new DotInsignificantToken(DotInsignificantTokenKind.Whitespace, _indentation);
+                yield return new DotTrivia(DotTokenKind.Whitespace, _indentation);
             }
         }
 
@@ -85,8 +86,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             if (node is not null)
             {
                 var trailingTrivia = node.TrailingTrivia;
-                trailingTrivia.RemoveAll(t => t.Kind is DotInsignificantTokenKind.Whitespace);
-                trailingTrivia.Add(new DotInsignificantToken(DotInsignificantTokenKind.Whitespace, _eol));
+                trailingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
+                trailingTrivia.Add(new DotTrivia(DotTokenKind.Whitespace, _eol));
             }
         }
 
@@ -95,7 +96,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             if (token is not null)
             {
                 TrimEnd(token);
-                token.TrailingTrivia.Add(new DotInsignificantToken(DotInsignificantTokenKind.Whitespace, _eol));
+                token.TrailingTrivia.Add(new DotTrivia(DotTokenKind.Whitespace, _eol));
             }
         }
 
@@ -103,7 +104,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             if (token.HasLeadingTrivia)
             {
-                token.LeadingTrivia.RemoveAll(t => t.Kind is DotInsignificantTokenKind.Whitespace);
+                token.LeadingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
             }
         }
 
@@ -111,7 +112,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         {
             if (token.HasTrailingTrivia)
             {
-                token.TrailingTrivia.RemoveAll(t => t.Kind is DotInsignificantTokenKind.Whitespace);
+                token.TrailingTrivia.RemoveAll(t => t.Kind is DotTokenKind.Whitespace);
             }
         }
 

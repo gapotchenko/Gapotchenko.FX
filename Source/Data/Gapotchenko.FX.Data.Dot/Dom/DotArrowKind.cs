@@ -3,7 +3,7 @@
     /// <summary>
     /// Arrow DOT document tokens.
     /// </summary>
-    public enum DotArrowTokenKind
+    public enum DotArrowKind
     {
         /// <summary>
         /// Represents <c>-></c> token.

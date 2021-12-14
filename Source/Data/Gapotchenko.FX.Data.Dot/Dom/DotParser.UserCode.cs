@@ -24,19 +24,19 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             public string Text { get; }
             public bool IsDefault => Text is null;
 
-            List<DotInsignificantToken>? _leadingTrivia;
-            List<DotInsignificantToken>? _trailingTrivia;
+            List<DotTrivia>? _leadingTrivia;
+            List<DotTrivia>? _trailingTrivia;
 
-            public IEnumerable<DotInsignificantToken> LeadingTrivia => _leadingTrivia ?? Enumerable.Empty<DotInsignificantToken>();
+            public IEnumerable<DotTrivia> LeadingTrivia => _leadingTrivia ?? Enumerable.Empty<DotTrivia>();
 
-            public IEnumerable<DotInsignificantToken> TrailingTrivia => _trailingTrivia ?? Enumerable.Empty<DotInsignificantToken>();
+            public IEnumerable<DotTrivia> TrailingTrivia => _trailingTrivia ?? Enumerable.Empty<DotTrivia>();
 
-            public void AddLeadingTrivia(DotInsignificantToken trivia)
+            public void AddLeadingTrivia(DotTrivia trivia)
             {
                 (_leadingTrivia ??= new()).Add(trivia);
             }
 
-            public void AddTrailingTrivia(DotInsignificantToken trivia)
+            public void AddTrailingTrivia(DotTrivia trivia)
             {
                 (_trailingTrivia ??= new()).Add(trivia);
             }
@@ -79,7 +79,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 _pendingToken = default;
             }
 
-            List<DotInsignificantToken>? leadingTrivia = null;
+            List<DotTrivia>? leadingTrivia = null;
 
             while (IsTriviaToken(token.Kind))
             {

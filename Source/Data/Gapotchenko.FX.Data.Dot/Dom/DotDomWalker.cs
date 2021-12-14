@@ -90,7 +90,7 @@
             }
         }
 
-        public virtual void VisitTrivia(DotInsignificantToken trivia)
+        public virtual void VisitTrivia(DotTrivia trivia)
         {
         }
 

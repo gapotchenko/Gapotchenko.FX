@@ -1,22 +1,23 @@
-﻿using System;
+﻿using Gapotchenko.FX.Data.Dot.Serialization;
+using System;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
-    /// Represents an insignificant token in the syntax tree.
+    /// Represents a token in the syntax tree.
     /// </summary>
-    public sealed class DotInsignificantToken
+    public abstract class DotToken
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string _text;
 
         /// <summary>
-        /// Initializes a new <see cref="DotInsignificantToken"/> instance.
+        /// Initializes a new <see cref="DotToken"/> instance.
         /// </summary>
         /// <param name="kind">Token kind.</param>
         /// <param name="text">Token text.</param>
-        public DotInsignificantToken(DotInsignificantTokenKind kind, string text)
+        protected internal DotToken(DotTokenKind kind, string text)
         {
             if (text is null)
                 throw new ArgumentNullException(nameof(text));
@@ -26,14 +27,14 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         /// <summary>
-        /// Token kind.
+        /// Gets the token kind.
         /// </summary>
-        public DotInsignificantTokenKind Kind { get; }
+        public DotTokenKind Kind { get; }
 
         /// <summary>
-        /// Trivia text.
+        /// Gets or sets the token text.
         /// </summary>
-        public string Text
+        public virtual string Text
         {
             get => _text;
             set
@@ -43,6 +44,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 _text = value;
             }
         }
+
         /// <summary>
         /// Returns the string representation of this token.
         /// </summary>

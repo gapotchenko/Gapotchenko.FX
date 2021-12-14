@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         where TNode : DotNode
         where TSeparator : DotSignificantToken
     {
-        readonly List<DotElement> _nodesAndSeparators = new();
+        readonly List<IDotElement> _nodesAndSeparators = new();
         readonly TSeparator _defaultSeparator;
 
         /// <summary>
@@ -216,9 +216,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Represents a list of nodes and separators.
         /// </summary>
-        public struct NodesAndSeparatorsList : IReadOnlyList<DotElement>
+        public struct NodesAndSeparatorsList : IReadOnlyList<IDotElement>
         {
-            readonly List<DotElement> _list;
+            readonly List<IDotElement> _list;
 
             internal NodesAndSeparatorsList(SeparatedDotNodeList<TNode, TSeparator> parent)
             {
@@ -230,7 +230,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             /// </summary>
             /// <param name="index">The zero-based index of a node or a separator to get.</param>
             /// <returns>A node or a separator at the specified index.</returns>
-            public DotElement this[int index]
+            public IDotElement this[int index]
             {
                 get => _list[index];
 
@@ -257,7 +257,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             /// <summary>
             /// Returns an enumerator that iterates through the nodes and separators.
             /// </summary>
-            public IEnumerator<DotElement> GetEnumerator() => _list.GetEnumerator();
+            public IEnumerator<IDotElement> GetEnumerator() => _list.GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => _list.GetEnumerator();
         }
