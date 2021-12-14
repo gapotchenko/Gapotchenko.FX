@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets or sets elements list.
         /// </summary>
-        public SeparatedDotNodeList<DotNode>? Elements { get; init; }
+        public SeparatedDotNodeList<DotNode, DotArrowToken>? Elements { get; init; }
 
         /// <summary>
         /// Gets or sets attributes list.

@@ -8,22 +8,24 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// Represents a list of syntax nodes with separators.
     /// </summary>
     /// <typeparam name="TNode">Syntax node type.</typeparam>
-    public class SeparatedDotNodeList<TNode> :
+    /// <typeparam name="TSeparator">Separator token type.</typeparam>
+    public class SeparatedDotNodeList<TNode, TSeparator> :
         IReadOnlyList<TNode>,
         IEnumerable<TNode>,
         IEnumerable,
         IReadOnlyCollection<TNode>,
         IDotSyntaxSlotProvider
         where TNode : DotNode
+        where TSeparator : DotSignificantToken
     {
         readonly List<TNode> _nodes = new();
         readonly List<IDotSyntaxSlotProvider> _nodesAndTokens = new();
-        readonly DotSignificantToken _defaultSeparator;
+        readonly TSeparator _defaultSeparator;
 
         /// <summary>
-        /// Creates a new <see cref="SeparatedDotNodeList{TNode}"/> instance.
+        /// Creates a new <see cref="SeparatedDotNodeList{TNode, TSeparator}"/> instance.
         /// </summary>
-        public SeparatedDotNodeList(DotSignificantToken separator)
+        public SeparatedDotNodeList(TSeparator separator)
         {
             if (separator is null)
                 throw new ArgumentNullException(nameof(separator));
@@ -32,9 +34,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         /// <summary>
-        /// Creates a new <see cref="SeparatedDotNodeList{TNode}"/> instance.
+        /// Creates a new <see cref="SeparatedDotNodeList{TNode, TSeparator}"/> instance.
         /// </summary>
-        public SeparatedDotNodeList(IEnumerable<TNode> nodes, DotSignificantToken separator)
+        public SeparatedDotNodeList(IEnumerable<TNode> nodes, TSeparator separator)
         {
             if (nodes is null)
                 throw new ArgumentNullException(nameof(nodes));
@@ -71,7 +73,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the node to the end of the list.
         /// </summary>
-        public void Add(TNode node, DotSignificantToken? separator = default)
+        public void Add(TNode node, TSeparator? separator = default)
         {
             if (node is null)
                 throw new ArgumentNullException(nameof(node));
@@ -88,7 +90,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Adds the node to the beginning of the list.
         /// </summary>
-        public void AddFirst(TNode node, DotSignificantToken? separator = default)
+        public void AddFirst(TNode node, TSeparator? separator = default)
         {
             _nodes.Insert(0, node);
 

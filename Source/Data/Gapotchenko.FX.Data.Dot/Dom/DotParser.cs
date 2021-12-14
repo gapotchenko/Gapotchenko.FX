@@ -2,7 +2,7 @@
 // Copyright (c) Wayne Kelly, John Gough, QUT 2005-2014
 // (see accompanying GPPGcopyright.rtf)
 
-// Input file <Dom\Dot.y - 13.12.2021 21:43:18>
+// Input file <Dom\Dot.y - 14.12.2021 14:26:48>
 
 // options: no-lines
 
@@ -23,7 +23,7 @@ internal partial struct DotValueType
 {
     public DotParser.DotToken token;
     public DotNode entity;
-    public SeparatedDotNodeList<DotNode> separatedSyntaxList;
+    public SeparatedDotNodeList<DotNode, DotArrowToken> separatedSyntaxList;
     public IList<DotAttributeNode> attributeSyntaxList;
     public IList<DotAttributeListNode> attributeListSyntaxList;
     public IList<DotStatementNode> statementSyntaxList;
@@ -227,7 +227,7 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
 { CurrentSemanticValue.entity = ValueStack[ValueStack.Depth-1].entity; }
         break;
       case 21: // edgeLHS -> endpoint, ARROW
-{ CurrentSemanticValue.separatedSyntaxList = new SeparatedDotNodeList<DotNode>(CreateArrowToken(ValueStack[ValueStack.Depth-1].token)) { ValueStack[ValueStack.Depth-2].entity }; }
+{ CurrentSemanticValue.separatedSyntaxList = new(CreateArrowToken(ValueStack[ValueStack.Depth-1].token)) { ValueStack[ValueStack.Depth-2].entity }; }
         break;
       case 22: // edgeLHS -> edgeLHS, endpoint, ARROW
 { ValueStack[ValueStack.Depth-3].separatedSyntaxList.Add(ValueStack[ValueStack.Depth-2].entity, CreateArrowToken(ValueStack[ValueStack.Depth-1].token)); CurrentSemanticValue.separatedSyntaxList = ValueStack[ValueStack.Depth-3].separatedSyntaxList; }

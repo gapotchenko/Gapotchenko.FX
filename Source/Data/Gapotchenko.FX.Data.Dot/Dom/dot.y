@@ -11,7 +11,7 @@
 %union {
     public DotParser.DotToken token;
     public DotNode entity;
-    public SeparatedDotNodeList<DotNode> separatedSyntaxList;
+    public SeparatedDotNodeList<DotNode, DotArrowToken> separatedSyntaxList;
     public IList<DotAttributeNode> attributeSyntaxList;
     public IList<DotAttributeListNode> attributeListSyntaxList;
     public IList<DotStatementNode> statementSyntaxList;
@@ -71,7 +71,7 @@ endpoint  : node_id  { $$ = $1; }
           | subgraph { $$ = $1; }
 		  ;
 
-edgeLHS   : endpoint ARROW          { $$ = new SeparatedDotNodeList<DotNode>(CreateArrowToken($2)) { $1 }; }
+edgeLHS   : endpoint ARROW          { $$ = new(CreateArrowToken($2)) { $1 }; }
           | edgeLHS endpoint ARROW  { $1.Add($2, CreateArrowToken($3)); $$ = $1; }
           ;
 

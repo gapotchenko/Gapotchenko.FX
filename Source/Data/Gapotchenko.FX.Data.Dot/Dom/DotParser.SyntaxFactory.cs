@@ -156,7 +156,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         static DotEdgeNode CreateEdgeSyntax(
-            SeparatedDotNodeList<DotNode> elements,
+            SeparatedDotNodeList<DotNode, DotArrowToken> elements,
             IList<DotAttributeListNode> attributes)
         {
             return new DotEdgeNode

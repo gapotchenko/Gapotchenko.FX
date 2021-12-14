@@ -252,7 +252,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         {
             return new DotEdgeNode
             {
-                Elements = new SeparatedDotNodeList<DotNode>(
+                Elements = new(
                     edge.Select(CreateEdgeElement),
                     new DotArrowToken(DotArrowTokenKind.LeftToRight))
             };
