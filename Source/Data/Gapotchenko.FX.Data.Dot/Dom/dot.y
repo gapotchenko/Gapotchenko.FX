@@ -64,15 +64,15 @@ stmt      : id '=' id { $$ = CreateAliasSyntax($1, $2.token, $3); }
 node_stmt : node_id opt_attr_list { $$ = CreateVertexSyntax((DotVertexIdentifierNode)$1, $2); }
           ;
 
-edge_stmt : edgeLHS endpoint opt_attr_list { $1.Add($2); $$ = CreateEdgeSyntax($1, $3);} 
+edge_stmt : edgeLHS opt_attr_list { $$ = CreateEdgeSyntax($1, $2); } 
           ;
 
 endpoint  : node_id  { $$ = $1; }
           | subgraph { $$ = $1; }
 		  ;
 
-edgeLHS   : endpoint ARROW          { $$ = new(CreateArrowToken($2)) { $1 }; }
-          | edgeLHS endpoint ARROW  { $1.Add($2, CreateArrowToken($3)); $$ = $1; }
+edgeLHS   : endpoint ARROW endpoint { $$ = new(CreateArrowToken($2)) { $1, $3 }; }
+          | edgeLHS ARROW endpoint  { $$ = $1; $1.Add($3, CreateArrowToken($2)); }
           ;
 
 subgraph  : stmts              { $$ = CreateGraphSyntax(default, default, default, (DotStatementListNode)$1); }

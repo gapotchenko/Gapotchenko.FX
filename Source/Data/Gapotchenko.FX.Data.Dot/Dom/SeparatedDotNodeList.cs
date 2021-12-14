@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
-    /// Represents a list of syntax nodes with separators.
+    /// Represents a list of nodes with separators.
     /// </summary>
-    /// <typeparam name="TNode">Syntax node type.</typeparam>
+    /// <typeparam name="TNode">Node type.</typeparam>
     /// <typeparam name="TSeparator">Separator token type.</typeparam>
     public class SeparatedDotNodeList<TNode, TSeparator> :
         IReadOnlyList<TNode>,
+        IList<TNode>,
         IEnumerable<TNode>,
-        IEnumerable,
-        IReadOnlyCollection<TNode>,
         IDotSyntaxSlotProvider
         where TNode : DotNode
         where TSeparator : DotSignificantToken
     {
-        readonly List<TNode> _nodes = new();
-        readonly List<IDotSyntaxSlotProvider> _nodesAndTokens = new();
+        readonly List<DotElement> _nodesAndSeparators = new();
         readonly TSeparator _defaultSeparator;
 
         /// <summary>
@@ -52,58 +51,195 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         /// <summary>
-        /// Gets the node at the specified index.
+        /// Gets or sets the node at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index of the node to get.</param>
         /// <returns>The node at the specified index.</returns>
-        public TNode this[int index] => _nodes[index];
+        public TNode this[int index]
+        {
+            get => (TNode)_nodesAndSeparators[index * 2];
+            set => _nodesAndSeparators[index * 2] = value ?? throw new ArgumentNullException(nameof(value));
+        }
 
         /// <summary>
         /// Gets the number of nodes in the list.
         /// </summary>
-        public int Count => _nodes.Count;
+        public int Count => (_nodesAndSeparators.Count + 1) / 2;
 
         /// <summary>
         /// Returns an enumerator that iterates through the nodes.
         /// </summary>
-        public IEnumerator<TNode> GetEnumerator() => _nodes.GetEnumerator();
+        public IEnumerator<TNode> GetEnumerator() =>
+            Enumerable.Range(0, Count)
+            .Select(index => this[index])
+            .GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => _nodes.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
-        /// Adds the node to the end of the list.
+        /// Adds the node to the list.
         /// </summary>
         public void Add(TNode node, TSeparator? separator = default)
         {
             if (node is null)
                 throw new ArgumentNullException(nameof(node));
 
-            _nodes.Add(node);
+            if (_nodesAndSeparators.Count >= 1)
+                _nodesAndSeparators.Add(separator ?? _defaultSeparator);
 
-            if (_nodes.Count > 1)
-                _nodesAndTokens.Add(separator ?? _defaultSeparator);
-
-            _nodesAndTokens.Add(node);
+            _nodesAndSeparators.Add(node);
 
         }
 
         /// <summary>
-        /// Adds the node to the beginning of the list.
+        /// Inserts the node at the specified index.
         /// </summary>
-        public void AddFirst(TNode node, TSeparator? separator = default)
+        public void Insert(int index, TNode node, TSeparator? separator = default)
         {
-            _nodes.Insert(0, node);
+            index *= 2;
 
-            if (_nodes.Count > 1)
-                _nodesAndTokens.Insert(0, separator ?? _defaultSeparator);
+            if (_nodesAndSeparators.Count != 0)
+            {
+                if (index == 0)
+                    _nodesAndSeparators.Insert(index, separator ?? _defaultSeparator);
+                else
+                    _nodesAndSeparators.Insert(index - 1, separator ?? _defaultSeparator);
+            }
 
-            _nodesAndTokens.Insert(0, node);
+            _nodesAndSeparators.Insert(index, node);
         }
 
-        int IDotSyntaxSlotProvider.SlotCount =>
-            _nodesAndTokens.Count;
+        bool ICollection<TNode>.IsReadOnly => false;
 
-        IDotSyntaxSlotProvider IDotSyntaxSlotProvider.GetSlot(int i) =>
-            _nodesAndTokens[i];
+        /// <summary>
+        /// Searches for the specified node and returns the zero-based index of the first
+        /// occurrence within the entire list.
+        /// </summary>
+        /// <param name="item">The node to locate in the list.</param>
+        /// <returns>
+        /// The zero-based index of the first occurrence of item within the entire list,
+        /// if found; otherwise, –1.
+        /// </returns>
+        public int IndexOf(TNode item)
+        {
+            var index = _nodesAndSeparators.IndexOf(item);
+            if (index != -1)
+                index /= 2;
+            return index;
+        }
+
+        void IList<TNode>.Insert(int index, TNode item) => Insert(index, item);
+
+        /// <summary>
+        /// Removes the node at the specified index of the list.
+        /// </summary>
+        /// <param name="index">The zero-based index of the node to remove.</param>
+        public void RemoveAt(int index)
+        {
+            if (index <= 0)
+            {
+                if (_nodesAndSeparators.Count <= 1)
+                    _nodesAndSeparators.RemoveAt(index);
+                else
+                    _nodesAndSeparators.RemoveRange(index, 2);
+            }
+            else
+            {
+                index = index * 2 - 1;
+                _nodesAndSeparators.RemoveRange(index, 2);
+            }
+        }
+
+        void ICollection<TNode>.Add(TNode item) => Add(item);
+
+        /// <summary>
+        /// Removes all nodes and separators from the list.
+        /// </summary>
+        public void Clear()
+        {
+            _nodesAndSeparators.Clear();
+        }
+
+        /// <summary>
+        /// Determines whether a node is in the list.
+        /// </summary>
+        /// <param name="item">The node to locate in the list.</param>
+        /// <returns>true if node is found in the list; otherwise, false.</returns>
+        public bool Contains(TNode item) => _nodesAndSeparators.Contains(item);
+
+        /// <summary>
+        /// Copies all the nodes to a compatible one-dimensional array, starting 
+        /// at the specified index of the target array.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the nodes copied from the list.</param>
+        /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+        public void CopyTo(TNode[] array, int arrayIndex)
+        {
+            if (array is null)
+                throw new ArgumentNullException(nameof(array));
+            if (arrayIndex < 0 || arrayIndex > array.Length)
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+            if (Count + arrayIndex > array.Length)
+                throw new ArgumentException("The number of nodes in the list is greater than the available space of a destination array.");
+
+            foreach (var node in this)
+            {
+                array[arrayIndex++] = node;
+            }
+        }
+
+        /// <summary>
+        /// Removes the first occurrence of a specific node from the list.
+        /// </summary>
+        /// <param name="item">The node to remove from the list.</param>
+        /// <returns>
+        /// true if item is successfully removed; otherwise, false. This method also returns
+        /// false if item was not found in the list.
+        /// </returns>
+        public bool Remove(TNode item)
+        {
+            var index = IndexOf(item);
+            if (index is -1)
+                return false;
+            RemoveAt(index);
+            return true;
+        }
+
+        /// <summary>
+        /// Gets a read-only list of nodes with separators.
+        /// </summary>
+        public IReadOnlyList<DotElement> NodesWithSeparators => _nodesAndSeparators;
+
+        /// <summary>
+        /// Gets the separator at the given index.
+        /// </summary>
+        /// <param name="index">The index of a separator in the list of nodes with separators, <see cref="NodesWithSeparators"/>.</param>
+        /// <returns>The separator at the given index</returns>
+        public TSeparator GetSeparator(int index)
+        {
+            if (index < 0 || index >= _nodesAndSeparators.Count || index % 2 == 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            return (TSeparator)_nodesAndSeparators[index];
+        }
+
+        /// <summary>
+        /// Sets the separator at the given index.
+        /// </summary>
+        /// <param name="index">The index of a separator in the list of nodes with separators, <see cref="NodesWithSeparators"/>.</param>
+        /// <param name="separator">The separator.</param>
+        public void SetSeparator(int index, TSeparator separator)
+        {
+            if (separator is null)
+                throw new ArgumentNullException(nameof(separator));
+            if (index < 0 || index >= _nodesAndSeparators.Count || index % 2 == 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            _nodesAndSeparators[index] = separator;
+        }
+
+        int IDotSyntaxSlotProvider.SlotCount => _nodesAndSeparators.Count;
+
+        IDotSyntaxSlotProvider IDotSyntaxSlotProvider.GetSlot(int i) => (IDotSyntaxSlotProvider)_nodesAndSeparators[i];
     }
 }

@@ -2,7 +2,7 @@
 // Copyright (c) Wayne Kelly, John Gough, QUT 2005-2014
 // (see accompanying GPPGcopyright.rtf)
 
-// Input file <Dom\Dot.y - 14.12.2021 14:26:48>
+// Input file <Dom\Dot.y - 14.12.2021 21:00:45>
 
 // options: no-lines
 
@@ -35,21 +35,21 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
   private static Dictionary<int, string>? aliases;
 #pragma warning restore 649
   private static Rule[] rules = new Rule[44];
-  private static State[] states = new State[64];
+  private static State[] states = new State[65];
   private static string[] nonTerms = new string[] {
       "graph", "graphType", "graphName", "id", "subgraph", "stmt", "node_stmt", 
       "edge_stmt", "endpoint", "stmts", "node_id", "attr_stmt", "opt_attr_list", 
       "avPair", "stmt_list", "edgeLHS", "a_list", "attr_list", "$accept", };
 
   static DotParser() {
-    states[0] = new State(new int[]{129,58,130,59,135,14},new int[]{-1,1,-2,3,-4,60});
+    states[0] = new State(new int[]{129,59,130,60,135,14},new int[]{-1,1,-2,3,-4,61});
     states[1] = new State(new int[]{128,2});
     states[2] = new State(-1);
-    states[3] = new State(new int[]{135,14,123,-8},new int[]{-3,4,-4,57});
+    states[3] = new State(new int[]{135,14,123,-8},new int[]{-3,4,-4,58});
     states[4] = new State(new int[]{123,6},new int[]{-10,5});
     states[5] = new State(-2);
     states[6] = new State(-9,new int[]{-15,7});
-    states[7] = new State(new int[]{125,8,135,14,123,6,132,43,130,51,133,53,134,55},new int[]{-6,9,-4,11,-7,19,-11,20,-8,34,-16,35,-9,47,-5,49,-10,42,-12,50});
+    states[7] = new State(new int[]{125,8,135,14,123,6,132,43,130,52,133,54,134,56},new int[]{-6,9,-4,11,-7,19,-11,20,-8,34,-16,35,-9,47,-5,50,-10,42,-12,51});
     states[8] = new State(-4);
     states[9] = new State(new int[]{59,10,125,-10,135,-10,123,-10,132,-10,130,-10,133,-10,134,-10});
     states[10] = new State(-11);
@@ -77,9 +77,9 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
     states[32] = new State(-38);
     states[33] = new State(-34);
     states[34] = new State(-14);
-    states[35] = new State(new int[]{135,14,123,6,132,43},new int[]{-9,36,-11,39,-4,40,-5,41,-10,42});
-    states[36] = new State(new int[]{131,38,91,23,59,-30,125,-30,135,-30,123,-30,132,-30,130,-30,133,-30,134,-30},new int[]{-13,37,-18,22});
-    states[37] = new State(-18);
+    states[35] = new State(new int[]{131,37,91,23,59,-30,125,-30,135,-30,123,-30,132,-30,130,-30,133,-30,134,-30},new int[]{-13,36,-18,22});
+    states[36] = new State(-18);
+    states[37] = new State(new int[]{135,14,123,6,132,43},new int[]{-9,38,-11,39,-4,40,-5,41,-10,42});
     states[38] = new State(-22);
     states[39] = new State(-19);
     states[40] = new State(new int[]{58,15,131,-40,91,-40,59,-40,125,-40,135,-40,123,-40,132,-40,130,-40,133,-40,134,-40});
@@ -90,22 +90,23 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
     states[45] = new State(new int[]{123,6},new int[]{-10,46});
     states[46] = new State(-25);
     states[47] = new State(new int[]{131,48});
-    states[48] = new State(-21);
-    states[49] = new State(new int[]{131,-20,59,-16,125,-16,135,-16,123,-16,132,-16,130,-16,133,-16,134,-16});
-    states[50] = new State(-15);
-    states[51] = new State(new int[]{91,23},new int[]{-18,52});
-    states[52] = new State(-27);
-    states[53] = new State(new int[]{91,23},new int[]{-18,54});
-    states[54] = new State(-28);
-    states[55] = new State(new int[]{91,23},new int[]{-18,56});
-    states[56] = new State(-29);
-    states[57] = new State(-7);
-    states[58] = new State(-5);
-    states[59] = new State(-6);
-    states[60] = new State(new int[]{129,58,130,59},new int[]{-2,61});
-    states[61] = new State(new int[]{135,14,123,-8},new int[]{-3,62,-4,57});
-    states[62] = new State(new int[]{123,6},new int[]{-10,63});
-    states[63] = new State(-3);
+    states[48] = new State(new int[]{135,14,123,6,132,43},new int[]{-9,49,-11,39,-4,40,-5,41,-10,42});
+    states[49] = new State(-21);
+    states[50] = new State(new int[]{131,-20,59,-16,125,-16,135,-16,123,-16,132,-16,130,-16,133,-16,134,-16});
+    states[51] = new State(-15);
+    states[52] = new State(new int[]{91,23},new int[]{-18,53});
+    states[53] = new State(-27);
+    states[54] = new State(new int[]{91,23},new int[]{-18,55});
+    states[55] = new State(-28);
+    states[56] = new State(new int[]{91,23},new int[]{-18,57});
+    states[57] = new State(-29);
+    states[58] = new State(-7);
+    states[59] = new State(-5);
+    states[60] = new State(-6);
+    states[61] = new State(new int[]{129,59,130,60},new int[]{-2,62});
+    states[62] = new State(new int[]{135,14,123,-8},new int[]{-3,63,-4,58});
+    states[63] = new State(new int[]{123,6},new int[]{-10,64});
+    states[64] = new State(-3);
 
     for (int sNo = 0; sNo < states.Length; sNo++) states[sNo].number = sNo;
 
@@ -126,11 +127,11 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
     rules[15] = new Rule(-6, new int[]{-12});
     rules[16] = new Rule(-6, new int[]{-5});
     rules[17] = new Rule(-7, new int[]{-11,-13});
-    rules[18] = new Rule(-8, new int[]{-16,-9,-13});
+    rules[18] = new Rule(-8, new int[]{-16,-13});
     rules[19] = new Rule(-9, new int[]{-11});
     rules[20] = new Rule(-9, new int[]{-5});
-    rules[21] = new Rule(-16, new int[]{-9,131});
-    rules[22] = new Rule(-16, new int[]{-16,-9,131});
+    rules[21] = new Rule(-16, new int[]{-9,131,-9});
+    rules[22] = new Rule(-16, new int[]{-16,131,-9});
     rules[23] = new Rule(-5, new int[]{-10});
     rules[24] = new Rule(-5, new int[]{132,-10});
     rules[25] = new Rule(-5, new int[]{132,-4,-10});
@@ -217,8 +218,8 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
       case 17: // node_stmt -> node_id, opt_attr_list
 { CurrentSemanticValue.entity = CreateVertexSyntax((DotVertexIdentifierNode)ValueStack[ValueStack.Depth-2].entity, ValueStack[ValueStack.Depth-1].attributeListSyntaxList); }
         break;
-      case 18: // edge_stmt -> edgeLHS, endpoint, opt_attr_list
-{ ValueStack[ValueStack.Depth-3].separatedSyntaxList.Add(ValueStack[ValueStack.Depth-2].entity); CurrentSemanticValue.entity = CreateEdgeSyntax(ValueStack[ValueStack.Depth-3].separatedSyntaxList, ValueStack[ValueStack.Depth-1].attributeListSyntaxList);}
+      case 18: // edge_stmt -> edgeLHS, opt_attr_list
+{ CurrentSemanticValue.entity = CreateEdgeSyntax(ValueStack[ValueStack.Depth-2].separatedSyntaxList, ValueStack[ValueStack.Depth-1].attributeListSyntaxList); }
         break;
       case 19: // endpoint -> node_id
 { CurrentSemanticValue.entity = ValueStack[ValueStack.Depth-1].entity; }
@@ -226,11 +227,11 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
       case 20: // endpoint -> subgraph
 { CurrentSemanticValue.entity = ValueStack[ValueStack.Depth-1].entity; }
         break;
-      case 21: // edgeLHS -> endpoint, ARROW
-{ CurrentSemanticValue.separatedSyntaxList = new(CreateArrowToken(ValueStack[ValueStack.Depth-1].token)) { ValueStack[ValueStack.Depth-2].entity }; }
+      case 21: // edgeLHS -> endpoint, ARROW, endpoint
+{ CurrentSemanticValue.separatedSyntaxList = new(CreateArrowToken(ValueStack[ValueStack.Depth-2].token)) { ValueStack[ValueStack.Depth-3].entity, ValueStack[ValueStack.Depth-1].entity }; }
         break;
-      case 22: // edgeLHS -> edgeLHS, endpoint, ARROW
-{ ValueStack[ValueStack.Depth-3].separatedSyntaxList.Add(ValueStack[ValueStack.Depth-2].entity, CreateArrowToken(ValueStack[ValueStack.Depth-1].token)); CurrentSemanticValue.separatedSyntaxList = ValueStack[ValueStack.Depth-3].separatedSyntaxList; }
+      case 22: // edgeLHS -> edgeLHS, ARROW, endpoint
+{ CurrentSemanticValue.separatedSyntaxList = ValueStack[ValueStack.Depth-3].separatedSyntaxList; ValueStack[ValueStack.Depth-3].separatedSyntaxList.Add(ValueStack[ValueStack.Depth-1].entity, CreateArrowToken(ValueStack[ValueStack.Depth-2].token)); }
         break;
       case 23: // subgraph -> stmts
 { CurrentSemanticValue.entity = CreateGraphSyntax(default, default, default, (DotStatementListNode)ValueStack[ValueStack.Depth-1].entity); }
