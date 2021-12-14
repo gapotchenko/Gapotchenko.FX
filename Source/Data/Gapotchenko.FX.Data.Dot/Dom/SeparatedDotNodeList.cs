@@ -13,7 +13,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     public class SeparatedDotNodeList<TNode, TSeparator> :
         IReadOnlyList<TNode>,
         IList<TNode>,
-        IEnumerable<TNode>,
         IDotSyntaxSlotProvider
         where TNode : DotNode
         where TSeparator : DotSignificantToken
@@ -208,38 +207,59 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <summary>
         /// Gets a read-only list of nodes with separators.
         /// </summary>
-        public IReadOnlyList<DotElement> NodesWithSeparators => _nodesAndSeparators;
-
-        /// <summary>
-        /// Gets the separator at the given index.
-        /// </summary>
-        /// <param name="index">The index of a separator in the list of nodes with separators, <see cref="NodesWithSeparators"/>.</param>
-        /// <returns>The separator at the given index</returns>
-        public TSeparator GetSeparator(int index)
-        {
-            if (index < 0 || index >= _nodesAndSeparators.Count || index % 2 == 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
-
-            return (TSeparator)_nodesAndSeparators[index];
-        }
-
-        /// <summary>
-        /// Sets the separator at the given index.
-        /// </summary>
-        /// <param name="index">The index of a separator in the list of nodes with separators, <see cref="NodesWithSeparators"/>.</param>
-        /// <param name="separator">The separator.</param>
-        public void SetSeparator(int index, TSeparator separator)
-        {
-            if (separator is null)
-                throw new ArgumentNullException(nameof(separator));
-            if (index < 0 || index >= _nodesAndSeparators.Count || index % 2 == 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
-
-            _nodesAndSeparators[index] = separator;
-        }
+        public NodesAndSeparatorsList NodesWithSeparators => new(this);
 
         int IDotSyntaxSlotProvider.SlotCount => _nodesAndSeparators.Count;
 
         IDotSyntaxSlotProvider IDotSyntaxSlotProvider.GetSlot(int i) => (IDotSyntaxSlotProvider)_nodesAndSeparators[i];
+
+        /// <summary>
+        /// Represents a list of nodes and separators.
+        /// </summary>
+        public struct NodesAndSeparatorsList : IReadOnlyList<DotElement>
+        {
+            readonly List<DotElement> _list;
+
+            internal NodesAndSeparatorsList(SeparatedDotNodeList<TNode, TSeparator> parent)
+            {
+                _list = parent._nodesAndSeparators;
+            }
+
+            /// <summary>
+            /// Gets or sets a node or a separator at the specified index.
+            /// </summary>
+            /// <param name="index">The zero-based index of a node or a separator to get.</param>
+            /// <returns>A node or a separator at the specified index.</returns>
+            public DotElement this[int index]
+            {
+                get => _list[index];
+
+                set
+                {
+                    if (value is null)
+                        throw new ArgumentNullException(nameof(value));
+
+                    var isNode = index % 2 == 0;
+                    if (isNode && value is not TNode)
+                        throw new ArgumentException("A node expected.", nameof(value));
+                    else if (!isNode && value is not TSeparator)
+                        throw new ArgumentException("A separator expected.", nameof(value));
+
+                    _list[index] = value;
+                }
+            }
+
+            /// <summary>
+            /// Gets the number of nodes and separators in the list.
+            /// </summary>
+            public int Count => _list.Count;
+
+            /// <summary>
+            /// Returns an enumerator that iterates through the nodes and separators.
+            /// </summary>
+            public IEnumerator<DotElement> GetEnumerator() => _list.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => _list.GetEnumerator();
+        }
     }
 }
