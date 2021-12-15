@@ -117,6 +117,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             EOF => (int)DotTokens.EOF,
             DotTokenKind.Digraph => (int)DotTokens.DIGRAPH,
             DotTokenKind.Graph => (int)DotTokens.GRAPH,
+            DotTokenKind.Strict => (int)DotTokens.STRICT,
             DotTokenKind.Arrow => (int)DotTokens.ARROW,
             DotTokenKind.Subgraph => (int)DotTokens.SUBGRAPH,
             DotTokenKind.Node => (int)DotTokens.NODE,

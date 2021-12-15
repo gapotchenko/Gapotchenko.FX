@@ -2,7 +2,7 @@
 // Copyright (c) Wayne Kelly, John Gough, QUT 2005-2014
 // (see accompanying GPPGcopyright.rtf)
 
-// Input file <Dom\Dot.y - 14.12.2021 22:16:04>
+// Input file <Dom\Dot.y - 15.12.2021 19:18:27>
 
 // options: no-lines
 
@@ -16,8 +16,8 @@ using Gapotchenko.FX.Data.Dot.ParserToolkit;
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
 internal enum DotTokens {
-    error=127,EOF=128,DIGRAPH=129,GRAPH=130,ARROW=131,SUBGRAPH=132,
-    NODE=133,EDGE=134,ID=135};
+    error=127,EOF=128,DIGRAPH=129,GRAPH=130,STRICT=131,ARROW=132,
+    SUBGRAPH=133,NODE=134,EDGE=135,ID=136};
 
 internal partial struct DotValueType
 {
@@ -43,59 +43,59 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
       "$accept", };
 
   static DotParser() {
-    states[0] = new State(new int[]{129,61,130,62,135,14},new int[]{-1,1,-2,3,-4,63});
+    states[0] = new State(new int[]{129,61,130,62,131,63},new int[]{-1,1,-2,3});
     states[1] = new State(new int[]{128,2});
     states[2] = new State(-1);
-    states[3] = new State(new int[]{135,14,123,-8},new int[]{-3,4,-4,60});
+    states[3] = new State(new int[]{136,14,123,-8},new int[]{-3,4,-4,60});
     states[4] = new State(new int[]{123,6},new int[]{-11,5});
     states[5] = new State(-2);
     states[6] = new State(-9,new int[]{-16,7});
-    states[7] = new State(new int[]{125,8,135,14,123,6,132,45,130,54,133,56,134,58},new int[]{-7,9,-4,11,-8,19,-12,20,-9,36,-17,37,-10,49,-6,52,-11,44,-13,53});
+    states[7] = new State(new int[]{125,8,136,14,123,6,133,45,130,54,134,56,135,58},new int[]{-7,9,-4,11,-8,19,-12,20,-9,36,-17,37,-10,49,-6,52,-11,44,-13,53});
     states[8] = new State(-4);
-    states[9] = new State(new int[]{59,10,125,-10,135,-10,123,-10,132,-10,130,-10,133,-10,134,-10});
+    states[9] = new State(new int[]{59,10,125,-10,136,-10,123,-10,133,-10,130,-10,134,-10,135,-10});
     states[10] = new State(-11);
-    states[11] = new State(new int[]{61,12,58,15,91,-41,59,-41,125,-41,135,-41,123,-41,132,-41,130,-41,133,-41,134,-41,131,-41});
-    states[12] = new State(new int[]{135,14},new int[]{-4,13});
+    states[11] = new State(new int[]{61,12,58,15,91,-41,59,-41,125,-41,136,-41,123,-41,133,-41,130,-41,134,-41,135,-41,132,-41});
+    states[12] = new State(new int[]{136,14},new int[]{-4,13});
     states[13] = new State(-12);
     states[14] = new State(-44);
-    states[15] = new State(new int[]{135,14},new int[]{-4,16});
-    states[16] = new State(new int[]{58,17,91,-42,59,-42,125,-42,135,-42,123,-42,132,-42,130,-42,133,-42,134,-42,131,-42});
-    states[17] = new State(new int[]{135,14},new int[]{-4,18});
+    states[15] = new State(new int[]{136,14},new int[]{-4,16});
+    states[16] = new State(new int[]{58,17,91,-42,59,-42,125,-42,136,-42,123,-42,133,-42,130,-42,134,-42,135,-42,132,-42});
+    states[17] = new State(new int[]{136,14},new int[]{-4,18});
     states[18] = new State(-43);
     states[19] = new State(-13);
-    states[20] = new State(new int[]{91,23,131,-19,59,-30,125,-30,135,-30,123,-30,132,-30,130,-30,133,-30,134,-30},new int[]{-14,21,-19,22});
+    states[20] = new State(new int[]{91,23,132,-19,59,-30,125,-30,136,-30,123,-30,133,-30,130,-30,134,-30,135,-30},new int[]{-14,21,-19,22});
     states[21] = new State(-17);
     states[22] = new State(-31);
-    states[23] = new State(new int[]{93,24,135,14},new int[]{-18,25,-15,35,-4,28});
+    states[23] = new State(new int[]{93,24,136,14},new int[]{-18,25,-15,35,-4,28});
     states[24] = new State(-32);
-    states[25] = new State(new int[]{93,26,135,14},new int[]{-15,27,-4,28});
+    states[25] = new State(new int[]{93,26,136,14},new int[]{-15,27,-4,28});
     states[26] = new State(-33);
     states[27] = new State(-35);
-    states[28] = new State(new int[]{61,29,44,32,59,33,93,-38,135,-38},new int[]{-5,34});
-    states[29] = new State(new int[]{135,14},new int[]{-4,30});
-    states[30] = new State(new int[]{44,32,59,33,93,-38,135,-38},new int[]{-5,31});
+    states[28] = new State(new int[]{61,29,44,32,59,33,93,-38,136,-38},new int[]{-5,34});
+    states[29] = new State(new int[]{136,14},new int[]{-4,30});
+    states[30] = new State(new int[]{44,32,59,33,93,-38,136,-38},new int[]{-5,31});
     states[31] = new State(-36);
     states[32] = new State(-39);
     states[33] = new State(-40);
     states[34] = new State(-37);
     states[35] = new State(-34);
     states[36] = new State(-14);
-    states[37] = new State(new int[]{131,39,91,23,59,-30,125,-30,135,-30,123,-30,132,-30,130,-30,133,-30,134,-30},new int[]{-14,38,-19,22});
+    states[37] = new State(new int[]{132,39,91,23,59,-30,125,-30,136,-30,123,-30,133,-30,130,-30,134,-30,135,-30},new int[]{-14,38,-19,22});
     states[38] = new State(-18);
-    states[39] = new State(new int[]{135,14,123,6,132,45},new int[]{-10,40,-12,41,-4,42,-6,43,-11,44});
+    states[39] = new State(new int[]{136,14,123,6,133,45},new int[]{-10,40,-12,41,-4,42,-6,43,-11,44});
     states[40] = new State(-22);
     states[41] = new State(-19);
-    states[42] = new State(new int[]{58,15,131,-41,91,-41,59,-41,125,-41,135,-41,123,-41,132,-41,130,-41,133,-41,134,-41});
+    states[42] = new State(new int[]{58,15,132,-41,91,-41,59,-41,125,-41,136,-41,123,-41,133,-41,130,-41,134,-41,135,-41});
     states[43] = new State(-20);
     states[44] = new State(-23);
-    states[45] = new State(new int[]{123,6,135,14,59,-26,125,-26,132,-26,130,-26,133,-26,134,-26,131,-26,91,-26},new int[]{-11,46,-4,47});
+    states[45] = new State(new int[]{123,6,136,14,59,-26,125,-26,133,-26,130,-26,134,-26,135,-26,132,-26,91,-26},new int[]{-11,46,-4,47});
     states[46] = new State(-24);
     states[47] = new State(new int[]{123,6},new int[]{-11,48});
     states[48] = new State(-25);
-    states[49] = new State(new int[]{131,50});
-    states[50] = new State(new int[]{135,14,123,6,132,45},new int[]{-10,51,-12,41,-4,42,-6,43,-11,44});
+    states[49] = new State(new int[]{132,50});
+    states[50] = new State(new int[]{136,14,123,6,133,45},new int[]{-10,51,-12,41,-4,42,-6,43,-11,44});
     states[51] = new State(-21);
-    states[52] = new State(new int[]{131,-20,59,-16,125,-16,135,-16,123,-16,132,-16,130,-16,133,-16,134,-16});
+    states[52] = new State(new int[]{132,-20,59,-16,125,-16,136,-16,123,-16,133,-16,130,-16,134,-16,135,-16});
     states[53] = new State(-15);
     states[54] = new State(new int[]{91,23},new int[]{-19,55});
     states[55] = new State(-27);
@@ -107,7 +107,7 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
     states[61] = new State(-5);
     states[62] = new State(-6);
     states[63] = new State(new int[]{129,61,130,62},new int[]{-2,64});
-    states[64] = new State(new int[]{135,14,123,-8},new int[]{-3,65,-4,60});
+    states[64] = new State(new int[]{136,14,123,-8},new int[]{-3,65,-4,60});
     states[65] = new State(new int[]{123,6},new int[]{-11,66});
     states[66] = new State(-3);
 
@@ -115,7 +115,7 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
 
     rules[1] = new Rule(-20, new int[]{-1,128});
     rules[2] = new Rule(-1, new int[]{-2,-3,-11});
-    rules[3] = new Rule(-1, new int[]{-4,-2,-3,-11});
+    rules[3] = new Rule(-1, new int[]{131,-2,-3,-11});
     rules[4] = new Rule(-11, new int[]{123,-16,125});
     rules[5] = new Rule(-2, new int[]{129});
     rules[6] = new Rule(-2, new int[]{130});
@@ -133,15 +133,15 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
     rules[18] = new Rule(-9, new int[]{-17,-14});
     rules[19] = new Rule(-10, new int[]{-12});
     rules[20] = new Rule(-10, new int[]{-6});
-    rules[21] = new Rule(-17, new int[]{-10,131,-10});
-    rules[22] = new Rule(-17, new int[]{-17,131,-10});
+    rules[21] = new Rule(-17, new int[]{-10,132,-10});
+    rules[22] = new Rule(-17, new int[]{-17,132,-10});
     rules[23] = new Rule(-6, new int[]{-11});
-    rules[24] = new Rule(-6, new int[]{132,-11});
-    rules[25] = new Rule(-6, new int[]{132,-4,-11});
-    rules[26] = new Rule(-6, new int[]{132});
+    rules[24] = new Rule(-6, new int[]{133,-11});
+    rules[25] = new Rule(-6, new int[]{133,-4,-11});
+    rules[26] = new Rule(-6, new int[]{133});
     rules[27] = new Rule(-13, new int[]{130,-19});
-    rules[28] = new Rule(-13, new int[]{133,-19});
-    rules[29] = new Rule(-13, new int[]{134,-19});
+    rules[28] = new Rule(-13, new int[]{134,-19});
+    rules[29] = new Rule(-13, new int[]{135,-19});
     rules[30] = new Rule(-14, new int[]{});
     rules[31] = new Rule(-14, new int[]{-19});
     rules[32] = new Rule(-19, new int[]{91,93});
@@ -156,7 +156,7 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
     rules[41] = new Rule(-12, new int[]{-4});
     rules[42] = new Rule(-12, new int[]{-4,58,-4});
     rules[43] = new Rule(-12, new int[]{-4,58,-4,58,-4});
-    rules[44] = new Rule(-4, new int[]{135});
+    rules[44] = new Rule(-4, new int[]{136});
   }
 
   protected override void Initialize() {
@@ -174,7 +174,7 @@ internal partial class DotParser: ShiftReduceParser<DotValueType, LexLocation>
       case 2: // graph -> graphType, graphName, stmts
 { Root = CreateGraphSyntax(default, ValueStack[ValueStack.Depth-3].token, ValueStack[ValueStack.Depth-2].token, (DotStatementListNode)ValueStack[ValueStack.Depth-1].entity); }
         break;
-      case 3: // graph -> id, graphType, graphName, stmts
+      case 3: // graph -> STRICT, graphType, graphName, stmts
 { Root = CreateGraphSyntax(ValueStack[ValueStack.Depth-4].token, ValueStack[ValueStack.Depth-3].token, ValueStack[ValueStack.Depth-2].token, (DotStatementListNode)ValueStack[ValueStack.Depth-1].entity); }
         break;
       case 4: // stmts -> '{', stmt_list, '}'

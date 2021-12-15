@@ -20,6 +20,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             {
                 case DotTokenKind.Digraph:
                 case DotTokenKind.Graph:
+                case DotTokenKind.Strict:
                 case DotTokenKind.Subgraph:
                 case DotTokenKind.Node:
                 case DotTokenKind.Edge:

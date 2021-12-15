@@ -31,13 +31,14 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
                 yyerror($"Unexpected string \"{txt}\"");
         }
 
-        public static DotTokenKind MkId(string txt) => txt.ToLower() switch
+        public static DotTokenKind MkId(string txt) => txt.ToLowerInvariant() switch
         {
             "graph" => DotTokenKind.Graph,
             "digraph" => DotTokenKind.Digraph,
             "subgraph" => DotTokenKind.Subgraph,
             "node" => DotTokenKind.Node,
             "edge" => DotTokenKind.Edge,
+            "strict" => DotTokenKind.Strict,
             _ => DotTokenKind.Id,
         };
 

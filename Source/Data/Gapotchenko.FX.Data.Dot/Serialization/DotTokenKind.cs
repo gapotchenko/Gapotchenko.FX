@@ -16,6 +16,11 @@
         Graph,
 
         /// <summary>
+        /// Represents <c>strict</c> token.
+        /// </summary>
+        Strict,
+
+        /// <summary>
         /// Represents <c>--</c> or <c>-></c> token.
         /// </summary>
         Arrow,

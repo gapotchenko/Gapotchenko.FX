@@ -17,7 +17,7 @@
     public IList<DotStatementNode> statementSyntaxList;
 }
 
-%token <token> DIGRAPH GRAPH ARROW SUBGRAPH NODE EDGE ID
+%token <token> DIGRAPH GRAPH STRICT ARROW SUBGRAPH NODE EDGE ID
 
 %type <token> graphType graphName id avPairTerminator
 %type <entity> graph subgraph stmt stmt node_stmt edge_stmt endpoint stmts node_id
@@ -32,7 +32,7 @@
 %%
 
 graph     : graphType graphName stmts    { Root = CreateGraphSyntax(default, $1, $2, (DotStatementListNode)$3); }
-          | id graphType graphName stmts { Root = CreateGraphSyntax($1, $2, $3, (DotStatementListNode)$4); }
+          | STRICT graphType graphName stmts { Root = CreateGraphSyntax($1, $2, $3, (DotStatementListNode)$4); }
           ;
           
 stmts     : '{' stmt_list '}' { $$ = CreateStatementListSyntax($1.token, $2, $3.token); }
