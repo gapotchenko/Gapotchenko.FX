@@ -146,7 +146,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         protected override void yyerror(string message)
         {
             var (line, col) = _scanner.Location;
-            throw new Exception($"Cannot parse document. {message} at {line}:{col}.");
+            throw new Exception($"Cannot parse document. {message} at line {line} column {col}.");
         }
 
         static bool IsTriviaToken(DotTokenKind token) => token switch

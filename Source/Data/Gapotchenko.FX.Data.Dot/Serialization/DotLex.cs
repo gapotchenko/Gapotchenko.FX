@@ -5,7 +5,7 @@
 //  See accompanying file GPLEXcopyright.rtf.
 //
 //  GPLEX Version:  1.2.2
-//  GPLEX input file <Serialization\Dot.lex - 10.12.2021 22:20:18>
+//  GPLEX input file <Serialization\Dot.lex - 15.12.2021 16:33:08>
 //  GPLEX frame file <SERIALIZATION\DOTLEXFRAME.CS>
 //
 //  Option settings: parser, minimize
@@ -437,7 +437,7 @@ int NextState() {
         case 1:
         case 7:
         case 8:
-Error(yytext);
+RaiseUnexpectedCharError(yytext);
             break;
         case 2:
 return (int)DotTokenKind.Whitespace;

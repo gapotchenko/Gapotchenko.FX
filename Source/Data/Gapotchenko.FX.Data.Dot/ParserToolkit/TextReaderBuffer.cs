@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
                 get
                 {
                     if (index < _minIx || index >= _maxIx)
-                        throw new BufferException("Index was outside data buffer");
+                        throw new ArgumentException("Index was outside data buffer.");
                     else if (index < _brkIx)
                         return _bldr[index - _minIx];
                     else
@@ -84,7 +84,7 @@ namespace Gapotchenko.FX.Data.Dot.ParserToolkit
                 }
                 else
                 {
-                    throw new BufferException("String was outside data buffer");
+                    throw new ArgumentException("String was outside data buffer.");
                 }
             }
 

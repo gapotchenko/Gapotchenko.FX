@@ -47,7 +47,7 @@ whitespace [ \t\r\f\v\n]
 {whitespace}+      { return (int)DotTokenKind.Whitespace; }
 \/\/               { BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend(); } 
 \/\*               { BEGIN(MLINECOMMENT); BuilderInit(); BuilderAppend(); }
-.                  { Error(yytext); }
+.                  { RaiseUnexpectedCharError(yytext); }
 
 <HTML>\<           { nesting++; 
                      BuilderAppend(); }

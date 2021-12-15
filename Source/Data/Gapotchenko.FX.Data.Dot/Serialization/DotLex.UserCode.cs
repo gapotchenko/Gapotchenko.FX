@@ -1,37 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Dot.Serialization
 {
     partial class DotLex
     {
-        // TBD: 
-        // parse string concatenation
-
-        string message = "";
-
         public int Line => yyline;
         public int Col => yycol;
-        public string Message => message;
 
         public override void yyerror(string format, params object[] args)
         {
+            string message;
+
             if (args.Length > 0)
                 message = string.Format(format, args);
             else
                 message = format;
+
+            throw new Exception($"Cannot tokenize document. {message} at line {yyline}, column {yycol}.");
         }
 
-        public void Error(string txt)
+        public void RaiseUnexpectedCharError(string txt)
         {
-            if (txt != null)
-            {
-                message = string.Format("Unexpected {0}", txt);
-            }
+            if (string.IsNullOrEmpty(txt))
+                yyerror("Unexpected char");
+            else if (txt.Length is 1)
+                yyerror($"Unexpected char \"{txt}\"");
+            else
+                yyerror($"Unexpected string \"{txt}\"");
         }
 
         public static DotTokenKind MkId(string txt) => txt.ToLower() switch
