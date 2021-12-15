@@ -8,8 +8,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
     /// </summary>
     public static class DotFormatter
     {
-        const string DefaultIndentation = "    ";
-        const string DefaultEOL = "\r\n";
+        internal const string DefaultIndentation = "    ";
+        internal const string DefaultEOL = "\r\n";
 
         /// <summary>
         /// Replaces the whitespace and end of line trivia with a regularly formatted trivia.
