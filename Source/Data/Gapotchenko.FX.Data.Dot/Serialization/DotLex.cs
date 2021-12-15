@@ -5,11 +5,12 @@
 //  See accompanying file GPLEXcopyright.rtf.
 //
 //  GPLEX Version:  1.2.2
-//  GPLEX input file <Serialization\Dot.lex - 15.12.2021 16:33:08>
+//  GPLEX input file <Serialization\Dot.lex - 15.12.2021 18:10:44>
 //  GPLEX frame file <SERIALIZATION\DOTLEXFRAME.CS>
 //
-//  Option settings: parser, minimize
-//  Option settings: compressNext, persistBuffer, embedbuffers
+//  Option settings: unicode, parser, minimize
+//  Option settings: classes, compressMap, compressNext, persistBuffer, embedbuffers
+//  Fallback code page: Target machine default
 //
 
 //
@@ -19,22 +20,23 @@
 //
 #define BACKUP
 #define PERSIST
-#define BYTEMODE
 
 using System;
 using System.IO;
+using System.Text;
+using System.Globalization;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Runtime.Serialization;
 using System.Diagnostics.CodeAnalysis;
 
 using Gapotchenko.FX.Data.Dot.ParserToolkit;
 
 namespace Gapotchenko.FX.Data.Dot.Serialization
-{   
+{
     /// <summary>
     /// Summary Canonical example of GPLEX automaton
     /// </summary>
-    
+
     // If the compiler can't find the scanner base class maybe you
     // need to run GPPG with the /gplex option, or GPLEX with /noparser
      internal sealed partial class DotLex : ScanBase, IDisposable
@@ -73,7 +75,7 @@ int nesting = 0;
         int lNum;      // current line number
         //
         // The following instance variables are used, among other
-        // things, for constructing the LLoc location objects.
+        // things, for constructing the yylloc location objects.
         //
         int tokPos;        // buffer position at start of token
         int tokCol;        // zero-based column number at start of token
@@ -82,6 +84,9 @@ int nesting = 0;
         int tokECol;       // column number at end of token
         int tokELin;       // line number at end of token
         string? tokTxt;     // lazily constructed text of token
+#if STACK          
+        Stack<int> scStack = new Stack<int>();
+#endif // STACK
 
 #region ScannerTables
     struct Table {
@@ -94,73 +99,69 @@ int nesting = 0;
 
     static int[] startState = new int[] {39, 42, 43, 44, 45, 0};
 
+#region CompressedCharacterMap
+    //
+    // There are 23 equivalence classes
+    // There are 3 character sequence regions
+    // There are 1 tables, 128 entries
+    // There are 2 runs, 0 singletons
+    // Decision tree depth is 2
+    //
+    static sbyte[] mapC0 = new sbyte[128] {
+/*     '\0' */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 18, 20, 20, 21, 0, 0, 
+/*   '\x10' */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+/*   '\x20' */ 20, 4, 7, 17, 0, 0, 0, 4, 0, 0, 3, 0, 12, 1, 5, 19, 
+/*      '0' */ 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 14, 13, 16, 15, 2, 4, 
+/*      '@' */ 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
+/*      'P' */ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8, 22, 9, 0, 4, 
+/*      '`' */ 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
+/*      'p' */ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 10, 0, 11, 0, 0 };
+
+    static sbyte MapC(int code)
+    { // '\0' <= code <= '\U0010FFFF'
+      if (code < 128) // '\0' <= code <= '\x7F'
+        return mapC0[code - 0];
+      else // '\x80' <= code <= '\U0010FFFF'
+        if (code < 256) // '\x80' <= code <= '\xFF'
+          return (sbyte)4;
+        else // '\u0100' <= code <= '\U0010FFFF'
+          return (sbyte)0;
+    }
+#endregion
+
     static Table[] NxS = new Table[46] {
 /* NxS[   0] */ new Table(0, 0, 0, null),
 /* NxS[   1] */ new Table(0, 0, -1, null),
-/* NxS[   2] */ new Table(9, 24, -1, new sbyte[] {2, 2, 2, 2, 2, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-          -1, 2}),
-/* NxS[   3] */ new Table(0, 128, 3, new sbyte[] {-1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, -1, 
-          -1, 3, -1, -1, 17, -1, -1, 40, 3, -1, 3, 3, 3, 3, 3, 3, 
-          3, 3, 3, 3, -1, -1, -1, -1, -1, 3, -1, 3, 3, 3, 3, 3, 
-          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
-          3, 3, 3, 3, 3, -1, -1, -1, -1, 3, -1, 3, 3, 3, 3, 3, 
-          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
-          3, 3, 3, 3, 3, -1, -1, -1, -1, -1}),
+/* NxS[   2] */ new Table(1, 6, -1, new sbyte[] {22, 23, -1, -1, 41, 24}),
+/* NxS[   3] */ new Table(1, 6, -1, new sbyte[] {40, -1, 19, 3, 3, 3}),
 /* NxS[   4] */ new Table(0, 0, -1, null),
 /* NxS[   5] */ new Table(0, 0, -1, null),
 /* NxS[   6] */ new Table(0, 0, -1, null),
-/* NxS[   7] */ new Table(45, 18, -1, new sbyte[] {22, 41, -1, 23, 23, 23, 
-          23, 23, 23, 23, 23, 23, 23, -1, -1, -1, -1, 24}),
-/* NxS[   8] */ new Table(42, 6, -1, new sbyte[] {20, -1, -1, -1, -1, 21}),
+/* NxS[   7] */ new Table(0, 0, -1, null),
+/* NxS[   8] */ new Table(0, 0, -1, null),
 /* NxS[   9] */ new Table(0, 0, -1, null),
 /* NxS[  10] */ new Table(0, 0, -1, null),
 /* NxS[  11] */ new Table(0, 0, -1, null),
 /* NxS[  12] */ new Table(0, 0, -1, null),
 /* NxS[  13] */ new Table(0, 0, -1, null),
 /* NxS[  14] */ new Table(0, 0, -1, null),
-/* NxS[  15] */ new Table(0, 0, -1, null),
-/* NxS[  16] */ new Table(0, 0, -1, null),
-/* NxS[  17] */ new Table(0, 128, 17, new sbyte[] {-1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 17, -1, -1, -1, -1, 
-          -1, 17, -1, -1, 17, -1, -1, -1, 17, -1, 17, 17, 17, 17, 17, 17, 
-          17, 17, 17, 17, -1, -1, -1, -1, -1, 17, -1, 17, 17, 17, 17, 17, 
-          17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 
-          17, 17, 17, 17, 17, -1, -1, -1, -1, 17, -1, 17, 17, 17, 17, 17, 
-          17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 
-          17, 17, 17, 17, 17, -1, -1, -1, -1, -1}),
-/* NxS[  18] */ new Table(0, 128, 18, new sbyte[] {-1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, -1, 
-          -1, 18, -1, -1, 19, -1, -1, 40, 18, -1, 18, 18, 18, 18, 18, 18, 
-          18, 18, 18, 18, -1, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
-          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 
-          18, 18, 18, 18, 18, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
-          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 
-          18, 18, 18, 18, 18, -1, -1, -1, -1, -1}),
-/* NxS[  19] */ new Table(0, 0, -1, null),
+/* NxS[  15] */ new Table(18, 4, -1, new sbyte[] {15, -1, 15, 15}),
+/* NxS[  16] */ new Table(19, 8, -1, new sbyte[] {18, -1, -1, -1, -1, -1, 
+          -1, 17}),
+/* NxS[  17] */ new Table(0, 0, -1, null),
+/* NxS[  18] */ new Table(0, 0, -1, null),
+/* NxS[  19] */ new Table(3, 4, -1, new sbyte[] {19, 19, 19, 19}),
 /* NxS[  20] */ new Table(0, 0, -1, null),
-/* NxS[  21] */ new Table(0, 0, -1, null),
+/* NxS[  21] */ new Table(1, 6, -1, new sbyte[] {40, -1, 20, 21, 21, 21}),
 /* NxS[  22] */ new Table(0, 0, -1, null),
-/* NxS[  23] */ new Table(46, 12, -1, new sbyte[] {25, -1, 23, 23, 23, 23, 
-          23, 23, 23, 23, 23, 23}),
-/* NxS[  24] */ new Table(0, 0, -1, null),
-/* NxS[  25] */ new Table(48, 10, -1, new sbyte[] {25, 25, 25, 25, 25, 25, 
-          25, 25, 25, 25}),
-/* NxS[  26] */ new Table(34, 59, 26, new sbyte[] {-1, 26, 26, 26, 26, 26, 
-          26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 
-          26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 
-          26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 
-          26, 26, 26, 26, -1}),
+/* NxS[  23] */ new Table(0, 0, -1, null),
+/* NxS[  24] */ new Table(5, 2, -1, new sbyte[] {25, 24}),
+/* NxS[  25] */ new Table(6, 1, -1, new sbyte[] {25}),
+/* NxS[  26] */ new Table(22, 9, 26, new sbyte[] {-1, 26, 26, 26, 26, 26, 
+          26, 26, -1}),
 /* NxS[  27] */ new Table(0, 0, -1, null),
-/* NxS[  28] */ new Table(34, 59, -1, new sbyte[] {29, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, 30}),
+/* NxS[  28] */ new Table(22, 9, -1, new sbyte[] {30, -1, -1, -1, -1, -1, 
+          -1, -1, 29}),
 /* NxS[  29] */ new Table(0, 0, -1, null),
 /* NxS[  30] */ new Table(0, 0, -1, null),
 /* NxS[  31] */ new Table(0, 0, -1, null),
@@ -169,36 +170,18 @@ int nesting = 0;
 /* NxS[  34] */ new Table(0, 0, -1, null),
 /* NxS[  35] */ new Table(0, 0, -1, null),
 /* NxS[  36] */ new Table(0, 0, -1, null),
-/* NxS[  37] */ new Table(47, 1, -1, new sbyte[] {38}),
+/* NxS[  37] */ new Table(19, 1, -1, new sbyte[] {38}),
 /* NxS[  38] */ new Table(0, 0, -1, null),
-/* NxS[  39] */ new Table(0, 128, 3, new sbyte[] {1, 1, 1, 1, 1, 1, 
-          1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 5, 1, 1, 
-          1, 3, 1, 1, 3, 1, 6, 7, 3, 8, 3, 3, 3, 3, 3, 3, 
-          3, 3, 3, 3, 9, 10, 11, 12, 1, 3, 1, 3, 3, 3, 3, 3, 
-          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
-          3, 3, 3, 3, 3, 13, 1, 14, 1, 3, 1, 3, 3, 3, 3, 3, 
-          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
-          3, 3, 3, 3, 3, 15, 1, 16, 1, 1}),
-/* NxS[  40] */ new Table(0, 128, 18, new sbyte[] {-1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-          -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, -1, 
-          -1, 18, -1, -1, 19, -1, -1, 40, 18, -1, 18, 18, 18, 18, 18, 18, 
-          18, 18, 18, 18, -1, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
-          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 
-          18, 18, 18, 18, 18, -1, -1, -1, -1, 18, -1, 18, 18, 18, 18, 18, 
-          18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 
-          18, 18, 18, 18, 18, -1, -1, -1, -1, -1}),
-/* NxS[  41] */ new Table(48, 10, -1, new sbyte[] {25, 25, 25, 25, 25, 25, 
-          25, 25, 25, 25}),
-/* NxS[  42] */ new Table(34, 59, 26, new sbyte[] {27, 26, 26, 26, 26, 26, 
-          26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 
-          26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 
-          26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 
-          26, 26, 26, 26, 28}),
-/* NxS[  43] */ new Table(60, 3, 31, new sbyte[] {32, 31, 33}),
-/* NxS[  44] */ new Table(10, 4, 34, new sbyte[] {35, 34, 34, 35}),
-/* NxS[  45] */ new Table(42, 1, 36, new sbyte[] {37}),
+/* NxS[  39] */ new Table(7, 19, 3, new sbyte[] {4, 5, 6, 7, 8, 9, 
+          10, 11, 12, 13, 14, 15, 16, 15, 15, 1, 1, 2, 1}),
+/* NxS[  40] */ new Table(1, 6, -1, new sbyte[] {40, -1, 20, 21, 21, 21}),
+/* NxS[  41] */ new Table(6, 1, -1, new sbyte[] {25}),
+/* NxS[  42] */ new Table(22, 9, 26, new sbyte[] {28, 26, 26, 26, 26, 26, 
+          26, 26, 27}),
+/* NxS[  43] */ new Table(16, 10, 31, new sbyte[] {33, 31, 31, 31, 31, 31, 
+          31, 31, 31, 32}),
+/* NxS[  44] */ new Table(18, 4, 34, new sbyte[] {35, 34, 34, 35}),
+/* NxS[  45] */ new Table(3, 1, 36, new sbyte[] {37}),
     };
 
 int NextState() {
@@ -207,7 +190,8 @@ int NextState() {
     else
         unchecked {
             int rslt;
-            int idx = (byte)(code - NxS[state].min);
+            int idx = MapC(code) - NxS[state].min;
+            if (idx < 0) idx += 23;
             if ((uint)idx >= (uint)NxS[state].rng) rslt = NxS[state].dflt;
             else rslt = NxS[state].nxt![idx];
             return rslt;
@@ -216,6 +200,8 @@ int NextState() {
 
 #endregion
 
+
+#if BACKUP
         // ==============================================================
         // == Nested struct used for backup in automata that do backup ==
         // ==============================================================
@@ -231,9 +217,54 @@ int NextState() {
         }
         
         Context ctx = new Context();
+#endif // BACKUP
 
+        // ==============================================================
+        // ==== Nested struct to support input switching in scanners ====
+        // ==============================================================
+
+		struct BufferContext {
+            internal ScanBuff buffSv;
+			internal int chrSv;
+			internal int cColSv;
+			internal int lNumSv;
+		}
+
+        // ==============================================================
+        // ===== Private methods to save and restore buffer contexts ====
+        // ==============================================================
+
+        /// <summary>
+        /// This method creates a buffer context record from
+        /// the current buffer object, together with some
+        /// scanner state values. 
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        BufferContext MkBuffCtx()
+		{
+			BufferContext rslt;
+			rslt.buffSv = this.buffer;
+			rslt.chrSv = this.code;
+			rslt.cColSv = this.cCol;
+			rslt.lNumSv = this.lNum;
+			return rslt;
+		}
+
+        /// <summary>
+        /// This method restores the buffer value and allied
+        /// scanner state from the given context record value.
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        void RestoreBuffCtx(BufferContext value)
+		{
+			this.buffer = value.buffSv;
+			this.code = value.chrSv;
+			this.cCol = value.cColSv;
+			this.lNum = value.lNumSv;
+        } 
         // =================== End Nested classes =======================
 
+#if !NOFILES
      internal DotLex(TextReader reader)
         {
             this.buffer = ScanBuff.GetBuffer(reader);
@@ -241,6 +272,7 @@ int NextState() {
             this.code = '\n'; // to initialize yyline, yycol and lineStart
             GetCode();
         }
+#endif // !NOFILES
 
         int readPos;
 
@@ -252,19 +284,31 @@ int NextState() {
                 cCol = -1;
                 lNum++;
             }
-
             readPos = buffer.Pos;
 
             // Now read new codepoint.
             code = buffer.Read();
             if (code > ScanBuff.EndOfFile)
             {
+#if (!BYTEMODE)
+                if (code >= 0xD800 && code <= 0xDBFF)
+                {
+                    int next = buffer.Read();
+                    if (next < 0xDC00 || next > 0xDFFF)
+                        code = ScanBuff.UnicodeReplacementChar;
+                    else
+                        code = (0x10000 + ((code & 0x3FF) << 10) + (next & 0x3FF));
+                }
+#endif
                 cCol++;
             }
         }
 
         void MarkToken()
         {
+#if (!PERSIST)
+            buffer.Mark();
+#endif
             tokPos = readPos;
             tokLin = lNum;
             tokCol = cCol;
@@ -286,7 +330,7 @@ int NextState() {
             lNum = lNumSv; cCol = cColSv; code = codeSv; buffer.Pos = bPosSv;
             return rslt;
         }
-        
+
         // ======== AbstractScanner<> Implementation =========
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
@@ -294,7 +338,7 @@ int NextState() {
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "yylex")]
         public override int yylex() =>
             Scan();
-
+        
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         int yypos { get { return tokPos; } }
         
@@ -371,7 +415,22 @@ int NextState() {
                 if (tokELin == tokLin)
                     return tokECol - tokCol;
                 else
+#if BYTEMODE
                     return tokEPos - tokPos;
+#else
+                {
+                    int ch;
+                    int count = 0;
+                    int save = buffer.Pos;
+                    buffer.Pos = tokPos;
+                    do {
+                        ch = buffer.Read();
+                        if (!char.IsHighSurrogate((char)ch)) count++;
+                    } while (buffer.Pos < tokEPos && ch != ScanBuff.EndOfFile);
+                    buffer.Pos = save;
+                    return count;
+                }
+#endif // BYTEMODE
             }
         }
         
@@ -393,24 +452,34 @@ int NextState() {
 
         // ============== The main tokenizer code =================
 
-        int Scan()
-        {
+        int Scan() {
             try {
-                for (; ; )
-                {
+                for (; ; ) {
                     int next;              // next state to enter
+#if LEFTANCHORS
+                    for (;;) {
+                        // Discard characters that do not start any pattern.
+                        // Must check the left anchor condition after *every* GetCode!
+                        state = ((cCol == 0) ? anchorState[currentScOrd] : currentStart);
+                        if ((next = NextState()) != goStart) break; // LOOP EXIT HERE...
+                        GetCode();
+                    }
+                    
+#else // !LEFTANCHORS
                     state = currentStart;
-                    while ((next = NextState()) == goStart)
+                    while ((next = NextState()) == goStart) {
                         // At this point, the current character has no
                         // transition from the current state.  We discard 
                         // the "no-match" char.   In traditional LEX such 
                         // characters are echoed to the console.
                         GetCode();
+                    }
+#endif // LEFTANCHORS                    
                     // At last, a valid transition ...    
                     MarkToken();
                     state = next;
-                    GetCode();
-                    
+                    GetCode();                    
+#if BACKUP
                     bool contextSaved = false;
                     while ((next = NextState()) > eofNum) { // Exit for goStart AND for eofNum
                         if (state <= maxAccept && next > maxAccept) { // need to prepare backup data
@@ -423,8 +492,13 @@ int NextState() {
                     }
                     if (state > maxAccept && contextSaved)
                         RestoreStateAndPos( ref ctx );
-                    if (state <= maxAccept) 
-                    {
+#else  // BACKUP
+                    while ((next = NextState()) > eofNum) { // Exit for goStart AND for eofNum
+                         state = next;
+                         GetCode();
+                    }
+#endif // BACKUP
+                    if (state <= maxAccept) {
                         MarkEnd();
 #region ActionSwitch
 #pragma warning disable 162, 1522
@@ -435,69 +509,69 @@ int NextState() {
                 return (int)Tokens.EOF;
             break;
         case 1:
-        case 7:
-        case 8:
+        case 2:
+        case 16:
 RaiseUnexpectedCharError(yytext);
             break;
-        case 2:
-return (int)DotTokenKind.Whitespace;
-            break;
         case 3:
-        case 17:
+        case 19:
 return (int) MkId(yytext);
             break;
         case 4:
 BEGIN(QSTRING); BuilderInit(); BuilderAppend();
             break;
         case 5:
-BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend();
+return (int)DotTokenKind.ListStart;
             break;
         case 6:
-return (int)DotTokenKind.Comma;
+return (int)DotTokenKind.ListEnd;
+            break;
+        case 7:
+return (int)DotTokenKind.ScopeStart;
+            break;
+        case 8:
+return (int)DotTokenKind.ScopeEnd;
             break;
         case 9:
-return (int)DotTokenKind.Colon;
+return (int)DotTokenKind.Comma;
             break;
         case 10:
 return (int)DotTokenKind.Semicolon;
             break;
         case 11:
-BEGIN(HTML); nesting = 1; BuilderInit(); BuilderAppend();
+return (int)DotTokenKind.Colon;
             break;
         case 12:
 return (int)DotTokenKind.Equal;
             break;
         case 13:
-return (int)DotTokenKind.ListStart;
+BEGIN(HTML); nesting = 1; BuilderInit(); BuilderAppend();
             break;
         case 14:
-return (int)DotTokenKind.ListEnd;
+BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend();
             break;
         case 15:
-return (int)DotTokenKind.ScopeStart;
+return (int)DotTokenKind.Whitespace;
             break;
-        case 16:
-return (int)DotTokenKind.ScopeEnd;
-            break;
-        case 18:
-        case 19:
-return (int) MkId(yytext);
-            break;
-        case 20:
+        case 17:
 BEGIN(MLINECOMMENT); BuilderInit(); BuilderAppend();
             break;
-        case 21:
+        case 18:
 BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend();
+            break;
+        case 20:
+        case 21:
+return (int) MkId(yytext);
             break;
         case 22:
 return (int) DotTokenKind.Arrow;
             break;
         case 23:
-        case 25:
-return (int) DotTokenKind.Id;
+return (int) DotTokenKind.Arrow;
             break;
         case 24:
-return (int) DotTokenKind.Arrow;
+        case 25:
+return (int) DotTokenKind.Id;
             break;
         case 26:
         case 28:
@@ -516,10 +590,6 @@ BuilderAppend();
 BuilderAppend();
             break;
         case 32:
-nesting++; 
-                     BuilderAppend();
-            break;
-        case 33:
 nesting--; 
                      BuilderAppend();
                      if (nesting == 0) {
@@ -527,6 +597,10 @@ nesting--;
                        tokTxt = BuilderBuild();
                        return (int)DotTokenKind.Id;
                      }
+            break;
+        case 33:
+nesting++; 
+                     BuilderAppend();
             break;
         case 34:
 BuilderAppend();
@@ -557,8 +631,8 @@ BuilderAppend(); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKi
             } // end finally
         }
 
-        void SaveStateAndPos(ref Context ctx)
-        {
+#if BACKUP
+        void SaveStateAndPos(ref Context ctx) {
             ctx.bPos  = buffer.Pos;
             ctx.rPos  = readPos;
             ctx.cCol  = cCol;
@@ -567,8 +641,7 @@ BuilderAppend(); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKi
             ctx.cChr  = code;
         }
 
-        void RestoreStateAndPos(ref Context ctx)
-        {
+        void RestoreStateAndPos(ref Context ctx) {
             buffer.Pos = ctx.bPos;
             readPos = ctx.rPos;
             cCol  = ctx.cCol;
@@ -576,13 +649,36 @@ BuilderAppend(); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKi
             state = ctx.state;
             code  = ctx.cChr;
         }
-
+#endif  // BACKUP
 
         // ============= End of the tokenizer code ================
 
+#if STACK        
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal void yy_clear_stack() { scStack.Clear(); }
+        
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal int yy_top_state() { return scStack.Peek(); }
+        
+        internal void yy_push_state(int state)
+        {
+            scStack.Push(currentScOrd);
+            BEGIN(state);
+        }
+        
+        internal void yy_pop_state()
+        {
+            // Protect against input errors that pop too far ...
+            if (scStack.Count > 0) {
+				int newSc = scStack.Pop();
+				BEGIN(newSc);
+            } // Otherwise leave stack unchanged.
+        }
+ #endif // STACK
+
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal void ECHO() { Console.Out.Write(yytext); }
-
+        
         public void Dispose()
         {
             if (buffer is not null)
@@ -591,6 +687,7 @@ BuilderAppend(); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKi
                 buffer = null!;
             }
         }
-        
+
         } // end class DotLex
+
 } // end namespace

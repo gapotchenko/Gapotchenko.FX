@@ -12,17 +12,19 @@
 
 using System;
 using System.IO;
+using System.Text;
+using System.Globalization;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Runtime.Serialization;
 using System.Diagnostics.CodeAnalysis;
 
 ##-->version295
 ##-->usingDcl
-{   
+{
     /// <summary>
     /// Summary Canonical example of GPLEX automaton
     /// </summary>
-    
+
     // If the compiler can't find the scanner base class maybe you
     // need to run GPPG with the /gplex option, or GPLEX with /noparser
 ##-->translate $public sealed partial class $Scanner : $ScanBase, IDisposable
@@ -49,7 +51,7 @@ using System.Diagnostics.CodeAnalysis;
         int lNum;      // current line number
         //
         // The following instance variables are used, among other
-        // things, for constructing the LLoc location objects.
+        // things, for constructing the yylloc location objects.
         //
         int tokPos;        // buffer position at start of token
         int tokCol;        // zero-based column number at start of token
@@ -58,9 +60,14 @@ using System.Diagnostics.CodeAnalysis;
         int tokECol;       // column number at end of token
         int tokELin;       // line number at end of token
         string? tokTxt;     // lazily constructed text of token
+#if STACK          
+        Stack<int> scStack = new Stack<int>();
+#endif // STACK
 
 ##-->tableDef
 
+
+#if BACKUP
         // ==============================================================
         // == Nested struct used for backup in automata that do backup ==
         // ==============================================================
@@ -76,9 +83,54 @@ using System.Diagnostics.CodeAnalysis;
         }
         
         Context ctx = new Context();
+#endif // BACKUP
 
+        // ==============================================================
+        // ==== Nested struct to support input switching in scanners ====
+        // ==============================================================
+
+		struct BufferContext {
+            internal ScanBuff buffSv;
+			internal int chrSv;
+			internal int cColSv;
+			internal int lNumSv;
+		}
+
+        // ==============================================================
+        // ===== Private methods to save and restore buffer contexts ====
+        // ==============================================================
+
+        /// <summary>
+        /// This method creates a buffer context record from
+        /// the current buffer object, together with some
+        /// scanner state values. 
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        BufferContext MkBuffCtx()
+		{
+			BufferContext rslt;
+			rslt.buffSv = this.buffer;
+			rslt.chrSv = this.code;
+			rslt.cColSv = this.cCol;
+			rslt.lNumSv = this.lNum;
+			return rslt;
+		}
+
+        /// <summary>
+        /// This method restores the buffer value and allied
+        /// scanner state from the given context record value.
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        void RestoreBuffCtx(BufferContext value)
+		{
+			this.buffer = value.buffSv;
+			this.code = value.chrSv;
+			this.cCol = value.cColSv;
+			this.lNum = value.lNumSv;
+        } 
         // =================== End Nested classes =======================
 
+#if !NOFILES
 ##-->translate $public $Scanner(TextReader reader)
         {
             this.buffer = ScanBuff.GetBuffer(reader);
@@ -86,6 +138,7 @@ using System.Diagnostics.CodeAnalysis;
             this.code = '\n'; // to initialize yyline, yycol and lineStart
             GetCode();
         }
+#endif // !NOFILES
 
         int readPos;
 
@@ -97,19 +150,31 @@ using System.Diagnostics.CodeAnalysis;
                 cCol = -1;
                 lNum++;
             }
-
             readPos = buffer.Pos;
 
             // Now read new codepoint.
             code = buffer.Read();
             if (code > ScanBuff.EndOfFile)
             {
+#if (!BYTEMODE)
+                if (code >= 0xD800 && code <= 0xDBFF)
+                {
+                    int next = buffer.Read();
+                    if (next < 0xDC00 || next > 0xDFFF)
+                        code = ScanBuff.UnicodeReplacementChar;
+                    else
+                        code = (0x10000 + ((code & 0x3FF) << 10) + (next & 0x3FF));
+                }
+#endif
                 cCol++;
             }
         }
 
         void MarkToken()
         {
+#if (!PERSIST)
+            buffer.Mark();
+#endif
             tokPos = readPos;
             tokLin = lNum;
             tokCol = cCol;
@@ -131,7 +196,7 @@ using System.Diagnostics.CodeAnalysis;
             lNum = lNumSv; cCol = cColSv; code = codeSv; buffer.Pos = bPosSv;
             return rslt;
         }
-        
+
         // ======== AbstractScanner<> Implementation =========
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
@@ -139,7 +204,7 @@ using System.Diagnostics.CodeAnalysis;
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "yylex")]
         public override int yylex() =>
             Scan();
-
+        
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         int yypos { get { return tokPos; } }
         
@@ -216,7 +281,22 @@ using System.Diagnostics.CodeAnalysis;
                 if (tokELin == tokLin)
                     return tokECol - tokCol;
                 else
+#if BYTEMODE
                     return tokEPos - tokPos;
+#else
+                {
+                    int ch;
+                    int count = 0;
+                    int save = buffer.Pos;
+                    buffer.Pos = tokPos;
+                    do {
+                        ch = buffer.Read();
+                        if (!char.IsHighSurrogate((char)ch)) count++;
+                    } while (buffer.Pos < tokEPos && ch != ScanBuff.EndOfFile);
+                    buffer.Pos = save;
+                    return count;
+                }
+#endif // BYTEMODE
             }
         }
         
@@ -238,24 +318,34 @@ using System.Diagnostics.CodeAnalysis;
 
         // ============== The main tokenizer code =================
 
-        int Scan()
-        {
+        int Scan() {
 ##-->prolog 
-                for (; ; )
-                {
+                for (; ; ) {
                     int next;              // next state to enter
+#if LEFTANCHORS
+                    for (;;) {
+                        // Discard characters that do not start any pattern.
+                        // Must check the left anchor condition after *every* GetCode!
+                        state = ((cCol == 0) ? anchorState[currentScOrd] : currentStart);
+                        if ((next = NextState()) != goStart) break; // LOOP EXIT HERE...
+                        GetCode();
+                    }
+                    
+#else // !LEFTANCHORS
                     state = currentStart;
-                    while ((next = NextState()) == goStart)
+                    while ((next = NextState()) == goStart) {
                         // At this point, the current character has no
                         // transition from the current state.  We discard 
                         // the "no-match" char.   In traditional LEX such 
                         // characters are echoed to the console.
                         GetCode();
+                    }
+#endif // LEFTANCHORS                    
                     // At last, a valid transition ...    
                     MarkToken();
                     state = next;
-                    GetCode();
-                    
+                    GetCode();                    
+#if BACKUP
                     bool contextSaved = false;
                     while ((next = NextState()) > eofNum) { // Exit for goStart AND for eofNum
                         if (state <= maxAccept && next > maxAccept) { // need to prepare backup data
@@ -268,8 +358,13 @@ using System.Diagnostics.CodeAnalysis;
                     }
                     if (state > maxAccept && contextSaved)
                         RestoreStateAndPos( ref ctx );
-                    if (state <= maxAccept) 
-                    {
+#else  // BACKUP
+                    while ((next = NextState()) > eofNum) { // Exit for goStart AND for eofNum
+                         state = next;
+                         GetCode();
+                    }
+#endif // BACKUP
+                    if (state <= maxAccept) {
                         MarkEnd();
 ##-->actionCases
                     }
@@ -277,8 +372,8 @@ using System.Diagnostics.CodeAnalysis;
 ##-->epilog
         }
 
-        void SaveStateAndPos(ref Context ctx)
-        {
+#if BACKUP
+        void SaveStateAndPos(ref Context ctx) {
             ctx.bPos  = buffer.Pos;
             ctx.rPos  = readPos;
             ctx.cCol  = cCol;
@@ -287,8 +382,7 @@ using System.Diagnostics.CodeAnalysis;
             ctx.cChr  = code;
         }
 
-        void RestoreStateAndPos(ref Context ctx)
-        {
+        void RestoreStateAndPos(ref Context ctx) {
             buffer.Pos = ctx.bPos;
             readPos = ctx.rPos;
             cCol  = ctx.cCol;
@@ -296,13 +390,36 @@ using System.Diagnostics.CodeAnalysis;
             state = ctx.state;
             code  = ctx.cChr;
         }
-
+#endif  // BACKUP
 
         // ============= End of the tokenizer code ================
 
+#if STACK        
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal void yy_clear_stack() { scStack.Clear(); }
+        
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal int yy_top_state() { return scStack.Peek(); }
+        
+        internal void yy_push_state(int state)
+        {
+            scStack.Push(currentScOrd);
+            BEGIN(state);
+        }
+        
+        internal void yy_pop_state()
+        {
+            // Protect against input errors that pop too far ...
+            if (scStack.Count > 0) {
+				int newSc = scStack.Pop();
+				BEGIN(newSc);
+            } // Otherwise leave stack unchanged.
+        }
+ #endif // STACK
+
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal void ECHO() { Console.Out.Write(yytext); }
-
+        
         public void Dispose()
         {
             if (buffer is not null)
@@ -311,7 +428,8 @@ using System.Diagnostics.CodeAnalysis;
                 buffer = null!;
             }
         }
-        
+
 ##-->userCode
 ##-->translate    } // end class $Scanner
+
 } // end namespace
