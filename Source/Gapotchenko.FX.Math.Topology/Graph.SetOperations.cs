@@ -12,6 +12,7 @@ namespace Gapotchenko.FX.Math.Topology
                 throw new ArgumentNullException(nameof(other));
 
             return
+                other == this ||
                 Vertices.SetEquals(other.Vertices) &&
                 Edges.SetEquals(other.Edges);
         }
@@ -36,8 +37,8 @@ namespace Gapotchenko.FX.Math.Topology
                 throw new ArgumentNullException(nameof(other));
 
             return
-                Vertices.IsProperSubsetOf(other.Vertices) ||
-                Edges.IsProperSubsetOf(other.Edges);
+                !GraphEquals(other) &&
+                IsSubgraphOf(other);
         }
 
         /// <inheritdoc/>
@@ -47,8 +48,8 @@ namespace Gapotchenko.FX.Math.Topology
                 throw new ArgumentNullException(nameof(other));
 
             return
-                Vertices.IsProperSupersetOf(other.Vertices) ||
-                Edges.IsProperSupersetOf(other.Edges);
+                !GraphEquals(other) &&
+                IsSupergraphOf(other);
         }
 
         /// <inheritdoc/>
@@ -57,9 +58,14 @@ namespace Gapotchenko.FX.Math.Topology
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
+            if (other == this)
+                return true;
+
+            var edges = Edges;
+
             return
                 Vertices.IsSubsetOf(other.Vertices) ||
-                Edges.IsSubsetOf(other.Edges);
+                edges.Count != 0 && edges.IsSubsetOf(other.Edges);
         }
 
         /// <inheritdoc/>
@@ -68,9 +74,14 @@ namespace Gapotchenko.FX.Math.Topology
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
+            if (other == this)
+                return true;
+
+            var otherEdges = other.Edges;
+
             return
                 Vertices.IsSupersetOf(other.Vertices) ||
-                Edges.IsSupersetOf(other.Edges);
+                otherEdges.Count != 0 && Edges.IsSupersetOf(otherEdges);
         }
     }
 }

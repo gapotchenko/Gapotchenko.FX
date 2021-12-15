@@ -328,5 +328,167 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             Assert.IsTrue(g.Edges.Remove(3, 5));
             Assert.IsTrue(g.GraphEquals(g0));
         }
+
+        [TestMethod]
+        public void Graph_IsProperSubgraphOf()
+        {
+            var g = new Graph<char>()
+            {
+                Vertices = { 'w' },
+                Edges = { ('u', 'v') }
+            };
+
+            var h = new Graph<char>()
+            {
+                Vertices = { 'w' },
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsFalse(h.IsProperSubgraphOf(g));
+
+            h = new Graph<char>()
+            {
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsTrue(h.IsProperSubgraphOf(g));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v', 'w' },
+            };
+
+            Assert.IsTrue(h.IsProperSubgraphOf(g));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v' },
+            };
+
+            Assert.IsTrue(h.IsProperSubgraphOf(g));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v', 'x' },
+            };
+
+            Assert.IsFalse(h.IsProperSubgraphOf(g));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'w', 'x' },
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsTrue(g.IsProperSubgraphOf(h));
+        }
+
+        [TestMethod]
+        public void Graph_IsSupergraphOf()
+        {
+            var g = new Graph<char>()
+            {
+                Vertices = { 'w' },
+                Edges = { ('u', 'v') }
+            };
+
+            var h = new Graph<char>()
+            {
+                Vertices = { 'w' },
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsTrue(g.IsSupergraphOf(h));
+
+            h = new Graph<char>()
+            {
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsTrue(g.IsSupergraphOf(h));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v', 'w' },
+            };
+
+            Assert.IsTrue(g.IsSupergraphOf(h));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v' },
+            };
+
+            Assert.IsTrue(g.IsSupergraphOf(h));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v', 'x' },
+            };
+
+            Assert.IsFalse(g.IsSupergraphOf(h));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'w', 'x' },
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsTrue(h.IsSupergraphOf(g));
+        }
+
+        [TestMethod]
+        public void Graph_IsSubgraphOf()
+        {
+            var g = new Graph<char>()
+            {
+                Vertices = { 'w' },
+                Edges = { ('u', 'v') }
+            };
+
+            var h = new Graph<char>()
+            {
+                Vertices = { 'w' },
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsTrue(h.IsSubgraphOf(g));
+
+            h = new Graph<char>()
+            {
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsTrue(h.IsSubgraphOf(g));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v', 'w' },
+            };
+
+            Assert.IsTrue(h.IsSubgraphOf(g));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v' },
+            };
+
+            Assert.IsTrue(h.IsSubgraphOf(g));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v', 'x' },
+            };
+
+            Assert.IsFalse(h.IsSubgraphOf(g));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'w', 'x' },
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsTrue(g.IsSubgraphOf(h));
+        }
     }
 }
