@@ -313,6 +313,10 @@ digraph {
         public void DotRoundtrip_035() =>
             ExecuteRoundtripTest("strict digraph {}");
 
+        [TestMethod]
+        public void DotRoundtrip_036() =>
+            ExecuteRoundtripTest("digraph { v1 [a=b] [c=d] }");
+
         static void ExecuteRoundtripTest(string document)
         {
             ExecuteLexerRoundtripTest(document);

@@ -108,17 +108,6 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
         }
 
-        static IList<DotAttributeListNode> CreateAttributeListSyntaxList(
-            DotToken openBraceToken,
-            IList<DotAttributeNode>? attributes,
-            DotToken closeBraceToken)
-        {
-            var list = new List<DotAttributeListNode>();
-            var syntax = CreateAttributeListSyntax(openBraceToken, attributes, closeBraceToken);
-            list.Add(syntax);
-            return list;
-        }
-
         static DotAttributeListNode CreateAttributeListSyntax(
             DotToken openBraceToken,
             IList<DotAttributeNode>? attributes,

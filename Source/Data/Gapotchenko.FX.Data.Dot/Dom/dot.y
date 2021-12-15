@@ -21,11 +21,11 @@
 
 %type <token> graphType graphName id avPairTerminator
 %type <entity> graph subgraph stmt stmt node_stmt edge_stmt endpoint stmts node_id
-%type <entity> attr_stmt opt_attr_list avPair
+%type <entity> attr_stmt avPair attr_list
 %type <statementSyntaxList> stmt_list
 %type <separatedSyntaxList> edgeLHS
 %type <attributeSyntaxList> a_list
-%type <attributeListSyntaxList> attr_list opt_attr_list
+%type <attributeListSyntaxList> attr_list_list opt_attr_list_list
 
 %left '{'
 
@@ -61,10 +61,10 @@ stmt      : id '=' id { $$ = CreateAliasSyntax($1, $2.token, $3); }
           | subgraph  { $$ = $1; }
           ;
 
-node_stmt : node_id opt_attr_list { $$ = CreateVertexSyntax((DotVertexIdentifierNode)$1, $2); }
+node_stmt : node_id opt_attr_list_list { $$ = CreateVertexSyntax((DotVertexIdentifierNode)$1, $2); }
           ;
 
-edge_stmt : edgeLHS opt_attr_list { $$ = CreateEdgeSyntax($1, $2); } 
+edge_stmt : edgeLHS opt_attr_list_list { $$ = CreateEdgeSyntax($1, $2); } 
           ;
 
 endpoint  : node_id  { $$ = $1; }
@@ -81,17 +81,21 @@ subgraph  : stmts              { $$ = CreateGraphSyntax(default, default, defaul
           | SUBGRAPH           { $$ = CreateGraphSyntax(default, $1, default, default); }
           ;
 
-attr_stmt : GRAPH attr_list { $$ = CreateAttachedAttributesSyntax($1, $2); }
-          | NODE attr_list  { $$ = CreateAttachedAttributesSyntax($1, $2); }
-          | EDGE attr_list  { $$ = CreateAttachedAttributesSyntax($1, $2); }
+attr_stmt : GRAPH attr_list_list { $$ = CreateAttachedAttributesSyntax($1, $2); }
+          | NODE attr_list_list  { $$ = CreateAttachedAttributesSyntax($1, $2); }
+          | EDGE attr_list_list  { $$ = CreateAttachedAttributesSyntax($1, $2); }
           ;
 
-opt_attr_list :       { }
-          | attr_list { $$ = $1; }
+opt_attr_list_list :       { }
+          | attr_list_list { $$ = $1; }
           ;
 
-attr_list : '[' ']'        { $$ = CreateAttributeListSyntaxList($1.token, default, $2.token); }
-          | '[' a_list ']' { $$ = CreateAttributeListSyntaxList($1.token, $2, $3.token); }
+attr_list_list : attr_list           { $$ = new List<DotAttributeListNode>(); $$.Add((DotAttributeListNode)$1); }
+          | attr_list_list attr_list { $$ = $1; $$.Add((DotAttributeListNode)$2); }
+          ;
+
+attr_list : '[' ']'        { $$ = CreateAttributeListSyntax($1.token, default, $2.token); }
+          | '[' a_list ']' { $$ = CreateAttributeListSyntax($1.token, $2, $3.token); }
           ;
 
 a_list    : avPair            { $$ = new List<DotAttributeNode>(); $$.Add((DotAttributeNode)$1); }
