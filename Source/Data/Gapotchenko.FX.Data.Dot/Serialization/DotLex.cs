@@ -5,7 +5,7 @@
 //  See accompanying file GPLEXcopyright.rtf.
 //
 //  GPLEX Version:  1.2.2
-//  GPLEX input file <Serialization\Dot.lex - 15.12.2021 18:10:44>
+//  GPLEX input file <Serialization\Dot.lex - 15.12.2021 18:12:29>
 //  GPLEX frame file <SERIALIZATION\DOTLEXFRAME.CS>
 //
 //  Option settings: unicode, parser, minimize
@@ -50,8 +50,8 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public ScanBuff Buffer => buffer;
 
-        const int maxAccept = 38;
-        const int initial = 39;
+        const int maxAccept = 37;
+        const int initial = 38;
         const int eofNum = 0;
         const int goStart = -1;
         const int INITIAL = 0;
@@ -97,45 +97,42 @@ int nesting = 0;
         }
     };
 
-    static int[] startState = new int[] {39, 42, 43, 44, 45, 0};
+    static int[] startState = new int[] {38, 40, 41, 42, 43, 0};
 
 #region CompressedCharacterMap
     //
     // There are 23 equivalence classes
-    // There are 3 character sequence regions
+    // There are 2 character sequence regions
     // There are 1 tables, 128 entries
-    // There are 2 runs, 0 singletons
-    // Decision tree depth is 2
+    // There are 1 runs, 0 singletons
+    // Decision tree depth is 1
     //
     static sbyte[] mapC0 = new sbyte[128] {
-/*     '\0' */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 18, 20, 20, 21, 0, 0, 
+/*     '\0' */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 17, 20, 20, 21, 0, 0, 
 /*   '\x10' */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-/*   '\x20' */ 20, 4, 7, 17, 0, 0, 0, 4, 0, 0, 3, 0, 12, 1, 5, 19, 
-/*      '0' */ 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 14, 13, 16, 15, 2, 4, 
-/*      '@' */ 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
-/*      'P' */ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8, 22, 9, 0, 4, 
-/*      '`' */ 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
-/*      'p' */ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 10, 0, 11, 0, 0 };
+/*   '\x20' */ 20, 0, 6, 16, 0, 0, 0, 0, 0, 0, 19, 0, 11, 1, 5, 18, 
+/*      '0' */ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 13, 12, 15, 14, 2, 0, 
+/*      '@' */ 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+/*      'P' */ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 22, 8, 0, 3, 
+/*      '`' */ 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+/*      'p' */ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 0, 10, 0, 0 };
 
     static sbyte MapC(int code)
     { // '\0' <= code <= '\U0010FFFF'
       if (code < 128) // '\0' <= code <= '\x7F'
         return mapC0[code - 0];
       else // '\x80' <= code <= '\U0010FFFF'
-        if (code < 256) // '\x80' <= code <= '\xFF'
-          return (sbyte)4;
-        else // '\u0100' <= code <= '\U0010FFFF'
-          return (sbyte)0;
+        return (sbyte)3;
     }
 #endregion
 
-    static Table[] NxS = new Table[46] {
+    static Table[] NxS = new Table[44] {
 /* NxS[   0] */ new Table(0, 0, 0, null),
 /* NxS[   1] */ new Table(0, 0, -1, null),
-/* NxS[   2] */ new Table(1, 6, -1, new sbyte[] {22, 23, -1, -1, 41, 24}),
-/* NxS[   3] */ new Table(1, 6, -1, new sbyte[] {40, -1, 19, 3, 3, 3}),
-/* NxS[   4] */ new Table(0, 0, -1, null),
-/* NxS[   5] */ new Table(0, 0, -1, null),
+/* NxS[   2] */ new Table(1, 5, -1, new sbyte[] {23, 24, -1, 4, 39}),
+/* NxS[   3] */ new Table(3, 2, -1, new sbyte[] {3, 3}),
+/* NxS[   4] */ new Table(3, 3, -1, new sbyte[] {22, 4, 21}),
+/* NxS[   5] */ new Table(4, 1, -1, new sbyte[] {21}),
 /* NxS[   6] */ new Table(0, 0, -1, null),
 /* NxS[   7] */ new Table(0, 0, -1, null),
 /* NxS[   8] */ new Table(0, 0, -1, null),
@@ -145,23 +142,22 @@ int nesting = 0;
 /* NxS[  12] */ new Table(0, 0, -1, null),
 /* NxS[  13] */ new Table(0, 0, -1, null),
 /* NxS[  14] */ new Table(0, 0, -1, null),
-/* NxS[  15] */ new Table(18, 4, -1, new sbyte[] {15, -1, 15, 15}),
-/* NxS[  16] */ new Table(19, 8, -1, new sbyte[] {18, -1, -1, -1, -1, -1, 
-          -1, 17}),
-/* NxS[  17] */ new Table(0, 0, -1, null),
-/* NxS[  18] */ new Table(0, 0, -1, null),
-/* NxS[  19] */ new Table(3, 4, -1, new sbyte[] {19, 19, 19, 19}),
+/* NxS[  15] */ new Table(0, 0, -1, null),
+/* NxS[  16] */ new Table(0, 0, -1, null),
+/* NxS[  17] */ new Table(17, 5, -1, new sbyte[] {17, -1, -1, 17, 17}),
+/* NxS[  18] */ new Table(18, 2, -1, new sbyte[] {19, 20}),
+/* NxS[  19] */ new Table(0, 0, -1, null),
 /* NxS[  20] */ new Table(0, 0, -1, null),
-/* NxS[  21] */ new Table(1, 6, -1, new sbyte[] {40, -1, 20, 21, 21, 21}),
+/* NxS[  21] */ new Table(3, 3, -1, new sbyte[] {22, 21, 22}),
 /* NxS[  22] */ new Table(0, 0, -1, null),
 /* NxS[  23] */ new Table(0, 0, -1, null),
-/* NxS[  24] */ new Table(5, 2, -1, new sbyte[] {25, 24}),
-/* NxS[  25] */ new Table(6, 1, -1, new sbyte[] {25}),
-/* NxS[  26] */ new Table(22, 9, 26, new sbyte[] {-1, 26, 26, 26, 26, 26, 
-          26, 26, -1}),
-/* NxS[  27] */ new Table(0, 0, -1, null),
-/* NxS[  28] */ new Table(22, 9, -1, new sbyte[] {30, -1, -1, -1, -1, -1, 
-          -1, -1, 29}),
+/* NxS[  24] */ new Table(0, 0, -1, null),
+/* NxS[  25] */ new Table(22, 8, 25, new sbyte[] {-1, 25, 25, 25, 25, 25, 
+          25, -1}),
+/* NxS[  26] */ new Table(0, 0, -1, null),
+/* NxS[  27] */ new Table(22, 8, -1, new sbyte[] {29, -1, -1, -1, -1, -1, 
+          -1, 28}),
+/* NxS[  28] */ new Table(0, 0, -1, null),
 /* NxS[  29] */ new Table(0, 0, -1, null),
 /* NxS[  30] */ new Table(0, 0, -1, null),
 /* NxS[  31] */ new Table(0, 0, -1, null),
@@ -169,19 +165,17 @@ int nesting = 0;
 /* NxS[  33] */ new Table(0, 0, -1, null),
 /* NxS[  34] */ new Table(0, 0, -1, null),
 /* NxS[  35] */ new Table(0, 0, -1, null),
-/* NxS[  36] */ new Table(0, 0, -1, null),
-/* NxS[  37] */ new Table(19, 1, -1, new sbyte[] {38}),
-/* NxS[  38] */ new Table(0, 0, -1, null),
-/* NxS[  39] */ new Table(7, 19, 3, new sbyte[] {4, 5, 6, 7, 8, 9, 
-          10, 11, 12, 13, 14, 15, 16, 15, 15, 1, 1, 2, 1}),
-/* NxS[  40] */ new Table(1, 6, -1, new sbyte[] {40, -1, 20, 21, 21, 21}),
-/* NxS[  41] */ new Table(6, 1, -1, new sbyte[] {25}),
-/* NxS[  42] */ new Table(22, 9, 26, new sbyte[] {28, 26, 26, 26, 26, 26, 
-          26, 26, 27}),
-/* NxS[  43] */ new Table(16, 10, 31, new sbyte[] {33, 31, 31, 31, 31, 31, 
-          31, 31, 31, 32}),
-/* NxS[  44] */ new Table(18, 4, 34, new sbyte[] {35, 34, 34, 35}),
-/* NxS[  45] */ new Table(3, 1, 36, new sbyte[] {37}),
+/* NxS[  36] */ new Table(18, 1, -1, new sbyte[] {37}),
+/* NxS[  37] */ new Table(0, 0, -1, null),
+/* NxS[  38] */ new Table(22, 21, 17, new sbyte[] {1, 1, 2, 1, 3, 4, 
+          5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 1}),
+/* NxS[  39] */ new Table(4, 1, -1, new sbyte[] {21}),
+/* NxS[  40] */ new Table(22, 8, 25, new sbyte[] {27, 25, 25, 25, 25, 25, 
+          25, 26}),
+/* NxS[  41] */ new Table(15, 11, 30, new sbyte[] {32, 30, 30, 30, 30, 30, 
+          30, 30, 30, 30, 31}),
+/* NxS[  42] */ new Table(17, 5, 33, new sbyte[] {34, 33, 33, 33, 34}),
+/* NxS[  43] */ new Table(19, 1, 35, new sbyte[] {36}),
     };
 
 int NextState() {
@@ -510,75 +504,73 @@ int NextState() {
             break;
         case 1:
         case 2:
-        case 16:
+        case 5:
+        case 18:
 RaiseUnexpectedCharError(yytext);
             break;
         case 3:
-        case 19:
+        case 4:
+        case 21:
+        case 22:
 return (int) MkId(yytext);
             break;
-        case 4:
+        case 6:
 BEGIN(QSTRING); BuilderInit(); BuilderAppend();
             break;
-        case 5:
+        case 7:
 return (int)DotTokenKind.ListStart;
             break;
-        case 6:
+        case 8:
 return (int)DotTokenKind.ListEnd;
             break;
-        case 7:
+        case 9:
 return (int)DotTokenKind.ScopeStart;
             break;
-        case 8:
+        case 10:
 return (int)DotTokenKind.ScopeEnd;
             break;
-        case 9:
+        case 11:
 return (int)DotTokenKind.Comma;
             break;
-        case 10:
+        case 12:
 return (int)DotTokenKind.Semicolon;
             break;
-        case 11:
+        case 13:
 return (int)DotTokenKind.Colon;
             break;
-        case 12:
+        case 14:
 return (int)DotTokenKind.Equal;
             break;
-        case 13:
+        case 15:
 BEGIN(HTML); nesting = 1; BuilderInit(); BuilderAppend();
             break;
-        case 14:
+        case 16:
 BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend();
             break;
-        case 15:
+        case 17:
 return (int)DotTokenKind.Whitespace;
             break;
-        case 17:
-BEGIN(MLINECOMMENT); BuilderInit(); BuilderAppend();
-            break;
-        case 18:
+        case 19:
 BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend();
             break;
         case 20:
-        case 21:
-return (int) MkId(yytext);
-            break;
-        case 22:
-return (int) DotTokenKind.Arrow;
+BEGIN(MLINECOMMENT); BuilderInit(); BuilderAppend();
             break;
         case 23:
 return (int) DotTokenKind.Arrow;
             break;
         case 24:
-        case 25:
-return (int) DotTokenKind.Id;
+return (int) DotTokenKind.Arrow;
             break;
-        case 26:
-        case 28:
+        case 25:
+        case 27:
 BuilderAppend();
             break;
-        case 27:
+        case 26:
 BEGIN(INITIAL); BuilderAppend(); tokTxt = BuilderBuild(); return (int)DotTokenKind.Id;
+            break;
+        case 28:
+BuilderAppend();
             break;
         case 29:
 BuilderAppend();
@@ -587,9 +579,6 @@ BuilderAppend();
 BuilderAppend();
             break;
         case 31:
-BuilderAppend();
-            break;
-        case 32:
 nesting--; 
                      BuilderAppend();
                      if (nesting == 0) {
@@ -598,21 +587,21 @@ nesting--;
                        return (int)DotTokenKind.Id;
                      }
             break;
-        case 33:
+        case 32:
 nesting++; 
                      BuilderAppend();
             break;
-        case 34:
+        case 33:
 BuilderAppend();
             break;
-        case 35:
+        case 34:
 _yytrunc(1); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKind.Comment;
             break;
+        case 35:
         case 36:
-        case 37:
 BuilderAppend();
             break;
-        case 38:
+        case 37:
 BuilderAppend(); tokTxt = BuilderBuild(); BEGIN(INITIAL); return (int)DotTokenKind.MultilineComment;
             break;
         default:

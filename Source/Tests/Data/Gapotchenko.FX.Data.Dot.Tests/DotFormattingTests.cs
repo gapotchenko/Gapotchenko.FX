@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Data.Dot.Tests
 
             var actualText = Apply(
                 text,
-                dom => dom.Root.Accept(new TerminatorCleaner()));
+                dom => dom.Root!.Accept(new TerminatorCleaner()));
 
             var expectedText = @"digraph{abra cadabra[attr1=val1 attr2=val2]c->{a b}}";
             Assert.AreEqual(expectedText, actualText);
@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Data.Dot.Tests
 
             var actualText = Apply(
                 text,
-                dom => dom.Root.Accept(new WhitespaceCleaner()));
+                dom => dom.Root!.Accept(new WhitespaceCleaner()));
 
             var expectedText = "// Comment\r\ndigraph{}";
             Assert.AreEqual(expectedText, actualText);

@@ -13,11 +13,13 @@
 
 %}
 
-alpha [a-zA-Z]
-alphaplus [a-zA-Z0-9\-\200-\377\_!\.\'\?]
-alphaplain [a-zA-Z0-9\200-\377\_*!\.\'\?]
-num [\-]?(\.([0-9]+)|([0-9]+)(\.([0-9]*))?)
-whitespace [ \t\r\f\v\n]
+NonASCII [^\0-\177]
+Letter   [A-Za-z_]{+}[[:NonASCII:]]
+Digit	 [0-9]
+Name	 {Letter}({Letter}|{Digit})*
+Number	 [\-]?(({Digit}+(\.{Digit}*)?)|(\.{Digit}+))(\.|{Letter})?
+Id		 ({Name}|{Number})
+Whitespace [ \t\r\f\v\n]
 
 %x QSTRING
 %x HTML
@@ -29,9 +31,7 @@ whitespace [ \t\r\f\v\n]
 // =============================================================
 
 \-\>               { return (int) DotTokenKind.Arrow; }
-{alphaplain}{alphaplain}* { return (int) MkId(yytext); }
-{alphaplain}{alphaplus}*{alphaplain} { return (int) MkId(yytext); }
-{num}              { return (int) DotTokenKind.Id; }
+{Id}               { return (int) MkId(yytext); }
 \-\-               { return (int) DotTokenKind.Arrow; }
 \"                 { BEGIN(QSTRING); BuilderInit(); BuilderAppend(); }
 \[                 { return (int)DotTokenKind.ListStart; }
@@ -44,7 +44,7 @@ whitespace [ \t\r\f\v\n]
 \=                 { return (int)DotTokenKind.Equal; }
 \<                 { BEGIN(HTML); nesting = 1; BuilderInit(); BuilderAppend(); }
 \#                 { BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend(); }
-{whitespace}+      { return (int)DotTokenKind.Whitespace; }
+{Whitespace}+      { return (int)DotTokenKind.Whitespace; }
 \/\/               { BEGIN(LINECOMMENT); BuilderInit(); BuilderAppend(); } 
 \/\*               { BEGIN(MLINECOMMENT); BuilderInit(); BuilderAppend(); }
 .                  { RaiseUnexpectedCharError(yytext); }
