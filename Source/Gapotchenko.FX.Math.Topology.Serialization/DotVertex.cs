@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
         /// <param name="attributes">Vertex attributes.</param>
         public DotVertex(
             string? identifier,
-            IReadOnlyDictionary<string, string>? attributes)
+            IReadOnlyDictionary<string, string>? attributes = default)
         {
             Identifier = identifier;
             Attributes = attributes ?? _noAttributes;
