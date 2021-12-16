@@ -268,7 +268,7 @@ namespace Gapotchenko.FX.Math.Topology
         bool HasTransitivePath(T from, T to) => new ReachibilityTraverser(this, to, false).CanBeReachedFrom(from);
 
         /// <inheritdoc/>
-        public bool ContainsPath(T from, T to) => Edges.Contains(from, to) || HasTransitivePath(from, to);
+        public bool HasPath(T from, T to) => Edges.Contains(from, to) || HasTransitivePath(from, to);
 
         /// <inheritdoc/>
         public void Clear()

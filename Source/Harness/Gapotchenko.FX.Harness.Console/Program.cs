@@ -87,10 +87,10 @@ namespace Gapotchenko.FX.Harness.Console
             var g = new Graph<int>();
             g.Edges.Add(1, 2);
             g.Vertices.Add(3);
-           
+
             foreach (var i in g.Vertices)
             {
-            }            
+            }
 
             Console.WriteLine(g.ToString("D"));
 

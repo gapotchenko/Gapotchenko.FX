@@ -48,7 +48,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="from">The source vertex.</param>
         /// <param name="to">The destination vertex.</param>
         /// <returns><c>true</c> when the specified source vertex can reach the target; otherwise, <c>false</c>.</returns>
-        bool ContainsPath(T from, T to);
+        bool HasPath(T from, T to);
 
         /// <summary>
         /// Gets a transposition of the current graph by reversing its edge directions.
@@ -82,7 +82,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="other">The graph to compare to the current one.</param>
         /// <returns><see langword="true" /> if the current graph is a vertex-induced subgraph of other; otherwise <see langword="false" />.</returns>
         /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
-        bool IsInducedSubgraphOf(IReadOnlyGraph<T> other);
+        bool IsVertexInducedSubgraphOf(IReadOnlyGraph<T> other);
 
         /// <summary>
         /// Determines whether the current graph is a vertex-induced supergraph of a specified graph.
@@ -90,7 +90,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="other">The graph to compare to the current one.</param>
         /// <returns><see langword="true" /> if the current graph is a vertex-induced supergraph of other; otherwise <see langword="false" />.</returns>
         /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
-        bool IsInducedSupergraphOf(IReadOnlyGraph<T> other);
+        bool IsVertexInducedSupergraphOf(IReadOnlyGraph<T> other);
 
         /// <summary>
         /// Determines whether the current graph is a proper (strict) subgraph of a specified graph.

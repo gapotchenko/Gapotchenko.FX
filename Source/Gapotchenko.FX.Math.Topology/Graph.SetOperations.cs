@@ -19,25 +19,24 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool IsInducedSubgraphOf(IReadOnlyGraph<T> other)
+        public bool IsVertexInducedSubgraphOf(IReadOnlyGraph<T> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
-            var vertices = Vertices;
-
             return
-                vertices.IsSubsetOf(other.Vertices) &&
+                Vertices.IsSubsetOf(other.Vertices) &&
                 InducedEdgesEqual(other.Edges);
         }
 
         /// <inheritdoc/>
-        public bool IsInducedSupergraphOf(IReadOnlyGraph<T> other)
+        public bool IsVertexInducedSupergraphOf(IReadOnlyGraph<T> other)
         {
-            var vertices = Vertices;
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
 
             return
-                vertices.IsSupersetOf(other.Vertices) &&
+                Vertices.IsSupersetOf(other.Vertices) &&
                 InducedEdgesEqual(other.Edges);
         }
 
