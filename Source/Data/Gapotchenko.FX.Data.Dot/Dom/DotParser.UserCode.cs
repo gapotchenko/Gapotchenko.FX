@@ -46,38 +46,20 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         protected override Rule[] Rules => rules;
         protected override string[] NonTerms => nonTerms;
 
-        readonly DotReader _scanner;
+        readonly TokenReader _tokenReader;
 
         public DotParser(DotReader scanner)
         {
-            _scanner = scanner;
+            _tokenReader = new TokenReader(scanner);
         }
 
         DotValueType _yylval;
-
-        DotToken _pendingToken;
 
         const DotTokenKind EOF = (DotTokenKind)DotTokens.EOF;
 
         protected override int yylex()
         {
-            static DotToken NextToken(DotReader scanner)
-            {
-                if (scanner.Read())
-                    return new DotToken(scanner.TokenType, scanner.Value);
-                else
-                    return new DotToken(EOF, string.Empty);
-            }
-
-            var token = _pendingToken;
-            if (token.Text is null)
-            {
-                token = NextToken(_scanner);
-            }
-            else
-            {
-                _pendingToken = default;
-            }
+            var token = _tokenReader.Next();
 
             List<DotTrivia>? leadingTrivia = null;
 
@@ -85,7 +67,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             {
                 var trivia = CreateTrivia(token);
                 (leadingTrivia ??= new()).Add(trivia);
-                token = NextToken(_scanner);
+                token = _tokenReader.Next();
             }
 
             if (leadingTrivia is not null)
@@ -96,12 +78,46 @@ namespace Gapotchenko.FX.Data.Dot.Dom
                 }
             }
 
-            _pendingToken = NextToken(_scanner);
-            while (IsTriviaToken(_pendingToken.Kind))
+            bool consumeTrailingTrivia = true;
+            while (consumeTrailingTrivia &&
+                IsTriviaToken(_tokenReader.Peek().Kind))
             {
-                var trivia = CreateTrivia(_pendingToken);
-                token.AddTrailingTrivia(trivia);
-                _pendingToken = NextToken(_scanner);
+                var nextToken = _tokenReader.Next();
+
+                int indexOfNewline;
+                if (nextToken.Kind is DotTokenKind.Whitespace &&
+                    (indexOfNewline = nextToken.Text.IndexOf('\n')) != -1)
+                {
+                    var isEndOfFile = _tokenReader.Peek(1).Kind is EOF;
+
+                    if (!isEndOfFile &&
+                        indexOfNewline != nextToken.Text.Length - 1)
+                    {
+                        // Split the trivia by a newline.
+
+                        var thisLineTrivia = new DotTrivia(
+                            nextToken.Kind,
+                            nextToken.Text.Substring(0, indexOfNewline + 1));
+                        token.AddTrailingTrivia(thisLineTrivia);
+
+                        var nextLineTrivia = new DotToken(
+                            nextToken.Kind,
+                            nextToken.Text.Substring(indexOfNewline + 1));
+
+                        _tokenReader.Push(nextLineTrivia);
+                    }
+                    else
+                    {
+                        // EOF token is absent in the tree, attach trivia to the current token.
+                        token.AddTrailingTrivia(CreateTrivia(nextToken));
+                    }
+
+                    break;
+                }
+                else
+                {
+                    token.AddTrailingTrivia(CreateTrivia(nextToken));
+                }
             }
 
             _yylval = new DotValueType
@@ -110,6 +126,55 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
 
             return MapToken(token.Kind);
+        }
+
+        sealed class TokenReader
+        {
+            public DotReader Scanner { get; }
+            readonly LinkedList<DotToken> _queue = new();
+
+            public TokenReader(DotReader scanner)
+            {
+                Scanner = scanner;
+            }
+
+            public DotToken Next()
+            {
+                if (_queue.Count > 0)
+                {
+                    var first = _queue.First.Value;
+                    _queue.RemoveFirst();
+                    return first;
+                }
+
+                return ReadNext();
+            }
+
+            DotToken ReadNext()
+            {
+                if (Scanner.Read())
+                    return new DotToken(Scanner.TokenType, Scanner.Value);
+                else
+                    return new DotToken(EOF, string.Empty);
+            }
+
+            public DotToken Peek(int depth = 0)
+            {
+                while (_queue.Count - depth < 1)
+                {
+                    _queue.AddLast(ReadNext());
+                }
+
+                if (depth is 0)
+                    return _queue.First.Value;
+                else
+                    return _queue.ElementAt(depth);
+            }
+
+            public void Push(DotToken token)
+            {
+                _queue.AddFirst(token);
+            }
         }
 
         static int MapToken(DotTokenKind token) => token switch
@@ -146,7 +211,7 @@ namespace Gapotchenko.FX.Data.Dot.Dom
 
         protected override void yyerror(string message)
         {
-            var (line, col) = _scanner.Location;
+            var (line, col) = _tokenReader.Scanner.Location;
             throw new Exception($"Cannot parse document. {message} at line {line} column {col}.");
         }
 
