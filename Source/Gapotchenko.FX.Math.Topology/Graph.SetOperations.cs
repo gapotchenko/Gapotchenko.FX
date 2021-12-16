@@ -19,34 +19,6 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool IsVertexInducedSubgraphOf(IReadOnlyGraph<T> other)
-        {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
-
-            return
-                Vertices.IsSubsetOf(other.Vertices) &&
-                InducedEdgesEqual(other.Edges);
-        }
-
-        /// <inheritdoc/>
-        public bool IsVertexInducedSupergraphOf(IReadOnlyGraph<T> other)
-        {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
-
-            return
-                Vertices.IsSupersetOf(other.Vertices) &&
-                InducedEdgesEqual(other.Edges);
-        }
-
-        bool InducedEdgesEqual(IEnumerable<GraphEdge<T>> others)
-        {
-            var vertices = Vertices;
-            return Edges.SetEquals(others.Where(e => vertices.Contains(e.From) && vertices.Contains(e.To)));
-        }
-
-        /// <inheritdoc/>
         public bool IsProperSubgraphOf(IReadOnlyGraph<T> other)
         {
             if (other == null)
@@ -90,6 +62,36 @@ namespace Gapotchenko.FX.Math.Topology
                 other == this ||
                 Vertices.IsSupersetOf(other.Vertices) &&
                 Edges.IsSupersetOf(other.Edges);
+        }
+
+        /// <inheritdoc/>
+        public bool IsVertexInducedSubgraphOf(IReadOnlyGraph<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            return
+                other == this ||
+                Vertices.IsSubsetOf(other.Vertices) &&
+                VertexInducedEdgesEqual(this, other);
+        }
+
+        /// <inheritdoc/>
+        public bool IsVertexInducedSupergraphOf(IReadOnlyGraph<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            return
+                other == this ||
+                Vertices.IsSupersetOf(other.Vertices) &&
+                VertexInducedEdgesEqual(other, this);
+        }
+
+        static bool VertexInducedEdgesEqual(IReadOnlyGraph<T> a, IReadOnlyGraph<T> b)
+        {
+            var aVertices = a.Vertices;
+            return a.Edges.SetEquals(b.Edges.Where(e => aVertices.Contains(e.From) && aVertices.Contains(e.To)));
         }
     }
 }

@@ -77,22 +77,6 @@ namespace Gapotchenko.FX.Math.Topology
         bool GraphEquals(IReadOnlyGraph<T> other);
 
         /// <summary>
-        /// Determines whether the current graph is a vertex-induced subgraph of a specified graph.
-        /// </summary>
-        /// <param name="other">The graph to compare to the current one.</param>
-        /// <returns><see langword="true" /> if the current graph is a vertex-induced subgraph of other; otherwise <see langword="false" />.</returns>
-        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
-        bool IsVertexInducedSubgraphOf(IReadOnlyGraph<T> other);
-
-        /// <summary>
-        /// Determines whether the current graph is a vertex-induced supergraph of a specified graph.
-        /// </summary>
-        /// <param name="other">The graph to compare to the current one.</param>
-        /// <returns><see langword="true" /> if the current graph is a vertex-induced supergraph of other; otherwise <see langword="false" />.</returns>
-        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
-        bool IsVertexInducedSupergraphOf(IReadOnlyGraph<T> other);
-
-        /// <summary>
         /// Determines whether the current graph is a proper (strict) subgraph of a specified graph.
         /// </summary>
         /// <param name="other">The graph to compare to the current one.</param>
@@ -123,5 +107,21 @@ namespace Gapotchenko.FX.Math.Topology
         /// <returns><see langword="true" /> if the current graph is a supergraph of other; otherwise <see langword="false" />.</returns>
         /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
         bool IsSupergraphOf(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Determines whether the current graph is a vertex-induced subgraph of a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true" /> if the current graph is a vertex-induced subgraph of other; otherwise <see langword="false" />.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+        bool IsVertexInducedSubgraphOf(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Determines whether the current graph is a vertex-induced supergraph of a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true" /> if the current graph is a vertex-induced supergraph of other; otherwise <see langword="false" />.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+        bool IsVertexInducedSupergraphOf(IReadOnlyGraph<T> other);
     }
 }
