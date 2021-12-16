@@ -291,6 +291,8 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { (1, 2), (2, 3) }
             };
 
+            Assert.IsTrue(g.GraphEquals(g));
+
             IReadOnlyGraph<int> g0 = g.Clone();
             Assert.IsTrue(g.GraphEquals(g0));
 
@@ -338,7 +340,9 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { ('u', 'v') }
             };
 
-            var h = new Graph<char>()
+            Assert.IsFalse(g.IsProperSubgraphOf(g));
+
+            IReadOnlyGraph<char> h = new Graph<char>()
             {
                 Vertices = { 'w' },
                 Edges = { ('u', 'v') }
@@ -384,6 +388,62 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
+        public void Graph_IsProperSupergraphOf()
+        {
+            var g = new Graph<char>()
+            {
+                Vertices = { 'w' },
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsFalse(g.IsProperSupergraphOf(g));
+
+            IReadOnlyGraph<char> h = new Graph<char>()
+            {
+                Vertices = { 'w' },
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsFalse(g.IsProperSupergraphOf(h));
+
+            h = new Graph<char>()
+            {
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsTrue(g.IsProperSupergraphOf(h));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v', 'w' },
+            };
+
+            Assert.IsTrue(g.IsProperSupergraphOf(h));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v' },
+            };
+
+            Assert.IsTrue(g.IsProperSupergraphOf(h));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'u', 'v', 'x' },
+            };
+
+            Assert.IsFalse(g.IsProperSupergraphOf(h));
+
+            h = new Graph<char>()
+            {
+                Vertices = { 'w', 'x' },
+                Edges = { ('u', 'v') }
+            };
+
+            Assert.IsTrue(h.IsProperSupergraphOf(g));
+        }
+
+        [TestMethod]
         public void Graph_IsSupergraphOf()
         {
             var g = new Graph<char>()
@@ -392,7 +452,9 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { ('u', 'v') }
             };
 
-            var h = new Graph<char>()
+            Assert.IsTrue(g.IsSupergraphOf(g));
+
+            IReadOnlyGraph<char> h = new Graph<char>()
             {
                 Vertices = { 'w' },
                 Edges = { ('u', 'v') }
@@ -446,7 +508,9 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { ('u', 'v') }
             };
 
-            var h = new Graph<char>()
+            Assert.IsTrue(g.IsSubgraphOf(g));
+
+            IReadOnlyGraph<char> h = new Graph<char>()
             {
                 Vertices = { 'w' },
                 Edges = { ('u', 'v') }

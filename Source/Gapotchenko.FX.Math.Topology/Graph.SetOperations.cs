@@ -58,14 +58,10 @@ namespace Gapotchenko.FX.Math.Topology
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
-            if (other == this)
-                return true;
-
-            var edges = Edges;
-
             return
-                Vertices.IsSubsetOf(other.Vertices) ||
-                edges.Count != 0 && edges.IsSubsetOf(other.Edges);
+                other == this ||
+                Vertices.IsSubsetOf(other.Vertices) &&
+                Edges.IsSubsetOf(other.Edges);
         }
 
         /// <inheritdoc/>
@@ -74,14 +70,10 @@ namespace Gapotchenko.FX.Math.Topology
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
-            if (other == this)
-                return true;
-
-            var otherEdges = other.Edges;
-
             return
-                Vertices.IsSupersetOf(other.Vertices) ||
-                otherEdges.Count != 0 && Edges.IsSupersetOf(otherEdges);
+                other == this ||
+                Vertices.IsSupersetOf(other.Vertices) &&
+                Edges.IsSupersetOf(other.Edges);
         }
     }
 }
