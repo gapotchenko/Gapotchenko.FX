@@ -26,6 +26,18 @@ namespace Gapotchenko.FX.Math.Topology
         IReadOnlySet<GraphEdge<T>> Edges { get; }
 
         /// <summary>
+        /// Gets the vertices adjacent to a specified vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex to find the adjacent vertices for.</param>
+        /// <returns>Sequence of vertices adjacent to the specified <paramref name="vertex"/>.</returns>
+        IEnumerable<T> VerticesAdjacentTo(T vertex);
+
+        /// <summary>
+        /// Determines whether the current graph contains a cycle.
+        /// </summary>
+        bool IsCyclic { get; }
+
+        /// <summary>
         /// <para>
         /// Gets a value indicating whether there is a path from a specified source vertex to a destination.
         /// </para>
@@ -37,18 +49,6 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="to">The destination vertex.</param>
         /// <returns><c>true</c> when the specified source vertex can reach the target; otherwise, <c>false</c>.</returns>
         bool ContainsPath(T from, T to);
-
-        /// <summary>
-        /// Gets the vertices adjacent to a specified vertex.
-        /// </summary>
-        /// <param name="vertex">The vertex to find the adjacent vertices for.</param>
-        /// <returns>Sequence of vertices adjacent to the specified <paramref name="vertex"/>.</returns>
-        IEnumerable<T> VerticesAdjacentTo(T vertex);
-
-        /// <summary>
-        /// Determines whether the current graph contains a cycle.
-        /// </summary>
-        bool IsCyclic { get; }
 
         /// <summary>
         /// Gets a transposition of the current graph by reversing its edge directions.
@@ -77,7 +77,7 @@ namespace Gapotchenko.FX.Math.Topology
         bool GraphEquals(IReadOnlyGraph<T> other);
 
         /// <summary>
-        /// Determines whether the current graph is a vertex-induced subgraph of a specified one.
+        /// Determines whether the current graph is a vertex-induced subgraph of a specified graph.
         /// </summary>
         /// <param name="other">The graph to compare to the current one.</param>
         /// <returns><see langword="true" /> if the current graph is a vertex-induced subgraph of other; otherwise <see langword="false" />.</returns>
@@ -85,7 +85,15 @@ namespace Gapotchenko.FX.Math.Topology
         bool IsInducedSubgraphOf(IReadOnlyGraph<T> other);
 
         /// <summary>
-        /// Determines whether the current graph is a proper (strict) subgraph of a specified one.
+        /// Determines whether the current graph is a vertex-induced supergraph of a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true" /> if the current graph is a vertex-induced supergraph of other; otherwise <see langword="false" />.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+        bool IsInducedSupergraphOf(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Determines whether the current graph is a proper (strict) subgraph of a specified graph.
         /// </summary>
         /// <param name="other">The graph to compare to the current one.</param>
         /// <returns><see langword="true" /> if the current graph is a proper subgraph of other; otherwise <see langword="false" />.</returns>
@@ -93,7 +101,7 @@ namespace Gapotchenko.FX.Math.Topology
         bool IsProperSubgraphOf(IReadOnlyGraph<T> other);
 
         /// <summary>
-        /// Determines whether the current graph is a proper (strict) supergraph of a specified one.
+        /// Determines whether the current graph is a proper (strict) supergraph of a specified graph.
         /// </summary>
         /// <param name="other">The graph to compare to the current one.</param>
         /// <returns><see langword="true" /> if the current graph is a proper supergraph of other; otherwise <see langword="false" />.</returns>
@@ -101,7 +109,7 @@ namespace Gapotchenko.FX.Math.Topology
         bool IsProperSupergraphOf(IReadOnlyGraph<T> other);
 
         /// <summary>
-        /// Determines whether the current graph is a subgraph of a specified one.
+        /// Determines whether the current graph is a subgraph of a specified graph.
         /// </summary>
         /// <param name="other">The graph to compare to the current one.</param>
         /// <returns><see langword="true" /> if the current graph is a subgraph of other; otherwise <see langword="false" />.</returns>
@@ -109,7 +117,7 @@ namespace Gapotchenko.FX.Math.Topology
         bool IsSubgraphOf(IReadOnlyGraph<T> other);
 
         /// <summary>
-        /// Determines whether the current graph is a supergraph of a specified one.
+        /// Determines whether the current graph is a supergraph of a specified graph.
         /// </summary>
         /// <param name="other">The graph to compare to the current one.</param>
         /// <returns><see langword="true" /> if the current graph is a supergraph of other; otherwise <see langword="false" />.</returns>
