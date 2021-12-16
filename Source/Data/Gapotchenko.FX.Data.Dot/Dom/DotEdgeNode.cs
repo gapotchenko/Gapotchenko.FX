@@ -30,6 +30,12 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             };
 
         /// <inheritdoc />
-        public override void Accept(DotDomVisitor visitor) => visitor.VisitDotEdgeNode(this);
+        public override void Accept(DotDomVisitor visitor)
+        {
+            if (visitor is null)
+                throw new ArgumentNullException(nameof(visitor));
+
+            visitor.VisitDotEdgeNode(this);
+        }
     }
 }

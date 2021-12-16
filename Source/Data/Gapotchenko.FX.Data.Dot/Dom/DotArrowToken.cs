@@ -35,15 +35,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             set => ArrowKindToString(value);
         }
 
-        static DotArrowKind ParseArrowKind(string text)
-        {
-            return text switch
+        static DotArrowKind ParseArrowKind(string text) =>
+            text switch
             {
                 "->" => DotArrowKind.LeftToRight,
                 "--" => DotArrowKind.Bidirectional,
                 _ => throw new ArgumentOutOfRangeException(nameof(text), $"Unknown arrow kind: {text}.")
             };
-        }
 
         static string ArrowKindToString(DotArrowKind kind) =>
             kind switch

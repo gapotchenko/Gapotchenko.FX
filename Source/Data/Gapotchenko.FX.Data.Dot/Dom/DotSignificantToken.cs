@@ -33,10 +33,10 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        List<DotTrivia>? _leadingTrivia;
+        NotNullList<DotTrivia>? _leadingTrivia;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        List<DotTrivia>? _trailingTrivia;
+        NotNullList<DotTrivia>? _trailingTrivia;
 
         /// <inheritdoc/>
         public IList<DotTrivia> LeadingTrivia => _leadingTrivia ??= new();

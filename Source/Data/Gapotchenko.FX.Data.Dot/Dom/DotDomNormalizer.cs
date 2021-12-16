@@ -1,5 +1,6 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Data.Dot.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,8 +14,8 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         public DotDomNormalizer(string indentation, string eol)
             : base(DotDomWalkerDepth.NodesAndTokens)
         {
-            _indentation = indentation;
-            _eol = eol;
+            _indentation = indentation ?? throw new ArgumentNullException(nameof(indentation));
+            _eol = eol ?? throw new ArgumentNullException(nameof(eol));
         }
 
         int _indents = 0;

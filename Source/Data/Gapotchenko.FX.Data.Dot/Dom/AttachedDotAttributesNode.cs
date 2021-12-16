@@ -31,6 +31,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <inheritdoc />
         public override void Accept(DotDomVisitor visitor)
         {
+            if (visitor is null)
+                throw new ArgumentNullException(nameof(visitor));
+
             visitor.VisitAttachedDotAttributesNode(this);
         }
     }

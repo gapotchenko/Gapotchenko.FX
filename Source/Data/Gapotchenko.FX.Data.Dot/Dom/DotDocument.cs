@@ -18,6 +18,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// </summary>
         public static DotDocument Load(DotReader reader)
         {
+            if (reader is null)
+                throw new ArgumentNullException(nameof(reader));
+
             var parser = new DotParser(reader);
             parser.Parse();
             var root = parser.Root;
@@ -36,6 +39,9 @@ namespace Gapotchenko.FX.Data.Dot.Dom
         /// <param name="writer"></param>
         public void Save(DotWriter writer)
         {
+            if (writer is null)
+                throw new ArgumentNullException(nameof(writer));
+
             if (Root is not null)
             {
                 var domWriter = new DotDomWriter(writer);

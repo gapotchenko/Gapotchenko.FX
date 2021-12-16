@@ -36,6 +36,9 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         /// <param name="value">Token value.</param>
         public void Write(DotTokenKind token, string value)
         {
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
             _writer.Write(value);
         }
 

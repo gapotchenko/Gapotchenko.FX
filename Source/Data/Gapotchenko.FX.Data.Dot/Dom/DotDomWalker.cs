@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Data.Dot.Dom
+﻿using System;
+
+namespace Gapotchenko.FX.Data.Dot.Dom
 {
     /// <summary>
     /// Represents a <see cref="DotDomVisitor"/> that descends into an entire <see cref="DotNode"/> hierarchy
@@ -41,6 +43,9 @@
         /// <inheritdoc/>
         protected override void DefaultVisit(DotNode node)
         {
+            if (node is null)
+                throw new ArgumentNullException(nameof(node));
+
             var childCnt = node.ChildNodesAndTokens.Count;
             int i = 0;
 
@@ -70,6 +75,9 @@
 
         public virtual void VisitLeadingTrivia(DotSignificantToken token)
         {
+            if (token is null)
+                throw new ArgumentNullException(nameof(token));
+
             if (token.HasLeadingTrivia)
             {
                 foreach (var tr in token.LeadingTrivia)
@@ -81,6 +89,9 @@
 
         public virtual void VisitTrailingTrivia(DotSignificantToken token)
         {
+            if (token is null)
+                throw new ArgumentNullException(nameof(token));
+
             if (token.HasTrailingTrivia)
             {
                 foreach (var tr in token.TrailingTrivia)

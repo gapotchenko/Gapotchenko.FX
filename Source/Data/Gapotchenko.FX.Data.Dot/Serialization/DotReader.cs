@@ -19,6 +19,7 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         {
             if (reader is null)
                 throw new ArgumentNullException(nameof(reader));
+
             _lexer = new DotLex(reader);
         }
 
@@ -59,6 +60,9 @@ namespace Gapotchenko.FX.Data.Dot.Serialization
         /// </param>
         public static DotReader Create(TextReader input)
         {
+            if (input is null)
+                throw new ArgumentNullException(nameof(input));
+
             return new DotReader(input);
         }
 

@@ -1,5 +1,6 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Data.Dot.Serialization;
+using System;
 
 namespace Gapotchenko.FX.Data.Dot.Dom
 {
@@ -20,6 +21,13 @@ namespace Gapotchenko.FX.Data.Dot.Dom
             string eol = DefaultEOL)
             where TNode : DotNode
         {
+            if (node is null)
+                throw new ArgumentNullException(nameof(node));
+            if (indentation is null)
+                throw new ArgumentNullException(nameof(indentation));
+            if (eol is null)
+                throw new ArgumentNullException(nameof(eol));
+
             node.Accept(new WhitespaceEraser());
             node.Accept(new DotDomNormalizer(indentation, eol));
         }
