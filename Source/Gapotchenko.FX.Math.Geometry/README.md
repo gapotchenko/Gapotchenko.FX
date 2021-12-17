@@ -20,7 +20,7 @@ Edit distance is a string metric reflecting the minimum number of operations req
 This table compares edit distances provided by `StringMetrics` class:
 
 |                                           |      Insertion     |      Deletion      |    Substitution    |    Transposition   |
-|:-----------------------------------------:|:------------------:|:------------------:|:------------------:|:------------------:|
+|:------------------------------------------|:------------------:|:------------------:|:------------------:|:------------------:|
 | Levenshtein distance                      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
 | Longest common subsequence (LCS) distance | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
 | Hamming distance                          |                    |                    | :heavy_check_mark: |                    |
