@@ -13,6 +13,25 @@ The notion of a string is purely abstract.
 So it is not limited by the characters like `System.String`; it can be a string of anything.
 In this way, `Gapotchenko.FX.Math.Geometry` module tries to achieve the right degree of abstraction desirable for a versatile math framework.
 
+### Edit Distance
+
+Edit distance is a string metric reflecting the minimum number of operations required to transform one string into the other. Different types of edit distance allow different sets of string operations.
+
+This table compares edit distances provided by `StringMetrics` class:
+
+|                                           |      Insertion     |      Deletion      |    Substitution    |    Transposition   |
+|:-----------------------------------------:|:------------------:|:------------------:|:------------------:|:------------------:|
+| Levenshtein distance                      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
+| Longest common subsequence (LCS) distance | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
+| Hamming distance                          |                    |                    | :heavy_check_mark: |                    |
+| Damerau–Levenshtein distance              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Optimal string alignment (OSA) distance   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Jaro distance                             |                    |                    |                    | :heavy_check_mark: |
+
+Despite optimal string alignment distance and Damerau–Levenshtein distance allow the same sets of operations, the first one computes the number of edit operations needed to make the strings equal under the condition that no substring is edited more than once, whereas the second one presents no such restriction at the cost of complexity.
+
+Although the Jaro distance is often referred to as an edit distance metric, its value does not represent a number of edit operations and varies between 0 and 1 such that 0 is an exact match and 1 equates to no similarities.
+
 ### StringMetrics.LevenshteinDistance
 
 `StringMetrics.LevenshteinDistance` method allows to calculate the Levenshtein distance between two strings of symbols.
@@ -23,6 +42,66 @@ Consider the example:
 using Gapotchenko.FX.Math.Geometry;
 
 Console.WriteLine("Distance is {0}.", StringMetrics.LevenshteinDistance("ABC", "BAC"));  // distance = 2
+```
+
+### StringMetrics.LcsDistance
+
+`StringMetrics.LcsDistance` method allows to calculate the longest common subsequence (LCS) distance between two strings of symbols.
+
+Consider the example:
+
+```csharp
+using Gapotchenko.FX.Math.Geometry;
+
+Console.WriteLine("Distance is {0}.", StringMetrics.LcsDistance("ABC", "BAC"));  // distance = 2
+```
+
+### StringMetrics.HammingDistance
+
+`StringMetrics.HammingDistance` method allows to calculate the Hamming distance between two strings of symbols.
+
+Consider the example:
+
+```csharp
+using Gapotchenko.FX.Math.Geometry;
+
+Console.WriteLine("Distance is {0}.", StringMetrics.HammingDistance("ABC", "BAC"));  // distance = 2
+```
+
+### StringMetrics.DamerauLevenshteinDistance
+
+`StringMetrics.DamerauLevenshteinDistance` method allows to calculate the Damerau–Levenshtein distance between two strings of symbols.
+
+Consider the example:
+
+```csharp
+using Gapotchenko.FX.Math.Geometry;
+
+Console.WriteLine("Distance is {0}.", StringMetrics.DamerauLevenshteinDistance("ABC", "BAC"));  // distance = 1
+```
+
+### StringMetrics.OsaDistance
+
+`StringMetrics.OsaDistance` method allows to calculate the optimal string alignment (OSA) distance between two strings of symbols.
+
+Consider the example:
+
+```csharp
+using Gapotchenko.FX.Math.Geometry;
+
+Console.WriteLine("Distance is {0}.", StringMetrics.OsaDistance("ABC", "BAC"));  // distance = 1
+```
+
+### StringMetrics.JaroDistance
+
+`StringMetrics.JaroDistance` method allows to calculate the Jaro distance between two strings of symbols.
+
+Consider the example:
+
+```csharp
+using Gapotchenko.FX.Math.Geometry;
+
+Console.WriteLine("Distance is {0.00}.", StringMetrics.JaroDistance("ABC", "BAC"));  // distance = 0.44
 ```
 
 ## Usage
