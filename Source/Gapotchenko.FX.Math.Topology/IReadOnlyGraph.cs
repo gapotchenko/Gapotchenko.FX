@@ -47,8 +47,37 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <param name="from">The source vertex.</param>
         /// <param name="to">The destination vertex.</param>
-        /// <returns><c>true</c> when the specified source vertex can reach the target; otherwise, <c>false</c>.</returns>
+        /// <returns><see langword="true"/> when the specified source vertex can reach the target; otherwise, <see langword="false"/>.</returns>
         bool HasPath(T from, T to);
+
+        /// <summary>
+        /// Determines whether the specified vertex is connected to another vertex by an edge.
+        /// </summary>
+        /// <param name="vertex">The vertex.</param>
+        /// <returns><see langword="true"/> when the specified vertex is connected to another vertex by an edge; otherwise, <see langword="false"/>.</returns>
+        bool IsVertexConnected(T vertex);
+
+        /// <summary>
+        /// Gets a vertex-induced subgraph of the current graph.
+        /// </summary>
+        /// <param name="vertices">The vertices to induce the subgraph from.</param>
+        /// <returns>The vertex-induced subgraph of the current graph.</returns>
+        IReadOnlyGraph<T> GetSubgraph(IEnumerable<T> vertices);
+
+        /// <summary>
+        /// Gets an edge-induced subgraph of the current graph.
+        /// </summary>
+        /// <param name="edges">The edges to induce the subgraph from.</param>
+        /// <returns>The edge-induced subgraph of the current graph.</returns>
+        IReadOnlyGraph<T> GetSubgraph(IEnumerable<GraphEdge<T>> edges);
+
+        /// <summary>
+        /// Gets an induced subgraph of the current graph.
+        /// </summary>
+        /// <param name="vertices">The vertices to induce the subgraph from.</param>
+        /// <param name="edges">The edges to induce the subgraph from.</param>
+        /// <returns>The induced subgraph of the current graph.</returns>
+        IReadOnlyGraph<T> GetSubgraph(IEnumerable<T> vertices, IEnumerable<GraphEdge<T>> edges);
 
         /// <summary>
         /// Gets a transposition of the current graph by reversing its edge directions.
@@ -75,6 +104,22 @@ namespace Gapotchenko.FX.Math.Topology
         /// <returns><see langword="true"/> if the current graph is equal to other; otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException">other is <see langword="null"/>.</exception>
         bool GraphEquals(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Determines whether the current graph is an edge-induced subgraph of a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true" /> if the current graph is an edge-induced subgraph of other; otherwise <see langword="false" />.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+        bool IsEdgeInducedSubgraphOf(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Determines whether the current graph is an edge-induced supergraph of a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true" /> if the current graph is an edge-induced supergraph of other; otherwise <see langword="false" />.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+        bool IsEdgeInducedSupergraphOf(IReadOnlyGraph<T> other);
 
         /// <summary>
         /// Determines whether the current graph is a proper (strict) subgraph of a specified graph.

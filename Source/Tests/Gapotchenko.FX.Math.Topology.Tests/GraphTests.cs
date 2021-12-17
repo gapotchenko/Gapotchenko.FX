@@ -620,5 +620,87 @@ namespace Gapotchenko.FX.Math.Topology.Tests
 
             Assert.IsTrue(g.IsVertexInducedSupergraphOf(h));
         }
+
+        [TestMethod]
+        public void Graph_IsEdgeInducedSubgraphOf()
+        {
+            var g = new Graph<char>
+            {
+                Edges = { ('a', 'b'), ('a', 'e'), ('b', 'c'), ('b', 'f'), ('c', 'e'), ('d', 'e'), ('e', 'f') }
+            };
+
+            Assert.IsTrue(g.IsEdgeInducedSubgraphOf(g));
+
+            IReadOnlyGraph<char> h = new Graph<char>
+            {
+                Vertices = { 'f' },
+                Edges = { ('a', 'b'), ('a', 'e') }
+            };
+
+            Assert.IsFalse(h.IsEdgeInducedSubgraphOf(g));
+
+            h = new Graph<char>
+            {
+                Edges = { ('a', 'b'), ('a', 'e'), ('b', 'f') }
+            };
+
+            Assert.IsTrue(h.IsEdgeInducedSubgraphOf(g));
+
+            h = new Graph<char>
+            {
+                Vertices = { 'd' },
+                Edges = { ('a', 'b'), ('a', 'e'), ('b', 'f') }
+            };
+
+            Assert.IsFalse(h.IsEdgeInducedSubgraphOf(g));
+
+            h = new Graph<char>
+            {
+                Edges = { ('d', 'e'), ('b', 'f'), ('a', 'b'), ('b', 'c') }
+            };
+
+            Assert.IsTrue(h.IsEdgeInducedSubgraphOf(g));
+        }
+
+        [TestMethod]
+        public void Graph_IsEdgeInducedSupergraphOf()
+        {
+            var g = new Graph<char>
+            {
+                Edges = { ('a', 'b'), ('a', 'e'), ('b', 'c'), ('b', 'f'), ('c', 'e'), ('d', 'e'), ('e', 'f') }
+            };
+
+            Assert.IsTrue(g.IsEdgeInducedSupergraphOf(g));
+
+            IReadOnlyGraph<char> h = new Graph<char>
+            {
+                Vertices = { 'f' },
+                Edges = { ('a', 'b'), ('a', 'e') }
+            };
+
+            Assert.IsFalse(g.IsEdgeInducedSupergraphOf(h));
+
+            h = new Graph<char>
+            {
+                Edges = { ('a', 'b'), ('a', 'e'), ('b', 'f') }
+            };
+
+            Assert.IsTrue(g.IsEdgeInducedSupergraphOf(h));
+
+            h = new Graph<char>
+            {
+                Vertices = { 'd' },
+                Edges = { ('a', 'b'), ('a', 'e'), ('b', 'f') }
+            };
+
+            Assert.IsFalse(g.IsEdgeInducedSupergraphOf(h));
+
+            h = new Graph<char>
+            {
+                Edges = { ('d', 'e'), ('b', 'f'), ('a', 'b'), ('b', 'c') }
+            };
+
+            Assert.IsTrue(g.IsEdgeInducedSupergraphOf(h));
+        }
     }
 }

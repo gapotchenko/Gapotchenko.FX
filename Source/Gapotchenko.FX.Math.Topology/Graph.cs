@@ -1,4 +1,5 @@
-﻿using Gapotchenko.FX.Linq;
+﻿using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -269,6 +270,30 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <inheritdoc/>
         public bool HasPath(T from, T to) => Edges.Contains(from, to) || HasTransitivePath(from, to);
+
+        /// <inheritdoc/>
+        public bool IsVertexConnected(T vertex)
+        {
+            var adjList = m_AdjacencyList;
+
+            if (adjList.TryGetValue(vertex, out var adjRow) &&
+                adjRow?.Count > 0)
+            {
+                return true;
+            }
+
+            foreach (var i in adjList)
+            {
+                adjRow = i.Value;
+                if (adjRow == null)
+                    continue;
+
+                if (adjRow.Contains(vertex))
+                    return true;
+            }
+
+            return false;
+        }
 
         /// <inheritdoc/>
         public void Clear()
