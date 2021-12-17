@@ -15,17 +15,20 @@ namespace Gapotchenko.FX.Math.Topology
                 if (adjRow == null)
                     continue;
 
-                var a = i.Key;
+                var from = i.Key;
 
-                var removeList = new List<T>();
+                List<T>? removeList = null;
 
-                foreach (var b in adjRow)
+                foreach (var to in adjRow)
                 {
-                    if (adjRow.Contains(b) && HasTransitivePath(a, b))
-                        removeList.Add(b);
+                    if (HasTransitivePath(from, to))
+                    {
+                        removeList ??= new List<T>();
+                        removeList.Add(to);
+                    }
                 }
 
-                if (removeList.Count != 0)
+                if (removeList != null)
                 {
                     adjRow.ExceptWith(removeList);
                     hasChanges = true;

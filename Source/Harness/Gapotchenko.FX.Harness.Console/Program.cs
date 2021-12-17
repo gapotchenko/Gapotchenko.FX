@@ -88,8 +88,6 @@ namespace Gapotchenko.FX.Harness.Console
             g.Edges.Add(1, 2);
             g.Vertices.Add(3);
 
-
-
             foreach (var i in g.Vertices)
             {
             }

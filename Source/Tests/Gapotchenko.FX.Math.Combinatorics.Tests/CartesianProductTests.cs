@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
             int cardinality = CartesianProduct.Cardinality(factors.Select(x => x.Length));
             Assert.AreEqual(l1 * l2, cardinality);
 
-            var p = CartesianProduct.Of(factors).AsReadOnly();
+            var p = CartesianProduct.Of(factors).AsReadOnlyList();
 
             Assert.AreEqual(cardinality, p.Count);
 
@@ -68,7 +68,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests
                     new int[l1] { 1, 2 },
                     new string[l2] { "A", "B", "C" },
                     ValueTuple.Create)
-                .AsReadOnly();
+                .AsReadOnlyList();
 
             Assert.AreEqual(cardinality, p.Count);
 

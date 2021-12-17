@@ -138,6 +138,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Topolog
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Geometry.Tests", "Tests\Gapotchenko.FX.Math.Geometry.Tests\Gapotchenko.FX.Math.Geometry.Tests.csproj", "{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Math.Topology.Tests", "Tests\Gapotchenko.FX.Math.Topology.Tests\Gapotchenko.FX.Math.Topology.Tests.csproj", "{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -288,6 +290,10 @@ Global
 		{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -341,6 +347,7 @@ Global
 		{BD33AE8B-1845-459E-8EA7-5793AEFF7102} = {9BF93356-2C42-4B31-AEB1-7E394D27F500}
 		{13237E5E-E6BD-4D3F-AB65-C3E2C3010EA9} = {8A1F0ADA-4897-47C7-96E2-E2941AF29C4E}
 		{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40} = {8A1F0ADA-4897-47C7-96E2-E2941AF29C4E}
+		{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F} = {8A1F0ADA-4897-47C7-96E2-E2941AF29C4E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}

@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
     {
         static IEnumerable<IRow<T>> Multiply<T>(IEnumerable<IEnumerable<T>> factors)
         {
-            var items = MemoizeMultipliers(factors).AsReadOnly();
+            var items = MemoizeMultipliers(factors).AsReadOnlyList();
             int rank = items.Count;
 
             if (rank == 0)

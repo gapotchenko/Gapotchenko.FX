@@ -119,7 +119,7 @@ namespace Gapotchenko.FX.Linq
                 };
 
 #if TFF_ENUMERABLE_TRYGETNONENUMERATEDCOUNT
-            if (source.TryGetNonEnumeratedCount(out var n))
+            if (count == null && source.TryGetNonEnumeratedCount(out var n))
                 count = n;
 #endif
 

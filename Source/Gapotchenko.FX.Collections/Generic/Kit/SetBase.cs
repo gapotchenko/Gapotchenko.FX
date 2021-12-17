@@ -9,7 +9,6 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
     /// <summary>
     /// Provides the implementation base for <see cref="ISet{T}"/>.
     /// </summary>
-    [DebuggerDisplay("Count = {Count}")]
     public abstract class SetBase<T> : ReadOnlySetBase<T>, ISet<T>
     {
         /// <inheritdoc/>

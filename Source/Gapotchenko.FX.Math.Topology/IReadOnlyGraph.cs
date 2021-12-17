@@ -5,7 +5,7 @@ namespace Gapotchenko.FX.Math.Topology
 {
     /// <summary>
     /// <para>
-    /// Defines an interface for a read-only graph.
+    /// Provides a read-only abstraction of a graph.
     /// </para>
     /// <para>
     /// Graph is a set of vertices and edges.
@@ -26,6 +26,18 @@ namespace Gapotchenko.FX.Math.Topology
         IReadOnlySet<GraphEdge<T>> Edges { get; }
 
         /// <summary>
+        /// Gets the vertices adjacent to a specified vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex to find the adjacent vertices for.</param>
+        /// <returns>Sequence of vertices adjacent to the specified <paramref name="vertex"/>.</returns>
+        IEnumerable<T> VerticesAdjacentTo(T vertex);
+
+        /// <summary>
+        /// Determines whether the current graph contains a cycle.
+        /// </summary>
+        bool IsCyclic { get; }
+
+        /// <summary>
         /// <para>
         /// Gets a value indicating whether there is a path from a specified source vertex to a destination.
         /// </para>
@@ -34,51 +46,82 @@ namespace Gapotchenko.FX.Math.Topology
         /// </para>
         /// </summary>
         /// <param name="from">The source vertex.</param>
-        /// <param name="to">The target vertex.</param>
+        /// <param name="to">The destination vertex.</param>
         /// <returns><c>true</c> when the specified source vertex can reach the target; otherwise, <c>false</c>.</returns>
-        bool ContainsPath(T from, T to);
+        bool HasPath(T from, T to);
 
         /// <summary>
-        /// <para>
-        /// Gets a value indicating whether there is a transitive path from a specified source vertex to a destination.
-        /// </para>
-        /// <para>
-        /// A transitive path consists of two or more edges with at least one intermediate vertex.
-        /// </para>
-        /// </summary>
-        /// <param name="from">The source vertex.</param>
-        /// <param name="to">The target vertex.</param>
-        /// <returns><c>true</c> when the specified source vertex can reach the target via one or more intermediate vertices; otherwise, <c>false</c>.</returns>
-        bool HasTransitivePath(T from, T to);
-
-        /// <summary>
-        /// Gets the vertices adjacent to a specified vertex.
-        /// </summary>
-        /// <param name="vertex">The vertex to find the adjacent vertices for.</param>
-        /// <returns>Sequence of vertices adjacent to vertex <paramref name="vertex"/>.</returns>
-        IEnumerable<T> VerticesAdjacentTo(T vertex);
-
-        /// <summary>
-        /// Gets a value indicating whether the graph contains a cycle.
-        /// </summary>
-        bool IsCyclic { get; }
-
-        /// <summary>
-        /// Gets a graph transposition by reversing its edge directions.
+        /// Gets a transposition of the current graph by reversing its edge directions.
         /// </summary>
         /// <returns>The transposed graph.</returns>
         IReadOnlyGraph<T> GetTransposition();
 
         /// <summary>
-        /// Gets a transitively reduced graph.
+        /// Gets a transitive reduction of the current graph.
         /// </summary>
         /// <returns>The transitively reduced graph.</returns>
         IReadOnlyGraph<T> GetTransitiveReduction();
 
         /// <summary>
-        /// Gets a reflexively reduced graph.
+        /// Gets a reflexive reduction of the current graph.
         /// </summary>
         /// <returns>The reflexively reduced graph.</returns>
         IReadOnlyGraph<T> GetReflexiveReduction();
+
+        /// <summary>
+        /// Determines whether the current graph and the specified one contain the same vertices and edges.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true"/> if the current graph is equal to other; otherwise, <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null"/>.</exception>
+        bool GraphEquals(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Determines whether the current graph is a proper (strict) subgraph of a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true" /> if the current graph is a proper subgraph of other; otherwise <see langword="false" />.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+        bool IsProperSubgraphOf(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Determines whether the current graph is a proper (strict) supergraph of a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true" /> if the current graph is a proper supergraph of other; otherwise <see langword="false" />.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+        bool IsProperSupergraphOf(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Determines whether the current graph is a subgraph of a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true" /> if the current graph is a subgraph of other; otherwise <see langword="false" />.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+        bool IsSubgraphOf(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Determines whether the current graph is a supergraph of a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true" /> if the current graph is a supergraph of other; otherwise <see langword="false" />.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+        bool IsSupergraphOf(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Determines whether the current graph is a vertex-induced subgraph of a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true" /> if the current graph is a vertex-induced subgraph of other; otherwise <see langword="false" />.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+        bool IsVertexInducedSubgraphOf(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Determines whether the current graph is a vertex-induced supergraph of a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns><see langword="true" /> if the current graph is a vertex-induced supergraph of other; otherwise <see langword="false" />.</returns>
+        /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+        bool IsVertexInducedSupergraphOf(IReadOnlyGraph<T> other);
     }
 }

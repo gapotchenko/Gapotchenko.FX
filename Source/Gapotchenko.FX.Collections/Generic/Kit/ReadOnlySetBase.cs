@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Gapotchenko.FX.Collections.Generic.Kit
@@ -9,6 +10,8 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
     /// <summary>
     /// Provides the implementation base for <see cref="IReadOnlySet{T}"/>.
     /// </summary>
+    [DebuggerDisplay("Count = {Count}")]
+    [DebuggerTypeProxy(typeof(CollectionDebugView<>))]
     public abstract class ReadOnlySetBase<T> : IReadOnlySet<T>
     {
         /// <summary>
@@ -44,6 +47,9 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
+
+            if (other == this)
+                return false;
 
             int count = Count;
 
@@ -84,8 +90,8 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
                 }
             }
 
-            var presence = CalculatePresenceOf(other, false);
-            return presence.UniqueCount == count && presence.UnfoundCount > 0;
+            var inclusivity = CalculateInclusivityOf(other);
+            return inclusivity.PresentCount == count && inclusivity.HasAbsent;
         }
 
         /// <inheritdoc/>
@@ -93,6 +99,9 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
+
+            if (other == this)
+                return false;
 
             int count = Count;
             if (count == 0)
@@ -123,8 +132,8 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
                 }
             }
 
-            var presence = CalculatePresenceOf(other, true);
-            return presence.UnfoundCount < count && presence.UnfoundCount == 0;
+            var inclusivity = CalculateInclusivityOf(other, true);
+            return inclusivity.PresentCount < count && !inclusivity.HasAbsent;
         }
 
         /// <inheritdoc/>
@@ -132,6 +141,9 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
+
+            if (other == this)
+                return true;
 
             int count = Count;
             if (count == 0)
@@ -166,7 +178,7 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
                 }
             }
 
-            return CalculatePresenceOf(other, false).UniqueCount == count;
+            return CalculateInclusivityOf(other).PresentCount == count;
         }
 
         /// <inheritdoc/>
@@ -174,6 +186,9 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
+
+            if (other == this)
+                return true;
 
             if (EnumerableEx.TryGetNonEnumeratedCount(other, out var otherCount))
             {
@@ -207,6 +222,9 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
+            if (Count == 0)
+                return false;
+
             foreach (var i in other)
                 if (Contains(i))
                     return true;
@@ -219,6 +237,9 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
+
+            if (other == this)
+                return true;
 
             int expectedCount = Count;
 
@@ -245,29 +266,30 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
             }
         }
 
-        (int UniqueCount, int UnfoundCount) CalculatePresenceOf(IEnumerable<T> other, bool stopOnUnfound)
+        (int PresentCount, bool HasAbsent) CalculateInclusivityOf(IEnumerable<T> other, bool stopOnAbsent = false)
         {
-            if (Count == 0)
-                return (0, other.Any() ? 1 : 0);
+            int count = Count;
+            if (count == 0)
+                return (0, other.Any());
 
-            var unique = new HashSet<T>(Comparer);
-            int unfoundCount = 0;
+            var present = new HashSet<T>(Comparer);
+            bool hasAbsent = false;
 
             foreach (var i in other)
             {
                 if (Contains(i))
                 {
-                    unique.Add(i);
+                    present.Add(i);
                 }
                 else
                 {
-                    ++unfoundCount;
-                    if (stopOnUnfound)
+                    hasAbsent = true;
+                    if (stopOnAbsent)
                         break;
                 }
             }
 
-            return (unique.Count, unfoundCount);
+            return (present.Count, hasAbsent);
         }
 
         bool ContainsAllElements(IEnumerable<T> other)
@@ -318,8 +340,15 @@ namespace Gapotchenko.FX.Collections.Generic.Kit
             if (count > array.Length - arrayIndex)
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
 
+            if (count == 0)
+                return;
+
             foreach (var i in this)
+            {
                 array[arrayIndex++] = i;
+                if (--count == 0)
+                    break;
+            }
         }
     }
 }

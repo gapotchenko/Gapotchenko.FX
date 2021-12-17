@@ -1,62 +1,26 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace Gapotchenko.FX.Math.Topology
 {
     /// <summary>
-    /// Represents an edge of a graph.
+    /// Provides static methods for creating <see cref="GraphEdge{T}"/> objects.
     /// </summary>
-    /// <typeparam name="T">The type of vertices in the graph.</typeparam>
-    public readonly struct GraphEdge<T>
+    public static class GraphEdge
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="GraphEdge{T}"/> struct with source and destination vertices.
+        /// Creates a new instance of <see cref="GraphEdge{T}"/> object with source and destination vertices.
         /// </summary>
         /// <param name="from">The source vertex.</param>
         /// <param name="to">The destination vertex.</param>
-        public GraphEdge(T from, T to)
-        {
-            From = from;
-            To = to;
-        }
-
-        /// <summary>
-        /// The source vertex of the edge.
-        /// </summary>
-        public T From { get; init; }
-
-        /// <summary>
-        /// The destination vertex of the edge.
-        /// </summary>
-        public T To { get; init; }
-
-        /// <inheritdoc/>
-        public override string ToString() => $"{From} -> {To}";
-
-        /// <summary>
-        /// Deconstructs the current <see cref="GraphEdge{T}"/>.
-        /// </summary>
-        /// <param name="from">The source vertex of the current <see cref="GraphEdge{T}"/>.</param>
-        /// <param name="to">The destination vertex of the current <see cref="GraphEdge{T}"/>.</param>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public void Deconstruct(out T from, out T to)
-        {
-            from = From;
-            to = To;
-        }
-
-        /// <summary>
-        /// Reverses the edge direction by swapping source and destination vertices.
-        /// </summary>
-        /// <returns>The edge with reversed direction.</returns>
-        public GraphEdge<T> Reverse() => new(To, From);
+        /// <returns>The new instance of <see cref="GraphEdge{T}"/> object with specified source and destination vertices.</returns>
+        public static GraphEdge<T> Create<T>(T from, T to) => new(from, to);
 
         /// <summary>
         /// Creates graph edge equality comparer with specified vertex comparer.
         /// </summary>
         /// <param name="vertexComparer">The vertex comparer.</param>
         /// <returns>A new instance of graph edge equality comparer.</returns>
-        public static IEqualityComparer<GraphEdge<T>> CreateEqualityComparer(IEqualityComparer<T> vertexComparer) =>
+        public static IEqualityComparer<GraphEdge<T>> CreateComparer<T>(IEqualityComparer<T> vertexComparer) =>
             new GraphEdgeEqualityComparer<T>(vertexComparer);
     }
 }
