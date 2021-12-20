@@ -17,25 +17,26 @@ namespace Gapotchenko.FX.Math.Topology
 
             var subgraph = NewGraph();
 
+            var subgraphVertices = subgraph.Vertices;
+
             foreach (var vertex in vertices)
             {
                 if (Vertices.Contains(vertex))
+                    subgraphVertices.Add(vertex);
+            }
+
+            var edgesToAdd = new List<GraphEdge<T>>();
+
+            foreach (var vertex in subgraphVertices)
+            {
+                foreach (var adjacentVertex in VerticesAdjacentTo(vertex))
                 {
-                    subgraph.Vertices.Add(vertex);
+                    if (subgraphVertices.Contains(adjacentVertex))
+                        edgesToAdd.Add(GraphEdge.Create(vertex, adjacentVertex));
                 }
             }
 
-            foreach (var vertex in subgraph.Vertices)
-            {
-                var adjacentTo = VerticesAdjacentTo(vertex);
-                foreach (var adjacentVertex in adjacentTo)
-                {
-                    if (subgraph.Vertices.Contains(adjacentVertex))
-                    {
-                        subgraph.Edges.Add((vertex, adjacentVertex));
-                    }
-                }
-            }
+            subgraph.Edges.UnionWith(edgesToAdd);
 
             return subgraph;
         }
@@ -57,12 +58,8 @@ namespace Gapotchenko.FX.Math.Topology
             var subgraph = NewGraph();
 
             foreach (var edge in edges)
-            {
                 if (Edges.Contains(edge))
-                {
                     subgraph.Edges.Add(edge);
-                }
-            }
 
             return subgraph;
         }
