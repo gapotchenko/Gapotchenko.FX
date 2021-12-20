@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Collections.Generic.Kit;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -46,6 +47,7 @@ namespace Gapotchenko.FX.Math.Topology
                 {
                     ++m_Graph.m_CachedSize;
                     m_Graph.m_CachedOrder = null;
+                    m_Graph.IncrementVersion();
                     return true;
                 }
                 else
@@ -70,11 +72,12 @@ namespace Gapotchenko.FX.Math.Topology
                 if (!adjRow.Remove(v))
                     return false;
 
-                --m_Graph.m_CachedSize;
-
                 // Preserve the vertex in vertices collection.
                 if (!adjList.ContainsKey(v))
                     adjList.Add(v, null);
+
+                --m_Graph.m_CachedSize;
+                m_Graph.IncrementVersion();
 
                 return true;
             }
@@ -112,6 +115,7 @@ namespace Gapotchenko.FX.Math.Topology
                 }
 
                 m_Graph.m_CachedSize = 0;
+                m_Graph.IncrementVersion();
             }
 
             public override bool Contains(GraphEdge<T> edge) =>
@@ -121,6 +125,8 @@ namespace Gapotchenko.FX.Math.Topology
 
             public override IEnumerator<GraphEdge<T>> GetEnumerator()
             {
+                var version = m_Graph.m_Version;
+
                 foreach (var i in m_Graph.m_AdjacencyList)
                 {
                     var adjacencyRow = i.Value;
@@ -128,7 +134,12 @@ namespace Gapotchenko.FX.Math.Topology
                     {
                         var from = i.Key;
                         foreach (var to in adjacencyRow)
+                        {
+                            if (m_Graph.m_Version != version)
+                                throw new InvalidOperationException("Graph was modified; enumeration operation may not execute.");
+
                             yield return GraphEdge.Create(from, to);
+                        }
                     }
                 }
             }

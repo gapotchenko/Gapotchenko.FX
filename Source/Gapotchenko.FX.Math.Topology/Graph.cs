@@ -298,9 +298,14 @@ namespace Gapotchenko.FX.Math.Topology
         /// <inheritdoc/>
         public void Clear()
         {
+            if (m_AdjacencyList.Count == 0)
+                return;
+
             m_AdjacencyList.Clear();
             m_CachedOrder = 0;
             m_CachedSize = 0;
+
+            IncrementVersion();
         }
 
         /// <inheritdoc/>
@@ -333,6 +338,11 @@ namespace Gapotchenko.FX.Math.Topology
         /// <returns>The new adjacency row instance.</returns>
         protected AdjacencyRow NewAdjacencyRow() => new(Comparer);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        int m_Version;
+
+        void IncrementVersion() => ++m_Version;
+
         /// <summary>
         /// Invalidates the cache.
         /// This method should be called if <see cref="AdjacencyList"/> is manipulated directly.
@@ -341,6 +351,7 @@ namespace Gapotchenko.FX.Math.Topology
         {
             m_CachedOrder = null;
             m_CachedSize = null;
+            IncrementVersion();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Gapotchenko.FX.Collections.Generic.Kit;
 using Gapotchenko.FX.Linq;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -29,6 +30,7 @@ namespace Gapotchenko.FX.Math.Topology
                     return false;
                 m_Graph.m_AdjacencyList.Add(vertex, null);
                 ++m_Graph.m_CachedOrder;
+                m_Graph.IncrementVersion();
                 return true;
             }
 
@@ -47,7 +49,10 @@ namespace Gapotchenko.FX.Math.Topology
                 }
 
                 if (hit)
+                {
                     --m_Graph.m_CachedOrder;
+                    m_Graph.IncrementVersion();
+                }
 
                 return hit;
             }
@@ -62,11 +67,22 @@ namespace Gapotchenko.FX.Math.Topology
                     adjacencyList.Any(x => x.Value?.Contains(vertex) ?? false);
             }
 
-            public override IEnumerator<T> GetEnumerator() =>
-                m_Graph.m_AdjacencyList
-                .SelectMany(x => (x.Value ?? Enumerable.Empty<T>()).Prepend(x.Key))
-                .Distinct(m_Graph.Comparer)
-                .GetEnumerator();
+            public override IEnumerator<T> GetEnumerator()
+            {
+                var version = m_Graph.m_Version;
+
+                var query = m_Graph.m_AdjacencyList
+                    .SelectMany(x => (x.Value ?? Enumerable.Empty<T>()).Prepend(x.Key))
+                    .Distinct(m_Graph.Comparer);
+
+                foreach (var i in query)
+                {
+                    if (m_Graph.m_Version != version)
+                        throw new InvalidOperationException("Graph was modified; enumeration operation may not execute.");
+
+                    yield return i;
+                }
+            }
         }
     }
 }
