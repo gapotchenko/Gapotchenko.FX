@@ -710,5 +710,91 @@ namespace Gapotchenko.FX.Math.Topology.Tests
 
             Assert.IsTrue(g.IsEdgeInducedSupergraphOf(h));
         }
+
+        [TestMethod]
+        public void Graph_GetSubgraph_VertexInduced()
+        {
+            var g = new Graph<char>
+            {
+                Edges = { ('a', 'b'), ('a', 'e'), ('b', 'c'), ('b', 'f'), ('c', 'e'), ('d', 'e'), ('e', 'f') }
+            };
+
+            var actualSubgraph = g.GetSubgraph(g.Vertices);
+            Assert.IsTrue(g.GraphEquals(actualSubgraph));
+            Assert.IsTrue(g.IsVertexInducedSupergraphOf(actualSubgraph));
+
+            var expectedSubgraph = new Graph<char>
+            {
+                Vertices = { 'b' }
+            };
+            actualSubgraph = g.GetSubgraph(new[] { 'b' });
+            Assert.IsTrue(expectedSubgraph.GraphEquals(actualSubgraph));
+            Assert.IsTrue(g.IsVertexInducedSupergraphOf(actualSubgraph));
+
+            expectedSubgraph = new Graph<char>
+            {
+                Edges = { ('a', 'b'), ('a', 'e') }
+            };
+            actualSubgraph = g.GetSubgraph(new[] { 'a', 'b', 'e' });
+            Assert.IsTrue(expectedSubgraph.GraphEquals(actualSubgraph));
+            Assert.IsTrue(g.IsVertexInducedSupergraphOf(actualSubgraph));
+
+            expectedSubgraph = new Graph<char>
+            {
+                Edges = { ('c', 'e'), ('d', 'e'), ('e', 'f') }
+            };
+            actualSubgraph = g.GetSubgraph(new[] { 'c', 'd', 'e', 'f' });
+            Assert.IsTrue(expectedSubgraph.GraphEquals(actualSubgraph));
+            Assert.IsTrue(g.IsVertexInducedSupergraphOf(actualSubgraph));
+
+            expectedSubgraph = new Graph<char>
+            {
+                Vertices = { 'b' }
+            };
+            actualSubgraph = g.GetSubgraph(new[] { 'x', 'b' });
+            Assert.IsTrue(expectedSubgraph.GraphEquals(actualSubgraph));
+            Assert.IsTrue(g.IsVertexInducedSupergraphOf(actualSubgraph));
+
+            actualSubgraph = g.GetSubgraph(new char[] { });
+            Assert.IsTrue(actualSubgraph.Vertices.Count is 0);
+            Assert.IsTrue(g.IsVertexInducedSupergraphOf(actualSubgraph));
+        }
+
+        [TestMethod]
+        public void Graph_GetSubgraph_EdgeInduced()
+        {
+            var g = new Graph<char>
+            {
+                Edges = { ('a', 'b'), ('a', 'e'), ('b', 'c'), ('b', 'f'), ('c', 'e'), ('d', 'e'), ('e', 'f') }
+            };
+
+            var actualSubgraph = g.GetSubgraph(g.Edges);
+            Assert.IsTrue(g.GraphEquals(actualSubgraph));
+            Assert.IsTrue(g.IsEdgeInducedSupergraphOf(actualSubgraph));
+
+            var expectedSubgraph = new Graph<char>
+            {
+                Edges = { ('a', 'b'), ('a', 'e') }
+            };
+            actualSubgraph = g.GetSubgraph(new GraphEdge<char>[] { ('a', 'b'), ('a', 'e') });
+            Assert.IsTrue(expectedSubgraph.GraphEquals(actualSubgraph));
+            Assert.IsTrue(g.IsEdgeInducedSupergraphOf(actualSubgraph));
+
+            expectedSubgraph = new Graph<char>
+            {
+                Edges = { ('a', 'b') }
+            };
+            actualSubgraph = g.GetSubgraph(new GraphEdge<char>[] { ('a', 'b'), ('e', 'a') });
+            Assert.IsTrue(expectedSubgraph.GraphEquals(actualSubgraph));
+            Assert.IsTrue(g.IsEdgeInducedSupergraphOf(actualSubgraph));
+
+            actualSubgraph = g.GetSubgraph(new GraphEdge<char>[] { ('e', 'a') });
+            Assert.IsTrue(new Graph<char>().GraphEquals(actualSubgraph));
+            Assert.IsTrue(g.IsEdgeInducedSupergraphOf(actualSubgraph));
+
+            actualSubgraph = g.GetSubgraph(new GraphEdge<char>[] { });
+            Assert.IsTrue(new Graph<char>().GraphEquals(actualSubgraph));
+            Assert.IsTrue(g.IsEdgeInducedSupergraphOf(actualSubgraph));
+        }
     }
 }
