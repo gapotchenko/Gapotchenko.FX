@@ -825,7 +825,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             {
                 Edges = { ('b', 'a') }
             };
-            Assert.AreEqual(1, g.GetVertexIndegree('a'));
+            Assert.AreEqual(1, g.GetVertexDegree('a'));
 
             g = new Graph<char>
             {
