@@ -660,6 +660,10 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             Assert.IsTrue(h.IsEdgeInducedSubgraphOf(g));
+
+            h = new Graph<char>();
+
+            Assert.IsTrue(h.IsEdgeInducedSubgraphOf(g));
         }
 
         [TestMethod]
@@ -699,6 +703,10 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             {
                 Edges = { ('d', 'e'), ('b', 'f'), ('a', 'b'), ('b', 'c') }
             };
+
+            Assert.IsTrue(g.IsEdgeInducedSupergraphOf(h));
+
+            h = new Graph<char>();
 
             Assert.IsTrue(g.IsEdgeInducedSupergraphOf(h));
         }

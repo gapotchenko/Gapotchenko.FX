@@ -29,7 +29,7 @@ namespace Gapotchenko.FX.Math.Topology
                 other == this ||
                 Vertices.IsSubsetOf(other.Vertices) &&
                 Edges.IsSubsetOf(GetInducedSubgraphEdges(this, other)) &&
-                Vertices.AnyAndAll(IsVertexConnected);
+                Vertices.All(IsVertexConnected);
         }
 
         /// <inheritdoc/>
@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Math.Topology
                 other == this ||
                 Vertices.IsSupersetOf(other.Vertices) &&
                 Edges.IsSupersetOf(GetInducedSubgraphEdges(this, other)) &&
-                other.Vertices.AnyAndAll(other.IsVertexConnected);
+                other.Vertices.All(other.IsVertexConnected);
         }
 
         static IEnumerable<GraphEdge<T>> GetInducedSubgraphEdges(IReadOnlyGraph<T> a, IReadOnlyGraph<T> b)
