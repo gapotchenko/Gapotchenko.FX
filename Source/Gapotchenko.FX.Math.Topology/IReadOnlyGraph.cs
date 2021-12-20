@@ -51,11 +51,16 @@ namespace Gapotchenko.FX.Math.Topology
         bool HasPath(T from, T to);
 
         /// <summary>
-        /// Determines whether the specified vertex is connected to another vertex by an edge.
+        /// <para>
+        /// Determines whether the specified vertex is isolated, that is, not connected by an edge to another vertex.
+        /// </para>
+        /// <para>
+        /// An isolated vertex is a vertex with degree zero; that is, a vertex that is not an endpoint of any edge.
+        /// </para>
         /// </summary>
         /// <param name="vertex">The vertex.</param>
-        /// <returns><see langword="true"/> when the specified vertex is connected to another vertex by an edge; otherwise, <see langword="false"/>.</returns>
-        bool IsVertexConnected(T vertex);
+        /// <returns><see langword="true"/> when the specified vertex is isolated; otherwise, <see langword="false"/>.</returns>
+        bool IsVertexIsolated(T vertex);
 
         /// <summary>
         /// Gets a vertex-induced subgraph of the current graph.
