@@ -272,14 +272,14 @@ namespace Gapotchenko.FX.Math.Topology
         public bool HasPath(T from, T to) => Edges.Contains(from, to) || HasTransitivePath(from, to);
 
         /// <inheritdoc/>
-        public bool IsVertexConnected(T vertex)
+        public bool IsVertexIsolated(T vertex)
         {
             var adjList = m_AdjacencyList;
 
             if (adjList.TryGetValue(vertex, out var adjRow) &&
                 adjRow?.Count > 0)
             {
-                return true;
+                return false;
             }
 
             foreach (var i in adjList)
@@ -289,10 +289,10 @@ namespace Gapotchenko.FX.Math.Topology
                     continue;
 
                 if (adjRow.Contains(vertex))
-                    return true;
+                    return false;
             }
 
-            return false;
+            return true;
         }
 
         /// <inheritdoc/>
