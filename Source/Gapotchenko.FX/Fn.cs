@@ -41,6 +41,7 @@ namespace Gapotchenko.FX
         /// <param name="value">The value to ignore.</param>
         public static void Ignore<T>(T value)
         {
+            _ = value;
         }
     }
 }
