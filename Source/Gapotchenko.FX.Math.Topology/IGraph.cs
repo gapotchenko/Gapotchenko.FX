@@ -45,14 +45,6 @@ namespace Gapotchenko.FX.Math.Topology
         new IGraph<T> GetSubgraph(IEnumerable<GraphEdge<T>> edges);
 
         /// <summary>
-        /// Gets an induced subgraph of the current graph.
-        /// </summary>
-        /// <param name="vertices">The vertices to induce the subgraph from.</param>
-        /// <param name="edges">The edges to induce the subgraph from.</param>
-        /// <returns>The induced subgraph of the current graph.</returns>
-        new IGraph<T> GetSubgraph(IEnumerable<T> vertices, IEnumerable<GraphEdge<T>> edges);
-
-        /// <summary>
         /// Transposes the current graph by reversing its edge directions in place.
         /// </summary>
         void Transpose();
