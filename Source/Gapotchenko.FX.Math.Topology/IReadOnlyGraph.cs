@@ -165,5 +165,26 @@ namespace Gapotchenko.FX.Math.Topology
         /// <returns><see langword="true" /> if the current graph is a vertex-induced supergraph of other; otherwise <see langword="false" />.</returns>
         /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
         bool IsVertexInducedSupergraphOf(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Gets the indegree of a specified vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex to find the indegree of.</param>
+        /// <returns>The indegree of a vertex.</returns>
+        int GetVertexIndegree(T vertex);
+
+        /// <summary>
+        /// Gets the outdegree of a specified vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex to find the outdegree of.</param>
+        /// <returns>The outdegree of a vertex.</returns>
+        int GetVertexOutdegree(T vertex);
+
+        /// <summary>
+        /// Gets the degree of a specified vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex to find the degree of.</param>
+        /// <returns>The degree of a vertex.</returns>
+        int GetVertexDegree(T vertex);
     }
 }
