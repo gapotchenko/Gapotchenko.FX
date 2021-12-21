@@ -5,7 +5,7 @@ namespace Gapotchenko.FX.Math.Topology
 {
     /// <summary>
     /// <para>
-    /// Defines an interface for a graph.
+    /// Provides the base interface for the abstraction of graphs.
     /// </para>
     /// <para>
     /// Graph is a set of vertices and edges.
@@ -96,5 +96,31 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <returns>The reflexively reduced graph.</returns>
         new IGraph<T> GetReflexiveReduction();
+
+        /// <summary>
+        /// Modifies the current graph so that it contains only vertices and edges that are also in a specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        void IntersectWith(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Gets a graph containing vertices and edges that are present in both the current and a specified graphs.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns>The graph containing vertices and edges that are present in both the current and a specified graphs.</returns>
+        new IGraph<T> Intersect(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Modifies the current graph so that it contains all vertices and edges that are present in the current graph, in the specified graph, or in both.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        void UnionWith(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Gets a graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns>The graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both.</returns>
+        new IGraph<T> Union(IReadOnlyGraph<T> other);
     }
 }
