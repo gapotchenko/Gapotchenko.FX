@@ -136,7 +136,7 @@ namespace Gapotchenko.FX.Math.Topology
                         foreach (var to in adjacencyRow)
                         {
                             if (m_Graph.m_Version != version)
-                                EnumerationModificationGuard.Throw();
+                                ModificationGuard.Throw();
 
                             yield return GraphEdge.Create(from, to);
                         }

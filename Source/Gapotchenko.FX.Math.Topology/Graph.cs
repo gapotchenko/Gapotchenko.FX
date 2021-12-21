@@ -311,14 +311,14 @@ namespace Gapotchenko.FX.Math.Topology
         /// <inheritdoc/>
         public IEnumerable<T> VerticesAdjacentTo(T vertex)
         {
-            var emg = new EnumerationModificationGuard(this);
+            var mg = new ModificationGuard(this);
             m_AdjacencyList.TryGetValue(vertex, out var adjRow);
-            return emg.Enumerate(adjRow) ?? Enumerable.Empty<T>();
+            return mg.Protect(adjRow) ?? Enumerable.Empty<T>();
         }
 
-        readonly struct EnumerationModificationGuard
+        readonly struct ModificationGuard
         {
-            public EnumerationModificationGuard(Graph<T> graph)
+            public ModificationGuard(Graph<T> graph)
             {
                 m_Graph = graph;
                 m_Version = graph.m_Version;
@@ -338,9 +338,9 @@ namespace Gapotchenko.FX.Math.Topology
             }
 
             [return: NotNullIfNotNull("source")]
-            public IEnumerable<T>? Enumerate(IEnumerable<T>? source) => source == null ? null : EnumerateCore(source);
+            public IEnumerable<T>? Protect(IEnumerable<T>? source) => source == null ? null : ProtectCore(source);
 
-            IEnumerable<T> EnumerateCore(IEnumerable<T> source)
+            IEnumerable<T> ProtectCore(IEnumerable<T> source)
             {
                 foreach (var i in source)
                 {

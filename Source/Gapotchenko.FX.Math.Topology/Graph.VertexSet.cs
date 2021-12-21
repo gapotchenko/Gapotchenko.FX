@@ -78,7 +78,7 @@ namespace Gapotchenko.FX.Math.Topology
                 foreach (var i in query)
                 {
                     if (m_Graph.m_Version != version)
-                        EnumerationModificationGuard.Throw();
+                        ModificationGuard.Throw();
 
                     yield return i;
                 }
