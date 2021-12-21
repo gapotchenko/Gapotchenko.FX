@@ -153,6 +153,21 @@ namespace Gapotchenko.FX.Math.Topology
             return graph;
         }
 
+        /// <inheritdoc/>
+        public void ExceptWith(IReadOnlyGraph<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            ExceptWithCore(other);
+        }
+
+        void ExceptWithCore(IReadOnlyGraph<T> other)
+        {
+            Vertices.ExceptWith(other.Vertices);
+            Edges.ExceptWith(other.Edges);
+        }
+
         IGraph<T> IGraph<T>.Intersect(IReadOnlyGraph<T> other) => Intersect(other);
 
         IReadOnlyGraph<T> IReadOnlyGraph<T>.Intersect(IReadOnlyGraph<T> other) => Intersect(other);

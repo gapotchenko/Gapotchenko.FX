@@ -98,6 +98,12 @@ namespace Gapotchenko.FX.Math.Topology
         new IGraph<T> GetReflexiveReduction();
 
         /// <summary>
+        /// Removes all vertices and edges in the specified graph from the current graph.
+        /// </summary>
+        /// <param name="other">The graph whose vertices and edges to remove from the current graph.</param>
+        void ExceptWith(IReadOnlyGraph<T> other);
+
+        /// <summary>
         /// Modifies the current graph so that it contains only vertices and edges that are also in a specified graph.
         /// </summary>
         /// <param name="other">The graph to compare to the current one.</param>

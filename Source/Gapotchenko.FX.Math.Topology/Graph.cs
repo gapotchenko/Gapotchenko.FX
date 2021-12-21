@@ -1,8 +1,8 @@
-﻿using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.Linq;
+﻿using Gapotchenko.FX.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
@@ -311,8 +311,43 @@ namespace Gapotchenko.FX.Math.Topology
         /// <inheritdoc/>
         public IEnumerable<T> VerticesAdjacentTo(T vertex)
         {
+            var emg = new EnumerationModificationGuard(this);
             m_AdjacencyList.TryGetValue(vertex, out var adjRow);
-            return adjRow ?? Enumerable.Empty<T>();
+            return emg.Enumerate(adjRow) ?? Enumerable.Empty<T>();
+        }
+
+        readonly struct EnumerationModificationGuard
+        {
+            public EnumerationModificationGuard(Graph<T> graph)
+            {
+                m_Graph = graph;
+                m_Version = graph.m_Version;
+            }
+
+            readonly Graph<T> m_Graph;
+            readonly int m_Version;
+
+            [DoesNotReturn]
+            public static void Throw() =>
+                throw new InvalidOperationException("Graph was modified; enumeration operation may not execute.");
+
+            public void Checkpoint()
+            {
+                if (m_Graph.m_Version != m_Version)
+                    Throw();
+            }
+
+            [return: NotNullIfNotNull("source")]
+            public IEnumerable<T>? Enumerate(IEnumerable<T>? source) => source == null ? null : EnumerateCore(source);
+
+            IEnumerable<T> EnumerateCore(IEnumerable<T> source)
+            {
+                foreach (var i in source)
+                {
+                    Checkpoint();
+                    yield return i;
+                }
+            }
         }
 
         /// <summary>

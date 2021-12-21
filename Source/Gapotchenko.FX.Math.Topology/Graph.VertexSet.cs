@@ -78,7 +78,7 @@ namespace Gapotchenko.FX.Math.Topology
                 foreach (var i in query)
                 {
                     if (m_Graph.m_Version != version)
-                        throw new InvalidOperationException("Graph was modified; enumeration operation may not execute.");
+                        EnumerationModificationGuard.Throw();
 
                     yield return i;
                 }
