@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Gapotchenko.FX.Math.Combinatorics;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Gapotchenko.FX.Math.Topology.Tests
 {
@@ -978,6 +981,170 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             Assert.AreEqual(1, g.GetVertexOutdegree('a'));
             Assert.AreEqual(1, g.GetVertexOutdegree('b'));
             Assert.AreEqual(1, g.GetVertexOutdegree('c'));
+        }
+
+        [TestMethod]
+        public void Graph_TopologicalOrder()
+        {
+            var g = new Graph<char>();
+            var order = g.TopologicalOrder();
+            Assert.AreEqual(0, order.Count());
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Vertices = { 'a' }
+            };
+
+            order = g.TopologicalOrder();
+            Assert.AreEqual("a", string.Join(" ", order));
+
+            /***************/
+
+            foreach (var edges in
+                Permutations.Of(new GraphEdge<char>[] { ('0', '1'), ('1', '2'), ('2', '3') }))
+            {
+                g = new();
+                foreach (var edge in edges)
+                    g.Edges.Add(edge);
+
+                var topoOrder = g.TopologicalOrder();
+                Assert.AreEqual("0 1 2 3", string.Join(" ", topoOrder));
+            }
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Edges = { ('a', 'a') }
+            };
+
+            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrder());
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
+            };
+
+            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrder());
+        }
+
+        [TestMethod]
+        public void Graph_TopologicalOrder_Stable()
+        {
+            var g = new Graph<char>();
+            var order = g.TopologicalOrder(Comparer<char>.Default);
+            Assert.AreEqual(0, order.Count());
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Vertices = { 'a' }
+            };
+
+            order = g.TopologicalOrder(Comparer<char>.Default);
+            Assert.AreEqual("a", string.Join(" ", order));
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Vertices = { 'a', 'b' }
+            };
+
+            order = g.TopologicalOrder(Comparer<char>.Default);
+            Assert.AreEqual("a b", string.Join(" ", order));
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Edges = { ('1', '0'), ('2', '0'), ('3', '0') }
+            };
+
+            order = g.TopologicalOrder(Comparer<char>.Default);
+            Assert.AreEqual("1 2 3 0", string.Join(" ", order));
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Edges =
+                {
+                    ('4', '0'), ('4', '1'), ('1', '3'), ('2', '3'),
+                    ('5', '0'), ('5', '2')
+                }
+            };
+
+            order = g.TopologicalOrder(Comparer<char>.Default);
+            Assert.AreEqual("4 1 5 0 2 3", string.Join(" ", order));
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Edges =
+                {
+                    ('a', 'b'), ('b', 'c'), ('c', 'd'), ('d', 'Z'),
+                    ('Z', 'Y'), ('d', 'Y'), ('d', 'e'), ('d', 'f')
+                }
+            };
+
+            order = g.TopologicalOrder(Comparer<char>.Default);
+            Assert.AreEqual("a b c d Z Y e f", string.Join(" ", order));
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Vertices = { '2' },
+                Edges =
+                {
+                    ('0', '1'), ('0', '4'), ('1', '3'), ('1', '5'),
+                    ('3', '5'), ('3', '7'), ('5', '6'), ('6', '7')
+                }
+            };
+
+            order = g.TopologicalOrder(Comparer<char>.Default);
+            Assert.AreEqual("0 1 2 3 4 5 6 7", string.Join(" ", order));
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Edges =
+                {
+                    ('1', '2'), ('2', '3'), ('2', '4'), ('2', '5'),
+                    ('2', '6'), ('3', '7'), ('3', '8'), ('4', '9'),
+                    ('6', '9'), ('7', 'a'), ('7', '9'), ('8', 'a'),
+                    ('8', '9')
+                }
+            };
+
+            order = g.TopologicalOrder(Comparer<char>.Default);
+            Assert.AreEqual("1 2 3 4 5 6 7 8 9 a", string.Join(" ", order));
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Edges = { ('a', 'a') }
+            };
+
+            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrder(Comparer<char>.Default));
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
+            };
+
+            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrder(Comparer<char>.Default));
         }
     }
 }

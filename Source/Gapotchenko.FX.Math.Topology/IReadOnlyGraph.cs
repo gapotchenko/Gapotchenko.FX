@@ -201,5 +201,36 @@ namespace Gapotchenko.FX.Math.Topology
         /// <returns><see langword="true" /> if the current graph is a vertex-induced supergraph of other; otherwise <see langword="false" />.</returns>
         /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
         bool IsVertexInducedSupergraphOf(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// <para>
+        /// Gets the vertices in topologically sorted order.
+        /// </para>
+        /// <para>
+        /// Topological order of a directed graph is an order of its vertices such that for every 
+        /// directed edge u → v, u comes before v.
+        /// </para>
+        /// </summary>
+        /// <returns>Sequence of vertices in topologically sorted order.</returns>
+        /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
+        IEnumerable<T> TopologicalOrder();
+
+        /// <summary>
+        /// <para>
+        /// Gets the vertices in topologically sorted order.
+        /// </para>
+        /// <para>
+        /// Topological order of a directed graph is an order of its vertices such that for every 
+        /// directed edge u → v, u comes before v.
+        /// </para>
+        /// <para>
+        /// This method uses <paramref name="comparer"/> to resolve the order ambiguities.
+        /// </para>
+        /// </summary>
+        /// <param name="comparer">A comparer to resolve the order ambiguities.</param>
+        /// <returns>Sequence of vertices in topologically sorted order.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="comparer"/> is <see langword="null" />.</exception>
+        /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
+        IEnumerable<T> TopologicalOrder(IComparer<T> comparer);
     }
 }
