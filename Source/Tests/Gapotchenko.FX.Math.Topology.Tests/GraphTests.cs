@@ -1107,10 +1107,10 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_TopologicalOrder_Stable()
+        public void Graph_TopologicalOrderBy()
         {
             var g = new Graph<char>();
-            var order = g.TopologicalOrder(Comparer<char>.Default);
+            var order = g.TopologicalOrderBy(Fn.Identity);
             Assert.AreEqual(0, order.Count());
 
             /***************/
@@ -1120,7 +1120,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Vertices = { 'a' }
             };
 
-            order = g.TopologicalOrder(Comparer<char>.Default);
+            order = g.TopologicalOrderBy(Fn.Identity);
             Assert.AreEqual("a", string.Join(" ", order));
 
             /***************/
@@ -1130,8 +1130,19 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Vertices = { 'a', 'b' }
             };
 
-            order = g.TopologicalOrder(Comparer<char>.Default);
+            order = g.TopologicalOrderBy(Fn.Identity);
             Assert.AreEqual("a b", string.Join(" ", order));
+
+            order = g.TopologicalOrderBy(x => -x);
+            Assert.AreEqual("b a", string.Join(" ", order));
+
+            var customComparer = Comparer<char>.Create((x, y) => x.CompareTo(y));
+            order = g.TopologicalOrderBy(Fn.Identity, customComparer);
+            Assert.AreEqual("a b", string.Join(" ", order));
+
+            customComparer = Comparer<char>.Create((x, y) => -x.CompareTo(y));
+            order = g.TopologicalOrderBy(Fn.Identity, customComparer);
+            Assert.AreEqual("b a", string.Join(" ", order));
 
             /***************/
 
@@ -1140,7 +1151,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { ('1', '0'), ('2', '0'), ('3', '0') }
             };
 
-            order = g.TopologicalOrder(Comparer<char>.Default);
+            order = g.TopologicalOrderBy(Fn.Identity);
             Assert.AreEqual("1 2 3 0", string.Join(" ", order));
 
             /***************/
@@ -1154,7 +1165,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 }
             };
 
-            order = g.TopologicalOrder(Comparer<char>.Default);
+            order = g.TopologicalOrderBy(Fn.Identity);
             Assert.AreEqual("4 1 5 0 2 3", string.Join(" ", order));
 
             /***************/
@@ -1164,12 +1175,13 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges =
                 {
                     ('a', 'b'), ('b', 'c'), ('c', 'd'), ('d', 'Z'),
-                    ('Z', 'Y'), ('d', 'Y'), ('d', 'e'), ('d', 'f')
+                    ('Z', 'y'), ('d', 'z'), ('d', 'y'), ('d', 'e'),
+                    ('d', 'f')
                 }
             };
 
-            order = g.TopologicalOrder(Comparer<char>.Default);
-            Assert.AreEqual("a b c d Z Y e f", string.Join(" ", order));
+            order = g.TopologicalOrderBy(Fn.Identity);
+            Assert.AreEqual("a b c d Z e f y z", string.Join(" ", order));
 
             /***************/
 
@@ -1183,7 +1195,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 }
             };
 
-            order = g.TopologicalOrder(Comparer<char>.Default);
+            order = g.TopologicalOrderBy(Fn.Identity);
             Assert.AreEqual("0 1 2 3 4 5 6 7", string.Join(" ", order));
 
             /***************/
@@ -1199,7 +1211,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 }
             };
 
-            order = g.TopologicalOrder(Comparer<char>.Default);
+            order = g.TopologicalOrderBy(Fn.Identity);
             Assert.AreEqual("1 2 3 4 5 6 7 8 9 a", string.Join(" ", order));
 
             /***************/
@@ -1209,7 +1221,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { ('a', 'a') }
             };
 
-            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrder(Comparer<char>.Default));
+            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrderBy(Fn.Identity));
 
             /***************/
 
@@ -1218,7 +1230,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
             };
 
-            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrder(Comparer<char>.Default));
+            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrderBy(Fn.Identity));
         }
     }
 }

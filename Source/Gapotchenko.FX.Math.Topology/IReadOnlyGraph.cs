@@ -231,20 +231,19 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <summary>
         /// <para>
-        /// Gets the vertices in topologically sorted order.
+        /// Gets the vertices sequence ordered topologically with a subsequent ordering according to a key.
         /// </para>
         /// <para>
         /// Topological order of a directed graph is an order of its vertices such that for every 
         /// directed edge u → v, u comes before v.
         /// </para>
-        /// <para>
-        /// This method uses <paramref name="comparer"/> to resolve the order ambiguities.
-        /// </para>
         /// </summary>
-        /// <param name="comparer">A comparer to resolve the order ambiguities.</param>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <param name="keySelector">A function to extract a key from a vertex.</param>
+        /// <param name="comparer">An <see cref="IComparer{TKey}"/> to compare keys.</param>
         /// <returns>Sequence of vertices in topologically sorted order.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="comparer"/> is <see langword="null" />.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
         /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
-        IEnumerable<T> TopologicalOrder(IComparer<T> comparer);
+        IEnumerable<T> TopologicalOrderBy<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default);
     }
 }
