@@ -203,6 +203,20 @@ namespace Gapotchenko.FX.Math.Topology
         bool IsVertexInducedSupergraphOf(IReadOnlyGraph<T> other);
 
         /// <summary>
+        /// Gets a graph containing vertices and edges that are present in both the current and a specified graphs.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns>The graph containing vertices and edges that are present in both the current and a specified graphs.</returns>
+        IReadOnlyGraph<T> Intersect(IReadOnlyGraph<T> other);
+
+        /// <summary>
+        /// Gets a graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns>The graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both.</returns>
+        IReadOnlyGraph<T> Union(IReadOnlyGraph<T> other);
+
+        /// <summary>
         /// <para>
         /// Gets the vertices in topologically sorted order.
         /// </para>

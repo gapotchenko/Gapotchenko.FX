@@ -1,8 +1,8 @@
-﻿using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.Linq;
+﻿using Gapotchenko.FX.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
@@ -73,35 +73,35 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for vertices,
-        /// contains vertices copied from the specified collection
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for vertices
+        /// and contains vertices copied from the specified collection
         /// and edges defined by the specified incidence function.
         /// </summary>
         /// <param name="vertices">The collection of graph vertices.</param>
-        /// <param name="incidence">The graph incidence function.</param>
-        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidence) :
-            this(vertices, incidence, null)
+        /// <param name="incidenceFunction">The graph incidence function.</param>
+        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidenceFunction) :
+            this(vertices, incidenceFunction, null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices,
-        /// contains vertices copied from the specified collection
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices
+        /// and contains vertices copied from the specified collection
         /// and edges defined by the specified incidence function.
         /// </summary>
         /// <param name="vertices">The collection of graph vertices.</param>
-        /// <param name="incidence">The graph incidence function.</param>
+        /// <param name="incidenceFunction">The graph incidence function.</param>
         /// <param name="comparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
-        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidence, IEqualityComparer<T>? comparer) :
+        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidenceFunction, IEqualityComparer<T>? comparer) :
             this(comparer)
         {
             if (vertices == null)
                 throw new ArgumentNullException(nameof(vertices));
-            if (incidence == null)
-                throw new ArgumentNullException(nameof(incidence));
+            if (incidenceFunction == null)
+                throw new ArgumentNullException(nameof(incidenceFunction));
 
             var list = vertices.AsReadOnlyList();
             int count = list.Count;
@@ -115,7 +115,7 @@ namespace Gapotchenko.FX.Math.Topology
                 {
                     var to = list[j];
 
-                    if (incidence(from, to))
+                    if (incidenceFunction(from, to))
                     {
                         Edges.Add(from, to);
                         edge = true;
@@ -311,8 +311,43 @@ namespace Gapotchenko.FX.Math.Topology
         /// <inheritdoc/>
         public IEnumerable<T> VerticesAdjacentTo(T vertex)
         {
+            var mg = new ModificationGuard(this);
             m_AdjacencyList.TryGetValue(vertex, out var adjRow);
-            return adjRow ?? Enumerable.Empty<T>();
+            return mg.Protect(adjRow) ?? Enumerable.Empty<T>();
+        }
+
+        readonly struct ModificationGuard
+        {
+            public ModificationGuard(Graph<T> graph)
+            {
+                m_Graph = graph;
+                m_Version = graph.m_Version;
+            }
+
+            readonly Graph<T> m_Graph;
+            readonly int m_Version;
+
+            [DoesNotReturn]
+            public static void Throw() =>
+                throw new InvalidOperationException("Graph was modified; enumeration operation may not execute.");
+
+            public void Checkpoint()
+            {
+                if (m_Graph.m_Version != m_Version)
+                    Throw();
+            }
+
+            [return: NotNullIfNotNull("source")]
+            public IEnumerable<T>? Protect(IEnumerable<T>? source) => source == null ? null : ProtectCore(source);
+
+            IEnumerable<T> ProtectCore(IEnumerable<T> source)
+            {
+                foreach (var i in source)
+                {
+                    Checkpoint();
+                    yield return i;
+                }
+            }
         }
 
         /// <summary>

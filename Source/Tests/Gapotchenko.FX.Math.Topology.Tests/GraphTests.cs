@@ -182,6 +182,80 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
+        public void Graph_HasPath()
+        {
+            IReadOnlyGraph<int> g = new Graph<int>
+            {
+                Vertices = { 5 },
+                Edges = { (1, 2), (2, 3), (4, 4) }
+            };
+
+            Assert.IsTrue(g.HasPath(1, 2));
+            Assert.IsFalse(g.HasPath(2, 1));
+
+            Assert.IsTrue(g.HasPath(1, 3));
+            Assert.IsFalse(g.HasPath(3, 1));
+
+            Assert.IsTrue(g.HasPath(4, 4));
+
+            Assert.IsFalse(g.HasPath(1, 5));
+            Assert.IsFalse(g.HasPath(5, 1));
+
+            Assert.IsFalse(g.HasPath(1, 10));
+            Assert.IsFalse(g.HasPath(10, 1));
+
+            Assert.IsFalse(g.HasPath(10, 20));
+        }
+
+        [TestMethod]
+        public void Graph_IsVertexIsolated()
+        {
+            IReadOnlyGraph<int> g = new Graph<int>
+            {
+                Vertices = { 5 },
+                Edges = { (1, 2), (2, 3), (4, 4) }
+            };
+
+            Assert.IsFalse(g.IsVertexIsolated(1));
+            Assert.IsFalse(g.IsVertexIsolated(2));
+            Assert.IsFalse(g.IsVertexIsolated(3));
+            Assert.IsFalse(g.IsVertexIsolated(4));
+            Assert.IsTrue(g.IsVertexIsolated(5));
+
+            Assert.IsTrue(g.IsVertexIsolated(10));
+        }
+
+        [TestMethod]
+        public void Graph_IsCyclic()
+        {
+            IReadOnlyGraph<int> g = new Graph<int>
+            {
+                Vertices = { 5 },
+                Edges = { (1, 2), (2, 3) }
+            };
+
+            Assert.IsFalse(g.IsCyclic);
+
+            g = new Graph<int>
+            {
+                Edges = { (1, 2), (2, 3), (3, 1) }
+            };
+
+            Assert.IsTrue(g.IsCyclic);
+
+            g = new Graph<int>
+            {
+                Edges = { (1, 1) }
+            };
+
+            Assert.IsTrue(g.IsCyclic);
+
+            g = new Graph<int>();
+
+            Assert.IsFalse(g.IsCyclic);
+        }
+
+        [TestMethod]
         public void Graph_SupportsReflexes()
         {
             var g = new Graph<int>
