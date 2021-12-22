@@ -107,46 +107,24 @@ namespace Gapotchenko.FX.Harness.Console
             }
 
             int n = list.Count;
-            //for (; ; )
-            //{
-            //    bool swapped = false;
-            //    for (int i = 1; i < n; ++i)
-            //        if (Compare(keySelector(list[i - 1]), keySelector(list[i])) > 0)
-            //        {
-            //            var t = list[i - 1];
-            //            list[i - 1] = list[i];
-            //            list[i] = t;
-
-            //            swapped = true;
-            //        }
-            //    if (!swapped)
-            //        break;
-            //    --n;
-            //}
-
-            for (int i = 0; i < n; ++i)
+            for (int i = 0; i < n - 1; ++i)
             {
-                bool swapped = false;
-
+                int jMin = i;
                 for (int j = i + 1; j < n; ++j)
                 {
-                    if (Compare(keySelector(list[i]), keySelector(list[j])) > 0)
-                    {
-                        var t = list[i];
-                        list[i] = list[j];
-                        list[j] = t;
-
-                        swapped = true;
-                    }
+                    if (Compare(keySelector(list[jMin]), keySelector(list[j])) > 0)
+                        jMin = j;
                 }
 
-                if (!swapped)
-                    break;
+                if (jMin != i)
+                {
+                    var t = list[i];
+                    list[i] = list[jMin];
+                    list[jMin] = t;
+                }
             }
 
             return list;
-
-            return list.OrderBy(keySelector, Comparer<TKey>.Create(Compare));
         }
     }
 
