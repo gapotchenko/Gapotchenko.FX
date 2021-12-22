@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+
+#nullable disable
 
 namespace Gapotchenko.FX.Math.Topology.Tests.Engine
 {
@@ -143,123 +143,6 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
             set;
         }
 
-        sealed class DependencyGraph<T>
-        {
-            private DependencyGraph()
-            {
-            }
-
-            IEqualityComparer<T> _EqualityComparer;
-            IDictionary<T, Node> _Nodes;
-
-            sealed class Node : HashSet<T>
-            {
-                public Node(IEqualityComparer<T> equalityComparer) :
-                    base(equalityComparer)
-                {
-                }
-            }
-
-            public static DependencyGraph<T>? TryCreate(
-                IEnumerable<T> source,
-                DependencyFunction<T> dependencyFunction,
-                IEqualityComparer<T> equalityComparer)
-            {
-                var list = source as IList<T>;
-                if (list == null)
-                    list = source.ToArray();
-
-                int n = list.Count;
-                if (n < 2)
-                    return null;
-
-                var graph = new DependencyGraph<T>();
-                graph._EqualityComparer = equalityComparer;
-                graph._Nodes = new Dictionary<T, Node>(n, equalityComparer);
-
-                bool hasDependencies = false;
-
-                for (int position = 0; position < n; ++position)
-                {
-                    var element = list[position];
-
-                    Node node;
-                    if (!graph._Nodes.TryGetValue(element, out node))
-                    {
-                        node = new Node(equalityComparer);
-                        graph._Nodes.Add(element, node);
-                    }
-
-                    foreach (var anotherElement in list)
-                    {
-                        if (equalityComparer.Equals(element, anotherElement))
-                            continue;
-
-                        if (dependencyFunction(element, anotherElement))
-                        {
-                            node.Add(anotherElement);
-                            hasDependencies = true;
-                        }
-                    }
-                }
-
-                if (!hasDependencies)
-                    return null;
-
-                return graph;
-            }
-
-            public bool DoesXHaveDirectDependencyOnY(T x, T y)
-            {
-                Node node;
-                if (_Nodes.TryGetValue(x, out node))
-                {
-                    if (node.Contains(y))
-                        return true;
-                }
-                return false;
-            }
-
-            sealed class DependencyTraverser
-            {
-                public DependencyTraverser(DependencyGraph<T> graph)
-                {
-                    _Graph = graph;
-                    _VisitedNodes = new HashSet<T>(graph._EqualityComparer);
-                }
-
-                DependencyGraph<T> _Graph;
-                HashSet<T> _VisitedNodes;
-
-                public bool DoesAHaveTransientDependencyOnB(T a, T b)
-                {
-                    if (!_VisitedNodes.Add(a))
-                        return false;
-
-                    Node node;
-                    if (_Graph._Nodes.TryGetValue(a, out node))
-                    {
-                        if (node.Contains(b))
-                            return true;
-
-                        foreach (var i in node)
-                        {
-                            if (DoesAHaveTransientDependencyOnB(i, b))
-                                return true;
-                        }
-                    }
-
-                    return false;
-                }
-            }
-
-            public bool DoesAHaveTransientDependencyOnB(T a, T b)
-            {
-                var traverser = new DependencyTraverser(this);
-                return traverser.DoesAHaveTransientDependencyOnB(a, b);
-            }
-        }
-
         public static bool Verify<T>(
             IEnumerable<T> source,
             IEnumerable<T> result,
@@ -271,7 +154,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
             if (_result.Count != n)
                 throw new ArgumentException("result.Length != source.Length");
 
-            var graph = LazyEvaluation.Create(() => DependencyGraph<T>.TryCreate(source, df, EqualityComparer<T>.Default));
+            var graph = LazyEvaluation.Create(() => new Graph<T>(source, (from, to) => df(from, to)));
 
             for (int i = 0; i < n; ++i)
             {
@@ -282,8 +165,8 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
                         bool circularDependency = false;
                         if (graph.Value != null)
                         {
-                            bool aDependsOnB = graph.Value.DoesAHaveTransientDependencyOnB(_result[j], _result[i]);
-                            bool bDependsOnA = graph.Value.DoesAHaveTransientDependencyOnB(_result[i], _result[j]);
+                            bool aDependsOnB = graph.Value.HasPath(_result[j], _result[i]);
+                            bool bDependsOnA = graph.Value.HasPath(_result[i], _result[j]);
                             circularDependency = aDependsOnB && bDependsOnA;
                         }
 
