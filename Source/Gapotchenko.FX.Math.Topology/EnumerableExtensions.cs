@@ -50,15 +50,9 @@ namespace Gapotchenko.FX.Math.Topology
                 .Where(x => x.HasValue)
                 .Select(x => x.Value);
 
-            var g = new Graph<TKey>(
-                vertices,
-                new GraphIncidenceFunction<TKey>(dependencyFunction),
-                comparer);
+            var g = new Graph<TKey>(vertices, new GraphIncidenceFunction<TKey>(dependencyFunction), comparer);
 
-            // Multi-level hierarchal comparer to target two objectives in one shot:
-            //   1. Topological order
-            //   2. Positional order
-            // Note that this comparer do not support partial orders and thus cannot be used with other sorting algorithms.
+            // Note that this comparer does not support partial orders and thus cannot be used with most other sorting algorithms.
             int compare(TKey x, TKey y)
             {
                 bool xDependsOnY = g.HasPath(x, y);
@@ -86,11 +80,11 @@ namespace Gapotchenko.FX.Math.Topology
                     }
                 }
 
-                // Followed by the positional order.
-                return 0; // positions[x].CompareTo(positions[y]);
+                // Followed by the positional order provided by the underlying algorithm.
+                return 0;
             }
 
-            // Selection sort allows to compensate for lack of partial orders support in comparer.
+            // Selection sort allows to compensate the lack of partial orders support in comparer.
             int n = list.Count;
             for (int i = 0; i < n - 1; ++i)
             {
@@ -103,12 +97,10 @@ namespace Gapotchenko.FX.Math.Topology
 
                 if (jMin != i)
                 {
+                    // Stable sort variant.
                     var t = list[jMin];
                     list.RemoveAt(jMin);
                     list.Insert(i, t);
-                    //var t = list[i];
-                    //list[i] = list[jMin];
-                    //list[jMin] = t;
                 }
             }
 

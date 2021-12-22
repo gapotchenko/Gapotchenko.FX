@@ -10,17 +10,12 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         [TestMethod]
         public void Enumerable_TopologicalOrderBy_1()
         {
-            DependencyFunction<char> df = (a, b) =>
-            {
-                switch (a + " depends on " + b)
+            static bool df(char a, char b) =>
+                (a + " depends on " + b) switch
                 {
-                    case "A depends on B":
-                        return true;
-
-                    default:
-                        return false;
-                }
-            };
+                    "A depends on B" => true,
+                    _ => false,
+                };
 
             var source = "ABCDEF";
             string result = string.Concat(source.TopologicalOrderBy(Fn.Identity, df));
@@ -43,7 +38,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             {
                 Sorter = (source, df) => source.TopologicalOrderBy(Fn.Identity, df),
                 VerticesCount = 4,
-                VerifyMinimalDistance = true
+                //VerifyMinimalDistance = true,
             };
             proof.Run();
         }
@@ -56,6 +51,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Sorter = (source, df) => source.TopologicalOrderBy(Fn.Identity, df),
                 VerticesCount = 5,
                 MaxGraphConfigurationsCount = 10000,
+                //SkipCyclicGraphs = true,
                 //VerifyMinimalDistance = true
             };
             proof.Run();
@@ -64,17 +60,12 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         [TestMethod]
         public void Enumerable_TopologicalOrderBy_25()
         {
-            bool df(char a, char b)
-            {
-                switch (a + " depends on " + b)
+            static bool df(char a, char b) =>
+                (a + " depends on " + b) switch
                 {
-                    case "1 depends on 0":
-                    case "2 depends on 0":
-                        return true;
-                    default:
-                        return false;
-                }
-            }
+                    "1 depends on 0" or "2 depends on 0" => true,
+                    _ => false,
+                };
 
             var source = "1320";
             string result = string.Concat(source.TopologicalOrderBy(Fn.Identity, df));

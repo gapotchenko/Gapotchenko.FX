@@ -103,45 +103,40 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
             {
                 var currentSource = sourcePermutation.ToArray();
 
+                if (SkipCyclicGraphs)
+                {
+                    var g = new Graph<int>(currentSource, (from, to) => df(from, to));
+                    if (g.IsCyclic)
+                        continue;
+                }
+
                 Interlocked.Increment(ref _TotalCountOfExperiments);
+
+                var result = Sorter(currentSource, df).ToArray();
                 try
                 {
-                    var result = Sorter(currentSource, df).ToArray();
-                    try
-                    {
-                        Validate(currentSource, result, df);
+                    Validate(currentSource, result, df);
 
-                        if (VerifyMinimalDistance)
+                    if (VerifyMinimalDistance)
+                    {
+                        if (!MinimalDistanceProof.Verify(currentSource, result, df))
                         {
-                            if (!MinimalDistanceProof.Verify(currentSource, result, df))
-                            {
-                                if (Debugger.IsAttached)
-                                    throw new Exception("Minimal distance not reached.");
-                                else
-                                    Interlocked.Increment(ref _TotalCountOfExperimentsWithViolatedMinimalDistance);
-                            }
+                            if (Debugger.IsAttached)
+                                throw new Exception("Minimal distance not reached.");
+                            else
+                                Interlocked.Increment(ref _TotalCountOfExperimentsWithViolatedMinimalDistance);
                         }
                     }
-                    catch
-                    {
-                        _DumpTopology(currentSource, result, df);
-                        throw;
-                    }
                 }
-                catch (CircularDependencyException)
+                catch
                 {
-                    if (!IgnoreCircularDependencyErrors)
-                        throw;
+                    _DumpTopology(currentSource, result, df);
+                    throw;
                 }
-
             }
         }
 
-        public bool IgnoreCircularDependencyErrors
-        {
-            get;
-            set;
-        }
+        public bool SkipCyclicGraphs { get; set; }
 
         public static bool Verify<T>(
             IEnumerable<T> source,
