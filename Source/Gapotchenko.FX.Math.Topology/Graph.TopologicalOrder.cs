@@ -42,20 +42,23 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc />
-        public IEnumerable<T> TopologicalOrder(IComparer<T> comparer)
+        public IEnumerable<T> TopologicalOrderBy<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default)
         {
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            if (keySelector == null)
+                throw new ArgumentNullException(nameof(keySelector));
 
-            var queue = new PriorityQueue<T, T>(comparer);
+            var queue = new PriorityQueue<T, TKey>(comparer);
             var order = new List<T>();
             var transposition = GetTransposition();
+
+            var keys = Vertices
+                .ToDictionary(v => v, v => keySelector(v), Comparer);
 
             foreach (var vertex in transposition.Vertices)
             {
                 // Find the nodes with no outcoming edges.
                 if (transposition.GetVertexOutdegree(vertex) is 0)
-                    queue.Enqueue(vertex, vertex);
+                    queue.Enqueue(vertex, keys[vertex]);
             }
 
             while (queue.Count > 0)
@@ -69,7 +72,7 @@ namespace Gapotchenko.FX.Math.Topology
                     transposition.Edges.Remove(adjacentVertex, vertex);
 
                     if (transposition.GetVertexOutdegree(adjacentVertex) is 0)
-                        queue.Enqueue(adjacentVertex, adjacentVertex);
+                        queue.Enqueue(adjacentVertex, keys[adjacentVertex]);
                 }
             }
 
