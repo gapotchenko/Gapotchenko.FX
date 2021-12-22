@@ -87,7 +87,7 @@ namespace Gapotchenko.FX.Math.Topology
                 }
 
                 // Followed by the positional order.
-                return positions[x].CompareTo(positions[y]);
+                return 0; // positions[x].CompareTo(positions[y]);
             }
 
             // Selection sort allows to compensate for lack of partial orders support in comparer.
@@ -103,9 +103,12 @@ namespace Gapotchenko.FX.Math.Topology
 
                 if (jMin != i)
                 {
-                    var t = list[i];
-                    list[i] = list[jMin];
-                    list[jMin] = t;
+                    var t = list[jMin];
+                    list.RemoveAt(jMin);
+                    list.Insert(i, t);
+                    //var t = list[i];
+                    //list[i] = list[jMin];
+                    //list[jMin] = t;
                 }
             }
 
