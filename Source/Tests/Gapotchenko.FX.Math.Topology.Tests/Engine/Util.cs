@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gapotchenko.FX.Math.Topology.Tests
+namespace Gapotchenko.FX.Math.Topology.Tests.Engine
 {
     static class Util
     {

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Math.Geometry\Gapotchenko.FX.Math.Geometry.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Math.Topology\Gapotchenko.FX.Math.Topology.csproj" />
   </ItemGroup>
 
