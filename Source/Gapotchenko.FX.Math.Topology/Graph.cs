@@ -73,35 +73,35 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for vertices,
-        /// contains vertices copied from the specified collection
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for vertices
+        /// and contains vertices copied from the specified collection
         /// and edges defined by the specified incidence function.
         /// </summary>
         /// <param name="vertices">The collection of graph vertices.</param>
-        /// <param name="incidence">The graph incidence function.</param>
-        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidence) :
-            this(vertices, incidence, null)
+        /// <param name="incidenceFunction">The graph incidence function.</param>
+        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidenceFunction) :
+            this(vertices, incidenceFunction, null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices,
-        /// contains vertices copied from the specified collection
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices
+        /// and contains vertices copied from the specified collection
         /// and edges defined by the specified incidence function.
         /// </summary>
         /// <param name="vertices">The collection of graph vertices.</param>
-        /// <param name="incidence">The graph incidence function.</param>
+        /// <param name="incidenceFunction">The graph incidence function.</param>
         /// <param name="comparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
-        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidence, IEqualityComparer<T>? comparer) :
+        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidenceFunction, IEqualityComparer<T>? comparer) :
             this(comparer)
         {
             if (vertices == null)
                 throw new ArgumentNullException(nameof(vertices));
-            if (incidence == null)
-                throw new ArgumentNullException(nameof(incidence));
+            if (incidenceFunction == null)
+                throw new ArgumentNullException(nameof(incidenceFunction));
 
             var list = vertices.AsReadOnlyList();
             int count = list.Count;
@@ -115,7 +115,7 @@ namespace Gapotchenko.FX.Math.Topology
                 {
                     var to = list[j];
 
-                    if (incidence(from, to))
+                    if (incidenceFunction(from, to))
                     {
                         Edges.Add(from, to);
                         edge = true;

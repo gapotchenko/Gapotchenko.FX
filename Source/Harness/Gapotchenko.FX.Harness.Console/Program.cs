@@ -43,11 +43,11 @@ namespace Gapotchenko.FX.Harness.Console
         public static IEnumerable<T> TopologicalOrderBy<T, TKey>(
             this IEnumerable<T> source,
             Func<T, TKey> keySelector,
-            DependencyFunction<TKey> dependency,
-            IEqualityComparer<TKey>? equalityComparer = null)
+            DependencyFunction<TKey> dependencyFunction,
+            IEqualityComparer<TKey>? comparer = null)
             where TKey : notnull
         {
-            var positions = new Dictionary<TKey, int>(equalityComparer);
+            var positions = new Dictionary<TKey, int>(comparer);
             var list = new List<T>();
 
             var vertices =
@@ -68,7 +68,7 @@ namespace Gapotchenko.FX.Harness.Console
                 .Where(x => x.HasValue)
                 .Select(x => x.Value);
 
-            var g = new Graph<TKey>(vertices, new GraphIncidenceFunction<TKey>(dependency), equalityComparer);
+            var g = new Graph<TKey>(vertices, new GraphIncidenceFunction<TKey>(dependencyFunction), comparer);
 
             int Compare(TKey x, TKey y)
             {
