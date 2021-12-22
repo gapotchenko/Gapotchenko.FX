@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -36,6 +37,73 @@ namespace Gapotchenko.FX.Harness.Console
 {
     using Console = System.Console;
     using Math = System.Math;
+
+    static class ExtensionMethods
+    {
+        public static IEnumerable<T> TopologicalOrderBy<T, TKey>(
+            this IEnumerable<T> source,
+            Func<T, TKey> keySelector,
+            DependencyFunction<TKey> dependency,
+            IEqualityComparer<TKey>? equalityComparer = null)
+            where TKey : notnull
+        {
+            var positions = new Dictionary<TKey, int>(equalityComparer);
+            var list = new List<T>();
+
+            var vertices =
+                source
+                .Select(
+                    value =>
+                    {
+                        var key = keySelector(value);
+                        bool unique = positions.TryAdd(key, list.Count);
+
+                        list.Add(value);
+
+                        if (unique)
+                            return Optional.Some(key);
+                        else
+                            return Optional<TKey>.None;
+                    })
+                .Where(x => x.HasValue)
+                .Select(x => x.Value);
+
+            var g = new Graph<TKey>(vertices, new GraphIncidenceFunction<TKey>(dependency), equalityComparer);
+
+            int Compare(TKey x, TKey y)
+            {
+                bool xDependsOnY = g.HasPath(x, y);
+                bool yDependsOnX = g.HasPath(y, x);
+
+                // If x depends on y
+                if (xDependsOnY)
+                {
+                    // and there is no circular dependency
+                    if (!yDependsOnX)
+                    {
+                        // then topological order should prevail.
+                        return 1;
+                    }
+                }
+
+                // If y depends on x
+                if (yDependsOnX)
+                {
+                    // and there is no circular dependency
+                    if (!xDependsOnY)
+                    {
+                        // then topological order should prevail.
+                        return -1;
+                    }
+                }
+
+                // Followed by the positional order.
+                return positions[x].CompareTo(positions[y]);
+            }
+
+            return list.OrderBy(keySelector, Comparer<TKey>.Create(Compare));
+        }
+    }
 
     class Program
     {
@@ -96,6 +164,25 @@ namespace Gapotchenko.FX.Harness.Console
 
             AssemblyAutoLoader.Default.AddProbingPath(@"C:\");
             AssemblyAutoLoader.Default.RemoveProbingPath(@"C:\");
+
+            _RunTopologicalSort();
+        }
+
+        static void _RunTopologicalSort()
+        {
+            string seq = "3120";
+
+            static bool Dependency(char a, char b) =>
+                (a, b) switch
+                {
+                    ('1', '0') or
+                    ('2', '0') => true,
+                    _ => false
+                };
+
+            var result = seq.TopologicalOrderBy(Fn.Identity, Dependency);
+
+            Console.WriteLine(string.Concat(result));
         }
 
         static async Task _RunAsync(CancellationToken ct)
