@@ -75,8 +75,6 @@ namespace Gapotchenko.FX.Harness.Console
 
             int Compare(TKey x, TKey y)
             {
-                Console.WriteLine("{0} {1}", x, y);
-
                 bool xDependsOnY = g.HasPath(x, y);
                 bool yDependsOnX = g.HasPath(y, x);
 
