@@ -68,10 +68,15 @@ namespace Gapotchenko.FX.Harness.Console
                 .Where(x => x.HasValue)
                 .Select(x => x.Value);
 
-            var g = new Graph<TKey>(vertices, new GraphIncidenceFunction<TKey>(dependencyFunction), comparer);
+            var g = new Graph<TKey>(
+                vertices,
+                new GraphIncidenceFunction<TKey>(dependencyFunction),
+                comparer);
 
             int Compare(TKey x, TKey y)
             {
+                Console.WriteLine("{0} {1}", x, y);
+
                 bool xDependsOnY = g.HasPath(x, y);
                 bool yDependsOnX = g.HasPath(y, x);
 
@@ -100,6 +105,46 @@ namespace Gapotchenko.FX.Harness.Console
                 // Followed by the positional order.
                 return positions[x].CompareTo(positions[y]);
             }
+
+            int n = list.Count;
+            //for (; ; )
+            //{
+            //    bool swapped = false;
+            //    for (int i = 1; i < n; ++i)
+            //        if (Compare(keySelector(list[i - 1]), keySelector(list[i])) > 0)
+            //        {
+            //            var t = list[i - 1];
+            //            list[i - 1] = list[i];
+            //            list[i] = t;
+
+            //            swapped = true;
+            //        }
+            //    if (!swapped)
+            //        break;
+            //    --n;
+            //}
+
+            for (int i = 0; i < n; ++i)
+            {
+                bool swapped = false;
+
+                for (int j = i + 1; j < n; ++j)
+                {
+                    if (Compare(keySelector(list[i]), keySelector(list[j])) > 0)
+                    {
+                        var t = list[i];
+                        list[i] = list[j];
+                        list[j] = t;
+
+                        swapped = true;
+                    }
+                }
+
+                if (!swapped)
+                    break;
+            }
+
+            return list;
 
             return list.OrderBy(keySelector, Comparer<TKey>.Create(Compare));
         }
@@ -170,7 +215,7 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _RunTopologicalSort()
         {
-            string seq = "3120";
+            string seq = "1320";
 
             static bool Dependency(char a, char b) =>
                 (a, b) switch
