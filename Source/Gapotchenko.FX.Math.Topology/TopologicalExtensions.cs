@@ -26,7 +26,14 @@ namespace Gapotchenko.FX.Math.Topology
         /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
         /// <param name="source">The sequence of values to order.</param>
         /// <param name="keySelector">The function to extract a key from an element.</param>
-        /// <param name="dependencyFunction">The dependency function that defines dependencies between elements.</param>
+        /// <param name="dependencyFunction">
+        /// <para>
+        /// The dependency function that defines dependencies between elements.
+        /// </para>
+        /// <para>
+        /// Given elements <c>a</c> and <c>b</c>, returns a Boolean value indicating whether <c>b</c> should appear before <c>a</c> in topological order.
+        /// </para>
+        /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according to a key and specified dependency function.</returns>
         public static IEnumerable<T> TopologicalOrderBy<T, TKey>(
