@@ -7,29 +7,27 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-#nullable disable
-
 namespace Gapotchenko.FX.Math.Topology.Tests.Engine
 {
     sealed class TopologicalOrderProof
     {
-        public int VerticesCount { get; set; }
+        public int VerticesCount { get; init; }
 
-        public int MaxGraphConfigurationsCount { get; set; }
+        public int MaxGraphConfigurationsCount { get; init; }
 
-        public bool VerifyMinimalDistance { get; set; }
+        public bool VerifyMinimalDistance { get; init; }
 
-        public Func<IEnumerable<int>, DependencyFunction<int>, IEnumerable<int>> Sorter
-        {
-            get;
-            set;
-        }
+        public bool SkipCyclicGraphs { get; init; }
+
+        public Func<IEnumerable<int>, Func<int, int, bool>, IEnumerable<int>>? PredicateSorter { get; init; }
+
+        public Func<Graph<int>, IEnumerable<int>>? GraphSorter { get; init; }
 
         int _CountOfBits;
 
         public void Run()
         {
-            if (Sorter == null)
+            if (PredicateSorter == null && GraphSorter == null)
                 throw new InvalidOperationException("Sorter is not set.");
 
             _CountOfBits = VerticesCount * VerticesCount;
@@ -95,7 +93,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
 
         void _CheckIterator(ulong iterator)
         {
-            DependencyFunction<int> df = (x, y) => DF(x, y, iterator);
+            bool df(int x, int y) => DF(x, y, iterator);
 
             var source = Enumerable.Range(0, VerticesCount).ToArray();
 
@@ -103,16 +101,25 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
             {
                 var currentSource = sourcePermutation.ToArray();
 
+                var g = LazyEvaluation.Create(() => new Graph<int>(currentSource, (from, to) => df(to, from)));
                 if (SkipCyclicGraphs)
                 {
-                    var g = new Graph<int>(currentSource, (from, to) => df(from, to));
-                    if (g.IsCyclic)
+                    if (g.Value.IsCyclic)
                         continue;
                 }
 
                 Interlocked.Increment(ref _TotalCountOfExperiments);
 
-                var result = Sorter(currentSource, df).ToArray();
+                IEnumerable<int> query;
+
+                if (PredicateSorter != null)
+                    query = PredicateSorter(currentSource, df);
+                else if (GraphSorter != null)
+                    query = GraphSorter(g.Value);
+                else
+                    throw new InvalidOperationException("Cannot select sorter.");
+
+                var result = query.ToArray();
                 try
                 {
                     Validate(currentSource, result, df);
@@ -136,12 +143,10 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
             }
         }
 
-        public bool SkipCyclicGraphs { get; set; }
-
         public static bool Verify<T>(
             IEnumerable<T> source,
             IEnumerable<T> result,
-            DependencyFunction<T> df)
+            Func<T, T, bool> df)
         {
             int n = source.Count();
 
@@ -177,7 +182,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
         public static void Validate<T>(
             IEnumerable<T> source,
             IEnumerable<T> result,
-            DependencyFunction<T> df)
+            Func<T, T, bool> df)
         {
             if (!Verify(source, result, df))
                 throw new Exception("Topological order is violated.");
@@ -188,7 +193,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
         static void _DumpTopology<T>(
             IEnumerable<T> source,
             IEnumerable<T> result,
-            DependencyFunction<T> df)
+            Func<T, T, bool> df)
         {
             var equalityComparer = EqualityComparer<T>.Default;
 
@@ -235,7 +240,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
             }
         }
 
-        public static IEnumerable<IEnumerable<T>> AllOrdersOf<T>(IEnumerable<T> source, DependencyFunction<T> df)
+        public static IEnumerable<IEnumerable<T>> AllOrdersOf<T>(IEnumerable<T> source, Func<T, T, bool> df)
         {
             source = source.Memoize();
             return source

@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// </para>
         /// <para>
         /// The sort is stable.
-        /// Circular dependencies are tolerated and resolved according to the original order of elements in the sequence.
+        /// Circular dependencies are ignored and resolved according to the original order of elements in the sequence.
         /// </para>
         /// </summary>
         /// <typeparam name="T">The type of the elements of source.</typeparam>
@@ -27,19 +27,15 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="source">The sequence of values to order.</param>
         /// <param name="keySelector">The function to extract a key from an element.</param>
         /// <param name="dependencyFunction">
-        /// <para>
-        /// The dependency function that defines dependencies between elements.
-        /// </para>
-        /// <para>
-        /// Given elements <c>a</c> and <c>b</c>, returns a Boolean value indicating whether <c>b</c> should appear before <c>a</c> in topological order.
-        /// </para>
+        /// The dependency function that defines dependencies between the elements of a sequence.
+        /// Given a pair of element keys as <c>arg1</c> and <c>arg2</c>, returns a Boolean value indicating whether <c>arg2</c> should appear before <c>arg1</c> in topological order.
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according to a key and specified dependency function.</returns>
         public static IEnumerable<T> TopologicalOrderBy<T, TKey>(
             this IEnumerable<T> source,
             Func<T, TKey> keySelector,
-            DependencyFunction<TKey> dependencyFunction,
+            Func<TKey, TKey, bool> dependencyFunction,
             IEqualityComparer<TKey>? comparer = null)
             where TKey : notnull
         {

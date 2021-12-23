@@ -115,8 +115,6 @@ namespace Gapotchenko.FX.Harness.Console
 
             var result = seq.TopologicalOrderBy(Fn.Identity, Dependency);
 
-            //seq.TopologicalOrderBy()
-
             Console.WriteLine(string.Concat(result));
         }
 
