@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
     {
         public int VerticesCount { get; init; }
 
-        public int MaxGraphConfigurationsCount { get; init; }
+        public int MaxTopologiesCount { get; init; }
 
         public bool VerifyMinimalDistance { get; init; }
 
@@ -38,8 +38,8 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
 
             var iterators = _EnumerateIterators(maxIterator);
 
-            if (MaxGraphConfigurationsCount != 0)
-                iterators = iterators.Take(MaxGraphConfigurationsCount);
+            if (MaxTopologiesCount != 0)
+                iterators = iterators.Take(MaxTopologiesCount);
 
             Console.WriteLine("Count of graph configurations: {0}", iterators.Count());
 

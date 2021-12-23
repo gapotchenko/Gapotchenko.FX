@@ -51,7 +51,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             {
                 PredicateSorter = (source, df) => source.TopologicalOrderBy(Fn.Identity, df),
                 VerticesCount = 5,
-                MaxGraphConfigurationsCount = 10000,
+                MaxTopologiesCount = 10000,
                 //SkipCyclicGraphs = true,
                 //VerifyMinimalDistance = true
             };

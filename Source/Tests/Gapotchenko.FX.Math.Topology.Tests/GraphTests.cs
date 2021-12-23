@@ -1325,5 +1325,17 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
             proof.Run();
         }
+
+        [TestMethod]
+        public void Graph_TopologicalOrderBy_Proof5Vertices()
+        {
+            var proof = new TopologicalOrderProof
+            {
+                GraphSorter = g => g.TopologicalOrder(),
+                VerticesCount = 5,
+                CircularDependenciesEnabled = false
+            };
+            proof.Run();
+        }
     }
 }
