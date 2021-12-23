@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
 
         public bool VerifyMinimalDistance { get; init; }
 
-        public bool SkipCyclicGraphs { get; init; }
+        public bool CircularDependenciesEnabled { get; init; } = true;
 
         public Func<IEnumerable<int>, Func<int, int, bool>, IEnumerable<int>>? PredicateSorter { get; init; }
 
@@ -97,49 +97,62 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
 
             var source = Enumerable.Range(0, VerticesCount).ToArray();
 
-            foreach (var sourcePermutation in source.Permute())
+            var g = LazyEvaluation.Create(() => new Graph<int>(source, (from, to) => df(to, from)));
+            if (!CircularDependenciesEnabled)
             {
-                var currentSource = sourcePermutation.ToArray();
+                if (g.Value.IsCyclic)
+                    return;
+            }
 
-                var g = LazyEvaluation.Create(() => new Graph<int>(currentSource, (from, to) => df(to, from)));
-                if (SkipCyclicGraphs)
+            if (GraphSorter != null)
+            {
+                var result = GraphSorter(g.Value);
+                CheckResult(source, result, df);
+            }
+            else
+            {
+                foreach (var currentSource in source.Permute())
                 {
-                    if (g.Value.IsCyclic)
-                        continue;
+                    Interlocked.Increment(ref _TotalCountOfExperiments);
+
+                    IEnumerable<int> result;
+
+                    if (PredicateSorter != null)
+                        result = PredicateSorter(currentSource, df);
+                    else
+                        throw new InvalidOperationException("Cannot select a sorter.");
+
+                    CheckResult(currentSource, result, df);
                 }
+            }
+        }
 
-                Interlocked.Increment(ref _TotalCountOfExperiments);
+        void CheckResult<T>(
+            IEnumerable<T> source,
+            IEnumerable<T> result,
+            Func<T, T, bool> df)
+        {
+            source = source.Memoize();
+            result = result.Memoize();
+            try
+            {
+                Validate(source, result, df);
 
-                IEnumerable<int> query;
-
-                if (PredicateSorter != null)
-                    query = PredicateSorter(currentSource, df);
-                else if (GraphSorter != null)
-                    query = GraphSorter(g.Value);
-                else
-                    throw new InvalidOperationException("Cannot select sorter.");
-
-                var result = query.ToArray();
-                try
+                if (VerifyMinimalDistance)
                 {
-                    Validate(currentSource, result, df);
-
-                    if (VerifyMinimalDistance)
+                    if (!MinimalDistanceProof.Verify(source, result, df))
                     {
-                        if (!MinimalDistanceProof.Verify(currentSource, result, df))
-                        {
-                            if (Debugger.IsAttached)
-                                throw new Exception("Minimal distance not reached.");
-                            else
-                                Interlocked.Increment(ref _TotalCountOfExperimentsWithViolatedMinimalDistance);
-                        }
+                        if (Debugger.IsAttached)
+                            throw new Exception("Minimal distance not reached.");
+                        else
+                            Interlocked.Increment(ref _TotalCountOfExperimentsWithViolatedMinimalDistance);
                     }
                 }
-                catch
-                {
-                    _DumpTopology(currentSource, result, df);
-                    throw;
-                }
+            }
+            catch
+            {
+                _DumpTopology(source, result, df);
+                throw;
             }
         }
 
@@ -154,7 +167,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
             if (_result.Count != n)
                 throw new ArgumentException("result.Length != source.Length");
 
-            var graph = LazyEvaluation.Create(() => new Graph<T>(source, (from, to) => df(from, to)));
+            var graph = new Graph<T>(source, (from, to) => df(from, to));
 
             for (int i = 0; i < n; ++i)
             {
@@ -162,14 +175,10 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
                 {
                     if (df(_result[j], _result[i]))
                     {
-                        bool circularDependency = false;
-                        if (graph.Value != null)
-                        {
-                            bool aDependsOnB = graph.Value.HasPath(_result[j], _result[i]);
-                            bool bDependsOnA = graph.Value.HasPath(_result[i], _result[j]);
-                            circularDependency = aDependsOnB && bDependsOnA;
-                        }
+                        bool aDependsOnB = graph.HasPath(_result[j], _result[i]);
+                        bool bDependsOnA = graph.HasPath(_result[i], _result[j]);
 
+                        bool circularDependency = aDependsOnB && bDependsOnA;
                         if (!circularDependency)
                             return false;
                     }

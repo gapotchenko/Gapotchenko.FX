@@ -1313,5 +1313,17 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 .ThenByDescending(x => x.a);
             Assert.AreEqual("23 13 22 12 21 11 10 20", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
         }
+
+        [TestMethod]
+        public void Graph_TopologicalOrderBy_Proof4Vertices()
+        {
+            var proof = new TopologicalOrderProof
+            {
+                GraphSorter = g => g.TopologicalOrder(),
+                VerticesCount = 4,
+                CircularDependenciesEnabled = false
+            };
+            proof.Run();
+        }
     }
 }
