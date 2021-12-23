@@ -1,6 +1,7 @@
 ﻿using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Math.Topology.Tests.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -1095,7 +1096,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { ('a', 'a') }
             };
 
-            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrder());
+            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrder().ToList());
 
             /***************/
 
@@ -1104,7 +1105,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
             };
 
-            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrder());
+            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrder().ToList());
         }
 
         [TestMethod]
@@ -1222,7 +1223,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { ('a', 'a') }
             };
 
-            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrderBy(Fn.Identity));
+            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrderBy(Fn.Identity).ToList());
 
             /***************/
 
@@ -1231,7 +1232,86 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
             };
 
-            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrderBy(Fn.Identity));
+            Assert.ThrowsException<CircularDependencyException>(() => g.TopologicalOrderBy(Fn.Identity).ToList());
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Vertices = { 'a', 'b', 'c', 'd', 'e' },
+                Edges = { ('b', 'd') }
+            };
+
+            order = g.TopologicalOrderBy(Fn.Identity);
+            Assert.AreEqual("a b c d e", string.Join(" ", order));
+
+            order = g.TopologicalOrderByDescending(Fn.Identity);
+            Assert.AreEqual("e c b d a", string.Join(" ", order));
+
+            /***************/
+
+            var vertices = new[] { 'a', 'b', 'c', 'd', 'e' };
+            g = new Graph<char>();
+            foreach (var v in vertices)
+                g.Vertices.Add(v);
+
+            order = g.TopologicalOrderBy(x => Array.IndexOf(vertices, x));
+            Assert.AreEqual("a b c d e", string.Join(" ", order));
+
+            order = g.TopologicalOrderBy(x => -Array.IndexOf(vertices, x));
+            Assert.AreEqual("e d c b a", string.Join(" ", order));
+
+            /***************/
+
+            var g_001 = new Graph<(int a, int b)>
+            {
+                Vertices =
+                {
+                    (1, 0), (1, 1), (1, 2), (1, 3),
+                    (2, 0), (2, 1), (2, 2), (2, 3),
+                },
+                Edges = { ((1, 0), (2, 0)) }
+            };
+
+            var order_001 = g_001
+                .TopologicalOrderBy(x => x.a)
+                .ThenBy(x => x.b);
+            Assert.AreEqual("10 11 12 13 20 21 22 23", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
+
+            order_001 = g_001
+                .TopologicalOrderByDescending(x => x.a)
+                .ThenBy(x => x.b);
+            Assert.AreEqual("21 22 23 10 20 11 12 13", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
+
+            order_001 = g_001
+                .TopologicalOrderBy(x => x.a)
+                .ThenByDescending(x => x.b);
+            Assert.AreEqual("13 12 11 10 23 22 21 20", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
+
+            order_001 = g_001
+                .TopologicalOrderByDescending(x => x.a)
+                .ThenByDescending(x => x.b);
+            Assert.AreEqual("23 22 21 13 12 11 10 20", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
+
+            order_001 = g_001
+                .TopologicalOrderBy(x => x.b)
+                .ThenBy(x => x.a);
+            Assert.AreEqual("10 20 11 21 12 22 13 23", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
+
+            order_001 = g_001
+                .TopologicalOrderByDescending(x => x.b)
+                .ThenBy(x => x.a);
+            Assert.AreEqual("13 23 12 22 11 21 10 20", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
+
+            order_001 = g_001
+                .TopologicalOrderBy(x => x.b)
+                .ThenByDescending(x => x.a);
+            Assert.AreEqual("10 20 21 11 22 12 23 13", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
+
+            order_001 = g_001
+                .TopologicalOrderByDescending(x => x.b)
+                .ThenByDescending(x => x.a);
+            Assert.AreEqual("23 13 22 12 21 11 10 20", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
         }
     }
 }
