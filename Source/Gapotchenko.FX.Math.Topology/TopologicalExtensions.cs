@@ -54,7 +54,7 @@ namespace Gapotchenko.FX.Math.Topology
                     vertices,
                     new GraphIncidenceFunction<TKey>(dependencyFunction),
                     comparer,
-                    GraphIncidenceOptions.ReflexiveReduction));
+                    GraphIncidenceOptions.ReflexiveReduction | GraphIncidenceOptions.ExcludeIsolatedVertices));
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Gapotchenko.FX.Math.Topology
         public static IEnumerable<T> OrderTopologicallyBy<T, TKey>(
             this IEnumerable<T> source,
             Func<T, TKey> keySelector,
-            Func<TKey, IEnumerable<TKey>> dependencyFunction,
+            Func<TKey, IEnumerable<TKey>?> dependencyFunction,
             IEqualityComparer<TKey>? comparer = null)
             where TKey : notnull
         {
@@ -101,8 +101,11 @@ namespace Gapotchenko.FX.Math.Topology
                     foreach (var vertex in vertices)
                     {
                         var adjacentVertices = dependencyFunction(vertex);
-                        foreach (var adjacentVertex in adjacentVertices)
-                            edges.Add(vertex, adjacentVertex);
+                        if (adjacentVertices != null)
+                        {
+                            foreach (var adjacentVertex in adjacentVertices)
+                                edges.Add(vertex, adjacentVertex);
+                        }
                     }
                     return graph;
                 });

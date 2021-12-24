@@ -121,6 +121,7 @@ namespace Gapotchenko.FX.Math.Topology
                 throw new ArgumentNullException(nameof(incidenceFunction));
 
             bool reflexiveReducion = (options & GraphIncidenceOptions.ReflexiveReduction) != 0;
+            bool storeIsolatedVertices = (options & GraphIncidenceOptions.ExcludeIsolatedVertices) == 0;
 
             var list = vertices.AsReadOnlyList();
             int count = list.Count;
@@ -129,7 +130,8 @@ namespace Gapotchenko.FX.Math.Topology
             {
                 var from = list[i];
 
-                bool edge = false;
+                bool storeIsolatedVertex = storeIsolatedVertices;
+
                 for (int j = 0; j < count; ++j)
                 {
                     if (reflexiveReducion && i == j)
@@ -140,11 +142,11 @@ namespace Gapotchenko.FX.Math.Topology
                     if (incidenceFunction(from, to))
                     {
                         Edges.Add(from, to);
-                        edge = true;
+                        storeIsolatedVertex = false;
                     }
                 }
 
-                if (!edge)
+                if (storeIsolatedVertex)
                     Vertices.Add(from);
             }
         }
