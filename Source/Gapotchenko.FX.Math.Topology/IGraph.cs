@@ -82,6 +82,8 @@ namespace Gapotchenko.FX.Math.Topology
         /// </para>
         /// <para>
         /// Reflexive reduction prunes the reflexive relations.
+        /// Reflexive relation is caused by a vertex which has a connection (edge) to itself.
+        /// The removal of such connections prunes the reflexive relations, making a graph reflexively reduced.
         /// </para>
         /// </summary>
         void ReduceReflexes();
