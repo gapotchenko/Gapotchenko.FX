@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
@@ -164,7 +163,7 @@ namespace Gapotchenko.FX.Math.Topology
             /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices.
             /// </summary>
             /// <param name="comparer">The comparer.</param>
-            public AdjacencyRow(IEqualityComparer<T>? comparer) :
+            internal AdjacencyRow(IEqualityComparer<T>? comparer) :
                 base(comparer)
             {
             }
@@ -232,6 +231,9 @@ namespace Gapotchenko.FX.Math.Topology
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int? m_CachedSize = 0;
 
+        /// <inheritdoc/>
+        public bool IsEmpty => m_AdjacencyList.Count == 0;
+
         struct ReachibilityTraverser
         {
             public ReachibilityTraverser(Graph<T> graph, T destination, bool adjacent)
@@ -295,40 +297,18 @@ namespace Gapotchenko.FX.Math.Topology
         public bool HasPath(T from, T to) => Edges.Contains(from, to) || HasTransitivePath(from, to);
 
         /// <inheritdoc/>
-        public bool IsVertexIsolated(T vertex)
-        {
-            var adjList = m_AdjacencyList;
-
-            if (adjList.TryGetValue(vertex, out var adjRow) &&
-                adjRow?.Count > 0)
-            {
-                return false;
-            }
-
-            foreach (var i in adjList)
-            {
-                adjRow = i.Value;
-                if (adjRow == null)
-                    continue;
-
-                if (adjRow.Contains(vertex))
-                    return false;
-            }
-
-            return true;
-        }
-
-        /// <inheritdoc/>
         public void Clear()
         {
-            if (m_AdjacencyList.Count == 0)
+            if (IsEmpty)
                 return;
 
             m_AdjacencyList.Clear();
             m_CachedOrder = 0;
             m_CachedSize = 0;
 
+#if !TFF_DICTIONARY_ENUMERATION_REMOVE_ALLOWED
             IncrementVersion();
+#endif
         }
 
         /// <inheritdoc/>
@@ -337,40 +317,6 @@ namespace Gapotchenko.FX.Math.Topology
             var mg = new ModificationGuard(this);
             m_AdjacencyList.TryGetValue(vertex, out var adjRow);
             return mg.Protect(adjRow) ?? Enumerable.Empty<T>();
-        }
-
-        readonly struct ModificationGuard
-        {
-            public ModificationGuard(Graph<T> graph)
-            {
-                m_Graph = graph;
-                m_Version = graph.m_Version;
-            }
-
-            readonly Graph<T> m_Graph;
-            readonly int m_Version;
-
-            [DoesNotReturn]
-            public static void Throw() =>
-                throw new InvalidOperationException("Graph was modified; enumeration operation may not execute.");
-
-            public void Checkpoint()
-            {
-                if (m_Graph.m_Version != m_Version)
-                    Throw();
-            }
-
-            [return: NotNullIfNotNull("source")]
-            public IEnumerable<T>? Protect(IEnumerable<T>? source) => source == null ? null : ProtectCore(source);
-
-            IEnumerable<T> ProtectCore(IEnumerable<T> source)
-            {
-                foreach (var i in source)
-                {
-                    Checkpoint();
-                    yield return i;
-                }
-            }
         }
 
         /// <summary>
@@ -391,15 +337,10 @@ namespace Gapotchenko.FX.Math.Topology
         protected internal IDictionary<T, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
 
         /// <summary>
-        /// Creates a new adjacency row instance inheriting parent class settings such as comparer.
+        /// Creates a new adjacency row instance.
         /// </summary>
         /// <returns>The new adjacency row instance.</returns>
         protected AdjacencyRow NewAdjacencyRow() => new(Comparer);
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        int m_Version;
-
-        void IncrementVersion() => ++m_Version;
 
         /// <summary>
         /// Invalidates the cache.

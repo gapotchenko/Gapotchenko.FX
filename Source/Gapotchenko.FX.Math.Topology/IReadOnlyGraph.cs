@@ -34,6 +34,11 @@ namespace Gapotchenko.FX.Math.Topology
         IEnumerable<T> VerticesAdjacentTo(T vertex);
 
         /// <summary>
+        /// Gets a value indicating whether the current graph is empty.
+        /// </summary>
+        bool IsEmpty { get; }
+
+        /// <summary>
         /// Determines whether the current graph contains a cycle.
         /// </summary>
         bool IsCyclic { get; }
@@ -53,15 +58,26 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <summary>
         /// <para>
-        /// Determines whether the specified vertex is isolated, that is, not connected by an edge to another vertex.
+        /// Determines whether the specified vertex is isolated.
+        /// An isolated vertex is not connected to any other vertex.
         /// </para>
         /// <para>
-        /// An isolated vertex is a vertex with degree zero; that is, a vertex that is not an endpoint of any edge.
+        /// An isolated vertex is a vertex with degree zero; that is, a vertex that is not an end-vertex of any edge.
         /// </para>
         /// </summary>
         /// <param name="vertex">The vertex.</param>
         /// <returns><see langword="true"/> when the specified vertex is isolated; otherwise, <see langword="false"/>.</returns>
         bool IsVertexIsolated(T vertex);
+
+        /// <summary>
+        /// <para>
+        /// Gets a sequence of isolated vertices of the current graph.
+        /// </para>
+        /// <para>
+        /// Isolated vertices are vertices with degree zero; that is, vertices that are not incident with any edge.
+        /// </para>
+        /// </summary>
+        IEnumerable<T> IsolatedVertices { get; }
 
         /// <summary>
         /// <para>
