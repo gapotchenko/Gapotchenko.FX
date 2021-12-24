@@ -156,42 +156,6 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         public IEqualityComparer<T> Comparer => m_AdjacencyList.Comparer;
 
-        /// <summary>
-        /// Graph adjacency row represents a set of vertices that relate to another vertex.
-        /// </summary>
-        protected internal sealed class AdjacencyRow : HashSet<T>
-        {
-            /// <summary>
-            /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices.
-            /// </summary>
-            /// <param name="comparer">The comparer.</param>
-            internal AdjacencyRow(IEqualityComparer<T>? comparer) :
-                base(comparer)
-            {
-            }
-
-            /// <inheritdoc/>
-            public override string ToString()
-            {
-                var sb = new StringBuilder();
-                sb.Append("{ ");
-
-                bool first = true;
-                foreach (var i in this)
-                {
-                    if (first)
-                        first = false;
-                    else
-                        sb.Append(", ");
-
-                    sb.Append(i);
-                }
-
-                sb.Append(" }");
-                return sb.ToString();
-            }
-        }
-
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly Dictionary<T, AdjacencyRow?> m_AdjacencyList;
 
@@ -220,18 +184,6 @@ namespace Gapotchenko.FX.Math.Topology
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlySet<GraphEdge<T>> IReadOnlyGraph<T>.Edges => EdgesCore;
-
-        /// <summary>
-        /// Cached number of vertices.
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        int? m_CachedOrder = 0;
-
-        /// <summary>
-        /// Cached number of edges.
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        int? m_CachedSize = 0;
 
         /// <inheritdoc/>
         public bool IsEmpty => m_AdjacencyList.Count == 0;
@@ -337,22 +289,5 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected internal IDictionary<T, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
-
-        /// <summary>
-        /// Creates a new adjacency row instance.
-        /// </summary>
-        /// <returns>The new adjacency row instance.</returns>
-        protected AdjacencyRow NewAdjacencyRow() => new(Comparer);
-
-        /// <summary>
-        /// Invalidates the cache.
-        /// This method should be called if <see cref="AdjacencyList"/> is manipulated directly.
-        /// </summary>
-        protected void InvalidateCache()
-        {
-            m_CachedOrder = null;
-            m_CachedSize = null;
-            IncrementVersion();
-        }
     }
 }
