@@ -53,7 +53,8 @@ namespace Gapotchenko.FX.Math.Topology
                 vertices => new Graph<TKey>(
                     vertices,
                     new GraphIncidenceFunction<TKey>(dependencyFunction),
-                    comparer));
+                    comparer,
+                    GraphIncidenceOptions.ReflexiveReduction));
         }
 
         static IEnumerable<T> OrderTopologicallyByCore<T, TKey>(

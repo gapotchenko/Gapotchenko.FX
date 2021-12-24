@@ -96,12 +96,32 @@ namespace Gapotchenko.FX.Math.Topology
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
         public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidenceFunction, IEqualityComparer<T>? comparer) :
+            this(vertices, incidenceFunction, comparer, GraphIncidenceOptions.None)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices
+        /// and contains vertices copied from the specified collection
+        /// and edges defined by the specified incidence function
+        /// with the given options.
+        /// </summary>
+        /// <param name="vertices">The collection of graph vertices.</param>
+        /// <param name="incidenceFunction">The graph incidence function.</param>
+        /// <param name="comparer">
+        /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
+        /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
+        /// </param>
+        /// <param name="options">The graph incidence options.</param>
+        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidenceFunction, IEqualityComparer<T>? comparer, GraphIncidenceOptions options) :
             this(comparer)
         {
             if (vertices == null)
                 throw new ArgumentNullException(nameof(vertices));
             if (incidenceFunction == null)
                 throw new ArgumentNullException(nameof(incidenceFunction));
+
+            bool reflexiveReducion = (options & GraphIncidenceOptions.ReflexiveReduction) != 0;
 
             var list = vertices.AsReadOnlyList();
             int count = list.Count;
@@ -113,6 +133,9 @@ namespace Gapotchenko.FX.Math.Topology
                 bool edge = false;
                 for (int j = 0; j < count; ++j)
                 {
+                    if (reflexiveReducion && i == j)
+                        continue;
+
                     var to = list[j];
 
                     if (incidenceFunction(from, to))
