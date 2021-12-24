@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according to a key and specified dependency function.</returns>
-        public static IEnumerable<T> TopologicalOrderBy<T, TKey>(
+        public static IEnumerable<T> OrderTopologicallyBy<T, TKey>(
             this IEnumerable<T> source,
             Func<T, TKey> keySelector,
             Func<TKey, TKey, bool> dependencyFunction,
@@ -70,7 +70,7 @@ namespace Gapotchenko.FX.Math.Topology
                 return g.HasPath(x, y) && !g.HasPath(y, x);
             }
 
-            // Selection sort algorithm compensates the lack of partial orders in comparer by doing a full scan.
+            // Selection sort algorithm compensates the lack of partial order support in comparer by doing a full scan.
             for (int i = 0; i < n - 1; ++i)
             {
                 int jMin = i;

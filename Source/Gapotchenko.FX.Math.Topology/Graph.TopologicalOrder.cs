@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Math.Topology
     partial class Graph<T>
     {
         /// <inheritdoc />
-        public IEnumerable<T> TopologicalOrder()
+        public IEnumerable<T> OrderTopologically()
         {
             var queue = new Queue<T>();
             var transposition = GetTransposition();
@@ -71,11 +71,11 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc />
-        public IOrderedEnumerable<T> TopologicalOrderBy<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default) =>
+        public IOrderedEnumerable<T> OrderTopologicallyBy<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default) =>
             new TopologicalOrderedEnumerable<TKey>(this, keySelector, comparer, descending: false);
 
         /// <inheritdoc />
-        public IOrderedEnumerable<T> TopologicalOrderByDescending<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default) =>
+        public IOrderedEnumerable<T> OrderTopologicallyByDescending<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default) =>
             new TopologicalOrderedEnumerable<TKey>(this, keySelector, comparer, descending: true);
 
         abstract class TopologicalOrderedEnumerable : IOrderedEnumerable<T>

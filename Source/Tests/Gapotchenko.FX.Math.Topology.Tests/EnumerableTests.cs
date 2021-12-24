@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 };
 
             var source = "ABCDEF";
-            string result = string.Concat(source.TopologicalOrderBy(Fn.Identity, df));
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
 
             AssertTopologicalOrderIsCorrect(source, result, df);
 
@@ -37,7 +37,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         {
             var proof = new TopologicalOrderProof
             {
-                PredicateSorter = (source, df) => source.TopologicalOrderBy(Fn.Identity, df),
+                PredicateSorter = (source, df) => source.OrderTopologicallyBy(Fn.Identity, df),
                 VerticesCount = 4,
                 //VerifyMinimalDistance = true,
             };
@@ -49,7 +49,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         {
             var proof = new TopologicalOrderProof
             {
-                PredicateSorter = (source, df) => source.TopologicalOrderBy(Fn.Identity, df),
+                PredicateSorter = (source, df) => source.OrderTopologicallyBy(Fn.Identity, df),
                 VerticesCount = 5,
                 MaxTopologiesCount = 10000,
                 //SkipCyclicGraphs = true,
@@ -69,7 +69,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 };
 
             var source = "1320";
-            string result = string.Concat(source.TopologicalOrderBy(Fn.Identity, df));
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
 
             AssertTopologicalOrderIsCorrect(source, result, df);
 
