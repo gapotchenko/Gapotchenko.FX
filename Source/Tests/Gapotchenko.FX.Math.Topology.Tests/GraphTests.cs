@@ -1060,7 +1060,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_TopologicalOrder()
+        public void Graph_OrderTopologically()
         {
             var g = new Graph<char>();
             var order = g.OrderTopologically();
@@ -1109,7 +1109,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_TopologicalOrderBy()
+        public void Graph_OrderTopologicallyBy()
         {
             var g = new Graph<char>();
             var order = g.OrderTopologicallyBy(Fn.Identity);
@@ -1315,7 +1315,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_TopologicalOrderBy_Proof4Vertices()
+        public void Graph_OrderTopologically_Proof4Vertices()
         {
             var proof = new TopologicalOrderProof
             {
@@ -1327,7 +1327,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_TopologicalOrderBy_Proof5Vertices()
+        public void Graph_OrderTopologically_Proof5Vertices()
         {
             var proof = new TopologicalOrderProof
             {

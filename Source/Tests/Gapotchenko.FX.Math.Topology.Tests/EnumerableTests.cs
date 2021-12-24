@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
     public class EnumerableTests
     {
         [TestMethod]
-        public void Enumerable_TopologicalOrderBy_1()
+        public void Enumerable_OrderTopologicallyBy_1()
         {
             static bool df(char a, char b) =>
                 (a + " depends on " + b) switch
@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Enumerable_TopologicalOrderBy_Proof4Vertices()
+        public void Enumerable_OrderTopologicallyBy_Proof4Vertices()
         {
             var proof = new TopologicalOrderProof
             {
@@ -45,7 +45,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Enumerable_TopologicalOrderBy_Proof5Vertices()
+        public void Enumerable_OrderTopologicallyBy_Proof5Vertices()
         {
             var proof = new TopologicalOrderProof
             {
@@ -59,7 +59,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Enumerable_TopologicalOrderBy_25()
+        public void Enumerable_OrderTopologicallyBy_25()
         {
             static bool df(char a, char b) =>
                 (a + " depends on " + b) switch

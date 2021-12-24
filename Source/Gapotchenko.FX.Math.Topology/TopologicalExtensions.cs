@@ -46,16 +46,30 @@ namespace Gapotchenko.FX.Math.Topology
             if (dependencyFunction == null)
                 throw new ArgumentNullException(nameof(dependencyFunction));
 
+            return OrderTopologicallyByCore(
+                source,
+                keySelector,
+                comparer,
+                vertices => new Graph<TKey>(
+                    vertices,
+                    new GraphIncidenceFunction<TKey>(dependencyFunction),
+                    comparer));
+        }
+
+        static IEnumerable<T> OrderTopologicallyByCore<T, TKey>(
+            IEnumerable<T> source,
+            Func<T, TKey> keySelector,
+            IEqualityComparer<TKey>? comparer,
+            Func<IEnumerable<TKey>, Graph<TKey>> graphFactory)
+            where TKey : notnull
+        {
             var list = EnumerableEx.AsList(source);
             int n = list.Count;
 
             if (n < 2)
                 return list;
 
-            var g = new Graph<TKey>(
-                list.Select(keySelector).Distinct(comparer),
-                new GraphIncidenceFunction<TKey>(dependencyFunction),
-                comparer);
+            var g = graphFactory(list.Select(keySelector).Distinct(comparer));
 
             if (list == source)
                 list = list.Clone();
