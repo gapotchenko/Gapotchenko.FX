@@ -82,7 +82,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// </para>
         /// <para>
         /// Reflexive reduction prunes the reflexive relations.
-        /// Reflexive relation is caused by a vertex which has a connection (edge) to itself.
+        /// Reflexive relation is caused by a vertex that has a connection (edge) to itself.
         /// The removal of such connections prunes the reflexive relations, making a graph reflexively reduced.
         /// </para>
         /// </summary>
@@ -106,7 +106,7 @@ namespace Gapotchenko.FX.Math.Topology
         void ExceptWith(IReadOnlyGraph<T> other);
 
         /// <summary>
-        /// Modifies the current graph so that it contains only vertices and edges that are also in a specified graph.
+        /// Modifies the current graph so that it contains only vertices and edges that are also present in a specified graph.
         /// </summary>
         /// <param name="other">The graph to compare to the current one.</param>
         void IntersectWith(IReadOnlyGraph<T> other);

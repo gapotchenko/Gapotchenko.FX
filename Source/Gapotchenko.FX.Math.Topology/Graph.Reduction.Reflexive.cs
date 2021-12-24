@@ -21,7 +21,14 @@
         }
 
         /// <summary>
-        /// Gets a reflexively reduced graph.
+        /// <para>
+        /// Gets a reflexive reduction of the current graph.
+        /// </para>
+        /// <para>
+        /// Reflexive reduction prunes the reflexive relations.
+        /// Reflexive relation is caused by a vertex that has a connection (edge) to itself.
+        /// The removal of such connections prunes the reflexive relations, making a graph reflexively reduced.
+        /// </para>
         /// </summary>
         /// <returns>The reflexively reduced graph.</returns>
         public Graph<T> GetReflexiveReduction()

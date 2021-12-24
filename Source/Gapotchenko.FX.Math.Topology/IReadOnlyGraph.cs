@@ -74,7 +74,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a sequence of isolated vertices of the current graph.
         /// </para>
         /// <para>
-        /// Isolated vertices are vertices with degree zero; that is, vertices that are not incident with any edge.
+        /// Isolated vertices are vertices with degree zero; that is, vertices that are not incident with any edges.
         /// </para>
         /// </summary>
         IEnumerable<T> IsolatedVertices { get; }
@@ -147,7 +147,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// </para>
         /// <para>
         /// Reflexive reduction prunes the reflexive relations.
-        /// Reflexive relation is caused by a vertex which has a connection (edge) to itself.
+        /// Reflexive relation is caused by a vertex that has a connection (edge) to itself.
         /// The removal of such connections prunes the reflexive relations, making a graph reflexively reduced.
         /// </para>
         /// </summary>
