@@ -250,38 +250,6 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <returns>Sequence of vertices in topologically sorted order.</returns>
         /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
-        IEnumerable<T> OrderTopologically();
-
-        /// <summary>
-        /// <para>
-        /// Gets a sequence of vertices ordered topologically with a subsequent ascending ordering according to a key.
-        /// </para>
-        /// <para>
-        /// Topological order of a directed graph is an order of its vertices such that for every directed edge u → v, u comes before v.
-        /// </para>
-        /// </summary>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <param name="keySelector">A function to extract a key from a vertex.</param>
-        /// <param name="comparer">An <see cref="IComparer{TKey}"/> to compare keys.</param>
-        /// <returns>Sequence of vertices in topological order with a subsequent ascending ordering according to a key.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
-        /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
-        IOrderedEnumerable<T> OrderTopologicallyBy<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default);
-
-        /// <summary>
-        /// <para>
-        /// Gets the vertices sequence ordered topologically with a subsequent descending ordering according to a key.
-        /// </para>
-        /// <para>
-        /// Topological order of a directed graph is an order of its vertices such that for every directed edge u → v, u comes before v.
-        /// </para>
-        /// </summary>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <param name="keySelector">A function to extract a key from a vertex.</param>
-        /// <param name="comparer">An <see cref="IComparer{TKey}"/> to compare keys.</param>
-        /// <returns>Sequence of vertices in topological order with a subsequent descending ordering according to a key.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
-        /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
-        IOrderedEnumerable<T> OrderTopologicallyByDescending<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default);
+        IOrderedEnumerable<T> OrderTopologically();
     }
 }
