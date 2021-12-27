@@ -25,7 +25,7 @@ namespace Gapotchenko.FX.Collections.Generic
         }
     }
 
-    sealed class AssociativeArrayKeyValueCollectionDebugView<T>
+    sealed class AssociativeArrayKeyValueCollectionDebugView<TKey, TValue, T>
     {
         readonly ICollection<T> _collection;
 

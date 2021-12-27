@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Gapotchenko.FX.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Collections.Generic
@@ -108,6 +110,41 @@ namespace Gapotchenko.FX.Collections.Generic
             _hasNullValue = associativeArray._hasNullValue;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssociativeArray{TKey, TValue}"/> class that contains 
+        /// elements copied from the specified <see cref="IDictionary{TKey, TValue}"/> and uses the default 
+        /// equality comparer for the key type.
+        /// </summary>
+        /// <param name="dictionary">
+        /// The <see cref="IDictionary{TKey, TValue}"/> whose elements are copied to the new 
+        /// <see cref="AssociativeArray{TKey, TValue}"/>.
+        /// </param>
+        public AssociativeArray(IDictionary<TKey, TValue> dictionary)
+            : this(dictionary, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssociativeArray{TKey, TValue}"/> class that contains 
+        /// elements copied from the specified <see cref="IDictionary{TKey, TValue}"/> and uses the specified 
+        /// <see cref="IEqualityComparer{T}"/>.
+        /// </summary>
+        /// <param name="dictionary">
+        /// The <see cref="IDictionary{TKey, TValue}"/> whose elements are copied to the new 
+        /// <see cref="AssociativeArray{TKey, TValue}"/>.
+        /// </param>
+        /// <param name="comparer">
+        /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or null to use the default 
+        /// <see cref="IEqualityComparer{T}"/> for the type of the key.
+        /// </param>
+        public AssociativeArray(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
+        {
+            if (dictionary == null)
+                throw new ArgumentNullException(nameof(dictionary));
+
+            _dictionary = new(dictionary, comparer!);
+            _nullValue = default!;
+        }
 
         /// <summary>
         /// Gets or sets the value associated with the specified key.
@@ -553,9 +590,11 @@ namespace Gapotchenko.FX.Collections.Generic
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             if (_hasNullValue)
-                yield return new KeyValuePair<TKey, TValue>(default!, _nullValue!);
-            foreach (var item in _dictionary)
-                yield return item!;
+                return _dictionary
+                    .Prepend(new KeyValuePair<TKey, TValue>(default!, _nullValue!))
+                    .GetEnumerator();
+            else
+                return _dictionary.GetEnumerator();
         }
 
 
@@ -627,7 +666,7 @@ namespace Gapotchenko.FX.Collections.Generic
             public void Reset() => _enumerator.Reset();
         }
 
-        [DebuggerTypeProxy(typeof(AssociativeArrayKeyValueCollectionDebugView<>))]
+        [DebuggerTypeProxy(typeof(AssociativeArrayKeyValueCollectionDebugView<,,>))]
         [DebuggerDisplay("Count = {Count}")]
         sealed class KeyValueCollection<T> : ICollection<T>, ICollection
         {
@@ -724,9 +763,9 @@ namespace Gapotchenko.FX.Collections.Generic
             public IEnumerator<T> GetEnumerator()
             {
                 if (_parent._hasNullValue)
-                    yield return _nullValueGetter()!;
-                foreach (var item in _collection)
-                    yield return item!;
+                    return _collection.Prepend(_nullValueGetter()!).GetEnumerator();
+                else
+                    return _collection.GetEnumerator();
             }
 
             public bool Remove(T item)
