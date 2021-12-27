@@ -7,6 +7,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
+#if NETCOREAPP3_0 || NET45
+#pragma warning disable CS8714
+#endif
+
 namespace Gapotchenko.FX.Collections.Generic
 {
     /// <summary>
@@ -16,13 +20,14 @@ namespace Gapotchenko.FX.Collections.Generic
     /// <typeparam name="TValue">The type of the values in the associative array.</typeparam>
     [DebuggerTypeProxy(typeof(AssociativeArrayDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
-#pragma warning disable CS8714
     public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>
-#pragma warning restore CS8714
     {
 #pragma warning disable CS8714
         Dictionary<TKey, TValue> _dictionary;
+#if !NETCOREAPP3_0 && !NET45
 #pragma warning restore CS8714
+#endif
+
         TValue _nullValue;
         bool _hasNullValue;
 
@@ -184,17 +189,13 @@ namespace Gapotchenko.FX.Collections.Generic
             }
         }
 
-#pragma warning disable CS8714
         TValue IDictionary<TKey, TValue>.this[TKey key]
-#pragma warning restore CS8714
         {
             get => this[key];
             set => this[key] = value;
         }
 
-#pragma warning disable CS8714
         TValue IReadOnlyDictionary<TKey, TValue>.this[TKey key] =>
-#pragma warning restore CS8714
             this[key]!;
 
         object? IDictionary.this[object key]
@@ -250,14 +251,10 @@ namespace Gapotchenko.FX.Collections.Generic
             _hasNullValue ? _dictionary.Count + 1 : _dictionary.Count;
 
         ICollection IDictionary.Keys => (ICollection)Keys;
-#pragma warning disable CS8714
         IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
-#pragma warning restore CS8714
 
         ICollection IDictionary.Values => (ICollection)Values;
-#pragma warning disable CS8714
         IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
-#pragma warning restore CS8714
 
         bool IDictionary.IsReadOnly => false;
         bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
@@ -347,10 +344,7 @@ namespace Gapotchenko.FX.Collections.Generic
             }
             else
             {
-
-#pragma warning disable CS8714
                 return _dictionary.TryAdd(key, value);
-#pragma warning restore CS8714
             }
         }
 
@@ -469,9 +463,7 @@ namespace Gapotchenko.FX.Collections.Generic
                 }
             }
 
-#pragma warning disable CS8714
             return _dictionary.Remove(key, out value);
-#pragma warning restore CS8714
         }
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> keyValuePair)
@@ -525,9 +517,7 @@ namespace Gapotchenko.FX.Collections.Generic
             return _dictionary.TryGetValue(key, out value!);
         }
 
-#pragma warning disable CS8714
         bool IReadOnlyDictionary<TKey, TValue>.TryGetValue(
-#pragma warning restore CS8714
             TKey key,
 #if NETCOREAPP3_1_OR_GREATER
             [MaybeNullWhen(false)]
@@ -547,9 +537,7 @@ namespace Gapotchenko.FX.Collections.Generic
             return false;
         }
 
-#pragma warning disable CS8714
         bool IReadOnlyDictionary<TKey, TValue>.ContainsKey(TKey key) =>
-#pragma warning restore CS8714
             ContainsKey(key);
 
         void ICollection.CopyTo(Array array, int arrayIndex)
