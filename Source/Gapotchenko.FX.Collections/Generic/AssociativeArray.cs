@@ -28,7 +28,7 @@ namespace Gapotchenko.FX.Collections.Generic
 #pragma warning restore CS8714
 #endif
 
-        Optional<TValue> m_NullValue;
+        Optional<TValue> m_NullSlot;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssociativeArray{TKey, TValue}"/> class that is empty, 
@@ -164,7 +164,7 @@ namespace Gapotchenko.FX.Collections.Generic
                 var source = (AssociativeArray<TKey, TValue>)collection;
 
                 m_Dictionary = new(source.m_Dictionary, comparer);
-                m_NullValue = source.m_NullValue;
+                m_NullSlot = source.m_NullSlot;
             }
 #pragma warning disable CS8714
             else if (collectionType == typeof(Dictionary<TKey, TValue>))
@@ -203,18 +203,25 @@ namespace Gapotchenko.FX.Collections.Generic
             {
                 if (key is null)
                 {
-                    if (m_NullValue.HasValue)
-                        return m_NullValue.Value;
-                    ThrowHelper.ThrowKeyNotFoundException(key);
-                    return default!;
+                    if (m_NullSlot.HasValue)
+                    {
+                        return m_NullSlot.Value;
+                    }
+                    else
+                    {
+                        ThrowHelper.ThrowKeyNotFoundException(key);
+                        return default!;
+                    }
                 }
-
-                return m_Dictionary[key];
+                else
+                {
+                    return m_Dictionary[key];
+                }
             }
             set
             {
                 if (key is null)
-                    m_NullValue = value;
+                    m_NullSlot = value;
                 else
                     m_Dictionary[key] = value;
             }
@@ -279,7 +286,7 @@ namespace Gapotchenko.FX.Collections.Generic
         /// Gets the number of key/value pairs contained in the <see cref="AssociativeArray{TKey, TValue}"/>.
         /// </summary>
         public int Count =>
-            m_NullValue.HasValue ? m_Dictionary.Count + 1 : m_Dictionary.Count;
+            m_NullSlot.HasValue ? m_Dictionary.Count + 1 : m_Dictionary.Count;
 
         ICollection IDictionary.Keys => (ICollection)Keys;
         IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
@@ -308,9 +315,9 @@ namespace Gapotchenko.FX.Collections.Generic
         {
             if (key is null)
             {
-                if (!m_NullValue.HasValue)
+                if (!m_NullSlot.HasValue)
                 {
-                    m_NullValue = value;
+                    m_NullSlot = value;
                 }
                 else
                 {
@@ -335,9 +342,9 @@ namespace Gapotchenko.FX.Collections.Generic
                 if (value is not null && value is not TValue)
                     ThrowHelper.ThrowWrongValueTypeArgumentException(value, typeof(TValue));
 
-                if (!m_NullValue.HasValue)
+                if (!m_NullSlot.HasValue)
                 {
-                    m_NullValue = (TValue)value!;
+                    m_NullSlot = (TValue)value!;
                 }
                 else
                 {
@@ -360,13 +367,13 @@ namespace Gapotchenko.FX.Collections.Generic
         {
             if (key is null)
             {
-                if (m_NullValue.HasValue)
+                if (m_NullSlot.HasValue)
                 {
                     return false;
                 }
                 else
                 {
-                    m_NullValue = value;
+                    m_NullSlot = value;
                     return true;
                 }
             }
@@ -382,7 +389,7 @@ namespace Gapotchenko.FX.Collections.Generic
         public void Clear()
         {
             m_Dictionary.Clear();
-            m_NullValue = default;
+            m_NullSlot = default;
         }
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
@@ -392,8 +399,10 @@ namespace Gapotchenko.FX.Collections.Generic
             {
                 return true;
             }
-
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -407,7 +416,7 @@ namespace Gapotchenko.FX.Collections.Generic
         public bool ContainsKey(TKey key)
         {
             if (key is null)
-                return m_NullValue.HasValue;
+                return m_NullSlot.HasValue;
             else
                 return m_Dictionary.ContainsKey(key);
         }
@@ -422,25 +431,24 @@ namespace Gapotchenko.FX.Collections.Generic
         /// </returns>
         public bool ContainsValue(TValue value)
         {
-            if (m_NullValue.HasValue)
+            if (m_NullSlot.HasValue &&
+                EqualityComparer<TValue>.Default.Equals(value, m_NullSlot.Value))
             {
-                if (value is null && m_NullValue.Value is null ||
-                    EqualityComparer<TValue>.Default.Equals(value, m_NullValue.Value))
-                {
-                    return true;
-                }
+                return true;
             }
-
-            return m_Dictionary.ContainsValue(value);
+            else
+            {
+                return m_Dictionary.ContainsValue(value);
+            }
         }
 
         void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
-            ((ICollection<KeyValuePair<TKey, TValue>>)m_Dictionary).CopyTo(array, arrayIndex + (m_NullValue.HasValue ? 1 : 0));
+            ((ICollection<KeyValuePair<TKey, TValue>>)m_Dictionary).CopyTo(array, arrayIndex + (m_NullSlot.HasValue ? 1 : 0));
 
-            if (m_NullValue.HasValue)
+            if (m_NullSlot.HasValue)
             {
-                array[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullValue.Value);
+                array[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullSlot.Value);
             }
         }
 
@@ -453,9 +461,9 @@ namespace Gapotchenko.FX.Collections.Generic
         {
             if (key is null)
             {
-                if (m_NullValue.HasValue)
+                if (m_NullSlot.HasValue)
                 {
-                    m_NullValue = default;
+                    m_NullSlot = default;
                     return true;
                 }
 
@@ -478,10 +486,10 @@ namespace Gapotchenko.FX.Collections.Generic
         {
             if (key is null)
             {
-                if (m_NullValue.HasValue)
+                if (m_NullSlot.HasValue)
                 {
-                    value = m_NullValue.Value;
-                    m_NullValue = default;
+                    value = m_NullSlot.Value;
+                    m_NullSlot = default;
                     return true;
                 }
                 else
@@ -490,24 +498,31 @@ namespace Gapotchenko.FX.Collections.Generic
                     return false;
                 }
             }
-
-            return m_Dictionary.Remove(key, out value);
+            else
+            {
+                return m_Dictionary.Remove(key, out value);
+            }
         }
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> keyValuePair)
         {
             if (keyValuePair.Key is null)
             {
-                if (m_NullValue.HasValue && EqualityComparer<TValue>.Default.Equals(m_NullValue.Value, keyValuePair.Value))
+                if (m_NullSlot.HasValue &&
+                    EqualityComparer<TValue>.Default.Equals(m_NullSlot.Value, keyValuePair.Value))
                 {
-                    m_NullValue = default;
+                    m_NullSlot = default;
                     return true;
                 }
-
-                return false;
+                else
+                {
+                    return false;
+                }
             }
-
-            return ((ICollection<KeyValuePair<TKey, TValue>>)m_Dictionary).Remove(keyValuePair);
+            else
+            {
+                return ((ICollection<KeyValuePair<TKey, TValue>>)m_Dictionary).Remove(keyValuePair);
+            }
         }
 
         /// <summary>
@@ -529,9 +544,9 @@ namespace Gapotchenko.FX.Collections.Generic
         {
             if (key is null)
             {
-                if (m_NullValue.HasValue)
+                if (m_NullSlot.HasValue)
                 {
-                    value = m_NullValue.Value;
+                    value = m_NullSlot.Value;
                     return true;
                 }
                 else
@@ -540,8 +555,10 @@ namespace Gapotchenko.FX.Collections.Generic
                     return false;
                 }
             }
-
-            return m_Dictionary.TryGetValue(key, out value!);
+            else
+            {
+                return m_Dictionary.TryGetValue(key, out value!);
+            }
         }
 
         bool IReadOnlyDictionary<TKey, TValue>.TryGetValue(
@@ -561,7 +578,8 @@ namespace Gapotchenko.FX.Collections.Generic
         {
             if (key is TKey tKey)
                 return ContainsKey(tKey);
-            return false;
+            else
+                return false;
         }
 
         bool IReadOnlyDictionary<TKey, TValue>.ContainsKey(TKey key) =>
@@ -569,21 +587,21 @@ namespace Gapotchenko.FX.Collections.Generic
 
         void ICollection.CopyTo(Array array, int arrayIndex)
         {
-            ((ICollection)m_Dictionary).CopyTo(array, arrayIndex + (m_NullValue.HasValue ? 1 : 0));
+            ((ICollection)m_Dictionary).CopyTo(array, arrayIndex + (m_NullSlot.HasValue ? 1 : 0));
 
-            if (m_NullValue.HasValue)
+            if (m_NullSlot.HasValue)
             {
                 if (array is KeyValuePair<TKey, TValue>[] pairs)
                 {
-                    pairs[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullValue.Value);
+                    pairs[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullSlot.Value);
                 }
                 else if (array is DictionaryEntry[] dictEntryArray)
                 {
-                    dictEntryArray[arrayIndex] = new DictionaryEntry(default!, m_NullValue.Value);
+                    dictEntryArray[arrayIndex] = new DictionaryEntry(default!, m_NullSlot.Value);
                 }
                 else if (array is object[] objArray)
                 {
-                    objArray[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullValue.Value);
+                    objArray[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullSlot.Value);
                 }
                 else
                 {
@@ -592,11 +610,11 @@ namespace Gapotchenko.FX.Collections.Generic
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() =>
-            GetEnumerator();
-
-        IDictionaryEnumerator IDictionary.GetEnumerator() =>
-            new DictionaryEnumerator(GetEnumerator());
+        void IDictionary.Remove(object key)
+        {
+            if (key is TKey tKey)
+                Remove(tKey);
+        }
 
         /// <summary>
         /// Returns an enumerator that iterates through the <see cref="AssociativeArray{TKey, TValue}"/>.
@@ -604,10 +622,10 @@ namespace Gapotchenko.FX.Collections.Generic
         /// <returns>An <see cref="IEnumerator{T}"/> for the <see cref="AssociativeArray{TKey, TValue}"/>.</returns>
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            if (m_NullValue.HasValue)
+            if (m_NullSlot.HasValue)
             {
                 return m_Dictionary
-                    .Prepend(new KeyValuePair<TKey, TValue>(default!, m_NullValue.Value))
+                    .Prepend(new KeyValuePair<TKey, TValue>(default!, m_NullSlot.Value))
                     .GetEnumerator();
             }
             else
@@ -616,12 +634,9 @@ namespace Gapotchenko.FX.Collections.Generic
             }
         }
 
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        void IDictionary.Remove(object key)
-        {
-            if (key is TKey tKey)
-                Remove(tKey);
-        }
+        IDictionaryEnumerator IDictionary.GetEnumerator() => new DictionaryEnumerator(GetEnumerator());
 
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
 
@@ -710,51 +725,7 @@ namespace Gapotchenko.FX.Collections.Generic
 
             object ICollection.SyncRoot => Parent.m_Dictionary;
 
-            public void Add(T item) =>
-                ThrowMutationNotAllowed();
-
-            public void Clear() =>
-                ThrowMutationNotAllowed();
-
-            public virtual bool Contains(T item) => m_Collection.Contains(item);
-
-            protected abstract Optional<T> NullValue { get; }
-
-            public void CopyTo(T[] array, int arrayIndex)
-            {
-                var nullValue = NullValue;
-
-                m_Collection.CopyTo(array, arrayIndex + (nullValue.HasValue ? 1 : 0));
-
-                if (nullValue.HasValue)
-                    array[arrayIndex] = nullValue.Value;
-            }
-
-            public void CopyTo(Array array, int arrayIndex)
-            {
-                var nullValue = NullValue;
-
-                ((ICollection)m_Collection).CopyTo(array, arrayIndex + (nullValue.HasValue ? 1 : 0));
-
-                if (nullValue.HasValue)
-                {
-                    if (array is T[] tArray)
-                        tArray[arrayIndex] = nullValue.Value;
-                    else if (array is object[] objArray)
-                        objArray[arrayIndex] = nullValue.Value!;
-                    else
-                        ThrowHelper.ThrowArgumentException_Argument_InvalidArrayType();
-                }
-            }
-
-            public IEnumerator<T> GetEnumerator()
-            {
-                var nullValue = NullValue;
-                if (nullValue.HasValue)
-                    return m_Collection.Prepend(nullValue.Value).GetEnumerator();
-                else
-                    return m_Collection.GetEnumerator();
-            }
+            public void Add(T item) => ThrowMutationNotAllowed();
 
             public bool Remove(T item)
             {
@@ -762,8 +733,49 @@ namespace Gapotchenko.FX.Collections.Generic
                 return default;
             }
 
-            IEnumerator IEnumerable.GetEnumerator() =>
-                GetEnumerator();
+            public void Clear() => ThrowMutationNotAllowed();
+
+            public virtual bool Contains(T item) => m_Collection.Contains(item);
+
+            protected abstract Optional<T> NullSlot { get; }
+
+            public void CopyTo(T[] array, int arrayIndex)
+            {
+                var nullSlot = NullSlot;
+
+                m_Collection.CopyTo(array, arrayIndex + (nullSlot.HasValue ? 1 : 0));
+
+                if (nullSlot.HasValue)
+                    array[arrayIndex] = nullSlot.Value;
+            }
+
+            public void CopyTo(Array array, int arrayIndex)
+            {
+                var nullSlot = NullSlot;
+
+                ((ICollection)m_Collection).CopyTo(array, arrayIndex + (nullSlot.HasValue ? 1 : 0));
+
+                if (nullSlot.HasValue)
+                {
+                    if (array is T[] tArray)
+                        tArray[arrayIndex] = nullSlot.Value;
+                    else if (array is object[] objArray)
+                        objArray[arrayIndex] = nullSlot.Value!;
+                    else
+                        ThrowHelper.ThrowArgumentException_Argument_InvalidArrayType();
+                }
+            }
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                var nullSlot = NullSlot;
+                if (nullSlot.HasValue)
+                    return m_Collection.Prepend(nullSlot.Value).GetEnumerator();
+                else
+                    return m_Collection.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
             [DoesNotReturn]
             protected abstract void ThrowMutationNotAllowed();
@@ -776,16 +788,17 @@ namespace Gapotchenko.FX.Collections.Generic
             {
             }
 
-            protected override Optional<TKey> NullValue =>
-                Parent.m_NullValue.HasValue ?
+            protected override Optional<TKey> NullSlot =>
+                Parent.m_NullSlot.HasValue ?
                     Optional.Some(default(TKey)!) :
                     default;
 
             public override bool Contains(TKey item)
             {
                 if (item is null)
-                    return Parent.m_NullValue.HasValue;
-                return base.Contains(item);
+                    return Parent.m_NullSlot.HasValue;
+                else
+                    return base.Contains(item);
             }
 
             [DoesNotReturn]
@@ -800,18 +813,20 @@ namespace Gapotchenko.FX.Collections.Generic
             {
             }
 
-            protected override Optional<TValue> NullValue => Parent.m_NullValue;
+            protected override Optional<TValue> NullSlot => Parent.m_NullSlot;
 
             public override bool Contains(TValue item)
             {
-                var nullValue = NullValue;
-                if (nullValue.HasValue &&
-                    EqualityComparer<TValue>.Default.Equals(item, nullValue.Value))
+                var nullSlot = NullSlot;
+                if (nullSlot.HasValue &&
+                    EqualityComparer<TValue>.Default.Equals(item, nullSlot.Value))
                 {
                     return true;
                 }
-
-                return base.Contains(item);
+                else
+                {
+                    return base.Contains(item);
+                }
             }
 
             [DoesNotReturn]
