@@ -711,10 +711,10 @@ namespace Gapotchenko.FX.Collections.Generic
             object ICollection.SyncRoot => Parent.m_Dictionary;
 
             public void Add(T item) =>
-                ThrowHelper.ThrowCollectionMutatingNotAllowed();
+                ThrowHelper.ThrowCollectionMutationNotAllowed();
 
             public void Clear() =>
-                ThrowHelper.ThrowCollectionMutatingNotAllowed();
+                ThrowHelper.ThrowCollectionMutationNotAllowed();
 
             public virtual bool Contains(T item) => m_Collection.Contains(item);
 
@@ -758,7 +758,7 @@ namespace Gapotchenko.FX.Collections.Generic
 
             public bool Remove(T item)
             {
-                ThrowHelper.ThrowCollectionMutatingNotAllowed();
+                ThrowHelper.ThrowCollectionMutationNotAllowed();
                 return default;
             }
 
@@ -839,9 +839,9 @@ namespace Gapotchenko.FX.Collections.Generic
             }
 
             [DoesNotReturn]
-            public static void ThrowCollectionMutatingNotAllowed()
+            public static void ThrowCollectionMutationNotAllowed()
             {
-                throw new NotSupportedException($"Mutating a key/value collection derived from an associative array is not allowed.");
+                throw new NotSupportedException($"Mutating a key/value collection retrieved from an associative array is not allowed.");
             }
 
             [DoesNotReturn]
