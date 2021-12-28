@@ -178,7 +178,7 @@ namespace Gapotchenko.FX.Collections.Generic
 #endif
             else
             {
-                m_Dictionary = new((collection as ICollection<KeyValuePair<TKey, TValue>>)?.Count ?? 0, comparer);
+                m_Dictionary = new(collection.TryGetNonEnumeratedCount() ?? 0, comparer);
 
                 foreach (var pair in collection)
                 {
