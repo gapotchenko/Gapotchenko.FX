@@ -31,5 +31,39 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray
             Assert.Equal(new[] { null, string.Empty }, array.Keys);
             Assert.Equal(new[] { string.Empty, null }, array.Values);
         }
+
+        [Fact]
+        public void AssociativeArray_CtorTricks()
+        {
+            var src1 = new AssociativeArray<string?, string>
+            {
+                ["a"] = "b",
+                [null] = string.Empty
+            };
+
+            var dst = new AssociativeArray<string?, string>(src1);
+            Assert.Equal("b", dst["a"]);
+            Assert.Equal(string.Empty, dst[null]);
+
+            var src2 = new Dictionary<string, string>
+            {
+                ["a"] = "b",
+            };
+
+#pragma warning disable CS8620
+            dst = new AssociativeArray<string?, string>(src2);
+#pragma warning restore CS8620
+            Assert.Equal("b", dst["a"]);
+            Assert.False(dst.ContainsKey(null));
+
+            var src3 = new[]
+            {
+                new KeyValuePair<string?, string>("a", "b"),
+                new KeyValuePair<string?, string>(null, string.Empty),
+            };
+            dst = new AssociativeArray<string?, string>(src3);
+            Assert.Equal("b", dst["a"]);
+            Assert.Equal(string.Empty, dst[null]);
+        }
     }
 }

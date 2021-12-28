@@ -45,6 +45,7 @@ namespace Gapotchenko.FX.Collections.Generic
         /// has the specified initial capacity, and uses the default equality comparer for the key type.
         /// </summary>
         /// <param name="capacity">The initial number of elements that the <see cref="AssociativeArray{TKey, TValue}"/> can contain.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
         public AssociativeArray(int capacity)
             : this(capacity, null)
         {
@@ -64,20 +65,6 @@ namespace Gapotchenko.FX.Collections.Generic
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AssociativeArray{TKey, TValue}"/> class that contains 
-        /// elements copied from the specified <see cref="AssociativeArray{TKey, TValue}"/> and uses the default 
-        /// equality comparer for the key type.
-        /// </summary>
-        /// <param name="associativeArray">
-        /// The <see cref="AssociativeArray{TKey, TValue}"/> whose elements are copied to the new 
-        /// <see cref="AssociativeArray{TKey, TValue}"/>.
-        /// </param>
-        public AssociativeArray(AssociativeArray<TKey, TValue> associativeArray)
-            : this(associativeArray, null)
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="AssociativeArray{TKey, TValue}"/> class that is empty, 
         /// has the specified initial capacity, and uses the specified <see cref="IEqualityComparer{T}"/>.
         /// </summary>
@@ -86,6 +73,7 @@ namespace Gapotchenko.FX.Collections.Generic
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or null to use the default 
         /// <see cref="IEqualityComparer{T}"/> for the type of the key.
         /// </param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
         public AssociativeArray(int capacity, IEqualityComparer<TKey>? comparer)
         {
             m_Dictionary = new(capacity, comparer!);
@@ -94,61 +82,117 @@ namespace Gapotchenko.FX.Collections.Generic
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssociativeArray{TKey, TValue}"/> class that contains 
-        /// elements copied from the specified <see cref="AssociativeArray{TKey, TValue}"/> and uses the specified 
-        /// <see cref="IEqualityComparer{T}"/>.
-        /// </summary>
-        /// <param name="associativeArray">
-        /// The <see cref="AssociativeArray{TKey, TValue}"/> whose elements are copied to the new 
-        /// <see cref="AssociativeArray{TKey, TValue}"/>.
-        /// </param>
-        /// <param name="comparer">
-        /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or null to use the default 
-        /// <see cref="IEqualityComparer{T}"/> for the type of the key.
-        /// </param>
-        public AssociativeArray(AssociativeArray<TKey, TValue> associativeArray, IEqualityComparer<TKey>? comparer)
-        {
-            if (associativeArray == null)
-                throw new ArgumentNullException(nameof(associativeArray));
-
-            m_Dictionary = new(associativeArray.m_Dictionary, comparer!);
-            m_NullValue = associativeArray.m_NullValue;
-            m_HasNullValue = associativeArray.m_HasNullValue;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AssociativeArray{TKey, TValue}"/> class that contains 
-        /// elements copied from the specified <see cref="IDictionary{TKey, TValue}"/> and uses the default 
+        /// elements copied from the specified <see cref="IReadOnlyDictionary{TKey, TValue}"/> and uses the default 
         /// equality comparer for the key type.
         /// </summary>
         /// <param name="dictionary">
-        /// The <see cref="IDictionary{TKey, TValue}"/> whose elements are copied to the new 
+        /// The <see cref="IReadOnlyDictionary{TKey, TValue}"/> whose elements are copied to the new 
         /// <see cref="AssociativeArray{TKey, TValue}"/>.
         /// </param>
-        public AssociativeArray(IDictionary<TKey, TValue> dictionary)
+        /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="dictionary"/> contains one or more duplicated keys.</exception>
+        public AssociativeArray(IReadOnlyDictionary<TKey, TValue> dictionary)
             : this(dictionary, null)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssociativeArray{TKey, TValue}"/> class that contains 
-        /// elements copied from the specified <see cref="IDictionary{TKey, TValue}"/> and uses the specified 
+        /// elements copied from the specified <see cref="IReadOnlyDictionary{TKey, TValue}"/> and uses the specified 
         /// <see cref="IEqualityComparer{T}"/>.
         /// </summary>
         /// <param name="dictionary">
-        /// The <see cref="IDictionary{TKey, TValue}"/> whose elements are copied to the new 
+        /// The <see cref="IReadOnlyDictionary{TKey, TValue}"/> whose elements are copied to the new 
         /// <see cref="AssociativeArray{TKey, TValue}"/>.
         /// </param>
         /// <param name="comparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or null to use the default 
         /// <see cref="IEqualityComparer{T}"/> for the type of the key.
         /// </param>
-        public AssociativeArray(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
+        /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="dictionary"/> contains one or more duplicated keys.</exception>
+        public AssociativeArray(IReadOnlyDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
         {
             if (dictionary == null)
                 throw new ArgumentNullException(nameof(dictionary));
 
-            m_Dictionary = new(dictionary, comparer!);
+            m_Dictionary = default!;
             m_NullValue = default!;
+
+            AddRange(dictionary, comparer);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssociativeArray{TKey, TValue}"/> class that contains 
+        /// elements copied from the specified <see cref="IEnumerable{T}"/> and uses the default 
+        /// equality comparer for the key type.
+        /// </summary>
+        /// <param name="collection">
+        /// The <see cref="IEnumerable{T}"/> whose elements are copied to the new <see cref="AssociativeArray{TKey, TValue}"/>.
+        /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="collection"/> contains one or more duplicated keys.</exception>
+        public AssociativeArray(IEnumerable<KeyValuePair<TKey, TValue>> collection)
+            : this(collection, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssociativeArray{TKey, TValue}"/> class that contains 
+        /// elements copied from the specified <see cref="IEnumerable{T}"/> and uses the specified 
+        /// <see cref="IEqualityComparer{T}"/>.
+        /// </summary>
+        /// <param name="collection">
+        /// The <see cref="IEnumerable{T}"/> whose elements are copied to the new <see cref="AssociativeArray{TKey, TValue}"/>.
+        /// </param>
+        /// <param name="comparer">
+        /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or null to use the default 
+        /// <see cref="IEqualityComparer{T}"/> for the type of the key.
+        /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="collection"/> contains one or more duplicated keys.</exception>
+        public AssociativeArray(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
+        {
+            if (collection == null)
+                throw new ArgumentNullException(nameof(collection));
+
+            m_Dictionary = default!;
+            m_NullValue = default!;
+
+            AddRange(collection, comparer);
+        }
+
+        void AddRange(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
+        {
+            var collectionType = collection.GetType();
+
+            if (collectionType == typeof(AssociativeArray<TKey, TValue>))
+            {
+                var source = (AssociativeArray<TKey, TValue>)collection;
+
+                m_Dictionary = new(source.m_Dictionary, comparer);
+                m_HasNullValue = source.m_HasNullValue;
+                m_NullValue = source.m_NullValue;
+            }
+#pragma warning disable CS8714
+            else if (collectionType == typeof(Dictionary<TKey, TValue>))
+            {
+                var source = (Dictionary<TKey, TValue>)collection;
+
+                m_Dictionary = new(source, comparer);
+            }
+#if !NETCOREAPP3_0 && !NETFRAMEWORK && !NETSTANDARD2_0
+#pragma warning restore CS8714
+#endif
+            else
+            {
+                m_Dictionary = new((collection as ICollection<KeyValuePair<TKey, TValue>>)?.Count ?? 0, comparer);
+
+                foreach (var pair in collection)
+                {
+                    Add(pair.Key, pair.Value);
+                }
+            }
         }
 
         /// <summary>
