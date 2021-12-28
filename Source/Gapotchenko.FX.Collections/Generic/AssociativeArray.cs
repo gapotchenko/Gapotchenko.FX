@@ -246,7 +246,7 @@ namespace Gapotchenko.FX.Collections.Generic
 
                 try
                 {
-                    TKey tempKey = (TKey)key;
+                    var tempKey = (TKey)key;
                     try
                     {
                         this[tempKey] = (TValue)value!;
