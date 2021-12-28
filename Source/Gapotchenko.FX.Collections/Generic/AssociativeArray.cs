@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-#if NETCOREAPP3_0 || NETFRAMEWORK
+#if NETCOREAPP3_0 || NETFRAMEWORK || NETSTANDARD2_0
 #pragma warning disable CS8714
 #endif
 
@@ -24,7 +24,7 @@ namespace Gapotchenko.FX.Collections.Generic
     {
 #pragma warning disable CS8714
         Dictionary<TKey, TValue> m_Dictionary;
-#if !NETCOREAPP3_0 && !NETFRAMEWORK
+#if !NETCOREAPP3_0 && !NETFRAMEWORK && !NETSTANDARD2_0
 #pragma warning restore CS8714
 #endif
 
