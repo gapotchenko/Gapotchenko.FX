@@ -22,7 +22,7 @@ namespace Gapotchenko.FX.Math.Topology
         public int Count => m_Source.Count();
     }
 
-    sealed class GraphDebugView<T> where T : notnull
+    sealed class GraphDebugView<T>
     {
         public GraphDebugView(Graph<T> graph)
         {

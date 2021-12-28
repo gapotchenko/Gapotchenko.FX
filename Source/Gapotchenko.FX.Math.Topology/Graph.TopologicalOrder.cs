@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Collections.Generic;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,7 +141,7 @@ namespace Gapotchenko.FX.Math.Topology
             readonly IComparer<TKey> _keyComparer;
             readonly bool _descending;
             readonly IComparer<T>? _nextComparer;
-            readonly Dictionary<T, TKey> _keys;
+            readonly AssociativeArray<T, TKey> _keys;
 
             public TopologicalComparer(
                 Func<T, TKey> keySelector,

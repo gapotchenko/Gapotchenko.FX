@@ -1,4 +1,5 @@
-﻿using Gapotchenko.FX.Linq;
+﻿using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -432,7 +433,7 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="a">The first sequence of elements.</param>
         /// <param name="b">The second sequence of elements.</param>
         /// <returns>The Damerau–Levenshtein distance between the specified sequences of elements.</returns>
-        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b) where T : notnull =>
+        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b) =>
             DamerauLevenshteinDistance(a, b, null, null);
 
         /// <summary>
@@ -443,7 +444,7 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="b">The second sequence of elements.</param>
         /// <param name="maxDistance">The inclusive upped bound of the edit distance.</param>
         /// <returns>The Damerau–Levenshtein distance between the specified sequences of elements.</returns>
-        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) where T : notnull =>
+        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance) =>
             DamerauLevenshteinDistance(a, b, maxDistance, null);
 
         /// <summary>
@@ -454,7 +455,7 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="b">The second sequence of elements.</param>
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The Damerau–Levenshtein distance between the specified sequences of elements.</returns>
-        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) where T : notnull =>
+        public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, IEqualityComparer<T>? equalityComparer) =>
             DamerauLevenshteinDistance(a, b, null, equalityComparer);
 
         /// <summary>
@@ -467,7 +468,6 @@ namespace Gapotchenko.FX.Math.Geometry
         /// <param name="equalityComparer">The equality comparer.</param>
         /// <returns>The Damerau–Levenshtein distance between the specified sequences of elements.</returns>
         public static int DamerauLevenshteinDistance<T>(IEnumerable<T> a, IEnumerable<T> b, int? maxDistance, IEqualityComparer<T>? equalityComparer)
-            where T : notnull
         {
             if (a == null)
                 throw new ArgumentNullException(nameof(a));
@@ -498,7 +498,7 @@ namespace Gapotchenko.FX.Math.Geometry
             int maxDist = bList.Count + aList.Count;
 
             // Sequence elements map.
-            var da = new Dictionary<T, int>(equalityComparer);
+            var da = new AssociativeArray<T, int>(equalityComparer);
 
             // Create the distance matrix d[0 .. a.Length + 1][0 .. b.Length + 1].
             int[,] d = new int[aLength + 2, bLength + 2];

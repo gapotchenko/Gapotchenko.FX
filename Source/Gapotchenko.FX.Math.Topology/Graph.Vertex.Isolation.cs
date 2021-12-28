@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Collections.Generic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -35,7 +36,7 @@ namespace Gapotchenko.FX.Math.Topology
         {
             get
             {
-                var map = new Dictionary<T, bool>(Comparer);
+                var map = new AssociativeArray<T, bool>(Comparer);
 
                 foreach (var (v, adjRow) in m_AdjacencyList)
                 {
