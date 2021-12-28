@@ -116,7 +116,6 @@ namespace Gapotchenko.FX.Collections.Generic
             if (dictionary == null)
                 throw new ArgumentNullException(nameof(dictionary));
 
-            m_Dictionary = default!;
             m_NullValue = default!;
 
             AddRange(dictionary, comparer);
@@ -156,12 +155,12 @@ namespace Gapotchenko.FX.Collections.Generic
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
 
-            m_Dictionary = default!;
             m_NullValue = default!;
 
             AddRange(collection, comparer);
         }
 
+        [MemberNotNull(nameof(m_Dictionary))]
         void AddRange(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
         {
             var collectionType = collection.GetType();
