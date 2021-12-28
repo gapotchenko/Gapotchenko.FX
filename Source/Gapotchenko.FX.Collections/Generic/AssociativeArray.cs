@@ -241,11 +241,9 @@ namespace Gapotchenko.FX.Collections.Generic
             get
             {
                 if (key is TKey tKey)
-                {
                     return this[tKey];
-                }
-
-                return null;
+                else
+                    return null;
             }
             set
             {
@@ -447,9 +445,7 @@ namespace Gapotchenko.FX.Collections.Generic
             ((ICollection<KeyValuePair<TKey, TValue>>)m_Dictionary).CopyTo(array, arrayIndex + (m_NullSlot.HasValue ? 1 : 0));
 
             if (m_NullSlot.HasValue)
-            {
-                array[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullSlot.Value);
-            }
+                array[arrayIndex] = new(default!, m_NullSlot.Value);
         }
 
         /// <summary>
@@ -466,8 +462,10 @@ namespace Gapotchenko.FX.Collections.Generic
                     m_NullSlot = default;
                     return true;
                 }
-
-                return false;
+                else
+                {
+                    return false;
+                }
             }
             else
             {
@@ -592,21 +590,13 @@ namespace Gapotchenko.FX.Collections.Generic
             if (m_NullSlot.HasValue)
             {
                 if (array is KeyValuePair<TKey, TValue>[] pairs)
-                {
-                    pairs[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullSlot.Value);
-                }
+                    pairs[arrayIndex] = new(default!, m_NullSlot.Value);
                 else if (array is DictionaryEntry[] dictEntryArray)
-                {
-                    dictEntryArray[arrayIndex] = new DictionaryEntry(default!, m_NullSlot.Value);
-                }
+                    dictEntryArray[arrayIndex] = new(default!, m_NullSlot.Value);
                 else if (array is object[] objArray)
-                {
                     objArray[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullSlot.Value);
-                }
                 else
-                {
                     ThrowHelper.ThrowArgumentException_Argument_InvalidArrayType();
-                }
             }
         }
 
@@ -623,15 +613,9 @@ namespace Gapotchenko.FX.Collections.Generic
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             if (m_NullSlot.HasValue)
-            {
-                return m_Dictionary
-                    .Prepend(new KeyValuePair<TKey, TValue>(default!, m_NullSlot.Value))
-                    .GetEnumerator();
-            }
+                return m_Dictionary.Prepend(new(default!, m_NullSlot.Value)).GetEnumerator();
             else
-            {
                 return m_Dictionary.GetEnumerator();
-            }
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

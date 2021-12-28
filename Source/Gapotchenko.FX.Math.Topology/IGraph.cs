@@ -102,7 +102,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <summary>
         /// Removes all vertices and edges in the specified graph from the current graph.
         /// </summary>
-        /// <param name="other">The graph whose vertices and edges to remove from the current graph.</param>
+        /// <param name="other">The graph whose vertices and edges should be removed from the current graph.</param>
         void ExceptWith(IReadOnlyGraph<T> other);
 
         /// <summary>
