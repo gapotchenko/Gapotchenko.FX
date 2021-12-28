@@ -1,5 +1,6 @@
 ﻿using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Math.Geometry;
+using System;
 using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Math.Topology.Tests.Engine
@@ -9,7 +10,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
         public static bool Verify<T>(
             IEnumerable<T> source,
             IEnumerable<T> destination,
-            DependencyFunction<T> df)
+            Func<T, T, bool> df)
         {
             var s = source.AsReadOnlyList();
             var d = destination.AsReadOnlyList();

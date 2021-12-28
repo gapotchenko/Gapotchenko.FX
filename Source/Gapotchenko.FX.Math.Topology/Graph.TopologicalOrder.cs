@@ -7,8 +7,7 @@ namespace Gapotchenko.FX.Math.Topology
 {
     partial class Graph<T>
     {
-        /// <inheritdoc />
-        public IEnumerable<T> TopologicalOrder()
+        IEnumerator<T> OrderTopologicallyCore()
         {
             var queue = new Queue<T>();
             var transposition = GetTransposition();
@@ -39,7 +38,7 @@ namespace Gapotchenko.FX.Math.Topology
                 throw new CircularDependencyException();
         }
 
-        IEnumerator<T> TopologicalOrderBy(IComparer<T> comparer)
+        IEnumerator<T> OrderTopologicallyByCore(IComparer<T> comparer)
         {
             var queue = new PriorityQueue<T, T>(comparer);
             var graphTransposition = GetTransposition();
@@ -71,18 +70,14 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc />
-        public IOrderedEnumerable<T> TopologicalOrderBy<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default) =>
-            new TopologicalOrderedEnumerable<TKey>(this, keySelector, comparer, descending: false);
+        public IOrderedEnumerable<T> OrderTopologically() =>
+            new TopologicalOrderedEnumerable(this);
 
-        /// <inheritdoc />
-        public IOrderedEnumerable<T> TopologicalOrderByDescending<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default) =>
-            new TopologicalOrderedEnumerable<TKey>(this, keySelector, comparer, descending: true);
-
-        abstract class TopologicalOrderedEnumerable : IOrderedEnumerable<T>
+        class TopologicalOrderedEnumerable : IOrderedEnumerable<T>
         {
             protected readonly Graph<T> _source;
 
-            protected TopologicalOrderedEnumerable(Graph<T> source)
+            public TopologicalOrderedEnumerable(Graph<T> source)
             {
                 _source = source ?? throw new ArgumentNullException(nameof(source));
             }
@@ -90,12 +85,18 @@ namespace Gapotchenko.FX.Math.Topology
             public IEnumerator<T> GetEnumerator()
             {
                 var comparer = GetTopologicalComparer(nextComparer: null);
-                return _source.TopologicalOrderBy(comparer);
+
+                if (comparer is not null)
+                    return _source.OrderTopologicallyByCore(comparer);
+                else
+                    return _source.OrderTopologicallyCore();
             }
 
-            public abstract IComparer<T> GetTopologicalComparer(IComparer<T>? nextComparer);
+            public virtual IComparer<T>? GetTopologicalComparer(IComparer<T>? nextComparer)
+                => nextComparer;
 
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() =>
+                GetEnumerator();
 
             IOrderedEnumerable<T> IOrderedEnumerable<T>.CreateOrderedEnumerable<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer, bool descending) =>
                 new TopologicalOrderedEnumerable<TKey>(_source, keySelector, comparer, descending, parent: this);
@@ -122,9 +123,9 @@ namespace Gapotchenko.FX.Math.Topology
                 _parent = parent;
             }
 
-            public override IComparer<T> GetTopologicalComparer(IComparer<T>? nextComparer)
+            public override IComparer<T>? GetTopologicalComparer(IComparer<T>? nextComparer)
             {
-                IComparer<T> comparer = new TopologicalComparer<TKey>(_keySelector, _comparer, _descending, nextComparer, _source.Comparer);
+                IComparer<T>? comparer = new TopologicalComparer<TKey>(_keySelector, _comparer, _descending, nextComparer, _source.Comparer);
                 if (_parent != null)
                 {
                     comparer = _parent.GetTopologicalComparer(comparer);

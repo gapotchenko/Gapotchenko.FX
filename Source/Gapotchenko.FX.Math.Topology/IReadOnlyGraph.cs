@@ -34,6 +34,11 @@ namespace Gapotchenko.FX.Math.Topology
         IEnumerable<T> VerticesAdjacentTo(T vertex);
 
         /// <summary>
+        /// Gets a value indicating whether the current graph is empty.
+        /// </summary>
+        bool IsEmpty { get; }
+
+        /// <summary>
         /// Determines whether the current graph contains a cycle.
         /// </summary>
         bool IsCyclic { get; }
@@ -53,15 +58,26 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <summary>
         /// <para>
-        /// Determines whether the specified vertex is isolated, that is, not connected by an edge to another vertex.
+        /// Determines whether the specified vertex is isolated.
+        /// An isolated vertex is not connected to any other vertex.
         /// </para>
         /// <para>
-        /// An isolated vertex is a vertex with degree zero; that is, a vertex that is not an endpoint of any edge.
+        /// An isolated vertex is a vertex with degree zero; that is, a vertex that is not an end-vertex of any edge.
         /// </para>
         /// </summary>
         /// <param name="vertex">The vertex.</param>
         /// <returns><see langword="true"/> when the specified vertex is isolated; otherwise, <see langword="false"/>.</returns>
         bool IsVertexIsolated(T vertex);
+
+        /// <summary>
+        /// <para>
+        /// Gets a sequence of isolated vertices of the current graph.
+        /// </para>
+        /// <para>
+        /// Isolated vertices are vertices with degree zero; that is, vertices that are not incident with any edges.
+        /// </para>
+        /// </summary>
+        IEnumerable<T> IsolatedVertices { get; }
 
         /// <summary>
         /// <para>
@@ -126,7 +142,14 @@ namespace Gapotchenko.FX.Math.Topology
         IReadOnlyGraph<T> GetTransitiveReduction();
 
         /// <summary>
+        /// <para>
         /// Gets a reflexive reduction of the current graph.
+        /// </para>
+        /// <para>
+        /// Reflexive reduction prunes the reflexive relations.
+        /// Reflexive relation is caused by a vertex that has a connection (edge) to itself.
+        /// The removal of such connections prunes the reflexive relations, making a graph reflexively reduced.
+        /// </para>
         /// </summary>
         /// <returns>The reflexively reduced graph.</returns>
         IReadOnlyGraph<T> GetReflexiveReduction();
@@ -219,7 +242,7 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <summary>
         /// <para>
-        /// Gets the vertices in topologically sorted order.
+        /// Gets a sequence of vertices ordered topologically.
         /// </para>
         /// <para>
         /// Topological order of a directed graph is an order of its vertices such that for every directed edge u → v, u comes before v.
@@ -227,38 +250,6 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <returns>Sequence of vertices in topologically sorted order.</returns>
         /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
-        IEnumerable<T> TopologicalOrder();
-
-        /// <summary>
-        /// <para>
-        /// Gets the vertices sequence ordered topologically with a subsequent ascending ordering according to a key.
-        /// </para>
-        /// <para>
-        /// Topological order of a directed graph is an order of its vertices such that for every directed edge u → v, u comes before v.
-        /// </para>
-        /// </summary>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <param name="keySelector">A function to extract a key from a vertex.</param>
-        /// <param name="comparer">An <see cref="IComparer{TKey}"/> to compare keys.</param>
-        /// <returns>Sequence of vertices in topologically sorted order.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
-        /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
-        IOrderedEnumerable<T> TopologicalOrderBy<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default);
-
-        /// <summary>
-        /// <para>
-        /// Gets the vertices sequence ordered topologically with a subsequent descending ordering according to a key.
-        /// </para>
-        /// <para>
-        /// Topological order of a directed graph is an order of its vertices such that for every directed edge u → v, u comes before v.
-        /// </para>
-        /// </summary>
-        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-        /// <param name="keySelector">A function to extract a key from a vertex.</param>
-        /// <param name="comparer">An <see cref="IComparer{TKey}"/> to compare keys.</param>
-        /// <returns>Sequence of vertices in topologically sorted order.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
-        /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
-        IOrderedEnumerable<T> TopologicalOrderByDescending<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer = default);
+        IOrderedEnumerable<T> OrderTopologically();
     }
 }

@@ -7,29 +7,27 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-#nullable disable
-
 namespace Gapotchenko.FX.Math.Topology.Tests.Engine
 {
     sealed class TopologicalOrderProof
     {
-        public int VerticesCount { get; set; }
+        public int VerticesCount { get; init; }
 
-        public int MaxGraphConfigurationsCount { get; set; }
+        public int MaxTopologiesCount { get; init; }
 
-        public bool VerifyMinimalDistance { get; set; }
+        public bool VerifyMinimalDistance { get; init; }
 
-        public Func<IEnumerable<int>, DependencyFunction<int>, IEnumerable<int>> Sorter
-        {
-            get;
-            set;
-        }
+        public bool CircularDependenciesEnabled { get; init; } = true;
+
+        public Func<IEnumerable<int>, Func<int, int, bool>, IEnumerable<int>>? PredicateSorter { get; init; }
+
+        public Func<Graph<int>, IEnumerable<int>>? GraphSorter { get; init; }
 
         int _CountOfBits;
 
         public void Run()
         {
-            if (Sorter == null)
+            if (PredicateSorter == null && GraphSorter == null)
                 throw new InvalidOperationException("Sorter is not set.");
 
             _CountOfBits = VerticesCount * VerticesCount;
@@ -40,8 +38,8 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
 
             var iterators = _EnumerateIterators(maxIterator);
 
-            if (MaxGraphConfigurationsCount != 0)
-                iterators = iterators.Take(MaxGraphConfigurationsCount);
+            if (MaxTopologiesCount != 0)
+                iterators = iterators.Take(MaxTopologiesCount);
 
             Console.WriteLine("Count of graph configurations: {0}", iterators.Count());
 
@@ -95,53 +93,73 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
 
         void _CheckIterator(ulong iterator)
         {
-            DependencyFunction<int> df = (x, y) => DF(x, y, iterator);
+            bool df(int x, int y) => DF(x, y, iterator);
 
             var source = Enumerable.Range(0, VerticesCount).ToArray();
 
-            foreach (var sourcePermutation in source.Permute())
+            var g = LazyEvaluation.Create(() => new Graph<int>(source, (from, to) => df(to, from)));
+            if (!CircularDependenciesEnabled)
             {
-                var currentSource = sourcePermutation.ToArray();
+                if (g.Value.IsCyclic)
+                    return;
+            }
 
-                if (SkipCyclicGraphs)
+            if (GraphSorter != null)
+            {
+                var result = GraphSorter(g.Value);
+                CheckResult(source, result, df);
+            }
+            else
+            {
+                foreach (var currentSource in source.Permute())
                 {
-                    var g = new Graph<int>(currentSource, (from, to) => df(from, to));
-                    if (g.IsCyclic)
-                        continue;
-                }
+                    Interlocked.Increment(ref _TotalCountOfExperiments);
 
-                Interlocked.Increment(ref _TotalCountOfExperiments);
+                    IEnumerable<int> result;
 
-                var result = Sorter(currentSource, df).ToArray();
-                try
-                {
-                    Validate(currentSource, result, df);
+                    if (PredicateSorter != null)
+                        result = PredicateSorter(currentSource, df);
+                    else
+                        throw new InvalidOperationException("Cannot select a sorter.");
 
-                    if (VerifyMinimalDistance)
-                    {
-                        if (!MinimalDistanceProof.Verify(currentSource, result, df))
-                        {
-                            if (Debugger.IsAttached)
-                                throw new Exception("Minimal distance not reached.");
-                            else
-                                Interlocked.Increment(ref _TotalCountOfExperimentsWithViolatedMinimalDistance);
-                        }
-                    }
-                }
-                catch
-                {
-                    _DumpTopology(currentSource, result, df);
-                    throw;
+                    CheckResult(currentSource, result, df);
                 }
             }
         }
 
-        public bool SkipCyclicGraphs { get; set; }
+        void CheckResult<T>(
+            IEnumerable<T> source,
+            IEnumerable<T> result,
+            Func<T, T, bool> df)
+        {
+            source = source.Memoize();
+            result = result.Memoize();
+            try
+            {
+                Validate(source, result, df);
+
+                if (VerifyMinimalDistance)
+                {
+                    if (!MinimalDistanceProof.Verify(source, result, df))
+                    {
+                        if (Debugger.IsAttached)
+                            throw new Exception("Minimal distance not reached.");
+                        else
+                            Interlocked.Increment(ref _TotalCountOfExperimentsWithViolatedMinimalDistance);
+                    }
+                }
+            }
+            catch
+            {
+                _DumpTopology(source, result, df);
+                throw;
+            }
+        }
 
         public static bool Verify<T>(
             IEnumerable<T> source,
             IEnumerable<T> result,
-            DependencyFunction<T> df)
+            Func<T, T, bool> df)
         {
             int n = source.Count();
 
@@ -149,7 +167,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
             if (_result.Count != n)
                 throw new ArgumentException("result.Length != source.Length");
 
-            var graph = LazyEvaluation.Create(() => new Graph<T>(source, (from, to) => df(from, to)));
+            var graph = new Graph<T>(source, (from, to) => df(from, to));
 
             for (int i = 0; i < n; ++i)
             {
@@ -157,14 +175,10 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
                 {
                     if (df(_result[j], _result[i]))
                     {
-                        bool circularDependency = false;
-                        if (graph.Value != null)
-                        {
-                            bool aDependsOnB = graph.Value.HasPath(_result[j], _result[i]);
-                            bool bDependsOnA = graph.Value.HasPath(_result[i], _result[j]);
-                            circularDependency = aDependsOnB && bDependsOnA;
-                        }
+                        bool aDependsOnB = graph.HasPath(_result[j], _result[i]);
+                        bool bDependsOnA = graph.HasPath(_result[i], _result[j]);
 
+                        bool circularDependency = aDependsOnB && bDependsOnA;
                         if (!circularDependency)
                             return false;
                     }
@@ -177,7 +191,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
         public static void Validate<T>(
             IEnumerable<T> source,
             IEnumerable<T> result,
-            DependencyFunction<T> df)
+            Func<T, T, bool> df)
         {
             if (!Verify(source, result, df))
                 throw new Exception("Topological order is violated.");
@@ -188,7 +202,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
         static void _DumpTopology<T>(
             IEnumerable<T> source,
             IEnumerable<T> result,
-            DependencyFunction<T> df)
+            Func<T, T, bool> df)
         {
             var equalityComparer = EqualityComparer<T>.Default;
 
@@ -235,7 +249,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests.Engine
             }
         }
 
-        public static IEnumerable<IEnumerable<T>> AllOrdersOf<T>(IEnumerable<T> source, DependencyFunction<T> df)
+        public static IEnumerable<IEnumerable<T>> AllOrdersOf<T>(IEnumerable<T> source, Func<T, T, bool> df)
         {
             source = source.Memoize();
             return source

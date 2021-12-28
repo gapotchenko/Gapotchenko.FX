@@ -40,7 +40,12 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
+        /// <para>
         /// Gets a transitively reduced graph.
+        /// </para>
+        /// <para>
+        /// Transitive reduction prunes the transitive relations that have shorter paths.
+        /// </para>
         /// </summary>
         /// <returns>The transitively reduced graph.</returns>
         public Graph<T> GetTransitiveReduction()

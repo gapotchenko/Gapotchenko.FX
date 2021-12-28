@@ -51,7 +51,10 @@ namespace Gapotchenko.FX.Math.Topology
                 if (hit)
                 {
                     --m_Graph.m_CachedOrder;
+
+#if !(TFF_DICTIONARY_ENUMERATION_REMOVE_ALLOWED && TFF_HASHSET_ENUMERATION_REMOVE_ALLOWED)
                     m_Graph.IncrementVersion();
+#endif
                 }
 
                 return hit;
