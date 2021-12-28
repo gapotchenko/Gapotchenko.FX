@@ -660,7 +660,7 @@ namespace Gapotchenko.FX.Collections.Generic
         public IEqualityComparer<TKey> Comparer =>
             m_Dictionary.Comparer;
 
-        struct DictionaryEnumerator : IDictionaryEnumerator
+        sealed class DictionaryEnumerator : IDictionaryEnumerator
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly IEnumerator<KeyValuePair<TKey, TValue>> m_Enumerator;
@@ -675,7 +675,7 @@ namespace Gapotchenko.FX.Collections.Generic
                 get
                 {
                     var entry = m_Enumerator.Current;
-                    return new DictionaryEntry(entry.Key!, entry.Value);
+                    return new(entry.Key!, entry.Value);
                 }
             }
 
@@ -711,10 +711,10 @@ namespace Gapotchenko.FX.Collections.Generic
             object ICollection.SyncRoot => Parent.m_Dictionary;
 
             public void Add(T item) =>
-                ThrowHelper.ThrowCollectionMutationNotAllowed();
+                ThrowMutationNotAllowed();
 
             public void Clear() =>
-                ThrowHelper.ThrowCollectionMutationNotAllowed();
+                ThrowMutationNotAllowed();
 
             public virtual bool Contains(T item) => m_Collection.Contains(item);
 
@@ -736,7 +736,7 @@ namespace Gapotchenko.FX.Collections.Generic
 
                 ((ICollection)m_Collection).CopyTo(array, arrayIndex + (nullValue.HasValue ? 1 : 0));
 
-                if (Parent.m_NullValue.HasValue)
+                if (nullValue.HasValue)
                 {
                     if (array is T[] tArray)
                         tArray[arrayIndex] = nullValue.Value;
@@ -758,12 +758,15 @@ namespace Gapotchenko.FX.Collections.Generic
 
             public bool Remove(T item)
             {
-                ThrowHelper.ThrowCollectionMutationNotAllowed();
+                ThrowMutationNotAllowed();
                 return default;
             }
 
             IEnumerator IEnumerable.GetEnumerator() =>
                 GetEnumerator();
+
+            [DoesNotReturn]
+            protected abstract void ThrowMutationNotAllowed();
         }
 
         sealed class KeyCollection : KeyValueCollection<TKey>
@@ -773,7 +776,10 @@ namespace Gapotchenko.FX.Collections.Generic
             {
             }
 
-            protected override Optional<TKey> NullValue => Parent.m_NullValue.HasValue ? Optional.Some(default(TKey)!) : default;
+            protected override Optional<TKey> NullValue =>
+                Parent.m_NullValue.HasValue ?
+                    Optional.Some(default(TKey)!) :
+                    default;
 
             public override bool Contains(TKey item)
             {
@@ -781,6 +787,10 @@ namespace Gapotchenko.FX.Collections.Generic
                     return Parent.m_NullValue.HasValue;
                 return base.Contains(item);
             }
+
+            [DoesNotReturn]
+            protected override void ThrowMutationNotAllowed() =>
+                throw new NotSupportedException($"Mutating a key collection retrieved from an associative array is not allowed.");
         }
 
         sealed class ValueCollection : KeyValueCollection<TValue>
@@ -803,6 +813,10 @@ namespace Gapotchenko.FX.Collections.Generic
 
                 return base.Contains(item);
             }
+
+            [DoesNotReturn]
+            protected override void ThrowMutationNotAllowed() =>
+                throw new NotSupportedException($"Mutating a value collection retrieved from an associative array is not allowed.");
         }
 
         static class ThrowHelper
@@ -836,12 +850,6 @@ namespace Gapotchenko.FX.Collections.Generic
             public static void ThrowKeyNotFoundException(TKey? key)
             {
                 throw new KeyNotFoundException($"The given key '{key}' was not present in the associative array.");
-            }
-
-            [DoesNotReturn]
-            public static void ThrowCollectionMutationNotAllowed()
-            {
-                throw new NotSupportedException($"Mutating a key/value collection retrieved from an associative array is not allowed.");
             }
 
             [DoesNotReturn]

@@ -104,7 +104,7 @@ namespace Gapotchenko.FX.Linq
         /// <param name="source">A sequence that contains elements to be counted.</param>
         /// <returns>
         /// The number of elements in <paramref name="source" /> sequence,
-        /// or <c>null</c> if the number cannot be determined without enumeration.
+        /// or <see langword="null"/> if the number cannot be determined without enumeration.
         /// </returns>
         public static int? TryGetNonEnumeratedCount<TSource>(this IEnumerable<TSource> source)
         {
