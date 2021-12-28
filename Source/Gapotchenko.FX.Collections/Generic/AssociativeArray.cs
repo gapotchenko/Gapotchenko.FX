@@ -267,13 +267,13 @@ namespace Gapotchenko.FX.Collections.Generic
         /// Gets a collection containing the keys in the <see cref="AssociativeArray{TKey, TValue}"/>.
         /// </summary>
         public ICollection<TKey> Keys =>
-            new KeyValueCollection<TKey>(this, KeyValueCollection<TKey>.CollectionKind.Keys, m_Dictionary.Keys, () => default!);
+            new KeyCollection(this, m_Dictionary.Keys);
 
         /// <summary>
         /// Gets a collection containing the values in the <see cref="AssociativeArray{TKey, TValue}"/>.
         /// </summary>
         public ICollection<TValue> Values =>
-            new KeyValueCollection<TValue>(this, KeyValueCollection<TValue>.CollectionKind.Values, m_Dictionary.Values, () => m_NullValue.Value);
+            new ValueCollection(this, m_Dictionary.Values);
 
         /// <summary>
         /// Gets the number of key/value pairs contained in the <see cref="AssociativeArray{TKey, TValue}"/>.
@@ -688,120 +688,121 @@ namespace Gapotchenko.FX.Collections.Generic
 
         [DebuggerTypeProxy(typeof(AssociativeArrayKeyValueCollectionDebugView<,,>))]
         [DebuggerDisplay("Count = {Count}")]
-        sealed class KeyValueCollection<T> : ICollection<T>, ICollection
+        abstract class KeyValueCollection<T> : ICollection<T>, ICollection
         {
-            public enum CollectionKind { Keys, Values };
-
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            public CollectionKind Kind { get; }
-
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            readonly AssociativeArray<TKey, TValue> m_Parent;
+            protected AssociativeArray<TKey, TValue> Parent { get; private init; }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly ICollection<T> m_Collection;
 
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            readonly Func<T> m_NullValueGetter;
-
-            public KeyValueCollection(
-                AssociativeArray<TKey, TValue> parent,
-                CollectionKind kind,
-                ICollection<T> collection,
-                Func<T> nullValueGetter)
+            public KeyValueCollection(AssociativeArray<TKey, TValue> parent, ICollection<T> collection)
             {
-                Kind = kind;
-                m_Parent = parent;
+                Parent = parent;
                 m_Collection = collection;
-                m_NullValueGetter = nullValueGetter;
             }
 
-            public int Count => m_Parent.Count;
+            public int Count => Parent.Count;
 
             public bool IsReadOnly => true;
 
             bool ICollection.IsSynchronized => false;
 
-            object ICollection.SyncRoot => m_Parent.m_Dictionary;
+            object ICollection.SyncRoot => Parent.m_Dictionary;
 
             public void Add(T item) =>
-                ThrowHelper.ThrowCollectionMutatingNotAllowed(Kind);
+                ThrowHelper.ThrowCollectionMutatingNotAllowed();
 
             public void Clear() =>
-                ThrowHelper.ThrowCollectionMutatingNotAllowed(Kind);
+                ThrowHelper.ThrowCollectionMutatingNotAllowed();
 
-            public bool Contains(T item)
-            {
-                switch (Kind)
-                {
-                    case CollectionKind.Keys:
-                        if (item is null)
-                            return m_Parent.m_NullValue.HasValue;
-                        break;
+            public virtual bool Contains(T item) => m_Collection.Contains(item);
 
-                    case CollectionKind.Values:
-                        if (m_Parent.m_NullValue.HasValue &&
-                            (item is null && m_Parent.m_NullValue.Value is null ||
-                                EqualityComparer<T>.Default.Equals(item, m_NullValueGetter())))
-                        {
-                            return true;
-                        }
-                        break;
-
-                    default:
-                        throw new InvalidOperationException();
-                }
-
-                return m_Collection.Contains(item);
-            }
+            protected abstract Optional<T> NullValue { get; }
 
             public void CopyTo(T[] array, int arrayIndex)
             {
-                m_Collection.CopyTo(array, arrayIndex + (m_Parent.m_NullValue.HasValue ? 1 : 0));
+                var nullValue = NullValue;
 
-                if (m_Parent.m_NullValue.HasValue)
-                {
-                    array[arrayIndex] = m_NullValueGetter()!;
-                }
+                m_Collection.CopyTo(array, arrayIndex + (nullValue.HasValue ? 1 : 0));
+
+                if (nullValue.HasValue)
+                    array[arrayIndex] = nullValue.Value;
             }
 
             public void CopyTo(Array array, int arrayIndex)
             {
-                ((ICollection)m_Collection).CopyTo(array, arrayIndex + (m_Parent.m_NullValue.HasValue ? 1 : 0));
+                var nullValue = NullValue;
 
-                if (m_Parent.m_NullValue.HasValue)
+                ((ICollection)m_Collection).CopyTo(array, arrayIndex + (nullValue.HasValue ? 1 : 0));
+
+                if (Parent.m_NullValue.HasValue)
                 {
                     if (array is T[] tArray)
-                    {
-                        tArray[arrayIndex] = m_NullValueGetter()!;
-                    }
+                        tArray[arrayIndex] = nullValue.Value;
                     else if (array is object[] objArray)
-                    {
-                        objArray[arrayIndex] = m_NullValueGetter()!;
-                    }
+                        objArray[arrayIndex] = nullValue.Value!;
                     else
-                    {
                         ThrowHelper.ThrowArgumentException_Argument_InvalidArrayType();
-                    }
                 }
             }
 
             public IEnumerator<T> GetEnumerator()
             {
-                if (m_Parent.m_NullValue.HasValue)
-                    return m_Collection.Prepend(m_NullValueGetter()!).GetEnumerator();
+                var nullValue = NullValue;
+                if (nullValue.HasValue)
+                    return m_Collection.Prepend(nullValue.Value).GetEnumerator();
                 else
                     return m_Collection.GetEnumerator();
             }
 
             public bool Remove(T item)
             {
-                ThrowHelper.ThrowCollectionMutatingNotAllowed(Kind);
+                ThrowHelper.ThrowCollectionMutatingNotAllowed();
                 return default;
             }
 
             IEnumerator IEnumerable.GetEnumerator() =>
                 GetEnumerator();
+        }
+
+        sealed class KeyCollection : KeyValueCollection<TKey>
+        {
+            public KeyCollection(AssociativeArray<TKey, TValue> parent, ICollection<TKey> collection) :
+                base(parent, collection)
+            {
+            }
+
+            protected override Optional<TKey> NullValue => Parent.m_NullValue.HasValue ? Optional.Some(default(TKey)!) : default;
+
+            public override bool Contains(TKey item)
+            {
+                if (item is null)
+                    return Parent.m_NullValue.HasValue;
+                return base.Contains(item);
+            }
+        }
+
+        sealed class ValueCollection : KeyValueCollection<TValue>
+        {
+            public ValueCollection(AssociativeArray<TKey, TValue> parent, ICollection<TValue> collection) :
+                base(parent, collection)
+            {
+            }
+
+            protected override Optional<TValue> NullValue => Parent.m_NullValue;
+
+            public override bool Contains(TValue item)
+            {
+                var nullValue = NullValue;
+                if (nullValue.HasValue &&
+                    EqualityComparer<TValue>.Default.Equals(item, nullValue.Value))
+                {
+                    return true;
+                }
+
+                return base.Contains(item);
+            }
         }
 
         static class ThrowHelper
@@ -838,16 +839,9 @@ namespace Gapotchenko.FX.Collections.Generic
             }
 
             [DoesNotReturn]
-            public static void ThrowCollectionMutatingNotAllowed<T>(AssociativeArray<TKey, TValue>.KeyValueCollection<T>.CollectionKind kind)
+            public static void ThrowCollectionMutatingNotAllowed()
             {
-                var kindString = kind switch
-                {
-                    AssociativeArray<TKey, TValue>.KeyValueCollection<T>.CollectionKind.Keys => "key",
-                    AssociativeArray<TKey, TValue>.KeyValueCollection<T>.CollectionKind.Values => "value",
-                    _ => throw new ArgumentOutOfRangeException(nameof(kind))
-                };
-
-                throw new NotSupportedException($"Mutating a {kindString} collection derived from an associative array is not allowed.");
+                throw new NotSupportedException($"Mutating a key/value collection derived from an associative array is not allowed.");
             }
 
             [DoesNotReturn]
