@@ -37,7 +37,6 @@ namespace Gapotchenko.FX.Math.Topology
             Func<T, TKey> keySelector,
             Func<TKey, TKey, bool> dependencyFunction,
             IEqualityComparer<TKey>? comparer = null)
-            where TKey : notnull
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -81,7 +80,6 @@ namespace Gapotchenko.FX.Math.Topology
             Func<T, TKey> keySelector,
             Func<TKey, IEnumerable<TKey>?> dependencyFunction,
             IEqualityComparer<TKey>? comparer = null)
-            where TKey : notnull
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -116,7 +114,6 @@ namespace Gapotchenko.FX.Math.Topology
             Func<T, TKey> keySelector,
             IEqualityComparer<TKey>? comparer,
             Func<IEnumerable<TKey>, Graph<TKey>> graphFactory)
-            where TKey : notnull
         {
             var list = EnumerableEx.AsList(source);
             int n = list.Count;

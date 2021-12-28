@@ -1,9 +1,13 @@
-﻿using Gapotchenko.FX.Linq;
+﻿using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
+
+#if NETCOREAPP3_0
+#pragma warning disable CS8714
+#endif
 
 namespace Gapotchenko.FX.Math.Topology
 {
@@ -20,7 +24,6 @@ namespace Gapotchenko.FX.Math.Topology
     [DebuggerDisplay("Order = {Vertices.Count}, Size = {Edges.Count}")]
     [DebuggerTypeProxy(typeof(GraphDebugView<>))]
     public partial class Graph<T> : IGraph<T>
-        where T : notnull
     {
         /// <summary>
         /// Initializes a new instance of <see cref="Graph{T}"/> class that is empty and uses the default equality comparer for graph vertices.
@@ -157,7 +160,7 @@ namespace Gapotchenko.FX.Math.Topology
         public IEqualityComparer<T> Comparer => m_AdjacencyList.Comparer;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly Dictionary<T, AdjacencyRow?> m_AdjacencyList;
+        readonly AssociativeArray<T, AdjacencyRow?> m_AdjacencyList;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         VertexSet? m_CachedVertices;

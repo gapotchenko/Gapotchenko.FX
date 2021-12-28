@@ -14,11 +14,10 @@ namespace Gapotchenko.FX.Math.Topology
         public IFormatProvider? FormatProvider { get; set; }
 
         public void Serialize<T>(Graph<T> graph, TextWriter writer)
-            where T : notnull
         {
             writer.WriteLine("digraph {");
 
-            var map = new Dictionary<T, int>(graph.Comparer);
+            var map = new AssociativeArray<T, int>(graph.Comparer);
 
             int GetVerticeId(T v)
             {
