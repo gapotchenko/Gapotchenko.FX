@@ -691,7 +691,7 @@ namespace Gapotchenko.FX.Collections.Generic
         abstract class KeyValueCollection<T> : ICollection<T>, ICollection
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            protected AssociativeArray<TKey, TValue> Parent { get; private init; }
+            protected AssociativeArray<TKey, TValue> Parent { get; }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly ICollection<T> m_Collection;
