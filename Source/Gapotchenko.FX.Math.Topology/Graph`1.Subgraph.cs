@@ -62,13 +62,7 @@ namespace Gapotchenko.FX.Math.Topology
                 throw new ArgumentNullException(nameof(edges));
 
             Edges.IntersectWith(edges);
-            Vertices.IntersectWith(Edges.SelectMany(EnumerateVertices));
-
-            static IEnumerable<TVertex> EnumerateVertices(GraphEdge<TVertex> edge)
-            {
-                yield return edge.From;
-                yield return edge.To;
-            }
+            Vertices.IntersectWith(Edges.SelectMany(x => x.IncidentVertices));
         }
 
         /// <summary>
