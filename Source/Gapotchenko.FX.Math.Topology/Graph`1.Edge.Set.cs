@@ -7,9 +7,12 @@ namespace Gapotchenko.FX.Math.Topology
 {
     partial class Graph<TVertex>
     {
-        sealed class EdgeSet : SetBase<GraphEdge<TVertex>>
+        /// <summary>
+        /// Represents a set of graph vertices.
+        /// </summary>
+        public sealed class EdgeSet : SetBase<GraphEdge<TVertex>>
         {
-            public EdgeSet(Graph<TVertex> graph)
+            internal EdgeSet(Graph<TVertex> graph)
             {
                 m_Graph = graph;
             }
@@ -20,11 +23,13 @@ namespace Gapotchenko.FX.Math.Topology
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             IEqualityComparer<GraphEdge<TVertex>>? m_Comparer;
 
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            /// <inheritdoc/>
             public override IEqualityComparer<GraphEdge<TVertex>> Comparer => m_Comparer ??= GraphEdge.CreateComparer(m_Graph.VertexComparer);
 
+            /// <inheritdoc/>
             public override int Count => m_Graph.m_CachedSize ??= m_Graph.m_AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
 
+            /// <inheritdoc/>
             public override bool Add(GraphEdge<TVertex> edge)
             {
                 var from = edge.From;
@@ -55,6 +60,7 @@ namespace Gapotchenko.FX.Math.Topology
                 }
             }
 
+            /// <inheritdoc/>
             public override bool Remove(GraphEdge<TVertex> item)
             {
                 var adjList = m_Graph.m_AdjacencyList;
@@ -81,6 +87,7 @@ namespace Gapotchenko.FX.Math.Topology
                 return true;
             }
 
+            /// <inheritdoc/>
             public override void Clear()
             {
                 HashSet<TVertex>? verticesToKeep = null;
@@ -117,11 +124,13 @@ namespace Gapotchenko.FX.Math.Topology
                 m_Graph.IncrementVersion();
             }
 
+            /// <inheritdoc/>
             public override bool Contains(GraphEdge<TVertex> edge) =>
                 m_Graph.m_AdjacencyList.TryGetValue(edge.From, out var adjRow) &&
                 adjRow != null &&
                 adjRow.Contains(edge.To);
 
+            /// <inheritdoc/>
             public override IEnumerator<GraphEdge<TVertex>> GetEnumerator()
             {
                 var version = m_Graph.m_Version;

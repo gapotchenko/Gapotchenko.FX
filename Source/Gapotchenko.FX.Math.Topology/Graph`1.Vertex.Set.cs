@@ -1,6 +1,5 @@
 ﻿using Gapotchenko.FX.Collections.Generic.Kit;
 using Gapotchenko.FX.Linq;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,9 +8,12 @@ namespace Gapotchenko.FX.Math.Topology
 {
     partial class Graph<TVertex>
     {
-        sealed class VertexSet : SetBase<TVertex>
+        /// <summary>
+        /// Represents a set of graph vertices.
+        /// </summary>
+        public sealed class VertexSet : SetBase<TVertex>
         {
-            public VertexSet(Graph<TVertex> graph)
+            internal VertexSet(Graph<TVertex> graph)
             {
                 m_Graph = graph;
             }
@@ -19,11 +21,13 @@ namespace Gapotchenko.FX.Math.Topology
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly Graph<TVertex> m_Graph;
 
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            /// <inheritdoc/>
             public override IEqualityComparer<TVertex> Comparer => m_Graph.VertexComparer;
 
+            /// <inheritdoc/>
             public override int Count => m_Graph.m_CachedOrder ??= GetEnumerator().Rest().Count();
 
+            /// <inheritdoc/>
             public override bool Add(TVertex vertex)
             {
                 if (Contains(vertex))
@@ -34,6 +38,7 @@ namespace Gapotchenko.FX.Math.Topology
                 return true;
             }
 
+            /// <inheritdoc/>
             public override bool Remove(TVertex vertex)
             {
                 bool hit = false;
@@ -60,8 +65,10 @@ namespace Gapotchenko.FX.Math.Topology
                 return hit;
             }
 
+            /// <inheritdoc/>
             public override void Clear() => m_Graph.Clear();
 
+            /// <inheritdoc/>
             public override bool Contains(TVertex vertex)
             {
                 var adjacencyList = m_Graph.m_AdjacencyList;
@@ -70,6 +77,7 @@ namespace Gapotchenko.FX.Math.Topology
                     adjacencyList.Any(x => x.Value?.Contains(vertex) ?? false);
             }
 
+            /// <inheritdoc/>
             public override IEnumerator<TVertex> GetEnumerator()
             {
                 var version = m_Graph.m_Version;

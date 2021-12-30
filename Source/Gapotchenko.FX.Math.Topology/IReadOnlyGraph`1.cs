@@ -251,13 +251,11 @@ namespace Gapotchenko.FX.Math.Topology
         IReadOnlyGraph<TVertex> Union(IReadOnlyGraph<TVertex> other);
 
         /// <summary>
-        /// <para>
         /// Gets a sequence of vertices ordered topologically.
-        /// </para>
-        /// <para>
-        /// Topological order of a directed graph is an order of its vertices such that for every directed edge u → v, u comes before v.
-        /// </para>
         /// </summary>
+        /// <remarks>
+        /// Topological order of a directed graph is an order of its vertices such that for every directed edge u → v, u comes before v.
+        /// </remarks>
         /// <returns>Sequence of vertices in topologically sorted order.</returns>
         /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
         IOrderedEnumerable<TVertex> OrderTopologically();

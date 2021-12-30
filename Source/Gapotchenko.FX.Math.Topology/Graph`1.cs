@@ -154,15 +154,8 @@ namespace Gapotchenko.FX.Math.Topology
             }
         }
 
-        /// <summary>
-        /// Gets the <see cref="IEqualityComparer{T}"/> that is used to determine equality of graph vertices.
-        /// </summary>
-        public IEqualityComparer<TVertex> VertexComparer => m_AdjacencyList.Comparer;
-
-        /// <summary>
-        /// Gets the <see cref="IEqualityComparer{T}"/> that is used to determine equality of graph edges.
-        /// </summary>
-        public IEqualityComparer<GraphEdge<TVertex>> EdgeComparer => EdgesCore.Comparer;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEqualityComparer<TVertex> VertexComparer => m_AdjacencyList.Comparer;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly AssociativeArray<TVertex, AdjacencyRow?> m_AdjacencyList;
@@ -170,28 +163,34 @@ namespace Gapotchenko.FX.Math.Topology
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         VertexSet? m_CachedVertices;
 
+        /// <summary>
+        /// Gets a set containing the vertices of the graph.
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        VertexSet VerticesCore => m_CachedVertices ??= new(this);
+        public VertexSet Vertices => m_CachedVertices ??= new(this);
 
         /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ISet<TVertex> Vertices => VerticesCore;
+        ISet<TVertex> IGraph<TVertex>.Vertices => Vertices;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySet<TVertex> IReadOnlyGraph<TVertex>.Vertices => VerticesCore;
+        IReadOnlySet<TVertex> IReadOnlyGraph<TVertex>.Vertices => Vertices;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         EdgeSet? m_CachedEdges;
 
+        /// <summary>
+        /// Gets a set containing the edges of the graph.
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        EdgeSet EdgesCore => m_CachedEdges ??= new(this);
+        public EdgeSet Edges => m_CachedEdges ??= new(this);
 
         /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ISet<GraphEdge<TVertex>> Edges => EdgesCore;
+        ISet<GraphEdge<TVertex>> IGraph<TVertex>.Edges => Edges;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySet<GraphEdge<TVertex>> IReadOnlyGraph<TVertex>.Edges => EdgesCore;
+        IReadOnlySet<GraphEdge<TVertex>> IReadOnlyGraph<TVertex>.Edges => Edges;
 
         /// <inheritdoc/>
         public bool IsEmpty => m_AdjacencyList.Count == 0;

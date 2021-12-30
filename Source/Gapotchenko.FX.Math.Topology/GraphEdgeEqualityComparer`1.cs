@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Math.Topology
@@ -14,7 +15,11 @@ namespace Gapotchenko.FX.Math.Topology
             m_vertexComparer = vertexComparer;
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly IEqualityComparer<T> m_vertexComparer;
+
+        // Needed for debug view.
+        public IEqualityComparer<T> VertexComparer => m_vertexComparer;
 
         public bool Equals(GraphEdge<T> x, GraphEdge<T> y) =>
             m_vertexComparer.Equals(x.From, y.From) &&
