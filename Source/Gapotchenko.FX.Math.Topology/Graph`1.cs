@@ -72,6 +72,9 @@ namespace Gapotchenko.FX.Math.Topology
 
             Edges.UnionWith(graph.Edges);
             Vertices.UnionWith(graph.Vertices);
+
+            if (graph is Graph<TVertex> g && VertexComparer.Equals(g.VertexComparer))
+                CopyCacheFrom(g);
         }
 
         /// <summary>
@@ -266,6 +269,7 @@ namespace Gapotchenko.FX.Math.Topology
             m_AdjacencyList.Clear();
             m_CachedOrder = 0;
             m_CachedSize = 0;
+            InvalidateCachedRelations();
 
 #if !TFF_DICTIONARY_ENUMERATION_REMOVE_ALLOWED
             IncrementVersion();

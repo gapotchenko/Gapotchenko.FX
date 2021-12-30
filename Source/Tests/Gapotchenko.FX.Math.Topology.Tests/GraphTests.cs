@@ -258,6 +258,35 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
+        public void Graph_IsCyclic_Cache()
+        {
+            var g = new Graph<int>
+            {
+                Edges = { (1, 2), (2, 3) }
+            };
+
+            Assert.IsFalse(g.IsCyclic);
+            Assert.IsFalse(g.IsCyclic);
+
+            g.Edges.Add(3, 1);
+
+            Assert.IsTrue(g.IsCyclic);
+            Assert.IsTrue(g.IsCyclic);
+
+            g.Edges.Remove(3, 1);
+
+            Assert.IsFalse(g.IsCyclic);
+            Assert.IsFalse(g.IsCyclic);
+
+            var h = g.Clone();
+            Assert.IsFalse(h.IsCyclic);
+            h.Edges.Add(3, 1);
+            Assert.IsTrue(h.IsCyclic);
+            h.Edges.Clear();
+            Assert.IsFalse(h.IsCyclic);
+        }
+
+        [TestMethod]
         public void Graph_SupportsReflexes()
         {
             var g = new Graph<int>

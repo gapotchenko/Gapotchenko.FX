@@ -51,6 +51,7 @@ namespace Gapotchenko.FX.Math.Topology
                 {
                     ++m_Graph.m_CachedSize;
                     m_Graph.m_CachedOrder = null;
+                    m_Graph.InvalidateCachedRelations();
                     m_Graph.IncrementVersion();
                     return true;
                 }
@@ -82,6 +83,7 @@ namespace Gapotchenko.FX.Math.Topology
                     adjList.Add(v, null);
 
                 --m_Graph.m_CachedSize;
+                m_Graph.InvalidateCachedRelations();
                 m_Graph.IncrementVersion();
 
                 return true;
@@ -121,6 +123,7 @@ namespace Gapotchenko.FX.Math.Topology
                 }
 
                 m_Graph.m_CachedSize = 0;
+                m_Graph.InvalidateCachedRelations();
                 m_Graph.IncrementVersion();
             }
 

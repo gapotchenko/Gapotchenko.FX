@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Math.Topology
 {
@@ -21,6 +17,17 @@ namespace Gapotchenko.FX.Math.Topology
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int? m_CachedSize = 0;
 
+        const int CF_IsCyclic_HasValue = 1 << 0;
+        const int CF_IsCyclic_Value = 1 << 1;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        BitVector32 m_CachedFlags;
+
+        void InvalidateCachedRelations()
+        {
+            m_CachedFlags[CF_IsCyclic_HasValue | CF_IsCyclic_Value] = false;
+        }
+
         /// <summary>
         /// Invalidates the cache.
         /// This method should be called if <see cref="AdjacencyList"/> is manipulated directly.
@@ -29,7 +36,16 @@ namespace Gapotchenko.FX.Math.Topology
         {
             m_CachedOrder = null;
             m_CachedSize = null;
+            InvalidateCachedRelations();
+
             IncrementVersion();
+        }
+
+        void CopyCacheFrom(Graph<TVertex> graph)
+        {
+            m_CachedOrder = graph.m_CachedOrder;
+            m_CachedSize = graph.m_CachedSize;
+            m_CachedFlags = graph.m_CachedFlags;
         }
     }
 }
