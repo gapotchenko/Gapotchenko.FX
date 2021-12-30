@@ -22,18 +22,18 @@ namespace Gapotchenko.FX.Math.Topology
         public int Count => m_Source.Count();
     }
 
-    sealed class GraphDebugView<T>
+    sealed class GraphDebugView<TVertex>
     {
-        public GraphDebugView(Graph<T> graph)
+        public GraphDebugView(Graph<TVertex> graph)
         {
             m_Graph = graph;
         }
 
-        readonly Graph<T> m_Graph;
+        readonly Graph<TVertex> m_Graph;
 
-        public object Vertices => new CountedEnumerableView<T>(m_Graph.Vertices);
+        public object Vertices => new CountedEnumerableView<TVertex>(m_Graph.Vertices);
 
-        public object Edges => new CountedEnumerableView<GraphEdge<T>>(m_Graph.Edges);
+        public object Edges => new CountedEnumerableView<GraphEdge<TVertex>>(m_Graph.Edges);
 
         public object AdjacencyList => m_Graph.AdjacencyList;
     }

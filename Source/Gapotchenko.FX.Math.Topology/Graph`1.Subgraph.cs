@@ -5,6 +5,15 @@ namespace Gapotchenko.FX.Math.Topology
 {
     partial class Graph<TVertex>
     {
+        /// <inheritdoc/>
+        public void Subgraph(IEnumerable<TVertex> vertices)
+        {
+            if (vertices == null)
+                throw new ArgumentNullException(nameof(vertices));
+
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Gets a vertex-induced subgraph of the current graph.
         /// </summary>
@@ -44,6 +53,15 @@ namespace Gapotchenko.FX.Math.Topology
         IGraph<TVertex> IGraph<TVertex>.GetSubgraph(IEnumerable<TVertex> vertices) => GetSubgraph(vertices);
 
         IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.GetSubgraph(IEnumerable<TVertex> vertices) => GetSubgraph(vertices);
+
+        /// <inheritdoc/>
+        public void Subgraph(IEnumerable<GraphEdge<TVertex>> edges)
+        {
+            if (edges == null)
+                throw new ArgumentNullException(nameof(edges));
+
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Gets an edge-induced subgraph of the current graph.
