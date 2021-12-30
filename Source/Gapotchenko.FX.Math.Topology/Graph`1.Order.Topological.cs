@@ -42,12 +42,12 @@ namespace Gapotchenko.FX.Math.Topology
         IEnumerator<TVertex> OrderTopologicallyByCore(IComparer<TVertex> comparer)
         {
             var queue = new PriorityQueue<TVertex, TVertex>(comparer);
-            var graphTransposition = GetTransposition();
+            var transposition = GetTransposition();
 
-            foreach (var vertex in graphTransposition.Vertices)
+            foreach (var vertex in transposition.Vertices)
             {
                 // Find the nodes with no outcoming edges.
-                if (graphTransposition.GetVertexOutdegree(vertex) is 0)
+                if (transposition.GetVertexOutdegree(vertex) is 0)
                     queue.Enqueue(vertex, vertex);
             }
 
@@ -59,14 +59,14 @@ namespace Gapotchenko.FX.Math.Topology
 
                 foreach (var adjacentVertex in DestinationVerticesAdjacentTo(vertex))
                 {
-                    graphTransposition.Edges.Remove(adjacentVertex, vertex);
+                    transposition.Edges.Remove(adjacentVertex, vertex);
 
-                    if (graphTransposition.GetVertexOutdegree(adjacentVertex) is 0)
+                    if (transposition.GetVertexOutdegree(adjacentVertex) is 0)
                         queue.Enqueue(adjacentVertex, adjacentVertex);
                 }
             }
 
-            if (graphTransposition.Edges.Count is > 0)
+            if (transposition.Edges.Count is > 0)
                 throw new CircularDependencyException();
         }
 
