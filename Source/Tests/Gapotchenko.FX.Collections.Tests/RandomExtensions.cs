@@ -1,4 +1,6 @@
-﻿using System;
+﻿// (c) Portions of code from the .NET project by Microsoft and .NET Foundation
+
+using System;
 
 namespace Gapotchenko.FX.Collections.Tests
 {

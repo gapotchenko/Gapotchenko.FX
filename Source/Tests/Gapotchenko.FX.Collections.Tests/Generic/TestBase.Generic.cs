@@ -1,3 +1,5 @@
+// (c) Portions of code from the .NET project by Microsoft and .NET Foundation
+
 using Gapotchenko.FX.Collections.Tests.NonGeneric;
 using System;
 using System.Collections.Generic;
