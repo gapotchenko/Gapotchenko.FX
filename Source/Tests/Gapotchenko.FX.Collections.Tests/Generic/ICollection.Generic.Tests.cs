@@ -28,8 +28,20 @@ namespace Gapotchenko.FX.Collections.Tests.Generic
         /// <returns>An instance of an ICollection{T} that can be used for testing.</returns>
         protected virtual ICollection<T> GenericICollectionFactory(int count)
         {
-            ICollection<T> collection = GenericICollectionFactory();
+            var collection = GenericICollectionFactory();
             AddToCollection(collection, count);
+            return collection;
+        }
+
+        protected virtual ICollection<T> GenericICollectionFactory(IEnumerable<T> elements)
+        {
+            var collection = GenericICollectionFactory();
+
+            foreach (var element in elements)
+            {
+                collection.Add(element);
+            }
+
             return collection;
         }
 
@@ -139,10 +151,10 @@ namespace Gapotchenko.FX.Collections.Tests.Generic
         [MemberData(nameof(ValidCollectionSizes))]
         public virtual void ICollection_Generic_Add_DefaultValue(int count)
         {
-            if (DefaultValueAllowed && !IsReadOnly && !AddRemoveClear_ThrowsNotSupported)
+            if (DefaultValueAllowed)
             {
-                ICollection<T> collection = GenericICollectionFactory(count);
-                collection.Add(default(T)!);
+                var elements = GenericICollectionFactory(count);
+                var collection = GenericICollectionFactory(elements.Append(default!));
                 Assert.Equal(count + 1, collection.Count);
             }
         }
@@ -412,10 +424,10 @@ namespace Gapotchenko.FX.Collections.Tests.Generic
         [MemberData(nameof(ValidCollectionSizes))]
         public virtual void ICollection_Generic_Contains_DefaultValueOnCollectionContainingDefaultValue(int count)
         {
-            if (DefaultValueAllowed && !IsReadOnly && !AddRemoveClear_ThrowsNotSupported)
+            if (DefaultValueAllowed)
             {
-                ICollection<T> collection = GenericICollectionFactory(count);
-                collection.Add(default(T)!);
+                var elements = GenericICollectionFactory(count);
+                var collection = GenericICollectionFactory(elements.Append(default!));
                 Assert.True(collection.Contains(default(T)!));
             }
         }
@@ -554,7 +566,6 @@ namespace Gapotchenko.FX.Collections.Tests.Generic
         {
             if (!IsReadOnly && !AddRemoveClear_ThrowsNotSupported && DefaultValueAllowed && !Enumerable.Contains(InvalidValues, default(T)))
             {
-                int seed = count * 21;
                 ICollection<T> collection = GenericICollectionFactory(count);
                 T value = default(T)!;
                 while (collection.Contains(value!))
@@ -589,7 +600,6 @@ namespace Gapotchenko.FX.Collections.Tests.Generic
         {
             if (!IsReadOnly && !AddRemoveClear_ThrowsNotSupported && DefaultValueAllowed && !Enumerable.Contains(InvalidValues, default(T)))
             {
-                int seed = count * 21;
                 ICollection<T> collection = GenericICollectionFactory(count);
                 T value = default(T)!;
                 if (!collection.Contains(value!))

@@ -22,11 +22,24 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray
 
         protected override ICollection<string> GenericICollectionFactory(int count)
         {
-            var list = new AssociativeArray<string, string>();
+            var list = new AssociativeArray<string?, string>();
             int seed = 13453;
             for (int i = 0; i < count; i++)
-                list.Add(CreateT(seed++), CreateT(seed++));
+                list.Add(i == 0 ? null : CreateT(seed++), CreateT(seed++));
             return list.Values;
+        }
+
+        protected override ICollection<string> GenericICollectionFactory(IEnumerable<string> elements)
+        {
+            var array = new AssociativeArray<string?, string>();
+            int seed = 13453;
+            var isFirstElement = true;
+            foreach (var element in elements)
+            {
+                array.Add(isFirstElement ? null : CreateT(seed++), element);
+                isFirstElement = false;
+            }
+            return array.Values;
         }
 
         protected override string CreateT(int seed)
