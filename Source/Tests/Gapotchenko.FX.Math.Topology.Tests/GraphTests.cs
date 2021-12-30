@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
     public class GraphTests
     {
         [TestMethod]
-        public void Graph_DeduplicateVertices()
+        public void Graph_Vertices_Uniqueness()
         {
             var g = new Graph<int>
             {
@@ -22,7 +22,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_RemoveVertices_1()
+        public void Graph_Vertices_Remove_1()
         {
             var g = new Graph<int>
             {
@@ -44,7 +44,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_RemoveVertices_2()
+        public void Graph_Vertices_Remove_2()
         {
             var g = new Graph<int>
             {
@@ -59,7 +59,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_ClearVertices()
+        public void Graph_Vertices_Clear()
         {
             var g = new Graph<int>
             {
@@ -95,7 +95,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_DeduplicateEdges()
+        public void Graph_Edges_Uniqueness()
         {
             var g = new Graph<int>
             {
@@ -107,7 +107,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_RemoveEdges()
+        public void Graph_Edges_Remove()
         {
             var g = new Graph<int>
             {
@@ -132,7 +132,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_ClearEdges()
+        public void Graph_Edges_Clear()
         {
             var g = new Graph<int>
             {
@@ -302,7 +302,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_SupportsReflexes()
+        public void Graph_Reflexes_Support()
         {
             var g = new Graph<int>
             {
@@ -315,7 +315,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_ReduceReflexes()
+        public void Graph_Reflexes_Reduce()
         {
             var g = new Graph<int>
             {
@@ -330,7 +330,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_GetReflexiveReduction()
+        public void Graph_Relexes_GetReduction()
         {
             var g = new Graph<int>
             {
@@ -348,7 +348,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_ReduceTransitions()
+        public void Graph_Transitions_Reduce()
         {
             var g = new Graph<char>
             {
@@ -376,7 +376,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_GetTransitiveReduction()
+        public void Graph_Transitions_GetReduction()
         {
             var g = new Graph<char>
             {
