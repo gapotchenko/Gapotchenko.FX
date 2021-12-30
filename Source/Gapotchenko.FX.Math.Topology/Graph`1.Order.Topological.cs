@@ -72,15 +72,15 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <inheritdoc />
         public IOrderedEnumerable<TVertex> OrderTopologically() =>
-            new TopologicalOrderedEnumerable(this);
+            new TopologicallyOrderedEnumerable(this);
 
-        class TopologicalOrderedEnumerable : IOrderedEnumerable<TVertex>
+        class TopologicallyOrderedEnumerable : IOrderedEnumerable<TVertex>
         {
-            protected readonly Graph<TVertex> _source;
+            protected readonly Graph<TVertex> m_Source;
 
-            public TopologicalOrderedEnumerable(Graph<TVertex> source)
+            public TopologicallyOrderedEnumerable(Graph<TVertex> source)
             {
-                _source = source ?? throw new ArgumentNullException(nameof(source));
+                m_Source = source ?? throw new ArgumentNullException(nameof(source));
             }
 
             public IEnumerator<TVertex> GetEnumerator()
@@ -88,9 +88,9 @@ namespace Gapotchenko.FX.Math.Topology
                 var comparer = GetTopologicalComparer(nextComparer: null);
 
                 if (comparer is not null)
-                    return _source.OrderTopologicallyByCore(comparer);
+                    return m_Source.OrderTopologicallyByCore(comparer);
                 else
-                    return _source.OrderTopologicallyCore();
+                    return m_Source.OrderTopologicallyCore();
             }
 
             public virtual IComparer<TVertex>? GetTopologicalComparer(IComparer<TVertex>? nextComparer)
@@ -100,36 +100,36 @@ namespace Gapotchenko.FX.Math.Topology
                 GetEnumerator();
 
             IOrderedEnumerable<TVertex> IOrderedEnumerable<TVertex>.CreateOrderedEnumerable<TKey>(Func<TVertex, TKey> keySelector, IComparer<TKey>? comparer, bool descending) =>
-                new TopologicalOrderedEnumerable<TKey>(_source, keySelector, comparer, descending, parent: this);
+                new TopologicallyOrderedEnumerable<TKey>(m_Source, keySelector, comparer, descending, parent: this);
         }
 
-        sealed class TopologicalOrderedEnumerable<TKey> : TopologicalOrderedEnumerable
+        sealed class TopologicallyOrderedEnumerable<TKey> : TopologicallyOrderedEnumerable
         {
-            readonly TopologicalOrderedEnumerable? _parent;
-            readonly Func<TVertex, TKey> _keySelector;
-            readonly IComparer<TKey> _comparer;
-            readonly bool _descending;
+            readonly TopologicallyOrderedEnumerable? m_Parent;
+            readonly Func<TVertex, TKey> m_KeySelector;
+            readonly IComparer<TKey> m_Comparer;
+            readonly bool m_Descending;
 
-            public TopologicalOrderedEnumerable(
+            public TopologicallyOrderedEnumerable(
                 Graph<TVertex> source,
                 Func<TVertex, TKey> keySelector,
                 IComparer<TKey>? comparer,
                 bool descending,
-                TopologicalOrderedEnumerable? parent = default)
+                TopologicallyOrderedEnumerable? parent = default)
                 : base(source)
             {
-                _keySelector = keySelector ?? throw new ArgumentNullException(nameof(keySelector));
-                _comparer = comparer ?? Comparer<TKey>.Default;
-                _descending = descending;
-                _parent = parent;
+                m_KeySelector = keySelector ?? throw new ArgumentNullException(nameof(keySelector));
+                m_Comparer = comparer ?? Comparer<TKey>.Default;
+                m_Descending = descending;
+                m_Parent = parent;
             }
 
             public override IComparer<TVertex>? GetTopologicalComparer(IComparer<TVertex>? nextComparer)
             {
-                IComparer<TVertex>? comparer = new TopologicalComparer<TKey>(_keySelector, _comparer, _descending, nextComparer, _source.VertexComparer);
-                if (_parent != null)
+                IComparer<TVertex>? comparer = new TopologicalComparer<TKey>(m_KeySelector, m_Comparer, m_Descending, nextComparer, m_Source.VertexComparer);
+                if (m_Parent != null)
                 {
-                    comparer = _parent.GetTopologicalComparer(comparer);
+                    comparer = m_Parent.GetTopologicalComparer(comparer);
                 }
                 return comparer;
             }
@@ -137,11 +137,11 @@ namespace Gapotchenko.FX.Math.Topology
 
         sealed class TopologicalComparer<TKey> : IComparer<TVertex>
         {
-            readonly Func<TVertex, TKey> _keySelector;
-            readonly IComparer<TKey> _keyComparer;
-            readonly bool _descending;
-            readonly IComparer<TVertex>? _nextComparer;
-            readonly AssociativeArray<TVertex, TKey> _keys;
+            readonly Func<TVertex, TKey> m_KeySelector;
+            readonly IComparer<TKey> m_KeyComparer;
+            readonly bool m_Descending;
+            readonly IComparer<TVertex>? m_NextComparer;
+            readonly AssociativeArray<TVertex, TKey> m_Keys;
 
             public TopologicalComparer(
                 Func<TVertex, TKey> keySelector,
@@ -150,11 +150,11 @@ namespace Gapotchenko.FX.Math.Topology
                 IComparer<TVertex>? nextComparer,
                 IEqualityComparer<TVertex> vertexEqualityComparer)
             {
-                _keySelector = keySelector;
-                _keyComparer = keyComparer;
-                _descending = descending;
-                _nextComparer = nextComparer;
-                _keys = new(vertexEqualityComparer);
+                m_KeySelector = keySelector;
+                m_KeyComparer = keyComparer;
+                m_Descending = descending;
+                m_NextComparer = nextComparer;
+                m_Keys = new(vertexEqualityComparer);
             }
 
             public int Compare(TVertex? x, TVertex? y)
@@ -164,15 +164,15 @@ namespace Gapotchenko.FX.Math.Topology
                 if (y is null)
                     throw new ArgumentNullException(nameof(y));
 
-                if (!_keys.TryGetValue(x, out var xKey))
-                    _keys[x] = xKey = _keySelector(x);
-                if (!_keys.TryGetValue(y, out var yKey))
-                    _keys[y] = yKey = _keySelector(y);
+                if (!m_Keys.TryGetValue(x, out var xKey))
+                    m_Keys[x] = xKey = m_KeySelector(x);
+                if (!m_Keys.TryGetValue(y, out var yKey))
+                    m_Keys[y] = yKey = m_KeySelector(y);
 
-                var c = _keyComparer.Compare(xKey, yKey);
-                if (c == 0 && _nextComparer is not null)
-                    return _nextComparer.Compare(x, y);
-                return _descending ? -c : c;
+                var c = m_KeyComparer.Compare(xKey, yKey);
+                if (c == 0 && m_NextComparer is not null)
+                    return m_NextComparer.Compare(x, y);
+                return m_Descending ? -c : c;
             }
         }
     }
