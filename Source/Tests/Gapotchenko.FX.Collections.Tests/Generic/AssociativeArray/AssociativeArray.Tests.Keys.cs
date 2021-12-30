@@ -28,6 +28,15 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray
             return list.Keys;
         }
 
+        protected override ICollection<string> GenericICollectionFactory(IEnumerable<string> elements)
+        {
+            var array = new AssociativeArray<string, string>();
+            int seed = 13453;
+            foreach (var element in elements)
+                array.Add(element, CreateT(seed++));
+            return array.Keys;
+        }
+
         protected override string CreateT(int seed)
         {
             int stringLength = seed % 10 + 5;

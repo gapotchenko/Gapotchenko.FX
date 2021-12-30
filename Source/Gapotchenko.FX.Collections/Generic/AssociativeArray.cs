@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 #if NETCOREAPP3_0 || NETFRAMEWORK || NETSTANDARD2_0
@@ -442,6 +441,13 @@ namespace Gapotchenko.FX.Collections.Generic
 
         void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+            if ((uint)arrayIndex > (uint)array.Length)
+                ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
+            if (array.Length - arrayIndex < Count)
+                ThrowHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
+
             ((ICollection<KeyValuePair<TKey, TValue>>)m_Dictionary).CopyTo(array, arrayIndex + (m_NullSlot.HasValue ? 1 : 0));
 
             if (m_NullSlot.HasValue)
@@ -585,6 +591,13 @@ namespace Gapotchenko.FX.Collections.Generic
 
         void ICollection.CopyTo(Array array, int arrayIndex)
         {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+            if ((uint)arrayIndex > (uint)array.Length)
+                ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
+            if (array.Length - arrayIndex < Count)
+                ThrowHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
+
             ((ICollection)m_Dictionary).CopyTo(array, arrayIndex + (m_NullSlot.HasValue ? 1 : 0));
 
             if (m_NullSlot.HasValue)
@@ -610,13 +623,10 @@ namespace Gapotchenko.FX.Collections.Generic
         /// Returns an enumerator that iterates through the <see cref="AssociativeArray{TKey, TValue}"/>.
         /// </summary>
         /// <returns>An <see cref="IEnumerator{T}"/> for the <see cref="AssociativeArray{TKey, TValue}"/>.</returns>
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-        {
-            if (m_NullSlot.HasValue)
-                return m_Dictionary.Prepend(new(default!, m_NullSlot.Value)).GetEnumerator();
-            else
-                return m_Dictionary.GetEnumerator();
-        }
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() =>
+            new PrependEnumerator<KeyValuePair<TKey, TValue>>(
+                () => m_NullSlot.HasValue ? new Optional<KeyValuePair<TKey, TValue>>(new(default!, m_NullSlot.Value)) : default,
+                m_Dictionary);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -725,6 +735,13 @@ namespace Gapotchenko.FX.Collections.Generic
 
             public void CopyTo(T[] array, int arrayIndex)
             {
+                if (array == null)
+                    throw new ArgumentNullException(nameof(array));
+                if ((uint)arrayIndex > (uint)array.Length)
+                    ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
+                if (array.Length - arrayIndex < Count)
+                    ThrowHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
+
                 var nullSlot = NullSlot;
 
                 m_Collection.CopyTo(array, arrayIndex + (nullSlot.HasValue ? 1 : 0));
@@ -735,6 +752,13 @@ namespace Gapotchenko.FX.Collections.Generic
 
             public void CopyTo(Array array, int arrayIndex)
             {
+                if (array == null)
+                    throw new ArgumentNullException(nameof(array));
+                if ((uint)arrayIndex > (uint)array.Length)
+                    ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
+                if (array.Length - arrayIndex < Count)
+                    ThrowHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
+
                 var nullSlot = NullSlot;
 
                 ((ICollection)m_Collection).CopyTo(array, arrayIndex + (nullSlot.HasValue ? 1 : 0));
@@ -750,14 +774,7 @@ namespace Gapotchenko.FX.Collections.Generic
                 }
             }
 
-            public IEnumerator<T> GetEnumerator()
-            {
-                var nullSlot = NullSlot;
-                if (nullSlot.HasValue)
-                    return m_Collection.Prepend(nullSlot.Value).GetEnumerator();
-                else
-                    return m_Collection.GetEnumerator();
-            }
+            public IEnumerator<T> GetEnumerator() => new PrependEnumerator<T>(() => NullSlot, m_Collection);
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -818,6 +835,79 @@ namespace Gapotchenko.FX.Collections.Generic
                 throw new NotSupportedException($"Mutating a value collection retrieved from an associative array is not allowed.");
         }
 
+        sealed class PrependEnumerator<T> : IEnumerator<T>
+        {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            int m_Index;
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            bool m_EndOfData;
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            Func<Optional<T>> m_ElementGetter;
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            IEnumerable<T> m_Source;
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            IEnumerator<T>? m_SourceEnumerator;
+
+            public PrependEnumerator(
+                Func<Optional<T>> elementGetter,
+                IEnumerable<T> source)
+            {
+                m_ElementGetter = elementGetter;
+                m_Source = source;
+                Current = default!;
+            }
+
+            public T Current { get; private set; }
+
+            object IEnumerator.Current
+            {
+                get
+                {
+                    if (m_Index == 0 || m_EndOfData)
+                        ThrowHelper.ThrowInvalidOperationException_InvalidOperation_EnumOpCantHappen();
+                    return Current!;
+                }
+            }
+
+            public bool MoveNext()
+            {
+                if (m_Index == 0)
+                {
+                    var element = m_ElementGetter();
+                    if (element.HasValue)
+                    {
+                        Current = element.Value;
+                        m_Index++;
+                        return true;
+                    }
+                }
+
+                m_SourceEnumerator ??= m_Source.GetEnumerator();
+                var moveNext = m_SourceEnumerator.MoveNext();
+                Current = m_SourceEnumerator.Current;
+
+                if (!moveNext)
+                    m_EndOfData = true;
+                else
+                    m_Index++;
+
+                return moveNext;
+            }
+
+            public void Reset()
+            {
+                m_Index = 0;
+                m_EndOfData = false;
+                m_SourceEnumerator?.Reset();
+            }
+
+            public void Dispose() { }
+        }
+
         static class ThrowHelper
         {
             // Allow nulls for reference types and Nullable<U>, but not for value types.
@@ -861,6 +951,24 @@ namespace Gapotchenko.FX.Collections.Generic
             public static void ThrowAddingDuplicateWithKeyArgumentException(TKey? key)
             {
                 throw new ArgumentException($"An item with the same key has already been added. Key: '{key}'.");
+            }
+
+            [DoesNotReturn]
+            public static void ThrowIndexArgumentOutOfRange_NeedNonNegNumException(string argName)
+            {
+                throw new ArgumentOutOfRangeException(argName, "Non-negative number required.");
+            }
+
+            [DoesNotReturn]
+            public static void ThrowArgumentException_ArrayPlusOffTooSmall()
+            {
+                throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
+            }
+
+            [DoesNotReturn]
+            public static void ThrowInvalidOperationException_InvalidOperation_EnumOpCantHappen()
+            {
+                throw new InvalidOperationException("Enumeration has either not started or has already finished.");
             }
         }
     }
