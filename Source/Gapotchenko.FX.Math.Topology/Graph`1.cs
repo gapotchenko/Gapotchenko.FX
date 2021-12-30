@@ -20,29 +20,29 @@ namespace Gapotchenko.FX.Math.Topology
     /// Vertices represent the objects, and edges represent the relations between them.
     /// </para>
     /// </summary>
-    /// <typeparam name="T">The type of vertices in the graph.</typeparam>
+    /// <typeparam name="TVertex">The type of vertices in the graph.</typeparam>
     [DebuggerDisplay("Order = {Vertices.Count}, Size = {Edges.Count}")]
     [DebuggerTypeProxy(typeof(GraphDebugView<>))]
-    public partial class Graph<T> : IGraph<T>
+    public partial class Graph<TVertex> : IGraph<TVertex>
     {
         /// <summary>
         /// Initializes a new instance of <see cref="Graph{T}"/> class that is empty and uses the default equality comparer for graph vertices.
         /// </summary>
         public Graph() :
-            this((IEqualityComparer<T>?)null)
+            this((IEqualityComparer<TVertex>?)null)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of <see cref="Graph{T}"/> class that is empty and uses the specified equality comparer for graph vertices.
         /// </summary>
-        /// <param name="comparer">
+        /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
-        public Graph(IEqualityComparer<T>? comparer)
+        public Graph(IEqualityComparer<TVertex>? vertexComparer)
         {
-            m_AdjacencyList = new(comparer);
+            m_AdjacencyList = new(vertexComparer);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// and contains vertices and edges copied from the specified <see cref="IReadOnlyGraph{T}"/>.
         /// </summary>
         /// <param name="graph">The <see cref="IReadOnlyGraph{T}"/> whose vertices and edges are copied to the new <see cref="Graph{T}"/>.</param>
-        public Graph(IReadOnlyGraph<T> graph) :
+        public Graph(IReadOnlyGraph<TVertex> graph) :
             this(graph, null)
         {
         }
@@ -60,12 +60,12 @@ namespace Gapotchenko.FX.Math.Topology
         /// and contains vertices and edges copied from the specified <see cref="IReadOnlyGraph{T}"/>.
         /// </summary>
         /// <param name="graph">The <see cref="IReadOnlyGraph{T}"/> whose vertices and edges are copied to the new <see cref="Graph{T}"/>.</param>
-        /// <param name="comparer">
+        /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
-        public Graph(IReadOnlyGraph<T> graph, IEqualityComparer<T>? comparer) :
-            this(comparer)
+        public Graph(IReadOnlyGraph<TVertex> graph, IEqualityComparer<TVertex>? vertexComparer) :
+            this(vertexComparer)
         {
             if (graph == null)
                 throw new ArgumentNullException(nameof(graph));
@@ -81,7 +81,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <param name="vertices">The collection of graph vertices.</param>
         /// <param name="incidenceFunction">The graph incidence function.</param>
-        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidenceFunction) :
+        public Graph(IEnumerable<TVertex> vertices, GraphIncidenceFunction<TVertex> incidenceFunction) :
             this(vertices, incidenceFunction, null)
         {
         }
@@ -93,12 +93,12 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <param name="vertices">The collection of graph vertices.</param>
         /// <param name="incidenceFunction">The graph incidence function.</param>
-        /// <param name="comparer">
+        /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
-        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidenceFunction, IEqualityComparer<T>? comparer) :
-            this(vertices, incidenceFunction, comparer, GraphIncidenceOptions.None)
+        public Graph(IEnumerable<TVertex> vertices, GraphIncidenceFunction<TVertex> incidenceFunction, IEqualityComparer<TVertex>? vertexComparer) :
+            this(vertices, incidenceFunction, vertexComparer, GraphIncidenceOptions.None)
         {
         }
 
@@ -110,13 +110,13 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <param name="vertices">The collection of graph vertices.</param>
         /// <param name="incidenceFunction">The graph incidence function.</param>
-        /// <param name="comparer">
+        /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
         /// <param name="options">The graph incidence options.</param>
-        public Graph(IEnumerable<T> vertices, GraphIncidenceFunction<T> incidenceFunction, IEqualityComparer<T>? comparer, GraphIncidenceOptions options) :
-            this(comparer)
+        public Graph(IEnumerable<TVertex> vertices, GraphIncidenceFunction<TVertex> incidenceFunction, IEqualityComparer<TVertex>? vertexComparer, GraphIncidenceOptions options) :
+            this(vertexComparer)
         {
             if (vertices == null)
                 throw new ArgumentNullException(nameof(vertices));
@@ -154,61 +154,65 @@ namespace Gapotchenko.FX.Math.Topology
             }
         }
 
-        /// <summary>
-        /// Gets the <see cref="IEqualityComparer{T}"/> that is used to determine equality of vertices for the graph.
-        /// </summary>
-        public IEqualityComparer<T> Comparer => m_AdjacencyList.Comparer;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEqualityComparer<TVertex> VertexComparer => m_AdjacencyList.Comparer;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly AssociativeArray<T, AdjacencyRow?> m_AdjacencyList;
+        readonly AssociativeArray<TVertex, AdjacencyRow?> m_AdjacencyList;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         VertexSet? m_CachedVertices;
 
+        /// <summary>
+        /// Gets a set containing the vertices of the graph.
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        VertexSet VerticesCore => m_CachedVertices ??= new(this);
+        public VertexSet Vertices => m_CachedVertices ??= new(this);
 
         /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ISet<T> Vertices => VerticesCore;
+        ISet<TVertex> IGraph<TVertex>.Vertices => Vertices;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySet<T> IReadOnlyGraph<T>.Vertices => VerticesCore;
+        IReadOnlySet<TVertex> IReadOnlyGraph<TVertex>.Vertices => Vertices;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         EdgeSet? m_CachedEdges;
 
+        /// <summary>
+        /// Gets a set containing the edges of the graph.
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        EdgeSet EdgesCore => m_CachedEdges ??= new(this);
+        public EdgeSet Edges => m_CachedEdges ??= new(this);
 
         /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public ISet<GraphEdge<T>> Edges => EdgesCore;
+        ISet<GraphEdge<TVertex>> IGraph<TVertex>.Edges => Edges;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlySet<GraphEdge<T>> IReadOnlyGraph<T>.Edges => EdgesCore;
+        IReadOnlySet<GraphEdge<TVertex>> IReadOnlyGraph<TVertex>.Edges => Edges;
 
         /// <inheritdoc/>
         public bool IsEmpty => m_AdjacencyList.Count == 0;
 
         struct ReachibilityTraverser
         {
-            public ReachibilityTraverser(Graph<T> graph, T destination, bool adjacent)
+            public ReachibilityTraverser(Graph<TVertex> graph, TVertex destination, bool adjacent)
             {
                 m_Graph = graph;
                 m_Destination = destination;
 
-                m_VisitedNodes = new HashSet<T>(graph.Comparer);
+                m_VisitedNodes = new HashSet<TVertex>(graph.VertexComparer);
                 m_Adjacent = adjacent;
             }
 
-            readonly Graph<T> m_Graph;
-            readonly T m_Destination;
+            readonly Graph<TVertex> m_Graph;
+            readonly TVertex m_Destination;
 
-            readonly HashSet<T> m_VisitedNodes;
+            readonly HashSet<TVertex> m_VisitedNodes;
             bool m_Adjacent;
 
-            public bool CanBeReachedFrom(T source)
+            public bool CanBeReachedFrom(TVertex source)
             {
                 if (!m_VisitedNodes.Add(source))
                     return false;
@@ -248,10 +252,10 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="from">The source vertex.</param>
         /// <param name="to">The target vertex.</param>
         /// <returns><c>true</c> when the specified source vertex can reach the target via one or more intermediate vertices; otherwise, <c>false</c>.</returns>
-        bool HasTransitivePath(T from, T to) => new ReachibilityTraverser(this, to, false).CanBeReachedFrom(from);
+        bool HasTransitivePath(TVertex from, TVertex to) => new ReachibilityTraverser(this, to, false).CanBeReachedFrom(from);
 
         /// <inheritdoc/>
-        public bool HasPath(T from, T to) => Edges.Contains(from, to) || HasTransitivePath(from, to);
+        public bool HasPath(TVertex from, TVertex to) => Edges.Contains(from, to) || HasTransitivePath(from, to);
 
         /// <inheritdoc/>
         public void Clear()
@@ -269,18 +273,23 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public IEnumerable<T> VerticesAdjacentTo(T vertex)
+        public IEnumerable<TVertex> DestinationVerticesAdjacentTo(TVertex vertex)
         {
             var mg = new ModificationGuard(this);
             m_AdjacencyList.TryGetValue(vertex, out var adjRow);
-            return mg.Protect(adjRow) ?? Enumerable.Empty<T>();
+            return mg.Protect(adjRow) ?? Enumerable.Empty<TVertex>();
         }
+
+        /// <inheritdoc/>
+        public IEnumerable<GraphEdge<TVertex>> OutgoingEdgesIncidentWith(TVertex vertex) =>
+            DestinationVerticesAdjacentTo(vertex)
+            .Select(x => GraphEdge.Create(vertex, x));
 
         /// <summary>
         /// Creates a new graph instance inheriting parent class settings such as comparer.
         /// </summary>
         /// <returns>The new graph instance.</returns>
-        protected Graph<T> NewGraph() => new(Comparer);
+        protected Graph<TVertex> NewGraph() => new(VertexComparer);
 
         /// <summary>
         /// <para>
@@ -291,6 +300,6 @@ namespace Gapotchenko.FX.Math.Topology
         /// </para>
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected internal IDictionary<T, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
+        protected internal IDictionary<TVertex, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
     }
 }

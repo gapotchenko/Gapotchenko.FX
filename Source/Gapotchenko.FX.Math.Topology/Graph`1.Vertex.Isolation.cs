@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace Gapotchenko.FX.Math.Topology
 {
-    partial class Graph<T>
+    partial class Graph<TVertex>
     {
         /// <inheritdoc/>
-        public bool IsVertexIsolated(T vertex)
+        public bool IsVertexIsolated(TVertex vertex)
         {
             var adjList = m_AdjacencyList;
 
@@ -32,11 +32,11 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public IEnumerable<T> IsolatedVertices
+        public IEnumerable<TVertex> IsolatedVertices
         {
             get
             {
-                var map = new AssociativeArray<T, bool>(Comparer);
+                var map = new AssociativeArray<TVertex, bool>(VertexComparer);
 
                 foreach (var (v, adjRow) in m_AdjacencyList)
                 {

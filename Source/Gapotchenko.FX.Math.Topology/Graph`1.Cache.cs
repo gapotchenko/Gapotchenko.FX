@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Math.Topology
 {
-    partial class Graph<T>
+    partial class Graph<TVertex>
     {
         /// <summary>
         /// Cached number of vertices.

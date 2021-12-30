@@ -3,14 +3,14 @@ using System.Text;
 
 namespace Gapotchenko.FX.Math.Topology
 {
-    partial class Graph<T>
+    partial class Graph<TVertex>
     {
         /// <summary>
         /// Graph adjacency row represents a set of vertices that relate to another vertex.
         /// </summary>
-        protected internal sealed class AdjacencyRow : HashSet<T>
+        protected internal sealed class AdjacencyRow : HashSet<TVertex>
         {
-            internal AdjacencyRow(IEqualityComparer<T>? comparer) :
+            internal AdjacencyRow(IEqualityComparer<TVertex>? comparer) :
                 base(comparer)
             {
             }
@@ -41,6 +41,6 @@ namespace Gapotchenko.FX.Math.Topology
         /// Creates a new adjacency row instance.
         /// </summary>
         /// <returns>The new adjacency row instance.</returns>
-        protected AdjacencyRow NewAdjacencyRow() => new(Comparer);
+        protected AdjacencyRow NewAdjacencyRow() => new(VertexComparer);
     }
 }
