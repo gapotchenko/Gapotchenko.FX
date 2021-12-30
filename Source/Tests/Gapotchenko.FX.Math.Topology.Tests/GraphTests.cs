@@ -22,7 +22,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_RemoveVertices()
+        public void Graph_RemoveVertices_1()
         {
             var g = new Graph<int>
             {
@@ -40,6 +40,21 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             Assert.IsTrue(g.Vertices.Remove(3));
             Assert.AreEqual(2, g.Vertices.Count);
             Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2 }));
+            Assert.AreEqual(0, g.Edges.Count);
+        }
+
+        [TestMethod]
+        public void Graph_RemoveVertices_2()
+        {
+            var g = new Graph<int>
+            {
+                Edges = { (1, 2), (2, 3) }
+            };
+
+            Assert.AreEqual(2, g.Edges.Count);
+
+            g.Vertices.Remove(2);
+
             Assert.AreEqual(0, g.Edges.Count);
         }
 

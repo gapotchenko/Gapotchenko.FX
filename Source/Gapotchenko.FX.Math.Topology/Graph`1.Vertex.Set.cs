@@ -41,10 +41,9 @@ namespace Gapotchenko.FX.Math.Topology
             /// <inheritdoc/>
             public override bool Remove(TVertex vertex)
             {
-                bool hit = false;
                 var adjacencyList = m_Graph.m_AdjacencyList;
 
-                hit |= adjacencyList.Remove(vertex);
+                bool hit = adjacencyList.Remove(vertex);
 
                 foreach (var i in adjacencyList)
                 {
@@ -56,10 +55,9 @@ namespace Gapotchenko.FX.Math.Topology
                 if (hit)
                 {
                     --m_Graph.m_CachedOrder;
-
-#if !(TFF_DICTIONARY_ENUMERATION_REMOVE_ALLOWED && TFF_HASHSET_ENUMERATION_REMOVE_ALLOWED)
+                    m_Graph.m_CachedSize = null;
+                    m_Graph.InvalidateCachedRelations();
                     m_Graph.IncrementVersion();
-#endif
                 }
 
                 return hit;

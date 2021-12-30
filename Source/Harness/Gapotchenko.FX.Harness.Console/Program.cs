@@ -87,9 +87,9 @@ namespace Gapotchenko.FX.Harness.Console
 
             var g = new Graph<int>();
             g.Edges.Add(1, 2);
-            g.Vertices.Add(3);
+            g.Edges.Add(2, 3);
 
-            bool cyclic = g.IsCyclic;
+            g.Vertices.Remove(2);
 
             foreach (var i in g.Vertices)
             {
