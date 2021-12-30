@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gapotchenko.FX.Math.Topology
 {
@@ -11,7 +12,7 @@ namespace Gapotchenko.FX.Math.Topology
             if (vertices == null)
                 throw new ArgumentNullException(nameof(vertices));
 
-            throw new NotImplementedException();
+            Vertices.IntersectWith(vertices);
         }
 
         /// <summary>
@@ -60,7 +61,14 @@ namespace Gapotchenko.FX.Math.Topology
             if (edges == null)
                 throw new ArgumentNullException(nameof(edges));
 
-            throw new NotImplementedException();
+            Edges.IntersectWith(edges);
+            Vertices.IntersectWith(Edges.SelectMany(EnumerateVertices));
+
+            static IEnumerable<TVertex> EnumerateVertices(GraphEdge<TVertex> edge)
+            {
+                yield return edge.From;
+                yield return edge.To;
+            }
         }
 
         /// <summary>
