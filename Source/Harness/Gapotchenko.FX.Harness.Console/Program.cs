@@ -95,8 +95,6 @@ namespace Gapotchenko.FX.Harness.Console
             {
             }
 
-            Console.WriteLine(g.ToString("D"));
-
             AssemblyAutoLoader.Default.AddProbingPath(@"C:\");
             AssemblyAutoLoader.Default.RemoveProbingPath(@"C:\");
 

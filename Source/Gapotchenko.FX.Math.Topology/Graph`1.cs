@@ -36,13 +36,13 @@ namespace Gapotchenko.FX.Math.Topology
         /// <summary>
         /// Initializes a new instance of <see cref="Graph{T}"/> class that is empty and uses the specified equality comparer for graph vertices.
         /// </summary>
-        /// <param name="comparer">
+        /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
-        public Graph(IEqualityComparer<TVertex>? comparer)
+        public Graph(IEqualityComparer<TVertex>? vertexComparer)
         {
-            m_AdjacencyList = new(comparer);
+            m_AdjacencyList = new(vertexComparer);
         }
 
         /// <summary>
@@ -60,12 +60,12 @@ namespace Gapotchenko.FX.Math.Topology
         /// and contains vertices and edges copied from the specified <see cref="IReadOnlyGraph{T}"/>.
         /// </summary>
         /// <param name="graph">The <see cref="IReadOnlyGraph{T}"/> whose vertices and edges are copied to the new <see cref="Graph{T}"/>.</param>
-        /// <param name="comparer">
+        /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
-        public Graph(IReadOnlyGraph<TVertex> graph, IEqualityComparer<TVertex>? comparer) :
-            this(comparer)
+        public Graph(IReadOnlyGraph<TVertex> graph, IEqualityComparer<TVertex>? vertexComparer) :
+            this(vertexComparer)
         {
             if (graph == null)
                 throw new ArgumentNullException(nameof(graph));
@@ -93,12 +93,12 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <param name="vertices">The collection of graph vertices.</param>
         /// <param name="incidenceFunction">The graph incidence function.</param>
-        /// <param name="comparer">
+        /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
-        public Graph(IEnumerable<TVertex> vertices, GraphIncidenceFunction<TVertex> incidenceFunction, IEqualityComparer<TVertex>? comparer) :
-            this(vertices, incidenceFunction, comparer, GraphIncidenceOptions.None)
+        public Graph(IEnumerable<TVertex> vertices, GraphIncidenceFunction<TVertex> incidenceFunction, IEqualityComparer<TVertex>? vertexComparer) :
+            this(vertices, incidenceFunction, vertexComparer, GraphIncidenceOptions.None)
         {
         }
 
@@ -110,13 +110,13 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <param name="vertices">The collection of graph vertices.</param>
         /// <param name="incidenceFunction">The graph incidence function.</param>
-        /// <param name="comparer">
+        /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
         /// <param name="options">The graph incidence options.</param>
-        public Graph(IEnumerable<TVertex> vertices, GraphIncidenceFunction<TVertex> incidenceFunction, IEqualityComparer<TVertex>? comparer, GraphIncidenceOptions options) :
-            this(comparer)
+        public Graph(IEnumerable<TVertex> vertices, GraphIncidenceFunction<TVertex> incidenceFunction, IEqualityComparer<TVertex>? vertexComparer, GraphIncidenceOptions options) :
+            this(vertexComparer)
         {
             if (vertices == null)
                 throw new ArgumentNullException(nameof(vertices));
