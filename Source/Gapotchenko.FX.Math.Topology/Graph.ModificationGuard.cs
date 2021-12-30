@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Math.Topology
 {
-	partial class Graph<T>
+	partial class Graph<TVertex>
 	{
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		int m_Version;
@@ -14,13 +14,13 @@ namespace Gapotchenko.FX.Math.Topology
 
 		readonly struct ModificationGuard
 		{
-			public ModificationGuard(Graph<T> graph)
+			public ModificationGuard(Graph<TVertex> graph)
 			{
 				m_Graph = graph;
 				m_Version = graph.m_Version;
 			}
 
-			readonly Graph<T> m_Graph;
+			readonly Graph<TVertex> m_Graph;
 			readonly int m_Version;
 
 			[DoesNotReturn]
@@ -34,9 +34,9 @@ namespace Gapotchenko.FX.Math.Topology
 			}
 
 			[return: NotNullIfNotNull("source")]
-			public IEnumerable<T>? Protect(IEnumerable<T>? source) => source == null ? null : ProtectCore(source);
+			public IEnumerable<TVertex>? Protect(IEnumerable<TVertex>? source) => source == null ? null : ProtectCore(source);
 
-			IEnumerable<T> ProtectCore(IEnumerable<T> source)
+			IEnumerable<TVertex> ProtectCore(IEnumerable<TVertex> source)
 			{
 				foreach (var i in source)
 				{

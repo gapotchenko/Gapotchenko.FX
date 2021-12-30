@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Gapotchenko.FX.Math.Topology
 {
-    partial class Graph<T> : IFormattable
+    partial class Graph<TVertex> : IFormattable
     {
         /// <inheritdoc/>
         public virtual string ToString(string? format, IFormatProvider? formatProvider = null)

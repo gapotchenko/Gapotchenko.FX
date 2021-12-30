@@ -7,24 +7,24 @@ using System.Linq;
 
 namespace Gapotchenko.FX.Math.Topology
 {
-    partial class Graph<T>
+    partial class Graph<TVertex>
     {
-        sealed class VertexSet : SetBase<T>
+        sealed class VertexSet : SetBase<TVertex>
         {
-            public VertexSet(Graph<T> graph)
+            public VertexSet(Graph<TVertex> graph)
             {
                 m_Graph = graph;
             }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            readonly Graph<T> m_Graph;
+            readonly Graph<TVertex> m_Graph;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            public override IEqualityComparer<T> Comparer => m_Graph.Comparer;
+            public override IEqualityComparer<TVertex> Comparer => m_Graph.VertexComparer;
 
             public override int Count => m_Graph.m_CachedOrder ??= GetEnumerator().Rest().Count();
 
-            public override bool Add(T vertex)
+            public override bool Add(TVertex vertex)
             {
                 if (Contains(vertex))
                     return false;
@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Math.Topology
                 return true;
             }
 
-            public override bool Remove(T vertex)
+            public override bool Remove(TVertex vertex)
             {
                 bool hit = false;
                 var adjacencyList = m_Graph.m_AdjacencyList;
@@ -62,7 +62,7 @@ namespace Gapotchenko.FX.Math.Topology
 
             public override void Clear() => m_Graph.Clear();
 
-            public override bool Contains(T vertex)
+            public override bool Contains(TVertex vertex)
             {
                 var adjacencyList = m_Graph.m_AdjacencyList;
                 return
@@ -70,13 +70,13 @@ namespace Gapotchenko.FX.Math.Topology
                     adjacencyList.Any(x => x.Value?.Contains(vertex) ?? false);
             }
 
-            public override IEnumerator<T> GetEnumerator()
+            public override IEnumerator<TVertex> GetEnumerator()
             {
                 var version = m_Graph.m_Version;
 
                 var query = m_Graph.m_AdjacencyList
-                    .SelectMany(x => (x.Value ?? Enumerable.Empty<T>()).Prepend(x.Key))
-                    .Distinct(m_Graph.Comparer);
+                    .SelectMany(x => (x.Value ?? Enumerable.Empty<TVertex>()).Prepend(x.Key))
+                    .Distinct(m_Graph.VertexComparer);
 
                 foreach (var i in query)
                 {

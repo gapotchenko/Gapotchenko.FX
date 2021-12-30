@@ -1,6 +1,6 @@
 ﻿namespace Gapotchenko.FX.Math.Topology
 {
-    partial class Graph<T>
+    partial class Graph<TVertex>
     {
         /// <inheritdoc/>
         public void ReduceReflexes()
@@ -31,15 +31,15 @@
         /// </para>
         /// </summary>
         /// <returns>The reflexively reduced graph.</returns>
-        public Graph<T> GetReflexiveReduction()
+        public Graph<TVertex> GetReflexiveReduction()
         {
             var graph = Clone();
             graph.ReduceReflexes();
             return graph;
         }
 
-        IGraph<T> IGraph<T>.GetReflexiveReduction() => GetReflexiveReduction();
+        IGraph<TVertex> IGraph<TVertex>.GetReflexiveReduction() => GetReflexiveReduction();
 
-        IReadOnlyGraph<T> IReadOnlyGraph<T>.GetReflexiveReduction() => GetReflexiveReduction();
+        IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.GetReflexiveReduction() => GetReflexiveReduction();
     }
 }

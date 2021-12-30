@@ -2,18 +2,18 @@
 
 namespace Gapotchenko.FX.Math.Topology
 {
-    partial class Graph<T>
+    partial class Graph<TVertex>
     {
         /// <inheritdoc/>
         public bool IsCyclic
         {
             get
             {
-                var comparer = Comparer;
-                var visited = new HashSet<T>(comparer);
-                var recStack = new HashSet<T>(comparer);
+                var comparer = VertexComparer;
+                var visited = new HashSet<TVertex>(comparer);
+                var recStack = new HashSet<TVertex>(comparer);
 
-                bool IsCyclicHelper(T v)
+                bool IsCyclicHelper(TVertex v)
                 {
                     if (recStack.Contains(v))
                         return true;
@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Math.Topology
 
                     recStack.Add(v);
 
-                    foreach (var i in VerticesAdjacentTo(v))
+                    foreach (var i in DestinationVerticesAdjacentTo(v))
                         if (IsCyclicHelper(i))
                             return true;
 

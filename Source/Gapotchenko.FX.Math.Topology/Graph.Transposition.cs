@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Gapotchenko.FX.Math.Topology
 {
-    partial class Graph<T>
+    partial class Graph<TVertex>
     {
         /// <inheritdoc/>
         public void Transpose()
@@ -19,14 +19,14 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a graph transposition by reversing its edge directions.
         /// </summary>
         /// <returns>The transposed graph.</returns>
-        public Graph<T> GetTransposition()
+        public Graph<TVertex> GetTransposition()
         {
             var graph = NewGraph();
             TransposeCore(graph, Edges, Vertices);
             return graph;
         }
 
-        static void TransposeCore(Graph<T> graph, IEnumerable<GraphEdge<T>> edges, IEnumerable<T> vertices)
+        static void TransposeCore(Graph<TVertex> graph, IEnumerable<GraphEdge<TVertex>> edges, IEnumerable<TVertex> vertices)
         {
             foreach (var edge in edges)
                 graph.Edges.Add(edge.Reverse());
@@ -35,8 +35,8 @@ namespace Gapotchenko.FX.Math.Topology
                 graph.Vertices.Add(vertex);
         }
 
-        IGraph<T> IGraph<T>.GetTransposition() => GetTransposition();
+        IGraph<TVertex> IGraph<TVertex>.GetTransposition() => GetTransposition();
 
-        IReadOnlyGraph<T> IReadOnlyGraph<T>.GetTransposition() => GetTransposition();
+        IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.GetTransposition() => GetTransposition();
     }
 }

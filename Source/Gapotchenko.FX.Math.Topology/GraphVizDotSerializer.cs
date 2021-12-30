@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Math.Topology
         {
             writer.WriteLine("digraph {");
 
-            var map = new AssociativeArray<T, int>(graph.Comparer);
+            var map = new AssociativeArray<T, int>(graph.VertexComparer);
 
             int GetVerticeId(T v)
             {

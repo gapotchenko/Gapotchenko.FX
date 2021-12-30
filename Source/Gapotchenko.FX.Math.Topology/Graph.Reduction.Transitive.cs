@@ -2,7 +2,7 @@
 
 namespace Gapotchenko.FX.Math.Topology
 {
-    partial class Graph<T>
+    partial class Graph<TVertex>
     {
         /// <inheritdoc/>
         public void ReduceTransitions()
@@ -17,13 +17,13 @@ namespace Gapotchenko.FX.Math.Topology
 
                 var from = i.Key;
 
-                List<T>? removeList = null;
+                List<TVertex>? removeList = null;
 
                 foreach (var to in adjRow)
                 {
                     if (HasTransitivePath(from, to))
                     {
-                        removeList ??= new List<T>();
+                        removeList ??= new List<TVertex>();
                         removeList.Add(to);
                     }
                 }
@@ -48,15 +48,15 @@ namespace Gapotchenko.FX.Math.Topology
         /// </para>
         /// </summary>
         /// <returns>The transitively reduced graph.</returns>
-        public Graph<T> GetTransitiveReduction()
+        public Graph<TVertex> GetTransitiveReduction()
         {
             var graph = Clone();
             graph.ReduceTransitions();
             return graph;
         }
 
-        IGraph<T> IGraph<T>.GetTransitiveReduction() => GetTransitiveReduction();
+        IGraph<TVertex> IGraph<TVertex>.GetTransitiveReduction() => GetTransitiveReduction();
 
-        IReadOnlyGraph<T> IReadOnlyGraph<T>.GetTransitiveReduction() => GetTransitiveReduction();
+        IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.GetTransitiveReduction() => GetTransitiveReduction();
     }
 }

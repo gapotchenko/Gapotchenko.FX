@@ -93,7 +93,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
 
             foreach (var v in idGraph.Vertices)
             {
-                var adjacentTo = idGraph.VerticesAdjacentTo(v);
+                var adjacentTo = idGraph.DestinationVerticesAdjacentTo(v);
                 if (adjacentTo.Any())
                 {
                     WriteVertexId(v);
@@ -128,7 +128,7 @@ namespace Gapotchenko.FX.Math.Topology.Serialization
 
                     indentedWriter.WriteLine();
                 }
-                else if (!transposedIdGraph.VerticesAdjacentTo(v).Any())
+                else if (!transposedIdGraph.DestinationVerticesAdjacentTo(v).Any())
                 {
                     WriteVertexId(v);
                     indentedWriter.WriteLine();

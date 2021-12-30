@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace Gapotchenko.FX.Math.Topology
 {
-    partial class Graph<T>
+    partial class Graph<TVertex>
     {
         /// <inheritdoc/>
-        public bool GraphEquals(IReadOnlyGraph<T> other)
+        public bool GraphEquals(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool IsEdgeInducedSubgraphOf(IReadOnlyGraph<T> other)
+        public bool IsEdgeInducedSubgraphOf(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool IsEdgeInducedSupergraphOf(IReadOnlyGraph<T> other)
+        public bool IsEdgeInducedSupergraphOf(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -44,14 +44,14 @@ namespace Gapotchenko.FX.Math.Topology
                 other.Vertices.All(v => !other.IsVertexIsolated(v));
         }
 
-        static IEnumerable<GraphEdge<T>> GetInducedSubgraphEdges(IReadOnlyGraph<T> a, IReadOnlyGraph<T> b)
+        static IEnumerable<GraphEdge<TVertex>> GetInducedSubgraphEdges(IReadOnlyGraph<TVertex> a, IReadOnlyGraph<TVertex> b)
         {
             var aVertices = a.Vertices;
             return b.Edges.Where(e => aVertices.Contains(e.From) && aVertices.Contains(e.To));
         }
 
         /// <inheritdoc/>
-        public bool IsProperSubgraphOf(IReadOnlyGraph<T> other)
+        public bool IsProperSubgraphOf(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -62,7 +62,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool IsProperSupergraphOf(IReadOnlyGraph<T> other)
+        public bool IsProperSupergraphOf(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -73,7 +73,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool IsSubgraphOf(IReadOnlyGraph<T> other)
+        public bool IsSubgraphOf(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -85,7 +85,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool IsSupergraphOf(IReadOnlyGraph<T> other)
+        public bool IsSupergraphOf(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -97,7 +97,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool IsVertexInducedSubgraphOf(IReadOnlyGraph<T> other)
+        public bool IsVertexInducedSubgraphOf(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -109,7 +109,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public bool IsVertexInducedSupergraphOf(IReadOnlyGraph<T> other)
+        public bool IsVertexInducedSupergraphOf(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -120,11 +120,11 @@ namespace Gapotchenko.FX.Math.Topology
                 VertexInducedSubgraphEdgesEqual(other, this);
         }
 
-        static bool VertexInducedSubgraphEdgesEqual(IReadOnlyGraph<T> a, IReadOnlyGraph<T> b) =>
+        static bool VertexInducedSubgraphEdgesEqual(IReadOnlyGraph<TVertex> a, IReadOnlyGraph<TVertex> b) =>
             a.Edges.SetEquals(GetInducedSubgraphEdges(a, b));
 
         /// <inheritdoc/>
-        public void IntersectWith(IReadOnlyGraph<T> other)
+        public void IntersectWith(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -132,7 +132,7 @@ namespace Gapotchenko.FX.Math.Topology
             IntersectWithCore(other);
         }
 
-        void IntersectWithCore(IReadOnlyGraph<T> other)
+        void IntersectWithCore(IReadOnlyGraph<TVertex> other)
         {
             Vertices.IntersectWith(other.Vertices);
             Edges.IntersectWith(other.Edges);
@@ -143,7 +143,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <param name="other">The graph to compare to the current one.</param>
         /// <returns>The graph containing vertices and edges that are present in both the current and a specified graphs.</returns>
-        public Graph<T> Intersect(IReadOnlyGraph<T> other)
+        public Graph<TVertex> Intersect(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -154,7 +154,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
-        public void ExceptWith(IReadOnlyGraph<T> other)
+        public void ExceptWith(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -162,18 +162,18 @@ namespace Gapotchenko.FX.Math.Topology
             ExceptWithCore(other);
         }
 
-        void ExceptWithCore(IReadOnlyGraph<T> other)
+        void ExceptWithCore(IReadOnlyGraph<TVertex> other)
         {
             Vertices.ExceptWith(other.Vertices);
             Edges.ExceptWith(other.Edges);
         }
 
-        IGraph<T> IGraph<T>.Intersect(IReadOnlyGraph<T> other) => Intersect(other);
+        IGraph<TVertex> IGraph<TVertex>.Intersect(IReadOnlyGraph<TVertex> other) => Intersect(other);
 
-        IReadOnlyGraph<T> IReadOnlyGraph<T>.Intersect(IReadOnlyGraph<T> other) => Intersect(other);
+        IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.Intersect(IReadOnlyGraph<TVertex> other) => Intersect(other);
 
         /// <inheritdoc/>
-        public void UnionWith(IReadOnlyGraph<T> other)
+        public void UnionWith(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -181,7 +181,7 @@ namespace Gapotchenko.FX.Math.Topology
             UnionWithCore(other);
         }
 
-        void UnionWithCore(IReadOnlyGraph<T> other)
+        void UnionWithCore(IReadOnlyGraph<TVertex> other)
         {
             Vertices.UnionWith(other.Vertices);
             Edges.UnionWith(other.Edges);
@@ -192,7 +192,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <param name="other">The graph to compare to the current one.</param>
         /// <returns>The graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both.</returns>
-        public Graph<T> Union(IReadOnlyGraph<T> other)
+        public Graph<TVertex> Union(IReadOnlyGraph<TVertex> other)
         {
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
@@ -202,8 +202,8 @@ namespace Gapotchenko.FX.Math.Topology
             return graph;
         }
 
-        IGraph<T> IGraph<T>.Union(IReadOnlyGraph<T> other) => Union(other);
+        IGraph<TVertex> IGraph<TVertex>.Union(IReadOnlyGraph<TVertex> other) => Union(other);
 
-        IReadOnlyGraph<T> IReadOnlyGraph<T>.Union(IReadOnlyGraph<T> other) => Union(other);
+        IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.Union(IReadOnlyGraph<TVertex> other) => Union(other);
     }
 }

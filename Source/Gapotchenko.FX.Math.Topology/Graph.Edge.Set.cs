@@ -5,27 +5,27 @@ using System.Linq;
 
 namespace Gapotchenko.FX.Math.Topology
 {
-    partial class Graph<T>
+    partial class Graph<TVertex>
     {
-        sealed class EdgeSet : SetBase<GraphEdge<T>>
+        sealed class EdgeSet : SetBase<GraphEdge<TVertex>>
         {
-            public EdgeSet(Graph<T> graph)
+            public EdgeSet(Graph<TVertex> graph)
             {
                 m_Graph = graph;
             }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            readonly Graph<T> m_Graph;
+            readonly Graph<TVertex> m_Graph;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            IEqualityComparer<GraphEdge<T>>? m_Comparer;
+            IEqualityComparer<GraphEdge<TVertex>>? m_Comparer;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            public override IEqualityComparer<GraphEdge<T>> Comparer => m_Comparer ??= GraphEdge.CreateComparer(m_Graph.Comparer);
+            public override IEqualityComparer<GraphEdge<TVertex>> Comparer => m_Comparer ??= GraphEdge.CreateComparer(m_Graph.VertexComparer);
 
             public override int Count => m_Graph.m_CachedSize ??= m_Graph.m_AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
 
-            public override bool Add(GraphEdge<T> edge)
+            public override bool Add(GraphEdge<TVertex> edge)
             {
                 var from = edge.From;
 
@@ -55,7 +55,7 @@ namespace Gapotchenko.FX.Math.Topology
                 }
             }
 
-            public override bool Remove(GraphEdge<T> item)
+            public override bool Remove(GraphEdge<TVertex> item)
             {
                 var adjList = m_Graph.m_AdjacencyList;
 
@@ -83,7 +83,7 @@ namespace Gapotchenko.FX.Math.Topology
 
             public override void Clear()
             {
-                HashSet<T>? verticesToKeep = null;
+                HashSet<TVertex>? verticesToKeep = null;
 
                 var adjList = m_Graph.AdjacencyList;
                 foreach (var i in adjList)
@@ -97,7 +97,7 @@ namespace Gapotchenko.FX.Math.Topology
                         // Preserve the vertex in vertices collection.
                         if (!adjList.ContainsKey(j))
                         {
-                            verticesToKeep ??= new HashSet<T>(m_Graph.Comparer);
+                            verticesToKeep ??= new HashSet<TVertex>(m_Graph.VertexComparer);
                             verticesToKeep.Add(j);
                         }
                     }
@@ -117,12 +117,12 @@ namespace Gapotchenko.FX.Math.Topology
                 m_Graph.IncrementVersion();
             }
 
-            public override bool Contains(GraphEdge<T> edge) =>
+            public override bool Contains(GraphEdge<TVertex> edge) =>
                 m_Graph.m_AdjacencyList.TryGetValue(edge.From, out var adjRow) &&
                 adjRow != null &&
                 adjRow.Contains(edge.To);
 
-            public override IEnumerator<GraphEdge<T>> GetEnumerator()
+            public override IEnumerator<GraphEdge<TVertex>> GetEnumerator()
             {
                 var version = m_Graph.m_Version;
 
