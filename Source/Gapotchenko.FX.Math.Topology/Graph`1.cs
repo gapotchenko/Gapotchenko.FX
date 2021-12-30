@@ -73,8 +73,8 @@ namespace Gapotchenko.FX.Math.Topology
             Edges.UnionWith(graph.Edges);
             Vertices.UnionWith(graph.Vertices);
 
-            if (graph is Graph<TVertex> g && VertexComparer.Equals(g.VertexComparer))
-                CopyCacheFrom(g);
+            if (graph is Graph<TVertex> other && VertexComparer.Equals(other.VertexComparer))
+                CopyCacheFrom(other);
         }
 
         /// <summary>
