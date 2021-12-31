@@ -18,14 +18,14 @@ namespace Gapotchenko.FX.Math.Topology
         /// Perform reflexive reduction by not calling a graph incidence function for all v → v edges where v ∈ V and V is a set of vertices of the graph.
         /// </para>
         /// <para>
-        /// This option efficiently eliminates loops (also called self-loops or buckles) from a resulting graph.
+        /// This option eliminates loops (also called self-loops or buckles) from appearing in the resulting graph.
         /// </para>
         /// </summary>
         ReflexiveReduction = 1 << 1,
 
         /// <summary>
         /// <para>
-        /// Instructs to exclude isolated vertices from a resulting graph.
+        /// Produce a connected resulting graph by excluding isolated vertices from it.
         /// </para>
         /// <para>
         /// Isolated vertices are vertices with degree zero; that is, vertices that are not incident with any edge.
