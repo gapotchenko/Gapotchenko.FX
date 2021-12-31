@@ -93,9 +93,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Performs in-place reflexive reduction of the current graph.
         /// </para>
         /// <para>
-        /// Reflexive reduction prunes the reflexive relations.
-        /// Reflexive relation is caused by a vertex that has a connection (edge) to itself.
-        /// The removal of such connections prunes the reflexive relations, making a graph reflexively reduced.
+        /// Reflexive reduction removes the loops (also called self-loops or buckles) from the graph.
         /// </para>
         /// </summary>
         void ReduceReflexes();
@@ -105,10 +103,10 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a reflexively reduced graph.
         /// </para>
         /// <para>
-        /// Reflexive reduction prunes the reflexive relations.
+        /// Reflexive reduction removes the loops (also called self-loops or buckles) from the graph.
         /// </para>
         /// </summary>
-        /// <returns>The reflexively reduced graph.</returns>
+        /// <returns>The graph without the loops.</returns>
         new IGraph<TVertex> GetReflexiveReduction();
 
         /// <summary>
