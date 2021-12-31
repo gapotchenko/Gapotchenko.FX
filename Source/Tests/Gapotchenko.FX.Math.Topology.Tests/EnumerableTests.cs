@@ -26,6 +26,23 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             Assert.AreEqual("BACDEF", result);
         }
 
+        [TestMethod]
+        public void Enumerable_OrderTopologicallyBy_2()
+        {
+            static IEnumerable<char>? df(char v) =>
+                v switch
+                {
+                    'A' => new[] { 'B' },
+                    'B' => new[] { 'D' },
+                    _ => null,
+                };
+
+            var source = "ABCDEF";
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
+
+            Assert.AreEqual("DBACEF", result);
+        }
+
         static void AssertTopologicalOrderIsCorrect<T>(IEnumerable<T> source, IEnumerable<T> result, Func<T, T, bool> dependencyFunction)
         {
             Assert.IsTrue(TopologicalOrderProof.Verify(source, result, dependencyFunction), "Topological order is violated.");
