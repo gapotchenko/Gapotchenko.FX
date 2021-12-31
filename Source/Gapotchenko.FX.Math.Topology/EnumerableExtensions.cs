@@ -1,6 +1,7 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,10 +9,10 @@ using System.Linq;
 namespace Gapotchenko.FX.Math.Topology
 {
     /// <summary>
-    /// Provides topological extensions for <see cref="IEnumerable{T}"/>.
+    /// Provides extension methods for <see cref="IEnumerable{T}"/>.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class TopologicalExtensions
+    public static class EnumerableExtensions
     {
         /// <summary>
         /// <para>
@@ -32,7 +33,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according to a key and specified dependency function.</returns>
-        public static IEnumerable<T> OrderTopologicallyBy<T, TKey>(
+        public static IOrderedEnumerable<T> OrderTopologicallyBy<T, TKey>(
             this IEnumerable<T> source,
             Func<T, TKey> keySelector,
             Func<TKey, TKey, bool> dependencyFunction,
@@ -45,7 +46,7 @@ namespace Gapotchenko.FX.Math.Topology
             if (dependencyFunction == null)
                 throw new ArgumentNullException(nameof(dependencyFunction));
 
-            return OrderTopologicallyByCore(
+            return OrderTopologicallyBy(
                 source,
                 keySelector,
                 comparer,
@@ -75,7 +76,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according to a key and specified dependency function.</returns>
-        public static IEnumerable<T> OrderTopologicallyBy<T, TKey>(
+        public static IOrderedEnumerable<T> OrderTopologicallyBy<T, TKey>(
             this IEnumerable<T> source,
             Func<T, TKey> keySelector,
             Func<TKey, IEnumerable<TKey>?> dependencyFunction,
@@ -88,7 +89,7 @@ namespace Gapotchenko.FX.Math.Topology
             if (dependencyFunction == null)
                 throw new ArgumentNullException(nameof(dependencyFunction));
 
-            return OrderTopologicallyByCore(
+            return OrderTopologicallyBy(
                 source,
                 keySelector,
                 comparer,
@@ -107,6 +108,19 @@ namespace Gapotchenko.FX.Math.Topology
                     }
                     return graph;
                 });
+        }
+
+        static IOrderedEnumerable<T> OrderTopologicallyBy<T, TKey>(
+            IEnumerable<T> source,
+            Func<T, TKey> keySelector,
+            IEqualityComparer<TKey>? comparer,
+            Func<IEnumerable<TKey>, Graph<TKey>> graphFactory)
+        {
+            return new TopologicallyOrderedEnumerable<T, TKey>(
+                source,
+                keySelector,
+                comparer,
+                graphFactory);
         }
 
         static IEnumerable<T> OrderTopologicallyByCore<T, TKey>(
@@ -157,6 +171,38 @@ namespace Gapotchenko.FX.Math.Topology
             }
 
             return list;
+        }
+
+        class TopologicallyOrderedEnumerable<T, TKey> : IOrderedEnumerable<T>
+        {
+            public TopologicallyOrderedEnumerable(
+                IEnumerable<T> source,
+                Func<T, TKey> keySelector,
+                IEqualityComparer<TKey>? comparer,
+                Func<IEnumerable<TKey>, Graph<TKey>> graphFactory)
+            {
+                m_Source = source;
+                m_KeySelector = keySelector;
+                m_Comparer = comparer;
+                m_GraphFactory = graphFactory;
+            }
+
+            readonly IEnumerable<T> m_Source;
+            readonly Func<T, TKey> m_KeySelector;
+            readonly IEqualityComparer<TKey>? m_Comparer;
+            readonly Func<IEnumerable<TKey>, Graph<TKey>> m_GraphFactory;
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                return OrderTopologicallyByCore(m_Source, m_KeySelector, m_Comparer, m_GraphFactory).GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            IOrderedEnumerable<T> IOrderedEnumerable<T>.CreateOrderedEnumerable<TNestedKey>(Func<T, TNestedKey> keySelector, IComparer<TNestedKey>? comparer, bool descending)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
