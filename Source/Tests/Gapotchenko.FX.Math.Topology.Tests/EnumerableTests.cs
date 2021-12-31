@@ -12,9 +12,9 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         public void Enumerable_OrderTopologicallyBy_1()
         {
             static bool df(char a, char b) =>
-                (a + " depends on " + b) switch
+                (a, b) switch
                 {
-                    "A depends on B" => true,
+                    ('A', 'B') => true,
                     _ => false,
                 };
 
@@ -79,9 +79,9 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         public void Enumerable_OrderTopologicallyBy_25()
         {
             static bool df(char a, char b) =>
-                (a + " depends on " + b) switch
+                (a, b) switch
                 {
-                    "1 depends on 0" or "2 depends on 0" => true,
+                    ('1', '0') or ('2', '0') => true,
                     _ => false,
                 };
 
