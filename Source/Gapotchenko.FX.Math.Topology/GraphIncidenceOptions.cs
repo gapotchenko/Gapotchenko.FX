@@ -25,7 +25,7 @@ namespace Gapotchenko.FX.Math.Topology
 
         /// <summary>
         /// <para>
-        /// Produce a connected resulting graph by excluding isolated vertices from it.
+        /// Produce a connected resulting graph by not adding isolated vertices to it.
         /// </para>
         /// <para>
         /// Isolated vertices are vertices with degree zero; that is, vertices that are not incident with any edge.
