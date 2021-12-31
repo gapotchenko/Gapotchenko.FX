@@ -118,6 +118,13 @@ namespace Gapotchenko.FX.Math.Topology
         void ExceptWith(IReadOnlyGraph<TVertex> other);
 
         /// <summary>
+        /// Gets a graph containing vertices and edges that are present in the current graph but not in the specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns>The graph containing vertices and edges that are present in the current graph but not in the specified graph.</returns>
+        new IGraph<TVertex> Except(IReadOnlyGraph<TVertex> other);
+
+        /// <summary>
         /// Modifies the current graph so that it contains only vertices and edges that are also present in a specified graph.
         /// </summary>
         /// <param name="other">The graph to compare to the current one.</param>

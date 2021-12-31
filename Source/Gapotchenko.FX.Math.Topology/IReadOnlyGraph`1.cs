@@ -251,6 +251,13 @@ namespace Gapotchenko.FX.Math.Topology
         IReadOnlyGraph<TVertex> Union(IReadOnlyGraph<TVertex> other);
 
         /// <summary>
+        /// Gets a graph containing vertices and edges that are present in the current graph but not in the specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns>The graph containing vertices and edges that are present in the current graph but not in the specified graph.</returns>
+        IReadOnlyGraph<TVertex> Except(IReadOnlyGraph<TVertex> other);
+
+        /// <summary>
         /// Gets a sequence of vertices ordered topologically.
         /// </summary>
         /// <remarks>

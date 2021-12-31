@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Math.Topology
 
             foreach (var vertex in transposition.Vertices)
             {
-                // Find the nodes with no outcoming edges.
+                // Find the nodes with no outgoing edges.
                 if (transposition.GetVertexOutdegree(vertex) is 0)
                     queue.Enqueue(vertex);
             }
@@ -46,7 +46,7 @@ namespace Gapotchenko.FX.Math.Topology
 
             foreach (var vertex in transposition.Vertices)
             {
-                // Find the nodes with no outcoming edges.
+                // Find the nodes with no outgoing edges.
                 if (transposition.GetVertexOutdegree(vertex) is 0)
                     queue.Enqueue(vertex, vertex);
             }

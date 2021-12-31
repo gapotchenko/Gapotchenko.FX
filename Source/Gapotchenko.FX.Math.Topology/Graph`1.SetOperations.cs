@@ -172,6 +172,25 @@ namespace Gapotchenko.FX.Math.Topology
 
         IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.Intersect(IReadOnlyGraph<TVertex> other) => Intersect(other);
 
+        /// <summary>
+        /// Gets a graph containing vertices and edges that are present in the current graph but not in the specified graph.
+        /// </summary>
+        /// <param name="other">The graph to compare to the current one.</param>
+        /// <returns>The graph containing vertices and edges that are present in the current graph but not in the specified graph.</returns>
+        public Graph<TVertex> Except(IReadOnlyGraph<TVertex> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            var graph = Clone();
+            graph.ExceptWithCore(other);
+            return graph;
+        }
+
+        IGraph<TVertex> IGraph<TVertex>.Except(IReadOnlyGraph<TVertex> other) => Except(other);
+
+        IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.Except(IReadOnlyGraph<TVertex> other) => Except(other);
+
         /// <inheritdoc/>
         public void UnionWith(IReadOnlyGraph<TVertex> other)
         {
