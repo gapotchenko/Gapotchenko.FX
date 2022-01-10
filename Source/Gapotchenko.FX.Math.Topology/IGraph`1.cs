@@ -31,7 +31,7 @@ namespace Gapotchenko.FX.Math.Topology
         void Clear();
 
         /// <summary>
-        /// Makes the current graph a vertex-induced subgraph.
+        /// Makes the current graph a vertex-induced subgraph from specified vertices.
         /// </summary>
         /// <param name="vertices">The vertices to induce the subgraph from.</param>
         void Subgraph(IEnumerable<TVertex> vertices);
@@ -44,7 +44,7 @@ namespace Gapotchenko.FX.Math.Topology
         new IGraph<TVertex> GetSubgraph(IEnumerable<TVertex> vertices);
 
         /// <summary>
-        /// Makes the current graph an edge-induced subgraph.
+        /// Makes the current graph an edge-induced subgraph from specified edges.
         /// </summary>
         /// <param name="edges">The edges to induce the subgraph from.</param>
         void Subgraph(IEnumerable<GraphEdge<TVertex>> edges);

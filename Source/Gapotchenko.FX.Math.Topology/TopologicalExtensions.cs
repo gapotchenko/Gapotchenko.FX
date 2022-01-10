@@ -293,8 +293,11 @@ namespace Gapotchenko.FX.Math.Topology
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<TNestedKey>(Func<TElement, TNestedKey> keySelector, IComparer<TNestedKey>? comparer, bool descending) =>
-                new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(keySelector, comparer, descending, this);
+            IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<TNestedKey>(
+                Func<TElement, TNestedKey> keySelector,
+                IComparer<TNestedKey>? comparer,
+                bool descending)
+                => new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(keySelector, comparer, descending, this);
         }
 
         abstract class NestedTopologicallyOrderedEnumerable<TElement> : TopologicallyOrderedEnumerable
@@ -381,8 +384,11 @@ namespace Gapotchenko.FX.Math.Topology
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<TNestedKey>(Func<TElement, TNestedKey> keySelector, IComparer<TNestedKey>? comparer, bool descending) =>
-                new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(keySelector, comparer, descending, this);
+            IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<TNestedKey>(
+                Func<TElement, TNestedKey> keySelector,
+                IComparer<TNestedKey>? comparer,
+                bool descending)
+                => new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(keySelector, comparer, descending, this);
         }
     }
 }
