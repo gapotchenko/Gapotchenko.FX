@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Gapotchenko.FX.Math.Topology
@@ -173,36 +174,131 @@ namespace Gapotchenko.FX.Math.Topology
             return list;
         }
 
-        class TopologicallyOrderedEnumerable<T, TKey> : IOrderedEnumerable<T>
+        abstract class TopologicallyOrderedEnumerable<TElement>
+        {
+            public TopologicallyOrderedEnumerable(IEnumerable<TElement> source)
+            {
+                Source = source;
+            }
+
+            public IEnumerable<TElement> Source { get; }
+
+            public abstract IEnumerable<TElement> Order(IEnumerable<TElement> source);
+        }
+
+        sealed class TopologicallyOrderedEnumerable<TElement, TKey> : TopologicallyOrderedEnumerable<TElement>, IOrderedEnumerable<TElement>
         {
             public TopologicallyOrderedEnumerable(
-                IEnumerable<T> source,
-                Func<T, TKey> keySelector,
+                IEnumerable<TElement> source,
+                Func<TElement, TKey> keySelector,
                 IEqualityComparer<TKey>? comparer,
-                Func<IEnumerable<TKey>, Graph<TKey>> graphFactory)
+                Func<IEnumerable<TKey>, Graph<TKey>> graphFactory) :
+                base(source)
             {
-                m_Source = source;
                 m_KeySelector = keySelector;
                 m_Comparer = comparer;
                 m_GraphFactory = graphFactory;
             }
 
-            readonly IEnumerable<T> m_Source;
-            readonly Func<T, TKey> m_KeySelector;
+            readonly Func<TElement, TKey> m_KeySelector;
             readonly IEqualityComparer<TKey>? m_Comparer;
+
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly Func<IEnumerable<TKey>, Graph<TKey>> m_GraphFactory;
 
-            public IEnumerator<T> GetEnumerator()
+            public override IEnumerable<TElement> Order(IEnumerable<TElement> source) => OrderTopologicallyByCore(source, m_KeySelector, m_Comparer, m_GraphFactory);
+
+            public IEnumerator<TElement> GetEnumerator() => Order(Source).GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<TNestedKey>(Func<TElement, TNestedKey> keySelector, IComparer<TNestedKey>? comparer, bool descending) =>
+                new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(this, keySelector, comparer, descending);
+        }
+
+        abstract class NestedTopologicallyOrderedEnumerable<TElement>
+        {
+            public NestedTopologicallyOrderedEnumerable(
+                TopologicallyOrderedEnumerable<TElement> root,
+                NestedTopologicallyOrderedEnumerable<TElement>? next)
             {
-                return OrderTopologicallyByCore(m_Source, m_KeySelector, m_Comparer, m_GraphFactory).GetEnumerator();
+                Root = root;
+                Next = next;
+            }
+
+            public TopologicallyOrderedEnumerable<TElement> Root { get; }
+
+            public NestedTopologicallyOrderedEnumerable<TElement>? Next { get; }
+
+            public abstract IOrderedEnumerable<TElement> Order(IEnumerable<TElement> source);
+        }
+
+        sealed class NestedTopologicallyOrderedEnumerable<TElement, TKey> : NestedTopologicallyOrderedEnumerable<TElement>, IOrderedEnumerable<TElement>
+        {
+            public NestedTopologicallyOrderedEnumerable(
+                TopologicallyOrderedEnumerable<TElement> root,
+                Func<TElement, TKey> keySelector,
+                IComparer<TKey>? comparer,
+                bool descending,
+                NestedTopologicallyOrderedEnumerable<TElement>? next = null)
+                : base(root, next)
+            {
+                m_KeySelector = keySelector;
+                m_Comparer = comparer;
+                m_Descending = descending;
+            }
+
+            readonly Func<TElement, TKey> m_KeySelector;
+            readonly IComparer<TKey>? m_Comparer;
+            readonly bool m_Descending;
+
+            public override IOrderedEnumerable<TElement> Order(IEnumerable<TElement> source)
+            {
+                if (Next == null)
+                {
+                    if (m_Descending)
+                        return source.OrderByDescending(m_KeySelector, m_Comparer);
+                    else
+                        return source.OrderBy(m_KeySelector, m_Comparer);
+                }
+                else
+                {
+                    var orderedSource = (IOrderedEnumerable<TElement>)source;
+                    if (m_Descending)
+                        return orderedSource.ThenByDescending(m_KeySelector, m_Comparer);
+                    else
+                        return orderedSource.ThenBy(m_KeySelector, m_Comparer);
+                }
+            }
+
+            public IEnumerator<TElement> GetEnumerator()
+            {
+                var list = new List<NestedTopologicallyOrderedEnumerable<TElement>>();
+
+                for (NestedTopologicallyOrderedEnumerable<TElement> i = this; ;)
+                {
+                    list.Add(i);
+
+                    var next = i.Next;
+                    if (next == null)
+                        break;
+                    i = next;
+                }
+
+                var query = Root.Source;
+
+                for (int i = list.Count - 1; i >= 0; --i)
+                    query = list[i].Order(query);
+
+                query = Root.Order(query);
+
+                return query.GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            IOrderedEnumerable<T> IOrderedEnumerable<T>.CreateOrderedEnumerable<TNestedKey>(Func<T, TNestedKey> keySelector, IComparer<TNestedKey>? comparer, bool descending)
-            {
-                throw new NotImplementedException();
-            }
+            IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<TNestedKey>(Func<TElement, TNestedKey> keySelector, IComparer<TNestedKey>? comparer, bool descending) =>
+                new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(Root, keySelector, comparer, descending, this);
         }
     }
 }

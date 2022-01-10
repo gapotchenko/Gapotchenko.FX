@@ -103,7 +103,7 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _RunTopologicalSort()
         {
-            string seq = "1320";
+            string seq = "13208795";
 
             static bool Dependency(char a, char b) =>
                 (a, b) switch
@@ -113,7 +113,7 @@ namespace Gapotchenko.FX.Harness.Console
                     _ => false
                 };
 
-            var result = seq.OrderTopologicallyBy(Fn.Identity, Dependency);
+            var result = seq.OrderTopologicallyBy(Fn.Identity, Dependency).ThenBy(x => x);
 
             Console.WriteLine(string.Concat(result));
         }
