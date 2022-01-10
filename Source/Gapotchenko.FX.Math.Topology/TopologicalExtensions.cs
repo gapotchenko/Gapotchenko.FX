@@ -39,6 +39,40 @@ namespace Gapotchenko.FX.Math.Topology
             Func<TElement, TKey> keySelector,
             Func<TKey, TKey, bool> dependencyFunction,
             IEqualityComparer<TKey>? comparer = null)
+            => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, false);
+
+        /// <summary>
+        /// <para>
+        /// Sorts the elements of a sequence in reverse topological order according to a key and specified dependency function.
+        /// </para>
+        /// <para>
+        /// The sort is stable.
+        /// Circular dependencies are ignored and resolved according to the original order of elements in the sequence.
+        /// </para>
+        /// </summary>
+        /// <typeparam name="TElement">The type of the elements of source.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">The sequence of values to order.</param>
+        /// <param name="keySelector">The function to extract a key from an element.</param>
+        /// <param name="dependencyFunction">
+        /// The dependency function that defines dependencies between the elements of a sequence.
+        /// Given a pair of element keys as <c>arg1</c> and <c>arg2</c>, returns a Boolean value indicating whether <c>arg2</c> should appear before <c>arg1</c> in topological order.
+        /// </param>
+        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according to a key and specified dependency function.</returns>
+        public static IOrderedEnumerable<TElement> OrderTopologicallyByReverse<TElement, TKey>(
+            this IEnumerable<TElement> source,
+            Func<TElement, TKey> keySelector,
+            Func<TKey, TKey, bool> dependencyFunction,
+            IEqualityComparer<TKey>? comparer = null)
+            => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, true);
+
+        static IOrderedEnumerable<TElement> OrderTopologicallyBy<TElement, TKey>(
+            IEnumerable<TElement> source,
+            Func<TElement, TKey> keySelector,
+            Func<TKey, TKey, bool> dependencyFunction,
+            IEqualityComparer<TKey>? comparer,
+            bool reverse)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -53,7 +87,9 @@ namespace Gapotchenko.FX.Math.Topology
                 comparer,
                 vertices => new Graph<TKey>(
                     vertices,
-                    new GraphIncidenceFunction<TKey>(dependencyFunction),
+                    reverse ?
+                        (a, b) => dependencyFunction(b, a) :
+                        new GraphIncidenceFunction<TKey>(dependencyFunction),
                     comparer,
                     GraphIncidenceOptions.ReflexiveReduction | GraphIncidenceOptions.ExcludeIsolatedVertices));
         }
@@ -82,6 +118,40 @@ namespace Gapotchenko.FX.Math.Topology
             Func<TElement, TKey> keySelector,
             Func<TKey, IEnumerable<TKey>?> dependencyFunction,
             IEqualityComparer<TKey>? comparer = null)
+            => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, false);
+
+        /// <summary>
+        /// <para>
+        /// Sorts the elements of a sequence in reverse topological order according to a key and specified dependency function.
+        /// </para>
+        /// <para>
+        /// The sort is stable.
+        /// Circular dependencies are ignored and resolved according to the original order of elements in the sequence.
+        /// </para>
+        /// </summary>
+        /// <typeparam name="TElement">The type of the elements of source.</typeparam>
+        /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">The sequence of values to order.</param>
+        /// <param name="keySelector">The function to extract a key from an element.</param>
+        /// <param name="dependencyFunction">
+        /// The dependency function that defines dependencies between the elements of a sequence.
+        /// Given an element key, returns a set of element keys which must appear before it in topological order.
+        /// </param>
+        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according to a key and specified dependency function.</returns>
+        public static IOrderedEnumerable<TElement> OrderTopologicallyByReverse<TElement, TKey>(
+            this IEnumerable<TElement> source,
+            Func<TElement, TKey> keySelector,
+            Func<TKey, IEnumerable<TKey>?> dependencyFunction,
+            IEqualityComparer<TKey>? comparer = null)
+            => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, true);
+
+        static IOrderedEnumerable<TElement> OrderTopologicallyBy<TElement, TKey>(
+            this IEnumerable<TElement> source,
+            Func<TElement, TKey> keySelector,
+            Func<TKey, IEnumerable<TKey>?> dependencyFunction,
+            IEqualityComparer<TKey>? comparer,
+            bool reverse)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -98,15 +168,22 @@ namespace Gapotchenko.FX.Math.Topology
                 {
                     var graph = new Graph<TKey>(comparer);
                     var edges = graph.Edges;
+
                     foreach (var vertex in vertices)
                     {
                         var adjacentVertices = dependencyFunction(vertex);
                         if (adjacentVertices != null)
                         {
                             foreach (var adjacentVertex in adjacentVertices)
-                                edges.Add(vertex, adjacentVertex);
+                            {
+                                if (reverse)
+                                    edges.Add(adjacentVertex, vertex);
+                                else
+                                    edges.Add(vertex, adjacentVertex);
+                            }
                         }
                     }
+
                     return graph;
                 });
         }
