@@ -502,6 +502,48 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
+        public void Enumerable_OrderTopologicallyBy_28A()
+        {
+            static bool df(char a, char b) =>
+                (a, b) switch
+                {
+                    ('A', 'B') or ('D', 'C') or ('E', 'D') => true,
+                    _ => false,
+                };
+
+            var source = "ABCDEF";
+
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
+            AssertTopologicalOrderIsCorrect(source, result, df);
+            Assert.AreEqual("BACDEF", result);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
+            Assert.AreEqual("ABEDCF", result);
+        }
+
+        [TestMethod]
+        public void Enumerable_OrderTopologicallyBy_28B()
+        {
+            static IEnumerable<char>? df(char v) =>
+                v switch
+                {
+                    'A' => new[] { 'B' },
+                    'D' => new[] { 'C' },
+                    'E' => new[] { 'D' },
+                    _ => null,
+                };
+
+            var source = "ABCDEF";
+
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
+            Assert.AreEqual("BACDEF", result);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            Assert.AreEqual("ABEDCF", result);
+        }
+
+        [TestMethod]
         public void Enumerable_OrderTopologicallyBy_Proof4Vertices()
         {
             var proof = new TopologicalOrderProof

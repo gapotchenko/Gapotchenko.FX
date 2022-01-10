@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Given a pair of element keys as <c>arg1</c> and <c>arg2</c>, returns a Boolean value indicating whether <c>arg2</c> should appear before <c>arg1</c> in topological order.
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according to a key and specified dependency function.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to a key and specified dependency function.</returns>
         public static IOrderedEnumerable<TElement> OrderTopologicallyBy<TElement, TKey>(
             this IEnumerable<TElement> source,
             Func<TElement, TKey> keySelector,
@@ -59,7 +59,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Given a pair of element keys as <c>arg1</c> and <c>arg2</c>, returns a Boolean value indicating whether <c>arg2</c> should appear before <c>arg1</c> in topological order.
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according to a key and specified dependency function.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according in reverse topological order to a key and specified dependency function.</returns>
         public static IOrderedEnumerable<TElement> OrderTopologicallyByReverse<TElement, TKey>(
             this IEnumerable<TElement> source,
             Func<TElement, TKey> keySelector,
@@ -112,7 +112,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Given an element key, returns a set of element keys which must appear before it in topological order.
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according to a key and specified dependency function.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to a key and specified dependency function.</returns>
         public static IOrderedEnumerable<TElement> OrderTopologicallyBy<TElement, TKey>(
             this IEnumerable<TElement> source,
             Func<TElement, TKey> keySelector,
@@ -138,7 +138,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Given an element key, returns a set of element keys which must appear before it in topological order.
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according to a key and specified dependency function.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in reverse topological order according to a key and specified dependency function.</returns>
         public static IOrderedEnumerable<TElement> OrderTopologicallyByReverse<TElement, TKey>(
             this IEnumerable<TElement> source,
             Func<TElement, TKey> keySelector,
