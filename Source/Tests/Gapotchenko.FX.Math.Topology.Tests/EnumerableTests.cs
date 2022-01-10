@@ -14,6 +14,13 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             //Assert.IsTrue(MinimalDistanceProof.Verify(source, result, dependencyFunction), "Minimal distance not reached.");
         }
 
+        static void AssertReverseTopologicalOrderIsCorrect<T>(IEnumerable<T> source, IEnumerable<T> result, Func<T, T, bool> dependencyFunction)
+        {
+            bool df(T a, T b) => dependencyFunction(b, a);
+            Assert.IsTrue(TopologicalOrderProof.Verify(source, result, df), "Reverse topological order is violated.");
+            //Assert.IsTrue(MinimalDistanceProof.Verify(source, result, df), "Minimal distance not reached.");
+        }
+
         [TestMethod]
         public void Enumerable_OrderTopologicallyBy_1()
         {
@@ -25,11 +32,14 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 };
 
             var source = "ABCDEF";
+
             string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
-
             AssertTopologicalOrderIsCorrect(source, result, df);
-
             Assert.AreEqual("BACDEF", result);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
+            Assert.AreEqual("ABCDEF", result);
         }
 
         [TestMethod]
@@ -44,9 +54,12 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 };
 
             var source = "ABCDEF";
-            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
 
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
             Assert.AreEqual("DBACEF", result);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            Assert.AreEqual("ABCDEF", result);
         }
 
         [TestMethod]
@@ -68,11 +81,14 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "ABCDEF";
+
             string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
-
             AssertTopologicalOrderIsCorrect(source, result, df);
-
             Assert.AreEqual("CBADEF", result);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
+            Assert.AreEqual("ABCDEF", result);
         }
 
         [TestMethod]
@@ -97,10 +113,13 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "ABCDEF";
+
             string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
-
             AssertTopologicalOrderIsCorrect(source, result, df);
+            Assert.AreEqual("ABCDEF", result);
 
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
             Assert.AreEqual("ABCDEF", result);
         }
 
@@ -123,10 +142,13 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "ABCDEF";
+
             string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
-
             AssertTopologicalOrderIsCorrect(source, result, df);
+            Assert.AreEqual("ABCDEF", result);
 
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
             Assert.AreEqual("ABCDEF", result);
         }
 
@@ -149,11 +171,14 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "ABCDEF";
+
             string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
-
             AssertTopologicalOrderIsCorrect(source, result, df);
-
             Assert.AreEqual("CABDEF", result);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
+            Assert.AreEqual("ABCDEF", result);
         }
 
         [TestMethod]
@@ -181,9 +206,12 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "ABCDEF";
-            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
 
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
             AssertTopologicalOrderIsCorrect(source, result, df);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
         }
 
         [TestMethod]
@@ -214,9 +242,12 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "ABCDEF";
-            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
 
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
             AssertTopologicalOrderIsCorrect(source, result, df);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
         }
 
         [TestMethod]
@@ -247,9 +278,12 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "ABCDEF";
-            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
 
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
             AssertTopologicalOrderIsCorrect(source, result, df);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
         }
 
         [TestMethod]
@@ -280,9 +314,12 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "ABCDEF";
-            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
 
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
             AssertTopologicalOrderIsCorrect(source, result, df);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
         }
 
         [TestMethod]
@@ -301,11 +338,14 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "ABCDEF";
+
             string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
-
             AssertTopologicalOrderIsCorrect(source, result, df);
-
             Assert.AreEqual("ADBCEF", result);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
+            Assert.AreEqual("ABCDEF", result);
         }
 
         [TestMethod]
@@ -327,9 +367,12 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "ABCDEF";
-            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
 
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
             AssertTopologicalOrderIsCorrect(source, result, df);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
         }
 
         [TestMethod]
@@ -354,9 +397,12 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "ABCDEF";
-            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
 
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
             AssertTopologicalOrderIsCorrect(source, result, df);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
         }
 
         [TestMethod]
@@ -377,11 +423,13 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             };
 
             var source = "02431";
+
             string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
-
             AssertTopologicalOrderIsCorrect(source, result, df);
-
             //Assert.AreEqual("01243", result);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
         }
 
         [TestMethod]
@@ -395,11 +443,14 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 };
 
             var source = "1320";
+
             string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
-
             AssertTopologicalOrderIsCorrect(source, result, df);
-
             Assert.AreEqual("0132", result);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
+            Assert.AreEqual("1320", result);
         }
 
         [TestMethod]
@@ -418,9 +469,12 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             }
 
             var source = "0321";
-            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
 
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
             AssertTopologicalOrderIsCorrect(source, result, df);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
         }
 
         [TestMethod]
@@ -439,9 +493,12 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             }
 
             var source = "2130";
-            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
 
+            string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
             AssertTopologicalOrderIsCorrect(source, result, df);
+
+            result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+            AssertReverseTopologicalOrderIsCorrect(source, result, df);
         }
 
         [TestMethod]
