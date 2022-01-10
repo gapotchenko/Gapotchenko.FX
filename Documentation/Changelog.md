@@ -7,12 +7,13 @@
 Release date: not released yet.
 
 - Improved support for .NET 6.0 target framework
-- Introduced `Gapotchenko.FX.Math.Topology` module that provides `Graph<T>` class and topological sorting for graph and sequences
+- Introduced `Gapotchenko.FX.Math.Topology` module that provides `Graph<T>` class and topological sorting for graphs and sequences
 - New `FileSystem.PathEquivalenceComparer` property returns the file path string comparer that takes into account path normalization and equivalence rules of the host environment
 - New `AssociativeArray` key/value map primitive which is similar to `Dictionary<TKey, TValue>` but handles the whole space of key values including `null`
 - New string metric functions: `DamerauLevenshteinDistance`, `HammingDistance`, `JaroDistance`, `LcsDistance`, `OsaDistance`
 - Added `PriorityQueue` polyfill
 - Added `IEnumerable<byte> AsEnumerable()` polyfill for `System.IO.Stream`
+- Added `LongIndexOf` LINQ polyfill
 - Added `TryGetNonEnumeratedCount` LINQ polyfill
 - Improved `AssemblyAutoLoader` which can now work simultaneously with app domains and assembly load contexts 
 
