@@ -174,7 +174,11 @@ namespace Gapotchenko.FX.Math.Topology
             return list;
         }
 
-        abstract class TopologicallyOrderedEnumerable<TElement>
+        abstract class TopologicallyOrderedEnumerable
+        {
+        }
+
+        abstract class TopologicallyOrderedEnumerable<TElement> : TopologicallyOrderedEnumerable
         {
             public TopologicallyOrderedEnumerable(IEnumerable<TElement> source)
             {
@@ -213,22 +217,17 @@ namespace Gapotchenko.FX.Math.Topology
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
             IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<TNestedKey>(Func<TElement, TNestedKey> keySelector, IComparer<TNestedKey>? comparer, bool descending) =>
-                new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(this, keySelector, comparer, descending);
+                new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(keySelector, comparer, descending, this);
         }
 
-        abstract class NestedTopologicallyOrderedEnumerable<TElement>
+        abstract class NestedTopologicallyOrderedEnumerable<TElement> : TopologicallyOrderedEnumerable
         {
-            public NestedTopologicallyOrderedEnumerable(
-                TopologicallyOrderedEnumerable<TElement> root,
-                NestedTopologicallyOrderedEnumerable<TElement>? next)
+            public NestedTopologicallyOrderedEnumerable(TopologicallyOrderedEnumerable next)
             {
-                Root = root;
                 Next = next;
             }
 
-            public TopologicallyOrderedEnumerable<TElement> Root { get; }
-
-            public NestedTopologicallyOrderedEnumerable<TElement>? Next { get; }
+            public TopologicallyOrderedEnumerable Next { get; }
 
             public abstract IOrderedEnumerable<TElement> Order(IEnumerable<TElement> source);
         }
@@ -236,12 +235,11 @@ namespace Gapotchenko.FX.Math.Topology
         sealed class NestedTopologicallyOrderedEnumerable<TElement, TKey> : NestedTopologicallyOrderedEnumerable<TElement>, IOrderedEnumerable<TElement>
         {
             public NestedTopologicallyOrderedEnumerable(
-                TopologicallyOrderedEnumerable<TElement> root,
                 Func<TElement, TKey> keySelector,
                 IComparer<TKey>? comparer,
                 bool descending,
-                NestedTopologicallyOrderedEnumerable<TElement>? next = null)
-                : base(root, next)
+                TopologicallyOrderedEnumerable next)
+                : base(next)
             {
                 m_KeySelector = keySelector;
                 m_Comparer = comparer;
@@ -254,8 +252,9 @@ namespace Gapotchenko.FX.Math.Topology
 
             public override IOrderedEnumerable<TElement> Order(IEnumerable<TElement> source)
             {
-                if (Next == null)
+                if (Next is TopologicallyOrderedEnumerable<TElement>)
                 {
+                    // Parented by the root enumerable.
                     if (m_Descending)
                         return source.OrderByDescending(m_KeySelector, m_Comparer);
                     else
@@ -275,22 +274,30 @@ namespace Gapotchenko.FX.Math.Topology
             {
                 var list = new List<NestedTopologicallyOrderedEnumerable<TElement>>();
 
+                TopologicallyOrderedEnumerable<TElement> root;
+
                 for (NestedTopologicallyOrderedEnumerable<TElement> i = this; ;)
                 {
                     list.Add(i);
 
                     var next = i.Next;
-                    if (next == null)
+                    if (next is NestedTopologicallyOrderedEnumerable<TElement> nested)
+                    {
+                        i = nested;
+                    }
+                    else
+                    {
+                        root = (TopologicallyOrderedEnumerable<TElement>)next;
                         break;
-                    i = next;
+                    }
                 }
 
-                var query = Root.Source;
+                var query = root.Source;
 
                 for (int i = list.Count - 1; i >= 0; --i)
                     query = list[i].Order(query);
 
-                query = Root.Order(query);
+                query = root.Order(query);
 
                 return query.GetEnumerator();
             }
@@ -298,7 +305,7 @@ namespace Gapotchenko.FX.Math.Topology
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
             IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<TNestedKey>(Func<TElement, TNestedKey> keySelector, IComparer<TNestedKey>? comparer, bool descending) =>
-                new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(Root, keySelector, comparer, descending, this);
+                new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(keySelector, comparer, descending, this);
         }
     }
 }
