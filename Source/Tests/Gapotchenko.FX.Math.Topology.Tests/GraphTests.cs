@@ -1156,7 +1156,11 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         public void Graph_OrderTopologicallyBy()
         {
             var g = new Graph<char>();
-            var order = g.OrderTopologically().ThenBy(Fn.Identity);
+
+            var order = g.OrderTopologically();
+            Assert.AreEqual(0, order.Count());
+
+            order = g.OrderTopologically().ThenBy(Fn.Identity);
             Assert.AreEqual(0, order.Count());
 
             /***************/
@@ -1165,6 +1169,9 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             {
                 Vertices = { 'a' }
             };
+
+            order = g.OrderTopologically();
+            Assert.AreEqual("a", string.Join(" ", order));
 
             order = g.OrderTopologically().ThenBy(Fn.Identity);
             Assert.AreEqual("a", string.Join(" ", order));
