@@ -26,7 +26,7 @@ namespace Gapotchenko.FX.Math.Topology
     public partial class Graph<TVertex> : IGraph<TVertex>
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{TVertex}"/> class that is empty and uses the default equality comparer for graph vertices.
+        /// Initializes a new instance of <see cref="Graph{TVertex}"/> class that uses the default equality comparer for graph vertices.
         /// </summary>
         public Graph() :
             this((IEqualityComparer<TVertex>?)null)
@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{TVertex}"/> class that is empty and uses the specified equality comparer for graph vertices.
+        /// Initializes a new instance of <see cref="Graph{TVertex}"/> class that uses the specified equality comparer for graph vertices.
         /// </summary>
         /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,

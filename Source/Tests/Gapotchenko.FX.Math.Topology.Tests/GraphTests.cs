@@ -1107,7 +1107,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         public void Graph_OrderTopologically()
         {
             var g = new Graph<char>();
-            var order = g.OrderTopologically();
+            IEnumerable<char> order = g.OrderTopologically();
             Assert.AreEqual(0, order.Count());
 
             /***************/
@@ -1126,8 +1126,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 Permutations.Of(new GraphEdge<char>[] { ('0', '1'), ('1', '2'), ('2', '3') }))
             {
                 g = new();
-                foreach (var edge in edges)
-                    g.Edges.Add(edge);
+                g.Edges.UnionWith(edges);
 
                 var topoOrder = g.OrderTopologically();
                 Assert.AreEqual("0 1 2 3", string.Join(" ", topoOrder));
@@ -1153,14 +1152,11 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
-        public void Graph_OrderTopologicallyBy()
+        public void Graph_OrderTopologically_Subsequent()
         {
             var g = new Graph<char>();
 
-            var order = g.OrderTopologically();
-            Assert.AreEqual(0, order.Count());
-
-            order = g.OrderTopologically().ThenBy(Fn.Identity);
+            IEnumerable<char> order = g.OrderTopologically().ThenBy(Fn.Identity);
             Assert.AreEqual(0, order.Count());
 
             /***************/
@@ -1169,9 +1165,6 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             {
                 Vertices = { 'a' }
             };
-
-            order = g.OrderTopologically();
-            Assert.AreEqual("a", string.Join(" ", order));
 
             order = g.OrderTopologically().ThenBy(Fn.Identity);
             Assert.AreEqual("a", string.Join(" ", order));
@@ -1303,8 +1296,7 @@ namespace Gapotchenko.FX.Math.Topology.Tests
 
             var vertices = new[] { 'a', 'b', 'c', 'd', 'e' };
             g = new Graph<char>();
-            foreach (var v in vertices)
-                g.Vertices.Add(v);
+            g.Vertices.UnionWith(vertices);
 
             order = g.OrderTopologically().ThenBy(x => Array.IndexOf(vertices, x));
             Assert.AreEqual("a b c d e", string.Join(" ", order));
@@ -1371,6 +1363,54 @@ namespace Gapotchenko.FX.Math.Topology.Tests
                 .ThenByDescending(x => x.b)
                 .ThenByDescending(x => x.a);
             Assert.AreEqual("23 13 22 12 21 11 10 20", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
+        }
+
+        [TestMethod]
+        public void Graph_OrderTopologicallyInReverse()
+        {
+            var g = new Graph<char>();
+            IEnumerable<char> order = g.OrderTopologicallyInReverse();
+            Assert.AreEqual(0, order.Count());
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Vertices = { 'a' }
+            };
+
+            order = g.OrderTopologicallyInReverse();
+            Assert.AreEqual("a", string.Join(" ", order));
+
+            /***************/
+
+            foreach (var edges in
+                Permutations.Of(new GraphEdge<char>[] { ('0', '1'), ('1', '2'), ('2', '3') }))
+            {
+                g = new();
+                g.Edges.UnionWith(edges);
+
+                var topoOrder = g.OrderTopologicallyInReverse();
+                Assert.AreEqual("3 2 1 0", string.Join(" ", topoOrder));
+            }
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Edges = { ('a', 'a') }
+            };
+
+            Assert.ThrowsException<CircularDependencyException>(() => g.OrderTopologicallyInReverse().ToList());
+
+            /***************/
+
+            g = new Graph<char>
+            {
+                Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
+            };
+
+            Assert.ThrowsException<CircularDependencyException>(() => g.OrderTopologicallyInReverse().ToList());
         }
 
         [TestMethod]
