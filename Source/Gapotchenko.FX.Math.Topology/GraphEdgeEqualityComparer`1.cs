@@ -5,9 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Math.Topology
 {
-    sealed class GraphEdgeEqualityComparer<T> : IEqualityComparer<GraphEdge<T>>
+    sealed class GraphEdgeEqualityComparer<TVertex> : IEqualityComparer<GraphEdge<TVertex>>
     {
-        public GraphEdgeEqualityComparer(IEqualityComparer<T> vertexComparer)
+        public GraphEdgeEqualityComparer(IEqualityComparer<TVertex> vertexComparer)
         {
             if (vertexComparer == null)
                 throw new ArgumentNullException(nameof(vertexComparer));
@@ -16,16 +16,16 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IEqualityComparer<T> m_vertexComparer;
+        readonly IEqualityComparer<TVertex> m_vertexComparer;
 
         // Needed for debug view.
-        public IEqualityComparer<T> VertexComparer => m_vertexComparer;
+        public IEqualityComparer<TVertex> VertexComparer => m_vertexComparer;
 
-        public bool Equals(GraphEdge<T> x, GraphEdge<T> y) =>
+        public bool Equals(GraphEdge<TVertex> x, GraphEdge<TVertex> y) =>
             m_vertexComparer.Equals(x.From, y.From) &&
             m_vertexComparer.Equals(x.To, y.To);
 
-        public int GetHashCode([DisallowNull] GraphEdge<T> obj)
+        public int GetHashCode([DisallowNull] GraphEdge<TVertex> obj)
         {
             var from = obj.From;
             var to = obj.To;
@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         public override bool Equals(object? obj) =>
-            obj is GraphEdgeEqualityComparer<T> other &&
+            obj is GraphEdgeEqualityComparer<TVertex> other &&
             m_vertexComparer.Equals(other.m_vertexComparer);
 
         public override int GetHashCode() => m_vertexComparer.GetHashCode();

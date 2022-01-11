@@ -16,7 +16,7 @@ Release date: not released yet.
 - Added `LongIndexOf` LINQ polyfill
 - Added `TryGetNonEnumeratedCount` LINQ polyfill
 - Improved `AssemblyAutoLoader` which can now work simultaneously with app domains and assembly load contexts
-- String metric functions can take an optional `maxDistance` parameter to limit the computational resources required to calculate the distance between the strings
+- String metric functions now take an optional `maxDistance` parameter that limits computational resources which are required to calculate the distance
 
 ### Gapotchenko FX 2021.1
 
