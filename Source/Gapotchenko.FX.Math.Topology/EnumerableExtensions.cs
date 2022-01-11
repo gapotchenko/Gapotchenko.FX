@@ -91,7 +91,7 @@ namespace Gapotchenko.FX.Math.Topology
                         (a, b) => dependencyFunction(b, a) :
                         new GraphIncidenceFunction<TKey>(dependencyFunction),
                     comparer,
-                    GraphIncidenceOptions.ReflexiveReduction | GraphIncidenceOptions.ExcludeIsolatedVertices));
+                    GraphIncidenceOptions.ReflexiveReduction | GraphIncidenceOptions.Connected));
         }
 
         /// <summary>

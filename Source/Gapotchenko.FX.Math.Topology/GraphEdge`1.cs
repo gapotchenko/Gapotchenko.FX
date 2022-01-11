@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Math.Topology
     public readonly struct GraphEdge<TVertex>
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="GraphEdge{T}"/> struct with source and destination end-vertices.
+        /// Initializes a new instance of <see cref="GraphEdge{TVertex}"/> struct with source and destination end-vertices.
         /// </summary>
         /// <param name="from">The source vertex.</param>
         /// <param name="to">The destination vertex.</param>
@@ -63,27 +63,27 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Converts a value tuple to a <see cref="GraphEdge{T}"/> instance.
+        /// Converts a value tuple to a <see cref="GraphEdge{TVertex}"/> instance.
         /// </summary>
         /// <param name="value">The value tuple to convert.</param>
         public static implicit operator GraphEdge<TVertex>((TVertex From, TVertex To) value) => new(value.From, value.To);
 
         /// <summary>
-        /// Converts a <see cref="GraphEdge{T}"/> value to a value tuple instance.
+        /// Converts a <see cref="GraphEdge{TVertex}"/> value to a value tuple instance.
         /// </summary>
-        /// <param name="value">The <see cref="GraphEdge{T}"/> value to convert.</param>
+        /// <param name="value">The <see cref="GraphEdge{TVertex}"/> value to convert.</param>
         public static implicit operator (TVertex From, TVertex To)(GraphEdge<TVertex> value) => (value.From, value.To);
 
         /// <summary>
-        /// Converts a tuple to a <see cref="GraphEdge{T}"/> instance.
+        /// Converts a tuple to a <see cref="GraphEdge{TVertex}"/> instance.
         /// </summary>
         /// <param name="value">The value tuple to convert.</param>
         public static implicit operator GraphEdge<TVertex>(Tuple<TVertex, TVertex> value) => new(value.Item1, value.Item2);
 
         /// <summary>
-        /// Converts a <see cref="GraphEdge{T}"/> value to a tuple instance.
+        /// Converts a <see cref="GraphEdge{TVertex}"/> value to a tuple instance.
         /// </summary>
-        /// <param name="value">The <see cref="GraphEdge{T}"/> value to convert.</param>
+        /// <param name="value">The <see cref="GraphEdge{TVertex}"/> value to convert.</param>
         public static implicit operator Tuple<TVertex, TVertex>(GraphEdge<TVertex> value) => Tuple.Create(value.From, value.To);
     }
 }

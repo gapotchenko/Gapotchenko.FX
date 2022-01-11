@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Math.Topology
 
             foreach (var vertex in graph.Vertices)
             {
-                // Find the nodes without outgoing edges.
+                // Find the nodes with no outgoing edges.
                 if (graph.GetVertexOutdegree(vertex) is 0)
                     queue.Enqueue(vertex);
             }
@@ -54,7 +54,7 @@ namespace Gapotchenko.FX.Math.Topology
 
             foreach (var vertex in graph.Vertices)
             {
-                // Find the nodes without outgoing edges.
+                // Find the nodes with no outgoing edges.
                 if (graph.GetVertexOutdegree(vertex) is 0)
                     queue.Enqueue(vertex, vertex);
             }

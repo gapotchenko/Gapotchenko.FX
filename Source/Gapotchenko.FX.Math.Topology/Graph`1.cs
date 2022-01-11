@@ -26,7 +26,7 @@ namespace Gapotchenko.FX.Math.Topology
     public partial class Graph<TVertex> : IGraph<TVertex>
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that is empty and uses the default equality comparer for graph vertices.
+        /// Initializes a new instance of <see cref="Graph{TVertex}"/> class that is empty and uses the default equality comparer for graph vertices.
         /// </summary>
         public Graph() :
             this((IEqualityComparer<TVertex>?)null)
@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that is empty and uses the specified equality comparer for graph vertices.
+        /// Initializes a new instance of <see cref="Graph{TVertex}"/> class that is empty and uses the specified equality comparer for graph vertices.
         /// </summary>
         /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
@@ -46,20 +46,20 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for vertices
-        /// and contains vertices and edges copied from the specified <see cref="IReadOnlyGraph{T}"/>.
+        /// Initializes a new instance of <see cref="Graph{TVertex}"/> class that uses the default equality comparer for vertices
+        /// and contains vertices and edges copied from the specified <see cref="IReadOnlyGraph{TVertex}"/>.
         /// </summary>
-        /// <param name="graph">The <see cref="IReadOnlyGraph{T}"/> whose vertices and edges are copied to the new <see cref="Graph{T}"/>.</param>
+        /// <param name="graph">The <see cref="IReadOnlyGraph{TVertex}"/> whose vertices and edges are copied to the new <see cref="Graph{TVertex}"/>.</param>
         public Graph(IReadOnlyGraph<TVertex> graph) :
             this(graph, null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices
-        /// and contains vertices and edges copied from the specified <see cref="IReadOnlyGraph{T}"/>.
+        /// Initializes a new instance of <see cref="Graph{TVertex}"/> class that uses the specified equality comparer for vertices
+        /// and contains vertices and edges copied from the specified <see cref="IReadOnlyGraph{TVertex}"/>.
         /// </summary>
-        /// <param name="graph">The <see cref="IReadOnlyGraph{T}"/> whose vertices and edges are copied to the new <see cref="Graph{T}"/>.</param>
+        /// <param name="graph">The <see cref="IReadOnlyGraph{TVertex}"/> whose vertices and edges are copied to the new <see cref="Graph{TVertex}"/>.</param>
         /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the graph,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
@@ -78,7 +78,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the default equality comparer for vertices
+        /// Initializes a new instance of <see cref="Graph{TVertex}"/> class that uses the default equality comparer for vertices
         /// and contains vertices copied from the specified collection
         /// and edges defined by the specified incidence function.
         /// </summary>
@@ -90,7 +90,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices
+        /// Initializes a new instance of <see cref="Graph{TVertex}"/> class that uses the specified equality comparer for vertices
         /// and contains vertices copied from the specified collection
         /// and edges defined by the specified incidence function.
         /// </summary>
@@ -106,7 +106,7 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Graph{T}"/> class that uses the specified equality comparer for vertices
+        /// Initializes a new instance of <see cref="Graph{TVertex}"/> class that uses the specified equality comparer for vertices
         /// and contains vertices copied from the specified collection
         /// and edges defined by the specified incidence function
         /// with the given options.
@@ -126,11 +126,13 @@ namespace Gapotchenko.FX.Math.Topology
             if (incidenceFunction == null)
                 throw new ArgumentNullException(nameof(incidenceFunction));
 
-            bool reflexiveReducion = (options & GraphIncidenceOptions.ReflexiveReduction) != 0;
-            bool storeIsolatedVertices = (options & GraphIncidenceOptions.ExcludeIsolatedVertices) == 0;
-
             var list = vertices.AsReadOnlyList();
             int count = list.Count;
+
+            bool reflexiveReducion = (options & GraphIncidenceOptions.ReflexiveReduction) != 0;
+            bool storeIsolatedVertices =
+                count == 1 ||  // a singleton graph is connected by definition
+                (options & GraphIncidenceOptions.Connected) == 0;
 
             for (int i = 0; i < count; ++i)
             {

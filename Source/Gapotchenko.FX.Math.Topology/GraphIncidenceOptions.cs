@@ -24,13 +24,8 @@ namespace Gapotchenko.FX.Math.Topology
         ReflexiveReduction = 1 << 1,
 
         /// <summary>
-        /// <para>
-        /// Produce a connected graph by not adding isolated vertices to it.
-        /// </para>
-        /// <para>
-        /// Isolated vertices are vertices with degree zero; that is, vertices that are not incident with any edge.
-        /// </para>
+        /// Produce a connected graph by ignoring the vertices not connected by edges.
         /// </summary>
-        ExcludeIsolatedVertices = 1 << 2
+        Connected = 1 << 2
     }
 }
