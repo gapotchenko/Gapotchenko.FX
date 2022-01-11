@@ -267,6 +267,13 @@ namespace Gapotchenko.FX.Math.Topology.Tests
 
             Assert.IsTrue(g.IsCyclic);
 
+            g = new Graph<int>
+            {
+                Vertices = { 1 }
+            };
+
+            Assert.IsFalse(g.IsCyclic);
+
             g = new Graph<int>();
 
             Assert.IsFalse(g.IsCyclic);
