@@ -94,7 +94,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets the indegree of a specified vertex.
         /// </para>
         /// <para>
-        /// Indegree of a vertex is the number of head ends adjacent to the vertex.
+        /// Indegree of a vertex is the number of incoming incident edges.
         /// </para>
         /// </summary>
         /// <param name="vertex">The vertex to find the indegree of.</param>
@@ -106,7 +106,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets the outdegree of a specified vertex.
         /// </para>
         /// <para>
-        /// Outdegree of a vertex is the number of tail ends adjacent to the vertex.
+        /// Outdegree of a vertex is the number of outgoing incident edges.
         /// </para>
         /// </summary>
         /// <param name="vertex">The vertex to find the outdegree of.</param>

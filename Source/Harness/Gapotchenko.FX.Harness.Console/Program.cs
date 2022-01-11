@@ -115,6 +115,11 @@ namespace Gapotchenko.FX.Harness.Console
 
             var result = seq.OrderTopologicallyBy(Fn.Identity, Dependency).ThenBy(x => x);
 
+            //seq.OrderBy
+
+            var assoc = new AssociativeArray<int, string>();
+            assoc[0] = "123";
+
             Console.WriteLine(string.Concat(result));
         }
 

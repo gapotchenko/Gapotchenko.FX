@@ -11,12 +11,12 @@ namespace Gapotchenko.FX.Math.Topology
         IEnumerator<TVertex> OrderTopologicallyCore()
         {
             var queue = new Queue<TVertex>();
-            var transposition = GetTransposition();
+            var graph = GetTransposition();
 
-            foreach (var vertex in transposition.Vertices)
+            foreach (var vertex in graph.Vertices)
             {
                 // Find the nodes with no outgoing edges.
-                if (transposition.GetVertexOutdegree(vertex) is 0)
+                if (graph.GetVertexOutdegree(vertex) is 0)
                     queue.Enqueue(vertex);
             }
 
@@ -28,26 +28,26 @@ namespace Gapotchenko.FX.Math.Topology
 
                 foreach (var adjacentVertex in DestinationVerticesAdjacentTo(vertex))
                 {
-                    transposition.Edges.Remove(adjacentVertex, vertex);
+                    graph.Edges.Remove(adjacentVertex, vertex);
 
-                    if (transposition.GetVertexOutdegree(adjacentVertex) is 0)
+                    if (graph.GetVertexOutdegree(adjacentVertex) is 0)
                         queue.Enqueue(adjacentVertex);
                 }
             }
 
-            if (transposition.Edges.Count is > 0)
+            if (graph.Edges.Count is > 0)
                 throw new CircularDependencyException();
         }
 
         IEnumerator<TVertex> OrderTopologicallyByCore(IComparer<TVertex> comparer)
         {
             var queue = new PriorityQueue<TVertex, TVertex>(comparer);
-            var transposition = GetTransposition();
+            var graph = GetTransposition();
 
-            foreach (var vertex in transposition.Vertices)
+            foreach (var vertex in graph.Vertices)
             {
                 // Find the nodes with no outgoing edges.
-                if (transposition.GetVertexOutdegree(vertex) is 0)
+                if (graph.GetVertexOutdegree(vertex) is 0)
                     queue.Enqueue(vertex, vertex);
             }
 
@@ -59,20 +59,19 @@ namespace Gapotchenko.FX.Math.Topology
 
                 foreach (var adjacentVertex in DestinationVerticesAdjacentTo(vertex))
                 {
-                    transposition.Edges.Remove(adjacentVertex, vertex);
+                    graph.Edges.Remove(adjacentVertex, vertex);
 
-                    if (transposition.GetVertexOutdegree(adjacentVertex) is 0)
+                    if (graph.GetVertexOutdegree(adjacentVertex) is 0)
                         queue.Enqueue(adjacentVertex, adjacentVertex);
                 }
             }
 
-            if (transposition.Edges.Count is > 0)
+            if (graph.Edges.Count is > 0)
                 throw new CircularDependencyException();
         }
 
         /// <inheritdoc />
-        public IOrderedEnumerable<TVertex> OrderTopologically() =>
-            new TopologicallyOrderedEnumerable(this);
+        public IOrderedEnumerable<TVertex> OrderTopologically() => new TopologicallyOrderedEnumerable(this);
 
         class TopologicallyOrderedEnumerable : IOrderedEnumerable<TVertex>
         {
@@ -93,11 +92,9 @@ namespace Gapotchenko.FX.Math.Topology
                     return m_Source.OrderTopologicallyCore();
             }
 
-            public virtual IComparer<TVertex>? GetTopologicalComparer(IComparer<TVertex>? nextComparer)
-                => nextComparer;
+            public virtual IComparer<TVertex>? GetTopologicalComparer(IComparer<TVertex>? nextComparer) => nextComparer;
 
-            IEnumerator IEnumerable.GetEnumerator() =>
-                GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
             IOrderedEnumerable<TVertex> IOrderedEnumerable<TVertex>.CreateOrderedEnumerable<TKey>(Func<TVertex, TKey> keySelector, IComparer<TKey>? comparer, bool descending) =>
                 new TopologicallyOrderedEnumerable<TKey>(m_Source, keySelector, comparer, descending, parent: this);
@@ -128,9 +125,7 @@ namespace Gapotchenko.FX.Math.Topology
             {
                 IComparer<TVertex>? comparer = new TopologicalComparer<TKey>(m_KeySelector, m_Comparer, m_Descending, nextComparer, m_Source.VertexComparer);
                 if (m_Parent != null)
-                {
                     comparer = m_Parent.GetTopologicalComparer(comparer);
-                }
                 return comparer;
             }
         }

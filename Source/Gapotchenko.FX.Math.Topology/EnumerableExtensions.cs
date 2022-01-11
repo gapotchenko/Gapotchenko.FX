@@ -10,10 +10,10 @@ using System.Linq;
 namespace Gapotchenko.FX.Math.Topology
 {
     /// <summary>
-    /// Provides topological extension methods.
+    /// Provides extension methods for <see cref="IEnumerable{T}"/>.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class TopologicalExtensions
+    public static class EnumerableExtensions
     {
         /// <summary>
         /// <para>
@@ -24,7 +24,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Circular dependencies are ignored and resolved according to the original order of elements in the sequence.
         /// </para>
         /// </summary>
-        /// <typeparam name="TElement">The type of the elements of source.</typeparam>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
         /// <param name="source">The sequence of values to order.</param>
         /// <param name="keySelector">The function to extract a key from an element.</param>
@@ -34,9 +34,9 @@ namespace Gapotchenko.FX.Math.Topology
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to a key and specified dependency function.</returns>
-        public static IOrderedEnumerable<TElement> OrderTopologicallyBy<TElement, TKey>(
-            this IEnumerable<TElement> source,
-            Func<TElement, TKey> keySelector,
+        public static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
+            this IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector,
             Func<TKey, TKey, bool> dependencyFunction,
             IEqualityComparer<TKey>? comparer = null)
             => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, false);
@@ -50,7 +50,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Circular dependencies are ignored and resolved according to the original order of elements in the sequence.
         /// </para>
         /// </summary>
-        /// <typeparam name="TElement">The type of the elements of source.</typeparam>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
         /// <param name="source">The sequence of values to order.</param>
         /// <param name="keySelector">The function to extract a key from an element.</param>
@@ -60,16 +60,16 @@ namespace Gapotchenko.FX.Math.Topology
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according in reverse topological order to a key and specified dependency function.</returns>
-        public static IOrderedEnumerable<TElement> OrderTopologicallyByReverse<TElement, TKey>(
-            this IEnumerable<TElement> source,
-            Func<TElement, TKey> keySelector,
+        public static IOrderedEnumerable<TSource> OrderTopologicallyByReverse<TSource, TKey>(
+            this IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector,
             Func<TKey, TKey, bool> dependencyFunction,
             IEqualityComparer<TKey>? comparer = null)
             => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, true);
 
-        static IOrderedEnumerable<TElement> OrderTopologicallyBy<TElement, TKey>(
-            IEnumerable<TElement> source,
-            Func<TElement, TKey> keySelector,
+        static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
+            IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector,
             Func<TKey, TKey, bool> dependencyFunction,
             IEqualityComparer<TKey>? comparer,
             bool reverse)
@@ -103,7 +103,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Circular dependencies are ignored and resolved according to the original order of elements in the sequence.
         /// </para>
         /// </summary>
-        /// <typeparam name="TElement">The type of the elements of source.</typeparam>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
         /// <param name="source">The sequence of values to order.</param>
         /// <param name="keySelector">The function to extract a key from an element.</param>
@@ -113,9 +113,9 @@ namespace Gapotchenko.FX.Math.Topology
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to a key and specified dependency function.</returns>
-        public static IOrderedEnumerable<TElement> OrderTopologicallyBy<TElement, TKey>(
-            this IEnumerable<TElement> source,
-            Func<TElement, TKey> keySelector,
+        public static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
+            this IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector,
             Func<TKey, IEnumerable<TKey>?> dependencyFunction,
             IEqualityComparer<TKey>? comparer = null)
             => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, false);
@@ -129,7 +129,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Circular dependencies are ignored and resolved according to the original order of elements in the sequence.
         /// </para>
         /// </summary>
-        /// <typeparam name="TElement">The type of the elements of source.</typeparam>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
         /// <param name="source">The sequence of values to order.</param>
         /// <param name="keySelector">The function to extract a key from an element.</param>
@@ -139,16 +139,16 @@ namespace Gapotchenko.FX.Math.Topology
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in reverse topological order according to a key and specified dependency function.</returns>
-        public static IOrderedEnumerable<TElement> OrderTopologicallyByReverse<TElement, TKey>(
-            this IEnumerable<TElement> source,
-            Func<TElement, TKey> keySelector,
+        public static IOrderedEnumerable<TSource> OrderTopologicallyByReverse<TSource, TKey>(
+            this IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector,
             Func<TKey, IEnumerable<TKey>?> dependencyFunction,
             IEqualityComparer<TKey>? comparer = null)
             => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, true);
 
-        static IOrderedEnumerable<TElement> OrderTopologicallyBy<TElement, TKey>(
-            this IEnumerable<TElement> source,
-            Func<TElement, TKey> keySelector,
+        static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
+            this IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector,
             Func<TKey, IEnumerable<TKey>?> dependencyFunction,
             IEqualityComparer<TKey>? comparer,
             bool reverse)
@@ -188,22 +188,22 @@ namespace Gapotchenko.FX.Math.Topology
                 });
         }
 
-        static IOrderedEnumerable<TElement> OrderTopologicallyBy<TElement, TKey>(
-            IEnumerable<TElement> source,
-            Func<TElement, TKey> keySelector,
+        static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
+            IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector,
             IEqualityComparer<TKey>? comparer,
             Func<IEnumerable<TKey>, Graph<TKey>> graphFactory)
         {
-            return new TopologicallyOrderedEnumerable<TElement, TKey>(
+            return new TopologicallyOrderedEnumerable<TSource, TKey>(
                 source,
                 keySelector,
                 comparer,
                 graphFactory);
         }
 
-        static IEnumerable<TElement> OrderTopologicallyByCore<TElement, TKey>(
-            IEnumerable<TElement> source,
-            Func<TElement, TKey> keySelector,
+        static IEnumerable<TSource> OrderTopologicallyByCore<TSource, TKey>(
+            IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector,
             IEqualityComparer<TKey>? comparer,
             Func<IEnumerable<TKey>, Graph<TKey>> graphFactory)
         {
@@ -255,23 +255,23 @@ namespace Gapotchenko.FX.Math.Topology
         {
         }
 
-        abstract class TopologicallyOrderedEnumerable<TElement> : TopologicallyOrderedEnumerable
+        abstract class TopologicallyOrderedEnumerable<TSource> : TopologicallyOrderedEnumerable
         {
-            public TopologicallyOrderedEnumerable(IEnumerable<TElement> source)
+            public TopologicallyOrderedEnumerable(IEnumerable<TSource> source)
             {
                 Source = source;
             }
 
-            public IEnumerable<TElement> Source { get; }
+            public IEnumerable<TSource> Source { get; }
 
-            public abstract IEnumerable<TElement> Order(IEnumerable<TElement> source);
+            public abstract IEnumerable<TSource> Order(IEnumerable<TSource> source);
         }
 
-        sealed class TopologicallyOrderedEnumerable<TElement, TKey> : TopologicallyOrderedEnumerable<TElement>, IOrderedEnumerable<TElement>
+        sealed class TopologicallyOrderedEnumerable<TSource, TKey> : TopologicallyOrderedEnumerable<TSource>, IOrderedEnumerable<TSource>
         {
             public TopologicallyOrderedEnumerable(
-                IEnumerable<TElement> source,
-                Func<TElement, TKey> keySelector,
+                IEnumerable<TSource> source,
+                Func<TSource, TKey> keySelector,
                 IEqualityComparer<TKey>? comparer,
                 Func<IEnumerable<TKey>, Graph<TKey>> graphFactory) :
                 base(source)
@@ -281,58 +281,58 @@ namespace Gapotchenko.FX.Math.Topology
                 m_GraphFactory = graphFactory;
             }
 
-            readonly Func<TElement, TKey> m_KeySelector;
+            readonly Func<TSource, TKey> m_KeySelector;
             readonly IEqualityComparer<TKey>? m_Comparer;
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly Func<IEnumerable<TKey>, Graph<TKey>> m_GraphFactory;
 
-            public override IEnumerable<TElement> Order(IEnumerable<TElement> source) => OrderTopologicallyByCore(source, m_KeySelector, m_Comparer, m_GraphFactory);
+            public override IEnumerable<TSource> Order(IEnumerable<TSource> source) => OrderTopologicallyByCore(source, m_KeySelector, m_Comparer, m_GraphFactory);
 
-            public IEnumerator<TElement> GetEnumerator() => Order(Source).GetEnumerator();
+            public IEnumerator<TSource> GetEnumerator() => Order(Source).GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<TNestedKey>(
-                Func<TElement, TNestedKey> keySelector,
-                IComparer<TNestedKey>? comparer,
+            IOrderedEnumerable<TSource> IOrderedEnumerable<TSource>.CreateOrderedEnumerable<TSubsequentKey>(
+                Func<TSource, TSubsequentKey> keySelector,
+                IComparer<TSubsequentKey>? comparer,
                 bool descending)
-                => new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(keySelector, comparer, descending, this);
+                => new SubsequentTopologicallyOrderedEnumerable<TSource, TSubsequentKey>(keySelector, comparer, descending, this);
         }
 
-        abstract class NestedTopologicallyOrderedEnumerable<TElement> : TopologicallyOrderedEnumerable
+        abstract class SubsequentTopologicallyOrderedEnumerable<TSource> : TopologicallyOrderedEnumerable
         {
-            public NestedTopologicallyOrderedEnumerable(TopologicallyOrderedEnumerable next)
+            public SubsequentTopologicallyOrderedEnumerable(TopologicallyOrderedEnumerable parent)
             {
-                Next = next;
+                Parent = parent;
             }
 
-            public TopologicallyOrderedEnumerable Next { get; }
+            public TopologicallyOrderedEnumerable Parent { get; }
 
-            public abstract IOrderedEnumerable<TElement> Order(IEnumerable<TElement> source);
+            public abstract IOrderedEnumerable<TSource> Order(IEnumerable<TSource> source);
         }
 
-        sealed class NestedTopologicallyOrderedEnumerable<TElement, TKey> : NestedTopologicallyOrderedEnumerable<TElement>, IOrderedEnumerable<TElement>
+        sealed class SubsequentTopologicallyOrderedEnumerable<TSource, TKey> : SubsequentTopologicallyOrderedEnumerable<TSource>, IOrderedEnumerable<TSource>
         {
-            public NestedTopologicallyOrderedEnumerable(
-                Func<TElement, TKey> keySelector,
+            public SubsequentTopologicallyOrderedEnumerable(
+                Func<TSource, TKey> keySelector,
                 IComparer<TKey>? comparer,
                 bool descending,
-                TopologicallyOrderedEnumerable next)
-                : base(next)
+                TopologicallyOrderedEnumerable parent)
+                : base(parent)
             {
                 m_KeySelector = keySelector;
                 m_Comparer = comparer;
                 m_Descending = descending;
             }
 
-            readonly Func<TElement, TKey> m_KeySelector;
+            readonly Func<TSource, TKey> m_KeySelector;
             readonly IComparer<TKey>? m_Comparer;
             readonly bool m_Descending;
 
-            public override IOrderedEnumerable<TElement> Order(IEnumerable<TElement> source)
+            public override IOrderedEnumerable<TSource> Order(IEnumerable<TSource> source)
             {
-                if (Next is TopologicallyOrderedEnumerable<TElement>)
+                if (Parent is TopologicallyOrderedEnumerable<TSource>)
                 {
                     // Parented by the root enumerable.
                     if (m_Descending)
@@ -342,7 +342,7 @@ namespace Gapotchenko.FX.Math.Topology
                 }
                 else
                 {
-                    var orderedSource = (IOrderedEnumerable<TElement>)source;
+                    var orderedSource = (IOrderedEnumerable<TSource>)source;
                     if (m_Descending)
                         return orderedSource.ThenByDescending(m_KeySelector, m_Comparer);
                     else
@@ -350,24 +350,24 @@ namespace Gapotchenko.FX.Math.Topology
                 }
             }
 
-            public IEnumerator<TElement> GetEnumerator()
+            public IEnumerator<TSource> GetEnumerator()
             {
-                var list = new List<NestedTopologicallyOrderedEnumerable<TElement>>();
+                var list = new List<SubsequentTopologicallyOrderedEnumerable<TSource>>();
 
-                TopologicallyOrderedEnumerable<TElement> root;
+                TopologicallyOrderedEnumerable<TSource> root;
 
-                for (NestedTopologicallyOrderedEnumerable<TElement> i = this; ;)
+                for (SubsequentTopologicallyOrderedEnumerable<TSource> i = this; ;)
                 {
                     list.Add(i);
 
-                    var next = i.Next;
-                    if (next is NestedTopologicallyOrderedEnumerable<TElement> nested)
+                    var parent = i.Parent;
+                    if (parent is SubsequentTopologicallyOrderedEnumerable<TSource> subsequent)
                     {
-                        i = nested;
+                        i = subsequent;
                     }
                     else
                     {
-                        root = (TopologicallyOrderedEnumerable<TElement>)next;
+                        root = (TopologicallyOrderedEnumerable<TSource>)parent;
                         break;
                     }
                 }
@@ -384,11 +384,11 @@ namespace Gapotchenko.FX.Math.Topology
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            IOrderedEnumerable<TElement> IOrderedEnumerable<TElement>.CreateOrderedEnumerable<TNestedKey>(
-                Func<TElement, TNestedKey> keySelector,
-                IComparer<TNestedKey>? comparer,
+            IOrderedEnumerable<TSource> IOrderedEnumerable<TSource>.CreateOrderedEnumerable<TSubsequentKey>(
+                Func<TSource, TSubsequentKey> keySelector,
+                IComparer<TSubsequentKey>? comparer,
                 bool descending)
-                => new NestedTopologicallyOrderedEnumerable<TElement, TNestedKey>(keySelector, comparer, descending, this);
+                => new SubsequentTopologicallyOrderedEnumerable<TSource, TSubsequentKey>(keySelector, comparer, descending, this);
         }
     }
 }
