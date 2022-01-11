@@ -197,9 +197,6 @@ namespace Gapotchenko.FX.Math.Topology
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlySet<GraphEdge<TVertex>> IReadOnlyGraph<TVertex>.Edges => Edges;
 
-        /// <inheritdoc/>
-        public bool IsEmpty => m_AdjacencyList.Count == 0;
-
         struct ReachibilityTraverser
         {
             public ReachibilityTraverser(Graph<TVertex> graph, TVertex destination, bool adjacent)
@@ -265,7 +262,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <inheritdoc/>
         public void Clear()
         {
-            if (IsEmpty)
+            if (m_AdjacencyList.Count == 0)
                 return;
 
             m_AdjacencyList.Clear();

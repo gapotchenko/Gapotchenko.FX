@@ -44,11 +44,6 @@ namespace Gapotchenko.FX.Math.Topology
         IEnumerable<GraphEdge<TVertex>> OutgoingEdgesIncidentWith(TVertex vertex);
 
         /// <summary>
-        /// Gets a value indicating whether the current graph is empty.
-        /// </summary>
-        bool IsEmpty { get; }
-
-        /// <summary>
         /// Determines whether the current graph contains a cycle.
         /// </summary>
         bool IsCyclic { get; }
