@@ -89,10 +89,11 @@ namespace Gapotchenko.FX.Harness.Console
             g.Edges.Add(1, 2);
             g.Edges.Add(2, 3);
 
-            g.Vertices.Remove(2);
+            //g.Vertices.Remove(2);
 
             foreach (var i in g.Vertices)
             {
+                Console.WriteLine(i);
             }
 
             AssemblyAutoLoader.Default.AddProbingPath(@"C:\");
@@ -114,11 +115,6 @@ namespace Gapotchenko.FX.Harness.Console
                 };
 
             var result = seq.OrderTopologicallyBy(Fn.Identity, Dependency).ThenBy(x => x);
-
-            //seq.OrderBy
-
-            var assoc = new AssociativeArray<int, string>();
-            assoc[0] = "123";
 
             Console.WriteLine(string.Concat(result));
         }

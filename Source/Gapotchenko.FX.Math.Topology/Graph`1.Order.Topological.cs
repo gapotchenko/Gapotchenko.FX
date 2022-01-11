@@ -202,15 +202,10 @@ namespace Gapotchenko.FX.Math.Topology
 
             public int Compare(TVertex? x, TVertex? y)
             {
-                if (x is null)
-                    throw new ArgumentNullException(nameof(x));
-                if (y is null)
-                    throw new ArgumentNullException(nameof(y));
-
-                if (!m_Keys.TryGetValue(x, out var xKey))
-                    m_Keys[x] = xKey = m_KeySelector(x);
-                if (!m_Keys.TryGetValue(y, out var yKey))
-                    m_Keys[y] = yKey = m_KeySelector(y);
+                if (!m_Keys.TryGetValue(x!, out var xKey))
+                    m_Keys[x!] = xKey = m_KeySelector(x!);
+                if (!m_Keys.TryGetValue(y!, out var yKey))
+                    m_Keys[y!] = yKey = m_KeySelector(y!);
 
                 var c = m_KeyComparer.Compare(xKey, yKey);
                 if (c == 0 && m_NextComparer is not null)
