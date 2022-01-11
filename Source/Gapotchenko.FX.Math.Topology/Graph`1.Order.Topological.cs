@@ -8,6 +8,14 @@ namespace Gapotchenko.FX.Math.Topology
 {
     partial class Graph<TVertex>
     {
+        /// <inheritdoc />
+        public IOrderedEnumerable<TVertex> OrderTopologically() => OrderTopologically(false);
+
+        /// <inheritdoc />
+        public IOrderedEnumerable<TVertex> OrderTopologicallyInReverse() => OrderTopologically(true);
+
+        IOrderedEnumerable<TVertex> OrderTopologically(bool reverse) => new TopologicallyOrderedEnumerable(this, reverse);
+
         IEnumerator<TVertex> OrderTopologicallyCore()
         {
             var queue = new Queue<TVertex>();
@@ -15,7 +23,7 @@ namespace Gapotchenko.FX.Math.Topology
 
             foreach (var vertex in graph.Vertices)
             {
-                // Find the nodes with no outgoing edges.
+                // Find the nodes without outgoing edges.
                 if (graph.GetVertexOutdegree(vertex) is 0)
                     queue.Enqueue(vertex);
             }
@@ -39,14 +47,14 @@ namespace Gapotchenko.FX.Math.Topology
                 throw new CircularDependencyException();
         }
 
-        IEnumerator<TVertex> OrderTopologicallyByCore(IComparer<TVertex> comparer)
+        IEnumerator<TVertex> OrderTopologicallyCore(IComparer<TVertex> comparer)
         {
             var queue = new PriorityQueue<TVertex, TVertex>(comparer);
             var graph = GetTransposition();
 
             foreach (var vertex in graph.Vertices)
             {
-                // Find the nodes with no outgoing edges.
+                // Find the nodes without outgoing edges.
                 if (graph.GetVertexOutdegree(vertex) is 0)
                     queue.Enqueue(vertex, vertex);
             }
@@ -70,64 +78,104 @@ namespace Gapotchenko.FX.Math.Topology
                 throw new CircularDependencyException();
         }
 
-        /// <inheritdoc />
-        public IOrderedEnumerable<TVertex> OrderTopologically() => new TopologicallyOrderedEnumerable(this);
-
-        class TopologicallyOrderedEnumerable : IOrderedEnumerable<TVertex>
+        interface ITopologicallyOrderedEnumerable : IOrderedEnumerable<TVertex>
         {
-            protected readonly Graph<TVertex> m_Source;
+        }
 
-            public TopologicallyOrderedEnumerable(Graph<TVertex> source)
+        sealed class TopologicallyOrderedEnumerable : ITopologicallyOrderedEnumerable
+        {
+            public TopologicallyOrderedEnumerable(Graph<TVertex> source, bool reverse)
             {
-                m_Source = source ?? throw new ArgumentNullException(nameof(source));
+                Source = source ?? throw new ArgumentNullException(nameof(source));
+                Reverse = reverse;
             }
+
+            public Graph<TVertex> Source { get; }
+
+            public bool Reverse { get; }
 
             public IEnumerator<TVertex> GetEnumerator()
             {
-                var comparer = GetTopologicalComparer(nextComparer: null);
+                var g = Source;
+                if (Reverse)
+                    g = g.GetTransposition();
 
-                if (comparer is not null)
-                    return m_Source.OrderTopologicallyByCore(comparer);
-                else
-                    return m_Source.OrderTopologicallyCore();
+                return g.OrderTopologicallyCore();
             }
-
-            public virtual IComparer<TVertex>? GetTopologicalComparer(IComparer<TVertex>? nextComparer) => nextComparer;
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            IOrderedEnumerable<TVertex> IOrderedEnumerable<TVertex>.CreateOrderedEnumerable<TKey>(Func<TVertex, TKey> keySelector, IComparer<TKey>? comparer, bool descending) =>
-                new TopologicallyOrderedEnumerable<TKey>(m_Source, keySelector, comparer, descending, parent: this);
+            IOrderedEnumerable<TVertex> IOrderedEnumerable<TVertex>.CreateOrderedEnumerable<TKey>(
+                Func<TVertex, TKey> keySelector,
+                IComparer<TKey>? comparer,
+                bool descending)
+                => new TopologicallyOrderedEnumerable<TKey>(keySelector, comparer, descending, parent: this);
         }
 
-        sealed class TopologicallyOrderedEnumerable<TKey> : TopologicallyOrderedEnumerable
+        sealed class TopologicallyOrderedEnumerable<TKey> : ITopologicallyOrderedEnumerable
         {
-            readonly TopologicallyOrderedEnumerable? m_Parent;
+            readonly ITopologicallyOrderedEnumerable m_Parent;
             readonly Func<TVertex, TKey> m_KeySelector;
-            readonly IComparer<TKey> m_Comparer;
+            readonly IComparer<TKey>? m_Comparer;
             readonly bool m_Descending;
 
             public TopologicallyOrderedEnumerable(
-                Graph<TVertex> source,
                 Func<TVertex, TKey> keySelector,
                 IComparer<TKey>? comparer,
                 bool descending,
-                TopologicallyOrderedEnumerable? parent = default)
-                : base(source)
+                ITopologicallyOrderedEnumerable parent)
             {
                 m_KeySelector = keySelector ?? throw new ArgumentNullException(nameof(keySelector));
-                m_Comparer = comparer ?? Comparer<TKey>.Default;
+                m_Comparer = comparer;
                 m_Descending = descending;
                 m_Parent = parent;
             }
 
-            public override IComparer<TVertex>? GetTopologicalComparer(IComparer<TVertex>? nextComparer)
+            IComparer<TVertex>? GetTopologicalComparer(IComparer<TVertex>? nextComparer, IEqualityComparer<TVertex> vertexEqualityComparer) =>
+                new TopologicalComparer<TKey>(m_KeySelector, m_Comparer, m_Descending, nextComparer, vertexEqualityComparer);
+
+            public IEnumerator<TVertex> GetEnumerator()
             {
-                IComparer<TVertex>? comparer = new TopologicalComparer<TKey>(m_KeySelector, m_Comparer, m_Descending, nextComparer, m_Source.VertexComparer);
-                if (m_Parent != null)
-                    comparer = m_Parent.GetTopologicalComparer(comparer);
-                return comparer;
+                var list = new List<TopologicallyOrderedEnumerable<TKey>>();
+                TopologicallyOrderedEnumerable root;
+
+                for (TopologicallyOrderedEnumerable<TKey> i = this; ;)
+                {
+                    list.Add(i);
+
+                    var parent = i.m_Parent;
+                    if (parent is TopologicallyOrderedEnumerable<TKey> subsequent)
+                    {
+                        i = subsequent;
+                    }
+                    else
+                    {
+                        root = (TopologicallyOrderedEnumerable)parent;
+                        break;
+                    }
+                }
+
+                var source = root.Source;
+                var vertexComparer = source.VertexComparer;
+
+                IComparer<TVertex>? comparer = null;
+                foreach (var i in list)
+                    comparer = i.GetTopologicalComparer(comparer, vertexComparer);
+
+                var g = source;
+                if (root.Reverse)
+                    g = g.GetTransposition();
+
+                return g.OrderTopologicallyCore(comparer!);
             }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            IOrderedEnumerable<TVertex> IOrderedEnumerable<TVertex>.CreateOrderedEnumerable<TSubsequentKey>(
+                Func<TVertex, TSubsequentKey> keySelector,
+                IComparer<TSubsequentKey>? comparer,
+                bool descending)
+                => new TopologicallyOrderedEnumerable<TSubsequentKey>(keySelector, comparer, descending, parent: this);
         }
 
         sealed class TopologicalComparer<TKey> : IComparer<TVertex>
@@ -140,13 +188,13 @@ namespace Gapotchenko.FX.Math.Topology
 
             public TopologicalComparer(
                 Func<TVertex, TKey> keySelector,
-                IComparer<TKey> keyComparer,
+                IComparer<TKey>? keyComparer,
                 bool descending,
                 IComparer<TVertex>? nextComparer,
                 IEqualityComparer<TVertex> vertexEqualityComparer)
             {
                 m_KeySelector = keySelector;
-                m_KeyComparer = keyComparer;
+                m_KeyComparer = keyComparer ?? Comparer<TKey>.Default;
                 m_Descending = descending;
                 m_NextComparer = nextComparer;
                 m_Keys = new(vertexEqualityComparer);

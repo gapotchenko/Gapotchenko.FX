@@ -256,13 +256,23 @@ namespace Gapotchenko.FX.Math.Topology
         IReadOnlyGraph<TVertex> Except(IReadOnlyGraph<TVertex> other);
 
         /// <summary>
-        /// Gets a sequence of vertices ordered topologically.
+        /// Gets a sequence of vertices sorted in topological order.
         /// </summary>
         /// <remarks>
         /// Topological order of a directed graph is an order of its vertices such that for every directed edge u → v, u comes before v.
         /// </remarks>
-        /// <returns>Sequence of vertices in topologically sorted order.</returns>
+        /// <returns>Sequence of vertices sorted in topological order.</returns>
         /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
         IOrderedEnumerable<TVertex> OrderTopologically();
+
+        /// <summary>
+        /// Gets a sequence of vertices sorted in reverse topological order.
+        /// </summary>
+        /// <remarks>
+        /// Reverse topological order of a directed graph is an order of its vertices such that for every directed edge u → v, v comes before u.
+        /// </remarks>
+        /// <returns>Sequence of vertices sorted in reverse topological order.</returns>
+        /// <exception cref="CircularDependencyException">Graph contains a cycle.</exception>
+        IOrderedEnumerable<TVertex> OrderTopologicallyInReverse();
     }
 }

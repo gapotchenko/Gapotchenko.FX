@@ -321,6 +321,9 @@ namespace Gapotchenko.FX.Math.Topology
                 TopologicallyOrderedEnumerable parent)
                 : base(parent)
             {
+                if (keySelector == null)
+                    throw new ArgumentNullException(nameof(keySelector));
+
                 m_KeySelector = keySelector;
                 m_Comparer = comparer;
                 m_Descending = descending;
@@ -353,7 +356,6 @@ namespace Gapotchenko.FX.Math.Topology
             public IEnumerator<TSource> GetEnumerator()
             {
                 var list = new List<SubsequentTopologicallyOrderedEnumerable<TSource>>();
-
                 TopologicallyOrderedEnumerable<TSource> root;
 
                 for (SubsequentTopologicallyOrderedEnumerable<TSource> i = this; ;)
