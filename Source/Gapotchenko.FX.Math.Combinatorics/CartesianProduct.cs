@@ -5,7 +5,7 @@ using System.Linq;
 namespace Gapotchenko.FX.Math.Combinatorics
 {
     /// <summary>
-    /// Defines Cartesian product operations.
+    /// Provides Cartesian product operations.
     /// </summary>
     public static partial class CartesianProduct
     {

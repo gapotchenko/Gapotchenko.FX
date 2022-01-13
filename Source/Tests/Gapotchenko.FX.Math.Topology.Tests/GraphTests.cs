@@ -1647,6 +1647,18 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
+        public void Graph_OrderTopologicallyInReverse_Proof4Vertices()
+        {
+            var proof = new TopologicalOrderProof
+            {
+                GraphSorter = g => g.GetTransposition().OrderTopologicallyInReverse(),
+                VerticesCount = 4,
+                CircularDependenciesEnabled = false
+            };
+            proof.Run();
+        }
+
+        [TestMethod]
         public void Graph_OrderTopologically_Proof5Vertices()
         {
             var proof = new TopologicalOrderProof
