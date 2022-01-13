@@ -56,7 +56,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="keySelector">The function to extract a key from an element.</param>
         /// <param name="dependencyFunction">
         /// The dependency function that defines dependencies between the elements of a sequence.
-        /// Given a pair of element keys as <c>arg1</c> and <c>arg2</c>, returns a Boolean value indicating whether <c>arg2</c> should appear before <c>arg1</c> in topological order.
+        /// Given a pair of element keys as <c>arg1</c> and <c>arg2</c>, returns a Boolean value indicating whether <c>arg2</c> should appear after <c>arg1</c> in reverse topological order.
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according in reverse topological order to a key and specified dependency function.</returns>
@@ -135,7 +135,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <param name="keySelector">The function to extract a key from an element.</param>
         /// <param name="dependencyFunction">
         /// The dependency function that defines dependencies between the elements of a sequence.
-        /// Given an element key, returns a set of element keys which must appear before it in topological order.
+        /// Given an element key, returns a set of element keys which must appear after it in reverse topological order.
         /// </param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in reverse topological order according to a key and specified dependency function.</returns>
