@@ -125,7 +125,7 @@ namespace Gapotchenko.FX.Math.Topology
 
             bool reflexiveReducion = (options & GraphIncidenceOptions.ReflexiveReduction) != 0;
             bool storeIsolatedVertices =
-                count == 1 ||  // a singleton graph is connected by definition
+                count == 1 || // a singleton graph is always connected by definition
                 (options & GraphIncidenceOptions.Connected) == 0;
 
             for (int i = 0; i < count; ++i)
