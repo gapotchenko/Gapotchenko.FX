@@ -202,8 +202,8 @@ namespace Gapotchenko.FX.Math.Topology
 
         void UnionWithCore(IReadOnlyGraph<TVertex> other)
         {
-            Vertices.UnionWith(other.Vertices);
             Edges.UnionWith(other.Edges);
+            Vertices.UnionWith(other.Vertices);
         }
 
         /// <summary>

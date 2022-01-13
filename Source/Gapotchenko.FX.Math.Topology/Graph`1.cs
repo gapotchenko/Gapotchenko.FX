@@ -1,13 +1,8 @@
-﻿using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.Linq;
+﻿using Gapotchenko.FX.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
-#if NETCOREAPP3_0
-#pragma warning disable CS8714
-#endif
 
 namespace Gapotchenko.FX.Math.Topology
 {
@@ -70,8 +65,7 @@ namespace Gapotchenko.FX.Math.Topology
             if (graph == null)
                 throw new ArgumentNullException(nameof(graph));
 
-            Edges.UnionWith(graph.Edges);
-            Vertices.UnionWith(graph.Vertices);
+            UnionWithCore(graph);
 
             if (graph is Graph<TVertex> other && VertexComparer.Equals(other.VertexComparer))
                 CopyCacheFrom(other);
@@ -161,9 +155,6 @@ namespace Gapotchenko.FX.Math.Topology
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEqualityComparer<TVertex> VertexComparer => m_AdjacencyList.Comparer;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly AssociativeArray<TVertex, AdjacencyRow?> m_AdjacencyList;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         VertexSet? m_CachedVertices;
@@ -293,16 +284,5 @@ namespace Gapotchenko.FX.Math.Topology
         /// </summary>
         /// <returns>The new graph instance.</returns>
         protected Graph<TVertex> NewGraph() => new(VertexComparer);
-
-        /// <summary>
-        /// <para>
-        /// Gets the graph adjacency list.
-        /// </para>
-        /// <para>
-        /// The list consists of a number of rows, each of them representing a set of vertices that relate to another vertex.
-        /// </para>
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected internal IDictionary<TVertex, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
     }
 }
