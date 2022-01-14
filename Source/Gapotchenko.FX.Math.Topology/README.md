@@ -12,6 +12,8 @@ so topology should not be viewed as limited to just one unique flavor of objects
 
 ## Graph&lt;T&gt;
 
+### Basics
+
 `Graph<T>` provided by `Gapotchenko.FX.Math.Topology` represents a strongly-typed directional graph of objects.
 The objects correspond to mathematical abstractions called graph vertices and each of the related pairs of vertices is called an edge.
 A graph can be viewed as a structure that contains two sets: set of vertices and set of edges.
@@ -32,13 +34,13 @@ If we could visualize that graph then it would look like this:
 
 ![Simple graph with two isolated vertices](../../Documentation/Assets/Math/Topology/simple-graph-2-0.svg?raw=true)
 
-Now let's add one more vertex `3` plus an edge from vertex `1` to vertex `2`:
+Now let's add one more vertex `3` plus an edge that goes from vertex `1` to vertex `2`:
 
 ``` c#
 var g = new Graph<int>
 {
     Vertices = { 1, 2, 3 },
-    Edges = { (1, 2) }
+    Edges = { (1, 2) }  // <-- an edge has (from, to) notation
 };
 ```
 
@@ -58,7 +60,7 @@ var h = new Graph<int>
 Console.WriteLine(g.GraphEquals(h)); // will print "True"
 ```
 
-It is worth mentioning that the graph provides its vertices as an `ISet<T>`, so the usual operations on a set apply:
+It is worth mentioning that the graph provides its vertices as an `ISet<T>`, so the usual operations on a set apply to verices as well:
 
 ``` c#
 var g = new Graph<int>
@@ -74,6 +76,55 @@ The example above produces the following graph:
 
 ![Simple graph with five vertices and one edge](../../Documentation/Assets/Math/Topology/simple-graph-5-1.svg?raw=true)
 
+The same goes to edges: they are treated as a set too.
+
+### Operations
+
+Now once we have the basics in place, let's take a look on graph operations.
+Consider the graph:
+
+``` c#
+var g = new Graph<int>
+{
+    Edges =
+    {
+        (7, 5), (7, 6),
+        (6, 4), (6, 4)
+        (5, 4), (5, 2),
+        (3, 1),
+        (2, 1),
+        (1, 0)
+    }
+};
+```
+
+It looks like this:
+
+![Graph with eight vertices and nine edges](../../Documentation/Assets/Math/Topology/graph-8-9.svg?raw=true)
+
+Let's transpose it (i.e. reverse the direction of its edges):
+
+``` c#
+var h = g.GetTransposition();
+```
+
+Graph `h` renders as:
+
+![Transposed graph with eight vertices and nine edges](../../Documentation/Assets/Math/Topology/graph-8-9-t.svg?raw=true)
+
+Note that `h` is a new graph which is a transposition of `g`.
+
+But what if we want to transpose the graph `g` itself?
+Every graph operation has a corresponding in-place variant, so for transposition it will be:
+
+``` c#
+g.Transpose();
+```
+
+In this way, a developer can freely choose between immutable, mutable, or combined graph models when working on a particular task at hand.
+
+Graph transposition is just one example but there are plenty of other operations available.
+They all work in the same way and follow the same model.
 
 ## Usage
 
