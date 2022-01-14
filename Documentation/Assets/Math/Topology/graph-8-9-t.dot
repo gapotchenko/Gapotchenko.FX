@@ -1,5 +1,7 @@
 digraph {
     
+  rankdir=LR
+  node [shape=circle]
   edge [dir=back]
 
   7 -> 5, 6 
