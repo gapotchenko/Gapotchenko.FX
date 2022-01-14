@@ -10,7 +10,7 @@ However, such a definition may be considered as too narrow by some.
 Math has no boundaries,
 so topology should not be viewed as limited to just one unique flavor of objects (geometric, physical); it can really be anything.
 
-## Graph&lt;T&gt;
+## Graph
 
 ### Basics
 
