@@ -11,7 +11,7 @@ The module provides primitives and operations for geometry math.
 
 The notion of a string is purely abstract.
 So it is not limited to just characters like `System.String`; it can be a string of anything in form of `IEnumerable<T>`.
-In this way, `Gapotchenko.FX.Math.Geometry` module tries to achieve the right degree of abstraction desirable for a versatile math framework.
+In this way, `Gapotchenko.FX.Math.Geometry` module tries to achieve the right degree of abstraction desirable for a versatile math toolkit.
 
 ### Edit Distance
 
