@@ -127,7 +127,7 @@ Graph transposition is just one example but there are plenty of other operations
 They all work in the same way and follow the same model:
 
 | Operation | Description | Function | In-place Method |
-| --- | --- |
+| --- | --- | --- | --- |
 | Transposition | Reverses the direction of edges | GetTransposition | Transpose |
 | Transitive reduction | Prunes the transitive relations that have shorter paths | GetTransitiveReduction | ReduceTransitions |
 | Reflexive reduction | Removes the loops (also called self-loops or buckles) | GetReflexiveReduction | ReduceReflexes |
