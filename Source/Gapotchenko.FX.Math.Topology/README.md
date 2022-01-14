@@ -126,6 +126,14 @@ In this way, a developer can freely choose between immutable, mutable, or combin
 Graph transposition is just one example but there are plenty of other operations available.
 They all work in the same way and follow the same model.
 
+### Topological Sorting
+
+TODO
+
+### Stable Topological Sorting
+
+TODO
+
 ## Usage
 
 `Gapotchenko.FX.Math.Topology` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Topology):
