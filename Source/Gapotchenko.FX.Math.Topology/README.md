@@ -46,28 +46,16 @@ Our new graph looks like this:
 
 ![Simple graph with three vertices and one edge](../../Documentation/Assets/Math/Topology/simple-graph-3-1.svg?raw=true)
 
-The vertices that are already defined in edges can be omitted:
+The vertices already defined in edges can be omitted for brevity:
 
 ``` c#
-var g = new Graph<int>
-{
-    Vertices = { 1, 2, 3 },
-    Edges = { (1, 2) }
-};
-
 var h = new Graph<int>
 {
     Vertices = { 3 },
     Edges = { (1, 2) }
 };
 
-Console.WriteLine(g.GraphEquals(h));
-```
-
-Running the example above will produce the following output:
-
-```
-True
+Console.WriteLine(g.GraphEquals(h));  // prints "True"
 ```
 
 ## Usage
