@@ -98,11 +98,11 @@ var g = new Graph<int>
 };
 ```
 
-It looks like this:
+which looks like this:
 
 ![Graph with eight vertices and nine edges](../../Documentation/Assets/Math/Topology/graph-8-9.svg?raw=true)
 
-Let's transpose it (i.e. reverse the direction of its edges):
+Let's transpose the graph (i.e. reverse the direction of its edges):
 
 ``` c#
 var h = g.GetTransposition();
