@@ -58,7 +58,7 @@ var h = new Graph<int>
 Console.WriteLine(g.GraphEquals(h)); // will print "True"
 ```
 
-It is worth mentioning that the graph provides its vertices as an `ISet<T>`, so the usual set operations can be used:
+It is worth mentioning that the graph provides its vertices as an `ISet<T>`, so the usual operations on a set apply:
 
 ``` c#
 var g = new Graph<int>
