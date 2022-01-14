@@ -88,6 +88,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - &#x27B4; [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
   - [Gapotchenko.FX.Math.Combinatorics](../Gapotchenko.FX.Math.Combinatorics)
   - [Gapotchenko.FX.Math.Geometry](../Gapotchenko.FX.Math.Geometry)
+  - [Gapotchenko.FX.Math.Topology](../Gapotchenko.FX.Math.Topology)
 - [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
