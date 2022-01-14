@@ -15,7 +15,7 @@ so topology should not be viewed as limited to just one unique flavor of objects
 `Graph<T>` provided by `Gapotchenko.FX.Math.Topology` represents a strongly-typed directional graph of objects.
 The objects correspond to mathematical abstractions called graph vertices and each of the related pairs of vertices is called an edge.
 A graph can be viewed as a structure that contains two sets: set of vertices and set of edges.
-Vertices define "what" and edges define "how" it is connected.
+Vertices define "what" graph contains and edges define "how" those vertices are connected.
 
 Let's take a look at the simplest graph that contains just two vertices:
 
@@ -30,7 +30,45 @@ var g = new Graph<int>
 
 If we could visualize that graph then it would look like this:
 
-![Simple graph with two isolated vertices](../../Documentation/Assets/Math/Topology/simple-graph-2.svg?raw=true)
+![Simple graph with two isolated vertices](../../Documentation/Assets/Math/Topology/simple-graph-2-0.svg?raw=true)
+
+Now let's add one more vertex `3` and an edge from vertex `1` to vertex `2`:
+
+``` c#
+var g = new Graph<int>
+{
+    Vertices = { 1, 2, 3 },
+    Edges = { (1, 2) }
+};
+```
+
+Our new graph looks like this:
+
+![Simple graph with three vertices and one edge](../../Documentation/Assets/Math/Topology/simple-graph-3-1.svg?raw=true)
+
+The vertices that are already defined in edges can be omitted:
+
+``` c#
+var g = new Graph<int>
+{
+    Vertices = { 1, 2, 3 },
+    Edges = { (1, 2) }
+};
+
+var h = new Graph<int>
+{
+    Vertices = { 3 },
+    Edges = { (1, 2) }
+};
+
+Console.WriteLine(g.GraphEquals(h));
+```
+
+Running the example above will produce the following output:
+
+```
+True
+```
 
 ## Usage
 
