@@ -25,6 +25,7 @@ The full list of Gapotchenko.FX modules is presented in the table below.
 - [Gapotchenko.FX.Math](Gapotchenko.FX.Math)
   - [Gapotchenko.FX.Math.Combinatorics](Gapotchenko.FX.Math.Combinatorics)
   - [Gapotchenko.FX.Math.Geometry](Gapotchenko.FX.Math.Geometry)
+  - [Gapotchenko.FX.Math.Topology](Gapotchenko.FX.Math.Topology)
 - [Gapotchenko.FX.Memory](Gapotchenko.FX.Memory)
 - [Gapotchenko.FX.Numerics](Gapotchenko.FX.Numerics) ✱
 - [Gapotchenko.FX.Reflection.Loader](Gapotchenko.FX.Reflection.Loader) ✱
