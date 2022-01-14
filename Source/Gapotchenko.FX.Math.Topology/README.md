@@ -60,7 +60,7 @@ var h = new Graph<int>
 Console.WriteLine(g.GraphEquals(h)); // will print "True"
 ```
 
-It is worth mentioning that the graph provides its vertices as an `ISet<T>`, so the usual operations on a set apply to verices as well:
+It is worth mentioning that the graph provides its vertices as an `ISet<T>`, so the usual operations on a set apply to vertices as well:
 
 ``` c#
 var g = new Graph<int>
@@ -76,7 +76,7 @@ The example above produces the following graph:
 
 ![Simple graph with five vertices and one edge](../../Documentation/Assets/Math/Topology/simple-graph-5-1.svg?raw=true)
 
-The same goes to edges: they are treated as a set too.
+The same `ISet<T>` model applies to  graph edges: they are treated as a set too.
 
 ### Operations
 
