@@ -108,7 +108,7 @@ Let's transpose the graph (i.e. reverse the direction of its edges):
 var h = g.GetTransposition();
 ```
 
-Graph `h` renders as:
+Transposed graph `h` renders as:
 
 ![Transposed graph with eight vertices and nine edges](../../Documentation/Assets/Math/Topology/graph-8-9-t.svg?raw=true)
 
