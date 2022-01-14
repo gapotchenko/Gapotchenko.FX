@@ -149,7 +149,7 @@ namespace Gapotchenko.FX.IO
         /// Sets the position within the current stream.
         /// </summary>
         /// <param name="offset">A byte offset relative to the <paramref name="origin" /> parameter.</param>
-        /// <param name="origin">A value of type <see cref="T:System.IO.SeekOrigin" /> indicating the reference point used to obtain the new position.</param>
+        /// <param name="origin">A value of type <see cref="SeekOrigin" /> indicating the reference point used to obtain the new position.</param>
         /// <returns>
         /// The new position within the current stream.
         /// </returns>

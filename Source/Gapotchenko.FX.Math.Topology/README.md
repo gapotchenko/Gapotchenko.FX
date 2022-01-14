@@ -3,9 +3,14 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.Topology.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math.Topology)
 
-The module provides primitives and operations for topology.
+The module provides data structures and primitives for working with abstract topologies.
 
-## TODO
+In its classical meaning, the science of topology is concerned with the properties of geometric objects.
+However, such a definition may be considered as too narrow by some.
+Math has no boundaries,
+so topology should not be viewed as limited to just one unique flavor of objects (geometric, physical); it can really be anything.
+
+## Graph&lt;T&gt;
 
 
 ## Usage
