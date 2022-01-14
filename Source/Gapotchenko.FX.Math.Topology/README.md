@@ -121,10 +121,20 @@ Every graph operation has a corresponding in-place variant, so for transposition
 g.Transpose();
 ```
 
-In this way, a developer can freely choose between immutable, mutable, or combined graph models when working on a particular task at hand.
+In this way, a developer can freely choose between immutable, mutable, or combined data models when working on a particular task at hand.
 
 Graph transposition is just one example but there are plenty of other operations available.
-They all work in the same way and follow the same model.
+They all work in the same way and follow the same model:
+
+| Operation | Description | Function | In-place Method
+| --- | --- |
+| Transposition | Reverses the direction of edges | GetTransposition | Transpose
+| Transitive reduction | Prunes the transitive relations that have shorter paths | GetTransitiveReduction | ReduceTransitions
+| Reflexive reduction | Removes the loops (also called self-loops or buckles) | GetReflexiveReduction | ReduceReflexes
+| Subgraph | Produces a vertex-induced or edge-induced subgraph | GetSubgraph | Subgraph
+| Intersect | Produces a graph containing vertices and edges that are present in both the current and a specified graphs | Intersect | IntersectWith
+| Union | Produces a graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both | Union | UnionWith
+| Except | Produces a  graph containing vertices and edges that are present in the current graph but not in the specified graph | Except | ExceptWith
 
 ### Topological Sorting
 
