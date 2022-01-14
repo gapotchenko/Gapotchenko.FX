@@ -30,7 +30,7 @@ var g = new Graph<int>
 
 If we could visualize that graph then it would look like this:
 
-![Simple graph with two isolated vertices](../../Documentation/Assets/Math/Topology/simple-graph-2.svg?raw=true)
+![Simple graph with two isolated vertices](../../Documentation/Assets/Math/Topology/simple-graph-2.svg)
 
 ## Usage
 
