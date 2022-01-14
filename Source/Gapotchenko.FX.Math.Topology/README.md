@@ -112,9 +112,9 @@ Transposed graph `h` renders as:
 
 ![Transposed graph with eight vertices and nine edges](../../Documentation/Assets/Math/Topology/graph-8-9-t.svg?raw=true)
 
-Note that `h` is a new graph which is a transposition of `g`.
+Note that graph `h` is a new instance of `Graph<T>`.
 
-But what if we want to transpose the graph `g` itself?
+But what if we want to transpose the graph `g` in place?
 Every graph operation has a corresponding in-place variant, so for transposition it will be:
 
 ``` c#
