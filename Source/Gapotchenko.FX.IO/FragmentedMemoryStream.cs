@@ -285,6 +285,9 @@ namespace Gapotchenko.FX.IO
         /// <param name="destination">The destination stream to write the content to.</param>
         public virtual void WriteTo(Stream destination)
         {
+            // This method has no sense from the functional composability point of view
+            // but is needed to exist in order to be a drop-in replacement for MemoryStream.
+
             if (destination == null)
                 throw new ArgumentNullException(nameof(destination));
 
