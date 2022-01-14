@@ -76,11 +76,11 @@ The example above produces the following graph:
 
 ![Simple graph with five vertices and one edge](../../Documentation/Assets/Math/Topology/simple-graph-5-1.svg?raw=true)
 
-The same `ISet<T>` model applies to  graph edges: they are treated as a set too.
+The same `ISet<T>` model applies to the graph edges: they are treated as a set too.
 
 ### Operations
 
-Now once we have the basics in place, let's take a look on graph operations.
+Now once we have the basics in place, let's take a look at graph operations.
 Consider the graph:
 
 ``` c#
@@ -124,7 +124,7 @@ g.Transpose();
 In this way, a developer can freely choose between immutable, mutable, or combined data models when working on a particular task at hand.
 
 Graph transposition is just one example but there are plenty of other operations available.
-They all work in the same way and follow the same model:
+They all work in the same manner and follow the same model:
 
 | Operation | Description | Immutable Function | In-place Method |
 | --- | --- | --- | --- |
