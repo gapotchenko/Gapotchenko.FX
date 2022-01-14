@@ -55,7 +55,7 @@ var h = new Graph<int>
     Edges = { (1, 2) }
 };
 
-Console.WriteLine(g.GraphEquals(h));  // prints "True"
+Console.WriteLine(g.GraphEquals(h)); // will print "True"
 ```
 
 ## Usage
