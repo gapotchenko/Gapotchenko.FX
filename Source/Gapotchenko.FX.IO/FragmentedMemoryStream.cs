@@ -3,17 +3,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 
 namespace Gapotchenko.FX.IO
 {
     /// <summary>
-    /// Creates a stream whose backing store is fragmented memory.
+    /// Creates a stream that can store large amount of data in random access memory under memory fragmentation conditions.
     /// </summary>
     /// <remarks>
     /// <see cref="FragmentedMemoryStream"/> is similar to <see cref="MemoryStream"/> but uses a dynamic list of byte arrays as a backing store.
-    /// This allows to use the memory address space more efficiently, as there is no need to allocate a contiguous memory block for the whole stream.
+    /// This allows is to use the memory address space more efficiently, as there is no need to allocate a contiguous memory block for the whole stream.
     /// </remarks>
     public class FragmentedMemoryStream : Stream
     {
