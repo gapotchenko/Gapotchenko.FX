@@ -58,6 +58,23 @@ var h = new Graph<int>
 Console.WriteLine(g.GraphEquals(h)); // will print "True"
 ```
 
+It is worth mentioning that the graph provides its vertices as an `ISet<T>`, so the usual set operations can be used:
+
+``` c#
+var g = new Graph<int>
+{
+    Vertices = { 3 },
+    Edges = { (1, 2) }
+};
+
+g.Vertices.UnionWith(new[] { 3, 4, 5 });
+```
+
+The example above produces the following graph:
+
+![Simple graph with five vertices and one edge](../../Documentation/Assets/Math/Topology/simple-graph-5-1.svg?raw=true)
+
+
 ## Usage
 
 `Gapotchenko.FX.Math.Topology` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Topology):
