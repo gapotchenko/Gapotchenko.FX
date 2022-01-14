@@ -30,26 +30,7 @@ var g = new Graph<int>
 
 If we could visualize that graph then it would look like this:
 
-<svg width="134pt" height="44pt"
- viewBox="0.00 0.00 134.00 44.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 40)">
-<title>G</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-40 130,-40 130,4 -4,4"/>
-<!-- 1 -->
-<g id="node1" class="node">
-<title>1</title>
-<ellipse fill="none" stroke="#000000" cx="27" cy="-18" rx="27" ry="18"/>
-<text text-anchor="middle" x="27" y="-13.8" font-family="Times,serif" font-size="14.00" fill="#000000">1</text>
-</g>
-<!-- 2 -->
-<g id="node2" class="node">
-<title>2</title>
-<ellipse fill="none" stroke="#000000" cx="99" cy="-18" rx="27" ry="18"/>
-<text text-anchor="middle" x="99" y="-13.8" font-family="Times,serif" font-size="14.00" fill="#000000">2</text>
-</g>
-</g>
-</svg>
-
+![Simple graph with two isolated vertices](../../Documentation/Assets/Math/Topology/simple-graph-2.svg?raw=true)
 
 ## Usage
 
