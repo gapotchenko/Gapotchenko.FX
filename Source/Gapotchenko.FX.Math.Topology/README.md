@@ -32,7 +32,7 @@ If we could visualize that graph then it would look like this:
 
 ![Simple graph with two isolated vertices](../../Documentation/Assets/Math/Topology/simple-graph-2-0.svg?raw=true)
 
-Now let's add one more vertex `3` and an edge from vertex `1` to vertex `2`:
+Now let's add one more vertex `3` plus an edge from vertex `1` to vertex `2`:
 
 ``` c#
 var g = new Graph<int>
