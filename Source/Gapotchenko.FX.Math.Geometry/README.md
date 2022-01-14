@@ -10,16 +10,17 @@ The module provides primitives and operations for geometry math.
 `StringMetrics` static class provides a variety of metric functions for measuring the distance between two strings of symbols.
 
 The notion of a string is purely abstract.
-So it is not limited by the characters like `System.String`; it can be a string of anything.
+So it is not limited to just characters like `System.String`; it can be a string of anything in form of `IEnumerable<T>`.
 In this way, `Gapotchenko.FX.Math.Geometry` module tries to achieve the right degree of abstraction desirable for a versatile math framework.
 
 ### Edit Distance
 
-Edit distance is a string metric reflecting the minimum number of operations required to transform one string into the other. Different types of edit distance allow different sets of string operations.
+Edit distance is a string metric reflecting the minimum number of operations required to transform one string into the other.
+There are several ways to measure the edit distance.
 
-This table compares edit distances provided by `StringMetrics` class:
+The table below compares edit distance measurement functions provided by `StringMetrics` class:
 
-|                                           |      Insertion     |      Deletion      |    Substitution    |    Transposition   |
+| Metric Function                           |      Insertion     |      Deletion      |    Substitution    |    Transposition   |
 |:------------------------------------------|:------------------:|:------------------:|:------------------:|:------------------:|
 | Levenshtein distance                      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
 | Longest common subsequence (LCS) distance | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
@@ -27,10 +28,6 @@ This table compares edit distances provided by `StringMetrics` class:
 | Damerau–Levenshtein distance              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | Optimal string alignment (OSA) distance   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | Jaro distance                             |                    |                    |                    | :heavy_check_mark: |
-
-Despite optimal string alignment distance and Damerau–Levenshtein distance allow the same sets of operations, the first one computes the number of edit operations needed to make the strings equal under the condition that no substring is edited more than once, whereas the second one presents no such restriction at the cost of complexity.
-
-Although the Jaro distance is often referred to as an edit distance metric, its value does not represent a number of edit operations and varies between 0 and 1 such that 0 is an exact match and 1 equates to no similarities.
 
 ### StringMetrics.LevenshteinDistance
 
@@ -95,6 +92,8 @@ Console.WriteLine("Distance is {0}.", StringMetrics.OsaDistance("ABC", "BAC")); 
 ### StringMetrics.JaroDistance
 
 `StringMetrics.JaroDistance` method allows to calculate the Jaro distance between two strings of symbols.
+
+Although the Jaro distance is often referred to as an edit distance metric, its value does not represent a number of edit operations and varies between 0 and 1 such that 0 is an exact match and 1 equates to no similarities.
 
 Consider the example:
 
