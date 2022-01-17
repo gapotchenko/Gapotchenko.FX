@@ -4,9 +4,8 @@
 
 ### Gapotchenko FX 2021.2
 
-Release date: not released yet.
+Release date: December 31, 2021
 
-- Improved support for .NET 6.0 target framework
 - Introduced `Gapotchenko.FX.Math.Topology` module that provides `Graph<T>` type and accompanying primitives including topological sorting
 - New `FileSystem.PathEquivalenceComparer` property returns the file path string comparer that takes into account path normalization and equivalence rules of the host environment
 - New `AssociativeArray` key/value map primitive which is similar to `Dictionary<TKey, TValue>` but handles the whole space of key values including `null`
@@ -15,8 +14,9 @@ Release date: not released yet.
 - Added `IEnumerable<byte> AsEnumerable()` polyfill for `System.IO.Stream`
 - Added `LongIndexOf` LINQ polyfill
 - Added `TryGetNonEnumeratedCount` LINQ polyfill
+- Improved support for .NET 6.0 target framework
 - Improved `AssemblyAutoLoader` which can now work simultaneously with app domains and assembly load contexts
-- String metric functions now take an optional `maxDistance` parameter that limits computational resources which are required to calculate the distance
+- String metric functions now take an optional `maxDistance` parameter that limits computational resources required to calculate the distance
 
 ### Gapotchenko FX 2021.1
 
