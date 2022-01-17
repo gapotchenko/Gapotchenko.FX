@@ -89,7 +89,7 @@ var g = new Graph<int>
     Edges =
     {
         (7, 5), (7, 6),
-        (6, 4), (6, 4)
+        (6, 3), (6, 4),
         (5, 4), (5, 2),
         (3, 1),
         (2, 1),
@@ -138,11 +138,101 @@ They all work in the same manner and follow the same model:
 
 ### Topological Sorting
 
-TODO
+Topological sort of a graph is a linear ordering of its vertices such that
+for every directed edge `u` -> `v`,
+`u` comes before `v` in the ordering.
+
+The canonical application of topological sorting is in scheduling a sequence of jobs or tasks based on their dependencies.
+The jobs are represented by vertices, and there is an edge from `x` to `y` if job `x` must be completed before job `y` can be started 
+Then, a topological sort gives an order in which to perform the jobs.
+
+Let's take a look at example graph:
+
+![Graph with eight vertices and nine edges](../../Documentation/Assets/Math/Topology/graph-8-9.svg?raw=true)
+
+Let's assume that vertices represent the jobs and edges define their dependencies.
+In this way, job `0` depends on job `1` and thus cannot be started unless job `1` is finished.
+In turn, job `1` cannot be started unless jobs `2` and `3` are finished, and so on.
+In what order should the jobs be executed?
+
+To answer that question, let's use `OrderTopologically` method:
+
+``` c#
+using Gapotchenko.FX.Math.Topology;
+
+var g = new Graph<int>
+{
+    Edges =
+    {
+        (7, 5), (7, 6),
+        (6, 3), (6, 4),
+        (5, 4), (5, 2),
+        (3, 1),
+        (2, 1),
+        (1, 0)
+    }
+};
+
+var ordering = g.OrderTopologically();
+Console.WriteLine(string.Join(", ", ordering));
+```
+
+The result is:
+
+```
+7, 5, 6, 2, 3, 4, 1, 0
+```
 
 ### Stable Topological Sorting
 
-TODO
+Graph is a data structure similar to a set: it does not guarantee the order preservation.
+It means that topological sorting may return different results for otherwise equal graphs.
+
+To overcome that limitation, it may be beneficial to use stable topologocal sorting with subsequent ordering by some other criteria.
+It can be achieved by leveraging the standard `IOrderedEnumerable<T>` semantics of the operation, like so:
+
+``` c#
+g.OrderTopologically().ThenBy(x => x)
+```
+
+### Stable Topological Sorting of a Sequence
+
+Sorting a sequence of elements in topological order is another play on topological sorting idea.
+
+Say we have a sequence of elements `{A, B, C, D, E, F}`. Some elements depend on others:
+
+- A depends on B
+- B depends on D
+
+Objective: sort the sequence so that its elements are ordered according to their dependencies.
+The resulting sequence should have a minimal edit distance to the original one.
+In other words, sequence should be topologically sorted while preserving the original order of elements whenever it is possible.
+
+`Gapotchenko.FX.Math.Topology` provides an extension method for `IEnumerable<T>` that allows to achieve that:
+
+``` c#
+using Gapotchenko.FX.Math.Topology;
+
+string seq = "ABCDEF";
+
+// Dependency function.
+static bool df(char a, char b) =>
+    (a + " depends on " + b) switch
+    {
+        "A depends on B" or
+        "B depends on D" => true,
+        _ => false
+    };
+
+var ordering = seq.OrderTopologicallyBy(x => x, df);
+Console.WriteLine(string.Join(", ", ordering));  // <- prints "D, B, A, C, E, F"
+```
+
+Like its graph sibling, `OrderTopologicallyBy` method allows subseqent sorting by playing well with the standard `IOrderedEnumerable<T>` LINQ semantics:
+
+``` c#
+seq.OrderTopologicallyBy(…).ThenBy(…)
+```
 
 ## Usage
 
