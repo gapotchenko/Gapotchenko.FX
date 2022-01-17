@@ -71,7 +71,7 @@ It allows to end a process according to a specified mode of operation.
 The default mode of operation is `ProcessEndMode.Complete` that follows a sequence presented below:
 
  1. Graceful techniques are tried first:  
-   1.1. `End()` method tries to close a main window of a process  
+   1.1. `End()` method tries to close a main window of the process  
    1.2. If that fails, it tries to send Ctrl+C (SIGTERM) signal
  2. Forceful techniques:  
    2.1. If graceful techniques fail, `End()` method tries to exit the process (suitable for the current process only)  
@@ -160,7 +160,7 @@ As you can see, despite a simple-looking signature, the End(…) method gives en
 ### EndAsync()
 
 The method is similar to `End()` but has an async implementation.
-If was created in order to efficiently handle a lot of processes in bulk.
+It can be used to efficiently handle a lot of processes in bulk.
 
 ## Usage
 
