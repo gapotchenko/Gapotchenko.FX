@@ -183,7 +183,7 @@ The result is:
 7, 5, 6, 2, 3, 4, 1, 0
 ```
 
-### Stable Topological Sorting
+### Stable Topological Sorting of a Graph
 
 Graph is a data structure similar to a set: it does not guarantee the order preservation.
 It means that topological sorting may return different results for otherwise equal graphs.
