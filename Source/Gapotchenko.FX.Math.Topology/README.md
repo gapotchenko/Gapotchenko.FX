@@ -143,7 +143,7 @@ for every directed edge `u` -> `v`,
 `u` comes before `v` in the ordering.
 
 The canonical application of topological sorting is in scheduling a sequence of jobs or tasks based on their dependencies.
-The jobs are represented by vertices, and there is an edge from `x` to `y` if job `x` must be completed before job `y` can be started 
+The jobs are represented by vertices, and there is an edge from `x` to `y` if job `x` must be completed before job `y` can be started.
 Then, a topological sort gives an order in which to perform the jobs.
 
 Let's take a look at example graph:
