@@ -183,6 +183,9 @@ The result is:
 7, 5, 6, 2, 3, 4, 1, 0
 ```
 
+The method works on directed acyclic graphs.
+If a graph is cyclic, then `CircularDependencyException` is raised.
+
 ### Stable Topological Sorting of a Graph
 
 Graph is a data structure similar to a set: it does not guarantee the preservation of order in which the elements are stored.
