@@ -1,5 +1,13 @@
 # What's New in Gapotchenko.FX
 
+## 2022
+
+### Gapotchenko FX 2022.1
+
+Release date: not released yet.
+
+- TODO
+
 ## 2021
 
 ### Gapotchenko FX 2021.2
