@@ -139,7 +139,7 @@ They all work in the same manner and follow the same model:
 ### Topological Sorting
 
 Topological sort of a graph is a linear ordering of its vertices such that
-for every directed edge `u` -> `v`,
+for every directed edge `u` → `v`,
 `u` comes before `v` in the ordering.
 
 The canonical application of topological sorting is in scheduling a sequence of jobs or tasks based on their dependencies.
