@@ -10,10 +10,10 @@ using System.Linq;
 namespace Gapotchenko.FX.Math.Topology
 {
     /// <summary>
-    /// Provides extension methods for <see cref="IEnumerable{T}"/>.
+    /// Provides topological sort extension methods.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class EnumerableExtensions
+    public static class TopologicalSortExtensions
     {
         /// <summary>
         /// <para>

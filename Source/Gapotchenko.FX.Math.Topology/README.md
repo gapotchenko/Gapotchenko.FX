@@ -90,7 +90,7 @@ var g = new Graph<int>
     {
         (7, 5), (7, 6),
         (6, 3), (6, 4),
-        (5, 4), (5, 2),
+        (5, 2), (5, 4),
         (3, 1),
         (2, 1),
         (1, 0)
@@ -166,7 +166,7 @@ var g = new Graph<int>
     {
         (7, 5), (7, 6),
         (6, 3), (6, 4),
-        (5, 4), (5, 2),
+        (5, 2), (5, 4),
         (3, 1),
         (2, 1),
         (1, 0)
@@ -192,7 +192,7 @@ To overcome that limitation, it may be beneficial to use stable topologocal sort
 It can be achieved by leveraging the standard `IOrderedEnumerable<T>` LINQ semantics of the operation, like so:
 
 ``` c#
-g.OrderTopologically().ThenBy(x => x)
+g.OrderTopologically().ThenBy(…)
 ```
 
 ### Stable Topological Sorting of a Sequence
