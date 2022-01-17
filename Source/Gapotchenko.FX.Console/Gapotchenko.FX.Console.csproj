@@ -5,14 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
-    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
-    <ProjectReference Include="..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Console.VirtualTerminal" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Console.ConsoleTraits" />
   </ItemGroup>
 
   <ItemGroup>
-    <CommonlyUsedPart Include="Gapotchenko.FX.Console.VirtualTerminal" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Console.ConsoleTraits" />
+    <PackageTag Include="console" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
   </ItemGroup>
 
   <Import Project="$(MasteringDir)\OOB\System.Memory.targets" />

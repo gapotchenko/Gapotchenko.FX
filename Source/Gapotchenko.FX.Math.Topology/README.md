@@ -150,7 +150,7 @@ Let's take a look at example graph:
 
 ![Graph with eight vertices and nine edges](../../Documentation/Assets/Math/Topology/graph-8-9.svg?raw=true)
 
-Let's assume that vertices represent the jobs and edges define their dependencies.
+Let's assume that vertices represent the jobs, and edges define their dependencies.
 In this way, job `0` depends on job `1` and thus cannot be started unless job `1` is finished.
 In turn, job `1` cannot be started unless jobs `2` and `3` are finished, and so on.
 In what order should the jobs be executed?
