@@ -183,7 +183,7 @@ The result is:
 7, 5, 6, 2, 3, 4, 1, 0
 ```
 
-The method works on directed acyclic graphs.
+`OrderTopologically` method works on directed acyclic graphs only.
 If a graph is cyclic, then `CircularDependencyException` is raised.
 
 ### Stable Topological Sorting of a Graph
