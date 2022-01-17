@@ -130,7 +130,10 @@ namespace Gapotchenko.FX.IO
             {
                 int b = stream.ReadByte();
                 if (b == -1)
+                {
+                    // End of file.
                     break;
+                }
 
                 yield return (byte)b;
             }

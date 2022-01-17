@@ -364,17 +364,8 @@ namespace Gapotchenko.FX.IO
         public static IEnumerable<byte> EnumerateFileBytes(string path)
         {
             using var stream = File.OpenRead(path);
-
-            for (; ; )
-            {
-                int b = stream.ReadByte();
-                if (b == -1)
-                {
-                    // EOF
-                    break;
-                }
-                yield return (byte)b;
-            }
+            foreach (var i in stream.AsEnumerable())
+                yield return i;
         }
 
         /// <summary>
