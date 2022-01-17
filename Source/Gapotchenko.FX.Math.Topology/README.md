@@ -185,11 +185,11 @@ The result is:
 
 ### Stable Topological Sorting of a Graph
 
-Graph is a data structure similar to a set: it does not guarantee the order preservation.
+Graph is a data structure similar to a set: it does not guarantee the preservation of order in which the elements are stored.
 It means that topological sorting may return different results for otherwise equal graphs.
 
 To overcome that limitation, it may be beneficial to use stable topologocal sorting with subsequent ordering by some other criteria.
-It can be achieved by leveraging the standard `IOrderedEnumerable<T>` semantics of the operation, like so:
+It can be achieved by leveraging the standard `IOrderedEnumerable<T>` LINQ semantics of the operation, like so:
 
 ``` c#
 g.OrderTopologically().ThenBy(x => x)
@@ -228,7 +228,7 @@ var ordering = seq.OrderTopologicallyBy(x => x, df);
 Console.WriteLine(string.Join(", ", ordering));  // <- prints "D, B, A, C, E, F"
 ```
 
-Like its graph sibling, `OrderTopologicallyBy` method allows subseqent sorting by playing well with the standard `IOrderedEnumerable<T>` LINQ semantics:
+Like its graph sibling, `OrderTopologicallyBy` method allows subseqent sorting by playing well with the standard LINQ semantics:
 
 ``` c#
 seq.OrderTopologicallyBy(…).ThenBy(…)
