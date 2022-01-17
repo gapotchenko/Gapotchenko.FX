@@ -228,7 +228,10 @@ var ordering = seq.OrderTopologicallyBy(x => x, df);
 Console.WriteLine(string.Join(", ", ordering));  // <- prints "D, B, A, C, E, F"
 ```
 
-Like its graph sibling, `OrderTopologicallyBy` method allows subseqent sorting by playing well with the standard LINQ semantics:
+Unlike its graph sibling, `OrderTopologicallyBy` method tolerates and ignores circular dependencies.
+They are resolved according to the original order of elements in the sequence.
+
+`OrderTopologicallyBy` method allows subseqent sorting by following the standard LINQ convention:
 
 ``` c#
 seq.OrderTopologicallyBy(…).ThenBy(…)
