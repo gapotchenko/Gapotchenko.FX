@@ -11,6 +11,15 @@ Other than that, the module provides polyfills for missing functionality in .NET
 
 `ConcurrentHashSet<T>` provided by `Gapotchenko.FX.Collections` is a thread-safe implementation of `HashSet<T>`.
 
+## AssociativeArray&lt;TKey, TValue&gt;
+
+`AssociativeArray<TKey, TValue>` provided by `Gapotchenko.FX.Collections` is a drop-in replacement for `Dictionary<TKey, TValue>` that can handle `null` keys.
+
+In contrast, `Dictionary<TKey, TValue>` cannot work with `null` keys and throws an exception when `null` key is encountered.
+Due to such an artificial narrowing of the key space, it becomes hardly possible to solve some kinds of tasks with `Dictionary<TKey, TValue>`.
+
+`AssociativeArray<TKey, TValue>` resolves that by supporting a full space of keys without exceptions.
+
 ## AddRange&lt;T&gt;(IEnumerable&lt;T&gt;) for Collections
 
 `AddRange` is a highly demanded operation that allows to add a sequence of elements to the end of a collection.
@@ -51,7 +60,12 @@ Other benefits include automatic type inference and semantic locality.
 
 ## Polyfills
 
-### KeyValuePair Polyfill
+### `PriorityQueue<TElement, TPriority>` polyfill
+
+`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` is an implementation of the prioritized queue available in .NET 6+.
+The polyfill makes that class available to all supported .NET versions.
+
+### `KeyValuePair` Polyfill
 
 .NET provides a versatile `KeyValuePair<TKey, TValue>` struct and suggests a default way for its instantiation:
 
