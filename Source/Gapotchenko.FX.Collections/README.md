@@ -15,7 +15,7 @@ Other than that, the module provides polyfills for missing functionality in .NET
 
 `AssociativeArray<TKey, TValue>` provided by `Gapotchenko.FX.Collections` is a drop-in replacement for `Dictionary<TKey, TValue>` that can handle `null` keys.
 
-In contrast, stock `Dictionary<TKey, TValue>` cannot work with `null` keys and throws an exception whenever `null` key is encountered.
+In contrast, stock `Dictionary<TKey, TValue>` cannot work with `null` keys and throws an exception whenever a `null` key is encountered.
 Due to such an artificial narrowing of the key space, it becomes hardly possible to solve some kinds of tasks with `Dictionary<TKey, TValue>`.
 
 `AssociativeArray<TKey, TValue>` resolves that by supporting a full space of keys without exceptions.
