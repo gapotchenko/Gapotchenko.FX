@@ -10,22 +10,32 @@ namespace Gapotchenko.FX.Math.Topology
         /// <inheritdoc/>
         public bool IsVertexIsolated(TVertex vertex)
         {
+            static bool IsAssociatedKeyVertex(AssociativeArray<TVertex, AdjacencyRow?> adjList, TVertex vertex) =>
+                adjList.TryGetValue(vertex, out var adjRow) &&
+                adjRow?.Count > 0;
+
             var adjList = m_AdjacencyList;
 
-            if (adjList.TryGetValue(vertex, out var adjRow) &&
-                adjRow?.Count > 0)
-            {
+            if (IsAssociatedKeyVertex(adjList, vertex))
                 return false;
-            }
 
-            foreach (var i in adjList)
+            var revAdjList = m_ReverseAdjacencyList;
+            if (revAdjList != null)
             {
-                adjRow = i.Value;
-                if (adjRow == null)
-                    continue;
-
-                if (adjRow.Contains(vertex))
+                if (IsAssociatedKeyVertex(revAdjList, vertex))
                     return false;
+            }
+            else
+            {
+                foreach (var i in adjList)
+                {
+                    var adjRow = i.Value;
+                    if (adjRow == null)
+                        continue;
+
+                    if (adjRow.Contains(vertex))
+                        return false;
+                }
             }
 
             return true;

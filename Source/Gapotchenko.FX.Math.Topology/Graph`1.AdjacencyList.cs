@@ -40,10 +40,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a reverse adjacency list for the current graph.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IReadOnlyDictionary<TVertex, AdjacencyRow?> ReverseAdjacencyList => ReverseAdjacencyListCore;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        AssociativeArray<TVertex, AdjacencyRow?> ReverseAdjacencyListCore => m_ReverseAdjacencyList ??= CreateReverseAdjacencyList();
+        protected IReadOnlyDictionary<TVertex, AdjacencyRow?> ReverseAdjacencyList => m_ReverseAdjacencyList ??= CreateReverseAdjacencyList();
 
         AssociativeArray<TVertex, AdjacencyRow?> CreateReverseAdjacencyList()
         {

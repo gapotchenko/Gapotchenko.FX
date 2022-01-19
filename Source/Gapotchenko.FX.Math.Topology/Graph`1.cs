@@ -302,8 +302,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <inheritdoc/>
         public IEnumerable<GraphEdge<TVertex>> EdgesIncidentWith(TVertex vertex) =>
             DistinctSelfLoop(
-                IncomingEdgesIncidentWith(vertex)
-                .Concat(OutgoingEdgesIncidentWith(vertex)),
+                IncomingEdgesIncidentWith(vertex).Concat(OutgoingEdgesIncidentWith(vertex)),
                 VertexComparer);
 
         static IEnumerable<GraphEdge<TVertex>> DistinctSelfLoop(
