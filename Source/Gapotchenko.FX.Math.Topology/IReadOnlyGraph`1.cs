@@ -27,6 +27,16 @@ namespace Gapotchenko.FX.Math.Topology
         IReadOnlySet<GraphEdge<TVertex>> Edges { get; }
 
         /// <summary>
+        /// Gets the source vertices adjacent to a specified vertex.
+        /// </summary>
+        /// <remarks>
+        /// Adjacent source vertices are end-vertices of the incoming edges incident with the specified vertex.
+        /// </remarks>
+        /// <param name="vertex">The vertex to find the adjacent source vertices for.</param>
+        /// <returns>Sequence of source vertices adjacent to the specified <paramref name="vertex"/>.</returns>
+        IEnumerable<TVertex> SourceVerticesAdjacentTo(TVertex vertex);
+
+        /// <summary>
         /// Gets the destination vertices adjacent to a specified vertex.
         /// </summary>
         /// <remarks>
@@ -37,11 +47,35 @@ namespace Gapotchenko.FX.Math.Topology
         IEnumerable<TVertex> DestinationVerticesAdjacentTo(TVertex vertex);
 
         /// <summary>
+        /// Gets vertices adjacent to a specified vertex.
+        /// </summary>
+        /// <remarks>
+        /// Adjacent vertices are end-vertices of the edges incident with the specified vertex.
+        /// </remarks>
+        /// <param name="vertex">The vertex to find the adjacent vertices for.</param>
+        /// <returns>Sequence of vertices adjacent to the specified <paramref name="vertex"/>.</returns>
+        IEnumerable<TVertex> VerticesAdjacentTo(TVertex vertex);
+
+        /// <summary>
+        /// Gets incoming edges incident with a specified vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex to find the incoming incident edges for.</param>
+        /// <returns>Sequence of incoming edges incident with the specified <paramref name="vertex"/>.</returns>
+        IEnumerable<GraphEdge<TVertex>> IncomingEdgesIncidentWith(TVertex vertex);
+
+        /// <summary>
         /// Gets outgoing edges incident with a specified vertex.
         /// </summary>
         /// <param name="vertex">The vertex to find the outgoing incident edges for.</param>
         /// <returns>Sequence of outgoing edges incident with the specified <paramref name="vertex"/>.</returns>
         IEnumerable<GraphEdge<TVertex>> OutgoingEdgesIncidentWith(TVertex vertex);
+
+        /// <summary>
+        /// Gets incoming and outgoing edges incident with a specified vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex to find the incident edges for.</param>
+        /// <returns>Sequence of edges incident with the specified <paramref name="vertex"/>.</returns>
+        IEnumerable<GraphEdge<TVertex>> EdgesIncidentWith(TVertex vertex);
 
         /// <summary>
         /// Determines whether the current graph contains a cycle.

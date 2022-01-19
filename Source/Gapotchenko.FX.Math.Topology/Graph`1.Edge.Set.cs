@@ -1,4 +1,5 @@
-﻿using Gapotchenko.FX.Collections.Generic.Kit;
+﻿using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Collections.Generic.Kit;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -32,55 +33,71 @@ namespace Gapotchenko.FX.Math.Topology
             /// <inheritdoc/>
             public override bool Add(GraphEdge<TVertex> edge)
             {
-                var from = edge.From;
+                static bool AddToAdjacencyList(Graph<TVertex> graph, AssociativeArray<TVertex, AdjacencyRow?> adjacencyList, TVertex from, TVertex to)
+                {
+                    if (!adjacencyList.TryGetValue(from, out var adjacencyRow))
+                    {
+                        adjacencyRow = graph.NewAdjacencyRow();
+                        adjacencyList.Add(from, adjacencyRow);
+                    }
+                    else if (adjacencyRow == null)
+                    {
+                        adjacencyRow = graph.NewAdjacencyRow();
+                        adjacencyList[from] = adjacencyRow;
+                    }
 
-                var adjList = m_Graph.m_AdjacencyList;
-
-                if (!adjList.TryGetValue(from, out var adjRow))
-                {
-                    adjRow = m_Graph.NewAdjacencyRow();
-                    adjList.Add(from, adjRow);
-                }
-                else if (adjRow == null)
-                {
-                    adjRow = m_Graph.NewAdjacencyRow();
-                    adjList[from] = adjRow;
+                    return adjacencyRow.Add(to);
                 }
 
-                if (adjRow.Add(edge.To))
-                {
-                    ++m_Graph.m_CachedSize;
-                    m_Graph.m_CachedOrder = null;
-                    m_Graph.InvalidateCachedRelations();
-                    m_Graph.IncrementVersion();
-                    return true;
-                }
-                else
-                {
+                if (!AddToAdjacencyList(m_Graph, m_Graph.m_AdjacencyList, edge.From, edge.To))
                     return false;
+
+                var reverseAdjacencyList = m_Graph.m_ReverseAdjacencyList;
+                if (reverseAdjacencyList != null)
+                {
+                    bool hit = AddToAdjacencyList(m_Graph, reverseAdjacencyList, edge.To, edge.From);
+                    Debug.Assert(hit);
                 }
+
+                ++m_Graph.m_CachedSize;
+                m_Graph.m_CachedOrder = null;
+                m_Graph.InvalidateCachedRelations();
+                m_Graph.IncrementVersion();
+
+                return true;
             }
 
             /// <inheritdoc/>
             public override bool Remove(GraphEdge<TVertex> item)
             {
-                var adjList = m_Graph.m_AdjacencyList;
+                static bool RemoveFromAdjacencyList(AssociativeArray<TVertex, AdjacencyRow?> adjacencyList, TVertex from, TVertex to)
+                {
+                    if (!adjacencyList.TryGetValue(from, out var adjacencyRow))
+                        return false;
 
-                if (!adjList.TryGetValue(item.From, out var adjRow))
+                    if (adjacencyRow == null)
+                        return false;
+
+                    // Remove the adjacent vertex.
+                    if (!adjacencyRow.Remove(to))
+                        return false;
+
+                    // Preserve the vertex in vertices collection.
+                    if (!adjacencyList.ContainsKey(to))
+                        adjacencyList.Add(to, null);
+
+                    return true;
+                }
+
+                if (!RemoveFromAdjacencyList(m_Graph.m_AdjacencyList, item.From, item.To))
                     return false;
 
-                if (adjRow == null)
-                    return false;
-
-                var v = item.To;
-
-                // Remove the adjacent vertex.
-                if (!adjRow.Remove(v))
-                    return false;
-
-                // Preserve the vertex in vertices collection.
-                if (!adjList.ContainsKey(v))
-                    adjList.Add(v, null);
+                var reverseAdjacencyList = m_Graph.m_ReverseAdjacencyList;
+                if (reverseAdjacencyList != null)
+                {
+                    bool hit = RemoveFromAdjacencyList(reverseAdjacencyList, item.To, item.From);
+                    Debug.Assert(hit);
+                }
 
                 --m_Graph.m_CachedSize;
                 m_Graph.InvalidateCachedRelations();
@@ -123,6 +140,7 @@ namespace Gapotchenko.FX.Math.Topology
                 }
 
                 m_Graph.m_CachedSize = 0;
+                m_Graph.m_ReverseAdjacencyList = null;
                 m_Graph.InvalidateCachedRelations();
                 m_Graph.IncrementVersion();
             }

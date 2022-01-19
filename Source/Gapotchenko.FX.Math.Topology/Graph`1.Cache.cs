@@ -36,6 +36,7 @@ namespace Gapotchenko.FX.Math.Topology
         {
             m_CachedOrder = null;
             m_CachedSize = null;
+            m_ReverseAdjacencyList = null;
             InvalidateCachedRelations();
 
             IncrementVersion();

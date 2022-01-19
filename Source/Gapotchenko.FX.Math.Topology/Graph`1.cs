@@ -259,11 +259,20 @@ namespace Gapotchenko.FX.Math.Topology
             m_AdjacencyList.Clear();
             m_CachedOrder = 0;
             m_CachedSize = 0;
+            m_ReverseAdjacencyList = null;
             InvalidateCachedRelations();
 
 #if !TFF_DICTIONARY_ENUMERATION_REMOVE_ALLOWED
             IncrementVersion();
 #endif
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<TVertex> SourceVerticesAdjacentTo(TVertex vertex)
+        {
+            var mg = new ModificationGuard(this);
+            ReverseAdjacencyList.TryGetValue(vertex, out var adjRow);
+            return mg.Protect(adjRow) ?? Enumerable.Empty<TVertex>();
         }
 
         /// <inheritdoc/>
@@ -275,9 +284,46 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <inheritdoc/>
+        public IEnumerable<TVertex> VerticesAdjacentTo(TVertex vertex) =>
+            SourceVerticesAdjacentTo(vertex)
+            .Concat(DestinationVerticesAdjacentTo(vertex))
+            .Distinct(VertexComparer);
+
+        /// <inheritdoc/>
+        public IEnumerable<GraphEdge<TVertex>> IncomingEdgesIncidentWith(TVertex vertex) =>
+            SourceVerticesAdjacentTo(vertex)
+            .Select(x => GraphEdge.Create(x, vertex));
+
+        /// <inheritdoc/>
         public IEnumerable<GraphEdge<TVertex>> OutgoingEdgesIncidentWith(TVertex vertex) =>
             DestinationVerticesAdjacentTo(vertex)
             .Select(x => GraphEdge.Create(vertex, x));
+
+        /// <inheritdoc/>
+        public IEnumerable<GraphEdge<TVertex>> EdgesIncidentWith(TVertex vertex) =>
+            DistinctSelfLoop(
+                IncomingEdgesIncidentWith(vertex)
+                .Concat(OutgoingEdgesIncidentWith(vertex)),
+                VertexComparer);
+
+        static IEnumerable<GraphEdge<TVertex>> DistinctSelfLoop(
+            IEnumerable<GraphEdge<TVertex>> source,
+            IEqualityComparer<TVertex> vertexComparer)
+        {
+            bool hasSelfLoop = false;
+
+            foreach (var i in source)
+            {
+                if (vertexComparer.Equals(i.From, i.To))
+                {
+                    if (hasSelfLoop)
+                        continue;
+                    hasSelfLoop = true;
+                }
+
+                yield return i;
+            }
+        }
 
         /// <summary>
         /// Creates a new graph instance inheriting parent class settings such as comparer.

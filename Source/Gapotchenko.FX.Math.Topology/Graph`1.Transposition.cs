@@ -8,11 +8,18 @@ namespace Gapotchenko.FX.Math.Topology
         /// <inheritdoc/>
         public void Transpose()
         {
-            var edges = Edges.ToList();
-            var vertices = Vertices.ToList();
+            if (HasReverseAdjacencyList)
+            {
+                MathEx.Swap(ref m_AdjacencyList, ref m_ReverseAdjacencyList);
+            }
+            else
+            {
+                var edges = Edges.ToList();
+                var vertices = Vertices.ToList();
 
-            Clear();
-            TransposeCore(this, edges, vertices);
+                Clear();
+                TransposeCore(this, edges, vertices);
+            }
         }
 
         /// <summary>
@@ -28,11 +35,8 @@ namespace Gapotchenko.FX.Math.Topology
 
         static void TransposeCore(Graph<TVertex> graph, IEnumerable<GraphEdge<TVertex>> edges, IEnumerable<TVertex> vertices)
         {
-            foreach (var edge in edges)
-                graph.Edges.Add(edge.Reverse());
-
-            foreach (var vertex in vertices)
-                graph.Vertices.Add(vertex);
+            graph.Edges.UnionWith(edges.Select(x => x.Reverse()));
+            graph.Vertices.UnionWith(vertices);
         }
 
         IGraph<TVertex> IGraph<TVertex>.GetTransposition() => GetTransposition();
