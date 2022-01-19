@@ -157,6 +157,12 @@ namespace Gapotchenko.FX.Math.Topology
         IEqualityComparer<TVertex> VertexComparer => m_AdjacencyList.Comparer;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEqualityComparer<GraphEdge<TVertex>>? m_EdgeComparer;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEqualityComparer<GraphEdge<TVertex>> EdgeComparer => m_EdgeComparer ??= GraphEdge.CreateComparer(VertexComparer, IsDirected);
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         VertexSet? m_CachedVertices;
 
         /// <summary>
@@ -325,9 +331,13 @@ namespace Gapotchenko.FX.Math.Topology
         }
 
         /// <summary>
-        /// Creates a new graph instance inheriting parent class settings such as comparer.
+        /// Creates a new graph instance inheriting parent class settings such as comparer and edge direction awareness.
         /// </summary>
         /// <returns>The new graph instance.</returns>
-        protected Graph<TVertex> NewGraph() => new(VertexComparer);
+        protected Graph<TVertex> NewGraph() =>
+            new(VertexComparer)
+            {
+                IsDirected = IsDirected
+            };
     }
 }

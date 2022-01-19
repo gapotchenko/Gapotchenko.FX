@@ -21,11 +21,8 @@ namespace Gapotchenko.FX.Math.Topology
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             readonly Graph<TVertex> m_Graph;
 
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            IEqualityComparer<GraphEdge<TVertex>>? m_Comparer;
-
             /// <inheritdoc/>
-            public override IEqualityComparer<GraphEdge<TVertex>> Comparer => m_Comparer ??= GraphEdge.CreateComparer(m_Graph.VertexComparer);
+            public override IEqualityComparer<GraphEdge<TVertex>> Comparer => m_Graph.EdgeComparer;
 
             /// <inheritdoc/>
             public override int Count => m_Graph.m_CachedSize ??= m_Graph.m_AdjacencyList.Select(x => x.Value?.Count ?? 0).Sum();
@@ -33,6 +30,9 @@ namespace Gapotchenko.FX.Math.Topology
             /// <inheritdoc/>
             public override bool Add(GraphEdge<TVertex> edge)
             {
+                if (!m_Graph.IsDirected && Contains(edge))
+                    return false;
+
                 static bool AddToAdjacencyList(Graph<TVertex> graph, AssociativeArray<TVertex, AdjacencyRow?> adjacencyList, TVertex from, TVertex to)
                 {
                     if (!adjacencyList.TryGetValue(from, out var adjacencyRow))
@@ -89,14 +89,26 @@ namespace Gapotchenko.FX.Math.Topology
                     return true;
                 }
 
-                if (!RemoveFromAdjacencyList(m_Graph.m_AdjacencyList, item.From, item.To))
-                    return false;
-
-                var reverseAdjacencyList = m_Graph.m_ReverseAdjacencyList;
-                if (reverseAdjacencyList != null)
+                if (m_Graph.IsDirected)
                 {
-                    bool hit = RemoveFromAdjacencyList(reverseAdjacencyList, item.To, item.From);
-                    Debug.Assert(hit);
+                    if (!RemoveFromAdjacencyList(m_Graph.m_AdjacencyList, item.From, item.To))
+                        return false;
+
+                    var reverseAdjacencyList = m_Graph.m_ReverseAdjacencyList;
+                    if (reverseAdjacencyList != null)
+                    {
+                        bool hit = RemoveFromAdjacencyList(reverseAdjacencyList, item.To, item.From);
+                        Debug.Assert(hit);
+                    }
+                }
+                else
+                {
+                    var adjacencyList = m_Graph.m_AdjacencyList;
+                    bool hit =
+                        RemoveFromAdjacencyList(adjacencyList, item.From, item.To) ||
+                        RemoveFromAdjacencyList(adjacencyList, item.To, item.From);
+                    if (!hit)
+                        return false;
                 }
 
                 --m_Graph.m_CachedSize;
@@ -146,10 +158,18 @@ namespace Gapotchenko.FX.Math.Topology
             }
 
             /// <inheritdoc/>
-            public override bool Contains(GraphEdge<TVertex> edge) =>
-                m_Graph.m_AdjacencyList.TryGetValue(edge.From, out var adjRow) &&
-                adjRow != null &&
-                adjRow.Contains(edge.To);
+            public override bool Contains(GraphEdge<TVertex> edge)
+            {
+                bool ContainsCore(TVertex from, TVertex to) =>
+                    m_Graph.m_AdjacencyList.TryGetValue(from, out var adjRow) &&
+                    adjRow != null &&
+                    adjRow.Contains(to);
+
+                if (m_Graph.IsDirected)
+                    return ContainsCore(edge.From, edge.To);
+                else
+                    return ContainsCore(edge.From, edge.To) || ContainsCore(edge.To, edge.From);
+            }
 
             /// <inheritdoc/>
             public override IEnumerator<GraphEdge<TVertex>> GetEnumerator()

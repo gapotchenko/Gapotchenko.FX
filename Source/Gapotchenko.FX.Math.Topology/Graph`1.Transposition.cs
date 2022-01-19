@@ -8,6 +8,9 @@ namespace Gapotchenko.FX.Math.Topology
         /// <inheritdoc/>
         public void Transpose()
         {
+            if (!IsDirected)
+                return;
+
             if (HasReverseAdjacencyList)
             {
                 MathEx.Swap(ref m_AdjacencyList, ref m_ReverseAdjacencyList);
@@ -29,7 +32,8 @@ namespace Gapotchenko.FX.Math.Topology
         public Graph<TVertex> GetTransposition()
         {
             var graph = NewGraph();
-            TransposeCore(graph, Edges, Vertices);
+            if (IsDirected)
+                TransposeCore(graph, Edges, Vertices);
             return graph;
         }
 

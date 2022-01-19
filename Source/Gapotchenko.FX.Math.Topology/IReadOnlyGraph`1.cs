@@ -78,6 +78,11 @@ namespace Gapotchenko.FX.Math.Topology
         IEnumerable<GraphEdge<TVertex>> EdgesIncidentWith(TVertex vertex);
 
         /// <summary>
+        /// Gets a value indicating whether the current graph is directed.
+        /// </summary>
+        bool IsDirected { get; }
+
+        /// <summary>
         /// Determines whether the current graph contains a cycle.
         /// </summary>
         bool IsCyclic { get; }

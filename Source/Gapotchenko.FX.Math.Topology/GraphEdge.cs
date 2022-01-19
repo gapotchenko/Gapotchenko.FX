@@ -16,14 +16,20 @@ namespace Gapotchenko.FX.Math.Topology
         public static GraphEdge<TVertex> Create<TVertex>(TVertex from, TVertex to) => new(from, to);
 
         /// <summary>
-        /// Creates graph edge equality comparer with specified vertex comparer.
+        /// Creates graph edge equality comparer with specified vertex comparer and direction awareness.
         /// </summary>
         /// <param name="vertexComparer">
         /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the edge,
         /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
         /// </param>
+        /// <param name="directed">
+        /// The direction awareness.
+        /// Indicates whether the equality comparer is for directed edges.
+        /// </param>
         /// <returns>A new instance of graph edge equality comparer.</returns>
-        internal static IEqualityComparer<GraphEdge<TVertex>> CreateComparer<TVertex>(IEqualityComparer<TVertex> vertexComparer) =>
-            new GraphEdgeEqualityComparer<TVertex>(vertexComparer);
+        public static IEqualityComparer<GraphEdge<TVertex>> CreateComparer<TVertex>(IEqualityComparer<TVertex> vertexComparer, bool directed) =>
+            directed ?
+                new GraphEdgeEqualityComparer<TVertex>.Directed(vertexComparer) :
+                new GraphEdgeEqualityComparer<TVertex>.Undirected(vertexComparer);
     }
 }

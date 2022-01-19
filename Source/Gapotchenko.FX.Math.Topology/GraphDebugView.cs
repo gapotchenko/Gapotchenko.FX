@@ -13,6 +13,8 @@
 
         public object Edges => m_Graph.Edges;
 
+        public bool IsDirected => m_Graph.IsDirected;
+
         public object AdjacencyList => m_Graph.AdjacencyList;
     }
 }

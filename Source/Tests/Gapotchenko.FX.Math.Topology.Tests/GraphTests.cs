@@ -107,6 +107,21 @@ namespace Gapotchenko.FX.Math.Topology.Tests
         }
 
         [TestMethod]
+        public void Graph_Edges_Reversibility()
+        {
+            var g = new Graph<int>();
+
+            Assert.IsTrue(g.Edges.Add(1, 2));
+            Assert.AreEqual(1, g.Edges.Count);
+
+            Assert.IsTrue(g.Edges.Contains(1, 2));
+            Assert.IsFalse(g.Edges.Contains(2, 1));
+
+            Assert.IsTrue(g.Edges.Add(2, 1));
+            Assert.AreEqual(2, g.Edges.Count);
+        }
+
+        [TestMethod]
         public void Graph_Edges_Remove()
         {
             var g = new Graph<int>

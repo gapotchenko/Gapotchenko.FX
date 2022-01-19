@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -31,6 +32,7 @@ namespace Gapotchenko.FX.Math.Topology
         /// <summary>
         /// Gets a value indicating whether a reverse adjacency list for the current graph is created.
         /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [MemberNotNull(nameof(m_ReverseAdjacencyList))]
 #pragma warning disable CS8774 // Member must have a non-null value when exiting.
         protected bool HasReverseAdjacencyList => m_ReverseAdjacencyList != null;
@@ -40,7 +42,16 @@ namespace Gapotchenko.FX.Math.Topology
         /// Gets a reverse adjacency list for the current graph.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IReadOnlyDictionary<TVertex, AdjacencyRow?> ReverseAdjacencyList => m_ReverseAdjacencyList ??= CreateReverseAdjacencyList();
+        protected IReadOnlyDictionary<TVertex, AdjacencyRow?> ReverseAdjacencyList
+        {
+            get
+            {
+                if (!IsDirected)
+                    throw new InvalidOperationException("Undirected graph cannot have a reverse adjacency list.");
+
+                return m_ReverseAdjacencyList ??= CreateReverseAdjacencyList();
+            }
+        }
 
         AssociativeArray<TVertex, AdjacencyRow?> CreateReverseAdjacencyList()
         {
