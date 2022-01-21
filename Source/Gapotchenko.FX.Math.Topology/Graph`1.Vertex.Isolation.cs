@@ -43,19 +43,13 @@ namespace Gapotchenko.FX.Math.Topology
                     if (adjRow?.Count > 0)
                     {
                         foreach (var u in adjRow)
-                        {
-                            if (!map.ContainsKey(u))
-                                map.Add(u, true);
-                            else
-                                map[u] = false;
-                        }
-
+                            map[u] = false;
                         map[v] = false;
-                        continue;
                     }
-
-                    if (!map.ContainsKey(v))
+                    else if (!map.ContainsKey(v))
+                    {
                         map.Add(v, true);
+                    }
                 }
 
                 return map.Where(x => x.Value).Select(x => x.Key);
