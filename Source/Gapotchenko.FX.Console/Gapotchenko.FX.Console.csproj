@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <CommonlyUsedPart Include="Gapotchenko.FX.Console.VirtualTerminal" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Console.ConsoleTraits" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Console.VirtualTerminal" />
   </ItemGroup>
 
   <ItemGroup>
