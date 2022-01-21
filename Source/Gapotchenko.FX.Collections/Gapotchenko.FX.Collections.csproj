@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Concurrent.ConcurrentHashSet" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Generic.AssociativeArray" />
   </ItemGroup>
 
   <ItemGroup>

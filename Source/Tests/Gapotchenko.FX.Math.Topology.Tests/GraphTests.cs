@@ -1,4 +1,5 @@
-﻿using Gapotchenko.FX.Math.Combinatorics;
+﻿using Gapotchenko.FX.Linq;
+using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Math.Topology.Tests.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -255,6 +256,38 @@ namespace Gapotchenko.FX.Math.Topology.Tests
             Assert.IsTrue(g.IsVertexIsolated(5));
 
             Assert.IsTrue(g.IsVertexIsolated(10));
+
+            /***************/
+
+            g = new Graph<int>
+            {
+                Edges = { (1, 2), (2, 3) }
+            };
+
+            Assert.IsFalse(g.IsVertexIsolated(1));
+            Assert.IsFalse(g.IsVertexIsolated(2));
+            Assert.IsFalse(g.IsVertexIsolated(3));
+        }
+
+        [TestMethod]
+        public void Graph_IsolatedVertices()
+        {
+            IReadOnlyGraph<int> g = new Graph<int>
+            {
+                Vertices = { 5 },
+                Edges = { (1, 2), (2, 3), (4, 4) }
+            };
+
+            Assert.IsTrue(g.IsolatedVertices.ToHashSet().SetEquals(new[] { 5 }));
+
+            /***************/
+
+            g = new Graph<int>
+            {
+                Edges = { (1, 2), (2, 3) }
+            };
+
+            Assert.AreEqual(0, g.IsolatedVertices.Count());
         }
 
         [TestMethod]
