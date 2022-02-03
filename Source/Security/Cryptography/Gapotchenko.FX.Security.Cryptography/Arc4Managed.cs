@@ -160,7 +160,6 @@ namespace Gapotchenko.FX.Security.Cryptography
                 throw new ArgumentNullException(nameof(outputBuffer));
             if (outputOffset < 0)
                 throw new ArgumentOutOfRangeException(nameof(outputOffset), "< 0");
-
             if (outputOffset > outputBuffer.Length - inputCount)
                 throw new ArgumentException(null, nameof(outputBuffer));
 
@@ -170,15 +169,17 @@ namespace Gapotchenko.FX.Security.Cryptography
         int TransformBlockCore(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
         {
             for (int i = 0; i < inputCount; ++i)
-            {
-                ++m_X;
-                m_Y = (byte)(m_State[m_X] + m_Y);
-                SwapState(m_X, m_Y);
-                var keyIndex = (byte)(m_State[m_X] + m_State[m_Y]);
-
-                outputBuffer[outputOffset + i] = (byte)(inputBuffer[inputOffset + i] ^ m_State[keyIndex]);
-            }
+                outputBuffer[outputOffset + i] = (byte)(inputBuffer[inputOffset + i] ^ GetKeyStreamElement());
             return inputCount;
+        }
+
+        byte GetKeyStreamElement()
+        {
+            ++m_X;
+            m_Y = (byte)(m_State[m_X] + m_Y);
+            SwapState(m_X, m_Y);
+            var keyIndex = (byte)(m_State[m_X] + m_State[m_Y]);
+            return m_State[keyIndex];
         }
 
         byte[] ICryptoTransform.TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)
