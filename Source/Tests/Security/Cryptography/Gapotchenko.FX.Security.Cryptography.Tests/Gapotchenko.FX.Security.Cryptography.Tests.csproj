@@ -6,37 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Arc4\TestVectors\RFC6229\02.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\03.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\04.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\05.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\06.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\07.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\08.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\09.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\10.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\11.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\12.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\13.txt" />
-    <None Remove="Arc4\TestVectors\RFC6229\14.txt" />
-  </ItemGroup>
-
- 
-  <ItemGroup>
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\14.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\13.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\12.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\11.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\10.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\09.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\08.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\07.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\06.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\05.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\04.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\03.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\02.txt" />
-    <EmbeddedResource Include="Arc4\TestVectors\RFC6229\01.txt" />
+    <EmbeddedResource Include="Arc4\TestVectors\**\*.txt" />
   </ItemGroup>
 
   <ItemGroup>
