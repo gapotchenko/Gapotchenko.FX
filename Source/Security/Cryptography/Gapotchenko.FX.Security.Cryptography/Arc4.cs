@@ -31,12 +31,12 @@ namespace Gapotchenko.FX.Security.Cryptography
 
         /// <summary>
         /// Gets or sets the initialization vector.
-        /// ARC4 does not use initialization vector and does not allow it to be set.
+        /// ARC4 does not use initialization vector and does not allow to set it.
         /// </summary>
         public override byte[] IV
         {
             get => Empty<byte>.Array;
-            set => throw new CryptographicException("Initialization vector cannot be set for a stream cipher.");
+            set => throw new CryptographicException("Initialization vector cannot be set for ARC4 algorithm.");
         }
 
         /// <inheritdoc/>

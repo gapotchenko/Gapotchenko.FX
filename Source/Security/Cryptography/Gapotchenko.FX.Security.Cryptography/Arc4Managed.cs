@@ -53,6 +53,7 @@ namespace Gapotchenko.FX.Security.Cryptography
             {
                 if (KeyValue == null)
                     GenerateKey();
+
                 return (byte[])KeyValue!.Clone();
             }
             set
@@ -94,14 +95,24 @@ namespace Gapotchenko.FX.Security.Cryptography
         /// <summary>
         /// Generates a random initialization vector to use for the algorithm.
         /// </summary>
-        public override void GenerateIV() => throw new NotSupportedException();
+        public override void GenerateIV() => throw new CryptographicException("ARC4 algorithm does not support initialization vectors.");
 
         /// <summary>
         /// Generates a random key to use for the algorithm.
         /// </summary>
         public override void GenerateKey()
         {
-            throw new NotImplementedException();
+            var key = new byte[KeySizeValue / 8];
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            RandomNumberGenerator.Fill(key);
+#else
+            var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(key);
+            rng.Dispose();
+#endif
+
+            KeyValue = key;
         }
 
         bool ICryptoTransform.CanReuseTransform => false;

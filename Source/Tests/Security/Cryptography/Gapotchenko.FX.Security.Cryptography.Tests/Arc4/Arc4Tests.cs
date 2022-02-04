@@ -93,5 +93,31 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4
             plainStream.Position = decryptedStream.Position = 0;
             Assert.IsTrue(plainStream.AsEnumerable().SequenceEqual(decryptedStream.AsEnumerable()));
         }
+
+        [TestMethod]
+        public void Arc4_DisposableRoundTrip()
+        {
+            using var arc4 = new Arc4Managed();
+
+            var plainData = new byte[4096];
+            using (var rng = RandomNumberGenerator.Create())
+                rng.GetBytes(plainData);
+            var plainStream = new MemoryStream(plainData, false);
+
+            var encryptedStream = new MemoryStream();
+            using (var encryptor = arc4.CreateEncryptor())
+            using (var cryptoStream = new CryptoStream(encryptedStream, encryptor, CryptoStreamMode.Write, true))
+                cryptoStream.Write(plainData, 0, plainData.Length);
+
+            encryptedStream.Position = 0;
+
+            var decryptedStream = new MemoryStream();
+            using (var decryptor = arc4.CreateDecryptor())
+            using (var cryptoStream = new CryptoStream(decryptedStream, decryptor, CryptoStreamMode.Write, true))
+                encryptedStream.CopyTo(cryptoStream);
+
+            decryptedStream.Position = 0;
+            Assert.IsTrue(plainStream.AsEnumerable().SequenceEqual(decryptedStream.AsEnumerable()));
+        }
     }
 }
