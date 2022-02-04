@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Security.Cryptography
@@ -27,16 +27,8 @@ namespace Gapotchenko.FX.Security.Cryptography
 
             ModeValue = CipherMode.ECB;
             PaddingValue = PaddingMode.None;
-        }
 
-        /// <summary>
-        /// Gets or sets the initialization vector.
-        /// ARC4 does not use initialization vector and does not allow to set it.
-        /// </summary>
-        public override byte[] IV
-        {
-            get => Empty<byte>.Array;
-            set => throw new CryptographicException("Initialization vector cannot be set for ARC4 algorithm.");
+            IVValue = Empty<byte>.Array;
         }
 
         /// <inheritdoc/>
@@ -49,7 +41,7 @@ namespace Gapotchenko.FX.Security.Cryptography
                 {
                     throw new CryptographicException(
                         string.Format(
-                            "Stream cipher does not support modes other than {0}.",
+                            "ARC4 algorithm does not support modes other than {0}.",
                             nameof(CipherMode.ECB)));
                 }
             }
@@ -65,11 +57,33 @@ namespace Gapotchenko.FX.Security.Cryptography
                 {
                     throw new CryptographicException(
                         string.Format(
-                            "Stream cipher does not support paddings other than {0}.",
+                            "ARC4 algorithm does not support paddings other than {0}.",
                             nameof(PaddingMode.None)));
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets the initialization vector.
+        /// </summary>
+        public override byte[] IV
+        {
+            get => base.IV;
+            set
+            {
+                if (value?.Length > 0)
+                    ThrowDoesNotSupportIV();
+                base.IV = value!;
+            }
+        }
+
+        [DoesNotReturn]
+        static void ThrowDoesNotSupportIV() => throw new CryptographicException("ARC4 algorithm does not support initialization vector.");
+
+        /// <summary>
+        /// Generates a random initialization vector to use for the algorithm.
+        /// </summary>
+        public override void GenerateIV() => ThrowDoesNotSupportIV();
 
         /// <summary>
         /// Creates an instance of the default implementation of ARC4 algorithm.
