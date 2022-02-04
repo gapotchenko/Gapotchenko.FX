@@ -140,9 +140,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{3F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cryptography", "Cryptography", "{C81ADA83-9C02-492E-B752-EC8E967C030C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Security.Cryptography", "Security\Cryptography\Gapotchenko.FX.Security.Cryptography\Gapotchenko.FX.Security.Cryptography.csproj", "{A38AD358-B8AE-41F6-A859-FC3EECF6F6AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography", "Security\Cryptography\Gapotchenko.FX.Security.Cryptography\Gapotchenko.FX.Security.Cryptography.csproj", "{A38AD358-B8AE-41F6-A859-FC3EECF6F6AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Security.Cryptography.Tests", "Tests\Security\Cryptography\Gapotchenko.FX.Security.Cryptography.Tests\Gapotchenko.FX.Security.Cryptography.Tests.csproj", "{CF09BAAB-7778-49F4-A8D5-123444D6CF00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography.Tests", "Tests\Security\Cryptography\Gapotchenko.FX.Security.Cryptography.Tests\Gapotchenko.FX.Security.Cryptography.Tests.csproj", "{CF09BAAB-7778-49F4-A8D5-123444D6CF00}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Checksum", "Checksum", "{87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Checksum", "Data\Checksum\Gapotchenko.FX.Data.Checksum\Gapotchenko.FX.Data.Checksum.csproj", "{CE487C26-F199-471F-B598-6A8D7AAA2FEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Checksum.Crc16", "Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc16\Gapotchenko.FX.Data.Checksum.Crc16.csproj", "{0A4346D7-3EE2-4BC9-9D61-26ED04F56CBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -298,6 +304,14 @@ Global
 		{CF09BAAB-7778-49F4-A8D5-123444D6CF00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF09BAAB-7778-49F4-A8D5-123444D6CF00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF09BAAB-7778-49F4-A8D5-123444D6CF00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE487C26-F199-471F-B598-6A8D7AAA2FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE487C26-F199-471F-B598-6A8D7AAA2FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE487C26-F199-471F-B598-6A8D7AAA2FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE487C26-F199-471F-B598-6A8D7AAA2FEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A4346D7-3EE2-4BC9-9D61-26ED04F56CBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A4346D7-3EE2-4BC9-9D61-26ED04F56CBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A4346D7-3EE2-4BC9-9D61-26ED04F56CBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A4346D7-3EE2-4BC9-9D61-26ED04F56CBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -354,6 +368,9 @@ Global
 		{C81ADA83-9C02-492E-B752-EC8E967C030C} = {3FAE141A-F711-4E62-8BD6-55C98470C2C7}
 		{A38AD358-B8AE-41F6-A859-FC3EECF6F6AF} = {C81ADA83-9C02-492E-B752-EC8E967C030C}
 		{CF09BAAB-7778-49F4-A8D5-123444D6CF00} = {C81ADA83-9C02-492E-B752-EC8E967C030C}
+		{87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF} = {C2DC67EB-5194-432D-A088-2EA90951DF87}
+		{CE487C26-F199-471F-B598-6A8D7AAA2FEC} = {87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}
+		{0A4346D7-3EE2-4BC9-9D61-26ED04F56CBB} = {87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}

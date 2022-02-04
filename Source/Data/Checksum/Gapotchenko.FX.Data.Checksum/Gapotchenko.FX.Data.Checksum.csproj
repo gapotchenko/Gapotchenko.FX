@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
+
+  <Import Project="$(MasteringDir)\OOB\System.Memory.targets" />
+
+</Project>
