@@ -46,10 +46,24 @@ Rotates the specified value right by the specified number of bits.
 
 The behavior corresponds to `ROR` instruction from Intel x86 instruction set.
 
+## BitOperationsEx
+
+`BitOperationsEx` provides an extended set of bit-twidling operations that are not in .NET mainstream yet.
+
+### Reverse
+
+Reverses the order of bits in a specified value.
+The least significant bit gets swapped with the most significant bit, and so on for all remaining bits of the number.
+For example:
+
+```c#
+BitOperationsEx.Reverse((byte)0b10100001) = 0b10000101
+```
+
 ## Hardware Acceleration
 
 `Gapothenko.FX.Numerics` automatically employs hardware acceleration on conforming CPUs and architectures.
-If hardware acceleration is not available for a particular operation then an optimized software fallback is used instead.
+If hardware acceleration is not available for a particular operation then a highly-optimized software fallback implementation is used instead.
 
 ## Usage
 
