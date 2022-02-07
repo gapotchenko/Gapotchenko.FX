@@ -40,5 +40,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc16_IsoIec14443_3_B_Check() => Check(Crc16.IsoIec14443_3_B, 0x906e);
+
+        [TestMethod]
+        public void Crc16_Maxim_Check() => Check(Crc16.Maxim, 0x44c2);
     }
 }

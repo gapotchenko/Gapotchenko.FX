@@ -94,7 +94,7 @@ namespace Gapotchenko.FX.Data.Checksum
         /// Parameters: poly=0x8005, init=0x0000, refin=true, refout=true, xorout=0x0000, check=0xbb3d.
         /// </para>
         /// </remarks>
-        public static Crc16 Standard => Implementations.Standard.Instance;
+        public static Crc16 Standard => Impl.Standard.Instance;
 
         /// <summary>
         /// <para>
@@ -110,7 +110,7 @@ namespace Gapotchenko.FX.Data.Checksum
         /// Parameters: poly=0x1021, init=0x0000, refin=true, refout=true, xorout=0x0000, check=0x2189.
         /// </para>
         /// </remarks>
-        public static Crc16 Ccitt => Implementations.Ccitt.Instance;
+        public static Crc16 Ccitt => Impl.Ccitt.Instance;
 
         /// <summary>
         /// <para>
@@ -118,7 +118,7 @@ namespace Gapotchenko.FX.Data.Checksum
         /// which performs checksum computation using x^16 + x^12 + x^8 + 1 polynomial with initial value of 0xC6C6.
         /// </para>
         /// <para>
-        /// Alias: CRC-A.
+        /// Aliases: CRC-A.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -126,7 +126,7 @@ namespace Gapotchenko.FX.Data.Checksum
         /// Parameters: poly=0x1021, init=0xc6c6, refin=true, refout=true, xorout=0x0000, check=0xbf05
         /// </para>
         /// </remarks>
-        public static Crc16 IsoIec14443_3_A => Implementations.IsoIec14443_3_A.Instance;
+        public static Crc16 IsoIec14443_3_A => Impl.IsoIec14443_3_A.Instance;
 
         /// <summary>
         /// <para>
@@ -142,9 +142,25 @@ namespace Gapotchenko.FX.Data.Checksum
         /// Parameters: poly=0x1021, init=0xffff, refin=true, refout=true, xorout=0xffff, check=0x906e
         /// </para>
         /// </remarks>
-        public static Crc16 IsoIec14443_3_B => Implementations.IsoIec14443_3_B.Instance;
+        public static Crc16 IsoIec14443_3_B => Impl.IsoIec14443_3_B.Instance;
 
-        static class Implementations
+        /// <summary>
+        /// <para>
+        /// Gets CRC-16/MAXIM algorithm
+        /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0.
+        /// </para>
+        /// <para>
+        /// Aliases: CRC-16/MAXIM-DOW.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Parameters: poly=0x8005, init=0x0000, refin=true, refout=true, xorout=0xffff, check=0x44c2
+        /// </para>
+        /// </remarks>
+        public static Crc16 Maxim => Impl.Maxim.Instance;
+
+        static class Impl
         {
             public sealed class Standard : GenericCrc16
             {
@@ -168,6 +184,12 @@ namespace Gapotchenko.FX.Data.Checksum
             {
                 IsoIec14443_3_B() : base(0x1021, 0xffff, true, true, 0xffff) { }
                 public static readonly IsoIec14443_3_B Instance = new();
+            }
+
+            public sealed class Maxim : GenericCrc16
+            {
+                Maxim() : base(0x8005, 0, true, true, 0xffff) { }
+                public static readonly Maxim Instance = new();
             }
         }
     }
