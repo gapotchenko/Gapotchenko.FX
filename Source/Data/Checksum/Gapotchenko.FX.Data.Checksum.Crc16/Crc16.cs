@@ -1,96 +1,108 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace Gapotchenko.FX.Data.Checksum
 {
     /// <summary>
     /// Computes CRC-16 checksum for the input data.
     /// </summary>
+    /// <remarks>
+    /// Represents the base class from which all implementations of CRC-16 checksum algorithm must derive.
+    /// </remarks>
     [CLSCompliant(false)]
-    public class Crc16 : ChecksumAlgorithm<ushort>
+    public abstract class Crc16 : ICrc16
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Crc16"/> class as <see cref="Crc16Kind.Standard"/> algorithm.
+        /// Initializes a new instance of the <see cref="GenericCrc16"/> class.
         /// </summary>
-        public Crc16() :
-            this(Crc16Kind.Standard)
+        /// <param name="initialValue">The initial value of the register when the algorithm starts.</param>
+        protected Crc16(ushort initialValue)
         {
+            InitialValue = initialValue;
+        }
+
+        readonly ushort InitialValue;
+
+        /// <inheritdoc/>
+        public int ChecksumSize => 16;
+
+        /// <inheritdoc/>
+        public virtual ushort ComputeChecksum(ReadOnlySpan<byte> data) => ComputeFinal(ComputeBlock(InitialValue, data));
+
+        /// <summary>
+        /// Creates an iterator for checksum computation.
+        /// </summary>
+        /// <returns>An iterator for checksum computation.</returns>
+        public Iterator CreateIterator() => new Iterator(this);
+
+        IChecksumIterator<ushort> IChecksumAlgorithm<ushort>.CreateIterator() => CreateIterator();
+
+        /// <summary>
+        /// Iterator for CRC-16 checksum computation.
+        /// </summary>
+        public struct Iterator : IChecksumIterator<ushort>
+        {
+            internal Iterator(Crc16 algorithm)
+            {
+                m_Algorithm = algorithm;
+                m_Register = m_Algorithm.InitialValue;
+            }
+
+            readonly Crc16 m_Algorithm;
+            ushort m_Register;
+
+            /// <inheritdoc/>
+            public void ComputeBlock(ReadOnlySpan<byte> data) => m_Register = m_Algorithm.ComputeBlock(m_Register, data);
+
+            /// <inheritdoc/>
+            public ushort ComputeFinal()
+            {
+                var checksum = m_Algorithm.ComputeFinal(m_Register);
+                Reset();
+                return checksum;
+            }
+
+            /// <inheritdoc/>
+            public void Reset() => m_Register = m_Algorithm.InitialValue;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Crc16"/> class with a specified algorithm kind.
+        /// Computes the checksum for the specified byte span.
         /// </summary>
-        /// <param name="kind">The CRC-16 algorithm kind.</param>
-        public Crc16(Crc16Kind kind)
-        {
-            if (kind != Crc16Kind.Standard)
-                throw new ArgumentOutOfRangeException(nameof(kind), "Unrecognized CRC-16 algorithm kind.");
-
-            HashSizeValue = 16;
-            Initialize();
-        }
+        /// <param name="register">The intermediate checksum register.</param>
+        /// <param name="data">The data to compute the checksum for.</param>
+        /// <returns>The updated intermediate checksum register.</returns>
+        protected abstract ushort ComputeBlock(ushort register, ReadOnlySpan<byte> data);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Crc16"/> class with custom algorithm parameters.
+        /// Finalizes the checksum computation after the last data is processed.
         /// </summary>
-        /// <param name="poly">The polynomial.</param>
-        /// <param name="init">The initial value.</param>
-        /// <param name="refIn"></param>
-        /// <param name="refOut"></param>
-        /// <param name="xorOut"></param>
-        [CLSCompliant(false)]
-        public Crc16(ushort poly, ushort init, bool refIn, bool refOut, ushort xorOut)
+        /// <returns>The computed checksum.</returns>
+        protected abstract ushort ComputeFinal(ushort register);
+
+        /// <summary>
+        /// <para>
+        /// Gets the standard CRC-16 algorithm
+        /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0.
+        /// </para>
+        /// <para>
+        /// Aliases: CRC-16, CRC-16/ARC, CRC-IBM, CRC-16/LHA.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Parameters: poly=0x8005, init=0x0000, refin=true, refout=true, xorout=0x0000, check=0xbb3d.
+        /// </para>
+        /// </remarks>
+        public static Crc16 Standard => Implementations.Standard.Instance;
+
+        static class Implementations
         {
-            throw new NotImplementedException("TODO");
-        }
-
-        static Crc16()
-        {
-            const ushort polynomial = 0xA001;
-
-            m_CrcTable = new ushort[256];
-
-            for (int i = 0; i < m_CrcTable.Length; ++i)
+            public sealed class Standard : GenericCrc16
             {
-                ushort value = 0;
-
-                var temp = i;
-                for (byte j = 0; j < 8; ++j)
-                {
-                    if (((value ^ temp) & 0x0001) != 0)
-                        value = (ushort)((value >> 1) ^ polynomial);
-                    else
-                        value >>= 1;
-                    temp >>= 1;
-                }
-
-                m_CrcTable[i] = value;
+                Standard() : base(0x8005, 0, true, true, 0) { }
+                public static readonly Standard Instance = new();
             }
         }
-
-        static readonly ushort[] m_CrcTable;
-
-        ushort m_Crc;
-
-        /// <inheritdoc/>
-        public override void Initialize()
-        {
-            m_Crc = 0;
-        }
-
-        /// <inheritdoc/>
-        protected override void ChecksumCore(ReadOnlySpan<byte> source)
-        {
-            foreach (var b in source)
-            {
-                byte x = (byte)(m_Crc ^ b);
-                m_Crc = (ushort)((m_Crc >> 8) ^ m_CrcTable[x]);
-            }
-        }
-
-        /// <inheritdoc/>
-        protected override ushort ChecksumFinal() => m_Crc;
-
-        /// <inheritdoc/>
-        protected override byte[] ChecksumHash(ushort checksum) => LittleEndianBitConverter.GetBytes(checksum);
     }
 }

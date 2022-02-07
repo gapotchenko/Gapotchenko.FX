@@ -118,6 +118,9 @@ namespace Gapotchenko.FX.Harness.Console
             var result = seq.OrderTopologicallyBy(Fn.Identity, Dependency).ThenBy(x => x);
 
             Console.WriteLine(string.Concat(result));
+
+            var iterator = Crc16.Standard.CreateIterator();
+            
         }
 
         static async Task _RunAsync(CancellationToken ct)

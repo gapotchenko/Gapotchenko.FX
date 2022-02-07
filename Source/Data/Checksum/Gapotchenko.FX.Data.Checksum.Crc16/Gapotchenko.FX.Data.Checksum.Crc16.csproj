@@ -8,4 +8,6 @@
     <ProjectReference Include="..\Gapotchenko.FX.Data.Checksum\Gapotchenko.FX.Data.Checksum.csproj" />
   </ItemGroup>
 
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.targets" />
+
 </Project>
