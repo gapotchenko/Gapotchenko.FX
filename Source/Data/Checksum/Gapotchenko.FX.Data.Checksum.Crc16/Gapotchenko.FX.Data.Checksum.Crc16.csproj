@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Data.Checksum\Gapotchenko.FX.Data.Checksum.csproj" />
   </ItemGroup>
 

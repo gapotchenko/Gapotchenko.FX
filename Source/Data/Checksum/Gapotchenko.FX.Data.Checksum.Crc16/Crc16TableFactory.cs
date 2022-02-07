@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Numerics;
+using System;
 using System.Collections.Concurrent;
 
 namespace Gapotchenko.FX.Data.Checksum
@@ -38,7 +39,8 @@ namespace Gapotchenko.FX.Data.Checksum
         {
             // TODO
 
-            polynomial = 0xA001;
+            if (reflectedInput)
+                polynomial = BitOperationsEx.Reverse(polynomial);
 
             const int TableSize = 256;
 
@@ -49,9 +51,9 @@ namespace Gapotchenko.FX.Data.Checksum
                 ushort value = 0;
 
                 var temp = i;
-                for (byte j = 0; j < 8; ++j)
+                for (int j = 0; j < 8; ++j)
                 {
-                    if (((value ^ temp) & 0x0001) != 0)
+                    if (((value ^ temp) & 0b1) != 0)
                         value = (ushort)((value >> 1) ^ polynomial);
                     else
                         value >>= 1;

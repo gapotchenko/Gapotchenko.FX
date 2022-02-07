@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Numerics;
+using System;
 using System.ComponentModel;
 
 namespace Gapotchenko.FX.Data.Checksum
@@ -24,7 +25,10 @@ namespace Gapotchenko.FX.Data.Checksum
             bool reflectedInput,
             bool reflectedOutput,
             ushort xorOutput)
-            : base(initialValue)
+            : base(
+                  reflectedInput ?
+                    BitOperationsEx.Reverse(initialValue) :
+                    initialValue)
         {
             m_Table = Crc16TableFactory.GetTable(polynomial, reflectedInput);
             m_XorOutput = xorOutput;

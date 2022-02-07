@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Data.Checksum
         /// Creates an iterator for checksum computation.
         /// </summary>
         /// <returns>An iterator for checksum computation.</returns>
-        public Iterator CreateIterator() => new Iterator(this);
+        public Iterator CreateIterator() => new(this);
 
         IChecksumIterator<ushort> IChecksumAlgorithm<ushort>.CreateIterator() => CreateIterator();
 
@@ -96,12 +96,56 @@ namespace Gapotchenko.FX.Data.Checksum
         /// </remarks>
         public static Crc16 Standard => Implementations.Standard.Instance;
 
+        /// <summary>
+        /// <para>
+        /// Gets CRC-16/CCITT algorithm
+        /// which performs checksum computation using x^16 + x^12 + x^8 + 1 polynomial with initial value of 0.
+        /// </para>
+        /// <para>
+        /// Aliases: CRC-16/KERMIT, CRC-16/CCITT-TRUE, CRC-16/V-41-LSB, CRC-CCITT, KERMIT.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Parameters: poly=0x1021, init=0x0000, refin=true, refout=true, xorout=0x0000, check=0x2189.
+        /// </para>
+        /// </remarks>
+        public static Crc16 Ccitt => Implementations.Ccitt.Instance;
+
+        /// <summary>
+        /// <para>
+        /// Gets CRC-16/ISO-IEC-14443-3-A algorithm
+        /// which performs checksum computation using x^16 + x^12 + x^8 + 1 polynomial with initial value of 0xC6C6.
+        /// </para>
+        /// <para>
+        /// Alias: CRC-A.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Parameters: poly=0x1021, init=0xc6c6, refin=true, refout=true, xorout=0x0000, check=0xbf05
+        /// </para>
+        /// </remarks>
+        public static Crc16 IsoIec14443_3_A => Implementations.IsoIec14443_3_A.Instance;
+
         static class Implementations
         {
             public sealed class Standard : GenericCrc16
             {
                 Standard() : base(0x8005, 0, true, true, 0) { }
                 public static readonly Standard Instance = new();
+            }
+
+            public sealed class Ccitt : GenericCrc16
+            {
+                Ccitt() : base(0x1021, 0, true, true, 0) { }
+                public static readonly Ccitt Instance = new();
+            }
+
+            public sealed class IsoIec14443_3_A : GenericCrc16
+            {
+                IsoIec14443_3_A() : base(0x1021, 0xc6c6, true, true, 0) { }
+                public static readonly IsoIec14443_3_A Instance = new();
             }
         }
     }
