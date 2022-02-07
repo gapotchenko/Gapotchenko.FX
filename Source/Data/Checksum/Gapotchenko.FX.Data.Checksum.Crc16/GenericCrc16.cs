@@ -26,7 +26,7 @@ namespace Gapotchenko.FX.Data.Checksum
             bool reflectedOutput,
             ushort xorOutput)
             : base(
-                  reflectedInput ?
+                reflectedInput ?
                     BitOperationsEx.Reverse(initialValue) :
                     initialValue)
         {
@@ -41,10 +41,7 @@ namespace Gapotchenko.FX.Data.Checksum
         protected sealed override ushort ComputeBlock(ushort register, ReadOnlySpan<byte> data)
         {
             foreach (var b in data)
-            {
-                byte x = (byte)(register ^ b);
-                register = (ushort)((register >> 8) ^ m_Table[x]);
-            }
+                register = (ushort)((register >> 8) ^ m_Table[(byte)(register ^ b)]);
             return register;
         }
 

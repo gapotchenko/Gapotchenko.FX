@@ -128,6 +128,22 @@ namespace Gapotchenko.FX.Data.Checksum
         /// </remarks>
         public static Crc16 IsoIec14443_3_A => Implementations.IsoIec14443_3_A.Instance;
 
+        /// <summary>
+        /// <para>
+        /// Gets CRC-16/ISO-IEC-14443-3-B algorithm
+        /// which performs checksum computation using x^16 + x^12 + x^8 + 1 polynomial with initial value of 0xFFFF.
+        /// </para>
+        /// <para>
+        /// Aliases: CRC-16/IBM-SDLC, CRC-16/ISO-HDLC, CRC-16/X-25, CRC-B, X-25.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Parameters: poly=0x1021, init=0xffff, refin=true, refout=true, xorout=0xffff, check=0x906e
+        /// </para>
+        /// </remarks>
+        public static Crc16 IsoIec14443_3_B => Implementations.IsoIec14443_3_B.Instance;
+
         static class Implementations
         {
             public sealed class Standard : GenericCrc16
@@ -146,6 +162,12 @@ namespace Gapotchenko.FX.Data.Checksum
             {
                 IsoIec14443_3_A() : base(0x1021, 0xc6c6, true, true, 0) { }
                 public static readonly IsoIec14443_3_A Instance = new();
+            }
+
+            public sealed class IsoIec14443_3_B : GenericCrc16
+            {
+                IsoIec14443_3_B() : base(0x1021, 0xffff, true, true, 0xffff) { }
+                public static readonly IsoIec14443_3_B Instance = new();
             }
         }
     }
