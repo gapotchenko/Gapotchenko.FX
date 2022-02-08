@@ -111,9 +111,25 @@
         /// </remarks>
         public static Crc16 SpiFujitsu => Impl.SpiFujitsu.Instance;
 
+        /// <summary>
+        /// <para>
+        /// Gets CRC-16/UMTS algorithm
+        /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0.
+        /// </para>
+        /// <para>
+        /// Aliases: CRC-16/VERIFONE, CRC-16/BUYPASS.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Parameters: poly=0x8005, init=0x0000, refin=false, refout=false, xorout=0x0000, check=0xfee8.
+        /// </para>
+        /// </remarks>
+        public static Crc16 Umts => Impl.Umts.Instance;
+
         static class Impl
         {
-            #region Standartized
+            #region Standardized
 
             public sealed class Standard : GenericCrc16
             {
@@ -159,6 +175,12 @@
             {
                 SpiFujitsu() : base(0x1021, 0x1d0f, false, false, 0) { }
                 public static readonly SpiFujitsu Instance = new();
+            }
+
+            public sealed class Umts : GenericCrc16
+            {
+                Umts() : base(0x8005, 0, false, false, 0) { }
+                public static readonly Umts Instance = new();
             }
 
             #endregion

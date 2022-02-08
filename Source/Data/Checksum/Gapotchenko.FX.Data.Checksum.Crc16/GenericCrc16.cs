@@ -26,22 +26,32 @@ namespace Gapotchenko.FX.Data.Checksum
             bool reflectedOutput,
             ushort xorOutput)
             : base(
-                reflectedInput ?
+                reflectedOutput ?
                     BitOperationsEx.Reverse(initialValue) :
                     initialValue)
         {
-            m_Table = Crc16TableFactory.GetTable(polynomial, reflectedInput);
+            m_ReflectedOutput = reflectedOutput;
             m_XorOutput = xorOutput;
+            m_Table = Crc16TableFactory.GetTable(polynomial, reflectedInput);
         }
 
-        readonly ushort[] m_Table;
+        readonly bool m_ReflectedOutput;
         readonly ushort m_XorOutput;
+        readonly ushort[] m_Table;
 
         /// <inheritdoc/>
         protected sealed override ushort ComputeBlock(ushort register, ReadOnlySpan<byte> data)
         {
-            foreach (var b in data)
-                register = (ushort)((register >> 8) ^ m_Table[(byte)(register ^ b)]);
+            if (m_ReflectedOutput)
+            {
+                foreach (var b in data)
+                    register = (ushort)((register >> 8) ^ m_Table[(byte)(register ^ b)]);
+            }
+            else
+            {
+                foreach (var b in data)
+                    register = (ushort)((register << 8) ^ m_Table[(byte)((register >> (Width - 8)) ^ b)]);
+            }
             return register;
         }
 

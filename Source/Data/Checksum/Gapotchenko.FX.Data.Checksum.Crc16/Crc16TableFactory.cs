@@ -1,6 +1,7 @@
 ﻿using Gapotchenko.FX.Numerics;
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 
 namespace Gapotchenko.FX.Data.Checksum
 {
@@ -27,9 +28,17 @@ namespace Gapotchenko.FX.Data.Checksum
                 table = CreateTable(polynomial, reflectedInput);
 
                 if (wr != null)
+                {
                     wr.SetTarget(table);
+                }
                 else
+                {
+                    var staleKeys = m_Cache.Where(x => !x.Value.TryGetTarget(out _)).Select(x => x.Key).ToList();
+                    foreach (var i in staleKeys)
+                        m_Cache.TryRemove(i, out _);
+
                     m_Cache[key] = new WeakReference<ushort[]>(table);
+                }
             }
 
             return table;
@@ -37,29 +46,49 @@ namespace Gapotchenko.FX.Data.Checksum
 
         static ushort[] CreateTable(ushort polynomial, bool reflectedInput)
         {
-            // TODO
-
+            const int Width = 16;
             const int TableSize = 256;
+            const ushort FirstBit = 0b1;
+            const ushort LastBit = 1 << (Width - 1);
+            const int RightShift = Width - 8;
+
             var table = new ushort[TableSize];
 
             if (reflectedInput)
+            {
                 polynomial = BitOperationsEx.Reverse(polynomial);
 
-            for (int i = 0; i < TableSize; ++i)
-            {
-                ushort value = 0;
-
-                var temp = (byte)i;
-                for (int j = 0; j < 8; ++j)
+                for (ushort i = 0; i < TableSize; ++i)
                 {
-                    if (((value ^ temp) & 0b1) != 0)
-                        value = (ushort)((value >> 1) ^ polynomial);
-                    else
-                        value >>= 1;
-                    temp >>= 1;
-                }
+                    ushort value = i;
 
-                table[i] = value;
+                    for (int j = 0; j < 8; ++j)
+                    {
+                        if ((value & FirstBit) != 0)
+                            value = (ushort)((value >> 1) ^ polynomial);
+                        else
+                            value >>= 1;
+                    }
+
+                    table[i] = value;
+                }
+            }
+            else
+            {
+                for (ushort i = 0; i < TableSize; ++i)
+                {
+                    ushort value = (ushort)(i << RightShift);
+
+                    for (int j = 0; j < 8; ++j)
+                    {
+                        if ((value & LastBit) != 0)
+                            value = (ushort)((value << 1) ^ polynomial);
+                        else
+                            value <<= 1;
+                    }
+
+                    table[i] = value;
+                }
             }
 
             return table;

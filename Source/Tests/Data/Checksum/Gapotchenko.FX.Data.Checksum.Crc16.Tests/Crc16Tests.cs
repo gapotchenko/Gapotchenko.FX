@@ -72,5 +72,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc16_SpiFujitsu_Check() => Check19(Crc16.SpiFujitsu, 0xe5cc);
+
+        [TestMethod]
+        public void Crc16_Umts_Check() => Check19(Crc16.Umts, 0xfee8);
     }
 }

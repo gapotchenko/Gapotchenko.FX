@@ -25,8 +25,13 @@ namespace Gapotchenko.FX.Data.Checksum
         /// </summary>
         protected readonly ushort InitialValue;
 
+        /// <summary>
+        /// The size, in bits, of the computed checksum value.
+        /// </summary>
+        protected const int Width = 16;
+
         /// <inheritdoc/>
-        public int ChecksumSize => 16;
+        public int ChecksumSize => Width;
 
         /// <inheritdoc/>
         public virtual ushort ComputeChecksum(ReadOnlySpan<byte> data) => ComputeFinal(ComputeBlock(InitialValue, data));
