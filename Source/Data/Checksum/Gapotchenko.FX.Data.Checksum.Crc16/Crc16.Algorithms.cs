@@ -195,6 +195,22 @@
 
             /// <summary>
             /// <para>
+            /// Gets CRC-16/GENIBUS algorithm
+            /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xFFFF.
+            /// </para>
+            /// <para>
+            /// Aliases: CRC-16/DARC, CRC-16/EPC, CRC-16/EPC-C1G2, CRC-16/I-CODE.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x1021, init=0xffff, refin=false, refout=false, xorout=0xffff, check=0xd64e.
+            /// </para>
+            /// </remarks>
+            public static Crc16 Genibus => Impl.Genibus.Instance;
+
+            /// <summary>
+            /// <para>
             /// Gets CRC-16/OPENSAFETY-A algorithm
             /// which performs checksum computation using x^16 + x^14 + x^12 + x^11 + x^8 + x^5 + x^4 + x^2 + 1 polynomial with initial value of 0.
             /// </para>
@@ -318,6 +334,12 @@
             {
                 Modbus() : base(0x8005, 0xffff, true, true, 0) { }
                 public static readonly Modbus Instance = new();
+            }
+
+            public sealed class Genibus : GenericCrc16
+            {
+                Genibus() : base(0x1021, 0xffff, false, false, 0xffff) { }
+                public static readonly Genibus Instance = new();
             }
 
             public sealed class OpenSafetyA : GenericCrc16
