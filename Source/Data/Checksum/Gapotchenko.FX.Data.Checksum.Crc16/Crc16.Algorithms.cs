@@ -196,7 +196,7 @@
             /// <summary>
             /// <para>
             /// Gets CRC-16/GENIBUS algorithm
-            /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xFFFF.
+            /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0.
             /// </para>
             /// <para>
             /// Aliases: CRC-16/DARC, CRC-16/EPC, CRC-16/EPC-C1G2, CRC-16/I-CODE.
@@ -208,6 +208,19 @@
             /// </para>
             /// </remarks>
             public static Crc16 Genibus => Impl.Genibus.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-16/GSM algorithm
+            /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xFFFF.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x1021, init=0x0000, refin=false, refout=false, xorout=0xffff, check=0xce3c.
+            /// </para>
+            /// </remarks>
+            public static Crc16 Gsm => Impl.Gsm.Instance;
 
             /// <summary>
             /// <para>
@@ -340,6 +353,12 @@
             {
                 Genibus() : base(0x1021, 0xffff, false, false, 0xffff) { }
                 public static readonly Genibus Instance = new();
+            }
+
+            public sealed class Gsm : GenericCrc16
+            {
+                Gsm() : base(0x1021, 0, false, false, 0xffff) { }
+                public static readonly Gsm Instance = new();
             }
 
             public sealed class OpenSafetyA : GenericCrc16
