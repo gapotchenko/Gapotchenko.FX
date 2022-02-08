@@ -177,6 +177,22 @@
             /// </para>
             /// </remarks>
             public static Crc16 Profibus => Impl.Profibus.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-16/MODBUS algorithm
+            /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0xFFFF.
+            /// </para>
+            /// <para>
+            /// Aliases: MODBUS.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x8005, init=0xffff, refin=true, refout=true, xorout=0x0000, check=0x4b37.
+            /// </para>
+            /// </remarks>
+            public static Crc16 Modbus => Impl.Modbus.Instance;
         }
 
         static class Impl
@@ -245,6 +261,12 @@
             {
                 Profibus() : base(0x1dcf, 0xffff, false, false, 0xffff) { }
                 public static readonly Profibus Instance = new();
+            }
+
+            public sealed class Modbus : GenericCrc16
+            {
+                Modbus() : base(0x8005, 0xffff, true, true, 0) { }
+                public static readonly Modbus Instance = new();
             }
         }
     }
