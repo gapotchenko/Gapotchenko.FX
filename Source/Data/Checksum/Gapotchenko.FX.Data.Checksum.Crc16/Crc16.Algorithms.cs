@@ -127,6 +127,19 @@
         /// </remarks>
         public static Crc16 Umts => Impl.Umts.Instance;
 
+        /// <summary>
+        /// <para>
+        /// Gets CRC-16/USB algorithm
+        /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Parameters: poly=0x8005, init=0xffff, refin=true, refout=true, xorout=0xffff, check=0xb4c8.
+        /// </para>
+        /// </remarks>
+        public static Crc16 Usb => Impl.Usb.Instance;
+
         static class Impl
         {
             #region Standardized
@@ -181,6 +194,12 @@
             {
                 Umts() : base(0x8005, 0, false, false, 0) { }
                 public static readonly Umts Instance = new();
+            }
+
+            public sealed class Usb : GenericCrc16
+            {
+                Usb() : base(0x8005, 0xffff, true, true, 0xffff) { }
+                public static readonly Usb Instance = new();
             }
 
             #endregion
