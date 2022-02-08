@@ -6,7 +6,7 @@ namespace Gapotchenko.FX.Data.Checksum
     /// Computes CRC-16 checksum for the input data.
     /// </summary>
     /// <remarks>
-    /// Represents the base class from which all implementations of CRC-16 checksum algorithm must derive.
+    /// Represents the base class from which implementations of CRC-16 checksum algorithm may derive.
     /// </remarks>
     [CLSCompliant(false)]
     public abstract partial class Crc16 : ICrc16
@@ -20,7 +20,10 @@ namespace Gapotchenko.FX.Data.Checksum
             InitialValue = initialValue;
         }
 
-        readonly ushort InitialValue;
+        /// <summary>
+        /// The initial value of the register when the algorithm starts.
+        /// </summary>
+        protected readonly ushort InitialValue;
 
         /// <inheritdoc/>
         public int ChecksumSize => 16;

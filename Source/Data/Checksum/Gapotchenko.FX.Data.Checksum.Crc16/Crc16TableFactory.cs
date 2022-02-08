@@ -39,18 +39,17 @@ namespace Gapotchenko.FX.Data.Checksum
         {
             // TODO
 
+            const int TableSize = 256;
+            var table = new ushort[TableSize];
+
             if (reflectedInput)
                 polynomial = BitOperationsEx.Reverse(polynomial);
-
-            const int TableSize = 256;
-
-            var table = new ushort[TableSize];
 
             for (int i = 0; i < TableSize; ++i)
             {
                 ushort value = 0;
 
-                var temp = i;
+                var temp = (byte)i;
                 for (int j = 0; j < 8; ++j)
                 {
                     if (((value ^ temp) & 0b1) != 0)

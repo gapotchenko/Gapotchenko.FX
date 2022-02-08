@@ -46,5 +46,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc16_Nrsc5_Check() => Check(Crc16.Nrsc5, 0xa066);
+
+        [TestMethod]
+        public void Crc16_SpiFujitsu_Check() => Check(Crc16.SpiFujitsu, 0xe5cc);
     }
 }
