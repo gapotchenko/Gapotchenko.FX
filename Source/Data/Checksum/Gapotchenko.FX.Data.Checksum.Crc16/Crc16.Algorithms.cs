@@ -231,6 +231,19 @@
             /// </para>
             /// </remarks>
             public static Crc16 TMS37157 => Impl.TMS37157.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-16/MCRF4XX algorithm
+            /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xFFFF.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x1021, init=0xffff, refin=true, refout=true, xorout=0x0000, check=0x6f91.
+            /// </para>
+            /// </remarks>
+            public static Crc16 MCRF4XX => Impl.MCRF4XX.Instance;
         }
 
         static class Impl
@@ -323,6 +336,12 @@
             {
                 TMS37157() : base(0x1021, 0x89ec, true, true, 0) { }
                 public static readonly TMS37157 Instance = new();
+            }
+
+            public sealed class MCRF4XX : GenericCrc16
+            {
+                MCRF4XX() : base(0x1021, 0xffff, true, true, 0) { }
+                public static readonly MCRF4XX Instance = new();
             }
         }
     }

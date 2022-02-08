@@ -96,5 +96,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc16_TMS37157_Check() => Check19(Crc16.Attested.TMS37157, 0x26b1);
+
+        [TestMethod]
+        public void Crc16_MCRF4XX_Check() => Check19(Crc16.Attested.MCRF4XX, 0x6f91);
     }
 }
