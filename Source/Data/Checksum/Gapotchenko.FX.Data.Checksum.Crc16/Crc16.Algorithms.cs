@@ -23,7 +23,6 @@
         /// </summary>
         public static class Attested
         {
-
             /// <summary>
             /// <para>
             /// Gets CRC-16/CCITT algorithm
@@ -219,6 +218,19 @@
             /// </para>
             /// </remarks>
             public static Crc16 OpenSafetyB => Impl.OpenSafetyB.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-16/TMS37157 algorithm
+            /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0x89EC.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x1021, init=0x89ec, refin=true, refout=true, xorout=0x0000, check=0x26b1.
+            /// </para>
+            /// </remarks>
+            public static Crc16 TMS37157 => Impl.TMS37157.Instance;
         }
 
         static class Impl
@@ -305,6 +317,12 @@
             {
                 OpenSafetyB() : base(0x755b, 0, false, false, 0) { }
                 public static readonly OpenSafetyB Instance = new();
+            }
+
+            public sealed class TMS37157 : GenericCrc16
+            {
+                TMS37157() : base(0x1021, 0x89ec, true, true, 0) { }
+                public static readonly TMS37157 Instance = new();
             }
         }
     }
