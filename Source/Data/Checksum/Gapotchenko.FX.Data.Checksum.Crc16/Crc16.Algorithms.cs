@@ -82,6 +82,19 @@
         /// </remarks>
         public static Crc16 Maxim => Impl.Maxim.Instance;
 
+        /// <summary>
+        /// <para>
+        /// Gets CRC-16/NRSC-5 algorithm
+        /// which performs checksum computation using x^16 + x^12 + x^4 + x^2 + 1 polynomial with initial value of 0xA066.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Parameters: poly=0x080b, init=0xffff, refin=true, refout=true, xorout=0x0000, check=0xa066.
+        /// </para>
+        /// </remarks>
+        public static Crc16 Nrsc5 => Impl.Nrsc5.Instance;
+
         static class Impl
         {
             public sealed class Standard : GenericCrc16
@@ -112,6 +125,12 @@
             {
                 Maxim() : base(0x8005, 0, true, true, 0xffff) { }
                 public static readonly Maxim Instance = new();
+            }
+
+            public sealed class Nrsc5 : GenericCrc16
+            {
+                Nrsc5() : base(0x080b, 0xffff, true, true, 0) { }
+                public static readonly Nrsc5 Instance = new();
             }
         }
     }
