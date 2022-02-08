@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
             iterator.Reset();
             iterator.ComputeBlock(data.AsSpan(0, 3));
             iterator.ComputeBlock(data.AsSpan(3, 6));
-            Assert.AreEqual(check, iterator.ComputeFinal(), "Reseted iterator checksum computation failed.");
+            Assert.AreEqual(check, iterator.ComputeFinal(), "Reset iterator checksum computation failed.");
 
             var ms = new MemoryStream(data, false);
             Assert.AreEqual(check, algorithm.ComputeChecksum(ms), "Stream checksum computation failed.");

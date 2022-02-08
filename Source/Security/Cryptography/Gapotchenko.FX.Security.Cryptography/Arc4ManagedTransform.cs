@@ -86,17 +86,6 @@ namespace Gapotchenko.FX.Security.Cryptography
             array[j] = t;
         }
 
-        byte NextKeyStreamElement()
-        {
-            var state = m_State!;
-
-            ++m_X;
-            m_Y = (byte)(state[m_X] + m_Y);
-            SwapElements(state, m_X, m_Y);
-            var keyIndex = (byte)(state[m_X] + state[m_Y]);
-            return state[keyIndex];
-        }
-
         static void CheckInputParameters(byte[] inputBuffer, int inputOffset, int inputCount)
         {
             if (inputBuffer == null)
@@ -112,19 +101,23 @@ namespace Gapotchenko.FX.Security.Cryptography
                     nameof(inputBuffer));
         }
 
-        [MemberNotNull(nameof(m_State))]
-        void EnsureNotDisposed()
-        {
-            if (m_State == null)
-                throw new ObjectDisposedException(GetType().FullName);
-        }
-
         int TransformBlockCore(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
         {
-            EnsureNotDisposed();
+            var state = m_State;
+            if (state == null)
+                throw new ObjectDisposedException(null);
 
             for (int i = 0; i < inputCount; ++i)
-                outputBuffer[outputOffset + i] = (byte)(inputBuffer[inputOffset + i] ^ NextKeyStreamElement());
+            {
+                ++m_X;
+                m_Y = (byte)(state[m_X] + m_Y);
+                SwapElements(state, m_X, m_Y);
+                var keyIndex = (byte)(state[m_X] + state[m_Y]);
+                var key = state[keyIndex];
+
+                outputBuffer[outputOffset + i] = (byte)(inputBuffer[inputOffset + i] ^ key);
+            }
+
             return inputCount;
         }
     }
