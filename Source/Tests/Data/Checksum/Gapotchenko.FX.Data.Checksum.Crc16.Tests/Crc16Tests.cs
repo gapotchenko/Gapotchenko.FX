@@ -78,5 +78,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc16_Usb_Check() => Check19(Crc16.Usb, 0xb4c8);
+
+        [TestMethod]
+        public void Crc16_XModem_Check() => Check19(Crc16.XModem, 0x31c3);
     }
 }
