@@ -196,7 +196,7 @@
             /// <summary>
             /// <para>
             /// Gets CRC-16/GENIBUS algorithm
-            /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0.
+            /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xFFFF.
             /// </para>
             /// <para>
             /// Aliases: CRC-16/DARC, CRC-16/EPC, CRC-16/EPC-C1G2, CRC-16/I-CODE.
@@ -212,7 +212,7 @@
             /// <summary>
             /// <para>
             /// Gets CRC-16/GSM algorithm
-            /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xFFFF.
+            /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0.
             /// </para>
             /// </summary>
             /// <remarks>
