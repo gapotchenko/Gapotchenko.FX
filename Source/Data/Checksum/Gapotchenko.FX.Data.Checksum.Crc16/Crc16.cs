@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Data.Checksum
 {
@@ -35,6 +36,13 @@ namespace Gapotchenko.FX.Data.Checksum
 
         /// <inheritdoc/>
         public override ushort ComputeChecksum(ReadOnlySpan<byte> data) => ComputeFinal(ComputeBlock(InitialValue, data));
+
+        /// <inheritdoc/>
+        public HashAlgorithm CreateHashAlgorithm(IBitConverter bitConverter) =>
+            CreateHashAlgorithmCore(bitConverter ?? throw new ArgumentNullException(nameof(bitConverter)));
+
+        /// <inheritdoc/>
+        protected override byte[] GetHashBytesCore(ushort checksum, IBitConverter bitConverter) => bitConverter.GetBytes(checksum);
 
         /// <summary>
         /// Creates an iterator for checksum computation.

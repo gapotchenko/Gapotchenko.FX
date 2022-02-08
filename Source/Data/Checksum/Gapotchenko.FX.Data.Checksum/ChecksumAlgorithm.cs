@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace Gapotchenko.FX.Data.Checksum
     /// <summary>
     /// The base class for <see cref="IChecksumAlgorithm{T}"/> implementations.
     /// </summary>
-    public abstract class ChecksumAlgorithm<T> : IChecksumAlgorithm<T>
+    public abstract partial class ChecksumAlgorithm<T> : IChecksumAlgorithm<T>
         where T : struct
     {
         /// <inheritdoc/>
@@ -78,5 +79,28 @@ namespace Gapotchenko.FX.Data.Checksum
         /// </summary>
         /// <returns>An iterator for checksum computation.</returns>
         protected abstract IChecksumIterator<T> CreateIteratorCore();
+
+        /// <inheritdoc/>
+        public HashAlgorithm CreateHashAlgorithm() => CreateHashAlgorithmCore(null);
+
+        /// <summary>
+        /// Creates a hash algorithm for checksum computation with the specified bit converter.
+        /// </summary>
+        /// <param name="bitConverter">
+        /// The bit converter to use for conversion of the computed checksum value to a hash byte representation
+        /// or <see langword="null"/> to use the default bit converter.</param>
+        /// <returns>A hash algorithm for checksum computation.</returns>
+        protected virtual HashAlgorithm CreateHashAlgorithmCore(IBitConverter? bitConverter) =>
+            new HashAlgorithmImpl(
+                this,
+                bitConverter ?? LittleEndianBitConverter.Instance);
+
+        /// <summary>
+        /// Gets a hash byte representation of the specified checksum value.
+        /// </summary>
+        /// <param name="checksum">The checksum.</param>
+        /// <param name="bitConverter">The bit converter.</param>
+        /// <returns>The hash bytes.</returns>
+        protected abstract byte[] GetHashBytesCore(T checksum, IBitConverter bitConverter);
     }
 }

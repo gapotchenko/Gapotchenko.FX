@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,5 +47,11 @@ namespace Gapotchenko.FX.Data.Checksum
         /// </summary>
         /// <returns>An iterator for checksum computation.</returns>
         IChecksumIterator<T> CreateIterator();
+
+        /// <summary>
+        /// Creates a hash algorithm for checksum computation.
+        /// </summary>
+        /// <returns>A hash algorithm for checksum computation.</returns>
+        HashAlgorithm CreateHashAlgorithm();
     }
 }
