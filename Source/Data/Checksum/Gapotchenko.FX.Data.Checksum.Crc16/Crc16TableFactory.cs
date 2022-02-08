@@ -50,7 +50,6 @@ namespace Gapotchenko.FX.Data.Checksum
             const int TableSize = 256;
             const ushort FirstBit = 0b1;
             const ushort LastBit = 1 << (Width - 1);
-            const int RightShift = Width - 8;
 
             var table = new ushort[TableSize];
 
@@ -77,7 +76,7 @@ namespace Gapotchenko.FX.Data.Checksum
             {
                 for (ushort i = 0; i < TableSize; ++i)
                 {
-                    ushort value = (ushort)(i << RightShift);
+                    ushort value = (ushort)(i << (Width - 8));
 
                     for (int j = 0; j < 8; ++j)
                     {

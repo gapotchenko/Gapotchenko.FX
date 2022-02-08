@@ -120,9 +120,8 @@ namespace Gapotchenko.FX.Harness.Console
             Console.WriteLine(string.Concat(result));
 
             var iterator = Crc16.Standard.CreateIterator();
-            iterator = Crc16.Ccitt.CreateIterator();
+            iterator = Crc16.Attested.Ccitt.CreateIterator();
 
-            
         }
 
         static async Task _RunAsync(CancellationToken ct)

@@ -48,7 +48,6 @@ namespace Gapotchenko.FX.Data.Checksum
         /// <summary>
         /// Iterator for CRC-16 checksum computation.
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
         public struct Iterator : IChecksumIterator<ushort>
         {
             internal Iterator(Crc16 algorithm)

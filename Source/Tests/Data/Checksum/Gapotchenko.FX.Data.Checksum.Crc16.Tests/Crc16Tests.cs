@@ -56,30 +56,33 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
         public void Crc16_Standard_Check() => Check19(Crc16.Standard, 0xbb3d);
 
         [TestMethod]
-        public void Crc16_Ccitt_Check() => Check19(Crc16.Ccitt, 0x2189);
+        public void Crc16_Ccitt_Check() => Check19(Crc16.Attested.Ccitt, 0x2189);
 
         [TestMethod]
-        public void Crc16_IsoIec14443_3_A_Check() => Check19(Crc16.IsoIec14443_3_A, 0xbf05);
+        public void Crc16_IsoIec14443_3_A_Check() => Check19(Crc16.Attested.IsoIec14443_3_A, 0xbf05);
 
         [TestMethod]
-        public void Crc16_IsoIec14443_3_B_Check() => Check19(Crc16.IsoIec14443_3_B, 0x906e);
+        public void Crc16_IsoIec14443_3_B_Check() => Check19(Crc16.Attested.IsoIec14443_3_B, 0x906e);
 
         [TestMethod]
-        public void Crc16_Maxim_Check() => Check19(Crc16.Maxim, 0x44c2);
+        public void Crc16_Maxim_Check() => Check19(Crc16.Attested.Maxim, 0x44c2);
 
         [TestMethod]
-        public void Crc16_Nrsc5_Check() => Check19(Crc16.Nrsc5, 0xa066);
+        public void Crc16_Nrsc5_Check() => Check19(Crc16.Attested.Nrsc5, 0xa066);
 
         [TestMethod]
-        public void Crc16_SpiFujitsu_Check() => Check19(Crc16.SpiFujitsu, 0xe5cc);
+        public void Crc16_SpiFujitsu_Check() => Check19(Crc16.Attested.SpiFujitsu, 0xe5cc);
 
         [TestMethod]
-        public void Crc16_Umts_Check() => Check19(Crc16.Umts, 0xfee8);
+        public void Crc16_Umts_Check() => Check19(Crc16.Attested.Umts, 0xfee8);
 
         [TestMethod]
-        public void Crc16_Usb_Check() => Check19(Crc16.Usb, 0xb4c8);
+        public void Crc16_Usb_Check() => Check19(Crc16.Attested.Usb, 0xb4c8);
 
         [TestMethod]
-        public void Crc16_XModem_Check() => Check19(Crc16.XModem, 0x31c3);
+        public void Crc16_XModem_Check() => Check19(Crc16.Attested.XModem, 0x31c3);
+
+        [TestMethod]
+        public void Crc16_Profibus_Check() => Check19(Crc16.Attested.Profibus, 0xa819);
     }
 }
