@@ -56,6 +56,31 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
         public void Crc16_Standard_Check() => Check19(Crc16.Standard, 0xbb3d);
 
         [TestMethod]
+        public void Crc16_Standard_Hash()
+        {
+            var algorithm = Crc16.Standard;
+            var ha = algorithm.CreateHashAlgorithm();
+            var hash = ha.ComputeHash(TV19);
+            Assert.AreEqual(2, hash.Length);
+            Assert.AreEqual(0xbb3d, LittleEndianBitConverter.ToUInt16(hash));
+        }
+
+        void Crc16_Standard_Hash(IBitConverter bitConverter)
+        {
+            var algorithm = Crc16.Standard;
+            var ha = algorithm.CreateHashAlgorithm(bitConverter);
+            var hash = ha.ComputeHash(TV19);
+            Assert.AreEqual(2, hash.Length);
+            Assert.AreEqual(0xbb3d, bitConverter.ToUInt16(hash));
+        }
+
+        [TestMethod]
+        public void Crc16_Standard_Hash_LE() => Crc16_Standard_Hash(LittleEndianBitConverter.Instance);
+
+        [TestMethod]
+        public void Crc16_Standard_Hash_BE() => Crc16_Standard_Hash(BigEndianBitConverter.Instance);
+
+        [TestMethod]
         public void Crc16_Ccitt_Check() => Check19(Crc16.Attested.Ccitt, 0x2189);
 
         [TestMethod]
