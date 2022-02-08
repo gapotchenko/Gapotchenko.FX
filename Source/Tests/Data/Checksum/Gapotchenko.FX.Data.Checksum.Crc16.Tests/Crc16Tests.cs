@@ -87,5 +87,11 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc16_Modbus_Check() => Check19(Crc16.Attested.Modbus, 0x4b37);
+
+        [TestMethod]
+        public void Crc16_OpenSafetyA_Check() => Check19(Crc16.Attested.OpenSafetyA, 0x5d38);
+
+        [TestMethod]
+        public void Crc16_OpenSafetyB_Check() => Check19(Crc16.Attested.OpenSafetyB, 0x20fe);
     }
 }

@@ -193,6 +193,32 @@
             /// </para>
             /// </remarks>
             public static Crc16 Modbus => Impl.Modbus.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-16/OPENSAFETY-A algorithm
+            /// which performs checksum computation using x^16 + x^14 + x^12 + x^11 + x^8 + x^5 + x^4 + x^2 + 1 polynomial with initial value of 0.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x5935, init=0x0000, refin=false, refout=false, xorout=0x0000, check=0x5d38.
+            /// </para>
+            /// </remarks>
+            public static Crc16 OpenSafetyA => Impl.OpenSafetyA.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-16/OPENSAFETY-B algorithm
+            /// which performs checksum computation using x^16 + x^14 + x^13 + x^12 + x^10 + x^8 + x^6 + x^4 + x^3 + x + 1 polynomial with initial value of 0.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x755b, init=0x0000, refin=false, refout=false, xorout=0x0000, check=0x20fe.
+            /// </para>
+            /// </remarks>
+            public static Crc16 OpenSafetyB => Impl.OpenSafetyB.Instance;
         }
 
         static class Impl
@@ -267,6 +293,18 @@
             {
                 Modbus() : base(0x8005, 0xffff, true, true, 0) { }
                 public static readonly Modbus Instance = new();
+            }
+
+            public sealed class OpenSafetyA : GenericCrc16
+            {
+                OpenSafetyA() : base(0x5935, 0, false, false, 0) { }
+                public static readonly OpenSafetyA Instance = new();
+            }
+
+            public sealed class OpenSafetyB : GenericCrc16
+            {
+                OpenSafetyB() : base(0x755b, 0, false, false, 0) { }
+                public static readonly OpenSafetyB Instance = new();
             }
         }
     }
