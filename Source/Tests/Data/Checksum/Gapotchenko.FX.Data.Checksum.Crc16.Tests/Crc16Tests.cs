@@ -21,6 +21,16 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
             iterator.ComputeBlock(CheckData.AsSpan(5, 4));
             Assert.AreEqual(check, iterator.ComputeFinal(), "Iterator checksum computation failed.");
 
+            iterator.ComputeBlock(CheckData.AsSpan(0, 2));
+            iterator.ComputeBlock(CheckData.AsSpan(2, 7));
+            Assert.AreEqual(check, iterator.ComputeFinal(), "Reused iterator checksum computation failed.");
+
+            iterator.ComputeBlock(CheckData.AsSpan(0, 5));
+            iterator.Reset();
+            iterator.ComputeBlock(CheckData.AsSpan(0, 3));
+            iterator.ComputeBlock(CheckData.AsSpan(3, 6));
+            Assert.AreEqual(check, iterator.ComputeFinal(), "Reseted iterator checksum computation failed.");
+
             var ms = new MemoryStream(CheckData, false);
             Assert.AreEqual(check, crc.ComputeChecksum(ms), "Stream checksum computation failed.");
 
