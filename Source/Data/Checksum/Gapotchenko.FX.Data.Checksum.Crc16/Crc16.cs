@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 
 namespace Gapotchenko.FX.Data.Checksum
 {
@@ -10,7 +9,7 @@ namespace Gapotchenko.FX.Data.Checksum
     /// Represents the base class from which implementations of CRC-16 checksum algorithm may derive.
     /// </remarks>
     [CLSCompliant(false)]
-    public abstract partial class Crc16 : ICrc16
+    public abstract partial class Crc16 : ChecksumAlgorithm<ushort>, ICrc16
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericCrc16"/> class.
@@ -32,18 +31,19 @@ namespace Gapotchenko.FX.Data.Checksum
         protected const int Width = 16;
 
         /// <inheritdoc/>
-        public int ChecksumSize => Width;
+        public sealed override int ChecksumSize => Width;
 
         /// <inheritdoc/>
-        public virtual ushort ComputeChecksum(ReadOnlySpan<byte> data) => ComputeFinal(ComputeBlock(InitialValue, data));
+        public override ushort ComputeChecksum(ReadOnlySpan<byte> data) => ComputeFinal(ComputeBlock(InitialValue, data));
 
         /// <summary>
         /// Creates an iterator for checksum computation.
         /// </summary>
         /// <returns>An iterator for checksum computation.</returns>
-        public Iterator CreateIterator() => new(this);
+        public new Iterator CreateIterator() => new(this);
 
-        IChecksumIterator<ushort> IChecksumAlgorithm<ushort>.CreateIterator() => CreateIterator();
+        /// <inheritdoc/>
+        protected sealed override IChecksumIterator<ushort> CreateIteratorCore() => CreateIterator();
 
         /// <summary>
         /// Iterator for CRC-16 checksum computation.
