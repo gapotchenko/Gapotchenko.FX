@@ -305,6 +305,19 @@
             /// </para>
             /// </remarks>
             public static Crc16 DectX => Impl.DectX.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-16/DDS-110 algorithm
+            /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0x800D.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x8005, init=0x800d, refin=false, refout=false, xorout=0x0000, check=0x9ecf.
+            /// </para>
+            /// </remarks>
+            public static Crc16 Dds110 => Impl.Dds110.Instance;
         }
 
         static class Impl
@@ -427,6 +440,12 @@
             {
                 DectX() : base(0x0589, 0, false, false, 0) { }
                 public static readonly DectX Instance = new();
+            }
+
+            public sealed class Dds110 : GenericCrc16
+            {
+                Dds110() : base(0x8005, 0x800d, false, false, 0) { }
+                public static readonly Dds110 Instance = new();
             }
         }
     }
