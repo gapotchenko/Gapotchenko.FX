@@ -83,6 +83,22 @@
             /// </para>
             /// </remarks>
             public static Crc32 Autosar => Impl.Autosar.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-32/POSIX algorithm
+            /// which performs checksum computation using x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1 polynomial with initial value of 0.
+            /// </para>
+            /// <para>
+            /// Alias: CRC-32/CKSUM, CKSUM.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x04c11db7, init=0x00000000, refin=false, refout=false, xorout=0xffffffff, check=0x765e7680.
+            /// </para>
+            /// </remarks>
+            public static Crc32 Posix => Impl.Posix.Instance;
         }
 
         static class Impl
@@ -115,6 +131,12 @@
             {
                 Autosar() : base(0xf4acfb13, 0xffffffff, true, true, 0xffffffff) { }
                 public static readonly Autosar Instance = new();
+            }
+
+            public sealed class Posix : GenericCrc32
+            {
+                Posix() : base(0x04c11db7, 0, false, false, 0xffffffff) { }
+                public static readonly Posix Instance = new();
             }
         }
     }

@@ -43,9 +43,9 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
         public void Crc32_D_Check() => Check19(Crc32.Attested.D, 0x87315576);
 
         [TestMethod]
-        public void Crc32_Q_Check() => Check19(Crc32.Attested.Q, 0x3010bf7f);
+        public void Crc32_Autosar_Check() => Check19(Crc32.Attested.Autosar, 0x1697d06a);
 
         [TestMethod]
-        public void Crc32_Autosar_Check() => Check19(Crc32.Attested.Autosar, 0x1697d06a);
+        public void Crc32_Posix_Check() => Check19(Crc32.Attested.Posix, 0x765e7680);
     }
 }
