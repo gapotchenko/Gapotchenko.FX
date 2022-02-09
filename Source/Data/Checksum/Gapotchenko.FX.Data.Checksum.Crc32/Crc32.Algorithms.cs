@@ -90,7 +90,7 @@
             /// which performs checksum computation using x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1 polynomial with initial value of 0.
             /// </para>
             /// <para>
-            /// Alias: CRC-32/CKSUM, CKSUM.
+            /// Aliases: CRC-32/CKSUM, CKSUM.
             /// </para>
             /// </summary>
             /// <remarks>
@@ -99,6 +99,22 @@
             /// </para>
             /// </remarks>
             public static Crc32 Posix => Impl.Posix.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-32/DECT-B algorithm
+            /// which performs checksum computation using x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1 polynomial with initial value of 0xFFFFFFFF.
+            /// </para>
+            /// <para>
+            /// Aliases: CRC-32/BZIP2, CRC-32/AAL5, B-CRC-32.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x04c11db7, init=0xffffffff, refin=false, refout=false, xorout=0xffffffff, check=0xfc891918.
+            /// </para>
+            /// </remarks>
+            public static Crc32 DectB => Impl.DectB.Instance;
         }
 
         static class Impl
@@ -137,6 +153,12 @@
             {
                 Posix() : base(0x04c11db7, 0, false, false, 0xffffffff) { }
                 public static readonly Posix Instance = new();
+            }
+
+            public sealed class DectB : GenericCrc32
+            {
+                DectB() : base(0x04c11db7, 0xffffffff, false, false, 0xffffffff) { }
+                public static readonly DectB Instance = new();
             }
         }
     }

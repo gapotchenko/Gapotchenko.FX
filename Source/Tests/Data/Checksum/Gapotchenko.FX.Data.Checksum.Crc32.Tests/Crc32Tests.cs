@@ -47,5 +47,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc32_Posix_Check() => Check19(Crc32.Attested.Posix, 0x765e7680);
+
+        [TestMethod]
+        public void Crc32_DectB_Check() => Check19(Crc32.Attested.DectB, 0xfc891918);
     }
 }
