@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageTag Include="checksum" />
     <PackageTag Include="crc" />
-    <PackageTag Include="crc-16" />
+    <PackageTag Include="crc-32" />
   </ItemGroup>
 
   <ItemGroup>

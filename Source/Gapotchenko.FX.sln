@@ -154,6 +154,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Checksu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Checksum.Tests.Bench", "Tests\Data\Checksum\Gapotchenko.FX.Data.Checksum.Tests.Bench\Gapotchenko.FX.Data.Checksum.Tests.Bench.csproj", "{3B521D95-0944-4F4D-ABA3-75CFBFFDD715}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Checksum.Crc32", "Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc32\Gapotchenko.FX.Data.Checksum.Crc32.csproj", "{65220923-B35A-435D-BB66-9DCEDB31812A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -324,6 +326,10 @@ Global
 		{3B521D95-0944-4F4D-ABA3-75CFBFFDD715}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B521D95-0944-4F4D-ABA3-75CFBFFDD715}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B521D95-0944-4F4D-ABA3-75CFBFFDD715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65220923-B35A-435D-BB66-9DCEDB31812A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65220923-B35A-435D-BB66-9DCEDB31812A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65220923-B35A-435D-BB66-9DCEDB31812A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65220923-B35A-435D-BB66-9DCEDB31812A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -385,6 +391,7 @@ Global
 		{0A4346D7-3EE2-4BC9-9D61-26ED04F56CBB} = {87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}
 		{B4A7E224-3D6D-4C8F-8505-FC37B9AFD3B4} = {87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}
 		{3B521D95-0944-4F4D-ABA3-75CFBFFDD715} = {87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}
+		{65220923-B35A-435D-BB66-9DCEDB31812A} = {87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}
