@@ -1,23 +1,17 @@
 ﻿using System;
 using System.IO;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Checksum
 {
     /// <summary>
-    /// Defines the interface of a checksum algorithm.
+    /// Defines the interface of a generic checksum algorithm.
     /// </summary>
     /// <typeparam name="T">The type of the checksum value.</typeparam>
-    public interface IChecksumAlgorithm<T>
+    public interface IChecksumAlgorithm<T> : IChecksumAlgorithm
         where T : struct
     {
-        /// <summary>
-        /// Gets the size, in bits, of the computed checksum value.
-        /// </summary>
-        int ChecksumSize { get; }
-
         /// <summary>
         /// Computes the checksum for the specified byte span.
         /// </summary>
@@ -47,11 +41,5 @@ namespace Gapotchenko.FX.Data.Checksum
         /// </summary>
         /// <returns>An iterator for checksum computation.</returns>
         IChecksumIterator<T> CreateIterator();
-
-        /// <summary>
-        /// Creates a hash algorithm for checksum computation.
-        /// </summary>
-        /// <returns>A hash algorithm for checksum computation.</returns>
-        HashAlgorithm CreateHashAlgorithm();
     }
 }
