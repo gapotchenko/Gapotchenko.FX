@@ -78,6 +78,8 @@ namespace Gapotchenko.FX.Data.Checksum
                 return checksum;
             }
 
+            object IChecksumIterator.ComputeFinal() => ComputeFinal();
+
             /// <inheritdoc/>
             public void Reset() => m_Register = m_Algorithm.InitialValue;
         }
