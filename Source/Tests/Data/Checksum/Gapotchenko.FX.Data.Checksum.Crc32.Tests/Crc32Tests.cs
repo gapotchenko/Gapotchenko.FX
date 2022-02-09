@@ -9,6 +9,9 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
         static void Check19(IChecksumAlgorithm<uint> algorithm, uint check) => ChecksumTestBench.Check(algorithm, ChecksumTestBench.TV19, check);
 
         [TestMethod]
+        public void Crc32_D_Check() => Check19(Crc32.Attested.D, 0x87315576);
+
+        [TestMethod]
         public void Crc32_Q_Check() => Check19(Crc32.Attested.Q, 0x3010bf7f);
 
         [TestMethod]

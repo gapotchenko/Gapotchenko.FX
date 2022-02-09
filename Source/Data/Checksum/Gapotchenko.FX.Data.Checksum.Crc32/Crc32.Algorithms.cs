@@ -9,7 +9,23 @@
         {
             /// <summary>
             /// <para>
-            /// Gets CRC-32/Q algorithm
+            /// Gets CRC-32D algorithm
+            /// which performs checksum computation using x^32 + x^31 + x^29 + x^27 + x^21 + x^20 + x^17 + x^16 + x^15 + x^12 + x^11 + x^5 + x^3 + x + 1 polynomial with initial value of 0xFFFFFFFF.
+            /// </para>
+            /// <para>
+            /// Alias: CRC-32/BASE91-D.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0xa833982b, init=0xffffffff, refin=true, refout=true, xorout=0xffffffff, check=0x87315576.
+            /// </para>
+            /// </remarks>
+            public static Crc32 D => Impl.D.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-32Q algorithm
             /// which performs checksum computation using x^32 + x^31 + x^24 + x^22 + x^16 + x^14 + x^8 + x^7 + x^5 + x^3 + x + 1 polynomial with initial value of 0.
             /// </para>
             /// <para>
@@ -39,6 +55,12 @@
 
         static class Impl
         {
+            public sealed class D : GenericCrc32
+            {
+                D() : base(0xa833982b, 0xffffffff, true, true, 0xffffffff) { }
+                public static readonly D Instance = new();
+            }
+
             public sealed class Q : GenericCrc32
             {
                 Q() : base(0x814141ab, 0, false, false, 0) { }
