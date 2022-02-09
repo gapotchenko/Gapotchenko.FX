@@ -3,10 +3,42 @@
     partial class Crc32
     {
         /// <summary>
+        /// <para>
+        /// Gets the standard CRC-32 algorithm
+        /// which performs checksum computation using x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1 polynomial with initial value of 0xFFFFFFFF.
+        /// </para>
+        /// <para>
+        /// Aliases: CRC-32, CRC-32/ISO-HDLC, CRC-32/ADCCP, CRC-32/V-42, CRC-32/XZ, PKZIP.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Parameters: poly=0x04c11db7, init=0xffffffff, refin=true, refout=true, xorout=0xffffffff, check=0xcbf43926.
+        /// </para>
+        /// </remarks>
+        public static Crc32 Standard => Impl.Standard.Instance;
+
+        /// <summary>
         /// Attested CRC-32 algorithms.
         /// </summary>
         public static class Attested
         {
+            /// <summary>
+            /// <para>
+            /// Gets CRC-32C algorithm
+            /// which performs checksum computation using x^32 + x^28 + x^27 + x^26 + x^25 + x^23 + x^22 + x^20 + x^19 + x^18 + x^14 + x^13 + x^11 + x^10 + x^9 + x^8 + x^6 + 1 polynomial with initial value of 0xFFFFFFFF.
+            /// </para>
+            /// <para>
+            /// Aliases: CRC-32/BASE91-C, CRC-32/CASTAGNOLI, CRC-32/INTERLAKEN, CRC-32/ISCSI.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x1edc6f41, init=0xffffffff, refin=true, refout=true, xorout=0xffffffff, check=0xe3069283.
+            /// </para>
+            /// </remarks>
+            public static Crc32 C => Impl.C.Instance;
+
             /// <summary>
             /// <para>
             /// Gets CRC-32D algorithm
@@ -55,6 +87,18 @@
 
         static class Impl
         {
+            public sealed class Standard : GenericCrc32
+            {
+                Standard() : base(0x04c11db7, 0xffffffff, true, true, 0xffffffff) { }
+                public static readonly Standard Instance = new();
+            }
+
+            public sealed class C : GenericCrc32
+            {
+                C() : base(0x1edc6f41, 0xffffffff, true, true, 0xffffffff) { }
+                public static readonly C Instance = new();
+            }
+
             public sealed class D : GenericCrc32
             {
                 D() : base(0xa833982b, 0xffffffff, true, true, 0xffffffff) { }
