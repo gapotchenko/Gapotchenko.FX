@@ -318,6 +318,22 @@
             /// </para>
             /// </remarks>
             public static Crc16 Dds110 => Impl.Dds110.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-16/CCITT-FALSE algorithm
+            /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xFFFF.
+            /// </para>
+            /// <para>
+            /// Aliases: CRC-16/AUTOSAR, CRC-16/IBM-3740.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x1021, init=0xffff, refin=false, refout=false, xorout=0x0000, check=0x29b1.
+            /// </para>
+            /// </remarks>
+            public static Crc16 CcittFalse => Impl.CcittFalse.Instance;
         }
 
         static class Impl
@@ -446,6 +462,12 @@
             {
                 Dds110() : base(0x8005, 0x800d, false, false, 0) { }
                 public static readonly Dds110 Instance = new();
+            }
+
+            public sealed class CcittFalse : GenericCrc16
+            {
+                CcittFalse() : base(0x1021, 0xffff, false, false, 0) { }
+                public static readonly CcittFalse Instance = new();
             }
         }
     }
