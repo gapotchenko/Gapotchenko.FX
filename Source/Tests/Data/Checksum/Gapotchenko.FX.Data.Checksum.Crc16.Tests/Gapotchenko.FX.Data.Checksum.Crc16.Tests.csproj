@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc16\Gapotchenko.FX.Data.Checksum.Crc16.csproj" />
     <ProjectReference Include="..\..\..\..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Checksum.Tests.Bench\Gapotchenko.FX.Data.Checksum.Tests.Bench.csproj" />
   </ItemGroup>
 
 </Project>
