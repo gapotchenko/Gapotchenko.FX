@@ -47,10 +47,10 @@ namespace Gapotchenko.FX.Data.Checksum
         static ushort[] CreateTable(ushort polynomial, bool reflectedInput)
         {
             const int Width = 16;
-            const int TableSize = 256;
             const ushort FirstBit = 0b1;
             const ushort LastBit = 1 << (Width - 1);
 
+            const int TableSize = 256;
             var table = new ushort[TableSize];
 
             if (reflectedInput)

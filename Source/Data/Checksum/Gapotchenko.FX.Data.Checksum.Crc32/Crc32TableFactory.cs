@@ -47,17 +47,17 @@ namespace Gapotchenko.FX.Data.Checksum
         static uint[] CreateTable(uint polynomial, bool reflectedInput)
         {
             const int Width = 32;
-            const int TableSize = 256;
             const uint FirstBit = 0b1;
             const uint LastBit = 1u << (Width - 1);
 
+            const int TableSize = 256;
             var table = new uint[TableSize];
 
             if (reflectedInput)
             {
                 polynomial = BitOperationsEx.Reverse(polynomial);
 
-                for (ushort i = 0; i < TableSize; ++i)
+                for (uint i = 0; i < TableSize; ++i)
                 {
                     uint value = i;
 
@@ -74,9 +74,9 @@ namespace Gapotchenko.FX.Data.Checksum
             }
             else
             {
-                for (ushort i = 0; i < TableSize; ++i)
+                for (uint i = 0; i < TableSize; ++i)
                 {
-                    uint value = (uint)i << (Width - 8);
+                    uint value = i << (Width - 8);
 
                     for (int j = 0; j < 8; ++j)
                     {
