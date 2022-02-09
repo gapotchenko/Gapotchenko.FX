@@ -50,5 +50,11 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc32_DectB_Check() => Check19(Crc32.Attested.DectB, 0xfc891918);
+
+        [TestMethod]
+        public void Crc32_Mef_Check() => Check19(Crc32.Attested.Mef, 0xd2c22f51);
+
+        [TestMethod]
+        public void Crc32_Mpeg2_Check() => Check19(Crc32.Attested.Mpeg2, 0x0376e6e7);
     }
 }
