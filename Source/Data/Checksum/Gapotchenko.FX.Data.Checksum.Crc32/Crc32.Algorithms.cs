@@ -41,22 +41,6 @@
 
             /// <summary>
             /// <para>
-            /// Gets CRC-32D algorithm
-            /// which performs checksum computation using x^32 + x^31 + x^29 + x^27 + x^21 + x^20 + x^17 + x^16 + x^15 + x^12 + x^11 + x^5 + x^3 + x + 1 polynomial with initial value of 0xFFFFFFFF.
-            /// </para>
-            /// <para>
-            /// Alias: CRC-32/BASE91-D.
-            /// </para>
-            /// </summary>
-            /// <remarks>
-            /// <para>
-            /// Parameters: poly=0xa833982b, init=0xffffffff, refin=true, refout=true, xorout=0xffffffff, check=0x87315576.
-            /// </para>
-            /// </remarks>
-            public static Crc32 D => Impl.D.Instance;
-
-            /// <summary>
-            /// <para>
             /// Gets CRC-32Q algorithm
             /// which performs checksum computation using x^32 + x^31 + x^24 + x^22 + x^16 + x^14 + x^8 + x^7 + x^5 + x^3 + x + 1 polynomial with initial value of 0.
             /// </para>
@@ -102,11 +86,11 @@
 
             /// <summary>
             /// <para>
-            /// Gets CRC-32/DECT-B algorithm
+            /// Gets CRC-32/BZIP2 algorithm
             /// which performs checksum computation using x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1 polynomial with initial value of 0xFFFFFFFF.
             /// </para>
             /// <para>
-            /// Aliases: CRC-32/BZIP2, CRC-32/AAL5, B-CRC-32.
+            /// Aliases: CRC-32/DECT-B, CRC-32/AAL5, B-CRC-32.
             /// </para>
             /// </summary>
             /// <remarks>
@@ -114,7 +98,7 @@
             /// Parameters: poly=0x04c11db7, init=0xffffffff, refin=false, refout=false, xorout=0xffffffff, check=0xfc891918.
             /// </para>
             /// </remarks>
-            public static Crc32 DectB => Impl.DectB.Instance;
+            public static Crc32 BZip2 => Impl.BZip2.Instance;
 
             /// <summary>
             /// <para>
@@ -157,12 +141,6 @@
                 public static readonly C Instance = new();
             }
 
-            public sealed class D : GenericCrc32
-            {
-                D() : base(0xa833982b, 0xffffffff, true, true, 0xffffffff) { }
-                public static readonly D Instance = new();
-            }
-
             public sealed class Q : GenericCrc32
             {
                 Q() : base(0x814141ab, 0, false, false, 0) { }
@@ -181,10 +159,10 @@
                 public static readonly Posix Instance = new();
             }
 
-            public sealed class DectB : GenericCrc32
+            public sealed class BZip2 : GenericCrc32
             {
-                DectB() : base(0x04c11db7, 0xffffffff, false, false, 0xffffffff) { }
-                public static readonly DectB Instance = new();
+                BZip2() : base(0x04c11db7, 0xffffffff, false, false, 0xffffffff) { }
+                public static readonly BZip2 Instance = new();
             }
 
             public sealed class Mef : GenericCrc32

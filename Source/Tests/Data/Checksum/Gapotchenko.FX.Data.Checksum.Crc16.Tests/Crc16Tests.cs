@@ -6,7 +6,11 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
     [TestClass]
     public class Crc16Tests
     {
-        static void Check19(IChecksumAlgorithm<ushort> algorithm, ushort check) => ChecksumTestBench.Check(algorithm, ChecksumTestBench.TV19, check);
+        static void Check19(IChecksumAlgorithm<ushort> algorithm, ushort check)
+        {
+            Assert.AreEqual(16, algorithm.ChecksumSize);
+            ChecksumTestBench.Check(algorithm, ChecksumTestBench.TV19, check);
+        }
 
         [TestMethod]
         public void Crc16_Standard_Check() => Check19(Crc16.Standard, 0xbb3d);

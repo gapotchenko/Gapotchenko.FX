@@ -6,7 +6,11 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
     [TestClass]
     public class Crc32Tests
     {
-        static void Check19(IChecksumAlgorithm<uint> algorithm, uint check) => ChecksumTestBench.Check(algorithm, ChecksumTestBench.TV19, check);
+        static void Check19(IChecksumAlgorithm<uint> algorithm, uint check)
+        {
+            Assert.AreEqual(32, algorithm.ChecksumSize);
+            ChecksumTestBench.Check(algorithm, ChecksumTestBench.TV19, check);
+        }
 
         [TestMethod]
         public void Crc32_Standard_Check() => Check19(Crc32.Standard, 0xcbf43926);
@@ -40,21 +44,30 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
         public void Crc32_C_Check() => Check19(Crc32.Attested.C, 0xe3069283);
 
         [TestMethod]
-        public void Crc32_D_Check() => Check19(Crc32.Attested.D, 0x87315576);
-
-        [TestMethod]
         public void Crc32_Autosar_Check() => Check19(Crc32.Attested.Autosar, 0x1697d06a);
 
         [TestMethod]
         public void Crc32_Posix_Check() => Check19(Crc32.Attested.Posix, 0x765e7680);
 
         [TestMethod]
-        public void Crc32_DectB_Check() => Check19(Crc32.Attested.DectB, 0xfc891918);
+        public void Crc32_DectB_Check() => Check19(Crc32.Attested.BZip2, 0xfc891918);
 
         [TestMethod]
         public void Crc32_Mef_Check() => Check19(Crc32.Attested.Mef, 0xd2c22f51);
 
         [TestMethod]
         public void Crc32_Mpeg2_Check() => Check19(Crc32.Attested.Mpeg2, 0x0376e6e7);
+
+        [TestMethod]
+        public void Crc32_Custom_JamCrc_Check() =>
+            Check19(
+                new CustomCrc32(0x04c11db7, 0xffffffff, true, true, 0),
+                0x340bc6d9);
+
+        [TestMethod]
+        public void Crc32_Custom_JamCrc_0_Check() =>
+            Check19(
+                new CustomCrc32(0x04c11db7, 0, true, true, 0),
+                0x2dfd2d88);
     }
 }
