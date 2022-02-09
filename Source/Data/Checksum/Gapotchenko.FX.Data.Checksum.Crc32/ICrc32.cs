@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Gapotchenko.FX.Data.Checksum.Crc32
+namespace Gapotchenko.FX.Data.Checksum
 {
     /// <summary>
     /// Represents a unifying interface for all CRC-32 checksum algorithm implementations.
