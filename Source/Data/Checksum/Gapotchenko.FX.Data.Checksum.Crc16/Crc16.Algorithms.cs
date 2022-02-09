@@ -45,7 +45,7 @@
             /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xC6C6.
             /// </para>
             /// <para>
-            /// Aliases: CRC-A.
+            /// Alias: CRC-A.
             /// </para>
             /// </summary>
             /// <remarks>
@@ -90,7 +90,7 @@
             /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0.
             /// </para>
             /// <para>
-            /// Aliases: CRC-16/MAXIM-DOW.
+            /// Alias: CRC-16/MAXIM-DOW.
             /// </para>
             /// </summary>
             /// <remarks>
@@ -106,7 +106,7 @@
             /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0x1D0F.
             /// </para>
             /// <para>
-            /// Aliases: CRC-16/AUG-CCITT.
+            /// Alias: CRC-16/AUG-CCITT.
             /// </para>
             /// </summary>
             /// <remarks>
@@ -167,7 +167,7 @@
             /// which performs checksum computation using x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^6 + x^3 + x^2 + x + 1 polynomial with initial value of 0xFFFF.
             /// </para>
             /// <para>
-            /// Aliases: CRC-16/IEC-61158-2.
+            /// Alias: CRC-16/IEC-61158-2.
             /// </para>
             /// </summary>
             /// <remarks>
@@ -183,7 +183,7 @@
             /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0xFFFF.
             /// </para>
             /// <para>
-            /// Aliases: MODBUS.
+            /// Alias: MODBUS.
             /// </para>
             /// </summary>
             /// <remarks>
@@ -273,6 +273,38 @@
             /// </para>
             /// </remarks>
             public static Crc16 MCRF4XX => Impl.MCRF4XX.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-16/DECT-R algorithm
+            /// which performs checksum computation using x^16 + x^10 + x^8 + x^7 + x^3 + 1 polynomial with initial value of 0.
+            /// </para>
+            /// <para>
+            /// Alias: R-CRC-16.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x0589, init=0x0000, refin=false, refout=false, xorout=0x0001, check=0x007e.
+            /// </para>
+            /// </remarks>
+            public static Crc16 DectR => Impl.DectR.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-16/DECT-X algorithm
+            /// which performs checksum computation using x^16 + x^10 + x^8 + x^7 + x^3 + 1 polynomial with initial value of 0.
+            /// </para>
+            /// <para>
+            /// Alias: X-CRC-16.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x0589, init=0x0000, refin=false, refout=false, xorout=0x0000, check=0x007f.
+            /// </para>
+            /// </remarks>
+            public static Crc16 DectX => Impl.DectX.Instance;
         }
 
         static class Impl
@@ -383,6 +415,18 @@
             {
                 MCRF4XX() : base(0x1021, 0xffff, true, true, 0) { }
                 public static readonly MCRF4XX Instance = new();
+            }
+
+            public sealed class DectR : GenericCrc16
+            {
+                DectR() : base(0x0589, 0, false, false, 0x0001) { }
+                public static readonly DectR Instance = new();
+            }
+
+            public sealed class DectX : GenericCrc16
+            {
+                DectX() : base(0x0589, 0, false, false, 0) { }
+                public static readonly DectX Instance = new();
             }
         }
     }

@@ -130,5 +130,11 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc16_MCRF4XX_Check() => Check19(Crc16.Attested.MCRF4XX, 0x6f91);
+
+        [TestMethod]
+        public void Crc16_DectR_Check() => Check19(Crc16.Attested.DectR, 0x007e);
+
+        [TestMethod]
+        public void Crc16_DectX_Check() => Check19(Crc16.Attested.DectX, 0x007f);
     }
 }
