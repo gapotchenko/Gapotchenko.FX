@@ -123,6 +123,8 @@ namespace Gapotchenko.FX.Harness.Console
             iterator = Crc16.Attested.Ccitt.CreateIterator();
 
             //var ha = Crc16.Attested.Ccitt.CreateHashAlgorithm();
+
+            
         }
 
         static async Task _RunAsync(CancellationToken ct)
