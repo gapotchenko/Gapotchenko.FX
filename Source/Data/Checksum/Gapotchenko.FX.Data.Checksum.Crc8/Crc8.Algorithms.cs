@@ -51,6 +51,19 @@
             /// </para>
             /// </remarks>
             public static Crc8 SaeJ1850 => Impl.SaeJ1850.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-8/OPENSAFETY algorithm
+            /// which performs checksum computation using x^8 + x^5 + x^3 + x^2 + x + 1  polynomial with initial value of 0.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x2f, init=0x00, refin=false, refout=false, xorout=0x00, check=0x3e.
+            /// </para>
+            /// </remarks>
+            public static Crc8 OpenSafety => Impl.OpenSafety.Instance;
         }
 
         static class Impl
@@ -71,6 +84,12 @@
             {
                 SaeJ1850() : base(0x1d, 0xff, false, false, 0xff) { }
                 public static readonly SaeJ1850 Instance = new();
+            }
+
+            public sealed class OpenSafety : GenericCrc8
+            {
+                OpenSafety() : base(0x2f, 0, false, false, 0) { }
+                public static readonly OpenSafety Instance = new();
             }
         }
     }
