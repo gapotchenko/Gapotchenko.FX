@@ -38,6 +38,19 @@
             /// </para>
             /// </remarks>
             public static Crc8 Tech3250 => Impl.Tech3250.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-8/SAE-J1850 algorithm
+            /// which performs checksum computation using x^8 + x^4 + x^3 + x^2 + 1 polynomial with initial value of 0xFF.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x1d, init=0xff, refin=false, refout=false, xorout=0xff, check=0x4b.
+            /// </para>
+            /// </remarks>
+            public static Crc8 SaeJ1850 => Impl.SaeJ1850.Instance;
         }
 
         static class Impl
@@ -52,6 +65,12 @@
             {
                 Tech3250() : base(0x1d, 0xff, true, true, 0) { }
                 public static readonly Tech3250 Instance = new();
+            }
+
+            public sealed class SaeJ1850 : GenericCrc8
+            {
+                SaeJ1850() : base(0x1d, 0xff, false, false, 0xff) { }
+                public static readonly SaeJ1850 Instance = new();
             }
         }
     }
