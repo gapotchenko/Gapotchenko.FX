@@ -48,5 +48,11 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc8_Hitag_Check() => Check19(Crc8.Attested.Hitag, 0xb4);
+
+        [TestMethod]
+        public void Crc8_Darc_Check() => Check19(Crc8.Attested.Darc, 0x15);
+
+        [TestMethod]
+        public void Crc8_Bluetooth_Check() => Check19(Crc8.Attested.Bluetooth, 0x26);
     }
 }

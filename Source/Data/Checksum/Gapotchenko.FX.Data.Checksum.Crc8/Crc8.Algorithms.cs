@@ -132,6 +132,32 @@
             /// </para>
             /// </remarks>
             public static Crc8 Hitag => Impl.Hitag.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-8/DARC algorithm
+            /// which performs checksum computation using x^8 + x^5 + x^4 + x^3 + 1 polynomial with initial value of 0.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x39, init=0x00, refin=true, refout=true, xorout=0x00, check=0x15.
+            /// </para>
+            /// </remarks>
+            public static Crc8 Darc => Impl.Darc.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-8/BLUETOOTH algorithm
+            /// which performs checksum computation using x^8 + x^7 + x^5 + x^2 + x + 1 polynomial with initial value of 0.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0xa7, init=0x00, refin=true, refout=true, xorout=0x00, check=0x26.
+            /// </para>
+            /// </remarks>
+            public static Crc8 Bluetooth => Impl.Bluetooth.Instance;
         }
 
         static class Impl
@@ -188,6 +214,18 @@
             {
                 Hitag() : base(0x1d, 0xff, false, false, 0) { }
                 public static readonly Hitag Instance = new();
+            }
+
+            public sealed class Darc : GenericCrc8
+            {
+                Darc() : base(0x39, 0, true, true, 0) { }
+                public static readonly Darc Instance = new();
+            }
+
+            public sealed class Bluetooth : GenericCrc8
+            {
+                Bluetooth() : base(0xa7, 0, true, true, 0) { }
+                public static readonly Bluetooth Instance = new();
             }
         }
     }
