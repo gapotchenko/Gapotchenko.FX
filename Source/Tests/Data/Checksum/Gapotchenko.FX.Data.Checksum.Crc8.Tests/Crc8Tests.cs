@@ -57,5 +57,11 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc8_Autosar_Check() => Check19(Crc8.Attested.Autosar, 0xdf);
+
+        [TestMethod]
+        public void Crc8_Custom_Cdma2000_Check() =>
+            Check19(
+                new CustomCrc8(0x9b, 0xff, false, false, 0x00),
+                0xda);
     }
 }
