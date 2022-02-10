@@ -55,7 +55,7 @@
             /// <summary>
             /// <para>
             /// Gets CRC-8/OPENSAFETY algorithm
-            /// which performs checksum computation using x^8 + x^5 + x^3 + x^2 + x + 1  polynomial with initial value of 0.
+            /// which performs checksum computation using x^8 + x^5 + x^3 + x^2 + x + 1 polynomial with initial value of 0.
             /// </para>
             /// </summary>
             /// <remarks>
@@ -64,6 +64,19 @@
             /// </para>
             /// </remarks>
             public static Crc8 OpenSafety => Impl.OpenSafety.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-8/NRSC-5 algorithm
+            /// which performs checksum computation using x^8 + x^5 + x^4 + 1 polynomial with initial value of 0xFF.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x31, init=0xff, refin=false, refout=false, xorout=0x00, check=0xf7.
+            /// </para>
+            /// </remarks>
+            public static Crc8 Nrsc5 => Impl.Nrsc5.Instance;
         }
 
         static class Impl
@@ -90,6 +103,12 @@
             {
                 OpenSafety() : base(0x2f, 0, false, false, 0) { }
                 public static readonly OpenSafety Instance = new();
+            }
+
+            public sealed class Nrsc5 : GenericCrc8
+            {
+                Nrsc5() : base(0x31, 0xff, false, false, 0) { }
+                public static readonly Nrsc5 Instance = new();
             }
         }
     }

@@ -33,5 +33,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc8_OpenSafety_Check() => Check19(Crc8.Attested.OpenSafety, 0x3e);
+
+        [TestMethod]
+        public void Crc8_Nrsc5_Check() => Check19(Crc8.Attested.Nrsc5, 0xf7);
     }
 }
