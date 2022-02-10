@@ -18,12 +18,40 @@
         /// </remarks>
         public static Crc8 Standard => Impl.Standard.Instance;
 
+        /// <summary>
+        /// Attested CRC-8 algorithms.
+        /// </summary>
+        public static class Attested
+        {
+            /// <summary>
+            /// <para>
+            /// Gets CRC-8/TECH-3250 algorithm
+            /// which performs checksum computation using x^8 + x^4 + x^3 + x^2 + 1 polynomial with initial value of 0xFF.
+            /// </para>
+            /// <para>
+            /// Aliases: CRC-8/AES, CRC-8/EBU.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x1d, init=0xff, refin=true, refout=true, xorout=0x00, check=0x97.
+            /// </para>
+            /// </remarks>
+            public static Crc8 Tech3250 => Impl.Tech3250.Instance;
+        }
+
         static class Impl
         {
             public sealed class Standard : GenericCrc8
             {
                 Standard() : base(0x07, 0, false, false, 0) { }
                 public static readonly Standard Instance = new();
+            }
+
+            public sealed class Tech3250 : GenericCrc8
+            {
+                Tech3250() : base(0x1d, 0xff, true, true, 0) { }
+                public static readonly Tech3250 Instance = new();
             }
         }
     }

@@ -24,5 +24,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
             Assert.AreEqual(1, hash.Length);
             Assert.AreEqual(0xf4, hash[0]);
         }
+
+        [TestMethod]
+        public void Crc8_Tech3250_Check() => Check19(Crc8.Attested.Tech3250, 0x97);
     }
 }
