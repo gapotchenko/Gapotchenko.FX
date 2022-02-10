@@ -90,6 +90,22 @@
             /// </para>
             /// </remarks>
             public static Crc8 MifareMad => Impl.MifareMad.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-8/MAXIM algorithm
+            /// which performs checksum computation using x^8 + x^5 + x^4 + 1 polynomial with initial value of 0.
+            /// </para>
+            /// <para>
+            /// Aliases: CRC-8/MAXIM-DOW, DOW-CRC.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x31, init=0x00, refin=true, refout=true, xorout=0x00, check=0xa1.
+            /// </para>
+            /// </remarks>
+            public static Crc8 Maxim => Impl.Maxim.Instance;
         }
 
         static class Impl
@@ -128,6 +144,12 @@
             {
                 MifareMad() : base(0x1d, 0xc7, false, false, 0) { }
                 public static readonly MifareMad Instance = new();
+            }
+
+            public sealed class Maxim : GenericCrc8
+            {
+                Maxim() : base(0x31, 0, true, true, 0) { }
+                public static readonly Maxim Instance = new();
             }
         }
     }
