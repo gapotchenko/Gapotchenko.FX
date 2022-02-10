@@ -36,5 +36,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc8_Nrsc5_Check() => Check19(Crc8.Attested.Nrsc5, 0xf7);
+
+        [TestMethod]
+        public void Crc8_MifareMad_Check() => Check19(Crc8.Attested.MifareMad, 0x99);
     }
 }

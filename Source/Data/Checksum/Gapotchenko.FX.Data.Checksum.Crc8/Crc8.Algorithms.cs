@@ -77,6 +77,19 @@
             /// </para>
             /// </remarks>
             public static Crc8 Nrsc5 => Impl.Nrsc5.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-8/MIFARE-MAD algorithm
+            /// which performs checksum computation using x^8 + x^4 + x^3 + x^2 + 1 polynomial with initial value of 0xC7.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x1d, init=0xc7, refin=false, refout=false, xorout=0x00, check=0x99.
+            /// </para>
+            /// </remarks>
+            public static Crc8 MifareMad => Impl.MifareMad.Instance;
         }
 
         static class Impl
@@ -109,6 +122,12 @@
             {
                 Nrsc5() : base(0x31, 0xff, false, false, 0) { }
                 public static readonly Nrsc5 Instance = new();
+            }
+
+            public sealed class MifareMad : GenericCrc8
+            {
+                MifareMad() : base(0x1d, 0xc7, false, false, 0) { }
+                public static readonly MifareMad Instance = new();
             }
         }
     }
