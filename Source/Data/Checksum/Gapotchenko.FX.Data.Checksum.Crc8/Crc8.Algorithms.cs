@@ -106,6 +106,19 @@
             /// </para>
             /// </remarks>
             public static Crc8 Maxim => Impl.Maxim.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-8/I-CODE algorithm
+            /// which performs checksum computation using x^8 + x^4 + x^3 + x^2 + 1 polynomial with initial value of 0xFD.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x1d, init=0xfd, refin=false, refout=false, xorout=0x00, check=0x7e.
+            /// </para>
+            /// </remarks>
+            public static Crc8 ICode => Impl.ICode.Instance;
         }
 
         static class Impl
@@ -150,6 +163,12 @@
             {
                 Maxim() : base(0x31, 0, true, true, 0) { }
                 public static readonly Maxim Instance = new();
+            }
+
+            public sealed class ICode : GenericCrc8
+            {
+                ICode() : base(0x1d, 0xfd, false, false, 0) { }
+                public static readonly ICode Instance = new();
             }
         }
     }

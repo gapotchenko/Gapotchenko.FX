@@ -42,5 +42,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc8_Maxim_Check() => Check19(Crc8.Attested.Maxim, 0xa1);
+
+        [TestMethod]
+        public void Crc8_ICode_Check() => Check19(Crc8.Attested.ICode, 0x7e);
     }
 }
