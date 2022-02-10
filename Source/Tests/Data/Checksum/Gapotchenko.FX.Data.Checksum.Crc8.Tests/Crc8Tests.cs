@@ -54,5 +54,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc8_Bluetooth_Check() => Check19(Crc8.Attested.Bluetooth, 0x26);
+
+        [TestMethod]
+        public void Crc8_Autosar_Check() => Check19(Crc8.Attested.Autosar, 0xdf);
     }
 }

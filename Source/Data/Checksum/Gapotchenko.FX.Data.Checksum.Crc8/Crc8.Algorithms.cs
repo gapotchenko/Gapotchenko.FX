@@ -158,6 +158,19 @@
             /// </para>
             /// </remarks>
             public static Crc8 Bluetooth => Impl.Bluetooth.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-8/AUTOSAR algorithm
+            /// which performs checksum computation using x^8 + x^5 + x^3 + x^2 + x + 1  polynomial with initial value of 0xFF.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x2f, init=0xff, refin=false, refout=false, xorout=0xff, check=0xdf.
+            /// </para>
+            /// </remarks>
+            public static Crc8 Autosar => Impl.Autosar.Instance;
         }
 
         static class Impl
@@ -226,6 +239,12 @@
             {
                 Bluetooth() : base(0xa7, 0, true, true, 0) { }
                 public static readonly Bluetooth Instance = new();
+            }
+
+            public sealed class Autosar : GenericCrc8
+            {
+                Autosar() : base(0x2f, 0xff, false, false, 0xff) { }
+                public static readonly Autosar Instance = new();
             }
         }
     }
