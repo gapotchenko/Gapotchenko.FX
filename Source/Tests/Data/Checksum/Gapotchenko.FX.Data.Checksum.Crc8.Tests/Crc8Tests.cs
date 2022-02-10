@@ -45,5 +45,8 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc8_ICode_Check() => Check19(Crc8.Attested.ICode, 0x7e);
+
+        [TestMethod]
+        public void Crc8_Hitag_Check() => Check19(Crc8.Attested.Hitag, 0xb4);
     }
 }

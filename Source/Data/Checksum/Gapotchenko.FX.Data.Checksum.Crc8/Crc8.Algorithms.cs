@@ -119,6 +119,19 @@
             /// </para>
             /// </remarks>
             public static Crc8 ICode => Impl.ICode.Instance;
+
+            /// <summary>
+            /// <para>
+            /// Gets CRC-8/HITAG algorithm
+            /// which performs checksum computation using x^8 + x^4 + x^3 + x^2 + 1 polynomial with initial value of 0xFF.
+            /// </para>
+            /// </summary>
+            /// <remarks>
+            /// <para>
+            /// Parameters: poly=0x1d, init=0xff, refin=false, refout=false, xorout=0x00, check=0xb4.
+            /// </para>
+            /// </remarks>
+            public static Crc8 Hitag => Impl.Hitag.Instance;
         }
 
         static class Impl
@@ -169,6 +182,12 @@
             {
                 ICode() : base(0x1d, 0xfd, false, false, 0) { }
                 public static readonly ICode Instance = new();
+            }
+
+            public sealed class Hitag : GenericCrc8
+            {
+                Hitag() : base(0x1d, 0xff, false, false, 0) { }
+                public static readonly Hitag Instance = new();
             }
         }
     }
