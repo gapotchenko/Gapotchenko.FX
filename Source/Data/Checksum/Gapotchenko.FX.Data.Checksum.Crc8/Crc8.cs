@@ -36,7 +36,7 @@ namespace Gapotchenko.FX.Data.Checksum
         public override byte ComputeChecksum(ReadOnlySpan<byte> data) => ComputeFinal(ComputeBlock(InitialValue, data));
 
         /// <inheritdoc/>
-        protected override byte[] GetHashBytesCore(byte checksum, IBitConverter bitConverter) => bitConverter.GetBytes(checksum);
+        protected override byte[] GetHashBytesCore(byte checksum, IBitConverter bitConverter) => new[] { checksum };
 
         /// <summary>
         /// Creates an iterator for checksum computation.

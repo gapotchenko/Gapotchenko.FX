@@ -1,6 +1,5 @@
 ﻿using Gapotchenko.FX.Data.Checksum.Tests.Bench;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace Gapotchenko.FX.Data.Checksum.Tests
 {
@@ -15,5 +14,15 @@ namespace Gapotchenko.FX.Data.Checksum.Tests
 
         [TestMethod]
         public void Crc8_Standard_Check() => Check19(Crc8.Standard, 0xf4);
+
+        [TestMethod]
+        public void Crc8_Standard_Hash()
+        {
+            var algorithm = Crc8.Standard;
+            var ha = algorithm.CreateHashAlgorithm();
+            var hash = ha.ComputeHash(ChecksumTestBench.TV19);
+            Assert.AreEqual(1, hash.Length);
+            Assert.AreEqual(0xf4, hash[0]);
+        }
     }
 }
