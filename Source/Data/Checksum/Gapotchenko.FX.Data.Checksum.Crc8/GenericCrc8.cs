@@ -29,28 +29,18 @@ namespace Gapotchenko.FX.Data.Checksum
                     BitOperationsEx.Reverse(initialValue) :
                     initialValue)
         {
-            m_ReflectedOutput = reflectedOutput;
             m_XorOutput = xorOutput;
             m_Table = Crc8TableFactory.GetTable(polynomial, reflectedInput);
         }
 
-        readonly bool m_ReflectedOutput;
         readonly byte m_XorOutput;
         readonly byte[] m_Table;
 
         /// <inheritdoc/>
         protected sealed override byte ComputeBlock(byte register, ReadOnlySpan<byte> data)
         {
-            if (m_ReflectedOutput)
-            {
-                foreach (var b in data)
-                    register = (byte)((register >> 8) ^ m_Table[(byte)(register ^ b)]);
-            }
-            else
-            {
-                foreach (var b in data)
-                    register = (byte)((register << 8) ^ m_Table[(byte)(register ^ b)]);
-            }
+            foreach (var b in data)
+                register = m_Table[(byte)(register ^ b)];
             return register;
         }
 
