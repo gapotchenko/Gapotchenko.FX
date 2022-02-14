@@ -60,11 +60,6 @@ Other benefits include automatic type inference and semantic locality.
 
 ## Polyfills
 
-### PriorityQueue polyfill
-
-`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue available in .NET 6+.
-The polyfill makes it available to all supported .NET versions.
-
 ### KeyValuePair Polyfill
 
 .NET provides a versatile `KeyValuePair<TKey, TValue>` struct and suggests a default way for its instantiation:
@@ -88,6 +83,11 @@ KeyValuePair.Create(key, value)
 ```
 
 It leverages the automatic type inference provided by some .NET languages like C#.
+
+### PriorityQueue polyfill
+
+`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue available in .NET 6+.
+The polyfill makes it available to all supported .NET versions.
 
 #### Deconstruction
 
