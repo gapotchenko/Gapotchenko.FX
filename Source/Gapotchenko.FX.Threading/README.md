@@ -17,9 +17,9 @@ Executing an async task from synchronous code poses a few rather big challenges 
 Meet `TaskBridge`. It makes interoperability a breeze:
 
 ``` csharp
+using Gapotchenko.FX.Threading.Tasks;
 using System;
 using System.Threading.Tasks;
-using Gapotchenko.FX.Threading.Tasks;
 
 class Program
 {
