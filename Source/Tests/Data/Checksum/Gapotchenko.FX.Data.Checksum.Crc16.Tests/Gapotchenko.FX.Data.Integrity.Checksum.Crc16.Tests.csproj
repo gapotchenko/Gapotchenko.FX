@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>Gapotchenko.FX.Data.Checksum.Tests</RootNamespace>
+    <RootNamespace>Gapotchenko.FX.Data.Integrity.Checksum.Tests</RootNamespace>
   </PropertyGroup>
   
   <ItemGroup>

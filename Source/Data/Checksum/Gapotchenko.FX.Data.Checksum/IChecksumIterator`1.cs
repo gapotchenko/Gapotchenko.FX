@@ -1,4 +1,4 @@
-﻿namespace Gapotchenko.FX.Data.Checksum
+﻿namespace Gapotchenko.FX.Data.Integrity.Checksum
 {
     /// <summary>
     /// Represents a generic iterator for checksum computation.

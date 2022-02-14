@@ -1,6 +1,6 @@
 <Project>
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
   <PropertyGroup>
-    <RootNamespace>Gapotchenko.FX.Data.Checksum</RootNamespace>
+    <RootNamespace>Gapotchenko.FX.Data.Integrity.Checksum</RootNamespace>
   </PropertyGroup>
 </Project>

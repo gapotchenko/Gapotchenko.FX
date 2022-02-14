@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Data.Checksum
+namespace Gapotchenko.FX.Data.Integrity.Checksum
 {
     /// <summary>
     /// The base class for <see cref="IChecksumAlgorithm{T}"/> implementations.

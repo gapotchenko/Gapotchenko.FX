@@ -3,7 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
-namespace Gapotchenko.FX.Data.Checksum
+namespace Gapotchenko.FX.Data.Integrity.Checksum
 {
     static class Crc32TableFactory
     {

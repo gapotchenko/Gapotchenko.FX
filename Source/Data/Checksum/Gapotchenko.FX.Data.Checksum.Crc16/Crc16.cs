@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Gapotchenko.FX.Data.Checksum
+namespace Gapotchenko.FX.Data.Integrity.Checksum
 {
     /// <summary>
     /// Computes CRC-16 checksum for the input data.

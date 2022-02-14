@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Gapotchenko.FX.Data.Checksum.Tests.Bench
+namespace Gapotchenko.FX.Data.Integrity.Checksum.Tests.Bench
 {
     public static class ChecksumTestBench
     {

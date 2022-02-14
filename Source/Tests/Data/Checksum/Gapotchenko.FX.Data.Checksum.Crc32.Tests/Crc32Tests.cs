@@ -1,7 +1,7 @@
-﻿using Gapotchenko.FX.Data.Checksum.Tests.Bench;
+﻿using Gapotchenko.FX.Data.Integrity.Checksum.Tests.Bench;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Gapotchenko.FX.Data.Checksum.Tests
+namespace Gapotchenko.FX.Data.Integrity.Checksum.Tests
 {
     [TestClass]
     public class Crc32Tests

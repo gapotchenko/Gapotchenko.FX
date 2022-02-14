@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Gapotchenko.FX.Data.Checksum
+namespace Gapotchenko.FX.Data.Integrity.Checksum
 {
     /// <summary>
     /// Provides a generic implementation of CRC-32 checksum algorithm.
