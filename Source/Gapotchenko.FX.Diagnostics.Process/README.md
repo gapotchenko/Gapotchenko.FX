@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Diagnostics.Process.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Diagnostics.Process)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Diagnostics.Process.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Diagnostics.Process)
 
 The module provides extended functionality for process manipulation.
 
