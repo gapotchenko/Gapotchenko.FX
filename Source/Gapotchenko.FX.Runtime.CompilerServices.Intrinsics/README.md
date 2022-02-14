@@ -81,7 +81,7 @@ using System.Runtime.InteropServices;
 
 class BitOperations
 {
-    // Use static constructor to ensure that intrinsic methods are initialized (compiled) before they are called
+    // Use static constructor to ensure that intrinsic methods are initialized (compiled) before they can be used
     static BitOperations() => Intrinsics.InitializeType(typeof(BitOperations));
 
     static readonly int[] m_Log2DeBruijn32 =
