@@ -86,7 +86,7 @@ It leverages the automatic type inference provided by some .NET languages like C
 
 ### PriorityQueue polyfill
 
-`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue available in .NET 6+.
+`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue introduced since .NET 6.
 The polyfill makes it available to all supported .NET versions.
 
 #### Deconstruction
