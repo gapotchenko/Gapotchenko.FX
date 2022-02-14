@@ -42,9 +42,9 @@ class Program
 Let's call a cancelable async method from a synchronous thread that can be aborted by `Thread.Abort()` method:
 
 ``` csharp
+using Gapotchenko.FX.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
-using Gapotchenko.FX.Threading.Tasks;
 
 void SyncMethod() // can be canceled by Thread.Abort()
 {
@@ -67,9 +67,9 @@ You see this? A simple one-liner for a *complete* interoperability between two e
 Now, let's take a look at the opposite scenario where a cancelable async task calls an abortable synchronous code:
 
 ``` csharp
+using Gapotchenko.FX.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
-using Gapotchenko.FX.Threading.Tasks;
 
 async Task DoJobAsync(CancellationToken ct) // can be canceled by a specified cancellation token
 {
