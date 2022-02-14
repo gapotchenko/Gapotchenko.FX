@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Threading.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Threading)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Threading.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Threading)
 
 The module provides extended primitives for multithreaded and asynchronous programming.
 
