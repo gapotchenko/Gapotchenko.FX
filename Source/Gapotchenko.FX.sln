@@ -142,17 +142,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cry
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Checksum", "Checksum", "{87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Checksum", "Data\Checksum\Gapotchenko.FX.Data.Checksum\Gapotchenko.FX.Data.Checksum.csproj", "{CE487C26-F199-471F-B598-6A8D7AAA2FEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum", "Data\Checksum\Gapotchenko.FX.Data.Checksum\Gapotchenko.FX.Data.Integrity.Checksum.csproj", "{CE487C26-F199-471F-B598-6A8D7AAA2FEC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Checksum.Crc16", "Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc16\Gapotchenko.FX.Data.Checksum.Crc16.csproj", "{0A4346D7-3EE2-4BC9-9D61-26ED04F56CBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc16", "Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc16\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.csproj", "{0A4346D7-3EE2-4BC9-9D61-26ED04F56CBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Checksum.Crc16.Tests", "Tests\Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc16.Tests\Gapotchenko.FX.Data.Checksum.Crc16.Tests.csproj", "{B4A7E224-3D6D-4C8F-8505-FC37B9AFD3B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc16.Tests", "Tests\Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc16.Tests\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.Tests.csproj", "{B4A7E224-3D6D-4C8F-8505-FC37B9AFD3B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Checksum.Tests.Bench", "Tests\Data\Checksum\Gapotchenko.FX.Data.Checksum.Tests.Bench\Gapotchenko.FX.Data.Checksum.Tests.Bench.csproj", "{3B521D95-0944-4F4D-ABA3-75CFBFFDD715}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Tests.Bench", "Tests\Data\Checksum\Gapotchenko.FX.Data.Checksum.Tests.Bench\Gapotchenko.FX.Data.Integrity.Checksum.Tests.Bench.csproj", "{3B521D95-0944-4F4D-ABA3-75CFBFFDD715}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Checksum.Crc32", "Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc32\Gapotchenko.FX.Data.Checksum.Crc32.csproj", "{65220923-B35A-435D-BB66-9DCEDB31812A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc32", "Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc32\Gapotchenko.FX.Data.Integrity.Checksum.Crc32.csproj", "{65220923-B35A-435D-BB66-9DCEDB31812A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Checksum.Crc32.Tests", "Tests\Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc32.Tests\Gapotchenko.FX.Data.Checksum.Crc32.Tests.csproj", "{BAE33BC5-5972-4FC6-A514-265026BBFDAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc32.Tests", "Tests\Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc32.Tests\Gapotchenko.FX.Data.Integrity.Checksum.Crc32.Tests.csproj", "{BAE33BC5-5972-4FC6-A514-265026BBFDAC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CRC-16", "CRC-16", "{82DFC144-96EE-4B08-A853-4240CE59F721}"
 EndProject
@@ -160,7 +160,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CRC-32", "CRC-32", "{AFA720
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CRC-8", "CRC-8", "{59203645-37D1-4855-8D12-A174FC2CB77D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Checksum.Crc8", "Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc8\Gapotchenko.FX.Data.Checksum.Crc8.csproj", "{494209ED-E811-4339-94A4-FF1C79888507}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc8", "Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc8\Gapotchenko.FX.Data.Integrity.Checksum.Crc8.csproj", "{494209ED-E811-4339-94A4-FF1C79888507}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommandLine", "CommandLine", "{51C84C28-4933-44F3-A9E5-6F0CE57DEA45}"
 EndProject
@@ -172,7 +172,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Geometry", "Geometry", "{E9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Topology", "Topology", "{D04EE9D1-7B2B-401A-8835-5D4DE9921802}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Checksum.Crc8.Tests", "Tests\Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc8.Tests\Gapotchenko.FX.Data.Checksum.Crc8.Tests.csproj", "{DA25EA25-D604-450E-A001-62E561EF6817}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc8.Tests", "Tests\Data\Checksum\Gapotchenko.FX.Data.Checksum.Crc8.Tests\Gapotchenko.FX.Data.Integrity.Checksum.Crc8.Tests.csproj", "{DA25EA25-D604-450E-A001-62E561EF6817}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

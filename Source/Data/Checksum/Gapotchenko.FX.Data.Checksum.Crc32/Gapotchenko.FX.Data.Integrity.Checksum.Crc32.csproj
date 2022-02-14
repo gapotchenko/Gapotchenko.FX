@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
@@ -7,12 +7,12 @@
   <ItemGroup>
     <PackageTag Include="checksum" />
     <PackageTag Include="crc" />
-    <PackageTag Include="crc-16" />
+    <PackageTag Include="crc-32" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
-    <ProjectReference Include="..\Gapotchenko.FX.Data.Checksum\Gapotchenko.FX.Data.Checksum.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Checksum\Gapotchenko.FX.Data.Integrity.Checksum.csproj" />
   </ItemGroup>
 
   <Import Project="$(MasteringDir)\OOB\System.ValueTuple.targets" />
