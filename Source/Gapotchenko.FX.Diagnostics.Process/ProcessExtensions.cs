@@ -90,10 +90,6 @@ namespace Gapotchenko.FX.Diagnostics
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
 
-            var adapter = ImplementationServices.AdapterOrDefault;
-            if (adapter == null)
-                return process.MainModule.FileName;
-
             ProcessModule? mainModule = null;
             try
             {
@@ -106,10 +102,15 @@ namespace Gapotchenko.FX.Diagnostics
             {
             }
 
-            if (mainModule != null)
-                return mainModule.FileName;
+            string? fileName = mainModule?.FileName;
+            if (fileName != null)
+                return fileName;
 
-            return adapter.GetProcessImageFileName(process);
+            var adapter = ImplementationServices.AdapterOrDefault;
+            if (adapter != null)
+                return adapter.GetProcessImageFileName(process);
+
+            throw new Exception("Cannot get process image file name.");
         }
     }
 }
