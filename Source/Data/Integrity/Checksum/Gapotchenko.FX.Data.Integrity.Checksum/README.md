@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Integrity.Checksum.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Integrity.Checksum)
 
-The module provides the universal framework for cyclic redundancy checks.
+The module provides a quasi-universal framework for cyclic redundancy checks.
 It supports both synchronous and asynchronous data processing, including the iterative checksum computation.
 
 ## IChecksumAlgorithm&lt;T&gt;
