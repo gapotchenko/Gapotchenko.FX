@@ -11,12 +11,13 @@ This is the root interface provided by a checksum algorithm.
 The generic parameter `T` defines the data type of a checksum value.
 For example, `System.UInt32` would be a type `T` for a CRC-32 algorithm.
 
-The interface provides several notable methods.
+Checksum algorithm interface provides several notable methods.
 
 ### ComputeChecksum(ReadOnlySpan&lt;byte&gt; data)
 
-The method allows to compute the checksum value for the specified byte span.
+The method allows to compute a checksum value for the specified byte span.
 This is the most widely used operation.
+Example:
 
 ```c#
 var data = new byte[] { ... };
@@ -27,7 +28,8 @@ Console.WriteLine("The array checksum is {0}.", checksum);
 ### ComputeChecksum(Stream stream)
 
 The method computes the checksum for the specified `System.IO.Stream` object.
-This operation is useful for computing the checksum for a file or any other data stream in one go.
+This operation is useful for computing a checksum for a file or any other data stream in one go.
+Example:
 
 ```c#
 using var file = File.OpenRead(...);
