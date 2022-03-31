@@ -47,9 +47,9 @@ Once the iterator is created, it can be used for iterative checksum computation 
 ```csharp
 var iterator = checksumAlgorithm.CreateIterator();
 
-iterator.ComputeBlock(...);
+iterator.ComputeBlock(...); // block 1
 // ...
-iterator.ComputeBlock(...);
+iterator.ComputeBlock(...); // block N
 // ...
 
 // Compute the final checksum value:
