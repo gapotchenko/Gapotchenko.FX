@@ -84,8 +84,8 @@ namespace Gapotchenko.FX.Diagnostics
         /// While <see cref="ProcessModule.FileName"/> may not work in that situation, this method always works.
         /// </remarks>
         /// <param name="process">The process to get image file name for.</param>
-        /// <returns>The file name of a process image.</returns>
-        public static string GetImageFileName(this Process process)
+        /// <returns>The file name of a process image or <see langword="null"/> if there is no associated file.</returns>
+        public static string? GetImageFileName(this Process process)
         {
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
@@ -110,7 +110,7 @@ namespace Gapotchenko.FX.Diagnostics
             if (adapter != null)
                 return adapter.GetProcessImageFileName(process);
 
-            throw new Exception("Cannot get process image file name.");
+            return null;
         }
     }
 }
