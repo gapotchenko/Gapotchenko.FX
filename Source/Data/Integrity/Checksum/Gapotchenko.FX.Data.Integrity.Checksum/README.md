@@ -39,7 +39,7 @@ Console.WriteLine("The file checksum is {0}.", checksum);
 
 ### CreateIterator()
 
-Sometimes the checksum computation should be performed in chunks.
+Sometimes the checksum computation cannot be performed in one go, and should be performed in chunks instead.
 That's why every checksum algorithm provides `CreateIterator()` method.
 
 Once the iterator is created, it can be used to compute the checksum iteratively without data concatenation overhead:
