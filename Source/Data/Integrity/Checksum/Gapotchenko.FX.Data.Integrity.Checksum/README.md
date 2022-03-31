@@ -63,11 +63,11 @@ Console.WriteLine("The checksum is {0}.", checksum);
 `Gapotchenko.FX.Data.Integrity.Checksum` module provides only a framework for checksum algorithms.
 If you want to use a popular and ready-to-use checksum algorithm, Gapotchenko.FX provides quite a few out of the box:
 
-| Family    | Module                                                                                                 | Algorithms |
-| --------- | ------------------------------------------------------------------------------------------------------ | ---------- |
-| CRC-8     | [Gapotchenko.FX.Data.Integrity.Checksum.Crc8](..\Gapotchenko.FX.Data.Integrity.Checksum.Crc8#readme)   | CRC-8, CRC-8/TECH-3250, CRC-8/SAE-J1850, CRC-8/OPENSAFETY, CRC-8/NRSC-5, CRC-8/MIFARE-MAD, CRC-8/MAXIM, CRC-8/I-CODE, CRC-8/HITAG, CRC-8/DARC, CRC-8/BLUETOOTH, CRC-8/AUTOSAR 
-| CRC-16    | [Gapotchenko.FX.Data.Integrity.Checksum.Crc16](..\Gapotchenko.FX.Data.Integrity.Checksum.Crc16#readme) |
-| CRC-32    | [Gapotchenko.FX.Data.Integrity.Checksum.Crc32](..\Gapotchenko.FX.Data.Integrity.Checksum.Crc32#readme) |
+| Algorithm Family    | Module                                                                                                 | Algorithms |
+| ------------------- | ------------------------------------------------------------------------------------------------------ | ---------- |
+| CRC-8               | [Gapotchenko.FX.Data.Integrity.Checksum.Crc8](..\Gapotchenko.FX.Data.Integrity.Checksum.Crc8#readme)   | CRC-8, CRC-8/TECH-3250, CRC-8/SAE-J1850, CRC-8/OPENSAFETY, CRC-8/NRSC-5, CRC-8/MIFARE-MAD, CRC-8/MAXIM, CRC-8/I-CODE, CRC-8/HITAG, CRC-8/DARC, CRC-8/BLUETOOTH, CRC-8/AUTOSAR 
+| CRC-16              | [Gapotchenko.FX.Data.Integrity.Checksum.Crc16](..\Gapotchenko.FX.Data.Integrity.Checksum.Crc16#readme) |
+| CRC-32              | [Gapotchenko.FX.Data.Integrity.Checksum.Crc32](..\Gapotchenko.FX.Data.Integrity.Checksum.Crc32#readme) |
 
 Moreover, you can create your own checksum algorithm.
 Gapotchenko.FX project welcomes contributions, or it can be a standalone NuGet package that uses `Gapotchenko.FX.Data.Integrity.Checksum` module as a wireframe.
