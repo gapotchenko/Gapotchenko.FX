@@ -9,7 +9,7 @@ It supports both synchronous and asynchronous data processing, including the ite
 
 This is the root interface provided by a checksum algorithm.
 The generic parameter `T` defines the data type of a checksum value.
-For example, this type would be `System.UInt32` for a CRC-32 algorithm.
+For example, `System.UInt32` would be a type `T` for a CRC-32 algorithm.
 
 The interface provides several notable methods.
 
