@@ -67,7 +67,36 @@ If you want to use a popular and ready-to-use checksum algorithm, Gapotchenko.FX
 | ------------------- | ------------------------------------------------------------------------------------------------------ | ---------- |
 | CRC-8               | [Gapotchenko.FX.Data.Integrity.Checksum.Crc8](../Gapotchenko.FX.Data.Integrity.Checksum.Crc8#readme)   | CRC-8/SMBUS, CRC-8/TECH-3250, CRC-8/SAE-J1850, CRC-8/OPENSAFETY, CRC-8/NRSC-5, CRC-8/MIFARE-MAD, CRC-8/MAXIM, CRC-8/I-CODE, CRC-8/HITAG, CRC-8/DARC, CRC-8/BLUETOOTH, CRC-8/AUTOSAR 
 | CRC-16              | [Gapotchenko.FX.Data.Integrity.Checksum.Crc16](../Gapotchenko.FX.Data.Integrity.Checksum.Crc16#readme) | CRC-16/CCITT, CRC-16/ISO-IEC-14443-3-A, CRC-16/ISO-IEC-14443-3-B, CRC-16/NRSC-5, CRC-16/MAXIM, CRC-16/SPI-FUJITSU, CRC-16/UMTS, CRC-16/USB, CRC-16/XMODEM, CRC-16/PROFIBUS, CRC-16/MODBUS, CRC-16/GENIBUS, CRC-16/GSM, CRC-16/OPENSAFETY-A, CRC-16/OPENSAFETY-B, CRC-16/TMS37157, CRC-16/MCRF4XX, CRC-16/DECT-R, CRC-16/DECT-X, CRC-16/DDS-110, CRC-16/CCITT-FALSE
-| CRC-32              | [Gapotchenko.FX.Data.Integrity.Checksum.Crc32](../Gapotchenko.FX.Data.Integrity.Checksum.Crc32#readme) |
+| CRC-32              | [Gapotchenko.FX.Data.Integrity.Checksum.Crc32](../Gapotchenko.FX.Data.Integrity.Checksum.Crc32#readme) | CRC-32/ISO-HDLC, CRC-32C, CRC-32Q, CRC-32/AUTOSAR, CRC-32/POSIX, CRC-32/BZIP2, CRC-32/MEF, CRC-32/MPEG-2
 
 Moreover, you can create your own checksum algorithm.
 Gapotchenko.FX project welcomes contributions, or it can be a standalone NuGet package that uses `Gapotchenko.FX.Data.Integrity.Checksum` module as a wireframe.
+
+## Usage
+
+`Gapotchenko.FX.Data.Integrity.Checksum` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Integrity.Checksum):
+
+```
+PM> Install-Package Gapotchenko.FX.Data.Integrity.Checksum
+```
+
+## Other Modules
+
+Let's continue with a look at some other modules provided by Gapotchenko.FX:
+
+- [Gapotchenko.FX](../Gapotchenko.FX)
+- [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
+- [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
+- [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
+  - [Gapotchenko.FX.Diagnostics.CommandLine](../Gapotchenko.FX.Diagnostics.CommandLine)
+  - &#x27B4; [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process)
+  - [Gapotchenko.FX.Diagnostics.WebBrowser](../Gapotchenko.FX.Diagnostics.WebBrowser)
+- [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
+- [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
+- [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
+- [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
+
+Or look at the [full list of modules](../../../../..#available-modules).
