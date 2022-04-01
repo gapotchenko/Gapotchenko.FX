@@ -4,7 +4,7 @@
 
 The module provides the implementation of checksum algorithms belonging to CRC-8 family.
 
-## Example
+## Quick Start
 
 Use the following code to calculate a CRC-8 checksum for the specified data:
 
@@ -46,8 +46,7 @@ CRC-8 family of cyclic redundancy checks consists of several attested checksum a
 | CRC-8/BLUETOOTH | | `Crc8.Attested.Bluetooth` | 0xa7 | 0x00 | true | true | 0x00 | 0x26 |
 | CRC-8/AUTOSAR | | `Crc8.Attested.Autosar` | 0x2f | 0xff | false | false | 0xff | 0xdf |
 
-The `check` parameter shows what checksum value an algorithm should produce for `"123456789"` input string interpreted as an ASCII data.
-For example:
+The `check` parameter shows what checksum value an algorithm should produce for `"123456789"` input string interpreted as an ASCII data:
 
 ``` c#
 // Get the byte representation of the ASCII string:
