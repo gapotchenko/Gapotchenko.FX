@@ -80,21 +80,21 @@ If you want to formalize a custom algorithm even further, you may opt-in to crea
 /// <summary>
 /// Defines a custom CRC-8 algorithm.
 /// </summary>
-sealed class FooCrc : CustomCrc8
+sealed class FooCrc8 : CustomCrc8
 {
-    FooCrc() :
+    FooCrc8() :
         base(...) // <- custom algorithm parameters go here
     {
     }
 
-    public static FooCrc Instance { get; } = new FooCrc();
+    public static FooCrc8 Instance { get; } = new FooCrc8();
 }
 ```
 
 That would allow to use the algorithm effortlessly from several places in the codebase:
 
 ``` c#
-var checksum = FooCrc.Instance.ComputeChecksum(...);
+var checksum = FooCrc8.Instance.ComputeChecksum(...);
 ```
 
 ## Usage

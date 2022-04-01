@@ -37,6 +37,24 @@ CRC-16 family of cyclic redundancy checks consists of several attested checksum 
 | CRC-16/CCITT | CRC-16/KERMIT, CRC-16/CCITT-TRUE, CRC-16/V-41-LSB, CRC-CCITT, KERMIT | `Crc16.Attested.Ccitt` | 0x1021 | 0x0000 | true | true | 0x0000 | 0x2189 |
 | CRC-16/ISO-IEC-14443-3-A | CRC-A | `Crc16.Attested.IsoIec14443_3_A` | 0x1021 | 0xc6c6 | true | true | 0x0000 | 0xbf05 |
 | CRC-16/ISO-IEC-14443-3-B | CRC-B, CRC-16/IBM-SDLC, CRC-16/ISO-HDLC, CRC-16/X-25, X-25 | `Crc16.Attested.IsoIec14443_3_B` | 0x1021 | 0xffff | true | true | 0xffff | 0x906e |
+| CRC-16/NRSC-5 | | `Crc16.Attested.Nrsc5` | 0x080b | 0xffff | true | true | 0x0000 | 0xa066 |
+| CRC-16/MAXIM | CRC-16/MAXIM-DOW | `Crc16.Attested.Maxim` | 0x8005 | 0x0000 | true | true | 0xffff | 0x44c2 |
+| CRC-16/SPI-FUJITSU | CRC-16/AUG-CCITT | `Crc16.Attested.SpiFujitsu` | 0x1021 | 0x1d0f | false | false | 0x0000 | 0xe5cc |
+| CRC-16/UMTS | CRC-16/VERIFONE, CRC-16/BUYPASS | `Crc16.Attested.Umts` | 0x8005 | 0x0000 | false | false | 0x0000 | 0xfee8 |
+| CRC-16/USB | | `Crc16.Attested.Usb` | 0x8005 | 0xffff | true | true | 0xffff | 0xb4c8 |
+| CRC-16/XMODEM | CRC-16/ACORN, CRC-16/LTE, CRC-16/V-41-MSB, XMODEM, ZMODEM | `Crc16.Attested.XModem` | 0x1021 | 0x0000 | false | false | 0x0000 | 0x31c3 |
+| CRC-16/PROFIBUS | CRC-16/IEC-61158-2 | `Crc16.Attested.Profibus` | 0x1dcf | 0xffff | false | false | 0xffff | 0xa819 |
+| CRC-16/MODBUS | MODBUS | `Crc16.Attested.Modbus` | 0x8005 | 0xffff | true | true | 0x0000 | 0x4b37 |
+| CRC-16/GENIBUS | CRC-16/DARC, CRC-16/EPC, CRC-16/EPC-C1G2, CRC-16/I-CODE | `Crc16.Attested.Genibus` | 0x1021 | 0xffff | false | false | 0xffff | 0xd64e |
+| CRC-16/GSM | | `Crc16.Attested.Gsm` | 0x1021 | 0x0000 | false | false | 0xffff | 0xce3c |
+| CRC-16/OPENSAFETY-A | | `Crc16.Attested.OpenSafetyA` | 0x5935 | 0x0000 | false | false | 0x0000 | 0x5d38 |
+| CRC-16/OPENSAFETY-B | | `Crc16.Attested.OpenSafetyB` | 0x755b | 0x0000 | false | false | 0x0000 | 0x20fe |
+| CRC-16/TMS37157 | | `Crc16.Attested.TMS37157` | 0x1021 | 0x89ec | true | true | 0x0000 | 0x26b1 |
+| CRC-16/MCRF4XX | | `Crc16.Attested.MCRF4xx` | 0x1021 | 0xffff | true | true | 0x0000 | 0x6f91 |
+| CRC-16/DECT-R | R-CRC-16 | `Crc16.Attested.DectR` | 0x0589 | 0x0000 | false | false | 0x0001 | 0x007e |
+| CRC-16/DECT-X | X-CRC-16 | `Crc16.Attested.DectX` | 0x0589 | 0x0000 | false | false | 0x0000 | 0x007f |
+| CRC-16/DDS-110 | | `Crc16.Attested.Dds110` | 0x8005 | 0x800d | false | false | 0x0000 | 0x9ecf |
+| CRC-16/CCITT-FALSE | CRC-16/AUTOSAR, CRC-16/IBM-3740 | `Crc16.Attested.CcittFalse` | 0x1021 | 0xffff | false | false | 0x0000 | 0x29b1 |
 
 The `check` parameter shows what checksum value an algorithm should produce for `"123456789"` input string interpreted as an ASCII data:
 
@@ -72,21 +90,21 @@ If you want to formalize a custom algorithm even further, you may opt-in to crea
 /// <summary>
 /// Defines a custom CRC-16 algorithm.
 /// </summary>
-sealed class FooCrc : CustomCrc16
+sealed class FooCrc16 : CustomCrc16
 {
-    FooCrc() :
+    FooCrc16() :
         base(...) // <- custom algorithm parameters go here
     {
     }
 
-    public static FooCrc Instance { get; } = new FooCrc();
+    public static FooCrc16 Instance { get; } = new FooCrc16();
 }
 ```
 
 That would allow to use the algorithm effortlessly from several places in the codebase:
 
 ``` c#
-var checksum = FooCrc.Instance.ComputeChecksum(...);
+var checksum = FooCrc16.Instance.ComputeChecksum(...);
 ```
 
 ## Usage
