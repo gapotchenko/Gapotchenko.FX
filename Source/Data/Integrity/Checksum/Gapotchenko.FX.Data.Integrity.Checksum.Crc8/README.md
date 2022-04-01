@@ -14,7 +14,7 @@ using Gapotchenko.FX.Data.Integrity.Checksum;
 var checksum = Crc8.Standard.ComputeChecksum(data);
 ```
 
-If you need to calculate a CRC-8 checksum iteratively then the following code becomes handy:
+If you need to calculate a CRC-8 checksum iteratively then the following approach becomes handy:
 
 ```csharp
 var iterator = Crc8.Standard.CreateIterator();
