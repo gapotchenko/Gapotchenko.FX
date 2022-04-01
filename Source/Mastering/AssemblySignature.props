@@ -4,7 +4,7 @@
   <!-- Put AssemblyKey.snk file to the current folder to sign the assemblies with your signing key. -->
 
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile Condition=" Exists('$(MSBuildThisFileDirectory)AssemblyKey.snk') ">$(MSBuildThisFileDirectory)AssemblyKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile Condition=" Exists('$(MSBuildThisFileDirectory)Keys\Assembly.snk') ">$(MSBuildThisFileDirectory)Keys\Assembly.snk</AssemblyOriginatorKeyFile>
     <SignAssembly Condition=" Exists('$(AssemblyOriginatorKeyFile)') AND $(IsPublicProject) ">true</SignAssembly>
   </PropertyGroup>
 
