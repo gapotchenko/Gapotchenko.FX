@@ -124,7 +124,8 @@ namespace Gapotchenko.FX.Harness.Console
 
             //var ha = Crc16.Attested.Ccitt.CreateHashAlgorithm();
 
-            
+            var checksum = Crc8.Standard.ComputeChecksum(Encoding.ASCII.GetBytes("123456789"));
+            Console.WriteLine("Checksum = 0x{0:x}", checksum);
         }
 
         static async Task _RunAsync(CancellationToken ct)

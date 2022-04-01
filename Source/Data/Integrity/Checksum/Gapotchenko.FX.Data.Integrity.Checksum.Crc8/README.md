@@ -22,21 +22,81 @@ var iterator = Crc8.Standard.CreateIterator();
 iterator.ComputeBlock(...); // block 1
 // ...
 iterator.ComputeBlock(...); // block N
-// ...
 
 // Compute the final checksum:
 var checksum = iterator.ComputeFinal();
 ```
 
-## Available Algorithms
+## Available CRC-8 Algorithms
 
-CRC-8 family of cyclic redundancy checks consists of several attested checksum algorithms:
+CRC-8 family of cyclic redundancy checks consists of several attested checksum algorithms with predefined parameters:
 
 | Algorithm | Aliases | Implementation | Parameters: poly | init | refin | refout | xorout | check |
 | --------- | ------- | -------- | ---- | ---- | ----- | ------ | ------ | ----- |
-| CRC-8 (standard) | CRC-8/SMBUS | `Crc8.Standard` | 0x07 | 0x00 | false | false | 0x00 | 0xf4 |
+| CRC-8 (standard, recommended) | CRC-8/SMBUS | `Crc8.Standard` | 0x07 | 0x00 | false | false | 0x00 | 0xf4 |
 | CRC-8/TECH-3250 | CRC-8/AES, CRC-8/EBU | `Crc8.Attested.Tech3250` | 0x1d | 0xff | true | true | 0x00 | 0x97 |
+| CRC-8/SAE-J1850 | | `Crc8.Attested.SaeJ1850` | 0x1d | 0xff | false | false | 0xff | 0x4b |
+| CRC-8/OPENSAFETY | | `Crc8.Attested.OpenSafety` | 0x2f | 0x00 | false | false | 0x00 | 0x3e |
+| CRC-8/NRSC-5 | | `Crc8.Attested.Nrsc5` | 0x31 | 0xff | false | false | 0x00 | 0xf7 |
+| CRC-8/MIFARE-MAD | | `Crc8.Attested.MifareMad` | 0x1d | 0xc7 | false | false | 0x00 | 0x99 |
+| CRC-8/MAXIM | CRC-8/MAXIM-DOW, DOW-CRC | `Crc8.Attested.Maxim` | 0x31 | 0x00 | true | true | 0x00 | 0xa1 |
+| CRC-8/I-CODE | | `Crc8.Attested.ICode` | 0x1d | 0xfd | false | false | 0x00 | 0x7e |
+| CRC-8/HITAG | | `Crc8.Attested.Hitag` | 0x1d | 0xff | false | false | 0x00 | 0xb4 |
+| CRC-8/DARC | | `Crc8.Attested.Darc` | 0x39 | 0x00 | true | true | 0x00 | 0x15 |
+| CRC-8/BLUETOOTH | | `Crc8.Attested.Bluetooth` | 0xa7 | 0x00 | true | true | 0x00 | 0x26 |
+| CRC-8/AUTOSAR | | `Crc8.Attested.Autosar` | 0x2f | 0xff | false | false | 0xff | 0xdf |
 
+The `check` parameter shows what checksum value an algorithm should produce for `"123456789"` input string interpreted as an ASCII data.
+For example:
+
+``` c#
+// Get the byte representation of the ASCII string:
+var data = Encoding.ASCII.GetBytes("123456789");
+
+// Compute checksum:
+var checksum = Crc8.Standard.ComputeChecksum(data);
+
+// Print out the result (will print "Checksum = 0xf4"):
+Console.WriteLine("Checksum = 0x{0:x}", checksum);
+```
+
+## Recommended CRC-8 Algorithm
+
+Among all other posibilities, it is recommended to use the standard CRC-8 algorithm which comes under CRC-8, CRC-8/SMBUS aliases and is available via `Crc8.Standard` property.
+
+All other predefined algorithms are available as the properties of `Crc8.Attested` class.
+
+## Custom CRC-8 Algorithms
+
+Once in a while you may encounter a custom CRC-8 algorithm that is neither widely known nor characterized.
+In that case, you can instantiate a custom checksum algorithm with the desired parameters:
+
+``` c#
+var checksumAlgorithm = new CustomCrc8(...);
+```
+
+If you want to formalize a custom algorithm even further, you may opt-in to creating a separate class for it with a convenient accessor property:
+
+``` c#
+/// <summary>
+/// Defines a custom CRC-8 algorithm.
+/// </summary>
+sealed class FooCrc : CustomCrc8
+{
+    FooCrc() :
+        base(...) // <- custom algorithm parameters go here
+    {
+    }
+
+    public static FooCrc Instance { get; } = new FooCrc();
+}
+```
+
+That would allow to use the algorithm effortlessly from several places in the codebase:
+
+``` c#
+var checksum = FooCrc.Instance.ComputeChecksum(...);
+```
 
 ## Usage
 
