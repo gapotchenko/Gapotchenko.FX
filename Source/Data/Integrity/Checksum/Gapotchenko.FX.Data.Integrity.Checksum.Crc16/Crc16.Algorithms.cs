@@ -8,7 +8,7 @@
         /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0.
         /// </para>
         /// <para>
-        /// Aliases: CRC-16, CRC-16/ARC, CRC-IBM, CRC-16/LHA.
+        /// Aliases: CRC-16/ARC, CRC-IBM, CRC-16/LHA.
         /// </para>
         /// </summary>
         /// <remarks>
