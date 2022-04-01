@@ -89,7 +89,7 @@ namespace Gapotchenko.FX.Data.Integrity.Checksum.Tests
         public void Crc16_TMS37157_Check() => Check19(Crc16.Attested.TMS37157, 0x26b1);
 
         [TestMethod]
-        public void Crc16_MCRF4XX_Check() => Check19(Crc16.Attested.MCRF4XX, 0x6f91);
+        public void Crc16_MCRF4XX_Check() => Check19(Crc16.Attested.MCRF4xx, 0x6f91);
 
         [TestMethod]
         public void Crc16_DectR_Check() => Check19(Crc16.Attested.DectR, 0x007e);

@@ -272,7 +272,7 @@
             /// Parameters: poly=0x1021, init=0xffff, refin=true, refout=true, xorout=0x0000, check=0x6f91.
             /// </para>
             /// </remarks>
-            public static Crc16 MCRF4XX => Impl.MCRF4XX.Instance;
+            public static Crc16 MCRF4xx => Impl.MCRF4xx.Instance;
 
             /// <summary>
             /// <para>
@@ -440,10 +440,10 @@
                 public static readonly TMS37157 Instance = new();
             }
 
-            public sealed class MCRF4XX : GenericCrc16
+            public sealed class MCRF4xx : GenericCrc16
             {
-                MCRF4XX() : base(0x1021, 0xffff, true, true, 0) { }
-                public static readonly MCRF4XX Instance = new();
+                MCRF4xx() : base(0x1021, 0xffff, true, true, 0) { }
+                public static readonly MCRF4xx Instance = new();
             }
 
             public sealed class DectR : GenericCrc16
