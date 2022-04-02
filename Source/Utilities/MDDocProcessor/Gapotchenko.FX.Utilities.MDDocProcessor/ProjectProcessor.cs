@@ -232,11 +232,10 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
             //if (!fullToc)
             {
-                string mdFileDirectory = Path.GetDirectoryName(mdFilePath) ?? throw new InvalidOperationException();
                 string path = Path.TrimEndingDirectorySeparator(
                     Util.MakeRelativePath(
                         _BaseDirectory + Path.DirectorySeparatorChar,
-                        mdFileDirectory + Path.DirectorySeparatorChar));
+                        mdFilePath));
                 path = path.Replace(Path.DirectorySeparatorChar, '/');
 
                 if (complexityLegend)
