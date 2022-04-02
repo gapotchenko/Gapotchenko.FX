@@ -63,15 +63,13 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
             var book = _TocNode.Book;
             if (book == null)
-                throw new InvalidOperationException("TOC node book not found.");
-
-            var tocWriter = new StringWriter();
+                throw new InvalidOperationException("TOC book not found.");
 
             var tocSerializer = new TocSerializer();
+
+            var tocWriter = new StringWriter();
             tocSerializer.SerializeToc(tocWriter, book, _TocNode);
-
             string newToc = tocWriter.ToString().TrimEnd('\n', '\r');
-
             text = StringEditor.Replace(text, tocGroup, newToc);
 
             // ------------------------------------------------------------------------
@@ -88,12 +86,9 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
                 throw new Exception("Cannot find TOC legend position.");
 
             var legendWriter = new StringWriter();
-
             if (!legendMatch.Groups["pp"].Success)
                 legendWriter.WriteLine();
-
             tocSerializer.SerializeLegend(legendWriter);
-
             text = StringEditor.Replace(text, legendGroup, legendWriter.ToString().TrimEnd('\n', '\r'));
 
             // ------------------------------------------------------------------------
