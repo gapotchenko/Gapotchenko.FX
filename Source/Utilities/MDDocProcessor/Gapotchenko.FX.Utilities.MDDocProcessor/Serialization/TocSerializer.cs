@@ -81,7 +81,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Serialization
 
                     textWriter.Write('(');
                     if (effectiveProject != null)
-                        textWriter.Write(Util.MakeRelativePath(effectiveProject.FolderPath, project.FolderPath + Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/'));
+                        textWriter.Write(Util.MakeRelativePath(effectiveProject.DirectoryPath, project.DirectoryPath + Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/'));
                     else
                         textWriter.Write('#');
                     textWriter.Write(')');

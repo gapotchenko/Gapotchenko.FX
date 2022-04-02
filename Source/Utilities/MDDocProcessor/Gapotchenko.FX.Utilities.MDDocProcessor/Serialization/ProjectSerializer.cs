@@ -8,11 +8,11 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 {
     static class ProjectSerializer
     {
-        public static bool IsProjectFolder(string folderPath) => Directory.EnumerateFiles(folderPath, "*.?*proj").Any();
+        public static bool IsProjectFolder(string directoryPath) => Directory.EnumerateFiles(directoryPath, "*.?*proj").Any();
 
-        public static Project ReadProject(string folderPath)
+        public static Project ReadProject(string directoryPath)
         {
-            string? readMeFilePath = Path.Combine(folderPath, "README.md");
+            string? readMeFilePath = Path.Combine(directoryPath, "README.md");
             if (!File.Exists(readMeFilePath))
                 readMeFilePath = null;
 
@@ -52,10 +52,8 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
                 }
             }
 
-            return new Project
+            return new Project(Path.GetFileName(directoryPath), directoryPath)
             {
-                Name = Path.GetFileName(folderPath),
-                FolderPath = folderPath,
                 ReadMeFilePath = readMeFilePath,
                 Complexity = complexity
             };

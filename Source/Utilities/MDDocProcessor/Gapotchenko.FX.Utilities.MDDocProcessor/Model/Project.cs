@@ -2,9 +2,15 @@
 {
     sealed class Project
     {
-        public string Name { get; init; } = "";
+        public Project(string name, string directoryPath)
+        {
+            Name = name;
+            DirectoryPath = directoryPath;
+        }
 
-        public string FolderPath { get; init; } = "";
+        public string Name { get; }
+
+        public string DirectoryPath { get; }
 
         public string? ReadMeFilePath { get; init; }
 
