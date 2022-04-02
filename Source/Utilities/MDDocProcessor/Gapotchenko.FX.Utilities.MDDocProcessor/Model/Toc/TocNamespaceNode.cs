@@ -1,6 +1,6 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
 {
-    class TocNamespaceNode : TocNode
+    sealed class TocNamespaceNode : TocNode
     {
         public TocNamespaceNode(string name)
         {
