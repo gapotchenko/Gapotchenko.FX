@@ -35,7 +35,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
             var tocGroup = tocRegex.EnumerateMatches(text).Select(x => x.Groups["toc"]).Where(x => x.Success).SingleOrDefault();
             if (tocGroup == null)
-                return;
+                throw new InvalidOperationException("Cannot find TOC section.");
 
             var tocSerializer = new TocSerializer();
 
@@ -49,7 +49,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             int legendStart = tocGroup.Index + newToc.Length;
 
             var legendRegex = new Regex(
-                @"#+\s+Legend\s*?((?<pp>(\r\n|\n|\r){2,})|[\r\n]+)\s*(?<legend>(.|\r|\n)*?)((\r\n|\n|\r)\#|$)",
+                @"#+(\s+\w+)+?((?<pp>(\r\n|\n|\r){2,})|[\r\n]+)\s*(?<legend>(.|\r|\n)*?)((\r\n|\n|\r)\#|$)",
                 RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
             var legendMatch = legendRegex.Match(text, legendStart);

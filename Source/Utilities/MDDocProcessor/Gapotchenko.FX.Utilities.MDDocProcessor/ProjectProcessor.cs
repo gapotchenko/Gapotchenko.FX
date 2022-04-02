@@ -57,7 +57,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
             var tocGroup = tocRegex.EnumerateMatches(text).Select(x => x.Groups["toc"]).Where(_IsTocMatch).SingleOrDefault();
             if (tocGroup == null)
-                return;
+                throw new InvalidOperationException("Cannot find TOC section.");
 
             var book = _TocNode.Book;
             if (book == null)
