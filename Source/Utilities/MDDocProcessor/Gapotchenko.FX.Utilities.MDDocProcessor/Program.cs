@@ -20,21 +20,43 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             catch (Exception e)
             {
                 Console.Write("Error: ");
-                Console.WriteLine(e);
+                Console.WriteLine(e.Message);
                 return 1;
             }
         }
 
         static void _Run(string[] args)
         {
+            if (args.Length == 0)
+            {
+                Console.WriteLine(
+                    "Usage: {0} <command>",
+                    Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location));
+                Console.WriteLine();
+                Console.WriteLine("where <command> is one of the following:");
+                Console.WriteLine("  - generate-toc <project root folder> | Generate table of contents in all markdown files");
+                throw new ProgramExitException(1);
+            }
+
+            switch (args[0])
+            {
+                case "generate-toc":
+                    _GenerateToc(args.Skip(1).ToArray());
+                    return;
+                default:
+                    throw new Exception("Unknown command.");
+            }
+        }
+
+        static void _GenerateToc(string[] args)
+        {
             if (args.Length != 1)
             {
                 Console.WriteLine(
-                    "Usage: {0} <project root folder>",
+                    "Usage: {0} generate-toc <project root folder>",
                     Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location));
 
-                Environment.ExitCode = 1;
-                return;
+                throw new ProgramExitException(1);
             }
 
             string projectRootFolder = args[0];
