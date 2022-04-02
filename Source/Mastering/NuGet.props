@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Authors>$(Company)</Authors>
     <PackageTags>framework platform polyfill rad</PackageTags>
-    <PackageIcon>PackageIcon.png</PackageIcon>
+    <PackageIcon>docs\assets\package-icon.png</PackageIcon>
     <PackageProjectUrl>https://gapotchenko.com/fx</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gapotchenko/Gapotchenko.FX</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Resources\PackageIcon.png" Pack="true" PackagePath="" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\NuGet\PackageIcon.png" Pack="true" PackagePath="docs\assets\package-icon.png" Visible="false" />
   </ItemGroup>
 
 </Project>
