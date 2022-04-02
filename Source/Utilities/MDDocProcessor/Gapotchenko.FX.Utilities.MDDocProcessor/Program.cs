@@ -50,7 +50,17 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             TocVisualizer.Visualize(toc.Root, Console.Out);
 
             Console.WriteLine();
-            _ProcessProjects(toc.Root, projectRootFolder);
+            _ProcessCatalog(toc, projectRootFolder);
+
+            Console.WriteLine();
+            _ProcessProjects(toc, projectRootFolder);
+        }
+
+        static void _ProcessCatalog(TocDocument toc, string rootFolder)
+        {
+            Console.WriteLine("Processing catalog...");
+            var catalogProcessor = new CatalogProcessor(rootFolder, toc);
+            catalogProcessor.Run();
         }
 
         static IEnumerable<string> _EnumerateProjectFolders(string rootPath)
@@ -78,9 +88,9 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             return projectFolders.Where(ProjectSerializer.IsProjectFolder);
         }
 
-        static void _ProcessProjects(TocRootNode root, string baseDirectory)
+        static void _ProcessProjects(TocDocument toc, string baseDirectory)
         {
-            foreach (var node in root.Descendants().OfType<TocProjectNode>())
+            foreach (var node in toc.Root.Descendants().OfType<TocProjectNode>())
             {
                 if (node.Project == null)
                     continue;
