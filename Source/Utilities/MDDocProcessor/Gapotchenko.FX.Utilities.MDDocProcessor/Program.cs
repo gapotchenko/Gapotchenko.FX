@@ -43,7 +43,8 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             projectRootFolder = Path.GetFullPath(projectRootFolder);
 
             var projects = _EnumerateProjectFolders(projectRootFolder).Select(ProjectSerializer.ReadProject);
-            var toc = TocService.BuildToc(projects);
+            var toc = new TocDocument();
+            TocService.BuildToc(toc.Root, projects);
 
             Console.WriteLine("Table of Contents:");
             Console.WriteLine();

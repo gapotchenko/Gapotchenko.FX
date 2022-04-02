@@ -4,14 +4,14 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
 {
     static class TocService
     {
-        public static TocDocument BuildToc(IEnumerable<Project> projects)
+        public static void BuildToc(TocNode rootNode, IEnumerable<Project> projects)
         {
             if (projects == null)
                 throw new ArgumentNullException(nameof(projects));
 
-            IEnumerable<Project> Sort(IEnumerable<Project> source) => source.OrderBy(x => x.Name);
+            static IEnumerable<Project> Sort(IEnumerable<Project> source) => source.OrderBy(x => x.Name);
 
-            var toc = new TocDocument();
+            var nodes = new List<TocNode>();
 
             var graph = new Graph<Project>(projects, (a, b) => a.Name.StartsWith(b.Name + "."));
             graph.ReduceTransitions();
@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
 
             foreach (var node in rootProjects.Select(x => new TocProjectNode(x)))
             {
-                toc.Root.Children.Add(node);
+                rootNode.Children.Add(node);
                 AddSubProjects(node);
             }
 
@@ -43,13 +43,11 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
                     BuildRelations(i, node);
             }
 
-            BuildRelations(toc.Root, null);
+            BuildRelations(rootNode, null);
 
-            _CreateProjectGroups(toc);
+            _CreateProjectGroups(rootNode);
 
-            BuildRelations(toc.Root, null);
-
-            return toc;
+            BuildRelations(rootNode, null);
         }
 
         static string? _GetParentName(string name)
@@ -60,13 +58,13 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
             return name.Substring(0, j);
         }
 
-        static void _CreateProjectGroups(TocDocument toc)
+        static void _CreateProjectGroups(TocNode rootNode)
         {
             var graph = new Graph<string>(StringComparer.Ordinal);
 
             var projects = new Dictionary<string, TocProjectNode>(StringComparer.Ordinal);
 
-            foreach (var i in toc.Root.Descendants().OfType<TocProjectNode>())
+            foreach (var i in rootNode.Descendants().OfType<TocProjectNode>())
             {
                 string projectName = i.Project.Name;
                 projects.Add(projectName, i);
