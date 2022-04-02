@@ -6,7 +6,7 @@ using Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Serialization;
 using System.Text.RegularExpressions;
 
-namespace Gapotchenko.FX.Utilities.MDDocProcessor
+namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GenerateToc
 {
     sealed class ProjectProcessor
     {
