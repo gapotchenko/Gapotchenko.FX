@@ -7,7 +7,7 @@
             Catalog = catalog;
         }
 
-        public Catalog Catalog { get; }
+        public new Catalog Catalog { get; }
 
         public override string ToString() => Catalog.ToString();
     }

@@ -6,7 +6,15 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Visualization
     {
         public static void Visualize(TocNode node, TextWriter tw)
         {
-            _VisualizeCore(node, tw, 0);
+            if (node is TocCatalogNode catalogNode)
+            {
+                foreach (var i in catalogNode.Children)
+                    Visualize(i, tw);
+            }
+            else
+            {
+                _VisualizeCore(node, tw, 0);
+            }
         }
 
         static void _VisualizeCore(TocNode node, TextWriter tw, int indent)

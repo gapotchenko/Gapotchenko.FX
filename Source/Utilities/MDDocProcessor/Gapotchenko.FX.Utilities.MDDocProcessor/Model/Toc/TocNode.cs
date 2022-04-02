@@ -10,8 +10,15 @@
             Parent switch
             {
                 null => null,
-                TocRootNode _ => this,
+                TocRootNode or TocCatalogNode => this,
                 _ => Parent.Book
+            };
+
+        public TocCatalogNode? Catalog =>
+            this switch
+            {
+                TocCatalogNode catalogNode => catalogNode,
+                _ => Parent?.Catalog
             };
 
         public IEnumerable<TocNode> Ancestors()

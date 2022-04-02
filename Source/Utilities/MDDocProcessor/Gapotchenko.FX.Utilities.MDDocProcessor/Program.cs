@@ -46,7 +46,11 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             var projects = _EnumerateProjectFolders(projectRootFolder).Select(ProjectSerializer.ReadProject);
             var toc = new TocDocument();
 
-            var catalog = new TocCatalogNode(new Catalog("Gapotchenko.FX", projectRootFolder));
+            var catalog = new TocCatalogNode(
+                new Catalog("Gapotchenko.FX", projectRootFolder)
+                {
+                    ReadMeFilePath = Path.Combine(projectRootFolder, "README.md")
+                });
             toc.Root.Children.Add(catalog);
             catalog.Parent = toc.Root;
 
@@ -54,8 +58,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
             Console.WriteLine("Table of Contents:");
             Console.WriteLine();
-            foreach (var i in catalog.Children)
-                TocVisualizer.Visualize(i, Console.Out);
+            TocVisualizer.Visualize(catalog, Console.Out);
 
             Console.WriteLine();
             _ProcessCatalog(toc, projectRootFolder);

@@ -34,18 +34,24 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
                 AddSubProjects(node);
             }
 
-            void BuildRelations(TocNode node, TocNode? parent)
-            {
-                node.Parent = parent;
-                foreach (var i in node.Children)
-                    BuildRelations(i, node);
-            }
-
-            BuildRelations(root, null);
+            BuildRelations(root);
 
             _CreateProjectGroups(root);
 
-            BuildRelations(root, null);
+            BuildRelations(root);
+        }
+
+        static void BuildRelations(TocNode node)
+        {
+            foreach (var i in node.Children)
+                BuildRelations(i, node);
+        }
+
+        static void BuildRelations(TocNode node, TocNode? parent)
+        {
+            node.Parent = parent;
+            foreach (var i in node.Children)
+                BuildRelations(i, node);
         }
 
         static string? _GetParentName(string name)

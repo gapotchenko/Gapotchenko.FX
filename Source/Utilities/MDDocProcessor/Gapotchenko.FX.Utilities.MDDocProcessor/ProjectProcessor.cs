@@ -92,23 +92,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             if (!legendMatch.Groups["pp"].Success)
                 legendWriter.WriteLine();
 
-            bool complexityLegend = tocSerializer.SerializeLegend(legendWriter);
-            if (complexityLegend)
-                legendWriter.WriteLine();
-
-            //if (!fullToc)
-            {
-                string path = Path.TrimEndingDirectorySeparator(
-                    Util.MakeRelativePath(
-                        _BaseDirectory + Path.DirectorySeparatorChar,
-                        mdFilePath));
-                path = path.Replace(Path.DirectorySeparatorChar, '/');
-
-                if (complexityLegend)
-                    legendWriter.WriteLine("Or take a look at the [full list of modules]({0}#available-modules).", path);
-                else
-                    legendWriter.WriteLine("Or look at the [full list of modules]({0}#available-modules).", path);
-            }
+            tocSerializer.SerializeLegend(legendWriter);
 
             text = StringEditor.Replace(text, legendGroup, legendWriter.ToString().TrimEnd('\n', '\r'));
 
