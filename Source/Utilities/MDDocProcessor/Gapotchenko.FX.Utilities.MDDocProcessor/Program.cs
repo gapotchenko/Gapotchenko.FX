@@ -70,7 +70,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
                         Path.Combine(rootPath, h.Path),
                         "*",
                         h.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
-                    .Where(x => Path.GetFileName(x).Contains("."));
+                    .Where(x => Path.GetFileName(x).Contains('.'));
 
                 projectFolders = projectFolders.Concat(q);
             }
