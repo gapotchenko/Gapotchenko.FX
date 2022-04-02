@@ -87,7 +87,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
                 Console.WriteLine("Processing project \"{0}\"...", node);
 
-                var processor = new ProjectProcessor(node.Project, node, baseDirectory);
+                var processor = new ProjectProcessor(node, baseDirectory);
                 processor.Run();
             }
         }

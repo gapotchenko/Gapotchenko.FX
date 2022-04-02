@@ -11,21 +11,20 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 {
     using Math = System.Math;
 
-    class ProjectProcessor
+    sealed class ProjectProcessor
     {
         public ProjectProcessor(
-            Project project,
             TocProjectNode tocNode,
             string baseDirectory)
         {
-            _Project = project;
             _TocNode = tocNode;
             _BaseDirectory = baseDirectory;
+            _Project = tocNode.Project;
         }
 
-        readonly Project _Project;
         readonly TocProjectNode _TocNode;
         readonly string _BaseDirectory;
+        readonly Project _Project;
 
         public void Run()
         {
