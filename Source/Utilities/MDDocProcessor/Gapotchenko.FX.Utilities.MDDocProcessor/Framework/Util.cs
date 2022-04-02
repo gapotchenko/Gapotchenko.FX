@@ -7,10 +7,6 @@
             if (string.IsNullOrEmpty(path))
                 return path;
 
-            // Require trailing backslash for path
-            if (!Path.EndsInDirectorySeparator(basePath))
-                basePath += Path.DirectorySeparatorChar;
-
             var baseUri = new Uri(basePath);
             var fullUri = new Uri(path);
 

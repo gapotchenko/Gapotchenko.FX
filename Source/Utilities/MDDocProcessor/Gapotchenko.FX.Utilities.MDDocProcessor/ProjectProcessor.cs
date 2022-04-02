@@ -150,7 +150,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
                     tw.Write('(');
                     if (effectiveProject != null)
-                        tw.Write(Util.MakeRelativePath(effectiveProject.FolderPath, _Project.FolderPath).Replace(Path.DirectorySeparatorChar, '/'));
+                        tw.Write(Util.MakeRelativePath(effectiveProject.FolderPath, _Project.FolderPath + Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/'));
                     else
                         tw.Write('#');
                     tw.Write(')');
@@ -233,7 +233,10 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             //if (!fullToc)
             {
                 string mdFileDirectory = Path.GetDirectoryName(mdFilePath) ?? throw new InvalidOperationException();
-                string path = Path.TrimEndingDirectorySeparator(Util.MakeRelativePath(_BaseDirectory + Path.DirectorySeparatorChar, mdFileDirectory));
+                string path = Path.TrimEndingDirectorySeparator(
+                    Util.MakeRelativePath(
+                        _BaseDirectory + Path.DirectorySeparatorChar,
+                        mdFileDirectory + Path.DirectorySeparatorChar));
                 path = path.Replace(Path.DirectorySeparatorChar, '/');
 
                 if (complexityLegend)
