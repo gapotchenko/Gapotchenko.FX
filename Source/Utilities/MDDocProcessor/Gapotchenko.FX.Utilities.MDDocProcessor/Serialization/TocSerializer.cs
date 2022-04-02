@@ -20,101 +20,114 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Serialization
             var catalog = rootNode.Catalog?.Catalog;
             var project = projectNode?.Project;
 
-            foreach (var node in rootNode.SelfAndDescendants())
+            void SerializeTocCore(TocNode rootNode)
             {
-                var nodeProject = (node as TocProjectNode)?.Project;
-                bool current = nodeProject == project;
-
-                if (!current && projectNode != null)
+                foreach (var node in rootNode.SelfAndDescendants())
                 {
-                    bool currentParent =
-                        node.Ancestors().OfType<TocProjectNode>().Any(x => x.Project == project) ||
-                        projectNode.Ancestors().Any(x => x == node.Parent);
+                    var nodeProject = (node as TocProjectNode)?.Project;
+                    bool current = nodeProject == project;
 
-                    if (currentParent)
+                    if (!current && projectNode != null)
                     {
-                        if (node.Depth > projectNode.Depth + 1)
-                            continue;
-                    }
-                    else
-                    {
-                        if (node.Depth > 2)
-                            continue;
-                    }
+                        bool currentParent =
+                            node.Ancestors().OfType<TocProjectNode>().Any(x => x.Project == project) ||
+                            projectNode.Ancestors().Any(x => x == node.Parent);
 
-                    if (_GetProjectCompexity(node) > project?.Complexity)
-                        continue;
-                }
-
-                int indent = Math.Max(node.Depth - rootNode.Depth - 1, 0);
-                for (var i = 0; i < indent; ++i)
-                    textWriter.Write("  ");
-
-                textWriter.Write("- ");
-                if (current && projectNode != null)
-                    textWriter.Write("&#x27B4; ");
-
-                var effectiveProject = nodeProject;
-
-                if (effectiveProject == null && node is TocNamespaceNode namespaceNode)
-                {
-                    effectiveProject = namespaceNode.Children.OfType<TocProjectNode>().FirstOrDefault()?.Project;
-
-                    if (effectiveProject == project)
-                        effectiveProject = null;
-
-                    //if (effectiveProject != null)
-                    //{
-                    //    if (namespaceNode.Children.OfType<TocProjectNode>().Any(x => x.Project == _Project))
-                    //        effectiveProject = null;
-                    //}
-                }
-
-                //if (effectiveProject == null)
-                //{
-                //    tw.Write(node.ToString());
-                //    tw.Write(" (namespace)");
-                //}
-                //else
-                {
-                    textWriter.Write('[');
-                    textWriter.Write(node.ToString());
-                    textWriter.Write(']');
-
-                    textWriter.Write('(');
-                    if (effectiveProject != null)
-                    {
-                        string basePath =
-                            project?.ReadMeFilePath ??
-                            catalog?.ReadMeFilePath ??
-                            throw new Exception("Cannot determine base path.");
-
-                        textWriter.Write(Util.MakeRelativePath(effectiveProject.DirectoryPath, basePath).Replace(Path.DirectorySeparatorChar, '/'));
-                    }
-                    else
-                    {
-                        textWriter.Write('#');
-                    }
-                    textWriter.Write(')');
-
-                    if (effectiveProject != null)
-                    {
-                        var projectComplexity = effectiveProject.Complexity;
-
-                        int starCount = ProjectComplexityVisualizer.GetStarCount(projectComplexity);
-                        if (starCount != 0)
+                        if (currentParent)
                         {
-                            var projectCompexitySet = ProjectCompexitySet ??= new HashSet<ProjectComplexity>();
-                            projectCompexitySet.Add(projectComplexity);
+                            if (node.Depth > projectNode.Depth + 1)
+                                continue;
+                        }
+                        else
+                        {
+                            if (node.Depth > 2)
+                                continue;
+                        }
 
-                            textWriter.Write(' ');
-                            for (int i = 0; i < starCount; ++i)
-                                textWriter.Write(ProjectComplexityVisualizer.StarSymbol);
+                        if (_GetProjectCompexity(node) > project?.Complexity)
+                            continue;
+                    }
+
+                    int indent = Math.Max(node.Depth - rootNode.Depth - 1, 0);
+                    for (var i = 0; i < indent; ++i)
+                        textWriter.Write("  ");
+
+                    textWriter.Write("- ");
+                    if (current && projectNode != null)
+                        textWriter.Write("&#x27B4; ");
+
+                    var effectiveProject = nodeProject;
+
+                    if (effectiveProject == null && node is TocNamespaceNode namespaceNode)
+                    {
+                        effectiveProject = namespaceNode.Children.OfType<TocProjectNode>().FirstOrDefault()?.Project;
+
+                        if (effectiveProject == project)
+                            effectiveProject = null;
+
+                        //if (effectiveProject != null)
+                        //{
+                        //    if (namespaceNode.Children.OfType<TocProjectNode>().Any(x => x.Project == _Project))
+                        //        effectiveProject = null;
+                        //}
+                    }
+
+                    //if (effectiveProject == null)
+                    //{
+                    //    tw.Write(node.ToString());
+                    //    tw.Write(" (namespace)");
+                    //}
+                    //else
+                    {
+                        textWriter.Write('[');
+                        textWriter.Write(node.ToString());
+                        textWriter.Write(']');
+
+                        textWriter.Write('(');
+                        if (effectiveProject != null)
+                        {
+                            string basePath =
+                                project?.ReadMeFilePath ??
+                                catalog?.ReadMeFilePath ??
+                                throw new Exception("Cannot determine base path.");
+
+                            textWriter.Write(Util.MakeRelativePath(effectiveProject.DirectoryPath, basePath).Replace(Path.DirectorySeparatorChar, '/'));
+                        }
+                        else
+                        {
+                            textWriter.Write('#');
+                        }
+                        textWriter.Write(')');
+
+                        if (effectiveProject != null)
+                        {
+                            var projectComplexity = effectiveProject.Complexity;
+
+                            int starCount = ProjectComplexityVisualizer.GetStarCount(projectComplexity);
+                            if (starCount != 0)
+                            {
+                                var projectCompexitySet = ProjectCompexitySet ??= new HashSet<ProjectComplexity>();
+                                projectCompexitySet.Add(projectComplexity);
+
+                                textWriter.Write(' ');
+                                for (int i = 0; i < starCount; ++i)
+                                    textWriter.Write(ProjectComplexityVisualizer.StarSymbol);
+                            }
                         }
                     }
-                }
 
-                textWriter.WriteLine();
+                    textWriter.WriteLine();
+                }
+            }
+
+            if (rootNode is TocCatalogNode catalogNode)
+            {
+                foreach (var i in rootNode.Children)
+                    SerializeTocCore(i);
+            }
+            else
+            {
+                SerializeTocCore(rootNode);
             }
         }
 

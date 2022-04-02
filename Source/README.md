@@ -14,6 +14,10 @@ The full list of Gapotchenko.FX modules is presented in the table below.
 - [Gapotchenko.FX.AppModel.Information](Gapotchenko.FX.AppModel.Information)
 - [Gapotchenko.FX.Collections](Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Console](Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data.Integrity.Checksum](Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum)
+  - [Gapotchenko.FX.Data.Integrity.Checksum.Crc16](Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum.Crc16)
+  - [Gapotchenko.FX.Data.Integrity.Checksum.Crc32](Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum.Crc32)
+  - [Gapotchenko.FX.Data.Integrity.Checksum.Crc8](Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum.Crc8)
 - [Gapotchenko.FX.Data.Linq](Data/Gapotchenko.FX.Data.Linq) ✱
 - [Gapotchenko.FX.Diagnostics](Gapotchenko.FX.Diagnostics.CommandLine)
   - [Gapotchenko.FX.Diagnostics.CommandLine](Gapotchenko.FX.Diagnostics.CommandLine)
@@ -35,6 +39,5 @@ The full list of Gapotchenko.FX modules is presented in the table below.
 
 ### Legend
 
-Symbol ✱ denotes an advanced module.
-<br/>
+Symbol ✱ denotes an advanced module.  
 Symbol ✱✱ denotes an expert module.
