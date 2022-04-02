@@ -13,22 +13,18 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
     sealed class ProjectProcessor
     {
-        public ProjectProcessor(
-            TocProjectNode tocNode,
-            string baseDirectory)
+        public ProjectProcessor(TocProjectNode tocNode, string baseDirectory)
         {
             _TocNode = tocNode;
             _BaseDirectory = baseDirectory;
-            _Project = tocNode.Project;
         }
 
         readonly TocProjectNode _TocNode;
         readonly string _BaseDirectory;
-        readonly Project _Project;
 
         public void Run()
         {
-            string? filePath = _Project.ReadMeFilePath;
+            string? filePath = _TocNode.Project.ReadMeFilePath;
             if (filePath != null)
                 _UpdateToc(filePath);
         }
@@ -83,15 +79,17 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             if (book == null)
                 throw new InvalidOperationException("TOC node book not found.");
 
+            var project = _TocNode.Project;
+
             foreach (var node in book.SelfAndDescendants())
             {
-                var project = (node as TocProjectNode)?.Project;
-                bool current = project == _Project;
+                var nodeProject = (node as TocProjectNode)?.Project;
+                bool current = nodeProject == project;
 
                 if (!current)
                 {
                     bool currentParent =
-                        node.Ancestors().OfType<TocProjectNode>().Any(x => x.Project == _Project) ||
+                        node.Ancestors().OfType<TocProjectNode>().Any(x => x.Project == project) ||
                         _TocNode.Ancestors().Any(x => x == node.Parent);
 
                     if (currentParent)
@@ -105,7 +103,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
                             continue;
                     }
 
-                    if (_GetProjectCompexity(node) > _Project.Complexity)
+                    if (_GetProjectCompexity(node) > project.Complexity)
                     {
                         fullToc = false;
                         continue;
@@ -120,13 +118,13 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
                 if (current)
                     tw.Write("&#x27B4; ");
 
-                var effectiveProject = project;
+                var effectiveProject = nodeProject;
 
                 if (effectiveProject == null && node is TocNamespaceNode namespaceNode)
                 {
                     effectiveProject = namespaceNode.Children.OfType<TocProjectNode>().FirstOrDefault()?.Project;
 
-                    if (effectiveProject == _Project)
+                    if (effectiveProject == project)
                         effectiveProject = null;
 
                     //if (effectiveProject != null)
@@ -149,7 +147,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
                     tw.Write('(');
                     if (effectiveProject != null)
-                        tw.Write(Util.MakeRelativePath(effectiveProject.FolderPath, _Project.FolderPath + Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/'));
+                        tw.Write(Util.MakeRelativePath(effectiveProject.FolderPath, project.FolderPath + Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/'));
                     else
                         tw.Write('#');
                     tw.Write(')');
