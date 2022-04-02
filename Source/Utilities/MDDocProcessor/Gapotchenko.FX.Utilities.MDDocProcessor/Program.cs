@@ -1,4 +1,5 @@
-﻿using Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
+﻿using Gapotchenko.FX.Utilities.MDDocProcessor.Model;
+using Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Visualization;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor
@@ -44,11 +45,17 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
             var projects = _EnumerateProjectFolders(projectRootFolder).Select(ProjectSerializer.ReadProject);
             var toc = new TocDocument();
-            TocService.BuildToc(toc.Root, projects);
+
+            var catalog = new TocCatalogNode(new Catalog("Gapotchenko.FX", projectRootFolder));
+            toc.Root.Children.Add(catalog);
+            catalog.Parent = toc.Root;
+
+            TocService.BuildToc(catalog, projects);
 
             Console.WriteLine("Table of Contents:");
             Console.WriteLine();
-            TocVisualizer.Visualize(toc.Root, Console.Out);
+            foreach (var i in catalog.Children)
+                TocVisualizer.Visualize(i, Console.Out);
 
             Console.WriteLine();
             _ProcessCatalog(toc, projectRootFolder);
