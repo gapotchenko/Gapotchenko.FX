@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Resources\NuGet\PackageIcon.png" Pack="true" PackagePath="docs\assets\package-icon.png" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\NuGet\Package Icon.png" Pack="true" PackagePath="docs\assets\package-icon.png" Visible="false" />
   </ItemGroup>
 
 </Project>
