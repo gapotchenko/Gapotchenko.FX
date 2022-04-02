@@ -89,6 +89,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
                     bool currentParent =
                         node.Ancestors().OfType<TocProjectNode>().Any(x => x.Project == _Project) ||
                         _TocNode.Ancestors().Any(x => x == node.Parent);
+
                     if (currentParent)
                     {
                         if (node.Depth > _TocNode.Depth + 1)

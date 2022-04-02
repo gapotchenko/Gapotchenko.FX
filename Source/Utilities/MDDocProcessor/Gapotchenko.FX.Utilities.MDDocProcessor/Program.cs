@@ -9,7 +9,8 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
         {
             try
             {
-                return _Run(args);
+                _Run(args);
+                return Environment.ExitCode;
             }
             catch (ProgramExitException e)
             {
@@ -23,12 +24,16 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             }
         }
 
-        static int _Run(string[] args)
+        static void _Run(string[] args)
         {
             if (args.Length != 1)
             {
-                Console.WriteLine("Usage: MDDocProcessor <project root folder>");
-                return 1;
+                Console.WriteLine(
+                    "Usage: {0} <project root folder>",
+                    Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location));
+
+                Environment.ExitCode = 1;
+                return;
             }
 
             string projectRootFolder = args[0];
@@ -46,8 +51,6 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
             Console.WriteLine();
             _ProcessProjects(toc.Root);
-
-            return 0;
         }
 
         static IEnumerable<string> _EnumerateProjectFolders(string rootPath)
