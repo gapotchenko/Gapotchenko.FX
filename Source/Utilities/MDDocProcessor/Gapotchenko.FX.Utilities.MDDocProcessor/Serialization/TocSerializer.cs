@@ -1,5 +1,4 @@
-﻿using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.Math;
+﻿using Gapotchenko.FX.Math;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Framework;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Model;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
@@ -11,22 +10,22 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Serialization
 
     sealed class TocSerializer
     {
-        public void SerializeToc(TextWriter textWriter, TocNode rootNode, TocProjectNode projectNode)
+        public void SerializeToc(TextWriter textWriter, TocNode rootNode, TocProjectNode? projectNode)
         {
             if (ProjectCompexitySet?.Count > 0)
                 ProjectCompexitySet.Clear();
-
             RootNode = rootNode;
             ProjectNode = projectNode;
 
-            var project = projectNode.Project;
+            var catalog = rootNode.Catalog?.Catalog;
+            var project = projectNode?.Project;
 
             foreach (var node in rootNode.SelfAndDescendants())
             {
                 var nodeProject = (node as TocProjectNode)?.Project;
                 bool current = nodeProject == project;
 
-                if (!current)
+                if (!current && projectNode != null)
                 {
                     bool currentParent =
                         node.Ancestors().OfType<TocProjectNode>().Any(x => x.Project == project) ||
@@ -43,7 +42,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Serialization
                             continue;
                     }
 
-                    if (_GetProjectCompexity(node) > project.Complexity)
+                    if (_GetProjectCompexity(node) > project?.Complexity)
                         continue;
                 }
 
@@ -52,7 +51,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Serialization
                     textWriter.Write("  ");
 
                 textWriter.Write("- ");
-                if (current)
+                if (current && projectNode != null)
                     textWriter.Write("&#x27B4; ");
 
                 var effectiveProject = nodeProject;
@@ -84,9 +83,18 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Serialization
 
                     textWriter.Write('(');
                     if (effectiveProject != null)
-                        textWriter.Write(Util.MakeRelativePath(effectiveProject.DirectoryPath, project.DirectoryPath + Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/'));
+                    {
+                        string basePath =
+                            project?.ReadMeFilePath ??
+                            catalog?.ReadMeFilePath ??
+                            throw new Exception("Cannot determine base path.");
+
+                        textWriter.Write(Util.MakeRelativePath(effectiveProject.DirectoryPath, basePath).Replace(Path.DirectorySeparatorChar, '/'));
+                    }
                     else
+                    {
                         textWriter.Write('#');
+                    }
                     textWriter.Write(')');
 
                     if (effectiveProject != null)
@@ -122,7 +130,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Serialization
                 return node.Children.Select(_GetProjectCompexity).Aggregate((a, b) => MathEx.Max(a, b));
         }
 
-        public bool SerializeLegend(TextWriter textWriter)
+        public void SerializeLegend(TextWriter textWriter)
         {
             bool complexityLegend = false;
 
@@ -173,8 +181,6 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Serialization
                         textWriter.WriteLine("Or look at the [full list of modules]({0}#available-modules).", path);
                 }
             }
-
-            return true;
         }
     }
 }
