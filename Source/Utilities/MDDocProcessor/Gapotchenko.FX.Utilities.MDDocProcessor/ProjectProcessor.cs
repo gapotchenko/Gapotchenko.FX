@@ -10,14 +10,12 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 {
     sealed class ProjectProcessor
     {
-        public ProjectProcessor(TocProjectNode tocNode, string baseDirectory)
+        public ProjectProcessor(TocProjectNode tocNode)
         {
             _TocNode = tocNode;
-            _BaseDirectory = baseDirectory;
         }
 
         readonly TocProjectNode _TocNode;
-        readonly string _BaseDirectory;
 
         public void Run()
         {

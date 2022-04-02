@@ -8,19 +8,17 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 {
     sealed class CatalogProcessor
     {
-        public CatalogProcessor(string directoryPath, TocDocument toc)
+        public CatalogProcessor(TocCatalogNode tocNode)
         {
-            _DirectoryPath = directoryPath;
-            _Toc = toc;
+            _TocNode = tocNode;
         }
 
-        readonly string _DirectoryPath;
-        TocDocument _Toc;
+        readonly TocCatalogNode _TocNode;
 
         public void Run()
         {
-            string readMeFilePath = Path.Combine(_DirectoryPath, "README.md");
-            if (File.Exists(readMeFilePath))
+            string? readMeFilePath = _TocNode.Catalog.ReadMeFilePath;
+            if (readMeFilePath != null)
                 _UpdateToc(readMeFilePath);
         }
 
@@ -39,16 +37,12 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             if (tocGroup == null)
                 return;
 
-            var book = _Toc.Root.Children.Single();
+            var tocSerializer = new TocSerializer();
 
-            //var tocWriter = new StringWriter();
-
-            //var tocSerializer = new TocSerializer();
-            //tocSerializer.SerializeToc(tocWriter, book, null);
-
-            //string newToc = tocWriter.ToString().TrimEnd('\n', '\r');
-
-            //text = StringEditor.Replace(text, tocGroup, newToc);
+            var tocWriter = new StringWriter();
+            tocSerializer.SerializeToc(tocWriter, _TocNode, null);
+            string newToc = tocWriter.ToString().TrimEnd('\n', '\r');
+            text = StringEditor.Replace(text, tocGroup, newToc);
 
         }
     }

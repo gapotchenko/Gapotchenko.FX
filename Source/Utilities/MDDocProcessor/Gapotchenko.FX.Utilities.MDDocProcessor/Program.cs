@@ -61,17 +61,10 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             TocVisualizer.Visualize(catalog, Console.Out);
 
             Console.WriteLine();
-            _ProcessCatalog(toc, projectRootFolder);
+            _ProcessProjects(toc);
 
             Console.WriteLine();
-            _ProcessProjects(toc, projectRootFolder);
-        }
-
-        static void _ProcessCatalog(TocDocument toc, string rootFolder)
-        {
-            Console.WriteLine("Processing catalog...");
-            var catalogProcessor = new CatalogProcessor(rootFolder, toc);
-            catalogProcessor.Run();
+            _ProcessCatalogs(toc);
         }
 
         static IEnumerable<string> _EnumerateProjectFolders(string rootPath)
@@ -99,7 +92,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             return projectFolders.Where(ProjectSerializer.IsProjectFolder);
         }
 
-        static void _ProcessProjects(TocDocument toc, string baseDirectory)
+        static void _ProcessProjects(TocDocument toc)
         {
             foreach (var node in toc.Root.Descendants().OfType<TocProjectNode>())
             {
@@ -108,8 +101,19 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
                 Console.WriteLine("Processing project \"{0}\"...", node);
 
-                var processor = new ProjectProcessor(node, baseDirectory);
+                var processor = new ProjectProcessor(node);
                 processor.Run();
+            }
+        }
+
+        static void _ProcessCatalogs(TocDocument toc)
+        {
+            foreach (var node in toc.Root.Descendants().OfType<TocCatalogNode>())
+            {
+                Console.WriteLine("Processing catalog \"{0}\"...", node.Catalog.Name);
+
+                var catalogProcessor = new CatalogProcessor(node);
+                catalogProcessor.Run();
             }
         }
     }
