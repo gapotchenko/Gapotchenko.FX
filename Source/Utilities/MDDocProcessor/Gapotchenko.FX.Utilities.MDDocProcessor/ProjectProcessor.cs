@@ -13,14 +13,19 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
     class ProjectProcessor
     {
-        public ProjectProcessor(Project project, TocProjectNode tocNode)
+        public ProjectProcessor(
+            Project project,
+            TocProjectNode tocNode,
+            string baseDirectory)
         {
             _Project = project;
             _TocNode = tocNode;
+            _BaseDirectory = baseDirectory;
         }
 
         readonly Project _Project;
         readonly TocProjectNode _TocNode;
+        readonly string _BaseDirectory;
 
         public void Run()
         {
@@ -227,10 +232,14 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
             //if (!fullToc)
             {
+                string mdFileDirectory = Path.GetDirectoryName(mdFilePath) ?? throw new InvalidOperationException();
+                string path = Path.TrimEndingDirectorySeparator(Util.MakeRelativePath(_BaseDirectory + Path.DirectorySeparatorChar, mdFileDirectory));
+                path = path.Replace(Path.DirectorySeparatorChar, '/');
+
                 if (complexityLegend)
-                    legendWriter.WriteLine("Or take a look at the [full list of modules](..#available-modules).");
+                    legendWriter.WriteLine("Or take a look at the [full list of modules]({0}#available-modules).", path);
                 else
-                    legendWriter.WriteLine("Or look at the [full list of modules](..#available-modules).");
+                    legendWriter.WriteLine("Or look at the [full list of modules]({0}#available-modules).", path);
             }
 
             text = StringEditor.Replace(text, legendGroup, legendWriter.ToString().TrimEnd('\n', '\r'));

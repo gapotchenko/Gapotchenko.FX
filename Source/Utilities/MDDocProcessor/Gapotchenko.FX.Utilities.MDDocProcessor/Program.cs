@@ -50,7 +50,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             TocVisualizer.Visualize(toc.Root, Console.Out);
 
             Console.WriteLine();
-            _ProcessProjects(toc.Root);
+            _ProcessProjects(toc.Root, projectRootFolder);
         }
 
         static IEnumerable<string> _EnumerateProjectFolders(string rootPath)
@@ -78,7 +78,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
             return projectFolders.Where(ProjectSerializer.IsProjectFolder);
         }
 
-        static void _ProcessProjects(TocRootNode root)
+        static void _ProcessProjects(TocRootNode root, string baseDirectory)
         {
             foreach (var node in root.Descendants().OfType<TocProjectNode>())
             {
@@ -87,7 +87,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
 
                 Console.WriteLine("Processing project \"{0}\"...", node);
 
-                var processor = new ProjectProcessor(node.Project, node);
+                var processor = new ProjectProcessor(node.Project, node, baseDirectory);
                 processor.Run();
             }
         }

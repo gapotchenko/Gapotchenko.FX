@@ -8,23 +8,26 @@
                 return path;
 
             // Require trailing backslash for path
-            if (!basePath.EndsWith("\\"))
-                basePath += "\\";
+            if (!Path.EndsInDirectorySeparator(basePath))
+                basePath += Path.DirectorySeparatorChar;
 
-            Uri baseUri = new Uri(basePath);
-            Uri fullUri = new Uri(path);
+            var baseUri = new Uri(basePath);
+            var fullUri = new Uri(path);
 
-            Uri relativeUri = baseUri.MakeRelativeUri(fullUri);
+            var relativeUri = baseUri.MakeRelativeUri(fullUri);
 
+            string relativePath;
             if (relativeUri.IsAbsoluteUri)
             {
-                return relativeUri.LocalPath;
+                relativePath = relativeUri.LocalPath;
             }
             else
             {
                 // Uri's use forward slashes so convert back to backward slashes
-                return Uri.UnescapeDataString(relativeUri.ToString()).Replace("/", "\\");
+                relativePath = Uri.UnescapeDataString(relativeUri.ToString()).Replace('/', Path.DirectorySeparatorChar);
             }
+
+            return relativePath;
         }
     }
 }
