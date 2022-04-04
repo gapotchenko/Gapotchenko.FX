@@ -1,13 +1,13 @@
-﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GenerateNuGetReadMe
+﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
 {
-    static class GenerateNuGetReadMeCommand
+    static class GeneratePackageReadMeCommand
     {
         public static void Run(string[] args)
         {
             if (args.Length != 2)
             {
                 Console.WriteLine(
-                    "Usage: {0} generate-nuget-readme <input markdown file path> <output markdown file path>",
+                    "Usage: {0} generate-package-readme <input markdown file path> <output markdown file path>",
                     Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location));
 
                 throw new ProgramExitException(1);

@@ -1,4 +1,4 @@
-﻿using Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GenerateNuGetReadMe;
+﻿using Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GenerateToc;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor
@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
                 Console.WriteLine();
                 Console.WriteLine("where <command> is one of the following:");
                 Console.WriteLine("  - generate-toc | Generate table of contents in all markdown files");
-                Console.WriteLine("  - generate-nuget-readme | Generate NuGet README.md file from GitHub README.md");
+                Console.WriteLine("  - generate-package-readme | Generate NuGet README.md file from GitHub README.md");
 
                 throw new ProgramExitException(1);
             }
@@ -45,8 +45,8 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor
                 case "generate-toc":
                     GenerateTocCommand.Run(args.Skip(1).ToArray());
                     break;
-                case "generate-nuget-readme":
-                    GenerateNuGetReadMeCommand.Run(args.Skip(1).ToArray());
+                case "generate-package-readme":
+                    GeneratePackageReadMeCommand.Run(args.Skip(1).ToArray());
                     break;
                 default:
                     throw new Exception(string.Format("Unknown command \"{0}\".", command));
