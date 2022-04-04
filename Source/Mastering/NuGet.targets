@@ -19,7 +19,9 @@
     <PropertyGroup>
       <NLP_PackageReadmeFile Condition=" '$(NLP_ProjectReadmeFile)' != '' ">$(IntermediateOutputPath)MDDocProcessor\Package\README.md</NLP_PackageReadmeFile>
     </PropertyGroup>
-    <Exec Command="&quot;$(MasteringDir)../Utilities/MDDocProcessor/run&quot; generate-package-readme &quot;$(NLP_ProjectReadmeFile)&quot; &quot;$(NLP_PackageReadmeFile)&quot;" />
+    <Exec
+        Condition=" '$(NLP_ProjectReadmeFile)' != '' "
+        Command="&quot;$(MasteringDir)../Utilities/MDDocProcessor/run&quot; generate-package-readme &quot;$(NLP_ProjectReadmeFile)&quot; &quot;$(NLP_PackageReadmeFile)&quot;" />
     <ItemGroup>
       <None Condition=" '$(NLP_PackageReadmeFile)' != '' " Include="$(NLP_PackageReadmeFile)" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="false" />
     </ItemGroup>
