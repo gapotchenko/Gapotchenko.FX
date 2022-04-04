@@ -16,6 +16,10 @@
             string inputFilePath = args[0];
             string outputFilePath = args[1];
 
+            var outputDirectoryPath = Path.GetDirectoryName(outputFilePath);
+            if (outputDirectoryPath != null)
+                Directory.CreateDirectory(outputDirectoryPath);
+
             File.WriteAllText(outputFilePath, "This is a demo README.md for NuGet:\n- One\n- Two\n- Three");
         }
     }

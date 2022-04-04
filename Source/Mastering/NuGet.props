@@ -1,5 +1,9 @@
 <Project>
 
+  <PropertyGroup>
+    <NLP_ProjectReadmeFile Condition=" Exists('$(MSBuildProjectDirectory)\README.md') ">$(MSBuildProjectDirectory)\README.md</NLP_ProjectReadmeFile>
+  </PropertyGroup>
+
   <!-- NuGet Specification -->
   <PropertyGroup>
     <Authors>$(Company)</Authors>
@@ -9,14 +13,15 @@
     <RepositoryUrl>https://github.com/gapotchenko/Gapotchenko.FX</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile Condition=" '$(NLP_ProjectReadmeFile)' != '' ">docs\README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <IsPackable>$(IsPublicProject)</IsPackable>
     <PackageOutputPath>bin\$(Configuration)\nuget</PackageOutputPath>
-    <GenerateNuspecDependsOn>PrepareNuspec;$(GenerateNuspecDependsOn)</GenerateNuspecDependsOn>
+    <GenerateNuspecDependsOn>PrepareNuspec;$(PackDependsOn)</GenerateNuspecDependsOn>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Resources\NuGet\Package Icon.png" Pack="true" PackagePath="docs\assets\package-icon.png" Visible="false" />
   </ItemGroup>
