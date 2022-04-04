@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GenerateNuGetReadMe
+﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GenerateNuGetReadMe
 {
     static class GenerateNuGetReadMeCommand
     {
         public static void Run(string[] args)
         {
-            if (args.Length != 1)
+            if (args.Length != 2)
             {
                 Console.WriteLine(
                     "Usage: {0} generate-nuget-readme <input markdown file path> <output markdown file path>",
@@ -19,7 +13,10 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GenerateNuGetReadMe
                 throw new ProgramExitException(1);
             }
 
-            throw new NotImplementedException("TODO");
+            string inputFilePath = args[0];
+            string outputFilePath = args[1];
+
+            File.WriteAllText(outputFilePath, "This is a demo README.md for NuGet:\n- One\n- Two\n- Three");
         }
     }
 }
