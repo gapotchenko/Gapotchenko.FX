@@ -76,7 +76,7 @@ which will produce the following output:
 An experienced engineer will definitely spot that while our approach produces the correct result, it is not the most efficient way of achieving it.
 
 It all comes to the number of elements processed by the `Distinct` operation.
-The number of resulting permutations is `n!` where `n` is the size of input sequence.
+The number of resulting permutations is `n!` where `n` is the size of the input sequence.
 So if we took care to perform `Distinct` on the input sequence instead, we would achieve considerable savings in number of operations and amount of used memory.
 Like so:
 
@@ -85,12 +85,12 @@ foreach (var i in Permutations.Of(seq.Distinct()))
     Console.WriteLine(string.Join(" ", i.Select(x => x.ToString())));
 ```
 
-Note that `Distinct` operation is now applied on input sequence, supposedly making the whole algorithm top-efficient while producing the same results.
+(Note that `Distinct` operation is now applied on the input sequence, supposedly making the whole algorithm top-efficient while producing the same results.)
 
-This whole way of thinking stands true but `Gapotchenko.FX.Math.Combinatorics` went ahead of that and managed to provide the out-of-the-box support for such natural idiosyncrasies.
+This whole way of thinking stands true but `Gapotchenko.FX.Math.Combinatorics` goes ahead of that and provides the out-of-the-box support for such natural idiosyncrasies.
 
 Whatever syntax is preferred: `Permutations.Of(seq.Distinct())` or `Permutations.Of(seq).Distinct()`,
-the algorithm complexity stays at bay thanks to the built-in optimizer that chooses the best execution plan for a query.
+the algorithm complexity stays at bay thanks to the built-in optimizer that chooses the best execution plan for a query automatically.
 
 ### Permutations in LINQ
 
