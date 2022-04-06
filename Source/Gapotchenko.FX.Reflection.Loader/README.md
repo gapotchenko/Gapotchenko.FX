@@ -306,6 +306,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
 - [Gapotchenko.FX.Numerics](../Gapotchenko.FX.Numerics) ✱
 - &#x27B4; [Gapotchenko.FX.Reflection.Loader](../Gapotchenko.FX.Reflection.Loader) ✱
+- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 

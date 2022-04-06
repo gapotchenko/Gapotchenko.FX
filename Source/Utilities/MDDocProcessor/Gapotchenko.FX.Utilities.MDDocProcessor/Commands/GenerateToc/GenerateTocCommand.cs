@@ -53,6 +53,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GenerateToc
             {
                 (".", false),
                 ("Data", true),
+                ("Security", true)
             };
 
             var projectFolders = Enumerable.Empty<string>();

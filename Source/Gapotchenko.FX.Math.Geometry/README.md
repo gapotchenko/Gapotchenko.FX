@@ -128,6 +128,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
   - &#x27B4; [Gapotchenko.FX.Math.Geometry](../Gapotchenko.FX.Math.Geometry)
   - [Gapotchenko.FX.Math.Topology](../Gapotchenko.FX.Math.Topology)
 - [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 

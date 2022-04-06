@@ -132,6 +132,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Linq](../../../../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../../../../Gapotchenko.FX.Math)
 - [Gapotchenko.FX.Memory](../../../../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Security.Cryptography](../../../../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../../../../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../../../../Gapotchenko.FX.Threading)
 
