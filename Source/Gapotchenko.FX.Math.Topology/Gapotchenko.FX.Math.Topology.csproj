@@ -9,8 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageTag Include="topology" />
-    <PackageTag Include="graph" />
+    <PackageTag Include="topology;algorithms;graph;directed;graph-theory;vertex;edge" />
   </ItemGroup>
 
   <ItemGroup>
