@@ -142,7 +142,7 @@ Topological sort of a graph is a linear ordering of its vertices such that
 for every directed edge `u` → `v`,
 `u` comes before `v` in the ordering.
 
-The canonical application example of topological sorting is to schedule a sequence of jobs or tasks based on their dependencies.
+The canonical application example of topological sorting is to schedule a sequence of jobs (or tasks) according to their dependencies.
 The jobs are represented by vertices, and there is an edge from `x` to `y` if job `x` must be completed before job `y` can be started.
 Then, a topological sort gives an order in which to perform the jobs.
 
