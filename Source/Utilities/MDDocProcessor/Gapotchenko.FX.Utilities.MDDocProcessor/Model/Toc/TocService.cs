@@ -1,15 +1,39 @@
 ﻿using Gapotchenko.FX.Math.Topology;
+using System.Text.RegularExpressions;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
 {
     static class TocService
     {
+        static IEnumerable<T> NaturalSortBy<T>(IEnumerable<T> list, Func<T, string> keySelector)
+        {
+            if (!list.Any())
+                return Enumerable.Empty<T>();
+
+            int maxLen = list.Select(s => keySelector(s).Length).Max();
+
+            static char PaddingChar(string s) => char.IsDigit(s[0]) ? ' ' : char.MaxValue;
+
+            return list
+                .Select(s =>
+                    new
+                    {
+                        OrgStr = s,
+                        SortStr = Regex.Replace(
+                            keySelector(s),
+                            @"(\d+)",
+                            m => m.Value.PadLeft(maxLen, PaddingChar(m.Value)))
+                    })
+                .OrderBy(x => x.SortStr)
+                .Select(x => x.OrgStr);
+        }
+
         public static void BuildToc(TocNode root, IEnumerable<Project> projects)
         {
             if (projects == null)
                 throw new ArgumentNullException(nameof(projects));
 
-            static IEnumerable<Project> Sort(IEnumerable<Project> source) => source.OrderBy(x => x.Name);
+            static IEnumerable<Project> Sort(IEnumerable<Project> source) => NaturalSortBy(source, x => x.Name);
 
             var graph = new Graph<Project>(projects, (a, b) => a.Name.StartsWith(b.Name + "."));
             graph.ReduceTransitions();
