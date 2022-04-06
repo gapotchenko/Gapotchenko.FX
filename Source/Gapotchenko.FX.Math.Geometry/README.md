@@ -21,7 +21,7 @@ There are several ways to measure the edit distance.
 The table below compares edit distance measurement functions provided by `StringMetrics` class:
 
 | Metric Function                           | Insertion | Deletion | Substitution | Transposition |
-|:------------------------------------------|:---------:|:--------:|:------------:|:-------------:|
+| ----------------------------------------- | --------- | -------- | ------------ | ------------- |
 | Levenshtein distance                      | &check;   | &check;  | &check;      |               |
 | Longest common subsequence (LCS) distance | &check;   | &check;  |              |               |
 | Hamming distance                          |           |          | &check;      |               |
