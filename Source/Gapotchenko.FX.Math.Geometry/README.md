@@ -11,7 +11,7 @@ The module provides primitives and operations for geometry math.
 
 The notion of a string is purely abstract.
 So it is not limited to just characters like `System.String`; it can be a string of anything in form of `IEnumerable<T>`.
-In this way, `Gapotchenko.FX.Math.Geometry` module tries to achieve the right degree of abstraction desirable for a versatile math toolkit.
+In this way, `Gapotchenko.FX.Math.Geometry` module achieves the right degree of abstraction desirable for a versatile math toolkit.
 
 ### Edit Distance
 
@@ -22,7 +22,7 @@ The table below compares edit distance measurement functions provided by `String
 
 | Metric Function                           |      Insertion     |      Deletion      |    Substitution    |    Transposition   |
 |:------------------------------------------|:------------------:|:------------------:|:------------------:|:------------------:|
-| Levenshtein distance                      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |
+| Levenshtein distance                      | &check; | :heavy_check_mark: | :heavy_check_mark: |                    |
 | Longest common subsequence (LCS) distance | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
 | Hamming distance                          |                    |                    | :heavy_check_mark: |                    |
 | Damerau–Levenshtein distance              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
