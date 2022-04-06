@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageTag Include="combinatorics;permutations;variations;cartesian-product" />
+    <PackageTag Include="combinatorics;permutations;combinations;variations;cartesian-product" />
   </ItemGroup>
 
   <ItemGroup>
