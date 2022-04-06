@@ -105,7 +105,7 @@ foreach (var i in new[] { "A", "B", "C" }.Permute())
 
 ## Cartesian Product
 
-Another widespread combinatorial primitive is Cartesian product:
+Another widespread combinatorial primitive is a Cartesian product:
 
 ```csharp
 using Gapotchenko.FX.Math.Combinatorics;
