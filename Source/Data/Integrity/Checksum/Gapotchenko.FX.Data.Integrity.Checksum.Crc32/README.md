@@ -87,7 +87,7 @@ sealed class FooCrc32 : CustomCrc32
 }
 ```
 
-That would allow you to use the algorithm effortlessly from several places in the codebase later:
+That will allow you to use the algorithm effortlessly from several places in the codebase later:
 
 ``` c#
 var checksum = FooCrc32.Instance.ComputeChecksum(...);

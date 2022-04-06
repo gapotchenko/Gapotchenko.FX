@@ -101,7 +101,7 @@ sealed class FooCrc16 : CustomCrc16
 }
 ```
 
-That would allow you to use the algorithm effortlessly from several places in the codebase later:
+That will allow you to use the algorithm effortlessly from several places in the codebase later:
 
 ``` c#
 var checksum = FooCrc16.Instance.ComputeChecksum(...);
