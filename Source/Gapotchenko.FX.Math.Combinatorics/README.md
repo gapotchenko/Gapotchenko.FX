@@ -73,7 +73,7 @@ which will produce the following output:
 2 1 1
 ```
 
-An experienced engineer will definitely spot that while our approach produces the correct result, it is not the most efficient way of achieving it.
+An experienced engineer will definitely spot that while that approach produces the correct result, it is not the most efficient way of achieving it.
 
 It all comes to the number of elements processed by the `Distinct` operation.
 The number of resulting permutations is `n!` where `n` is the size of the input sequence.
