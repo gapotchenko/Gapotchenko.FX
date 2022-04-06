@@ -10,8 +10,8 @@ The module provides extended cryptography primitives and algorithms.
 ARC4 (Alleged Rivest Cipher 4 also known as ARCFOUR or RC4) is a stream cipher.
 While it is remarkable for its simplicity and performance, nowadays its usage is limited due to discovered limitations and vulnerabilities.
 
-Still, it may be a good enough fit for less sensitive tasks.
-ARC4 may also be required for communication with legacy or energy-constrained systems.
+Still, ARC4 may be a good enough fit for less sensitive tasks.
+It may also be required for communication with legacy or energy-constrained systems.
 
 ## Usage
 
