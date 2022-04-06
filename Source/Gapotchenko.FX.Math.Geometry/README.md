@@ -29,7 +29,7 @@ The table below compares edit distance measurement functions provided by `String
 | Optimal string alignment (OSA) distance   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | Jaro distance                             |                    |                    |                    | :heavy_check_mark: |
 
-### StringMetrics.LevenshteinDistance
+### Levenshtein Distance
 
 `StringMetrics.LevenshteinDistance` method allows to calculate the Levenshtein distance between two strings of symbols.
 
@@ -41,7 +41,7 @@ using Gapotchenko.FX.Math.Geometry;
 Console.WriteLine("Distance is {0}.", StringMetrics.LevenshteinDistance("ABC", "BAC"));  // distance = 2
 ```
 
-### StringMetrics.LcsDistance
+### Longest Common Subsequence (LCS) Distance
 
 `StringMetrics.LcsDistance` method allows to calculate the longest common subsequence (LCS) distance between two strings of symbols.
 
@@ -53,7 +53,7 @@ using Gapotchenko.FX.Math.Geometry;
 Console.WriteLine("Distance is {0}.", StringMetrics.LcsDistance("ABC", "BAC"));  // distance = 2
 ```
 
-### StringMetrics.HammingDistance
+### Hamming Distance
 
 `StringMetrics.HammingDistance` method allows to calculate the Hamming distance between two strings of symbols.
 
@@ -65,7 +65,7 @@ using Gapotchenko.FX.Math.Geometry;
 Console.WriteLine("Distance is {0}.", StringMetrics.HammingDistance("ABC", "BAC"));  // distance = 2
 ```
 
-### StringMetrics.DamerauLevenshteinDistance
+### Damerau-Levenshtein Distance
 
 `StringMetrics.DamerauLevenshteinDistance` method allows to calculate the Damerau–Levenshtein distance between two strings of symbols.
 
@@ -77,7 +77,7 @@ using Gapotchenko.FX.Math.Geometry;
 Console.WriteLine("Distance is {0}.", StringMetrics.DamerauLevenshteinDistance("ABC", "BAC"));  // distance = 1
 ```
 
-### StringMetrics.OsaDistance
+### Optimal String Alignment (OSA) Distance
 
 `StringMetrics.OsaDistance` method allows to calculate the optimal string alignment (OSA) distance between two strings of symbols.
 
@@ -89,7 +89,7 @@ using Gapotchenko.FX.Math.Geometry;
 Console.WriteLine("Distance is {0}.", StringMetrics.OsaDistance("ABC", "BAC"));  // distance = 1
 ```
 
-### StringMetrics.JaroDistance
+### Jaro Distance
 
 `StringMetrics.JaroDistance` method allows to calculate the Jaro distance between two strings of symbols.
 
