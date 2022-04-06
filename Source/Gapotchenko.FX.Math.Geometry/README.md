@@ -20,14 +20,14 @@ There are several ways to measure the edit distance.
 
 The table below compares edit distance measurement functions provided by `StringMetrics` class:
 
-| Metric Function                           |      Insertion     |      Deletion      |    Substitution    |    Transposition   |
-|:------------------------------------------|:------------------:|:------------------:|:------------------:|:------------------:|
-| Levenshtein distance                      | &check; | :heavy_check_mark: | :heavy_check_mark: |                    |
-| Longest common subsequence (LCS) distance | :heavy_check_mark: | :heavy_check_mark: |                    |                    |
-| Hamming distance                          |                    |                    | :heavy_check_mark: |                    |
-| Damerau–Levenshtein distance              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Optimal string alignment (OSA) distance   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Jaro distance                             |                    |                    |                    | :heavy_check_mark: |
+| Metric Function                           | Insertion | Deletion | Substitution | Transposition |
+|:------------------------------------------|:---------:|:--------:|:------------:|:-------------:|
+| Levenshtein distance                      | &check;   | &check;  | &check;      |               |
+| Longest common subsequence (LCS) distance | &check;   | &check;  |              |               |
+| Hamming distance                          |           |          | &check;      |               |
+| Damerau–Levenshtein distance              | &check;   | &check;  | &check;      | &check;       |
+| Optimal string alignment (OSA) distance   | &check;   | &check;  | &check;      | &check;       |
+| Jaro distance                             |           |          |              | &check;       |
 
 ### Levenshtein Distance
 
