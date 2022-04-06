@@ -94,7 +94,7 @@ the algorithm complexity stays at bay thanks to the built-in optimizer that choo
 
 ### Permutations in LINQ
 
-`Permutations.Of(...)` is an explicit form of producing the permutations, but the LINQ shorthand `Permute()` is also available as a part of fluent API:
+`Permutations.Of(...)` is an explicit form of producing the permutations, but the LINQ shorthand `Permute()` is also available as a part of the fluent API:
 
 ```csharp
 using Gapotchenko.FX.Math.Combinatorics;
