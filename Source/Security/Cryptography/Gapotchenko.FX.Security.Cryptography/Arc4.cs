@@ -89,9 +89,6 @@ namespace Gapotchenko.FX.Security.Cryptography
         /// Creates an instance of the default implementation of ARC4 algorithm.
         /// </summary>
         /// <returns>The instance of ARC4 algorithm.</returns>
-        public new static Arc4 Create()
-        {
-            return new Arc4Managed();
-        }
+        public new static Arc4 Create() => new Arc4Managed();
     }
 }
