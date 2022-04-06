@@ -144,7 +144,7 @@ for every directed edge `u` → `v`,
 
 The canonical application example of topological sorting is to schedule a sequence of jobs (or tasks) according to their dependencies.
 The jobs are represented by vertices, and there is an edge from `x` to `y` if job `x` must be completed before job `y` can be started.
-Performing a topological sort on such graph would give us an order in which to perform the jobs.
+Performing topological sort on such a graph would give us an order in which to perform the jobs.
 
 Let's take a look at example graph:
 
