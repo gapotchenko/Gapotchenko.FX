@@ -79,7 +79,7 @@ If you want to formalize a custom algorithm even further, you may opt-in to crea
 sealed class FooCrc32 : CustomCrc32
 {
     FooCrc32() :
-        base(...) // <- custom algorithm parameters go here
+        base(poly, init, refin, refout, xorout)
     {
     }
 
