@@ -130,7 +130,7 @@ The output:
 
 ### Cartesian Product in LINQ
 
-`CartesianProduct.Of(...)` is an explicit form of producing the Cartesian product, but the LINQ shorthand `CrossJoin()` is also available as a part of fluent API:
+`CartesianProduct.Of(...)` is an explicit form of producing the Cartesian product, but the LINQ shorthand `CrossJoin()` is also available as a part of the fluent API:
 
 ```csharp
 using Gapotchenko.FX.Math.Combinatorics;
