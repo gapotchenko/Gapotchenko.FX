@@ -186,7 +186,7 @@ The resulting sequence of jobs is:
 `OrderTopologically` method can only work on directed acyclic graphs.
 If the graph contains a cycle then `CircularDependencyException` is raised.
 
-### Stable Topological Sorting of a Graph
+### Stable Topological Sort of a Graph
 
 Graph is a data structure similar to a set: it does not guarantee to preserve the order in which the elements were added.
 As a result, topological sorting may return different orderings for otherwise equal graphs.
@@ -199,7 +199,7 @@ It can be achieved by leveraging the standard `IOrderedEnumerable<T>` LINQ seman
 g.OrderTopologically().ThenBy(…)
 ```
 
-### Stable Topological Sorting of a Sequence
+### Stable Topological Sort of a Sequence
 
 Sorting a sequence of elements in topological order is another play on topological sorting idea.
 
