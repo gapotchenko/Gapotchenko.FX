@@ -38,7 +38,8 @@ Consider the example:
 ```csharp
 using Gapotchenko.FX.Math.Geometry;
 
-Console.WriteLine("Distance is {0}.", StringMetrics.LevenshteinDistance("ABC", "BAC"));  // distance = 2
+int distance = StringMetrics.LevenshteinDistance("ABC", "BAC");
+Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 ```
 
 ### Longest Common Subsequence (LCS) Distance
@@ -50,7 +51,8 @@ Consider the example:
 ```csharp
 using Gapotchenko.FX.Math.Geometry;
 
-Console.WriteLine("Distance is {0}.", StringMetrics.LcsDistance("ABC", "BAC"));  // distance = 2
+int distance = StringMetrics.LcsDistance("ABC", "BAC");
+Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 ```
 
 ### Hamming Distance
@@ -62,7 +64,8 @@ Consider the example:
 ```csharp
 using Gapotchenko.FX.Math.Geometry;
 
-Console.WriteLine("Distance is {0}.", StringMetrics.HammingDistance("ABC", "BAC"));  // distance = 2
+int distance = StringMetrics.HammingDistance("ABC", "BAC");
+Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 ```
 
 ### Damerau-Levenshtein Distance
@@ -74,7 +77,8 @@ Consider the example:
 ```csharp
 using Gapotchenko.FX.Math.Geometry;
 
-Console.WriteLine("Distance is {0}.", StringMetrics.DamerauLevenshteinDistance("ABC", "BAC"));  // distance = 1
+int distance = StringMetrics.DamerauLevenshteinDistance("ABC", "BAC");
+Console.WriteLine("Distance is {0}.", distance);  // distance = 1
 ```
 
 ### Optimal String Alignment (OSA) Distance
@@ -86,7 +90,8 @@ Consider the example:
 ```csharp
 using Gapotchenko.FX.Math.Geometry;
 
-Console.WriteLine("Distance is {0}.", StringMetrics.OsaDistance("ABC", "BAC"));  // distance = 1
+int distance = StringMetrics.OsaDistance("ABC", "BAC");
+Console.WriteLine("Distance is {0}.", distance);  // distance = 1
 ```
 
 ### Jaro Distance
@@ -100,7 +105,8 @@ Consider the example:
 ```csharp
 using Gapotchenko.FX.Math.Geometry;
 
-Console.WriteLine("Distance is {0.00}.", StringMetrics.JaroDistance("ABC", "BAC"));  // distance = 0.44
+double distance = StringMetrics.JaroDistance("ABC", "BAC");
+Console.WriteLine("Distance is {0.00}.", distance);  // distance = 0.44
 ```
 
 ## Usage
