@@ -191,7 +191,7 @@ If a graph is cyclic, then `CircularDependencyException` is raised.
 Graph is a data structure similar to a set: it does not guarantee to preserve the order in which the elements were added.
 As a result, topological sorting may return different orderings for otherwise equal graphs.
 
-To overcome that limitation, it may be beneficial to use topological sorting with subsequent ordering by some other criteria.
+To overcome that limitation, it may be beneficial to use the topological sorting with a subsequent ordering by some other criteria.
 Such approach makes the topological sorting stable.
 It can be achieved by leveraging the standard `IOrderedEnumerable<T>` LINQ semantics of the operation, like so:
 
