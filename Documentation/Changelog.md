@@ -4,12 +4,14 @@
 
 ### Gapotchenko FX 2022.1
 
-Release date: not released yet.
+Release date: April 7, 2022
 
 - Added support for .NET 7.0 target framework
-- Introduced the framework and primitives for cyclic redundancy check (CRC) calculations.
+- Introduced `Gapotchenko.FX.Security.Cryptography` module
+- Introduced `Gapotchenko.FX.Data.Integrity.Checksum` module and primitives for cyclic redundancy check (CRC) calculations.
   They are grouped by the family and provided by the corresponding modules:
   `Gapotchenko.FX.Data.Integrity.Checksum.Crc32`, `Gapotchenko.FX.Data.Integrity.Checksum.Crc16`, `Gapotchenko.FX.Data.Integrity.Checksum.Crc8`
+- Improved documentation
 - `Process.GetImageFileName()` extension method provided by `Gapotchenko.FX.Diagnostics.Process` module now returns `null` when a process is not associated with an image file
 - Fixed issue that could lead to `System.IO.EndOfStreamException` exception in `Process.ReadEnvironmentVariables()` method provided by `Gapotchenko.FX.Diagnostics.Process` module (GH-2)
 
