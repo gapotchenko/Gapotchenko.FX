@@ -152,7 +152,7 @@ Let's take a look at example graph:
 
 Let's assume that vertices represent the jobs, and edges define the dependencies between them.
 In this way, job `0` depends on job `1` and thus cannot be started unless job `1` is finished.
-In turn, job `1` cannot be started unless jobs `2` and `3` are finished, and so on.
+In turn, job `1` cannot be started unless jobs `2` and `3` are finished. And so on.
 In what order should the jobs be executed?
 
 To answer that question, let's use `OrderTopologically` method:
