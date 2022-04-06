@@ -183,8 +183,8 @@ The resulting sequence of jobs is:
 7, 5, 6, 2, 3, 4, 1, 0
 ```
 
-`OrderTopologically` method works on directed acyclic graphs only.
-If a graph is cyclic, then `CircularDependencyException` is raised.
+`OrderTopologically` method can only work on directed acyclic graphs.
+`CircularDependencyException` is raised when the graph is cyclic.
 
 ### Stable Topological Sorting of a Graph
 
