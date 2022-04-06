@@ -177,7 +177,7 @@ var ordering = g.OrderTopologically();
 Console.WriteLine(string.Join(", ", ordering));
 ```
 
-The result is:
+The resulting sequence of jobs is:
 
 ```
 7, 5, 6, 2, 3, 4, 1, 0
