@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Security.Cryptography.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Security.Cryptography)
 
-The module provides extended cryptography primitives and algorithms.
+The module provides an extended set of cryptography primitives and algorithms.
 
 ## ARC4
 
