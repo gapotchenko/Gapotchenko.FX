@@ -78,10 +78,10 @@ All other predefined algorithms are available as the properties of `Crc16.Attest
 ## Custom CRC-16 Algorithms
 
 Once in a while you may encounter a custom CRC-16 algorithm that is neither widely known nor characterized.
-In that case, you can instantiate a custom checksum algorithm with the desired parameters:
+In that case, you can instantiate a custom checksum algorithm with the desired parameters by hand:
 
 ``` c#
-var checksumAlgorithm = new CustomCrc16(...);
+var checksumAlgorithm = new CustomCrc16(poly, init, refin, refout, xorout);
 ```
 
 If you want to formalize a custom algorithm even further, you may opt-in to creating a separate class for it with a convenient accessor property:
