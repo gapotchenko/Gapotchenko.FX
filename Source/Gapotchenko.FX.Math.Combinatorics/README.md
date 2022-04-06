@@ -77,7 +77,7 @@ An experienced engineer will definitely spot that while that approach produces t
 
 It all comes to the number of elements processed by the `Distinct` operation.
 The number of resulting permutations is `n!` where `n` is the size of the input sequence.
-So if we take care to perform `Distinct` on the input sequence instead, we are going to achieve considerable savings in number of operations and amount of used memory.
+So if we take care to perform `Distinct` on the input sequence instead, we are going to achieve considerable savings in the number of operations and amount of used memory.
 Like so:
 
 ``` csharp
