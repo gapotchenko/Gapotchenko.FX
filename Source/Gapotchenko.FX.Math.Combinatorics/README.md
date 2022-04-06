@@ -85,7 +85,7 @@ foreach (var i in Permutations.Of(seq.Distinct()))
     Console.WriteLine(string.Join(" ", i.Select(x => x.ToString())));
 ```
 
-(Note that `Distinct` operation is now applied on the input sequence, supposedly making the whole algorithm top-efficient while producing the same results)
+(Note that `Distinct` operation is now applied to the input sequence, supposedly making the whole algorithm top-efficient while producing the same results)
 
 This whole way of thinking stands true but `Gapotchenko.FX.Math.Combinatorics` goes ahead of that and provides the out-of-the-box support for such natural idiosyncrasies.
 
