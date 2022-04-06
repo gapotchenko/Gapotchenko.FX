@@ -90,7 +90,7 @@ foreach (var i in Permutations.Of(seq.Distinct()))
 This whole way of thinking stands true but `Gapotchenko.FX.Math.Combinatorics` goes ahead of that and provides the out-of-the-box support for such natural idiosyncrasies.
 
 Whatever syntax is preferred: `Permutations.Of(seq.Distinct())` or `Permutations.Of(seq).Distinct()`,
-the algorithm complexity stays at bay thanks to the built-in optimizer that chooses the best execution plan for a query automatically.
+the algorithm complexity stays at bay thanks to the built-in optimizer that chooses the best execution plan for a query <u>automatically</u>.
 
 ### Permutations in LINQ
 
