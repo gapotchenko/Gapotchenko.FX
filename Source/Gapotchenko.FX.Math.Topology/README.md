@@ -184,7 +184,7 @@ The resulting sequence of jobs is:
 ```
 
 `OrderTopologically` method can only work on directed acyclic graphs.
-`CircularDependencyException` is raised when the graph is cyclic.
+If the graph contains cycles then `CircularDependencyException` is raised.
 
 ### Stable Topological Sorting of a Graph
 
