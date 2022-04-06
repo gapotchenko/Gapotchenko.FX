@@ -55,14 +55,19 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
             }
         }
 
-        static string _GetText(LeafBlock leafBlock)
+        static string? _GetText(LeafBlock leafBlock)
         {
             var inline = leafBlock.Inline;
             if (inline == null)
-                return string.Empty;
-            var literal = (LiteralInline)inline.First();
+                return null;
+
+            var literal = inline.First() as LiteralInline;
+            if (literal == null)
+                return null;
+
             if (literal.NextSibling != null)
-                throw new NotSupportedException();
+                return null;
+
             return literal.ToString();
         }
 
