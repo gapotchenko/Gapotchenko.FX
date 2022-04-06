@@ -16,6 +16,7 @@
     <PackageReference Include="Gapotchenko.FX.Math" Version="2021.2.21" />
     <PackageReference Include="Gapotchenko.FX.Math.Topology" Version="2021.2.21" />
     <PackageReference Include="Gapotchenko.FX.Text" Version="2021.2.21" />
+    <PackageReference Include="Markdig.Signed" Version="0.28.1" />
   </ItemGroup>
 
 </Project>
