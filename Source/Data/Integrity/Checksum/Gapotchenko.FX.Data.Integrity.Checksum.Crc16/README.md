@@ -59,13 +59,13 @@ CRC-16 family of cyclic redundancy checks consists of several attested checksum 
 The `check` parameter shows what checksum value an algorithm should produce for `"123456789"` input string interpreted as an ASCII data:
 
 ``` c#
-// Get the byte representation of the ASCII string:
+// Get the byte representation of the ASCII string.
 var data = Encoding.ASCII.GetBytes("123456789");
 
-// Compute checksum:
+// Compute the checksum.
 var checksum = Crc16.Standard.ComputeChecksum(data);
 
-// Print out the result (will print "Checksum = 0xbb3d"):
+// Print out the result (will print "Checksum = 0xbb3d").
 Console.WriteLine("Checksum = 0x{0:x}", checksum);
 ```
 
@@ -77,7 +77,7 @@ All other predefined algorithms are available as the properties of `Crc16.Attest
 
 ## Custom CRC-16 Algorithms
 
-Once in a while you may encounter a custom CRC-16 algorithm that is neither widely known nor characterized.
+Once in a while, you may encounter a custom CRC-16 algorithm that is neither widely known nor characterized.
 In that case, you can instantiate a custom checksum algorithm with the desired parameters by hand:
 
 ``` c#
