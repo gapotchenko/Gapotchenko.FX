@@ -9,7 +9,7 @@ It supports both synchronous and asynchronous data processing, including the ite
 
 This is the root interface provided by a checksum algorithm.
 The generic parameter `T` defines the data type of a checksum value.
-For example, `System.UInt32` would be a type `T` for a CRC-32 algorithm.
+For example, `System.UInt32` would be the type `T` for a CRC-32 algorithm.
 
 Checksum algorithm interface provides several notable methods.
 
@@ -61,7 +61,7 @@ Console.WriteLine("The checksum is {0}.", checksum);
 ## Checksum Algorithms
 
 `Gapotchenko.FX.Data.Integrity.Checksum` module provides only a framework for checksum algorithms.
-If you want to use a popular and ready-to-use checksum algorithm, Gapotchenko.FX provides quite a few out of the box:
+If you want to use a ready-to-use checksum algorithm, Gapotchenko.FX provides quite a few out of the box:
 
 | Algorithm Family    | Module                                                                                                 | Algorithms |
 | ------------------- | ------------------------------------------------------------------------------------------------------ | ---------- |
