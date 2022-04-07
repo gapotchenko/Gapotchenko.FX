@@ -1,6 +1,7 @@
 ﻿using Gapotchenko.FX.Text;
 using Markdig;
 using Markdig.Renderers.Roundtrip;
+using Mono.Options;
 using System.Text.RegularExpressions;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
@@ -9,11 +10,25 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
     {
         public static void Run(string[] args)
         {
-            if (args.Length != 2)
+            string[]? commonlyUsedParts = null;
+
+            var options = new OptionSet
+            {
+                {
+                    "commonly-used-parts=",
+                    "Specifies a list of commonly used parts separated by a semicolon.",
+                    x => commonlyUsedParts = Empty.Nullify(x.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                }
+            };
+
+            if (args.Length < 2)
             {
                 Console.WriteLine(
-                    "Usage: {0} generate-package-readme <input markdown file path> <output directory path>",
+                    "Usage: {0} generate-package-readme <input markdown file path> <output directory path> [options]",
                     Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location));
+                Console.WriteLine();
+                Console.WriteLine("Options:");
+                options.WriteOptionDescriptions(Console.Out);
 
                 throw new ProgramExitException(1);
             }
@@ -21,6 +36,14 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
             string inputFilePath = args[0];
             string outputDirectoryPath = args[1];
 
+            if (options.Parse(args.Skip(2).ToArray()).Count != 0)
+                throw new Exception("Malformed command-line arguments.");
+
+            RunCore(inputFilePath, outputDirectoryPath, commonlyUsedParts);
+        }
+
+        static void RunCore(string inputFilePath, string outputDirectoryPath, string[]? commonlyUsedParts)
+        {
             var md = Markdown.Parse(File.ReadAllText(inputFilePath), true);
 
             var mdProcessor = new MarkdownProcessor(md, new Uri(Path.GetFullPath(inputFilePath)));
