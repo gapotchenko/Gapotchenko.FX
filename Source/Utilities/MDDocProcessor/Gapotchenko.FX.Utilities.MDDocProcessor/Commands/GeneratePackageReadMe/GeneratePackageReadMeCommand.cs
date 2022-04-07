@@ -12,23 +12,21 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
             if (args.Length != 2)
             {
                 Console.WriteLine(
-                    "Usage: {0} generate-package-readme <input markdown file path> <output markdown file path>",
+                    "Usage: {0} generate-package-readme <input markdown file path> <output directory path>",
                     Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location));
 
                 throw new ProgramExitException(1);
             }
 
             string inputFilePath = args[0];
-            string outputFilePath = args[1];
+            string outputDirectoryPath = args[1];
 
             var md = Markdown.Parse(File.ReadAllText(inputFilePath), true);
 
             var mdProcessor = new MarkdownProcessor(md, new Uri(Path.GetFullPath(inputFilePath)));
             mdProcessor.Run();
 
-            var outputDirectoryPath = Path.GetDirectoryName(outputFilePath);
-            if (outputDirectoryPath != null)
-                Directory.CreateDirectory(outputDirectoryPath);
+            Directory.CreateDirectory(outputDirectoryPath);
 
             var mdWriter = new StringWriter();
             var mdRenderer = new RoundtripRenderer(mdWriter);
@@ -42,7 +40,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
 
             text = se.ToString();
 
-            using (var outputFile = File.CreateText(outputFilePath))
+            using (var outputFile = File.CreateText(Path.Combine(outputDirectoryPath, "README.md")))
             {
                 outputFile.WriteLine("# Overview");
                 outputFile.WriteLine();
