@@ -26,7 +26,7 @@
 
     <Exec
         Condition=" '$(NLP_PackageDir)' != '' "
-        Command="&quot;$(MasteringDir)../Utilities/MDDocProcessor/run&quot; generate-package-readme &quot;$(NLP_ProjectReadmeFile)&quot; &quot;$(NLP_PackageDir)&quot;" />
+        Command="&quot;$(MasteringDir)../Utilities/MDDocProcessor/run&quot; generate-package-readme &quot;$(NLP_ProjectReadmeFile)&quot; &quot;$(NLP_PackageDir)&quot; &quot;--commonly-used-parts=@(CommonlyUsedPart)&quot;" />
 
     <ItemGroup>
       <None Condition=" '$(NLP_PackageDir)' != '' " Include="$(NLP_PackageDir)/README.md" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="false" />

@@ -2,11 +2,12 @@
 using Markdig;
 using Markdig.Renderers.Roundtrip;
 using Mono.Options;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
 {
-    static class GeneratePackageReadMeCommand
+    class GeneratePackageReadMeCommand
     {
         public static void Run(string[] args)
         {
@@ -27,6 +28,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
                     "Usage: {0} generate-package-readme <input markdown file path> <output directory path> [options]",
                     Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location));
                 Console.WriteLine();
+
                 Console.WriteLine("Options:");
                 options.WriteOptionDescriptions(Console.Out);
 
@@ -39,17 +41,37 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
             if (options.Parse(args.Skip(2).ToArray()).Count != 0)
                 throw new Exception("Malformed command-line arguments.");
 
-            RunCore(inputFilePath, outputDirectoryPath, commonlyUsedParts);
+            var command = new GeneratePackageReadMeCommand(inputFilePath, outputDirectoryPath, commonlyUsedParts);
+            command.RunCore();
         }
 
-        static void RunCore(string inputFilePath, string outputDirectoryPath, string[]? commonlyUsedParts)
+        GeneratePackageReadMeCommand(
+            string inputFilePath,
+            string outputDirectoryPath,
+            string[]? commonlyUsedParts)
         {
-            var md = Markdown.Parse(File.ReadAllText(inputFilePath), true);
+            _InputFilePath = Path.GetFullPath(inputFilePath);
+            _OutputDirectoryPath = outputDirectoryPath;
+            _CommonlyUsedParts = commonlyUsedParts;
 
-            var mdProcessor = new MarkdownProcessor(md, new Uri(Path.GetFullPath(inputFilePath)));
+            _ModuleName =
+                Path.GetFileName(Path.GetDirectoryName(_InputFilePath)) ??
+                throw new Exception("Cannot deduct module name.");
+        }
+
+        readonly string _InputFilePath;
+        readonly string _OutputDirectoryPath;
+        readonly string[]? _CommonlyUsedParts;
+        readonly string _ModuleName;
+
+        void RunCore()
+        {
+            var md = Markdown.Parse(File.ReadAllText(_InputFilePath), true);
+
+            var mdProcessor = new MarkdownProcessor(md, new Uri(_InputFilePath));
             mdProcessor.Run();
 
-            Directory.CreateDirectory(outputDirectoryPath);
+            Directory.CreateDirectory(_OutputDirectoryPath);
 
             var mdWriter = new StringWriter();
             var mdRenderer = new RoundtripRenderer(mdWriter);
@@ -63,17 +85,44 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
 
             text = se.ToString();
 
-            using (var outputFile = File.CreateText(Path.Combine(outputDirectoryPath, "README.md")))
+            if (_CommonlyUsedParts != null)
+            {
+                var section = RenderCommonlyUsedPartsToMarkdown(_CommonlyUsedParts);
+
+                int insertionPoint = text.IndexOf("# See Also");
+
+                if (insertionPoint == -1)
+                    text = text.TrimEnd() + Environment.NewLine + Environment.NewLine + section;
+                else
+                    text = text.Insert(insertionPoint, section + Environment.NewLine);
+            }
+
+            using (var outputFile = File.CreateText(Path.Combine(_OutputDirectoryPath, "README.md")))
             {
                 outputFile.WriteLine("# Overview");
                 outputFile.WriteLine();
                 outputFile.WriteLine(text.Trim());
             }
 
-            using (var outputFile = File.CreateText(Path.Combine(outputDirectoryPath, "Description.txt")))
+            using (var outputFile = File.CreateText(Path.Combine(_OutputDirectoryPath, "Description.txt")))
             {
                 outputFile.Write(mdProcessor.Description);
             }
+        }
+
+        string RenderCommonlyUsedPartsToMarkdown(string[] commonlyUsedParts)
+        {
+            var sb = new StringBuilder("# ")
+                .AppendLine(
+                    _ModuleName.StartsWith("Gapotchenko.FX.Profiles.") ?
+                        "Commonly Used Modules" :
+                        "Commonly Used Types")
+                .AppendLine();
+
+            foreach (var i in commonlyUsedParts)
+                sb.Append("- ").AppendLine(i);
+
+            return sb.ToString();
         }
 
         static void PatchHtmlUris(MarkdownProcessor mdProcessor, string text, StringEditor se)

@@ -6,6 +6,10 @@
     <NoWarn>NU5128</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageDescription>Represents the Core profile of Gapotchenko.FX.</PackageDescription>
+  </PropertyGroup>
+  
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Linq" />
