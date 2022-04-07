@@ -35,9 +35,23 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
             mdRenderer.Write(md);
 
             string text = mdWriter.ToString();
-
             var se = new StringEditor(text);
 
+            PatchHtmlUris(mdProcessor, text, se);
+            LowerMarkdownSyntax(text, se);
+
+            text = se.ToString();
+
+            using (var outputFile = File.CreateText(outputFilePath))
+            {
+                outputFile.WriteLine("# Overview");
+                outputFile.WriteLine();
+                outputFile.WriteLine(text.Trim());
+            }
+        }
+
+        static void PatchHtmlUris(MarkdownProcessor mdProcessor, string text, StringEditor se)
+        {
             var regex = new Regex(
                 "(?:\\<\\s*a.*?\\s+href\\s*=\\s*(?:\"|'))(?<uri>.*?)?(?:(?:\"|').*?\\>)",
                 RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
@@ -53,14 +67,23 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
                 if (newUri != null)
                     se.Replace(g, newUri.ToString());
             }
+        }
 
-            text = se.ToString();
+        static void LowerMarkdownSyntax(string text, StringEditor se)
+        {
+            var regex = new Regex(
+                @"(?<start_tag><ins>).*?(?<end_tag></ins>)",
+                RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
 
-            using (var outputFile = File.CreateText(outputFilePath))
+            foreach (Match i in regex.Matches(text))
             {
-                outputFile.WriteLine("# Overview");
-                outputFile.WriteLine();
-                outputFile.WriteLine(text.Trim());
+                var startTag = i.Groups["start_tag"];
+                var endTag = i.Groups["end_tag"];
+                if (startTag.Success && endTag.Success)
+                {
+                    se.Replace(startTag, "*");
+                    se.Replace(endTag, "*");
+                }
             }
         }
     }
