@@ -1,6 +1,7 @@
 ﻿using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Vcs;
 using Markdig.Helpers;
+using Markdig.Renderers.Roundtrip;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
@@ -28,6 +29,8 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
             _RemoveSection("Other Modules", 1);
 
             _PatchUris();
+
+            _ExtractDescription();
         }
 
         void _ReLevelHeaders(int delta)
@@ -122,6 +125,25 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
             }
 
             return null;
+        }
+
+        string? _Description;
+
+        public string Description => _Description ?? throw new InvalidOperationException("Description has not been extracted yet.");
+
+        void _ExtractDescription()
+        {
+            var tw = new StringWriter();
+
+            var elements = _Document.TakeWhile(x => x is not HeadingBlock).ToArray();
+
+            var mdRenderer = new RoundtripRenderer(tw);
+            foreach (var i in elements)
+                mdRenderer.Write(i);
+
+            string text = tw.ToString().Trim();
+
+            _Description = text;
         }
     }
 }

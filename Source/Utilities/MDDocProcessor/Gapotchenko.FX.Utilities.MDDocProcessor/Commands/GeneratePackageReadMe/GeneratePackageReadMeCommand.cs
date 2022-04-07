@@ -31,8 +31,8 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
             var mdWriter = new StringWriter();
             var mdRenderer = new RoundtripRenderer(mdWriter);
             mdRenderer.Write(md);
-
             string text = mdWriter.ToString();
+
             var se = new StringEditor(text);
 
             PatchHtmlUris(mdProcessor, text, se);
@@ -45,6 +45,11 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
                 outputFile.WriteLine("# Overview");
                 outputFile.WriteLine();
                 outputFile.WriteLine(text.Trim());
+            }
+
+            using (var outputFile = File.CreateText(Path.Combine(outputDirectoryPath, "Description.txt")))
+            {
+                outputFile.Write(mdProcessor.Description);
             }
         }
 

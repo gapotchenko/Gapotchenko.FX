@@ -1,5 +1,9 @@
 <Project>
 
+  <PropertyGroup>
+    <OrigPackageDescription>$(PackageDescription)</OrigPackageDescription>
+  </PropertyGroup>
+
   <Target Name="PrepareNuspec" BeforeTargets="_GetPackageFiles">
     <NLP_GeneratePackageRepositoryUrl
         ProjectDirectory="$(MSBuildProjectDirectory)"
@@ -9,24 +13,27 @@
       <Output PropertyName="RepositoryUrl" TaskParameter="RepositoryUrl" />
     </NLP_GeneratePackageRepositoryUrl>
 
-    <NLP_GeneratePackageSpecification
+    <!-- NLP_GeneratePackageSpecification
         PackageId="$(PackageId)"
         CommonlyUsedParts="@(CommonlyUsedPart)"
         TargetFrameworks="$(TargetFrameworks)">
       <Output PropertyName="PackageDescription" TaskParameter="Description" />
-    </NLP_GeneratePackageSpecification>
+    </NLP_GeneratePackageSpecification-->
 
     <PropertyGroup>
-      <NLP_PackageReadmeFile Condition=" '$(NLP_ProjectReadmeFile)' != '' ">$(IntermediateOutputPath)MDDocProcessor\Package\README.md</NLP_PackageReadmeFile>
+      <NLP_PackageDir Condition=" '$(NLP_ProjectReadmeFile)' != '' ">$(IntermediateOutputPath)MDDocProcessor\Package</NLP_PackageDir>
     </PropertyGroup>
+
     <Exec
-        Condition=" '$(NLP_ProjectReadmeFile)' != '' "
-        Command="&quot;$(MasteringDir)../Utilities/MDDocProcessor/run&quot; generate-package-readme &quot;$(NLP_ProjectReadmeFile)&quot; &quot;$(NLP_PackageReadmeFile)/..&quot;" />
+        Condition=" '$(NLP_PackageDir)' != '' "
+        Command="&quot;$(MasteringDir)../Utilities/MDDocProcessor/run&quot; generate-package-readme &quot;$(NLP_ProjectReadmeFile)&quot; &quot;$(NLP_PackageDir)&quot;" />
+
     <ItemGroup>
-      <None Condition=" '$(NLP_PackageReadmeFile)' != '' " Include="$(NLP_PackageReadmeFile)" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="false" />
+      <None Condition=" '$(NLP_PackageDir)' != '' " Include="$(NLP_PackageDir)/README.md" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="false" />
     </ItemGroup>
 
     <PropertyGroup>
+      <PackageDescription Condition=" '$(OrigPackageDescription)' == '' AND '$(NLP_PackageDir)' != '' ">$([System.IO.File]::ReadAllText("$(NLP_PackageDir)/Description.txt"))</PackageDescription>
       <PackageTags>$(PackageTags) @(PackageTag)</PackageTags>
     </PropertyGroup>
   </Target>
