@@ -1,9 +1,11 @@
 ﻿using Gapotchenko.FX.Linq;
+using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Vcs;
 using Markdig.Helpers;
 using Markdig.Renderers.Roundtrip;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
+using System.Text.RegularExpressions;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
 {
@@ -142,6 +144,31 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
                 mdRenderer.Write(i);
 
             string text = tw.ToString().Trim();
+            var se = new StringEditor(text);
+
+            // Remove inline code decorations.
+            var regex = new Regex(
+                @"(?<start_tag>`).+?(?<end_tag>`)",
+                RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
+            foreach (Match m in regex.Matches(text))
+            {
+                var g1 = m.Groups["start_tag"];
+                var g2 = m.Groups["end_tag"];
+                if (g1.Success && g2.Success)
+                {
+                    se.Remove(g1);
+                    se.Remove(g2);
+                }
+            }
+
+            // Remove YAML metadata.
+            regex = new Regex(
+                @"<!--.*?-->",
+                RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+            foreach (Match m in regex.Matches(text))
+                se.Remove(m);
+
+            text = se.ToString().Trim();
 
             _Description = text;
         }
