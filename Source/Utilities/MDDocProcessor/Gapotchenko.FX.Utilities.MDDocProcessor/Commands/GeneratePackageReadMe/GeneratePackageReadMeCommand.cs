@@ -90,6 +90,8 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
                 var section = RenderCommonlyUsedPartsToMarkdown(_CommonlyUsedParts);
 
                 int insertionPoint = text.IndexOf("# See Also");
+                if (insertionPoint == -1)
+                    insertionPoint = text.IndexOf("# Other Modules");
 
                 if (insertionPoint == -1)
                     text = text.TrimEnd() + Environment.NewLine + Environment.NewLine + section;

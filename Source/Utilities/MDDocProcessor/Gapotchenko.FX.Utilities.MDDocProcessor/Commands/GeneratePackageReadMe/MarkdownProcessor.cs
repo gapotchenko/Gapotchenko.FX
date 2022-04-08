@@ -28,7 +28,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
 
             _RemoveSection("Supported Platforms", 1);
             _RemoveSection("Usage", 1);
-            _RemoveSection("Other Modules", 1);
+            //_RemoveSection("Other Modules", 1);
 
             _PatchUris();
 
@@ -115,16 +115,10 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
 
         public Uri? TryMapUri(Uri uri)
         {
-            if (!uri.IsAbsoluteUri)
-            {
-                var absoulteUri = new Uri(_BaseUri, uri);
-                var rootUri = new Uri(RepositoryService.RootPath);
-                var repositoryUri = rootUri.MakeRelativeUri(absoulteUri);
-
-                var newUri = RepositoryService.TryMapUri(repositoryUri);
-                if (newUri != null)
-                    return newUri;
-            }
+            var absoluteUri = new Uri(_BaseUri, uri);
+            var newUri = RepositoryService.TryMapUri(absoluteUri);
+            if (newUri != null)
+                return newUri;
 
             return null;
         }

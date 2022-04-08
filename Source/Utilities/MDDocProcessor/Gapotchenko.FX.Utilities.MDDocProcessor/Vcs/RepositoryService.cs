@@ -42,8 +42,22 @@
 
         public static Uri? TryMapUri(Uri uri)
         {
+            string? localPath = null;
+
             if (uri.IsAbsoluteUri)
-                return null;
+            {
+                if (!uri.IsFile)
+                    return null;
+
+                localPath = uri.LocalPath;
+                int j = localPath.IndexOf('?');
+                if (j != -1)
+                    localPath = localPath[0..j];
+
+                var rootUri = new Uri(RootPath);
+                uri = rootUri.MakeRelativeUri(uri);
+                uri = new Uri(Uri.UnescapeDataString(uri.OriginalString), UriKind.Relative);
+            }
 
             string s = uri.OriginalString;
 
@@ -61,8 +75,6 @@
             }
             else
             {
-                s = s.Replace("%3F", "?");
-
                 string? query = null;
                 int j = s.IndexOf('?');
                 if (j != -1)
@@ -72,11 +84,25 @@
                 }
 
                 bool raw = query?.Contains("raw=true") == true;
+                bool blob = Path.GetExtension(s).ToLowerInvariant() is ".png" or ".jpg" or ".jpeg" or ".gif";
+
+                string? packageName = null;
+                if (!(raw || blob) && localPath != null && Directory.Exists(localPath))
+                {
+                    if (File.Exists(Path.Combine(localPath, "README.md")) &&
+                        Directory.EnumerateFiles(localPath, "*.*proj").Any())
+                    {
+                        packageName = Path.GetFileName(localPath);
+                    }
+                }
+
+                if (packageName != null)
+                    return new Uri($"https://www.nuget.org/packages/{Uri.EscapeDataString(packageName)}");
 
                 var baseUri = new Uri(
                     raw ?
-                        $"https://raw.githubusercontent.com/{RespositoryUriSuffix}/{OrigHead}/" :
-                        $"https://github.com/{RespositoryUriSuffix}/blob/{OrigHead}/"
+                        $"https://raw.githubusercontent.com/{RespositoryUriSuffix}/{Uri.EscapeDataString(OrigHead)}/" :
+                        $"https://github.com/{RespositoryUriSuffix}/{(blob ? "blob" : "tree")}/{Uri.EscapeDataString(OrigHead)}/"
                     );
                 var newUri = new Uri(baseUri, new Uri(s, UriKind.Relative));
                 return newUri;
