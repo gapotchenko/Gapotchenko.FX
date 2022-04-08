@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.svg)](https://www.nuget.org/packages/Gapotchenko.FX)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.svg)](https://www.nuget.org/packages/Gapotchenko.FX)
 
-`Gapotchenko.FX` is the main module of Gapotchenko.FX platform. Coincidently, they have identical names.
+`Gapotchenko.FX` is the main module of Gapotchenko.FX toolkit. Coincidently, they have identical names.
 
 The module was started by creating its first building block `ArrayEqualityComparer` back in 2014.
 
