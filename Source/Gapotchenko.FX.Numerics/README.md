@@ -13,7 +13,7 @@
 
 ## BitOperations
 
-`BitOperations` class from `Gapothenko.FX.Numerics` module provides bit manipulation operations for unsigned integer values of 32 and 64 bit lengths.
+`BitOperations` class provides bit manipulation operations for unsigned integer values of 32 and 64 bit lengths.
 
 The main consumers of hardware-accelerated bit operations are path-finding and cryptographic algorithms.
 
