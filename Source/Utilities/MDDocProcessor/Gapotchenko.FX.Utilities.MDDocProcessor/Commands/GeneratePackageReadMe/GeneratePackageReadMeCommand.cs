@@ -81,7 +81,12 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
             var se = new StringEditor(text);
 
             PatchHtmlUris(mdProcessor, text, se);
+
+            se.Reset(text = se.ToString());
+
             LowerMarkdownSyntax(text, se);
+
+            ConvertHtmlToMarkdown(ref text, se);
 
             text = se.ToString();
 
@@ -161,6 +166,57 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
                     se.Replace(startTag, "*");
                     se.Replace(endTag, "*");
                 }
+            }
+        }
+
+        static void ConvertHtmlToMarkdown(ref string text, StringEditor se)
+        {
+            var regex = new Regex(
+                @"(?<start_tag><div(\s+.*?)?>)(?<body>.*?)(?<end_tag></div>)",
+                RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            foreach (Match i in regex.Matches(text))
+            {
+                string body = i.Groups["body"].Value;
+
+                var sr = new StringReader(body);
+                var sw = new StringWriter();
+
+                for (; ; )
+                {
+                    string? line = sr.ReadLine();
+                    if (line == null)
+                        break;
+                    sw.WriteLine(line.AsSpan().Trim());
+                }
+
+                body = sw.ToString();
+
+                se.Replace(i, body);
+            }
+
+            // --------------------------------------------------------------
+
+            se.Reset(text = se.ToString());
+
+            regex = new Regex(
+                @"(?<start_tag><a\s+href=""(?<href>.*?)""(\s+title=""(?<title>.*?)"")?(\s+.*?)?>)(?<body>.*?)(?<end_tag></a>)",
+                RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            foreach (Match i in regex.Matches(text))
+            {
+                string href = i.Groups["href"].Value;
+                string? title = Empty.Nullify(i.Groups["title"].Value);
+                string body = i.Groups["body"].Value;
+
+                var sb = new StringBuilder();
+                sb.Append('[').Append(body).Append(']');
+                sb.Append('(').Append(href);
+                if (title != null)
+                    sb.Append(" \"").Append(title).Append('"');
+                sb.Append(')');
+
+                se.Replace(i, sb.ToString());
             }
         }
     }
