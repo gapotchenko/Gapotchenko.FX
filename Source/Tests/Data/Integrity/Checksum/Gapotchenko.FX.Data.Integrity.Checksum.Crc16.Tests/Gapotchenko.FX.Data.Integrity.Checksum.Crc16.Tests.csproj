@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc16\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.csproj" />
-    <ProjectReference Include="..\Gapotchenko.FX.Data.Integrity.Checksum.Tests.Bench\Gapotchenko.FX.Data.Integrity.Checksum.Tests.Bench.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Integrity.Checksum.Tests\Gapotchenko.FX.Data.Integrity.Checksum.Tests.csproj" />
   </ItemGroup>
 
 </Project>
