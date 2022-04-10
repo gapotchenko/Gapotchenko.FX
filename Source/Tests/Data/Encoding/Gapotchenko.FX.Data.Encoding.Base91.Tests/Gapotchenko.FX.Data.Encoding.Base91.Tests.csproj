@@ -13,7 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base91\Gapotchenko.FX.Data.Encoding.Base91.csproj" />
     <ProjectReference Include="..\..\..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
-    <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding.Tests.Bench\Gapotchenko.FX.Data.Encoding.Tests.Bench.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding.Tests\Gapotchenko.FX.Data.Encoding.Tests.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj" />
-    <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding.Tests.Bench\Gapotchenko.FX.Data.Encoding.Tests.Bench.csproj" />
   </ItemGroup>
 
 </Project>

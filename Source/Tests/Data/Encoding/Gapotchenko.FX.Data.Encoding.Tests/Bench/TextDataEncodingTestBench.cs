@@ -479,8 +479,6 @@ namespace Gapotchenko.FX.Data.Encoding.Tests.Bench
         {
             if (encoding == null)
                 throw new ArgumentNullException(nameof(encoding));
-            if (raw == null)
-                throw new ArgumentNullException(nameof(raw));
             if (encoded == null)
                 throw new ArgumentNullException(nameof(encoded));
 
