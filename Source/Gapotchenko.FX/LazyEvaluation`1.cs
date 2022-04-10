@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace Gapotchenko.FX
 {
@@ -18,7 +19,9 @@ namespace Gapotchenko.FX
     /// For thread-safe lazy evaluation, please use <see cref="Threading.EvaluateOnce{T}"/> struct.
     /// </para>
     /// </remarks>
+    [Serializable]
     [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
+    [DebuggerTypeProxy(typeof(LazyEvaluation<>.DebugView))]
     public struct LazyEvaluation<T>
     {
         /// <summary>
@@ -38,6 +41,7 @@ namespace Gapotchenko.FX
         [AllowNull]
         T m_Value;
 
+        [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Func<T>? m_ValueFactory;
 
@@ -55,7 +59,7 @@ namespace Gapotchenko.FX
                     var valueFactory = m_ValueFactory;
                     if (valueFactory != null)
                         m_Value = valueFactory();
-                    m_ValueFactory = defaultFunc;
+                    m_ValueFactory = defaultFunc!;
                 }
                 return m_Value;
             }
@@ -79,8 +83,29 @@ namespace Gapotchenko.FX
                 Value?.ToString() :
                 Resources.ValueNotCreated;
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [OnSerializing]
+        void OnSerializing(StreamingContext context)
+        {
+            // Force evaluation before the value is serialized.
+            Fn.Ignore(Value);
+        }
+
         [MaybeNull]
-        internal T ValueForDebugDisplay => IsValueCreated ? Value : default;
+        T ValueForDebugDisplay => IsValueCreated ? Value : default;
+
+        internal sealed class DebugView
+        {
+            public DebugView(LazyEvaluation<T> instance)
+            {
+                m_Instance = instance;
+            }
+
+            LazyEvaluation<T> m_Instance;
+
+            public bool IsValueCreated => m_Instance.IsValueCreated;
+
+            [MaybeNull]
+            public T Value => m_Instance.ValueForDebugDisplay;
+        }
     }
 }

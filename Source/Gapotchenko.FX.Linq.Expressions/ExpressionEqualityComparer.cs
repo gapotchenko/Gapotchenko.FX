@@ -9,6 +9,11 @@ namespace Gapotchenko.FX.Linq.Expressions
     public sealed class ExpressionEqualityComparer : EqualityComparer<Expression>
     {
         /// <summary>
+        /// Returns a default equality comparer for LINQ expressions.
+        /// </summary>
+        public new static ExpressionEqualityComparer Default { get; } = new ExpressionEqualityComparer();
+
+        /// <summary>
         /// Determines whether two <see cref="Expression"/> objects are equal.
         /// </summary>
         /// <param name="x">The first object to compare.</param>
@@ -40,10 +45,5 @@ namespace Gapotchenko.FX.Linq.Expressions
             var worker = new ExpressionHashCodeWorker();
             return worker.CalculateHashCode(obj);
         }
-
-        /// <summary>
-        /// Returns a default equality comparer for LINQ expressions.
-        /// </summary>
-        public new static ExpressionEqualityComparer Default { get; } = new ExpressionEqualityComparer();
     }
 }

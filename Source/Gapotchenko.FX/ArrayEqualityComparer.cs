@@ -72,7 +72,7 @@ namespace Gapotchenko.FX
             if (n == 0)
                 return true;
 
-            // Signed element types are covered by implicit cast to an array of corresponding unsigned element types.
+            // Signed element types are covered by implicit cast to an array of matched unsigned types.
             //
             // E.g. the following is possible:
             //     short[] x = new { 1, 2, 3 };
@@ -122,12 +122,10 @@ namespace Gapotchenko.FX
         public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer) =>
             Type.GetTypeCode(typeof(T)) switch
             {
-                TypeCode.Byte when IsDefaultEqualityComparer(elementComparer) => (ArrayEqualityComparer<T>)(object)new ByteRank1Comparer(),
+                TypeCode.Byte when IsDefaultComparer(elementComparer) => (ArrayEqualityComparer<T>)(object)new ByteRank1Comparer(),
                 _ => new DefaultArrayEqualityComparer<T>(elementComparer),
             };
 
-        static bool IsDefaultEqualityComparer<T>(IEqualityComparer<T>? comparer) =>
-            comparer is null ||
-            comparer == EqualityComparer<T>.Default;
+        static bool IsDefaultComparer<T>(IEqualityComparer<T>? comparer) => Empty.Nullify(comparer) == null;
     }
 }

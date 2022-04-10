@@ -120,4 +120,7 @@
   <data name="ArgumentCannotBeNegative" xml:space="preserve">
     <value>Argument cannot be negative.</value>
   </data>
+  <data name="MinCannotBeGreaterThanMax" xml:space="preserve">
+    <value>Minimal value '{0}' cannot be greater than maximal '{1}'.</value>
+  </data>
 </root>

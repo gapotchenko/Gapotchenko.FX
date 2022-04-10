@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageDescription>The module provides the implementation of checksum algorithms belonging to CRC-32 family: CRC-32, CRC-32/ISO-HDLC, CRC-32/ADCCP, CRC-32/V-42, CRC-32/XZ, PKZIP, CRC-32C, CRC-32/BASE91-C, CRC-32/CASTAGNOLI, CRC-32/INTERLAKEN, CRC-32/ISCSI, CRC-32Q, CRC-32/AIXM, CRC-32/AUTOSAR, CRC-32/POSIX, CRC-32/CKSUM, CKSUM, CRC-32/BZIP2, CRC-32/DECT-B, CRC-32/AAL5, B-CRC-32, CRC-32/MEF, CRC-32/MPEG-2.</PackageDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="checksum" />
+    <PackageTag Include="crc" />
+    <PackageTag Include="crc-32" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Integrity.Checksum\Gapotchenko.FX.Data.Integrity.Checksum.csproj" />
+  </ItemGroup>
+
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.targets" />
+
+</Project>

@@ -3,12 +3,17 @@ using Gapotchenko.FX.AppModel;
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.ComponentModel;
 using Gapotchenko.FX.Console;
-using Gapotchenko.FX.Data.Encoding;
+using Gapotchenko.FX.Data.Integrity.Checksum;
+//using Gapotchenko.FX.Data.Encoding;
 using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Linq.Expressions;
 using Gapotchenko.FX.Math;
+using Gapotchenko.FX.Math.Combinatorics;
+using Gapotchenko.FX.Math.Geometry;
+using Gapotchenko.FX.Math.Topology;
+using Gapotchenko.FX.Reflection;
 using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Threading.Tasks;
@@ -16,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -58,6 +64,10 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _Run()
         {
+            var res = new[] { 1, 1, 2 }.CrossJoin(new[] { "A", "B" }, ValueTuple.Create).Distinct();
+
+            Console.WriteLine("A = {0}", Enumerable.Distinct(Permutations.Of(new[] { 1, 1, 2 })).Count());
+
             Console.WriteLine("Process: {0}", RuntimeInformation.ProcessArchitecture);
             Console.WriteLine("OS: {0}", RuntimeInformation.OSArchitecture);
 
@@ -69,6 +79,53 @@ namespace Gapotchenko.FX.Harness.Console
                 var env = process.ReadEnvironmentVariables();
                 Console.WriteLine(env["PATH"]);
             }
+
+            var seq1 = new[] { "1", "2" };
+            var seq2 = new[] { "A", "B", "C" };
+
+            foreach (var i in CartesianProduct.Of(seq1, seq2))
+                Console.WriteLine(string.Join(" ", i));
+
+            var g = new Graph<int>();
+            g.Edges.Add(1, 2);
+            g.Edges.Add(2, 3);
+
+            //g.Vertices.Remove(2);
+
+            foreach (var i in g.Vertices)
+            {
+                Console.WriteLine(i);
+            }
+
+            AssemblyAutoLoader.Default.AddProbingPath(@"C:\");
+            AssemblyAutoLoader.Default.RemoveProbingPath(@"C:\");
+
+            _RunTopologicalSort();
+        }
+
+        static void _RunTopologicalSort()
+        {
+            string seq = "13208795";
+
+            static bool Dependency(char a, char b) =>
+                (a, b) switch
+                {
+                    ('1', '0') or
+                    ('2', '0') => true,
+                    _ => false
+                };
+
+            var result = seq.OrderTopologicallyBy(Fn.Identity, Dependency).ThenBy(x => x);
+
+            Console.WriteLine(string.Concat(result));
+
+            var iterator = Crc16.Standard.CreateIterator();
+            iterator = Crc16.Attested.Ccitt.CreateIterator();
+
+            //var ha = Crc16.Attested.Ccitt.CreateHashAlgorithm();
+
+            var checksum = Crc8.Standard.ComputeChecksum(Encoding.ASCII.GetBytes("123456789"));
+            Console.WriteLine("Checksum = 0x{0:x}", checksum);
         }
 
         static async Task _RunAsync(CancellationToken ct)

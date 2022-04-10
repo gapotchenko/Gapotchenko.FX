@@ -35,6 +35,25 @@ namespace Gapotchenko.FX.AppModel
         }
 
         /// <summary>
+        /// Extracts app information for the specified assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>The app information.</returns>
+        public static IAppInformation For(Assembly assembly)
+        {
+            if (assembly == null)
+                throw new ArgumentNullException(nameof(assembly));
+
+            var entryType = assembly.EntryPoint?.ReflectedType;
+
+            return new AppInformation
+            {
+                EntryType = entryType ?? Empty.Type,
+                EntryAssembly = assembly
+            };
+        }
+
+        /// <summary>
         /// Initializes a new instance of <see cref="AppInformation"/> class.
         /// </summary>
         protected AppInformation()
@@ -54,7 +73,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_Title;
+        volatile string? m_Title;
 
         /// <summary>
         /// Retrieves app title.
@@ -96,7 +115,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_Description;
+        volatile string? m_Description;
 
         /// <summary>
         /// Retrieves app description.
@@ -141,7 +160,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Type? m_EntryType;
+        volatile Type? m_EntryType;
 
         /// <summary>
         /// Retrieves app entry type.
@@ -165,7 +184,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Assembly? m_EntryAssembly;
+        volatile Assembly? m_EntryAssembly;
 
         /// <summary>
         /// Retrieves app entry assembly.
@@ -204,7 +223,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_ProductName;
+        volatile string? m_ProductName;
 
         /// <summary>
         /// Retrieves product name.
@@ -266,7 +285,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static Version? m_ProductVersion;
+        volatile Version? m_ProductVersion;
 
         /// <summary>
         /// Retrieves product version.
@@ -304,7 +323,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_InformationalVersion;
+        volatile string? m_InformationalVersion;
 
         /// <summary>
         /// Retrieves product informational version.
@@ -346,7 +365,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static string? m_CompanyName;
+        volatile string? m_CompanyName;
 
         /// <summary>
         /// Retrieves company name.
@@ -403,7 +422,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_Copyright;
+        volatile string? m_Copyright;
 
         /// <summary>
         /// Retrieves app copyright information.
@@ -448,7 +467,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_Trademark;
+        volatile string? m_Trademark;
 
         /// <summary>
         /// Retrieves app trademark information.
@@ -490,7 +509,7 @@ namespace Gapotchenko.FX.AppModel
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? m_ExecutablePath;
+        volatile string? m_ExecutablePath;
 
         /// <summary>
         /// Retrieves app executable path.
@@ -514,13 +533,13 @@ namespace Gapotchenko.FX.AppModel
                     {
                         string localPath = uri.LocalPath;
 
-#if NETSTANDARD || NETCOREAPP
+#if NETSTANDARD || NETCOREAPP || NET
                         if (localPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                         {
-#if !NETCOREAPP3_0
+#if !(NETCOREAPP3_0 || NETCOREAPP3_1 || NET)
                             string frameworkDescription = RuntimeInformation.FrameworkDescription;
-                            if (frameworkDescription.StartsWith(".NET Core ", StringComparison.OrdinalIgnoreCase) &&
-                                Environment.Version.Major >= 3)
+                            if (frameworkDescription.StartsWith(".NET Core ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 3 ||
+                                frameworkDescription.StartsWith(".NET ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 5)
 #endif
                             {
                                 string? exeExtension;

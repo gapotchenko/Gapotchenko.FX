@@ -134,12 +134,14 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
 
                 int codeSize = code.Length;
 
+#if TFF_CER
                 // Ensure that changes in code are atomic by using the constrained region.
                 RuntimeHelpers.PrepareConstrainedRegions();
                 try
                 {
                 }
                 finally
+#endif
                 {
                     // Temporarily allow memory modification in order to apply the intrinsic code.
                     using (var scope = new VirtualProtectScope(p, codeSize + 1, NativeMethods.Page.ExecuteReadWrite))
@@ -236,7 +238,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
                     }
                     catch (Exception e) when (!e.IsControlFlowException())
                     {
-                        // Give up on patching the code if an error occurs.
+                        // Give up on code patching if an error occurs.
                         _Patcher = null;
 
                         Log.TraceSource.TraceEvent(

@@ -95,7 +95,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
                 if (currentCount == 0)
                 {
                     // EOF
-                    return 0;
+                    break;
                 }
 
                 bool throwOnError = pageStart == m_FirstPageAddress;

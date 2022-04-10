@@ -29,16 +29,20 @@ PM> Install-Package Gapotchenko.FX.Linq.Expressions
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
+- [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
+- [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data.Integrity.Checksum](../Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum)
 - [Gapotchenko.FX.Data.Linq](../Data/Gapotchenko.FX.Data.Linq) ✱
 - [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
-- [Gapotchenko.FX.Drawing](../Gapotchenko.FX.Drawing)
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
   - &#x27B4; [Gapotchenko.FX.Linq.Expressions](../Gapotchenko.FX.Linq.Expressions) ✱
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
 - [Gapotchenko.FX.Numerics](../Gapotchenko.FX.Numerics) ✱
 - [Gapotchenko.FX.Reflection.Loader](../Gapotchenko.FX.Reflection.Loader) ✱
+- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 

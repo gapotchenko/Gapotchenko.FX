@@ -1,0 +1,21 @@
+﻿ Key length: 40 bits.
+ key: 0x833222772a
+
+ DEC    0 HEX    0:  80 ad 97 bd  c9 73 df 8a   2e 87 9e 92  a4 97 ef da
+ DEC   16 HEX   10:  20 f0 60 c2  f2 e5 12 65   01 d3 d4 fe  a1 0d 5f c0
+ DEC  240 HEX   f0:  fa a1 48 e9  90 46 18 1f   ec 6b 20 85  f3 b2 0e d9
+ DEC  256 HEX  100:  f0 da f5 ba  b3 d5 96 83   98 57 84 6f  73 fb fe 5a
+ DEC  496 HEX  1f0:  1c 7e 2f c4  63 92 32 fe   29 75 84 b2  96 99 6b c8
+ DEC  512 HEX  200:  3d b9 b2 49  40 6c c8 ed   ff ac 55 cc  d3 22 ba 12
+ DEC  752 HEX  2f0:  e4 f9 f7 e0  06 61 54 bb   d1 25 b7 45  56 9b c8 97
+ DEC  768 HEX  300:  75 d5 ef 26  2b 44 c4 1a   9c f6 3a e1  45 68 e1 b9
+ DEC 1008 HEX  3f0:  6d a4 53 db  f8 1e 82 33   4a 3d 88 66  cb 50 a1 e3
+ DEC 1024 HEX  400:  78 28 d0 74  11 9c ab 5c   22 b2 94 d7  a9 bf a0 bb
+ DEC 1520 HEX  5f0:  ad b8 9c ea  9a 15 fb e6   17 29 5b d0  4b 8c a0 5c
+ DEC 1536 HEX  600:  62 51 d8 7f  d4 aa ae 9a   7e 4a d5 c2  17 d3 f3 00
+ DEC 2032 HEX  7f0:  e7 11 9b d6  dd 9b 22 af   e8 f8 95 85  43 28 81 e2
+ DEC 2048 HEX  800:  78 5b 60 fd  7e c4 e9 fc   b6 54 5f 35  0d 66 0f ab
+ DEC 3056 HEX  bf0:  af ec c0 37  fd b7 b0 83   8e b3 d7 0b  cd 26 83 82
+ DEC 3072 HEX  c00:  db c1 a7 b4  9d 57 35 8c   c9 fa 6d 61  d7 3b 7c f0
+ DEC 4080 HEX  ff0:  63 49 d1 26  a3 7a fc ba   89 79 4f 98  04 91 4f dc
+ DEC 4096 HEX 1000:  bf 42 c3 01  8c 2f 7c 66   bf de 52 49  75 76 81 15

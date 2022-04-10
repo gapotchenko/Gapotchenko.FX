@@ -351,14 +351,10 @@ namespace System
             return (int)hash;
         }
 
-#if TFF_AGGRESSIVE_INLINING
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         static uint Rol(uint value, int count) => (value << count) | (value >> (32 - count));
 
-#if TFF_AGGRESSIVE_INLINING
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         static void Initialize(out uint v1, out uint v2, out uint v3, out uint v4)
         {
             v1 = s_seed + Prime1 + Prime2;
@@ -367,9 +363,7 @@ namespace System
             v4 = s_seed - Prime1;
         }
 
-#if TFF_AGGRESSIVE_INLINING
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         static uint Round(uint hash, uint input)
         {
             hash += input * Prime2;
@@ -378,18 +372,14 @@ namespace System
             return hash;
         }
 
-#if TFF_AGGRESSIVE_INLINING
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         static uint QueueRound(uint hash, uint queuedValue)
         {
             hash += queuedValue * Prime3;
             return Rol(hash, 17) * Prime4;
         }
 
-#if TFF_AGGRESSIVE_INLINING
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         static uint MixState(uint v1, uint v2, uint v3, uint v4)
         {
             return Rol(v1, 1) + Rol(v2, 7) + Rol(v3, 12) + Rol(v4, 18);
@@ -400,9 +390,7 @@ namespace System
             return s_seed + Prime5;
         }
 
-#if TFF_AGGRESSIVE_INLINING
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         static uint MixFinal(uint hash)
         {
             hash ^= hash >> 15;

@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -309,13 +310,26 @@ namespace Gapotchenko.FX.Console
                 Console.CancelKeyPress += Console_CancelKeyPress;
             }
 
-            static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+            static void Console_CancelKeyPress(object? sender, ConsoleCancelEventArgs e)
             {
                 Console.CursorVisible = true;
             }
 
             public static void Activate()
             {
+            }
+        }
+
+        static bool _IsCursorVisible()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return Console.CursorVisible;
+            }
+            else
+            {
+                // Console.CursorVisible retrieval is not available.
+                return true;
             }
         }
 
@@ -328,7 +342,7 @@ namespace Gapotchenko.FX.Console
             baseTextWriter.Flush();
             int promptLength = Console.CursorLeft - left;
 
-            bool savedCursorVisible = Console.CursorVisible;
+            bool savedCursorVisible = _IsCursorVisible();
             CursorRecovery.Activate();
             Console.CursorVisible = false;
             try

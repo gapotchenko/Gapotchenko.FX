@@ -3,17 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 
 namespace Gapotchenko.FX.IO
 {
     /// <summary>
-    /// Creates a stream whose backing store is fragmented memory.
+    /// Creates a stream that can store large amount of data in random access memory under memory fragmentation conditions.
     /// </summary>
     /// <remarks>
     /// <see cref="FragmentedMemoryStream"/> is similar to <see cref="MemoryStream"/> but uses a dynamic list of byte arrays as a backing store.
-    /// This allows to use the memory address space more efficiently, as there is no need to allocate a contiguous memory block for the whole stream.
+    /// This allows it to use the memory address space more efficiently, as there is no need to allocate a contiguous memory block for the whole stream.
     /// </remarks>
     public class FragmentedMemoryStream : Stream
     {
@@ -52,44 +52,45 @@ namespace Gapotchenko.FX.IO
         /// </summary>
         public override bool CanWrite => true;
 
-        long _Length;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        long m_Length;
 
         /// <summary>
         /// Gets the length in bytes of the stream.
         /// </summary>
-        public override long Length => _Length;
+        public override long Length => m_Length;
 
         /// <summary>
         /// Gets or sets the position within the current stream.
         /// </summary>
         public override long Position { get; set; }
 
-        const long _BlockSize = 65536;
+        const long BlockSize = 65536;
 
-        List<byte[]> _Blocks = new List<byte[]>();
+        readonly List<byte[]> m_Blocks = new();
 
         /// <summary>
         /// The block of memory currently addressed by Position
         /// </summary>
-        byte[] _Block
+        byte[] CurrentBlock
         {
             get
             {
-                while (_Blocks.Count <= _BlockIndex)
-                    _Blocks.Add(new byte[_BlockSize]);
-                return _Blocks[(int)_BlockIndex];
+                while (m_Blocks.Count <= CurrentBlockIndex)
+                    m_Blocks.Add(new byte[BlockSize]);
+                return m_Blocks[(int)CurrentBlockIndex];
             }
         }
 
         /// <summary>
         /// The index of a block currently addressed by <see cref="Position"/>.
         /// </summary>
-        long _BlockIndex => Position / _BlockSize;
+        long CurrentBlockIndex => Position / BlockSize;
 
         /// <summary>
         /// The block offset of a byte currently addressed by <see cref="Position"/>.
         /// </summary>
-        long _BlockOffset => Position % _BlockSize;
+        long CurrentBlockOffset => Position % BlockSize;
 
         /// <summary>
         /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -124,15 +125,15 @@ namespace Gapotchenko.FX.IO
 
             var lcount = (long)count;
 
-            long remaining = _Length - Position;
+            long remaining = m_Length - Position;
             if (lcount > remaining)
                 lcount = remaining;
 
             int read = 0;
             do
             {
-                var copySize = Math.Min(lcount, _BlockSize - _BlockOffset);
-                Buffer.BlockCopy(_Block, (int)_BlockOffset, buffer, offset, (int)copySize);
+                var copySize = Math.Min(lcount, BlockSize - CurrentBlockOffset);
+                Buffer.BlockCopy(CurrentBlock, (int)CurrentBlockOffset, buffer, offset, (int)copySize);
                 lcount -= copySize;
                 offset += (int)copySize;
 
@@ -149,7 +150,7 @@ namespace Gapotchenko.FX.IO
         /// Sets the position within the current stream.
         /// </summary>
         /// <param name="offset">A byte offset relative to the <paramref name="origin" /> parameter.</param>
-        /// <param name="origin">A value of type <see cref="T:System.IO.SeekOrigin" /> indicating the reference point used to obtain the new position.</param>
+        /// <param name="origin">A value of type <see cref="SeekOrigin" /> indicating the reference point used to obtain the new position.</param>
         /// <returns>
         /// The new position within the current stream.
         /// </returns>
@@ -176,7 +177,7 @@ namespace Gapotchenko.FX.IO
         /// <param name="value">The desired length of the current stream in bytes.</param>
         public override void SetLength(long value)
         {
-            _Length = value;
+            m_Length = value;
         }
 
         /// <summary>
@@ -205,11 +206,11 @@ namespace Gapotchenko.FX.IO
             {
                 do
                 {
-                    int copySize = Math.Min(count, (int)(_BlockSize - _BlockOffset));
+                    int copySize = Math.Min(count, (int)(BlockSize - CurrentBlockOffset));
 
-                    _EnsureCapacity(Position + copySize);
+                    EnsureCapacity(Position + copySize);
 
-                    Buffer.BlockCopy(buffer, offset, _Block, (int)_BlockOffset, copySize);
+                    Buffer.BlockCopy(buffer, offset, CurrentBlock, (int)CurrentBlockOffset, copySize);
                     count -= copySize;
                     offset += copySize;
 
@@ -232,11 +233,11 @@ namespace Gapotchenko.FX.IO
         /// </returns>
         public override int ReadByte()
         {
-            if (Position >= _Length)
+            if (Position >= m_Length)
                 return -1;
 
-            byte b = _Block[_BlockOffset];
-            Position++;
+            byte b = CurrentBlock[CurrentBlockOffset];
+            ++Position;
 
             return b;
         }
@@ -247,15 +248,15 @@ namespace Gapotchenko.FX.IO
         /// <param name="value">The byte to write to the stream.</param>
         public override void WriteByte(byte value)
         {
-            _EnsureCapacity(Position + 1);
-            _Block[_BlockOffset] = value;
-            Position++;
+            EnsureCapacity(Position + 1);
+            CurrentBlock[CurrentBlockOffset] = value;
+            ++Position;
         }
 
-        void _EnsureCapacity(long capacity)
+        void EnsureCapacity(long capacity)
         {
-            if (capacity > _Length)
-                _Length = capacity;
+            if (capacity > m_Length)
+                m_Length = capacity;
         }
 
         /// <summary>
@@ -284,15 +285,22 @@ namespace Gapotchenko.FX.IO
         /// <param name="destination">The destination stream to write the content to.</param>
         public virtual void WriteTo(Stream destination)
         {
+            // This method has no sense from the functional composability point of view
+            // but is needed to exist in order to be a drop-in replacement for MemoryStream.
+
             if (destination == null)
                 throw new ArgumentNullException(nameof(destination));
 
             var savedPosition = Position;
             Position = 0;
-
-            CopyTo(destination);
-
-            Position = savedPosition;
+            try
+            {
+                CopyTo(destination);
+            }
+            finally
+            {
+                Position = savedPosition;
+            }
         }
     }
 }

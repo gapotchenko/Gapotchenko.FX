@@ -11,7 +11,9 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 {
     sealed partial class ImplementationAdapter : IImplementationAdapter
     {
-        private ImplementationAdapter() { }
+        ImplementationAdapter()
+        {
+        }
 
         public static ImplementationAdapter Instance { get; } = new ImplementationAdapter();
 

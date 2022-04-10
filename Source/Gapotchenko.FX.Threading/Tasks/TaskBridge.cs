@@ -42,9 +42,32 @@ namespace Gapotchenko.FX.Threading.Tasks
 
             // Use a short path when possible.
             if (task.Status == TaskStatus.RanToCompletion)
+            {
+                // Task.Status property issues an acquire memory barrier internally.
                 return;
+            }
 
             Execute(() => task);
+        }
+
+        /// <summary>
+        /// Synchronously completes execution of an already started async task that returns a value of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <param name="task">The async task to execute.</param>
+        /// <returns>The return value.</returns>
+        public static T Execute<T>(Task<T> task)
+        {
+            if (task == null)
+                throw new ArgumentNullException(nameof(task));
+
+            // Use a short path when possible.
+            if (task.Status == TaskStatus.RanToCompletion)
+            {
+                // Task.Status property issues an acquire memory barrier internally.
+                return task.Result;
+            }
+
+            return Execute(() => task);
         }
 
         /// <summary>
@@ -106,7 +129,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
-            T result = default;
+            T result = default!;
             Execute(
                 async () =>
                 {
@@ -114,22 +137,6 @@ namespace Gapotchenko.FX.Threading.Tasks
                 });
 
             return result!;
-        }
-
-        /// <summary>
-        /// Synchronously completes execution of an already started async task that returns a value of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <param name="task">The async task to execute.</param>
-        /// <returns>The return value.</returns>
-        public static T Execute<T>(Task<T> task)
-        {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            if (task.Status == TaskStatus.RanToCompletion)
-                return task.Result;
-
-            return Execute(() => task);
         }
 
         /// <summary>
@@ -143,7 +150,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
-            T result = default;
+            T result = default!;
             Execute(
                 async ct =>
                 {
@@ -181,7 +188,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
 
-            T result = default;
+            T result = default!;
             await
                 ExecuteAsync(
                     () =>
@@ -200,19 +207,19 @@ namespace Gapotchenko.FX.Threading.Tasks
         /// <param name="action">The cancelable synchronous action to execute.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        public static Task ExecuteAsync(Action action, CancellationToken cancellationToken)
-        {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
-
-            if (!cancellationToken.CanBeCanceled)
-                return ExecuteAsyncCore(action);
-            else
-                return ExecuteAsyncCore(action, cancellationToken);
-        }
+        public static Task ExecuteAsync(Action action, CancellationToken cancellationToken) =>
+            ExecuteAsyncCore(
+                action ?? throw new ArgumentNullException(nameof(action)),
+                cancellationToken);
 
         static Task ExecuteAsyncCore(Action action, CancellationToken cancellationToken)
         {
+#if NETCOREAPP || NET
+            return RunLongTask(action, cancellationToken);
+#else
+            if (!cancellationToken.CanBeCanceled)
+                return ExecuteAsyncCore(action);
+
             Thread? taskThread = null;
             using (cancellationToken.Register(
                 () =>
@@ -223,6 +230,9 @@ namespace Gapotchenko.FX.Threading.Tasks
                         try
                         {
                             thread.Abort();
+                        }
+                        catch (PlatformNotSupportedException)
+                        {
                         }
                         catch (ThreadStateException)
                         {
@@ -249,12 +259,19 @@ namespace Gapotchenko.FX.Threading.Tasks
                         }
                         catch (ThreadAbortException)
                         {
-                            Thread.ResetAbort();
+                            try
+                            {
+                                Thread.ResetAbort();
+                            }
+                            catch (PlatformNotSupportedException)
+                            {
+                            }
                             throw new TaskCanceledException();
                         }
                     },
                     cancellationToken);
             }
+#endif
         }
 
         /// <summary>
@@ -269,7 +286,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
 
-            T result = default;
+            T result = default!;
             await
                 ExecuteAsync(
                     () =>

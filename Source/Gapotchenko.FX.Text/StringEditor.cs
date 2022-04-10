@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Text
     public sealed class StringEditor
     {
         /// <summary>
-        /// Initialized a new instance of the <see cref="StringEditor"/> class.
+        /// Initializes a new instance of the <see cref="StringEditor"/> class.
         /// </summary>
         /// <param name="value">The string to edit.</param>
         public StringEditor(string value)

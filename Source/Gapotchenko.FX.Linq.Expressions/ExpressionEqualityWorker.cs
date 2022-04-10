@@ -10,10 +10,10 @@ namespace Gapotchenko.FX.Linq.Expressions
     {
         public bool AreEqual(Expression x, Expression y) => _Visit(x, y);
 
-        readonly ParameterExpressionRegistry _XParameters = new ParameterExpressionRegistry();
-        readonly ParameterExpressionRegistry _YParameters = new ParameterExpressionRegistry();
+        readonly ParameterExpressionRegistry m_XParameters = new ParameterExpressionRegistry();
+        readonly ParameterExpressionRegistry m_YParameters = new ParameterExpressionRegistry();
 
-        bool _Visit(Expression x, Expression y)
+        bool _Visit(Expression? x, Expression? y)
         {
             if (x == y)
                 return true;
@@ -23,83 +23,24 @@ namespace Gapotchenko.FX.Linq.Expressions
             if (x.NodeType != y.NodeType || x.Type != y.Type)
                 return false;
 
-            switch (x.NodeType)
+            return x.NodeType switch
             {
-                case ExpressionType.Add:
-                case ExpressionType.AddChecked:
-                case ExpressionType.And:
-                case ExpressionType.AndAlso:
-                case ExpressionType.ArrayIndex:
-                case ExpressionType.Coalesce:
-                case ExpressionType.Divide:
-                case ExpressionType.Equal:
-                case ExpressionType.ExclusiveOr:
-                case ExpressionType.GreaterThan:
-                case ExpressionType.GreaterThanOrEqual:
-                case ExpressionType.LeftShift:
-                case ExpressionType.LessThan:
-                case ExpressionType.LessThanOrEqual:
-                case ExpressionType.Modulo:
-                case ExpressionType.Multiply:
-                case ExpressionType.MultiplyChecked:
-                case ExpressionType.NotEqual:
-                case ExpressionType.Or:
-                case ExpressionType.OrElse:
-                case ExpressionType.RightShift:
-                case ExpressionType.Subtract:
-                case ExpressionType.SubtractChecked:
-                    return _VisitBinary((BinaryExpression)x, (BinaryExpression)y);
-
-                case ExpressionType.ArrayLength:
-                case ExpressionType.Convert:
-                case ExpressionType.ConvertChecked:
-                case ExpressionType.Negate:
-                case ExpressionType.NegateChecked:
-                case ExpressionType.Not:
-                case ExpressionType.Quote:
-                case ExpressionType.TypeAs:
-                    return _VisitUnary((UnaryExpression)x, (UnaryExpression)y);
-
-                case ExpressionType.Call:
-                    return _VisitMethodCall((MethodCallExpression)x, (MethodCallExpression)y);
-
-                case ExpressionType.Conditional:
-                    return _VisitConditional((ConditionalExpression)x, (ConditionalExpression)y);
-
-                case ExpressionType.Constant:
-                    return _VisitConstant((ConstantExpression)x, (ConstantExpression)y);
-
-                case ExpressionType.Invoke:
-                    return _VisitInvocation((InvocationExpression)x, (InvocationExpression)y);
-
-                case ExpressionType.Lambda:
-                    return _VisitLambda((LambdaExpression)x, (LambdaExpression)y);
-
-                case ExpressionType.ListInit:
-                    return _VisitListInit((ListInitExpression)x, (ListInitExpression)y);
-
-                case ExpressionType.MemberAccess:
-                    return VisitMemberAccess((MemberExpression)x, (MemberExpression)y);
-
-                case ExpressionType.MemberInit:
-                    return _VisitMemberInit((MemberInitExpression)x, (MemberInitExpression)y);
-
-                case ExpressionType.New:
-                    return _VisitNew((NewExpression)x, (NewExpression)y);
-
-                case ExpressionType.NewArrayInit:
-                case ExpressionType.NewArrayBounds:
-                    return _VisitNewArray((NewArrayExpression)x, (NewArrayExpression)y);
-
-                case ExpressionType.Parameter:
-                    return _VisitParameter((ParameterExpression)x, (ParameterExpression)y);
-
-                case ExpressionType.TypeIs:
-                    return _VisitTypeIs((TypeBinaryExpression)x, (TypeBinaryExpression)y);
-
-                default:
-                    return x.Equals(y);
-            }
+                ExpressionType.Add or ExpressionType.AddChecked or ExpressionType.And or ExpressionType.AndAlso or ExpressionType.ArrayIndex or ExpressionType.Coalesce or ExpressionType.Divide or ExpressionType.Equal or ExpressionType.ExclusiveOr or ExpressionType.GreaterThan or ExpressionType.GreaterThanOrEqual or ExpressionType.LeftShift or ExpressionType.LessThan or ExpressionType.LessThanOrEqual or ExpressionType.Modulo or ExpressionType.Multiply or ExpressionType.MultiplyChecked or ExpressionType.NotEqual or ExpressionType.Or or ExpressionType.OrElse or ExpressionType.RightShift or ExpressionType.Subtract or ExpressionType.SubtractChecked => _VisitBinary((BinaryExpression)x, (BinaryExpression)y),
+                ExpressionType.ArrayLength or ExpressionType.Convert or ExpressionType.ConvertChecked or ExpressionType.Negate or ExpressionType.NegateChecked or ExpressionType.Not or ExpressionType.Quote or ExpressionType.TypeAs => _VisitUnary((UnaryExpression)x, (UnaryExpression)y),
+                ExpressionType.Call => _VisitMethodCall((MethodCallExpression)x, (MethodCallExpression)y),
+                ExpressionType.Conditional => _VisitConditional((ConditionalExpression)x, (ConditionalExpression)y),
+                ExpressionType.Constant => _VisitConstant((ConstantExpression)x, (ConstantExpression)y),
+                ExpressionType.Invoke => _VisitInvocation((InvocationExpression)x, (InvocationExpression)y),
+                ExpressionType.Lambda => _VisitLambda((LambdaExpression)x, (LambdaExpression)y),
+                ExpressionType.ListInit => _VisitListInit((ListInitExpression)x, (ListInitExpression)y),
+                ExpressionType.MemberAccess => VisitMemberAccess((MemberExpression)x, (MemberExpression)y),
+                ExpressionType.MemberInit => _VisitMemberInit((MemberInitExpression)x, (MemberInitExpression)y),
+                ExpressionType.New => _VisitNew((NewExpression)x, (NewExpression)y),
+                ExpressionType.NewArrayInit or ExpressionType.NewArrayBounds => _VisitNewArray((NewArrayExpression)x, (NewArrayExpression)y),
+                ExpressionType.Parameter => _VisitParameter((ParameterExpression)x, (ParameterExpression)y),
+                ExpressionType.TypeIs => _VisitTypeIs((TypeBinaryExpression)x, (TypeBinaryExpression)y),
+                _ => x.Equals(y),
+            };
         }
 
         bool _VisitListInit(ListInitExpression x, ListInitExpression y)
@@ -179,8 +120,8 @@ namespace Gapotchenko.FX.Linq.Expressions
 
         bool _VisitLambda(LambdaExpression x, LambdaExpression y)
         {
-            _XParameters.AddRange(x.Parameters);
-            _YParameters.AddRange(y.Parameters);
+            m_XParameters.AddRange(x.Parameters);
+            m_YParameters.AddRange(y.Parameters);
             if (_ExpressionsEqual(x.Parameters, y.Parameters))
                 return _Visit(x.Body, y.Body);
             return false;
@@ -200,10 +141,7 @@ namespace Gapotchenko.FX.Linq.Expressions
             return false;
         }
 
-        bool _VisitParameter(ParameterExpression x, ParameterExpression y)
-        {
-            return _XParameters.GetIndex(x) == _YParameters.GetIndex(y);
-        }
+        bool _VisitParameter(ParameterExpression x, ParameterExpression y) => m_XParameters.GetIndex(x) == m_YParameters.GetIndex(y);
 
         bool _VisitConstant(ConstantExpression x, ConstantExpression y) => _PrimitivesEqual(x.Value, y.Value);
 
@@ -238,7 +176,7 @@ namespace Gapotchenko.FX.Linq.Expressions
         bool _ExpressionsEqual<T>(ReadOnlyCollection<T> x, ReadOnlyCollection<T> y) where T : Expression =>
             x.SequenceEqual(y, _Visit);
 
-        bool _PrimitivesEqual(object x, object y)
+        bool _PrimitivesEqual(object? x, object? y)
         {
             if (ReferenceEquals(x, y))
                 return true;

@@ -94,13 +94,13 @@ The code above produces the following output:
 
 This is a neat departure from a traditional .NET convention where it always throws `ArgumentNullException`.
 Instead, Gapotchenko.FX uses a slightly different philosophy.
-It does the best possible job under existing conditions by following common-sense expectations of a customer.
+It does the best job possible under existing conditions by following common-sense expectations of a user.
 
 
 ### Split
 
 `CommandLine.Split` provides the opposite operation to `CommandLine.Build`.
-It allows to split a command line string into a list of arguments:
+It allows to split a command line string into a list of arguments using the rules of a host operating system:
 
 ``` csharp
 using Gapotchenko.FX.Diagnostics;
@@ -132,15 +132,19 @@ PM> Install-Package Gapotchenko.FX.Diagnostics.CommandLine
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
+- [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
+- [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data.Integrity.Checksum](../Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum)
 - [Gapotchenko.FX.Diagnostics](#)
   - &#x27B4; [Gapotchenko.FX.Diagnostics.CommandLine](../Gapotchenko.FX.Diagnostics.CommandLine)
   - [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process)
   - [Gapotchenko.FX.Diagnostics.WebBrowser](../Gapotchenko.FX.Diagnostics.WebBrowser)
-- [Gapotchenko.FX.Drawing](../Gapotchenko.FX.Drawing)
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 

@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Diagnostics.Process.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Diagnostics.Process)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Diagnostics.Process.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Diagnostics.Process)
 
 The module provides extended functionality for process manipulation.
 
@@ -68,13 +69,13 @@ Lost files, potentially corrupted extensions and so on.
 
 Meet the `End()` method provided by `Gapotchenko.FX.Diagnostics.Process` module.
 It allows to end a process according to a specified mode of operation.
-The default mode of operation is `ProcessEndMode.Complete` that follows a sequence below:
+The default mode of operation is `ProcessEndMode.Complete` that follows a sequence presented below:
 
  1. Graceful techniques are tried first:  
-   1.1. `End()` method tries to close a main window of a process  
+   1.1. `End()` method tries to close a main window of the process  
    1.2. If that fails, it tries to send Ctrl+C (SIGTERM) signal
  2. Forceful techniques:  
-   2.1. If graceful techniques failed, `End()` method tries to exit the process (suitable for the current process only)  
+   2.1. If graceful techniques fail, `End()` method tries to exit the process (suitable for the current process only)  
    2.2. If that fails, it kills the process (SIGKILL)
 
 The method returns a `ProcessEndMode` value on completion indicating how the process was actually ended.
@@ -160,7 +161,7 @@ As you can see, despite a simple-looking signature, the End(…) method gives en
 ### EndAsync()
 
 The method is similar to `End()` but has an async implementation.
-If was created in order to efficiently handle a lot of processes in bulk.
+It can be used to efficiently handle a lot of processes in bulk.
 
 ## Usage
 
@@ -175,15 +176,19 @@ PM> Install-Package Gapotchenko.FX.Diagnostics.Process
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
+- [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
+- [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data.Integrity.Checksum](../Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum)
 - [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
   - [Gapotchenko.FX.Diagnostics.CommandLine](../Gapotchenko.FX.Diagnostics.CommandLine)
   - &#x27B4; [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process)
   - [Gapotchenko.FX.Diagnostics.WebBrowser](../Gapotchenko.FX.Diagnostics.WebBrowser)
-- [Gapotchenko.FX.Drawing](../Gapotchenko.FX.Drawing)
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 

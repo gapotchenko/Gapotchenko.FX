@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Threading;
 
@@ -19,10 +20,12 @@ namespace Gapotchenko.FX.Threading
     /// <see cref="EvaluateOnce{T}"/> is thread-safe.
     /// </para>
     /// </remarks>
-    [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
+    [Serializable]
 #if TFF_HOST_PROTECTION
     [HostProtection(Synchronization = true, ExternalThreading = true)]
 #endif
+    [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
+    [DebuggerTypeProxy(typeof(EvaluateOnce<>.DebugView))]
     public struct EvaluateOnce<T>
     {
         /// <summary>
@@ -53,9 +56,11 @@ namespace Gapotchenko.FX.Threading
         [AllowNull]
         T m_Value;
 
+        [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object? m_SyncLock;
 
+        [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Func<T>? m_ValueFactory;
 
@@ -75,7 +80,7 @@ namespace Gapotchenko.FX.Threading
                 Thread.MemoryBarrier();
                 return
                     m_ValueFactory == null &&
-                    m_SyncLock != null; // check for _SyncLock is needed to cover uninitialized struct scenario
+                    m_SyncLock != null; // check for m_SyncLock is needed to cover uninitialized struct scenario
             }
         }
 
@@ -89,8 +94,29 @@ namespace Gapotchenko.FX.Threading
         /// </returns>
         public override string? ToString() => IsValueCreated ? Value?.ToString() : Resources.ValueNotCreated;
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [OnSerializing]
+        void OnSerializing(StreamingContext context)
+        {
+            // Force evaluation before the value is serialized.
+            Fn.Ignore(Value);
+        }
+
         [MaybeNull]
-        internal T ValueForDebugDisplay => IsValueCreated ? Value : default;
+        T ValueForDebugDisplay => IsValueCreated ? Value : default;
+
+        internal sealed class DebugView
+        {
+            public DebugView(EvaluateOnce<T> instance)
+            {
+                m_Instance = instance;
+            }
+
+            EvaluateOnce<T> m_Instance;
+
+            public bool IsValueCreated => m_Instance.IsValueCreated;
+
+            [MaybeNull]
+            public T Value => m_Instance.ValueForDebugDisplay;
+        }
     }
 }

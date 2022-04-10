@@ -5,17 +5,18 @@ namespace Gapotchenko.FX.Linq.Expressions
 {
     sealed class ParameterExpressionRegistry
     {
-        private readonly List<ParameterExpression> _Indeces = new List<ParameterExpression>();
+        readonly List<ParameterExpression> m_Indeces = new List<ParameterExpression>();
 
         public int GetIndex(ParameterExpression parameter)
         {
-            int num = _Indeces.IndexOf(parameter);
-            if (num >= 0)
-                return num;
-            _Indeces.Add(parameter);
-            return _Indeces.Count - 1;
+            int index = m_Indeces.IndexOf(parameter);
+            if (index >= 0)
+                return index;
+
+            m_Indeces.Add(parameter);
+            return m_Indeces.Count - 1;
         }
 
-        public void AddRange(IEnumerable<ParameterExpression> parameters) => _Indeces.AddRange(parameters);
+        public void AddRange(IEnumerable<ParameterExpression> parameters) => m_Indeces.AddRange(parameters);
     }
 }

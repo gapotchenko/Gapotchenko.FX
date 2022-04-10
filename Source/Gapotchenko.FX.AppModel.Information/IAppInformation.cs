@@ -3,7 +3,7 @@
 namespace Gapotchenko.FX.AppModel
 {
     /// <summary>
-    /// App information interface.
+    /// Provides information about the app.
     /// </summary>
     public interface IAppInformation
     {

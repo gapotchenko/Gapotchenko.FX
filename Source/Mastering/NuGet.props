@@ -1,25 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
+
+  <PropertyGroup>
+    <NLP_ProjectReadmeFile Condition=" Exists('$(MSBuildProjectDirectory)\README.md') ">$(MSBuildProjectDirectory)\README.md</NLP_ProjectReadmeFile>
+  </PropertyGroup>
 
   <!-- NuGet Specification -->
   <PropertyGroup>
     <Authors>$(Company)</Authors>
     <PackageTags>framework platform polyfill rad</PackageTags>
-    <PackageIcon>PackageIcon.png</PackageIcon>
+    <PackageIcon>docs\assets\package-icon.png</PackageIcon>
     <PackageProjectUrl>https://gapotchenko.com/fx</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gapotchenko/Gapotchenko.FX</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile Condition=" '$(NLP_ProjectReadmeFile)' != '' ">docs\README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <IsPackable>$(IsPublicProject)</IsPackable>
     <PackageOutputPath>bin\$(Configuration)\nuget</PackageOutputPath>
-    <GenerateNuspecDependsOn>PrepareNuspec;$(GenerateNuspecDependsOn)</GenerateNuspecDependsOn>
+    <GenerateNuspecDependsOn>PrepareNuspec;$(PackDependsOn)</GenerateNuspecDependsOn>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Resources\PackageIcon.png" Pack="true" PackagePath="" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\NuGet\Package Icon.png" Pack="true" PackagePath="docs\assets\package-icon.png" Visible="false" />
   </ItemGroup>
 
 </Project>

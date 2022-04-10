@@ -18,6 +18,7 @@ The Core profile contains the following Gapotchenko.FX modules:
 - [Gapotchenko.FX.Linq](../../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Linq.Expressions](../../Gapotchenko.FX.Linq.Expressions)
 - [Gapotchenko.FX.Math](../../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../../Gapotchenko.FX.Memory)
 - [Gapotchenko.FX.Text](../../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../../Gapotchenko.FX.Threading)
 

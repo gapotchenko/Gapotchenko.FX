@@ -58,13 +58,8 @@ namespace System.Numerics
         }
 
         /// <summary>
-        /// <para>
         /// Returns the bit population count for a specified value.
         /// The result corresponds to the number of bits set to <c>1</c>.
-        /// </para>
-        /// <para>
-        /// The behavior corresponds to <c>POPCNT</c> instruction from Intel x86 instruction set.
-        /// </para>
         /// </summary>
         /// <param name="value">The value.</param>
         [CLSCompliant(false)]
@@ -83,6 +78,23 @@ namespace System.Numerics
         }
 
         /// <summary>
+        /// Returns the bit population count for a specified value.
+        /// The result corresponds to the number of bits set to <c>1</c>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        [CLSCompliant(false)]
+        public static int PopCount(ulong value)
+        {
+            const ulong Mask01010101 = 0x5555555555555555UL;
+            const ulong Mask00110011 = 0x3333333333333333UL;
+            const ulong Mask00001111 = 0x0F0F0F0F0F0F0F0FUL;
+            const ulong Mask00000001 = 0x0101010101010101UL;
+            value -= ((value >> 1) & Mask01010101);
+            value = (value & Mask00110011) + ((value >> 2) & Mask00110011);
+            return (int)(unchecked(((value + (value >> 4)) & Mask00001111) * Mask00000001) >> 56);
+        }
+
+        /// <summary>
         /// <para>
         /// Rotates the specified value left by the specified number of bits.
         /// </para>
@@ -96,10 +108,8 @@ namespace System.Numerics
         /// Any value outside the range [0..31] is treated as congruent mod 32.
         /// </param>
         /// <returns>The rotated value.</returns>
-#if TFF_AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [CLSCompliant(false)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint RotateLeft(uint value, int offset) => (value << offset) | (value >> (32 - offset));
 
         /// <summary>
@@ -116,10 +126,8 @@ namespace System.Numerics
         /// Any value outside the range [0..63] is treated as congruent mod 64.
         /// </param>
         /// <returns>The rotated value.</returns>
-#if TFF_AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [CLSCompliant(false)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong RotateLeft(ulong value, int offset) => (value << offset) | (value >> (64 - offset));
 
         /// <summary>
@@ -136,10 +144,8 @@ namespace System.Numerics
         /// Any value outside the range [0..31] is treated as congruent mod 32.
         /// </param>
         /// <returns>The rotated value.</returns>
-#if TFF_AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [CLSCompliant(false)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint RotateRight(uint value, int offset) => (value >> offset) | (value << (32 - offset));
 
         /// <summary>
@@ -156,10 +162,8 @@ namespace System.Numerics
         /// Any value outside the range [0..63] is treated as congruent mod 64.
         /// </param>
         /// <returns>The rotated value.</returns>
-#if TFF_AGGRESSIVE_INLINING
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [CLSCompliant(false)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong RotateRight(ulong value, int offset) => (value >> offset) | (value << (64 - offset));
     }
 }

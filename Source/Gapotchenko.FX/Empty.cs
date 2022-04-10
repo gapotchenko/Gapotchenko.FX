@@ -68,6 +68,35 @@ namespace Gapotchenko.FX
         }
 
         /// <summary>
+        /// Nullifies an empty string.
+        /// </summary>
+        /// <param name="value">The value to nullify.</param>
+        /// <param name="empty">The value to treat as empty.</param>
+        /// <returns>The string value or a null if the string is empty or null.</returns>
+        public static string? Nullify(string? value, string? empty)
+        {
+            if (value == null || value == empty)
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
+        /// Nullifies an empty string.
+        /// </summary>
+        /// <param name="value">The value to nullify.</param>
+        /// <param name="empty">The value to treat as empty.</param>
+        /// <param name="comparison">The comparison.</param>
+        /// <returns>The string value or a null if the string is empty or null.</returns>
+        public static string? Nullify(string? value, string? empty, StringComparison comparison)
+        {
+            if (value == null || value.Equals(empty, comparison))
+                return null;
+            else
+                return value;
+        }
+
+        /// <summary>
         /// Nullifies a string when it is empty, or consists only of white-space characters.
         /// </summary>
         /// <param name="value">The value.</param>
@@ -372,6 +401,22 @@ namespace Gapotchenko.FX
                 return null;
             else
                 return func;
+        }
+
+        /// <summary>
+        /// Nullifies a default equality comparer for type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of objects compared by a comparer.</typeparam>
+        /// <param name="comparer">The comparer.</param>
+        /// <returns>The value of <paramref name="comparer"/> or <c>null</c> if it represents a default equality comparer for type <typeparamref name="T"/>.</returns>
+        public static IEqualityComparer<T>? Nullify<T>(IEqualityComparer<T>? comparer)
+        {
+            if (comparer == null)
+                return null;
+            else if (comparer == EqualityComparer<T>.Default)
+                return null;
+            else
+                return comparer;
         }
 
         /// <summary>

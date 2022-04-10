@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Gapotchenko.FX.Console
 {
@@ -15,29 +16,32 @@ namespace Gapotchenko.FX.Console
     {
         /// <summary>
         /// <para>
-        /// Gets a value indicating whether console color is available.
+        /// Gets a value indicating whether console color output is available.
         /// </para>
         /// <para>
-        /// Console color is usually always available unless program output streams are redirected.
+        /// Console color is usually always available unless program standard output streams are redirected.
         /// </para>
         /// </summary>
         public static bool IsColorAvailable => !(Console.IsOutputRedirected || Console.IsErrorRedirected);
 
-        enum BoolTrait : byte
+        /// <summary>
+        /// A tristate atomic data type for thread-safe representation of a nullable boolean value in accordance with .NET memory model.
+        /// </summary>
+        enum AtomicNullableBool : byte
         {
-            None,
-            True,
-            False
+            Null,
+            False,
+            True
         }
 
-        static BoolTrait m_CachedIsColorInhibited;
+        static AtomicNullableBool m_CachedIsColorInhibited;
 
         /// <summary>
         /// <para>
-        /// Gets a value indicating whether console color is inhibited.
+        /// Gets a value indicating whether console color output is inhibited.
         /// </para>
         /// <para>
-        /// Console color can be inhibited by the host system or a user preference.
+        /// Console color may be inhibited by the host system or a user preference.
         /// For example, a NO_COLOR environment variable can be used to inhibit console colors as described by corresponding <a href="https://no-color.org/">specification</a>.
         /// </para>
         /// </summary>
@@ -46,12 +50,13 @@ namespace Gapotchenko.FX.Console
             get
             {
                 var value = m_CachedIsColorInhibited;
-                if (value == BoolTrait.None)
+                if (value == AtomicNullableBool.Null)
                 {
-                    value = IsColorInhibitedCore() ? BoolTrait.True : BoolTrait.False;
+                    value = IsColorInhibitedCore() ? AtomicNullableBool.True : AtomicNullableBool.False;
                     m_CachedIsColorInhibited = value;
+                    Thread.MemoryBarrier();  // Freshness improvement.
                 }
-                return value == BoolTrait.True;
+                return value == AtomicNullableBool.True;
             }
         }
 
@@ -60,7 +65,7 @@ namespace Gapotchenko.FX.Console
 
         /// <summary>
         /// <para>
-        /// Gets a value indicating whether console color is enabled.
+        /// Gets a value indicating whether console color output is enabled.
         /// </para>
         /// <para>
         /// The console color is enabled when it is <see cref="IsColorAvailable">available</see> and not <see cref="IsColorInhibited">inhibited</see>.
@@ -69,7 +74,7 @@ namespace Gapotchenko.FX.Console
         public static bool IsColorEnabled => IsColorAvailable && !IsColorInhibited;
 
         // This cached value should not be discarded as it represents an immutable trait.
-        static BoolTrait m_CachedWillDisappearOnExit;
+        static AtomicNullableBool m_CachedWillDisappearOnExit;
 
         /// <summary>
         /// Gets a value indicating whether a console window will immediately disappear on program exit.
@@ -79,12 +84,13 @@ namespace Gapotchenko.FX.Console
             get
             {
                 var value = m_CachedWillDisappearOnExit;
-                if (value == BoolTrait.None)
+                if (value == AtomicNullableBool.Null)
                 {
-                    value = WillDisappearOnExitCore() ? BoolTrait.True : BoolTrait.False;
+                    value = WillDisappearOnExitCore() ? AtomicNullableBool.True : AtomicNullableBool.False;
                     m_CachedWillDisappearOnExit = value;
+                    Thread.MemoryBarrier();  // Freshness improvement.
                 }
-                return value == BoolTrait.True;
+                return value == AtomicNullableBool.True;
             }
         }
 
@@ -116,6 +122,7 @@ namespace Gapotchenko.FX.Console
         public static void Refresh()
         {
             m_CachedIsColorInhibited = default;
+            Thread.MemoryBarrier();  // Freshness improvement.
         }
     }
 }

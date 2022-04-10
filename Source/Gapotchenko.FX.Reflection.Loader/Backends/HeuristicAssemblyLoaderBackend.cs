@@ -1,20 +1,23 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace Gapotchenko.FX.Reflection.Loader.Backends
 {
     sealed class HeuristicAssemblyLoaderBackend : ProbingPathAssemblyLoaderBackend
     {
-        public HeuristicAssemblyLoaderBackend(AssemblyDependencyTracker assemblyDependencyTracker, params string[] probingPaths) :
-            base(probingPaths)
+        public HeuristicAssemblyLoaderBackend(
+            bool isAttached,
+            AssemblyLoadPal assemblyLoadPal,
+            AssemblyDependencyTracker assemblyDependencyTracker,
+            params string[] probingPaths) :
+            base(isAttached, assemblyLoadPal, probingPaths)
         {
             _AssemblyDependencyTracker = assemblyDependencyTracker;
         }
 
         readonly AssemblyDependencyTracker _AssemblyDependencyTracker;
 
-        protected override bool IsAssemblyResolutionInhibited(ResolveEventArgs args) =>
-            _AssemblyDependencyTracker.IsAssemblyResolutionInhibited(args.RequestingAssembly);
+        protected override bool IsAssemblyResolutionInhibited(Assembly? requstingAssembly) =>
+            _AssemblyDependencyTracker.IsAssemblyResolutionInhibited(requstingAssembly);
 
         protected override Assembly LoadAssembly(string filePath, AssemblyName name)
         {

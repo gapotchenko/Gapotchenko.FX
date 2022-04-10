@@ -2,8 +2,9 @@
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.svg)](https://www.nuget.org/packages/Gapotchenko.FX)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.svg)](https://www.nuget.org/packages/Gapotchenko.FX)
 
-`Gapotchenko.FX` is the main module of Gapotchenko.FX platform. Coincidently, they have identical names.
+`Gapotchenko.FX` is the main module of Gapotchenko.FX toolkit. Coincidently, they have identical names.
 
 The module was started by creating its first building block `ArrayEqualityComparer` back in 2014.
 
@@ -335,9 +336,10 @@ Gapotchenko.FX brings RAD back to the people 💪")
 
 ## Supported Platforms
 
+- .NET 5.0+
 - .NET Standard 2.0+
 - .NET Core 2.0+
-- .NET Framework 4.0+
+- .NET Framework 4.6+
 
 ## Usage
 
@@ -352,12 +354,16 @@ PM> Install-Package Gapotchenko.FX
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 - &#x27B4; [Gapotchenko.FX](../Gapotchenko.FX)
+- [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
+- [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data.Integrity.Checksum](../Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum)
 - [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
-- [Gapotchenko.FX.Drawing](../Gapotchenko.FX.Drawing)
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 

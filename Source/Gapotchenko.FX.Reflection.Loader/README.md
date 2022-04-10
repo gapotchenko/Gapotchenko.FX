@@ -19,7 +19,7 @@ Assembly loading plays a crucial role in .NET apps.
 Once the app is started, .NET runtime ensures that all required assemblies are gradually loaded.
 
 Whenever the code hits the point where a type from another assembly is used, it raises `AppDomain.AssemblyResolve` event.
-The good thing is .NET comes pre-equipped with default assembly loader which does a sensible job for most applications.
+The good thing is .NET comes pre-equipped with a default assembly loader, which does a sensible job for most applications.
 
 However, there are situations when having a default assembly loader is just not enough.
 This is where `Gapotchenko.FX.Reflection.Loader` module becomes extremely handy.
@@ -36,14 +36,14 @@ The folder contains a single `ContosoApp.exe` assembly which represents the main
 `C:\Program Files\Common Files\Contoso\Engine` folder.
 It so happens ContosoApp uses a common engine developed by the company.
 
-Now when `ContosoApp.exe` is run it bails out with the following exception:
+Now when `ContosoApp.exe` is run, it bails out with the following exception:
 
 ```
 System.IO.FileNotFoundException: Could not load file or assembly 'ContosoEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null' or one of its dependencies. The system cannot find the file specified.
 ```
 
 It occurs because `ContoseEngine.dll` assembly is located at the outside folder,
-and the default .NET assembly loader does not provide a way to cover scenarios like this.
+and the default .NET assembly loader does not provide an easy way to cover scenarios like this.
 
 In order to cover that scenario, a developer would subscribe to `AppDomain.CurrentDomain.AssemblyResolve` event.
 Then he would come up with a custom assembly lookup and loading logic.
@@ -69,7 +69,7 @@ namespace ContosoApp
             // The statement below instructs Gapotchenko.FX assembly loader to use
             // 'C:\Program Files\Common Files\Contoso\Engine' folder as a probing path for
             // dependent assemblies.
-            AssemblyAutoLoader.AddProbingPath(
+            AssemblyAutoLoader.Default.AddProbingPath(
                 Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles),
                     @"Contoso\Engine"));
@@ -181,7 +181,7 @@ namespace ContosoApp.Integration.AutoCAD
             // The statement below instructs Gapotchenko.FX assembly loader to use
             // 'C:\Program Files\Common Files\Contoso\Engine' folder as a probing path for
             // resolution of 'ContosoApp.Integration.AutoCAD.dll' assembly dependencies.
-            AssemblyAutoLoader.AddAssembly(
+            AssemblyAutoLoader.Default.AddAssembly(
                 typeof(AssemblyLoader).Assembly,
                 Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles),
@@ -201,14 +201,14 @@ Smart.
 
 But even if Alberto did not create a singleton, `AssemblyAutoLoader` is sophisticated enough to do the right job out of the box.
 
-Now why did Alberto call `AssemblyAutoLoader.AddAssembly` method instead of `AssemblyAutoLoader.AddProbingPath`?
+Now why did Alberto call `AddAssembly` method instead of `AddProbingPath`?
 Both would work, actually. There is a subtle but very important difference.
 
-`AssemblyAutoLoader.AddProbingPath` is a coarse "catch-all" method.
+`AddProbingPath` is a coarse "catch-all" method.
 It would serve not only the dependencies of a given plugin assembly but would also cover the whole app domain.
 Sometimes this is a beneficial behavior, like in case with the root `ContosoApp.exe` assembly.
 
-In contrast, `AssemblyAutoLoader.AddAssembly` method provides a finer control.
+In contrast, `AddAssembly` method provides a finer control.
 It only serves the dependencies of a _specified assembly_.
 It turns out to be a much saner choice for plugins where app domain is shared among a lot of things.
 In this way, assembly loaders from different plugins would not clash with each other, even when they look at a conflicting assembly dependency (it's easy to imagine that a lot of plugins would use the "same" but subtly different version of `Newtonsoft.Json`).
@@ -216,13 +216,13 @@ In this way, assembly loaders from different plugins would not clash with each o
 ## Scenario #4. Automatic handling of binding redirects for a .DLL assembly
 
 Assembly binding redirects allow to "remap" specific ranges of assembly versions.
-The redirects are automatically created by build tools, and then put to corresponding `.config` files of resulting assemblies.
+The redirects are automatically created by build tools, and then being put to corresponding `.config` files of resulting assemblies.
 [(Learn more)](https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/how-to-enable-and-disable-automatic-binding-redirection)
 
 Assembly binding redirects work well for apps, but get completely broken if you want to employ them for dynamically loaded assemblies like plugins.
 The default .NET loader simply ignores `.config` files of .DLL assemblies!
 
-`Gapotchenko.FX.Reflection.Loader` solves this. Just add the following code early at the assembly lifecycle:
+`Gapotchenko.FX.Reflection.Loader` solves this. Just add the following code to a place which gets executed at the early stage of the assembly lifecycle:
 
 ``` csharp
 AssemblyLoader.Activate()
@@ -244,7 +244,7 @@ namespace MyPlugin
             // The loader automatically handles binding redirects according to a corresponding assembly
             // configuration (.config) file. If configuration file is missing then binding redirects are
             // automatically deducted according to the assembly compatibility heuristics.
-            AssemblyAutoLoader.AddAssembly(typeof(AssemblyLoader).Assembly);
+            AssemblyAutoLoader.Default.AddAssembly(typeof(AssemblyLoader).Assembly);
         }
 
         public static void Activate()
@@ -254,8 +254,8 @@ namespace MyPlugin
 }
 ```
 
-There are a lot of projects that may need this: T4 templates, MSBuild tasks, plugins, extensions etc.
-Basically everything that gets dynamically loaded and depends on one or more NuGet packages.
+There are a lot of projects that may need automatic handling of DLL binding redirects: T4 templates, MSBuild tasks, plugins, extensions etc.
+Basically everything that gets dynamically loaded and depends on one or more NuGet packages with mishmash of versions.
 
 <hr/>
 
@@ -267,11 +267,17 @@ This is done to avoid chicken & egg dilemma.
 In this way, the default .NET assembly loader can always load the assembly despite the possible variety of different NuGet packages that can be used in the given project.
 
 Another point to consider is **how to select a point of assembly loader installation** that is early enough in the assembly lifecycle.
-This tends to be trivial for an app: the first few lines of main entry point are good to go.
-But it may be hard to do or totally infeasible for a class library with a wide public API surface.
+This tends to be trivial for an app: the first few lines of the main entry point are good to go.
+But it may be hard to do for a class library. Sometimes it gets totally infeasible when public API surface of a library gets wide enough.
 To overcome that dilemma, assembly loader can be installed at module initializer of a class library.
 
-[Fody/ModuleInit](https://github.com/Fody/ModuleInit) is an example of tool that gives access to .NET module initialization functionality from high-level programming languages like C#/VB.NET.
+[Fody/ModuleInit](https://github.com/Fody/ModuleInit) is an example of tool that gives access to .NET module initialization functionality from high-level programming languages like C#/VB.NET. Another option is to use more specialized tool like [Eazfuscator.NET](https://www.gapotchenko.com/eazfuscator.net) that provides not only [module initialization functionality](https://help.gapotchenko.com/eazfuscator.net/63/sensei-features/module-initializers), but also intellectual property protection.
+
+Please note that some .NET languages provide the out of the box support for module initializers.
+For example, C# starting with version 9.0 treats all static methods marked with [`ModuleInitializerAttribute`](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.moduleinitializerattribute) as module initializers.
+
+While `ModuleInitializerAttribute` is only available in .NET 5.0 and newer, the whole concept is perfectly functional with any .NET version once attribute definition is in place.
+That's why [`Gapotchenko.FX`](../Gapotchenko.FX) module provides a ready to use [polyfill for that attribute](../Gapotchenko.FX/Runtime/CompilerServices/ModuleInitializerAttribute.cs).
 
 <hr/>
 
@@ -288,15 +294,19 @@ PM> Install-Package Gapotchenko.FX.Reflection.Loader
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 - [Gapotchenko.FX](../Gapotchenko.FX)
+- [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
+- [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data.Integrity.Checksum](../Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum)
 - [Gapotchenko.FX.Data.Linq](../Data/Gapotchenko.FX.Data.Linq) ✱
 - [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
-- [Gapotchenko.FX.Drawing](../Gapotchenko.FX.Drawing)
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
 - [Gapotchenko.FX.Numerics](../Gapotchenko.FX.Numerics) ✱
 - &#x27B4; [Gapotchenko.FX.Reflection.Loader](../Gapotchenko.FX.Reflection.Loader) ✱
+- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 

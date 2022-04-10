@@ -2,22 +2,26 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
+#if !TFF_ENUMERABLE_DISTINCTBY
+
 namespace Gapotchenko.FX.Linq
 {
     sealed class SelectedEqualityComparer<TSource, TResult> : IEqualityComparer<TSource>
     {
-        delegate TResult Selector([AllowNull] TSource source);
-
         public SelectedEqualityComparer(Func<TSource, TResult> selector, IEqualityComparer<TResult>? comparer)
         {
-            m_Selector = new Selector(selector);
+            m_Selector = selector;
             m_Comparer = comparer ?? EqualityComparer<TResult>.Default;
         }
 
-        readonly Selector m_Selector;
+        readonly Func<TSource, TResult> m_Selector;
         readonly IEqualityComparer<TResult> m_Comparer;
 
-        public bool Equals([AllowNull] TSource x, [AllowNull] TSource y) => m_Comparer.Equals(m_Selector(x), m_Selector(y));
+        public bool Equals([AllowNull] TSource x, [AllowNull] TSource y) =>
+            (x is null && y is null) ||
+            (x is not null) &&
+            (y is not null) &&
+            m_Comparer.Equals(m_Selector(x), m_Selector(y));
 
         public int GetHashCode(TSource obj)
         {
@@ -28,3 +32,5 @@ namespace Gapotchenko.FX.Linq
         }
     }
 }
+
+#endif

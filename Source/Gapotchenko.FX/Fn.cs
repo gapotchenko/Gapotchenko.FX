@@ -9,7 +9,7 @@ namespace Gapotchenko.FX
     public static partial class Fn
     {
         /// <summary>
-        /// A pure function that returns a value of its single parameter, e.g. f(x) = x.
+        /// A pure function that returns a value of its single argument: f(x) = x.
         /// </summary>
         /// <typeparam name="T">The type a function works with.</typeparam>
         /// <param name="x">The parameter.</param>
@@ -17,11 +17,11 @@ namespace Gapotchenko.FX
         public static T Identity<T>(T x) => x;
 
         /// <summary>
-        /// A pure function that returns a default value of <typeparamref name="T"/>, e.g. f() = default(T).
+        /// A pure function that returns a default value of <typeparamref name="T"/>: f() = default(T).
         /// </summary>
         /// <typeparam name="T">The type a function works with.</typeparam>
         /// <returns>The default value of <typeparamref name="T"/>.</returns>
-        public static T Default<T>() => default!;
+        public static T? Default<T>() => default;
 
         /// <summary>
         /// Gets a delegate to a pure parameterless function that does nothing.
@@ -41,6 +41,7 @@ namespace Gapotchenko.FX
         /// <param name="value">The value to ignore.</param>
         public static void Ignore<T>(T value)
         {
+            _ = value;
         }
     }
 }

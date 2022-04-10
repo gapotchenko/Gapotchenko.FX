@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Topology.Graph" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageTag Include="topology;algorithms;graph;directed;graph-theory;vertex;edge" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
+  </ItemGroup>
+
+</Project>

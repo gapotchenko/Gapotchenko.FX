@@ -1,9 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFramework></TargetFramework>
+    <CLSCompliant>true</CLSCompliant>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageDescription>.NET polyfill to the future. A versatile RAD (Rapid Application Development) framework for .NET platform.</PackageDescription>
+  </PropertyGroup>
+  
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -11,12 +16,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
+  
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.ArrayEqualityComparer" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Optional" />
@@ -25,5 +32,7 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.ComponentModel.Disposable" />
     <CommonlyUsedPart Include="System.HashCode" />
   </ItemGroup>
+  
   <Import Project="$(MasteringDir)\OOB\System.Runtime.InteropServices.RuntimeInformation.targets" />
+
 </Project>

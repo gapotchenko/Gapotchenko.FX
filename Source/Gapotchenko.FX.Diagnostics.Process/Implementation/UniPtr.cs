@@ -51,11 +51,11 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
             }
         }
 
-        public static implicit operator IntPtr(UniPtr p) => new IntPtr(p.ToInt64());
+        public static implicit operator IntPtr(UniPtr p) => new(p.ToInt64());
 
-        public static implicit operator UniPtr(IntPtr p) => new UniPtr(p);
+        public static implicit operator UniPtr(IntPtr p) => new(p);
 
-        public static UniPtr operator +(UniPtr a, long b) => new UniPtr(a.ToInt64() + b);
+        public static UniPtr operator +(UniPtr a, long b) => new(a.ToInt64() + b);
 
         public static bool operator ==(UniPtr a, UniPtr b) => a.ToUInt64() == b.ToUInt64();
 

@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
 
   <PropertyGroup>
     <DefaultItemExcludes>$(DefaultItemExcludes);**\*.orig;**\launchSettings.json</DefaultItemExcludes>
 
     <!-- peverify-compat: https://github.com/dotnet/roslyn/issues/22485 -->
     <Features>$(Features);peverify-compat</Features>
+
+    <!-- Bug in .NET SDK 6.0 preview 7 -->
+    <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>		
   </PropertyGroup>
 
 </Project>

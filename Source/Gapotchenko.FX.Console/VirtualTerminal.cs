@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Console
     using Console = System.Console;
 
     /// <summary>
-    /// Provides operations for VT100-compatible virtual console terminal.
+    /// Provides operations for ANSI X3.64-compatible virtual console terminal.
     /// </summary>
     public static class VirtualTerminal
     {
@@ -204,8 +204,8 @@ namespace Gapotchenko.FX.Console
             {
                 if (m_IsEmulated)
                 {
-                    Console.SetOut(m_PrevConsoleOut);
-                    Console.SetError(m_PrevConsoleError);
+                    Console.SetOut(m_PrevConsoleOut!);
+                    Console.SetError(m_PrevConsoleError!);
 
                     m_IsEmulated = false;
                     m_PrevConsoleOut = null;

@@ -1,13 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework></TargetFramework>
     <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
+    <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
 
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.CommandLine" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.CommandLineBuilder" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageTag Include="command-line" />
   </ItemGroup>
 
   <ItemGroup>

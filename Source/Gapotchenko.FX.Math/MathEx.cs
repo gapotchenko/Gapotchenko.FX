@@ -15,9 +15,7 @@ namespace Gapotchenko.FX.Math
         /// <typeparam name="T">The type of values to swap.</typeparam>
         /// <param name="val1">The first of two values to swap.</param>
         /// <param name="val2">The second of two values to swap.</param>
-#if TFF_AGGRESSIVE_INLINING
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static void Swap<T>(ref T val1, ref T val2)
         {
             var temp = val1;
@@ -56,5 +54,35 @@ namespace Gapotchenko.FX.Math
                 result = checked(result * factor);
             return result;
         }
+
+        /// <summary>
+        /// Returns a linear interpolation between specified <paramref name="a">start</paramref> and <paramref name="b">end</paramref> values by given <paramref name="t">coefficient</paramref>.
+        /// </summary>
+        /// <param name="a">The start value.</param>
+        /// <param name="b">The end value.</param>
+        /// <param name="t">The interpolation coefficient between the start and end values.</param>
+        /// <returns>
+        /// The linear interpolation between <paramref name="a"/> and <paramref name="b"/> by <paramref name="t"/>.
+        /// When <paramref name="t"/> is 0, the value of <paramref name="a"/> is returned.
+        /// When <paramref name="t"/> is 1, the value of <paramref name="b"/> is returned.
+        /// When <paramref name="t"/> is 0.5, the midpoint of <paramref name="a"/> and <paramref name="b"/> is returned.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Lerp(float a, float b, float t) => a + (b - a) * t;
+
+        /// <summary>
+        /// Returns a linear interpolation between specified <paramref name="a">start</paramref> and <paramref name="b">end</paramref> values by given <paramref name="t">coefficient</paramref>.
+        /// </summary>
+        /// <param name="a">The start value.</param>
+        /// <param name="b">The end value.</param>
+        /// <param name="t">The interpolation coefficient between the start and end values.</param>
+        /// <returns>
+        /// The linear interpolation between <paramref name="a"/> and <paramref name="b"/> by <paramref name="t"/>.
+        /// When <paramref name="t"/> is 0, the value of <paramref name="a"/> is returned.
+        /// When <paramref name="t"/> is 1, the value of <paramref name="b"/> is returned.
+        /// When <paramref name="t"/> is 0.5, the midpoint of <paramref name="a"/> and <paramref name="b"/> is returned.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double Lerp(double a, double b, double t) => a + (b - a) * t;
     }
 }

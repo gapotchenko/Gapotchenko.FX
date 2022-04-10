@@ -44,7 +44,7 @@ class Program
                     break;
             }
 
-            // Move to next sentence.
+            // Move to the next sentence.
             match = match.NextMatch();
         }
 

@@ -62,7 +62,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         /// <param name="args">A sequence of arguments.</param>
         /// <returns>The command line.</returns>
-        public static string Build(IEnumerable<string> args)
+        public static string Build(IEnumerable<string?> args)
         {
             if (args == null)
                 throw new ArgumentNullException(nameof(args));
@@ -78,6 +78,6 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         /// <param name="args">An array of arguments.</param>
         /// <returns>The command line.</returns>
-        public static string Build(params string[] args) => Build((IEnumerable<string>)args);
+        public static string Build(params string?[] args) => Build((IEnumerable<string?>)args);
     }
 }
