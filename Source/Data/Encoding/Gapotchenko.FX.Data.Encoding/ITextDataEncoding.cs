@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Gapotchenko.FX.Data.Encoding
@@ -19,8 +18,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="data">The input array of bytes.</param>
         /// <returns>The string representation of the contents of <paramref name="data"/>.</returns>
-        [return: NotNullIfNotNull("data")]
-        string? GetString(ReadOnlySpan<byte> data);
+        string GetString(ReadOnlySpan<byte> data);
 
         /// <summary>
         /// Encodes an array of bytes to its equivalent string representation with specified options.
@@ -28,16 +26,14 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="data">The input array of bytes.</param>
         /// <param name="options">The options.</param>
         /// <returns>The string representation of the contents of <paramref name="data"/>.</returns>
-        [return: NotNullIfNotNull("data")]
-        string? GetString(ReadOnlySpan<byte> data, DataEncodingOptions options);
+        string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <summary>
         /// Decodes the specified string to an equivalent array of bytes.
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("s")]
-        byte[]? GetBytes(ReadOnlySpan<char> s);
+        byte[] GetBytes(ReadOnlySpan<char> s);
 
         /// <summary>
         /// Decodes the specified string to an equivalent array of bytes with specified options.
@@ -45,8 +41,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="s">The string to decode.</param>
         /// <param name="options">The options.</param>
         /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("s")]
-        byte[]? GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options);
+        byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options);
 
         /// <summary>
         /// Creates a streaming encoder.
@@ -69,15 +64,13 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="s">The encoded string to pad.</param>
         /// <returns>The padded encoded string.</returns>
-        [return: NotNullIfNotNull("s")]
-        string? Pad(ReadOnlySpan<char> s);
+        string Pad(ReadOnlySpan<char> s);
 
         /// <summary>
         /// Unpads the encoded string.
         /// </summary>
         /// <param name="s">The encoded string to unpad.</param>
         /// <returns>The unpadded encoded string.</returns>
-        [return: NotNullIfNotNull("s")]
         ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s);
 
         /// <summary>
@@ -92,8 +85,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="s">The encoded string.</param>
         /// <returns>The canonicalized encoded string.</returns>
-        [return: NotNullIfNotNull("s")]
-        string? Canonicalize(ReadOnlySpan<char> s);
+        string Canonicalize(ReadOnlySpan<char> s);
 
         /// <summary>
         /// Calculates the maximum number of characters produced by encoding the specified number of bytes.

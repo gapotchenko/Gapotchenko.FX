@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework></TargetFramework>
+    <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
 
   <Import Project="$(MasteringDir)\OOB\System.Memory.targets" />
