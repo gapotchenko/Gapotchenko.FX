@@ -6,7 +6,7 @@ The module provides the implementation of checksum algorithms belonging to CRC-1
 
 ## Quick Start
 
-Use the following code to calculate a CRC-16 checksum for the specified data, be it `System.Byte[]`, `System.ReadOnlySpan<Byte>` or `System.IO.Stream`::
+Use the following code to calculate a CRC-16 checksum for the specified data, be it `System.Byte[]`, `System.ReadOnlySpan<Byte>` or `System.IO.Stream`:
 
 ``` c#
 using Gapotchenko.FX.Data.Integrity.Checksum;
