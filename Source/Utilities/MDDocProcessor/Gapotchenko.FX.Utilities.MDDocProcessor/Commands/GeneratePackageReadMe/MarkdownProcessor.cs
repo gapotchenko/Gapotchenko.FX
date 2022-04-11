@@ -103,8 +103,10 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
                 if (i.Url == null)
                     continue;
 
+                var uriUsage = i.IsImage ? RepositoryUriUsage.Resource : RepositoryUriUsage.Link;
+
                 var uri = new Uri(i.Url, UriKind.RelativeOrAbsolute);
-                uri = TryMapUri(uri);
+                uri = TryMapUri(uri, uriUsage);
                 if (uri != null)
                 {
                     i.Url = uri.ToString();
@@ -113,10 +115,10 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
             }
         }
 
-        public Uri? TryMapUri(Uri uri)
+        public Uri? TryMapUri(Uri uri, RepositoryUriUsage usage)
         {
             var absoluteUri = new Uri(_BaseUri, uri);
-            var newUri = RepositoryService.TryMapUri(absoluteUri);
+            var newUri = RepositoryService.TryMapUri(absoluteUri, usage);
             if (newUri != null)
                 return newUri;
 

@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Text;
+using Gapotchenko.FX.Utilities.MDDocProcessor.Vcs;
 using Markdig;
 using Markdig.Renderers.Roundtrip;
 using Mono.Options;
@@ -145,7 +146,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
                     continue;
 
                 var uri = new Uri(g.Value, UriKind.RelativeOrAbsolute);
-                var newUri = mdProcessor.TryMapUri(uri);
+                var newUri = mdProcessor.TryMapUri(uri, RepositoryUriUsage.Link);
                 if (newUri != null)
                     se.Replace(g, newUri.ToString());
             }

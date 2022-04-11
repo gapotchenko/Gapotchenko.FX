@@ -40,7 +40,7 @@
                 Path.Combine(RootPath, ".git", "ORIG_HEAD"))
             .Trim();
 
-        public static Uri? TryMapUri(Uri uri)
+        public static Uri? TryMapUri(Uri uri, RepositoryUriUsage usage)
         {
             string? localPath = null;
 
@@ -83,7 +83,10 @@
                     s = s[0..j];
                 }
 
-                bool raw = query?.Contains("raw=true") == true;
+                bool raw =
+                    usage == RepositoryUriUsage.Resource ||
+                    query?.Contains("raw=true") == true;
+
                 bool blob = Path.GetExtension(s).ToLowerInvariant() is ".png" or ".jpg" or ".jpeg" or ".gif";
 
                 string? packageName = null;
