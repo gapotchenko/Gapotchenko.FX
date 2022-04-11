@@ -268,7 +268,7 @@ In this way, the default .NET assembly loader can always load the assembly despi
 
 Another point to consider is **how to select a point of assembly loader installation** that is early enough in the assembly lifecycle.
 This tends to be trivial for an app: the first few lines of the main entry point are good to go.
-But it may be hard to do so for a class library due to the sheer width of the public API surface.
+But it may be hard to do so for a class library due to the sheer breadth of the public API surface.
 An assembly loader can then be installed at the module initializer of a class library to overcome that dilemma.
 
 A module initializer can be seen as a constructor for an assembly (technically, it is a constructor for a module; each .NET assembly is comprised of one or more modules, typically just one).
