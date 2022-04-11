@@ -268,10 +268,13 @@ In this way, the default .NET assembly loader can always load the assembly despi
 
 Another point to consider is **how to select a point of assembly loader installation** that is early enough in the assembly lifecycle.
 This tends to be trivial for an app: the first few lines of the main entry point are good to go.
-But it may be hard to do for a class library. Sometimes it gets totally infeasible when public API surface of a library gets wide enough.
-To overcome that dilemma, assembly loader can be installed at module initializer of a class library.
+But it may be hard to do so for a class library due to the sheer width of the public API surface.
+An assembly loader can then be installed at the module initializer of a class library to overcome that dilemma.
 
-[Fody/ModuleInit](https://github.com/Fody/ModuleInit) is an example of tool that gives access to .NET module initialization functionality from high-level programming languages like C#/VB.NET. Another option is to use more specialized tool like [Eazfuscator.NET](https://www.gapotchenko.com/eazfuscator.net) that provides not only [module initialization functionality](https://help.gapotchenko.com/eazfuscator.net/63/sensei-features/module-initializers), but also intellectual property protection.
+A module initializer can be seen as a constructor for an assembly (technically, it is a constructor for a module; each .NET assembly is comprised of one or more modules, typically just one).
+
+[Fody/ModuleInit](https://github.com/Fody/ModuleInit) is an example of a tool that gives access to .NET module initialization functionality from high-level programming languages like C#/VB.NET.
+Another option is to use a more specialized tool like [Eazfuscator.NET](https://www.gapotchenko.com/eazfuscator.net) that provides not only [module initialization functionality](https://help.gapotchenko.com/eazfuscator.net/63/sensei-features/module-initializers), but also intellectual property protection.
 
 Please note that some .NET languages provide the out of the box support for module initializers.
 For example, C# starting with version 9.0 treats all static methods marked with [`ModuleInitializerAttribute`](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.moduleinitializerattribute) as module initializers.
