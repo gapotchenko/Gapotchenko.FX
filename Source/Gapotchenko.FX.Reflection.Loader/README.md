@@ -287,7 +287,7 @@ The example of such an approach is presented below:
 using Gapotchenko.FX.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace MyLibarary
+namespace MyLibrary
 {
     static class AssemblyLoader
     {
