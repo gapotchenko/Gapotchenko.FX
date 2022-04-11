@@ -11,7 +11,7 @@
 
 The module provides versatile primitives that can be used to automatically lookup and load assembly dependencies in various dynamic scenarios.
 
-<hr/>
+-----------------------------------------------------------------------------
 
 ![The Assembly Loader](../../Documentation/Assets/the-assembly-loader.png)
 
@@ -24,7 +24,7 @@ The good thing is .NET comes pre-equipped with a default assembly loader, which 
 However, there are situations when having a default assembly loader is just not enough.
 This is where `Gapotchenko.FX.Reflection.Loader` module becomes extremely handy.
 
-<hr/>
+-----------------------------------------------------------------------------
 
 ## Scenario #1. Load dependent assemblies from an app's outside folder
 
@@ -257,7 +257,7 @@ namespace MyPlugin
 There are a lot of projects that may need automatic handling of DLL binding redirects: T4 templates, MSBuild tasks, plugins, extensions etc.
 Basically everything that gets dynamically loaded and depends on one or more NuGet packages with mishmash of versions.
 
-<hr/>
+-----------------------------------------------------------------------------
 
 ![Chicken & Egg Dilemma](../../Documentation/Assets/chicken-and-egg-dilemma.png)
 
@@ -279,7 +279,7 @@ For example, C# starting with version 9.0 treats all static methods marked with 
 While `ModuleInitializerAttribute` is only available in .NET 5.0 and newer, the whole concept is perfectly functional with any .NET version once attribute definition is in place.
 That's why [`Gapotchenko.FX`](../Gapotchenko.FX) module provides a ready to use [polyfill for that attribute](../Gapotchenko.FX/Runtime/CompilerServices/ModuleInitializerAttribute.cs).
 
-<hr/>
+-----------------------------------------------------------------------------
 
 ## Usage
 
