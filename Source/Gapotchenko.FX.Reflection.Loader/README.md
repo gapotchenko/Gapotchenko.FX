@@ -259,7 +259,7 @@ Basically everything that gets dynamically loaded and depends on one or more NuG
 
 -----------------------------------------------------------------------------
 
-## Chicken & Egg Dilemma
+## A Chicken & Egg Dilemma
 
 `Gapotchenko.FX.Reflection.Loader` module is distributed as a NuGet package with a single assembly file without dependencies.
 
