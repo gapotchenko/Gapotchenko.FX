@@ -13,7 +13,7 @@ The module provides versatile primitives that can be used to automatically looku
 
 -----------------------------------------------------------------------------
 
-![The Assembly Loader](../../Documentation/Assets/the-assembly-loader.png)
+## The Assembly Loader
 
 Assembly loading plays a crucial role in .NET apps.
 Once the app is started, .NET runtime ensures that all required assemblies are gradually loaded.
@@ -259,7 +259,7 @@ Basically everything that gets dynamically loaded and depends on one or more NuG
 
 -----------------------------------------------------------------------------
 
-![Chicken & Egg Dilemma](../../Documentation/Assets/chicken-and-egg-dilemma.png)
+## Chicken & Egg Dilemma
 
 `Gapotchenko.FX.Reflection.Loader` module is distributed as a NuGet package with a single assembly file without dependencies.
 
