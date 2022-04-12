@@ -62,6 +62,11 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// Pads the encoded string.
         /// </summary>
+        /// <remarks>
+        /// In some encodings, the length of an encoded string must be a multiple of the predefined number of characters.
+        /// This method adds padding characters at the end of the specified string as needed in order to meet this requirement.
+        /// The added suffix is called padding.
+        /// </remarks>
         /// <param name="s">The encoded string to pad.</param>
         /// <returns>The padded encoded string.</returns>
         string Pad(ReadOnlySpan<char> s);
@@ -74,7 +79,12 @@ namespace Gapotchenko.FX.Data.Encoding
         ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s);
 
         /// <summary>
+        /// <para>
         /// Gets a value indicating whether the current encoding supports canonicalization.
+        /// </para>
+        /// <para>
+        /// Canonicalization is the process of normalization of the encoded symbols with their canonical forms.
+        /// </para>
         /// </summary>
         bool CanCanonicalize { get; }
 
