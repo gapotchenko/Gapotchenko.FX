@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Data.Encoding
     {
         internal const string Symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-        private Base64() :
+        Base64() :
             base(new TextDataEncodingAlphabet(Symbols))
         {
         }
