@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Defines the interface of a binary-to-text encoding based on positional numeral system.
+    /// Defines the interface of a binary-to-text encoding based on a positional numeral system.
     /// </summary>
     public interface IRadixTextDataEncoding : ITextDataEncoding
     {

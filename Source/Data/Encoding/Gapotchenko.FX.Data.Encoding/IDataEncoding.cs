@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Gapotchenko.FX.Data.Encoding
@@ -33,8 +32,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         /// <param name="data">The input data.</param>
         /// <returns>The encoded output data.</returns>
-        [return: NotNullIfNotNull("data")]
-        byte[]? EncodeData(ReadOnlySpan<byte> data);
+        byte[] EncodeData(ReadOnlySpan<byte> data);
 
         /// <summary>
         /// Encodes the data with specified options.
@@ -42,16 +40,14 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="data">The input data.</param>
         /// <param name="options">The options.</param>
         /// <returns>The encoded output data.</returns>
-        [return: NotNullIfNotNull("data")]
-        byte[]? EncodeData(ReadOnlySpan<byte> data, DataEncodingOptions options);
+        byte[] EncodeData(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <summary>
         /// Decodes the data.
         /// </summary>
         /// <param name="data">The encoded input data.</param>
         /// <returns>The decoded output data.</returns>
-        [return: NotNullIfNotNull("data")]
-        byte[]? DecodeData(ReadOnlySpan<byte> data);
+        byte[] DecodeData(ReadOnlySpan<byte> data);
 
         /// <summary>
         /// Decodes the data with specified options.
@@ -59,11 +55,15 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="data">The encoded input data.</param>
         /// <param name="options">The options.</param>
         /// <returns>The decoded output data.</returns>
-        [return: NotNullIfNotNull("data")]
-        byte[]? DecodeData(ReadOnlySpan<byte> data, DataEncodingOptions options);
+        byte[] DecodeData(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <summary>
-        /// Gets a value indicating whether the current encoding supports streaming.
+        /// <para>
+        /// Gets a value indicating whether the current encoding supports streaming operations.
+        /// </para>
+        /// <para>
+        /// Streaming operations are represented by <see cref="CreateEncoder(Stream, DataEncodingOptions)"/> and <see cref="CreateDecoder(Stream, DataEncodingOptions)"/> methods.\
+        /// </para>
         /// </summary>
         bool CanStream { get; }
 
@@ -73,6 +73,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="outputStream">The output stream of an encoder.</param>
         /// <param name="options">The options.</param>
         /// <returns>The stream.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="outputStream"/> argument is <see langword="null"/>.</exception>
+        /// <exception cref="NotSupportedException">The encoding does not support streaming operations.</exception>
         Stream CreateEncoder(Stream outputStream, DataEncodingOptions options = DataEncodingOptions.None);
 
         /// <summary>
@@ -81,6 +83,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="inputStream">The input stream of a decoder.</param>
         /// <param name="options">The options.</param>
         /// <returns>The stream.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="inputStream"/> argument is <see langword="null"/>.</exception>
+        /// <exception cref="NotSupportedException">The encoding does not support streaming operations.</exception>
         Stream CreateDecoder(Stream inputStream, DataEncodingOptions options = DataEncodingOptions.None);
 
         /// <summary>
@@ -89,7 +93,7 @@ namespace Gapotchenko.FX.Data.Encoding
         bool CanPad { get; }
 
         /// <summary>
-        /// Gets the number of symbols for padding of an encoded data representation.
+        /// Gets the number of symbols for padding of the encoded data representation.
         /// </summary>
         int Padding { get; }
 
