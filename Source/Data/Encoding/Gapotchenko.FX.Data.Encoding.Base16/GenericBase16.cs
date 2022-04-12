@@ -22,7 +22,7 @@ namespace Gapotchenko.FX.Data.Encoding
             if (alphabet.Size != Base)
             {
                 throw new ArgumentException(
-                    string.Format("The alphabet size of {0} encoding should be {1}.", this, Base),
+                    string.Format("The alphabet size for {0} encoding should be equal to {1}.", this, Base),
                     nameof(alphabet));
             }
 
