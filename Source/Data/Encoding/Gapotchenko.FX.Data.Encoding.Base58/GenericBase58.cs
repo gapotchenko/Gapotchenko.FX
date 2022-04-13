@@ -254,10 +254,10 @@ namespace Gapotchenko.FX.Data.Encoding
         public override bool CanStream => false;
 
         /// <inheritdoc/>
-        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => throw new InvalidOperationException();
+        protected override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => throw new NotSupportedException();
 
         /// <inheritdoc/>
-        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => throw new InvalidOperationException();
+        protected override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => throw new NotSupportedException();
 
         /// <inheritdoc/>
         public override bool IsCaseSensitive => Alphabet.IsCaseSensitive;

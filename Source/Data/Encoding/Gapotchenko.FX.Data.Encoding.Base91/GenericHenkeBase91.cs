@@ -192,15 +192,9 @@ namespace Gapotchenko.FX.Data.Encoding
         protected override void CanonicalizeCore(ReadOnlySpan<char> source, Span<char> destination) => Alphabet.Canonicalize(source, destination);
 
         /// <inheritdoc/>
-        protected override int GetMaxCharCountCore(int byteCount, DataEncodingOptions options)
-        {
-            return (int)Math.Ceiling(byteCount / MinEfficiency);
-        }
+        protected override int GetMaxCharCountCore(int byteCount, DataEncodingOptions options) => (int)Math.Ceiling(byteCount / MinEfficiency);
 
         /// <inheritdoc/>
-        protected override int GetMaxByteCountCore(int charCount, DataEncodingOptions options)
-        {
-            return (int)Math.Ceiling(charCount * MaxEfficiency);
-        }
+        protected override int GetMaxByteCountCore(int charCount, DataEncodingOptions options) => (int)Math.Ceiling(charCount * MaxEfficiency);
     }
 }

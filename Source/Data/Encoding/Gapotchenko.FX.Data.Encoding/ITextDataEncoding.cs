@@ -49,6 +49,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="textWriter">The output text writer of an encoder.</param>
         /// <param name="options">The options.</param>
         /// <returns>The stream.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="textWriter"/> argument is <see langword="null"/>.</exception>
+        /// <exception cref="NotSupportedException">The encoding does not support streaming operations.</exception>
         Stream CreateEncoder(TextWriter textWriter, DataEncodingOptions options = DataEncodingOptions.None);
 
         /// <summary>
@@ -57,6 +59,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="textReader">The input text reader of a decoder.</param>
         /// <param name="options">The options.</param>
         /// <returns>The stream.</returns>
+        /// <exception cref="ArgumentNullException">The <paramref name="textReader"/> argument is <see langword="null"/>.</exception>
+        /// <exception cref="NotSupportedException">The encoding does not support streaming operations.</exception>
         Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.None);
 
         /// <summary>

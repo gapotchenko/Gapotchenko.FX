@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// </summary>
     public sealed class Base58 : GenericBase58
     {
-        private Base58() :
+        Base58() :
             base(new TextDataEncodingAlphabet("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"))
         {
         }
