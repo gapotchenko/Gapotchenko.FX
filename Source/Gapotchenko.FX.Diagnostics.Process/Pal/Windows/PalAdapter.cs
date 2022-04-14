@@ -7,15 +7,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
+namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
-    sealed partial class ImplementationAdapter : IImplementationAdapter
+    sealed partial class PalAdapter : IPalAdapter
     {
-        ImplementationAdapter()
+        PalAdapter()
         {
         }
 
-        public static ImplementationAdapter Instance { get; } = new ImplementationAdapter();
+        public static PalAdapter Instance { get; } = new PalAdapter();
 
         public int GetParentProcessId(Process process)
         {
@@ -55,7 +55,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
                     case NativeMethods.ERROR_ACCESS_DENIED:
                         // Process is already attached to a console.
-                        isCurrentProcess = ImplementationServices.IsCurrentProcess(process);
+                        isCurrentProcess = PalServices.IsCurrentProcess(process);
                         if (!isCurrentProcess)
                             return false;
                         break;

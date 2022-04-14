@@ -2,11 +2,11 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
+namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
-    sealed class ProcessMemoryProvider : IProcessMemoryProvider
+    sealed class ProcessMemoryAccessor : IProcessMemoryAccessor
     {
-        public ProcessMemoryProvider(IntPtr hProcess)
+        public ProcessMemoryAccessor(IntPtr hProcess)
         {
             m_hProcess = hProcess;
         }

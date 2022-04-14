@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Gapotchenko.FX.Diagnostics.Implementation
+namespace Gapotchenko.FX.Diagnostics.Pal
 {
-    static class ImplementationServices
+    static class PalServices
     {
         static bool ProcessesAreEquivalent(Process? a, Process? b)
         {
@@ -40,19 +40,19 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
                 Instance = CreateInstance();
             }
 
-            public static IImplementationAdapter? Instance { get; }
+            public static IPalAdapter? Instance { get; }
 
-            static IImplementationAdapter? CreateInstance()
+            static IPalAdapter? CreateInstance()
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    return Windows.ImplementationAdapter.Instance;
+                    return Windows.PalAdapter.Instance;
                 else
                     return null;
             }
         }
 
-        public static IImplementationAdapter? AdapterOrDefault => AdapterFactory.Instance;
+        public static IPalAdapter? AdapterOrDefault => AdapterFactory.Instance;
 
-        public static IImplementationAdapter Adapter => AdapterOrDefault ?? throw new PlatformNotSupportedException();
+        public static IPalAdapter Adapter => AdapterOrDefault ?? throw new PlatformNotSupportedException();
     }
 }

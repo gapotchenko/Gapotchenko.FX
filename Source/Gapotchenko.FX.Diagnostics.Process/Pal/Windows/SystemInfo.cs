@@ -1,4 +1,4 @@
-﻿namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
+﻿namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
     static class SystemInfo
     {

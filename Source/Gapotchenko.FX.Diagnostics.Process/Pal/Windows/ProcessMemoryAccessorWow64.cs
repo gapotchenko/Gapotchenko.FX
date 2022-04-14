@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
+namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
-    sealed class ProcessMemoryProviderWow64 : IProcessMemoryProvider
+    sealed class ProcessMemoryAccessorWow64 : IProcessMemoryAccessor
     {
-        public ProcessMemoryProviderWow64(IntPtr hProcess)
+        public ProcessMemoryAccessorWow64(IntPtr hProcess)
         {
             m_hProcess = hProcess;
         }

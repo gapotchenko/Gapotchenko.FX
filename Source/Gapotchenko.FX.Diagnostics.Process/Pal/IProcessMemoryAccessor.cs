@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Gapotchenko.FX.Diagnostics.Implementation
+namespace Gapotchenko.FX.Diagnostics.Pal
 {
     /// <summary>
     /// Provides low-level access to the process memory.
     /// </summary>
-    interface IProcessMemoryProvider
+    interface IProcessMemoryAccessor
     {
         /// <summary>
         /// Gets the page size measured in bytes according to the granularity of memory access control.

@@ -1,4 +1,4 @@
-﻿using Gapotchenko.FX.Diagnostics.Implementation;
+﻿using Gapotchenko.FX.Diagnostics.Pal;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -22,7 +22,7 @@ namespace Gapotchenko.FX.Diagnostics
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
 
-            return ImplementationServices.Adapter.ReadProcessEnvironmentVariables(process);
+            return PalServices.Adapter.ReadProcessEnvironmentVariables(process);
         }
 
         /// <summary>
@@ -35,11 +35,11 @@ namespace Gapotchenko.FX.Diagnostics
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
 
-            int parentPID = ImplementationServices.Adapter.GetParentProcessId(process);
+            int parentPID = PalServices.Adapter.GetParentProcessId(process);
             try
             {
                 var parentProcess = Process.GetProcessById(parentPID);
-                if (!ImplementationServices.IsValidParentProcess(parentProcess, process))
+                if (!PalServices.IsValidParentProcess(parentProcess, process))
                     return null;
                 return parentProcess;
             }
@@ -106,7 +106,7 @@ namespace Gapotchenko.FX.Diagnostics
             if (fileName != null)
                 return fileName;
 
-            var adapter = ImplementationServices.AdapterOrDefault;
+            var adapter = PalServices.AdapterOrDefault;
             if (adapter != null)
                 return adapter.GetProcessImageFileName(process);
 

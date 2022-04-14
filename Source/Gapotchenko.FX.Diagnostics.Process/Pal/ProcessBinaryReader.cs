@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace Gapotchenko.FX.Diagnostics.Implementation
+namespace Gapotchenko.FX.Diagnostics.Pal
 {
     sealed class ProcessBinaryReader : BinaryReader
     {

@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Gapotchenko.FX.Diagnostics.Implementation
+namespace Gapotchenko.FX.Diagnostics.Pal
 {
-    interface IImplementationAdapter
+    interface IPalAdapter
     {
         int GetParentProcessId(Process process);
         StringDictionary ReadProcessEnvironmentVariables(Process process);

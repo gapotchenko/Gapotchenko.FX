@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
+namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
     static class NativeMethods
     {

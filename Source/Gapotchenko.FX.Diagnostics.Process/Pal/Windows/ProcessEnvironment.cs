@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
+namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
     static partial class ProcessEnvironment
     {
@@ -57,7 +57,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
                 dataSize = _ClampEnvSize(dataSize);
 
-                var provider = new ProcessMemoryProvider(hProcess);
+                var provider = new ProcessMemoryAccessor(hProcess);
                 return new ProcessMemoryStream(provider, penv, dataSize);
             }
             else if (penv.Size == 8 && IntPtr.Size == 4)
@@ -78,7 +78,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
                 dataSize = _ClampEnvSize(dataSize);
 
-                var adapter = new ProcessMemoryProviderWow64(hProcess);
+                var adapter = new ProcessMemoryAccessorWow64(hProcess);
                 return new ProcessMemoryStream(adapter, penv, dataSize);
             }
             else
