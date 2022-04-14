@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// </summary>
     public sealed class FlickrBase58 : GenericBase58
     {
-        private FlickrBase58() :
+        FlickrBase58() :
             base(new TextDataEncodingAlphabet("123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"))
         {
         }

@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Collections.Generic.Kit;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -49,10 +50,10 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Kit
             Assert.Equal(0, s1.Count);
 
             s1 = new SetChimera<int>(new HashSet<int> { 1, 2, 3 });
-            s1.IntersectWith(Empty<int>.Array);
+            s1.IntersectWith(Array.Empty<int>());
             Assert.Equal(0, s1.Count);
 
-            foreach (var s2 in Util.Sets(Empty<int>.Array))
+            foreach (var s2 in Util.Sets(Array.Empty<int>()))
             {
                 s1 = new SetChimera<int>(new HashSet<int> { 1, 2, 3, 4, 5 });
                 s1.IntersectWith(s2);

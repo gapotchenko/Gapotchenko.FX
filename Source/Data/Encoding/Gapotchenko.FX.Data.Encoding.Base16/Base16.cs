@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// </summary>
     public sealed class Base16 : GenericBase16
     {
-        private Base16() :
+        Base16() :
             base(new TextDataEncodingAlphabet("0123456789ABCDEF", false))
         {
         }

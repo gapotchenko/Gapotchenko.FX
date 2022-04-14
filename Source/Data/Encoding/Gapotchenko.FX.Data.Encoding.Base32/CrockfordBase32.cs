@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// </summary>
     public sealed class CrockfordBase32 : GenericCrockfordBase32
     {
-        private CrockfordBase32() : base(
+        CrockfordBase32() : base(
             new TextDataEncodingAlphabet(
                 "0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U",
                 false,

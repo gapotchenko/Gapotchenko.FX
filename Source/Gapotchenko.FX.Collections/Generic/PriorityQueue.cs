@@ -77,7 +77,7 @@ namespace System.Collections.Generic
         /// </summary>
         public PriorityQueue()
         {
-            _nodes = Empty<(TElement, TPriority)>.Array;
+            _nodes = Array.Empty<(TElement, TPriority)>();
             _comparer = InitializeComparer(null);
         }
 
@@ -104,7 +104,7 @@ namespace System.Collections.Generic
         /// </param>
         public PriorityQueue(IComparer<TPriority>? comparer)
         {
-            _nodes = Empty<(TElement, TPriority)>.Array;
+            _nodes = Array.Empty<(TElement, TPriority)>();
             _comparer = InitializeComparer(comparer);
         }
 
@@ -329,7 +329,7 @@ namespace System.Collections.Generic
         {
             if (_size != 0)
             {
-                (TElement Element, TPriority Priority) root = _nodes[0];
+                var root = _nodes[0];
 
                 if (_comparer == null)
                 {
@@ -582,12 +582,12 @@ namespace System.Collections.Generic
         /// <summary>
         /// Gets the index of an element's parent.
         /// </summary>
-        int GetParentIndex(int index) => (index - 1) >> Log2Arity;
+        static int GetParentIndex(int index) => (index - 1) >> Log2Arity;
 
         /// <summary>
         /// Gets the index of the first child of an element.
         /// </summary>
-        int GetFirstChildIndex(int index) => (index << Log2Arity) + 1;
+        static int GetFirstChildIndex(int index) => (index << Log2Arity) + 1;
 
         /// <summary>
         /// Converts an unordered list into a heap.

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Security.Cryptography
@@ -28,7 +29,7 @@ namespace Gapotchenko.FX.Security.Cryptography
             ModeValue = CipherMode.ECB;
             PaddingValue = PaddingMode.None;
 
-            IVValue = Empty<byte>.Array;
+            IVValue = Array.Empty<byte>();
         }
 
         /// <inheritdoc/>

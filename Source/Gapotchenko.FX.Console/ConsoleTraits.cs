@@ -107,7 +107,10 @@ namespace Gapotchenko.FX.Console
                     var parentProcess = Process.GetCurrentProcess().GetParent();
                     return
                         parentProcess != null &&
-                        Path.GetFileName(parentProcess.GetImageFileName()).Equals("Explorer.EXE", StringComparison.OrdinalIgnoreCase);
+                        string.Equals(
+                            Path.GetFileName(parentProcess.GetImageFileName()),
+                            "explorer.exe",
+                            StringComparison.OrdinalIgnoreCase);
                 }
                 catch (Exception e) when (!e.IsControlFlowException())
                 {

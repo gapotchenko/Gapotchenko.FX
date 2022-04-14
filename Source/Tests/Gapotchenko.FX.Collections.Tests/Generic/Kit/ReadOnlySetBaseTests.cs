@@ -29,7 +29,7 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Kit
             foreach (var s in Util.Sets(new[] { 1, 2, 3 }))
                 Assert.True(s2.IsProperSubsetOf(s));
 
-            foreach (var s in Util.Sets(Empty<int>.Array))
+            foreach (var s in Util.Sets(Array.Empty<int>()))
                 Assert.False(s2.IsProperSubsetOf(s));
 
             foreach (var s in Util.SetsEnumerable(s2))
@@ -41,7 +41,7 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Kit
         {
             var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 3, 2, 1 });
 
-            foreach (var s in Util.Sets(Empty<int>.Array))
+            foreach (var s in Util.Sets(Array.Empty<int>()))
                 Assert.True(s1.IsProperSupersetOf(s));
 
             foreach (var s in Util.Sets(new[] { 1, 2 }))
@@ -61,7 +61,7 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Kit
             foreach (var s in Util.Sets(new[] { 1, 2, 3 }))
                 Assert.False(s2.IsProperSupersetOf(s));
 
-            foreach (var s in Util.Sets(Empty<int>.Array))
+            foreach (var s in Util.Sets(Array.Empty<int>()))
                 Assert.False(s2.IsProperSupersetOf(s));
 
             foreach (var s in Util.SetsEnumerable(s2))
@@ -90,7 +90,7 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Kit
             foreach (var s in Util.Sets(new[] { 1, 2, 3 }))
                 Assert.True(s2.IsSubsetOf(s));
 
-            foreach (var s in Util.Sets(Empty<int>.Array))
+            foreach (var s in Util.Sets(Array.Empty<int>()))
                 Assert.True(s2.IsSubsetOf(s));
 
             foreach (var s in Util.SetsEnumerable(s2))
@@ -102,7 +102,7 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Kit
         {
             var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 3, 2, 1 });
 
-            foreach (var s in Util.Sets(Empty<int>.Array))
+            foreach (var s in Util.Sets(Array.Empty<int>()))
                 Assert.True(s1.IsSupersetOf(s));
 
             foreach (var s in Util.Sets(new[] { 1, 2 }))
@@ -123,7 +123,7 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Kit
         {
             var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 3, 2, 1 });
 
-            foreach (var s in Util.Sets(Empty<int>.Array))
+            foreach (var s in Util.Sets(Array.Empty<int>()))
                 Assert.False(s1.Overlaps(s));
 
             foreach (var s in Util.Sets(new[] { 1, 2 }))
@@ -167,7 +167,7 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Kit
         {
             var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 3, 2, 1 });
 
-            foreach (var s in Util.Sets(Empty<int>.Array))
+            foreach (var s in Util.Sets(Array.Empty<int>()))
                 Assert.False(s1.SetEquals(s));
 
             foreach (var s in Util.Sets(new[] { 1, 2 }))

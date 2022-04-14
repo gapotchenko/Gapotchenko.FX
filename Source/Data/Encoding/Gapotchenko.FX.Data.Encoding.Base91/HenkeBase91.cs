@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// </summary>
     public sealed class HenkeBase91 : GenericHenkeBase91
     {
-        private HenkeBase91() :
+        HenkeBase91() :
             base(new TextDataEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~\"", true))
         {
         }

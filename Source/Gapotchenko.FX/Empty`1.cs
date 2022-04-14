@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace Gapotchenko.FX
@@ -10,37 +10,16 @@ namespace Gapotchenko.FX
     /// <typeparam name="T">The type.</typeparam>
     public static class Empty<T>
     {
-#if !TFF_ARRAY_EMPTY
-        static class ArrayFactory
-        {
-            public static readonly T[] Array = new T[0];
-        }
-#endif
-
         /// <summary>
         /// Returns an empty array.
         /// </summary>
-        public static T[] Array =>
-#if !TFF_ARRAY_EMPTY
-            ArrayFactory.Array;
-#else
-            System.Array.Empty<T>();
-#endif
+        [Obsolete("Use System.Array.Empty<T>() instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static T[] Array => System.Array.Empty<T>();
 
         static class TaskFactory
         {
-            public static readonly Task<T> Task = FromResult(default);
-
-            static Task<T> FromResult([AllowNull] T value)
-            {
-#if !TFF_TASK_FROMRESULT
-                var tcs = new TaskCompletionSource<T>();
-                tcs.SetResult(value);
-                return tcs.Task;
-#else
-                return System.Threading.Tasks.Task.FromResult(value!);
-#endif
-            }
+            public static readonly Task<T> Task = System.Threading.Tasks.Task.FromResult(default(T)!);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors
 {
@@ -15,7 +16,7 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors
         /// <summary>
         /// Gets or sets the key.
         /// </summary>
-        public byte[] Key { get; set; } = Empty<byte>.Array;
+        public byte[] Key { get; set; } = Array.Empty<byte>();
 
         /// <summary>
         /// Represents a chunk of data in the key stream at the given offset.
@@ -30,7 +31,7 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors
             /// <summary>
             /// Gets or sets the data representing an expected key stream at the given offset.
             /// </summary>
-            public byte[] Data { get; set; } = Empty<byte>.Array;
+            public byte[] Data { get; set; } = Array.Empty<byte>();
         }
 
         /// <summary>

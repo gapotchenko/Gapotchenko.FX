@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// </summary>
     public sealed class KuonBase24 : GenericKuonBase24
     {
-        private KuonBase24() :
+        KuonBase24() :
             base(new TextDataEncodingAlphabet("ZAC2B3EF4GH5TK67P8RS9WXY", false))
         {
         }

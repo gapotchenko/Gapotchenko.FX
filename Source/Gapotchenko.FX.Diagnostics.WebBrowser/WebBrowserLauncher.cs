@@ -87,7 +87,7 @@ namespace Gapotchenko.FX.Diagnostics
         {
             try
             {
-                Process.Start(fileName, arguments);
+                Process.Start(fileName, arguments ?? string.Empty);
             }
             catch (Exception e) when (!e.IsControlFlowException())
             {

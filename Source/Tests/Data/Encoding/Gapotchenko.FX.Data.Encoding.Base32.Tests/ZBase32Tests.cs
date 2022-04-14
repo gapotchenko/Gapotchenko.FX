@@ -49,7 +49,7 @@ namespace Gapotchenko.FX.Data.Encoding.Tests
         static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);
 
         [TestMethod]
-        public void ZBase32_Empty() => TestVector(new byte[0], "");
+        public void ZBase32_Empty() => TestVector(Array.Empty<byte>(), "");
 
         [TestMethod]
         public void ZBase32_Bytes_TV1() => TestVector(new byte[] { 240, 191, 199 }, "6n9hq");

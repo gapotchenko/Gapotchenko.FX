@@ -416,7 +416,7 @@ namespace Gapotchenko.FX.Data.Encoding
             readonly DataEncodingOptions m_Options;
 
             readonly int m_BufferSize;
-            MemoryStream m_Buffer;
+            readonly MemoryStream m_Buffer;
 
             public override bool CanRead => true;
 
@@ -772,22 +772,6 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="paddingChar">The padding character.</param>
         /// <returns>The padded encoded string.</returns>
         protected string PadLeft(ReadOnlySpan<char> s, char paddingChar) => Pad(s, paddingChar, false);
-
-        /// <summary>
-        /// Unpads the encoded string from the right side.
-        /// </summary>
-        /// <param name="s">The encoded string.</param>
-        /// <param name="paddingChar">The padding character.</param>
-        /// <returns>The unpadded encoded string.</returns>
-        protected ReadOnlySpan<char> UnpadRight(ReadOnlySpan<char> s, char paddingChar) => s.TrimEnd(paddingChar);
-
-        /// <summary>
-        /// Unpads the encoded string from the left side.
-        /// </summary>
-        /// <param name="s">The encoded string.</param>
-        /// <param name="paddingChar">The padding character.</param>
-        /// <returns>The unpadded encoded string.</returns>
-        protected ReadOnlySpan<char> UnpadLeft(ReadOnlySpan<char> s, char paddingChar) => s.TrimStart(paddingChar);
 
         /// <summary>
         /// Maximum number of characters in a line terminator.
