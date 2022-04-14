@@ -55,8 +55,6 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                 if (!_HasReadAccess(hProcess, penv, out dataSize))
                     throw new Exception("Unable to read environment block.");
 
-                dataSize = _ClampEnvSize(dataSize);
-
                 var provider = new ProcessMemoryAccessor(hProcess);
                 return new ProcessMemoryStream(provider, penv, dataSize);
             }
@@ -76,8 +74,6 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                     dataSize = -1;
                 }
 
-                dataSize = _ClampEnvSize(dataSize);
-
                 var adapter = new ProcessMemoryAccessorWow64(hProcess);
                 return new ProcessMemoryStream(adapter, penv, dataSize);
             }
@@ -85,19 +81,6 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             {
                 throw new Exception("Unable to access process memory due to unsupported bitness cardinality.");
             }
-        }
-
-        static int _ClampEnvSize(int size)
-        {
-            int maxSize = EnvironmentInfo.MaxSize;
-
-            if (maxSize != -1)
-            {
-                if (size == -1 || size > maxSize)
-                    size = maxSize;
-            }
-
-            return size;
         }
 
         static StringDictionary _ReadEnv(ProcessBinaryReader br)
