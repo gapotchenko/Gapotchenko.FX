@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Diagnostics.Pal
+﻿namespace Gapotchenko.FX.Diagnostics.Pal
 {
     /// <summary>
     /// Provides low-level access to the process memory.

@@ -55,7 +55,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 
                     case NativeMethods.ERROR_ACCESS_DENIED:
                         // Process is already attached to a console.
-                        isCurrentProcess = PalServices.IsCurrentProcess(process);
+                        isCurrentProcess = ProcessHelper.IsCurrentProcess(process);
                         if (!isCurrentProcess)
                             return false;
                         break;

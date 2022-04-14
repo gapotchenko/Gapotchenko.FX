@@ -251,7 +251,7 @@ namespace Gapotchenko.FX.Diagnostics
 
         static bool _TryExitProcess(Process process)
         {
-            if (!PalServices.IsCurrentProcess(process))
+            if (!ProcessHelper.IsCurrentProcess(process))
                 return false;
             Environment.Exit(1);
             return true;

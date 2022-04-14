@@ -39,7 +39,7 @@ namespace Gapotchenko.FX.Diagnostics
             try
             {
                 var parentProcess = Process.GetProcessById(parentPID);
-                if (!PalServices.IsValidParentProcess(parentProcess, process))
+                if (!ProcessHelper.IsValidParentProcess(parentProcess, process))
                     return null;
                 return parentProcess;
             }
