@@ -111,7 +111,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
             }
         }
 
-        public string GetProcessImageFileName(Process process)
+        public string? GetProcessImageFileName(Process process)
         {
             var sb = new StringBuilder(NativeMethods.MAX_PATH);
             for (; ; )

@@ -5,22 +5,22 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
 {
     sealed class ProcessMemoryStream : Stream
     {
-        public ProcessMemoryStream(IProcessMemoryAdapter adapter, UniPtr baseAddress, long regionLength)
+        public ProcessMemoryStream(IProcessMemoryProvider provider, UniPtr baseAddress, long regionLength)
         {
-            m_Adapter = adapter;
+            m_Provider = provider;
             m_BaseAddress = baseAddress;
             m_RegionLength = regionLength;
 
-            m_PageSize = (uint)adapter.PageSize;
+            m_PageSize = (uint)provider.PageSize;
             m_FirstPageAddress = GetPageLowerBound(baseAddress);
         }
 
-        IProcessMemoryAdapter m_Adapter;
-        UniPtr m_BaseAddress;
-        long m_RegionLength;
+        readonly IProcessMemoryProvider m_Provider;
+        readonly UniPtr m_BaseAddress;
+        readonly long m_RegionLength;
 
-        uint m_PageSize;
-        UniPtr m_FirstPageAddress;
+        readonly uint m_PageSize;
+        readonly UniPtr m_FirstPageAddress;
 
         public override bool CanRead => true;
 
@@ -100,7 +100,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
 
                 bool throwOnError = pageStart == m_FirstPageAddress;
 
-                int r = m_Adapter.ReadMemory(addr, buffer, offset, currentCount, throwOnError);
+                int r = m_Provider.ReadMemory(addr, buffer, offset, currentCount, throwOnError);
                 if (r <= 0)
                 {
                     if (throwOnError)

@@ -57,8 +57,8 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
                 dataSize = _ClampEnvSize(dataSize);
 
-                var adapter = new ProcessMemoryAdapter(hProcess);
-                return new ProcessMemoryStream(adapter, penv, dataSize);
+                var provider = new ProcessMemoryProvider(hProcess);
+                return new ProcessMemoryStream(provider, penv, dataSize);
             }
             else if (penv.Size == 8 && IntPtr.Size == 4)
             {
@@ -78,7 +78,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation.Windows
 
                 dataSize = _ClampEnvSize(dataSize);
 
-                var adapter = new ProcessMemoryAdapterWow64(hProcess);
+                var adapter = new ProcessMemoryProviderWow64(hProcess);
                 return new ProcessMemoryStream(adapter, penv, dataSize);
             }
             else

@@ -54,6 +54,5 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
         public static IImplementationAdapter? AdapterOrDefault => AdapterFactory.Instance;
 
         public static IImplementationAdapter Adapter => AdapterOrDefault ?? throw new PlatformNotSupportedException();
-
     }
 }

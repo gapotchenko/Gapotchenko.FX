@@ -5,7 +5,7 @@ namespace Gapotchenko.FX.Diagnostics.Implementation
     /// <summary>
     /// Provides low-level access to the process memory.
     /// </summary>
-    interface IProcessMemoryAdapter
+    interface IProcessMemoryProvider
     {
         /// <summary>
         /// Gets the page size measured in bytes according to the granularity of memory access control.
