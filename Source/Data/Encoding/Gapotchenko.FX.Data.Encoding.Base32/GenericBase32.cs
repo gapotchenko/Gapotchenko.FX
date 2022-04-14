@@ -52,7 +52,7 @@ namespace Gapotchenko.FX.Data.Encoding
         protected const int Base = 1 << BitsPerSymbol;
 
         /// <summary>
-        /// Number of bits per symbol.
+        /// Number of bits per encoded symbol.
         /// </summary>
         protected const int BitsPerSymbol = 5;
 
@@ -93,14 +93,13 @@ namespace Gapotchenko.FX.Data.Encoding
         const DataEncodingOptions FormatMask = DataEncodingOptions.Wrap | DataEncodingOptions.Indent;
 
         /// <summary>
-        /// Mathematical shift to the right.
-        /// Shifts the specified value to the right when <paramref name="n"/> is positive or to the left when <paramref name="n"/> is negative.
+        /// Shifts <see cref="UInt64"/> value by specified number of bits to the right when <paramref name="n"/> is positive or to the left when <paramref name="n"/> is negative.
         /// </summary>
         /// <param name="x">The value.</param>
-        /// <param name="n">The number of bits to shift.</param>
+        /// <param name="n">The number of bits to shift by.</param>
         /// <returns>The shifted value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private protected static ulong ShiftRight(ulong x, int n) => n >= 0 ? x >> n : x << -n;
+        private protected static ulong Shift(ulong x, int n) => n >= 0 ? x >> n : x << -n;
 
         private protected abstract class CodecContextBase
         {
@@ -162,7 +161,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 do
                 {
                     s -= BitsPerSymbol;
-                    m_Buffer[i++] = alphabet[(int)ShiftRight(m_Bits, s) & SymbolMask];
+                    m_Buffer[i++] = alphabet[(int)Shift(m_Bits, s) & SymbolMask];
                 }
                 while (s > 0);
 
@@ -220,14 +219,8 @@ namespace Gapotchenko.FX.Data.Encoding
                     {
                         m_Modulus = 0;
 
-                        m_Buffer[0] = alphabet[(int)(m_Bits >> 35) & SymbolMask];
-                        m_Buffer[1] = alphabet[(int)(m_Bits >> 30) & SymbolMask];
-                        m_Buffer[2] = alphabet[(int)(m_Bits >> 25) & SymbolMask];
-                        m_Buffer[3] = alphabet[(int)(m_Bits >> 20) & SymbolMask];
-                        m_Buffer[4] = alphabet[(int)(m_Bits >> 15) & SymbolMask];
-                        m_Buffer[5] = alphabet[(int)(m_Bits >> 10) & SymbolMask];
-                        m_Buffer[6] = alphabet[(int)(m_Bits >> 5) & SymbolMask];
-                        m_Buffer[7] = alphabet[(int)m_Bits & SymbolMask];
+                        for (int i = 0; i < SymbolsPerEncodedBlock; ++i)
+                            m_Buffer[i] = alphabet[(int)(m_Bits >> ((SymbolsPerEncodedBlock - 1 - i) * BitsPerSymbol)) & SymbolMask];
 
                         EmitLineBreak(output);
                         output.Write(m_Buffer);

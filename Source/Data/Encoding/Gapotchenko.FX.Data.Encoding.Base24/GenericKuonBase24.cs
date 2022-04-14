@@ -64,7 +64,7 @@ namespace Gapotchenko.FX.Data.Encoding
         protected const int Base = 24;
 
         /// <summary>
-        /// Number of bits per symbol.
+        /// Number of bits per encoded symbol.
         /// </summary>
         protected const float BitsPerSymbol = 4.584962500721156181453738943947816f; // = log2(Base) = log2(24)
 

@@ -35,7 +35,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 bool compress =
                     (m_Options & DataEncodingOptions.Compress) != 0 && // compression is only active when it is on and
-                    ((byte)bits != 0 || (bits & ((1UL << bitCount) - 1)) == 0); // the last byte is non-zero or the whole block is filled with zero bits
+                    ((byte)bits != 0 || (bits & ((1ul << bitCount) - 1)) == 0); // the last byte is non-zero or the whole block is filled with zero bits
 
                 int i = 0; // output symbol index
                 int s = bitCount; // shift accumulator
@@ -46,7 +46,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 {
                     s -= BitsPerSymbol;
 
-                    int si = (int)ShiftRight(bits, s) & SymbolMask; // symbol index
+                    int si = (int)Shift(bits, s) & SymbolMask; // symbol index
                     m_Buffer[i++] = alphabet[si]; // map symbol
 
                     if (compress)
@@ -97,7 +97,7 @@ namespace Gapotchenko.FX.Data.Encoding
                 {
                     s -= 8;
 
-                    byte b = (byte)ShiftRight(m_Bits, s);
+                    byte b = (byte)Shift(m_Bits, s);
                     m_Buffer[i++] = b;
 
                     if (b != 0 ||

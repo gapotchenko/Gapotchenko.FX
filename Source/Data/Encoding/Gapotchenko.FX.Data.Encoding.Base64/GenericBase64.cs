@@ -43,7 +43,7 @@ namespace Gapotchenko.FX.Data.Encoding
         protected const int Base = 1 << BitsPerSymbol;
 
         /// <summary>
-        /// Number of bits per symbol.
+        /// Number of bits per encoded symbol.
         /// </summary>
         protected const int BitsPerSymbol = 6;
 
@@ -321,7 +321,7 @@ namespace Gapotchenko.FX.Data.Encoding
             void ValidateIncompleteByte()
             {
                 if ((m_Options & DataEncodingOptions.Relax) == 0)
-                    throw new InvalidDataException($"Cannot decode the last byte due to missing {Name} symbol.");
+                    throw new InvalidDataException($"Cannot decode the last byte due to a missing {Name} symbol.");
             }
 
             void ValidateLastSymbol(int zeroMask)

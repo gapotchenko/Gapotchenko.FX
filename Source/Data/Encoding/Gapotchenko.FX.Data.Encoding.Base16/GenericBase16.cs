@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Data.Encoding
         protected const int Base = 1 << BitsPerSymbol;
 
         /// <summary>
-        /// Number of bits per symbol.
+        /// Number of bits per encoded symbol.
         /// </summary>
         protected const int BitsPerSymbol = 4;
 
