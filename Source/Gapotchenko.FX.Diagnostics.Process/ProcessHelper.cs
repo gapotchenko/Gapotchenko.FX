@@ -23,7 +23,7 @@ namespace Gapotchenko.FX.Diagnostics
             if (parentProcess.StartTime > childProcess.StartTime)
             {
                 // The parent process was started after the child process.
-                // This condition indicates that the real parent process has exited before, and
+                // This condition indicates that a real parent process has exited before, and
                 // its process ID has been reused by another unrelated process.
                 return false;
             }
