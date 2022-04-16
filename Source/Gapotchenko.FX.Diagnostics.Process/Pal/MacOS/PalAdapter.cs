@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Versioning;
 using System.Threading;
@@ -38,7 +38,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.MacOS
 
         public string? GetProcessImageFileName(Process process) => null;
 
-        public StringDictionary ReadProcessEnvironmentVariables(Process process)
+        public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process)
         {
             throw new NotImplementedException();
         }

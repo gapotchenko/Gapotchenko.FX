@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -33,7 +33,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             return pbi.InheritedFromUniqueProcessId.ToInt32();
         }
 
-        public StringDictionary ReadProcessEnvironmentVariables(Process process) => ProcessEnvironment.ReadVariables(process);
+        public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process) => ProcessEnvironment.ReadVariables(process);
 
         public async Task<bool> TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
         {

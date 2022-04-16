@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -13,9 +13,9 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 #endif
     static partial class ProcessEnvironment
     {
-        public static StringDictionary ReadVariables(Process process) => _ReadVariablesCore(process.Handle);
+        public static IReadOnlyDictionary<string, string> ReadVariables(Process process) => _ReadVariablesCore(process.Handle);
 
-        static StringDictionary _ReadVariablesCore(IntPtr hProcess)
+        static IReadOnlyDictionary<string, string> _ReadVariablesCore(IntPtr hProcess)
         {
             int retryCount = 3;
             bool RetryPolicy() => --retryCount > 0;
@@ -83,9 +83,9 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             }
         }
 
-        static StringDictionary _ReadEnv(ProcessBinaryReader br)
+        static IReadOnlyDictionary<string, string> _ReadEnv(ProcessBinaryReader br)
         {
-            var env = new StringDictionary();
+            var env = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
             for (; ; )
             {

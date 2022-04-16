@@ -22,7 +22,17 @@ namespace Gapotchenko.FX.Diagnostics
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
 
-            return PalServices.Adapter.ReadProcessEnvironmentVariables(process);
+            // This is a hacky way to create a StringDictionary with the correct characteristics.
+            // Needs a future review.
+            // One solution is to change the public contract to IReadOnlyDictionary<string, string>.
+            var psi = new ProcessStartInfo();
+            var env = psi.EnvironmentVariables;
+            env.Clear();
+
+            foreach (var i in PalServices.Adapter.ReadProcessEnvironmentVariables(process))
+                env[i.Key] = i.Value;
+
+            return env;
         }
 
         /// <summary>

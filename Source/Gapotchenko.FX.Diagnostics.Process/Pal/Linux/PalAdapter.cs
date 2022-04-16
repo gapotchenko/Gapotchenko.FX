@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -50,11 +50,11 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Linux
 
         public string? GetProcessImageFileName(Process process) => null;
 
-        public StringDictionary ReadProcessEnvironmentVariables(Process process)
+        public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process)
         {
             using var br = new ProcessBinaryReader(File.OpenRead(Invariant($"/proc/{process.Id}/environ")), Encoding.UTF8);
 
-            var env = new StringDictionary();
+            var env = new Dictionary<string, string>(StringComparer.InvariantCulture);
 
             for (; ; )
             {
