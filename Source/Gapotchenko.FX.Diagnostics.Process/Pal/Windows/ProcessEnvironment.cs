@@ -119,7 +119,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                 {
                     // Accessing a 64-bit process from 64-bit host.
 
-                    IntPtr pPeb = _GetPeb64(hProcess);
+                    var pPeb = _GetPeb64(hProcess);
 
                     if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x20, out var ptr))
                         throw new Exception("Unable to read PEB.");
@@ -135,28 +135,28 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 
                     var pPeb = _GetPeb64(hProcess);
 
-                    if (!ProcessMemory.TryReadIntPtrWow64(hProcess, pPeb.ToInt64() + 0x20, out var ptr))
+                    if (!ProcessMemory.TryReadIntPtrWow64(hProcess, pPeb + 0x20, out var ptr))
                         throw new Exception("Unable to read PEB.");
 
-                    if (!ProcessMemory.TryReadIntPtrWow64(hProcess, ptr + 0x80, out var penv))
+                    if (!ProcessMemory.TryReadIntPtrWow64(hProcess, ptr + 0x80, out var pEnv))
                         throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
-                    return new UniPtr(penv);
+                    return pEnv;
                 }
             }
             else
             {
                 // Accessing a 32-bit process from 32-bit host.
 
-                IntPtr pPeb = _GetPeb32(hProcess);
+                var pPeb = _GetPeb32(hProcess);
 
                 if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x10, out var ptr))
                     throw new Exception("Unable to read PEB.");
 
-                if (!ProcessMemory.TryReadIntPtr(hProcess, ptr + 0x48, out var penv))
+                if (!ProcessMemory.TryReadIntPtr(hProcess, ptr + 0x48, out var pEnv))
                     throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
-                return penv;
+                return pEnv;
             }
         }
 

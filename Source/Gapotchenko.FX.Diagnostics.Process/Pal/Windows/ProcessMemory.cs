@@ -37,15 +37,15 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             return status && (int)res_len == dataSize;
         }
 
-        public static unsafe bool TryReadIntPtrWow64(IntPtr hProcess, long address, out long value)
+        public static unsafe bool TryReadIntPtrWow64(IntPtr hProcess, UniPtr address, out UniPtr value)
         {
             long data;
             const int dataSize = sizeof(long);
 
             long res_len = 0;
-            int status = NativeMethods.NtWow64ReadVirtualMemory64(hProcess, address, &data, dataSize, ref res_len);
+            int status = NativeMethods.NtWow64ReadVirtualMemory64(hProcess, address.ToInt64(), &data, dataSize, ref res_len);
 
-            value = data;
+            value = new UniPtr(data);
             return status == NativeMethods.STATUS_SUCCESS && res_len == dataSize;
         }
 
