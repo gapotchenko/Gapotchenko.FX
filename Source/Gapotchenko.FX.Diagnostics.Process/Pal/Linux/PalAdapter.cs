@@ -4,8 +4,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Versioning;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+using static System.FormattableString;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Linux
 {
@@ -22,7 +25,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Linux
 
         public int GetParentProcessId(Process process)
         {
-            using var tr = File.OpenText($"/proc/{process.Id}/status");
+            using var tr = File.OpenText(Invariant($"/proc/{process.Id}/status"));
 
             for (; ; )
             {
@@ -49,7 +52,31 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Linux
 
         public StringDictionary ReadProcessEnvironmentVariables(Process process)
         {
-            throw new NotImplementedException();
+            using var br = new ProcessBinaryReader(File.OpenRead(Invariant($"/proc/{process.Id}/environ")), Encoding.UTF8);
+
+            var env = new StringDictionary();
+
+            for (; ; )
+            {
+                if (br.PeekChar() == -1)
+                {
+                    // End of environment block.
+                    break;
+                }
+
+                var s = br.ReadCString();
+
+                int j = s.IndexOf('=');
+                if (j <= 0)
+                    continue;
+
+                string name = s.Substring(0, j);
+                string value = s.Substring(j + 1);
+
+                env[name] = value;
+            }
+
+            return env;
         }
 
         public Task<bool> TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
