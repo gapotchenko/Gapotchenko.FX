@@ -117,7 +117,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             {
                 if (Environment.Is64BitProcess)
                 {
-                    // Accessing a 64-bit process from 64-bit host.
+                    // Accessing a 64-bit process from the 64-bit host.
 
                     var pPeb = _GetPeb64(hProcess);
 
@@ -131,7 +131,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                 }
                 else
                 {
-                    // Accessing a 64-bit process from 32-bit host.
+                    // Accessing a 64-bit process from the 32-bit host.
 
                     var pPeb = _GetPeb64(hProcess);
 
@@ -146,7 +146,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             }
             else
             {
-                // Accessing a 32-bit process from 32-bit host.
+                // Accessing a 32-bit process from the 32-bit host.
 
                 var pPeb = _GetPeb32(hProcess);
 
@@ -160,67 +160,95 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             }
         }
 
+        /// <summary>
+        /// Gets Process Environment Block (PEB) of a 32-bit process.
+        /// </summary>
+        /// <param name="hProcess">The process handle.</param>
+        /// <returns>The PEB base address.</returns>
         static IntPtr _GetPeb32(IntPtr hProcess)
         {
             if (Environment.Is64BitProcess)
             {
+                // Getting PEB of a 32-bit process from the 64-bit host.
+
                 var ptr = IntPtr.Zero;
-                int res_len = 0;
                 int pbiSize = IntPtr.Size;
+                int res_len = 0;
+
                 int status = NativeMethods.NtQueryInformationProcess(
                     hProcess,
                     NativeMethods.ProcessWow64Information,
                     ref ptr,
                     pbiSize,
                     ref res_len);
+
                 if (status != NativeMethods.STATUS_SUCCESS || res_len != pbiSize)
                     throw new Exception("Unable to query process information.");
+
                 return ptr;
             }
             else
             {
+                // Getting PEB of a 32-bit process from the 32-bit host.
+
                 return _GetPebNative(hProcess);
             }
         }
 
-        static IntPtr _GetPebNative(IntPtr hProcess)
-        {
-            var pbi = new NativeMethods.PROCESS_BASIC_INFORMATION();
-            int res_len = 0;
-            int pbiSize = Marshal.SizeOf(pbi);
-            int status = NativeMethods.NtQueryInformationProcess(
-                hProcess,
-                NativeMethods.ProcessBasicInformation,
-                ref pbi,
-                pbiSize,
-                ref res_len);
-            if (status != NativeMethods.STATUS_SUCCESS || res_len != pbiSize)
-                throw new Exception("Unable to query process information.");
-            return pbi.PebBaseAddress;
-        }
-
+        /// <summary>
+        /// Gets Process Environment Block (PEB) of a 64-bit process.
+        /// </summary>
+        /// <param name="hProcess">The process handle.</param>
+        /// <returns>The PEB base address.</returns>
         static UniPtr _GetPeb64(IntPtr hProcess)
         {
             if (Environment.Is64BitProcess)
             {
+                // Getting PEB of a 64-bit process from the 64-bit host.
+
                 return _GetPebNative(hProcess);
             }
             else
             {
-                // Get PEB via WOW64 API.
+                // Getting PEB of a 64-bit process from the 32-bit host using WOW64 API.
+
                 var pbi = new NativeMethods.PROCESS_BASIC_INFORMATION_WOW64();
-                int res_len = 0;
                 int pbiSize = Marshal.SizeOf(pbi);
+                int res_len = 0;
+
                 int status = NativeMethods.NtWow64QueryInformationProcess64(
                     hProcess,
                     NativeMethods.ProcessBasicInformation,
                     ref pbi,
                     pbiSize,
                     ref res_len);
+
                 if (status != NativeMethods.STATUS_SUCCESS || res_len != pbiSize)
                     throw new Exception("Unable to query process information.");
+
                 return new UniPtr(pbi.PebBaseAddress);
             }
+        }
+
+        static IntPtr _GetPebNative(IntPtr hProcess)
+        {
+            // Getting PEB of a x-bit process from the y-bit host, where x = y.
+
+            var pbi = new NativeMethods.PROCESS_BASIC_INFORMATION();
+            int pbiSize = Marshal.SizeOf(pbi);
+            int res_len = 0;
+
+            int status = NativeMethods.NtQueryInformationProcess(
+                hProcess,
+                NativeMethods.ProcessBasicInformation,
+                ref pbi,
+                pbiSize,
+                ref res_len);
+
+            if (status != NativeMethods.STATUS_SUCCESS || res_len != pbiSize)
+                throw new Exception("Unable to query process information.");
+
+            return pbi.PebBaseAddress;
         }
     }
 }

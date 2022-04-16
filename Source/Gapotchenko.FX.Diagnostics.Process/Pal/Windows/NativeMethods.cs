@@ -116,7 +116,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             public int Type;
         }
 
-        [DllImport("kernel32")]
+        [DllImport("kernel32.dll")]
         public static extern int VirtualQueryEx(IntPtr hProcess, IntPtr lpAddress, ref MEMORY_BASIC_INFORMATION lpBuffer, int dwLength);
 
         [StructLayout(LayoutKind.Sequential)]

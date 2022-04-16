@@ -3,7 +3,7 @@
 namespace Gapotchenko.FX.Diagnostics.Pal
 {
     /// <summary>
-    /// Universal pointer that can hold both 32 and 64 bit values.
+    /// Universal pointer that can hold both 32- and 64-bit values.
     /// </summary>
     readonly struct UniPtr : IEquatable<UniPtr>
     {
