@@ -150,10 +150,10 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 
                 IntPtr pPeb = _GetPeb32(hProcess);
 
-                if (!ProcessMemory.TryReadIntPtr32(hProcess, pPeb + 0x10, out var ptr))
+                if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x10, out var ptr))
                     throw new Exception("Unable to read PEB.");
 
-                if (!ProcessMemory.TryReadIntPtr32(hProcess, ptr + 0x48, out var penv))
+                if (!ProcessMemory.TryReadIntPtr(hProcess, ptr + 0x48, out var penv))
                     throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
                 return penv;

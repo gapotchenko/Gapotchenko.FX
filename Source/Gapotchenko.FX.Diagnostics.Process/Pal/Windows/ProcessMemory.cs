@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
@@ -13,16 +9,20 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 #endif
     static class ProcessMemory
     {
-        public static unsafe bool TryReadIntPtr32(IntPtr hProcess, IntPtr address, out IntPtr value)
+        public static int GetBitness(IntPtr hProcess)
         {
-            int data;
-            const int dataSize = sizeof(int);
-
-            var res_len = IntPtr.Zero;
-            bool status = NativeMethods.ReadProcessMemory(hProcess, address, &data, new IntPtr(dataSize), ref res_len);
-
-            value = new IntPtr(data);
-            return status && (int)res_len == dataSize;
+            if (Environment.Is64BitOperatingSystem)
+            {
+                if (!NativeMethods.IsWow64Process(hProcess, out var wow64))
+                    return 32;
+                if (wow64)
+                    return 32;
+                return 64;
+            }
+            else
+            {
+                return 32;
+            }
         }
 
         public static unsafe bool TryReadIntPtr(IntPtr hProcess, IntPtr address, out IntPtr value)
@@ -134,22 +134,6 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                 return false;
 
             return true;
-        }
-
-        public static int GetBitness(IntPtr hProcess)
-        {
-            if (Environment.Is64BitOperatingSystem)
-            {
-                if (!NativeMethods.IsWow64Process(hProcess, out var wow64))
-                    return 32;
-                if (wow64)
-                    return 32;
-                return 64;
-            }
-            else
-            {
-                return 32;
-            }
         }
     }
 }
