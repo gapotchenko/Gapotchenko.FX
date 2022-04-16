@@ -25,11 +25,11 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                 throw new ArgumentException();
 
             long actualCount = 0;
-            int result;
+            int status;
 
             fixed (byte* p = buffer)
             {
-                result = NativeMethods.NtWow64ReadVirtualMemory64(
+                status = NativeMethods.NtWow64ReadVirtualMemory64(
                     m_hProcess,
                     address.ToInt64(),
                     p + offset,
@@ -37,7 +37,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                     ref actualCount);
             }
 
-            if (result != NativeMethods.STATUS_SUCCESS)
+            if (status != NativeMethods.STATUS_SUCCESS)
                 return -1;
 
             return (int)actualCount;

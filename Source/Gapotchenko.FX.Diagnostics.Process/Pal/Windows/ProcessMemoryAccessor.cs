@@ -27,11 +27,11 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                 throw new ArgumentException();
 
             var actualCount = IntPtr.Zero;
-            bool result;
+            bool status;
 
             fixed (byte* p = buffer)
             {
-                result = NativeMethods.ReadProcessMemory(
+                status = NativeMethods.ReadProcessMemory(
                     m_hProcess,
                     address,
                     p + offset,
@@ -39,7 +39,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                     ref actualCount);
             }
 
-            if (!result)
+            if (!status)
             {
                 if (throwOnError)
                 {

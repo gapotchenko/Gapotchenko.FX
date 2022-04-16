@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 #if NET
     [SupportedOSPlatform("windows")]
 #endif
-    sealed partial class PalAdapter : IPalAdapter
+    sealed class PalAdapter : IPalAdapter
     {
         PalAdapter()
         {
