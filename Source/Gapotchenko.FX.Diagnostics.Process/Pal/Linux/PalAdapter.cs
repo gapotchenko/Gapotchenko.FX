@@ -25,7 +25,8 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Linux
 
         public int GetParentProcessId(Process process)
         {
-            using var tr = File.OpenText(Invariant($"/proc/{process.Id}/status"));
+            string filePath = Invariant($"/proc/{process.Id}/status");
+            using var tr = File.OpenText(filePath);
 
             for (; ; )
             {
@@ -45,14 +46,16 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Linux
                 }
             }
 
-            throw new Exception("Cannot determine parent process ID.");
+            throw new Exception(string.Format("PPid entry not found in \"{0}\" file.", filePath));
         }
 
         public string? GetProcessImageFileName(Process process) => null;
 
         public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process)
         {
-            using var br = new ProcessBinaryReader(File.OpenRead(Invariant($"/proc/{process.Id}/environ")), Encoding.UTF8);
+            using var br = new ProcessBinaryReader(
+                File.OpenRead(Invariant($"/proc/{process.Id}/environ")),
+                Encoding.UTF8);
 
             var env = new Dictionary<string, string>(StringComparer.InvariantCulture);
 

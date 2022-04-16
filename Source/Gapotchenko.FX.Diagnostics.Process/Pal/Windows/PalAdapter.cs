@@ -28,7 +28,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             int size = 0;
             int status = NativeMethods.NtQueryInformationProcess(process.Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref size);
             if (status != 0)
-                throw new Exception("Unable to get parent process. NtQueryInformationProcess failed.");
+                throw new Exception("NtQueryInformationProcess failed.");
 
             return pbi.InheritedFromUniqueProcessId.ToInt32();
         }

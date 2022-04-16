@@ -45,18 +45,25 @@ namespace Gapotchenko.FX.Diagnostics
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
 
-            int parentPID = PalServices.Adapter.GetParentProcessId(process);
             try
             {
-                var parentProcess = Process.GetProcessById(parentPID);
-                if (!ProcessHelper.IsValidParentProcess(parentProcess, process))
+                int parentPID = PalServices.Adapter.GetParentProcessId(process);
+                try
+                {
+                    var parentProcess = Process.GetProcessById(parentPID);
+                    if (!ProcessHelper.IsValidParentProcess(parentProcess, process))
+                        return null;
+                    return parentProcess;
+                }
+                catch (ArgumentException)
+                {
+                    // "Process with an Id of NNN is not running."
                     return null;
-                return parentProcess;
+                }
             }
-            catch (ArgumentException)
+            catch (Exception e) when (!e.IsControlFlowException())
             {
-                // "Process with an Id of NNN is not running."
-                return null;
+                throw new Exception("Unable to get parent process.", e);
             }
         }
 
