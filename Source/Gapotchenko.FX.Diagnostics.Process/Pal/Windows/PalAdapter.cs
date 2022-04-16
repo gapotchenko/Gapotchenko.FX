@@ -115,20 +115,24 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             }
         }
 
-        public string? GetProcessImageFileName(Process process)
+        public string GetProcessImageFileName(Process process)
         {
             var sb = new StringBuilder(NativeMethods.MAX_PATH);
+
             for (; ; )
             {
                 uint dwSize = (uint)sb.Capacity;
                 var result = NativeMethods.QueryFullProcessImageName(process.Handle, 0, sb, ref dwSize);
+
                 if (!result)
                 {
                     int errorCode = Marshal.GetLastWin32Error();
+
                     if (errorCode == NativeMethods.ERROR_INSUFFICIENT_BUFFER)
                     {
-                        const int MaxCapacity = 32768;
+                        // Guesswork is needed because dwSize is not updated with the required buffer size.
 
+                        const int MaxCapacity = 32768;
                         int capacity = sb.Capacity;
                         if (capacity < MaxCapacity)
                         {
