@@ -15,6 +15,8 @@ namespace Gapotchenko.FX.Diagnostics.Pal
                     return Windows.PalAdapter.Instance;
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     return MacOS.PalAdapter.Instance;
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    return Linux.PalAdapter.Instance;
                 else
                     return null;
             }
