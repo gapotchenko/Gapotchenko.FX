@@ -173,7 +173,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                     ref ptr,
                     pbiSize,
                     ref res_len);
-                if (res_len != pbiSize)
+                if (status != NativeMethods.STATUS_SUCCESS || res_len != pbiSize)
                     throw new Exception("Unable to query process information.");
                 return ptr;
             }
@@ -194,7 +194,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                 ref pbi,
                 pbiSize,
                 ref res_len);
-            if (res_len != pbiSize)
+            if (status != NativeMethods.STATUS_SUCCESS || res_len != pbiSize)
                 throw new Exception("Unable to query process information.");
             return pbi.PebBaseAddress;
         }
@@ -217,7 +217,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                     ref pbi,
                     pbiSize,
                     ref res_len);
-                if (res_len != pbiSize)
+                if (status != NativeMethods.STATUS_SUCCESS || res_len != pbiSize)
                     throw new Exception("Unable to query process information.");
                 return new UniPtr(pbi.PebBaseAddress);
             }
