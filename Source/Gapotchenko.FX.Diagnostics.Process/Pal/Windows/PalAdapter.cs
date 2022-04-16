@@ -3,12 +3,16 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
+#if NET
+    [SupportedOSPlatform("windows")]
+#endif
     sealed partial class PalAdapter : IPalAdapter
     {
         PalAdapter()

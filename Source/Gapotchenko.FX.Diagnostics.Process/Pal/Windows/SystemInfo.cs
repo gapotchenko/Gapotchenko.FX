@@ -1,5 +1,10 @@
-﻿namespace Gapotchenko.FX.Diagnostics.Pal.Windows
+﻿using System.Runtime.Versioning;
+
+namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
+#if NET
+    [SupportedOSPlatform("windows")]
+#endif
     static class SystemInfo
     {
         static SystemInfo()

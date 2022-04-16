@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Runtime.Versioning;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
+#if NET
+    [SupportedOSPlatform("windows")]
+#endif
     sealed class ProcessMemoryAccessorWow64 : IProcessMemoryAccessor
     {
         public ProcessMemoryAccessorWow64(IntPtr hProcess)

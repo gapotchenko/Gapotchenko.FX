@@ -2,18 +2,18 @@
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
+#if NET
+    [SupportedOSPlatform("windows")]
+#endif
     static partial class ProcessEnvironment
     {
-        public static StringDictionary ReadVariables(Process process)
-        {
-            return _ReadVariablesCore(process.Handle);
-        }
+        public static StringDictionary ReadVariables(Process process) => _ReadVariablesCore(process.Handle);
 
         static StringDictionary _ReadVariablesCore(IntPtr hProcess)
         {
@@ -48,25 +48,25 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 
         static Stream _GetEnvStream(IntPtr hProcess)
         {
-            var penv = _GetPenv(hProcess);
-            if (penv.CanBeRepresentedByNativePointer)
+            var pEnv = _GetPEnv(hProcess);
+            if (pEnv.CanBeRepresentedByNativePointer)
             {
                 int dataSize;
-                if (!_HasReadAccess(hProcess, penv, out dataSize))
-                    throw new Exception("Unable to read environment block.");
+                if (!_HasReadAccessToProcessMemory(hProcess, pEnv, out dataSize))
+                    throw new Exception("Unable to read process environment block.");
 
                 var provider = new ProcessMemoryAccessor(hProcess);
-                return new ProcessMemoryStream(provider, penv, dataSize);
+                return new ProcessMemoryStream(provider, pEnv, dataSize);
             }
-            else if (penv.Size == 8 && IntPtr.Size == 4)
+            else if (pEnv.Size == 8 && IntPtr.Size == 4)
             {
                 // Accessing a 64-bit process from 32-bit host.
 
                 int dataSize;
                 try
                 {
-                    if (!_HasReadAccessWow64(hProcess, penv.ToInt64(), out dataSize))
-                        throw new Exception("Unable to read environment block with WOW64 API.");
+                    if (!_HasReadAccessToProcessMemoryWow64(hProcess, pEnv.ToInt64(), out dataSize))
+                        throw new Exception("Unable to read process environment block with WOW64 API.");
                 }
                 catch (EntryPointNotFoundException)
                 {
@@ -75,7 +75,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                 }
 
                 var adapter = new ProcessMemoryAccessorWow64(hProcess);
-                return new ProcessMemoryStream(adapter, penv, dataSize);
+                return new ProcessMemoryStream(adapter, pEnv, dataSize);
             }
             else
             {
@@ -109,97 +109,43 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             return env;
         }
 
-        static bool _TryReadIntPtr32(IntPtr hProcess, IntPtr ptr, out IntPtr readPtr)
+        static unsafe bool _TryReadIntPtr32(IntPtr hProcess, IntPtr ptr, out IntPtr readPtr)
         {
-            bool result;
-#if TFF_CER
-            RuntimeHelpers.PrepareConstrainedRegions();
-            try
-            {
-            }
-            finally
-#endif
-            {
-                int dataSize = sizeof(Int32);
-                var data = Marshal.AllocHGlobal(dataSize);
-                var res_len = IntPtr.Zero;
-                bool b = NativeMethods.ReadProcessMemory(
-                    hProcess,
-                    ptr,
-                    data,
-                    new IntPtr(dataSize),
-                    ref res_len);
-                readPtr = new IntPtr(Marshal.ReadInt32(data));
-                Marshal.FreeHGlobal(data);
-                if (!b || (int)res_len != dataSize)
-                    result = false;
-                else
-                    result = true;
-            }
-            return result;
+            int data;
+            const int dataSize = sizeof(int);
+
+            var res_len = IntPtr.Zero;
+            bool status = NativeMethods.ReadProcessMemory(hProcess, ptr, &data, new IntPtr(dataSize), ref res_len);
+
+            readPtr = new IntPtr(data);
+            return status && (int)res_len == dataSize;
         }
 
-        static bool _TryReadIntPtr(IntPtr hProcess, IntPtr ptr, out IntPtr readPtr)
+        static unsafe bool _TryReadIntPtr(IntPtr hProcess, IntPtr ptr, out IntPtr readPtr)
         {
-            bool result;
-#if TFF_CER
-            RuntimeHelpers.PrepareConstrainedRegions();
-            try
-            {
-            }
-            finally
-#endif
-            {
-                int dataSize = IntPtr.Size;
-                var data = Marshal.AllocHGlobal(dataSize);
-                var res_len = IntPtr.Zero;
-                bool b = NativeMethods.ReadProcessMemory(
-                    hProcess,
-                    ptr,
-                    data,
-                    new IntPtr(dataSize),
-                    ref res_len);
-                readPtr = Marshal.ReadIntPtr(data);
-                Marshal.FreeHGlobal(data);
-                if (!b || (int)res_len != dataSize)
-                    result = false;
-                else
-                    result = true;
-            }
-            return result;
+            IntPtr data;
+            int dataSize = IntPtr.Size;
+
+            var res_len = IntPtr.Zero;
+            bool status = NativeMethods.ReadProcessMemory(hProcess, ptr, &data, new IntPtr(dataSize), ref res_len);
+
+            readPtr = data;
+            return status && (int)res_len == dataSize;
         }
 
-        static bool _TryReadIntPtrWow64(IntPtr hProcess, long ptr, out long readPtr)
+        static unsafe bool _TryReadIntPtrWow64(IntPtr hProcess, long ptr, out long readPtr)
         {
-            bool result;
-#if TFF_CER
-            RuntimeHelpers.PrepareConstrainedRegions();
-            try
-            {
-            }
-            finally
-#endif
-            {
-                int dataSize = sizeof(long);
-                var data = Marshal.AllocHGlobal(dataSize);
-                long res_len = 0;
-                int status = NativeMethods.NtWow64ReadVirtualMemory64(
-                    hProcess,
-                    ptr,
-                    data,
-                    dataSize,
-                    ref res_len);
-                readPtr = Marshal.ReadInt64(data);
-                Marshal.FreeHGlobal(data);
-                if (status != NativeMethods.STATUS_SUCCESS || res_len != dataSize)
-                    result = false;
-                else
-                    result = true;
-            }
-            return result;
+            long data;
+            const int dataSize = sizeof(long);
+
+            long res_len = 0;
+            int status = NativeMethods.NtWow64ReadVirtualMemory64(hProcess, ptr, &data, dataSize, ref res_len);
+
+            readPtr = data;
+            return status == NativeMethods.STATUS_SUCCESS && res_len == dataSize;
         }
 
-        static UniPtr _GetPenv(IntPtr hProcess)
+        static UniPtr _GetPEnv(IntPtr hProcess)
         {
             int processBitness = _GetProcessBitness(hProcess);
 
@@ -214,10 +160,10 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                     if (!_TryReadIntPtr(hProcess, pPeb + 0x20, out var ptr))
                         throw new Exception("Unable to read PEB.");
 
-                    if (!_TryReadIntPtr(hProcess, ptr + 0x80, out var penv))
+                    if (!_TryReadIntPtr(hProcess, ptr + 0x80, out var pEnv))
                         throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
-                    return penv;
+                    return pEnv;
                 }
                 else
                 {
@@ -329,7 +275,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             }
         }
 
-        static bool _HasReadAccess(IntPtr hProcess, IntPtr address, out int size)
+        static bool _HasReadAccessToProcessMemory(IntPtr hProcess, IntPtr address, out int size)
         {
             size = 0;
 
@@ -361,7 +307,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             return true;
         }
 
-        static bool _HasReadAccessWow64(IntPtr hProcess, long address, out int size)
+        static bool _HasReadAccessToProcessMemoryWow64(IntPtr hProcess, long address, out int size)
         {
             size = 0;
 

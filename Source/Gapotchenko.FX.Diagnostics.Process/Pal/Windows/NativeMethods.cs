@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
+#if NET
+    [SupportedOSPlatform("windows")]
+#endif
     static class NativeMethods
     {
         [StructLayout(LayoutKind.Sequential)]
@@ -80,44 +84,12 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             ref int pSize);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool ReadProcessMemory(
-          IntPtr hProcess,
-          IntPtr lpBaseAddress,
-          [Out] byte[] lpBuffer,
-          IntPtr dwSize,
-          ref IntPtr lpNumberOfBytesRead);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool ReadProcessMemory(
-          IntPtr hProcess,
-          IntPtr lpBaseAddress,
-          IntPtr lpBuffer,
-          IntPtr dwSize,
-          ref IntPtr lpNumberOfBytesRead);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
         public static unsafe extern bool ReadProcessMemory(
             IntPtr hProcess,
             IntPtr lpBaseAddress,
             void* lpBuffer,
             IntPtr dwSize,
             ref IntPtr lpNumberOfBytesRead);
-
-        [DllImport("ntdll.dll", SetLastError = true)]
-        public static extern int NtWow64ReadVirtualMemory64(
-            IntPtr hProcess,
-            long lpBaseAddress,
-            IntPtr lpBuffer,
-            long dwSize,
-            ref long lpNumberOfBytesRead);
-
-        [DllImport("ntdll.dll", SetLastError = true)]
-        public static extern int NtWow64ReadVirtualMemory64(
-            IntPtr hProcess,
-            long lpBaseAddress,
-            [Out] byte[] lpBuffer,
-            long dwSize,
-            ref long lpNumberOfBytesRead);
 
         [DllImport("ntdll.dll", SetLastError = true)]
         public static unsafe extern int NtWow64ReadVirtualMemory64(

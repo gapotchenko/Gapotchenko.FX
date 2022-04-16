@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Diagnostics.Process.Tests
         [TestMethod]
         public void Process_ReadEnvironment()
         {
-            var process = new Process();
+            using var process = new Process();
 
             var psi = process.StartInfo;
             psi.FileName = "dotnet";
@@ -41,7 +41,7 @@ namespace Gapotchenko.FX.Diagnostics.Process.Tests
         [TestMethod]
         public void Process_ReadLargeEnvironment()
         {
-            var process = new Process();
+            using var process = new Process();
 
             var psi = process.StartInfo;
             psi.FileName = "dotnet";
