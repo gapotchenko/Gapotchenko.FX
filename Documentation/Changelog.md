@@ -7,7 +7,7 @@
 Release date: not released yet
 
 - Added ability to read the command-line arguments of a running OS process
-
+- Improved multi-platform support for macOS and Linux
 
 ### Gapotchenko FX 2022.1
 
