@@ -28,9 +28,9 @@ The functionality is achieved by reading the process environment block (PEB) at 
 For example, this is how a PATH environment variable can be retrieved from all running instances of Microsoft Visual Studio:
 
 ``` csharp
+using Gapotchenko.FX.Diagnostics;
 using System;
 using System.Diagnostics;
-using Gapotchenko.FX.Diagnostics;
 
 class Program
 {
@@ -54,6 +54,46 @@ class Program
     }
 }
 ```
+
+### ReadArguments()
+
+The method retrieves a set of command-line arguments specified at the process start.
+The functionality is achieved by reading the process environment block at the operating system level.
+
+``` csharp
+using Gapotchenko.FX.Diagnostics;
+using System;
+using System.Diagnostics;
+
+class Program
+{
+    static void Main()
+    {
+        var processes = Process.GetProcessesByName("devenv");
+
+        if (processes.Length == 0)
+            Console.WriteLine("Process with a given name not found. Please modify the code and specify the existing process name.");
+
+        foreach (var process in processes)
+        {
+            Console.WriteLine(
+                "Process with ID {0} was started with the following command line:",
+                process.Id,
+                process.ReadArguments());
+        }
+    }
+}
+```
+
+### ReadArgumentList()
+
+The method retrieves a sequence of command-line arguments specified at the process start.
+It is similar to aforementioned `ReadArguments()` method but returns a sequence of command-line arguments instead of a single command line string.
+
+This fundamental difference may be essential in multi-platform scenarios.
+For instance, Windows represents a command line of a process as a single string, while Unix operating systems represent the command line as a strongly-typed array of command-line arguments.
+
+Whichever method is used the results are similar, but every method provides a higher degree of detalization for the specific operating system.
 
 ### End()
 

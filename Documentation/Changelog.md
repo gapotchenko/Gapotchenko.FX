@@ -2,6 +2,13 @@
 
 ## 2022
 
+### Gapotchenko FX 2022.2
+
+Release date: not released yet
+
+- Added ability to read the command-line arguments of a running OS process
+
+
 ### Gapotchenko FX 2022.1
 
 Release date: April 7, 2022
