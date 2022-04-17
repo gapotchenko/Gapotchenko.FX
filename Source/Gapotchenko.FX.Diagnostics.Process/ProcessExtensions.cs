@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// <summary>
         /// Reads the environment variables from the environment block of a process.
         /// </summary>
-        /// <param name="process">The process. It can be any process running on local machine.</param>
+        /// <param name="process">The process. It can be any process running on a local machine.</param>
         /// <returns>The environment variables.</returns>
         public static StringDictionary ReadEnvironmentVariables(this Process process)
         {
@@ -33,6 +33,46 @@ namespace Gapotchenko.FX.Diagnostics
                 env[i.Key] = i.Value;
 
             return env;
+        }
+
+        /// <summary>
+        /// Reads the set of command-line arguments of a process.
+        /// </summary>
+        /// <param name="process">The process. It can be any process running on a local machine.</param>
+        /// <returns>The set of command-line arguments of a process.</returns>
+        public static string ReadArguments(this Process process)
+        {
+            if (process == null)
+                throw new ArgumentNullException(nameof(process));
+
+            PalServices.Adapter.ReadProcessCommandLineArguments(process, out var commandLine, out var arguments);
+
+            if (commandLine != null)
+                return commandLine;
+            else if (arguments != null)
+                return CommandLine.Build(arguments);
+            else
+                throw new InvalidOperationException();
+        }
+
+        /// <summary>
+        /// Reads the sequence of command-line arguments of a process.
+        /// </summary>
+        /// <param name="process">The process. It can be any process running on a local machine.</param>
+        /// <returns>The sequence of command-line arguments of a process.</returns>
+        public static IEnumerable<string> ReadArgumentList(this Process process)
+        {
+            if (process == null)
+                throw new ArgumentNullException(nameof(process));
+
+            PalServices.Adapter.ReadProcessCommandLineArguments(process, out var commandLine, out var arguments);
+
+            if (arguments != null)
+                return arguments;
+            else if (commandLine != null)
+                return CommandLine.Split(commandLine);
+            else
+                throw new InvalidOperationException();
         }
 
         /// <summary>

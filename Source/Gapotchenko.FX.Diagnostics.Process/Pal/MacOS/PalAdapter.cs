@@ -33,33 +33,36 @@ namespace Gapotchenko.FX.Diagnostics.Pal.MacOS
             if (NativeMethods.sysctl(mib, mib.Length, info, &infoLength, null, 0) < 0)
                 throw new Exception("sysctl for KERN_PROC failed.");
             if (infoLength == IntPtr.Zero)
-                throw new Exception("sysctl returned an unexpected length.");
+                throw new Exception("sysctl returned an unexpected attribute length for KERN_PROC.");
 
             return *(int*)(info + 560); // info.kp_eproc.e_ppid
         }
 
         public string? GetProcessImageFileName(Process process) => null;
 
+        public void ReadProcessCommandLineArguments(Process process, out string? commandLine, out IEnumerable<string>? arguments)
+        {
+            commandLine = null;
+
+            var procArgs = GetProcArgs2(process.Id);
+            var br = new ProcessBinaryReader(
+                new MemoryStream(procArgs, false),
+                Encoding.UTF8);
+
+            arguments = ReadArguments(br);
+        }
+
         public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process)
         {
-            var procargs = GetProcArgs2(process.Id);
+            var procArgs = GetProcArgs2(process.Id);
+            var br = new ProcessBinaryReader(
+                new MemoryStream(procArgs, false),
+                Encoding.UTF8);
+
+            foreach (var i in ReadArguments(br))
+                _ = i;
 
             var env = new Dictionary<string, string>(StringComparer.InvariantCulture);
-
-            var br = new ProcessBinaryReader(
-                new MemoryStream(procargs, false),
-                Encoding.UTF8);
-            var nargs = br.ReadInt32();
-
-            br.ReadCString(); // exec_path
-
-            // Skip zeros.
-            if (!SkipZeroChars(br))
-                return env; // EOF
-
-            // Read command-line arguments.
-            for (int i = 0; i < nargs; ++i)
-                br.ReadCString();
 
             if (br.PeekChar() == -1)
                 return env; // EOF
@@ -101,7 +104,6 @@ namespace Gapotchenko.FX.Diagnostics.Pal.MacOS
 
             var procArgs = new byte[argMax];
 
-            mib[0] = NativeMethods.CTL_KERN;
             mib[1] = NativeMethods.KERN_PROCARGS2;
             mib[2] = pid;
 
@@ -116,19 +118,32 @@ namespace Gapotchenko.FX.Diagnostics.Pal.MacOS
             return procArgs;
         }
 
-        static bool SkipZeroChars(BinaryReader br)
+        static IEnumerable<string> ReadArguments(ProcessBinaryReader br)
+        {
+            var argc = br.ReadInt32();
+
+            br.ReadCString(); // exec_path
+
+            // Skip zeros.
+            SkipZeroChars(br);
+
+            // Read command-line arguments.
+            for (int i = 0; i < argc; ++i)
+                yield return br.ReadCString();
+        }
+
+        static void SkipZeroChars(BinaryReader br)
         {
             for (; ; )
             {
                 int c = br.Read();
                 if (c == -1)
-                    return false; // EOF
+                    break;
                 if (c == 0)
                     continue;
                 --br.BaseStream.Position;
                 break;
             }
-            return true;
         }
 
         public Task<bool> TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
@@ -137,4 +152,3 @@ namespace Gapotchenko.FX.Diagnostics.Pal.MacOS
         }
     }
 }
-

@@ -51,6 +51,13 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Linux
 
         public string? GetProcessImageFileName(Process process) => null;
 
+        public void ReadProcessCommandLineArguments(Process process, out string? commandLine, out IEnumerable<string>? arguments)
+        {
+            commandLine = null;
+
+            throw new NotImplementedException();
+        }
+
         public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process)
         {
             using var br = new ProcessBinaryReader(

@@ -33,6 +33,48 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             return pbi.InheritedFromUniqueProcessId.ToInt32();
         }
 
+        public string GetProcessImageFileName(Process process)
+        {
+            var sb = new StringBuilder(NativeMethods.MAX_PATH);
+
+            for (; ; )
+            {
+                uint dwSize = (uint)sb.Capacity;
+                var result = NativeMethods.QueryFullProcessImageName(process.Handle, 0, sb, ref dwSize);
+
+                if (!result)
+                {
+                    int errorCode = Marshal.GetLastWin32Error();
+
+                    if (errorCode == NativeMethods.ERROR_INSUFFICIENT_BUFFER)
+                    {
+                        // Guesswork is needed because dwSize is not updated with the required buffer size.
+
+                        const int MaxCapacity = 32768;
+                        int capacity = sb.Capacity;
+                        if (capacity < MaxCapacity)
+                        {
+                            sb.Capacity = Math.Min(capacity * 2, MaxCapacity);
+                            continue;
+                        }
+                    }
+
+                    throw new Win32Exception(errorCode);
+                }
+
+                break;
+            }
+
+            return sb.ToString();
+        }
+
+        public void ReadProcessCommandLineArguments(Process process, out string? commandLine, out IEnumerable<string>? arguments)
+        {
+            arguments = null;
+
+            throw new NotImplementedException();
+        }
+
         public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process) => ProcessEnvironment.ReadVariables(process);
 
         public async Task<bool> TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
@@ -111,41 +153,6 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                     NativeMethods.SetConsoleCtrlHandler(null, false);
                 }
             }
-        }
-
-        public string GetProcessImageFileName(Process process)
-        {
-            var sb = new StringBuilder(NativeMethods.MAX_PATH);
-
-            for (; ; )
-            {
-                uint dwSize = (uint)sb.Capacity;
-                var result = NativeMethods.QueryFullProcessImageName(process.Handle, 0, sb, ref dwSize);
-
-                if (!result)
-                {
-                    int errorCode = Marshal.GetLastWin32Error();
-
-                    if (errorCode == NativeMethods.ERROR_INSUFFICIENT_BUFFER)
-                    {
-                        // Guesswork is needed because dwSize is not updated with the required buffer size.
-
-                        const int MaxCapacity = 32768;
-                        int capacity = sb.Capacity;
-                        if (capacity < MaxCapacity)
-                        {
-                            sb.Capacity = Math.Min(capacity * 2, MaxCapacity);
-                            continue;
-                        }
-                    }
-
-                    throw new Win32Exception(errorCode);
-                }
-
-                break;
-            }
-
-            return sb.ToString();
         }
     }
 }
