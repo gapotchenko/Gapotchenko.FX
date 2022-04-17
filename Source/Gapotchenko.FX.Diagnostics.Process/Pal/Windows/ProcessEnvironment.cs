@@ -117,45 +117,28 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 
             if (processBitness == 64)
             {
-                if (Environment.Is64BitProcess)
-                {
-                    // Accessing a 64-bit process from the 64-bit host.
+                // Accessing a 64-bit process.
 
-                    var pPeb = _GetPeb64(hProcess);
+                var pPeb = _GetPeb64(hProcess);
 
-                    if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x20, out var ptr))
-                        throw new Exception("Unable to read PEB.");
+                if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x20, out var pProcessParameters))
+                    throw new Exception("Unable to read PEB.");
 
-                    if (!ProcessMemory.TryReadIntPtr(hProcess, ptr + 0x80, out var pEnv))
-                        throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
+                if (!ProcessMemory.TryReadIntPtr(hProcess, pProcessParameters + 0x80, out var pEnv))
+                    throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
-                    return pEnv;
-                }
-                else
-                {
-                    // Accessing a 64-bit process from the 32-bit host.
-
-                    var pPeb = _GetPeb64(hProcess);
-
-                    if (!ProcessMemory.TryReadIntPtrWow64(hProcess, pPeb + 0x20, out var ptr))
-                        throw new Exception("Unable to read PEB.");
-
-                    if (!ProcessMemory.TryReadIntPtrWow64(hProcess, ptr + 0x80, out var pEnv))
-                        throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
-
-                    return pEnv;
-                }
+                return pEnv;
             }
             else
             {
-                // Accessing a 32-bit process from the 32-bit host.
+                // Accessing a 32-bit process.
 
                 var pPeb = _GetPeb32(hProcess);
 
-                if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x10, out var ptr))
+                if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x10, out var pProcessParameters))
                     throw new Exception("Unable to read PEB.");
 
-                if (!ProcessMemory.TryReadIntPtr(hProcess, ptr + 0x48, out var pEnv))
+                if (!ProcessMemory.TryReadIntPtr(hProcess, pProcessParameters + 0x48, out var pEnv))
                     throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
                 return pEnv;

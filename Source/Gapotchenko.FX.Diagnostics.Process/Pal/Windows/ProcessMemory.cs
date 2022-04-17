@@ -25,28 +25,48 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             }
         }
 
-        public static unsafe bool TryReadIntPtr(IntPtr hProcess, IntPtr address, out IntPtr value)
+        static unsafe bool ReadProcessMemory(IntPtr hProcess, UniPtr from, void* to, nint length, out nint actualLength)
         {
-            IntPtr data;
-            int dataSize = IntPtr.Size;
-
-            nint res_len = 0;
-            bool status = NativeMethods.ReadProcessMemory(hProcess, address, &data, dataSize, ref res_len);
-
-            value = data;
-            return status && res_len == dataSize;
+            if (from.CanBeRepresentedByNativePointer)
+            {
+                actualLength = 0;
+                return NativeMethods.ReadProcessMemory(hProcess, from, to, length, ref actualLength);
+            }
+            else if (from.Size == 8 && IntPtr.Size == 4)
+            {
+                long numberOfBytesRead = 0;
+                var status = NativeMethods.NtWow64ReadVirtualMemory64(hProcess, from.ToInt64(), to, length, ref numberOfBytesRead);
+                actualLength = (nint)numberOfBytesRead;
+                return status == NativeMethods.STATUS_SUCCESS;
+            }
+            else
+            {
+                throw new Exception("Unable to access process memory due to unsupported bitness cardinality.");
+            }
         }
 
-        public static unsafe bool TryReadIntPtrWow64(IntPtr hProcess, UniPtr address, out UniPtr value)
+        public static unsafe bool TryReadIntPtr(IntPtr hProcess, UniPtr address, out UniPtr value)
         {
-            long data;
-            const int dataSize = sizeof(long);
+            if (address.Size == 8)
+            {
+                long data;
+                const int length = sizeof(long);
 
-            long res_len = 0;
-            int status = NativeMethods.NtWow64ReadVirtualMemory64(hProcess, address.ToInt64(), &data, dataSize, ref res_len);
+                bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
 
-            value = new UniPtr(data);
-            return status == NativeMethods.STATUS_SUCCESS && res_len == dataSize;
+                value = new UniPtr(data);
+                return status && actualLength == length;
+            }
+            else
+            {
+                IntPtr data;
+                int length = IntPtr.Size;
+
+                bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
+
+                value = data;
+                return status && actualLength == length;
+            }
         }
 
         public static bool HasReadAccess(IntPtr hProcess, IntPtr address, out int size)
