@@ -26,7 +26,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             if (offset + count > buffer.Length)
                 throw new ArgumentException();
 
-            var actualCount = IntPtr.Zero;
+            nint actualCount = 0;
             bool status;
 
             fixed (byte* p = buffer)
@@ -35,7 +35,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                     m_hProcess,
                     address,
                     p + offset,
-                    new IntPtr(count),
+                    count,
                     ref actualCount);
             }
 
@@ -51,7 +51,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                 return -1;
             }
 
-            return actualCount.ToInt32();
+            return (int)actualCount;
         }
     }
 }

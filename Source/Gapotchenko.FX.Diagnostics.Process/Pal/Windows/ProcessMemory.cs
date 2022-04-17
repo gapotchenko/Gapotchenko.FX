@@ -30,11 +30,11 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             IntPtr data;
             int dataSize = IntPtr.Size;
 
-            var res_len = IntPtr.Zero;
-            bool status = NativeMethods.ReadProcessMemory(hProcess, address, &data, new IntPtr(dataSize), ref res_len);
+            nint res_len = 0;
+            bool status = NativeMethods.ReadProcessMemory(hProcess, address, &data, dataSize, ref res_len);
 
             value = data;
-            return status && (int)res_len == dataSize;
+            return status && res_len == dataSize;
         }
 
         public static unsafe bool TryReadIntPtrWow64(IntPtr hProcess, UniPtr address, out UniPtr value)

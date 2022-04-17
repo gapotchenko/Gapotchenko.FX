@@ -88,8 +88,8 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
             IntPtr hProcess,
             IntPtr lpBaseAddress,
             void* lpBuffer,
-            IntPtr dwSize,
-            ref IntPtr lpNumberOfBytesRead);
+            nint dwSize,
+            ref nint lpNumberOfBytesRead);
 
         [DllImport("ntdll.dll", SetLastError = true)]
         public static unsafe extern int NtWow64ReadVirtualMemory64(
