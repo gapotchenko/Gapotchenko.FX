@@ -14,7 +14,54 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
     {
         public static string ReadCommandLine(IntPtr hProcess)
         {
-            throw new NotImplementedException();
+            int processBitness = ProcessMemory.GetBitness(hProcess);
+
+            if (processBitness == 64)
+            {
+                // Accessing a 32-bit process.
+
+                var pPeb = _GetPeb64(hProcess);
+
+                if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x20, out var pProcessParameters))
+                    throw new Exception("Unable to read PEB.");
+
+                if (!ProcessMemory.TryReadUInt16(hProcess, pProcessParameters + 0x70, out var commandLineLength))
+                    throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
+
+                if (!ProcessMemory.TryReadIntPtr(hProcess, pProcessParameters + 0x78, out var pCommandLineBuffer))
+                    throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
+
+                IProcessMemoryAccessor adapter =
+                    Environment.Is64BitProcess ?
+                        new ProcessMemoryAccessor(hProcess) :
+                        new ProcessMemoryAccessorWow64(hProcess);
+
+                var stream = new ProcessMemoryStream(adapter, pCommandLineBuffer, commandLineLength + sizeof(char));
+                var br = new ProcessBinaryReader(stream, Encoding.Unicode);
+
+                return br.ReadCString();
+            }
+            else
+            {
+                // Accessing a 32-bit process.
+
+                var pPeb = _GetPeb32(hProcess);
+
+                if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x10, out var pProcessParameters))
+                    throw new Exception("Unable to read PEB.");
+
+                if (!ProcessMemory.TryReadUInt16(hProcess, pProcessParameters + 0x40, out var commandLineLength))
+                    throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
+
+                if (!ProcessMemory.TryReadIntPtr(hProcess, pProcessParameters + 0x44, out var pCommandLineBuffer))
+                    throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
+
+                var adapter = new ProcessMemoryAccessor(hProcess);
+                var stream = new ProcessMemoryStream(adapter, pCommandLineBuffer, commandLineLength + sizeof(char));
+                var br = new ProcessBinaryReader(stream, Encoding.Unicode);
+
+                return br.ReadCString();
+            }
         }
 
         public static IReadOnlyDictionary<string, string> ReadVariables(IntPtr hProcess)
@@ -150,7 +197,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
         /// </summary>
         /// <param name="hProcess">The process handle.</param>
         /// <returns>The PEB base address.</returns>
-        static IntPtr _GetPeb32(IntPtr hProcess)
+        static UniPtr _GetPeb32(IntPtr hProcess)
         {
             if (Environment.Is64BitProcess)
             {
@@ -170,7 +217,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                 if (status != NativeMethods.STATUS_SUCCESS || res_len != pbiSize)
                     throw new Exception("Unable to query process information.");
 
-                return ptr;
+                return new UniPtr(ptr.ToInt32());
             }
             else
             {

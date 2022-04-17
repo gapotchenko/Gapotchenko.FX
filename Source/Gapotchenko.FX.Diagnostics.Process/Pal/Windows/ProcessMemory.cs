@@ -57,16 +57,31 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                 value = new UniPtr(data);
                 return status && actualLength == length;
             }
-            else
+            else if (address.Size == 4)
             {
-                IntPtr data;
-                int length = IntPtr.Size;
+                int data;
+                const int length = sizeof(int);
 
                 bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
 
-                value = data;
+                value = new UniPtr(data);
                 return status && actualLength == length;
             }
+            else
+            {
+                throw new NotSupportedException("Unsupported UniPtr size.");
+            }
+        }
+
+        public static unsafe bool TryReadUInt16(IntPtr hProcess, UniPtr address, out ushort value)
+        {
+            ushort data;
+            const int length = sizeof(ushort);
+
+            bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
+
+            value = data;
+            return status && actualLength == length;
         }
 
         public static bool HasReadAccess(IntPtr hProcess, IntPtr address, out int size)

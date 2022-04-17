@@ -13,6 +13,12 @@ namespace Gapotchenko.FX.Diagnostics.Pal
             m_Size = (byte)IntPtr.Size;
         }
 
+        public UniPtr(int value)
+        {
+            m_Value = value;
+            m_Size = sizeof(int);
+        }
+
         public UniPtr(long value)
         {
             m_Value = value;
@@ -22,6 +28,12 @@ namespace Gapotchenko.FX.Diagnostics.Pal
         public UniPtr(ulong value) :
             this((long)value)
         {
+        }
+
+        UniPtr(long value, int size)
+        {
+            m_Value = value;
+            m_Size = checked((byte)size);
         }
 
         readonly long m_Value;
@@ -55,7 +67,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal
 
         public static implicit operator UniPtr(IntPtr p) => new(p);
 
-        public static UniPtr operator +(UniPtr a, long b) => new(a.ToInt64() + b);
+        public static UniPtr operator +(UniPtr a, long b) => new(a.ToInt64() + b, a.Size);
 
         public static bool operator ==(UniPtr a, UniPtr b) => a.ToUInt64() == b.ToUInt64();
 
