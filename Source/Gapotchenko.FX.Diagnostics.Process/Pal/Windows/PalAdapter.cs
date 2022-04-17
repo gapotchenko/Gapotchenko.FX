@@ -37,8 +37,6 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 
         public async Task<bool> TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             bool isCurrentProcess = false;
 
             // Try to attach the current process to the console of another process.

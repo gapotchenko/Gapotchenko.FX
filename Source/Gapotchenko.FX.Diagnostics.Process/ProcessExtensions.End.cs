@@ -242,6 +242,8 @@ namespace Gapotchenko.FX.Diagnostics
 
         static async Task<bool> _TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var adapter = PalServices.AdapterOrDefault;
             if (adapter != null)
                 return await adapter.TryInterruptProcessAsync(process, cancellationToken).ConfigureAwait(false);
