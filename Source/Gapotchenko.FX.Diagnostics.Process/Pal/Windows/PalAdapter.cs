@@ -71,11 +71,11 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
         public void ReadProcessCommandLineArguments(Process process, out string? commandLine, out IEnumerable<string>? arguments)
         {
             arguments = null;
-
-            throw new NotImplementedException();
+            commandLine = ProcessEnvironment.ReadCommandLine(process.Handle);
         }
 
-        public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process) => ProcessEnvironment.ReadVariables(process);
+        public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process) =>
+            ProcessEnvironment.ReadVariables(process.Handle);
 
         public async Task<bool> TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
         {

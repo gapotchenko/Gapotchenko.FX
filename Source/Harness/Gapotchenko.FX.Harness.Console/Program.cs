@@ -18,6 +18,7 @@ using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Threading.Tasks;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -64,6 +65,15 @@ namespace Gapotchenko.FX.Harness.Console
 
         static void _Run()
         {
+            var parentProcess = Process.GetCurrentProcess().GetParent() ?? throw new Exception("No parent process.");
+            Console.WriteLine("Parent process ID: {0}", parentProcess.Id);
+            Console.WriteLine("Parent process command line: {0}", parentProcess.ReadArguments());
+            foreach (DictionaryEntry i in parentProcess.ReadEnvironmentVariables())
+            {
+                Console.WriteLine("{0}={1}", i.Key, i.Value);
+            }
+            Console.WriteLine("------------------------------------------------------------------");
+
             var res = new[] { 1, 1, 2 }.CrossJoin(new[] { "A", "B" }, ValueTuple.Create).Distinct();
 
             Console.WriteLine("A = {0}", Enumerable.Distinct(Permutations.Of(new[] { 1, 1, 2 })).Count());

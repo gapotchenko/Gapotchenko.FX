@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -13,9 +12,12 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 #endif
     static partial class ProcessEnvironment
     {
-        public static IReadOnlyDictionary<string, string> ReadVariables(Process process) => _ReadVariablesCore(process.Handle);
+        public static string ReadCommandLine(IntPtr hProcess)
+        {
+            throw new NotImplementedException();
+        }
 
-        static IReadOnlyDictionary<string, string> _ReadVariablesCore(IntPtr hProcess)
+        public static IReadOnlyDictionary<string, string> ReadVariables(IntPtr hProcess)
         {
             int retryCount = 3;
             bool RetryPolicy() => --retryCount > 0;
