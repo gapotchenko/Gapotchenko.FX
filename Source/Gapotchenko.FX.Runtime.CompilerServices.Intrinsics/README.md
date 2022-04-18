@@ -72,7 +72,7 @@ Here are the execution times of all two implementations (lower is better):
 This is a vast improvement over the previous version but we can do even better.
 
 Meet the Intel 80386, a 32-bit microprocessor introduced in 1985.
-It brought the Bit Scan Reverse (BSR) instruction that does exactly the same what we want to achieve by `Log2` using just a small fraction of cycles.
+It brought the Bit Scan Reverse (BSR) instruction that does exactly the same what we want to achieve by `Log2` using just a small fraction of CPU cycles.
 
 Chances are your machine runs on a descendant of that influential CPU, be it AMD Ryzen or Intel Core.
 So how can we use the `BSR` instruction from .NET?
