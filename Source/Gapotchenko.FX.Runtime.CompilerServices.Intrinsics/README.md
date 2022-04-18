@@ -75,7 +75,7 @@ Meet the Intel 80386, a 32-bit microprocessor introduced in 1985.
 It brought the Bit Scan Reverse (BSR) instruction that does exactly the same what we want to achieve by `Log2` using just a small fraction of CPU cycles.
 
 Chances are that your machine runs on a descendant of that influential CPU, be it AMD Ryzen or Intel Core.
-So how can we use the `BSR` instruction from .NET?
+So how can we use the low-level `BSR` instruction from high-level .NET?
 
 This is why `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` class exists.
 It provides an ability to define intrinsic implementation of a method with `MachineCodeIntrinsicAttribute`. Let's see how:
