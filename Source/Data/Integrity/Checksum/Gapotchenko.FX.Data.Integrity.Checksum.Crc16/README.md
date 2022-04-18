@@ -73,7 +73,7 @@ Console.WriteLine("Checksum = 0x{0:x}", checksum);
 
 Among all other posibilities, it is recommended to use the standard CRC-16 algorithm which comes under CRC-16, CRC-16/ARC, CRC-IBM, CRC-16/LHA aliases and is available via `Crc16.Standard` property.
 
-All other predefined algorithms are available via the properties of `Crc16.Attested` class.
+All other predefined algorithms are available via the corresponding properties of `Crc16.Attested` class.
 
 ## Custom CRC-16 Algorithms
 
