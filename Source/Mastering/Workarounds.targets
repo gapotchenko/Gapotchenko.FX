@@ -1,14 +1,5 @@
 ﻿<Project>
 
-  <!-- Workaround for https://github.com/NuGet/Home/issues/7001 -->
-  <Target Name="DisableNuGetDeterministicPackaging"
-          BeforeTargets="GenerateNuspec"
-          AfterTargets="CoreCompile">
-    <PropertyGroup>
-      <Deterministic>false</Deterministic>
-    </PropertyGroup>
-  </Target>
-
   <!-- Workaround for nullable checks under untraceable (not annotated) target frameworks. -->
   <Target Name="SuppressUntraceableNullableChecks" BeforeTargets="CoreCompile">
     <PropertyGroup>
