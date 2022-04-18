@@ -128,7 +128,7 @@ They all work in the same manner and follow the same model:
 
 | Operation | Description | Immutable Function | In-Place Method |
 | --- | --- | --- | --- |
-| Transposition | Reverses the direction of all edges. | `GetTransposition` | `Transpose` |
+| Transposition | Reverses the direction of all edges in the graph. | `GetTransposition` | `Transpose` |
 | Transitive reduction | Prunes the transitive relations that have shorter paths. | `GetTransitiveReduction` | `ReduceTransitions` |
 | Reflexive reduction | Removes the loops (also called self-loops or buckles). | `GetReflexiveReduction` | `ReduceReflexes` |
 | Subgraph | Produces a vertex-induced or edge-induced subgraph. | `GetSubgraph` | `Subgraph` |
