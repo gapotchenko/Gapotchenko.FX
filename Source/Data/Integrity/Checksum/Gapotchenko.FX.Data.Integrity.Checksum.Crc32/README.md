@@ -59,7 +59,7 @@ Console.WriteLine("Checksum = 0x{0:x}", checksum);
 
 Among all other posibilities, it is recommended to use the standard CRC-32 algorithm which comes under CRC-32, CRC-32/ISO-HDLC, CRC-32/ADCCP, CRC-32/V-42, CRC-32/XZ, PKZIP aliases and is available via `Crc32.Standard` property.
 
-All other predefined algorithms are available via the properties of `Crc32.Attested` class.
+All other predefined algorithms are available via the corresponding properties of `Crc32.Attested` class.
 
 ## Custom CRC-32 Algorithms
 
