@@ -204,11 +204,11 @@ namespace Gapotchenko.FX.IO
         [return: NotNullIfNotNull("filePath")]
         public static string? GetShortPath(string? filePath)
         {
-            if (string.IsNullOrEmpty(filePath))
-                return filePath;
-
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
+                if (string.IsNullOrEmpty(filePath))
+                    return filePath;
+
                 int bufferSize = filePath.Length;
 
                 var sb = new StringBuilder(bufferSize);
