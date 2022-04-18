@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !HAS_TARGET_PLATFORM || WINDOWS
+
+using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
@@ -181,3 +183,5 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
         public static extern bool QueryFullProcessImageName(IntPtr hProcess, uint dwFlags, StringBuilder lpExeName, ref uint lpdwSize);
     }
 }
+
+#endif

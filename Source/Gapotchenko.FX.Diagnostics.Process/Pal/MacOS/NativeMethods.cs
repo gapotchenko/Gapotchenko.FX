@@ -1,9 +1,11 @@
-﻿using System.Runtime.InteropServices;
+﻿#if !HAS_TARGET_PLATFORM || MACOS
+
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.MacOS
 {
-#if NET
+#if NET && !MACOS
     [SupportedOSPlatform("macos")]
 #endif
     static class NativeMethods
@@ -65,3 +67,5 @@ namespace Gapotchenko.FX.Diagnostics.Pal.MacOS
         public static extern int kill(int pid, int signal);
     }
 }
+
+#endif

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !HAS_TARGET_PLATFORM || WINDOWS
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -7,7 +9,7 @@ using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
-#if NET
+#if NET && !WINDOWS
     [SupportedOSPlatform("windows")]
 #endif
     static partial class ProcessEnvironment
@@ -284,3 +286,5 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
         }
     }
 }
+
+#endif

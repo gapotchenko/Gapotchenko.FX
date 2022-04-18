@@ -1,9 +1,11 @@
-﻿using System;
+﻿#if !HAS_TARGET_PLATFORM || WINDOWS
+
+using System;
 using System.Runtime.Versioning;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
-#if NET
+#if NET && !WINDOWS
     [SupportedOSPlatform("windows")]
 #endif
     sealed class ProcessMemoryAccessorWow64 : IProcessMemoryAccessor
@@ -44,3 +46,5 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
         }
     }
 }
+
+#endif

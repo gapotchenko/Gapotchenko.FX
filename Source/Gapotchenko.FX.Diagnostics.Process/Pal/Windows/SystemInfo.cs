@@ -1,4 +1,6 @@
-﻿using System.Runtime.Versioning;
+﻿#if !HAS_TARGET_PLATFORM || WINDOWS
+
+using System.Runtime.Versioning;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
@@ -27,3 +29,5 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
         }
     }
 }
+
+#endif

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !HAS_TARGET_PLATFORM || MACOS
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.MacOS
 {
-#if NET
+#if NET && !MACOS
     [SupportedOSPlatform("macos")]
 #endif
     sealed class PalAdapter : IPalAdapter
@@ -166,3 +168,5 @@ namespace Gapotchenko.FX.Diagnostics.Pal.MacOS
         }
     }
 }
+
+#endif

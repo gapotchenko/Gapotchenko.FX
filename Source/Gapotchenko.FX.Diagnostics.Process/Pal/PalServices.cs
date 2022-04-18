@@ -11,6 +11,17 @@ namespace Gapotchenko.FX.Diagnostics.Pal
 
             static IPalAdapter? CreateInstance()
             {
+#if HAS_TARGET_PLATFORM
+#if WINDOWS
+                return Windows.PalAdapter.Instance;
+#elif MACOS
+                return MacOS.PalAdapter.Instance;
+#elif LINUX
+                return Linux.PalAdapter.Instance;
+#else
+                return null;
+#endif
+#else
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     return Windows.PalAdapter.Instance;
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -19,6 +30,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal
                     return Linux.PalAdapter.Instance;
                 else
                     return null;
+#endif
             }
         }
 

@@ -1,9 +1,11 @@
-﻿using System.Runtime.InteropServices;
+﻿#if !HAS_TARGET_PLATFORM || LINUX
+
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Linux
 {
-#if NET
+#if NET && !LINUX
     [SupportedOSPlatform("linux")]
 #endif
     static class NativeMethods
@@ -14,3 +16,5 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Linux
         public static extern int kill(int pid, int signal);
     }
 }
+
+#endif

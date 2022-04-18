@@ -4,6 +4,7 @@
     <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
     <CLSCompliant>true</CLSCompliant>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TargetPlatforms>any;windows</TargetPlatforms>
   </PropertyGroup>
 
   <ItemGroup>

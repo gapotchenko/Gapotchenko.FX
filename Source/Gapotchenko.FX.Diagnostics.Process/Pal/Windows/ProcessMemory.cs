@@ -1,10 +1,12 @@
-﻿using System;
+﻿#if !HAS_TARGET_PLATFORM || WINDOWS
+
+using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
-#if NET
+#if NET && !WINDOWS
     [SupportedOSPlatform("windows")]
 #endif
     static class ProcessMemory
@@ -172,3 +174,5 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
         }
     }
 }
+
+#endif

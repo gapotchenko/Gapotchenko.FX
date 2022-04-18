@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !HAS_TARGET_PLATFORM || LINUX
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,11 +14,11 @@ using static System.FormattableString;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Linux
 {
-#if NET
+#if NET && !LINUX
     [SupportedOSPlatform("linux")]
 #endif
     sealed class PalAdapter : IPalAdapter
-    {
+    { 
         PalAdapter()
         {
         }
@@ -128,3 +130,5 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Linux
         }
     }
 }
+
+#endif

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !HAS_TARGET_PLATFORM || WINDOWS
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows
 {
-#if NET
+#if NET && !WINDOWS
     [SupportedOSPlatform("windows")]
 #endif
     sealed class PalAdapter : IPalAdapter
@@ -156,3 +158,5 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
         }
     }
 }
+
+#endif
