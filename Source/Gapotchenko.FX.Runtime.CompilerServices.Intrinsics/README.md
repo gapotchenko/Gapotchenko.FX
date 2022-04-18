@@ -131,7 +131,7 @@ Here are the execution times of all three implementations (lower is better):
 
 `Log2_Intrinsic` is a clear winner.
 
-Intrinsic compiler may or may not apply machine code to a method depending on current app host environment.
+The intrinsic compiler may or may not apply machine code to a method depending on the current app host environment.
 When intrinsic is not applied, the original method implementation is used, thus providing a graceful, albeit less performant, fallback.
 
 ## Usage
