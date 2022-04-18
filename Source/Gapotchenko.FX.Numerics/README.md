@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Numerics.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Numerics)
 
-`Gapothenko.FX.Numerics` module provides hardware-accelerated operations for numeric data types.
+The module provides hardware-accelerated operations for numeric data types.
 
 ## BitOperations
 
