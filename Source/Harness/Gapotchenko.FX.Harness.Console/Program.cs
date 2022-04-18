@@ -55,6 +55,14 @@ namespace Gapotchenko.FX.Harness.Console
                 Console.WriteLine();
                 Console.WriteLine("----------------------");
                 Console.WriteLine("DONE");
+
+                if (args.Length == 1)
+                {
+                    int pid = int.Parse(args[0]);
+                    var process = Process.GetProcessById(pid);
+                    var mode = process.End(ProcessEndMode.Interrupt);
+                    Console.WriteLine("Process end mode: {0}", mode);
+                }
             }
             catch (Exception e)
             {
@@ -68,6 +76,10 @@ namespace Gapotchenko.FX.Harness.Console
             var parentProcess = Process.GetCurrentProcess().GetParent() ?? throw new Exception("No parent process.");
             Console.WriteLine("Parent process ID: {0}", parentProcess.Id);
             Console.WriteLine("Parent process command line: {0}", parentProcess.ReadArguments());
+            Console.WriteLine("------------------------------------------------------------------");
+            foreach (var i in parentProcess.ReadArgumentList())
+                Console.WriteLine(i);
+            Console.WriteLine("------------------------------------------------------------------");
             foreach (DictionaryEntry i in parentProcess.ReadEnvironmentVariables())
             {
                 Console.WriteLine("{0}={1}", i.Key, i.Value);

@@ -146,9 +146,23 @@ namespace Gapotchenko.FX.Diagnostics.Pal.MacOS
             }
         }
 
-        public Task<bool> TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
+        public async Task<bool> TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            int pid = process.Id;
+
+            for (int i = 0; i < 5; ++i)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                int result = NativeMethods.kill(pid, NativeMethods.SIGINT);
+                if (result == -1)
+                    return false;
+
+                if (await process.WaitForExitAsync(100, cancellationToken).ConfigureAwait(false))
+                    return true;
+            }
+
+            return false;
         }
     }
 }

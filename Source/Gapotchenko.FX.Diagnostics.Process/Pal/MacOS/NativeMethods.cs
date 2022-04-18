@@ -55,5 +55,13 @@ namespace Gapotchenko.FX.Diagnostics.Pal.MacOS
         /// </returns>
         [DllImport("libc")]
         public static unsafe extern int sysctl(int[] mib, int lenmib, void* oldp, nint* oldlenp, void* newp, nint newlenp);
+
+        /// <summary>
+        /// Interrupt.
+        /// </summary>
+        public const int SIGINT = 2;
+
+        [DllImport("libc")]
+        public static extern int kill(int pid, int signal);
     }
 }

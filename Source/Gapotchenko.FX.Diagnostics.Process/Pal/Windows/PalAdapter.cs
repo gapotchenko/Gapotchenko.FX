@@ -128,7 +128,7 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows
                     {
                         bool result = NativeMethods.GenerateConsoleCtrlEvent(NativeMethods.CTRL_C_EVENT, 0);
                         if (!result)
-                            throw new Win32Exception();
+                            return false;
                     }
                     catch (Exception e) when (!e.IsControlFlowException())
                     {
