@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Gapotchenko.FX.Console
@@ -86,84 +87,85 @@ namespace Gapotchenko.FX.Console
 
         static bool _TryEnablePlatformVTProcessing(out bool prevState)
         {
-            var platform = Environment.OSVersion.Platform;
-            if (platform == PlatformID.Unix || platform == PlatformID.MacOSX)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                prevState = false;
+
+                var hOut = NativeMethods.GetStdHandle(NativeMethods.STD_OUTPUT_HANDLE);
+                if (hOut == NativeMethods.INVALID_HANDLE_VALUE)
+                    return false;
+
+                uint mode;
+                if (!NativeMethods.GetConsoleMode(hOut, out mode))
+                    return false;
+
+                if ((mode & (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0)
+                {
+                    prevState = true;
+                    return true;
+                }
+                else
+                {
+                    mode |= (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+                    return NativeMethods.SetConsoleMode(hOut, mode);
+                }
+            }
+            else
             {
                 // Unix-like OSes have inherent support for VT processing.
                 prevState = true;
                 return true;
-            }
-
-            prevState = false;
-
-            var hOut = NativeMethods.GetStdHandle(NativeMethods.STD_OUTPUT_HANDLE);
-            if (hOut == NativeMethods.INVALID_HANDLE_VALUE)
-                return false;
-
-            uint mode;
-            if (!NativeMethods.GetConsoleMode(hOut, out mode))
-                return false;
-
-            if ((mode & (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0)
-            {
-                prevState = true;
-                return true;
-            }
-            else
-            {
-                mode |= (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-                return NativeMethods.SetConsoleMode(hOut, mode);
             }
         }
 
         static bool _TryRestorePlatformVTProcessing(bool prevState)
         {
-            var platform = Environment.OSVersion.Platform;
-            if (platform == PlatformID.Unix || platform == PlatformID.MacOSX)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var hOut = NativeMethods.GetStdHandle(NativeMethods.STD_OUTPUT_HANDLE);
+                if (hOut == NativeMethods.INVALID_HANDLE_VALUE)
+                    return false;
+
+                if (!NativeMethods.GetConsoleMode(hOut, out var mode))
+                    return false;
+
+                bool curState = (mode & (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0;
+                if (curState == prevState)
+                    return true;
+
+                if (prevState)
+                    mode |= (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+                else
+                    mode &= ~(uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+
+                return NativeMethods.SetConsoleMode(hOut, mode);
+            }
+            else
             {
                 // Unix-like OSes have inherent support for VT processing.
                 // There is no simple way to disable it.
                 return prevState;
             }
-
-            var hOut = NativeMethods.GetStdHandle(NativeMethods.STD_OUTPUT_HANDLE);
-            if (hOut == NativeMethods.INVALID_HANDLE_VALUE)
-                return false;
-
-            uint mode;
-            if (!NativeMethods.GetConsoleMode(hOut, out mode))
-                return false;
-
-            bool curState = (mode & (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0;
-            if (curState == prevState)
-                return true;
-
-            if (prevState)
-                mode |= (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-            else
-                mode &= ~(uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-
-            return NativeMethods.SetConsoleMode(hOut, mode);
         }
 
         static bool _IsPlatformVTProcessingEnabled()
         {
-            var platform = Environment.OSVersion.Platform;
-            if (platform == PlatformID.Unix || platform == PlatformID.MacOSX)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var hOut = NativeMethods.GetStdHandle(NativeMethods.STD_OUTPUT_HANDLE);
+                if (hOut == NativeMethods.INVALID_HANDLE_VALUE)
+                    return false;
+
+                if (!NativeMethods.GetConsoleMode(hOut, out var mode))
+                    return false;
+
+                return (mode & (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0;
+            }
+            else
             {
                 // Unix-like OSes have inherent support for VT processing.
                 return true;
             }
-
-            var hOut = NativeMethods.GetStdHandle(NativeMethods.STD_OUTPUT_HANDLE);
-            if (hOut == NativeMethods.INVALID_HANDLE_VALUE)
-                return false;
-
-            uint mode;
-            if (!NativeMethods.GetConsoleMode(hOut, out mode))
-                return false;
-
-            return (mode & (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0;
         }
 
         static readonly object m_SyncRoot = new object();

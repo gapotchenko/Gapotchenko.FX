@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics
@@ -60,6 +61,9 @@ namespace Gapotchenko.FX.Diagnostics
             }
         }
 
+#if NET
+        [SupportedOSPlatform("windows")]
+#endif
         static partial class NativeMethods
         {
             [DllImport("kernel32.dll", ExactSpelling = true)]

@@ -1,8 +1,12 @@
 ﻿using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 
 namespace Gapotchenko.FX.IO
 {
+#if NET
+    [SupportedOSPlatform("windows")]
+#endif
     static class NativeMethods
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]

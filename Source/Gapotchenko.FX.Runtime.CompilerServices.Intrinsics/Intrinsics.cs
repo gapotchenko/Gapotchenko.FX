@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices
 {
@@ -69,6 +70,9 @@ namespace Gapotchenko.FX.Runtime.CompilerServices
         /// <summary>
         /// Intrinsic patcher for Windows OS and AMD-based 64-bit processor architecture.
         /// </summary>
+#if NET
+        [SupportedOSPlatform("windows")]
+#endif
         sealed class PatcherWindowsX64 : Patcher
         {
             static byte* _GetPointerToMethodInstructions(MethodInfo method)
