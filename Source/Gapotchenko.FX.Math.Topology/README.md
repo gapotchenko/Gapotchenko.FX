@@ -174,7 +174,10 @@ var g = new Graph<int>
     }
 };
 
+// Sort the graph topologically.
 var ordering = g.OrderTopologically();
+
+// Print the results.
 Console.WriteLine(string.Join(", ", ordering));
 ```
 
