@@ -126,7 +126,7 @@ In this way, a developer can freely choose between immutable, mutable, or combin
 Graph transposition is just one example but there are plenty of other operations available.
 They all work in the same manner and follow the same model:
 
-| Operation | Description | Immutable Function | In-place Method |
+| Operation | Description | Immutable Function | In-Place Method |
 | --- | --- | --- | --- |
 | Transposition | Reverses the direction of edges | `GetTransposition` | `Transpose` |
 | Transitive reduction | Prunes the transitive relations that have shorter paths | `GetTransitiveReduction` | `ReduceTransitions` |
