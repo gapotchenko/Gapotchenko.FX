@@ -23,9 +23,11 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Linux
 
         public static PalAdapter Instance { get; } = new PalAdapter();
 
+        static string GetProcEntryFilePath(int pid, string name) => Invariant($"/proc/{pid}/{name}");
+
         public int GetParentProcessId(Process process)
         {
-            string filePath = Invariant($"/proc/{process.Id}/status");
+            string filePath = GetProcEntryFilePath(process.Id, "status");
             using var tr = File.OpenText(filePath);
 
             for (; ; )
@@ -54,14 +56,31 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Linux
         public void ReadProcessCommandLineArguments(Process process, out string? commandLine, out IEnumerable<string>? arguments)
         {
             commandLine = null;
+            arguments = ReadArguments(process.Id);
+        }
 
-            throw new NotImplementedException();
+        static IEnumerable<string> ReadArguments(int pid)
+        {
+            using var br = new ProcessBinaryReader(
+                File.OpenRead(GetProcEntryFilePath(pid, "cmdline")),
+                Encoding.UTF8);
+
+            for (; ; )
+            {
+                if (br.PeekChar() == -1)
+                {
+                    // EOF
+                    break;
+                }
+
+                yield return br.ReadCString();
+            }
         }
 
         public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process)
         {
             using var br = new ProcessBinaryReader(
-                File.OpenRead(Invariant($"/proc/{process.Id}/environ")),
+                File.OpenRead(GetProcEntryFilePath(process.Id, "environ")),
                 Encoding.UTF8);
 
             var env = new Dictionary<string, string>(StringComparer.InvariantCulture);
