@@ -53,7 +53,7 @@ p=a%20b%20c
 ```
 
 
-Once a query is built, it can be combined with a URI:
+Once the query is built, it can be combined with a URI:
 
 ```csharp
 using Gapotchenko.FX;
@@ -70,7 +70,7 @@ var uri = uqb.CombineWithUri("https://example.com/");
 Console.WriteLine(uri);
 ```
 
-This code produces the following output:
+The code produces the following output:
 
 ```
 https://example.com/?a=1&rad=productivity
