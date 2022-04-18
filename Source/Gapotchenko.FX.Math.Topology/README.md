@@ -160,6 +160,7 @@ To answer that question, let's use `OrderTopologically` method:
 ``` c#
 using Gapotchenko.FX.Math.Topology;
 
+// Define a graph according to the diagram.
 var g = new Graph<int>
 {
     Edges =
