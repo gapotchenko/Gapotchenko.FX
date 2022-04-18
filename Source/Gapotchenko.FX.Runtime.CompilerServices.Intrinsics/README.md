@@ -120,7 +120,7 @@ class BitOperations
 Machine code is tied to CPU architecture and this is reflected in the attribute as well.
 
 Please note that besides using `MachineCodeIntrinsicAttribute` to define method intrinsic implementations,
-`BitOperations` class **should** use a static constructor to ensure that corresponding methods are initialized (compiled) before they are called.
+`BitOperations` class **should** use a static constructor to ensure that the corresponding methods are initialized (compiled) before they are called.
 
 Here are the execution times of all three implementations (lower is better):
 
