@@ -78,7 +78,8 @@ Chances are that your machine runs on a descendant of that influential CPU, be i
 So how can we use the low-level `BSR` instruction from high-level .NET?
 
 This is why `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` class exists.
-It provides an ability to define intrinsic implementation of a method with `MachineCodeIntrinsicAttribute`. Let's see how:
+It provides the ability to define an intrinsic implementation of a method with `MachineCodeIntrinsicAttribute`.
+Let's see how:
 
 ``` csharp
 using Gapotchenko.FX.Runtime.CompilerServices;
