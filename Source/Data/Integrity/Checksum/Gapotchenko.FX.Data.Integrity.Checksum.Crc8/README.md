@@ -63,7 +63,7 @@ Console.WriteLine("Checksum = 0x{0:x}", checksum);
 
 Among all other posibilities, it is recommended to use the standard CRC-8 algorithm which comes under CRC-8, CRC-8/SMBUS aliases and is available via `Crc8.Standard` property.
 
-All other predefined algorithms are available via the properties of `Crc8.Attested` class.
+All other predefined algorithms are available via the corresponding properties of `Crc8.Attested` class.
 
 ## Custom CRC-8 Algorithms
 
