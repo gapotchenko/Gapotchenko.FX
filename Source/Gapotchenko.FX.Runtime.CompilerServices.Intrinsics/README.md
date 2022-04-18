@@ -69,7 +69,7 @@ Here are the execution times of all two implementations (lower is better):
 |   Log2_Trivial | 4.587 ns | 0.0325 ns | 0.0288 ns |
 |  Log2_DeBruijn | 1.256 ns | 0.0068 ns | 0.0063 ns |
 
-This is a vast improvement over previous version but we can do even better.
+This is a vast improvement over the previous version but we can do even better.
 
 Meet the Intel 80386, a 32-bit microprocessor introduced in 1985.
 It brought the Bit Scan Reverse (BSR) instruction that does exactly what we want to achieve with `Log2`
