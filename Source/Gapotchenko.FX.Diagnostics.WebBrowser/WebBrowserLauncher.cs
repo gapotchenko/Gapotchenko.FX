@@ -34,7 +34,9 @@ namespace Gapotchenko.FX.Diagnostics
             {
                 var psi = new ProcessStartInfo(fileName, arguments ?? string.Empty)
                 {
-                    UseShellExecute = true
+#if NETSTANDARD || NET
+                    UseShellExecute = true // .NET Framework has UseShellExecute set to true by default, .NET Core hasn't.
+#endif
                 };
                 Process.Start(psi)?.Dispose();
             }
