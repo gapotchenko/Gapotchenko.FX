@@ -14,33 +14,33 @@ namespace Gapotchenko.FX.Data.Encoding
         bool IsCaseSensitive { get; }
 
         /// <summary>
-        /// Encodes an array of bytes to its equivalent string representation.
+        /// Encodes all the bytes in the specified span into a string.
         /// </summary>
-        /// <param name="data">The input array of bytes.</param>
-        /// <returns>The string representation of the contents of <paramref name="data"/>.</returns>
+        /// <param name="data">The byte span to encode.</param>
+        /// <returns>The string with encoded data.</returns>
         string GetString(ReadOnlySpan<byte> data);
 
         /// <summary>
-        /// Encodes an array of bytes to its equivalent string representation with specified options.
+        /// Encodes all the bytes in the specified span into a string with specified options.
         /// </summary>
-        /// <param name="data">The input array of bytes.</param>
+        /// <param name="data">The byte span to encode.</param>
         /// <param name="options">The options.</param>
-        /// <returns>The string representation of the contents of <paramref name="data"/>.</returns>
+        /// <returns>The string with encoded data.</returns>
         string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <summary>
-        /// Decodes the specified string to an equivalent array of bytes.
+        /// Decodes all the characters in the specified string into a byte array.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
-        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
+        /// <param name="s">The read-only character span to decode.</param>
+        /// <returns>A byte array with decoded data.</returns>
         byte[] GetBytes(ReadOnlySpan<char> s);
 
         /// <summary>
-        /// Decodes the specified string to an equivalent array of bytes with specified options.
+        /// Decodes all the characters in the specified string into a byte array with specified options.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="options">The options.</param>
-        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
+        /// <returns>A byte array with decoded data.</returns>
         byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options);
 
         /// <summary>
