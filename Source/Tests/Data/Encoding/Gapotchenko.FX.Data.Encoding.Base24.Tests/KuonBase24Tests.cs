@@ -33,7 +33,11 @@ namespace Gapotchenko.FX.Data.Encoding.Tests
 
         static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);
 
-        static void RoundTrip(ReadOnlySpan<byte> raw) => TextDataEncodingTestBench.RoundTrip(KuonBase24.Instance, raw);
+        static void RoundTrip(ReadOnlySpan<byte> raw) =>
+            TextDataEncodingTestBench.RoundTrip(
+                KuonBase24.Instance,
+                raw,
+                raw.Length % 4 != 0 ? DataEncodingOptions.Relax : DataEncodingOptions.None);
 
         [TestMethod]
         public void KuonBase24_Empty() => TestVector("", "");
@@ -197,7 +201,12 @@ namespace Gapotchenko.FX.Data.Encoding.Tests
         [DataTestMethod]
         [DataRow(DataEncodingOptions.None)]
         [DataRow(DataEncodingOptions.Padding)]
-        public void KuonBase24_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(KuonBase24.Instance, 16, 100000, options);
+        public void KuonBase24_RT_Random(DataEncodingOptions options) =>
+            TextDataEncodingTestBench.RandomRoundTrip(
+                KuonBase24.Instance,
+                16,
+                100000,
+                options | DataEncodingOptions.Relax);
 
         [DataTestMethod]
         // S1
@@ -209,6 +218,10 @@ namespace Gapotchenko.FX.Data.Encoding.Tests
         // S3
         [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.None)]
         [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.Padding)]
-        public void KuonBase24_RT_S(string s, DataEncodingOptions options) => TextDataEncodingTestBench.RoundTrip(KuonBase24.Instance, s, options);
+        public void KuonBase24_RT_S(string s, DataEncodingOptions options) =>
+            TextDataEncodingTestBench.RoundTrip(
+                KuonBase24.Instance,
+                s,
+                options | DataEncodingOptions.Relax);
     }
 }

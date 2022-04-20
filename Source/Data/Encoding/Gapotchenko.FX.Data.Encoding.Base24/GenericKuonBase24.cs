@@ -99,6 +99,26 @@ namespace Gapotchenko.FX.Data.Encoding
         /// </summary>
         const DataEncodingOptions FormatMask = DataEncodingOptions.Wrap | DataEncodingOptions.Indent;
 
+        /// <inheritdoc/>
+        protected override string GetStringCore(ReadOnlySpan<byte> data, DataEncodingOptions options)
+        {
+            if ((options & DataEncodingOptions.Relax) == 0 && data.Length % 4 != 0)
+            {
+                // The author of Kuon Base24 encoding put an artificial restriction on allowed data lengths:
+                // https://github.com/kuon/java-base24/issues/3
+                // There are neither mathematical nor technical restrictions for such a view, however we have to respect the current de-facto spec.
+                // The restriction can be lifted by specifying DataEncodingOptions.Relax flag.
+
+                throw new Exception(
+                    string.Format(
+                        "The length of data to encode with {0} encoding should be a multiple of 4. To lift this restriction, specify {1} option.",
+                        this,
+                        nameof(DataEncodingOptions.Relax)));
+            }
+
+            return base.GetStringCore(data, options);
+        }
+
         abstract class CodecContextBase
         {
             public CodecContextBase(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
@@ -392,7 +412,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="alphabet">The alphabet.</param>
         /// <param name="options">The options.</param>
         /// <returns>The encoder context.</returns>
-        protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new EncoderContext(alphabet, options);
+        protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
+            new EncoderContext(alphabet, options);
 
         /// <summary>
         /// Creates decoder context with specified alphabet and options.
