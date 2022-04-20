@@ -62,7 +62,21 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// Gets the number of symbols for padding of the encoded data representation.
         /// </summary>
-        public new const int Padding = 8;
+        public new const int Padding = SymbolsPerEncodedBlock;
+
+        /// <summary>
+        /// Pads the encoded read-only character span.
+        /// </summary>
+        /// <param name="s">The read-only character span to pad.</param>
+        /// <returns>The padded encoded string.</returns>
+        public new static string Pad(ReadOnlySpan<char> s) => Instance.Pad(s);
+
+        /// <summary>
+        /// Unpads the encoded read-only character span.
+        /// </summary>
+        /// <param name="s">The read-only character span to unpad.</param>
+        /// <returns>The unpadded read-only character span.</returns>
+        public new static ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => Instance.Unpad(s);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static volatile IBase32? m_Instance;

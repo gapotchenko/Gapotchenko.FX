@@ -62,7 +62,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// Gets the number of symbols for padding of the encoded data representation.
         /// </summary>
-        public new const int Padding = 8;
+        public new const int Padding = SymbolsPerEncodedBlock;
 
         /// <summary>
         /// Pads the encoded read-only character span.
