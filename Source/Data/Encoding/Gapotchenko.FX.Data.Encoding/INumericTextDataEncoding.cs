@@ -45,7 +45,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Decodes all the characters in the specified read-only span into an <see cref="Int32"/> value.
         /// A return value indicates whether the decoding succeeded.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="value">When this method returns, contains the decoded <see cref="Int32"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
         bool TryGetInt32(ReadOnlySpan<char> s, out int value);
@@ -54,7 +54,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Decodes all the characters in the specified read-only span into an <see cref="Int32"/> value with specified options.
         /// A return value indicates whether the decoding succeeded.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="value">When this method returns, contains the decoded <see cref="Int32"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
         /// <param name="options">The options.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
@@ -98,7 +98,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Decodes all the characters in the specified read-only span into an <see cref="UInt32"/> value.
         /// A return value indicates whether the decoding succeeded.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="value">When this method returns, contains the decoded <see cref="UInt32"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
         bool TryGetUInt32(ReadOnlySpan<char> s, out uint value);
@@ -107,7 +107,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Decodes all the characters in the specified read-only span into an <see cref="UInt32"/> value with specified options.
         /// A return value indicates whether the decoding succeeded.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="value">When this method returns, contains the decoded <see cref="UInt32"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
         /// <param name="options">The options.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
@@ -151,7 +151,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Decodes all the characters in the specified read-only span into an <see cref="Int64"/> value.
         /// A return value indicates whether the decoding succeeded.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="value">When this method returns, contains the decoded <see cref="Int64"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
         bool TryGetInt64(ReadOnlySpan<char> s, out long value);
@@ -160,7 +160,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Decodes all the characters in the specified read-only span into an <see cref="Int64"/> value with specified options.
         /// A return value indicates whether the decoding succeeded.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="value">When this method returns, contains the decoded <see cref="Int64"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
         /// <param name="options">The options.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
@@ -204,7 +204,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Decodes all the characters in the specified read-only span into an <see cref="UInt64"/> value.
         /// A return value indicates whether the decoding succeeded.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="value">When this method returns, contains the decoded <see cref="UInt64"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
         bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value);
@@ -213,7 +213,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Decodes all the characters in the specified read-only span into an <see cref="UInt64"/> value with specified options.
         /// A return value indicates whether the decoding succeeded.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="value">When this method returns, contains the decoded <see cref="UInt64"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
         /// <param name="options">The options.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
@@ -257,7 +257,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Decodes all the characters in the specified read-only span into an <see cref="BigInteger"/> value.
         /// A return value indicates whether the decoding succeeded.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="value">When this method returns, contains the decoded <see cref="BigInteger"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
         bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value);
@@ -266,7 +266,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Decodes all the characters in the specified read-only span into an <see cref="BigInteger"/> value with specified options.
         /// A return value indicates whether the decoding succeeded.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="value">When this method returns, contains the decoded <see cref="BigInteger"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
         /// <param name="options">The options.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
