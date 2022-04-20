@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Data.Encoding
     public sealed class TextDataEncodingAlphabet
     {
         /// <summary>
-        /// Initializes a new instance of a case-sensitive <see cref="TextDataEncodingAlphabet"/>.
+        /// Initializes a new instance of a case-sensitive <see cref="TextDataEncodingAlphabet"/> with the specified symbols.
         /// </summary>
         /// <param name="symbols">The symbols.</param>
         public TextDataEncodingAlphabet(string symbols) :
@@ -32,7 +32,7 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/> with the specified symbols and options.
+        /// Initializes a new instance of <see cref="TextDataEncodingAlphabet"/> with the specified symbols, case-sensitivity and synonyms.
         /// </summary>
         /// <param name="symbols">The symbols.</param>
         /// <param name="caseSensitive">Indicates whether alphabet is case sensitive.</param>
@@ -197,7 +197,7 @@ namespace Gapotchenko.FX.Data.Encoding
         readonly Dictionary<char, int>? m_LookupDictionary;
 
         [Flags]
-        enum Flags
+        enum Flags : byte
         {
             None = 0,
             CaseSensitive = 1 << 0,
