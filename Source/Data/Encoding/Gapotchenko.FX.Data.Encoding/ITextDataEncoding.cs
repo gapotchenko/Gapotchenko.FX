@@ -64,22 +64,21 @@ namespace Gapotchenko.FX.Data.Encoding
         Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.None);
 
         /// <summary>
-        /// Pads the encoded string.
+        /// Pads the encoded read-only character span.
         /// </summary>
         /// <remarks>
-        /// In some encodings, the length of an encoded string must be a multiple of the predefined number of characters.
-        /// This method adds padding characters at the end of the specified string as needed in order to meet this requirement.
-        /// The added suffix is called padding.
+        /// In some encodings, the length of an encoded string representation must be a multiple of the predefined number of characters.
+        /// This method concatenates the specified character span with padding characters to meet that requirement and returns the resulting string.
         /// </remarks>
-        /// <param name="s">The encoded string to pad.</param>
+        /// <param name="s">The read-only character span to pad.</param>
         /// <returns>The padded encoded string.</returns>
         string Pad(ReadOnlySpan<char> s);
 
         /// <summary>
-        /// Unpads the encoded string.
+        /// Unpads the encoded read-only character span.
         /// </summary>
-        /// <param name="s">The encoded string to unpad.</param>
-        /// <returns>The unpadded encoded string.</returns>
+        /// <param name="s">The read-only character span to unpad.</param>
+        /// <returns>The unpadded read-only character span.</returns>
         ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s);
 
         /// <summary>
