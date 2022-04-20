@@ -29,14 +29,14 @@ namespace Gapotchenko.FX.Data.Encoding
         string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options);
 
         /// <summary>
-        /// Decodes all the characters in the specified string into a byte array.
+        /// Decodes all the characters in the specified read-only span into a byte array.
         /// </summary>
         /// <param name="s">The read-only character span to decode.</param>
         /// <returns>A byte array with decoded data.</returns>
         byte[] GetBytes(ReadOnlySpan<char> s);
 
         /// <summary>
-        /// Decodes all the characters in the specified string into a byte array with specified options.
+        /// Decodes all the characters in the specified read-only span into a byte array with specified options.
         /// </summary>
         /// <param name="s">The read-only character span to decode.</param>
         /// <param name="options">The options.</param>
