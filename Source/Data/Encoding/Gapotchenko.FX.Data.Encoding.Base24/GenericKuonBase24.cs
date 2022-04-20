@@ -116,7 +116,7 @@ namespace Gapotchenko.FX.Data.Encoding
                         nameof(DataEncodingOptions.Relax)));
             }
 
-            return base.GetStringCore(data, options);
+            return base.GetStringCore(data, options | DataEncodingOptions.Relax);
         }
 
         abstract class CodecContextBase
@@ -412,8 +412,19 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="alphabet">The alphabet.</param>
         /// <param name="options">The options.</param>
         /// <returns>The encoder context.</returns>
-        protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
-            new EncoderContext(alphabet, options);
+        protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
+        {
+            if ((options & DataEncodingOptions.Relax) == 0)
+            {
+                throw new Exception(
+                    string.Format(
+                        "{0} encoding does not support arbitrary data lengths and thus cannot support streaming. To lift this restriction, specify {1} option.",
+                        this,
+                        nameof(DataEncodingOptions.Relax)));
+            }
+
+            return new EncoderContext(alphabet, options);
+        }
 
         /// <summary>
         /// Creates decoder context with specified alphabet and options.
@@ -421,7 +432,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="alphabet">The alphabet.</param>
         /// <param name="options">The options.</param>
         /// <returns>The decoder context.</returns>
-        protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new DecoderContext(alphabet, options);
+        protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
+            new DecoderContext(alphabet, options);
 
         /// <inheritdoc/>
         public sealed override bool IsCaseSensitive => Alphabet.IsCaseSensitive;
