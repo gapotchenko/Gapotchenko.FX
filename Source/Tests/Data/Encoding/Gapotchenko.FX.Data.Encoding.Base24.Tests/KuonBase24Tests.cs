@@ -23,7 +23,10 @@ namespace Gapotchenko.FX.Data.Encoding.Tests
             var instance = KuonBase24.Instance;
 
             Assert.AreEqual(KuonBase24.Efficiency, instance.Efficiency);
+
             Assert.IsFalse(instance.PrefersPadding);
+            Assert.IsTrue(instance.CanPad);
+            Assert.AreEqual(7, instance.Padding);
 
             // -----------------------------------------------------------------
 
