@@ -43,7 +43,7 @@ namespace Gapotchenko.FX.Data.Encoding
 
         /// <summary>
         /// Instructs to produce a wrapped output if the encoding supports it natively.
-        /// For example, Base64 handles wrapping by inserting a new line separator for every 76 symbols of the output.
+        /// For example, Base64 encoding handles wrapping by inserting a new line separator for every 76 symbols of the output.
         /// </summary>
         Wrap = 1 << 4,
 
@@ -53,7 +53,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// For example, if encoded Base64 string contains an invalid character it gets ignored instead of throwing an exception.
         /// </para>
         /// <para>
-        /// Alternatively, the flag can be used to lift the restrictions imposed the by the encoding operation.
+        /// Alternatively, the flag can be used to lift the restrictions imposed by the encoding operation.
         /// </para>
         /// </summary>
         Relax = 1 << 5,
