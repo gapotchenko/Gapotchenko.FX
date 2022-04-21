@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -10,7 +9,7 @@ namespace Gapotchenko.FX.Data.Encoding
     /// </summary>
     public sealed class Base64Url : GenericBase64
     {
-        private Base64Url() :
+        Base64Url() :
             base(new TextDataEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"))
         {
         }
@@ -38,55 +37,49 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
-        /// Encodes an array of bytes to its equivalent string representation that is encoded with base64url symbols.
+        /// Encodes all the bytes in the specified span into a string of Base64 URL characters.
         /// </summary>
-        /// <param name="data">The input array of bytes.</param>
-        /// <returns>The string representation, in base64url, of the contents of <paramref name="data"/>.</returns>
-        [return: NotNullIfNotNull("data")]
-        public new static string? GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
+        /// <param name="data">The byte span to encode.</param>
+        /// <returns>The string with encoded data.</returns>
+        public new static string GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
 
         /// <summary>
-        /// Encodes an array of bytes to its equivalent string representation that is encoded with base64url symbols with specified options.
+        /// Encodes all the bytes in the specified span into a string of Base64 URL characters with specified options.
         /// </summary>
-        /// <param name="data">The input array of bytes.</param>
+        /// <param name="data">The byte span to encode.</param>
         /// <param name="options">The options.</param>
-        /// <returns>The string representation, in base64url, of the contents of <paramref name="data"/>.</returns>
-        [return: NotNullIfNotNull("data")]
-        public new static string? GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => Instance.GetString(data, options);
+        /// <returns>The string with encoded data.</returns>
+        public new static string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => Instance.GetString(data, options);
 
         /// <summary>
-        /// Decodes the specified string, which represents encoded binary data as base64url symbols, to an equivalent array of bytes.
+        /// Decodes all Base64 URL characters in the specified read-only span into a byte array.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
-        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("s")]
-        public new static byte[]? GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
+        /// <param name="s">The read-only character span to decode.</param>
+        /// <returns>A byte array with decoded data.</returns>
+        public new static byte[] GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
 
         /// <summary>
-        /// Decodes the specified string, which represents encoded binary data as base64url symbols, to an equivalent array of bytes.
+        /// Decodes all Base64 URL characters in the specified read-only span into a byte array with specified options.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
-        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("s")]
-        public static byte[]? GetBytes(string? s) => GetBytes(s.AsSpan());
-
-        /// <summary>
-        /// Decodes the specified string, which represents encoded binary data as base64url symbols, to an equivalent array of bytes with specified options.
-        /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="options">The options.</param>
-        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("s")]
-        public new static byte[]? GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBytes(s, options);
+        /// <returns>A byte array with decoded data.</returns>
+        public new static byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBytes(s, options);
 
         /// <summary>
-        /// Decodes the specified string, which represents encoded binary data as base64url symbols, to an equivalent array of bytes with specified options.
+        /// Decodes all Base64 URL characters in the specified string into a byte array.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <returns>A byte array with decoded data.</returns>
+        public static byte[] GetBytes(string s) => GetBytes(s.AsSpan());
+
+        /// <summary>
+        /// Decodes all Base64 URL characters in the specified string into a byte array with specified options.
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <param name="options">The options.</param>
-        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("s")]
-        public static byte[]? GetBytes(string? s, DataEncodingOptions options) => GetBytes(s.AsSpan(), options);
+        /// <returns>A byte array with decoded data.</returns>
+        public static byte[] GetBytes(string s, DataEncodingOptions options) => GetBytes(s.AsSpan(), options);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static volatile IBase64? m_Instance;

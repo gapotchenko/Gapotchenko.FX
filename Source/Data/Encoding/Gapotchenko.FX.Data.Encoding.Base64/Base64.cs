@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -27,74 +26,67 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
-        /// Encodes an array of bytes to its equivalent string representation that is encoded with Base64 symbols.
+        /// Encodes all the bytes in the specified span into a string of Base64 characters.
         /// </summary>
-        /// <param name="data">The input array of bytes.</param>
-        /// <returns>The string representation, in Base64, of the contents of <paramref name="data"/>.</returns>
-        [return: NotNullIfNotNull("data")]
-        public new static string? GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
+        /// <param name="data">The byte span to encode.</param>
+        /// <returns>The string with encoded data.</returns>
+        public new static string GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
 
         /// <summary>
-        /// Encodes an array of bytes to its equivalent string representation that is encoded with Base64 symbols with specified options.
+        /// Encodes all the bytes in the specified span into a string of Base64 characters with specified options.
         /// </summary>
-        /// <param name="data">The input array of bytes.</param>
+        /// <param name="data">The byte span to encode.</param>
         /// <param name="options">The options.</param>
-        /// <returns>The string representation, in Base64, of the contents of <paramref name="data"/>.</returns>
-        [return: NotNullIfNotNull("data")]
-        public new static string? GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => Instance.GetString(data, options);
+        /// <returns>The string with encoded data.</returns>
+        public new static string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => Instance.GetString(data, options);
 
         /// <summary>
-        /// Decodes the specified string, which represents encoded binary data as Base64 symbols, to an equivalent array of bytes.
+        /// Decodes all Base64 characters in the specified read-only span into a byte array.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
-        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("s")]
-        public new static byte[]? GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
+        /// <param name="s">The read-only character span to decode.</param>
+        /// <returns>A byte array with decoded data.</returns>
+        public new static byte[] GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
 
         /// <summary>
-        /// Decodes the specified string, which represents encoded binary data as Base64 symbols, to an equivalent array of bytes.
+        /// Decodes all Base64 characters in the specified read-only span into a byte array with specified options.
         /// </summary>
-        /// <param name="s">The string to decode.</param>
-        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("s")]
-        public static byte[]? GetBytes(string? s) => GetBytes(s.AsSpan());
-
-        /// <summary>
-        /// Decodes the specified string, which represents encoded binary data as Base64 symbols, to an equivalent array of bytes with specified options.
-        /// </summary>
-        /// <param name="s">The string to decode.</param>
+        /// <param name="s">The read-only character span to decode.</param>
         /// <param name="options">The options.</param>
-        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("s")]
-        public new static byte[]? GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBytes(s, options);
+        /// <returns>A byte array with decoded data.</returns>
+        public new static byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBytes(s, options);
 
         /// <summary>
-        /// Decodes the specified string, which represents encoded binary data as Base64 symbols, to an equivalent array of bytes with specified options.
+        /// Decodes all Base64 characters in the specified string into a byte array.
+        /// </summary>
+        /// <param name="s">The string to decode.</param>
+        /// <returns>A byte array with decoded data.</returns>
+        public static byte[] GetBytes(string s) => GetBytes(s.AsSpan());
+
+        /// <summary>
+        /// Decodes all Base64 characters in the specified string into a byte array with specified options.
         /// </summary>
         /// <param name="s">The string to decode.</param>
         /// <param name="options">The options.</param>
-        /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-        [return: NotNullIfNotNull("s")]
-        public static byte[]? GetBytes(string? s, DataEncodingOptions options) => GetBytes(s.AsSpan(), options);
+        /// <returns>A byte array with decoded data.</returns>
+        public static byte[] GetBytes(string s, DataEncodingOptions options) => GetBytes(s.AsSpan(), options);
 
         /// <summary>
-        /// The number of characters for padding of an encoded string representation.
+        /// The number of symbols for padding of the encoded data representation.
         /// </summary>
         public new const int Padding = 4;
 
         /// <summary>
-        /// Pads the encoded string.
+        /// Pads the encoded read-only character span.
         /// </summary>
-        /// <param name="s">The encoded string to pad.</param>
+        /// <param name="s">The read-only character span to pad.</param>
         /// <returns>The padded encoded string.</returns>
-        [return: NotNullIfNotNull("s")]
-        public new static string? Pad(ReadOnlySpan<char> s) => Instance.Pad(s);
+        public new static string Pad(ReadOnlySpan<char> s) => Instance.Pad(s);
 
         /// <summary>
-        /// Unpads the encoded string.
+        /// Unpads the encoded read-only character span.
         /// </summary>
-        /// <param name="s">The encoded string to unpad.</param>
-        /// <returns>The unpadded encoded string.</returns>
+        /// <param name="s">The read-only character span to unpad.</param>
+        /// <returns>The unpadded read-only character span.</returns>
         public new static ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => Instance.Unpad(s);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

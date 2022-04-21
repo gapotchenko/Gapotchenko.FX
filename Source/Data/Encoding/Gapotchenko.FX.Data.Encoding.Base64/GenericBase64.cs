@@ -376,7 +376,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="alphabet">The alphabet.</param>
         /// <param name="options">The options.</param>
         /// <returns>The encoder context.</returns>
-        protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new EncoderContext(alphabet, options);
+        protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
+            new EncoderContext(alphabet, options);
 
         /// <summary>
         /// Creates decoder context with specified alphabet and options.
@@ -384,7 +385,8 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="alphabet">The alphabet.</param>
         /// <param name="options">The options.</param>
         /// <returns>The decoder context.</returns>
-        protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new DecoderContext(alphabet, options);
+        protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
+            new DecoderContext(alphabet, options);
 
         /// <inheritdoc/>
         public sealed override bool IsCaseSensitive => Alphabet.IsCaseSensitive;

@@ -60,7 +60,7 @@ namespace Gapotchenko.FX.Data.Encoding
         public static byte[] GetBytes(string s, DataEncodingOptions options) => GetBytes((s ?? throw new ArgumentNullException(nameof(s))).AsSpan(), options);
 
         /// <summary>
-        /// Gets the number of symbols for padding of the encoded data representation.
+        /// The number of symbols for padding of the encoded data representation.
         /// </summary>
         public new const int Padding = SymbolsPerEncodedBlock;
 
