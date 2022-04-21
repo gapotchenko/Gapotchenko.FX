@@ -31,7 +31,7 @@ var checksum = iterator.ComputeFinal();
 
 CRC-32 family of cyclic redundancy checks consists of several attested checksum algorithms with predefined parameters:
 
-| Algorithm | Aliases | Implementation | Parameters: poly | init | refin | refout | xorout | check |
+| Algorithm | Aliases | Gapotchenko.FX Implementation | Parameters: poly | init | refin | refout | xorout | check |
 | --------- | ------- | -------- | ---- | ---- | ----- | ------ | ------ | ----- |
 | CRC-32 (standard, recommended) | CRC-32/ISO-HDLC, CRC-32/ADCCP, CRC-32/V-42, CRC-32/XZ, PKZIP | `Crc32.Standard` | 0x04c11db7 | 0xffffffff | true | true | 0xffffffff | 0xcbf43926 |
 | CRC-32C | CRC-32/BASE91-C, CRC-32/CASTAGNOLI, CRC-32/INTERLAKEN, CRC-32/ISCSI | `Crc32.Attested.C` | 0x1edc6f41 | 0xffffffff | true | true | 0xffffffff | 0xe3069283 |

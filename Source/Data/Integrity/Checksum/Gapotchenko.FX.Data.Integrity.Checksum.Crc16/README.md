@@ -31,7 +31,7 @@ var checksum = iterator.ComputeFinal();
 
 CRC-16 family of cyclic redundancy checks consists of several attested checksum algorithms with predefined parameters:
 
-| Algorithm | Aliases | Implementation | Parameters: poly | init | refin | refout | xorout | check |
+| Algorithm | Aliases | Gapotchenko.FX Implementation | Parameters: poly | init | refin | refout | xorout | check |
 | --------- | ------- | -------- | ---- | ---- | ----- | ------ | ------ | ----- |
 | CRC-16 (standard, recommended) | CRC-16/ARC, CRC-IBM, CRC-16/LHA | `Crc16.Standard` | 0x8005 | 0x0000 | true | true | 0x0000 | 0xbb3d |
 | CRC-16/CCITT | CRC-16/KERMIT, CRC-16/CCITT-TRUE, CRC-16/V-41-LSB, CRC-CCITT, KERMIT | `Crc16.Attested.Ccitt` | 0x1021 | 0x0000 | true | true | 0x0000 | 0x2189 |

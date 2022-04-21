@@ -31,7 +31,7 @@ var checksum = iterator.ComputeFinal();
 
 CRC-8 family of cyclic redundancy checks consists of several attested checksum algorithms with predefined parameters:
 
-| Algorithm | Aliases | Implementation | Parameters: poly | init | refin | refout | xorout | check |
+| Algorithm | Aliases | Gapotchenko.FX Implementation | Parameters: poly | init | refin | refout | xorout | check |
 | --------- | ------- | -------- | ---- | ---- | ----- | ------ | ------ | ----- |
 | CRC-8 (standard, recommended) | CRC-8/SMBUS | `Crc8.Standard` | 0x07 | 0x00 | false | false | 0x00 | 0xf4 |
 | CRC-8/TECH-3250 | CRC-8/AES, CRC-8/EBU | `Crc8.Attested.Tech3250` | 0x1d | 0xff | true | true | 0x00 | 0x97 |
