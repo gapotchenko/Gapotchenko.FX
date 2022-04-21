@@ -32,11 +32,7 @@ namespace Gapotchenko.FX.Data.Encoding.Tests
 
         static void TestVector(string raw, string encoded) => TestVector(Encoding.UTF8.GetBytes(raw), encoded);
 
-        static void RoundTrip(ReadOnlySpan<byte> raw) =>
-            TextDataEncodingTestBench.RoundTrip(
-                KuonBase24.Instance,
-                raw,
-                raw.Length % 4 != 0 ? DataEncodingOptions.Relax : DataEncodingOptions.None);
+        static void RoundTrip(ReadOnlySpan<byte> raw) => TextDataEncodingTestBench.RoundTrip(KuonBase24.Instance, raw);
 
         [TestMethod]
         public void KuonBase24_Empty() => TestVector("", "");
@@ -201,26 +197,20 @@ namespace Gapotchenko.FX.Data.Encoding.Tests
         [DataRow(DataEncodingOptions.None)]
         [DataRow(DataEncodingOptions.Padding)]
         public void KuonBase24_RT_Random(DataEncodingOptions options) =>
-            TextDataEncodingTestBench.RandomRoundTrip(
-                KuonBase24.Instance,
-                16,
-                100000,
-                options | DataEncodingOptions.Relax);
+            TextDataEncodingTestBench.RandomRoundTrip(KuonBase24.Instance, 16, 100000);
 
         [DataTestMethod]
-        // S1
+        //
         [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.None)]
         [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Padding)]
-        // S2
+        //
         [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.None)]
         [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.Padding)]
-        // S3
+        //
         [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.None)]
         [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.Padding)]
+        //
         public void KuonBase24_RT_S(string s, DataEncodingOptions options) =>
-            TextDataEncodingTestBench.RoundTrip(
-                KuonBase24.Instance,
-                s,
-                options | DataEncodingOptions.Relax);
+            TextDataEncodingTestBench.RoundTrip(KuonBase24.Instance, s, options);
     }
 }
