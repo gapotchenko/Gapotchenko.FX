@@ -5,7 +5,7 @@ using System.IO;
 namespace Gapotchenko.FX.Data.Encoding
 {
     /// <summary>
-    /// Provides a generic implementation of Base64 encoding.
+    /// Provides a generic implementation of Base16 encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class GenericBase16 : TextDataEncoding, IBase16
@@ -57,7 +57,7 @@ namespace Gapotchenko.FX.Data.Encoding
         protected const int BytesPerDecodedBlock = 1;
 
         /// <summary>
-        /// Base64 encoding efficiency.
+        /// Base16 encoding efficiency.
         /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
         /// </summary>
         public new const float Efficiency = (float)BytesPerDecodedBlock / SymbolsPerEncodedBlock;
