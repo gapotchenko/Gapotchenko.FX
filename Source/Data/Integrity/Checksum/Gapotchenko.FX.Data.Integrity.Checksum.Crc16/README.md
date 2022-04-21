@@ -65,7 +65,7 @@ var data = Encoding.ASCII.GetBytes("123456789");
 // Compute the checksum.
 var checksum = Crc16.Standard.ComputeChecksum(data);
 
-// Print out the result (will print "Checksum = 0xbb3d").
+// Print out the result ("Checksum = 0xbb3d" for standard CRC-16).
 Console.WriteLine("Checksum = 0x{0:x}", checksum);
 ```
 

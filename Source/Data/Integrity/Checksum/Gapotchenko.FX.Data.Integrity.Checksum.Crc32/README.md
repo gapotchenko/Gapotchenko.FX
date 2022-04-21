@@ -51,7 +51,7 @@ var data = Encoding.ASCII.GetBytes("123456789");
 // Compute the checksum.
 var checksum = Crc32.Standard.ComputeChecksum(data);
 
-// Print out the result (will print "Checksum = 0xcbf43926").
+// Print out the result ("Checksum = 0xcbf43926" for standard CRC-32).
 Console.WriteLine("Checksum = 0x{0:x}", checksum);
 ```
 
