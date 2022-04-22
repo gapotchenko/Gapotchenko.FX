@@ -8,7 +8,7 @@ It supports both synchronous and asynchronous data processing, including the ite
 ## ITextDataEncoding
 
 This is the root interface provided by a binary-to-text data encoding algorithm.
-The interface provides several notable methods.
+The interface has several notable methods.
 
 ### GetString(ReadOnlySpan&lt;byte&gt; data)
 
@@ -31,7 +31,7 @@ producing the following output:
 ```
 
 The `GetString` method can also take options.
-Here is a sample that would produce the indented output:
+Here is an example that would produce the indented output:
 
 ``` c#
 var data = new byte[] { 0x01, 0x02, 0x03 };
@@ -45,14 +45,15 @@ The output:
 01 02 03
 ```
 
-Note that the output now contains space separators (indentations) between the encoded symantical values.
+Note that the output now contains space separators (indentations) between the encoded semantical values.
+Not all encodings support indentation so `Indent` option flag may be ignored by them.
 
 ### GetBytes(ReadOnlySpan&lt;char&gt; s)
 
 The method decodes all the characters in the specified read-only span into a byte array.
 In this way, `GetBytes` method performs a reverse operation to `GetString`.
 
-For example, `GetBytes` method of a Base16 encoding would be used like this:
+For example, `GetBytes` method of a Base16 encoding can be used like this:
 
 ``` c#
 using Gapotchenko.FX.Data.Encoding;
@@ -106,10 +107,10 @@ It is worth mentioning that the streaming encoder also supports the asynchronous
 The method creates a streaming decoder for the specified binary-to-text data encoding.
 It can be viewed as a reverse operation to `CreateEncoder`.
 
-## Streaming Transcoding Between Various Binary-To-Text Encodings
+## Transcoding Between Various Binary-To-Text Encodings
 
 Imagine a Base64-encoded file that needs to be converted to Base32.
-The file is pretty large, around 2 GB of data.
+The file is pretty large, around 2 gigabytes of data.
 
 A naive approach would be to read all the data from the file beforehand in order to re-encode it later:
 
@@ -157,5 +158,35 @@ sourceStream.CopyTo(destinationStream);
 destinationStream.Flush();
 ```
 
-The transcoding algorithm based on streaming codecs presented above is highly efficient in terms of memory usage and consumes just a few kilobytes of RAM.
+The transcoding algorithm based on streaming codecs presented above is highly efficient in terms of memory usage and consumes just a few kilobytes of RAM to transcode a file of any size.
 
+## Usage
+
+`Gapotchenko.FX.Data.Encoding` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Encoding):
+
+```
+PM> Install-Package Gapotchenko.FX.Data.Encoding
+```
+
+## Other Modules
+
+Let's continue with a look at some other modules provided by Gapotchenko.FX:
+
+- [Gapotchenko.FX](../../../../Gapotchenko.FX)
+- [Gapotchenko.FX.AppModel.Information](../../../../Gapotchenko.FX.AppModel.Information)
+- [Gapotchenko.FX.Collections](../../../../Gapotchenko.FX.Collections)
+- [Gapotchenko.FX.Console](../../../../Gapotchenko.FX.Console)
+- &#x27B4; [Gapotchenko.FX.Data.Integrity.Checksum](../Gapotchenko.FX.Data.Integrity.Checksum)
+  - [Gapotchenko.FX.Data.Integrity.Checksum.Crc8](../Gapotchenko.FX.Data.Integrity.Checksum.Crc8)
+  - [Gapotchenko.FX.Data.Integrity.Checksum.Crc16](../Gapotchenko.FX.Data.Integrity.Checksum.Crc16)
+  - [Gapotchenko.FX.Data.Integrity.Checksum.Crc32](../Gapotchenko.FX.Data.Integrity.Checksum.Crc32)
+- [Gapotchenko.FX.Diagnostics](../../../../Gapotchenko.FX.Diagnostics.CommandLine)
+- [Gapotchenko.FX.IO](../../../../Gapotchenko.FX.IO)
+- [Gapotchenko.FX.Linq](../../../../Gapotchenko.FX.Linq)
+- [Gapotchenko.FX.Math](../../../../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../../../../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Security.Cryptography](../../../../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
+- [Gapotchenko.FX.Text](../../../../Gapotchenko.FX.Text)
+- [Gapotchenko.FX.Threading](../../../../Gapotchenko.FX.Threading)
+
+Or look at the [full list of modules](../../..#available-modules).
