@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 
 namespace Gapotchenko.FX.Data.Encoding
 {
@@ -12,11 +11,12 @@ namespace Gapotchenko.FX.Data.Encoding
     public abstract class GenericZBase32 : GenericBase32
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="GenericZBase32"/> class with the specified alphabet.
+        /// Initializes a new instance of <see cref="GenericZBase32"/> class with the specified alphabet and padding character.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        protected GenericZBase32(TextDataEncodingAlphabet alphabet) :
-            base(alphabet)
+        /// <param name="paddingChar">The padding character.</param>
+        protected GenericZBase32(TextDataEncodingAlphabet alphabet, char paddingChar) :
+            base(alphabet, paddingChar)
         {
         }
 
@@ -71,8 +71,10 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
                 {
+                    var paddingChar = ((GenericZBase32)m_Encoding).PaddingChar;
+
                     while (i < SymbolsPerEncodedBlock)
-                        m_Buffer[i++] = PaddingChar;
+                        m_Buffer[i++] = paddingChar;
                 }
 
                 EmitLineBreak(output);

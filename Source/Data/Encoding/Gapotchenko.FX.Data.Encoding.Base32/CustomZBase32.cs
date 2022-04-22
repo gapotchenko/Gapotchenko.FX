@@ -20,8 +20,9 @@ namespace Gapotchenko.FX.Data.Encoding
         /// Initializes a new instance of <see cref="CustomZBase32"/> class with the specified alphabet.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        public CustomZBase32(TextDataEncodingAlphabet alphabet) :
-            base(alphabet)
+        /// <param name="paddingChar">The padding character.</param>
+        public CustomZBase32(TextDataEncodingAlphabet alphabet, char paddingChar = '=') :
+            base(alphabet, paddingChar)
         {
         }
     }

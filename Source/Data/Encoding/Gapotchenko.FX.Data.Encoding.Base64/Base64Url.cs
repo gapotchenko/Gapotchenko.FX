@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Encoding
     public sealed class Base64Url : GenericBase64
     {
         Base64Url() :
-            base(new TextDataEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"))
+            base(new TextDataEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"), '=')
         {
         }
 

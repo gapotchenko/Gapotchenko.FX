@@ -17,11 +17,12 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="CustomKuonBase24"/> class with the specified alphabet.
+        /// Initializes a new instance of <see cref="CustomKuonBase24"/> class with the specified alphabet and padding char.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        public CustomKuonBase24(TextDataEncodingAlphabet alphabet) :
-            base(alphabet)
+        /// <param name="paddingChar">The padding char.</param>
+        public CustomKuonBase24(TextDataEncodingAlphabet alphabet, char paddingChar = '=') :
+            base(alphabet, paddingChar)
         {
         }
     }

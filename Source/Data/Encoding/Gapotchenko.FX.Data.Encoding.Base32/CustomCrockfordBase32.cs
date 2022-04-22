@@ -17,11 +17,12 @@ namespace Gapotchenko.FX.Data.Encoding
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="CustomCrockfordBase32"/> class with the specified alphabet.
+        /// Initializes a new instance of <see cref="CustomCrockfordBase32"/> class with the specified alphabet and padding character.
         /// </summary>
         /// <param name="alphabet">The alphabet.</param>
-        public CustomCrockfordBase32(TextDataEncodingAlphabet alphabet) :
-            base(alphabet)
+        /// <param name="paddingChar">The padding character.</param>
+        public CustomCrockfordBase32(TextDataEncodingAlphabet alphabet, char paddingChar = '=') :
+            base(alphabet, paddingChar)
         {
         }
     }

@@ -12,12 +12,8 @@ namespace Gapotchenko.FX.Data.Encoding
     [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="GenericCrockfordBase32"/> class with the specified alphabet.
-        /// </summary>
-        /// <param name="alphabet">The alphabet.</param>
-        protected GenericCrockfordBase32(TextDataEncodingAlphabet alphabet) :
-            base(alphabet)
+        private protected GenericCrockfordBase32(TextDataEncodingAlphabet alphabet, char paddingChar) :
+            base(alphabet, paddingChar)
         {
         }
 

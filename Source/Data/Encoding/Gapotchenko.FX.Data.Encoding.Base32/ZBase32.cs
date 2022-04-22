@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Encoding
     public sealed class ZBase32 : GenericZBase32
     {
         ZBase32() :
-            base(new TextDataEncodingAlphabet("ybndrfg8ejkmcpqxot1uwisza345h769", false))
+            base(new TextDataEncodingAlphabet("ybndrfg8ejkmcpqxot1uwisza345h769", false), '=')
         {
         }
 

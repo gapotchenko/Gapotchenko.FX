@@ -11,11 +11,7 @@ namespace Gapotchenko.FX.Data.Encoding
     [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class GenericBase32 : TextDataEncoding, IBase32
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="GenericBase32"/> class with the specified alphabet.
-        /// </summary>
-        /// <param name="alphabet">The alphabet.</param>
-        protected GenericBase32(TextDataEncodingAlphabet alphabet)
+        private protected GenericBase32(TextDataEncodingAlphabet alphabet, char paddingChar)
         {
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));
@@ -23,6 +19,7 @@ namespace Gapotchenko.FX.Data.Encoding
             ValidateAlphabet(alphabet);
 
             Alphabet = alphabet;
+            PaddingChar = paddingChar;
         }
 
         /// <summary>
@@ -167,8 +164,10 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
                 {
+                    var paddingChar = m_Encoding.PaddingChar;
+
                     while (i < SymbolsPerEncodedBlock)
-                        m_Buffer[i++] = PaddingChar;
+                        m_Buffer[i++] = paddingChar;
                 }
 
                 EmitLineBreak(output);
@@ -256,10 +255,11 @@ namespace Gapotchenko.FX.Data.Encoding
                 }
 
                 var alphabet = m_Alphabet;
+                var paddingChar = m_Encoding.PaddingChar;
 
                 foreach (var c in input)
                 {
-                    if (c == PaddingChar)
+                    if (c == paddingChar)
                     {
                         if ((m_Options & DataEncodingOptions.Padding) != 0)
                             ValidatePaddingChar();
@@ -451,7 +451,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// The padding character.
         /// </summary>
-        protected const char PaddingChar = '=';
+        protected readonly char PaddingChar;
 
         /// <inheritdoc/>
         protected override string PadCore(ReadOnlySpan<char> s) => PadRight(s, PaddingChar);

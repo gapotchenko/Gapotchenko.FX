@@ -20,7 +20,8 @@ namespace Gapotchenko.FX.Data.Encoding
                 {
                     ['0'] = "O",
                     ['1'] = "IL",
-                }))
+                }),
+            '#')
         {
         }
 

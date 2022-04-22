@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Data.Encoding
     public sealed class Base32Hex : GenericBase32
     {
         Base32Hex() :
-            base(new TextDataEncodingAlphabet("0123456789ABCDEFGHIJKLMNOPQRSTUV", false))
+            base(new TextDataEncodingAlphabet("0123456789ABCDEFGHIJKLMNOPQRSTUV", false), '=')
         {
         }
 

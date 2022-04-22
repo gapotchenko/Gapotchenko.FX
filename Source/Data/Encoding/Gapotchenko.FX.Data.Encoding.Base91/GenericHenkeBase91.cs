@@ -10,11 +10,7 @@ namespace Gapotchenko.FX.Data.Encoding
     [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class GenericHenkeBase91 : TextDataEncoding, IBase91
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="GenericHenkeBase91"/> class with the specified alphabet.
-        /// </summary>
-        /// <param name="alphabet">The alphabet.</param>
-        protected GenericHenkeBase91(TextDataEncodingAlphabet alphabet)
+        private protected GenericHenkeBase91(TextDataEncodingAlphabet alphabet)
         {
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));

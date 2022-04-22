@@ -7,10 +7,10 @@ namespace Gapotchenko.FX.Data.Encoding
     /// <summary>
     /// Implements Base32 encoding described in RFC 4648.
     /// </summary>
-    public class Base32 : GenericBase32
+    public sealed class Base32 : GenericBase32
     {
         Base32() :
-            base(new TextDataEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", false))
+            base(new TextDataEncodingAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", false), '=')
         {
         }
 

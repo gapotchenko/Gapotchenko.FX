@@ -11,11 +11,7 @@ namespace Gapotchenko.FX.Data.Encoding
     [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="GenericKuonBase24"/> class with the specified alphabet.
-        /// </summary>
-        /// <param name="alphabet">The alphabet.</param>
-        protected GenericKuonBase24(TextDataEncodingAlphabet alphabet)
+        private protected GenericKuonBase24(TextDataEncodingAlphabet alphabet, char paddingChar)
         {
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));
@@ -23,6 +19,7 @@ namespace Gapotchenko.FX.Data.Encoding
             ValidateAlphabet(alphabet);
 
             Alphabet = alphabet;
+            PaddingChar = paddingChar;
         }
 
         /// <summary>
@@ -101,13 +98,15 @@ namespace Gapotchenko.FX.Data.Encoding
 
         abstract class CodecContextBase
         {
-            public CodecContextBase(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
+            public CodecContextBase(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options)
             {
                 m_Alphabet = alphabet;
+                m_PaddingChar = paddingChar;
                 m_Options = options;
             }
 
             protected readonly TextDataEncodingAlphabet m_Alphabet;
+            protected readonly char m_PaddingChar;
             protected readonly DataEncodingOptions m_Options;
 
             #region Parameters
@@ -123,8 +122,8 @@ namespace Gapotchenko.FX.Data.Encoding
 
         sealed class EncoderContext : CodecContextBase, IEncoderContext
         {
-            public EncoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-                base(alphabet, options)
+            public EncoderContext(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options) :
+                base(alphabet, paddingChar, options)
             {
             }
 
@@ -173,8 +172,10 @@ namespace Gapotchenko.FX.Data.Encoding
 
                 if ((m_Options & DataEncodingOptions.Unpad) == 0)
                 {
+                    var paddingChar = m_PaddingChar;
+
                     while (i < SymbolsPerEncodedBlock)
-                        m_Buffer[i++] = PaddingChar;
+                        m_Buffer[i++] = paddingChar;
                 }
 
                 EmitLineBreak(output);
@@ -246,8 +247,8 @@ namespace Gapotchenko.FX.Data.Encoding
 
         sealed class DecoderContext : CodecContextBase, IDecoderContext
         {
-            public DecoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-                base(alphabet, options)
+            public DecoderContext(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options) :
+                base(alphabet, paddingChar, options)
             {
             }
 
@@ -268,10 +269,11 @@ namespace Gapotchenko.FX.Data.Encoding
                 }
 
                 var alphabet = m_Alphabet;
+                var paddingChar = m_PaddingChar;
 
                 foreach (var c in input)
                 {
-                    if (c == PaddingChar)
+                    if (c == paddingChar)
                     {
                         if ((m_Options & DataEncodingOptions.Padding) != 0)
                             ValidatePaddingChar();
@@ -393,7 +395,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns>The encoder context.</returns>
         protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
-            new EncoderContext(alphabet, options);
+            new EncoderContext(alphabet, PaddingChar, options);
 
         /// <summary>
         /// Creates decoder context with specified alphabet and options.
@@ -402,7 +404,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <param name="options">The options.</param>
         /// <returns>The decoder context.</returns>
         protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
-            new DecoderContext(alphabet, options);
+            new DecoderContext(alphabet, PaddingChar, options);
 
         /// <inheritdoc/>
         public sealed override bool IsCaseSensitive => Alphabet.IsCaseSensitive;
@@ -413,7 +415,7 @@ namespace Gapotchenko.FX.Data.Encoding
         /// <summary>
         /// The padding character.
         /// </summary>
-        protected const char PaddingChar = '=';
+        protected readonly char PaddingChar;
 
         /// <inheritdoc/>
         protected override string PadCore(ReadOnlySpan<char> s) => PadRight(s, PaddingChar);

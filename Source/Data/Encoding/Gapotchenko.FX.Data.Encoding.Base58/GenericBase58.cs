@@ -15,11 +15,7 @@ namespace Gapotchenko.FX.Data.Encoding
     [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class GenericBase58 : TextDataEncoding, IBase58
     {
-        /// <summary>
-        /// Initializes a new instance of <see cref="GenericBase58"/> class with the specified alphabet.
-        /// </summary>
-        /// <param name="alphabet">The alphabet.</param>
-        protected GenericBase58(TextDataEncodingAlphabet alphabet)
+        private protected GenericBase58(TextDataEncodingAlphabet alphabet)
         {
             if (alphabet == null)
                 throw new ArgumentNullException(nameof(alphabet));
