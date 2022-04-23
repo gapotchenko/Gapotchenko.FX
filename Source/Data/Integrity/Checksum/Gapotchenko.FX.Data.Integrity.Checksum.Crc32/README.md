@@ -109,6 +109,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../../../../Gapotchenko.FX.AppModel.Information)
 - [Gapotchenko.FX.Collections](../../../../Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Console](../../../../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data](../../../Encoding/Gapotchenko.FX.Data.Encoding)
 - [Gapotchenko.FX.Data.Integrity.Checksum](../Gapotchenko.FX.Data.Integrity.Checksum)
   - [Gapotchenko.FX.Data.Integrity.Checksum.Crc8](../Gapotchenko.FX.Data.Integrity.Checksum.Crc8)
   - [Gapotchenko.FX.Data.Integrity.Checksum.Crc16](../Gapotchenko.FX.Data.Integrity.Checksum.Crc16)
