@@ -140,7 +140,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Serialization
             if (node is TocProjectNode projectNode)
                 return projectNode.Project.Complexity;
             else
-                return node.Children.Select(_GetProjectCompexity).Aggregate((a, b) => MathEx.Max(a, b));
+                return node.Children.Select(_GetProjectCompexity).Aggregate((a, b) => MathEx.Min(a, b));
         }
 
         public void SerializeLegend(TextWriter textWriter)
