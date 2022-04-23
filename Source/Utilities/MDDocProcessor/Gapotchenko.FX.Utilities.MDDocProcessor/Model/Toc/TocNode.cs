@@ -1,10 +1,16 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
 {
-    abstract class TocNode
+    abstract class TocNode : ITocNode
     {
         public TocNode? Parent { get; set; }
 
-        public List<TocNode> Children { get; } = new List<TocNode>();
+        ITocNode? ITocNode.Parent
+        {
+            get => Parent;
+            set => Parent = (TocNode?)value;
+        }
+
+        public IList<TocNode> Children { get; } = new List<TocNode>();
 
         public TocNode? Book =>
             Parent switch

@@ -1,21 +1,17 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model
 {
-    sealed class Project
+    sealed class Project : HierarchyItem
     {
-        public Project(string name, string directoryPath)
+        public Project(string name, string directoryPath) :
+            base(name)
         {
-            Name = name;
             DirectoryPath = directoryPath;
         }
-
-        public string Name { get; }
 
         public string DirectoryPath { get; }
 
         public string? ReadMeFilePath { get; init; }
 
         public ProjectComplexity Complexity { get; init; }
-
-        public override string ToString() => Name;
     }
 }

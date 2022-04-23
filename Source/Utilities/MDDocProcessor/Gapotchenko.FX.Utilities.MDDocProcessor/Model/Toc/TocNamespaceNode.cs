@@ -1,13 +1,17 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
 {
-    sealed class TocNamespaceNode : TocNode
+    sealed class TocNamespaceNode : TocNode, ITocHierarchyItemNode
     {
-        public TocNamespaceNode(string name)
+        public TocNamespaceNode(Namespace @namespace)
         {
-            Name = name;
+            Namespace = @namespace;
         }
 
-        public string Name { get; }
+        public string Name => Namespace.Name;
+
+        public Namespace Namespace { get; }
+
+        HierarchyItem ITocHierarchyItemNode.HierarchyItem => Namespace;
 
         public override string ToString() => Name;
     }
