@@ -56,8 +56,8 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Console](../../Gapotchenko.FX.Console)
 - [Gapotchenko.FX.Data](../Encoding/Gapotchenko.FX.Data.Encoding)
   - [Gapotchenko.FX.Data.Encoding](../Encoding/Gapotchenko.FX.Data.Encoding)
+  - [Gapotchenko.FX.Data.Integrity.Checksum](../Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum)
   - &#x27B4; [Gapotchenko.FX.Data.Linq](../Gapotchenko.FX.Data.Linq) ✱
-- [Gapotchenko.FX.Data.Integrity.Checksum](../Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum)
 - [Gapotchenko.FX.Diagnostics](../../Gapotchenko.FX.Diagnostics.CommandLine)
 - [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../../Gapotchenko.FX.Linq)

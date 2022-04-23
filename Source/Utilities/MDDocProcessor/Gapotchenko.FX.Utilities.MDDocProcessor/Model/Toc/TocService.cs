@@ -37,21 +37,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
 
             var items = projects.Cast<HierarchyItem>().ToDictionary(x => x.Name, StringComparer.InvariantCulture);
 
-            var orphanNamespaces = new HashSet<string>(StringComparer.InvariantCulture);
-
-            // Create namespaces for orphan projects.
-            foreach (var project in items.Values.ToList())
-            {
-                string? parentName = _GetParentName(project.Name);
-                if (parentName == null)
-                    continue;
-
-                if (items.ContainsKey(parentName))
-                    continue;
-
-                if (!orphanNamespaces.Add(parentName))
-                    items.Add(parentName, new Namespace(parentName));
-            }
+            CreateNamespacesForOrphanProjects(items);
 
             static IEnumerable<HierarchyItem> Sort(IEnumerable<HierarchyItem> source) => OrderNaturallyBy(source, x => x.Name);
 
@@ -79,6 +65,24 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
             }
 
             BuildRelations(root);
+        }
+
+        static void CreateNamespacesForOrphanProjects(Dictionary<string, HierarchyItem> items)
+        {
+            var orphanNamespaces = new HashSet<string>(StringComparer.InvariantCulture);
+
+            foreach (var project in items.Values.ToList())
+            {
+                string? parentName = _GetParentName(project.Name);
+                if (parentName == null)
+                    continue;
+
+                if (items.ContainsKey(parentName))
+                    continue;
+
+                if (!orphanNamespaces.Add(parentName))
+                    items.Add(parentName, new Namespace(parentName));
+            }
         }
 
         static ITocHierarchyItemNode ConvertHierarchyItemToTocNode(HierarchyItem item) =>
