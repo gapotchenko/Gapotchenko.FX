@@ -48,7 +48,7 @@ The output:
 ```
 
 Note that the output now contains space separators (indentations) between the encoded semantical values.
-Not all encodings support indentation so `Indent` option flag may be ignored by them.
+Not all encodings support indentation so `Indent` option flag may be ignored by some of them.
 
 ### GetBytes(ReadOnlySpan&lt;char&gt; s)
 
