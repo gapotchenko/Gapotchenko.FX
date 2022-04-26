@@ -2,8 +2,10 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Encoding.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Encoding)
 
-The module provides a quasi-universal framework for data encodings.
-It supports both synchronous and asynchronous data processing, including the iterative transcoding.
+`Gapotchenko.FX.Data.Encoding` module provides a quasi-universal framework for data encodings.
+It supports both synchronous and asynchronous data processing models, including the iterative transcoding.
+
+The module serves as the implementation basis for a variety of popular encodings: Base16, Base32, Base64, and others.
 
 ## ITextDataEncoding
 
@@ -159,6 +161,18 @@ destinationStream.Flush();
 ```
 
 The transcoding algorithm based on streaming codecs presented above is highly efficient in terms of memory usage and consumes just a few kilobytes of RAM to transcode a file of any size.
+
+## Data Encoding Algorithms
+
+`Gapotchenko.FX.Data.Encoding` module provides only a framework for data encoding algorithms.
+If you want to use a ready-to-use algorithm, Gapotchenko.FX provides quite a few out of the box:
+
+| Algorithm Family    | Module                                                                                                 | Algorithms |
+| ------------------- | ------------------------------------------------------------------------------------------------------ | ---------- |
+| Base16              | [Gapotchenko.FX.Data.Encoding.Base16](../Gapotchenko.FX.Data.Encoding.Base16#readme)   | Base16
+
+Moreover, you can create your own data encoding algorithm.
+Gapotchenko.FX project welcomes contributions, or it can be a standalone NuGet package that uses `Gapotchenko.FX.Data.Encoding` module as a wireframe.
 
 ## Usage
 
