@@ -164,7 +164,7 @@ The transcoding algorithm based on streaming codecs presented above is highly ef
 
 ## Data Encoding Algorithms
 
-`Gapotchenko.FX.Data.Encoding` module provides only a framework for data encoding algorithms.
+`Gapotchenko.FX.Data.Encoding` module provides only the framework for data encoding algorithms.
 If you want to use a ready-to-use algorithm, Gapotchenko.FX provides quite a few out of the box:
 
 | Algorithm Family    | Module                                                                                                 | Algorithms |
