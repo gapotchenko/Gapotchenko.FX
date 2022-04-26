@@ -21,7 +21,7 @@ For example, `GetString` method of a Base16 encoding would be used like this:
 ``` c#
 using Gapotchenko.FX.Data.Encoding;
 
-var data = new byte[] { 0x01, 0x02, 0x03 };
+var data = new byte[] { 1, 2, 3, 10 };
 var s = Base16.GetString(data);
 Console.WriteLine(s);
 ```
@@ -29,14 +29,14 @@ Console.WriteLine(s);
 producing the following output:
 
 ```
-010203
+0102030A
 ```
 
 The `GetString` method can also take options.
 Here is an example that would produce the indented output:
 
 ``` c#
-var data = new byte[] { 0x01, 0x02, 0x03 };
+var data = new byte[] { 1, 2, 3, 10 };
 var s = Base16.GetString(data, DataEncodingOptions.Indent);
 Console.WriteLine(s);
 ```
@@ -44,7 +44,7 @@ Console.WriteLine(s);
 The output:
 
 ```
-01 02 03
+01 02 03 0A
 ```
 
 Note that the output now contains space separators (indentations) between the encoded semantical values.
@@ -60,7 +60,7 @@ For example, `GetBytes` method of a Base16 encoding can be used like this:
 ``` c#
 using Gapotchenko.FX.Data.Encoding;
 
-byte[] data = Base16.GetBytes("010203");
+byte[] data = Base16.GetBytes("0102030A");
 foreach (var i in data)
     Console.WriteLine(i);
 ```
@@ -71,6 +71,7 @@ producing the following output:
 1
 2
 3
+10
 ```
 
 ### CreateEncoder(TextWriter textWriter)
@@ -88,9 +89,10 @@ var encoding = Base16.Instance;
 var sw = new StringWriter();
 
 var stream = encoding.CreateEncoder(sw);
-stream.Write(0x01);
-stream.Write(0x02);
-stream.Write(0x03);
+stream.Write(1);
+stream.Write(2);
+stream.Write(3);
+stream.Write(10);
 stream.Flush();
 
 Console.WriteLine(sw.ToString());
@@ -99,7 +101,7 @@ Console.WriteLine(sw.ToString());
 The output:
 
 ```
-010203
+0102030A
 ```
 
 It is worth mentioning that the streaming encoder also supports the asynchronous operations.
