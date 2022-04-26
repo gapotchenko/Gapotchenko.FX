@@ -5,7 +5,7 @@
 `Gapotchenko.FX.Data.Encoding` module provides a quasi-universal framework for data encodings.
 It supports both synchronous and asynchronous data processing models, including the iterative transcoding.
 
-The module serves as the implementation basis for a variety of popular encodings: Base16, Base32, Base64, and others.
+The module serves as the implementation basis for a variety of popular encodings: [Base16](../Gapotchenko.FX.Data.Encoding.Base16), [Base32](../Gapotchenko.FX.Data.Encoding.Base32), [Base64](../Gapotchenko.FX.Data.Encoding.Base64), and others.
 
 ## ITextDataEncoding
 
@@ -170,6 +170,9 @@ If you want to use a ready-to-use algorithm, Gapotchenko.FX provides quite a few
 | Algorithm Family    | Module                                                                                                 | Algorithms |
 | ------------------- | ------------------------------------------------------------------------------------------------------ | ---------- |
 | Base16              | [Gapotchenko.FX.Data.Encoding.Base16](../Gapotchenko.FX.Data.Encoding.Base16#readme)   | Base16
+| Base24              | [Gapotchenko.FX.Data.Encoding.Base24](../Gapotchenko.FX.Data.Encoding.Base24#readme)   | Kuon Base24
+| Base32              | [Gapotchenko.FX.Data.Encoding.Base32](../Gapotchenko.FX.Data.Encoding.Base32#readme)   | Base32, base32-hex, Crockford Base 32, z-base-32
+| Base64              | [Gapotchenko.FX.Data.Encoding.Base64](../Gapotchenko.FX.Data.Encoding.Base64#readme)   | Base64, Base64 URL
 
 Moreover, you can create your own data encoding algorithm.
 Gapotchenko.FX project welcomes contributions, or it can be a standalone NuGet package that uses `Gapotchenko.FX.Data.Encoding` module as a wireframe.
