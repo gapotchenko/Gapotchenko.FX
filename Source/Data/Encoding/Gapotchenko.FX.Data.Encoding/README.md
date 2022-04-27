@@ -123,7 +123,7 @@ using Gapotchenko.FX.Data.Encoding;
 using System.IO;
 
 // Read the file.
-var text = File.ReadAllText("2GB.txt");
+var text = File.ReadAllText("2GB-base64.txt");
 
 // Decode the Base64 data.
 var data = Base64.GetBytes(text);
@@ -148,7 +148,7 @@ var sourceEncoding = Base64.Instance;
 var destinationEncoding = Base32.Instance;
 
 // Open the source file.
-using var sourceTextReader = File.OpenText("2GB.txt");
+using var sourceTextReader = File.OpenText("2GB-base64.txt");
 // Create the destination file.
 using var destinationTextWriter = File.CreateText("2GB-base32.txt");
 
