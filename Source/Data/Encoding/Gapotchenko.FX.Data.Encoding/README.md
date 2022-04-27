@@ -86,13 +86,19 @@ using System.IO;
 
 var encoding = Base16.Instance;
 
+// Create a destination text writer.
 var sw = new StringWriter();
 
+// Create a streaming encoder.
 var stream = encoding.CreateEncoder(sw);
+
+// Stream the data.
 stream.Write(1);
 stream.Write(2);
 stream.Write(3);
 stream.Write(10);
+
+// Flush the data.
 stream.Flush();
 
 Console.WriteLine(sw.ToString());
