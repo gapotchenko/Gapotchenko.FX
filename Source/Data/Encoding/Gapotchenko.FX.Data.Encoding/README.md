@@ -101,7 +101,6 @@ stream.Write(10);
 // Flush the data.
 stream.Flush();
 
-// Print the resulting encoded data.
 Console.WriteLine(sw.ToString());
 ```
 
