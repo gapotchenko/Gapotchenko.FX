@@ -10,9 +10,11 @@ namespace Gapotchenko.FX.Data.Encoding
     public sealed class Base64 : GenericBase64
     {
         Base64() :
-            base(new TextDataEncodingAlphabet(Base64LinguaFranca.Symbols), '=')
+            base(new TextDataEncodingAlphabet(Symbols), '=')
         {
         }
+
+        internal const string Symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
         /// <inheritdoc/>
         protected override IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
