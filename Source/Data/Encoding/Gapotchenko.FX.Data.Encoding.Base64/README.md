@@ -61,8 +61,8 @@ Base64 family of binary-to-text data encodings consists of several attested algo
 
 | Algorithm | Aliases | Gapotchenko.FX Implementation | Alphabet | Case-Sensitivity | Data Encoding Efficiency* |
 | --------- | -------- | -------- | -------- | -------- | -------- | 
-| Base64 | | `Base64` | ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/ | Yes | 0.75 |
-| Base64 URL | base64url | `Base64Url` | ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_ | Yes | 0.75 |
+| Base64 | | `Base64` | ABCDEFGHIJKLMNOPQRSTUVWXYZ<wbr/>abcdefghijklmnopqrstuvwxyz0123456789+/ | Yes | 0.75 |
+| Base64 URL | base64url | `Base64Url` | ABCDEFGHIJKLMNOPQRSTUVWXYZ<wbr/>abcdefghijklmnopqrstuvwxyz0123456789-_ | Yes | 0.75 |
 
 \* Data encoding efficiency is the ratio between the amount of original data and its encoded representation.
 
