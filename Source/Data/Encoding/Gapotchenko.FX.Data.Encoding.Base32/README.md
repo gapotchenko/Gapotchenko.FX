@@ -59,12 +59,12 @@ stream.Read(...); // block N
 
 Base32 family of binary-to-text data encodings consists of several attested algorithms with predefined parameters:
 
-| Algorithm | Aliases | Gapotchenko.FX Implementation | Alphabet | Case-Sensitive | Data Encoding Efficiency |
-| --------- | ------- | -------- | -------- | -------- | -------- | 
-| Base32 | base32, base-32 | `Base32` | ABCDEFGHIJKLMNOPQRSTUVWXYZ234567 | No | 0.625 |
-| base32-hex | | `Base32Hex` | 0123456789ABCDEFGHIJKLMNOPQRSTUV | No | 0.625 |
-| Crockford Base 32 | | `CrockfordBase32` | 0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U | No | 0.625 |
-| z-base-32 | | `ZBase32` | ybndrfg8ejkmcpqxot1uwisza345h769 | No | 0.625 |
+| Algorithm | Gapotchenko.FX Implementation | Alphabet | Case-Sensitive | Data Encoding Efficiency |
+| --------- | -------- | -------- | -------- | -------- | 
+| Base32 | `Base32` | ABCDEFGHIJKLMNOPQRSTUVWXYZ234567 | No | 0.625 |
+| base32-hex | `Base32Hex` | 0123456789ABCDEFGHIJKLMNOPQRSTUV | No | 0.625 |
+| Crockford Base 32 | `CrockfordBase32` | 0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U | No | 0.625 |
+| z-base-32 | `ZBase32` | ybndrfg8ejkmcpqxot1uwisza345h769 | No | 0.625 |
 
 The data encoding efficiency is the ratio between the amount of original data and its encoded representation.
 
