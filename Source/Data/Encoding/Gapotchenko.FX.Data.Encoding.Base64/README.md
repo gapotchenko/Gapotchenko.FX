@@ -64,6 +64,8 @@ Base64 family of binary-to-text data encodings consists of several attested algo
 | Base64 | | `Base64` | ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/ | Yes | 0.75 |
 | Base64 URL | base64url | `Base64Url` | ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_ | Yes | 0.75 |
 
+abc
+
 +---------------+---------------+--------------------+
 | Algorithm     | Price         | Advantages         |
 +===============+===============+====================+
