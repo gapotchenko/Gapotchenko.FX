@@ -59,11 +59,11 @@ stream.Read(...); // block N
 
 Base16 family of binary-to-text data encodings consists of the following algorithms with predefined parameters:
 
-| Algorithm | Gapotchenko.FX Implementation | Alphabet | Case-Sensitivity | Data Encoding Efficiency |
+| Algorithm | Gapotchenko.FX Implementation | Alphabet | Case-Sensitivity | Data Encoding Efficiency* |
 | ---------  | -------- | -------- | -------- | -------- | 
 | Base16 | `Base16` | 0123456789ABCDEF | No | 0.5 |
 
-The data encoding efficiency is the ratio between the amount of original data and its encoded representation.
+\* Data encoding efficiency is the ratio between the amount of original data and its encoded representation.
 
 ## Usage
 
