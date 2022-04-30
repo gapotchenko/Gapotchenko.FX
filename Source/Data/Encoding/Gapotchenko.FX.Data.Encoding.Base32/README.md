@@ -66,7 +66,7 @@ Base32 family of binary-to-text data encodings consists of several attested algo
 | Crockford Base 32 | `CrockfordBase32` | 0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U | No | 0.625 |
 | z-base-32 | `ZBase32` | ybndrfg8ejkmcpqxot1uwisza345h769 | No | 0.625 |
 
-\* Data encoding efficiency is the ratio between the amount of original data and its encoded representation.
+\*Data encoding efficiency is the ratio between the amount of original data and its encoded representation.
 
 ## Usage
 
