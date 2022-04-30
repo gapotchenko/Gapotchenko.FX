@@ -63,6 +63,8 @@ Base16 family of binary-to-text data encodings consists of several attested algo
 | --------- | ------- | -------- | -------- | -------- | -------- | 
 | Base16 | base16, base-16 | `Base16` | 0123456789ABCDEF | No | 0.5 |
 
+The data encoding efficiency is the ratio between the amount of original data and its encoded representation.
+
 ## Usage
 
 `Gapotchenko.FX.Data.Encoding.Base16` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Encoding.Base16):
