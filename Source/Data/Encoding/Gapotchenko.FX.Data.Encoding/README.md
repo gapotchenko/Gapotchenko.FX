@@ -5,7 +5,7 @@
 `Gapotchenko.FX.Data.Encoding` module provides a quasi-universal framework for data encodings.
 It supports both synchronous and asynchronous data processing models, including the iterative transcoding.
 
-The module serves as the implementation basis for a variety of popular encodings: [Base16](../Gapotchenko.FX.Data.Encoding.Base16), [Base32](../Gapotchenko.FX.Data.Encoding.Base32), [Base64](../Gapotchenko.FX.Data.Encoding.Base64), and others.
+The module serves as the implementation basis for a variety of popular encodings: [Base16](../Gapotchenko.FX.Data.Encoding.Base16#readme), [Base32](../Gapotchenko.FX.Data.Encoding.Base32#readme), [Base64](../Gapotchenko.FX.Data.Encoding.Base64#readme), and others.
 
 ## ITextDataEncoding
 
