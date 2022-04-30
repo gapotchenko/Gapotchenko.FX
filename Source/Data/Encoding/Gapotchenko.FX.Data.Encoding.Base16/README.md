@@ -40,7 +40,7 @@ stream.Write(...); // block N
 stream.Flush();
 ```
 
-The same approach is valid for the decoding operation which is the opposite to the encoding operation:
+The same approach is valid for the decoding operation which is the opposite of the encoding:
 
 ``` c#
 var encoding = Base16.Instance;
