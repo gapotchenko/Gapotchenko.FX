@@ -27,8 +27,8 @@ If you need to encode the data iteratively then the following approach becomes h
 ``` c#
 var encoding = Base16.Instance;
 
-// Create a streaming encoder that iteratively writes the encoded text
-// to the specified text writer.
+// Create a streaming encoder that iteratively encodes the data and
+// writes the encoded text to the specified text writer.
 var stream = encoding.CreateEncoder(textWriter);
 
 // Stream the data to encode.
@@ -46,7 +46,7 @@ The same approach is valid for the decoding operation which is reverse of the en
 var encoding = Base16.Instance;
 
 // Create a streaming decoder that iteratively reads the encoded text
-// from the specified text reader.
+// from the specified text reader and decodes the data on the fly.
 var stream = encoding.CreateDecoder(textReader);
 
 // Stream the decoded data.
