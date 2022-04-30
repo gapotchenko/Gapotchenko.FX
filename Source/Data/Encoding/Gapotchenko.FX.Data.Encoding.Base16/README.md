@@ -2,7 +2,66 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Encoding.Base16.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Encoding.Base16)
 
-TODO
+The module provides the implementation of binary-to-text encoding algorithms belonging to Base16 family.
+
+## Quick Start
+
+Use the following code to get the textual representation of the specified data in Base16 encoding:
+
+``` c#
+using Gapotchenko.FX.Data.Encoding;
+
+var encodedText = Base16.GetString(data);
+```
+
+To get the data back from the textual representation, use the following method:
+
+``` c#
+var decodedData = Base16.GetBytes(encodedText);
+```
+
+## Iterative Data Processing
+
+If you need to encode the data iteratively then the following approach becomes handy:
+
+``` c#
+var encoding = Base16.Instance;
+
+// Create a streaming encoder that iteratively writes the encoded text
+// to the specified text writer.
+var stream = encoding.CreateEncoder(textWriter);
+
+// Stream the data to encode.
+stream.Write(...); // block 1
+// ...
+stream.Write(...); // block N
+
+// Flush the data to the underlying text writer.
+stream.Flush();
+```
+
+The same approach is valid for the decoding operation:
+
+``` c#
+var encoding = Base16.Instance;
+
+// Create a streaming decoder that iteratively reads the encoded text
+// from the specified text reader.
+var stream = encoding.CreateDecoder(textReader);
+
+// Stream the decoded data.
+stream.Read(...); // block 1
+// ...
+stream.Read(...); // block N
+```
+
+## Available Base16 Algorithms
+
+Base16 family of binary-to-text data encodings consists of several attested algorithms with predefined parameters:
+
+| Algorithm | Aliases | Gapotchenko.FX Implementation | Alphabet | Case-Sensitive | Data Encoding Efficiency |
+| --------- | ------- | -------- | -------- | -------- | -------- | 
+| Base16 | base16, base-16 | `Base16` | 0123456789ABCDEF | No | 0.5 |
 
 ## Usage
 
