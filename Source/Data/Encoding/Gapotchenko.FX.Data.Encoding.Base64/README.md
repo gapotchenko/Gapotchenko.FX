@@ -66,6 +66,44 @@ Base64 family of binary-to-text data encodings consists of several attested algo
 
 \* Data encoding efficiency is the ratio between the amount of original data and its encoded representation.
 
+## Recommended Base64 Algorithm
+
+Among all other posibilities, it is recommended to use the standard Base64 algorithm which is provided by `Base64` class.
+
+All other predefined algorithms are provided by the corresponding classes of `Gapotchenko.FX.Data.Encoding.Base64` module.
+
+## Custom Base64 Algorithms
+
+Once in a while, you may encounter a custom Base64 algorithm that is neither widely known nor characterized.
+In that case, you can instantiate a custom data encoding algorithm with the desired parameters by hand:
+
+``` c#
+var encoding = new CustomBase64(...);
+```
+
+If you want to formalize a custom algorithm even further, you may opt-in to creating a separate class for it with a convenient accessor property:
+
+``` c#
+/// <summary>
+/// Defines a custom Base64 data encoding algorithm.
+/// </summary>
+sealed class FooBase64 : CustomBase64
+{
+    FooBase64() :
+        base(...)
+    {
+    }
+
+    public static FooBase64 Instance { get; } = new FooBase64();
+}
+```
+
+That will allow you to use the algorithm effortlessly from several places in the codebase later:
+
+``` c#
+var encodedText = FooBase64.Instance.GetString(...);
+```
+
 ## Usage
 
 `Gapotchenko.FX.Data.Encoding.Base64` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Encoding.Base64):
