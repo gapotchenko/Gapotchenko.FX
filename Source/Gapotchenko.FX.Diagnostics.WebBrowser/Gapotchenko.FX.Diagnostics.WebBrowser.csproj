@@ -4,7 +4,11 @@
     <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
     <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
-  
+
+  <PropertyGroup>
+    <PackageDescription>The module provides high-level integration with OS web browser.</PackageDescription>
+  </PropertyGroup>
+
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.WebBrowser" />
   </ItemGroup>

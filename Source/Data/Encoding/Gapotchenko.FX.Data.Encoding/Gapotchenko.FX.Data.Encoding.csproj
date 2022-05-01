@@ -4,6 +4,10 @@
     <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageDescription>Gapotchenko.FX.Data.Encoding module provides a quasi-universal framework for data encodings. It supports both synchronous and asynchronous data processing models, including the iterative transcoding.</PackageDescription>
+  </PropertyGroup>
+
   <Import Project="$(MasteringDir)\OOB\System.Memory.targets" />
 
   <ItemGroup>

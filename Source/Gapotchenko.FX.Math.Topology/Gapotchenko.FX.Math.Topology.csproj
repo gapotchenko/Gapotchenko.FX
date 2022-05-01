@@ -4,6 +4,10 @@
     <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageDescription>The module provides data structures and primitives for working with abstract topologies.</PackageDescription>
+  </PropertyGroup>
+
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Topology.Graph" />
   </ItemGroup>

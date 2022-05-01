@@ -5,6 +5,10 @@
     <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageDescription>The module provides the asynchronous data access support for LINQ2SQL technology.</PackageDescription>
+  </PropertyGroup>
+
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Data.Linq.DataContextExtensions" />
   </ItemGroup>
