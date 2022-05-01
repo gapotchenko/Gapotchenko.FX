@@ -54,6 +54,10 @@
                 if (j != -1)
                     localPath = localPath[0..j];
 
+                j = localPath.IndexOf('#');
+                if (j != -1)
+                    localPath = localPath[0..j];
+
                 var rootUri = new Uri(RootPath);
                 uri = rootUri.MakeRelativeUri(uri);
                 uri = new Uri(Uri.UnescapeDataString(uri.OriginalString), UriKind.Relative);
