@@ -4,6 +4,21 @@
     <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageDescription>The module provides the implementation of data encoding algorithms belonging to Base32 family: Base32, base32-hex, Crockford Base 32, z-base-32.</PackageDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="base32;base32-hex;crockford-base-32;z-base-32;rfc4648" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Data.Encoding.Base32" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Data.Encoding.Base32Hex" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Data.Encoding.CrockfordBase32" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Data.Encoding.ZBase32" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
     <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />

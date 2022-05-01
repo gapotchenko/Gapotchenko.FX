@@ -4,6 +4,18 @@
     <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageDescription>The module provides the implementation of data encoding algorithms belonging to Base16 family.</PackageDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="base16;rfc4648" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Data.Encoding.Base16" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj" />
