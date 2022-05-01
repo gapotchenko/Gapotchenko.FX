@@ -65,6 +65,38 @@ Base16 family of binary-to-text data encodings consists of the following algorit
 
 \* Data encoding efficiency is the ratio between the amount of original data and its encoded representation.
 
+## Custom Base16 Algorithms
+
+Once in a while, you may encounter a custom Base16 algorithm that is neither widely known nor characterized.
+In that case, you can instantiate a custom data encoding algorithm with the desired parameters by hand:
+
+``` c#
+var encoding = new CustomBase16(...);
+```
+
+If you want to formalize a custom algorithm even further, you may opt-in to creating a separate class for it with a convenient accessor property:
+
+``` c#
+/// <summary>
+/// Defines a custom Base16 data encoding algorithm.
+/// </summary>
+sealed class FooBase16 : CustomBase16
+{
+    FooBase16() :
+        base(...)
+    {
+    }
+
+    public static FooBase16 Instance { get; } = new FooBase16();
+}
+```
+
+That will allow you to use the algorithm effortlessly from several places in the codebase later:
+
+``` c#
+var encodedText = FooBase16.Instance.GetString(...);
+```
+
 ## Usage
 
 `Gapotchenko.FX.Data.Encoding.Base16` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Encoding.Base16):
