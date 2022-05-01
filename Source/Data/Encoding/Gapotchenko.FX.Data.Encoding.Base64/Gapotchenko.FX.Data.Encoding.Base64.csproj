@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageTag Include="base16;rfc4648" />
+    <PackageTag Include="base64;base64-url;rfc4648" />
   </ItemGroup>
 
   <ItemGroup>
