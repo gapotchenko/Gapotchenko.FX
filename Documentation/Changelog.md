@@ -12,7 +12,7 @@ Release date: May 1, 2022
 - New `Gapotchenko.FX.Data.Encoding.Base32` module provides a ready-to-use implementation of popular data encoding algorithms belonging to Base32 family: Base32, base32-hex, Crockford Base 32, z-base-32
 - New `Gapotchenko.FX.Data.Encoding.Base64` module provides a ready-to-use implementation of popular data encoding algorithms belonging to Base64 family: Base64, Base64 URL
 - Added ability to read the command-line arguments of a running OS process
-- Improved multi-platform support for macOS and Linux
+- Improved multi-platform support. Reached the functional parity among Linux, macOS, and Windows platforms  
 
 ### Gapotchenko FX 2022.1
 
