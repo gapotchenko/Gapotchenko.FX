@@ -61,12 +61,50 @@ Base32 family of binary-to-text data encodings consists of several attested algo
 
 | Algorithm | Gapotchenko.FX Implementation | Alphabet | Case-Sensitivity | Data Encoding Efficiency* |
 | --------- | -------- | -------- | -------- | -------- | 
-| Base32 | `Base32` | ABCDEFGHIJKLMNOPQRSTUVWXYZ234567 | No | 0.625 |
+| Base32 (standard, recommended) | `Base32` | ABCDEFGHIJKLMNOPQRSTUVWXYZ234567 | No | 0.625 |
 | base32-hex | `Base32Hex` | 0123456789ABCDEFGHIJKLMNOPQRSTUV | No | 0.625 |
 | Crockford Base 32 | `CrockfordBase32` | 0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U | No | 0.625 |
 | z-base-32 | `ZBase32` | ybndrfg8ejkmcpqxot1uwisza345h769 | No | 0.625 |
 
 \* Data encoding efficiency is the ratio between the amount of original data and its encoded representation.
+
+## Recommended Base32 Algorithm
+
+Among all other posibilities, it is recommended to use the standard Base32 algorithm which is provided by `Base32` class.
+
+All other predefined algorithms are provided by the corresponding classes of `Gapotchenko.FX.Data.Encoding.Base32` module.
+
+## Custom Base32 Algorithms
+
+Once in a while, you may encounter a custom Base32 algorithm that is neither widely known nor characterized.
+In that case, you can instantiate a custom data encoding algorithm with the desired parameters by hand:
+
+``` c#
+var encoding = new CustomBase32(...);
+```
+
+If you want to formalize a custom algorithm even further, you may opt-in to creating a separate class for it with a convenient accessor property:
+
+``` c#
+/// <summary>
+/// Defines a custom Base32 data encoding algorithm.
+/// </summary>
+sealed class FooBase32 : CustomBase32
+{
+    FooBase32() :
+        base(...)
+    {
+    }
+
+    public static FooBase32 Instance { get; } = new FooBase32();
+}
+```
+
+That will allow you to use the algorithm effortlessly from several places in the codebase later:
+
+``` c#
+var encodedText = FooBase32.Instance.GetString(...);
+```
 
 ## Usage
 
