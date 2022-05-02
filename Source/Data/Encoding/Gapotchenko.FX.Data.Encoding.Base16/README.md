@@ -20,6 +20,11 @@ To get the data back from the textual representation, use the following method:
 var decodedData = Base16.GetBytes(encodedText);
 ```
 
+## Static Methods vs Interface
+
+Base16 encoding classes provide a set of convenient static methods that represent the most commonly used operations.
+For a more general and full use, however, the classes implement `ITextDataEncoding` interface which can be accessed via the `Instance` property of the corresponding encoding class.
+
 ## Iterative Data Processing
 
 If you need to encode the data iteratively then the following approach becomes handy:
