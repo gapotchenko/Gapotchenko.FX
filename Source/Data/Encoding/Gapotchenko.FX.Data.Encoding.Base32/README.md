@@ -36,7 +36,7 @@ var encoding = Base32.Instance;
 // writes the encoded text to the specified text writer.
 var stream = encoding.CreateEncoder(textWriter);
 
-// Stream the data to encode.
+// Iteratively stream the data to encode.
 stream.Write(...); // block 1
 // ...
 stream.Write(...); // block N
@@ -54,7 +54,7 @@ var encoding = Base32.Instance;
 // from the specified text reader and decodes the data on the fly.
 var stream = encoding.CreateDecoder(textReader);
 
-// Stream the decoded data.
+// Iteratively stream the decoded data.
 stream.Read(...); // block 1
 // ...
 stream.Read(...); // block N
