@@ -128,7 +128,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
                 .AppendLine();
 
             foreach (var i in commonlyUsedParts)
-                sb.Append("- ").AppendLine(i);
+                sb.Append("- ").Append('`').Append(i).Append('`').AppendLine();
 
             return sb.ToString();
         }
