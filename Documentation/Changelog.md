@@ -2,6 +2,12 @@
 
 ## 2022
 
+### Gapotchenko FX 2022.3
+
+Release date: not released yet
+
+- TODO
+
 ### Gapotchenko FX 2022.2
 
 Release date: May 1, 2022
