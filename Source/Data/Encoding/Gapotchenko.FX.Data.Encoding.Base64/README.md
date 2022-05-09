@@ -64,7 +64,7 @@ stream.Read(...); // block N
 
 Base64 family of binary-to-text data encodings consists of several attested algorithms with predefined parameters:
 
-| Algorithm | Aliases | Gapotchenko.FX Implementation | Alphabet | Case-Sensitivity | Data Encoding Efficiency* |
+| Algorithm | Aliases | Gapotchenko.FX Implementation | Alphabet | Case-Sensitive | Data Encoding Efficiency* |
 | --------- | -------- | -------- | -------- | -------- | -------- | 
 | Base64 | | `Base64` | ABCDEFGHIJKLMNOPQRSTUVWXYZ<br/>abcdefghijklmnopqrstuvwxyz0123456789+/ | Yes | 0.75 |
 | Base64 URL | base64url | `Base64Url` | ABCDEFGHIJKLMNOPQRSTUVWXYZ<br/>abcdefghijklmnopqrstuvwxyz0123456789-_ | Yes | 0.75 |
