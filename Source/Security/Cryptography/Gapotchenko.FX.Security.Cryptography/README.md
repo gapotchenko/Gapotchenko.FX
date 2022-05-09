@@ -13,6 +13,34 @@ While it is remarkable for its simplicity and performance, nowadays its usage is
 Still, ARC4 may be a good enough fit for less sensitive tasks.
 It may also be required for communication with legacy or energy-constrained systems.
 
+Example:
+
+``` c#
+using Gapotchenko.FX.Security.Cryptography;
+
+byte[] messageToEncrypt = ...;
+
+// Encrypt
+byte[] encryptedMessage;
+using (var arc4 = new Arc4Managed { Key = ... })
+{
+    var ms = new MemoryStream();
+    using (var cryptoStream = new CryptoStream(ms, arc4.CreateEncryptor(), CryptoStreamMode.Write))
+        cryptoStream.Write(messageToEncrypt, 0, messageToEncrypt.Length);
+    encryptedMessage = ms.ToArray();
+}
+
+// Decrypt
+byte[] decryptedMessage;
+using (var arc4 = new Arc4Managed { Key = ... })
+{
+    var ms = new MemoryStream();
+    using (var cryptoStream = new CryptoStream(ms, arc4.CreateDecryptor(), CryptoStreamMode.Write))
+        cryptoStream.Write(encryptedMessage, 0, encryptedMessage.Length);
+    decryptedMessage = ms.ToArray();
+}
+```
+
 ## Usage
 
 `Gapotchenko.FX.Security.Cryptography` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Security.Cryptography):
