@@ -1,0 +1,13 @@
+digraph {
+    
+  rankdir=LR
+  node [shape=circle]
+  edge [dir=back]
+
+  7 -> 5, 6 
+  5 -> 4, 2
+  6 -> 4, 3
+  2, 3 -> 1
+  1 -> 0
+
+}

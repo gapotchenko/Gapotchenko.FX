@@ -129,7 +129,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
-            T result = default;
+            T result = default!;
             Execute(
                 async () =>
                 {
@@ -150,7 +150,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
-            T result = default;
+            T result = default!;
             Execute(
                 async ct =>
                 {
@@ -188,7 +188,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
 
-            T result = default;
+            T result = default!;
             await
                 ExecuteAsync(
                     () =>
@@ -286,7 +286,7 @@ namespace Gapotchenko.FX.Threading.Tasks
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
 
-            T result = default;
+            T result = default!;
             await
                 ExecuteAsync(
                     () =>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134pt" height="44pt" viewBox="0.00 0.00 134.00 44.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 40)">
+<title>G</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-40 130,-40 130,4 -4,4"/>
+<!-- 1 -->
+<g id="node1" class="node">
+<title>1</title>
+<ellipse fill="none" stroke="#000000" cx="27" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-13.8" font-family="Times,serif" font-size="14.00" fill="#000000">1</text>
+</g>
+<!-- 2 -->
+<g id="node2" class="node">
+<title>2</title>
+<ellipse fill="none" stroke="#000000" cx="99" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="99" y="-13.8" font-family="Times,serif" font-size="14.00" fill="#000000">2</text>
+</g>
+</g>
+</svg>

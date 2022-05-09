@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
         /// <summary>
         /// Returns a <see cref="long"/> that represents the total number of permutations for a multiset of a specified length.
         /// </summary>
-        /// <param name="length">The length of a sequence.</param>
+        /// <param name="length">The length of a multiset.</param>
         /// <returns>The number of permutations.</returns>
         public static long Cardinality(long length) => MathEx.Factorial(length);
     }

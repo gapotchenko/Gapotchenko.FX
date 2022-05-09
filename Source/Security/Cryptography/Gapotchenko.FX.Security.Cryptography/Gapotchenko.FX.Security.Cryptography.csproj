@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="rc4;arc4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -106,7 +106,7 @@ bool IsContosoReportsFolder(string path) => path.StartsWith(@"Contoso\Reports");
 ```
 
 It kind of works, until we try to pass something like `Contoso\ReportsBackup`.
-The problem is `ReportsBackup` is a very different folder than `Reports`, but the provided function returns `true`.
+The problem is that `ReportsBackup` is a very different folder than `Reports`, but the provided function returns `true` nevertheless.
 
 We can cheat here, and try to use an updated function that adds a trailing slash:
 
@@ -116,7 +116,7 @@ bool IsContosoReportsFolder(string path) => path.StartsWith(@"Contoso\Reports\")
 
 The problem is gone.
 Until we ask for `IsContosoReportsFolder("Contoso\Reports")` value.
-It is `false` now despite the fact that `Contoso\Reports` is literally a Contoso reports folder we are so eagerly looking for.
+It is `false` now despite the fact that `Contoso\Reports` is literally the folder we are so eagerly looking for.
 
 The correct solution is to use `FileSystem.PathStartsWith` method provided by `Gapotchenko.FX.IO` module:
 
@@ -197,10 +197,13 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data](../Data/Encoding/Gapotchenko.FX.Data.Encoding)
 - [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
 - &#x27B4; [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 

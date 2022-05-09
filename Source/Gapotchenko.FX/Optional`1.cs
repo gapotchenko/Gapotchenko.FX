@@ -10,7 +10,7 @@ namespace Gapotchenko.FX
     /// Represents an optional value.
     /// </para>
     /// <para>
-    /// <see cref="Optional{T}"/> is similar to <see cref="Nullable{T}"/> but can also operate when <typeparamref name="T"/> is a reference type.
+    /// <see cref="Optional{T}"/> is similar to <see cref="Nullable{T}"/> but can also operate on reference types.
     /// </para>
     /// </summary>
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>

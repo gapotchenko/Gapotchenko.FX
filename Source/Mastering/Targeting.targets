@@ -1,0 +1,15 @@
+﻿<Project>
+
+  <PropertyGroup Condition=" $(IsPublicProject) ">
+    <TargetFrameworks Condition=" '$(TargetPlatforms)' == 'any;windows' ">$(TargetFrameworks);net5.0-windows;net6.0-windows;net7.0-windows</TargetFrameworks>
+  </PropertyGroup>
+
+  <Target Name="ConfigureLangTargeting"
+          BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <DefineConstants Condition=" '$(TargetPlatformSupported)' == 'true' ">$(DefineConstants),HAS_TARGET_PLATFORM</DefineConstants>
+    </PropertyGroup>
+  </Target>
+
+
+</Project>

@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// <para>
-    /// Supports cloning, which creates a new instance of class <typeparamref name="T"/> with the same value as an existing instance.
+    /// Supports cloning, which creates a new instance of class <typeparamref name="T"/> with the same semantical value as an existing instance.
     /// </para>
     /// <para>
     /// This is a polyfill provided by Gapotchenko.FX.

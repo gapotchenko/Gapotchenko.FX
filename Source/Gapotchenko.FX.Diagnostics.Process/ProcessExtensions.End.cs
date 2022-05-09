@@ -1,4 +1,4 @@
-﻿using Gapotchenko.FX.Diagnostics.Implementation;
+﻿using Gapotchenko.FX.Diagnostics.Pal;
 using Gapotchenko.FX.Threading.Tasks;
 using System;
 using System.Diagnostics;
@@ -242,7 +242,9 @@ namespace Gapotchenko.FX.Diagnostics
 
         static async Task<bool> _TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
         {
-            var adapter = ImplementationServices.AdapterOrDefault;
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var adapter = PalServices.AdapterOrDefault;
             if (adapter != null)
                 return await adapter.TryInterruptProcessAsync(process, cancellationToken).ConfigureAwait(false);
             else
@@ -251,7 +253,7 @@ namespace Gapotchenko.FX.Diagnostics
 
         static bool _TryExitProcess(Process process)
         {
-            if (!ImplementationServices.IsCurrentProcess(process))
+            if (!ProcessHelper.IsCurrentProcess(process))
                 return false;
             Environment.Exit(1);
             return true;

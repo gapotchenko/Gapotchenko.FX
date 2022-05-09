@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+  
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Memory.MemoryEqualityComparer" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Diagnostics.Process.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Diagnostics.Process)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Diagnostics.Process.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Diagnostics.Process)
 
 The module provides extended functionality for process manipulation.
 
@@ -27,9 +28,9 @@ The functionality is achieved by reading the process environment block (PEB) at 
 For example, this is how a PATH environment variable can be retrieved from all running instances of Microsoft Visual Studio:
 
 ``` csharp
+using Gapotchenko.FX.Diagnostics;
 using System;
 using System.Diagnostics;
-using Gapotchenko.FX.Diagnostics;
 
 class Program
 {
@@ -54,6 +55,46 @@ class Program
 }
 ```
 
+### ReadArguments()
+
+The method retrieves a set of command-line arguments specified at the process start.
+The functionality is achieved by reading the process environment block at the operating system level.
+
+``` csharp
+using Gapotchenko.FX.Diagnostics;
+using System;
+using System.Diagnostics;
+
+class Program
+{
+    static void Main()
+    {
+        var processes = Process.GetProcessesByName("devenv");
+
+        if (processes.Length == 0)
+            Console.WriteLine("Process with a given name not found. Please modify the code and specify the existing process name.");
+
+        foreach (var process in processes)
+        {
+            Console.WriteLine(
+                "Process with ID {0} was started with the following command line:",
+                process.Id,
+                process.ReadArguments());
+        }
+    }
+}
+```
+
+### ReadArgumentList()
+
+The method retrieves a sequence of command-line arguments specified at the process start.
+It is similar to aforementioned `ReadArguments()` method but returns a sequence of command-line arguments instead of a single command line string.
+
+This fundamental difference may be essential in multi-platform scenarios.
+For instance, Windows represents a command line of a process as a single string, while Unix operating systems represent the command line as a strongly-typed array of command-line arguments.
+
+Whichever method is used the results are similar, but every method provides a higher degree of detalization for the specific operating system.
+
 ### End()
 
 Allows to end a process according to a specified mode of operation.
@@ -68,13 +109,13 @@ Lost files, potentially corrupted extensions and so on.
 
 Meet the `End()` method provided by `Gapotchenko.FX.Diagnostics.Process` module.
 It allows to end a process according to a specified mode of operation.
-The default mode of operation is `ProcessEndMode.Complete` that follows a sequence below:
+The default mode of operation is `ProcessEndMode.Complete` that follows a sequence presented below:
 
  1. Graceful techniques are tried first:  
-   1.1. `End()` method tries to close a main window of a process  
+   1.1. `End()` method tries to close a main window of the process  
    1.2. If that fails, it tries to send Ctrl+C (SIGTERM) signal
  2. Forceful techniques:  
-   2.1. If graceful techniques failed, `End()` method tries to exit the process (suitable for the current process only)  
+   2.1. If graceful techniques fail, `End()` method tries to exit the process (suitable for the current process only)  
    2.2. If that fails, it kills the process (SIGKILL)
 
 The method returns a `ProcessEndMode` value on completion indicating how the process was actually ended.
@@ -160,7 +201,7 @@ As you can see, despite a simple-looking signature, the End(…) method gives en
 ### EndAsync()
 
 The method is similar to `End()` but has an async implementation.
-If was created in order to efficiently handle a lot of processes in bulk.
+It can be used to efficiently handle a lot of processes in bulk.
 
 ## Usage
 
@@ -178,6 +219,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data](../Data/Encoding/Gapotchenko.FX.Data.Encoding)
 - [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
   - [Gapotchenko.FX.Diagnostics.CommandLine](../Gapotchenko.FX.Diagnostics.CommandLine)
   - &#x27B4; [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process)
@@ -185,6 +227,8 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 

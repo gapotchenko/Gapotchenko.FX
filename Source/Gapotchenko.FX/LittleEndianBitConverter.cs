@@ -12,7 +12,7 @@ namespace Gapotchenko.FX
     /// </remarks>
     public sealed class LittleEndianBitConverter : IBitConverter
     {
-        private LittleEndianBitConverter()
+        LittleEndianBitConverter()
         {
         }
 

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 namespace Gapotchenko.FX.Console
 {
+#if NET
+    [SupportedOSPlatform("windows")]
+#endif
     static class NativeMethods
     {
         public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);

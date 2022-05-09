@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework></TargetFramework>
-    <LangVersion>9.0</LangVersion>
+    <CLSCompliant>true</CLSCompliant>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   

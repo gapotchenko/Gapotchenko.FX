@@ -1,11 +1,12 @@
 ﻿using System;
 
+#pragma warning disable CS3010 // CLS-compliant interfaces must have only CLS-compliant members
+
 namespace Gapotchenko.FX
 {
     /// <summary>
     /// Defines interface of a byte order converter.
     /// </summary>
-    [CLSCompliant(false)]
     public interface IBitConverter
     {
         /// <summary>
@@ -20,6 +21,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 2.</returns>
+        [CLSCompliant(false)]
         byte[] GetBytes(ushort value);
 
         /// <summary>
@@ -34,6 +36,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 4.</returns>
+        [CLSCompliant(false)]
         byte[] GetBytes(uint value);
 
         /// <summary>
@@ -48,6 +51,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 8.</returns>
+        [CLSCompliant(false)]
         byte[] GetBytes(ulong value);
 
         /// <summary>
@@ -92,6 +96,7 @@ namespace Gapotchenko.FX
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The array of bytes to store converted value at.</param>
         /// <param name="startIndex">The start index where converted value is to be stored at <paramref name="buffer"/>.</param>
+        [CLSCompliant(false)]
         void FillBytes(ushort value, byte[] buffer, int startIndex);
 
         /// <summary>
@@ -108,6 +113,7 @@ namespace Gapotchenko.FX
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The array of bytes to store converted value at.</param>
         /// <param name="startIndex">The start index where converted value is to be stored at <paramref name="buffer"/>.</param>
+        [CLSCompliant(false)]
         void FillBytes(uint value, byte[] buffer, int startIndex);
 
         /// <summary>
@@ -124,6 +130,7 @@ namespace Gapotchenko.FX
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The array of bytes to store converted value at.</param>
         /// <param name="startIndex">The start index where converted value is to be stored at <paramref name="buffer"/>.</param>
+        [CLSCompliant(false)]
         void FillBytes(ulong value, byte[] buffer, int startIndex);
 
         /// <summary>
@@ -170,6 +177,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The array of bytes to store converted value at.</param>
+        [CLSCompliant(false)]
         void FillBytes(ushort value, byte[] buffer);
 
         /// <summary>
@@ -184,6 +192,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The array of bytes to store converted value at.</param>
+        [CLSCompliant(false)]
         void FillBytes(uint value, byte[] buffer);
 
         /// <summary>
@@ -198,6 +207,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The array of bytes to store converted value at.</param>
+        [CLSCompliant(false)]
         void FillBytes(ulong value, byte[] buffer);
 
         /// <summary>
@@ -242,6 +252,7 @@ namespace Gapotchenko.FX
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 16-bit unsigned integer formed by two bytes beginning at <paramref name="startIndex"/>.</returns>
+        [CLSCompliant(false)]
         ushort ToUInt16(byte[] value, int startIndex);
 
         /// <summary>
@@ -258,6 +269,7 @@ namespace Gapotchenko.FX
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 32-bit unsigned integer formed by four bytes beginning at <paramref name="startIndex"/>.</returns>
+        [CLSCompliant(false)]
         uint ToUInt32(byte[] value, int startIndex);
 
         /// <summary>
@@ -274,6 +286,7 @@ namespace Gapotchenko.FX
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 64-bit unsigned integer formed by eight bytes beginning at <paramref name="startIndex"/>.</returns>
+        [CLSCompliant(false)]
         ulong ToUInt64(byte[] value, int startIndex);
 
         /// <summary>
@@ -320,6 +333,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <returns>A 16-bit unsigned integer formed by the first two bytes of a byte array.</returns>
+        [CLSCompliant(false)]
         ushort ToUInt16(byte[] value);
 
         /// <summary>
@@ -334,6 +348,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <returns>A 32-bit unsigned integer formed by the first four bytes of a byte array.</returns>
+        [CLSCompliant(false)]
         uint ToUInt32(byte[] value);
 
         /// <summary>
@@ -348,6 +363,7 @@ namespace Gapotchenko.FX
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <returns>A 64-bit unsigned integer formed by the first eight bytes of a byte array.</returns>
+        [CLSCompliant(false)]
         ulong ToUInt64(byte[] value);
 
         /// <summary>

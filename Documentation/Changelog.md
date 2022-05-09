@@ -1,26 +1,84 @@
 # What's New in Gapotchenko.FX
 
-## 2020
+## 2022
 
-### Gapotchenko FX 2020.2
+### Gapotchenko FX 2022.3
 
 Release date: not released yet
 
+- TODO
+
+### Gapotchenko FX 2022.2
+
+Release date: May 1, 2022
+
+- Introduced `Gapotchenko.FX.Data.Encoding` module that defines a wireframe for data encoding algorithms
+- New `Gapotchenko.FX.Data.Encoding.Base16` module provides a ready-to-use implementation of popular data encoding algorithms belonging to Base16 family
+- New `Gapotchenko.FX.Data.Encoding.Base24` module provides a ready-to-use implementation of data encoding algorithms belonging to Base24 family: Kuon Base24
+- New `Gapotchenko.FX.Data.Encoding.Base32` module provides a ready-to-use implementation of popular data encoding algorithms belonging to Base32 family: Base32, base32-hex, Crockford Base 32, z-base-32
+- New `Gapotchenko.FX.Data.Encoding.Base64` module provides a ready-to-use implementation of popular data encoding algorithms belonging to Base64 family: Base64, Base64 URL
+- Added ability to read the command-line arguments of a running OS process
+- Improved multi-platform support. Reached the functional parity among Linux, macOS, and Windows platforms  
+
+### Gapotchenko FX 2022.1
+
+Release date: April 7, 2022
+
+- Added support for .NET 7.0 target framework
+- Introduced `Gapotchenko.FX.Security.Cryptography` module
+- Introduced `Gapotchenko.FX.Data.Integrity.Checksum` module and primitives for cyclic redundancy check (CRC) calculations.
+  They are grouped by the family and provided by the corresponding modules:
+  `Gapotchenko.FX.Data.Integrity.Checksum.Crc32`, `Gapotchenko.FX.Data.Integrity.Checksum.Crc16`, `Gapotchenko.FX.Data.Integrity.Checksum.Crc8`
+- Improved documentation
+- `Process.GetImageFileName()` extension method provided by `Gapotchenko.FX.Diagnostics.Process` module now returns `null` when a process is not associated with an image file
+- Fixed issue that could lead to `System.IO.EndOfStreamException` exception in `Process.ReadEnvironmentVariables()` method provided by `Gapotchenko.FX.Diagnostics.Process` module (GH-2)
+
+## 2021
+
+### Gapotchenko FX 2021.2
+
+Release date: December 31, 2021
+
+- Introduced `Gapotchenko.FX.Math.Topology` module that provides `Graph<T>` type and accompanying primitives including topological sorting
+- New `FileSystem.PathEquivalenceComparer` property returns the file path string comparer that takes into account path normalization and equivalence rules of the host environment
+- New `AssociativeArray` key/value map primitive which is similar to `Dictionary<TKey, TValue>` but handles the whole space of key values including `null`
+- New string metric functions: `DamerauLevenshteinDistance`, `HammingDistance`, `JaroDistance`, `LcsDistance`, `OsaDistance`
+- Added `PriorityQueue` polyfill
+- Added `IEnumerable<byte> AsEnumerable()` polyfill for `System.IO.Stream`
+- Added `LongIndexOf` LINQ polyfill
+- Added `TryGetNonEnumeratedCount` LINQ polyfill
+- Improved support for .NET 6.0 target framework
+- Improved `AssemblyAutoLoader` which can now work simultaneously with app domains and assembly load contexts
+- String metric functions now take an optional `maxDistance` parameter that limits computational resources required to calculate the distance
+
+### Gapotchenko FX 2021.1
+
+Release date: July 6, 2021
+
+- Added support for .NET 6.0 target framework
 - Introduced `Gapotchenko.FX.Memory` module
 - Introduced `Gapotchenko.FX.Math.Geometry` module
 - Introduced `Gapotchenko.FX.Math.Combinatorics` module
+- Added `MathEx.Clamp` function that clamps a value to the specified range
+- Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
+- Added `AppInformation.For(assembly)` static function that retrieves app information for a specified assembly
+- Added LINQ function that simultaneously determines whether any elements of a sequence satisfy the specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` with higher dimensional overloads)
+- Added `ConsoleEx.ReadPassword` function for reading a password from the console
+- Added `System.Runtime.CompilerServices.ModuleInitializerAttribute` polyfill
 - Added `SkipLast` and `TakeLast` LINQ polyfills
 - Added `System.Collections.Generic.ReferenceEqualityComparer` polyfill
 - Added `MemberNotNullAttribute` and `MemberNotNullWhenAttribute` nullability annotation polyfills
-- Added `MathEx.Clamp` function that clamps a value to the specified range
-- Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
-- Added LINQ function that determines whether any elements of a sequence satisfy multiple specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` with higher dimensional overloads)
-- Added `ConsoleEx.ReadPassword` function for reading a password from the console
-- Added `AppInformation.For(assembly)` static function that retrieves app information for a specified assembly
+- Added `GetValueOrDefault` polyfills for `IReadOnlyDictionary<TKey, TValue>`
+- Added `TryAdd` and `Remove(key, out value)` polyfills for `IDictionary<TKey, TValue>`
+- Added `System.Numerics.BitOperations.PopCount(ulong)` polyfill
 - Improved performance of a thread-safe LINQ memoization
 - Fixed nullability annotations for `MathEx.Min` and `MathEx.Max` functions
 - Fixed nullability annotations for `LazyInitializerEx` class
-- Fixed thread safety issues that could occur on architectures with weaker memory model
+- Fixed issue with UTF-8 BOM encoding returned by `CommandLine.OemEncoding` on Windows when system locale is set to UTF-8
+  (cmd.exe cannot consume UTF-8 with BOM)
+- Fixed potential thread safety issues that could occur on architectures with weaker memory models
+
+## 2020
 
 ### Gapotchenko.FX 2020.1
 

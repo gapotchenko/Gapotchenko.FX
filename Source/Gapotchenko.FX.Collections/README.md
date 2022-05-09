@@ -11,6 +11,15 @@ Other than that, the module provides polyfills for missing functionality in .NET
 
 `ConcurrentHashSet<T>` provided by `Gapotchenko.FX.Collections` is a thread-safe implementation of `HashSet<T>`.
 
+## AssociativeArray&lt;TKey, TValue&gt;
+
+`AssociativeArray<TKey, TValue>` provided by `Gapotchenko.FX.Collections` is a drop-in replacement for `Dictionary<TKey, TValue>` that can handle `null` keys.
+
+In contrast, stock `Dictionary<TKey, TValue>` cannot work with `null` keys and throws an exception whenever a `null` key is encountered.
+Due to such an artificial narrowing of the key space, it becomes hardly possible to solve some kinds of tasks with `Dictionary<TKey, TValue>`.
+
+`AssociativeArray<TKey, TValue>` resolves that by supporting a full space of keys without opinionated exclusions.
+
 ## AddRange&lt;T&gt;(IEnumerable&lt;T&gt;) for Collections
 
 `AddRange` is a highly demanded operation that allows to add a sequence of elements to the end of a collection.
@@ -75,6 +84,11 @@ KeyValuePair.Create(key, value)
 
 It leverages the automatic type inference provided by some .NET languages like C#.
 
+### PriorityQueue polyfill
+
+`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue introduced since .NET 6.
+The polyfill makes it available to all supported .NET versions.
+
 #### Deconstruction
 
 `Gapotchenko.FX.Collections` module comes with a function for `KeyValuePair<TKey, TValue>` deconstruction, so you can write this:
@@ -123,10 +137,13 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
 - &#x27B4; [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data](../Data/Encoding/Gapotchenko.FX.Data.Encoding)
 - [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 

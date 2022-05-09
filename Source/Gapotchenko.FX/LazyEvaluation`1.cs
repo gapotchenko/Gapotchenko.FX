@@ -59,7 +59,7 @@ namespace Gapotchenko.FX
                     var valueFactory = m_ValueFactory;
                     if (valueFactory != null)
                         m_Value = valueFactory();
-                    m_ValueFactory = defaultFunc;
+                    m_ValueFactory = defaultFunc!;
                 }
                 return m_Value;
             }

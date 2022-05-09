@@ -1,12 +1,11 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Xunit;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic
 {
-    [TestClass]
     public class ListExtensionsTests
     {
         class SortItem : IComparable<SortItem>
@@ -22,7 +21,7 @@ namespace Gapotchenko.FX.Collections.Tests.Generic
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GenericList_StableSort_1()
         {
             var list = new List<SortItem>
@@ -34,19 +33,19 @@ namespace Gapotchenko.FX.Collections.Tests.Generic
 
             list.StableSort();
 
-            Assert.AreEqual(3, list.Count);
+            Assert.Equal(3, list.Count);
 
-            Assert.AreEqual(1, list[0].SortOrder);
-            Assert.AreEqual("Name1", list[0].Name);
+            Assert.Equal(1, list[0].SortOrder);
+            Assert.Equal("Name1", list[0].Name);
 
-            Assert.AreEqual(2, list[1].SortOrder);
-            Assert.AreEqual("Name2", list[1].Name);
+            Assert.Equal(2, list[1].SortOrder);
+            Assert.Equal("Name2", list[1].Name);
 
-            Assert.AreEqual(2, list[2].SortOrder);
-            Assert.AreEqual("Name3", list[2].Name);
+            Assert.Equal(2, list[2].SortOrder);
+            Assert.Equal("Name3", list[2].Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void GenericList_StableSort_2()
         {
             var list = new List<SortItem>
@@ -58,19 +57,19 @@ namespace Gapotchenko.FX.Collections.Tests.Generic
 
             list.StableSort();
 
-            Assert.AreEqual(3, list.Count);
+            Assert.Equal(3, list.Count);
 
-            Assert.AreEqual(1, list[0].SortOrder);
-            Assert.AreEqual("Name1", list[0].Name);
+            Assert.Equal(1, list[0].SortOrder);
+            Assert.Equal("Name1", list[0].Name);
 
-            Assert.AreEqual(2, list[1].SortOrder);
-            Assert.AreEqual("Name2", list[1].Name);
+            Assert.Equal(2, list[1].SortOrder);
+            Assert.Equal("Name2", list[1].Name);
 
-            Assert.AreEqual(2, list[2].SortOrder);
-            Assert.AreEqual("Name3", list[2].Name);
+            Assert.Equal(2, list[2].SortOrder);
+            Assert.Equal("Name3", list[2].Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void GenericList_StableSort_Order()
         {
             var elements = new[] { 10, 5, 20 };
@@ -81,7 +80,7 @@ namespace Gapotchenko.FX.Collections.Tests.Generic
             list1.Sort();
             list2.StableSort();
 
-            Assert.IsTrue(list1.SequenceEqual(list2));
+            Assert.True(list1.SequenceEqual(list2));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Gapotchenko.FX.Diagnostics.Implementation;
+﻿using Gapotchenko.FX.Diagnostics.Pal;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -13,16 +13,66 @@ namespace Gapotchenko.FX.Diagnostics
     public static partial class ProcessExtensions
     {
         /// <summary>
-        /// Reads the environment variables from the environment block of a process.
+        /// Reads environment variables from the environment block of a process.
         /// </summary>
-        /// <param name="process">The process. It can be any process running on local machine.</param>
+        /// <param name="process">The process. It can be any process running on a local machine.</param>
         /// <returns>The environment variables.</returns>
         public static StringDictionary ReadEnvironmentVariables(this Process process)
         {
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
 
-            return ImplementationServices.Adapter.ReadProcessEnvironmentVariables(process);
+            // This is a hacky way to create a StringDictionary with the correct characteristics.
+            // Needs a future review.
+            // One solution is to change the public contract to IReadOnlyDictionary<string, string>.
+            var psi = new ProcessStartInfo();
+            var env = psi.EnvironmentVariables;
+            env.Clear();
+
+            foreach (var i in PalServices.Adapter.ReadProcessEnvironmentVariables(process))
+                env[i.Key] = i.Value;
+
+            return env;
+        }
+
+        /// <summary>
+        /// Reads a set of command-line arguments of the process.
+        /// </summary>
+        /// <param name="process">The process. It can be any process running on a local machine.</param>
+        /// <returns>The set of command-line arguments of the process.</returns>
+        public static string ReadArguments(this Process process)
+        {
+            if (process == null)
+                throw new ArgumentNullException(nameof(process));
+
+            PalServices.Adapter.ReadProcessCommandLineArguments(process, out var commandLine, out var arguments);
+
+            if (commandLine != null)
+                return commandLine;
+            else if (arguments != null)
+                return CommandLine.Build(arguments);
+            else
+                throw new InvalidOperationException();
+        }
+
+        /// <summary>
+        /// Reads a sequence of command-line arguments of the process.
+        /// </summary>
+        /// <param name="process">The process. It can be any process running on a local machine.</param>
+        /// <returns>The sequence of command-line arguments of the process.</returns>
+        public static IEnumerable<string> ReadArgumentList(this Process process)
+        {
+            if (process == null)
+                throw new ArgumentNullException(nameof(process));
+
+            PalServices.Adapter.ReadProcessCommandLineArguments(process, out var commandLine, out var arguments);
+
+            if (arguments != null)
+                return arguments;
+            else if (commandLine != null)
+                return CommandLine.Split(commandLine);
+            else
+                throw new InvalidOperationException();
         }
 
         /// <summary>
@@ -35,29 +85,36 @@ namespace Gapotchenko.FX.Diagnostics
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
 
-            int parentPID = ImplementationServices.Adapter.GetParentProcessId(process);
             try
             {
-                var parentProcess = Process.GetProcessById(parentPID);
-                if (!ImplementationServices.IsValidParentProcess(parentProcess, process))
+                int parentPID = PalServices.Adapter.GetParentProcessId(process);
+                try
+                {
+                    var parentProcess = Process.GetProcessById(parentPID);
+                    if (!ProcessHelper.IsValidParentProcess(parentProcess, process))
+                        return null;
+                    return parentProcess;
+                }
+                catch (ArgumentException)
+                {
+                    // "Process with an Id of NNN is not running."
                     return null;
-                return parentProcess;
+                }
             }
-            catch (ArgumentException)
+            catch (Exception e) when (!e.IsControlFlowException())
             {
-                // "Process with an Id of NNN is not running."
-                return null;
+                throw new Exception("Unable to get parent process.", e);
             }
         }
 
         /// <summary>
-        /// Enumerates parent processes.
+        /// Enumerates observable parent processes.
         /// </summary>
         /// <remarks>
         /// The closest parents are returned first.
         /// </remarks>
         /// <param name="process">The process to get the parents for.</param>
-        /// <returns>The sequence of parent processes.</returns>
+        /// <returns>The sequence of observable parent processes.</returns>
         public static IEnumerable<Process> EnumerateParents(this Process process)
         {
             if (process == null)
@@ -80,19 +137,15 @@ namespace Gapotchenko.FX.Diagnostics
         /// </summary>
         /// <remarks>
         /// Usually, the value returned by this method equals to the value returned by <see cref="ProcessModule.FileName"/> property of the main process module.
-        /// The difference becomes apparent when the current process cannot access the module information due to security restrictions imposed by the host platform.
+        /// The difference becomes apparent when the current process cannot access the module information due to security restrictions imposed by the host environment.
         /// While <see cref="ProcessModule.FileName"/> may not work in that situation, this method always works.
         /// </remarks>
         /// <param name="process">The process to get image file name for.</param>
-        /// <returns>The file name of a process image.</returns>
-        public static string GetImageFileName(this Process process)
+        /// <returns>The file name of a process image or <see langword="null"/> if there is no associated file.</returns>
+        public static string? GetImageFileName(this Process process)
         {
             if (process == null)
                 throw new ArgumentNullException(nameof(process));
-
-            var adapter = ImplementationServices.AdapterOrDefault;
-            if (adapter == null)
-                return process.MainModule.FileName;
 
             ProcessModule? mainModule = null;
             try
@@ -106,10 +159,15 @@ namespace Gapotchenko.FX.Diagnostics
             {
             }
 
-            if (mainModule != null)
-                return mainModule.FileName;
+            string? fileName = mainModule?.FileName;
+            if (fileName != null)
+                return fileName;
 
-            return adapter.GetProcessImageFileName(process);
+            var adapter = PalServices.AdapterOrDefault;
+            if (adapter != null)
+                return adapter.GetProcessImageFileName(process);
+
+            return null;
         }
     }
 }

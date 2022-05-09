@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project>
 
   <Import Project="Workarounds.props" />
 
@@ -11,12 +10,7 @@
   <PropertyGroup>
     <MasteringDir>$(MSBuildThisFileDirectory)</MasteringDir>
     <IsPublicProject>false</IsPublicProject>
-    <IsPublicProject Condition=" !($(MSBuildProjectName.EndsWith('.Test')) OR $(MSBuildProjectName.EndsWith('.Tests')) OR $(MSBuildProjectName.Contains('.Test.')) OR $(MSBuildProjectName.Contains('.Tests.')) OR $(MSBuildProjectName.EndsWith('.Harness')) OR $(MSBuildProjectName.Contains('.Harness.'))) ">true</IsPublicProject>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
-    <Nullable>enable</Nullable>
+    <IsPublicProject Condition=" !($(MSBuildProjectName.EndsWith('.Test')) OR $(MSBuildProjectName.EndsWith('.Tests')) OR $(MSBuildProjectName.Contains('.Test.')) OR $(MSBuildProjectName.Contains('.Tests.')) OR $(MSBuildProjectName.EndsWith('.Harness')) OR $(MSBuildProjectName.Contains('.Harness.')) OR $(MSBuildProjectName.Contains('.Utilities.'))) ">true</IsPublicProject>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -31,6 +25,7 @@
 
   <!-- =================================================================== -->
 
+  <Import Project="Language.props" />
   <Import Project="NuGet.props" />
   <Import Project="Targeting.props" />
   <Import Project="AssemblySignature.props" />

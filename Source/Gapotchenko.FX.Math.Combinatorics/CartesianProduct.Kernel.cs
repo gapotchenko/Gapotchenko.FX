@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
     {
         static IEnumerable<IRow<T>> Multiply<T>(IEnumerable<IEnumerable<T>> factors)
         {
-            var items = MemoizeMultipliers(factors).AsReadOnly();
+            var items = MemoizeMultipliers(factors).AsReadOnlyList();
             int rank = items.Count;
 
             if (rank == 0)
@@ -49,7 +49,7 @@ namespace Gapotchenko.FX.Math.Combinatorics
                     // Reset the enumerator by retrieving a new one.
                     var newEnumerator = items[i].GetEnumerator();
                     if (!newEnumerator.MoveNext())
-                        throw new InvalidOperationException("Cartesian product pool is prematurely exhausted.");
+                        throw new InvalidOperationException("Cartesian product pool is exhausted prematurely.");
                     enumerators[i] = newEnumerator;
                 }
             }

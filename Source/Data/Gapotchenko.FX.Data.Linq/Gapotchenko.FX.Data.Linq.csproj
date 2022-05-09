@@ -1,8 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework></TargetFramework>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net46</TargetFrameworks>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageDescription>The module provides the asynchronous data access support for LINQ2SQL technology.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

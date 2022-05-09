@@ -39,7 +39,7 @@ namespace Gapotchenko.FX.Linq.Expressions
             if (expressions == null)
                 return null;
             else
-                return expressions.Select(Visit).AsReadOnly();
+                return expressions.Select(Visit).AsReadOnlyList();
         }
 
         protected abstract TResult VisitBinary(BinaryExpression expression);

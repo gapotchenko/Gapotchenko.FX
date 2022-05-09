@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Gapotchenko.FX.Math.Combinatorics
 {
     /// <summary>
-    /// Defines permutation operations.
+    /// Provides permutation operations.
     /// </summary>
     public static partial class Permutations
     {

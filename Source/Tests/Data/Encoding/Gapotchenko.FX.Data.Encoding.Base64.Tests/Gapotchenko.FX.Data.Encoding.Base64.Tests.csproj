@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Gapotchenko.FX.Data.Encoding.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.9" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16\Gapotchenko.FX.Data.Encoding.Base16.csproj" />
+    <ProjectReference Include="..\..\..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64\Gapotchenko.FX.Data.Encoding.Base64.csproj" />
+    <ProjectReference Include="..\..\..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding.Tests\Gapotchenko.FX.Data.Encoding.Tests.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -37,7 +37,7 @@ if (name.Equals("[mscorlib]System.Object", StringComparison.Ordinal) ||
 ```
 
 It does the job but such mechanical changes may put a toll on code maintainability when they accumulate.
-You can also spot some amount of code duplication there.
+You can also spot some amount of code duplication here.
 
 Another approach would be to use `Regex` class which is readily available in .NET.
 But that might destroy the expressiveness of string manipulation functions like `Equals`.
@@ -45,10 +45,10 @@ If a string function takes a `StringComparison` parameter then it may become a s
 
 
 That's why `Gapotchenko.FX.Text` module provides a set of so called regex trampoline functions.
-They look exactly like `Equals`, `StartsWith`, `EndsWith`, `IndexOf` but work on regex patterns instead of raw strings.
-They also end with `Regex` suffix in their names, so `Equals` becomes `EqualsRegex`, `StartsWith` becomes `StartsWithRegex` and so on.
+They look exactly like `Equals`, `StartsWith`, `EndsWith`, `IndexOf` but work with regex patterns instead of raw strings.
+They also end with `Regex` suffix in their names, so `Equals` becomes `EqualsRegex`, `StartsWith` correspondingly becomes `StartsWithRegex`, and so on.
 
-This is how a regex trampoline can be used for the given sample in order to meet the new requirements by a single line change:
+And this is how a regex trampoline can be used for the given sample in order to meet the new requirements by a single line change:
 
 ``` csharp
 using Gapotchenko.FX.Text.RegularExpressions;
@@ -66,6 +66,8 @@ An immediate improvement in expressiveness without duplication.
 `StringBuilder.AppendJoin` is a method that appeared in later versions of .NET platform.
 Gapochenko.FX provides a corresponding polyfill that can be used in code targeting older .NET versions.
 
+The benefit of this method is that it combines `string.Join` and `StringBuilder.Append` operations into one method using the underlying efficiency of `StringBuilder`.
+
 ## Usage
 
 `Gapotchenko.FX.Text` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Text):
@@ -82,10 +84,13 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
 - [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data](../Data/Encoding/Gapotchenko.FX.Data.Encoding)
 - [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
 - &#x27B4; [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 

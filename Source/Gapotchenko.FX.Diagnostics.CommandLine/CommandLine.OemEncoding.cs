@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics
@@ -21,15 +22,7 @@ namespace Gapotchenko.FX.Diagnostics
         /// If a host OS has no notion of OEM encoding then <see cref="Encoding.Default"/> value is returned instead.
         /// </para>
         /// </summary>
-        public static Encoding OemEncoding
-        {
-            get
-            {
-                if (m_OemEncoding == null)
-                    m_OemEncoding = GetOemEncodingCore();
-                return m_OemEncoding;
-            }
-        }
+        public static Encoding OemEncoding => m_OemEncoding ??= GetOemEncodingCore();
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static Encoding? m_OemEncoding;
@@ -43,7 +36,19 @@ namespace Gapotchenko.FX.Diagnostics
                     int lcid = NativeMethods.GetSystemDefaultLCID();
                     var ci = CultureInfo.GetCultureInfo(lcid);
                     var page = ci.TextInfo.OEMCodePage;
-                    return Encoding.GetEncoding(page);
+
+                    Encoding encoding;
+                    if (page == 65001)
+                    {
+                        // cmd.exe cannot interpret UTF-8-with-BOM encoding, so use UTF-8 encoding without BOM.
+                        encoding = new UTF8Encoding(false);
+                    }
+                    else
+                    {
+                        encoding = Encoding.GetEncoding(page);
+                    }
+
+                    return encoding;
                 }
                 catch (Exception e) when (!e.IsControlFlowException())
                 {
@@ -56,6 +61,9 @@ namespace Gapotchenko.FX.Diagnostics
             }
         }
 
+#if NET
+        [SupportedOSPlatform("windows")]
+#endif
         static partial class NativeMethods
         {
             [DllImport("kernel32.dll", ExactSpelling = true)]

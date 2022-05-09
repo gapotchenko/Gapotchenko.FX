@@ -1,7 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
 
-  <Target Name="PrepareNuspec">
+  <PropertyGroup>
+    <OrigPackageDescription>$(PackageDescription)</OrigPackageDescription>
+  </PropertyGroup>
+
+  <Target Name="PrepareNuspec" BeforeTargets="_GetPackageFiles">
     <NLP_GeneratePackageRepositoryUrl
         ProjectDirectory="$(MSBuildProjectDirectory)"
         SolutionDirectory="$(SolutionDir)"
@@ -10,15 +13,28 @@
       <Output PropertyName="RepositoryUrl" TaskParameter="RepositoryUrl" />
     </NLP_GeneratePackageRepositoryUrl>
 
-    <NLP_GeneratePackageSpecification
+    <!-- NLP_GeneratePackageSpecification
         PackageId="$(PackageId)"
         CommonlyUsedParts="@(CommonlyUsedPart)"
         TargetFrameworks="$(TargetFrameworks)">
       <Output PropertyName="PackageDescription" TaskParameter="Description" />
-    </NLP_GeneratePackageSpecification>
+    </NLP_GeneratePackageSpecification-->
 
     <PropertyGroup>
-      <PackageTags>$(PackageTags) @(PackageTag)</PackageTags>
+      <NLP_PackageDir Condition=" '$(NLP_ProjectReadmeFile)' != '' ">$(IntermediateOutputPath)MDDocProcessor\Package</NLP_PackageDir>
+    </PropertyGroup>
+
+    <Exec
+        Condition=" '$(NLP_PackageDir)' != '' "
+        Command="&quot;$(MasteringDir)../Utilities/MDDocProcessor/run&quot; generate-package-readme &quot;$(NLP_ProjectReadmeFile)&quot; &quot;$(NLP_PackageDir)&quot; &quot;--commonly-used-parts=@(CommonlyUsedPart)&quot;" />
+
+    <ItemGroup>
+      <None Condition=" '$(NLP_PackageDir)' != '' " Include="$(NLP_PackageDir)/README.md" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="false" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <PackageDescription Condition=" '$(OrigPackageDescription)' == '' AND '$(NLP_PackageDir)' != '' ">$([System.IO.File]::ReadAllText("$(NLP_PackageDir)/Description.txt"))</PackageDescription>
+      <PackageTags>@(PackageTag) $(PackageTags)</PackageTags>
     </PropertyGroup>
   </Target>
 
@@ -118,8 +134,8 @@ if (supportsNETStandard20)
     supportedPlatforms.Add(".NET Standard 2.0+");
 if (supportsNETCore20)
     supportedPlatforms.Add(".NET Core 2.0+");
-if (targetFrameworks.Contains("net45"))
-    supportedPlatforms.Add(".NET Framework 4.5+");
+if (targetFrameworks.Contains("net46"))
+    supportedPlatforms.Add(".NET Framework 4.6+");
 
 if (supportedPlatforms.Count != 0)
 {

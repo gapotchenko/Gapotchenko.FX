@@ -1,16 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework></TargetFramework>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageDescription>The module provides data structures and primitives for collections.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Concurrent.ConcurrentHashSet" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Generic.AssociativeArray" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
+
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.targets" />
 
 </Project>

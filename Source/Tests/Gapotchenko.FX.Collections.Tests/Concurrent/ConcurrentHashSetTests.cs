@@ -1,89 +1,88 @@
 ﻿using Gapotchenko.FX.Collections.Concurrent;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using Xunit;
 
 namespace Gapotchenko.FX.Collections.Tests.Concurrent
 {
-    [TestClass]
     public class ConcurrentHashSetTests
     {
-        [TestMethod]
+        [Fact]
         public void ConcurrentHashSet_Ctor_1()
         {
             var hashSet = new ConcurrentHashSet<string>((IEqualityComparer<string>?)null);
-            Assert.AreEqual(0, hashSet.Count);
+            Assert.Empty(hashSet);
         }
 
-        [TestMethod]
+        [Fact]
         public void ConcurrentHashSet_Ctor_2()
         {
             var hashSet = new ConcurrentHashSet<string>(StringComparer.Ordinal);
-            Assert.AreEqual(0, hashSet.Count);
+            Assert.Empty(hashSet);
         }
 
-        [TestMethod]
+        [Fact]
         public void ConcurrentHashSet_NullStringKey_DefaultEqualityComparer()
         {
             var hashSet = new ConcurrentHashSet<string?>();
 
-            Assert.IsFalse(hashSet.Contains(null));
+            Assert.DoesNotContain(null, hashSet);
 
             hashSet.Add(null);
-            Assert.IsTrue(hashSet.Contains(null));
+            Assert.Contains(null, hashSet);
 
-            Assert.AreEqual(1, hashSet.Count);
+            Assert.Single(hashSet);
 
-            Assert.IsTrue(hashSet.Add("A"));
-            Assert.IsTrue(hashSet.Add("B"));
-            Assert.IsTrue(hashSet.Add("C"));
-            Assert.IsTrue(hashSet.Add("a"));
-            Assert.IsTrue(hashSet.Add("b"));
-            Assert.IsTrue(hashSet.Add("c"));
+            Assert.True(hashSet.Add("A"));
+            Assert.True(hashSet.Add("B"));
+            Assert.True(hashSet.Add("C"));
+            Assert.True(hashSet.Add("a"));
+            Assert.True(hashSet.Add("b"));
+            Assert.True(hashSet.Add("c"));
 
-            Assert.AreEqual(7, hashSet.Count);
+            Assert.Equal(7, hashSet.Count);
 
-            Assert.IsTrue(hashSet.Contains(null));
-            Assert.IsTrue(hashSet.Contains("A"));
-            Assert.IsTrue(hashSet.Contains("B"));
-            Assert.IsTrue(hashSet.Contains("C"));
-            Assert.IsFalse(hashSet.Contains("D"));
-            Assert.IsTrue(hashSet.Contains("a"));
-            Assert.IsTrue(hashSet.Contains("b"));
-            Assert.IsTrue(hashSet.Contains("c"));
-            Assert.IsFalse(hashSet.Contains("d"));
+            Assert.Contains(null, hashSet);
+            Assert.Contains("A", hashSet);
+            Assert.Contains("B", hashSet);
+            Assert.Contains("C", hashSet);
+            Assert.DoesNotContain("D", hashSet);
+            Assert.Contains("a", hashSet);
+            Assert.Contains("b", hashSet);
+            Assert.Contains("c", hashSet);
+            Assert.DoesNotContain("d", hashSet);
         }
 
-        [TestMethod]
+        [Fact]
         public void ConcurrentHashSet_NullStringKey_OicEqualityComparer()
         {
             var hashSet = new ConcurrentHashSet<string?>(StringComparer.OrdinalIgnoreCase);
 
-            Assert.IsFalse(hashSet.Contains(null));
+            Assert.DoesNotContain(null, hashSet);
 
             hashSet.Add(null);
-            Assert.IsTrue(hashSet.Contains(null));
+            Assert.Contains(null, hashSet);
 
-            Assert.AreEqual(1, hashSet.Count);
+            Assert.Single(hashSet);
 
-            Assert.IsTrue(hashSet.Add("A"));
-            Assert.IsTrue(hashSet.Add("B"));
-            Assert.IsTrue(hashSet.Add("C"));
-            Assert.IsFalse(hashSet.Add("a"));
-            Assert.IsFalse(hashSet.Add("b"));
-            Assert.IsFalse(hashSet.Add("c"));
+            Assert.True(hashSet.Add("A"));
+            Assert.True(hashSet.Add("B"));
+            Assert.True(hashSet.Add("C"));
+            Assert.False(hashSet.Add("a"));
+            Assert.False(hashSet.Add("b"));
+            Assert.False(hashSet.Add("c"));
 
-            Assert.AreEqual(4, hashSet.Count);
+            Assert.Equal(4, hashSet.Count);
 
-            Assert.IsTrue(hashSet.Contains(null));
-            Assert.IsTrue(hashSet.Contains("A"));
-            Assert.IsTrue(hashSet.Contains("B"));
-            Assert.IsTrue(hashSet.Contains("C"));
-            Assert.IsFalse(hashSet.Contains("D"));
-            Assert.IsTrue(hashSet.Contains("a"));
-            Assert.IsTrue(hashSet.Contains("b"));
-            Assert.IsTrue(hashSet.Contains("c"));
-            Assert.IsFalse(hashSet.Contains("d"));
+            Assert.Contains(null, hashSet);
+            Assert.Contains("A", hashSet);
+            Assert.Contains("B", hashSet);
+            Assert.Contains("C", hashSet);
+            Assert.DoesNotContain("D", hashSet);
+            Assert.Contains("a", hashSet);
+            Assert.Contains("b", hashSet);
+            Assert.Contains("c", hashSet);
+            Assert.DoesNotContain("d", hashSet);
         }
     }
 }

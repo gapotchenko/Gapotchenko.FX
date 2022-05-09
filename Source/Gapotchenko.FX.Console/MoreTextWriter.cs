@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -319,6 +320,19 @@ namespace Gapotchenko.FX.Console
             }
         }
 
+        static bool _IsCursorVisible()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return Console.CursorVisible;
+            }
+            else
+            {
+                // Console.CursorVisible retrieval is not available.
+                return true;
+            }
+        }
+
         void HandleUI()
         {
             var baseTextWriter = BaseTextWriter;
@@ -328,7 +342,7 @@ namespace Gapotchenko.FX.Console
             baseTextWriter.Flush();
             int promptLength = Console.CursorLeft - left;
 
-            bool savedCursorVisible = Console.CursorVisible;
+            bool savedCursorVisible = _IsCursorVisible();
             CursorRecovery.Activate();
             Console.CursorVisible = false;
             try

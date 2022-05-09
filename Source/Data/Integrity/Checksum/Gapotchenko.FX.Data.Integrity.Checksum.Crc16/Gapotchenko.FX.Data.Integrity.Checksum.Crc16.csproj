@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageDescription>The module provides the implementation of checksum algorithms belonging to CRC-16 family: CRC-16, CRC-16/ARC, CRC-IBM, CRC-16/LHA, CRC-16/CCITT, CRC-16/KERMIT, CRC-16/CCITT-TRUE, CRC-16/V-41-LSB, CRC-CCITT, KERMIT, CRC-16/ISO-IEC-14443-3-A, CRC-A, CRC-16/ISO-IEC-14443-3-B, CRC-B, CRC-16/IBM-SDLC, CRC-16/ISO-HDLC, CRC-16/X-25, X-25, CRC-16/NRSC-5, CRC-16/MAXIM, CRC-16/MAXIM-DOW, CRC-16/SPI-FUJITSU, CRC-16/AUG-CCITT, CRC-16/UMTS, CRC-16/VERIFONE, CRC-16/BUYPASS, CRC-16/USB, CRC-16/XMODEM, CRC-16/ACORN, CRC-16/LTE, CRC-16/V-41-MSB, XMODEM, ZMODEM, CRC-16/PROFIBUS, CRC-16/IEC-61158-2, CRC-16/MODBUS, MODBUS, CRC-16/GENIBUS, CRC-16/DARC, CRC-16/EPC, CRC-16/EPC-C1G2, CRC-16/I-CODE, CRC-16/GSM, CRC-16/OPENSAFETY-A, CRC-16/OPENSAFETY-B, CRC-16/TMS37157, CRC-16/MCRF4XX, CRC-16/DECT-R, R-CRC-16, CRC-16/DECT-X, X-CRC-16, CRC-16/DDS-110, CRC-16/CCITT-FALSE, CRC-16/AUTOSAR, CRC-16/IBM-3740.</PackageDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="checksum" />
+    <PackageTag Include="crc" />
+    <PackageTag Include="crc-16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Data.Integrity.Checksum.Crc16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Integrity.Checksum\Gapotchenko.FX.Data.Integrity.Checksum.csproj" />
+  </ItemGroup>
+
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.targets" />
+
+</Project>

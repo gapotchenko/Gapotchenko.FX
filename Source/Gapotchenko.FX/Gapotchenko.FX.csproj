@@ -1,8 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework></TargetFramework>
+    <CLSCompliant>true</CLSCompliant>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageDescription>.NET polyfill to the future. A versatile RAD (Rapid Application Development) framework for .NET platform.</PackageDescription>
   </PropertyGroup>
   
   <ItemGroup>

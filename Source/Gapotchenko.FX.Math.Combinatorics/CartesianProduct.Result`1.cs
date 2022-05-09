@@ -9,8 +9,12 @@ namespace Gapotchenko.FX.Math.Combinatorics
     partial class CartesianProduct
     {
         /// <summary>
+        /// <para>
         /// Represents the Cartesian product result.
+        /// </para>
+        /// <para>
         /// Exposes accelerated LINQ operations and the enumerator for the rows.
+        /// </para>
         /// </summary>
         /// <typeparam name="T">The type of elements that the row contains.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
