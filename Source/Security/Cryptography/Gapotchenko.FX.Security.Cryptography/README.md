@@ -20,23 +20,29 @@ using Gapotchenko.FX.Security.Cryptography;
 
 byte[] messageToEncrypt = ...;
 
-// Encrypt
+// Encryption
+
 byte[] encryptedMessage;
+
 using (var arc4 = new Arc4Managed { Key = ... })
 {
     var ms = new MemoryStream();
     using (var cryptoStream = new CryptoStream(ms, arc4.CreateEncryptor(), CryptoStreamMode.Write))
         cryptoStream.Write(messageToEncrypt, 0, messageToEncrypt.Length);
+
     encryptedMessage = ms.ToArray();
 }
 
-// Decrypt
+// Decryption
+
 byte[] decryptedMessage;
+
 using (var arc4 = new Arc4Managed { Key = ... })
 {
     var ms = new MemoryStream();
     using (var cryptoStream = new CryptoStream(ms, arc4.CreateDecryptor(), CryptoStreamMode.Write))
         cryptoStream.Write(encryptedMessage, 0, encryptedMessage.Length);
+
     decryptedMessage = ms.ToArray();
 }
 ```
