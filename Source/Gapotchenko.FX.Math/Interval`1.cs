@@ -16,8 +16,14 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds.
         /// </summary>
-        /// <param name="from">The left bound of the interval.</param>
-        /// <param name="to">The right bound of the interval.</param>
+        /// <param name="from">
+        /// The left bound of the interval.
+        /// The corresponding limit point is included in the interval.
+        /// </param>
+        /// <param name="to">
+        /// The right bound of the interval.
+        /// The corresponding limit point is not included in the interval.
+        /// </param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
@@ -32,19 +38,19 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         /// <param name="from">The left bound of the interval.</param>
         /// <param name="to">The right bound of the interval.</param>
-        /// <param name="includeFrom">Indicates whether the left bound limit point should be included in the interval.</param>
-        /// <param name="includeTo">Indicates whether the right bound limit point should be included in the interval.</param>
+        /// <param name="includesFrom">Indicates whether the left bound limit point is included in the interval.</param>
+        /// <param name="includesTo">Indicates whether the right bound limit point is included in the interval.</param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
         public Interval(
             T from, T to,
-            bool includeFrom, bool includeTo,
+            bool includesFrom, bool includesTo,
             IComparer<T>? comparer = null) :
             this(
                 from, to,
-                includeFrom, includeTo,
+                includesFrom, includesTo,
                 from is not null, to is not null,
                 comparer)
         {
@@ -74,9 +80,9 @@ namespace Gapotchenko.FX.Math
 
             var flags = IntervalFlags.None;
             if (includesFrom)
-                flags |= IntervalFlags.InclusiveLeft;
+                flags |= IntervalFlags.LeftClosed;
             if (includesTo)
-                flags |= IntervalFlags.InclusiveRight;
+                flags |= IntervalFlags.RightClosed;
             if (leftBounded)
                 flags |= IntervalFlags.LeftBounded;
             if (rightBounded)
@@ -104,8 +110,8 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         public bool IncludesFrom
         {
-            get => (m_Flags & IntervalFlags.InclusiveLeft) != 0;
-            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.InclusiveLeft, value);
+            get => (m_Flags & IntervalFlags.LeftClosed) != 0;
+            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.LeftClosed, value);
         }
 
         /// <summary>
@@ -113,8 +119,8 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         public bool IncludesTo
         {
-            get => (m_Flags & IntervalFlags.InclusiveRight) != 0;
-            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.InclusiveRight, value);
+            get => (m_Flags & IntervalFlags.RightClosed) != 0;
+            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.RightClosed, value);
         }
 
         /// <summary>
@@ -167,11 +173,11 @@ namespace Gapotchenko.FX.Math
 
         Interval<T> Construct(
             T from, T to,
-            bool includeFrom, bool includeTo,
+            bool includesFrom, bool includesTo,
             bool leftBounded, bool rightBounded) =>
             new Interval<T>(
                 from, to,
-                includeFrom, includeTo,
+                includesFrom, includesTo,
                 leftBounded, rightBounded,
                 m_Comparer);
 

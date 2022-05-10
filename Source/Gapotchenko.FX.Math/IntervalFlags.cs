@@ -6,8 +6,8 @@ namespace Gapotchenko.FX.Math
     enum IntervalFlags : byte
     {
         None = 0,
-        InclusiveLeft = 1 << 0,
-        InclusiveRight = 1 << 1,
+        LeftClosed = 1 << 0,
+        RightClosed = 1 << 1,
         LeftBounded = 1 << 2,
         RightBounded = 1 << 3
     }
