@@ -16,11 +16,11 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds.
         /// </summary>
-        /// <param name="from">
+        /// <param name="leftBound">
         /// The left bound of the interval.
         /// The corresponding limit point is included in the interval.
         /// </param>
-        /// <param name="to">
+        /// <param name="rightBound">
         /// The right bound of the interval.
         /// The corresponding limit point is not included in the interval.
         /// </param>
@@ -28,30 +28,30 @@ namespace Gapotchenko.FX.Math
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
-        public Interval(T from, T to, IComparer<T>? comparer = null) :
-            this(from, to, true, false, comparer)
+        public Interval(T leftBound, T rightBound, IComparer<T>? comparer = null) :
+            this(leftBound, rightBound, true, false, comparer)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds and their limit point inclusions.
         /// </summary>
-        /// <param name="from">The left bound of the interval.</param>
-        /// <param name="to">The right bound of the interval.</param>
-        /// <param name="includesFrom">Indicates whether the left bound limit point is included in the interval.</param>
-        /// <param name="includesTo">Indicates whether the right bound limit point is included in the interval.</param>
+        /// <param name="leftBound">The left bound of the interval.</param>
+        /// <param name="rightBound">The right bound of the interval.</param>
+        /// <param name="leftClosed">Indicates whether the left bound limit point is included in the interval.</param>
+        /// <param name="rightClosed">Indicates whether the right bound limit point is included in the interval.</param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
         public Interval(
-            T from, T to,
-            bool includesFrom, bool includesTo,
+            T leftBound, T rightBound,
+            bool leftClosed, bool rightClosed,
             IComparer<T>? comparer = null) :
             this(
-                from, to,
-                includesFrom, includesTo,
-                from is not null, to is not null,
+                leftBound, rightBound,
+                leftClosed, rightClosed,
+                leftBound is not null, rightBound is not null,
                 comparer)
         {
         }
@@ -59,10 +59,10 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds, their limit point inclusions and boundedness.
         /// </summary>
-        /// <param name="from">The left bound of the interval.</param>
-        /// <param name="to">The right bound of the interval.</param>
-        /// <param name="includesFrom">Indicates whether the left bound limit point is included in the interval.</param>
-        /// <param name="includesTo">Indicates whether the right bound limit point is included in the interval.</param>
+        /// <param name="leftBound">The left bound of the interval.</param>
+        /// <param name="rightBound">The right bound of the interval.</param>
+        /// <param name="leftClosed">Indicates whether the left bound limit point is included in the interval.</param>
+        /// <param name="rightClosed">Indicates whether the right bound limit point is included in the interval.</param>
         /// <param name="leftBounded">Indicates whether the interval is left-bounded.</param>
         /// <param name="rightBounded">Indicates whether the interval is right-bounded.</param>
         /// <param name="comparer">
@@ -70,18 +70,18 @@ namespace Gapotchenko.FX.Math
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
         public Interval(
-            T from, T to,
-            bool includesFrom, bool includesTo,
+            T leftBound, T rightBound,
+            bool leftClosed, bool rightClosed,
             bool leftBounded, bool rightBounded,
             IComparer<T>? comparer = null)
         {
-            From = from;
-            To = to;
+            LeftBound = leftBound;
+            RightBound = rightBound;
 
             var flags = IntervalFlags.None;
-            if (includesFrom)
+            if (leftClosed)
                 flags |= IntervalFlags.LeftClosed;
-            if (includesTo)
+            if (rightClosed)
                 flags |= IntervalFlags.RightClosed;
             if (leftBounded)
                 flags |= IntervalFlags.LeftBounded;
@@ -95,12 +95,12 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// The left bound of the interval.
         /// </summary>
-        public T From { get; init; }
+        public T LeftBound { get; init; }
 
         /// <summary>
         /// The right bound of the interval.
         /// </summary>
-        public T To { get; init; }
+        public T RightBound { get; init; }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly IntervalFlags m_Flags;
@@ -108,7 +108,7 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Indicates whether the left bound limit point is included in the interval.
         /// </summary>
-        public bool IncludesFrom
+        public bool IsLeftClosed
         {
             get => (m_Flags & IntervalFlags.LeftClosed) != 0;
             init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.LeftClosed, value);
@@ -117,7 +117,7 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Indicates whether the right bound limit point is included in the interval.
         /// </summary>
-        public bool IncludesTo
+        public bool IsRightClosed
         {
             get => (m_Flags & IntervalFlags.RightClosed) != 0;
             init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.RightClosed, value);
@@ -156,6 +156,7 @@ namespace Gapotchenko.FX.Math
             init => m_Comparer = value ?? Comparer<T>.Default;
         }
 
+#if !TFF_DEFAULT_INTERFACE
         /// <inheritdoc/>
         public bool IsBounded => IntervalHelpers.IsBounded<Interval<T>, T>(this);
 
@@ -170,14 +171,24 @@ namespace Gapotchenko.FX.Math
 
         /// <inheritdoc/>
         public bool IsHalfOpen => IntervalHelpers.IsHalfOpen<Interval<T>, T>(this);
+#endif
+
+        /// <inheritdoc/>
+        public bool IsEmpty => IntervalHelpers.IsEmpty<Interval<T>, T>(this, m_Comparer);
+
+        /// <inheritdoc/>
+        public bool IsDegenerate => IntervalHelpers.IsDegenerate<Interval<T>, T>(this, m_Comparer);
+
+        /// <inheritdoc/>
+        public bool Contains(T item) => IntervalHelpers.Contains(this, item, m_Comparer);
 
         Interval<T> Construct(
-            T from, T to,
-            bool includesFrom, bool includesTo,
+            T leftBound, T rightBound,
+            bool leftClosed, bool rightClosed,
             bool leftBounded, bool rightBounded) =>
-            new Interval<T>(
-                from, to,
-                includesFrom, includesTo,
+            new(
+                leftBound, rightBound,
+                leftClosed, rightClosed,
                 leftBounded, rightBounded,
                 m_Comparer);
 
@@ -208,15 +219,6 @@ namespace Gapotchenko.FX.Math
 
         /// <inheritdoc/>
         IInterval<T> IInterval<T>.Enclosure => Enclosure;
-
-        /// <inheritdoc/>
-        public bool IsEmpty => IntervalHelpers.IsEmpty<Interval<T>, T>(this, m_Comparer);
-
-        /// <inheritdoc/>
-        public bool IsSingleton => IntervalHelpers.IsSingleton<Interval<T>, T>(this, m_Comparer);
-
-        /// <inheritdoc/>
-        public bool Contains(T item) => IntervalHelpers.Contains(this, item, m_Comparer);
 
         /// <summary>
         /// Returns a copy of this interval clamped to the specified limits.

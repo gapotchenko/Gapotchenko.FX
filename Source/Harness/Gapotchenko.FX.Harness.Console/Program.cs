@@ -125,7 +125,7 @@ namespace Gapotchenko.FX.Harness.Console
             _RunTopologicalSort();
 
             var interval = new Interval<int>(10, 20);
-            
+
         }
 
         static void _RunTopologicalSort()

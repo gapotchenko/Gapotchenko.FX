@@ -19,15 +19,15 @@ namespace Gapotchenko.FX.Math
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsOpen<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            !(interval.IncludesFrom || interval.IncludesTo);
+            !(interval.IsLeftClosed || interval.IsRightClosed);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsClosed<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.IncludesFrom && interval.IncludesTo;
+            interval.IsLeftClosed && interval.IsRightClosed;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHalfOpen<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.IncludesFrom ^ interval.IncludesTo;
+            interval.IsLeftClosed ^ interval.IsRightClosed;
 
         public delegate TInterval Constructor<out TInterval, in TValue>(
             TValue lowerBound, TValue upperBound,
@@ -42,7 +42,7 @@ namespace Gapotchenko.FX.Math
             Constructor<TInterval, TValue> constructor)
             where TInterval : IInterval<TValue> =>
             constructor(
-                interval.From, interval.To,
+                interval.LeftBound, interval.RightBound,
                 inclusive, inclusive,
                 interval.IsLeftBounded, interval.IsRightBounded);
 
@@ -59,16 +59,14 @@ namespace Gapotchenko.FX.Math
                 WithInclusiveBounds(interval, true, constructor);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static bool IsDegenerate<TInterval, TValue>(TInterval interval, IComparer<TValue> comparer) where TInterval : IInterval<TValue> =>
-            comparer.Compare(interval.From, interval.To) == 0;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmpty<TInterval, TValue>(TInterval interval, IComparer<TValue> comparer) where TInterval : IInterval<TValue> =>
-            !IsClosed<TInterval, TValue>(interval) && IsDegenerate(interval, comparer);
+            !IsClosed<TInterval, TValue>(interval) &&
+            comparer.Compare(interval.LeftBound, interval.RightBound) == 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsSingleton<TInterval, TValue>(TInterval interval, IComparer<TValue> comparer) where TInterval : IInterval<TValue> =>
-            IsClosed<TInterval, TValue>(interval) && IsDegenerate(interval, comparer);
+        public static bool IsDegenerate<TInterval, TValue>(TInterval interval, IComparer<TValue> comparer) where TInterval : IInterval<TValue> =>
+            IsClosed<TInterval, TValue>(interval) &&
+            comparer.Compare(interval.LeftBound, interval.RightBound) == 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int BoundLimit(bool inclusive) => inclusive ? 0 : -1;
@@ -78,13 +76,13 @@ namespace Gapotchenko.FX.Math
         {
             if (interval.IsLeftBounded)
             {
-                if (comparer.Compare(interval.From, item) > BoundLimit(interval.IncludesFrom))
+                if (comparer.Compare(interval.LeftBound, item) > BoundLimit(interval.IsLeftClosed))
                     return false;
             }
 
             if (interval.IsRightBounded)
             {
-                if (comparer.Compare(item, interval.To) > BoundLimit(interval.IncludesTo))
+                if (comparer.Compare(item, interval.RightBound) > BoundLimit(interval.IsRightClosed))
                     return false;
             }
 
@@ -114,24 +112,24 @@ namespace Gapotchenko.FX.Math
         public static string ToString<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue>
         {
             var sb = new StringBuilder();
-            if (interval.IncludesFrom)
+            if (interval.IsLeftClosed)
                 sb.Append('[');
             else
                 sb.Append('(');
 
             if (interval.IsLeftBounded)
-                sb.Append(interval.From);
+                sb.Append(interval.LeftBound);
             else
                 sb.Append("-inf");
 
             sb.Append(',');
 
             if (interval.IsRightBounded)
-                sb.Append(interval.To);
+                sb.Append(interval.RightBound);
             else
                 sb.Append("inf");
 
-            if (interval.IncludesTo)
+            if (interval.IsRightClosed)
                 sb.Append(']');
             else
                 sb.Append(')');

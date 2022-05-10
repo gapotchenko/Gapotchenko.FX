@@ -9,22 +9,22 @@
         /// <summary>
         /// Gets the left bound of the interval.
         /// </summary>
-        public T From { get; }
+        public T LeftBound { get; }
 
         /// <summary>
         /// Gets the right bound of the interval.
         /// </summary>
-        public T To { get; }
+        public T RightBound { get; }
 
         /// <summary>
         /// Gets a value indicating whether the left bound limit point is included in the interval.
         /// </summary>
-        public bool IncludesFrom { get; }
+        public bool IsLeftClosed { get; }
 
         /// <summary>
         /// Gets a value indicating whether the right bound limit point is included in the interval.
         /// </summary>
-        public bool IncludesTo { get; }
+        public bool IsRightClosed { get; }
 
         /// <summary>
         /// Gets a value indicating whether the interval is left-bounded.
@@ -140,13 +140,13 @@
 
         /// <summary>
         /// <para>
-        /// Gets a value indicating whether the interval is a singleton.
+        /// Gets a value indicating whether the interval is a degenerate.
         /// </para>
         /// <para>
-        /// The singleton interval <c>[x,x]</c> represents a set of exactly one element <c>{x}</c>.
+        /// A degenerate interval <c>[x,x]</c> represents a set of exactly one element <c>{x}</c>.
         /// </para>
         /// </summary>
-        public bool IsSingleton { get; }
+        public bool IsDegenerate { get; }
 
         /// <summary>
         /// Determines whether the specified element is contained within the interval.
