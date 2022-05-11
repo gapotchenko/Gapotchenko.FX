@@ -20,5 +20,13 @@ namespace Gapotchenko.FX.Math.Tests
             var interval = new Interval<int>(10, default, true, false, true, false);
             Assert.IsTrue(interval.IsClosed);
         }
+
+        [TestMethod]
+        public void Interval_UnboundedIsClosed()
+        {
+            // If one of the endpoints is ±∞, then the interval still contains all of its limit points, so [a,∞) and (-∞,b] are also closed intervals.
+            var interval = new Interval<int>(default, default, false, false, false, false);
+            Assert.IsTrue(interval.IsClosed);
+        }
     }
 }
