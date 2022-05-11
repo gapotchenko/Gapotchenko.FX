@@ -78,10 +78,12 @@ namespace Gapotchenko.FX.Math
             LeftBound = leftBound;
             RightBound = rightBound;
 
+            // If one of the endpoints is ±∞, then the interval still contains all of its limit points, so [a,∞) and (-∞,b] are also closed intervals.
+
             var flags = IntervalFlags.None;
-            if (leftClosed)
+            if (leftClosed || !leftBounded)
                 flags |= IntervalFlags.LeftClosed;
-            if (rightClosed)
+            if (rightClosed || !rightBounded)
                 flags |= IntervalFlags.RightClosed;
             if (leftBounded)
                 flags |= IntervalFlags.LeftBounded;
@@ -156,7 +158,6 @@ namespace Gapotchenko.FX.Math
             init => m_Comparer = value ?? Comparer<T>.Default;
         }
 
-#if !TFF_DEFAULT_INTERFACE
         /// <inheritdoc/>
         public bool IsBounded => IntervalHelpers.IsBounded<Interval<T>, T>(this);
 
@@ -171,7 +172,6 @@ namespace Gapotchenko.FX.Math
 
         /// <inheritdoc/>
         public bool IsHalfOpen => IntervalHelpers.IsHalfOpen<Interval<T>, T>(this);
-#endif
 
         /// <inheritdoc/>
         public bool IsEmpty => IntervalHelpers.IsEmpty<Interval<T>, T>(this, m_Comparer);
