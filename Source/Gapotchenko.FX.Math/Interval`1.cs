@@ -78,8 +78,6 @@ namespace Gapotchenko.FX.Math
             LeftBound = leftBound;
             RightBound = rightBound;
 
-            // If one of the endpoints is ±∞, then the interval still contains all of its limit points, so [a,∞) and (-∞,b] are also closed intervals.
-
             var flags = IntervalFlags.None;
             if (leftClosed || !leftBounded)
                 flags |= IntervalFlags.LeftClosed;
@@ -112,7 +110,10 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         public bool IsLeftClosed
         {
-            get => (m_Flags & IntervalFlags.LeftClosed) != 0;
+            get =>
+                (m_Flags & IntervalFlags.LeftClosed) != 0 ||
+                !IsLeftBounded; // If one of the endpoints is ±∞, then the interval still contains all of its limit points, so [a,∞) and (-∞,b] are also closed intervals.
+
             init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.LeftClosed, value);
         }
 
@@ -121,7 +122,10 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         public bool IsRightClosed
         {
-            get => (m_Flags & IntervalFlags.RightClosed) != 0;
+            get =>
+                (m_Flags & IntervalFlags.RightClosed) != 0 ||
+                !IsRightBounded; // If one of the endpoints is ±∞, then the interval still contains all of its limit points, so [a,∞) and (-∞,b] are also closed intervals.
+
             init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.RightClosed, value);
         }
 
