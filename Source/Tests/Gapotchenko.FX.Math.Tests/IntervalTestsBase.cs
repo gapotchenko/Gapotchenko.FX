@@ -189,5 +189,53 @@ namespace Gapotchenko.FX.Math.Tests
 
             Assert.IsTrue(interval.Contains(int.MaxValue));
         }
+
+        [TestMethod]
+        public void Interval_Contains_RightBoundedOpen()
+        {
+            var interval = NewInterval(IntervalBoundary.Infinite, default, 10, IntervalBoundary.Exclusive);
+
+            Assert.IsTrue(interval.Contains(int.MinValue));
+
+            Assert.IsTrue(interval.Contains(9));
+            Assert.IsFalse(interval.Contains(10));
+            Assert.IsFalse(interval.Contains(11));
+        }
+
+        [TestMethod]
+        public void Interval_Contains_RightBoundedClosed()
+        {
+            var interval = NewInterval(IntervalBoundary.Infinite, default, 10, IntervalBoundary.Inclusive);
+
+            Assert.IsTrue(interval.Contains(int.MinValue));
+
+            Assert.IsTrue(interval.Contains(9));
+            Assert.IsTrue(interval.Contains(10));
+            Assert.IsFalse(interval.Contains(11));
+        }
+
+        [TestMethod]
+        public void Interval_Contains_LeftBoundedOpen()
+        {
+            var interval = NewInterval(IntervalBoundary.Exclusive, 0, default, IntervalBoundary.Infinite);
+
+            Assert.IsFalse(interval.Contains(-1));
+            Assert.IsFalse(interval.Contains(0));
+            Assert.IsTrue(interval.Contains(1));
+
+            Assert.IsTrue(interval.Contains(int.MaxValue));
+        }
+
+        [TestMethod]
+        public void Interval_Contains_LeftBoundedClosed()
+        {
+            var interval = NewInterval(IntervalBoundary.Inclusive, 0, default, IntervalBoundary.Infinite);
+
+            Assert.IsFalse(interval.Contains(-1));
+            Assert.IsTrue(interval.Contains(0));
+            Assert.IsTrue(interval.Contains(1));
+
+            Assert.IsTrue(interval.Contains(int.MaxValue));
+        }
     }
 }

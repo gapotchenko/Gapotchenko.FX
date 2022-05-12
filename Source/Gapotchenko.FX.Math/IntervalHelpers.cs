@@ -111,7 +111,7 @@ namespace Gapotchenko.FX.Math
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Contains<TInterval, TBound>(TInterval interval, TBound item, IComparer<TBound> comparer) where TInterval : IInterval<TBound>
         {
-            int arrow = comparer.Compare(interval.To, interval.From);
+            int arrow = IsBounded<TInterval, TBound>(interval) ? comparer.Compare(interval.To, interval.From) : 0;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static bool BoundLimit(int cmp, IntervalBoundary boundary, int arrow)
