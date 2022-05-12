@@ -107,11 +107,11 @@ namespace Gapotchenko.FX.Math
             comparer.Compare(interval.From, interval.To) == 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static int BoundLimit(bool inclusive) => inclusive ? 0 : -1;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Contains<TInterval, TBound>(TInterval interval, TBound item, IComparer<TBound> comparer) where TInterval : IInterval<TBound>
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static int BoundLimit(bool inclusive) => inclusive ? 0 : -1;
+
             var fromBoundary = interval.FromBoundary;
             if (fromBoundary != IntervalBoundary.Infinite)
             {
