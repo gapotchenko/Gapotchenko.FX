@@ -6,27 +6,41 @@ namespace Gapotchenko.FX.Math.Tests
     public class IntervalTests
     {
         [TestMethod]
-        public void Interval_LeftUnboundedIsClosed()
+        public void Interval_LeftUnbounded()
         {
-            // If one of the endpoints is ±∞, then the interval still contains all of its limit points, so [a,∞) and (-∞,b] are also closed intervals.
-            var interval = new Interval<int>(default, 10, IntervalBoundary.Infinite, IntervalBoundary.Inclusive);
+            var interval = new Interval<int>(IntervalBoundary.Infinite, default, 10, IntervalBoundary.Inclusive);
+            Assert.IsFalse(interval.IsBounded);
+            Assert.IsTrue(interval.IsHalfBounded);
             Assert.IsTrue(interval.IsClosed);
         }
 
         [TestMethod]
-        public void Interval_RightUnboundedIsClosed()
+        public void Interval_RightUnbounded()
         {
-            // If one of the endpoints is ±∞, then the interval still contains all of its limit points, so [a,∞) and (-∞,b] are also closed intervals.
-            var interval = new Interval<int>(10, default, IntervalBoundary.Inclusive, IntervalBoundary.Infinite);
+            var interval = new Interval<int>(IntervalBoundary.Inclusive, 10, default, IntervalBoundary.Infinite);
+            Assert.IsFalse(interval.IsBounded);
+            Assert.IsTrue(interval.IsHalfBounded);
             Assert.IsTrue(interval.IsClosed);
         }
 
         [TestMethod]
-        public void Interval_UnboundedIsClosed()
+        public void Interval_Unbounded()
         {
-            // If one of the endpoints is ±∞, then the interval still contains all of its limit points, so [a,∞) and (-∞,b] are also closed intervals.
-            var interval = new Interval<int>(default, default, IntervalBoundary.Infinite, IntervalBoundary.Infinite);
+            var interval = new Interval<int>(IntervalBoundary.Infinite, default, default, IntervalBoundary.Infinite);
+            Assert.IsFalse(interval.IsBounded);
+            Assert.IsFalse(interval.IsHalfBounded);
             Assert.IsTrue(interval.IsClosed);
+        }
+
+        [TestMethod]
+        public void Interval_HalfOpenBounded()
+        {
+            var interval = new Interval<int>(0, 10);
+            Assert.IsTrue(interval.IsHalfOpen);
+            Assert.IsTrue(interval.IsBounded);
+            Assert.IsFalse(interval.IsHalfBounded);
+            Assert.IsFalse(interval.IsOpen);
+            Assert.IsFalse(interval.IsClosed);
         }
     }
 }
