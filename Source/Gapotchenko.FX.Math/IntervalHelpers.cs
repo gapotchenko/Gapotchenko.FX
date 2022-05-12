@@ -5,6 +5,8 @@ using System.Text;
 
 namespace Gapotchenko.FX.Math
 {
+    using Math = System.Math;
+
     static class IntervalHelpers
     {
         public static IntervalFlags SetFlag(IntervalFlags flags, IntervalFlags mask, bool value) => value ? flags | mask : flags & ~mask;
@@ -116,9 +118,8 @@ namespace Gapotchenko.FX.Math
             {
                 int limit = boundary == IntervalBoundary.Inclusive ? 0 : -1;
                 if (arrow < 0)
-                    return cmp <= limit;
-                else
-                    return cmp > limit;
+                    cmp = -Math.Sign(cmp);
+                return cmp > limit;
             }
 
             var fromBoundary = interval.FromBoundary;
