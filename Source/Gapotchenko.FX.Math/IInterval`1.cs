@@ -8,33 +8,27 @@
     {
         /// <summary>
         /// Gets the left bound of the interval.
+        /// Represents a value the interval starts with.
         /// </summary>
-        public T LeftBound { get; }
+        public T From { get; }
 
         /// <summary>
         /// Gets the right bound of the interval.
+        /// Represents a value the interval ends with.
         /// </summary>
-        public T RightBound { get; }
+        public T To { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the left bound limit point is included in the interval.
+        /// Gets the left boundary of the interval.
+        /// Represents a type of boundary the interval starts with.
         /// </summary>
-        public bool IsLeftClosed { get; }
+        public IntervalBoundary FromBoundary { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the right bound limit point is included in the interval.
+        /// Gets the right boundary of the interval.
+        /// Represents a type of boundary the interval ends with.
         /// </summary>
-        public bool IsRightClosed { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the interval is left-bounded.
-        /// </summary>
-        public bool IsLeftBounded { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the interval is right-bounded.
-        /// </summary>
-        public bool IsRightBounded { get; }
+        public IntervalBoundary ToBoundary { get; }
 
         /// <summary>
         /// <para>
@@ -48,7 +42,7 @@
 #if TFF_DEFAULT_INTERFACE
             => IntervalHelpers.IsBounded<IInterval<T>, T>(this);
 #else
-            { get; }
+        { get; }
 #endif
 
         /// <summary>
@@ -63,7 +57,7 @@
 #if TFF_DEFAULT_INTERFACE
             => IntervalHelpers.IsHalfBounded<IInterval<T>, T>(this);
 #else
-            { get; }
+        { get; }
 #endif
 
         /// <summary>
@@ -78,7 +72,7 @@
 #if TFF_DEFAULT_INTERFACE
             => IntervalHelpers.IsOpen<IInterval<T>, T>(this);
 #else
-            { get; }
+        { get; }
 #endif
 
         /// <summary>
@@ -93,7 +87,7 @@
 #if TFF_DEFAULT_INTERFACE
             => IntervalHelpers.IsClosed<IInterval<T>, T>(this);
 #else
-            { get; }
+        { get; }
 #endif
 
         /// <summary>
@@ -108,7 +102,7 @@
 #if TFF_DEFAULT_INTERFACE
             => IntervalHelpers.IsHalfOpen<IInterval<T>, T>(this);
 #else
-            { get; }
+        { get; }
 #endif
 
         /// <summary>

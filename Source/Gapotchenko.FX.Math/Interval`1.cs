@@ -16,135 +16,93 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds.
         /// </summary>
-        /// <param name="leftBound">
+        /// <param name="from">
         /// The left bound of the interval.
+        /// Represents a value the interval starts with.
         /// The corresponding limit point is included in the interval.
         /// </param>
-        /// <param name="rightBound">
+        /// <param name="to">
         /// The right bound of the interval.
+        /// Represents a value the interval ends with.
         /// The corresponding limit point is not included in the interval.
         /// </param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
-        public Interval(T leftBound, T rightBound, IComparer<T>? comparer = null) :
-            this(leftBound, rightBound, true, false, comparer)
+        public Interval(T from, T to, IComparer<T>? comparer = null) :
+            this(from, to, IntervalBoundary.Inclusive, IntervalBoundary.Exclusive, comparer)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds and their limit point inclusions.
+        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds and their types.
         /// </summary>
-        /// <param name="leftBound">The left bound of the interval.</param>
-        /// <param name="rightBound">The right bound of the interval.</param>
-        /// <param name="leftClosed">Indicates whether the left bound limit point is included in the interval.</param>
-        /// <param name="rightClosed">Indicates whether the right bound limit point is included in the interval.</param>
+        /// <param name="from">
+        /// The left bound of the interval.
+        /// Represents a value the interval starts with.
+        /// </param>
+        /// <param name="to">
+        /// The right bound of the interval.
+        /// Represents a value the interval ends with.
+        /// </param>
+        /// <param name="fromBoundary">
+        /// The left boundary.
+        /// Represents a type of boundary the interval starts with.
+        /// </param>
+        /// <param name="toBoundary">
+        /// The right boundary.
+        /// Represents a type of boundary the interval ends with.
+        /// </param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
         public Interval(
-            T leftBound, T rightBound,
-            bool leftClosed, bool rightClosed,
-            IComparer<T>? comparer = null) :
-            this(
-                leftBound, rightBound,
-                leftClosed, rightClosed,
-                leftBound is not null, rightBound is not null,
-                comparer)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds, their limit point inclusions and boundedness.
-        /// </summary>
-        /// <param name="leftBound">The left bound of the interval.</param>
-        /// <param name="rightBound">The right bound of the interval.</param>
-        /// <param name="leftClosed">Indicates whether the left bound limit point is included in the interval.</param>
-        /// <param name="rightClosed">Indicates whether the right bound limit point is included in the interval.</param>
-        /// <param name="leftBounded">Indicates whether the interval is left-bounded.</param>
-        /// <param name="rightBounded">Indicates whether the interval is right-bounded.</param>
-        /// <param name="comparer">
-        /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
-        /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
-        /// </param>
-        public Interval(
-            T leftBound, T rightBound,
-            bool leftClosed, bool rightClosed,
-            bool leftBounded, bool rightBounded,
+            T from, T to,
+            IntervalBoundary fromBoundary, IntervalBoundary toBoundary,
             IComparer<T>? comparer = null)
         {
-            LeftBound = leftBound;
-            RightBound = rightBound;
+            From = from;
+            To = to;
 
-            var flags = IntervalFlags.None;
-            if (leftClosed || !leftBounded)
-                flags |= IntervalFlags.LeftClosed;
-            if (rightClosed || !rightBounded)
-                flags |= IntervalFlags.RightClosed;
-            if (leftBounded)
-                flags |= IntervalFlags.LeftBounded;
-            if (rightBounded)
-                flags |= IntervalFlags.RightBounded;
+            FromBoundary = fromBoundary;
+            ToBoundary = toBoundary;
 
-            m_Flags = flags;
             Comparer = comparer;
         }
 
         /// <summary>
         /// The left bound of the interval.
         /// </summary>
-        public T LeftBound { get; init; }
+        public T From { get; init; }
 
         /// <summary>
         /// The right bound of the interval.
         /// </summary>
-        public T RightBound { get; init; }
+        public T To { get; init; }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly IntervalFlags m_Flags;
 
         /// <summary>
-        /// Indicates whether the left bound limit point is included in the interval.
+        /// The left boundary.
+        /// Represents a type of boundary the interval starts with.
         /// </summary>
-        public bool IsLeftClosed
+        public IntervalBoundary FromBoundary
         {
-            get =>
-                (m_Flags & IntervalFlags.LeftClosed) != 0 ||
-                !IsLeftBounded; // If one of the endpoints is ±∞, then the interval still contains all of its limit points, so [a,∞) and (-∞,b] are also closed intervals.
-
-            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.LeftClosed, value);
+            get => IntervalHelpers.GetBoundary(m_Flags, IntervalFlags.LeftClosed, IntervalFlags.LeftBounded);
+            init => m_Flags = IntervalHelpers.SetBoundary(m_Flags, IntervalFlags.LeftClosed, IntervalFlags.LeftBounded, value);
         }
 
         /// <summary>
-        /// Indicates whether the right bound limit point is included in the interval.
+        /// The right boundary.
+        /// Represents a type of boundary the interval ends with.
         /// </summary>
-        public bool IsRightClosed
+        public IntervalBoundary ToBoundary
         {
-            get =>
-                (m_Flags & IntervalFlags.RightClosed) != 0 ||
-                !IsRightBounded; // If one of the endpoints is ±∞, then the interval still contains all of its limit points, so [a,∞) and (-∞,b] are also closed intervals.
-
-            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.RightClosed, value);
-        }
-
-        /// <summary>
-        /// Indicates whether the interval is left-bounded.
-        /// </summary>
-        public bool IsLeftBounded
-        {
-            get => (m_Flags & IntervalFlags.LeftBounded) != 0;
-            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.LeftBounded, value);
-        }
-
-        /// <summary>
-        /// Indicates whether the interval is right-bounded.
-        /// </summary>
-        public bool IsRightBounded
-        {
-            get => (m_Flags & IntervalFlags.RightBounded) != 0;
-            init => m_Flags = IntervalHelpers.SetFlag(m_Flags, IntervalFlags.RightBounded, value);
+            get => IntervalHelpers.GetBoundary(m_Flags, IntervalFlags.RightClosed, IntervalFlags.RightBounded);
+            init => m_Flags = IntervalHelpers.SetBoundary(m_Flags, IntervalFlags.RightClosed, IntervalFlags.RightBounded, value);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -187,13 +145,11 @@ namespace Gapotchenko.FX.Math
         public bool Contains(T item) => IntervalHelpers.Contains(this, item, m_Comparer);
 
         Interval<T> Construct(
-            T leftBound, T rightBound,
-            bool leftClosed, bool rightClosed,
-            bool leftBounded, bool rightBounded) =>
+            T from, T to,
+            IntervalBoundary fromBoundary, IntervalBoundary toBoundary) =>
             new(
-                leftBound, rightBound,
-                leftClosed, rightClosed,
-                leftBounded, rightBounded,
+                from, to,
+                fromBoundary, toBoundary,
                 m_Comparer);
 
         /// <summary>

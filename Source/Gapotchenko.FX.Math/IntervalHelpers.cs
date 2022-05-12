@@ -9,30 +9,53 @@ namespace Gapotchenko.FX.Math
     {
         public static IntervalFlags SetFlag(IntervalFlags flags, IntervalFlags mask, bool value) => value ? flags | mask : flags & ~mask;
 
+        public static IntervalBoundary GetBoundary(IntervalFlags flags, IntervalFlags closedFlag, IntervalFlags boundedFlag)
+        {
+            if ((flags & boundedFlag) == 0)
+                return IntervalBoundary.Infinite;
+            else if ((flags & closedFlag) != 0)
+                return IntervalBoundary.Inclusive;
+            else
+                return IntervalBoundary.Exclusive;
+        }
+
+        public static IntervalFlags SetBoundary(IntervalFlags flags, IntervalFlags closedFlag, IntervalFlags boundedFlag, IntervalBoundary boundary) =>
+            boundary switch
+            {
+                IntervalBoundary.Inclusive => flags | boundedFlag | closedFlag,
+                IntervalBoundary.Exclusive => (flags & ~closedFlag) | boundedFlag,
+                IntervalBoundary.Infinite => (flags & ~boundedFlag) | closedFlag,
+                _ => throw new SwitchExpressionException(boundary)
+            };
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBounded<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.IsLeftBounded && interval.IsRightBounded;
+            interval.FromBoundary != IntervalBoundary.Infinite &&
+            interval.ToBoundary != IntervalBoundary.Infinite;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHalfBounded<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.IsLeftBounded ^ interval.IsRightBounded;
+            interval.FromBoundary == IntervalBoundary.Infinite ^
+            interval.ToBoundary == IntervalBoundary.Infinite;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsOpen<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            !(interval.IsLeftClosed || interval.IsRightClosed);
+            interval.FromBoundary == IntervalBoundary.Exclusive &&
+            interval.ToBoundary == IntervalBoundary.Exclusive;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsClosed<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.IsLeftClosed && interval.IsRightClosed;
+            interval.FromBoundary != IntervalBoundary.Exclusive &&
+            interval.ToBoundary != IntervalBoundary.Exclusive;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHalfOpen<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue> =>
-            interval.IsLeftClosed ^ interval.IsRightClosed;
+            interval.FromBoundary == IntervalBoundary.Exclusive ^
+            interval.ToBoundary == IntervalBoundary.Exclusive;
 
         public delegate TInterval Constructor<out TInterval, in TValue>(
             TValue lowerBound, TValue upperBound,
-            bool inclusiveLowerBound, bool inclusiveUpperBound,
-            bool hasLowerBound, bool hasUpperBound)
+            IntervalBoundary fromBoundary, IntervalBoundary toBoundary)
             where TInterval : IInterval<TValue>;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -40,11 +63,22 @@ namespace Gapotchenko.FX.Math
             TInterval interval,
             bool inclusive,
             Constructor<TInterval, TValue> constructor)
-            where TInterval : IInterval<TValue> =>
-            constructor(
-                interval.LeftBound, interval.RightBound,
-                inclusive, inclusive,
-                interval.IsLeftBounded, interval.IsRightBounded);
+            where TInterval : IInterval<TValue>
+        {
+            static IntervalBoundary WithInclusiveBoundary(IntervalBoundary boundary, bool inclusive)
+            {
+                if (boundary == IntervalBoundary.Infinite)
+                    return IntervalBoundary.Infinite;
+                else if (inclusive)
+                    return IntervalBoundary.Inclusive;
+                else
+                    return IntervalBoundary.Exclusive;
+            }
+
+            return constructor(
+                interval.From, interval.To,
+                WithInclusiveBoundary(interval.FromBoundary, inclusive), WithInclusiveBoundary(interval.ToBoundary, inclusive));
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TInterval Interior<TInterval, TValue>(TInterval interval, Constructor<TInterval, TValue> constructor) where TInterval : IInterval<TValue> =>
@@ -61,12 +95,12 @@ namespace Gapotchenko.FX.Math
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmpty<TInterval, TValue>(TInterval interval, IComparer<TValue> comparer) where TInterval : IInterval<TValue> =>
             !IsClosed<TInterval, TValue>(interval) &&
-            comparer.Compare(interval.LeftBound, interval.RightBound) == 0;
+            comparer.Compare(interval.From, interval.To) == 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDegenerate<TInterval, TValue>(TInterval interval, IComparer<TValue> comparer) where TInterval : IInterval<TValue> =>
             IsClosed<TInterval, TValue>(interval) &&
-            comparer.Compare(interval.LeftBound, interval.RightBound) == 0;
+            comparer.Compare(interval.From, interval.To) == 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int BoundLimit(bool inclusive) => inclusive ? 0 : -1;
@@ -74,15 +108,17 @@ namespace Gapotchenko.FX.Math
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Contains<TInterval, TValue>(TInterval interval, TValue item, IComparer<TValue> comparer) where TInterval : IInterval<TValue>
         {
-            if (interval.IsLeftBounded)
+            var fromBoundary = interval.FromBoundary;
+            if (fromBoundary != IntervalBoundary.Infinite)
             {
-                if (comparer.Compare(interval.LeftBound, item) > BoundLimit(interval.IsLeftClosed))
+                if (comparer.Compare(interval.From, item) > BoundLimit(fromBoundary == IntervalBoundary.Inclusive))
                     return false;
             }
 
-            if (interval.IsRightBounded)
+            var toBoundary = interval.ToBoundary;
+            if (toBoundary != IntervalBoundary.Infinite)
             {
-                if (comparer.Compare(item, interval.RightBound) > BoundLimit(interval.IsRightClosed))
+                if (comparer.Compare(item, interval.To) > BoundLimit(toBoundary == IntervalBoundary.Inclusive))
                     return false;
             }
 
@@ -112,24 +148,27 @@ namespace Gapotchenko.FX.Math
         public static string ToString<TInterval, TValue>(TInterval interval) where TInterval : IInterval<TValue>
         {
             var sb = new StringBuilder();
-            if (interval.IsLeftClosed)
+
+            var fromBoundary = interval.FromBoundary;
+            if (fromBoundary == IntervalBoundary.Inclusive)
                 sb.Append('[');
             else
                 sb.Append('(');
 
-            if (interval.IsLeftBounded)
-                sb.Append(interval.LeftBound);
-            else
+            if (fromBoundary == IntervalBoundary.Infinite)
                 sb.Append("-inf");
+            else
+                sb.Append(interval.From);
 
             sb.Append(',');
 
-            if (interval.IsRightBounded)
-                sb.Append(interval.RightBound);
-            else
+            var toBoundary = interval.ToBoundary;
+            if (toBoundary == IntervalBoundary.Infinite)
                 sb.Append("inf");
+            else
+                sb.Append(interval.To);
 
-            if (interval.IsRightClosed)
+            if (toBoundary == IntervalBoundary.Inclusive)
                 sb.Append(']');
             else
                 sb.Append(')');
