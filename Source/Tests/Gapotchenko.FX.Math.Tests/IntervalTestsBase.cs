@@ -70,110 +70,73 @@ namespace Gapotchenko.FX.Math.Tests
         }
 
         [TestMethod]
-        public void Interval_Reverse()
-        {
-            var interval = NewInterval(IntervalBoundary.Inclusive, 0, 10, IntervalBoundary.Exclusive);
-            interval = interval.Reverse();
-
-            Assert.AreEqual(IntervalBoundary.Exclusive, interval.FromBoundary);
-            Assert.AreEqual(10, interval.From);
-            Assert.AreEqual(0, interval.To);
-            Assert.AreEqual(IntervalBoundary.Inclusive, interval.ToBoundary);
-        }
-
-        [TestMethod]
         public void Interval_Contains_Default()
         {
-            static void Test(IInterval<int> interval)
-            {
-                Assert.IsFalse(interval.Contains(-1));
-                Assert.IsTrue(interval.Contains(0));
-                Assert.IsTrue(interval.Contains(1));
-
-                Assert.IsTrue(interval.Contains(9));
-                Assert.IsFalse(interval.Contains(10));
-                Assert.IsFalse(interval.Contains(11));
-            }
-
             var interval = NewInterval(0, 10);
-            Test(interval);
-            Test(interval.Reverse());
+
+            Assert.IsFalse(interval.Contains(-1));
+            Assert.IsTrue(interval.Contains(0));
+            Assert.IsTrue(interval.Contains(1));
+
+            Assert.IsTrue(interval.Contains(9));
+            Assert.IsFalse(interval.Contains(10));
+            Assert.IsFalse(interval.Contains(11));
         }
 
         [TestMethod]
         public void Interval_Contains_BoundedRightOpen()
         {
-            static void Test(IInterval<int> interval)
-            {
-                Assert.IsFalse(interval.Contains(-1));
-                Assert.IsTrue(interval.Contains(0));
-                Assert.IsTrue(interval.Contains(1));
-
-                Assert.IsTrue(interval.Contains(9));
-                Assert.IsFalse(interval.Contains(10));
-                Assert.IsFalse(interval.Contains(11));
-            }
-
             var interval = NewInterval(IntervalBoundary.Inclusive, 0, 10, IntervalBoundary.Exclusive);
-            Test(interval);
-            Test(interval.Reverse());
+
+            Assert.IsFalse(interval.Contains(-1));
+            Assert.IsTrue(interval.Contains(0));
+            Assert.IsTrue(interval.Contains(1));
+
+            Assert.IsTrue(interval.Contains(9));
+            Assert.IsFalse(interval.Contains(10));
+            Assert.IsFalse(interval.Contains(11));
         }
 
         [TestMethod]
         public void Interval_Contains_BoundedLeftOpen()
         {
-            static void Test(IInterval<int> interval)
-            {
-                Assert.IsFalse(interval.Contains(-1));
-                Assert.IsFalse(interval.Contains(0));
-                Assert.IsTrue(interval.Contains(1));
-
-                Assert.IsTrue(interval.Contains(9));
-                Assert.IsTrue(interval.Contains(10));
-                Assert.IsFalse(interval.Contains(11));
-            }
-
             var interval = NewInterval(IntervalBoundary.Exclusive, 0, 10, IntervalBoundary.Inclusive);
-            Test(interval);
-            Test(interval.Reverse());
+
+            Assert.IsFalse(interval.Contains(-1));
+            Assert.IsFalse(interval.Contains(0));
+            Assert.IsTrue(interval.Contains(1));
+
+            Assert.IsTrue(interval.Contains(9));
+            Assert.IsTrue(interval.Contains(10));
+            Assert.IsFalse(interval.Contains(11));
         }
 
         [TestMethod]
         public void Interval_Contains_BoundedOpen()
         {
-            static void Test(IInterval<int> interval)
-            {
-                Assert.IsFalse(interval.Contains(-1));
-                Assert.IsFalse(interval.Contains(0));
-                Assert.IsTrue(interval.Contains(1));
-
-                Assert.IsTrue(interval.Contains(9));
-                Assert.IsFalse(interval.Contains(10));
-                Assert.IsFalse(interval.Contains(11));
-            }
-
             var interval = NewInterval(IntervalBoundary.Exclusive, 0, 10, IntervalBoundary.Exclusive);
-            Test(interval);
-            Test(interval.Reverse());
+
+            Assert.IsFalse(interval.Contains(-1));
+            Assert.IsFalse(interval.Contains(0));
+            Assert.IsTrue(interval.Contains(1));
+
+            Assert.IsTrue(interval.Contains(9));
+            Assert.IsFalse(interval.Contains(10));
+            Assert.IsFalse(interval.Contains(11));
         }
 
         [TestMethod]
         public void Interval_Contains_BoundedClosed()
         {
-            static void Test(IInterval<int> interval)
-            {
-                Assert.IsFalse(interval.Contains(-1));
-                Assert.IsTrue(interval.Contains(0));
-                Assert.IsTrue(interval.Contains(1));
-
-                Assert.IsTrue(interval.Contains(9));
-                Assert.IsTrue(interval.Contains(10));
-                Assert.IsFalse(interval.Contains(11));
-            }
-
             var interval = NewInterval(IntervalBoundary.Inclusive, 0, 10, IntervalBoundary.Inclusive);
-            Test(interval);
-            Test(interval.Reverse());
+
+            Assert.IsFalse(interval.Contains(-1));
+            Assert.IsTrue(interval.Contains(0));
+            Assert.IsTrue(interval.Contains(1));
+
+            Assert.IsTrue(interval.Contains(9));
+            Assert.IsTrue(interval.Contains(10));
+            Assert.IsFalse(interval.Contains(11));
         }
 
         [TestMethod]

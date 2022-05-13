@@ -222,14 +222,6 @@ namespace Gapotchenko.FX.Math
                 other ?? throw new ArgumentNullException(nameof(other)),
                 m_Comparer);
 
-        /// <summary>
-        /// Gets a reverse interval where left and right bounds are swapped.
-        /// </summary>
-        /// <returns>The reverse interval.</returns>
-        public Interval<T> Reverse() => new(ToBoundary, To, From, FromBoundary, Comparer);
-
-        IInterval<T> IInterval<T>.Reverse() => Reverse();
-
         // Minify unused record method.
         bool PrintMembers(StringBuilder _) => false;
 

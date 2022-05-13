@@ -162,11 +162,5 @@
         /// <param name="other">The interval to check for overlapping.</param>
         /// <returns><c>true</c> if this interval and <paramref name="other"/> overlap; otherwise, false.</returns>
         public bool Overlaps(IInterval<T> other);
-
-        /// <summary>
-        /// Gets a reverse interval where left and right bounds are swapped.
-        /// </summary>
-        /// <returns></returns>
-        IInterval<T> Reverse();
     }
 }
