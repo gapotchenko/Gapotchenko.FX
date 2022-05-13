@@ -30,15 +30,18 @@ namespace Gapotchenko.FX.Math
                 _ => throw new SwitchExpressionException(boundary)
             };
 
+        static bool IsInfinity(IntervalBoundary boundary) =>
+            boundary is IntervalBoundary.Infinite;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBounded<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
-            interval.FromBoundary != IntervalBoundary.Infinite &&
-            interval.ToBoundary != IntervalBoundary.Infinite;
+            !IsInfinity(interval.FromBoundary) &&
+            !IsInfinity(interval.ToBoundary);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHalfBounded<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
-            interval.FromBoundary == IntervalBoundary.Infinite ^
-            interval.ToBoundary == IntervalBoundary.Infinite;
+            IsInfinity(interval.FromBoundary) ^
+            IsInfinity(interval.ToBoundary);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsOpen<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
@@ -71,8 +74,8 @@ namespace Gapotchenko.FX.Math
         {
             static IntervalBoundary WithInclusiveBoundary(IntervalBoundary boundary, bool inclusive)
             {
-                if (boundary == IntervalBoundary.Infinite)
-                    return IntervalBoundary.Infinite;
+                if (IsInfinity(boundary))
+                    return boundary;
                 else if (inclusive)
                     return IntervalBoundary.Inclusive;
                 else
@@ -119,14 +122,14 @@ namespace Gapotchenko.FX.Math
             }
 
             var fromBoundary = interval.FromBoundary;
-            if (fromBoundary != IntervalBoundary.Infinite)
+            if (!IsInfinity(fromBoundary))
             {
                 if (BoundLimit(comparer.Compare(interval.From, item), fromBoundary))
                     return false;
             }
 
             var toBoundary = interval.ToBoundary;
-            if (toBoundary != IntervalBoundary.Infinite)
+            if (!IsInfinity(toBoundary))
             {
                 if (BoundLimit(comparer.Compare(item, interval.To), toBoundary))
                     return false;
