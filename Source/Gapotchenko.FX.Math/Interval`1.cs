@@ -213,14 +213,13 @@ namespace Gapotchenko.FX.Math
         /// Determines whether this and the specified intervals overlap (i.e., contain at least one element in common).
         /// </summary>
         /// <param name="other">The interval to check for overlapping.</param>
-        /// <returns><c>true</c> if this interval and <paramref name="other"/> overlap; otherwise, false.</returns>
+        /// <returns><see langword="true"/> if this interval and <paramref name="other"/> overlap; otherwise, <see langword="false"/>.</returns>
         /// <typeparam name="TOther">Type of the interval to check for overlapping.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool Overlaps<TOther>(TOther other) where TOther : IInterval<T> =>
-            IntervalHelpers.Overlaps(
+            IntervalHelpers.Overlaps<Interval<T>, TOther, T>(
                 this,
-                other ?? throw new ArgumentNullException(nameof(other)),
-                m_Comparer);
+                other ?? throw new ArgumentNullException(nameof(other)));
 
         // Minify unused record method.
         bool PrintMembers(StringBuilder _) => false;

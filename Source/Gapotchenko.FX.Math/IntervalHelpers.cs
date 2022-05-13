@@ -148,12 +148,11 @@ namespace Gapotchenko.FX.Math
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Overlaps<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
+        public static bool Overlaps<TInterval, TOther, TBound>(TInterval interval, TOther other)
             where TInterval : IInterval<TBound>
-            where TOther : IInterval<TBound>
-        {
-            throw new NotImplementedException();
-        }
+            where TOther : IInterval<TBound> =>
+            interval.Contains(other.From) || interval.Contains(other.To) ||
+            other.Contains(interval.From) || other.Contains(interval.To);
 
         public static string ToString<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound>
         {

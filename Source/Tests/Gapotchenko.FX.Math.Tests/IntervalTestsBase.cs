@@ -200,5 +200,15 @@ namespace Gapotchenko.FX.Math.Tests
 
             Assert.IsTrue(interval.Contains(int.MaxValue));
         }
+
+        [TestMethod]
+        public void Interval_Overlaps_1()
+        {
+            var a = NewInterval(0, 2);
+            var b = NewInterval(2, 10);
+
+            Assert.IsFalse(a.Overlaps(b));
+            Assert.IsFalse(b.Overlaps(a));
+        }
     }
 }
