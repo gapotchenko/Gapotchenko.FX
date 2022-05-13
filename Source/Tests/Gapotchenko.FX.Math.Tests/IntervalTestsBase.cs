@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Math.Tests
         [TestMethod]
         public void Interval_Characteristics_LeftUnbounded()
         {
-            var interval = NewInterval(IntervalBoundary.Infinite, default, 10, IntervalBoundary.Inclusive);
+            var interval = NewInterval(IntervalBoundary.NegativeInfinity, default, 10, IntervalBoundary.Inclusive);
             Assert.IsFalse(interval.IsBounded);
             Assert.IsTrue(interval.IsHalfBounded);
             Assert.IsTrue(interval.IsClosed);
@@ -21,7 +21,7 @@ namespace Gapotchenko.FX.Math.Tests
         [TestMethod]
         public void Interval_Characteristics_RightUnbounded()
         {
-            var interval = NewInterval(IntervalBoundary.Inclusive, 10, default, IntervalBoundary.Infinite);
+            var interval = NewInterval(IntervalBoundary.Inclusive, 10, default, IntervalBoundary.PositiveInfinity);
             Assert.IsFalse(interval.IsBounded);
             Assert.IsTrue(interval.IsHalfBounded);
             Assert.IsTrue(interval.IsClosed);
@@ -30,7 +30,7 @@ namespace Gapotchenko.FX.Math.Tests
         [TestMethod]
         public void Interval_Characteristics_Unbounded()
         {
-            var interval = NewInterval<int>(IntervalBoundary.Infinite, default, default, IntervalBoundary.Infinite);
+            var interval = NewInterval<int>(IntervalBoundary.NegativeInfinity, default, default, IntervalBoundary.PositiveInfinity);
             Assert.IsFalse(interval.IsBounded);
             Assert.IsFalse(interval.IsHalfBounded);
             Assert.IsTrue(interval.IsClosed);
@@ -142,7 +142,7 @@ namespace Gapotchenko.FX.Math.Tests
         [TestMethod]
         public void Interval_Contains_Unbounded()
         {
-            var interval = NewInterval(IntervalBoundary.Infinite, 0, 0, IntervalBoundary.Infinite);
+            var interval = NewInterval(IntervalBoundary.NegativeInfinity, 0, 0, IntervalBoundary.PositiveInfinity);
 
             Assert.IsTrue(interval.Contains(int.MinValue));
 
@@ -156,7 +156,7 @@ namespace Gapotchenko.FX.Math.Tests
         [TestMethod]
         public void Interval_Contains_RightBoundedOpen()
         {
-            var interval = NewInterval(IntervalBoundary.Infinite, default, 10, IntervalBoundary.Exclusive);
+            var interval = NewInterval(IntervalBoundary.NegativeInfinity, default, 10, IntervalBoundary.Exclusive);
 
             Assert.IsTrue(interval.Contains(int.MinValue));
 
@@ -168,7 +168,7 @@ namespace Gapotchenko.FX.Math.Tests
         [TestMethod]
         public void Interval_Contains_RightBoundedClosed()
         {
-            var interval = NewInterval(IntervalBoundary.Infinite, default, 10, IntervalBoundary.Inclusive);
+            var interval = NewInterval(IntervalBoundary.NegativeInfinity, default, 10, IntervalBoundary.Inclusive);
 
             Assert.IsTrue(interval.Contains(int.MinValue));
 
@@ -180,7 +180,7 @@ namespace Gapotchenko.FX.Math.Tests
         [TestMethod]
         public void Interval_Contains_LeftBoundedOpen()
         {
-            var interval = NewInterval(IntervalBoundary.Exclusive, 0, default, IntervalBoundary.Infinite);
+            var interval = NewInterval(IntervalBoundary.Exclusive, 0, default, IntervalBoundary.PositiveInfinity);
 
             Assert.IsFalse(interval.Contains(-1));
             Assert.IsFalse(interval.Contains(0));
@@ -192,7 +192,7 @@ namespace Gapotchenko.FX.Math.Tests
         [TestMethod]
         public void Interval_Contains_LeftBoundedClosed()
         {
-            var interval = NewInterval(IntervalBoundary.Inclusive, 0, default, IntervalBoundary.Infinite);
+            var interval = NewInterval(IntervalBoundary.Inclusive, 0, default, IntervalBoundary.PositiveInfinity);
 
             Assert.IsFalse(interval.Contains(-1));
             Assert.IsTrue(interval.Contains(0));

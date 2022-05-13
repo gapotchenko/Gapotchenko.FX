@@ -26,8 +26,13 @@
         Exclusive,
 
         /// <summary>
-        /// Indicates that the boundary is unbounded, i.e. has no bound limit point, and thus can be thought of as infinity.
+        /// Indicates that the boundary is unbounded to the negative infinity.
         /// </summary>
-        Infinite
+        NegativeInfinity,
+
+        /// <summary>
+        /// Indicates that the boundary is unbounded to the positive infinity.
+        /// </summary>
+        PositiveInfinity
     }
 }

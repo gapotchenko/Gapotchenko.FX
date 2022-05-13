@@ -14,7 +14,12 @@ namespace Gapotchenko.FX.Math
         public static IntervalBoundary GetBoundary(IntervalFlags flags, IntervalFlags boundedFlag, IntervalFlags closedFlag)
         {
             if ((flags & boundedFlag) == 0)
-                return IntervalBoundary.Infinite;
+            {
+                if ((flags & closedFlag) != 0)
+                    return IntervalBoundary.NegativeInfinity;
+                else
+                    return IntervalBoundary.PositiveInfinity;
+            }
             else if ((flags & closedFlag) != 0)
                 return IntervalBoundary.Inclusive;
             else
@@ -26,12 +31,13 @@ namespace Gapotchenko.FX.Math
             {
                 IntervalBoundary.Inclusive => flags | boundedFlag | closedFlag,
                 IntervalBoundary.Exclusive => (flags & ~closedFlag) | boundedFlag,
-                IntervalBoundary.Infinite => (flags & ~boundedFlag) | closedFlag,
+                IntervalBoundary.PositiveInfinity => flags & ~(boundedFlag | closedFlag),
+                IntervalBoundary.NegativeInfinity => (flags & ~boundedFlag) | closedFlag,
                 _ => throw new SwitchExpressionException(boundary)
             };
 
         static bool IsInfinity(IntervalBoundary boundary) =>
-            boundary is IntervalBoundary.Infinite;
+            boundary is IntervalBoundary.PositiveInfinity or IntervalBoundary.NegativeInfinity;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBounded<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
@@ -167,18 +173,28 @@ namespace Gapotchenko.FX.Math
             else
                 sb.Append('(');
 
-            if (fromBoundary == IntervalBoundary.Infinite)
-                sb.Append("-inf");
-            else
-                sb.Append(interval.From);
+            static void AppendBoundary(StringBuilder sb, IntervalBoundary boundary, TBound bound)
+            {
+                switch (boundary)
+                {
+                    case IntervalBoundary.NegativeInfinity:
+                        sb.Append("-inf");
+                        break;
+                    case IntervalBoundary.PositiveInfinity:
+                        sb.Append("inf");
+                        break;
+                    default:
+                        sb.Append(bound);
+                        break;
+                }
+            }
+
+            AppendBoundary(sb, fromBoundary, interval.From);
 
             sb.Append(',');
 
             var toBoundary = interval.ToBoundary;
-            if (toBoundary == IntervalBoundary.Infinite)
-                sb.Append("inf");
-            else
-                sb.Append(interval.To);
+            AppendBoundary(sb, toBoundary, interval.To);
 
             if (toBoundary == IntervalBoundary.Inclusive)
                 sb.Append(']');
