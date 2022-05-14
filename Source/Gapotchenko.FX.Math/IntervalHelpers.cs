@@ -5,40 +5,8 @@ using System.Text;
 
 namespace Gapotchenko.FX.Math
 {
-    using Math = System.Math;
-
     static class IntervalHelpers
     {
-        public static IntervalFlags SetFlag(IntervalFlags flags, IntervalFlags mask, bool value) => value ? flags | mask : flags & ~mask;
-
-        public static IntervalBoundaryKind GetBoundary(IntervalFlags flags, IntervalFlags boundedFlag, IntervalFlags closedFlag)
-        {
-            if ((flags & boundedFlag) == 0)
-            {
-                if ((flags & closedFlag) != 0)
-                    return IntervalBoundaryKind.NegativeInfinity;
-                else
-                    return IntervalBoundaryKind.PositiveInfinity;
-            }
-            else if ((flags & closedFlag) != 0)
-                return IntervalBoundaryKind.Inclusive;
-            else
-                return IntervalBoundaryKind.Exclusive;
-        }
-
-        public static IntervalFlags SetBoundary(IntervalFlags flags, IntervalFlags boundedFlag, IntervalFlags closedFlag, IntervalBoundaryKind boundary) =>
-            boundary switch
-            {
-                IntervalBoundaryKind.Inclusive => flags | boundedFlag | closedFlag,
-                IntervalBoundaryKind.Exclusive => (flags & ~closedFlag) | boundedFlag,
-                IntervalBoundaryKind.PositiveInfinity => flags & ~(boundedFlag | closedFlag),
-                IntervalBoundaryKind.NegativeInfinity => (flags & ~boundedFlag) | closedFlag,
-                _ => throw new SwitchExpressionException(boundary)
-            };
-
-        static bool IsInfinity(IntervalBoundaryKind boundary) =>
-            boundary is IntervalBoundaryKind.PositiveInfinity or IntervalBoundaryKind.NegativeInfinity;
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBounded<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
             !interval.From.IsInfinity &&
