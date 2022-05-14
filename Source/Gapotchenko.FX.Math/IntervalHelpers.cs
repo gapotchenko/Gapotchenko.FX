@@ -64,11 +64,9 @@ namespace Gapotchenko.FX.Math
             interval.From.Kind == IntervalBoundaryKind.Exclusive ^
             interval.To.Kind == IntervalBoundaryKind.Exclusive;
 
-        public delegate TInterval Constructor<out TInterval, in TBound>(
-            IntervalBoundaryKind fromBoundary,
-            TBound from,
-            TBound to,
-            IntervalBoundaryKind toBoundary)
+        public delegate TInterval Constructor<out TInterval, TBound>(
+            IntervalBoundary<TBound> from,
+            IntervalBoundary<TBound> to)
             where TInterval : IInterval<TBound>;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -78,21 +76,19 @@ namespace Gapotchenko.FX.Math
             Constructor<TInterval, TBound> constructor)
             where TInterval : IInterval<TBound>
         {
-            static IntervalBoundaryKind WithInclusiveBoundary(IntervalBoundaryKind boundary, bool inclusive)
+            static IntervalBoundary<TBound> WithInclusiveBoundary(IntervalBoundary<TBound> boundary, bool inclusive)
             {
-                if (IsInfinity(boundary))
+                if (boundary.IsInfinity)
                     return boundary;
                 else if (inclusive)
-                    return IntervalBoundaryKind.Inclusive;
+                    return IntervalBoundary.Inclusive(boundary.Value);
                 else
-                    return IntervalBoundaryKind.Exclusive;
+                    return IntervalBoundary.Exclusive(boundary.Value);
             }
 
             return constructor(
-                WithInclusiveBoundary(interval.From.Kind, inclusive),
-                interval.From.GetValueOrDefault(),
-                interval.To.GetValueOrDefault(),
-                WithInclusiveBoundary(interval.To.Kind, inclusive));
+                WithInclusiveBoundary(interval.From, inclusive),
+                WithInclusiveBoundary(interval.To, inclusive));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

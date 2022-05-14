@@ -109,13 +109,7 @@ namespace Gapotchenko.FX.Math
         /// <inheritdoc/>
         public bool Contains(T item) => IntervalHelpers.Contains(this, item, m_Comparer);
 
-        Interval<T> Construct(
-            IntervalBoundaryKind fromBoundary, T from,
-            T to, IntervalBoundaryKind toBoundary) =>
-            new(
-                new IntervalBoundary<T>(fromBoundary, from),
-                new IntervalBoundary<T>(toBoundary, to),
-                m_Comparer);
+        Interval<T> Construct(IntervalBoundary<T> from, IntervalBoundary<T> to) => new(from, to, m_Comparer);
 
         /// <summary>
         /// <para>
