@@ -31,45 +31,32 @@ namespace Gapotchenko.FX.Math
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
         public Interval(T from, T to, IComparer<T>? comparer = null) :
-            this(IntervalBoundary.Inclusive, from, to, IntervalBoundary.Exclusive, comparer)
+            this(IntervalBoundary.Inclusive(from), IntervalBoundary.Exclusive(to), comparer)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds and their types.
+        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified boundaries.
         /// </summary>
-        /// <param name="fromBoundary">
-        /// The left boundary.
-        /// Represents a type of boundary the interval starts with.
-        /// </param>
         /// <param name="from">
-        /// The left bound of the interval.
-        /// Represents a value the interval starts with.
+        /// The left boundary of the interval.
+        /// Represents a boundary the interval starts with.
         /// </param>
         /// <param name="to">
-        /// The right bound of the interval.
-        /// Represents a value the interval ends with.
-        /// </param>
-        /// <param name="toBoundary">
-        /// The right boundary.
-        /// Represents a type of boundary the interval ends with.
+        /// The right boundary of the interval.
+        /// Represents a boundary the interval ends with.
         /// </param>
         /// <param name="comparer">
         /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
         /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
         /// </param>
-        public Interval(
-            IntervalBoundary fromBoundary,
-            T from,
-            T to,
-            IntervalBoundary toBoundary,
-            IComparer<T>? comparer = null)
+        public Interval(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer = null)
         {
-            From = from;
-            To = to;
+            From = from.GetValueOrDefault();
+            To = to.GetValueOrDefault();
 
-            FromBoundary = fromBoundary;
-            ToBoundary = toBoundary;
+            FromBoundary = from.Kind;
+            ToBoundary = to.Kind;
 
             Comparer = comparer;
         }
@@ -91,7 +78,7 @@ namespace Gapotchenko.FX.Math
         /// The left boundary.
         /// Represents a type of boundary the interval starts with.
         /// </summary>
-        public IntervalBoundary FromBoundary
+        public IntervalBoundaryKind FromBoundary
         {
             get => IntervalHelpers.GetBoundary(m_Flags, IntervalFlags.LeftBounded, IntervalFlags.LeftClosed);
             init => m_Flags = IntervalHelpers.SetBoundary(m_Flags, IntervalFlags.LeftBounded, IntervalFlags.LeftClosed, value);
@@ -101,7 +88,7 @@ namespace Gapotchenko.FX.Math
         /// The right boundary.
         /// Represents a type of boundary the interval ends with.
         /// </summary>
-        public IntervalBoundary ToBoundary
+        public IntervalBoundaryKind ToBoundary
         {
             get => IntervalHelpers.GetBoundary(m_Flags, IntervalFlags.RightBounded, IntervalFlags.RightClosed);
             init => m_Flags = IntervalHelpers.SetBoundary(m_Flags, IntervalFlags.RightBounded, IntervalFlags.RightClosed, value);
@@ -147,11 +134,11 @@ namespace Gapotchenko.FX.Math
         public bool Contains(T item) => IntervalHelpers.Contains(this, item, m_Comparer);
 
         Interval<T> Construct(
-            IntervalBoundary fromBoundary, T from,
-            T to, IntervalBoundary toBoundary) =>
+            IntervalBoundaryKind fromBoundary, T from,
+            T to, IntervalBoundaryKind toBoundary) =>
             new(
-                fromBoundary, from,
-                to, toBoundary,
+                new IntervalBoundary<T>(fromBoundary, from),
+                new IntervalBoundary<T>(toBoundary, to),
                 m_Comparer);
 
         /// <summary>

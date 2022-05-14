@@ -1,38 +1,34 @@
 ﻿namespace Gapotchenko.FX.Math
 {
     /// <summary>
-    /// Defines the types of interval boundaries.
+    /// Provides construction methods for <see cref="IntervalBoundary{T}"/>.
     /// </summary>
-    public enum IntervalBoundary
+    public static class IntervalBoundary
     {
         /// <summary>
         /// <para>
-        /// Indicates that the bound limit point is included in the interval.
+        /// Creates an inclusive interval boundary with the specified value.
         /// </para>
         /// <para>
         /// An inclusive boundary is also called a closed boundary.
         /// </para>
         /// </summary>
-        Inclusive,
+        /// <typeparam name="T">The type of a boundary value.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns>The inclusive interval boundary.</returns>
+        public static IntervalBoundary<T> Inclusive<T>(T value) => new(IntervalBoundaryKind.Inclusive, value);
 
         /// <summary>
         /// <para>
-        /// Indicates that the bound limit point is not included in the interval.
+        /// Creates an exclusive interval boundary with the specified value.
         /// </para>
         /// <para>
         /// An exclusive boundary is also called an open boundary.
         /// </para>
         /// </summary>
-        Exclusive,
-
-        /// <summary>
-        /// Indicates that the boundary is unbounded to the negative infinity.
-        /// </summary>
-        NegativeInfinity,
-
-        /// <summary>
-        /// Indicates that the boundary is unbounded to the positive infinity.
-        /// </summary>
-        PositiveInfinity
+        /// <typeparam name="T">The type of a boundary value.</typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns>The inclusive interval boundary.</returns>
+        public static IntervalBoundary<T> Exclusive<T>(T value) => new(IntervalBoundaryKind.Exclusive, value);
     }
 }

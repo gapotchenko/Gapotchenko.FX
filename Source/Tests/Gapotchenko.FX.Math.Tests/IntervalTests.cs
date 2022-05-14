@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Math.Tests
         public override IInterval<T> NewInterval<T>(T from, T to, IComparer<T>? comparer = null) =>
             new Interval<T>(from, to, comparer);
 
-        public override IInterval<T> NewInterval<T>(IntervalBoundary fromBoundary, T from, T to, IntervalBoundary toBoundary, IComparer<T>? comparer = null) =>
-            new Interval<T>(fromBoundary, from, to, toBoundary, comparer);
+        public override IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer = null) =>
+            new Interval<T>(from, to, comparer);
     }
 }

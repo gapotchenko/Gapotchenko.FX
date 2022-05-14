@@ -11,33 +11,33 @@ namespace Gapotchenko.FX.Math
     {
         public static IntervalFlags SetFlag(IntervalFlags flags, IntervalFlags mask, bool value) => value ? flags | mask : flags & ~mask;
 
-        public static IntervalBoundary GetBoundary(IntervalFlags flags, IntervalFlags boundedFlag, IntervalFlags closedFlag)
+        public static IntervalBoundaryKind GetBoundary(IntervalFlags flags, IntervalFlags boundedFlag, IntervalFlags closedFlag)
         {
             if ((flags & boundedFlag) == 0)
             {
                 if ((flags & closedFlag) != 0)
-                    return IntervalBoundary.NegativeInfinity;
+                    return IntervalBoundaryKind.NegativeInfinity;
                 else
-                    return IntervalBoundary.PositiveInfinity;
+                    return IntervalBoundaryKind.PositiveInfinity;
             }
             else if ((flags & closedFlag) != 0)
-                return IntervalBoundary.Inclusive;
+                return IntervalBoundaryKind.Inclusive;
             else
-                return IntervalBoundary.Exclusive;
+                return IntervalBoundaryKind.Exclusive;
         }
 
-        public static IntervalFlags SetBoundary(IntervalFlags flags, IntervalFlags boundedFlag, IntervalFlags closedFlag, IntervalBoundary boundary) =>
+        public static IntervalFlags SetBoundary(IntervalFlags flags, IntervalFlags boundedFlag, IntervalFlags closedFlag, IntervalBoundaryKind boundary) =>
             boundary switch
             {
-                IntervalBoundary.Inclusive => flags | boundedFlag | closedFlag,
-                IntervalBoundary.Exclusive => (flags & ~closedFlag) | boundedFlag,
-                IntervalBoundary.PositiveInfinity => flags & ~(boundedFlag | closedFlag),
-                IntervalBoundary.NegativeInfinity => (flags & ~boundedFlag) | closedFlag,
+                IntervalBoundaryKind.Inclusive => flags | boundedFlag | closedFlag,
+                IntervalBoundaryKind.Exclusive => (flags & ~closedFlag) | boundedFlag,
+                IntervalBoundaryKind.PositiveInfinity => flags & ~(boundedFlag | closedFlag),
+                IntervalBoundaryKind.NegativeInfinity => (flags & ~boundedFlag) | closedFlag,
                 _ => throw new SwitchExpressionException(boundary)
             };
 
-        static bool IsInfinity(IntervalBoundary boundary) =>
-            boundary is IntervalBoundary.PositiveInfinity or IntervalBoundary.NegativeInfinity;
+        static bool IsInfinity(IntervalBoundaryKind boundary) =>
+            boundary is IntervalBoundaryKind.PositiveInfinity or IntervalBoundaryKind.NegativeInfinity;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBounded<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
@@ -51,24 +51,24 @@ namespace Gapotchenko.FX.Math
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsOpen<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
-            interval.FromBoundary == IntervalBoundary.Exclusive &&
-            interval.ToBoundary == IntervalBoundary.Exclusive;
+            interval.FromBoundary == IntervalBoundaryKind.Exclusive &&
+            interval.ToBoundary == IntervalBoundaryKind.Exclusive;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsClosed<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
-            interval.FromBoundary != IntervalBoundary.Exclusive &&
-            interval.ToBoundary != IntervalBoundary.Exclusive;
+            interval.FromBoundary != IntervalBoundaryKind.Exclusive &&
+            interval.ToBoundary != IntervalBoundaryKind.Exclusive;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHalfOpen<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
-            interval.FromBoundary == IntervalBoundary.Exclusive ^
-            interval.ToBoundary == IntervalBoundary.Exclusive;
+            interval.FromBoundary == IntervalBoundaryKind.Exclusive ^
+            interval.ToBoundary == IntervalBoundaryKind.Exclusive;
 
         public delegate TInterval Constructor<out TInterval, in TBound>(
-            IntervalBoundary fromBoundary,
+            IntervalBoundaryKind fromBoundary,
             TBound from,
             TBound to,
-            IntervalBoundary toBoundary)
+            IntervalBoundaryKind toBoundary)
             where TInterval : IInterval<TBound>;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -78,14 +78,14 @@ namespace Gapotchenko.FX.Math
             Constructor<TInterval, TBound> constructor)
             where TInterval : IInterval<TBound>
         {
-            static IntervalBoundary WithInclusiveBoundary(IntervalBoundary boundary, bool inclusive)
+            static IntervalBoundaryKind WithInclusiveBoundary(IntervalBoundaryKind boundary, bool inclusive)
             {
                 if (IsInfinity(boundary))
                     return boundary;
                 else if (inclusive)
-                    return IntervalBoundary.Inclusive;
+                    return IntervalBoundaryKind.Inclusive;
                 else
-                    return IntervalBoundary.Exclusive;
+                    return IntervalBoundaryKind.Exclusive;
             }
 
             return constructor(
@@ -121,9 +121,9 @@ namespace Gapotchenko.FX.Math
         public static bool Contains<TInterval, TBound>(TInterval interval, TBound item, IComparer<TBound> comparer) where TInterval : IInterval<TBound>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static bool BoundLimit(int cmp, IntervalBoundary boundary)
+            static bool BoundLimit(int cmp, IntervalBoundaryKind boundary)
             {
-                int limit = boundary == IntervalBoundary.Inclusive ? 0 : -1;
+                int limit = boundary == IntervalBoundaryKind.Inclusive ? 0 : -1;
                 return cmp > limit;
             }
 
@@ -168,19 +168,19 @@ namespace Gapotchenko.FX.Math
             var sb = new StringBuilder();
 
             var fromBoundary = interval.FromBoundary;
-            if (fromBoundary == IntervalBoundary.Inclusive)
+            if (fromBoundary == IntervalBoundaryKind.Inclusive)
                 sb.Append('[');
             else
                 sb.Append('(');
 
-            static void AppendBoundary(StringBuilder sb, IntervalBoundary boundary, TBound bound)
+            static void AppendBoundary(StringBuilder sb, IntervalBoundaryKind boundary, TBound bound)
             {
                 switch (boundary)
                 {
-                    case IntervalBoundary.NegativeInfinity:
+                    case IntervalBoundaryKind.NegativeInfinity:
                         sb.Append("-inf");
                         break;
-                    case IntervalBoundary.PositiveInfinity:
+                    case IntervalBoundaryKind.PositiveInfinity:
                         sb.Append("inf");
                         break;
                     default:
@@ -196,7 +196,7 @@ namespace Gapotchenko.FX.Math
             var toBoundary = interval.ToBoundary;
             AppendBoundary(sb, toBoundary, interval.To);
 
-            if (toBoundary == IntervalBoundary.Inclusive)
+            if (toBoundary == IntervalBoundaryKind.Inclusive)
                 sb.Append(']');
             else
                 sb.Append(')');

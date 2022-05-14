@@ -22,13 +22,13 @@
         /// Gets the left boundary of the interval.
         /// Represents a type of boundary the interval starts with.
         /// </summary>
-        public IntervalBoundary FromBoundary { get; }
+        public IntervalBoundaryKind FromBoundary { get; }
 
         /// <summary>
         /// Gets the right boundary of the interval.
         /// Represents a type of boundary the interval ends with.
         /// </summary>
-        public IntervalBoundary ToBoundary { get; }
+        public IntervalBoundaryKind ToBoundary { get; }
 
         /// <summary>
         /// <para>
