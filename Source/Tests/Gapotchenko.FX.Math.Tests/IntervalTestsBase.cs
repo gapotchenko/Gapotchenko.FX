@@ -52,10 +52,10 @@ namespace Gapotchenko.FX.Math.Tests
         {
             var interval = NewInterval(0, 10);
 
-            Assert.AreEqual(IntervalBoundaryKind.Inclusive, interval.FromBoundary);
-            Assert.AreEqual(0, interval.From);
-            Assert.AreEqual(10, interval.To);
-            Assert.AreEqual(IntervalBoundaryKind.Exclusive, interval.ToBoundary);
+            Assert.AreEqual(IntervalBoundaryKind.Inclusive, interval.From.Kind);
+            Assert.AreEqual(0, interval.From.Value);
+            Assert.AreEqual(10, interval.To.Value);
+            Assert.AreEqual(IntervalBoundaryKind.Exclusive, interval.To.Kind);
         }
 
         [TestMethod]
@@ -63,10 +63,10 @@ namespace Gapotchenko.FX.Math.Tests
         {
             var interval = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Inclusive(10));
 
-            Assert.AreEqual(IntervalBoundaryKind.Exclusive, interval.FromBoundary);
-            Assert.AreEqual(0, interval.From);
-            Assert.AreEqual(10, interval.To);
-            Assert.AreEqual(IntervalBoundaryKind.Inclusive, interval.ToBoundary);
+            Assert.AreEqual(IntervalBoundaryKind.Exclusive, interval.From.Kind);
+            Assert.AreEqual(0, interval.From.Value);
+            Assert.AreEqual(10, interval.To.Value);
+            Assert.AreEqual(IntervalBoundaryKind.Inclusive, interval.To.Kind);
         }
 
         [TestMethod]

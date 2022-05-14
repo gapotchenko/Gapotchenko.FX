@@ -52,47 +52,23 @@ namespace Gapotchenko.FX.Math
         /// </param>
         public Interval(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer = null)
         {
-            From = from.GetValueOrDefault();
-            To = to.GetValueOrDefault();
-
-            FromBoundary = from.Kind;
-            ToBoundary = to.Kind;
+            From = from;
+            To = to;
 
             Comparer = comparer;
         }
 
         /// <summary>
-        /// The left bound of the interval.
+        /// The left boundary of the interval.
+        /// Represents a boundary the interval starts with.
         /// </summary>
-        public T From { get; init; }
+        public IntervalBoundary<T> From { get; init; }
 
         /// <summary>
-        /// The right bound of the interval.
+        /// The right boundary of the interval.
+        /// Represents a boundary the interval ends with.
         /// </summary>
-        public T To { get; init; }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IntervalFlags m_Flags;
-
-        /// <summary>
-        /// The left boundary.
-        /// Represents a type of boundary the interval starts with.
-        /// </summary>
-        public IntervalBoundaryKind FromBoundary
-        {
-            get => IntervalHelpers.GetBoundary(m_Flags, IntervalFlags.LeftBounded, IntervalFlags.LeftClosed);
-            init => m_Flags = IntervalHelpers.SetBoundary(m_Flags, IntervalFlags.LeftBounded, IntervalFlags.LeftClosed, value);
-        }
-
-        /// <summary>
-        /// The right boundary.
-        /// Represents a type of boundary the interval ends with.
-        /// </summary>
-        public IntervalBoundaryKind ToBoundary
-        {
-            get => IntervalHelpers.GetBoundary(m_Flags, IntervalFlags.RightBounded, IntervalFlags.RightClosed);
-            init => m_Flags = IntervalHelpers.SetBoundary(m_Flags, IntervalFlags.RightBounded, IntervalFlags.RightClosed, value);
-        }
+        public IntervalBoundary<T> To { get; init; }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IComparer<T> m_Comparer;

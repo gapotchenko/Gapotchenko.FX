@@ -7,28 +7,16 @@
     public interface IInterval<T>
     {
         /// <summary>
-        /// Gets the left bound of the interval.
-        /// Represents a value the interval starts with.
-        /// </summary>
-        public T From { get; }
-
-        /// <summary>
-        /// Gets the right bound of the interval.
-        /// Represents a value the interval ends with.
-        /// </summary>
-        public T To { get; }
-
-        /// <summary>
         /// Gets the left boundary of the interval.
-        /// Represents a type of boundary the interval starts with.
+        /// Represents a boundary the interval starts with.
         /// </summary>
-        public IntervalBoundaryKind FromBoundary { get; }
+        public IntervalBoundary<T> From { get; }
 
         /// <summary>
         /// Gets the right boundary of the interval.
-        /// Represents a type of boundary the interval ends with.
+        /// Represents a boundary the interval ends with.
         /// </summary>
-        public IntervalBoundaryKind ToBoundary { get; }
+        public IntervalBoundary<T> To { get; }
 
         /// <summary>
         /// <para>
