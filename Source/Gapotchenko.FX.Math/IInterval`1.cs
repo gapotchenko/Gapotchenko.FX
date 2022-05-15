@@ -28,7 +28,7 @@
         /// </summary>
         public bool IsBounded
 #if TFF_DEFAULT_INTERFACE
-            => IntervalHelpers.IsBounded<IInterval<T>, T>(this);
+            => IntervalEngine.IsBounded<IInterval<T>, T>(this);
 #else
         { get; }
 #endif
@@ -43,7 +43,7 @@
         /// </summary>
         public bool IsHalfBounded
 #if TFF_DEFAULT_INTERFACE
-            => IntervalHelpers.IsHalfBounded<IInterval<T>, T>(this);
+            => IntervalEngine.IsHalfBounded<IInterval<T>, T>(this);
 #else
         { get; }
 #endif
@@ -58,7 +58,7 @@
         /// </summary>
         public bool IsOpen
 #if TFF_DEFAULT_INTERFACE
-            => IntervalHelpers.IsOpen<IInterval<T>, T>(this);
+            => IntervalEngine.IsOpen<IInterval<T>, T>(this);
 #else
         { get; }
 #endif
@@ -73,7 +73,7 @@
         /// </summary>
         public bool IsClosed
 #if TFF_DEFAULT_INTERFACE
-            => IntervalHelpers.IsClosed<IInterval<T>, T>(this);
+            => IntervalEngine.IsClosed<IInterval<T>, T>(this);
 #else
         { get; }
 #endif
@@ -88,7 +88,7 @@
         /// </summary>
         public bool IsHalfOpen
 #if TFF_DEFAULT_INTERFACE
-            => IntervalHelpers.IsHalfOpen<IInterval<T>, T>(this);
+            => IntervalEngine.IsHalfOpen<IInterval<T>, T>(this);
 #else
         { get; }
 #endif

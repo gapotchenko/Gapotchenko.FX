@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Gapotchenko.FX.Math
 {
-    static class IntervalHelpers
+    static class IntervalEngine
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBounded<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
@@ -142,6 +142,9 @@ namespace Gapotchenko.FX.Math
             {
                 switch (boundary.Kind)
                 {
+                    case IntervalBoundaryKind.Empty:
+                        sb.Append("{}");
+                        break;
                     case IntervalBoundaryKind.NegativeInfinity:
                         sb.Append("-inf");
                         break;

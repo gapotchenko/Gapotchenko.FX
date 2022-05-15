@@ -86,28 +86,28 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <inheritdoc/>
-        public bool IsBounded => IntervalHelpers.IsBounded<Interval<T>, T>(this);
+        public bool IsBounded => IntervalEngine.IsBounded<Interval<T>, T>(this);
 
         /// <inheritdoc/>
-        public bool IsHalfBounded => IntervalHelpers.IsHalfBounded<Interval<T>, T>(this);
+        public bool IsHalfBounded => IntervalEngine.IsHalfBounded<Interval<T>, T>(this);
 
         /// <inheritdoc/>
-        public bool IsOpen => IntervalHelpers.IsOpen<Interval<T>, T>(this);
+        public bool IsOpen => IntervalEngine.IsOpen<Interval<T>, T>(this);
 
         /// <inheritdoc/>
-        public bool IsClosed => IntervalHelpers.IsClosed<Interval<T>, T>(this);
+        public bool IsClosed => IntervalEngine.IsClosed<Interval<T>, T>(this);
 
         /// <inheritdoc/>
-        public bool IsHalfOpen => IntervalHelpers.IsHalfOpen<Interval<T>, T>(this);
+        public bool IsHalfOpen => IntervalEngine.IsHalfOpen<Interval<T>, T>(this);
 
         /// <inheritdoc/>
-        public bool IsEmpty => IntervalHelpers.IsEmpty<Interval<T>, T>(this, m_Comparer);
+        public bool IsEmpty => IntervalEngine.IsEmpty<Interval<T>, T>(this, m_Comparer);
 
         /// <inheritdoc/>
-        public bool IsDegenerate => IntervalHelpers.IsDegenerate<Interval<T>, T>(this, m_Comparer);
+        public bool IsDegenerate => IntervalEngine.IsDegenerate<Interval<T>, T>(this, m_Comparer);
 
         /// <inheritdoc/>
-        public bool Contains(T item) => IntervalHelpers.Contains(this, item, m_Comparer);
+        public bool Contains(T item) => IntervalEngine.Contains(this, item, m_Comparer);
 
         Interval<T> Construct(IntervalBoundary<T> from, IntervalBoundary<T> to) => new(from, to, m_Comparer);
 
@@ -120,7 +120,7 @@ namespace Gapotchenko.FX.Math
         /// it is also the set of points in <c>I</c> which are not the endpoints of <c>I</c>.
         /// </para>
         /// </summary>
-        public Interval<T> Interior => IntervalHelpers.Interior<Interval<T>, T>(this, Construct);
+        public Interval<T> Interior => IntervalEngine.Interior<Interval<T>, T>(this, Construct);
 
         /// <inheritdoc/>
         IInterval<T> IInterval<T>.Interior => Interior;
@@ -134,7 +134,7 @@ namespace Gapotchenko.FX.Math
         /// which is also the set <c>I</c> augmented with its finite endpoints.
         /// </para>
         /// </summary>
-        public Interval<T> Enclosure => IntervalHelpers.Enclosure<Interval<T>, T>(this, Construct);
+        public Interval<T> Enclosure => IntervalEngine.Enclosure<Interval<T>, T>(this, Construct);
 
         /// <inheritdoc/>
         IInterval<T> IInterval<T>.Enclosure => Enclosure;
@@ -154,7 +154,7 @@ namespace Gapotchenko.FX.Math
         /// <typeparam name="TLimits">Type of the limiting interval.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public Interval<T> Clamp<TLimits>(TLimits limits) where TLimits : IInterval<T> =>
-            IntervalHelpers.Clamp(
+            IntervalEngine.Clamp(
                 this,
                 limits ?? throw new ArgumentNullException(nameof(limits)),
                 m_Comparer,
@@ -174,7 +174,7 @@ namespace Gapotchenko.FX.Math
         /// <typeparam name="TOther">Type of the interval to check for overlapping.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool Overlaps<TOther>(TOther other) where TOther : IInterval<T> =>
-            IntervalHelpers.Overlaps<Interval<T>, TOther, T>(
+            IntervalEngine.Overlaps<Interval<T>, TOther, T>(
                 this,
                 other ?? throw new ArgumentNullException(nameof(other)));
 
@@ -182,6 +182,6 @@ namespace Gapotchenko.FX.Math
         bool PrintMembers(StringBuilder _) => false;
 
         /// <inheritdoc/>
-        public override string ToString() => IntervalHelpers.ToString<Interval<T>, T>(this);
+        public override string ToString() => IntervalEngine.ToString<Interval<T>, T>(this);
     }
 }
