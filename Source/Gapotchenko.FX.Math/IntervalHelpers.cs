@@ -82,29 +82,18 @@ namespace Gapotchenko.FX.Math
             comparer.Compare(interval.From.GetValueOrDefault(), interval.To.GetValueOrDefault()) == 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Contains<TInterval, TBound>(TInterval interval, TBound item, IComparer<TBound> comparer) where TInterval : IInterval<TBound>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            static bool BoundLimit(int cmp, IntervalBoundaryKind boundary)
-            {
-                int limit = boundary == IntervalBoundaryKind.Inclusive ? 0 : -1;
-                return cmp > limit;
-            }
+        public static bool Contains<TInterval, TBound>(TInterval interval, TBound item, IComparer<TBound> comparer) where TInterval : IInterval<TBound> =>
+            CompareBoundaries(interval.From, item, false, comparer) <= 0 &&
+            CompareBoundaries(interval.To, item, true, comparer) <= 0;
 
-            if (!interval.From.IsInfinity)
+        static int CompareBoundaries<TBound>(IntervalBoundary<TBound> x, TBound y, bool reverse, IComparer<TBound> comparer) =>
+            x.Kind switch
             {
-                if (BoundLimit(comparer.Compare(interval.From.Value, item), interval.From.Kind))
-                    return false;
-            }
-
-            if (!interval.To.IsInfinity)
-            {
-                if (BoundLimit(comparer.Compare(item, interval.To.Value), interval.To.Kind))
-                    return false;
-            }
-
-            return true;
-        }
+                IntervalBoundaryKind.PositiveInfinity => reverse ? -1 : 1,
+                IntervalBoundaryKind.NegativeInfinity => reverse ? 1 : -1,
+                IntervalBoundaryKind.Inclusive => reverse ? comparer.Compare(y, x.Value) : comparer.Compare(x.Value, y),
+                IntervalBoundaryKind.Exclusive => (reverse ? comparer.Compare(y, x.Value) : comparer.Compare(x.Value, y)) > -1 ? 1 : -1
+            };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TInterval Clamp<TInterval, TLimits, TBound>(

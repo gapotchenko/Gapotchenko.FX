@@ -4,6 +4,8 @@
   <PropertyGroup>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
+    <NoWarn>$(NoWarn),CS8524</NoWarn>
+    <WarningsAsErrors>$(WarningsAsErrors),CS8509</WarningsAsErrors>
   </PropertyGroup>
 
 </Project>
