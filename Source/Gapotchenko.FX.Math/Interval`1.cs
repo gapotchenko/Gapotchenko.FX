@@ -176,7 +176,8 @@ namespace Gapotchenko.FX.Math
         public bool Overlaps<TOther>(TOther other) where TOther : IInterval<T> =>
             IntervalEngine.Overlaps<Interval<T>, TOther, T>(
                 this,
-                other ?? throw new ArgumentNullException(nameof(other)));
+                other ?? throw new ArgumentNullException(nameof(other)),
+                m_Comparer);
 
         // Minify unused record method.
         bool PrintMembers(StringBuilder _) => false;

@@ -100,7 +100,7 @@ namespace Gapotchenko.FX.Math
             if (x.HasValue && y.HasValue)
             {
                 int c = comparer.Compare(x.Value, y.Value);
-                if (c == 0)
+                if (c == 0 && (x.Kind == IntervalBoundaryKind.Exclusive || y.Kind == IntervalBoundaryKind.Exclusive))
                     c = x.Kind.CompareTo(y.Kind);
                 return c;
             }
@@ -123,11 +123,11 @@ namespace Gapotchenko.FX.Math
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Overlaps<TInterval, TOther, TBound>(TInterval interval, TOther other)
+        public static bool Overlaps<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
             where TInterval : IInterval<TBound>
             where TOther : IInterval<TBound> =>
-            interval.Contains(other.From.GetValueOrDefault()) || interval.Contains(other.To.GetValueOrDefault()) ||
-            other.Contains(interval.From.GetValueOrDefault()) || other.Contains(interval.To.GetValueOrDefault());
+            CompareBoundaries(interval.From, other.To, comparer) <= 0 &&
+            CompareBoundaries(interval.To, other.To, comparer) >= 0;
 
         public static string ToString<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound>
         {
@@ -143,13 +143,13 @@ namespace Gapotchenko.FX.Math
                 switch (boundary.Kind)
                 {
                     case IntervalBoundaryKind.Empty:
-                        sb.Append("{}");
+                        sb.Append("{}"); // ∅
                         break;
                     case IntervalBoundaryKind.NegativeInfinity:
-                        sb.Append("-inf");
+                        sb.Append("-inf"); // -∞
                         break;
                     case IntervalBoundaryKind.PositiveInfinity:
-                        sb.Append("inf");
+                        sb.Append("+inf"); // +∞
                         break;
                     default:
                         sb.Append(boundary.Value);

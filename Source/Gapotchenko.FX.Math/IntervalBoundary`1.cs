@@ -6,6 +6,7 @@ namespace Gapotchenko.FX.Math
     /// <summary>
     /// Represents an interval boundary.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct IntervalBoundary<T>
     {
         internal IntervalBoundary(IntervalBoundaryKind kind, T value)
@@ -72,5 +73,15 @@ namespace Gapotchenko.FX.Math
         /// Gets a positive infinity interval boundary +∞.
         /// </summary>
         public static IntervalBoundary<T> PositiveInfinity { get; } = new(IntervalBoundaryKind.PositiveInfinity, default!);
+
+        string DebuggerDisplay =>
+            Kind switch
+            {
+                IntervalBoundaryKind.Empty => "Empty, ∅",
+                IntervalBoundaryKind.NegativeInfinity => "Negative infinity, -∞",
+                IntervalBoundaryKind.PositiveInfinity => "Positive infinity, +∞",
+                IntervalBoundaryKind.Exclusive => $"Exclusive, {Value}",
+                IntervalBoundaryKind.Inclusive => $"Inclusive, {Value}"
+            };
     }
 }

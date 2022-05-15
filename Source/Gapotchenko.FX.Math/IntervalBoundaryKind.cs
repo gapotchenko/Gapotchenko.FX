@@ -17,16 +17,6 @@
 
         /// <summary>
         /// <para>
-        /// Indicates that the bound limit point is included in the interval.
-        /// </para>
-        /// <para>
-        /// An inclusive boundary is also called a closed boundary.
-        /// </para>
-        /// </summary>
-        Inclusive,
-
-        /// <summary>
-        /// <para>
         /// Indicates that the bound limit point is not included in the interval.
         /// </para>
         /// <para>
@@ -34,6 +24,16 @@
         /// </para>
         /// </summary>
         Exclusive,
+
+        /// <summary>
+        /// <para>
+        /// Indicates that the bound limit point is included in the interval.
+        /// </para>
+        /// <para>
+        /// An inclusive boundary is also called a closed boundary.
+        /// </para>
+        /// </summary>
+        Inclusive,
 
         /// <summary>
         /// Positive infinity, +∞.
