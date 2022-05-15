@@ -11,6 +11,7 @@ namespace Gapotchenko.FX.Math
     /// Represents a continuous interval of values.
     /// </summary>
     /// <typeparam name="T">The type of interval values.</typeparam>
+    [DebuggerDisplay("{ToString(),nq}")]
     public sealed record Interval<T> : IInterval<T>
     {
         /// <summary>
@@ -123,6 +124,7 @@ namespace Gapotchenko.FX.Math
         public Interval<T> Interior => IntervalEngine.Interior<Interval<T>, T>(this, Construct);
 
         /// <inheritdoc/>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IInterval<T> IInterval<T>.Interior => Interior;
 
         /// <summary>
@@ -137,6 +139,7 @@ namespace Gapotchenko.FX.Math
         public Interval<T> Enclosure => IntervalEngine.Enclosure<Interval<T>, T>(this, Construct);
 
         /// <inheritdoc/>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IInterval<T> IInterval<T>.Enclosure => Enclosure;
 
         /// <summary>

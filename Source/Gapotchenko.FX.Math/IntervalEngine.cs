@@ -5,6 +5,8 @@ using System.Text;
 
 namespace Gapotchenko.FX.Math
 {
+    using Math = System.Math;
+
     static class IntervalEngine
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -95,13 +97,21 @@ namespace Gapotchenko.FX.Math
                 IntervalBoundaryKind.PositiveInfinity => reverse ? -1 : 1
             };
 
-        static int CompareBoundaries<TBound>(IntervalBoundary<TBound> x, IntervalBoundary<TBound> y, IComparer<TBound> comparer)
+        static int CompareBoundaries<TBound>(
+            IntervalBoundary<TBound> x,
+            IntervalBoundary<TBound> y,
+            IComparer<TBound> comparer,
+            bool to)
         {
             if (x.HasValue && y.HasValue)
             {
                 int c = comparer.Compare(x.Value, y.Value);
                 if (c == 0 && (x.Kind == IntervalBoundaryKind.Exclusive || y.Kind == IntervalBoundaryKind.Exclusive))
+                {
                     c = x.Kind.CompareTo(y.Kind);
+                    if (to)
+                        c = -Math.Sign(c);
+                }
                 return c;
             }
             else
@@ -126,8 +136,8 @@ namespace Gapotchenko.FX.Math
         public static bool Overlaps<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
             where TInterval : IInterval<TBound>
             where TOther : IInterval<TBound> =>
-            CompareBoundaries(interval.From, other.To, comparer) <= 0 &&
-            CompareBoundaries(interval.To, other.To, comparer) >= 0;
+            CompareBoundaries(interval.From, other.To, comparer, false) <= 0 &&
+            CompareBoundaries(interval.To, other.From, comparer, false) >= 0;
 
         public static string ToString<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound>
         {
