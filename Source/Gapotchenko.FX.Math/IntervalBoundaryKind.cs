@@ -6,6 +6,16 @@
     public enum IntervalBoundaryKind : byte
     {
         /// <summary>
+        /// Empty boundary, ∅.
+        /// </summary>
+        Empty,
+
+        /// <summary>
+        /// Negative infinity, -∞.
+        /// </summary>
+        NegativeInfinity,
+
+        /// <summary>
         /// <para>
         /// Indicates that the bound limit point is included in the interval.
         /// </para>
@@ -26,12 +36,7 @@
         Exclusive,
 
         /// <summary>
-        /// Indicates that the boundary is unbounded to the negative infinity.
-        /// </summary>
-        NegativeInfinity,
-
-        /// <summary>
-        /// Indicates that the boundary is unbounded to the positive infinity.
+        /// Positive infinity, +∞.
         /// </summary>
         PositiveInfinity
     }
