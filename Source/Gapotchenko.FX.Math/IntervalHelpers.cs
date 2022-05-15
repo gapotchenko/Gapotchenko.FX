@@ -95,6 +95,21 @@ namespace Gapotchenko.FX.Math
                 IntervalBoundaryKind.Exclusive => (reverse ? comparer.Compare(y, x.Value) : comparer.Compare(x.Value, y)) > -1 ? 1 : -1
             };
 
+        static int CompareBoundaries<TBound>(IntervalBoundary<TBound> x, IntervalBoundary<TBound> y, IComparer<TBound> comparer)
+        {
+            static int? CompareInfinityOneWay(IntervalBoundaryKind x, IntervalBoundaryKind y) =>
+                x switch
+                {
+                    IntervalBoundaryKind.PositiveInfinity => y == IntervalBoundaryKind.PositiveInfinity ? 0 : 1,
+                    IntervalBoundaryKind.NegativeInfinity => y == IntervalBoundaryKind.NegativeInfinity ? 0 : -1,
+                    _ => null,
+                };
+
+            return
+                CompareInfinityOneWay(x.Kind, y.Kind) ??
+                -CompareInfinityOneWay(y.Kind, x.Kind) ?? 0;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TInterval Clamp<TInterval, TLimits, TBound>(
             TInterval interval,

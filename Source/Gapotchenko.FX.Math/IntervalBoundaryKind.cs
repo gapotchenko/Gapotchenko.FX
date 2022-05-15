@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines the types of interval boundaries.
     /// </summary>
-    public enum IntervalBoundaryKind
+    public enum IntervalBoundaryKind : byte
     {
         /// <summary>
         /// <para>

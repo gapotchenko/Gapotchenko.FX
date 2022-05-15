@@ -24,6 +24,11 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         public bool IsInfinity => Kind is IntervalBoundaryKind.NegativeInfinity or IntervalBoundaryKind.PositiveInfinity;
 
+        /// <summary>
+        /// Gets a value indicating whether the current interval boundary has a value.
+        /// </summary>
+        public bool HasValue => !IsInfinity;
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly T m_Value;
 
@@ -34,8 +39,8 @@ namespace Gapotchenko.FX.Math
         {
             get
             {
-                if (IsInfinity)
-                    throw new InvalidOperationException("Infinite interval boundary has no value.");
+                if (!HasValue)
+                    throw new InvalidOperationException("Interval boundary has no bound value.");
                 return m_Value;
             }
         }
