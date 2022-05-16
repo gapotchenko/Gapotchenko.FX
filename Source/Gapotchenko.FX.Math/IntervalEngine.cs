@@ -97,20 +97,27 @@ namespace Gapotchenko.FX.Math
                 IntervalBoundaryKind.PositiveInfinity => reverse ? -1 : 1
             };
 
-        static int CompareBoundaries<TBound>(
-            IntervalBoundary<TBound> x,
-            IntervalBoundary<TBound> y,
-            IComparer<TBound> comparer,
-            bool to)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool Overlaps<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
+            where TInterval : IInterval<TBound>
+            where TOther : IInterval<TBound> =>
+            CompareBoundaries(interval.From, other.To, comparer, false) <= 0 &&
+            CompareBoundaries(interval.To, other.From, comparer, true) >= 0;
+
+        static int CompareBoundaries<TBound>(IntervalBoundary<TBound> x, IntervalBoundary<TBound> y, IComparer<TBound> comparer, bool to)
         {
             if (x.HasValue && y.HasValue)
             {
                 int c = comparer.Compare(x.Value, y.Value);
-                if (c == 0 && (x.Kind == IntervalBoundaryKind.Exclusive || y.Kind == IntervalBoundaryKind.Exclusive))
+                if (c == 0 && x.Kind != y.Kind)
                 {
-                    c = x.Kind.CompareTo(y.Kind);
-                    if (to)
-                        c = -Math.Sign(c);
+                    if (x.Kind == IntervalBoundaryKind.Exclusive || y.Kind == IntervalBoundaryKind.Exclusive)
+                    {
+                        if (to)
+                            return -1;
+                        else
+                            return 1;
+                    }
                 }
                 return c;
             }
@@ -131,13 +138,6 @@ namespace Gapotchenko.FX.Math
         {
             throw new NotImplementedException();
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Overlaps<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
-            where TInterval : IInterval<TBound>
-            where TOther : IInterval<TBound> =>
-            CompareBoundaries(interval.From, other.To, comparer, false) <= 0 &&
-            CompareBoundaries(interval.To, other.From, comparer, false) >= 0;
 
         public static string ToString<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound>
         {

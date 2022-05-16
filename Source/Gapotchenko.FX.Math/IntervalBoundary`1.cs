@@ -77,11 +77,11 @@ namespace Gapotchenko.FX.Math
         string DebuggerDisplay =>
             Kind switch
             {
-                IntervalBoundaryKind.Empty => "Empty, ∅",
-                IntervalBoundaryKind.NegativeInfinity => "Negative infinity, -∞",
-                IntervalBoundaryKind.PositiveInfinity => "Positive infinity, +∞",
-                IntervalBoundaryKind.Exclusive => $"Exclusive, {Value}",
-                IntervalBoundaryKind.Inclusive => $"Inclusive, {Value}"
+                IntervalBoundaryKind.Empty => "{Empty, ∅}",
+                IntervalBoundaryKind.NegativeInfinity => "{Negative infinity, -∞}",
+                IntervalBoundaryKind.PositiveInfinity => "{Positive infinity, +∞}",
+                IntervalBoundaryKind.Exclusive => $"{{Exclusive, {Value}}}",
+                IntervalBoundaryKind.Inclusive => $"{{Inclusive, {Value}}}"
             };
     }
 }
