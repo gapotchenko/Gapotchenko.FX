@@ -147,36 +147,37 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         /// <param name="limits">The limiting interval.</param>
         /// <returns>A new interval clamped to the bounds of <paramref name="limits"/>.</returns>
-        public Interval<T> Clamp(IInterval<T> limits) => Clamp<IInterval<T>>(limits);
+        public Interval<T> Clamp(IInterval<T> limits) => Intersect<IInterval<T>>(limits);
 
         /// <summary>
-        /// Returns a copy of this interval clamped to the specified limits.
+        /// Produces the intersection of the current and specified intervals.
         /// </summary>
-        /// <param name="limits">The limiting interval.</param>
-        /// <returns>A new interval clamped to the bounds of <paramref name="limits"/>.</returns>
-        /// <typeparam name="TLimits">Type of the limiting interval.</typeparam>
+        /// <param name="other">The interval to produce the intersection with.</param>
+        /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
+        /// <typeparam name="TOther">Type of the other interval to produce the intersection with.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public Interval<T> Clamp<TLimits>(TLimits limits) where TLimits : IInterval<T> =>
-            IntervalEngine.Clamp(
+        public Interval<T> Intersect<TOther>(TOther other) where TOther : IInterval<T> =>
+            IntervalEngine.Intersect(
                 this,
-                limits ?? throw new ArgumentNullException(nameof(limits)),
+                other ?? throw new ArgumentNullException(nameof(other)),
                 m_Comparer,
                 Construct);
 
         /// <inheritdoc/>
-        IInterval<T> IInterval<T>.Clamp(IInterval<T> limits) => Clamp<IInterval<T>>(limits);
+        IInterval<T> IInterval<T>.Intersect(IInterval<T> limits) => Intersect<IInterval<T>>(limits);
 
         /// <inheritdoc/>
         public bool Overlaps(IInterval<T> other) => Overlaps<IInterval<T>>(other);
 
         /// <summary>
-        /// Determines whether this and the specified intervals overlap (i.e., contain at least one element in common).
+        /// Determines whether this and the specified intervals overlap.
         /// </summary>
         /// <param name="other">The interval to check for overlapping.</param>
         /// <returns><see langword="true"/> if this interval and <paramref name="other"/> overlap; otherwise, <see langword="false"/>.</returns>
         /// <typeparam name="TOther">Type of the interval to check for overlapping.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool Overlaps<TOther>(TOther other) where TOther : IInterval<T> =>
+            ReferenceEquals(other, this) ||
             IntervalEngine.Overlaps<Interval<T>, TOther, T>(
                 this,
                 other ?? throw new ArgumentNullException(nameof(other)),

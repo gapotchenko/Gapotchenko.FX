@@ -138,17 +138,17 @@
         public bool Contains(T item);
 
         /// <summary>
-        /// Returns a copy of this interval clamped to the specified limits.
+        /// Produces the intersection of the current and specified intervals.
         /// </summary>
-        /// <param name="limits">The limiting interval.</param>
-        /// <returns>A new interval clamped to the bounds of <paramref name="limits"/>.</returns>
-        public IInterval<T> Clamp(IInterval<T> limits);
+        /// <param name="other">The interval to produce the intersection with.</param>
+        /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
+        public IInterval<T> Intersect(IInterval<T> other);
 
         /// <summary>
-        /// Determines whether this and the specified intervals overlap (i.e., contain at least one element in common).
+        /// Determines whether this and the specified intervals overlap.
         /// </summary>
         /// <param name="other">The interval to check for overlapping.</param>
-        /// <returns><c>true</c> if this interval and <paramref name="other"/> overlap; otherwise, false.</returns>
+        /// <returns><see langword="true"/> if this interval and <paramref name="other"/> overlap; otherwise, <see langword="false"/>.</returns>
         public bool Overlaps(IInterval<T> other);
     }
 }

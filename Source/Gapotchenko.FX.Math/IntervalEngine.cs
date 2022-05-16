@@ -80,8 +80,9 @@ namespace Gapotchenko.FX.Math
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDegenerate<TInterval, TBound>(TInterval interval, IComparer<TBound> comparer) where TInterval : IInterval<TBound> =>
-            IsClosed<TInterval, TBound>(interval) &&
-            comparer.Compare(interval.From.GetValueOrDefault(), interval.To.GetValueOrDefault()) == 0;
+            interval.From.Kind == IntervalBoundaryKind.Inclusive &&
+            interval.To.Kind == IntervalBoundaryKind.Inclusive &&
+            comparer.Compare(interval.From.Value, interval.To.Value) == 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Contains<TInterval, TBound>(TInterval interval, TBound item, IComparer<TBound> comparer) where TInterval : IInterval<TBound> =>
@@ -147,13 +148,13 @@ namespace Gapotchenko.FX.Math
             };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TInterval Clamp<TInterval, TLimits, TBound>(
+        public static TInterval Intersect<TInterval, TOther, TBound>(
             TInterval interval,
-            TLimits limits,
+            TOther other,
             IComparer<TBound> comparer,
             Constructor<TInterval, TBound> constructor)
             where TInterval : IInterval<TBound>
-            where TLimits : IInterval<TBound>
+            where TOther : IInterval<TBound>
         {
             throw new NotImplementedException();
         }
