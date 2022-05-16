@@ -220,5 +220,35 @@ namespace Gapotchenko.FX.Math.Tests
             Assert.IsFalse(a.Overlaps(b));
             Assert.IsFalse(b.Overlaps(a));
         }
+
+        [TestMethod]
+        public void Interval_Overlaps_3()
+        {
+            var a = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Exclusive(2));
+            var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Exclusive(10));
+
+            Assert.IsFalse(a.Overlaps(b));
+            Assert.IsFalse(b.Overlaps(a));
+        }
+
+        [TestMethod]
+        public void Interval_Overlaps_4()
+        {
+            var a = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Inclusive(2));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
+
+            Assert.IsTrue(a.Overlaps(b));
+            Assert.IsTrue(b.Overlaps(a));
+        }
+
+        [TestMethod]
+        public void Interval_Overlaps_5()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Exclusive(2));
+            var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(a.Overlaps(b));
+            Assert.IsFalse(b.Overlaps(a));
+        }
     }
 }

@@ -11,9 +11,14 @@
         Empty,
 
         /// <summary>
-        /// Negative infinity, -∞.
+        /// <para>
+        /// Indicates that the bound limit point is included in the interval.
+        /// </para>
+        /// <para>
+        /// An inclusive boundary is also called a closed boundary.
+        /// </para>
         /// </summary>
-        NegativeInfinity,
+        Inclusive,
 
         /// <summary>
         /// <para>
@@ -26,14 +31,9 @@
         Exclusive,
 
         /// <summary>
-        /// <para>
-        /// Indicates that the bound limit point is included in the interval.
-        /// </para>
-        /// <para>
-        /// An inclusive boundary is also called a closed boundary.
-        /// </para>
+        /// Negative infinity, -∞.
         /// </summary>
-        Inclusive,
+        NegativeInfinity,
 
         /// <summary>
         /// Positive infinity, +∞.

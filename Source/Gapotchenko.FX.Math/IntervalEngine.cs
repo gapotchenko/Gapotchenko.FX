@@ -88,36 +88,32 @@ namespace Gapotchenko.FX.Math
             CompareBoundaries(interval.From, item, false, comparer) <= 0 &&
             CompareBoundaries(interval.To, item, true, comparer) <= 0;
 
-        static int CompareBoundaries<TBound>(IntervalBoundary<TBound> x, TBound y, bool reverse, IComparer<TBound> comparer) =>
+        static int CompareBoundaries<TBound>(IntervalBoundary<TBound> x, TBound y, bool direction, IComparer<TBound> comparer) =>
             x.Kind switch
             {
-                IntervalBoundaryKind.Empty or IntervalBoundaryKind.NegativeInfinity => reverse ? 1 : -1,
-                IntervalBoundaryKind.Inclusive => reverse ? comparer.Compare(y, x.Value) : comparer.Compare(x.Value, y),
-                IntervalBoundaryKind.Exclusive => (reverse ? comparer.Compare(y, x.Value) : comparer.Compare(x.Value, y)) > -1 ? 1 : -1,
-                IntervalBoundaryKind.PositiveInfinity => reverse ? -1 : 1
+                IntervalBoundaryKind.Empty or IntervalBoundaryKind.NegativeInfinity => direction ? 1 : -1,
+                IntervalBoundaryKind.Inclusive => direction ? comparer.Compare(y, x.Value) : comparer.Compare(x.Value, y),
+                IntervalBoundaryKind.Exclusive => (direction ? comparer.Compare(y, x.Value) : comparer.Compare(x.Value, y)) > -1 ? 1 : -1,
+                IntervalBoundaryKind.PositiveInfinity => direction ? -1 : 1
             };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Overlaps<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
             where TInterval : IInterval<TBound>
             where TOther : IInterval<TBound> =>
-            CompareBoundaries(interval.From, other.To, comparer, false) <= 0 &&
-            CompareBoundaries(interval.To, other.From, comparer, true) >= 0;
+            CompareBoundaries(interval.From, other.To, false, comparer) <= 0 &&
+            CompareBoundaries(interval.To, other.From, true, comparer) >= 0;
 
-        static int CompareBoundaries<TBound>(IntervalBoundary<TBound> x, IntervalBoundary<TBound> y, IComparer<TBound> comparer, bool to)
+        static int CompareBoundaries<TBound>(IntervalBoundary<TBound> x, IntervalBoundary<TBound> y, bool direction, IComparer<TBound> comparer)
         {
             if (x.HasValue && y.HasValue)
             {
                 int c = comparer.Compare(x.Value, y.Value);
-                if (c == 0 && x.Kind != y.Kind)
+                if (c == 0)
                 {
-                    if (x.Kind == IntervalBoundaryKind.Exclusive || y.Kind == IntervalBoundaryKind.Exclusive)
-                    {
-                        if (to)
-                            return -1;
-                        else
-                            return 1;
-                    }
+                    var orderedKindX = GetOrderedBoundaryKind(x.Kind, direction);
+                    var orderedKindY = GetOrderedBoundaryKind(y.Kind, !direction);
+                    c = orderedKindX.CompareTo(orderedKindY);
                 }
                 return c;
             }
@@ -126,6 +122,29 @@ namespace Gapotchenko.FX.Math
                 return x.Kind.CompareTo(y.Kind);
             }
         }
+
+        enum OrderedBoundaryKind
+        {
+            Empty,
+            NegativeInfinity,
+            ToExclusive,
+            FromInclusive,
+            ToInclusive,
+            FromExclusive,
+            PositiveInfinity
+        }
+
+        static OrderedBoundaryKind GetOrderedBoundaryKind(IntervalBoundaryKind kind, bool direction) =>
+            (kind, direction) switch
+            {
+                (IntervalBoundaryKind.Empty, _) => OrderedBoundaryKind.Empty,
+                (IntervalBoundaryKind.NegativeInfinity, _) => OrderedBoundaryKind.NegativeInfinity,
+                (IntervalBoundaryKind.Inclusive, false) => OrderedBoundaryKind.FromInclusive,
+                (IntervalBoundaryKind.Inclusive, true) => OrderedBoundaryKind.ToInclusive,
+                (IntervalBoundaryKind.Exclusive, false) => OrderedBoundaryKind.FromExclusive,
+                (IntervalBoundaryKind.Exclusive, true) => OrderedBoundaryKind.ToExclusive,
+                (IntervalBoundaryKind.PositiveInfinity, _) => OrderedBoundaryKind.PositiveInfinity
+            };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TInterval Clamp<TInterval, TLimits, TBound>(
