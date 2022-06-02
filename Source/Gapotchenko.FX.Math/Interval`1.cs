@@ -200,19 +200,6 @@ namespace Gapotchenko.FX.Math
                 other ?? throw new ArgumentNullException(nameof(other)),
                 m_Comparer);
 
-        static bool EqualityOperator(IInterval<T>? x, IInterval<T>? y) =>
-            ReferenceEquals(x, y) ||
-            x is not null &&
-            y is not null &&
-            x.IntervalEquals(y);
-
-        static bool EqualityOperator<TOther>(Interval<T>? x, TOther? y)
-            where TOther : IIntervalOperations<T> =>
-            ReferenceEquals(x, y) ||
-            x is not null &&
-            y is not null &&
-            x.IntervalEquals(y);
-
         /// <summary>
         /// Determines whether the specified intervals are equal.
         /// </summary>
@@ -229,10 +216,23 @@ namespace Gapotchenko.FX.Math
         /// <returns><see langword="true"/> if the specified intervals are not equal; otherwise, <see langword="false"/>.</returns>
         public static bool operator !=(Interval<T>? x, IInterval<T>? y) => !EqualityOperator(x, y);
 
+        static bool EqualityOperator<TOther>(Interval<T>? x, TOther? y)
+            where TOther : IIntervalOperations<T> =>
+            ReferenceEquals(x, y) ||
+            x is not null &&
+            y is not null &&
+            x.IntervalEquals(y);
+
 #if false && NET7_0_OR_GREATER
         static bool IInterval<T>.operator ==(IInterval<T>? x, IInterval<T>? y) => EqualityOperator(x, y);
 
         static bool IInterval<T>.operator !=(IInterval<T>? x, IInterval<T>? y) => !EqualityOperator(x, y);
+
+        static bool EqualityOperator(IInterval<T>? x, IInterval<T>? y) =>
+            ReferenceEquals(x, y) ||
+            x is not null &&
+            y is not null &&
+            x.IntervalEquals(y);
 #endif
 
         // Minify unused record method.

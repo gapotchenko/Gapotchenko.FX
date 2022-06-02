@@ -28,10 +28,10 @@ namespace Gapotchenko.FX.Math
         /// <summary>
         /// Gets a value indicating whether the current interval boundary has a bound limit point, e.g. is bounded.
         /// </summary>
-        public bool HasValue => !IsInfinity;
+        public bool HasValue => !(IsInfinity || Kind is IntervalBoundaryKind.Empty);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        internal readonly T m_Value;
+        readonly T m_Value;
 
         /// <summary>
         /// Gets the value of a bound limit point.
@@ -57,7 +57,7 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         /// <param name="defaultValue">A value to return if the boundary is infinite.</param>
         /// <returns>The value of a bound limit point, or the specified default value when the boundary is unbounded.</returns>
-        public T GetValueOrDefault(T defaultValue) => IsInfinity ? defaultValue : m_Value;
+        public T GetValueOrDefault(T defaultValue) => HasValue ? m_Value : defaultValue;
 
         /// <summary>
         /// Gets an empty interval boundary ∅.

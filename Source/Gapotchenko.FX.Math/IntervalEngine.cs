@@ -112,7 +112,7 @@ namespace Gapotchenko.FX.Math
 
         public static bool BoundariesEqual<TBound>(IntervalBoundary<TBound> x, IntervalBoundary<TBound> y, IComparer<TBound> comparer) =>
             x.Kind == y.Kind &&
-            comparer.Compare(x.m_Value, y.m_Value) == 0;
+            comparer.Compare(x.GetValueOrDefault(), y.GetValueOrDefault()) == 0;
 
         public static bool IntervalsEqual<TInterval, TOther, TBound>(TInterval x, TOther y, IComparer<TBound> comparer)
             where TInterval : IIntervalOperations<TBound>
