@@ -105,6 +105,16 @@ namespace Gapotchenko.FX.Math
             CompareBoundaries(interval.From, other.To, false, comparer) <= 0 &&
             CompareBoundaries(interval.To, other.From, true, comparer) >= 0;
 
+        public static bool BoundariesEqual<TBound>(IntervalBoundary<TBound> x, IntervalBoundary<TBound> y, IComparer<TBound> comparer) =>
+            x.Kind == y.Kind &&
+            comparer.Compare(x.m_Value, y.m_Value) == 0;
+
+        public static bool IntervalsEqual<TInterval, TOther, TBound>(TInterval x, TOther y, IComparer<TBound> comparer)
+            where TInterval : IInterval<TBound>
+            where TOther : IInterval<TBound> =>
+            BoundariesEqual(x.From, y.From, comparer) &&
+            BoundariesEqual(x.To, y.To, comparer);
+
         static int CompareBoundaries<TBound>(IntervalBoundary<TBound> x, IntervalBoundary<TBound> y, bool direction, IComparer<TBound> comparer)
         {
             if (x.HasValue && y.HasValue)

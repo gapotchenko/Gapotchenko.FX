@@ -31,7 +31,7 @@ namespace Gapotchenko.FX.Math
         public bool HasValue => !IsInfinity;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly T m_Value;
+        internal readonly T m_Value;
 
         /// <summary>
         /// Gets the value of a bound limit point.

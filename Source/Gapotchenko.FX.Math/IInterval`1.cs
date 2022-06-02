@@ -150,5 +150,12 @@
         /// <param name="other">The interval to check for overlapping.</param>
         /// <returns><see langword="true"/> if this interval and <paramref name="other"/> overlap; otherwise, <see langword="false"/>.</returns>
         public bool Overlaps(IInterval<T> other);
+
+        /// <summary>
+        /// Determines whether this and the specified intervals are equal.
+        /// </summary>
+        /// <param name="other">The interval to check for equality.</param>
+        /// <returns></returns>s
+        public bool IntervalEquals(IInterval<T> other);
     }
 }

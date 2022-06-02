@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gapotchenko.FX.Runtime.CompilerServices;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -177,8 +178,24 @@ namespace Gapotchenko.FX.Math
         /// <typeparam name="TOther">Type of the interval to check for overlapping.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool Overlaps<TOther>(TOther other) where TOther : IInterval<T> =>
-            ReferenceEquals(other, this) ||
+            !TypeTraits<TOther>.IsValueType && ReferenceEquals(other, this) ||
             IntervalEngine.Overlaps<Interval<T>, TOther, T>(
+                this,
+                other ?? throw new ArgumentNullException(nameof(other)),
+                m_Comparer);
+
+        /// <inheritdoc/>
+        public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IInterval<T>>(other);
+
+        /// <summary>
+        /// Determines whether this and the specified intervals are equal.
+        /// </summary>
+        /// <param name="other">The interval to compare to the current interval.</param>
+        /// <returns><see langword="true"/> if this interval and <paramref name="other"/> are equal; otherwise, <see langword="false"/>.</returns>
+        /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
+        public bool IntervalEquals<TOther>(TOther other) where TOther : IInterval<T> =>
+            !TypeTraits<TOther>.IsValueType && ReferenceEquals(other, this) ||
+            IntervalEngine.IntervalsEqual<Interval<T>, TOther, T>(
                 this,
                 other ?? throw new ArgumentNullException(nameof(other)),
                 m_Comparer);
