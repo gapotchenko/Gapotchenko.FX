@@ -10,41 +10,41 @@ namespace Gapotchenko.FX.Math
     static class IntervalEngine
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsBounded<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
+        public static bool IsBounded<TInterval, TBound>(TInterval interval) where TInterval : IIntervalOperations<TBound> =>
             !interval.From.IsInfinity &&
             !interval.To.IsInfinity;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsHalfBounded<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
+        public static bool IsHalfBounded<TInterval, TBound>(TInterval interval) where TInterval : IIntervalOperations<TBound> =>
             interval.From.IsInfinity ^
             interval.To.IsInfinity;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsOpen<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
+        public static bool IsOpen<TInterval, TBound>(TInterval interval) where TInterval : IIntervalOperations<TBound> =>
             interval.From.Kind == IntervalBoundaryKind.Exclusive &&
             interval.To.Kind == IntervalBoundaryKind.Exclusive;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsClosed<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
+        public static bool IsClosed<TInterval, TBound>(TInterval interval) where TInterval : IIntervalOperations<TBound> =>
             interval.From.Kind != IntervalBoundaryKind.Exclusive &&
             interval.To.Kind != IntervalBoundaryKind.Exclusive;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsHalfOpen<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound> =>
+        public static bool IsHalfOpen<TInterval, TBound>(TInterval interval) where TInterval : IIntervalOperations<TBound> =>
             interval.From.Kind == IntervalBoundaryKind.Exclusive ^
             interval.To.Kind == IntervalBoundaryKind.Exclusive;
 
         public delegate TInterval Constructor<out TInterval, TBound>(
             IntervalBoundary<TBound> from,
             IntervalBoundary<TBound> to)
-            where TInterval : IInterval<TBound>;
+            where TInterval : IIntervalOperations<TBound>;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static TInterval WithInclusiveBounds<TInterval, TBound>(
             TInterval interval,
             bool inclusive,
             Constructor<TInterval, TBound> constructor)
-            where TInterval : IInterval<TBound>
+            where TInterval : IIntervalOperations<TBound>
         {
             static IntervalBoundary<TBound> WithInclusiveBoundary(IntervalBoundary<TBound> boundary, bool inclusive)
             {
@@ -62,30 +62,35 @@ namespace Gapotchenko.FX.Math
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TInterval Interior<TInterval, TBound>(TInterval interval, Constructor<TInterval, TBound> constructor) where TInterval : IInterval<TBound> =>
+        public static TInterval Interior<TInterval, TBound>(TInterval interval, Constructor<TInterval, TBound> constructor)
+            where TInterval : IIntervalOperations<TBound> =>
             IsOpen<TInterval, TBound>(interval) ?
                 interval :
                 WithInclusiveBounds(interval, false, constructor);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TInterval Enclosure<TInterval, TBound>(TInterval interval, Constructor<TInterval, TBound> constructor) where TInterval : IInterval<TBound> =>
+        public static TInterval Enclosure<TInterval, TBound>(TInterval interval, Constructor<TInterval, TBound> constructor)
+            where TInterval : IIntervalOperations<TBound> =>
             IsClosed<TInterval, TBound>(interval) ?
                 interval :
                 WithInclusiveBounds(interval, true, constructor);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsEmpty<TInterval, TBound>(TInterval interval, IComparer<TBound> comparer) where TInterval : IInterval<TBound> =>
+        public static bool IsEmpty<TInterval, TBound>(TInterval interval, IComparer<TBound> comparer)
+            where TInterval : IIntervalOperations<TBound> =>
             !IsClosed<TInterval, TBound>(interval) &&
             comparer.Compare(interval.From.GetValueOrDefault(), interval.To.GetValueOrDefault()) == 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsDegenerate<TInterval, TBound>(TInterval interval, IComparer<TBound> comparer) where TInterval : IInterval<TBound> =>
+        public static bool IsDegenerate<TInterval, TBound>(TInterval interval, IComparer<TBound> comparer)
+            where TInterval : IIntervalOperations<TBound> =>
             interval.From.Kind == IntervalBoundaryKind.Inclusive &&
             interval.To.Kind == IntervalBoundaryKind.Inclusive &&
             comparer.Compare(interval.From.Value, interval.To.Value) == 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Contains<TInterval, TBound>(TInterval interval, TBound item, IComparer<TBound> comparer) where TInterval : IInterval<TBound> =>
+        public static bool Contains<TInterval, TBound>(TInterval interval, TBound item, IComparer<TBound> comparer)
+            where TInterval : IIntervalOperations<TBound> =>
             CompareBoundaries(interval.From, item, false, comparer) <= 0 &&
             CompareBoundaries(interval.To, item, true, comparer) <= 0;
 
@@ -100,8 +105,8 @@ namespace Gapotchenko.FX.Math
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Overlaps<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
-            where TInterval : IInterval<TBound>
-            where TOther : IInterval<TBound> =>
+            where TInterval : IIntervalOperations<TBound>
+            where TOther : IIntervalOperations<TBound> =>
             CompareBoundaries(interval.From, other.To, false, comparer) <= 0 &&
             CompareBoundaries(interval.To, other.From, true, comparer) >= 0;
 
@@ -110,8 +115,8 @@ namespace Gapotchenko.FX.Math
             comparer.Compare(x.m_Value, y.m_Value) == 0;
 
         public static bool IntervalsEqual<TInterval, TOther, TBound>(TInterval x, TOther y, IComparer<TBound> comparer)
-            where TInterval : IInterval<TBound>
-            where TOther : IInterval<TBound> =>
+            where TInterval : IIntervalOperations<TBound>
+            where TOther : IIntervalOperations<TBound> =>
             BoundariesEqual(x.From, y.From, comparer) &&
             BoundariesEqual(x.To, y.To, comparer);
 
@@ -163,13 +168,14 @@ namespace Gapotchenko.FX.Math
             TOther other,
             IComparer<TBound> comparer,
             Constructor<TInterval, TBound> constructor)
-            where TInterval : IInterval<TBound>
-            where TOther : IInterval<TBound>
+            where TInterval : IIntervalOperations<TBound>
+            where TOther : IIntervalOperations<TBound>
         {
             throw new NotImplementedException();
         }
 
-        public static string ToString<TInterval, TBound>(TInterval interval) where TInterval : IInterval<TBound>
+        public static string ToString<TInterval, TBound>(TInterval interval)
+            where TInterval : IIntervalOperations<TBound>
         {
             var sb = new StringBuilder();
 

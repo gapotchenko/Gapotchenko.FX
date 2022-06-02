@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
+    <!--<EnablePreviewFeatures>true</EnablePreviewFeatures>-->
   </PropertyGroup>
 
   <ItemGroup>
