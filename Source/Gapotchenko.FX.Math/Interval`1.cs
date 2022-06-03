@@ -61,6 +61,16 @@ namespace Gapotchenko.FX.Math
         }
 
         /// <summary>
+        /// Returns an empty <see cref="Interval{T}"/>.
+        /// </summary>
+        public static Interval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
+
+        /// <summary>
+        /// Returns an infinite <see cref="Interval{T}"/>.
+        /// </summary>
+        public static Interval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
+
+        /// <summary>
         /// The left boundary of the interval.
         /// Represents a boundary the interval starts with.
         /// </summary>

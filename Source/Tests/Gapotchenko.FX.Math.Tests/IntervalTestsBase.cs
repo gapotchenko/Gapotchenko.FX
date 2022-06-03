@@ -73,7 +73,7 @@ namespace Gapotchenko.FX.Math.Tests
 
         #endregion
 
-        #region Contain
+        #region Contains
 
         [TestMethod]
         public void Interval_Contains_Default()
@@ -281,6 +281,76 @@ namespace Gapotchenko.FX.Math.Tests
 
             Assert.IsTrue(a.Overlaps(b));
             Assert.IsTrue(b.Overlaps(a));
+        }
+
+        #endregion
+
+        #region Intersect
+
+        [TestMethod]
+        public void Interval_Intersect_1()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            var c = a.Intersect(b);
+
+            Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10))));
+        }
+
+        [TestMethod]
+        public void Interval_Intersect_2()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Exclusive(10));
+
+            var c = a.Intersect(b);
+
+            Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Exclusive(10))));
+        }
+
+        [TestMethod]
+        public void Interval_Intersect_3()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Inclusive(9));
+
+            var c = a.Intersect(b);
+
+            Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(9))));
+        }
+
+        [TestMethod]
+        public void Interval_Intersect_4()
+        {
+            var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Exclusive(9));
+
+            var c = a.Intersect(b);
+
+            Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Exclusive(9))));
+        }
+
+        [TestMethod]
+        public void Interval_Intersect_5()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Inclusive(2));
+            var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+
+            var c = a.Intersect(b);
+
+            Assert.IsTrue(c.IsEmpty);
+        }
+
+        [TestMethod]
+        public void Interval_Intersect_6()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Inclusive(2));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            var c = a.Intersect(b);
+
+            Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(2))));
         }
 
         #endregion

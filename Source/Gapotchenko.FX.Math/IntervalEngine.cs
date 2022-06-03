@@ -178,12 +178,10 @@ namespace Gapotchenko.FX.Math
             IComparer<TBound> comparer,
             Constructor<TInterval, TBound> constructor)
             where TInterval : IIntervalOperations<TBound>
-            where TOther : IIntervalOperations<TBound>
-        {
-            var from = CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) >= 0 ? interval.From : other.From;
-            var to = CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) <= 0 ? interval.To : other.To;
-            return constructor(from, to);
-        }
+            where TOther : IIntervalOperations<TBound> =>
+            constructor(
+                CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) >= 0 ? interval.From : other.From,
+                CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) <= 0 ? interval.To : other.To);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsSubintervalOf<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
