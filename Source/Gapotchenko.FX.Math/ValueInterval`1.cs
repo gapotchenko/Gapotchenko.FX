@@ -1,22 +1,20 @@
-﻿using Gapotchenko.FX.Runtime.CompilerServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 namespace Gapotchenko.FX.Math
 {
     /// <summary>
-    /// Represents a continuous interval.
+    /// Represents a continuous value interval.
     /// </summary>
     /// <typeparam name="T">The type of interval value.</typeparam>
-    [DebuggerDisplay("{ToString(),nq}")]
-    public sealed record Interval<T> : IInterval<T>
+    public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval<T>>
+        where T : IEquatable<T>, IComparable<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds.
+        /// Initializes a new <see cref="ValueInterval{T}"/> instance with the specified bounds.
         /// </summary>
         /// <param name="from">
         /// The left bound of the interval.
@@ -28,17 +26,13 @@ namespace Gapotchenko.FX.Math
         /// Represents a value the interval ends with.
         /// The corresponding limit point is not included in the interval.
         /// </param>
-        /// <param name="comparer">
-        /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
-        /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
-        /// </param>
-        public Interval(T from, T to, IComparer<T>? comparer = null) :
-            this(IntervalBoundary.Inclusive(from), IntervalBoundary.Exclusive(to), comparer)
+        public ValueInterval(T from, T to) :
+            this(IntervalBoundary.Inclusive(from), IntervalBoundary.Exclusive(to))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified boundaries.
+        /// Initializes a new <see cref="ValueInterval{T}"/> instance with the specified boundaries.
         /// </summary>
         /// <param name="from">
         /// The left boundary of the interval.
@@ -48,27 +42,21 @@ namespace Gapotchenko.FX.Math
         /// The right boundary of the interval.
         /// Represents a boundary the interval ends with.
         /// </param>
-        /// <param name="comparer">
-        /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
-        /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
-        /// </param>
-        public Interval(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer = null)
+        public ValueInterval(IntervalBoundary<T> from, IntervalBoundary<T> to)
         {
             From = from;
             To = to;
-
-            Comparer = comparer;
         }
 
         /// <summary>
-        /// Returns an empty <see cref="Interval{T}"/>.
+        /// Returns an empty <see cref="ValueInterval{T}"/>.
         /// </summary>
-        public static Interval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
+        public static ValueInterval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
 
         /// <summary>
-        /// Returns an infinite <see cref="Interval{T}"/>.
+        /// Returns an infinite <see cref="ValueInterval{T}"/>.
         /// </summary>
-        public static Interval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
+        public static ValueInterval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
 
         /// <summary>
         /// The left boundary of the interval.
@@ -82,46 +70,31 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         public IntervalBoundary<T> To { get; init; }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IComparer<T> m_Comparer;
-
-        /// <summary>
-        /// The <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
-        /// </summary>
-        [AllowNull]
-        public IComparer<T> Comparer
-        {
-            get => m_Comparer;
-
-            [MemberNotNull(nameof(m_Comparer))]
-            init => m_Comparer = value ?? Comparer<T>.Default;
-        }
+        /// <inheritdoc/>
+        public bool IsBounded => IntervalEngine.IsBounded<ValueInterval<T>, T>(this);
 
         /// <inheritdoc/>
-        public bool IsBounded => IntervalEngine.IsBounded<Interval<T>, T>(this);
+        public bool IsHalfBounded => IntervalEngine.IsHalfBounded<ValueInterval<T>, T>(this);
 
         /// <inheritdoc/>
-        public bool IsHalfBounded => IntervalEngine.IsHalfBounded<Interval<T>, T>(this);
+        public bool IsOpen => IntervalEngine.IsOpen<ValueInterval<T>, T>(this);
 
         /// <inheritdoc/>
-        public bool IsOpen => IntervalEngine.IsOpen<Interval<T>, T>(this);
+        public bool IsClosed => IntervalEngine.IsClosed<ValueInterval<T>, T>(this);
 
         /// <inheritdoc/>
-        public bool IsClosed => IntervalEngine.IsClosed<Interval<T>, T>(this);
+        public bool IsHalfOpen => IntervalEngine.IsHalfOpen<ValueInterval<T>, T>(this);
 
         /// <inheritdoc/>
-        public bool IsHalfOpen => IntervalEngine.IsHalfOpen<Interval<T>, T>(this);
+        public bool IsEmpty => IntervalEngine.IsEmpty<ValueInterval<T>, T>(this, Comparer<T>.Default);
 
         /// <inheritdoc/>
-        public bool IsEmpty => IntervalEngine.IsEmpty<Interval<T>, T>(this, m_Comparer);
+        public bool IsDegenerate => IntervalEngine.IsDegenerate<ValueInterval<T>, T>(this, Comparer<T>.Default);
 
         /// <inheritdoc/>
-        public bool IsDegenerate => IntervalEngine.IsDegenerate<Interval<T>, T>(this, m_Comparer);
+        public bool Contains(T item) => IntervalEngine.Contains(this, item, Comparer<T>.Default);
 
-        /// <inheritdoc/>
-        public bool Contains(T item) => IntervalEngine.Contains(this, item, m_Comparer);
-
-        Interval<T> Construct(IntervalBoundary<T> from, IntervalBoundary<T> to) => new(from, to, m_Comparer);
+        static ValueInterval<T> Construct(IntervalBoundary<T> from, IntervalBoundary<T> to) => new(from, to);
 
         /// <summary>
         /// <para>
@@ -132,7 +105,7 @@ namespace Gapotchenko.FX.Math
         /// it is also the set of points in <c>I</c> which are not the endpoints of <c>I</c>.
         /// </para>
         /// </summary>
-        public Interval<T> Interior => IntervalEngine.Interior<Interval<T>, T>(this, Construct);
+        public ValueInterval<T> Interior => IntervalEngine.Interior<ValueInterval<T>, T>(this, Construct);
 
         /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -147,7 +120,7 @@ namespace Gapotchenko.FX.Math
         /// which is also the set <c>I</c> augmented with its finite endpoints.
         /// </para>
         /// </summary>
-        public Interval<T> Enclosure => IntervalEngine.Enclosure<Interval<T>, T>(this, Construct);
+        public ValueInterval<T> Enclosure => IntervalEngine.Enclosure<ValueInterval<T>, T>(this, Construct);
 
         /// <inheritdoc/>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -160,18 +133,14 @@ namespace Gapotchenko.FX.Math
         /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
         /// <typeparam name="TOther">Type of the other interval to produce the intersection with.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public Interval<T> Intersect<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+        public ValueInterval<T> Intersect<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
             IntervalEngine.Intersect(
                 this,
                 other ?? throw new ArgumentNullException(nameof(other)),
-                m_Comparer,
+                Comparer<T>.Default,
                 Construct);
 
         IInterval<T> IIntervalOperations<T>.Intersect(IInterval<T> limits) => Intersect<IIntervalOperations<T>>(limits);
-
-        bool IsThis<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
-            !TypeTraits<TOther>.IsValueType &&
-            ReferenceEquals(other, this);
 
         /// <inheritdoc/>
         public bool Overlaps(IInterval<T> other) => Overlaps<IInterval<T>>(other);
@@ -184,8 +153,7 @@ namespace Gapotchenko.FX.Math
         /// <typeparam name="TOther">Type of the interval to check for overlapping.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool Overlaps<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
-            IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
-            IntervalEngine.Overlaps<Interval<T>, TOther, T>(this, other, m_Comparer);
+            IntervalEngine.Overlaps<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
 
         /// <inheritdoc/>
         public bool IsSubintervalOf(IInterval<T> other) => IsSubintervalOf<IInterval<T>>(other);
@@ -197,8 +165,7 @@ namespace Gapotchenko.FX.Math
         /// <returns><see langword="true"/> if the current interval is a subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsSubintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
-            IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
-            IntervalEngine.IsSubintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
+            IntervalEngine.IsSubintervalOf<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
 
         /// <inheritdoc/>
         public bool IsSuperintervalOf(IInterval<T> other) => IsSuperintervalOf<IInterval<T>>(other);
@@ -210,8 +177,7 @@ namespace Gapotchenko.FX.Math
         /// <returns><see langword="true"/> if the current interval is a superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsSuperintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
-            IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
-            IntervalEngine.IsSuperintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
+            IntervalEngine.IsSuperintervalOf<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
 
         /// <inheritdoc/>
         public bool IsProperSubintervalOf(IInterval<T> other) => IsProperSubintervalOf<IInterval<T>>(other);
@@ -223,8 +189,7 @@ namespace Gapotchenko.FX.Math
         /// <returns><see langword="true"/> if the current interval is a proper subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsProperSubintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
-            !IsThis(other ?? throw new ArgumentNullException(nameof(other))) &&
-            IntervalEngine.IsProperSubintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
+            IntervalEngine.IsProperSubintervalOf<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
 
         /// <inheritdoc/>
         public bool IsProperSuperintervalOf(IInterval<T> other) => IsProperSuperintervalOf<IInterval<T>>(other);
@@ -236,8 +201,7 @@ namespace Gapotchenko.FX.Math
         /// <returns><see langword="true"/> if the current interval is a proper superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsProperSuperintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
-            !IsThis(other ?? throw new ArgumentNullException(nameof(other))) &&
-            IntervalEngine.IsProperSuperintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
+            IntervalEngine.IsProperSuperintervalOf<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
 
         /// <inheritdoc/>
         public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
@@ -249,8 +213,7 @@ namespace Gapotchenko.FX.Math
         /// <returns><see langword="true"/> if this interval and <paramref name="other"/> are equal; otherwise, <see langword="false"/>.</returns>
         /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
         public bool IntervalEquals<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
-            IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
-            IntervalEngine.IntervalsEqual<Interval<T>, TOther, T>(this, other, m_Comparer);
+            IntervalEngine.IntervalsEqual<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
 
         /// <summary>
         /// Determines whether the specified intervals are equal.
@@ -258,7 +221,7 @@ namespace Gapotchenko.FX.Math
         /// <param name="x">The first interval.</param>
         /// <param name="y">The second interval.</param>
         /// <returns><see langword="true"/> if the specified intervals are equal; otherwise, <see langword="false"/>.</returns>
-        public static bool operator ==(Interval<T>? x, IInterval<T>? y) => EqualityOperator(x, y);
+        public static bool operator ==(ValueInterval<T> x, IInterval<T>? y) => EqualityOperator(x, y);
 
         /// <summary>
         /// Determines whether the specified intervals are not equal.
@@ -266,11 +229,28 @@ namespace Gapotchenko.FX.Math
         /// <param name="x">The first interval.</param>
         /// <param name="y">The second interval.</param>
         /// <returns><see langword="true"/> if the specified intervals are not equal; otherwise, <see langword="false"/>.</returns>
-        public static bool operator !=(Interval<T>? x, IInterval<T>? y) => !EqualityOperator(x, y);
+        public static bool operator !=(ValueInterval<T> x, IInterval<T>? y) => !EqualityOperator(x, y);
 
-        static bool EqualityOperator(Interval<T>? x, IInterval<T>? y) =>
-            ReferenceEquals(x, y) ||
-            x is not null &&
+        /// <summary>
+        /// Determines whether the specified intervals are equal.
+        /// </summary>
+        /// <param name="x">The first interval.</param>
+        /// <param name="y">The second interval.</param>
+        /// <returns><see langword="true"/> if the specified intervals are equal; otherwise, <see langword="false"/>.</returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator ==(ValueInterval<T> x, Interval<T>? y) => EqualityOperator(x, y);
+
+        /// <summary>
+        /// Determines whether the specified intervals are not equal.
+        /// </summary>
+        /// <param name="x">The first interval.</param>
+        /// <param name="y">The second interval.</param>
+        /// <returns><see langword="true"/> if the specified intervals are not equal; otherwise, <see langword="false"/>.</returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static bool operator !=(ValueInterval<T> x, Interval<T>? y) => !EqualityOperator(x, y);
+
+        static bool EqualityOperator<TOther>(ValueInterval<T> x, TOther? y)
+            where TOther : IIntervalOperations<T> =>
             y is not null &&
             x.IntervalEquals(y);
 
@@ -286,10 +266,31 @@ namespace Gapotchenko.FX.Math
             x.IntervalEquals(y);
 #endif
 
-        // Minify unused record method.
-        bool PrintMembers(StringBuilder _) => false;
+        /// <inheritdoc/>
+        public bool Equals(ValueInterval<T> other) => IntervalEngine.IntervalsEqual(this, other, EqualityComparer<T>.Default);
 
         /// <inheritdoc/>
-        public override string ToString() => IntervalEngine.ToString<Interval<T>, T>(this);
+        public override bool Equals([NotNullWhen(true)] object? obj) =>
+            obj is ValueInterval<T> other &&
+            Equals(other);
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            var hc = new HashCode();
+
+            hc.Add(From.Kind.GetHashCode());
+            if (From.HasValue)
+                hc.Add(From.Value);
+
+            hc.Add(To.Kind.GetHashCode());
+            if (To.HasValue)
+                hc.Add(To.Value);
+
+            return hc.ToHashCode();
+        }
+
+        /// <inheritdoc/>
+        public override string ToString() => IntervalEngine.ToString<ValueInterval<T>, T>(this);
     }
 }

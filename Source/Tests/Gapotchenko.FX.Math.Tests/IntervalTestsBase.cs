@@ -1,13 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Math.Tests
 {
     public abstract class IntervalTestsBase
     {
-        public abstract IInterval<T> NewInterval<T>(T from, T to, IComparer<T>? comparer = null);
+        public abstract IInterval<T> NewInterval<T>(T from, T to) where T : IComparable<T>, IEquatable<T>;
 
-        public abstract IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer = null);
+        public abstract IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to) where T : IComparable<T>, IEquatable<T>;
 
         [TestMethod]
         public void Interval_Characteristics_LeftUnbounded()

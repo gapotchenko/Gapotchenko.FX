@@ -1,9 +1,9 @@
 ﻿namespace Gapotchenko.FX.Math
 {
     /// <summary>
-    /// Provides the base interface for the abstraction of continuous interval of values.
+    /// Provides the interface for continuous interval abstraction.
     /// </summary>
-    /// <typeparam name="T">The type of interval values.</typeparam>
+    /// <typeparam name="T">The type of interval value.</typeparam>
     public interface IInterval<T> : IIntervalOperations<T>
     {
 #if false && NET7_0_OR_GREATER
