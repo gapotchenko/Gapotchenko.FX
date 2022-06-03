@@ -47,6 +47,8 @@ namespace Gapotchenko.FX.Math.Tests
             Assert.IsFalse(interval.IsClosed);
         }
 
+        #region Constructor
+
         [TestMethod]
         public void Interval_Constructor_1()
         {
@@ -68,6 +70,10 @@ namespace Gapotchenko.FX.Math.Tests
             Assert.AreEqual(10, interval.To.Value);
             Assert.AreEqual(IntervalBoundaryKind.Inclusive, interval.To.Kind);
         }
+
+        #endregion
+
+        #region Contain
 
         [TestMethod]
         public void Interval_Contains_Default()
@@ -201,6 +207,10 @@ namespace Gapotchenko.FX.Math.Tests
             Assert.IsTrue(interval.Contains(int.MaxValue));
         }
 
+        #endregion
+
+        #region Overlaps
+
         [TestMethod]
         public void Interval_Overlaps_1()
         {
@@ -273,6 +283,10 @@ namespace Gapotchenko.FX.Math.Tests
             Assert.IsTrue(b.Overlaps(a));
         }
 
+        #endregion
+
+        #region IntervalEquals
+
         [TestMethod]
         public void Interval_IntervalEquals_1()
         {
@@ -301,6 +315,10 @@ namespace Gapotchenko.FX.Math.Tests
             Assert.IsFalse(a == b);
             Assert.IsFalse(b == a);
         }
+
+        #endregion
+
+        #region IsSubintervalOf
 
         [TestMethod]
         public void Interval_IsSubintervalOf_1()
@@ -392,6 +410,10 @@ namespace Gapotchenko.FX.Math.Tests
             Assert.IsFalse(b.IsSubintervalOf(a));
         }
 
+        #endregion
+
+        #region IsSuperintervalOf
+
         [TestMethod]
         public void Interval_IsSuperintervalOf_1()
         {
@@ -481,5 +503,195 @@ namespace Gapotchenko.FX.Math.Tests
 
             Assert.IsFalse(b.IsSuperintervalOf(a));
         }
+
+        #endregion
+
+        #region IsProperSubintervalOf
+
+        [TestMethod]
+        public void Interval_IsProperSubintervalOf_1()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            Assert.IsFalse(a.IsProperSubintervalOf(a));
+
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsProperSubintervalOf(a));
+            Assert.IsFalse(a.IsProperSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSubintervalOf_2()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(3), IntervalBoundary.Inclusive(9));
+
+            Assert.IsTrue(b.IsProperSubintervalOf(a));
+            Assert.IsFalse(a.IsProperSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSubintervalOf_3()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsTrue(b.IsProperSubintervalOf(a));
+            Assert.IsFalse(a.IsProperSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSubintervalOf_4()
+        {
+            var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsProperSubintervalOf(a));
+            Assert.IsTrue(a.IsProperSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSubintervalOf_5()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
+
+            Assert.IsTrue(b.IsProperSubintervalOf(a));
+            Assert.IsFalse(a.IsProperSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSubintervalOf_6()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsProperSubintervalOf(a));
+            Assert.IsTrue(a.IsProperSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSubintervalOf_7()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Exclusive(2));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsProperSubintervalOf(a));
+            Assert.IsFalse(a.IsProperSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSubintervalOf_8()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsProperSubintervalOf(a));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSubintervalOf_9()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(11));
+
+            Assert.IsFalse(b.IsProperSubintervalOf(a));
+        }
+
+        #endregion
+
+        #region IsProperSuperintervalOf
+
+        [TestMethod]
+        public void Interval_IsProperSuperintervalOf_1()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            Assert.IsFalse(a.IsProperSuperintervalOf(a));
+
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsProperSuperintervalOf(a));
+            Assert.IsFalse(a.IsProperSuperintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSuperintervalOf_2()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(3), IntervalBoundary.Inclusive(9));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsTrue(b.IsProperSuperintervalOf(a));
+            Assert.IsFalse(a.IsProperSuperintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSuperintervalOf_3()
+        {
+            var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsTrue(b.IsProperSuperintervalOf(a));
+            Assert.IsFalse(a.IsProperSuperintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSuperintervalOf_4()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsProperSuperintervalOf(a));
+            Assert.IsTrue(a.IsProperSuperintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSuperintervalOf_5()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsTrue(b.IsProperSuperintervalOf(a));
+            Assert.IsFalse(a.IsProperSuperintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSuperintervalOf_6()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
+
+            Assert.IsFalse(b.IsProperSuperintervalOf(a));
+            Assert.IsTrue(a.IsProperSuperintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSuperintervalOf_7()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Exclusive(2));
+
+            Assert.IsFalse(b.IsProperSuperintervalOf(a));
+            Assert.IsFalse(a.IsProperSuperintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSuperintervalOf_8()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsProperSuperintervalOf(a));
+        }
+
+        [TestMethod]
+        public void Interval_IsProperSuperintervalOf_9()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(11));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsProperSuperintervalOf(a));
+        }
+
+        #endregion
     }
 }
