@@ -182,6 +182,13 @@ namespace Gapotchenko.FX.Math
             CompareBoundaries(interval.To, other.To, true, true, comparer) <= 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsSuperintervalOf<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
+            where TInterval : IIntervalOperations<TBound>
+            where TOther : IIntervalOperations<TBound> =>
+            CompareBoundaries(interval.From, other.From, false, false, comparer) <= 0 &&
+            CompareBoundaries(interval.To, other.To, true, true, comparer) >= 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsProperSubintervalOf<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
             where TInterval : IIntervalOperations<TBound>
             where TOther : IIntervalOperations<TBound>
@@ -192,6 +199,22 @@ namespace Gapotchenko.FX.Math
 
             int cTo = CompareBoundaries(interval.To, other.To, true, true, comparer);
             if (cTo > 0)
+                return false;
+
+            return cFrom != 0 || cTo != 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsProperSuperintervalOf<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
+            where TInterval : IIntervalOperations<TBound>
+            where TOther : IIntervalOperations<TBound>
+        {
+            int cFrom = CompareBoundaries(interval.From, other.From, false, false, comparer);
+            if (cFrom > 0)
+                return false;
+
+            int cTo = CompareBoundaries(interval.To, other.To, true, true, comparer);
+            if (cTo < 0)
                 return false;
 
             return cFrom != 0 || cTo != 0;

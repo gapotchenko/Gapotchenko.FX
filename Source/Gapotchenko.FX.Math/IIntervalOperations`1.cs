@@ -163,11 +163,25 @@ namespace Gapotchenko.FX.Math
         bool IsSubintervalOf(IInterval<T> other);
 
         /// <summary>
+        /// Determines whether the current interval is a superinterval of the specified interval.
+        /// </summary>
+        /// <param name="other">The interval to compare to the current interval.</param>
+        /// <returns><see langword="true"/> if the current interval is a superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        bool IsSuperintervalOf(IInterval<T> other);
+
+        /// <summary>
         /// Determines whether the current interval is a proper subinterval of the specified interval.
         /// </summary>
         /// <param name="other">The interval to compare to the current interval.</param>
         /// <returns><see langword="true"/> if the current interval is a proper subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         bool IsProperSubintervalOf(IInterval<T> other);
+
+        /// <summary>
+        /// Determines whether the current interval is a proper superinterval of the specified interval.
+        /// </summary>
+        /// <param name="other">The interval to compare to the current interval.</param>
+        /// <returns><see langword="true"/> if the current interval is a proper superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        bool IsProperSuperintervalOf(IInterval<T> other);
 
         /// <summary>
         /// Determines whether this and the specified intervals are equal.

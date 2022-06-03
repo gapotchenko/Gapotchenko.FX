@@ -199,6 +199,19 @@ namespace Gapotchenko.FX.Math
             IntervalEngine.IsSubintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
 
         /// <inheritdoc/>
+        public bool IsSuperintervalOf(IInterval<T> other) => IsSuperintervalOf<IInterval<T>>(other);
+
+        /// <summary>
+        /// Determines whether the current interval is a superinterval of the specified interval.
+        /// </summary>
+        /// <param name="other">The interval to compare to the current interval.</param>
+        /// <returns><see langword="true"/> if the current interval is a superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool IsSuperintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+            IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
+            IntervalEngine.IsSuperintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
+
+        /// <inheritdoc/>
         public bool IsProperSubintervalOf(IInterval<T> other) => IsProperSubintervalOf<IInterval<T>>(other);
 
         /// <summary>
@@ -210,6 +223,19 @@ namespace Gapotchenko.FX.Math
         public bool IsProperSubintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
             !IsThis(other ?? throw new ArgumentNullException(nameof(other))) &&
             IntervalEngine.IsProperSubintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
+
+        /// <inheritdoc/>
+        public bool IsProperSuperintervalOf(IInterval<T> other) => IsProperSuperintervalOf<IInterval<T>>(other);
+
+        /// <summary>
+        /// Determines whether the current interval is a proper superinterval of the specified interval.
+        /// </summary>
+        /// <param name="other">The interval to compare to the current interval.</param>
+        /// <returns><see langword="true"/> if the current interval is a proper superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool IsProperSuperintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+            !IsThis(other ?? throw new ArgumentNullException(nameof(other))) &&
+            IntervalEngine.IsProperSuperintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
 
         /// <inheritdoc/>
         public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
