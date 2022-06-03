@@ -174,6 +174,29 @@ namespace Gapotchenko.FX.Math
             throw new NotImplementedException();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsSubintervalOf<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
+            where TInterval : IIntervalOperations<TBound>
+            where TOther : IIntervalOperations<TBound> =>
+            CompareBoundaries(interval.From, other.From, false, comparer) <= 0 &&
+            CompareBoundaries(interval.To, other.To, true, comparer) >= 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsProperSubintervalOf<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
+            where TInterval : IIntervalOperations<TBound>
+            where TOther : IIntervalOperations<TBound>
+        {
+            int cFrom = CompareBoundaries(interval.From, other.From, false, comparer);
+            if (cFrom > 0)
+                return false;
+
+            int cTo = CompareBoundaries(interval.To, other.To, true, comparer);
+            if (cTo < 0)
+                return false;
+
+            return cFrom != 0 || cTo != 0;
+        }
+
         public static string ToString<TInterval, TBound>(TInterval interval)
             where TInterval : IIntervalOperations<TBound>
         {

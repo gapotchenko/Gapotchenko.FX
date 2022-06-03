@@ -269,6 +269,9 @@ namespace Gapotchenko.FX.Math.Tests
 
             Assert.IsTrue(a.IntervalEquals(b));
             Assert.IsTrue(b.IntervalEquals(a));
+
+            //Assert.IsTrue(a == b);
+            //Assert.IsTrue(b == a);
         }
 
         [TestMethod]
@@ -279,6 +282,28 @@ namespace Gapotchenko.FX.Math.Tests
 
             Assert.IsFalse(a.IntervalEquals(b));
             Assert.IsFalse(b.IntervalEquals(a));
+
+            Assert.IsFalse(a == b);
+            Assert.IsFalse(b == a);
         }
+
+        [TestMethod]
+        public void Interval_IsSubintervalOf_1()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsTrue(b.IsSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsSubintervalOf_2()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(3), IntervalBoundary.Inclusive(9));
+
+            Assert.IsTrue(b.IsSubintervalOf(b));
+        }
+
     }
 }

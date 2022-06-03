@@ -149,11 +149,25 @@ namespace Gapotchenko.FX.Math
         IInterval<T> Intersect(IInterval<T> other);
 
         /// <summary>
-        /// Determines whether this and the specified intervals overlap.
+        /// Determines whether the current and the specified intervals overlap.
         /// </summary>
         /// <param name="other">The interval to check for overlapping.</param>
-        /// <returns><see langword="true"/> if this interval and <paramref name="other"/> overlap; otherwise, <see langword="false"/>.</returns>
+        /// <returns><see langword="true"/> if the current and <paramref name="other"/> intervals overlap; otherwise, <see langword="false"/>.</returns>
         bool Overlaps(IInterval<T> other);
+
+        /// <summary>
+        /// Determines whether the current interval is a subinterval of the specified interval.
+        /// </summary>
+        /// <param name="other">The interval to compare to the current interval.</param>
+        /// <returns><see langword="true"/> if the current interval is a subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        bool IsSubintervalOf(IInterval<T> other);
+
+        /// <summary>
+        /// Determines whether the current interval is a proper subinterval of the specified interval.
+        /// </summary>
+        /// <param name="other">The interval to compare to the current interval.</param>
+        /// <returns><see langword="true"/> if the current interval is a proper subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        bool IsProperSubintervalOf(IInterval<T> other);
 
         /// <summary>
         /// Determines whether this and the specified intervals are equal.

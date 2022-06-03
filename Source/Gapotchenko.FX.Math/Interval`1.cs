@@ -185,6 +185,38 @@ namespace Gapotchenko.FX.Math
                 m_Comparer);
 
         /// <inheritdoc/>
+        public bool IsSubintervalOf(IInterval<T> other) => IsSubintervalOf<IInterval<T>>(other);
+
+        /// <summary>
+        /// Determines whether the current interval is a subinterval of the specified interval.
+        /// </summary>
+        /// <param name="other">The interval to compare to the current interval.</param>
+        /// <returns><see langword="true"/> if the current interval is a subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool IsSubintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+            !TypeTraits<TOther>.IsValueType && ReferenceEquals(other, this) ||
+            IntervalEngine.IsSubintervalOf<Interval<T>, TOther, T>(
+                this,
+                other ?? throw new ArgumentNullException(nameof(other)),
+                m_Comparer);
+
+        /// <inheritdoc/>
+        public bool IsProperSubintervalOf(IInterval<T> other) => IsProperSubintervalOf<IInterval<T>>(other);
+
+        /// <summary>
+        /// Determines whether the current interval is a proper subinterval of the specified interval.
+        /// </summary>
+        /// <param name="other">The interval to compare to the current interval.</param>
+        /// <returns><see langword="true"/> if the current interval is a proper subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool IsProperSubintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+            !TypeTraits<TOther>.IsValueType && ReferenceEquals(other, this) ||
+            IntervalEngine.IsProperSubintervalOf<Interval<T>, TOther, T>(
+                this,
+                other ?? throw new ArgumentNullException(nameof(other)),
+                m_Comparer);
+
+        /// <inheritdoc/>
         public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
 
         /// <summary>
