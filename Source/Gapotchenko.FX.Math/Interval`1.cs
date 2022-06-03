@@ -167,6 +167,10 @@ namespace Gapotchenko.FX.Math
         /// <inheritdoc/>
         IInterval<T> IIntervalOperations<T>.Intersect(IInterval<T> limits) => Intersect<IIntervalOperations<T>>(limits);
 
+        bool IsThis<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+            !TypeTraits<TOther>.IsValueType &&
+            ReferenceEquals(other, this);
+
         /// <inheritdoc/>
         public bool Overlaps(IInterval<T> other) => Overlaps<IInterval<T>>(other);
 
@@ -178,11 +182,8 @@ namespace Gapotchenko.FX.Math
         /// <typeparam name="TOther">Type of the interval to check for overlapping.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool Overlaps<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
-            !TypeTraits<TOther>.IsValueType && ReferenceEquals(other, this) ||
-            IntervalEngine.Overlaps<Interval<T>, TOther, T>(
-                this,
-                other ?? throw new ArgumentNullException(nameof(other)),
-                m_Comparer);
+            IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
+            IntervalEngine.Overlaps<Interval<T>, TOther, T>(this, other, m_Comparer);
 
         /// <inheritdoc/>
         public bool IsSubintervalOf(IInterval<T> other) => IsSubintervalOf<IInterval<T>>(other);
@@ -194,11 +195,8 @@ namespace Gapotchenko.FX.Math
         /// <returns><see langword="true"/> if the current interval is a subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsSubintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
-            !TypeTraits<TOther>.IsValueType && ReferenceEquals(other, this) ||
-            IntervalEngine.IsSubintervalOf<Interval<T>, TOther, T>(
-                this,
-                other ?? throw new ArgumentNullException(nameof(other)),
-                m_Comparer);
+            IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
+            IntervalEngine.IsSubintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
 
         /// <inheritdoc/>
         public bool IsProperSubintervalOf(IInterval<T> other) => IsProperSubintervalOf<IInterval<T>>(other);
@@ -210,11 +208,8 @@ namespace Gapotchenko.FX.Math
         /// <returns><see langword="true"/> if the current interval is a proper subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsProperSubintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
-            !TypeTraits<TOther>.IsValueType && ReferenceEquals(other, this) ||
-            IntervalEngine.IsProperSubintervalOf<Interval<T>, TOther, T>(
-                this,
-                other ?? throw new ArgumentNullException(nameof(other)),
-                m_Comparer);
+            !IsThis(other ?? throw new ArgumentNullException(nameof(other))) &&
+            IntervalEngine.IsProperSubintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
 
         /// <inheritdoc/>
         public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
@@ -226,11 +221,8 @@ namespace Gapotchenko.FX.Math
         /// <returns><see langword="true"/> if this interval and <paramref name="other"/> are equal; otherwise, <see langword="false"/>.</returns>
         /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
         public bool IntervalEquals<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
-            !TypeTraits<TOther>.IsValueType && ReferenceEquals(other, this) ||
-            IntervalEngine.IntervalsEqual<Interval<T>, TOther, T>(
-                this,
-                other ?? throw new ArgumentNullException(nameof(other)),
-                m_Comparer);
+            IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
+            IntervalEngine.IntervalsEqual<Interval<T>, TOther, T>(this, other, m_Comparer);
 
         /// <summary>
         /// Determines whether the specified intervals are equal.

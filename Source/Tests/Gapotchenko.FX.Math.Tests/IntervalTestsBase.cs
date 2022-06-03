@@ -204,6 +204,18 @@ namespace Gapotchenko.FX.Math.Tests
         [TestMethod]
         public void Interval_Overlaps_1()
         {
+            var a = NewInterval(2, 10);
+            Assert.IsTrue(a.Overlaps(a));
+
+            var b = NewInterval(2, 10);
+
+            Assert.IsTrue(a.Overlaps(b));
+            Assert.IsTrue(b.Overlaps(a));
+        }
+
+        [TestMethod]
+        public void Interval_Overlaps_2()
+        {
             var a = NewInterval(0, 2);
             var b = NewInterval(2, 10);
 
@@ -212,7 +224,7 @@ namespace Gapotchenko.FX.Math.Tests
         }
 
         [TestMethod]
-        public void Interval_Overlaps_2()
+        public void Interval_Overlaps_3()
         {
             var a = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Inclusive(2));
             var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
@@ -222,7 +234,7 @@ namespace Gapotchenko.FX.Math.Tests
         }
 
         [TestMethod]
-        public void Interval_Overlaps_3()
+        public void Interval_Overlaps_4()
         {
             var a = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Exclusive(2));
             var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Exclusive(10));
@@ -232,7 +244,7 @@ namespace Gapotchenko.FX.Math.Tests
         }
 
         [TestMethod]
-        public void Interval_Overlaps_4()
+        public void Interval_Overlaps_5()
         {
             var a = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Inclusive(2));
             var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
@@ -242,7 +254,7 @@ namespace Gapotchenko.FX.Math.Tests
         }
 
         [TestMethod]
-        public void Interval_Overlaps_5()
+        public void Interval_Overlaps_6()
         {
             var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Exclusive(2));
             var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
@@ -252,7 +264,7 @@ namespace Gapotchenko.FX.Math.Tests
         }
 
         [TestMethod]
-        public void Interval_Overlaps_6()
+        public void Interval_Overlaps_7()
         {
             var a = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Inclusive(3));
             var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Exclusive(10));
@@ -265,12 +277,15 @@ namespace Gapotchenko.FX.Math.Tests
         public void Interval_IntervalEquals_1()
         {
             var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+            Assert.IsTrue(a.IntervalEquals(a));
+            //Assert.IsTrue(a == a);
+
             var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
 
             Assert.IsTrue(a.IntervalEquals(b));
-            Assert.IsTrue(b.IntervalEquals(a));
-
             //Assert.IsTrue(a == b);
+
+            Assert.IsTrue(b.IntervalEquals(a));
             //Assert.IsTrue(b == a);
         }
 
@@ -291,9 +306,12 @@ namespace Gapotchenko.FX.Math.Tests
         public void Interval_IsSubintervalOf_1()
         {
             var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            Assert.IsTrue(a.IsSubintervalOf(a));
+
             var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
 
             Assert.IsTrue(b.IsSubintervalOf(a));
+            Assert.IsTrue(a.IsSubintervalOf(b));
         }
 
         [TestMethod]
@@ -303,6 +321,7 @@ namespace Gapotchenko.FX.Math.Tests
             var b = NewInterval(IntervalBoundary.Inclusive(3), IntervalBoundary.Inclusive(9));
 
             Assert.IsTrue(b.IsSubintervalOf(a));
+            Assert.IsFalse(a.IsSubintervalOf(b));
         }
 
         [TestMethod]
@@ -312,6 +331,47 @@ namespace Gapotchenko.FX.Math.Tests
             var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
 
             Assert.IsTrue(b.IsSubintervalOf(a));
+            Assert.IsFalse(a.IsSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsSubintervalOf_4()
+        {
+            var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsSubintervalOf(a));
+            Assert.IsTrue(a.IsSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsSubintervalOf_5()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
+
+            Assert.IsTrue(b.IsSubintervalOf(a));
+            Assert.IsFalse(a.IsSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsSubintervalOf_6()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsSubintervalOf(a));
+            Assert.IsTrue(a.IsSubintervalOf(b));
+        }
+
+        [TestMethod]
+        public void Interval_IsSubintervalOf_7()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Exclusive(2));
+            var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsFalse(b.IsSubintervalOf(a));
+            Assert.IsFalse(a.IsSubintervalOf(b));
         }
     }
 }
