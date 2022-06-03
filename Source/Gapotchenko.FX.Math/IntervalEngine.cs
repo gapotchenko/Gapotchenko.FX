@@ -107,8 +107,8 @@ namespace Gapotchenko.FX.Math
         public static bool Overlaps<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
             where TInterval : IIntervalOperations<TBound>
             where TOther : IIntervalOperations<TBound> =>
-            CompareBoundaries(interval.From, other.To, false, comparer) <= 0 &&
-            CompareBoundaries(interval.To, other.From, true, comparer) >= 0;
+            CompareBoundaries(interval.From, other.To, false, true, comparer) <= 0 &&
+            CompareBoundaries(interval.To, other.From, true, false, comparer) >= 0;
 
         public static bool BoundariesEqual<TBound>(IntervalBoundary<TBound> x, IntervalBoundary<TBound> y, IComparer<TBound> comparer) =>
             x.Kind == y.Kind &&
@@ -120,15 +120,15 @@ namespace Gapotchenko.FX.Math
             BoundariesEqual(x.From, y.From, comparer) &&
             BoundariesEqual(x.To, y.To, comparer);
 
-        static int CompareBoundaries<TBound>(IntervalBoundary<TBound> x, IntervalBoundary<TBound> y, bool direction, IComparer<TBound> comparer)
+        static int CompareBoundaries<TBound>(IntervalBoundary<TBound> x, IntervalBoundary<TBound> y, bool directionX, bool directionY, IComparer<TBound> comparer)
         {
             if (x.HasValue && y.HasValue)
             {
                 int c = comparer.Compare(x.Value, y.Value);
                 if (c == 0)
                 {
-                    var orderedKindX = GetOrderedBoundaryKind(x.Kind, direction);
-                    var orderedKindY = GetOrderedBoundaryKind(y.Kind, !direction);
+                    var orderedKindX = GetOrderedBoundaryKind(x.Kind, directionX);
+                    var orderedKindY = GetOrderedBoundaryKind(y.Kind, directionY);
                     c = orderedKindX.CompareTo(orderedKindY);
                 }
                 return c;
@@ -178,20 +178,20 @@ namespace Gapotchenko.FX.Math
         public static bool IsSubintervalOf<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
             where TInterval : IIntervalOperations<TBound>
             where TOther : IIntervalOperations<TBound> =>
-            CompareBoundaries(interval.From, other.From, false, comparer) <= 0 &&
-            CompareBoundaries(interval.To, other.To, true, comparer) >= 0;
+            CompareBoundaries(interval.From, other.From, false, false, comparer) >= 0 &&
+            CompareBoundaries(interval.To, other.To, true, true, comparer) <= 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsProperSubintervalOf<TInterval, TOther, TBound>(TInterval interval, TOther other, IComparer<TBound> comparer)
             where TInterval : IIntervalOperations<TBound>
             where TOther : IIntervalOperations<TBound>
         {
-            int cFrom = CompareBoundaries(interval.From, other.From, false, comparer);
-            if (cFrom > 0)
+            int cFrom = CompareBoundaries(interval.From, other.From, false, false, comparer);
+            if (cFrom < 0)
                 return false;
 
-            int cTo = CompareBoundaries(interval.To, other.To, true, comparer);
-            if (cTo < 0)
+            int cTo = CompareBoundaries(interval.To, other.To, true, true, comparer);
+            if (cTo > 0)
                 return false;
 
             return cFrom != 0 || cTo != 0;

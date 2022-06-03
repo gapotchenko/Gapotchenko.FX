@@ -293,7 +293,7 @@ namespace Gapotchenko.FX.Math.Tests
             var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
             var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
 
-            Assert.IsTrue(b.IsSubintervalOf(b));
+            Assert.IsTrue(b.IsSubintervalOf(a));
         }
 
         [TestMethod]
@@ -302,8 +302,16 @@ namespace Gapotchenko.FX.Math.Tests
             var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
             var b = NewInterval(IntervalBoundary.Inclusive(3), IntervalBoundary.Inclusive(9));
 
-            Assert.IsTrue(b.IsSubintervalOf(b));
+            Assert.IsTrue(b.IsSubintervalOf(a));
         }
 
+        [TestMethod]
+        public void Interval_IsSubintervalOf_3()
+        {
+            var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+            var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+
+            Assert.IsTrue(b.IsSubintervalOf(a));
+        }
     }
 }
