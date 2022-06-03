@@ -132,6 +132,7 @@ namespace Gapotchenko.FX.Math
         /// it is also the set of points in <c>I</c> which are not the endpoints of <c>I</c>.
         /// </para>
         /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Interval<T> Interior => IntervalEngine.Interior<Interval<T>, T>(this, Construct);
 
         /// <inheritdoc/>
@@ -147,6 +148,7 @@ namespace Gapotchenko.FX.Math
         /// which is also the set <c>I</c> augmented with its finite endpoints.
         /// </para>
         /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Interval<T> Enclosure => IntervalEngine.Enclosure<Interval<T>, T>(this, Construct);
 
         /// <inheritdoc/>
@@ -160,7 +162,7 @@ namespace Gapotchenko.FX.Math
         /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
         /// <typeparam name="TOther">Type of the other interval to produce the intersection with.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public Interval<T> Intersect<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+        public Interval<T> Intersect<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
             IntervalEngine.Intersect(
                 this,
                 other ?? throw new ArgumentNullException(nameof(other)),
@@ -183,7 +185,7 @@ namespace Gapotchenko.FX.Math
         /// <returns><see langword="true"/> if this interval and <paramref name="other"/> overlap; otherwise, <see langword="false"/>.</returns>
         /// <typeparam name="TOther">Type of the interval to check for overlapping.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public bool Overlaps<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+        public bool Overlaps<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
             IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
             IntervalEngine.Overlaps<Interval<T>, TOther, T>(this, other, m_Comparer);
 
@@ -196,7 +198,7 @@ namespace Gapotchenko.FX.Math
         /// <param name="other">The interval to compare to the current interval.</param>
         /// <returns><see langword="true"/> if the current interval is a subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public bool IsSubintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+        public bool IsSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
             IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
             IntervalEngine.IsSubintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
 
@@ -209,7 +211,7 @@ namespace Gapotchenko.FX.Math
         /// <param name="other">The interval to compare to the current interval.</param>
         /// <returns><see langword="true"/> if the current interval is a superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public bool IsSuperintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+        public bool IsSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
             IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
             IntervalEngine.IsSuperintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
 
@@ -222,7 +224,7 @@ namespace Gapotchenko.FX.Math
         /// <param name="other">The interval to compare to the current interval.</param>
         /// <returns><see langword="true"/> if the current interval is a proper subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public bool IsProperSubintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+        public bool IsProperSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
             !IsThis(other ?? throw new ArgumentNullException(nameof(other))) &&
             IntervalEngine.IsProperSubintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
 
@@ -235,7 +237,7 @@ namespace Gapotchenko.FX.Math
         /// <param name="other">The interval to compare to the current interval.</param>
         /// <returns><see langword="true"/> if the current interval is a proper superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public bool IsProperSuperintervalOf<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+        public bool IsProperSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
             !IsThis(other ?? throw new ArgumentNullException(nameof(other))) &&
             IntervalEngine.IsProperSuperintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
 
@@ -248,7 +250,8 @@ namespace Gapotchenko.FX.Math
         /// <param name="other">The interval to compare to the current interval.</param>
         /// <returns><see langword="true"/> if this interval and <paramref name="other"/> are equal; otherwise, <see langword="false"/>.</returns>
         /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
-        public bool IntervalEquals<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool IntervalEquals<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
             IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
             IntervalEngine.IntervalsEqual<Interval<T>, TOther, T>(this, other, m_Comparer);
 
