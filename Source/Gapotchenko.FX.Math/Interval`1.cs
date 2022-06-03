@@ -171,7 +171,7 @@ namespace Gapotchenko.FX.Math
 
         IInterval<T> IIntervalOperations<T>.Intersect(IInterval<T> limits) => Intersect<IIntervalOperations<T>>(limits);
 
-        bool IsThis<TOther>(TOther other) where TOther : IIntervalOperations<T> =>
+        bool IsThis<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
             !TypeTraits<TOther>.IsValueType &&
             ReferenceEquals(other, this);
 
