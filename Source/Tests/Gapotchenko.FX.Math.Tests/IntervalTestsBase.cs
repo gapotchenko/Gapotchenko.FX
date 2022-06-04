@@ -74,6 +74,26 @@ namespace Gapotchenko.FX.Math.Tests
 
         #endregion
 
+        #region Empty
+
+        [TestMethod]
+        public void Interval_Empty_1()
+        {
+            var interval = NewInterval(0, 0);
+
+            Assert.IsTrue(interval.IsEmpty);
+        }
+
+        [TestMethod]
+        public void Interval_Empty_2()
+        {
+            var interval = NewInterval(1, 0);
+
+            Assert.IsTrue(interval.IsEmpty);
+        }
+
+        #endregion
+
         #region Contains
 
         [TestMethod]

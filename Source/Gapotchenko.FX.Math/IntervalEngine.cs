@@ -76,8 +76,7 @@ namespace Gapotchenko.FX.Math
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmpty<TInterval, TBound>(in TInterval interval, IComparer<TBound> comparer)
             where TInterval : IIntervalOperations<TBound> =>
-            !IsClosed<TInterval, TBound>(interval) &&
-            comparer.Compare(interval.From.GetValueOrDefault(), interval.To.GetValueOrDefault()) == 0;
+            CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.To, interval.To, comparer) > 0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDegenerate<TInterval, TBound>(in TInterval interval, IComparer<TBound> comparer)
@@ -85,6 +84,13 @@ namespace Gapotchenko.FX.Math
             interval.From.Kind == IntervalBoundaryKind.Inclusive &&
             interval.To.Kind == IntervalBoundaryKind.Inclusive &&
             comparer.Compare(interval.From.Value, interval.To.Value) == 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDegenerate<TInterval, TBound>(in TInterval interval, IEqualityComparer<TBound> comparer)
+            where TInterval : IIntervalOperations<TBound> =>
+            interval.From.Kind == IntervalBoundaryKind.Inclusive &&
+            interval.To.Kind == IntervalBoundaryKind.Inclusive &&
+            comparer.Equals(interval.From.Value, interval.To.Value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Contains<TInterval, TBound>(in TInterval interval, TBound item, IComparer<TBound> comparer)

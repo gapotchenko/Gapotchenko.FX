@@ -90,7 +90,7 @@ namespace Gapotchenko.FX.Math
         public bool IsEmpty => IntervalEngine.IsEmpty<ValueInterval<T>, T>(this, Comparer<T>.Default);
 
         /// <inheritdoc/>
-        public bool IsDegenerate => IntervalEngine.IsDegenerate<ValueInterval<T>, T>(this, Comparer<T>.Default);
+        public bool IsDegenerate => IntervalEngine.IsDegenerate<ValueInterval<T>, T>(this, EqualityComparer<T>.Default);
 
         /// <inheritdoc/>
         public bool Contains(T item) => IntervalEngine.Contains(this, item, Comparer<T>.Default);
