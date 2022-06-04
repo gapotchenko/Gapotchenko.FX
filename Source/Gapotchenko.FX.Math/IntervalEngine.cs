@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -135,21 +134,21 @@ namespace Gapotchenko.FX.Math
             BoundariesEqual(x.To, y.To, comparer);
 
         static int CompareBoundaries<TBound>(
-            BoundaryDirection directionX,
-            in IntervalBoundary<TBound> boundaryX,
-            BoundaryDirection directionY,
-            in IntervalBoundary<TBound> boundaryY,
+            BoundaryDirection directionX, in IntervalBoundary<TBound> boundaryX,
+            BoundaryDirection directionY, in IntervalBoundary<TBound> boundaryY,
             IComparer<TBound> comparer)
         {
             if (boundaryX.HasValue && boundaryY.HasValue)
             {
                 int c = comparer.Compare(boundaryX.Value, boundaryY.Value);
+
                 if (c == 0)
                 {
-                    var orderedKindX = GetOrderedBoundaryKind(boundaryX.Kind, directionX);
-                    var orderedKindY = GetOrderedBoundaryKind(boundaryY.Kind, directionY);
+                    var orderedKindX = GetOrderedBoundaryKind(directionX, boundaryX.Kind);
+                    var orderedKindY = GetOrderedBoundaryKind(directionY, boundaryY.Kind);
                     c = orderedKindX.CompareTo(orderedKindY);
                 }
+
                 return c;
             }
             else
@@ -175,16 +174,16 @@ namespace Gapotchenko.FX.Math
             PositiveInfinity
         }
 
-        static OrderedBoundaryKind GetOrderedBoundaryKind(IntervalBoundaryKind kind, BoundaryDirection direction) =>
-            (kind, direction) switch
+        static OrderedBoundaryKind GetOrderedBoundaryKind(BoundaryDirection direction, IntervalBoundaryKind kind) =>
+            (direction, kind) switch
             {
-                (IntervalBoundaryKind.Empty, _) => OrderedBoundaryKind.Empty,
-                (IntervalBoundaryKind.NegativeInfinity, _) => OrderedBoundaryKind.NegativeInfinity,
-                (IntervalBoundaryKind.Inclusive, BoundaryDirection.From) => OrderedBoundaryKind.FromInclusive,
-                (IntervalBoundaryKind.Inclusive, BoundaryDirection.To) => OrderedBoundaryKind.ToInclusive,
-                (IntervalBoundaryKind.Exclusive, BoundaryDirection.From) => OrderedBoundaryKind.FromExclusive,
-                (IntervalBoundaryKind.Exclusive, BoundaryDirection.To) => OrderedBoundaryKind.ToExclusive,
-                (IntervalBoundaryKind.PositiveInfinity, _) => OrderedBoundaryKind.PositiveInfinity
+                (_, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.Empty,
+                (_, IntervalBoundaryKind.NegativeInfinity) => OrderedBoundaryKind.NegativeInfinity,
+                (BoundaryDirection.From, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.FromInclusive,
+                (BoundaryDirection.To, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.ToInclusive,
+                (BoundaryDirection.From, IntervalBoundaryKind.Exclusive) => OrderedBoundaryKind.FromExclusive,
+                (BoundaryDirection.To, IntervalBoundaryKind.Exclusive) => OrderedBoundaryKind.ToExclusive,
+                (_, IntervalBoundaryKind.PositiveInfinity) => OrderedBoundaryKind.PositiveInfinity
             };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
