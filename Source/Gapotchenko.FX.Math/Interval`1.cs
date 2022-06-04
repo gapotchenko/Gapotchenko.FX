@@ -160,6 +160,13 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         /// <param name="other">The interval to produce the intersection with.</param>
         /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
+        public Interval<T> Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
+
+        /// <summary>
+        /// Produces the intersection of the current and specified intervals.
+        /// </summary>
+        /// <param name="other">The interval to produce the intersection with.</param>
+        /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
         /// <typeparam name="TOther">Type of the other interval to produce the intersection with.</typeparam>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public Interval<T> Intersect<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
@@ -169,7 +176,7 @@ namespace Gapotchenko.FX.Math
                 m_Comparer,
                 Construct);
 
-        IInterval<T> IIntervalOperations<T>.Intersect(IInterval<T> limits) => Intersect<IIntervalOperations<T>>(limits);
+        IInterval<T> IIntervalOperations<T>.Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
 
         bool IsThis<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
             !TypeTraits<TOther>.IsValueType &&
