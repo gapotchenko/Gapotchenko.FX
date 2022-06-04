@@ -205,5 +205,19 @@ namespace Gapotchenko.FX.Math
             => new(
                 from is null ? IntervalBoundary<T>.NegativeInfinity : IntervalBoundary.Exclusive(from.Value),
                 to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Inclusive(to.Value));
+
+        /// <summary>
+        /// <para>
+        /// Creates a new degenerate <see cref="ValueInterval{T}"/> instance with the specified value of its inclusive boundaries.
+        /// </para>
+        /// <para>
+        /// A degenerate interval <c>[x,x]</c> represents a set of exactly one element <c>{x}</c>.
+        /// </para>
+        /// </summary>
+        /// <param name="value">The value of the inclusive boundaries.</param>
+        /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
+        public static ValueInterval<T> Degenerate<T>(T value)
+            where T : IEquatable<T>, IComparable<T> =>
+            new(IntervalBoundary.Inclusive(value), IntervalBoundary.Inclusive(value));
     }
 }

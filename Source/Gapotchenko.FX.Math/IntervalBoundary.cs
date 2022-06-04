@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Math
 {
     /// <summary>
-    /// Provides construction methods for <see cref="IntervalBoundary{T}"/>.
+    /// Provides static methods for creating interval boundaries.
     /// </summary>
     public static class IntervalBoundary
     {
