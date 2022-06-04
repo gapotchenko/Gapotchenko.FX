@@ -22,9 +22,8 @@ namespace Gapotchenko.FX.Math
         /// The corresponding limit point is not included in the interval.
         /// </param>
         /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
-        public static ValueInterval<T> Create<T>(T from, T to)
-            where T : IEquatable<T>, IComparable<T>
-            => new(from, to);
+        public static ValueInterval<T> Create<T>(T from, T to) where T : IEquatable<T>, IComparable<T> =>
+            new(from, to);
 
         /// <summary>
         /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified boundaries.
@@ -38,9 +37,8 @@ namespace Gapotchenko.FX.Math
         /// Represents a boundary the interval ends with.
         /// </param>
         /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
-        public static ValueInterval<T> Create<T>(IntervalBoundary<T> from, IntervalBoundary<T> to)
-            where T : IEquatable<T>, IComparable<T>
-            => new(from, to);
+        public static ValueInterval<T> Create<T>(IntervalBoundary<T> from, IntervalBoundary<T> to) where T : IEquatable<T>, IComparable<T> =>
+            new(from, to);
 
         /// <summary>
         /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified inclusive boundaries.
@@ -56,9 +54,8 @@ namespace Gapotchenko.FX.Math
         /// If the specified value is <see langword="null"/> then the right boundary is set to the positive infinity.
         /// </param>
         /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
-        public static ValueInterval<T> Inclusive<T>(T? from, T? to)
-            where T : IEquatable<T>, IComparable<T>
-            => new(
+        public static ValueInterval<T> Inclusive<T>(T? from, T? to) where T : IEquatable<T>, IComparable<T> =>
+            new(
                 from is null ? IntervalBoundary<T>.NegativeInfinity : IntervalBoundary.Inclusive(from),
                 to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Inclusive(to));
 
@@ -77,9 +74,8 @@ namespace Gapotchenko.FX.Math
         /// </param>
         /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static ValueInterval<T> Inclusive<T>(T? from, T? to)
-            where T : struct, IEquatable<T>, IComparable<T>
-            => new(
+        public static ValueInterval<T> Inclusive<T>(T? from, T? to) where T : struct, IEquatable<T>, IComparable<T> =>
+            new(
                 from is null ? IntervalBoundary<T>.NegativeInfinity : IntervalBoundary.Inclusive(from.Value),
                 to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Inclusive(to.Value));
 
@@ -97,9 +93,8 @@ namespace Gapotchenko.FX.Math
         /// If the specified value is <see langword="null"/> then the right boundary is set to the positive infinity.
         /// </param>
         /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
-        public static ValueInterval<T> Exclusive<T>(T? from, T? to)
-            where T : IEquatable<T>, IComparable<T>
-            => new(
+        public static ValueInterval<T> Exclusive<T>(T? from, T? to) where T : IEquatable<T>, IComparable<T> =>
+            new(
                 from is null ? IntervalBoundary<T>.NegativeInfinity : IntervalBoundary.Exclusive(from),
                 to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Exclusive(to));
 
@@ -118,9 +113,8 @@ namespace Gapotchenko.FX.Math
         /// </param>
         /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static ValueInterval<T> Exclusive<T>(T? from, T? to)
-            where T : struct, IEquatable<T>, IComparable<T>
-            => new(
+        public static ValueInterval<T> Exclusive<T>(T? from, T? to) where T : struct, IEquatable<T>, IComparable<T> =>
+            new(
                 from is null ? IntervalBoundary<T>.NegativeInfinity : IntervalBoundary.Exclusive(from.Value),
                 to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Exclusive(to.Value));
 
@@ -138,9 +132,8 @@ namespace Gapotchenko.FX.Math
         /// If the specified value is <see langword="null"/> then the right boundary is set to the positive infinity.
         /// </param>
         /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
-        public static ValueInterval<T> InclusiveExclusive<T>(T? from, T? to)
-            where T : IEquatable<T>, IComparable<T>
-            => new(
+        public static ValueInterval<T> InclusiveExclusive<T>(T? from, T? to) where T : IEquatable<T>, IComparable<T> =>
+            new(
                 from is null ? IntervalBoundary<T>.NegativeInfinity : IntervalBoundary.Inclusive(from),
                 to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Exclusive(to));
 
@@ -159,9 +152,8 @@ namespace Gapotchenko.FX.Math
         /// </param>
         /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static ValueInterval<T> InclusiveExclusive<T>(T? from, T? to)
-            where T : struct, IEquatable<T>, IComparable<T>
-            => new(
+        public static ValueInterval<T> InclusiveExclusive<T>(T? from, T? to) where T : struct, IEquatable<T>, IComparable<T> =>
+            new(
                 from is null ? IntervalBoundary<T>.NegativeInfinity : IntervalBoundary.Inclusive(from.Value),
                 to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Exclusive(to.Value));
 
@@ -179,9 +171,8 @@ namespace Gapotchenko.FX.Math
         /// If the specified value is <see langword="null"/> then the right boundary is set to the positive infinity.
         /// </param>
         /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
-        public static ValueInterval<T> ExclusiveInclusive<T>(T? from, T? to)
-            where T : IEquatable<T>, IComparable<T>
-            => new(
+        public static ValueInterval<T> ExclusiveInclusive<T>(T? from, T? to) where T : IEquatable<T>, IComparable<T> =>
+            new(
                 from is null ? IntervalBoundary<T>.NegativeInfinity : IntervalBoundary.Exclusive(from),
                 to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Inclusive(to));
 
@@ -200,9 +191,8 @@ namespace Gapotchenko.FX.Math
         /// </param>
         /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static ValueInterval<T> ExclusiveInclusive<T>(T? from, T? to)
-            where T : struct, IEquatable<T>, IComparable<T>
-            => new(
+        public static ValueInterval<T> ExclusiveInclusive<T>(T? from, T? to) where T : struct, IEquatable<T>, IComparable<T> =>
+            new(
                 from is null ? IntervalBoundary<T>.NegativeInfinity : IntervalBoundary.Exclusive(from.Value),
                 to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Inclusive(to.Value));
 
@@ -216,8 +206,9 @@ namespace Gapotchenko.FX.Math
         /// </summary>
         /// <param name="value">The value of the inclusive boundaries.</param>
         /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
-        public static ValueInterval<T> Degenerate<T>(T value)
-            where T : IEquatable<T>, IComparable<T> =>
-            new(IntervalBoundary.Inclusive(value), IntervalBoundary.Inclusive(value));
+        public static ValueInterval<T> Degenerate<T>(T value) where T : IEquatable<T>, IComparable<T> =>
+            new(
+                IntervalBoundary.Inclusive(value),
+                IntervalBoundary.Inclusive(value));
     }
 }

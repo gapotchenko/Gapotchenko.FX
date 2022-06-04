@@ -205,6 +205,8 @@ namespace Gapotchenko.FX.Math
         /// <param name="value">The value of the inclusive boundaries.</param>
         /// <returns>The new <see cref="Interval{T}"/> instance.</returns>
         public static Interval<T> Degenerate<T>(T value) =>
-            new(IntervalBoundary.Inclusive(value), IntervalBoundary.Inclusive(value));
+            new(
+                IntervalBoundary.Inclusive(value),
+                IntervalBoundary.Inclusive(value));
     }
 }
