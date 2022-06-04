@@ -6,6 +6,7 @@ namespace Gapotchenko.FX.Math
     /// <summary>
     /// Represents an interval boundary.
     /// </summary>
+    /// <typeparam name="T">The type of bound limit point value.</typeparam>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly struct IntervalBoundary<T>
     {
@@ -58,6 +59,24 @@ namespace Gapotchenko.FX.Math
         /// <param name="defaultValue">A value to return if the boundary is infinite.</param>
         /// <returns>The value of a bound limit point, or the specified default value when the boundary is unbounded.</returns>
         public T GetValueOrDefault(T defaultValue) => HasValue ? m_Value : defaultValue;
+
+        /// <summary>
+        /// Projects a value of the current boundary into a new boundary of the same kind.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the value returned by selector.</typeparam>
+        /// <param name="selector">
+        /// A transform function to apply to the boundary value.
+        /// The function is invoked only when the boundary has a bound limit point, i.e. has a value.
+        /// </param>
+        /// <returns>A <see cref="IntervalBoundary"/> whose value is the result of invoking the transform function on the current boundary value.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="selector"/> is null.</exception>
+        public IntervalBoundary<TResult> SelectValue<TResult>(Func<T, TResult> selector)
+        {
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return new IntervalBoundary<TResult>(Kind, HasValue ? selector(m_Value) : default!);
+        }
 
         /// <summary>
         /// Gets an empty interval boundary ∅.
