@@ -1,8 +1,12 @@
 # Learn more: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
 
+[*.{cs,vb}]
+dotnet_style_require_accessibility_modifiers=omit_if_default:warning
+dotnet_diagnostic.IDE0005.severity = warning
+
 [*.xml]
 indent_style = space
 indent_size = 2
 
-[*.{cs,vb}]
-dotnet_style_require_accessibility_modifiers=omit_if_default:warning
+[*.cs]
+csharp_style_namespace_declarations = file_scoped:warning
