@@ -374,6 +374,17 @@ public abstract class IntervalTestsBase
         Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(2))));
     }
 
+    [TestMethod]
+    public void Interval_Intersect_7()
+    {
+        var a = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary<int>.PositiveInfinity);
+        var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
+
+        var c = a.Intersect(b);
+
+        Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10))));
+    }
+
     #endregion
 
     #region IntervalEquals

@@ -11,6 +11,11 @@ public enum IntervalBoundaryKind : byte
     Empty,
 
     /// <summary>
+    /// Negative infinity, -∞.
+    /// </summary>
+    NegativeInfinity,
+
+    /// <summary>
     /// <para>
     /// Indicates that the bound limit point is included in the interval.
     /// </para>
@@ -29,11 +34,6 @@ public enum IntervalBoundaryKind : byte
     /// </para>
     /// </summary>
     Exclusive,
-
-    /// <summary>
-    /// Negative infinity, -∞.
-    /// </summary>
-    NegativeInfinity,
 
     /// <summary>
     /// Positive infinity, +∞.
