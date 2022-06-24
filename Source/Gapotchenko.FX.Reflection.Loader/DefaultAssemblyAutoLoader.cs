@@ -3,57 +3,56 @@
 using System.Runtime.Loader;
 #endif
 
-namespace Gapotchenko.FX.Reflection.Loader
+namespace Gapotchenko.FX.Reflection.Loader;
+
+sealed class DefaultAssemblyAutoLoader : AssemblyAutoLoader
 {
-    sealed class DefaultAssemblyAutoLoader : AssemblyAutoLoader
-    {
 #if TFF_ASSEMBLYLOADCONTEXT
-        private DefaultAssemblyAutoLoader(AssemblyLoadContext assemblyLoadContext) :
-            base(assemblyLoadContext)
-        {
-        }
+    private DefaultAssemblyAutoLoader(AssemblyLoadContext assemblyLoadContext) :
+        base(assemblyLoadContext)
+    {
+    }
 #else
-        private DefaultAssemblyAutoLoader()
-        {
-        }
+    private DefaultAssemblyAutoLoader()
+    {
+    }
 #endif
 
 #if TFF_ASSEMBLYLOADCONTEXT
 #if NETCOREAPP3_0_OR_GREATER
-        public static DefaultAssemblyAutoLoader Instance
+    public static DefaultAssemblyAutoLoader Instance
+    {
+        get
         {
-            get
+            // The default instance of assembly auto loader depends on the current assembly load context.
+            var assemblyLoadContext = AssemblyLoadContexts.Current;
+            if (!m_Instances.TryGetValue(assemblyLoadContext, out var instance))
             {
-                // The default instance of assembly auto loader depends on the current assembly load context.
-                var assemblyLoadContext = AssemblyLoadContexts.Current;
-                if (!m_Instances.TryGetValue(assemblyLoadContext, out var instance))
+                // AssemblyLoadContexts.Current is AsyncLocal and thus can have the same value in several threads simultaneously.
+                // This may lead to race conditions which should be avoided by providing a strong one to one AssemblyLoadContext <-> AssemblyAutoLoader mapping.
+                lock (m_Instances)
                 {
-                    // AssemblyLoadContexts.Current is AsyncLocal and thus can have the same value in several threads simultaneously.
-                    // This may lead to race conditions which should be avoided by providing a strong one to one AssemblyLoadContext <-> AssemblyAutoLoader mapping.
-                    lock (m_Instances)
+                    if (!m_Instances.TryGetValue(assemblyLoadContext, out instance))
                     {
-                        if (!m_Instances.TryGetValue(assemblyLoadContext, out instance))
-                        {
-                            instance = new DefaultAssemblyAutoLoader(assemblyLoadContext);
-                            m_Instances.Add(assemblyLoadContext, instance);
-                        }
+                        instance = new DefaultAssemblyAutoLoader(assemblyLoadContext);
+                        m_Instances.Add(assemblyLoadContext, instance);
                     }
                 }
-                return instance;
             }
+            return instance;
         }
+    }
 
-        static readonly ConditionalWeakTable<AssemblyLoadContext, DefaultAssemblyAutoLoader> m_Instances = new();
+    static readonly ConditionalWeakTable<AssemblyLoadContext, DefaultAssemblyAutoLoader> m_Instances = new();
 #else
-        public static DefaultAssemblyAutoLoader Instance { get; } = new DefaultAssemblyAutoLoader(AssemblyLoadContexts.Local);
+    public static DefaultAssemblyAutoLoader Instance { get; } = new DefaultAssemblyAutoLoader(AssemblyLoadContexts.Local);
 #endif
 #else
-        public static DefaultAssemblyAutoLoader Instance { get; } = new DefaultAssemblyAutoLoader();
+    public static DefaultAssemblyAutoLoader Instance { get; } = new DefaultAssemblyAutoLoader();
 #endif
 
-        protected override void Dispose(bool disposing)
-        {
-            // Default instance is not disposable.
-        }
+    protected override void Dispose(bool disposing)
+    {
+        // Default instance is not disposable.
     }
 }

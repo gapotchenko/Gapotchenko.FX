@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Gapotchenko.FX.Math.Topology
-{
+namespace Gapotchenko.FX.Math.Topology;
+
 	partial class Graph<TVertex>
 	{
 		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -46,4 +46,3 @@ namespace Gapotchenko.FX.Math.Topology
 			}
 		}
 	}
-}

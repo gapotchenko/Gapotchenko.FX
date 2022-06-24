@@ -4,174 +4,173 @@ using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-namespace Gapotchenko.FX.Diagnostics.Pal.Windows
-{
+namespace Gapotchenko.FX.Diagnostics.Pal.Windows;
+
 #if NET && !WINDOWS
-    [SupportedOSPlatform("windows")]
+[SupportedOSPlatform("windows")]
 #endif
-    static class ProcessMemory
+static class ProcessMemory
+{
+    public static int GetBitness(IntPtr hProcess)
     {
-        public static int GetBitness(IntPtr hProcess)
+        if (Environment.Is64BitOperatingSystem)
         {
-            if (Environment.Is64BitOperatingSystem)
-            {
-                if (!NativeMethods.IsWow64Process(hProcess, out var wow64))
-                    return 32;
-                if (wow64)
-                    return 32;
-                return 64;
-            }
-            else
-            {
+            if (!NativeMethods.IsWow64Process(hProcess, out var wow64))
                 return 32;
-            }
+            if (wow64)
+                return 32;
+            return 64;
         }
-
-        static unsafe bool ReadProcessMemory(IntPtr hProcess, UniPtr from, void* to, nint length, out nint actualLength)
+        else
         {
-            if (from.CanBeRepresentedByNativePointer)
-            {
-                actualLength = 0;
-                return NativeMethods.ReadProcessMemory(hProcess, from, to, length, ref actualLength);
-            }
-            else if (from.Size == 8 && IntPtr.Size == 4)
-            {
-                long numberOfBytesRead = 0;
-                var status = NativeMethods.NtWow64ReadVirtualMemory64(hProcess, from.ToInt64(), to, length, ref numberOfBytesRead);
-                actualLength = (nint)numberOfBytesRead;
-                return status == NativeMethods.STATUS_SUCCESS;
-            }
-            else
-            {
-                throw new Exception("Unable to access process memory due to unsupported bitness cardinality.");
-            }
+            return 32;
         }
+    }
 
-        public static unsafe bool TryReadIntPtr(IntPtr hProcess, UniPtr address, out UniPtr value)
+    static unsafe bool ReadProcessMemory(IntPtr hProcess, UniPtr from, void* to, nint length, out nint actualLength)
+    {
+        if (from.CanBeRepresentedByNativePointer)
         {
-            if (address.Size == 8)
-            {
-                long data;
-                const int length = sizeof(long);
-
-                bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
-
-                value = new UniPtr(data);
-                return status && actualLength == length;
-            }
-            else if (address.Size == 4)
-            {
-                int data;
-                const int length = sizeof(int);
-
-                bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
-
-                value = new UniPtr(data);
-                return status && actualLength == length;
-            }
-            else
-            {
-                throw new NotSupportedException("Unsupported UniPtr size.");
-            }
+            actualLength = 0;
+            return NativeMethods.ReadProcessMemory(hProcess, from, to, length, ref actualLength);
         }
-
-        public static unsafe bool TryReadUInt16(IntPtr hProcess, UniPtr address, out ushort value)
+        else if (from.Size == 8 && IntPtr.Size == 4)
         {
-            ushort data;
-            const int length = sizeof(ushort);
+            long numberOfBytesRead = 0;
+            var status = NativeMethods.NtWow64ReadVirtualMemory64(hProcess, from.ToInt64(), to, length, ref numberOfBytesRead);
+            actualLength = (nint)numberOfBytesRead;
+            return status == NativeMethods.STATUS_SUCCESS;
+        }
+        else
+        {
+            throw new Exception("Unable to access process memory due to unsupported bitness cardinality.");
+        }
+    }
+
+    public static unsafe bool TryReadIntPtr(IntPtr hProcess, UniPtr address, out UniPtr value)
+    {
+        if (address.Size == 8)
+        {
+            long data;
+            const int length = sizeof(long);
 
             bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
 
-            value = data;
+            value = new UniPtr(data);
             return status && actualLength == length;
         }
-
-        public static bool HasReadAccess(IntPtr hProcess, IntPtr address, out int size)
+        else if (address.Size == 4)
         {
-            size = 0;
+            int data;
+            const int length = sizeof(int);
 
-            var memInfo = new NativeMethods.MEMORY_BASIC_INFORMATION();
-            int result = NativeMethods.VirtualQueryEx(
+            bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
+
+            value = new UniPtr(data);
+            return status && actualLength == length;
+        }
+        else
+        {
+            throw new NotSupportedException("Unsupported UniPtr size.");
+        }
+    }
+
+    public static unsafe bool TryReadUInt16(IntPtr hProcess, UniPtr address, out ushort value)
+    {
+        ushort data;
+        const int length = sizeof(ushort);
+
+        bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
+
+        value = data;
+        return status && actualLength == length;
+    }
+
+    public static bool HasReadAccess(IntPtr hProcess, IntPtr address, out int size)
+    {
+        size = 0;
+
+        var memInfo = new NativeMethods.MEMORY_BASIC_INFORMATION();
+        int result = NativeMethods.VirtualQueryEx(
+            hProcess,
+            address,
+            ref memInfo,
+            Marshal.SizeOf(memInfo));
+
+        if (result == 0)
+            return false;
+
+        if (memInfo.Protect == NativeMethods.PAGE_NOACCESS || memInfo.Protect == NativeMethods.PAGE_EXECUTE)
+            return false;
+
+        try
+        {
+            size = Convert.ToInt32(memInfo.RegionSize.ToInt64() - (address.ToInt64() - memInfo.BaseAddress.ToInt64()));
+        }
+        catch (OverflowException)
+        {
+            return false;
+        }
+
+        if (size <= 0)
+            return false;
+
+        return true;
+    }
+
+    public static bool HasReadAccessWow64(IntPtr hProcess, long address, out int size)
+    {
+        size = 0;
+
+        NativeMethods.MEMORY_BASIC_INFORMATION_WOW64 memInfo;
+
+        int memInfoLength = Marshal.SizeOf<NativeMethods.MEMORY_BASIC_INFORMATION_WOW64>();
+
+        const int memInfoAlign = 8;
+
+        long resultLength = 0;
+        int result;
+
+        IntPtr hMemInfo = Marshal.AllocHGlobal(memInfoLength + memInfoAlign * 2);
+        try
+        {
+            // Align to 64 bits.
+            var hMemInfoAligned = new IntPtr(hMemInfo.ToInt64() & ~(memInfoAlign - 1L));
+
+            result = NativeMethods.NtWow64QueryVirtualMemory64(
                 hProcess,
                 address,
-                ref memInfo,
-                Marshal.SizeOf(memInfo));
+                NativeMethods.MEMORY_INFORMATION_CLASS.MemoryBasicInformation,
+                hMemInfoAligned,
+                memInfoLength,
+                ref resultLength);
 
-            if (result == 0)
-                return false;
-
-            if (memInfo.Protect == NativeMethods.PAGE_NOACCESS || memInfo.Protect == NativeMethods.PAGE_EXECUTE)
-                return false;
-
-            try
-            {
-                size = Convert.ToInt32(memInfo.RegionSize.ToInt64() - (address.ToInt64() - memInfo.BaseAddress.ToInt64()));
-            }
-            catch (OverflowException)
-            {
-                return false;
-            }
-
-            if (size <= 0)
-                return false;
-
-            return true;
+            memInfo = Marshal.PtrToStructure<NativeMethods.MEMORY_BASIC_INFORMATION_WOW64>(hMemInfoAligned);
         }
-
-        public static bool HasReadAccessWow64(IntPtr hProcess, long address, out int size)
+        finally
         {
-            size = 0;
-
-            NativeMethods.MEMORY_BASIC_INFORMATION_WOW64 memInfo;
-
-            int memInfoLength = Marshal.SizeOf<NativeMethods.MEMORY_BASIC_INFORMATION_WOW64>();
-
-            const int memInfoAlign = 8;
-
-            long resultLength = 0;
-            int result;
-
-            IntPtr hMemInfo = Marshal.AllocHGlobal(memInfoLength + memInfoAlign * 2);
-            try
-            {
-                // Align to 64 bits.
-                var hMemInfoAligned = new IntPtr(hMemInfo.ToInt64() & ~(memInfoAlign - 1L));
-
-                result = NativeMethods.NtWow64QueryVirtualMemory64(
-                    hProcess,
-                    address,
-                    NativeMethods.MEMORY_INFORMATION_CLASS.MemoryBasicInformation,
-                    hMemInfoAligned,
-                    memInfoLength,
-                    ref resultLength);
-
-                memInfo = Marshal.PtrToStructure<NativeMethods.MEMORY_BASIC_INFORMATION_WOW64>(hMemInfoAligned);
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(hMemInfo);
-            }
-
-            if (result != NativeMethods.STATUS_SUCCESS)
-                return false;
-
-            if (memInfo.Protect == NativeMethods.PAGE_NOACCESS || memInfo.Protect == NativeMethods.PAGE_EXECUTE)
-                return false;
-
-            try
-            {
-                size = Convert.ToInt32(memInfo.RegionSize - (address - memInfo.BaseAddress));
-            }
-            catch (OverflowException)
-            {
-                return false;
-            }
-
-            if (size <= 0)
-                return false;
-
-            return true;
+            Marshal.FreeHGlobal(hMemInfo);
         }
+
+        if (result != NativeMethods.STATUS_SUCCESS)
+            return false;
+
+        if (memInfo.Protect == NativeMethods.PAGE_NOACCESS || memInfo.Protect == NativeMethods.PAGE_EXECUTE)
+            return false;
+
+        try
+        {
+            size = Convert.ToInt32(memInfo.RegionSize - (address - memInfo.BaseAddress));
+        }
+        catch (OverflowException)
+        {
+            return false;
+        }
+
+        if (size <= 0)
+            return false;
+
+        return true;
     }
 }
 

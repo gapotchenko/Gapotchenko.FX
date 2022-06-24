@@ -6,165 +6,164 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Gapotchenko.FX.Reflection.Loader.Backends
+namespace Gapotchenko.FX.Reflection.Loader.Backends;
+
+class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
 {
-    class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
+    public ProbingPathAssemblyLoaderBackend(bool isAttached, AssemblyLoadPal assemblyLoadPal, params string[] probingPaths)
     {
-        public ProbingPathAssemblyLoaderBackend(bool isAttached, AssemblyLoadPal assemblyLoadPal, params string[] probingPaths)
-        {
-            AssemblyLoadPal = assemblyLoadPal;
-            m_ProbingPaths = probingPaths;
+        AssemblyLoadPal = assemblyLoadPal;
+        m_ProbingPaths = probingPaths;
 
-            if (isAttached)
-                AssemblyLoadPal.Resolving += AssemblyResolver_Resolving;
-        }
+        if (isAttached)
+            AssemblyLoadPal.Resolving += AssemblyResolver_Resolving;
+    }
 
-        public void Dispose()
-        {
-            AssemblyLoadPal.Resolving -= AssemblyResolver_Resolving;
-        }
+    public void Dispose()
+    {
+        AssemblyLoadPal.Resolving -= AssemblyResolver_Resolving;
+    }
 
-        public bool StrictVersionMatch { get; init; }
+    public bool StrictVersionMatch { get; init; }
 
-        protected readonly AssemblyLoadPal AssemblyLoadPal;
-        readonly string[] m_ProbingPaths;
+    protected readonly AssemblyLoadPal AssemblyLoadPal;
+    readonly string[] m_ProbingPaths;
 
-        static IEnumerable<string> _EnumerateAssemblies(string path) =>
-            Directory.EnumerateFiles(path, "*.dll")
-            .Concat(Directory.EnumerateFiles(path, "*.exe"));
+    static IEnumerable<string> _EnumerateAssemblies(string path) =>
+        Directory.EnumerateFiles(path, "*.dll")
+        .Concat(Directory.EnumerateFiles(path, "*.exe"));
 
-        List<KeyValuePair<string, AssemblyName>>? _CachedProbingList;
+    List<KeyValuePair<string, AssemblyName>>? _CachedProbingList;
 
-        List<KeyValuePair<string, AssemblyName>> _GetProbingList()
-        {
-            if (_CachedProbingList == null)
-                lock (this)
-                    if (_CachedProbingList == null)
+    List<KeyValuePair<string, AssemblyName>> _GetProbingList()
+    {
+        if (_CachedProbingList == null)
+            lock (this)
+                if (_CachedProbingList == null)
+                {
+                    _CachedProbingList = new();
+
+                    foreach (string path in m_ProbingPaths)
                     {
-                        _CachedProbingList = new();
+                        if (!Directory.Exists(path))
+                            continue;
 
-                        foreach (string path in m_ProbingPaths)
+                        foreach (string file in _EnumerateAssemblies(path))
                         {
-                            if (!Directory.Exists(path))
-                                continue;
-
-                            foreach (string file in _EnumerateAssemblies(path))
+                            AssemblyName definition;
+                            try
                             {
-                                AssemblyName definition;
-                                try
-                                {
-                                    definition = AssemblyName.GetAssemblyName(file);
-                                }
-                                catch
-                                {
-                                    continue;
-                                }
-                                _CachedProbingList.Add(new(file, definition));
+                                definition = AssemblyName.GetAssemblyName(file);
                             }
+                            catch
+                            {
+                                continue;
+                            }
+                            _CachedProbingList.Add(new(file, definition));
                         }
                     }
+                }
 
-            return _CachedProbingList;
-        }
+        return _CachedProbingList;
+    }
 
-        readonly ConcurrentDictionary<string, Assembly?> _ResolvedAssembliesCache = new(StringComparer.OrdinalIgnoreCase);
+    readonly ConcurrentDictionary<string, Assembly?> _ResolvedAssembliesCache = new(StringComparer.OrdinalIgnoreCase);
 
-        bool _ReferenceMatchesDefinition(AssemblyName reference, AssemblyName definition) =>
-            StringComparer.OrdinalIgnoreCase.Equals(reference.Name, definition.Name) &&
-            _ReferenceMatchesDefinition(reference.Version, definition.Version) &&
-            ArrayEqualityComparer.Equals(reference.GetPublicKeyToken(), definition.GetPublicKeyToken()) &&
+    bool _ReferenceMatchesDefinition(AssemblyName reference, AssemblyName definition) =>
+        StringComparer.OrdinalIgnoreCase.Equals(reference.Name, definition.Name) &&
+        _ReferenceMatchesDefinition(reference.Version, definition.Version) &&
+        ArrayEqualityComparer.Equals(reference.GetPublicKeyToken(), definition.GetPublicKeyToken()) &&
 #if NET40
-            (reference.CultureInfo is null && definition.CultureInfo is null || (reference.CultureInfo?.Equals(definition.CultureInfo) ?? false))
+        (reference.CultureInfo is null && definition.CultureInfo is null || (reference.CultureInfo?.Equals(definition.CultureInfo) ?? false))
 #else
-            string.Equals(reference.CultureName, definition.CultureName, StringComparison.OrdinalIgnoreCase)
+        string.Equals(reference.CultureName, definition.CultureName, StringComparison.OrdinalIgnoreCase)
 #endif
-            ;
+        ;
 
-        bool _ReferenceMatchesDefinition(Version? reference, Version? definition)
+    bool _ReferenceMatchesDefinition(Version? reference, Version? definition)
+    {
+        if (StrictVersionMatch)
         {
-            if (StrictVersionMatch)
-            {
-                return reference == definition;
-            }
-            else
-            {
-                if (reference == definition)
-                    return true;
-                if (reference is null || definition is null)
-                    return false;
-
-                return reference <= definition;
-            }
+            return reference == definition;
         }
-
-        Assembly? AssemblyResolver_Resolving(AssemblyLoadPal sender, AssemblyLoadPal.ResolvingEventArgs args)
+        else
         {
-            if (IsAssemblyResolutionInhibited(args.RequestingAssembly))
-                return null;
+            if (reference == definition)
+                return true;
+            if (reference is null || definition is null)
+                return false;
 
-            var name = args.FullName;
+            return reference <= definition;
+        }
+    }
 
-            if (_ResolvedAssembliesCache.TryGetValue(name, out var assembly))
-                return assembly;
+    Assembly? AssemblyResolver_Resolving(AssemblyLoadPal sender, AssemblyLoadPal.ResolvingEventArgs args)
+    {
+        if (IsAssemblyResolutionInhibited(args.RequestingAssembly))
+            return null;
 
-            var reference = args.Name;
+        var name = args.FullName;
 
-            foreach (var i in _GetProbingList())
-            {
-                var definition = i.Value;
-                if (_ReferenceMatchesDefinition(reference, definition))
-                {
-                    assembly = LoadAssembly(i.Key, definition);
-                    break;
-                }
-            }
-
-            _ResolvedAssembliesCache.TryAdd(name, assembly);
+        if (_ResolvedAssembliesCache.TryGetValue(name, out var assembly))
             return assembly;
-        }
 
-        protected virtual bool IsAssemblyResolutionInhibited(Assembly? requestingAssembly) => false;
+        var reference = args.Name;
 
-        protected virtual Assembly LoadAssembly(string filePath, AssemblyName name) => AssemblyLoadPal.LoadFrom(filePath);
-
-        public string? ResolveAssemblyPath(AssemblyName assemblyName)
+        foreach (var i in _GetProbingList())
         {
-            if (_ResolvedAssembliesCache.TryGetValue(assemblyName.FullName, out var assembly))
-                return assembly?.Location;
-
-            var reference = assemblyName;
-
-            foreach (var i in _GetProbingList())
+            var definition = i.Value;
+            if (_ReferenceMatchesDefinition(reference, definition))
             {
-                var definition = i.Value;
-                if (_ReferenceMatchesDefinition(reference, definition))
-                    return i.Key;
+                assembly = LoadAssembly(i.Key, definition);
+                break;
             }
-
-            return null;
         }
 
-        public string? ResolveUnmanagedDllPath(string unmanagedDllName)
+        _ResolvedAssembliesCache.TryAdd(name, assembly);
+        return assembly;
+    }
+
+    protected virtual bool IsAssemblyResolutionInhibited(Assembly? requestingAssembly) => false;
+
+    protected virtual Assembly LoadAssembly(string filePath, AssemblyName name) => AssemblyLoadPal.LoadFrom(filePath);
+
+    public string? ResolveAssemblyPath(AssemblyName assemblyName)
+    {
+        if (_ResolvedAssembliesCache.TryGetValue(assemblyName.FullName, out var assembly))
+            return assembly?.Location;
+
+        var reference = assemblyName;
+
+        foreach (var i in _GetProbingList())
         {
-            bool isRelativePath =
+            var definition = i.Value;
+            if (_ReferenceMatchesDefinition(reference, definition))
+                return i.Key;
+        }
+
+        return null;
+    }
+
+    public string? ResolveUnmanagedDllPath(string unmanagedDllName)
+    {
+        bool isRelativePath =
 #if NETCOREAPP2_1_OR_GREATER
-                !Path.IsPathFullyQualified(unmanagedDllName);
+            !Path.IsPathFullyQualified(unmanagedDllName);
 #else
-                !Path.IsPathRooted(unmanagedDllName);
+            !Path.IsPathRooted(unmanagedDllName);
 #endif
 
-            foreach (var libraryNameVariation in LibraryNameVariation.Enumerate(unmanagedDllName, isRelativePath))
+        foreach (var libraryNameVariation in LibraryNameVariation.Enumerate(unmanagedDllName, isRelativePath))
+        {
+            string libraryName = libraryNameVariation.Prefix + unmanagedDllName + libraryNameVariation.Suffix;
+            foreach (string probingPath in m_ProbingPaths)
             {
-                string libraryName = libraryNameVariation.Prefix + unmanagedDllName + libraryNameVariation.Suffix;
-                foreach (string probingPath in m_ProbingPaths)
-                {
-                    string libraryPath = Path.Combine(probingPath, libraryName);
-                    if (File.Exists(libraryPath))
-                        return libraryPath;
-                }
+                string libraryPath = Path.Combine(probingPath, libraryName);
+                if (File.Exists(libraryPath))
+                    return libraryPath;
             }
-
-            return null;
         }
+
+        return null;
     }
 }

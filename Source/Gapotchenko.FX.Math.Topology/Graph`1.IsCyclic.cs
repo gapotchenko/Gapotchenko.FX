@@ -1,58 +1,57 @@
 ﻿using System.Collections.Generic;
 
-namespace Gapotchenko.FX.Math.Topology
+namespace Gapotchenko.FX.Math.Topology;
+
+partial class Graph<TVertex>
 {
-    partial class Graph<TVertex>
+    /// <inheritdoc/>
+    public bool IsCyclic
     {
-        /// <inheritdoc/>
-        public bool IsCyclic
+        get
         {
-            get
-            {
-                if (m_CachedFlags[CF_IsCyclic_HasValue])
-                    return m_CachedFlags[CF_IsCyclic_Value];
+            if (m_CachedFlags[CF_IsCyclic_HasValue])
+                return m_CachedFlags[CF_IsCyclic_Value];
 
-                bool value = IsCyclicCore();
+            bool value = IsCyclicCore();
 
-                m_CachedFlags[CF_IsCyclic_Value] = value;
-                m_CachedFlags[CF_IsCyclic_HasValue] = true;
+            m_CachedFlags[CF_IsCyclic_Value] = value;
+            m_CachedFlags[CF_IsCyclic_HasValue] = true;
 
-                return value;
-            }
+            return value;
         }
+    }
 
-        bool IsCyclicCore()
+    bool IsCyclicCore()
+    {
+        var comparer = VertexComparer;
+        var visited = new HashSet<TVertex>(comparer);
+        var recStack = new HashSet<TVertex>(comparer);
+
+        bool IsCyclicHelper(TVertex v)
         {
-            var comparer = VertexComparer;
-            var visited = new HashSet<TVertex>(comparer);
-            var recStack = new HashSet<TVertex>(comparer);
+            if (recStack.Contains(v))
+                return true;
 
-            bool IsCyclicHelper(TVertex v)
-            {
-                if (recStack.Contains(v))
-                    return true;
-
-                if (!visited.Add(v))
-                    return false;
-
-                recStack.Add(v);
-
-                foreach (var i in DestinationVerticesAdjacentTo(v))
-                    if (IsCyclicHelper(i))
-                        return true;
-
-                recStack.Remove(v);
-
+            if (!visited.Add(v))
                 return false;
-            }
 
-            foreach (var v in Vertices)
-            {
-                if (IsCyclicHelper(v))
+            recStack.Add(v);
+
+            foreach (var i in DestinationVerticesAdjacentTo(v))
+                if (IsCyclicHelper(i))
                     return true;
-            }
+
+            recStack.Remove(v);
 
             return false;
         }
+
+        foreach (var v in Vertices)
+        {
+            if (IsCyclicHelper(v))
+                return true;
+        }
+
+        return false;
     }
 }

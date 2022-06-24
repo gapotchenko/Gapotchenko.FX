@@ -2,42 +2,41 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace Gapotchenko.FX.Math.Topology
+namespace Gapotchenko.FX.Math.Topology;
+
+partial class Graph<TVertex>
 {
-    partial class Graph<TVertex>
+    /// <summary>
+    /// Gets or configures a value indicating whether the current graph is directed.
+    /// </summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public bool IsDirected
     {
-        /// <summary>
-        /// Gets or configures a value indicating whether the current graph is directed.
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public bool IsDirected
+        get => !m_Flags[F_IsUndirected];
+        init
         {
-            get => !m_Flags[F_IsUndirected];
-            init
-            {
-                if (m_Flags[F_IsDirected_Initialized])
-                    throw new InvalidOperationException("Graph direction is already initialized.");
+            if (m_Flags[F_IsDirected_Initialized])
+                throw new InvalidOperationException("Graph direction is already initialized.");
 
-                if (!value)
-                    ConvertToUndirected();
+            if (!value)
+                ConvertToUndirected();
 
-                m_Flags[F_IsDirected_Initialized] = true;
-            }
+            m_Flags[F_IsDirected_Initialized] = true;
         }
+    }
 
-        void ConvertToUndirected()
-        {
-            if (m_EdgeComparer != null)
-                throw new InvalidOperationException("Graph direction cannot be changed at this stage.");
+    void ConvertToUndirected()
+    {
+        if (m_EdgeComparer != null)
+            throw new InvalidOperationException("Graph direction cannot be changed at this stage.");
 
-            var edges = Edges;
-            var savedEdges = edges.ToList();
+        var edges = Edges;
+        var savedEdges = edges.ToList();
 
-            m_Flags[F_IsUndirected] = true;
-            m_ReverseAdjacencyList = null;
+        m_Flags[F_IsUndirected] = true;
+        m_ReverseAdjacencyList = null;
 
-            edges.Clear();
-            edges.UnionWith(savedEdges);
-        }
+        edges.Clear();
+        edges.UnionWith(savedEdges);
     }
 }

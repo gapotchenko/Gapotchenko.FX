@@ -1,104 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gapotchenko.FX.Linq
+namespace Gapotchenko.FX.Linq;
+
+partial class EnumerableEx
 {
-    partial class EnumerableEx
+    /// <summary>
+    /// Returns the only element of a sequence, or a default value if the sequence is empty or contains several elements.
+    /// </summary>
+    /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+    /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
+    /// <returns>
+    /// The only element of the input sequence, or default value if the sequence is empty or contains several elements.
+    /// </returns>
+    public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source) => ScalarOrDefault(source, default(TSource));
+
+    /// <summary>
+    /// Returns the only element of a sequence, or the specified default value if the sequence is empty or contains several elements.
+    /// </summary>
+    /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+    /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
+    /// <param name="defaultValue">The default value.</param>
+    /// <returns>
+    /// The only element of the input sequence, or <paramref name="defaultValue"/> if the sequence is empty or contains several elements.
+    /// </returns>
+    public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source, TSource defaultValue)
     {
-        /// <summary>
-        /// Returns the only element of a sequence, or a default value if the sequence is empty or contains several elements.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
-        /// <returns>
-        /// The only element of the input sequence, or default value if the sequence is empty or contains several elements.
-        /// </returns>
-        public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source) => ScalarOrDefault(source, default(TSource));
+        if (source == null)
+            throw new ArgumentNullException(nameof(source));
 
-        /// <summary>
-        /// Returns the only element of a sequence, or the specified default value if the sequence is empty or contains several elements.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
-        /// <param name="defaultValue">The default value.</param>
-        /// <returns>
-        /// The only element of the input sequence, or <paramref name="defaultValue"/> if the sequence is empty or contains several elements.
-        /// </returns>
-        public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source, TSource defaultValue)
+        using var enumerator = source.GetEnumerator();
+
+        if (!enumerator.MoveNext())
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            using var enumerator = source.GetEnumerator();
-
-            if (!enumerator.MoveNext())
-            {
-                // The sequence is empty.
-                return defaultValue;
-            }
-
-            var result = enumerator.Current;
-
-            if (enumerator.MoveNext())
-            {
-                // The sequence contains several elements.
-                return defaultValue;
-            }
-
-            return result;
+            // The sequence is empty.
+            return defaultValue;
         }
 
-        /// <summary>
-        /// Returns the only element of a sequence that satisfies a specified condition,
-        /// or default value when no such element exists or more than one element satisfies the condition.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
-        /// <param name="predicate">A function to test an element for a condition.</param>
-        /// <returns>
-        /// The only element of the input sequence that satisfies a specified condition,
-        /// or default value when no such element exists or more than one element satisfies the condition.
-        /// </returns>
-        public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) => ScalarOrDefault(source, predicate, default!);
+        var result = enumerator.Current;
 
-        /// <summary>
-        /// Returns the only element of a sequence that satisfies a specified condition,
-        /// or the specified default value when no such element exists or more than one element satisfies the condition.
-        /// </summary>
-        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
-        /// <param name="predicate">A function to test an element for a condition.</param>
-        /// <param name="defaultValue">The default value.</param>
-        /// <returns>
-        /// The only element of the input sequence that satisfies a specified condition,
-        /// or <paramref name="defaultValue"/> when no such element exists or more than one element satisfies the condition.
-        /// </returns>
-        public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate, TSource defaultValue)
+        if (enumerator.MoveNext())
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            // The sequence contains several elements.
+            return defaultValue;
+        }
 
-            Optional<TSource> result = default;
+        return result;
+    }
 
-            foreach (var element in source)
+    /// <summary>
+    /// Returns the only element of a sequence that satisfies a specified condition,
+    /// or default value when no such element exists or more than one element satisfies the condition.
+    /// </summary>
+    /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+    /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
+    /// <param name="predicate">A function to test an element for a condition.</param>
+    /// <returns>
+    /// The only element of the input sequence that satisfies a specified condition,
+    /// or default value when no such element exists or more than one element satisfies the condition.
+    /// </returns>
+    public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) => ScalarOrDefault(source, predicate, default!);
+
+    /// <summary>
+    /// Returns the only element of a sequence that satisfies a specified condition,
+    /// or the specified default value when no such element exists or more than one element satisfies the condition.
+    /// </summary>
+    /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+    /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
+    /// <param name="predicate">A function to test an element for a condition.</param>
+    /// <param name="defaultValue">The default value.</param>
+    /// <returns>
+    /// The only element of the input sequence that satisfies a specified condition,
+    /// or <paramref name="defaultValue"/> when no such element exists or more than one element satisfies the condition.
+    /// </returns>
+    public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate, TSource defaultValue)
+    {
+        if (source == null)
+            throw new ArgumentNullException(nameof(source));
+        if (predicate == null)
+            throw new ArgumentNullException(nameof(predicate));
+
+        Optional<TSource> result = default;
+
+        foreach (var element in source)
+        {
+            if (predicate(element))
             {
-                if (predicate(element))
+                if (result.HasValue)
                 {
-                    if (result.HasValue)
-                    {
-                        // More than one element satisfies the condition.
-                        return defaultValue;
-                    }
-                    else
-                    {
-                        result = element;
-                    }
+                    // More than one element satisfies the condition.
+                    return defaultValue;
+                }
+                else
+                {
+                    result = element;
                 }
             }
-
-            return result.GetValueOrDefault(defaultValue);
         }
+
+        return result.GetValueOrDefault(defaultValue);
     }
 }

@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Gapotchenko.FX.Math.Combinatorics
+namespace Gapotchenko.FX.Math.Combinatorics;
+
+enum ResultMode : byte
 {
-    enum ResultMode : byte
-    {
-        Default,
-        Distinct,
-        DistinctView
-    }
+    Default,
+    Distinct,
+    DistinctView
 }

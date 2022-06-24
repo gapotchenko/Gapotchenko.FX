@@ -3,67 +3,66 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gapotchenko.FX.Math.Topology
+namespace Gapotchenko.FX.Math.Topology;
+
+partial class Graph<TVertex>
 {
-    partial class Graph<TVertex>
+    /// <inheritdoc/>
+    public bool IsVertexIsolated(TVertex vertex)
     {
-        /// <inheritdoc/>
-        public bool IsVertexIsolated(TVertex vertex)
+        static bool IsAssociatedKeyVertex(AssociativeArray<TVertex, AdjacencyRow?> adjList, TVertex vertex) =>
+            adjList.TryGetValue(vertex, out var adjRow) &&
+            adjRow?.Count > 0;
+
+        var adjList = m_AdjacencyList;
+
+        if (IsAssociatedKeyVertex(adjList, vertex))
+            return false;
+
+        var revAdjList = m_ReverseAdjacencyList;
+        if (revAdjList != null)
         {
-            static bool IsAssociatedKeyVertex(AssociativeArray<TVertex, AdjacencyRow?> adjList, TVertex vertex) =>
-                adjList.TryGetValue(vertex, out var adjRow) &&
-                adjRow?.Count > 0;
-
-            var adjList = m_AdjacencyList;
-
-            if (IsAssociatedKeyVertex(adjList, vertex))
+            if (IsAssociatedKeyVertex(revAdjList, vertex))
                 return false;
-
-            var revAdjList = m_ReverseAdjacencyList;
-            if (revAdjList != null)
+        }
+        else
+        {
+            foreach (var i in adjList)
             {
-                if (IsAssociatedKeyVertex(revAdjList, vertex))
+                var adjRow = i.Value;
+                if (adjRow == null)
+                    continue;
+
+                if (adjRow.Contains(vertex))
                     return false;
             }
-            else
-            {
-                foreach (var i in adjList)
-                {
-                    var adjRow = i.Value;
-                    if (adjRow == null)
-                        continue;
-
-                    if (adjRow.Contains(vertex))
-                        return false;
-                }
-            }
-
-            return true;
         }
 
-        /// <inheritdoc/>
-        public IEnumerable<TVertex> IsolatedVertices
+        return true;
+    }
+
+    /// <inheritdoc/>
+    public IEnumerable<TVertex> IsolatedVertices
+    {
+        get
         {
-            get
+            var map = new AssociativeArray<TVertex, bool>(VertexComparer);
+
+            foreach (var (v, adjRow) in m_AdjacencyList)
             {
-                var map = new AssociativeArray<TVertex, bool>(VertexComparer);
-
-                foreach (var (v, adjRow) in m_AdjacencyList)
+                if (adjRow?.Count > 0)
                 {
-                    if (adjRow?.Count > 0)
-                    {
-                        foreach (var u in adjRow)
-                            map[u] = false;
-                        map[v] = false;
-                    }
-                    else if (!map.ContainsKey(v))
-                    {
-                        map.Add(v, true);
-                    }
+                    foreach (var u in adjRow)
+                        map[u] = false;
+                    map[v] = false;
                 }
-
-                return map.Where(x => x.Value).Select(x => x.Key);
+                else if (!map.ContainsKey(v))
+                {
+                    map.Add(v, true);
+                }
             }
+
+            return map.Where(x => x.Value).Select(x => x.Key);
         }
     }
 }

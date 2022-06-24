@@ -1,62 +1,61 @@
 ﻿using System.Collections.Generic;
 
-namespace Gapotchenko.FX.Math.Topology
+namespace Gapotchenko.FX.Math.Topology;
+
+partial class Graph<TVertex>
 {
-    partial class Graph<TVertex>
+    /// <inheritdoc/>
+    public void ReduceTransitions()
     {
-        /// <inheritdoc/>
-        public void ReduceTransitions()
+        bool hasChanges = false;
+
+        foreach (var i in m_AdjacencyList)
         {
-            bool hasChanges = false;
+            var adjRow = i.Value;
+            if (adjRow == null)
+                continue;
 
-            foreach (var i in m_AdjacencyList)
+            var from = i.Key;
+
+            List<TVertex>? removeList = null;
+
+            foreach (var to in adjRow)
             {
-                var adjRow = i.Value;
-                if (adjRow == null)
-                    continue;
-
-                var from = i.Key;
-
-                List<TVertex>? removeList = null;
-
-                foreach (var to in adjRow)
+                if (HasTransitivePath(from, to))
                 {
-                    if (HasTransitivePath(from, to))
-                    {
-                        removeList ??= new List<TVertex>();
-                        removeList.Add(to);
-                    }
-                }
-
-                if (removeList != null)
-                {
-                    adjRow.ExceptWith(removeList);
-                    hasChanges = true;
+                    removeList ??= new List<TVertex>();
+                    removeList.Add(to);
                 }
             }
 
-            if (hasChanges)
-                InvalidateCache();
+            if (removeList != null)
+            {
+                adjRow.ExceptWith(removeList);
+                hasChanges = true;
+            }
         }
 
-        /// <summary>
-        /// <para>
-        /// Gets a transitively reduced graph.
-        /// </para>
-        /// <para>
-        /// Transitive reduction prunes the transitive relations that have shorter paths.
-        /// </para>
-        /// </summary>
-        /// <returns>The transitively reduced graph.</returns>
-        public Graph<TVertex> GetTransitiveReduction()
-        {
-            var graph = Clone();
-            graph.ReduceTransitions();
-            return graph;
-        }
-
-        IGraph<TVertex> IGraph<TVertex>.GetTransitiveReduction() => GetTransitiveReduction();
-
-        IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.GetTransitiveReduction() => GetTransitiveReduction();
+        if (hasChanges)
+            InvalidateCache();
     }
+
+    /// <summary>
+    /// <para>
+    /// Gets a transitively reduced graph.
+    /// </para>
+    /// <para>
+    /// Transitive reduction prunes the transitive relations that have shorter paths.
+    /// </para>
+    /// </summary>
+    /// <returns>The transitively reduced graph.</returns>
+    public Graph<TVertex> GetTransitiveReduction()
+    {
+        var graph = Clone();
+        graph.ReduceTransitions();
+        return graph;
+    }
+
+    IGraph<TVertex> IGraph<TVertex>.GetTransitiveReduction() => GetTransitiveReduction();
+
+    IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.GetTransitiveReduction() => GetTransitiveReduction();
 }

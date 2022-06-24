@@ -1,27 +1,26 @@
-﻿namespace Gapotchenko.FX.Data.Integrity.Checksum
+﻿namespace Gapotchenko.FX.Data.Integrity.Checksum;
+
+/// <summary>
+/// Customizable CRC-8 checksum algorithm.
+/// </summary>
+public class CustomCrc8 : GenericCrc8
 {
     /// <summary>
-    /// Customizable CRC-8 checksum algorithm.
+    /// Initializes a new instance of the <see cref="CustomCrc8"/> class with specified CRC-8 algorithm parameters.
     /// </summary>
-    public class CustomCrc8 : GenericCrc8
+    /// <inheritdoc/>
+    public CustomCrc8(
+        byte polynomial,
+        byte initialValue,
+        bool reflectedInput,
+        bool reflectedOutput,
+        byte xorOutput)
+        : base(
+              polynomial,
+              initialValue,
+              reflectedInput,
+              reflectedOutput,
+              xorOutput)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomCrc8"/> class with specified CRC-8 algorithm parameters.
-        /// </summary>
-        /// <inheritdoc/>
-        public CustomCrc8(
-            byte polynomial,
-            byte initialValue,
-            bool reflectedInput,
-            bool reflectedOutput,
-            byte xorOutput)
-            : base(
-                  polynomial,
-                  initialValue,
-                  reflectedInput,
-                  reflectedOutput,
-                  xorOutput)
-        {
-        }
     }
 }

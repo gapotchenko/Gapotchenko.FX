@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;
 
-namespace Gapotchenko.FX.Runtime.CompilerServices
+namespace Gapotchenko.FX.Runtime.CompilerServices;
+
+static class Log
 {
-    static class Log
-    {
-        public static readonly TraceSource TraceSource = new TraceSource("Gapotchenko.FX.Runtime.CompilerServices.Intrinsics", SourceLevels.Error);
-    }
+    public static readonly TraceSource TraceSource = new TraceSource("Gapotchenko.FX.Runtime.CompilerServices.Intrinsics", SourceLevels.Error);
 }

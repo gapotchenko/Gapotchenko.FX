@@ -1,43 +1,42 @@
-﻿namespace Gapotchenko.FX.Math
+﻿namespace Gapotchenko.FX.Math;
+
+/// <summary>
+/// Defines the types of interval boundaries.
+/// </summary>
+public enum IntervalBoundaryKind : byte
 {
     /// <summary>
-    /// Defines the types of interval boundaries.
+    /// Empty boundary, ∅.
     /// </summary>
-    public enum IntervalBoundaryKind : byte
-    {
-        /// <summary>
-        /// Empty boundary, ∅.
-        /// </summary>
-        Empty,
+    Empty,
 
-        /// <summary>
-        /// <para>
-        /// Indicates that the bound limit point is included in the interval.
-        /// </para>
-        /// <para>
-        /// An inclusive boundary is also called a closed boundary.
-        /// </para>
-        /// </summary>
-        Inclusive,
+    /// <summary>
+    /// <para>
+    /// Indicates that the bound limit point is included in the interval.
+    /// </para>
+    /// <para>
+    /// An inclusive boundary is also called a closed boundary.
+    /// </para>
+    /// </summary>
+    Inclusive,
 
-        /// <summary>
-        /// <para>
-        /// Indicates that the bound limit point is not included in the interval.
-        /// </para>
-        /// <para>
-        /// An exclusive boundary is also called an open boundary.
-        /// </para>
-        /// </summary>
-        Exclusive,
+    /// <summary>
+    /// <para>
+    /// Indicates that the bound limit point is not included in the interval.
+    /// </para>
+    /// <para>
+    /// An exclusive boundary is also called an open boundary.
+    /// </para>
+    /// </summary>
+    Exclusive,
 
-        /// <summary>
-        /// Negative infinity, -∞.
-        /// </summary>
-        NegativeInfinity,
+    /// <summary>
+    /// Negative infinity, -∞.
+    /// </summary>
+    NegativeInfinity,
 
-        /// <summary>
-        /// Positive infinity, +∞.
-        /// </summary>
-        PositiveInfinity
-    }
+    /// <summary>
+    /// Positive infinity, +∞.
+    /// </summary>
+    PositiveInfinity
 }

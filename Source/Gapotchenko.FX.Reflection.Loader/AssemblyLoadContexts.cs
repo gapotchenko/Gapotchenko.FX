@@ -2,20 +2,19 @@
 
 using System.Runtime.Loader;
 
-namespace Gapotchenko.FX.Reflection.Loader
-{
-    static class AssemblyLoadContexts
-    {
-        public static AssemblyLoadContext Local { get; } =
-            AssemblyLoadContext.GetLoadContext(typeof(AssemblyLoadContexts).Assembly) ??
-            AssemblyLoadContext.Default;
+namespace Gapotchenko.FX.Reflection.Loader;
 
-        public static AssemblyLoadContext Current =>
+static class AssemblyLoadContexts
+{
+    public static AssemblyLoadContext Local { get; } =
+        AssemblyLoadContext.GetLoadContext(typeof(AssemblyLoadContexts).Assembly) ??
+        AssemblyLoadContext.Default;
+
+    public static AssemblyLoadContext Current =>
 #if NETCOREAPP3_0_OR_GREATER
-            AssemblyLoadContext.CurrentContextualReflectionContext ??
+        AssemblyLoadContext.CurrentContextualReflectionContext ??
 #endif
-            Local;
-    }
+        Local;
 }
 
 #endif

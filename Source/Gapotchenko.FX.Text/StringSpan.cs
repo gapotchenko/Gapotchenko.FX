@@ -1,82 +1,81 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Gapotchenko.FX.Text
+namespace Gapotchenko.FX.Text;
+
+/// <summary>
+/// Represents a string span.
+/// </summary>
+public struct StringSpan : IEquatable<StringSpan>
 {
     /// <summary>
-    /// Represents a string span.
+    /// Initializes a new instance of the <see cref="StringSpan"/> struct.
     /// </summary>
-    public struct StringSpan : IEquatable<StringSpan>
+    /// <param name="startIndex">The zero-based start index.</param>
+    /// <param name="length">The length.</param>
+    public StringSpan(int startIndex, int length)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StringSpan"/> struct.
-        /// </summary>
-        /// <param name="startIndex">The zero-based start index.</param>
-        /// <param name="length">The length.</param>
-        public StringSpan(int startIndex, int length)
-        {
-            StartIndex = startIndex;
-            Length = length;
-        }
+        StartIndex = startIndex;
+        Length = length;
+    }
 
-        /// <summary>
-        /// Gets the zero-based start index.
-        /// </summary>
-        public int StartIndex { get; }
+    /// <summary>
+    /// Gets the zero-based start index.
+    /// </summary>
+    public int StartIndex { get; }
 
-        /// <summary>
-        /// Gets the length.
-        /// </summary>
-        public int Length { get; }
+    /// <summary>
+    /// Gets the length.
+    /// </summary>
+    public int Length { get; }
 
-        /// <summary>
-        /// Indicates whether the current <see cref="StringSpan"/> struct is equal to another <see cref="StringSpan"/>.
-        /// </summary>
-        /// <param name="other">An <see cref="StringSpan"/> value to compare with this struct.</param>
-        /// <returns><c>true</c> if the specified object is equal to the current <see cref="StringSpan"/>; otherwise, <c>false</c>.</returns>
-        public bool Equals(StringSpan other) =>
-            StartIndex == other.StartIndex &&
-            Length == other.Length;
+    /// <summary>
+    /// Indicates whether the current <see cref="StringSpan"/> struct is equal to another <see cref="StringSpan"/>.
+    /// </summary>
+    /// <param name="other">An <see cref="StringSpan"/> value to compare with this struct.</param>
+    /// <returns><c>true</c> if the specified object is equal to the current <see cref="StringSpan"/>; otherwise, <c>false</c>.</returns>
+    public bool Equals(StringSpan other) =>
+        StartIndex == other.StartIndex &&
+        Length == other.Length;
 
-        /// <summary>
-        /// Indicates whether the current <see cref="StringSpan"/> struct is equal to another object.
-        /// </summary>
-        /// <param name="obj">An object to compare with this <see cref="StringSpan"/>.</param>
-        /// <returns><c>true</c> if the specified object is equal to the current <see cref="StringSpan"/>; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object? obj) => obj is StringSpan other && Equals(other);
+    /// <summary>
+    /// Indicates whether the current <see cref="StringSpan"/> struct is equal to another object.
+    /// </summary>
+    /// <param name="obj">An object to compare with this <see cref="StringSpan"/>.</param>
+    /// <returns><c>true</c> if the specified object is equal to the current <see cref="StringSpan"/>; otherwise, <c>false</c>.</returns>
+    public override bool Equals(object? obj) => obj is StringSpan other && Equals(other);
 
-        /// <summary>
-        /// Gets a hash code for the current <see cref="StringSpan"/> struct.
-        /// </summary>
-        /// <returns>A hash code for the current <see cref="StringSpan"/> struct.</returns>
-        public override int GetHashCode() => HashCode.Combine(StartIndex, Length);
+    /// <summary>
+    /// Gets a hash code for the current <see cref="StringSpan"/> struct.
+    /// </summary>
+    /// <returns>A hash code for the current <see cref="StringSpan"/> struct.</returns>
+    public override int GetHashCode() => HashCode.Combine(StartIndex, Length);
 
-        /// <summary>
-        /// Indicates whether two <see cref="StringSpan"/> structs are equal.
-        /// </summary>
-        /// <param name="a">The first value to compare.</param>
-        /// <param name="b">The second value to compare.</param>
-        /// <returns><c>true</c> if the specified <see cref="StringSpan"/> structs are equal; otherwise, <c>false</c>.</returns>
-        public static bool operator ==(StringSpan a, StringSpan b) => a.Equals(b);
+    /// <summary>
+    /// Indicates whether two <see cref="StringSpan"/> structs are equal.
+    /// </summary>
+    /// <param name="a">The first value to compare.</param>
+    /// <param name="b">The second value to compare.</param>
+    /// <returns><c>true</c> if the specified <see cref="StringSpan"/> structs are equal; otherwise, <c>false</c>.</returns>
+    public static bool operator ==(StringSpan a, StringSpan b) => a.Equals(b);
 
-        /// <summary>
-        /// Indicates whether two <see cref="StringSpan"/> structs are not equal.
-        /// </summary>
-        /// <param name="a">The first value to compare.</param>
-        /// <param name="b">The second value to compare.</param>
-        /// <returns><c>true</c> if the specified <see cref="StringSpan"/> structs are not equal; otherwise, <c>false</c>.</returns>
-        public static bool operator !=(StringSpan a, StringSpan b) => !a.Equals(b);
+    /// <summary>
+    /// Indicates whether two <see cref="StringSpan"/> structs are not equal.
+    /// </summary>
+    /// <param name="a">The first value to compare.</param>
+    /// <param name="b">The second value to compare.</param>
+    /// <returns><c>true</c> if the specified <see cref="StringSpan"/> structs are not equal; otherwise, <c>false</c>.</returns>
+    public static bool operator !=(StringSpan a, StringSpan b) => !a.Equals(b);
 
-        /// <summary>
-        /// Implicitly converts a regular expression capture to a string span.
-        /// </summary>
-        /// <param name="capture">The regular expression capture.</param>
-        public static implicit operator StringSpan(Capture capture)
-        {
-            if (capture == null)
-                throw new ArgumentNullException(nameof(capture));
+    /// <summary>
+    /// Implicitly converts a regular expression capture to a string span.
+    /// </summary>
+    /// <param name="capture">The regular expression capture.</param>
+    public static implicit operator StringSpan(Capture capture)
+    {
+        if (capture == null)
+            throw new ArgumentNullException(nameof(capture));
 
-            return new StringSpan(capture.Index, capture.Length);
-        }
+        return new StringSpan(capture.Index, capture.Length);
     }
 }

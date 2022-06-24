@@ -1,25 +1,24 @@
 ﻿using System;
 
-namespace Gapotchenko.FX.Console
+namespace Gapotchenko.FX.Console;
+
+/// <summary>
+/// Defines virtual terminal processing states.
+/// </summary>
+public enum VirtualTerminalProcessingState
 {
     /// <summary>
-    /// Defines virtual terminal processing states.
+    /// Virtual terminal processing is disabled.
     /// </summary>
-    public enum VirtualTerminalProcessingState
-    {
-        /// <summary>
-        /// Virtual terminal processing is disabled.
-        /// </summary>
-        Disabled,
+    Disabled,
 
-        /// <summary>
-        /// Virtual terminal processing is provided by the host platform.
-        /// </summary>
-        Platform,
+    /// <summary>
+    /// Virtual terminal processing is provided by the host platform.
+    /// </summary>
+    Platform,
 
-        /// <summary>
-        /// Virtual terminal processing is provided by emulation.
-        /// </summary>
-        Emulation
-    }
+    /// <summary>
+    /// Virtual terminal processing is provided by emulation.
+    /// </summary>
+    Emulation
 }

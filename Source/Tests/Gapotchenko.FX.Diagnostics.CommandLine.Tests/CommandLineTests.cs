@@ -1,10 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests
+namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests;
+
+[TestClass]
+public partial class CommandLineTests
 {
-    [TestClass]
-    public partial class CommandLineTests
-    {
-        // This class is partial. Please take a look at the neighborhood.
-    }
+    // This class is partial. Please take a look at the neighborhood.
 }

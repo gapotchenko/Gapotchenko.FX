@@ -4,108 +4,107 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
-namespace Gapotchenko.FX
+namespace Gapotchenko.FX;
+
+/// <summary>
+/// Provides an evaluation strategy which delays the evaluation of an expression until its value is needed.
+/// </summary>
+/// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
+/// <remarks>
+/// <para>
+/// <see cref="LazyEvaluation{T}"/> is a better alternative to <see cref="Lazy{T}"/> when the evaluated value is located at a local variable.
+/// </para>
+/// <para>
+/// <see cref="LazyEvaluation{T}"/> is not thread-safe.
+/// For thread-safe lazy evaluation, please use <see cref="Threading.EvaluateOnce{T}"/> struct.
+/// </para>
+/// </remarks>
+[Serializable]
+[DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
+[DebuggerTypeProxy(typeof(LazyEvaluation<>.DebugView))]
+public struct LazyEvaluation<T>
 {
     /// <summary>
-    /// Provides an evaluation strategy which delays the evaluation of an expression until its value is needed.
+    /// Initializes a new instance of the <see cref="LazyEvaluation{T}"/> struct.
     /// </summary>
-    /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
-    /// <remarks>
-    /// <para>
-    /// <see cref="LazyEvaluation{T}"/> is a better alternative to <see cref="Lazy{T}"/> when the evaluated value is located at a local variable.
-    /// </para>
-    /// <para>
-    /// <see cref="LazyEvaluation{T}"/> is not thread-safe.
-    /// For thread-safe lazy evaluation, please use <see cref="Threading.EvaluateOnce{T}"/> struct.
-    /// </para>
-    /// </remarks>
-    [Serializable]
-    [DebuggerDisplay("IsValueCreated={IsValueCreated}, Value={ValueForDebugDisplay}")]
-    [DebuggerTypeProxy(typeof(LazyEvaluation<>.DebugView))]
-    public struct LazyEvaluation<T>
+    /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
+    public LazyEvaluation(Func<T> valueFactory)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LazyEvaluation{T}"/> struct.
-        /// </summary>
-        /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
-        public LazyEvaluation(Func<T> valueFactory)
+        if (valueFactory == null)
+            throw new ArgumentNullException(nameof(valueFactory));
+
+        m_ValueFactory = Empty.Nullify(valueFactory);
+        m_Value = default;
+    }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    [AllowNull]
+    T m_Value;
+
+    [NonSerialized]
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    Func<T>? m_ValueFactory;
+
+    /// <summary>
+    /// Gets the lazily evaluated value of the current <see cref="LazyEvaluation{T}"/> instance.
+    /// </summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public T Value
+    {
+        get
         {
-            if (valueFactory == null)
-                throw new ArgumentNullException(nameof(valueFactory));
-
-            m_ValueFactory = Empty.Nullify(valueFactory);
-            m_Value = default;
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [AllowNull]
-        T m_Value;
-
-        [NonSerialized]
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Func<T>? m_ValueFactory;
-
-        /// <summary>
-        /// Gets the lazily evaluated value of the current <see cref="LazyEvaluation{T}"/> instance.
-        /// </summary>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public T Value
-        {
-            get
+            var defaultFunc = Fn<T>.Default;
+            if (m_ValueFactory != defaultFunc)
             {
-                var defaultFunc = Fn<T>.Default;
-                if (m_ValueFactory != defaultFunc)
-                {
-                    var valueFactory = m_ValueFactory;
-                    if (valueFactory != null)
-                        m_Value = valueFactory();
-                    m_ValueFactory = defaultFunc!;
-                }
-                return m_Value;
+                var valueFactory = m_ValueFactory;
+                if (valueFactory != null)
+                    m_Value = valueFactory();
+                m_ValueFactory = defaultFunc!;
             }
+            return m_Value;
         }
+    }
 
-        /// <summary>
-        /// Gets a value that indicates whether a value has been created for this <see cref="LazyEvaluation{T}"/> instance.
-        /// </summary>
-        public bool IsValueCreated => m_ValueFactory == Fn<T>.Default;
+    /// <summary>
+    /// Gets a value that indicates whether a value has been created for this <see cref="LazyEvaluation{T}"/> instance.
+    /// </summary>
+    public bool IsValueCreated => m_ValueFactory == Fn<T>.Default;
 
-        /// <summary>
-        /// Creates and returns a string representation of the <see cref="Value"/> property for this instance.
-        /// </summary>
-        /// <returns>
-        /// The result of calling the <see cref="Object.ToString()"/> method on the <see cref="Value"/> property for this instance,
-        /// if the value has been created (that is, if the <see cref="IsValueCreated"/> property returns <c>true</c>).
-        /// Otherwise, a string indicating that the value has not been created.
-        /// </returns>
-        public override string? ToString() =>
-            IsValueCreated ?
-                Value?.ToString() :
-                Resources.ValueNotCreated;
+    /// <summary>
+    /// Creates and returns a string representation of the <see cref="Value"/> property for this instance.
+    /// </summary>
+    /// <returns>
+    /// The result of calling the <see cref="Object.ToString()"/> method on the <see cref="Value"/> property for this instance,
+    /// if the value has been created (that is, if the <see cref="IsValueCreated"/> property returns <c>true</c>).
+    /// Otherwise, a string indicating that the value has not been created.
+    /// </returns>
+    public override string? ToString() =>
+        IsValueCreated ?
+            Value?.ToString() :
+            Resources.ValueNotCreated;
 
-        [OnSerializing]
-        void OnSerializing(StreamingContext context)
+    [OnSerializing]
+    void OnSerializing(StreamingContext context)
+    {
+        // Force evaluation before the value is serialized.
+        Fn.Ignore(Value);
+    }
+
+    [MaybeNull]
+    T ValueForDebugDisplay => IsValueCreated ? Value : default;
+
+    internal sealed class DebugView
+    {
+        public DebugView(LazyEvaluation<T> instance)
         {
-            // Force evaluation before the value is serialized.
-            Fn.Ignore(Value);
+            m_Instance = instance;
         }
+
+        LazyEvaluation<T> m_Instance;
+
+        public bool IsValueCreated => m_Instance.IsValueCreated;
 
         [MaybeNull]
-        T ValueForDebugDisplay => IsValueCreated ? Value : default;
-
-        internal sealed class DebugView
-        {
-            public DebugView(LazyEvaluation<T> instance)
-            {
-                m_Instance = instance;
-            }
-
-            LazyEvaluation<T> m_Instance;
-
-            public bool IsValueCreated => m_Instance.IsValueCreated;
-
-            [MaybeNull]
-            public T Value => m_Instance.ValueForDebugDisplay;
-        }
+        public T Value => m_Instance.ValueForDebugDisplay;
     }
 }

@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
 
-namespace Gapotchenko.FX.Reflection.Loader.Polyfills
+namespace Gapotchenko.FX.Reflection.Loader.Polyfills;
+
+static class DictionaryExtensions
 {
-    static class DictionaryExtensions
-    {
 #if !TFF_DICTIONARY_REMOVEANDGETVALUE
-        public static bool Remove<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, out TValue value)
-        {
-            if (!dictionary.TryGetValue(key, out value))
-                return false;
-            dictionary.Remove(key);
-            return true;
-        }
-#endif
+    public static bool Remove<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, out TValue value)
+    {
+        if (!dictionary.TryGetValue(key, out value))
+            return false;
+        dictionary.Remove(key);
+        return true;
     }
+#endif
 }
