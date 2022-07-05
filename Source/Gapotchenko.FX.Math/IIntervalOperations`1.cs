@@ -30,12 +30,7 @@ public interface IIntervalOperations<T>
     /// A bounded interval is both left- and right-bounded.
     /// </para>
     /// </summary>
-    bool IsBounded
-#if TFF_DEFAULT_INTERFACE
-        => IntervalEngine.IsBounded<IIntervalOperations<T>, T>(this);
-#else
-    { get; }
-#endif
+    bool IsBounded { get; }
 
     /// <summary>
     /// <para>
@@ -45,12 +40,7 @@ public interface IIntervalOperations<T>
     /// A half-bounded interval is either left- or right-bounded.
     /// </para>
     /// </summary>
-    bool IsHalfBounded
-#if TFF_DEFAULT_INTERFACE
-        => IntervalEngine.IsHalfBounded<IIntervalOperations<T>, T>(this);
-#else
-    { get; }
-#endif
+    bool IsHalfBounded { get; }
 
     /// <summary>
     /// <para>
@@ -60,12 +50,7 @@ public interface IIntervalOperations<T>
     /// An open interval does not include its endpoints.
     /// </para>
     /// </summary>
-    bool IsOpen
-#if TFF_DEFAULT_INTERFACE
-        => IntervalEngine.IsOpen<IIntervalOperations<T>, T>(this);
-#else
-    { get; }
-#endif
+    bool IsOpen { get; }
 
     /// <summary>
     /// <para>
@@ -75,12 +60,7 @@ public interface IIntervalOperations<T>
     /// A closed interval includes all its limit points.
     /// </para>
     /// </summary>
-    bool IsClosed
-#if TFF_DEFAULT_INTERFACE
-        => IntervalEngine.IsClosed<IIntervalOperations<T>, T>(this);
-#else
-    { get; }
-#endif
+    bool IsClosed { get; }
 
     /// <summary>
     /// <para>
@@ -90,12 +70,7 @@ public interface IIntervalOperations<T>
     /// A half-open interval includes only one of its endpoints.
     /// </para>
     /// </summary>
-    bool IsHalfOpen
-#if TFF_DEFAULT_INTERFACE
-        => IntervalEngine.IsHalfOpen<IIntervalOperations<T>, T>(this);
-#else
-    { get; }
-#endif
+    bool IsHalfOpen { get; }
 
     /// <summary>
     /// <para>
