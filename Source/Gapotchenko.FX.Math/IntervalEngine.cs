@@ -78,6 +78,12 @@ static class IntervalEngine
         CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.To, interval.To, comparer) > 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsInfinite<TInterval, TBound>(in TInterval interval)
+        where TInterval : IIntervalOperations<TBound> =>
+        interval.From.Kind == IntervalBoundaryKind.NegativeInfinity &&
+        interval.To.Kind == IntervalBoundaryKind.PositiveInfinity;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDegenerate<TInterval, TBound>(in TInterval interval, IComparer<TBound> comparer)
         where TInterval : IIntervalOperations<TBound> =>
         interval.From.Kind == IntervalBoundaryKind.Inclusive &&

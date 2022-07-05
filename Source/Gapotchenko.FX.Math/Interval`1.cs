@@ -116,6 +116,9 @@ public sealed record Interval<T> : IInterval<T>
     public bool IsEmpty => IntervalEngine.IsEmpty<Interval<T>, T>(this, m_Comparer);
 
     /// <inheritdoc/>
+    public bool IsInfinite => IntervalEngine.IsInfinite<Interval<T>, T>(this);
+
+    /// <inheritdoc/>
     public bool IsDegenerate => IntervalEngine.IsDegenerate<Interval<T>, T>(this, m_Comparer);
 
     /// <inheritdoc/>

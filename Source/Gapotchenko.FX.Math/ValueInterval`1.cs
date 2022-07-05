@@ -90,6 +90,9 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     public bool IsEmpty => IntervalEngine.IsEmpty<ValueInterval<T>, T>(this, Comparer<T>.Default);
 
     /// <inheritdoc/>
+    public bool IsInfinite => IntervalEngine.IsInfinite<ValueInterval<T>, T>(this);
+
+    /// <inheritdoc/>
     public bool IsDegenerate => IntervalEngine.IsDegenerate<ValueInterval<T>, T>(this, EqualityComparer<T>.Default);
 
     /// <inheritdoc/>

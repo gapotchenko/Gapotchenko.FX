@@ -125,6 +125,11 @@ public interface IIntervalOperations<T>
     bool IsEmpty { get; }
 
     /// <summary>
+    /// Gets a value indicating whether the interval is infinite.
+    /// </summary>
+    bool IsInfinite { get; }
+
+    /// <summary>
     /// <para>
     /// Gets a value indicating whether the interval is a degenerate.
     /// </para>

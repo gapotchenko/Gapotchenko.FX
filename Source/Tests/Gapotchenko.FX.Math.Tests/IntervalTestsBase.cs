@@ -94,6 +94,18 @@ public abstract class IntervalTestsBase
 
     #endregion
 
+    #region Infinite
+
+    [TestMethod]
+    public void Interval_Infinite_1()
+    {
+        var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary<int>.PositiveInfinity);
+
+        Assert.IsTrue(interval.IsInfinite);
+    }
+
+    #endregion
+
     #region Contains
 
     [TestMethod]
