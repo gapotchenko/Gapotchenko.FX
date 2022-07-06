@@ -6,9 +6,10 @@ using System.Linq;
 namespace Gapotchenko.FX.Math;
 
 /// <summary>
-/// Interval extensions for <see cref="IEnumerable{T}"/>.
+/// Extension methods for <see cref="IInterval{T}"/>.
 /// </summary>
-public static class IntervalEnumerableExtensions
+[EditorBrowsable(EditorBrowsableState.Never)]
+public static class IntervalExtensions
 {
     /// <summary>
     /// Filters a sequence of values based on an interval.

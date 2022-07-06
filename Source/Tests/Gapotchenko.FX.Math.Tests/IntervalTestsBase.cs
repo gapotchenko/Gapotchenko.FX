@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace Gapotchenko.FX.Math.Tests;
 
@@ -9,6 +9,9 @@ public abstract class IntervalTestsBase
     public abstract IInterval<T> NewInterval<T>(T from, T to) where T : IComparable<T>, IEquatable<T>;
 
     public abstract IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to) where T : IComparable<T>, IEquatable<T>;
+
+    public IInterval<T> NewInterval<T>(IInterval<T> interval) where T : IComparable<T>, IEquatable<T> =>
+        NewInterval(interval.From, interval.To);
 
     [TestMethod]
     public void Interval_Characteristics_LeftUnbounded()
@@ -804,6 +807,74 @@ public abstract class IntervalTestsBase
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
 
         Assert.IsFalse(b.IsProperSuperintervalOf(a));
+    }
+
+    #endregion
+
+    #region WithinInterval
+
+    [TestMethod]
+    public void Interval_WithinInterval_1()
+    {
+        var sequence = Enumerable.Range(1, 5);
+        var interval = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(4));
+
+        var result = sequence.WithinInterval(interval);
+        Assert.IsTrue(result.SequenceEqual(new[] { 2, 3, 4 }));
+    }
+
+    [TestMethod]
+    public void Interval_WithinInterval_2()
+    {
+        var sequence = Enumerable.Range(1, 5);
+        var interval = NewInterval(ValueInterval<int>.Empty);
+
+        var result = sequence.WithinInterval(interval);
+        Assert.AreEqual(0, result.Count());
+    }
+
+    [TestMethod]
+    public void Interval_WithinInterval_3()
+    {
+        var sequence = Enumerable.Range(1, 5);
+        var interval = NewInterval(ValueInterval<int>.Infinite);
+
+        var result = sequence.WithinInterval(interval);
+        Assert.IsTrue(result.SequenceEqual(new[] { 1, 2, 3, 4, 5 }));
+    }
+
+    #endregion
+
+    #region WithinInterval
+
+    [TestMethod]
+    public void Interval_WithoutInterval_1()
+    {
+        var sequence = Enumerable.Range(1, 5);
+        var interval = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(4));
+
+        var result = sequence.WithoutInterval(interval);
+        Assert.IsTrue(result.SequenceEqual(new[] { 1, 5 }));
+    }
+
+    [TestMethod]
+    public void Interval_WithoutInterval_2()
+    {
+        var sequence = Enumerable.Range(1, 5);
+        var interval = NewInterval(ValueInterval<int>.Empty);
+
+        var result = sequence.WithoutInterval(interval);
+        Assert.IsTrue(result.SequenceEqual(new[] { 1, 2, 3, 4, 5 }));
+    }
+
+    [TestMethod]
+    public void Interval_WithoutInterval_3()
+    {
+        var sequence = Enumerable.Range(1, 5);
+        var interval = NewInterval(ValueInterval<int>.Infinite);
+
+        var result = sequence.WithoutInterval(interval);
+        Assert.AreEqual(0, result.Count());
     }
 
     #endregion
