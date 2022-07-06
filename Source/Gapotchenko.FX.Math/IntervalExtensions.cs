@@ -13,6 +13,7 @@ public static class IntervalExtensions
 {
     /// <summary>
     /// Filters a sequence of values based on an interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are contained within the interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <param name="source">The <see cref="IEnumerable{T}"/> to filter.</param>
@@ -23,6 +24,7 @@ public static class IntervalExtensions
 
     /// <summary>
     /// Filters a sequence of values based on an interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are contained within the interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
@@ -48,6 +50,7 @@ public static class IntervalExtensions
 
     /// <summary>
     /// Filters a sequence of values based on an interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within the interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <param name="source">The <see cref="IEnumerable{T}"/> to filter.</param>
@@ -58,6 +61,7 @@ public static class IntervalExtensions
 
     /// <summary>
     /// Filters a sequence of values based on an interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within the interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
