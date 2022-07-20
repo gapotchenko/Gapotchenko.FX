@@ -155,7 +155,7 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
                             m_Buffer[1] = alphabet[(m_Bits << 4) & SymbolMask]; // 2 bits
 
                             int count = 2;
-                            if ((m_Options & DataEncodingOptions.Unpad) == 0)
+                            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
                             {
                                 m_Buffer[2] = m_Buffer[3] = m_PaddingChar;
                                 count = 4;
@@ -174,7 +174,7 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
                             m_Buffer[2] = alphabet[(m_Bits << 2) & SymbolMask]; // 4 bits
 
                             int count = 3;
-                            if ((m_Options & DataEncodingOptions.Unpad) == 0)
+                            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
                             {
                                 m_Buffer[3] = m_PaddingChar;
                                 count = 4;
@@ -415,7 +415,7 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
     {
         int charCount = (byteCount * SymbolsPerEncodedBlock + BytesPerDecodedBlock - 1) / BytesPerDecodedBlock;
 
-        if ((options & DataEncodingOptions.Unpad) == 0)
+        if ((options & DataEncodingOptions.NoPadding) == 0)
             charCount = Pad(charCount);
 
         int newLineCount =

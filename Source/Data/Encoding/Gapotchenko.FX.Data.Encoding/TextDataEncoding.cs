@@ -160,7 +160,7 @@ public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
 
         options = GetEffectiveStreamingOptions(options);
 
-        if ((options & DataEncodingOptions.Unpad) == 0)
+        if ((options & DataEncodingOptions.NoPadding) == 0)
         {
             // Encode stream with a padding unless it is explicitly disabled.
             options |= DataEncodingOptions.Padding;
@@ -547,7 +547,7 @@ public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
         int GetMaxCharCount(int byteCount) =>
             m_Encoding.GetMaxCharCount(
                 byteCount,
-                (m_Options & ~DataEncodingOptions.Unpad) | DataEncodingOptions.Padding | DataEncodingOptions.Wrap | DataEncodingOptions.Indent);
+                (m_Options & ~DataEncodingOptions.NoPadding) | DataEncodingOptions.Padding | DataEncodingOptions.Wrap | DataEncodingOptions.Indent);
 
         void FillBuffer(int count)
         {
@@ -627,7 +627,7 @@ public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
     /// <inheritdoc/>
     public override bool PrefersPadding =>
         CanPad &&
-        (GetEffectiveOptions(DataEncodingOptions.None) & DataEncodingOptions.Unpad) == 0;
+        (GetEffectiveOptions(DataEncodingOptions.None) & DataEncodingOptions.NoPadding) == 0;
 
     /// <inheritdoc/>
     public string Pad(ReadOnlySpan<char> s) => PadCore(s);

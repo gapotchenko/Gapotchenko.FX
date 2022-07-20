@@ -83,18 +83,18 @@ public class Base64Tests
 
     [DataTestMethod]
     [DataRow(DataEncodingOptions.None)]
-    [DataRow(DataEncodingOptions.Unpad)]
+    [DataRow(DataEncodingOptions.NoPadding)]
     public void Base64_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base64.Instance, 16, 100000, options);
 
     [DataTestMethod]
     // S1
     [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.None)]
-    [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Unpad)]
+    [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.NoPadding)]
     // S2
     [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.None)]
-    [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.Unpad)]
+    [DataRow(TextDataEncodingTemplates.S2, DataEncodingOptions.NoPadding)]
     // S3
     [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.None)]
-    [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.Unpad)]
+    [DataRow(TextDataEncodingTemplates.S3, DataEncodingOptions.NoPadding)]
     public void Base64_RT_S(string s, DataEncodingOptions options) => TextDataEncodingTestBench.RoundTrip(Base64.Instance, s, options);
 }

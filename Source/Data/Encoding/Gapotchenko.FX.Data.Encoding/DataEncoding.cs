@@ -44,14 +44,14 @@ public abstract class DataEncoding : IDataEncoding
     /// <returns>The effective encoding options to use.</returns>
     protected virtual DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
     {
-        const DataEncodingOptions PaddingConflictMask = DataEncodingOptions.Padding | DataEncodingOptions.Unpad;
+        const DataEncodingOptions PaddingConflictMask = DataEncodingOptions.Padding | DataEncodingOptions.NoPadding;
         if ((options & PaddingConflictMask) == PaddingConflictMask)
         {
             throw new ArgumentException(
                 string.Format(
                     "'{0}' and '{1}' options cannot be used simultaneously.",
                     nameof(DataEncodingOptions.Padding),
-                    nameof(DataEncodingOptions.Unpad)),
+                    nameof(DataEncodingOptions.NoPadding)),
                 nameof(options));
         }
 

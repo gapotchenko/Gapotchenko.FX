@@ -21,7 +21,7 @@ public sealed class Base64Url : GenericBase64
         {
             // Produce unpadded strings unless padding is explicitly requested as suggested by RFC 4648.
             // This is necessary in order to avoid '%' escape symbols in URI for '=' padding chars.
-            options |= DataEncodingOptions.Unpad;
+            options |= DataEncodingOptions.NoPadding;
         }
 
         return base.GetEffectiveOptions(options);

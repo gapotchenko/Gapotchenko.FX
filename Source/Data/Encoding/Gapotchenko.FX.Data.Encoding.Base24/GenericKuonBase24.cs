@@ -47,7 +47,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
         if ((options & DataEncodingOptions.Padding) == 0)
         {
             // Produce unpadded strings unless padding is explicitly requested.
-            options |= DataEncodingOptions.Unpad;
+            options |= DataEncodingOptions.NoPadding;
         }
 
         return base.GetEffectiveOptions(options);
@@ -170,7 +170,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
 
             Array.Reverse(m_Buffer, 0, i);
 
-            if ((m_Options & DataEncodingOptions.Unpad) == 0)
+            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
             {
                 var paddingChar = m_PaddingChar;
 
@@ -434,7 +434,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
     {
         int charCount = (byteCount * SymbolsPerEncodedBlock + BytesPerDecodedBlock - 1) / BytesPerDecodedBlock;
 
-        if ((options & DataEncodingOptions.Unpad) == 0)
+        if ((options & DataEncodingOptions.NoPadding) == 0)
             charCount = Pad(charCount);
 
         int newLineCount =
