@@ -162,7 +162,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
             }
             while (s > 0);
 
-            if ((m_Options & DataEncodingOptions.Unpad) == 0)
+            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
             {
                 var paddingChar = m_Encoding.PaddingChar;
 
@@ -470,7 +470,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
     {
         int charCount = (byteCount * SymbolsPerEncodedBlock + BytesPerDecodedBlock - 1) / BytesPerDecodedBlock;
 
-        if ((options & DataEncodingOptions.Unpad) == 0)
+        if ((options & DataEncodingOptions.NoPadding) == 0)
             charCount = Pad(charCount);
 
         int newLineCount =

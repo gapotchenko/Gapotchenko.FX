@@ -59,7 +59,7 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
         if ((options & DataEncodingOptions.Padding) == 0)
         {
             // Produce unpadded strings unless padding is explicitly requested.
-            options |= DataEncodingOptions.Unpad;
+            options |= DataEncodingOptions.NoPadding;
         }
         else if ((options & DataEncodingOptions.Checksum) != 0)
         {
@@ -77,14 +77,14 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
 
     string Epilogue(string s, DataEncodingOptions options)
     {
-        if ((options & DataEncodingOptions.Unpad) == 0)
+        if ((options & DataEncodingOptions.NoPadding) == 0)
             s = Pad(s.AsSpan());
         return s;
     }
 
     StringBuilder Epilogue(StringBuilder sb, DataEncodingOptions options)
     {
-        if ((options & DataEncodingOptions.Unpad) == 0)
+        if ((options & DataEncodingOptions.NoPadding) == 0)
         {
             int padding = Padding;
             while (sb.Length % padding != 0)

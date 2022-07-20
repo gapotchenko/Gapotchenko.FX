@@ -116,7 +116,7 @@ public static class TextDataEncodingTestBench
 
         Assert.IsTrue(raw.SequenceEqual(dataEncoding.GetBytes(actualEncodedUnpadded.AsSpan(), options)), "Cannot decode unpadded string.");
 
-        string actualEncodedWithoutPadding = dataEncoding.GetString(raw, options | DataEncodingOptions.Unpad);
+        string actualEncodedWithoutPadding = dataEncoding.GetString(raw, options | DataEncodingOptions.NoPadding);
         Assert.AreEqual(actualEncodedUnpadded, actualEncodedWithoutPadding, "DataTextEncodingOptions.NoPadding is not honored.");
 
         // -----------------------------------------------------------------

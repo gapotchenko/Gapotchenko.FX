@@ -69,7 +69,7 @@ public abstract class GenericZBase32 : GenericBase32
             if (compress)
                 i = li;
 
-            if ((m_Options & DataEncodingOptions.Unpad) == 0)
+            if ((m_Options & DataEncodingOptions.NoPadding) == 0)
             {
                 var paddingChar = ((GenericZBase32)m_Encoding).PaddingChar;
 
@@ -134,7 +134,7 @@ public abstract class GenericZBase32 : GenericBase32
         if ((options & DataEncodingOptions.Padding) == 0)
         {
             // Produce unpadded strings unless padding is explicitly requested.
-            options |= DataEncodingOptions.Unpad;
+            options |= DataEncodingOptions.NoPadding;
         }
 
         return base.GetEffectiveOptions(options);

@@ -58,7 +58,7 @@ public class Base32Tests
 
     [DataTestMethod]
     [DataRow(DataEncodingOptions.None)]
-    [DataRow(DataEncodingOptions.Unpad)]
+    [DataRow(DataEncodingOptions.NoPadding)]
     public void Base32_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base32.Instance, 16, 100000, options);
 
     [DataTestMethod]

@@ -58,7 +58,7 @@ public class Base32HexTests
 
     [DataTestMethod]
     [DataRow(DataEncodingOptions.None)]
-    [DataRow(DataEncodingOptions.Unpad)]
+    [DataRow(DataEncodingOptions.NoPadding)]
     public void Base32Hex_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base32Hex.Instance, 16, 100000, options);
 
     [DataTestMethod]
