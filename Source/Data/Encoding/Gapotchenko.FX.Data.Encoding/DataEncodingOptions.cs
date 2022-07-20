@@ -23,7 +23,7 @@ public enum DataEncodingOptions
     /// <summary>
     /// Inhibit padding generation in the encoding operation.
     /// </summary>
-    [Obsolete]
+    [Obsolete($"Use {nameof(NoPadding)} instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     Unpad = NoPadding,
 
