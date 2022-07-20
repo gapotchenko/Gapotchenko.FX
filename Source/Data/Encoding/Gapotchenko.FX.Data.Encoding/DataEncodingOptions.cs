@@ -31,7 +31,7 @@ public enum DataEncodingOptions
     /// Validate the padding in decoding operation or enforce its generation in encoding operation.
     /// </summary>
     /// <remarks>
-    /// In some encodings, the length of an output-encoded string must be a multiple of the predefined number of characters.
+    /// In some data encodings, the length of an output-encoded string must be a multiple of the predefined number of characters.
     /// The encoder adds padding characters at the end of the output as needed in order to meet this requirement.
     /// The added suffix is called padding.
     /// </remarks>
