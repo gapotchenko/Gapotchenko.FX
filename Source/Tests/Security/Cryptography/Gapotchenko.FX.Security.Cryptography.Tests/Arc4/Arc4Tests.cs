@@ -54,7 +54,7 @@ public class Arc4Tests
     [TestMethod]
     public void Arc4_TV_RFC6229_14() => CheckTestVector(TestVectorReader.Read("RFC6229/14.txt"));
 
-    static void CheckTestVector(TestVector tv)
+    private static void CheckTestVector(TestVector tv)
     {
         var arc4 = new Arc4Managed
         {

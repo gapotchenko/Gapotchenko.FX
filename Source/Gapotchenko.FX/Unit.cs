@@ -7,5 +7,5 @@ namespace Gapotchenko.FX;
 /// </summary>
 public sealed class Unit
 {
-    private Unit() => throw new InvalidOperationException("Unit type cannot be instantiated.");
+    Unit() => throw new InvalidOperationException("Unit type cannot be instantiated.");
 }

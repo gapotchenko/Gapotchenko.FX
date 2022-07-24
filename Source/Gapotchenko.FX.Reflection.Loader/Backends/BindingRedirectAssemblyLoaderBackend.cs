@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends;
 
 sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
 {
-    private BindingRedirectAssemblyLoaderBackend(
+    BindingRedirectAssemblyLoaderBackend(
         bool isAttached,
         AssemblyAutoLoader assemblyAutoLoader,
         Dictionary<string, BindingRedirect> bindingRedirects,

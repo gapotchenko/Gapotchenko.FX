@@ -8,12 +8,12 @@ namespace Gapotchenko.FX.Reflection.Loader;
 sealed class DefaultAssemblyAutoLoader : AssemblyAutoLoader
 {
 #if TFF_ASSEMBLYLOADCONTEXT
-    private DefaultAssemblyAutoLoader(AssemblyLoadContext assemblyLoadContext) :
+    DefaultAssemblyAutoLoader(AssemblyLoadContext assemblyLoadContext) :
         base(assemblyLoadContext)
     {
     }
 #else
-    private DefaultAssemblyAutoLoader()
+    DefaultAssemblyAutoLoader()
     {
     }
 #endif

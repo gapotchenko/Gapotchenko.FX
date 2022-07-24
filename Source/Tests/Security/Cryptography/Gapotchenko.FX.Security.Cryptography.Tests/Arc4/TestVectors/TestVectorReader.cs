@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors;
 
-static class TestVectorReader
+internal static class TestVectorReader
 {
-    enum State
+    private enum State
     {
         KeyLength,
         Key,

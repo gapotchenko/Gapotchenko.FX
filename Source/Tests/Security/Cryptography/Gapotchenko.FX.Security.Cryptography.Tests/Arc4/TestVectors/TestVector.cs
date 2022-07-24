@@ -6,7 +6,7 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors;
 /// <summary>
 /// Represents a test vector for Alleged Rivest Cipher 4 (ARC4) algorithm.
 /// </summary>
-sealed class TestVector
+internal sealed class TestVector
 {
     /// <summary>
     /// Gets or sets the key length in bits.

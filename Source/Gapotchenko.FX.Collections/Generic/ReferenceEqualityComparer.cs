@@ -16,7 +16,7 @@ namespace System.Collections.Generic;
 /// </summary>
 public sealed class ReferenceEqualityComparer : IEqualityComparer<object?>, IEqualityComparer
 {
-    private ReferenceEqualityComparer()
+    ReferenceEqualityComparer()
     {
     }
 
