@@ -1,6 +1,5 @@
 ﻿using Gapotchenko.FX.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
 namespace Gapotchenko.FX.Math.Combinatorics.Tests;
 

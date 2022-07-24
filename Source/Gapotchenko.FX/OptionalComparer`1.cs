@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Gapotchenko.FX;
+﻿namespace Gapotchenko.FX;
 
 [Serializable]
 sealed class OptionalComparer<T> : IComparer<Optional<T>>

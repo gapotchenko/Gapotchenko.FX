@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Math.Topology;
+﻿namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
 /// Graph incidence options.

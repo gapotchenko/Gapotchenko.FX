@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Threading;
-using System;
 
 namespace Gapotchenko.FX.Runtime.InteropServices;
 

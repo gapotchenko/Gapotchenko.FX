@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Threading;
+﻿namespace Gapotchenko.FX.Threading;
 
 /// <summary>
 /// Provides information about multithreading capabilities.

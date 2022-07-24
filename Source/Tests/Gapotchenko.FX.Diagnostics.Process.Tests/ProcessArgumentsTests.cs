@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
 namespace Gapotchenko.FX.Diagnostics.Process.Tests;
 

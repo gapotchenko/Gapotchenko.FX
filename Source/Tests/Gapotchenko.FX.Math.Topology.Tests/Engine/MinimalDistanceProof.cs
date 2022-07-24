@@ -1,7 +1,5 @@
 ﻿using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Math.Geometry;
-using System;
-using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Math.Topology.Tests.Engine;
 

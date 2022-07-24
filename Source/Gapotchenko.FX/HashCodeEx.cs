@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Gapotchenko.FX;
+﻿namespace Gapotchenko.FX;
 
 /// <summary>
 /// Provides extended functionality for building, combining and diffusing hash codes.

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX;
+﻿namespace Gapotchenko.FX;
 
 /// <summary>
 /// Provides lambda calculus and functional composition primitives for type <typeparamref name="T"/>.

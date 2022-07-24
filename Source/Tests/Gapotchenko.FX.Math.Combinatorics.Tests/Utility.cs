@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Math.Combinatorics.Tests;
+﻿namespace Gapotchenko.FX.Math.Combinatorics.Tests;
 
 static class Utility
 {

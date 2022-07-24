@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Math.Topology;
+﻿namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
 /// <para>

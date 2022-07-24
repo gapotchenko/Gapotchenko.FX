@@ -1,6 +1,4 @@
 ﻿using Gapotchenko.FX.Properties;
-using System;
-using System.Collections.Generic;
 
 namespace Gapotchenko.FX;
 

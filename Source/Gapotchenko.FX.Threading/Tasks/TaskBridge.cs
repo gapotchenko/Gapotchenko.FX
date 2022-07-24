@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Gapotchenko.FX.Threading.Tasks;
+﻿namespace Gapotchenko.FX.Threading.Tasks;
 
 /// <summary>
 /// Bridges together synchronous and asynchronous task execution models.

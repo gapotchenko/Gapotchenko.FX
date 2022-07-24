@@ -1,6 +1,4 @@
 ﻿using Gapotchenko.FX.Collections.Concurrent;
-using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Gapotchenko.FX.Collections.Tests.Concurrent;

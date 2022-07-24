@@ -2,12 +2,9 @@
 // The implementation is based on a work from Bar Arnon: https://github.com/i3arnon/ConcurrentHashSet
 
 using Gapotchenko.FX.Threading;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading;
 
 namespace Gapotchenko.FX.Collections.Concurrent;
 

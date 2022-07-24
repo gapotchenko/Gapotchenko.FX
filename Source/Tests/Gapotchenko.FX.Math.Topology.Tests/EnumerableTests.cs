@@ -1,9 +1,6 @@
 ﻿using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Math.Topology.Tests.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Gapotchenko.FX.Math.Topology.Tests;
 

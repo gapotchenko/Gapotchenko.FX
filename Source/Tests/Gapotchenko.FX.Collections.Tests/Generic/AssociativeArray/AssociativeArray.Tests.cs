@@ -1,7 +1,4 @@
 using Gapotchenko.FX.Collections.Generic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 #pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.

@@ -1,10 +1,6 @@
 ﻿// (c) Portions of code from the .NET project by Microsoft and .NET Foundation
 
 using Gapotchenko.FX.Reflection.Loader.Polyfills;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Reflection.Loader.Backends;

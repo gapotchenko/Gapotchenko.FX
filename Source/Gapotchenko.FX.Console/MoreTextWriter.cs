@@ -1,10 +1,7 @@
 ﻿using Gapotchenko.FX.Text;
-using System;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Console;
 

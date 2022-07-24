@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.IO;
+﻿using System.ComponentModel;
 
 namespace Gapotchenko.FX.Data.Encoding;
 

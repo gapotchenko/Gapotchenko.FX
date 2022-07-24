@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Gapotchenko.FX.Collections.Generic;
+﻿namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
 /// Generic list extensions.

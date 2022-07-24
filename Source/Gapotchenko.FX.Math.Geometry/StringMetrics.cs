@@ -1,8 +1,6 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Linq;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Math.Geometry;
 

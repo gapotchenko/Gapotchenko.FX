@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Console;
+﻿namespace Gapotchenko.FX.Console;
 
 /// <summary>
 /// Defines virtual terminal processing states.

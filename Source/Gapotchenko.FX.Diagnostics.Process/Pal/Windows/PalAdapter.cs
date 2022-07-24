@@ -1,14 +1,10 @@
 ﻿#if !HAS_TARGET_PLATFORM || WINDOWS
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows;
 

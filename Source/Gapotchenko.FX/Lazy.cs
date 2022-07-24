@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-
-namespace Gapotchenko.FX;
+﻿namespace Gapotchenko.FX;
 
 /// <summary>
 /// Provides static methods for creating <see cref="Lazy{T}"/> objects.

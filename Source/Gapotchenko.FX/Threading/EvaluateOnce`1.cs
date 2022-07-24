@@ -1,10 +1,8 @@
 ﻿using Gapotchenko.FX.Properties;
-using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-using System.Threading;
 
 namespace Gapotchenko.FX.Threading;
 

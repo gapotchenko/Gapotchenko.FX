@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Diagnostics.Pal;
+﻿namespace Gapotchenko.FX.Diagnostics.Pal;
 
 /// <summary>
 /// Universal pointer that can hold both 32- and 64-bit values.

@@ -1,12 +1,7 @@
 ﻿using Gapotchenko.FX.Threading.Tasks;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Linq;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Linq;
 

@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Numerics;
-using System;
 using System.ComponentModel;
 
 namespace Gapotchenko.FX.Data.Integrity.Checksum;

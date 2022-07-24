@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 
 namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors;
 

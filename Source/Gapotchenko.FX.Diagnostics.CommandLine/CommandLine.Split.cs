@@ -1,8 +1,5 @@
 ﻿// Portions of the code came from Boost Program Options library authored by Vladimir Prus.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics;

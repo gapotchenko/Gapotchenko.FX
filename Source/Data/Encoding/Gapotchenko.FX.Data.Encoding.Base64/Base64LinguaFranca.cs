@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Data.Encoding;
+﻿namespace Gapotchenko.FX.Data.Encoding;
 
 static class Base64LinguaFranca
 {

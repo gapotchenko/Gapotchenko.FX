@@ -1,9 +1,6 @@
 ﻿using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Threading.Tasks;
-using System;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics;
 

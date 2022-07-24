@@ -1,8 +1,5 @@
 ﻿#if !HAS_TARGET_PLATFORM || WINDOWS
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;

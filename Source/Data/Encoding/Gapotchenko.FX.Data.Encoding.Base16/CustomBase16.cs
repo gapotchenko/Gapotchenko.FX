@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Data.Encoding;
+﻿namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
 /// Customizable Base16 encoding.

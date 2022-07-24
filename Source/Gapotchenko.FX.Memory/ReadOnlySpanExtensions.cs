@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Memory;
+﻿namespace Gapotchenko.FX.Memory;
 
 /// <summary>
 /// Extensions for <see cref="ReadOnlySpan{T}"/>.

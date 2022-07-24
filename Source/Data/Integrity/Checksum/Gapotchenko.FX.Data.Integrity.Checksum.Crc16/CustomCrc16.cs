@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Data.Integrity.Checksum;
+﻿namespace Gapotchenko.FX.Data.Integrity.Checksum;
 
 /// <summary>
 /// Customizable CRC-16 checksum algorithm.

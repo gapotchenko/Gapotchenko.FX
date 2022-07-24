@@ -1,8 +1,6 @@
 ﻿// (c) Portions of code from the .NET project by Microsoft and .NET Foundation
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Collections.Tests;
 

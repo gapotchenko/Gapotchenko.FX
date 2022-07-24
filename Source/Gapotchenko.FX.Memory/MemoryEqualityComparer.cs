@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Memory;
+﻿namespace Gapotchenko.FX.Memory;
 
 /// <summary>
 /// Equality comparer for contiguous regions of memory represented by <see cref="ReadOnlyMemory{T}"/> type.

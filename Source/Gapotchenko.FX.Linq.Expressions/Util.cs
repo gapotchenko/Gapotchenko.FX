@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Gapotchenko.FX.Linq.Expressions;
+﻿namespace Gapotchenko.FX.Linq.Expressions;
 
 static class Util
 {

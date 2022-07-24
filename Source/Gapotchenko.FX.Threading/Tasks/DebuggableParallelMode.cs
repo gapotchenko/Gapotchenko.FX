@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Threading.Tasks;
+﻿namespace Gapotchenko.FX.Threading.Tasks;
 
 /// <summary>
 /// Defines modes of operation for <see cref="DebuggableParallel"/> primitive.

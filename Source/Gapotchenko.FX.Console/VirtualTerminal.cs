@@ -1,9 +1,6 @@
 ﻿using Gapotchenko.FX.Console.Emulation;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace Gapotchenko.FX.Console;
 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Reflection.Loader.Polyfills;
+﻿namespace Gapotchenko.FX.Reflection.Loader.Polyfills;
 
 static class DictionaryExtensions
 {

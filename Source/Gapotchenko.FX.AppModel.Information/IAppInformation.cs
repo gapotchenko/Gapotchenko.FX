@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.AppModel;
+﻿namespace Gapotchenko.FX.AppModel;
 
 /// <summary>
 /// Provides information about the app.

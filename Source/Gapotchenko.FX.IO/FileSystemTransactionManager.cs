@@ -1,8 +1,5 @@
 ﻿#if TFF_TRANSACTIONS
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Transactions;
 
 namespace Gapotchenko.FX.IO;

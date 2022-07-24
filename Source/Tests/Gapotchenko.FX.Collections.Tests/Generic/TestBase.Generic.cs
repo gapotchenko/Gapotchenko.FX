@@ -1,10 +1,7 @@
 // (c) Portions of code from the .NET project by Microsoft and .NET Foundation
 
 using Gapotchenko.FX.Collections.Tests.NonGeneric;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Xunit;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic;

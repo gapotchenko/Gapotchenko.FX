@@ -1,7 +1,6 @@
 extern alias testable;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
 
 namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests;
 

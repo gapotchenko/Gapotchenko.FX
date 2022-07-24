@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace Gapotchenko.FX.Console.Emulation;
+﻿namespace Gapotchenko.FX.Console.Emulation;
 
 interface IVirtualTerminalOutputBackend
 {

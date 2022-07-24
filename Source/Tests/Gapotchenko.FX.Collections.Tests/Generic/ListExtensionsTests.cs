@@ -1,7 +1,4 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic;

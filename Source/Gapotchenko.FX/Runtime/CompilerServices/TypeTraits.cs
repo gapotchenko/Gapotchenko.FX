@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Runtime.CompilerServices;
+﻿namespace Gapotchenko.FX.Runtime.CompilerServices;
 
 /// <summary>
 /// Provides a quick strongly-typed access to reflection traits of type <typeparamref name="T"/>.

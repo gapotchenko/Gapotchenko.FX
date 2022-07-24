@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Math.Topology;
+﻿namespace Gapotchenko.FX.Math.Topology;
 
 partial class Graph<TVertex>
 {

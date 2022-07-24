@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Math.Properties;
-using System;
 using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Math;

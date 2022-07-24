@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Diagnostics;
+﻿namespace Gapotchenko.FX.Diagnostics;
 
 /// <summary>
 /// Performs operations on <see cref="System.String"/> instances that contain command line information.

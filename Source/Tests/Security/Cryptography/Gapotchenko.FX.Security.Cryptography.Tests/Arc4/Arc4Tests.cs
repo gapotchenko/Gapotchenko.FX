@@ -2,9 +2,6 @@
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4;

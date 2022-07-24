@@ -1,8 +1,6 @@
 ﻿using Gapotchenko.FX.Data.Encoding.Tests.Bench;
 using Gapotchenko.FX.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Linq;
 
 namespace Gapotchenko.FX.Data.Encoding.Tests;
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Memory;
+﻿namespace Gapotchenko.FX.Memory;
 
 partial class MemoryEqualityComparer
 {

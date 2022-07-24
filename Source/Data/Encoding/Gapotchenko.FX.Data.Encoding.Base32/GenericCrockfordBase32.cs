@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Text;
-using System;
 using System.ComponentModel;
 using System.Numerics;
 using System.Text;

@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Collections.Generic.Kit;
-using System.Collections.Generic;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.Kit;
 

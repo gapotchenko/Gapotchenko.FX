@@ -1,10 +1,8 @@
 ﻿// Portions of the code came from MSBuild project authored by Microsoft.
 
 using Gapotchenko.FX.Text;
-using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 

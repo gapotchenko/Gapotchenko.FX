@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray;

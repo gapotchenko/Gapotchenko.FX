@@ -1,7 +1,4 @@
 ﻿using Gapotchenko.FX.Math.Combinatorics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.Kit;
 

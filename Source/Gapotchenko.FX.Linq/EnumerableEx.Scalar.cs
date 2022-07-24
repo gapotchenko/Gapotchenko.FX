@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Linq;
+﻿namespace Gapotchenko.FX.Linq;
 
 partial class EnumerableEx
 {

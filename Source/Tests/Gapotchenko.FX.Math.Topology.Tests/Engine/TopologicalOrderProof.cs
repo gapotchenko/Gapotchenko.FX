@@ -1,11 +1,7 @@
 ﻿using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Threading.Tasks;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 
 namespace Gapotchenko.FX.Math.Topology.Tests.Engine;
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.ComponentModel;
+﻿namespace Gapotchenko.FX.ComponentModel;
 
 /// <summary>
 /// Defines a base class for disposable objects that implement a finalizer pattern.

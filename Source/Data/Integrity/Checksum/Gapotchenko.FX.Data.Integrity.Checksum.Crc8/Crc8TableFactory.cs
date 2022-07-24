@@ -1,7 +1,5 @@
 ﻿using Gapotchenko.FX.Numerics;
-using System;
 using System.Collections.Concurrent;
-using System.Linq;
 
 namespace Gapotchenko.FX.Data.Integrity.Checksum;
 

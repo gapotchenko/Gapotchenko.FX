@@ -1,36 +1,19 @@
 ﻿#region Usings
 using Gapotchenko.FX.AppModel;
-using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.ComponentModel;
-using Gapotchenko.FX.Console;
 using Gapotchenko.FX.Data.Integrity.Checksum;
 //using Gapotchenko.FX.Data.Encoding;
 using Gapotchenko.FX.Diagnostics;
-using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq;
-using Gapotchenko.FX.Linq.Expressions;
 using Gapotchenko.FX.Math;
 using Gapotchenko.FX.Math.Combinatorics;
-using Gapotchenko.FX.Math.Geometry;
 using Gapotchenko.FX.Math.Topology;
 using Gapotchenko.FX.Reflection;
-using Gapotchenko.FX.Text;
-using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Threading.Tasks;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 #endregion
 
 #nullable enable
@@ -38,7 +21,6 @@ using System.Threading.Tasks;
 namespace Gapotchenko.FX.Harness.Console;
 
 using Console = System.Console;
-using Math = System.Math;
 
 class Program
 {

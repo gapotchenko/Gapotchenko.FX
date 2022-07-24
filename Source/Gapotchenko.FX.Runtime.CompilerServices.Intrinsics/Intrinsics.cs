@@ -1,6 +1,5 @@
 ﻿using Gapotchenko.FX.Runtime.CompilerServices.Pal;
 using Gapotchenko.FX.Runtime.InteropServices;
-using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;

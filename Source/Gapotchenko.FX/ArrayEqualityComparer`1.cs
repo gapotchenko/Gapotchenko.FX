@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Gapotchenko.FX;
+﻿namespace Gapotchenko.FX;
 
 /// <summary>
 /// Optimized and fast equality comparer for one-dimensional arrays.

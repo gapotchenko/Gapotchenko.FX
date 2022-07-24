@@ -1,8 +1,5 @@
 ﻿using Gapotchenko.FX.Linq;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Gapotchenko.FX.Collections.Generic.Kit;
 

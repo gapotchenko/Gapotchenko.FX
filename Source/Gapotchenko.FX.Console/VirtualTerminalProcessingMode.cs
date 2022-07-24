@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Console;
+﻿namespace Gapotchenko.FX.Console;
 
 /// <summary>
 /// Specifies virtual terminal processing preference.

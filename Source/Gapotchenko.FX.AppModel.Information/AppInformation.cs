@@ -1,7 +1,5 @@
 ﻿using Gapotchenko.FX.Threading;
-using System;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 

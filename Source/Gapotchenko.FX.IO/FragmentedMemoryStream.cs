@@ -1,10 +1,7 @@
 ﻿// Based on the work "Improving on .NET Memory Management for Large Objects" by Michael Sydney Balloni
 // https://www.codeproject.com/Tips/894885/Improving-on-NET-Memory-Management-for-Large-Objec
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 
 namespace Gapotchenko.FX.IO;
 

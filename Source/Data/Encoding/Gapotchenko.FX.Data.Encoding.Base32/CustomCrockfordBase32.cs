@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Data.Encoding;
+﻿namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
 /// Customizable Crockford Base 32 encoding.

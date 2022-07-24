@@ -1,8 +1,6 @@
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Collections.Tests.NonGeneric;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Xunit;
 

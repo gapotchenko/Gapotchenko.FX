@@ -1,6 +1,4 @@
-﻿using System;
-
-#pragma warning disable CS3010 // CLS-compliant interfaces must have only CLS-compliant members
+﻿#pragma warning disable CS3010 // CLS-compliant interfaces must have only CLS-compliant members
 
 namespace Gapotchenko.FX;
 

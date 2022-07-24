@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Diagnostics;
+﻿namespace Gapotchenko.FX.Diagnostics;
 
 partial class CommandLine
 {

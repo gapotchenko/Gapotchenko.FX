@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Math.Combinatorics;
+﻿namespace Gapotchenko.FX.Math.Combinatorics;
 
 partial class CartesianProduct
 {

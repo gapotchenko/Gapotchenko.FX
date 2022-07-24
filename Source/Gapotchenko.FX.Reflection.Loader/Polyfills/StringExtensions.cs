@@ -1,7 +1,4 @@
-﻿using System;
-
-
-/* Unmerged change from project 'Gapotchenko.FX.Reflection.Loader (net5.0)'
+﻿/* Unmerged change from project 'Gapotchenko.FX.Reflection.Loader (net5.0)'
 Before:
 namespace Gapotchenko.FX.Reflection.Loader.Polyfills
 {

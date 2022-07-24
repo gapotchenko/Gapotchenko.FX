@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Math.Combinatorics;
+﻿namespace Gapotchenko.FX.Math.Combinatorics;
 
 enum ResultMode : byte
 {

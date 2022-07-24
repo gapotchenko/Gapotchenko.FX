@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Math.Topology;
+﻿namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
 /// Provides static methods for creating <see cref="GraphEdge{TVertex}"/> objects.

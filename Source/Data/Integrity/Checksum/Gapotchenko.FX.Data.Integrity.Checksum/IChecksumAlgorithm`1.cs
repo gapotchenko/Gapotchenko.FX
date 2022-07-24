@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Gapotchenko.FX.Data.Integrity.Checksum;
+﻿namespace Gapotchenko.FX.Data.Integrity.Checksum;
 
 /// <summary>
 /// Defines the interface of a generic checksum algorithm.

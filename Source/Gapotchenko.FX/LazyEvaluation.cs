@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX;
+﻿namespace Gapotchenko.FX;
 
 /// <summary>
 /// Provides static methods for creating <see cref="LazyEvaluation{T}"/> values.

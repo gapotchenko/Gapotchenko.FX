@@ -1,12 +1,8 @@
 ﻿using Gapotchenko.FX.Text;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 #if TFF_TRANSACTIONS
 using System.Transactions;
 #endif

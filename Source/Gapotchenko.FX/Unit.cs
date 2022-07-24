@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX;
+﻿namespace Gapotchenko.FX;
 
 /// <summary>
 /// A special type that allows only one value (<c>null</c>), and thus can hold no information.

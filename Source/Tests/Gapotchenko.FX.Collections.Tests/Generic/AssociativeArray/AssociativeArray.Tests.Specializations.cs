@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray;
+﻿namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray;
 
 public partial class AssociativeArray_Tests_string_string : AssociativeArray_Tests<string, string>
 {

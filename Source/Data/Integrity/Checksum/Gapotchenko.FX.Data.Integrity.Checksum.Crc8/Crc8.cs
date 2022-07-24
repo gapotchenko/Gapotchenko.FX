@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Data.Integrity.Checksum;
+﻿namespace Gapotchenko.FX.Data.Integrity.Checksum;
 
 /// <summary>
 /// Computes CRC-8 checksum for the input data.

@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace Gapotchenko.FX.Diagnostics.Pal;
+﻿namespace Gapotchenko.FX.Diagnostics.Pal;
 
 sealed class ProcessMemoryStream : Stream
 {

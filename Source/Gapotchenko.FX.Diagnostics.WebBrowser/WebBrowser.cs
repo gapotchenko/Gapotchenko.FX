@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gapotchenko.FX.Diagnostics;
+﻿namespace Gapotchenko.FX.Diagnostics;
 
 /// <summary>
 /// Provides access to a web browser.

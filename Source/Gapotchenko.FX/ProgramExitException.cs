@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Properties;
-using System;
 using System.Runtime.Serialization;
 
 namespace Gapotchenko.FX;
