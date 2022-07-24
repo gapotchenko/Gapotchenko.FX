@@ -6,7 +6,7 @@
 
 Release date: not released yet
 
-- TODO
+- Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
 
 ### Gapotchenko FX 2022.2
 

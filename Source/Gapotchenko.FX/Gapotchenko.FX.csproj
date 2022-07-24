@@ -34,5 +34,6 @@
   </ItemGroup>
   
   <Import Project="$(MasteringDir)\OOB\System.Runtime.InteropServices.RuntimeInformation.targets" />
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.targets" />
 
 </Project>
