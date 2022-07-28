@@ -221,6 +221,66 @@ public static class FileSystem
     }
 
     /// <summary>
+    /// Inserts a subpath into the path at the specified index.
+    /// </summary>
+    /// <param name="path">The path to insert the subpath to.</param>
+    /// <param name="index">The index to insert the subpath at.</param>
+    /// <param name="subpath">The subpath to insert.</param>
+    /// <returns>The path with the inserted subpath.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">The specified index is out of range.</exception>
+    public static string InsertSubpath(string path, Index index, string subpath)
+    {
+        if (path == null)
+            throw new ArgumentNullException(nameof(path));
+        if (subpath == null)
+            throw new ArgumentNullException(nameof(subpath));
+
+        switch ((index.IsFromEnd, index.Value))
+        {
+            case (true, 0):
+                return Path.Combine(path, subpath);
+
+            case (true, 1):
+                {
+                    var folder = Path.GetDirectoryName(path);
+                    if (folder == null)
+                        throw new ArgumentOutOfRangeException(nameof(index));
+                    folder = Path.Combine(folder, subpath);
+                    return Path.Combine(folder, Path.GetFileName(path));
+                }
+
+            case (false, 0):
+                return Path.Combine(subpath, path);
+
+            default:
+                {
+                    var parts = new List<string>();
+                    for (string? i = path; !string.IsNullOrEmpty(i); i = Path.GetDirectoryName(i))
+                        parts.Add(Path.GetFileName(i));
+
+                    int n = parts.Count;
+                    int offset = index.GetOffset(n);
+                    if (offset < 0 || offset > n)
+                        throw new ArgumentOutOfRangeException(nameof(index));
+
+                    parts.Reverse();
+                    parts.Insert(offset, subpath);
+                    return Path.Combine(parts.ToArray());
+                }
+        }
+    }
+
+    /// <summary>
+    /// Determines whether the given path refers to an existing file or directory on disk.
+    /// </summary>
+    /// <param name="path">The path to test.</param>
+    /// <returns>
+    /// <see langword="true"/> if path refers to an existing file or directory;
+    /// <see langword="false"/> if neither directory nor file exists or an error occurs when trying to determine if the specified file system entry exists.
+    /// </returns>
+    public static bool EntryExists(string? path) => File.Exists(path) || Directory.Exists(path);
+
+    /// <summary>
     /// Waits for a read access to the file.
     /// </summary>
     /// <param name="path">The file path.</param>
