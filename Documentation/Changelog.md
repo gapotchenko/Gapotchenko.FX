@@ -6,7 +6,10 @@
 
 Release date: not released yet
 
+- Introduced interval arithmetics implementation mainly represented by `Interval<T>` and `ValueInterval<T>` types defined in `Gapotchenko.FX.Math` module
+- Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
+- Added polyfill for `Path.TrimEndingDirectorySeparator` method
 
 ### Gapotchenko FX 2022.2
 
