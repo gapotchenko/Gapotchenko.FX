@@ -12,7 +12,8 @@ public sealed class ValueIntervalTests : IntervalTestsBase
     [TestMethod]
     public void ValueInterval_Empty_Default()
     {
-        ValueInterval<Version> interval = default;
+        ValueInterval<string?> interval = default;
         Assert.IsTrue(interval.IsEmpty);
+        Assert.IsFalse(interval.Contains(default));
     }
 }

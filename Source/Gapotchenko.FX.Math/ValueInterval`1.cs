@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Math;
 /// <typeparam name="T">The type of interval value.</typeparam>
 [DebuggerDisplay("{ToString(),nq}")]
 public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval<T>>
-    where T : IEquatable<T>, IComparable<T>
+    where T : IEquatable<T>?, IComparable<T>?
 {
     /// <summary>
     /// Initializes a new <see cref="ValueInterval{T}"/> instance with the specified bounds.
