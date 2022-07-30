@@ -74,7 +74,8 @@ static class IntervalEngine
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsEmpty<TInterval, TBound>(in TInterval interval, IComparer<TBound> comparer)
         where TInterval : IIntervalOperations<TBound> =>
-        CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.To, interval.To, comparer) > 0;
+        CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.To, interval.To, comparer) > 0 ||
+        interval.From.Kind == IntervalBoundaryKind.Empty && interval.To.Kind == IntervalBoundaryKind.Empty;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsInfinite<TInterval, TBound>(in TInterval interval)
