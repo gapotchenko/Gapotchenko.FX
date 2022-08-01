@@ -12,8 +12,7 @@ sealed class TocSerializer
 {
     public void SerializeToc(TextWriter textWriter, TocNode rootNode, TocProjectNode? projectNode)
     {
-        if (ProjectCompexitySet?.Count > 0)
-            ProjectCompexitySet.Clear();
+        ProjectCompexitySet?.Clear();
         RootNode = rootNode;
         ProjectNode = projectNode;
 
@@ -106,8 +105,7 @@ sealed class TocSerializer
                         int starCount = ProjectComplexityVisualizer.GetStarCount(projectComplexity);
                         if (starCount != 0)
                         {
-                            var projectCompexitySet = ProjectCompexitySet ??= new HashSet<ProjectComplexity>();
-                            projectCompexitySet.Add(projectComplexity);
+                            (ProjectCompexitySet ??= new()).Add(projectComplexity);
 
                             textWriter.Write(' ');
                             for (int i = 0; i < starCount; ++i)
