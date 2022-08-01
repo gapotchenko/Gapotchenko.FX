@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageDescription>The module provides primitives that can be used to automatically lookup and load assembly dependencies in dynamic scenarios.</PackageDescription>
+    <PackageDescription>Provides primitives that can be used to automatically lookup and load assembly dependencies in dynamic scenarios.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

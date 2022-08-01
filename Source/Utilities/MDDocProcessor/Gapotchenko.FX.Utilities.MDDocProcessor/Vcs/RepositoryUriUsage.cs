@@ -1,9 +1,8 @@
-﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Vcs
+﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Vcs;
+
+enum RepositoryUriUsage
 {
-    enum RepositoryUriUsage
-    {
-        Default,
-        Resource,
-        Link
-    }
+    Default,
+    Resource,
+    Link
 }

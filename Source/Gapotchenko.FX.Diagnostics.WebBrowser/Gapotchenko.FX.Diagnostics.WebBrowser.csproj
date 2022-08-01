@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageDescription>The module provides high-level integration with OS web browser.</PackageDescription>
+    <PackageDescription>Provides high-level integration with OS web browser.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

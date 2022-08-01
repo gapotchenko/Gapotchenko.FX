@@ -1,24 +1,23 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Gapotchenko.FX.Utilities.MDDocProcessor.Framework
+namespace Gapotchenko.FX.Utilities.MDDocProcessor.Framework;
+
+static class RegexExtensions
 {
-    static class RegexExtensions
+    public static IEnumerable<Match> EnumerateMatches(this Regex regex, string input)
     {
-        public static IEnumerable<Match> EnumerateMatches(this Regex regex, string input)
-        {
-            if (regex == null)
-                throw new ArgumentNullException(nameof(regex));
+        if (regex == null)
+            throw new ArgumentNullException(nameof(regex));
 
-            return _SelfAndNextMatches(regex.Match(input));
-        }
+        return _SelfAndNextMatches(regex.Match(input));
+    }
 
-        static IEnumerable<Match> _SelfAndNextMatches(this Match match)
+    static IEnumerable<Match> _SelfAndNextMatches(this Match match)
+    {
+        while (match.Success)
         {
-            while (match.Success)
-            {
-                yield return match;
-                match = match.NextMatch();
-            }
+            yield return match;
+            match = match.NextMatch();
         }
     }
 }

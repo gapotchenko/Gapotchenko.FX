@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageDescription>The module provides the implementation of data encoding algorithms belonging to Base24 family.</PackageDescription>
+    <PackageDescription>Provides the implementation of data encoding algorithms belonging to the Base24 family.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

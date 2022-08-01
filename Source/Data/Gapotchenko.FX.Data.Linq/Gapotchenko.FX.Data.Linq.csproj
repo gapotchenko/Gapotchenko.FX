@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageDescription>The module provides the asynchronous data access support for LINQ2SQL technology.</PackageDescription>
+    <PackageDescription>Provides asynchronous data access support for LINQ2SQL technology.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

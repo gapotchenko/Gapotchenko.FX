@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Integrity.Checksum.Crc16.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Integrity.Checksum.Crc16)
 
-The module provides the implementation of checksum algorithms belonging to CRC-16 family.
+The module provides the implementation of checksum algorithms belonging to the CRC-16 family.
 
 ## Quick Start
 

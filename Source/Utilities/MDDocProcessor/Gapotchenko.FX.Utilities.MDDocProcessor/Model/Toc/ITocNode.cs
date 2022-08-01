@@ -1,9 +1,8 @@
 ﻿
-namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
+namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
+
+interface ITocNode
 {
-    interface ITocNode
-    {
-        ITocNode? Parent { get; set; }
-        IList<TocNode> Children { get; }
-    }
+    ITocNode? Parent { get; set; }
+    IList<TocNode> Children { get; }
 }

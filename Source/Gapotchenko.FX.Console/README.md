@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Console.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Console)
 
-The module provides virtual terminal functionality, console traits and useful primitives for .NET console apps.
+The module provides virtual terminal functionality, console traits, and other useful primitives for .NET console apps.
 
 ## Virtual Terminal
 

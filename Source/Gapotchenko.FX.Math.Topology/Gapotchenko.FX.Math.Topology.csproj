@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageDescription>The module provides data structures and primitives for working with abstract topologies.</PackageDescription>
+    <PackageDescription>Provides data structures and primitives for working with abstract topologies.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

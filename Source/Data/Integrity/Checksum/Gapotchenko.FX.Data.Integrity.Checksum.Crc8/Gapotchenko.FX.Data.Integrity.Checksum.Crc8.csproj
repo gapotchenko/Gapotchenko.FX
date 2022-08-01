@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageDescription>The module provides the implementation of checksum algorithms belonging to CRC-8 family: CRC-8, CRC-8/SMBUS, CRC-8/TECH-3250, CRC-8/AES, CRC-8/EBU, CRC-8/SAE-J1850, CRC-8/OPENSAFETY, CRC-8/NRSC-5, CRC-8/MIFARE-MAD, CRC-8/MAXIM, CRC-8/MAXIM-DOW, DOW-CRC, CRC-8/I-CODE, CRC-8/HITAG, CRC-8/DARC, CRC-8/BLUETOOTH, CRC-8/AUTOSAR.</PackageDescription>
+    <PackageDescription>Provides the implementation of checksum algorithms belonging to the CRC-8 family: CRC-8, CRC-8/SMBUS, CRC-8/TECH-3250, CRC-8/AES, CRC-8/EBU, CRC-8/SAE-J1850, CRC-8/OPENSAFETY, CRC-8/NRSC-5, CRC-8/MIFARE-MAD, CRC-8/MAXIM, CRC-8/MAXIM-DOW, DOW-CRC, CRC-8/I-CODE, CRC-8/HITAG, CRC-8/DARC, CRC-8/BLUETOOTH, CRC-8/AUTOSAR.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,119 +1,118 @@
-﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Vcs
+﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Vcs;
+
+static class RepositoryService
 {
-    static class RepositoryService
+    const string RespositoryUriSuffix = "gapotchenko/Gapotchenko.FX";
+
+    static string? _CachedRootPath;
+
+    public static string RootPath => _CachedRootPath ??= _GetRootPathCore();
+
+    static string _GetRootPathCore()
     {
-        const string RespositoryUriSuffix = "gapotchenko/Gapotchenko.FX";
+        string path = typeof(RepositoryService).Assembly.Location;
 
-        static string? _CachedRootPath;
-
-        public static string RootPath => _CachedRootPath ??= _GetRootPathCore();
-
-        static string _GetRootPathCore()
+        for (; ; )
         {
-            string path = typeof(RepositoryService).Assembly.Location;
+            string? newPath = Path.GetDirectoryName(path);
+            if (newPath == null)
+                throw new Exception("Cannot locate repository root path.");
 
-            for (; ; )
+            path = newPath;
+
+            string probingPath = Path.Combine(path, ".gitignore");
+            if (File.Exists(probingPath))
             {
-                string? newPath = Path.GetDirectoryName(path);
-                if (newPath == null)
-                    throw new Exception("Cannot locate repository root path.");
-
-                path = newPath;
-
-                string probingPath = Path.Combine(path, ".gitignore");
-                if (File.Exists(probingPath))
-                {
-                    path += Path.DirectorySeparatorChar;
-                    break;
-                }
+                path += Path.DirectorySeparatorChar;
+                break;
             }
-
-            return path;
         }
 
-        static string? _CachedOrigHead;
+        return path;
+    }
 
-        static string OrigHead => _CachedOrigHead ??= _GetOrigHeadCore();
+    static string? _CachedOrigHead;
 
-        static string _GetOrigHeadCore() =>
-            File.ReadAllText(
-                Path.Combine(RootPath, ".git", "ORIG_HEAD"))
-            .Trim();
+    static string OrigHead => _CachedOrigHead ??= _GetOrigHeadCore();
 
-        public static Uri? TryMapUri(Uri uri, RepositoryUriUsage usage)
+    static string _GetOrigHeadCore() =>
+        File.ReadAllText(
+            Path.Combine(RootPath, ".git", "ORIG_HEAD"))
+        .Trim();
+
+    public static Uri? TryMapUri(Uri uri, RepositoryUriUsage usage)
+    {
+        string? localPath = null;
+
+        if (uri.IsAbsoluteUri)
         {
-            string? localPath = null;
-
-            if (uri.IsAbsoluteUri)
-            {
-                if (!uri.IsFile)
-                    return null;
-
-                localPath = uri.LocalPath;
-                int j = localPath.IndexOf('?');
-                if (j != -1)
-                    localPath = localPath[0..j];
-
-                j = localPath.IndexOf('#');
-                if (j != -1)
-                    localPath = localPath[0..j];
-
-                var rootUri = new Uri(RootPath);
-                uri = rootUri.MakeRelativeUri(uri);
-                uri = new Uri(Uri.UnescapeDataString(uri.OriginalString), UriKind.Relative);
-            }
-
-            string s = uri.OriginalString;
-
-            if (s.StartsWith("../../.."))
-            {
+            if (!uri.IsFile)
                 return null;
-            }
-            else if (s.StartsWith("../../"))
+
+            localPath = uri.LocalPath;
+            int j = localPath.IndexOf('?');
+            if (j != -1)
+                localPath = localPath[0..j];
+
+            j = localPath.IndexOf('#');
+            if (j != -1)
+                localPath = localPath[0..j];
+
+            var rootUri = new Uri(RootPath);
+            uri = rootUri.MakeRelativeUri(uri);
+            uri = new Uri(Uri.UnescapeDataString(uri.OriginalString), UriKind.Relative);
+        }
+
+        string s = uri.OriginalString;
+
+        if (s.StartsWith("../../.."))
+        {
+            return null;
+        }
+        else if (s.StartsWith("../../"))
+        {
+            // GitHub services like Wiki etc.
+
+            var baseUri = new Uri("https://github.com/" + RespositoryUriSuffix + "/tree/branch/");
+            var newUri = new Uri(baseUri, uri);
+            return newUri;
+        }
+        else
+        {
+            string? query = null;
+            int j = s.IndexOf('?');
+            if (j != -1)
             {
-                // GitHub services like Wiki etc.
-
-                var baseUri = new Uri("https://github.com/" + RespositoryUriSuffix + "/tree/branch/");
-                var newUri = new Uri(baseUri, uri);
-                return newUri;
+                query = s[(j + 1)..];
+                s = s[0..j];
             }
-            else
+
+            bool raw =
+                usage == RepositoryUriUsage.Resource ||
+                query?.Contains("raw=true") == true;
+
+            bool blob = Path.GetExtension(s).ToLowerInvariant() is ".png" or ".jpg" or ".jpeg" or ".gif";
+
+            string? packageName = null;
+            if (!(raw || blob) && localPath != null && Directory.Exists(localPath))
             {
-                string? query = null;
-                int j = s.IndexOf('?');
-                if (j != -1)
+                if (File.Exists(Path.Combine(localPath, "README.md")) &&
+                    Directory.EnumerateFiles(localPath, "*.*proj").Any())
                 {
-                    query = s[(j + 1)..];
-                    s = s[0..j];
+                    packageName = Path.GetFileName(localPath);
                 }
-
-                bool raw =
-                    usage == RepositoryUriUsage.Resource ||
-                    query?.Contains("raw=true") == true;
-
-                bool blob = Path.GetExtension(s).ToLowerInvariant() is ".png" or ".jpg" or ".jpeg" or ".gif";
-
-                string? packageName = null;
-                if (!(raw || blob) && localPath != null && Directory.Exists(localPath))
-                {
-                    if (File.Exists(Path.Combine(localPath, "README.md")) &&
-                        Directory.EnumerateFiles(localPath, "*.*proj").Any())
-                    {
-                        packageName = Path.GetFileName(localPath);
-                    }
-                }
-
-                if (packageName != null)
-                    return new Uri($"https://www.nuget.org/packages/{Uri.EscapeDataString(packageName)}");
-
-                var baseUri = new Uri(
-                    raw ?
-                        $"https://raw.githubusercontent.com/{RespositoryUriSuffix}/{Uri.EscapeDataString(OrigHead)}/" :
-                        $"https://github.com/{RespositoryUriSuffix}/{(blob ? "blob" : "tree")}/{Uri.EscapeDataString(OrigHead)}/"
-                    );
-                var newUri = new Uri(baseUri, new Uri(s, UriKind.Relative));
-                return newUri;
             }
+
+            if (packageName != null)
+                return new Uri($"https://www.nuget.org/packages/{Uri.EscapeDataString(packageName)}");
+
+            var baseUri = new Uri(
+                raw ?
+                    $"https://raw.githubusercontent.com/{RespositoryUriSuffix}/{Uri.EscapeDataString(OrigHead)}/" :
+                    $"https://github.com/{RespositoryUriSuffix}/{(blob ? "blob" : "tree")}/{Uri.EscapeDataString(OrigHead)}/"
+                );
+            var newUri = new Uri(baseUri, new Uri(s, UriKind.Relative));
+            return newUri;
         }
     }
 }

@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Encoding.Base16.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Encoding.Base16)
 
-The module provides the implementation of binary-to-text encoding algorithms belonging to Base16 family.
+The module provides the implementation of binary-to-text encoding algorithms belonging to the Base16 family.
 
 ## Quick Start
 

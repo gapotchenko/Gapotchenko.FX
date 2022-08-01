@@ -3,11 +3,11 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.AppModel.Information.svg)](https://www.nuget.org/packages/Gapotchenko.FX.AppModel.Information)
 
-The module provides functionality for getting the information about the app.
+The module provides functionality for getting information about the app.
 
 ## Information About the Current App
 
-To get the information about the current app, use `AppInformation.Current` property:
+To get information about the current app, use `AppInformation.Current` property:
 
 ```csharp
 using Gapotchenko.FX.AppModel.Information;

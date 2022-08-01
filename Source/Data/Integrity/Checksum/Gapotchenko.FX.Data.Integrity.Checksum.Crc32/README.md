@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Integrity.Checksum.Crc32.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Integrity.Checksum.Crc32)
 
-The module provides the implementation of checksum algorithms belonging to CRC-32 family.
+The module provides the implementation of checksum algorithms belonging to the CRC-32 family.
 
 ## Quick Start
 
