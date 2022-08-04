@@ -218,12 +218,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encodin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Tests", "Tests\Gapotchenko.FX.Math.Tests\Gapotchenko.FX.Math.Tests.csproj", "{9566836B-12A7-4EB1-AD4A-2905393D462C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workarounds", "Workarounds", "{760E336D-BCA7-4E42-ACE1-D63A8D6D5745}"
-	ProjectSection(SolutionItems) = preProject
-		Mastering\Workarounds.props = Mastering\Workarounds.props
-		Mastering\Workarounds.targets = Mastering\Workarounds.targets
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -551,7 +545,6 @@ Global
 		{F6815CA5-1828-4C75-A194-FD29980E4E24} = {CF52618D-C2C4-4C11-87FE-D54B286DF7AF}
 		{BF0C97B4-6374-4253-B9C7-D023A4F5E1A7} = {5A5AD176-C393-4785-9E07-DB5910DE50A2}
 		{9566836B-12A7-4EB1-AD4A-2905393D462C} = {9BF93356-2C42-4B31-AEB1-7E394D27F500}
-		{760E336D-BCA7-4E42-ACE1-D63A8D6D5745} = {68BA92DB-7296-463D-9C99-01357420A1A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}
