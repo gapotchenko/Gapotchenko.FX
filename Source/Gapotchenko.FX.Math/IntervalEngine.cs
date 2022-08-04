@@ -123,44 +123,30 @@ static class IntervalEngine
         x.Kind == y.Kind &&
         comparer.Compare(x.GetValueOrDefault(), y.GetValueOrDefault()) == 0;
 
-    static bool BoundariesEqual<TBound>(in IntervalBoundary<TBound> x, in IntervalBoundary<TBound> y, IEqualityComparer<TBound> comparer) =>
-        x.Kind == y.Kind &&
-        comparer.Equals(x.GetValueOrDefault(), y.GetValueOrDefault());
-
     public static bool IntervalsEqual<TInterval, TOther, TBound>(in TInterval x, in TOther y, IComparer<TBound> comparer)
         where TInterval : IIntervalOperations<TBound>
         where TOther : IIntervalOperations<TBound> =>
-        BoundariesEqual(x.From, y.From, comparer) &&
-        BoundariesEqual(x.To, y.To, comparer);
-
-    public static bool IntervalsEqual<TInterval, TOther, TBound>(in TInterval x, in TOther y, IEqualityComparer<TBound> comparer)
-        where TInterval : IIntervalOperations<TBound>
-        where TOther : IIntervalOperations<TBound> =>
-        BoundariesEqual(x.From, y.From, comparer) &&
-        BoundariesEqual(x.To, y.To, comparer);
+        IsEmpty(x, comparer) && IsEmpty(y, comparer) ||
+        BoundariesEqual(x.From, y.From, comparer) && BoundariesEqual(x.To, y.To, comparer);
 
     static int CompareBoundaries<TBound>(
         BoundaryDirection directionX, in IntervalBoundary<TBound> boundaryX,
         BoundaryDirection directionY, in IntervalBoundary<TBound> boundaryY,
         IComparer<TBound> comparer)
     {
-        if (boundaryX.HasValue && boundaryY.HasValue)
-        {
-            int c = comparer.Compare(boundaryX.Value, boundaryY.Value);
+        int c =
+            boundaryX.HasValue && boundaryY.HasValue ?
+                comparer.Compare(boundaryX.Value, boundaryY.Value) :
+                0;
 
-            if (c == 0)
-            {
-                var orderedKindX = GetOrderedBoundaryKind(directionX, boundaryX.Kind);
-                var orderedKindY = GetOrderedBoundaryKind(directionY, boundaryY.Kind);
-                c = orderedKindX.CompareTo(orderedKindY);
-            }
-
-            return c;
-        }
-        else
+        if (c == 0)
         {
-            return boundaryX.Kind.CompareTo(boundaryY.Kind);
+            var orderedKindX = GetOrderedBoundaryKind(directionX, boundaryX.Kind);
+            var orderedKindY = GetOrderedBoundaryKind(directionY, boundaryY.Kind);
+            c = orderedKindX.CompareTo(orderedKindY);
         }
+
+        return c;
     }
 
     enum BoundaryDirection
@@ -171,19 +157,21 @@ static class IntervalEngine
 
     enum OrderedBoundaryKind
     {
-        Empty,
+        ToEmpty,
         NegativeInfinity,
         ToExclusive,
         FromInclusive,
         ToInclusive,
         FromExclusive,
-        PositiveInfinity
+        PositiveInfinity,
+        FromEmpty
     }
 
     static OrderedBoundaryKind GetOrderedBoundaryKind(BoundaryDirection direction, IntervalBoundaryKind kind) =>
         (direction, kind) switch
         {
-            (_, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.Empty,
+            (BoundaryDirection.From, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.FromEmpty,
+            (BoundaryDirection.To, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.ToEmpty,
             (_, IntervalBoundaryKind.NegativeInfinity) => OrderedBoundaryKind.NegativeInfinity,
             (BoundaryDirection.From, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.FromInclusive,
             (BoundaryDirection.To, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.ToInclusive,
@@ -203,6 +191,18 @@ static class IntervalEngine
         constructor(
             CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) >= 0 ? interval.From : other.From,
             CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) <= 0 ? interval.To : other.To);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static TInterval Union<TInterval, TOther, TBound>(
+        in TInterval interval,
+        in TOther other,
+        IComparer<TBound> comparer,
+        Constructor<TInterval, TBound> constructor)
+        where TInterval : IIntervalOperations<TBound>
+        where TOther : IIntervalOperations<TBound> =>
+        constructor(
+            CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) <= 0 ? interval.From : other.From,
+            CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) >= 0 ? interval.To : other.To);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSubintervalOf<TInterval, TOther, TBound>(in TInterval interval, in TOther other, IComparer<TBound> comparer)

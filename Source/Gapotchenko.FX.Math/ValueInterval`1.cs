@@ -153,6 +153,29 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
 
     IInterval<T> IIntervalOperations<T>.Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
 
+    /// <summary>
+    /// Produces the union of the current and specified intervals.
+    /// </summary>
+    /// <param name="other">The interval to produce the union with.</param>
+    /// <returns>A new interval representing a union of the current and specified intervals.</returns>
+    public ValueInterval<T> Union(IInterval<T> other) => Union<IIntervalOperations<T>>(other);
+
+    /// <summary>
+    /// Produces the union of the current and specified intervals.
+    /// </summary>
+    /// <param name="other">The interval to produce the union with.</param>
+    /// <returns>A new interval representing a union of the current and specified intervals.</returns>
+    /// <typeparam name="TOther">Type of the other interval to produce the union with.</typeparam>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public ValueInterval<T> Union<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
+        IntervalEngine.Union(
+            this,
+            other ?? throw new ArgumentNullException(nameof(other)),
+            Comparer<T>.Default,
+            Construct);
+
+    IInterval<T> IIntervalOperations<T>.Union(IInterval<T> other) => Union<IIntervalOperations<T>>(other);
+
     /// <inheritdoc/>
     public bool Overlaps(IInterval<T> other) => Overlaps<IInterval<T>>(other);
 
@@ -279,7 +302,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
 #endif
 
     /// <inheritdoc/>
-    public bool Equals(ValueInterval<T> other) => IntervalEngine.IntervalsEqual(this, other, EqualityComparer<T>.Default);
+    public bool Equals(ValueInterval<T> other) => IntervalEngine.IntervalsEqual(this, other, Comparer<T>.Default);
 
     /// <inheritdoc/>
     public override bool Equals([NotNullWhen(true)] object? obj) =>

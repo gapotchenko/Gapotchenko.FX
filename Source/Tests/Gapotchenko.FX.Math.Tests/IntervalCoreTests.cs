@@ -2,7 +2,7 @@
 
 namespace Gapotchenko.FX.Math.Tests;
 
-public abstract class IntervalTestsBase
+public abstract class IntervalCoreTests
 {
     public abstract IInterval<T> NewInterval<T>(T from, T to) where T : IComparable<T>, IEquatable<T>;
 
@@ -11,8 +11,14 @@ public abstract class IntervalTestsBase
     public IInterval<T> NewInterval<T>(IInterval<T> interval) where T : IComparable<T>, IEquatable<T> =>
         NewInterval(interval.From, interval.To);
 
+    public abstract IInterval<T> InfiniteInterval<T>() where T : IComparable<T>, IEquatable<T>;
+
+    public abstract IInterval<T> EmptyInterval<T>() where T : IComparable<T>, IEquatable<T>;
+
+    #region Characteristics
+
     [TestMethod]
-    public void Interval_Characteristics_LeftUnbounded()
+    public void Interval_Core_Characteristics_LeftUnbounded()
     {
         var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary.Inclusive(10));
         Assert.IsFalse(interval.IsBounded);
@@ -21,7 +27,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Characteristics_RightUnbounded()
+    public void Interval_Core_Characteristics_RightUnbounded()
     {
         var interval = NewInterval(IntervalBoundary.Inclusive(10), IntervalBoundary<int>.PositiveInfinity);
         Assert.IsFalse(interval.IsBounded);
@@ -30,7 +36,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Characteristics_Unbounded()
+    public void Interval_Core_Characteristics_Unbounded()
     {
         var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary<int>.PositiveInfinity);
         Assert.IsFalse(interval.IsBounded);
@@ -39,7 +45,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Characteristics_HalfOpenBounded()
+    public void Interval_Core_Characteristics_HalfOpenBounded()
     {
         var interval = NewInterval(0, 10);
         Assert.IsTrue(interval.IsHalfOpen);
@@ -49,10 +55,12 @@ public abstract class IntervalTestsBase
         Assert.IsFalse(interval.IsClosed);
     }
 
+    #endregion
+
     #region Constructor
 
     [TestMethod]
-    public void Interval_Constructor_1()
+    public void Interval_Core_Constructor_1()
     {
         var interval = NewInterval(0, 10);
 
@@ -63,7 +71,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Constructor_2()
+    public void Interval_Core_Constructor_2()
     {
         var interval = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Inclusive(10));
 
@@ -78,7 +86,15 @@ public abstract class IntervalTestsBase
     #region Empty
 
     [TestMethod]
-    public void Interval_Empty_1()
+    public void Interval_Core_Empty_1()
+    {
+        var interval = EmptyInterval<int>();
+
+        Assert.IsTrue(interval.IsEmpty);
+    }
+
+    [TestMethod]
+    public void Interval_Core_Empty_2()
     {
         var interval = NewInterval(0, 0);
 
@@ -86,11 +102,20 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Empty_2()
+    public void Interval_Core_Empty_3()
     {
         var interval = NewInterval(1, 0);
 
         Assert.IsTrue(interval.IsEmpty);
+    }
+
+    [TestMethod]
+    public void Interval_Core_Empty_4()
+    {
+        var a = NewInterval(1, 0);
+        var b = EmptyInterval<int>();
+
+        Assert.IsTrue(a.IntervalEquals(b));
     }
 
     #endregion
@@ -98,11 +123,26 @@ public abstract class IntervalTestsBase
     #region Infinite
 
     [TestMethod]
-    public void Interval_Infinite_1()
+    public void IntervalCore_Infinite_1()
+    {
+        var interval = InfiniteInterval<int>();
+        Assert.IsTrue(interval.IsInfinite);
+    }
+
+    [TestMethod]
+    public void Interval_Core_Infinite_2()
     {
         var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary<int>.PositiveInfinity);
-
         Assert.IsTrue(interval.IsInfinite);
+    }
+
+    [TestMethod]
+    public void Interval_Core_Infinite_3()
+    {
+        var a = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary<int>.PositiveInfinity);
+        var b = InfiniteInterval<int>();
+
+        Assert.IsTrue(a.IntervalEquals(b));
     }
 
     #endregion
@@ -110,7 +150,7 @@ public abstract class IntervalTestsBase
     #region Contains
 
     [TestMethod]
-    public void Interval_Contains_Default()
+    public void Interval_Core_Contains_Default()
     {
         var interval = NewInterval(0, 10);
 
@@ -124,7 +164,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Contains_BoundedRightOpen()
+    public void Interval_Core_Contains_BoundedRightOpen()
     {
         var interval = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Exclusive(10));
 
@@ -138,7 +178,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Contains_BoundedLeftOpen()
+    public void Interval_Core_Contains_BoundedLeftOpen()
     {
         var interval = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Inclusive(10));
 
@@ -152,7 +192,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Contains_BoundedOpen()
+    public void Interval_Core_Contains_BoundedOpen()
     {
         var interval = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Exclusive(10));
 
@@ -166,7 +206,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Contains_BoundedClosed()
+    public void Interval_Core_Contains_BoundedClosed()
     {
         var interval = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Inclusive(10));
 
@@ -180,7 +220,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Contains_Unbounded()
+    public void Interval_Core_Contains_Unbounded()
     {
         var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary<int>.PositiveInfinity);
 
@@ -194,7 +234,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Contains_RightBoundedOpen()
+    public void Interval_Core_Contains_RightBoundedOpen()
     {
         var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary.Exclusive(10));
 
@@ -206,7 +246,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Contains_RightBoundedClosed()
+    public void Interval_Core_Contains_RightBoundedClosed()
     {
         var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary.Inclusive(10));
 
@@ -218,7 +258,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Contains_LeftBoundedOpen()
+    public void Interval_Core_Contains_LeftBoundedOpen()
     {
         var interval = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary<int>.PositiveInfinity);
 
@@ -230,7 +270,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Contains_LeftBoundedClosed()
+    public void Interval_Core_Contains_LeftBoundedClosed()
     {
         var interval = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary<int>.PositiveInfinity);
 
@@ -246,7 +286,7 @@ public abstract class IntervalTestsBase
     #region Overlaps
 
     [TestMethod]
-    public void Interval_Overlaps_1()
+    public void Interval_Core_Overlaps_1()
     {
         var a = NewInterval(2, 10);
         Assert.IsTrue(a.Overlaps(a));
@@ -258,7 +298,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Overlaps_2()
+    public void Interval_Core_Overlaps_2()
     {
         var a = NewInterval(0, 2);
         var b = NewInterval(2, 10);
@@ -268,7 +308,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Overlaps_3()
+    public void Interval_Core_Overlaps_3()
     {
         var a = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Inclusive(2));
         var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
@@ -278,7 +318,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Overlaps_4()
+    public void Interval_Core_Overlaps_4()
     {
         var a = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Exclusive(2));
         var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Exclusive(10));
@@ -288,7 +328,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Overlaps_5()
+    public void Interval_Core_Overlaps_5()
     {
         var a = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Inclusive(2));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
@@ -298,7 +338,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Overlaps_6()
+    public void Interval_Core_Overlaps_6()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Exclusive(2));
         var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
@@ -308,7 +348,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Overlaps_7()
+    public void Interval_Core_Overlaps_7()
     {
         var a = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.Inclusive(3));
         var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Exclusive(10));
@@ -322,7 +362,7 @@ public abstract class IntervalTestsBase
     #region Intersect
 
     [TestMethod]
-    public void Interval_Intersect_1()
+    public void Interval_Core_Intersect_1()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -333,7 +373,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Intersect_2()
+    public void Interval_Core_Intersect_2()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Exclusive(10));
@@ -344,7 +384,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Intersect_3()
+    public void Interval_Core_Intersect_3()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Inclusive(9));
@@ -355,7 +395,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Intersect_4()
+    public void Interval_Core_Intersect_4()
     {
         var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Exclusive(9));
@@ -366,7 +406,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Intersect_5()
+    public void Interval_Core_Intersect_5()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Inclusive(2));
         var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
@@ -377,7 +417,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Intersect_6()
+    public void Interval_Core_Intersect_6()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Inclusive(2));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -388,12 +428,115 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_Intersect_7()
+    public void Interval_Core_Intersect_7()
     {
-        var a = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary<int>.PositiveInfinity);
+        var a = InfiniteInterval<int>();
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
 
         var c = a.Intersect(b);
+
+        Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10))));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Intersect_8()
+    {
+        var a = EmptyInterval<int>();
+        var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
+
+        var c = a.Intersect(b);
+
+        Assert.IsTrue(c.IsEmpty);
+    }
+
+    #endregion
+
+    #region Union
+
+    [TestMethod]
+    public void Interval_Core_Union_1()
+    {
+        var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+        var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+        var c = a.Union(b);
+
+        Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10))));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Union_2()
+    {
+        var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+        var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Exclusive(10));
+
+        var c = a.Union(b);
+
+        Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10))));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Union_3()
+    {
+        var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+        var b = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Inclusive(9));
+
+        var c = a.Union(b);
+
+        Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Inclusive(10))));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Union_4()
+    {
+        var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+        var b = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Exclusive(9));
+
+        var c = a.Union(b);
+
+        Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Inclusive(10))));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Union_5()
+    {
+        var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Inclusive(2));
+        var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
+
+        var c = a.Union(b);
+
+        Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Inclusive(10))));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Union_6()
+    {
+        var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Inclusive(2));
+        var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
+
+        var c = a.Union(b);
+
+        Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Inclusive(10))));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Union_7()
+    {
+        var a = InfiniteInterval<int>();
+        var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
+
+        var c = a.Union(b);
+
+        Assert.IsTrue(c.IsInfinite);
+    }
+
+    [TestMethod]
+    public void Interval_Core_Union_8()
+    {
+        var a = EmptyInterval<int>();
+        var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
+
+        var c = a.Union(b);
 
         Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10))));
     }
@@ -403,7 +546,7 @@ public abstract class IntervalTestsBase
     #region IntervalEquals
 
     [TestMethod]
-    public void Interval_IntervalEquals_1()
+    public void Interval_Core_IntervalEquals_1()
     {
         var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
         Assert.IsTrue(a.IntervalEquals(a));
@@ -419,7 +562,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IntervalEquals_2()
+    public void Interval_Core_IntervalEquals_2()
     {
         var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Exclusive(10));
@@ -436,7 +579,7 @@ public abstract class IntervalTestsBase
     #region IsSubintervalOf
 
     [TestMethod]
-    public void Interval_IsSubintervalOf_1()
+    public void Interval_Core_IsSubintervalOf_1()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         Assert.IsTrue(a.IsSubintervalOf(a));
@@ -448,7 +591,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSubintervalOf_2()
+    public void Interval_Core_IsSubintervalOf_2()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(3), IntervalBoundary.Inclusive(9));
@@ -458,7 +601,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSubintervalOf_3()
+    public void Interval_Core_IsSubintervalOf_3()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
@@ -468,7 +611,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSubintervalOf_4()
+    public void Interval_Core_IsSubintervalOf_4()
     {
         var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -478,7 +621,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSubintervalOf_5()
+    public void Interval_Core_IsSubintervalOf_5()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
@@ -488,7 +631,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSubintervalOf_6()
+    public void Interval_Core_IsSubintervalOf_6()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -498,7 +641,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSubintervalOf_7()
+    public void Interval_Core_IsSubintervalOf_7()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Exclusive(2));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -508,7 +651,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSubintervalOf_8()
+    public void Interval_Core_IsSubintervalOf_8()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Inclusive(10));
@@ -517,7 +660,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSubintervalOf_9()
+    public void Interval_Core_IsSubintervalOf_9()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(11));
@@ -530,7 +673,7 @@ public abstract class IntervalTestsBase
     #region IsSuperintervalOf
 
     [TestMethod]
-    public void Interval_IsSuperintervalOf_1()
+    public void Interval_Core_IsSuperintervalOf_1()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         Assert.IsTrue(a.IsSuperintervalOf(a));
@@ -542,7 +685,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSuperintervalOf_2()
+    public void Interval_Core_IsSuperintervalOf_2()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(3), IntervalBoundary.Inclusive(9));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -552,7 +695,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSuperintervalOf_3()
+    public void Interval_Core_IsSuperintervalOf_3()
     {
         var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -562,7 +705,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSuperintervalOf_4()
+    public void Interval_Core_IsSuperintervalOf_4()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
@@ -572,7 +715,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSuperintervalOf_5()
+    public void Interval_Core_IsSuperintervalOf_5()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -582,7 +725,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSuperintervalOf_6()
+    public void Interval_Core_IsSuperintervalOf_6()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
@@ -592,7 +735,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSuperintervalOf_7()
+    public void Interval_Core_IsSuperintervalOf_7()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Exclusive(2));
@@ -602,7 +745,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSuperintervalOf_8()
+    public void Interval_Core_IsSuperintervalOf_8()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -611,7 +754,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsSuperintervalOf_9()
+    public void Interval_Core_IsSuperintervalOf_9()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(11));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -624,7 +767,7 @@ public abstract class IntervalTestsBase
     #region IsProperSubintervalOf
 
     [TestMethod]
-    public void Interval_IsProperSubintervalOf_1()
+    public void Interval_Core_IsProperSubintervalOf_1()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         Assert.IsFalse(a.IsProperSubintervalOf(a));
@@ -636,7 +779,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSubintervalOf_2()
+    public void Interval_Core_IsProperSubintervalOf_2()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(3), IntervalBoundary.Inclusive(9));
@@ -646,7 +789,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSubintervalOf_3()
+    public void Interval_Core_IsProperSubintervalOf_3()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
@@ -656,7 +799,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSubintervalOf_4()
+    public void Interval_Core_IsProperSubintervalOf_4()
     {
         var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -666,7 +809,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSubintervalOf_5()
+    public void Interval_Core_IsProperSubintervalOf_5()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
@@ -676,7 +819,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSubintervalOf_6()
+    public void Interval_Core_IsProperSubintervalOf_6()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -686,7 +829,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSubintervalOf_7()
+    public void Interval_Core_IsProperSubintervalOf_7()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Exclusive(2));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -696,7 +839,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSubintervalOf_8()
+    public void Interval_Core_IsProperSubintervalOf_8()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Inclusive(10));
@@ -705,7 +848,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSubintervalOf_9()
+    public void Interval_Core_IsProperSubintervalOf_9()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(11));
@@ -718,7 +861,7 @@ public abstract class IntervalTestsBase
     #region IsProperSuperintervalOf
 
     [TestMethod]
-    public void Interval_IsProperSuperintervalOf_1()
+    public void Interval_Core_IsProperSuperintervalOf_1()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         Assert.IsFalse(a.IsProperSuperintervalOf(a));
@@ -730,7 +873,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSuperintervalOf_2()
+    public void Interval_Core_IsProperSuperintervalOf_2()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(3), IntervalBoundary.Inclusive(9));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -740,7 +883,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSuperintervalOf_3()
+    public void Interval_Core_IsProperSuperintervalOf_3()
     {
         var a = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -750,7 +893,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSuperintervalOf_4()
+    public void Interval_Core_IsProperSuperintervalOf_4()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Exclusive(2), IntervalBoundary.Inclusive(10));
@@ -760,7 +903,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSuperintervalOf_5()
+    public void Interval_Core_IsProperSuperintervalOf_5()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -770,7 +913,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSuperintervalOf_6()
+    public void Interval_Core_IsProperSuperintervalOf_6()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
@@ -780,7 +923,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSuperintervalOf_7()
+    public void Interval_Core_IsProperSuperintervalOf_7()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Exclusive(2));
@@ -790,7 +933,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSuperintervalOf_8()
+    public void Interval_Core_IsProperSuperintervalOf_8()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(1), IntervalBoundary.Inclusive(10));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -799,7 +942,7 @@ public abstract class IntervalTestsBase
     }
 
     [TestMethod]
-    public void Interval_IsProperSuperintervalOf_9()
+    public void Interval_Core_IsProperSuperintervalOf_9()
     {
         var a = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(11));
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(10));
@@ -809,70 +952,144 @@ public abstract class IntervalTestsBase
 
     #endregion
 
-    #region WithinInterval
+    #region Sequence Intersect
 
     [TestMethod]
-    public void Interval_WithinInterval_1()
+    public void Interval_Core_Sequence_Intersect_1()
     {
         var sequence = Enumerable.Range(1, 5);
         var interval = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(4));
 
-        var result = sequence.WithinInterval(interval);
+        var result = sequence.Intersect(interval);
         Assert.IsTrue(result.SequenceEqual(new[] { 2, 3, 4 }));
     }
 
     [TestMethod]
-    public void Interval_WithinInterval_2()
+    public void Interval_Core_Sequence_Intersect_2()
     {
         var sequence = Enumerable.Range(1, 5);
         var interval = NewInterval(ValueInterval<int>.Empty);
 
-        var result = sequence.WithinInterval(interval);
+        var result = sequence.Intersect(interval);
         Assert.AreEqual(0, result.Count());
     }
 
     [TestMethod]
-    public void Interval_WithinInterval_3()
+    public void Interval_Core_Sequence_Intersect_3()
     {
         var sequence = Enumerable.Range(1, 5);
         var interval = NewInterval(ValueInterval<int>.Infinite);
 
-        var result = sequence.WithinInterval(interval);
+        var result = sequence.Intersect(interval);
         Assert.IsTrue(result.SequenceEqual(new[] { 1, 2, 3, 4, 5 }));
     }
 
     #endregion
 
-    #region WithinInterval
+    #region Sequence Except
 
     [TestMethod]
-    public void Interval_WithoutInterval_1()
+    public void Interval_Core_Sequence_Except_1()
     {
         var sequence = Enumerable.Range(1, 5);
         var interval = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(4));
 
-        var result = sequence.WithoutInterval(interval);
+        var result = sequence.Except(interval);
         Assert.IsTrue(result.SequenceEqual(new[] { 1, 5 }));
     }
 
     [TestMethod]
-    public void Interval_WithoutInterval_2()
+    public void Interval_Core_Sequence_Except_2()
     {
         var sequence = Enumerable.Range(1, 5);
         var interval = NewInterval(ValueInterval<int>.Empty);
 
-        var result = sequence.WithoutInterval(interval);
+        var result = sequence.Except(interval);
         Assert.IsTrue(result.SequenceEqual(new[] { 1, 2, 3, 4, 5 }));
     }
 
     [TestMethod]
-    public void Interval_WithoutInterval_3()
+    public void Interval_Core_Sequence_Except_3()
     {
         var sequence = Enumerable.Range(1, 5);
         var interval = NewInterval(ValueInterval<int>.Infinite);
 
-        var result = sequence.WithoutInterval(interval);
+        var result = sequence.Except(interval);
         Assert.AreEqual(0, result.Count());
+    }
+
+    #endregion
+
+    #region Set Intersect
+
+    [TestMethod]
+    public void Interval_Core_Set_IntersectWith_1()
+    {
+        var set = new HashSet<int> { 1, 2, 3, 5, 6, 7 };
+        var interval = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(6));
+
+        set.IntersectWith(interval);
+
+        Assert.IsTrue(set.SetEquals(new[] { 2, 3, 5, 6 }));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Set_IntersectWith_2()
+    {
+        var set = new HashSet<int> { 1, 2, 3, 4, 5 };
+        var interval = EmptyInterval<int>();
+
+        set.IntersectWith(interval);
+
+        Assert.AreEqual(0, set.Count);
+    }
+
+    [TestMethod]
+    public void Interval_Core_Set_IntersectWith_3()
+    {
+        var set = new HashSet<int> { 1, 2, 3, 4, 5 };
+        var interval = InfiniteInterval<int>();
+
+        set.IntersectWith(interval);
+
+        Assert.IsTrue(set.SetEquals(new[] { 1, 2, 3, 4, 5 }));
+    }
+
+    #endregion
+
+    #region Set Except
+
+    [TestMethod]
+    public void Interval_Core_Set_ExceptWith_1()
+    {
+        var set = new HashSet<int> { 1, 2, 3, 5, 6, 7 };
+        var interval = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(6));
+
+        set.ExceptWith(interval);
+
+        Assert.IsTrue(set.SetEquals(new[] { 1, 7 }));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Set_ExceptWith_2()
+    {
+        var set = new HashSet<int> { 1, 2, 3, 4, 5 };
+        var interval = EmptyInterval<int>();
+
+        set.ExceptWith(interval);
+
+        Assert.IsTrue(set.SetEquals(new[] { 1, 2, 3, 4, 5 }));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Set_ExceptWith_3()
+    {
+        var set = new HashSet<int> { 1, 2, 3, 4, 5 };
+        var interval = InfiniteInterval<int>();
+
+        set.ExceptWith(interval);
+
+        Assert.AreEqual(0, set.Count);
     }
 
     #endregion

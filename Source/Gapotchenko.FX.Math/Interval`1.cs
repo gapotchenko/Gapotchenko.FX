@@ -179,6 +179,29 @@ public sealed record Interval<T> : IInterval<T>
 
     IInterval<T> IIntervalOperations<T>.Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
 
+    /// <summary>
+    /// Produces the union of the current and specified intervals.
+    /// </summary>
+    /// <param name="other">The interval to produce the union with.</param>
+    /// <returns>A new interval representing a union of the current and specified intervals.</returns>
+    public Interval<T> Union(IInterval<T> other) => Union<IIntervalOperations<T>>(other);
+
+    /// <summary>
+    /// Produces the union of the current and specified intervals.
+    /// </summary>
+    /// <param name="other">The interval to produce the union with.</param>
+    /// <returns>A new interval representing a union of the current and specified intervals.</returns>
+    /// <typeparam name="TOther">Type of the other interval to produce the union with.</typeparam>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public Interval<T> Union<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
+        IntervalEngine.Union(
+            this,
+            other ?? throw new ArgumentNullException(nameof(other)),
+            m_Comparer,
+            Construct);
+
+    IInterval<T> IIntervalOperations<T>.Union(IInterval<T> other) => Union<IIntervalOperations<T>>(other);
+
     bool IsThis<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         !TypeTraits<TOther>.IsValueType &&
         ReferenceEquals(other, this);

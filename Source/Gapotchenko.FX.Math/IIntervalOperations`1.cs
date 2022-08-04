@@ -129,6 +129,13 @@ public interface IIntervalOperations<T>
     IInterval<T> Intersect(IInterval<T> other);
 
     /// <summary>
+    /// Produces the union of the current and specified intervals.
+    /// </summary>
+    /// <param name="other">The interval to produce the union with.</param>
+    /// <returns>A new interval representing a union of the current and specified intervals.</returns>
+    IInterval<T> Union(IInterval<T> other);
+
+    /// <summary>
     /// Determines whether the current and the specified intervals overlap.
     /// </summary>
     /// <param name="other">The interval to check for overlapping.</param>
