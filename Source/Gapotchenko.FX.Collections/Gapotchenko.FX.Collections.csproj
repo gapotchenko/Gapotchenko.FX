@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageDescription>Provides data structures and primitives for collections.</PackageDescription>
+    <PackageDescription>Provides additional data collections and primitives for .NET.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>
