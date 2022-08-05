@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.Math.Topology;
+﻿namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
 /// Represents an edge of a graph.

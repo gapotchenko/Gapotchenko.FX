@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 #if TFF_KEYVALUEPAIR
 [assembly: TypeForwardedTo(typeof(System.Collections.Generic.KeyValuePair))]

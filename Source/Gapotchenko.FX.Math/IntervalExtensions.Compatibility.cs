@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.Math;
+﻿namespace Gapotchenko.FX.Math;
 
 partial class IntervalExtensions
 {

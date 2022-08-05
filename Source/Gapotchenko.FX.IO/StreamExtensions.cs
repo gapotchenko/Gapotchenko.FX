@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.IO;
+﻿namespace Gapotchenko.FX.IO;
 
 /// <summary>
 /// <see cref="Stream"/> extensions.

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.Text;
+﻿namespace Gapotchenko.FX.Text;
 
 /// <summary>
 /// <see cref="String"/> extensions.

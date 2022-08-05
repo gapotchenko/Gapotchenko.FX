@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.Math.Topology;
+﻿namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
 /// Extensions for <see cref="GraphEdge{TVertex}"/> struct.

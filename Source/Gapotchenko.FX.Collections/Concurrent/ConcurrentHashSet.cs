@@ -3,7 +3,6 @@
 
 using Gapotchenko.FX.Threading;
 using System.Collections;
-using System.ComponentModel;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Collections.Concurrent;

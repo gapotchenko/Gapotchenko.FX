@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.Data.Encoding;
+﻿namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
 /// The base class for <see cref="IDataEncoding"/> implementations.

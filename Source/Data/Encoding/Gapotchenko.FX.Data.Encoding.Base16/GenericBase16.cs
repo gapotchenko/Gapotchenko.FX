@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.Data.Encoding;
+﻿namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
 /// Provides a generic implementation of Base16 encoding.

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.Math.Combinatorics;
+﻿namespace Gapotchenko.FX.Math.Combinatorics;
 
 /// <summary>
 /// Cartesian product LINQ extensions.

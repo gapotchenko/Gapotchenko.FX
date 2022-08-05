@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX;
+﻿namespace Gapotchenko.FX;
 
 /// <summary>
 /// Provides typed constructions related to a functional notion of emptiness.

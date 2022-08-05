@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.Math.Combinatorics;
+﻿namespace Gapotchenko.FX.Math.Combinatorics;
 
 /// <summary>
 /// Permutation LINQ extensions.

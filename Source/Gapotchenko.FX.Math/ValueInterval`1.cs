@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Math;

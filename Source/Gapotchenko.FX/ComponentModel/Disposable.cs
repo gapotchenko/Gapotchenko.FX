@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.ComponentModel;
+﻿namespace Gapotchenko.FX.ComponentModel;
 
 /// <summary>
 /// Provides methods for manipulating the disposable objects.

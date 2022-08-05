@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Linq.Properties;
-using System.ComponentModel;
 
 namespace Gapotchenko.FX.Linq;
 

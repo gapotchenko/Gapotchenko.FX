@@ -9,4 +9,8 @@
     <WarningsAsErrors>$(WarningsAsErrors),CS8509</WarningsAsErrors>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Using Include="System.ComponentModel" />
+  </ItemGroup>
+  
 </Project>

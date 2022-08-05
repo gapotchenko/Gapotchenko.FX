@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
 #if TFF_ASSEMBLYLOADCONTEXT
 using System.Runtime.Loader;

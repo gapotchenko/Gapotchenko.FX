@@ -1,6 +1,5 @@
 ﻿using Gapotchenko.FX.Diagnostics.Pal;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Diagnostics;

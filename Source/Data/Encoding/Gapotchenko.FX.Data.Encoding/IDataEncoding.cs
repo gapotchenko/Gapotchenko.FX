@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.Data.Encoding;
+﻿namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
 /// Defines interface of a data encoding.

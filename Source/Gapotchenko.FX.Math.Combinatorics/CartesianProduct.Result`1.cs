@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.ComponentModel;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Combinatorics;

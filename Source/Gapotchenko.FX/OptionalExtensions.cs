@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX;
+﻿namespace Gapotchenko.FX;
 
 /// <summary>
 /// <see cref="Optional{T}"/> extensions.

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.Linq;
+﻿namespace Gapotchenko.FX.Linq;
 
 partial class EnumerableEx
 {

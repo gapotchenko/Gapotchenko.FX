@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Gapotchenko.FX.Math;
+﻿namespace Gapotchenko.FX.Math;
 
 /// <summary>
 /// Defines the base operations for <see cref="IInterval{T}"/>.

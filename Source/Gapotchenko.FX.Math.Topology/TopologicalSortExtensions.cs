@@ -1,7 +1,6 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Linq;
 using System.Collections;
-using System.ComponentModel;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Topology;

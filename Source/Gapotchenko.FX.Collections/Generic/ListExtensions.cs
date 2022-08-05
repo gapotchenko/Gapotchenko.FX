@@ -1,8 +1,9 @@
 ﻿namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
-/// Generic list extensions.
+/// <see cref="List{T}"/> extensions.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public static class ListExtensions
 {
     /// <summary>
