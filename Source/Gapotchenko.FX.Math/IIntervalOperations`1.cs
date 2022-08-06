@@ -21,6 +21,11 @@ public interface IIntervalOperations<T>
     IntervalBoundary<T> To { get; }
 
     /// <summary>
+    /// Gets the <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
+    /// </summary>
+    public IComparer<T> Comparer { get; }
+
+    /// <summary>
     /// <para>
     /// Gets a value indicating whether the interval is bounded.
     /// </para>

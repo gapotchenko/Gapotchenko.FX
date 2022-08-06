@@ -68,6 +68,8 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// </summary>
     public IntervalBoundary<T> To { get; init; }
 
+    IComparer<T> IIntervalOperations<T>.Comparer => Comparer<T>.Default;
+
     /// <inheritdoc/>
     public bool IsBounded => IntervalEngine.IsBounded<ValueInterval<T>, T>(this);
 
