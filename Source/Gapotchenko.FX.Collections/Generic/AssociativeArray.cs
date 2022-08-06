@@ -183,9 +183,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             m_Dictionary = new(collection.TryGetNonEnumeratedCount() ?? 0, comparer);
 
             foreach (var pair in collection)
-            {
                 Add(pair.Key, pair.Value);
-            }
         }
     }
 
@@ -235,8 +233,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         set => this[key] = value;
     }
 
-    TValue IReadOnlyDictionary<TKey, TValue>.this[TKey key] =>
-        this[key]!;
+    TValue IReadOnlyDictionary<TKey, TValue>.this[TKey key] => this[key]!;
 
     object? IDictionary.this[object key]
     {
@@ -273,20 +270,17 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// <summary>
     /// Gets a collection containing the keys in the <see cref="AssociativeArray{TKey, TValue}"/>.
     /// </summary>
-    public ICollection<TKey> Keys =>
-        new KeyCollection(this, m_Dictionary.Keys);
+    public ICollection<TKey> Keys => new KeyCollection(this, m_Dictionary.Keys);
 
     /// <summary>
     /// Gets a collection containing the values in the <see cref="AssociativeArray{TKey, TValue}"/>.
     /// </summary>
-    public ICollection<TValue> Values =>
-        new ValueCollection(this, m_Dictionary.Values);
+    public ICollection<TValue> Values => new ValueCollection(this, m_Dictionary.Values);
 
     /// <summary>
     /// Gets the number of key/value pairs contained in the <see cref="AssociativeArray{TKey, TValue}"/>.
     /// </summary>
-    public int Count =>
-        m_NullSlot.HasValue ? m_Dictionary.Count + 1 : m_Dictionary.Count;
+    public int Count => m_NullSlot.HasValue ? m_Dictionary.Count + 1 : m_Dictionary.Count;
 
     ICollection IDictionary.Keys => (ICollection)Keys;
     IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
@@ -316,13 +310,9 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         if (key is null)
         {
             if (!m_NullSlot.HasValue)
-            {
                 m_NullSlot = value;
-            }
             else
-            {
                 ThrowHelper.ThrowAddingDuplicateWithKeyArgumentException(key);
-            }
         }
         else
         {
@@ -330,8 +320,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         }
     }
 
-    void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) =>
-        Add(item.Key, item.Value);
+    void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
     void IDictionary.Add(object key, object? value)
     {
@@ -392,18 +381,9 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         m_NullSlot = default;
     }
 
-    bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
-    {
-        if (TryGetValue(item.Key, out var value) &&
-            EqualityComparer<TValue>.Default.Equals(value, item.Value))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) =>
+        TryGetValue(item.Key, out var value) &&
+        EqualityComparer<TValue>.Default.Equals(value, item.Value);
 
     /// <summary>
     /// Determines whether the <see cref="AssociativeArray{TKey, TValue}"/> contains the specified key.
@@ -413,13 +393,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// <see langword="true"/> if the <see cref="AssociativeArray{TKey, TValue}"/> contains an element with
     /// the specified key; otherwise, <see langword="false"/>.
     /// </returns>
-    public bool ContainsKey(TKey key)
-    {
-        if (key is null)
-            return m_NullSlot.HasValue;
-        else
-            return m_Dictionary.ContainsKey(key);
-    }
+    public bool ContainsKey(TKey key) => key is null ? m_NullSlot.HasValue : m_Dictionary.ContainsKey(key);
 
     /// <summary>
     /// Determines whether the <see cref="AssociativeArray{TKey, TValue}"/> contains the specified value.
@@ -573,24 +547,14 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 #if NETCOREAPP3_1_OR_GREATER
         [MaybeNullWhen(false)]
 #endif
-        out TValue value)
-    {
-        return TryGetValue(key, out value);
-    }
+        out TValue value) =>
+        TryGetValue(key, out value);
 
-    void IDictionary.Clear() =>
-        Clear();
+    void IDictionary.Clear() => Clear();
 
-    bool IDictionary.Contains(object key)
-    {
-        if (key is TKey tKey)
-            return ContainsKey(tKey);
-        else
-            return false;
-    }
+    bool IDictionary.Contains(object key) => key is TKey tKey && ContainsKey(tKey);
 
-    bool IReadOnlyDictionary<TKey, TValue>.ContainsKey(TKey key) =>
-        ContainsKey(key);
+    bool IReadOnlyDictionary<TKey, TValue>.ContainsKey(TKey key) => ContainsKey(key);
 
     void ICollection.CopyTo(Array array, int arrayIndex)
     {
@@ -669,8 +633,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// Gets the <see cref="IEqualityComparer{T}"/> that is used to determine
     /// equality of keys for the associative array.
     /// </summary>
-    public IEqualityComparer<TKey> Comparer =>
-        m_Dictionary.Comparer;
+    public IEqualityComparer<TKey> Comparer => m_Dictionary.Comparer;
 
     sealed class DictionaryEnumerator : IDictionaryEnumerator
     {
@@ -927,51 +890,35 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         const string WrongArgumentTypeMessage = "The value '{0}' is not of type '{1}' and cannot be used in this generic collection.";
 
         [DoesNotReturn]
-        public static void ThrowWrongValueTypeArgumentException<T>(T value, Type targetType)
-        {
+        public static void ThrowWrongValueTypeArgumentException<T>(T value, Type targetType) =>
             throw new ArgumentException(string.Format(WrongArgumentTypeMessage, value, targetType), nameof(value));
-        }
 
         [DoesNotReturn]
-        public static void ThrowWrongKeyTypeArgumentException<T>(T key, Type targetType)
-        {
+        public static void ThrowWrongKeyTypeArgumentException<T>(T key, Type targetType) =>
             throw new ArgumentException(string.Format(WrongArgumentTypeMessage, key, targetType), nameof(key));
-        }
 
         [DoesNotReturn]
-        public static void ThrowKeyNotFoundException(TKey? key)
-        {
+        public static void ThrowKeyNotFoundException(TKey? key) =>
             throw new KeyNotFoundException($"The given key '{key}' was not present in the associative array.");
-        }
 
         [DoesNotReturn]
-        public static void ThrowArgumentException_Argument_InvalidArrayType()
-        {
+        public static void ThrowArgumentException_Argument_InvalidArrayType() =>
             throw new ArgumentException("Target array type is not compatible with the type of items in the collection.");
-        }
 
         [DoesNotReturn]
-        public static void ThrowAddingDuplicateWithKeyArgumentException(TKey? key)
-        {
+        public static void ThrowAddingDuplicateWithKeyArgumentException(TKey? key) =>
             throw new ArgumentException($"An item with the same key has already been added. Key: '{key}'.");
-        }
 
         [DoesNotReturn]
-        public static void ThrowIndexArgumentOutOfRange_NeedNonNegNumException(string argName)
-        {
+        public static void ThrowIndexArgumentOutOfRange_NeedNonNegNumException(string argName) =>
             throw new ArgumentOutOfRangeException(argName, "Non-negative number required.");
-        }
 
         [DoesNotReturn]
-        public static void ThrowArgumentException_ArrayPlusOffTooSmall()
-        {
+        public static void ThrowArgumentException_ArrayPlusOffTooSmall() =>
             throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
-        }
 
         [DoesNotReturn]
-        public static void ThrowInvalidOperationException_InvalidOperation_EnumOpCantHappen()
-        {
+        public static void ThrowInvalidOperationException_InvalidOperation_EnumOpCantHappen() =>
             throw new InvalidOperationException("Enumeration has either not started or has already finished.");
-        }
     }
 }
