@@ -10,6 +10,9 @@ public static class EnumerableExtensions
     /// Creates an <see cref="AssociativeArray{TKey, TValue}"/> from an <see cref="IEnumerable{T}"/>
     /// according to a specified key selector function and key comparer.
     /// </summary>
+    /// <remarks>
+    /// In contrast to <see cref="Dictionary{TKey, TValue}"/>, <see cref="AssociativeArray{TKey, TValue}"/> supports keys with <see langword="null"/> values.
+    /// </remarks>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector"/>.</typeparam>
     /// <param name="source">An <see cref="IEnumerable{T}"/> to create an <see cref="AssociativeArray{TKey, TValue}"/> from.</param>
@@ -32,6 +35,9 @@ public static class EnumerableExtensions
     /// Creates an <see cref="AssociativeArray{TKey, TValue}"/> from an <see cref="IEnumerable{T}"/>
     /// according to a specified key selector function, a comparer, and an element selector function.
     /// </summary>
+    /// <remarks>
+    /// In contrast to <see cref="Dictionary{TKey, TValue}"/>, <see cref="AssociativeArray{TKey, TValue}"/> supports keys with <see langword="null"/> values.
+    /// </remarks>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector"/>.</typeparam>
     /// <typeparam name="TElement">The type of the value returned by <paramref name="elementSelector"/>.</typeparam>

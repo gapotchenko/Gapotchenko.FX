@@ -11,7 +11,12 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
-/// Represents a collection of keys and values with <see langword="null"/> key support.
+/// <para>
+/// Represents a collection of keys and values.
+/// </para>
+/// <para>
+/// In contrast to <see cref="Dictionary{TKey, TValue}"/>, <see cref="AssociativeArray{TKey, TValue}"/> supports keys with <see langword="null"/> values.
+/// </para>
 /// </summary>
 /// <typeparam name="TKey">The type of the keys in the associative array.</typeparam>
 /// <typeparam name="TValue">The type of the values in the associative array.</typeparam>
