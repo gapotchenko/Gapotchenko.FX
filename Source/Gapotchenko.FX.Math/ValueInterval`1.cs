@@ -12,7 +12,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     where T : IEquatable<T>?, IComparable<T>?
 {
     /// <summary>
-    /// Initializes a new <see cref="ValueInterval{T}"/> instance with the specified bounds.
+    /// Initializes a new <see cref="ValueInterval{T}"/> instance with the specified inclusive left and exclusive right bounds.
     /// </summary>
     /// <param name="from">
     /// The left bound of the interval.

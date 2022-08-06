@@ -6,7 +6,7 @@
 public static class ValueInterval
 {
     /// <summary>
-    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified bounds.
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified inclusive left and exclusive right bounds.
     /// </summary>
     /// <param name="from">
     /// The left bound of the interval.

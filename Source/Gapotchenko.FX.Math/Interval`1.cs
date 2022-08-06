@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Math;
 public sealed record Interval<T> : IInterval<T>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified bounds.
+    /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified inclusive left and exclusive right bounds.
     /// </summary>
     /// <param name="from">
     /// The left bound of the interval.
