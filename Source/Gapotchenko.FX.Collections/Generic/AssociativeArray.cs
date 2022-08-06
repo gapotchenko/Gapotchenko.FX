@@ -159,31 +159,26 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     [MemberNotNull(nameof(m_Dictionary))]
     void AddRange(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
     {
-        var collectionType = collection.GetType();
-
-        if (collectionType == typeof(AssociativeArray<TKey, TValue>))
+        switch (collection)
         {
-            var source = (AssociativeArray<TKey, TValue>)collection;
+            case AssociativeArray<TKey, TValue> associativeArray:
+                m_Dictionary = new(associativeArray.m_Dictionary, comparer);
+                m_NullSlot = associativeArray.m_NullSlot;
+                break;
 
-            m_Dictionary = new(source.m_Dictionary, comparer);
-            m_NullSlot = source.m_NullSlot;
-        }
 #pragma warning disable CS8714
-        else if (collectionType == typeof(Dictionary<TKey, TValue>))
-        {
-            var source = (Dictionary<TKey, TValue>)collection;
-
-            m_Dictionary = new(source, comparer);
-        }
+            case Dictionary<TKey, TValue> dictionary:
+                m_Dictionary = new(dictionary, comparer);
+                break;
 #if !NETCOREAPP3_0 && !NETFRAMEWORK && !NETSTANDARD2_0
 #pragma warning restore CS8714
 #endif
-        else
-        {
-            m_Dictionary = new(collection.TryGetNonEnumeratedCount() ?? 0, comparer);
 
-            foreach (var pair in collection)
-                Add(pair.Key, pair.Value);
+            default:
+                m_Dictionary = new(collection.TryGetNonEnumeratedCount() ?? 0, comparer);
+                foreach (var pair in collection)
+                    Add(pair.Key, pair.Value);
+                break;
         }
     }
 

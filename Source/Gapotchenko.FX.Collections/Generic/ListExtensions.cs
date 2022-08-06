@@ -42,5 +42,5 @@ public static class ListExtensions
     /// <typeparam name="T">The type of elements in the list.</typeparam>
     /// <param name="list">The list.</param>
     /// <returns>A cloned list.</returns>
-    public static List<T> Clone<T>(this List<T> list) => new List<T>(list ?? throw new ArgumentNullException(nameof(list)));
+    public static List<T> Clone<T>(this List<T> list) => new(list ?? throw new ArgumentNullException(nameof(list)));
 }
