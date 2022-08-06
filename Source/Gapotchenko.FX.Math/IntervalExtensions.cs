@@ -7,37 +7,37 @@
 public static partial class IntervalExtensions
 {
     /// <summary>
-    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are contained within the interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are contained within a specified interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <param name="source">The <see cref="IEnumerable{T}"/> to filter.</param>
     /// <param name="interval">The interval.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are contained within the interval.</returns>
+    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are contained within a specified interval.</returns>
     public static IEnumerable<TSource> Intersect<TSource>(this IEnumerable<TSource> source, IInterval<TSource> interval) =>
         Intersect<TSource, IInterval<TSource>>(source, interval);
 
     /// <summary>
-    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are contained within the interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are contained within a specified interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
     /// <param name="source">The <see cref="IEnumerable{T}"/> to filter.</param>
     /// <param name="interval">The interval.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are contained within the interval.</returns>
+    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are contained within a specified interval.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static IEnumerable<TSource> Intersect<TSource, TInterval>(this IEnumerable<TSource> source, TInterval interval)
         where TInterval : IInterval<TSource> =>
         IntersectBy(source, interval, Fn.Identity);
 
     /// <summary>
-    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are contained within the interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are contained within a specified interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
     /// <param name="source">The <see cref="IEnumerable{T}"/> to filter.</param>
     /// <param name="interval">The interval.</param>
     /// <param name="keySelector">A function to extract a key from an element.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are contained within the interval.</returns>
+    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are contained within a specified interval.</returns>
     public static IEnumerable<TSource> IntersectBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         IInterval<TKey> interval,
@@ -45,7 +45,7 @@ public static partial class IntervalExtensions
         IntersectBy<TSource, IInterval<TKey>, TKey>(source, interval, keySelector);
 
     /// <summary>
-    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are contained within the interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are contained within a specified interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
@@ -53,7 +53,7 @@ public static partial class IntervalExtensions
     /// <param name="source">The <see cref="IEnumerable{T}"/> to filter.</param>
     /// <param name="interval">The interval.</param>
     /// <param name="keySelector">A function to extract a key from an element.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are contained within the interval.</returns>
+    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are contained within a specified interval.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static IEnumerable<TSource> IntersectBy<TSource, TInterval, TKey>(
         this IEnumerable<TSource> source,
@@ -77,37 +77,37 @@ public static partial class IntervalExtensions
     }
 
     /// <summary>
-    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within the interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within a specified interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <param name="source">The <see cref="IEnumerable{T}"/> to filter.</param>
     /// <param name="interval">The interval.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within the interval.</returns>
+    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within a specified interval.</returns>
     public static IEnumerable<TSource> Except<TSource>(this IEnumerable<TSource> source, IInterval<TSource> interval) =>
         Except<TSource, IInterval<TSource>>(source, interval);
 
     /// <summary>
-    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within the interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within a specified interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
     /// <param name="source">The <see cref="IEnumerable{T}"/> to filter.</param>
     /// <param name="interval">The interval.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within the interval.</returns>
+    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within a specified interval.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static IEnumerable<TSource> Except<TSource, TInterval>(this IEnumerable<TSource> source, TInterval interval)
         where TInterval : IInterval<TSource> =>
         ExceptBy(source, interval, Fn.Identity);
 
     /// <summary>
-    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within the interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within a specified interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
     /// <param name="source">The <see cref="IEnumerable{T}"/> to filter.</param>
     /// <param name="interval">The interval.</param>
     /// <param name="keySelector">A function to extract a key from an element.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within the interval.</returns>
+    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence that are not contained within a specified interval.</returns>
     public static IEnumerable<TSource> ExceptBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         IInterval<TKey> interval,
@@ -115,7 +115,7 @@ public static partial class IntervalExtensions
         ExceptBy<TSource, IInterval<TKey>, TKey>(source, interval, keySelector);
 
     /// <summary>
-    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are not contained within the interval.
+    /// Produces an <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are not contained within a specified interval.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
@@ -123,7 +123,7 @@ public static partial class IntervalExtensions
     /// <param name="source">The <see cref="IEnumerable{T}"/> to filter.</param>
     /// <param name="interval">The interval.</param>
     /// <param name="keySelector">A function to extract a key from an element.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are not contained within the interval.</returns>
+    /// <returns>An <see cref="IEnumerable{T}"/> that contains elements from the input sequence the keys of which are not contained within a specified interval.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static IEnumerable<TSource> ExceptBy<TSource, TInterval, TKey>(
         this IEnumerable<TSource> source,
