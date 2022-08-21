@@ -8,7 +8,7 @@ The module provides virtual terminal functionality, console traits and useful pr
 ## Virtual Terminal
 
 From the very beginning, computers used to employ [teletypes](https://en.wikipedia.org/wiki/Teleprinter) as primary input and output devices.
-A teletype usually consisted of a keyboard and printer in a single box.
+A teletype usually consisted of a keyboard and a printer, both placed inside a single case.
 
 At later stages of development, teletypes were swapped with specialized computer terminals such as [VT100](https://en.wikipedia.org/wiki/VT100).
 Those electronic devices provided not only the basic input/output capabilities,
