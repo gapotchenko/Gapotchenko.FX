@@ -100,6 +100,10 @@ else
 }
 ```
 
+This is important in situations when the color output is not available.
+For example, console output redirection inhibits color by default.
+So the code above will produce slightly different outputs depending on whether the console output is written to the color screen or redirected to a file which has no notion of a color at all.
+
 ### WillDisappearOnExit
 
 `ConsoleTraits.WillDisappearOnExit` boolean property indicates whether a console window will immediately disappear on a program exit.
