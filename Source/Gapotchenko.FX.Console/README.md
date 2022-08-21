@@ -28,7 +28,7 @@ ANSI escape sequences become handy when the complexity of console output reaches
 
 ![Advanced console visualization](../../Documentation/Assets/console-eazfuscator.net.png)
 
-It would be a very *involved* code to render such an output with a set of imperative calls.
+It would be a very *involved* code to render such output with a set of imperative calls.
 
 But we can do better with [ANSI escape sequences](https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences):
 
