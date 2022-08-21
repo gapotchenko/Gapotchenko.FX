@@ -104,7 +104,7 @@ else
 
 `ConsoleTraits.WillDisappearOnExit` boolean property indicates whether a console window will immediately disappear on a program exit.
 Such a situation can occur when a console app is directly launched from a graphical shell.
-In Windows, you can achieve that by creating a desktop shortcut to a console app, then running it.
+In Windows, you can achieve that by creating a desktop shortcut to a console app and then running it.
 
 A program can use the value of `WillDisappearOnExit` property to hold the console window in a visible state so that the user could read the output.
 Like so:
