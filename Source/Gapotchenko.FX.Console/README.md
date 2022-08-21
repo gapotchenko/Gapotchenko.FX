@@ -148,7 +148,7 @@ It produces the following output:
 
 ![Console sample output](../../Documentation/Assets/console-more-sample.png)
 
-The keys, colors, and styling are fully customizable by class inheritance.
+The keys, colors, and styling are fully customizable by inheriting a class from `MoreTextWriter`.
 
 ## Usage
 
