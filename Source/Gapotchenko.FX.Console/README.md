@@ -7,7 +7,7 @@ The module provides virtual terminal functionality, console traits and useful pr
 
 ## Virtual Terminal
 
-From the very beginning, computers used to employ [teletypes](https://en.wikipedia.org/wiki/Teleprinter) as primary input/output devices.
+From the very beginning, computers used to employ [teletypes](https://en.wikipedia.org/wiki/Teleprinter) as primary input and output devices.
 A teletype usually consisted of a keyboard and printer in a single box.
 
 At later stages of development, teletypes were swapped with specialized computer terminals such as [VT100](https://en.wikipedia.org/wiki/VT100).
@@ -24,7 +24,7 @@ Indeed, .NET base class library already provides
 [`BackroundColor`](https://docs.microsoft.com/en-us/dotnet/api/system.console.backgroundcolor)
 and other properties for controlling the console.
 
-ANSI escape sequences become handy when the complexity of console output reaches a certain level:
+ANSI escape sequences become handy when the complexity of console output reaches a certain level. Just take a look at the example below:
 
 ![Advanced console visualization](../../Documentation/Assets/console-eazfuscator.net.png)
 
