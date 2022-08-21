@@ -130,6 +130,7 @@ Let's take a look on example:
 ![Console output pagination](../../Documentation/Assets/console-eazfuscator.net-more.png)
 
 By pressing `Page Down` and `Down Arrow` keys it is possible to scroll the console output.
+The standard `Space` and `Enter` are supported as well.
 
 Below is a simple program that demonstrates the use of `MoreTextWriter`:
 
