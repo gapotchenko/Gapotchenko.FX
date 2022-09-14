@@ -385,30 +385,54 @@ public static class FileSystem
 #if TFF_TRANSACTIONS
 
     /// <summary>
-    /// Enlists file in the current <see cref="Transaction"/>.
-    /// </summary>
-    /// <param name="path">The file path.</param>
-    public static void EnlistFileInTransaction(string path) => EnlistFileInTransaction(path, null);
-
-    /// <summary>
     /// Enlists file in a specified <see cref="Transaction"/>.
     /// </summary>
     /// <param name="path">The file path.</param>
-    /// <param name="transaction">The transaction. If the value is <c>null</c> then the current transaction is used.</param>
-    public static void EnlistFileInTransaction(string path, Transaction? transaction)
-    {
-        if (path == null)
-            throw new ArgumentNullException(nameof(path));
+    /// <param name="transaction">
+    /// The transaction.
+    /// If the value is <see langword="null"/> then the current transaction is used.
+    /// </param>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">There is no current transaction.</exception>
+    public static void EnlistFileInTransaction(string path, Transaction? transaction) =>
+        FileSystemTransactionManager.EnlistFileInTransaction(
+            path ?? throw new ArgumentNullException(nameof(path)),
+            transaction ?? GetCurrentTransaction());
 
-        if (transaction == null)
-        {
-            transaction = Transaction.Current;
-            if (transaction == null)
-                throw new InvalidOperationException("There is no current transaction.");
-        }
+    /// <summary>
+    /// Enlists file in the current <see cref="Transaction"/>.
+    /// </summary>
+    /// <param name="path">The file path.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">There is no current transaction.</exception>
+    public static void EnlistFileInTransaction(string path) => EnlistFileInTransaction(path, null);
 
-        FileSystemTransactionManager.EnlistFileInTransaction(path, transaction);
-    }
+    /// <summary>
+    /// Enlists directory in a specified <see cref="Transaction"/>.
+    /// </summary>
+    /// <param name="path">The directory path.</param>
+    /// <param name="transaction">
+    /// The transaction.
+    /// If the value is <see langword="null"/> then the current transaction is used.
+    /// </param>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">There is no current transaction.</exception>
+    public static void EnlistDirectoryInTransaction(string path, Transaction? transaction) =>
+        FileSystemTransactionManager.EnlistDirectoryInTransaction(
+            path ?? throw new ArgumentNullException(nameof(path)),
+            transaction ?? GetCurrentTransaction());
+
+    /// <summary>
+    /// Enlists directory in the current <see cref="Transaction"/>.
+    /// </summary>
+    /// <param name="path">The directory path.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">There is no current transaction.</exception>
+    public static void EnlistDirectoryInTransaction(string path) => EnlistDirectoryInTransaction(path, null);
+
+    static Transaction GetCurrentTransaction() =>
+        Transaction.Current ??
+        throw new InvalidOperationException("There is no current transaction.");
 
 #endif
 

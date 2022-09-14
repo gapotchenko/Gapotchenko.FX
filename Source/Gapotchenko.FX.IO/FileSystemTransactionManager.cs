@@ -1,11 +1,14 @@
 ﻿#if TFF_TRANSACTIONS
 
+using Gapotchenko.FX.IO.Properties;
 using System.Transactions;
 
 namespace Gapotchenko.FX.IO;
 
 static class FileSystemTransactionManager
 {
+    #region Files
+
     sealed class FileEnlistment : IEnlistmentNotification
     {
         public FileEnlistment(string filePath, string transactionKey)
@@ -19,6 +22,10 @@ static class FileSystemTransactionManager
             {
                 m_TempFilePath = Path.GetTempFileName();
                 File.Copy(filePath, m_TempFilePath, true);
+            }
+            else if (Directory.Exists(filePath))
+            {
+                throw new IOException(string.Format(Resources.PathPointsToDirectoryNotFileTX, filePath));
             }
         }
 
@@ -44,16 +51,7 @@ static class FileSystemTransactionManager
             if (m_FilePath != null)
             {
                 if (m_TransactionKey != null)
-                {
-                    lock (m_TransactionEnlistedFiles)
-                    {
-                        if (m_TransactionEnlistedFiles.TryGetValue(m_TransactionKey, out var enlistedFiles))
-                        {
-                            if (enlistedFiles.Remove(m_FilePath) && enlistedFiles.Count == 0)
-                                m_TransactionEnlistedFiles.Remove(m_TransactionKey);
-                        }
-                    }
-                }
+                    m_TransactionEnlistedFiles.Remove(m_TransactionKey, m_FilePath);
 
                 m_FilePath = null;
             }
@@ -67,15 +65,9 @@ static class FileSystemTransactionManager
             enlistment.Done();
         }
 
-        public void InDoubt(Enlistment enlistment)
-        {
-            enlistment.Done();
-        }
+        public void InDoubt(Enlistment enlistment) => enlistment.Done();
 
-        public void Prepare(PreparingEnlistment preparingEnlistment)
-        {
-            preparingEnlistment.Prepared();
-        }
+        public void Prepare(PreparingEnlistment preparingEnlistment) => preparingEnlistment.Prepared();
 
         public void Rollback(Enlistment enlistment)
         {
@@ -102,29 +94,142 @@ static class FileSystemTransactionManager
         }
     }
 
-    static Dictionary<string, HashSet<string>> m_TransactionEnlistedFiles = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
+    static TransactionEnlistedEntries m_TransactionEnlistedFiles = new();
 
     public static void EnlistFileInTransaction(string path, Transaction transaction)
     {
         path = Path.GetFullPath(path);
-
         string transactionKey = transaction.TransactionInformation.LocalIdentifier;
 
-        lock (m_TransactionEnlistedFiles)
-        {
-            if (!m_TransactionEnlistedFiles.TryGetValue(transactionKey, out var enlistedFiles))
-            {
-                enlistedFiles = new HashSet<string>(FileSystem.PathComparer);
-                m_TransactionEnlistedFiles.Add(transactionKey, enlistedFiles);
-            }
-
-            if (!enlistedFiles.Add(path))
-                return;
-        }
+        if (!m_TransactionEnlistedFiles.Add(transactionKey, path))
+            return;
 
         transaction.EnlistVolatile(
             new FileEnlistment(path, transactionKey),
             EnlistmentOptions.None);
+    }
+
+    #endregion
+
+    #region Directories
+
+    sealed class DirectoryEnlistment : IEnlistmentNotification
+    {
+        public DirectoryEnlistment(string directoryPath, string transactionKey)
+        {
+            directoryPath = Path.GetFullPath(directoryPath);
+
+            m_DirectoryPath = directoryPath;
+            m_TransactionKey = transactionKey;
+
+            if (Directory.Exists(directoryPath))
+            {
+                m_DirectoryExists = true;
+            }
+            else if (File.Exists(directoryPath))
+            {
+                throw new IOException(string.Format(Resources.PathPointsToFileNotDirectoryTX, directoryPath));
+            }
+        }
+
+        string? m_DirectoryPath;
+        string? m_TransactionKey;
+        bool m_DirectoryExists;
+
+        void Forget()
+        {
+            if (m_DirectoryPath != null)
+            {
+                if (m_TransactionKey != null)
+                    m_TransactionEnlistedDirectories.Remove(m_TransactionKey, m_DirectoryPath);
+
+                m_DirectoryPath = null;
+            }
+
+            m_TransactionKey = null;
+        }
+
+        public void Commit(Enlistment enlistment)
+        {
+            Forget();
+            enlistment.Done();
+        }
+
+        public void InDoubt(Enlistment enlistment) => enlistment.Done();
+
+        public void Prepare(PreparingEnlistment preparingEnlistment) => preparingEnlistment.Prepared();
+
+        public void Rollback(Enlistment enlistment)
+        {
+            if (m_DirectoryPath != null)
+            {
+                if (!m_DirectoryExists)
+                {
+                    try
+                    {
+                        Directory.Delete(m_DirectoryPath);
+                    }
+                    catch (IOException)
+                    {
+                    }
+                }
+            }
+
+            Forget();
+            enlistment.Done();
+        }
+    }
+
+    static TransactionEnlistedEntries m_TransactionEnlistedDirectories = new();
+
+    public static void EnlistDirectoryInTransaction(string path, Transaction transaction)
+    {
+        path = Path.GetFullPath(path);
+        string transactionKey = transaction.TransactionInformation.LocalIdentifier;
+
+        if (!m_TransactionEnlistedDirectories.Add(transactionKey, path))
+            return;
+
+        transaction.EnlistVolatile(
+            new DirectoryEnlistment(path, transactionKey),
+            EnlistmentOptions.None);
+    }
+
+    #endregion
+
+    struct TransactionEnlistedEntries
+    {
+        public TransactionEnlistedEntries()
+        {
+        }
+
+        Dictionary<string, HashSet<string>> m_Entries = new(StringComparer.Ordinal);
+
+        public bool Add(string transactionKey, string entryPath)
+        {
+            lock (m_Entries)
+            {
+                if (!m_Entries.TryGetValue(transactionKey, out var enlistedEntries))
+                {
+                    enlistedEntries = new HashSet<string>(FileSystem.PathComparer);
+                    m_Entries.Add(transactionKey, enlistedEntries);
+                }
+
+                return enlistedEntries.Add(entryPath);
+            }
+        }
+
+        public void Remove(string transactionKey, string entryPath)
+        {
+            lock (m_Entries)
+            {
+                if (m_Entries.TryGetValue(transactionKey, out var enlistedEntries))
+                {
+                    if (enlistedEntries.Remove(entryPath) && enlistedEntries.Count == 0)
+                        m_Entries.Remove(transactionKey);
+                }
+            }
+        }
     }
 }
 
