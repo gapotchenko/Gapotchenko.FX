@@ -30,6 +30,7 @@ public interface ITextDataEncoding : IDataEncoding
     /// </summary>
     /// <param name="s">The read-only character span to decode.</param>
     /// <returns>A byte array with decoded data.</returns>
+    /// <exception cref="FormatException">Cannot decode the input string.</exception>
     byte[] GetBytes(ReadOnlySpan<char> s);
 
     /// <summary>
@@ -38,6 +39,7 @@ public interface ITextDataEncoding : IDataEncoding
     /// <param name="s">The read-only character span to decode.</param>
     /// <param name="options">The options.</param>
     /// <returns>A byte array with decoded data.</returns>
+    /// <exception cref="FormatException">Cannot decode the input string.</exception>
     byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options);
 
     /// <summary>

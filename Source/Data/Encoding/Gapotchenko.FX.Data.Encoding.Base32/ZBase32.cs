@@ -32,6 +32,7 @@ public sealed class ZBase32 : GenericZBase32
     /// </summary>
     /// <param name="s">The read-only character span to decode.</param>
     /// <returns>A byte array with decoded data.</returns>
+    /// <exception cref="FormatException">Cannot decode the input string.</exception>
     public new static byte[] GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
 
     /// <summary>
@@ -40,6 +41,7 @@ public sealed class ZBase32 : GenericZBase32
     /// <param name="s">The read-only character span to decode.</param>
     /// <param name="options">The options.</param>
     /// <returns>A byte array with decoded data.</returns>
+    /// <exception cref="FormatException">Cannot decode the input string.</exception>
     public new static byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBytes(s, options);
 
     /// <summary>
@@ -47,6 +49,8 @@ public sealed class ZBase32 : GenericZBase32
     /// </summary>
     /// <param name="s">The string to decode.</param>
     /// <returns>A byte array with decoded data.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="s"/> is null.</exception>
+    /// <exception cref="FormatException">Cannot decode the input string.</exception>
     public static byte[] GetBytes(string s) => GetBytes((s ?? throw new ArgumentNullException(nameof(s))).AsSpan());
 
     /// <summary>
@@ -55,6 +59,8 @@ public sealed class ZBase32 : GenericZBase32
     /// <param name="s">The string to decode.</param>
     /// <param name="options">The options.</param>
     /// <returns>A byte array with decoded data.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="s"/> is null.</exception>
+    /// <exception cref="FormatException">Cannot decode the input string.</exception>
     public static byte[] GetBytes(string s, DataEncodingOptions options) => GetBytes((s ?? throw new ArgumentNullException(nameof(s))).AsSpan(), options);
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

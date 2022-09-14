@@ -132,6 +132,8 @@ class Program
 
         var checksum = Crc8.Standard.ComputeChecksum(Encoding.ASCII.GetBytes("123456789"));
         Console.WriteLine("Checksum = 0x{0:x}", checksum);
+
+        Gapotchenko.FX.Data.Encoding.Base32.GetBytes("xzczxcSKaspo;sdasdas;");
     }
 
     static async Task _RunAsync(CancellationToken ct)
