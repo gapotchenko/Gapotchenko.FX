@@ -17,6 +17,7 @@ public class ProcessArgumentsTests
         psi.Arguments = "fsi";
         psi.UseShellExecute = false;
         psi.RedirectStandardOutput = true;
+        psi.CreateNoWindow = true;
 
         Assert.IsTrue(process.Start());
         try
@@ -43,6 +44,7 @@ public class ProcessArgumentsTests
         psi.Arguments = "fsi";
         psi.UseShellExecute = false;
         psi.RedirectStandardOutput = true;
+        psi.CreateNoWindow = true;
 
         Assert.IsTrue(process.Start());
         try
