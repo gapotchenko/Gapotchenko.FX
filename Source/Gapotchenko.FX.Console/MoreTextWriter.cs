@@ -145,15 +145,10 @@ public class MoreTextWriter : TextWriter
         m_SkipCriteriaNeedsProbing = true;
     }
 
-    /// <summary>
-    /// Returns the character encoding in which the output is written.
-    /// </summary>
+    /// <inheritdoc/>
     public override Encoding Encoding => BaseTextWriter.Encoding;
 
-    /// <summary>
-    /// Writes a character to the text string or stream.
-    /// </summary>
-    /// <param name="value">The character to write to the text stream.</param>
+    /// <inheritdoc/>
     public override void Write(char value)
     {
         if (m_Skip || !Enabled)
@@ -162,10 +157,7 @@ public class MoreTextWriter : TextWriter
             Write(new string(value, 1));
     }
 
-    /// <summary>
-    /// Writes a character array to the text string or stream.
-    /// </summary>
-    /// <param name="buffer">The character array to write to the text stream.</param>
+    /// <inheritdoc/>
     public override void Write(char[]? buffer)
     {
         if (m_Skip || !Enabled || buffer == null)
@@ -174,12 +166,7 @@ public class MoreTextWriter : TextWriter
             Write(new string(buffer));
     }
 
-    /// <summary>
-    /// Writes a subarray of characters to the text string or stream.
-    /// </summary>
-    /// <param name="buffer">The character array to write data from.</param>
-    /// <param name="index">The character position in the buffer at which to start retrieving data.</param>
-    /// <param name="count">The number of characters to write.</param>
+    /// <inheritdoc/>
     public override void Write(char[] buffer, int index, int count)
     {
         if (m_Skip || !Enabled)
@@ -188,10 +175,7 @@ public class MoreTextWriter : TextWriter
             Write(new string(buffer, index, count));
     }
 
-    /// <summary>
-    /// Writes a string followed by a line terminator to the text string or stream.
-    /// </summary>
-    /// <param name="value">The string to write. If value is null, only the line terminator is written.</param>
+    /// <inheritdoc/>
     public override void WriteLine(string? value)
     {
         if (!Enabled)
@@ -242,10 +226,7 @@ public class MoreTextWriter : TextWriter
         }
     }
 
-    /// <summary>
-    /// Writes a string to the text string or stream.
-    /// </summary>
-    /// <param name="value">The string to write.</param>
+    /// <inheritdoc/>
     public override void Write(string? value)
     {
         var baseTextWriter = BaseTextWriter;
@@ -274,9 +255,7 @@ public class MoreTextWriter : TextWriter
         }
     }
 
-    /// <summary>
-    /// Clears all buffers for the current writer and causes any buffered data to be written to the underlying device.
-    /// </summary>
+    /// <inheritdoc/>
     public override void Flush()
     {
         base.Flush();
@@ -285,10 +264,7 @@ public class MoreTextWriter : TextWriter
             m_BaseTextWriter.Flush();
     }
 
-    /// <summary>
-    /// Asynchronously clears all buffers for the current writer and causes any buffered data to be written to the underlying device.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous flush operation.</returns>
+    /// <inheritdoc/>
     public async override Task FlushAsync()
     {
         await base.FlushAsync().ConfigureAwait(false);
@@ -423,22 +399,13 @@ public class MoreTextWriter : TextWriter
     /// </summary>
     /// <param name="key">The console key.</param>
     /// <returns>The interactive action.</returns>
-    protected virtual InteractiveAction GetInteractiveAction(ConsoleKey key)
-    {
-        switch (key)
+    protected virtual InteractiveAction GetInteractiveAction(ConsoleKey key) =>
+        key switch
         {
-            case ConsoleKey.PageDown:
-            case ConsoleKey.Spacebar:
-                return InteractiveAction.ScrollToNextPage;
-
-            case ConsoleKey.DownArrow:
-            case ConsoleKey.Enter:
-                return InteractiveAction.ScrollToNextLine;
-
-            default:
-                return InteractiveAction.None;
-        }
-    }
+            ConsoleKey.PageDown or ConsoleKey.Spacebar => InteractiveAction.ScrollToNextPage,
+            ConsoleKey.DownArrow or ConsoleKey.Enter => InteractiveAction.ScrollToNextLine,
+            _ => InteractiveAction.None
+        };
 
     void OnNewLine()
     {
@@ -446,13 +413,7 @@ public class MoreTextWriter : TextWriter
             HandleUI();
     }
 
-    /// <summary>
-    /// Releases the unmanaged resources used by the <see cref="MoreTextWriter"/> and optionally releases the managed resources.
-    /// </summary>
-    /// <param name="disposing">
-    /// <c>true</c> to release both managed and unmanaged resources;
-    /// <c>false</c> to release only unmanaged resources.
-    /// </param>
+    /// <inheritdoc/>
     protected override void Dispose(bool disposing)
     {
         if (disposing)
