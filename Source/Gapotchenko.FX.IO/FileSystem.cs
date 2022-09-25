@@ -221,6 +221,53 @@ public static class FileSystem
     }
 
     /// <summary>
+    /// <para>
+    /// Enumerates subpaths of a path.
+    /// </para>
+    /// <para>
+    /// For example, the subpaths of C:\Users\Tester\Documents path are:
+    /// <list type="bullet">
+    /// <item>C:\Users\Tester\Documents</item>
+    /// <item>C:\Users\Tester</item>
+    /// <item>C:\Users</item>
+    /// <item>C:\</item>
+    /// </list>
+    /// </para>
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The sequence of subpaths.</returns>
+    public static IEnumerable<string> EnumerateSubpaths(string? path)
+    {
+        for (var i = path; !string.IsNullOrEmpty(i); i = Path.GetDirectoryName(i))
+            yield return i
+#if !NET
+                !
+#endif
+                ;
+    }
+
+    /// <summary>
+    /// <para>
+    /// Splits a specified path into a sequence of file system entry names.
+    /// </para>
+    /// <para>
+    /// For example, the entry names of C:\Users\Tester\Documents path are:
+    /// <list type="bullet">
+    /// <item>C:\</item>
+    /// <item>Users</item>
+    /// <item>Tester</item>
+    /// <item>Documents</item>
+    /// </list>
+    /// </para>
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The sequence of entry names.</returns>
+    public static IEnumerable<string> SplitPath(string? path) =>
+        EnumerateSubpaths(path)
+        .Reverse()
+        .Select(subpath => Path.GetFileName(subpath));
+
+    /// <summary>
     /// Inserts a subpath into the path at the specified index.
     /// </summary>
     /// <param name="path">The path to insert the subpath to.</param>
