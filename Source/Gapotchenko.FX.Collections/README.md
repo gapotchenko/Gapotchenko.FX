@@ -84,11 +84,6 @@ KeyValuePair.Create(key, value)
 
 It leverages the automatic type inference provided by some .NET languages like C#.
 
-### PriorityQueue polyfill
-
-`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue introduced since .NET 6.
-The polyfill makes it available to all supported .NET versions.
-
 #### Deconstruction
 
 `Gapotchenko.FX.Collections` module comes with a function for `KeyValuePair<TKey, TValue>` deconstruction, so you can write this:
@@ -120,6 +115,11 @@ void ProcessMap(IDictionary<string, int> map)
 ```
 
 A little detail, but sometimes it matters a lot when you are amid the heat of the code.
+
+### PriorityQueue polyfill
+
+`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue introduced since .NET 6.
+The polyfill makes it available to all supported .NET versions.
 
 ## Usage
 
