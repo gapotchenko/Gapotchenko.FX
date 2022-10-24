@@ -16,26 +16,26 @@ public class AppInformation : IAppInformation
     public static IAppInformation Current => CurrentAppInformation.Instance;
 
     /// <summary>
-    /// Extracts app information for the specified entry type.
+    /// Extracts app information associated with the specified type.
     /// </summary>
-    /// <param name="entryType">The entry type of an app.</param>
+    /// <param name="type">The type to extract the app information from.</param>
     /// <returns>The app information.</returns>
-    public static IAppInformation For(Type entryType)
+    public static IAppInformation For(Type type)
     {
-        if (entryType == null)
-            throw new ArgumentNullException(nameof(entryType));
+        if (type == null)
+            throw new ArgumentNullException(nameof(type));
 
         return new AppInformation
         {
-            EntryType = entryType,
-            EntryAssembly = entryType.Assembly
+            EntryType = type,
+            EntryAssembly = type.Assembly
         };
     }
 
     /// <summary>
-    /// Extracts app information for the specified assembly.
+    /// Extracts app information associated with the specified assembly.
     /// </summary>
-    /// <param name="assembly">The assembly.</param>
+    /// <param name="assembly">The assembly to extract the app information from.</param>
     /// <returns>The app information.</returns>
     public static IAppInformation For(Assembly assembly)
     {
