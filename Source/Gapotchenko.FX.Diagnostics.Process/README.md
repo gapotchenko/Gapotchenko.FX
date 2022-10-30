@@ -77,7 +77,7 @@ class Program
         foreach (var process in processes)
         {
             Console.WriteLine(
-                "Process with ID {0} was started with the following command line:",
+                "Process with ID {0} was started with the following command line: {1}",
                 process.Id,
                 process.ReadArguments());
         }
