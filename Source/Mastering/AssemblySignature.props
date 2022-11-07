@@ -1,7 +1,7 @@
 <Project>
 
   <!-- INSTRUCTIONS -->
-  <!-- Put AssemblyKey.snk file to the current folder to sign the assemblies with your signing key. -->
+  <!-- Put Assembly.snk file to the Keys folder to sign the assemblies with your signing key. -->
 
   <PropertyGroup>
     <AssemblyOriginatorKeyFile Condition=" Exists('$(MSBuildThisFileDirectory)Keys\Assembly.snk') ">$(MSBuildThisFileDirectory)Keys\Assembly.snk</AssemblyOriginatorKeyFile>
