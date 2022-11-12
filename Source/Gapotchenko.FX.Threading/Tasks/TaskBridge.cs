@@ -1,14 +1,14 @@
 ﻿namespace Gapotchenko.FX.Threading.Tasks;
 
 /// <summary>
-/// Bridges together synchronous and asynchronous task execution models.
+/// Bridges synchronous and asynchronous task execution models together.
 /// </summary>
 public static class TaskBridge
 {
     /// <summary>
-    /// Synchronously executes an async task with a void return value.
+    /// Synchronously executes an asynchronous task with a void return value.
     /// </summary>
-    /// <param name="task">The async task to execute.</param>
+    /// <param name="task">The asynchronous task to execute.</param>
     public static void Execute(Func<Task> task)
     {
         if (task == null)
@@ -28,9 +28,9 @@ public static class TaskBridge
     }
 
     /// <summary>
-    /// Synchronously completes execution of an already started async task.
+    /// Synchronously completes execution of an already started asynchronous task.
     /// </summary>
-    /// <param name="task">The async task to execute.</param>
+    /// <param name="task">The asynchronous task to execute.</param>
     public static void Execute(Task task)
     {
         if (task == null)
@@ -47,9 +47,9 @@ public static class TaskBridge
     }
 
     /// <summary>
-    /// Synchronously completes execution of an already started async task that returns a value of type <typeparamref name="T"/>.
+    /// Synchronously completes execution of an already started asynchronous task that returns a value of type <typeparamref name="T"/>.
     /// </summary>
-    /// <param name="task">The async task to execute.</param>
+    /// <param name="task">The asynchronous task to execute.</param>
     /// <returns>The return value.</returns>
     public static T Execute<T>(Task<T> task)
     {
@@ -67,10 +67,10 @@ public static class TaskBridge
     }
 
     /// <summary>
-    /// Synchronously executes a cancelable async task with a void return value.
+    /// Synchronously executes a cancelable asynchronous task with a void return value.
     /// If the current thread is being aborted or interrupted then a corresponding cancellation request is issued for the given task.
     /// </summary>
-    /// <param name="task">The cancelable async task to execute.</param>
+    /// <param name="task">The cancelable asynchronous task to execute.</param>
     public static void Execute(Func<CancellationToken, Task> task)
     {
         if (task == null)
@@ -97,7 +97,7 @@ public static class TaskBridge
                     {
                         context.ExceptionFilter = exception => !(exception is TaskCanceledException);
 
-                        // Execute remaining async iterations and finalizers.
+                        // Execute remaining asynchronous iterations and finalizers.
                         context.Execute(() => pendingTask);
                     }
 
@@ -116,9 +116,9 @@ public static class TaskBridge
     }
 
     /// <summary>
-    /// Synchronously executes an async task with a return value of type <typeparamref name="T"/>.
+    /// Synchronously executes an asynchronous task with a return value of type <typeparamref name="T"/>.
     /// </summary>
-    /// <param name="task">The async task to execute.</param>
+    /// <param name="task">The asynchronous task to execute.</param>
     /// <returns>The return value.</returns>
     public static T Execute<T>(Func<Task<T>> task)
     {
@@ -136,10 +136,10 @@ public static class TaskBridge
     }
 
     /// <summary>
-    /// Synchronously executes an async task with a return value of type <typeparamref name="T"/>.
+    /// Synchronously executes an asynchronous task with a return value of type <typeparamref name="T"/>.
     /// If the current thread is being aborted or interrupted then a corresponding cancellation request is issued for the given task.
     /// </summary>
-    /// <param name="task">The cancelable async task to execute.</param>
+    /// <param name="task">The cancelable asynchronous task to execute.</param>
     /// <returns>The return value.</returns>
     public static T Execute<T>(Func<CancellationToken, Task<T>> task)
     {
