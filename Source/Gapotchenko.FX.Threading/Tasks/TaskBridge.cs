@@ -46,6 +46,25 @@ public static class TaskBridge
         Execute(() => task);
     }
 
+#if TFF_VALUETASK
+    /// <summary>
+    /// Synchronously completes execution of an already started asynchronous task.
+    /// </summary>
+    /// <param name="task">The asynchronous task to execute.</param>
+    public static void Execute(in ValueTask task)
+    {
+        // Use a short path when possible.
+        if (task.IsCompletedSuccessfully)
+        {
+            // ValueTask.IsCompletedSuccessfully property issues an acquire memory barrier internally.
+            return;
+        }
+
+        var t = task.AsTask();
+        Execute(() => t);
+    }
+#endif
+
     /// <summary>
     /// Synchronously completes execution of an already started asynchronous task that returns a value of type <typeparamref name="T"/>.
     /// </summary>
@@ -65,6 +84,26 @@ public static class TaskBridge
 
         return Execute(() => task);
     }
+
+#if TFF_VALUETASK
+    /// <summary>
+    /// Synchronously completes execution of an already started asynchronous task that returns a value of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <param name="task">The asynchronous task to execute.</param>
+    /// <returns>The return value.</returns>
+    public static T Execute<T>(in ValueTask<T> task)
+    {
+        // Use a short path when possible.
+        if (task.IsCompleted)
+        {
+            // ValueTask<T>.IsCompleted property issues an acquire memory barrier internally.
+            return task.Result;
+        }
+
+        var t = task.AsTask();
+        return Execute(() => t);
+    }
+#endif
 
     /// <summary>
     /// Synchronously executes a cancelable asynchronous task with a void return value.
