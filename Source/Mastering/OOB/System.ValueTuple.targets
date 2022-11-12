@@ -1,4 +1,4 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
 
   <PropertyGroup>
     <TFF_VALUETUPLE_OOB Condition=" '$(TargetFramework)' == 'net45' ">true</TFF_VALUETUPLE_OOB>
