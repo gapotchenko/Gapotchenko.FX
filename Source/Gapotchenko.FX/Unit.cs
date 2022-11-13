@@ -12,5 +12,5 @@ public sealed class Unit
     /// <summary>
     /// Gets the value of <see cref="Unit"/> type.
     /// </summary>
-    public Unit Value { get; } = new();
+    public static Unit Value { get; } = new();
 }
