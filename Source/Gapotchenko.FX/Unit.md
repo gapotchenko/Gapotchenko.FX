@@ -5,14 +5,14 @@
 `Unit` class cannot be instantiated and thus can hold no information.
 Its notion comes from the area of mathematical logic and computer science known as [type theory](https://en.wikipedia.org/wiki/Type_theory).
 
-The `Unit` class can only have a single possible value (`null`):
+The `Unit` class can only have a single possible value (`Unit.Value`):
 
 ``` csharp
 using Gapotchenko.FX;
 
 Unit val;
 
-val = null;        // OK: null is the only possible value for Unit
+val = Unit.Value;        // OK: `Unit.Value` is the only possible value for Unit
 val = new Unit();  // ERROR: wouldn't compile
 ```
 
@@ -23,9 +23,20 @@ Similarly, the `System.Boolean` is the type with two values.
 A visual placement of the `Unit` type in .NET type system:
 
 - `Void` (allows *zero* possible values)
-- **`Unit`** (allows *one* possible value: `null`)
+- **`Unit`** (allows *one* possible value: `Unit.Value`)
 - `Boolean` (allows *two* possible values: `true` | `false`)
 - …
+
+## Nullability
+
+Although the `Unit` type can only have one value, it is also a refererence type in terms of .NET type system.
+It means that it's possible for a `Unit` variable to have a `null` value as well:
+
+``` csharp
+Unit? val = null; // OK
+```
+
+But it does not circumvent the notion of a unit type, it's just the way reference types work in .NET – they all are intrinsicably nullable.
 
 ## Usage
 
@@ -38,7 +49,7 @@ var set = new Dictionary<string, object>();
 
 The values in these dictionaries were always `null`, and only the keys represented the useful payload.
 
-What most of developers did not realize back then, is that they were essentially using a Unit type in disguise.
+What most of developers did not realize back then, is that they were essentially using a unit type in disguise.
 So a better way to write this would be:
 
 ``` csharp
@@ -64,7 +75,7 @@ Instead, we have the second best alternative out there: the `Unit` type from `Ga
 
 You think that the whole story with `Dictionary` as a `HashSet` is a thing of the past?
 
-Surprise, surprise, meet a `ConcurrentHashSet` which is… still absent in conventional .NET.
+Surprise, meet a `ConcurrentHashSet` which is… still absent in conventional .NET.
 So you know what to do now:
 
 ```
