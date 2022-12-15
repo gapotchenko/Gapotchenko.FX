@@ -229,15 +229,24 @@ Here is a full example that demonstrates that:
 using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.Threading.Tasks;
 
-var processEndModes = TaskBridge.Execute(
-    EndProcessesAsync(
-        Process.GetProcessesByName("notepad"));
-        
-Console.WriteLine(
-    "Notepads were ended with the following results: {0}.",
-    string.Join(
-        ", ",
-        processEndModes.Select(x => x.ToString())));
+class Program
+{
+    static Task<ProcessEndMode[]> EndProcessesAsync(IEnumerable<Process> processesToEnd) =>
+        Task.WhenAll(processesToEnd.Select(x => x.EndAsync()));
+
+    static void Main()
+    {
+        var processEndModes = TaskBridge.Execute(
+            EndProcessesAsync(
+                Process.GetProcessesByName("notepad"));
+
+        Console.WriteLine(
+            "Notepads were ended with the following results: {0}.",
+            string.Join(
+                ", ",
+                processEndModes.Select(x => x.ToString())));
+    }
+}
 ```
 
 ## Usage
