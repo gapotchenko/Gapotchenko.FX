@@ -234,7 +234,7 @@ var processEndModes = TaskBridge.Execute(
         Process.GetProcessesByName("notepad"));
         
 Console.WriteLine(
-    "Notepads were ended with the following results: {0}",
+    "Notepads were ended with the following results: {0}.",
     string.Join(
         ", ",
         processEndModes.Select(x => x.ToString())));
