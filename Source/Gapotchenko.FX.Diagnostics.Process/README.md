@@ -215,7 +215,7 @@ What if we could have the benefits of both solutions at the same time?
 We can do this by using asynchronous code, like so:
 
 ``` csharp
-Task<ProcessEndMode[]> EndProcessesAsync(IEnumerable<Process> processesToEnd) =>
+static Task<ProcessEndMode[]> EndProcessesAsync(IEnumerable<Process> processesToEnd) =>
     Task.WhenAll(processesToEnd.Select(x => x.EndAsync()));
 ```
 
