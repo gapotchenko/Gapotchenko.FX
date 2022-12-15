@@ -219,7 +219,7 @@ static Task<ProcessEndMode[]> EndProcessesAsync(IEnumerable<Process> processesTo
     Task.WhenAll(processesToEnd.Select(x => x.EndAsync()));
 ```
 
-Even if you write a single-threaded app, you still get the benefits of asynchronouse code here: the processes are shut down in parallel and no CPU threads are wasted.
+Even if you write a single-threaded app, you still get the benefits of asynchronous code here: the processes are shut down in parallel and no CPU threads are wasted.
 
 (Reminder: the correct way to wait for the completion of an asynchronous task in synchronous code is to use [`TaskBridge`](../Gapotchenko.FX.Threading#taskbridge))
 
