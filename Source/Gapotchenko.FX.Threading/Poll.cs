@@ -13,7 +13,7 @@ public static class Poll
     /// </summary>
     /// <remarks>
     /// The efficiency of a polling strategy is achieved by randomizing the delays between the polling attempts.
-    /// In this way, the peak pressure on a thread pool is minimized by dispersing the thread activation requests on time axis.
+    /// In this way, the peak pressure on a thread pool is minimized by dispersing the thread activation requests in time.
     /// </remarks>
     /// <param name="condition">The asynchronous predicate which defines the condition to wait for.</param>
     /// <param name="millisecondsInterval">The amount of time, in milliseconds, to wait between condition polling attempts.</param>
