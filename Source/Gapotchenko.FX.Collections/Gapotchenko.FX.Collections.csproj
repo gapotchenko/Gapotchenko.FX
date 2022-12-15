@@ -19,6 +19,6 @@
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
 
-  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.targets" />
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.props" />
 
 </Project>

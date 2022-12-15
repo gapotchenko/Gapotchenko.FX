@@ -1,0 +1,12 @@
+<Project>
+
+  <PropertyGroup>
+    <TFF_VALUETUPLE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '4.7')) ">true</TFF_VALUETUPLE_OOB>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TFF_VALUETUPLE_OOB)' == 'true' ">
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <MasteringFrameworkFeature Include="TFF_VALUETUPLE;TFF_VALUETUPLE_OOB" />
+  </ItemGroup>
+
+</Project>

@@ -23,6 +23,6 @@
     <ProjectReference Include="..\Gapotchenko.FX.Data.Integrity.Checksum\Gapotchenko.FX.Data.Integrity.Checksum.csproj" />
   </ItemGroup>
 
-  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.targets" />
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.props" />
 
 </Project>

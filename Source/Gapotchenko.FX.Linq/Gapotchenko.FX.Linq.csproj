@@ -23,6 +23,6 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.targets" />
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.props" />
 
 </Project>

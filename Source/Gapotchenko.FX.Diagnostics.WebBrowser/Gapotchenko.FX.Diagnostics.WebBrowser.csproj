@@ -24,6 +24,6 @@
     </PackageReference>
   </ItemGroup>
 
-  <Import Project="$(MasteringDir)\OOB\System.Memory.targets" />
+  <Import Project="$(MasteringDir)\OOB\System.Memory.props" />
 
 </Project>

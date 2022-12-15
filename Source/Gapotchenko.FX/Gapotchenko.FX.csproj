@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <Import Project="$(MasteringDir)\OOB\Microsoft.Bcl.HashCode.props" />
-  <Import Project="$(MasteringDir)\OOB\System.Runtime.InteropServices.RuntimeInformation.targets" />
-  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.targets" />
+  <Import Project="$(MasteringDir)\OOB\System.Runtime.InteropServices.RuntimeInformation.props" />
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.props" />
 
 </Project>
