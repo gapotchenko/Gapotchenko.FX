@@ -30,8 +30,8 @@ partial class WebBrowserLauncher
         else
             ++j;
 
-        string args = command.Substring(j).Trim();
-        string filePath = command.Substring(0, j).Trim('"');
+        var args = command.AsSpan(j).Trim().ToString();
+        var filePath = command.AsSpan(0, j).Trim('"').ToString();
 
         string pattern = args;
 
@@ -39,7 +39,7 @@ partial class WebBrowserLauncher
 
         if (args.Equals(pattern, StringComparison.Ordinal))
         {
-            // URL is not set.
+            // URL cannot be passed in an argument.
             return false;
         }
 
