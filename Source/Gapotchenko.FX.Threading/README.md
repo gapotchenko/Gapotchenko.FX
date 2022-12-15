@@ -89,7 +89,7 @@ as it elegantly solves a world-class problem of bridging sync and async models t
 
 ## `Sequential`, an Antogonist to `Parallel`
 
-.NET platform provides `System.Threading.Tasks.Parallel` class that contains a bunch of static methods allowing to execute the tasks in parallel.
+.NET platform provides `System.Threading.Tasks.Parallel` class that contains a bunch of static methods allowing one to execute the tasks in parallel.
 But what if you want to temporarily switch them to a sequential execution mode?
 
 Of course, you can do that manually, for example, by changing `Parallel.ForEach` method to `foreach` C# language keyword.
