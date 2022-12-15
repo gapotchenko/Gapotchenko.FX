@@ -91,7 +91,7 @@ The method retrieves a sequence of command-line arguments specified at the proce
 It is similar to aforementioned `ReadArguments()` method but returns a sequence of command-line arguments instead of a single command line string.
 
 This fundamental difference may be essential in multi-platform scenarios.
-For instance, Windows OS represents the command line of a process as a single string, while Unix operating systems represent the command line as a strongly-typed array of command-line arguments.
+For instance, Windows OS natively represents the command line of a process as a single string, while Unix operating systems natively represent the command line as a strongly-typed array of command-line arguments.
 
 Whichever method is used the results are similar, but every method provides a higher degree of detalization for the specific operating system.
 
