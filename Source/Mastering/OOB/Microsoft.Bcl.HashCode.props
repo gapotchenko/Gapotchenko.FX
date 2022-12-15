@@ -1,0 +1,13 @@
+<Project>
+
+  <PropertyGroup>
+    <TFF_MICROSOFT_BCL_HASHCODE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">true</TFF_MICROSOFT_BCL_HASHCODE_OOB>
+    <TFF_MICROSOFT_BCL_HASHCODE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '2.1')) ">true</TFF_MICROSOFT_BCL_HASHCODE_OOB>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TFF_MICROSOFT_BCL_HASHCODE_OOB)' == 'true' ">
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+    <MasteringFrameworkFeature Include="TFF_HASHCODE;TFF_HASHCODE_OOB" />
+  </ItemGroup>
+
+</Project>
