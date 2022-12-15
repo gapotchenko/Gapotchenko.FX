@@ -203,6 +203,26 @@ As you can see, despite a simple-looking signature, the End(…) method gives en
 The method is similar to `End()` but has an async implementation.
 It can be used to efficiently handle dozens of processes in bulk.
 
+Let's take a look at an example.
+For instance, there is a need to shut down quite a few processes, say 20.
+One possible solution is to shut down the processes sequentially, one by one.
+But this may take quite a few moments to complete, up to several dozen seconds.
+On a positive side, it only takes one CPU thread.
+The second solution is to shut down the processes in parallel.
+This solution will reduce the overall time significantly, but that reduction will come at the expense of 20 wasted CPU threads.
+What if we could have the benefits of both solutions at the same time?
+
+We can do this by using asynchronous code, like so:
+
+``` csharp
+Task<ProcessEndMode[]> EndProcessesAsync(IEnumerable<Process> processesToEnd) =>
+    Task.WhenAll(processesToEnd.Select(x => x.EndAsync()));
+```
+
+Even if you write a single-threaded app, you still get the benefits of asynchronouse code here: the processes are shut down in parallel and no CPU threads are wasted.
+
+(Reminder: the correct way to wait for the completion of an asynchronous task in synchronous code is to use [`TaskBridge`](../Gapotchenko.FX.Threading#taskbridge))
+
 ## Usage
 
 `Gapotchenko.FX.Diagnostics.Process` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Diagnostics.Process):
