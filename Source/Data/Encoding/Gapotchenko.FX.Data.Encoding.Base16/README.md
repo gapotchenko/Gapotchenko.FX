@@ -64,7 +64,7 @@ stream.Read(...); // block N
 
 Base16 family of binary-to-text data encodings consists of the following algorithms with predefined parameters:
 
-| Algorithm | Gapotchenko.FX Implementation | Alphabet | Case-Sensitivity | Data Encoding Efficiency* |
+| Algorithm | Gapotchenko.FX Implementation | Alphabet | Case-Sensitive | Data Encoding Efficiency* |
 | ---------  | -------- | -------- | -------- | -------- | 
 | Base16 | `Base16` | 0123456789ABCDEF | No | 0.5 |
 

@@ -19,13 +19,16 @@ Example:
 using Gapotchenko.FX.Security.Cryptography;
 
 byte[] messageToEncrypt = ...;
+byte[] key = ...;
 
 // Encryption
 
 byte[] encryptedMessage;
 
-using (var arc4 = new Arc4Managed { Key = ... })
+using (var arc4 = Arc4.Create())
 {
+    arc4.Key = key;
+
     var ms = new MemoryStream();
     using (var cryptoStream = new CryptoStream(ms, arc4.CreateEncryptor(), CryptoStreamMode.Write))
         cryptoStream.Write(messageToEncrypt, 0, messageToEncrypt.Length);
@@ -37,8 +40,10 @@ using (var arc4 = new Arc4Managed { Key = ... })
 
 byte[] decryptedMessage;
 
-using (var arc4 = new Arc4Managed { Key = ... })
+using (var arc4 = Arc4.Create())
 {
+    arc4.Key = key;
+
     var ms = new MemoryStream();
     using (var cryptoStream = new CryptoStream(ms, arc4.CreateDecryptor(), CryptoStreamMode.Write))
         cryptoStream.Write(encryptedMessage, 0, encryptedMessage.Length);

@@ -64,7 +64,7 @@ stream.Read(...); // block N
 
 Base32 family of binary-to-text data encodings consists of several attested algorithms with predefined parameters:
 
-| Algorithm | Gapotchenko.FX Implementation | Alphabet | Case-Sensitivity | Data Encoding Efficiency* |
+| Algorithm | Gapotchenko.FX Implementation | Alphabet | Case-Sensitive | Data Encoding Efficiency* |
 | --------- | -------- | -------- | -------- | -------- | 
 | Base32 (standard, recommended) | `Base32` | ABCDEFGHIJKLMNOPQRSTUVWXYZ234567 | No | 0.625 |
 | base32-hex | `Base32Hex` | 0123456789ABCDEFGHIJKLMNOPQRSTUV | No | 0.625 |

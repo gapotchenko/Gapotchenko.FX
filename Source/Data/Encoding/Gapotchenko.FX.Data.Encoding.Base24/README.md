@@ -64,7 +64,7 @@ stream.Read(...); // block N
 
 Base24 family of binary-to-text data encodings consists of the following algorithms with predefined parameters:
 
-| Algorithm | Gapotchenko.FX Implementation | Alphabet | Case-Sensitivity | Data Encoding Efficiency* |
+| Algorithm | Gapotchenko.FX Implementation | Alphabet | Case-Sensitive | Data Encoding Efficiency* |
 | --------- | -------- | -------- | -------- | -------- | 
 | Kuon Base24 | `KuonBase24` | ZAC2B3EF4GH5TK67P8RS9WXY | No | 0.571 |
  

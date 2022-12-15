@@ -143,11 +143,11 @@ Why would anyone want such a method?
 It turns out that a modern OS is a noisy environment that can put your app under a sledgehammer.
 
 For example, if an app changes a file, it immediately grabs attention of various OS services.
-Anti-virus tools, search engines, file synchronization applications all can lock the files for short random time spans.
+Anti-virus tools, search engines, file synchronization applications all can lock the files for short and random time spans.
 
 If a user of your app is unlucky or just uses an app frequently enough then he would occasionally get "File access denied" errors.
 
-To minimize a possibility of such a congestion, you should call `FileSystem.WaitForFileWriteAccess` method before changing a file:
+To minimize a possibility of such a congestion, you can call `FileSystem.WaitForFileWriteAccess` method before changing a file:
 
 ``` csharp
 using Gapotchenko.FX.IO;

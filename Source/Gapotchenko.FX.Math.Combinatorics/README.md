@@ -89,12 +89,12 @@ foreach (var i in Permutations.Of(seq.Distinct()))
 
 This whole way of thinking stands true but `Gapotchenko.FX.Math.Combinatorics` goes ahead of that and provides the out-of-the-box support for such natural idiosyncrasies.
 
-Whatever syntax is preferred: `Permutations.Of(seq.Distinct())` or `Permutations.Of(seq).Distinct()`,
-the algorithm complexity stays at bay thanks to the built-in optimizer that chooses the best execution plan for a query <ins>automatically</ins>.
+Whatever syntax is used: `Permutations.Of(seq.Distinct())` or `Permutations.Of(seq).Distinct()`,
+the algorithm complexity stays at bay thanks to the built-in optimizer that chooses the best execution plan of a query <ins>automatically</ins>.
 
 ### Permutations in LINQ
 
-`Permutations.Of(...)` is an explicit form of producing the permutations, but the LINQ shorthand `Permute()` is also available as a part of the fluent API:
+`Permutations.Of(...)` is an explicit form of producing the permutations, but the LINQ shorthand `Permute()` is also available as a part of `Gapotchenko.FX.Math.Combinatorics` fluent API:
 
 ```csharp
 using Gapotchenko.FX.Math.Combinatorics;
@@ -130,7 +130,7 @@ The output:
 
 ### Cartesian Product in LINQ
 
-`CartesianProduct.Of(...)` is an explicit form of producing the Cartesian product, but the LINQ shorthand `CrossJoin()` is also available as a part of the fluent API:
+`CartesianProduct.Of(...)` is an explicit form of producing the Cartesian product, but the LINQ shorthand `CrossJoin(...)` is also available as a part of `Gapotchenko.FX.Math.Combinatorics` fluent API:
 
 ```csharp
 using Gapotchenko.FX.Math.Combinatorics;
