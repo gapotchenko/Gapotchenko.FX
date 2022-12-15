@@ -10,8 +10,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using static System.FormattableString;
-
 namespace Gapotchenko.FX.Diagnostics.Pal.Linux;
 
 #if NET && !LINUX

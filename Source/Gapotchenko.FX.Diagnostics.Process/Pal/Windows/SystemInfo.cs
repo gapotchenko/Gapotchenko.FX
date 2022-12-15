@@ -1,6 +1,5 @@
 ﻿#if !HAS_TARGET_PLATFORM || WINDOWS
 
-
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows;
 
 #if NET
