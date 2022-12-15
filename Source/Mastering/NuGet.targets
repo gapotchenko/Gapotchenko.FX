@@ -134,8 +134,8 @@ if (supportsNETStandard20)
     supportedPlatforms.Add(".NET Standard 2.0+");
 if (supportsNETCore20)
     supportedPlatforms.Add(".NET Core 2.0+");
-if (targetFrameworks.Contains("net46"))
-    supportedPlatforms.Add(".NET Framework 4.6+");
+if (targetFrameworks.Contains("net461"))
+    supportedPlatforms.Add(".NET Framework 4.6.1+");
 
 if (supportedPlatforms.Count != 0)
 {

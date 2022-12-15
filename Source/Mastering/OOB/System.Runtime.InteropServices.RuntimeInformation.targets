@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <TFF_RUNTIME_INFORMATION_OOB Condition=" '$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'net46' ">true</TFF_RUNTIME_INFORMATION_OOB>
+    <TFF_RUNTIME_INFORMATION_OOB Condition=" '$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'net46' OR '$(TargetFramework)' == 'net461' ">true</TFF_RUNTIME_INFORMATION_OOB>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_RUNTIME_INFORMATION_OOB)' == 'true' ">

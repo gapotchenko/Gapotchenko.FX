@@ -10,6 +10,7 @@ Release date: not released yet
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
 - Added polyfill for `Path.TrimEndingDirectorySeparator` method
+- .NET Framework 4.6 target is retired. The minimal supported .NET Framework version is 4.6.1
 
 ### Gapotchenko FX 2022.2
 

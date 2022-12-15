@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TFF_VALUETUPLE_OOB Condition=" '$(TargetFramework)' == 'net45' ">true</TFF_VALUETUPLE_OOB>
     <TFF_VALUETUPLE_OOB Condition=" '$(TargetFramework)' == 'net46' ">true</TFF_VALUETUPLE_OOB>
+    <TFF_VALUETUPLE_OOB Condition=" '$(TargetFramework)' == 'net461' ">true</TFF_VALUETUPLE_OOB>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_VALUETUPLE_OOB)' == 'true' ">
