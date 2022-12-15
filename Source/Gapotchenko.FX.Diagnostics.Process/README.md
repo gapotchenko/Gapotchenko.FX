@@ -223,6 +223,23 @@ Even if you write a single-threaded app, you still get the benefits of asynchron
 
 (Reminder: the correct way to wait for the completion of an asynchronous task in synchronous code is to use [`TaskBridge`](../Gapotchenko.FX.Threading#taskbridge))
 
+Here is a full example that demonstrates that:
+
+``` csharp
+using Gapotchenko.FX.Diagnostics;
+using Gapotchenko.FX.Threading.Tasks;
+
+var processEndModes = TaskBridge.Execute(
+    EndProcessesAsync(
+        Process.GetProcessesByName("notepad"));
+        
+Console.WriteLine(
+    "Notepads were ended with the following results: {0}",
+    string.Join(
+        ", ",
+        processEndModes.Select(x => x.ToString())));
+```
+
 ## Usage
 
 `Gapotchenko.FX.Diagnostics.Process` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Diagnostics.Process):
