@@ -15,6 +15,8 @@ public class ProcessInformationTests
         var psi = process.StartInfo;
         psi.FileName = "dotnet";
         psi.Arguments = "fsi";
+        psi.UseShellExecute = false;
+        psi.CreateNoWindow = true;
 
         Assert.IsTrue(process.Start());
         try

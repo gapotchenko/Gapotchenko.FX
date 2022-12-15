@@ -18,6 +18,7 @@ public class ProcessEnvironmentTests
         psi.Arguments = "fsi";
         psi.UseShellExecute = false;
         psi.RedirectStandardOutput = true;
+        psi.CreateNoWindow = true;
 
         string value = Guid.NewGuid().ToString("D");
         psi.EnvironmentVariables["PROC_ENV_TEST"] = value;
@@ -47,6 +48,7 @@ public class ProcessEnvironmentTests
         psi.Arguments = "fsi";
         psi.UseShellExecute = false;
         psi.RedirectStandardOutput = true;
+        psi.CreateNoWindow = true;
 
         const string envKeyPrefix = "PROC_ENV_TEST_";
 
