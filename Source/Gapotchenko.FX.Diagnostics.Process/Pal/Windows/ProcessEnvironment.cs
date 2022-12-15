@@ -17,7 +17,7 @@ static partial class ProcessEnvironment
 
         if (processBitness == 64)
         {
-            // Accessing a 32-bit process.
+            // Accessing a 64-bit process.
 
             var pPeb = _GetPeb64(hProcess);
 
