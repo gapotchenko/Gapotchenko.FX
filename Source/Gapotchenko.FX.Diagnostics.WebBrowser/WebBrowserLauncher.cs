@@ -33,7 +33,7 @@ sealed partial class WebBrowserLauncher
         {
             var psi = new ProcessStartInfo(fileName, arguments ?? string.Empty)
             {
-#if NETSTANDARD || NET
+#if !NETFRAMEWORK
                 UseShellExecute = true // .NET Framework has UseShellExecute set to true by default, .NET Core hasn't.
 #endif
             };
