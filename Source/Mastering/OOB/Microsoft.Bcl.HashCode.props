@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TFF_MICROSOFT_BCL_HASHCODE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">true</TFF_MICROSOFT_BCL_HASHCODE_OOB>
     <TFF_MICROSOFT_BCL_HASHCODE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '2.1')) ">true</TFF_MICROSOFT_BCL_HASHCODE_OOB>
+    <TFF_MICROSOFT_BCL_HASHCODE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '2.1')) ">true</TFF_MICROSOFT_BCL_HASHCODE_OOB>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_MICROSOFT_BCL_HASHCODE_OOB)' == 'true' ">
