@@ -1,7 +1,6 @@
 ﻿#if !HAS_TARGET_PLATFORM || WINDOWS
 
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows;

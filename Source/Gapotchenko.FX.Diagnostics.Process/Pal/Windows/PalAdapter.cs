@@ -2,7 +2,6 @@
 
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows;

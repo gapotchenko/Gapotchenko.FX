@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Using Include="System.ComponentModel" />
+    <Using Include="System.Runtime.Versioning" />
   </ItemGroup>
   
 </Project>
