@@ -409,13 +409,14 @@ public static class FileSystem
 
             if (sw == null)
             {
-                // TODO: Use AppContext.TryGetSwitch to turn that behavior on.
-                // Suggested switch name is Switch.Gapotchenko.FX.IO.UseGCForFileAccess
-
-                // Try to close open file streams that weren't properly disposed.
-                //GC.Collect();
-                //GC.WaitForPendingFinalizers();
-                //GC.Collect();
+                if (AppContext.TryGetSwitch("Switch.Gapotchenko.FX.IO.UseGCForFileAccess", out var gcEnabled) &&
+                    gcEnabled)
+                {
+                    // Try to close open file streams that weren't properly disposed.
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                }
 
                 sw = Stopwatch.StartNew();
             }
