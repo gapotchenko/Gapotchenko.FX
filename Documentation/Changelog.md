@@ -36,8 +36,9 @@ Release date: April 7, 2022
   They are grouped by the family and provided by the corresponding modules:
   `Gapotchenko.FX.Data.Integrity.Checksum.Crc32`, `Gapotchenko.FX.Data.Integrity.Checksum.Crc16`, `Gapotchenko.FX.Data.Integrity.Checksum.Crc8`
 - Improved documentation
+- .NET Framework 4.5 target is retired. The minimal supported .NET Framework version is 4.6
 - `Process.GetImageFileName()` extension method provided by `Gapotchenko.FX.Diagnostics.Process` module now returns `null` when a process is not associated with an image file
-- Fixed issue that could lead to `System.IO.EndOfStreamException` exception in `Process.ReadEnvironmentVariables()` method provided by `Gapotchenko.FX.Diagnostics.Process` module (GH-2)
+- Fixed issue that could lead to `System.IO.EndOfStreamException` exception in `Process.ReadEnvironmentVariables()` method provided by `Gapotchenko.FX.Diagnostics.Process` module (issue GH-2)
 
 ## 2021
 
