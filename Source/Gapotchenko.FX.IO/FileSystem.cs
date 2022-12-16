@@ -196,7 +196,7 @@ public static class FileSystem
     /// Gets a short version of a specified file path.
     /// </summary>
     /// <param name="filePath">The file path.</param>
-    /// <returns>A short version of the file path.</returns>
+    /// <returns>A short version of the file path or the file path if its short version is unavailable.</returns>
     [return: NotNullIfNotNull("filePath")]
     public static string? GetShortPath(string? filePath)
     {
@@ -251,7 +251,7 @@ public static class FileSystem
     /// Splits a specified path into a sequence of file system entry names.
     /// </para>
     /// <para>
-    /// For example, the entry names of C:\Users\Tester\Documents path are:
+    /// For example, the entry names of "C:\Users\Tester\Documents" path are:
     /// <list type="bullet">
     /// <item>C:\</item>
     /// <item>Users</item>
@@ -289,11 +289,11 @@ public static class FileSystem
 
             case (true, 1):
                 {
-                    var folder = Path.GetDirectoryName(path);
-                    if (folder == null)
+                    var directory = Path.GetDirectoryName(path);
+                    if (directory == null)
                         throw new ArgumentOutOfRangeException(nameof(index));
-                    folder = Path.Combine(folder, subpath);
-                    return Path.Combine(folder, Path.GetFileName(path));
+                    directory = Path.Combine(directory, subpath);
+                    return Path.Combine(directory, Path.GetFileName(path));
                 }
 
             case (false, 0):
