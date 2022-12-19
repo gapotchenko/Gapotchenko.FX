@@ -342,7 +342,7 @@ public static class FileSystem
     /// Please note that the actual access check is read-write despite the name of the method.
     /// This is done to cover a common sense perception of a file write operation,
     /// e.g. a write means not only file creation/overwrite but also an edit.
-    /// Please use <see cref="WaitForFileAccess(string, FileAccess)"/> method to specify the exact file access mode.
+    /// Please use <see cref="WaitForFileAccess(string, FileAccess)"/> method if you want to specify the exact file access mode.
     /// </remarks>
     /// <param name="path">The file path.</param>
     public static void WaitForFileWriteAccess(string path) => WaitForFileAccess(path, FileAccess.ReadWrite, FileShare.None);
@@ -354,7 +354,7 @@ public static class FileSystem
     /// File share mode is automatically deducted from the given file access mode.
     /// If <see cref="FileAccess.Write"/> access flag is set then <see cref="FileShare.None"/> share mode is used.
     /// Otherwise, the <see cref="FileShare.Read"/> share mode is used.
-    /// Please use <see cref="WaitForFileAccess(string, FileAccess, FileShare)"/> method to specify the exact file access and share modes.
+    /// Please use <see cref="WaitForFileAccess(string, FileAccess, FileShare)"/> method if you want to specify the exact file access and share modes.
     /// </remarks>
     /// <param name="path">The file path.</param>
     /// <param name="access">The file access.</param>
