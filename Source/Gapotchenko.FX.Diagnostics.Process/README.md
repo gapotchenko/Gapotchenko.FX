@@ -242,9 +242,7 @@ class Program
 
         Console.WriteLine(
             "Notepads were ended with the following results: {0}.",
-            string.Join(
-                ", ",
-                processEndModes.Select(x => x.ToString())));
+            string.Join(", ", processEndModes.Select(x => x.ToString())));
     }
 }
 ```
