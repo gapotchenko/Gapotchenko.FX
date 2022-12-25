@@ -93,7 +93,7 @@ It is similar to aforementioned `ReadArguments()` method but returns a sequence 
 This fundamental difference may be essential in multi-platform scenarios.
 For instance, Windows OS natively represents the command line of a process as a single string, while Unix operating systems natively represent the command line as a strongly-typed array of command-line arguments.
 
-Whichever method is used the results are similar, but every method provides a higher degree of detalization for a specific operating system.
+Whichever method is used the results are similar, but every method provides a higher degree of detalization for a particular operating system.
 
 ### End()
 
