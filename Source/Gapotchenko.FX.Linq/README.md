@@ -33,7 +33,7 @@ This often leads to suboptimal performance of an otherwise sound functional algo
 ## ScalarOrDefault
 
 The second most popular primitive provided by `Gapotchenko.FX.Linq` module is `ScalarOrDefault()` method.
-It is similar to `SingleOrDefault()` from conventional .NET but with one big difference: it does not throw an exception when sequence contains multiple elements.
+It is similar to `SingleOrDefault()` provided by conventional .NET but has one big difference: `ScalarOrDefault()` does not throw an exception when sequence contains multiple elements.
 
 ### *Single*OrDefault() Semantics
 
