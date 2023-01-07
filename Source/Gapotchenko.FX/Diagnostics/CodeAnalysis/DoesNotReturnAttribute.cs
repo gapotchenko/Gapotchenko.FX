@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-
-#if !TFF_NULLABLE_ATTRIBUTES
+﻿#if !TFF_NULLABLE_ATTRIBUTES
 
 namespace System.Diagnostics.CodeAnalysis;
 
@@ -19,6 +16,9 @@ public sealed class DoesNotReturnAttribute : Attribute
 }
 
 #else
+
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 [assembly: TypeForwardedTo(typeof(DoesNotReturnAttribute))]
 

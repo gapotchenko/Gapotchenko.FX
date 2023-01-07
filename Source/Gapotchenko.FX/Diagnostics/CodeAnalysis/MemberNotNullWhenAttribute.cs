@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-
-#if !TFF_MEMBERNOTNULLATTRIBUTE
+﻿#if !TFF_MEMBERNOTNULLATTRIBUTE
 
 namespace System.Diagnostics.CodeAnalysis;
 
@@ -56,6 +53,9 @@ public sealed class MemberNotNullWhenAttribute : Attribute
 }
 
 #else
+
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 [assembly: TypeForwardedTo(typeof(MemberNotNullWhenAttribute))]
 
