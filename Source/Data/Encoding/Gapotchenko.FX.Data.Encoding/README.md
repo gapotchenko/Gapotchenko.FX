@@ -115,7 +115,7 @@ It is worth mentioning that the streaming encoder also supports the asynchronous
 ### CreateDecoder(TextReader textReader)
 
 The method creates a streaming decoder for the specified binary-to-text data encoding.
-It can be viewed as a reverse operation to `CreateEncoder`.
+It can be viewed as a reverse operation to `CreateEncoder` and it fully supports the asynchronous operations as well.
 
 ## Transcoding Between Various Binary-To-Text Encodings
 
@@ -143,7 +143,7 @@ File.WriteAllText("2GB-base32.txt", text);
 
 It will work but obviously will consume at least 2 GB of RAM.
 
-This is when the concept of streaming decoders and encoders becomes handy.
+This is when the concept of streaming becomes handy.
 A better transcoding algorithm can use just a fraction of RAM to perform the very same operation of re-encoding a Base64-encoded file to Base32:
 
 ``` c#

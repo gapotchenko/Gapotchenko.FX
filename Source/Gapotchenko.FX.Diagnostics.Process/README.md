@@ -91,9 +91,9 @@ The method retrieves a sequence of command-line arguments specified at the proce
 It is similar to aforementioned `ReadArguments()` method but returns a sequence of command-line arguments instead of a single command line string.
 
 This fundamental difference may be essential in multi-platform scenarios.
-For instance, Windows OS represents the command line of a process as a single string, while Unix operating systems represent the command line as a strongly-typed array of command-line arguments.
+For instance, Windows OS natively represents the command line of a process as a single string, while Unix operating systems natively represent the command line as a strongly-typed array of command-line arguments.
 
-Whichever method is used the results are similar, but every method provides a higher degree of detalization for the specific operating system.
+Whichever method is used the results are similar, but every method provides a higher degree of detalization for a particular operating system.
 
 ### End()
 
@@ -201,7 +201,51 @@ As you can see, despite a simple-looking signature, the End(…) method gives en
 ### EndAsync()
 
 The method is similar to `End()` but has an async implementation.
-It can be used to efficiently handle a lot of processes in bulk.
+It can be used to efficiently handle dozens of processes in bulk.
+
+Let's take a look at an example.
+For instance, there is a need to shut down quite a few processes, say 20.
+One possible solution is to shut down the processes sequentially, one by one.
+But this may take quite a few moments to complete, up to several dozen seconds.
+On a positive side, it only takes one CPU thread.
+The second solution is to shut down the processes in parallel.
+This solution will reduce the overall time significantly, but that reduction will come at the expense of 20 wasted CPU threads.
+What if we could have the benefits of both solutions at the same time?
+
+We can do this by using asynchronous code, like so:
+
+``` csharp
+static Task<ProcessEndMode[]> EndProcessesAsync(IEnumerable<Process> processesToEnd) =>
+    Task.WhenAll(processesToEnd.Select(x => x.EndAsync()));
+```
+
+Even if you write a single-threaded app, you still get the benefits of asynchronous code here: the processes are shut down in parallel and no CPU threads are wasted.
+
+(Reminder: the correct way to wait for the completion of an asynchronous task in synchronous code is to use [`TaskBridge`](../Gapotchenko.FX.Threading#taskbridge))
+
+Here is a full example that demonstrates that:
+
+``` csharp
+using Gapotchenko.FX.Diagnostics;
+using Gapotchenko.FX.Threading.Tasks;
+
+class Program
+{
+    static Task<ProcessEndMode[]> EndProcessesAsync(IEnumerable<Process> processesToEnd) =>
+        Task.WhenAll(processesToEnd.Select(x => x.EndAsync()));
+
+    static void Main()
+    {
+        var processEndModes = TaskBridge.Execute(
+            EndProcessesAsync(
+                Process.GetProcessesByName("notepad"));
+
+        Console.WriteLine(
+            "Notepads were ended with the following results: {0}.",
+            string.Join(", ", processEndModes.Select(x => x.ToString())));
+    }
+}
+```
 
 ## Usage
 

@@ -89,13 +89,13 @@ as it elegantly solves a world-class problem of bridging sync and async models t
 
 ## `Sequential`, an Antogonist to `Parallel`
 
-.NET platform provides `System.Threading.Tasks.Parallel` class that contains a bunch of static methods allowing to execute the tasks in parallel.
+.NET platform provides `System.Threading.Tasks.Parallel` class that contains a bunch of static methods allowing one to execute the tasks in parallel.
 But what if you want to temporarily switch them to a sequential execution mode?
 
 Of course, you can do that manually, for example, by changing `Parallel.ForEach` method to `foreach` C# language keyword.
 But this constitutes a lot of manual labour prone to errors.
-That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, an anotogonist to `Parallel`.
-It allows to make the switch by changing just the class name from `Parallel` to `Sequential` in a corresponding function call.
+That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, a drop-in anotogonist to `Parallel`.
+It allows you to make the switch by just changing the class name from `Parallel` to `Sequential` in a corresponding function call.
 So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now executed sequentially allowing you to isolate that pesky multithreading bug you were hunting for.
 
 ## Usage
