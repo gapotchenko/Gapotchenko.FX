@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-#if !TFF_MODULEINITIALIZERATTRIBUTE
+﻿#if !TFF_MODULEINITIALIZERATTRIBUTE
 
 namespace System.Runtime.CompilerServices;
 
@@ -24,6 +22,8 @@ public sealed class ModuleInitializerAttribute : Attribute
 }
 
 #else
+
+using System.Runtime.CompilerServices;
 
 [assembly: TypeForwardedTo(typeof(ModuleInitializerAttribute))]
 

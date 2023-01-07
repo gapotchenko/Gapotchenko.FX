@@ -1,7 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
+﻿#if !TFF_SWITCHEXPRESSIONEXCEPTION
 
-#if !TFF_SWITCHEXPRESSIONEXCEPTION
+using System.Runtime.Serialization;
 
 namespace System.Runtime.CompilerServices;
 
@@ -102,6 +101,8 @@ public sealed class SwitchExpressionException : InvalidOperationException
 }
 
 #else
+
+using System.Runtime.CompilerServices;
 
 [assembly: TypeForwardedTo(typeof(SwitchExpressionException))]
 
