@@ -3,6 +3,7 @@
 [*.{cs,vb}]
 dotnet_style_require_accessibility_modifiers=omit_if_default:warning
 dotnet_diagnostic.IDE0005.severity = warning
+dotnet_diagnostic.IDE0036.severity = warning
 
 [*.xml]
 indent_style = space
