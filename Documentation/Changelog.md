@@ -6,8 +6,9 @@
 
 Release date: not released yet
 
-- Introduced interval arithmetics implementation represented by `Interval<T>` and `ValueInterval<T>` types defined in `Gapotchenko.FX.Math` module
+- Introduced primitives for interval arithmetics represented by `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
 - Added polyfill for required properties introduced in C# 11.0
+- Added polyfill for a LINQ-style pipe operator
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
 - Added polyfill for `Path.GetRelativePath` method
