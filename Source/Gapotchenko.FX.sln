@@ -27,9 +27,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math", "Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj", "{C4BFF210-5036-460E-85EF-1F3C2B53185C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03. Misc", "03. Misc", "{2B63C0D4-A90F-458D-9116-83ABC34274D9}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Harness", "Harness", "{93EBF1AB-34B5-4A12-8135-8BC2047A9634}"
 EndProject
