@@ -36,12 +36,17 @@ public static partial class MemoryEqualityComparer
     public static MemoryEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer)
     {
         var type = typeof(T);
-        return Type.GetTypeCode(type) switch
-        {
-            TypeCode.Byte when IsDefaultComparer(elementComparer) => (new ByteComparer() as MemoryEqualityComparer<T>)!,
-            _ when typeof(IEquatable<T>).IsAssignableFrom(type) && IsDefaultComparer(elementComparer) => (MemoryEqualityComparer<T>)Activator.CreateInstance(typeof(EquatableComparer<>).MakeGenericType(type))!,
-            _ => new DefaultComparer<T>(elementComparer)
-        };
+        return
+            Type.GetTypeCode(type) switch
+            {
+                TypeCode.Byte when IsDefaultComparer(elementComparer) =>
+                    (new ByteComparer() as MemoryEqualityComparer<T>)!,
+
+                _ when typeof(IEquatable<T>).IsAssignableFrom(type) && IsDefaultComparer(elementComparer) =>
+                    (MemoryEqualityComparer<T>)Activator.CreateInstance(typeof(EquatableComparer<>).MakeGenericType(type))!,
+
+                _ => new DefaultComparer<T>(elementComparer)
+            };
     }
 
     static bool IsDefaultComparer<T>(IEqualityComparer<T>? comparer) => Empty.Nullify(comparer) is null;
