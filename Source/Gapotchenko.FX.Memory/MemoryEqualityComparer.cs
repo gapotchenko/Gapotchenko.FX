@@ -14,6 +14,11 @@ public static partial class MemoryEqualityComparer
     /// <returns><c>true</c> if the specified read-only memory regions are equal; otherwise, <c>false</c>.</returns>
     public static bool Equals<T>(in ReadOnlyMemory<T> x, in ReadOnlyMemory<T> y) => MemoryEqualityComparer<T>.Default.Equals(x, y);
 
+    /// <inheritdoc/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("MemoryEqualityComparer.Equals(object, object) method cannot be used. Use MemoryEqualityComparer.Equals<T>(ReadOnlyMemory<T>, ReadOnlyMemory<T>) method instead.", true)]
+    public static new bool Equals(object? objA, object? objB) => throw new NotSupportedException();
+
     /// <summary>
     /// Returns a hash code for specified read-only memory region.
     /// </summary>
