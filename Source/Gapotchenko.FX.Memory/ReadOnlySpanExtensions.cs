@@ -3,6 +3,7 @@
 /// <summary>
 /// Extensions for <see cref="ReadOnlySpan{T}"/>.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public static class ReadOnlySpanExtensions
 {
     /// <summary>
