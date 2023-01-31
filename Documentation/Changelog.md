@@ -8,14 +8,15 @@ Release date: not released yet
 
 - Introduced primitives for interval arithmetics represented by `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
 - Added ability to create streams over contiguous memory regions represented by `System.Memory` and `System.ReadOnlyMemory` objects by using `ToStream` extension methods provided by `Gapotchenko.FX.Memory` module
-- Added polyfill for required properties introduced in C# 11.0
 - Added polyfill for a LINQ-style pipe operator
-- Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
+- Added polyfill for required properties introduced in C# 11.0
 - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
-- Added polyfill for `Path.GetRelativePath` method
-- Added polyfill for `Path.TrimEndingDirectorySeparator` method
+- Added polyfill for `System.ArraySegment<T>.Slice` method
+- Added polyfill for `System.IO.Path.GetRelativePath` method
+- Added polyfill for `System.IO.Path.TrimEndingDirectorySeparator` method
+- Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - .NET Framework 4.6 target is retired. The minimal supported .NET Framework version is 4.6.1
-- Removed `System.HashCode` polyfill in favor of `Microsoft.Bcl.HashCode` package
+- Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
 
 ### Gapotchenko FX 2022.2
 
