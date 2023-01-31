@@ -4,11 +4,21 @@ namespace Gapotchenko.FX;
 
 static class BitConverterServices
 {
-    public static void ValidateToArguments(byte[] value, int startIndex, int size)
+    public static void ValidateToArguments(in ReadOnlySpan<byte> span, int size) =>
+        ValidateArguments(span, size);
+
+    static void ValidateArguments(in ReadOnlySpan<byte> span, int size)
+    {
+        if (size > span.Length)
+            throw new ArgumentException(Resources.Argument_SpanTooSmall);
+    }
+
+    public static ReadOnlySpan<byte> ValidateToArguments(byte[] value, int startIndex, int size)
     {
         if (value == null)
             throw new ArgumentNullException(nameof(value));
         ValidateArguments(value, startIndex, size);
+        return value.AsSpan(startIndex);
     }
 
     public static void ValidateFillArguments(byte[] buffer, int startIndex, int size)
@@ -33,10 +43,5 @@ static class BitConverterServices
         buffer[startIndex] = value ? (byte)1 : (byte)0;
     }
 
-    public static bool ToBoolean(byte[] value, int startIndex)
-    {
-        ValidateToArguments(value, startIndex, 1);
-
-        return value[startIndex] != 0;
-    }
+    public static bool ToBooleanCore(ReadOnlySpan<byte> value) => value[0] != 0;
 }

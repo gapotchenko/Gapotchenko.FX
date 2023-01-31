@@ -129,6 +129,9 @@
   <data name="Argument_InvalidComparison" xml:space="preserve">
     <value>Invalid arguments for comparison.</value>
   </data>
+  <data name="Argument_SpanTooSmall" xml:space="preserve">
+    <value>Span is not long enough.</value>
+  </data>
   <data name="ProgramExit_Message" xml:space="preserve">
     <value>The program exit has been requested with code {0}.</value>
   </data>

@@ -237,6 +237,81 @@ public interface IBitConverter
     void FillBytes(bool value, byte[] buffer);
 
     /// <summary>
+    /// Returns a 16-bit signed integer converted from the first two bytes of a specified span.
+    /// </summary>
+    /// <param name="value">The byte span.</param>
+    /// <returns>A 16-bit signed integer formed by the first two bytes of a specified span.</returns>
+    short ToInt16(ReadOnlySpan<byte> value);
+
+    /// <summary>
+    /// Returns a 16-bit unsigned integer converted from the first two bytes of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A 16-bit unsigned integer formed by the first two bytes of a specified span.</returns>
+    [CLSCompliant(false)]
+    ushort ToUInt16(ReadOnlySpan<byte> value);
+
+    /// <summary>
+    /// Returns a 32-bit signed integer converted from the first four bytes of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A 32-bit signed integer formed by the first four bytes of a specified span.</returns>
+    int ToInt32(ReadOnlySpan<byte> value);
+
+    /// <summary>
+    /// Returns a 32-bit unsigned integer converted from the first four bytes of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A 32-bit unsigned integer formed by the first four bytes of a specified span.</returns>
+    [CLSCompliant(false)]
+    uint ToUInt32(ReadOnlySpan<byte> value);
+
+    /// <summary>
+    /// Returns a 64-bit signed integer converted from the first eight bytes of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A 64-bit signed integer formed by the first eight bytes of a specified span.</returns>
+    long ToInt64(ReadOnlySpan<byte> value);
+
+    /// <summary>
+    /// Returns a 64-bit unsigned integer converted from the first eight bytes of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A 64-bit unsigned integer formed by the first eight bytes of a specified span.</returns>
+    [CLSCompliant(false)]
+    ulong ToUInt64(ReadOnlySpan<byte> value);
+
+    /// <summary>
+    /// Returns a single-precision floating point number converted from four bytes of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A single-precision floating point number formed by four bytes of a specified span.</returns>
+    float ToSingle(ReadOnlySpan<byte> value);
+
+    /// <summary>
+    /// Returns a double-precision floating point number converted from eight bytes of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A double-precision floating point number formed by eight bytes of a specified span.</returns>
+    double ToDouble(ReadOnlySpan<byte> value);
+
+    /// <summary>
+    /// Returns a decimal number converted from sixteen bytes of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A decimal number formed by sixteen of a specified span.</returns>
+    decimal ToDecimal(ReadOnlySpan<byte> value);
+
+    /// <summary>
+    /// Returns a <see cref="Boolean"/> value converted from the first byte of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns><c>true</c> if the first byte of a specified span is nonzero; otherwise, <c>false</c>.</returns>
+    bool ToBoolean(ReadOnlySpan<byte> value);
+
+    #region Compatibility
+
+    /// <summary>
     /// Returns a 16-bit signed integer converted from two bytes at a specified position in a byte array.
     /// </summary>
     /// <param name="value">An array of bytes.</param>
@@ -391,4 +466,6 @@ public interface IBitConverter
     /// <param name="value">An array of bytes.</param>
     /// <returns><c>true</c> if the first byte of a byte array is nonzero; otherwise, <c>false</c>.</returns>
     bool ToBoolean(byte[] value);
+
+    #endregion
 }

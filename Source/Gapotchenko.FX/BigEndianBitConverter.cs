@@ -3,16 +3,61 @@
 namespace Gapotchenko.FX;
 
 /// <summary>
-/// Converts base data types to an array of bytes, and an array of bytes to base data types in big-endian byte order.
+/// Converts base data types to a span or an array of bytes, and a span of bytes to base data types in big-endian byte order.
 /// </summary>
 /// <remarks>
-/// <seealso cref="LittleEndianBitConverter"/>
+/// <seealso cref="LittleEndianBitConverter"/> is a little-endian counterpart of <see cref="BigEndianBitConverter"/>.
 /// </remarks>
 public sealed class BigEndianBitConverter : IBitConverter
 {
     BigEndianBitConverter()
     {
     }
+
+    #region Kernel
+
+    static ushort ToUInt16Core(ReadOnlySpan<byte> value) => (ushort)
+        (value[0] << 8 |
+        value[1]);
+
+    static short ToInt16Core(in ReadOnlySpan<byte> value) => (short)ToUInt16Core(value);
+
+    static uint ToUInt32Core(ReadOnlySpan<byte> value) =>
+        (uint)value[0] << 24 |
+        (uint)value[1] << 16 |
+        (uint)value[2] << 8 |
+        value[3];
+
+    static int ToInt32Core(in ReadOnlySpan<byte> value) => (int)ToUInt32Core(value);
+
+    static ulong ToUInt64Core(ReadOnlySpan<byte> value) =>
+        (ulong)value[0] << 56 |
+        (ulong)value[1] << 48 |
+        (ulong)value[2] << 40 |
+        (ulong)value[3] << 32 |
+        (ulong)value[4] << 24 |
+        (ulong)value[5] << 16 |
+        (ulong)value[6] << 8 |
+        value[7];
+
+    static long ToInt64Core(in ReadOnlySpan<byte> value) => (long)ToUInt64Core(value);
+
+    static float ToSingleCore(ReadOnlySpan<byte> value) => BitConverterEx.Int32BitsToSingle(ToInt32Core(value));
+
+    static double ToDoubleCore(ReadOnlySpan<byte> value) => BitConverter.Int64BitsToDouble(ToInt64Core(value));
+
+    static decimal ToDecimalCore(ReadOnlySpan<byte> value)
+    {
+        const int n = 4;
+        var bits = new int[n];
+
+        for (int i = 0; i < n; ++i)
+            bits[3 - i] = ToInt32Core(value.Slice(i * sizeof(int)));
+
+        return new decimal(bits);
+    }
+
+    #endregion
 
     /// <summary>
     /// Returns the specified 32-bit signed integer value as an array of bytes.
@@ -331,44 +376,15 @@ public sealed class BigEndianBitConverter : IBitConverter
     public static void FillBytes(bool value, byte[] buffer) => FillBytes(value, buffer, 0);
 
     /// <summary>
-    /// Returns a 32-bit signed integer converted from four bytes at a specified position in a byte array.
+    /// Returns a 16-bit signed integer converted from the first two bytes of a specified span.
     /// </summary>
-    /// <param name="value">An array of bytes.</param>
-    /// <param name="startIndex">The starting position within value.</param>
-    /// <returns>A 32-bit signed integer formed by four bytes beginning at startIndex.</returns>
-    public static int ToInt32(byte[] value, int startIndex) => (int)ToUInt32(value, startIndex);
-
-    /// <summary>
-    /// Returns a 32-bit signed integer converted from the first four bytes of a byte array.
-    /// </summary>
-    /// <param name="value">An array of bytes.</param>
-    /// <returns>A 32-bit signed integer formed by the first four bytes of a byte array.</returns>
-    public static int ToInt32(byte[] value) => ToInt32(value, 0);
-
-    /// <summary>
-    /// Returns a 32-bit unsigned integer converted from four bytes at a specified position in a byte array.
-    /// </summary>
-    /// <param name="value">An array of bytes.</param>
-    /// <param name="startIndex">The starting position within value.</param>
-    /// <returns>A 32-bit unsigned integer formed by four bytes beginning at startIndex.</returns>
-    [CLSCompliant(false)]
-    public static uint ToUInt32(byte[] value, int startIndex)
+    /// <param name="value">The byte span.</param>
+    /// <returns>A 16-bit signed integer formed by the first two bytes of a specified span.</returns>
+    public static short ToInt16(ReadOnlySpan<byte> value)
     {
-        BitConverterServices.ValidateToArguments(value, startIndex, 4);
-
-        uint x = ToUInt16(value, startIndex);
-        x <<= 16;
-        x |= ToUInt16(value, startIndex + 2);
-        return x;
+        BitConverterServices.ValidateToArguments(value, sizeof(short));
+        return ToInt16Core(value);
     }
-
-    /// <summary>
-    /// Returns a 32-bit unsigned integer converted from the first four bytes of a byte array.
-    /// </summary>
-    /// <param name="value">An array of bytes.</param>
-    /// <returns>A 32-bit unsigned integer formed by the first four bytes of a byte array.</returns>
-    [CLSCompliant(false)]
-    public static uint ToUInt32(byte[] value) => ToUInt32(value, 0);
 
     /// <summary>
     /// Returns a 16-bit signed integer converted from two bytes at a specified position in a byte array.
@@ -376,14 +392,9 @@ public sealed class BigEndianBitConverter : IBitConverter
     /// <param name="value">An array of bytes.</param>
     /// <param name="startIndex">The starting position within value.</param>
     /// <returns>A 16-bit signed integer formed by two bytes beginning at startIndex.</returns>
-    public static short ToInt16(byte[] value, int startIndex)
-    {
-        BitConverterServices.ValidateToArguments(value, startIndex, 2);
-
-        byte b1 = value[startIndex++];
-        byte b0 = value[startIndex];
-        return (short)((b1 << 8) | b0);
-    }
+    public static short ToInt16(byte[] value, int startIndex) =>
+        ToInt16Core(
+            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(short)));
 
     /// <summary>
     /// Returns a 16-bit signed integer converted from the first two bytes of a byte array.
@@ -393,13 +404,27 @@ public sealed class BigEndianBitConverter : IBitConverter
     public static short ToInt16(byte[] value) => ToInt16(value, 0);
 
     /// <summary>
-    /// Returns a 16-bit unsigned integer converted from four bytes at a specified position in a byte array.
+    /// Returns a 16-bit unsigned integer converted from the first two bytes of a specified span.
+    /// </summary>
+    /// <param name="value">The byte span.</param>
+    /// <returns>A 16-bit unsigned integer formed by the first two bytes of a specified span.</returns>
+    [CLSCompliant(false)]
+    public static ushort ToUInt16(ReadOnlySpan<byte> value)
+    {
+        BitConverterServices.ValidateToArguments(value, sizeof(ushort));
+        return ToUInt16Core(value);
+    }
+
+    /// <summary>
+    /// Returns a 16-bit unsigned integer converted from two bytes at a specified position in a byte array.
     /// </summary>
     /// <param name="value">An array of bytes.</param>
     /// <param name="startIndex">The starting position within value.</param>
     /// <returns>A 16-bit unsigned integer formed by two bytes beginning at startIndex.</returns>
     [CLSCompliant(false)]
-    public static ushort ToUInt16(byte[] value, int startIndex) => (ushort)ToInt16(value, startIndex);
+    public static ushort ToUInt16(byte[] value, int startIndex) =>
+        ToUInt16Core(
+            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(ushort)));
 
     /// <summary>
     /// Returns a 16-bit unsigned integer converted from the first two bytes of a byte array.
@@ -410,19 +435,84 @@ public sealed class BigEndianBitConverter : IBitConverter
     public static ushort ToUInt16(byte[] value) => ToUInt16(value, 0);
 
     /// <summary>
+    /// Returns a 32-bit signed integer converted from the first four bytes of a specified span.
+    /// </summary>
+    /// <param name="value">The byte span.</param>
+    /// <returns>A 32-bit signed integer formed by the first four bytes of a specified span.</returns>
+    public static int ToInt32(ReadOnlySpan<byte> value)
+    {
+        BitConverterServices.ValidateToArguments(value, sizeof(int));
+        return ToInt32Core(value);
+    }
+
+    /// <summary>
+    /// Returns a 32-bit signed integer converted from four bytes at a specified position in a byte array.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <param name="startIndex">The starting position within value.</param>
+    /// <returns>A 32-bit signed integer formed by four bytes beginning at startIndex.</returns>
+    public static int ToInt32(byte[] value, int startIndex) =>
+        ToInt32Core(
+            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(int)));
+
+    /// <summary>
+    /// Returns a 32-bit signed integer converted from the first four bytes of a byte array.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A 32-bit signed integer formed by the first four bytes of a byte array.</returns>
+    public static int ToInt32(byte[] value) => ToInt32(value, 0);
+
+    /// <summary>
+    /// Returns a 32-bit unsigned integer converted from the first four bytes of a specified span.
+    /// </summary>
+    /// <param name="value">The byte span.</param>
+    /// <returns>A 32-bit unsigned integer formed by the first four bytes of a specified span.</returns>
+    [CLSCompliant(false)]
+    public static uint ToUInt32(ReadOnlySpan<byte> value)
+    {
+        BitConverterServices.ValidateToArguments(value, sizeof(uint));
+        return ToUInt32Core(value);
+    }
+
+    /// <summary>
+    /// Returns a 32-bit unsigned integer converted from four bytes at a specified position in a byte array.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <param name="startIndex">The starting position within value.</param>
+    /// <returns>A 32-bit unsigned integer formed by four bytes beginning at startIndex.</returns>
+    [CLSCompliant(false)]
+    public static uint ToUInt32(byte[] value, int startIndex) =>
+        ToUInt32Core(
+            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(uint)));
+
+    /// <summary>
+    /// Returns a 32-bit unsigned integer converted from the first four bytes of a byte array.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A 32-bit unsigned integer formed by the first four bytes of a byte array.</returns>
+    [CLSCompliant(false)]
+    public static uint ToUInt32(byte[] value) => ToUInt32(value, 0);
+
+    /// <summary>
+    /// Returns a 64-bit signed integer converted from the first eight bytes of a specified span.
+    /// </summary>
+    /// <param name="value">The byte span.</param>
+    /// <returns>A 64-bit signed integer formed by the first eight bytes of a specified span.</returns>
+    public static long ToInt64(ReadOnlySpan<byte> value)
+    {
+        BitConverterServices.ValidateToArguments(value, sizeof(long));
+        return ToInt64Core(value);
+    }
+
+    /// <summary>
     /// Returns a 64-bit signed integer converted from eight bytes at a specified position in a byte array.
     /// </summary>
     /// <param name="value">An array of bytes.</param>
     /// <param name="startIndex">The starting position within value.</param>
     /// <returns>A 64-bit signed integer formed by eight bytes beginning at startIndex.</returns>
-    public static long ToInt64(byte[] value, int startIndex)
-    {
-        BitConverterServices.ValidateToArguments(value, startIndex, 8);
-
-        uint h = ToUInt32(value, startIndex);
-        uint l = ToUInt32(value, startIndex + 4);
-        return (((long)h) << 32) | l;
-    }
+    public static long ToInt64(byte[] value, int startIndex) =>
+        ToInt64Core(
+            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(long)));
 
     /// <summary>
     /// Returns a 64-bit signed integer converted from the first eight bytes of a byte array.
@@ -432,13 +522,27 @@ public sealed class BigEndianBitConverter : IBitConverter
     public static long ToInt64(byte[] value) => ToInt64(value, 0);
 
     /// <summary>
+    /// Returns a 64-bit unsigned integer converted from the first eight bytes of a specified span.
+    /// </summary>
+    /// <param name="value">The byte span.</param>
+    /// <returns>A 64-bit unsigned integer formed by the first eight bytes of a specified span.</returns>
+    [CLSCompliant(false)]
+    public static ulong ToUInt64(ReadOnlySpan<byte> value)
+    {
+        BitConverterServices.ValidateToArguments(value, sizeof(ulong));
+        return ToUInt64Core(value);
+    }
+
+    /// <summary>
     /// Returns a 64-bit unsigned integer converted from eight bytes at a specified position in a byte array.
     /// </summary>
     /// <param name="value">An array of bytes.</param>
     /// <param name="startIndex">The starting position within value.</param>
     /// <returns>A 64-bit unsigned integer formed by eight bytes beginning at startIndex.</returns>
     [CLSCompliant(false)]
-    public static ulong ToUInt64(byte[] value, int startIndex) => (ulong)ToInt64(value, startIndex);
+    public static ulong ToUInt64(byte[] value, int startIndex) =>
+        ToUInt64Core(
+            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(ulong)));
 
     /// <summary>
     /// Returns a 64-bit unsigned integer converted from the first eight bytes of a byte array.
@@ -449,17 +553,25 @@ public sealed class BigEndianBitConverter : IBitConverter
     public static ulong ToUInt64(byte[] value) => ToUInt64(value, 0);
 
     /// <summary>
+    /// Returns a single-precision floating point number converted from four bytes of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A single-precision floating point number formed by four bytes of a specified span.</returns>
+    public static float ToSingle(ReadOnlySpan<byte> value)
+    {
+        BitConverterServices.ValidateToArguments(value, sizeof(float));
+        return ToSingleCore(value);
+    }
+
+    /// <summary>
     /// Returns a single-precision floating point number converted from four bytes at a specified position in a byte array.
     /// </summary>
     /// <param name="value">An array of bytes.</param>
     /// <param name="startIndex">The starting position within value.</param>
     /// <returns>A single-precision floating point number formed by four bytes beginning at <paramref name="startIndex"/>.</returns>
-    public static float ToSingle(byte[] value, int startIndex)
-    {
-        BitConverterServices.ValidateToArguments(value, startIndex, 4);
-
-        return BitConverterEx.Int32BitsToSingle(ToInt32(value, startIndex));
-    }
+    public static float ToSingle(byte[] value, int startIndex) =>
+        ToSingleCore(
+            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(float)));
 
     /// <summary>
     /// Returns a single-precision floating point number converted from four bytes of a byte array.
@@ -469,17 +581,25 @@ public sealed class BigEndianBitConverter : IBitConverter
     public static float ToSingle(byte[] value) => ToSingle(value, 0);
 
     /// <summary>
+    /// Returns a double-precision floating point number converted from eight bytes of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A double-precision floating point number formed by eight bytes of a specified span.</returns>
+    public static double ToDouble(ReadOnlySpan<byte> value)
+    {
+        BitConverterServices.ValidateToArguments(value, sizeof(double));
+        return ToDoubleCore(value);
+    }
+
+    /// <summary>
     /// Returns a double-precision floating point number converted from eight bytes at a specified position in a byte array.
     /// </summary>
     /// <param name="value">An array of bytes.</param>
     /// <param name="startIndex">The starting position within value.</param>
     /// <returns>A double-precision floating point number formed by eight bytes beginning at <paramref name="startIndex"/>.</returns>
-    public static double ToDouble(byte[] value, int startIndex)
-    {
-        BitConverterServices.ValidateToArguments(value, startIndex, 8);
-
-        return BitConverter.Int64BitsToDouble(ToInt64(value, startIndex));
-    }
+    public static double ToDouble(byte[] value, int startIndex) =>
+        ToDoubleCore(
+            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(double)));
 
     /// <summary>
     /// Returns a double-precision floating point number converted from eight bytes of a byte array.
@@ -489,22 +609,25 @@ public sealed class BigEndianBitConverter : IBitConverter
     public static double ToDouble(byte[] value) => ToDouble(value, 0);
 
     /// <summary>
+    /// Returns a decimal number converted from sixteen bytes of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns>A decimal number formed by sixteen of a specified span.</returns>
+    public static decimal ToDecimal(ReadOnlySpan<byte> value)
+    {
+        BitConverterServices.ValidateToArguments(value, sizeof(decimal));
+        return ToDecimalCore(value);
+    }
+
+    /// <summary>
     /// Returns a decimal number converted from sixteen bytes at a specified position in a byte array.
     /// </summary>
     /// <param name="value">An array of bytes.</param>
     /// <param name="startIndex">The starting position within value.</param>
     /// <returns>A decimal number formed by sixteen bytes beginning at <paramref name="startIndex"/>.</returns>
-    public static decimal ToDecimal(byte[] value, int startIndex)
-    {
-        BitConverterServices.ValidateToArguments(value, startIndex, 16);
-
-        var bits = new int[4];
-
-        for (int i = 0; i < bits.Length; ++i)
-            bits[3 - i] = ToInt32(value, startIndex + i * sizeof(int));
-
-        return new decimal(bits);
-    }
+    public static decimal ToDecimal(byte[] value, int startIndex) =>
+        ToDecimalCore(
+            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(decimal)));
 
     /// <summary>
     /// Returns a decimal number converted from sixteen bytes of a byte array.
@@ -514,15 +637,28 @@ public sealed class BigEndianBitConverter : IBitConverter
     public static decimal ToDecimal(byte[] value) => ToDecimal(value, 0);
 
     /// <summary>
-    /// Returns a Boolean value converted from one byte at a specified position in a byte array.
+    /// Returns a <see cref="Boolean"/> value converted from the first byte of a specified span.
+    /// </summary>
+    /// <param name="value">An array of bytes.</param>
+    /// <returns><c>true</c> if the first byte of a specified span is nonzero; otherwise, <c>false</c>.</returns>
+    public static bool ToBoolean(ReadOnlySpan<byte> value)
+    {
+        BitConverterServices.ValidateToArguments(value, sizeof(bool));
+        return BitConverterServices.ToBooleanCore(value);
+    }
+
+    /// <summary>
+    /// Returns a <see cref="Boolean"/> value converted from one byte at a specified position in a byte array.
     /// </summary>
     /// <param name="value">An array of bytes.</param>
     /// <param name="startIndex">The starting position within value.</param>
     /// <returns><c>true</c> if the byte at startIndex in value is nonzero; otherwise, <c>false</c>.</returns>
-    public static bool ToBoolean(byte[] value, int startIndex) => BitConverterServices.ToBoolean(value, startIndex);
+    public static bool ToBoolean(byte[] value, int startIndex) =>
+        BitConverterServices.ToBooleanCore(
+            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(bool)));
 
     /// <summary>
-    /// Returns a <see cref="Boolean"/> value converted from the first byte of a byte array.
+    /// Returns a Boolean value converted from the first byte of a byte array.
     /// </summary>
     /// <param name="value">An array of bytes.</param>
     /// <returns><c>true</c> if the first byte of a byte array is nonzero; otherwise, <c>false</c>.</returns>
@@ -590,6 +726,28 @@ public sealed class BigEndianBitConverter : IBitConverter
 
     byte[] IBitConverter.GetBytes(bool value) => GetBytes(value);
 
+    ushort IBitConverter.ToUInt16(ReadOnlySpan<byte> value) => ToUInt16(value);
+
+    short IBitConverter.ToInt16(ReadOnlySpan<byte> value) => ToInt16(value);
+
+    int IBitConverter.ToInt32(ReadOnlySpan<byte> value) => ToInt32(value);
+
+    uint IBitConverter.ToUInt32(ReadOnlySpan<byte> value) => ToUInt32(value);
+
+    long IBitConverter.ToInt64(ReadOnlySpan<byte> value) => ToInt64(value);
+
+    ulong IBitConverter.ToUInt64(ReadOnlySpan<byte> value) => ToUInt64(value);
+
+    float IBitConverter.ToSingle(ReadOnlySpan<byte> value) => ToSingle(value);
+
+    double IBitConverter.ToDouble(ReadOnlySpan<byte> value) => ToDouble(value);
+
+    decimal IBitConverter.ToDecimal(ReadOnlySpan<byte> value) => ToDecimal(value);
+
+    bool IBitConverter.ToBoolean(ReadOnlySpan<byte> value) => ToBoolean(value);
+
+    #region Compatibility
+
     ushort IBitConverter.ToUInt16(byte[] value, int startIndex) => ToUInt16(value, startIndex);
 
     short IBitConverter.ToInt16(byte[] value, int startIndex) => ToInt16(value, startIndex);
@@ -629,6 +787,8 @@ public sealed class BigEndianBitConverter : IBitConverter
     decimal IBitConverter.ToDecimal(byte[] value) => ToDecimal(value);
 
     bool IBitConverter.ToBoolean(byte[] value) => ToBoolean(value);
+
+    #endregion
 
     #endregion
 
