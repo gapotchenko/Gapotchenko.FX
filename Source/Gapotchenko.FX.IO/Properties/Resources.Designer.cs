@@ -61,6 +61,24 @@ namespace Gapotchenko.FX.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Non-negative number required..
+        /// </summary>
+        internal static string ArgumentOutOfRange_NonNegativeNumberRequired {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_NonNegativeNumberRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Must not be greater than the length of the buffer..
+        /// </summary>
+        internal static string ArgumentOutOfRange_NotGreaterThanBufferLength {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_NotGreaterThanBufferLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Path &apos;{0}&apos; points to a directory instead of file and thus cannot be enlisted in the file transaction..
         /// </summary>
         internal static string PathPointsToDirectoryNotFileTX {

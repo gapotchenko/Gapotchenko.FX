@@ -63,9 +63,9 @@ namespace Gapotchenko.FX.Memory.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Non-negative number required..
         /// </summary>
-        internal static string NonNegativeNumberRequired {
+        internal static string ArgumentOutOfRangeException_NonNegativeNumberRequired {
             get {
-                return ResourceManager.GetString("NonNegativeNumberRequired", resourceCulture);
+                return ResourceManager.GetString("ArgumentOutOfRangeException_NonNegativeNumberRequired", resourceCulture);
             }
         }
         

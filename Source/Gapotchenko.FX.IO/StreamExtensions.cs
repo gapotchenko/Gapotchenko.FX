@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.IO;
 
 /// <summary>
-/// <see cref="Stream"/> extensions.
+/// Provides extension methods for <see cref="Stream"/>.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class StreamExtensions
@@ -30,7 +30,7 @@ public static class StreamExtensions
         byte[] buffer = new byte[bufferSize];
         while (count != 0)
         {
-            int bytesToRead = (int)(Math.Min(bufferSize, count));
+            int bytesToRead = (int)Math.Min(bufferSize, count);
 
             int readBytes = source.Read(buffer, 0, bytesToRead);
             if (readBytes == 0)

@@ -10,9 +10,9 @@ static class StreamHelpers
         if (buffer == null)
             throw new ArgumentNullException(nameof(buffer));
         if (offset < 0)
-            throw new ArgumentOutOfRangeException(nameof(offset), Resources.NonNegativeNumberRequired);
+            throw new ArgumentOutOfRangeException(nameof(offset), Resources.ArgumentOutOfRangeException_NonNegativeNumberRequired);
         if (count < 0)
-            throw new ArgumentOutOfRangeException(nameof(count), Resources.NonNegativeNumberRequired);
+            throw new ArgumentOutOfRangeException(nameof(count), Resources.ArgumentOutOfRangeException_NonNegativeNumberRequired);
         if (buffer.Length - offset < count)
         {
             throw new ArgumentException(
@@ -24,7 +24,7 @@ static class StreamHelpers
     public static void ValidatePosition(long value)
     {
         if (value < 0)
-            throw new ArgumentOutOfRangeException(nameof(value), Resources.NonNegativeNumberRequired);
+            throw new ArgumentOutOfRangeException(nameof(value), Resources.ArgumentOutOfRangeException_NonNegativeNumberRequired);
     }
 
     public static int SetPosition(long value)
