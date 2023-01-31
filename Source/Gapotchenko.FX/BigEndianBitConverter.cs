@@ -6,7 +6,7 @@ namespace Gapotchenko.FX;
 /// Converts base data types to a span or an array of bytes, and a span of bytes to base data types in big-endian byte order.
 /// </summary>
 /// <remarks>
-/// <seealso cref="LittleEndianBitConverter"/> is a little-endian counterpart of <see cref="BigEndianBitConverter"/>.
+/// <seealso cref="LittleEndianBitConverter"/> is a little-endian counterpart of the <see cref="BigEndianBitConverter"/>.
 /// </remarks>
 public sealed class BigEndianBitConverter : IBitConverter
 {
@@ -52,7 +52,7 @@ public sealed class BigEndianBitConverter : IBitConverter
         var bits = new int[n];
 
         for (int i = 0; i < n; ++i)
-            bits[3 - i] = ToInt32Core(value.Slice(i * sizeof(int)));
+            bits[n - 1 - i] = ToInt32Core(value.Slice(i * sizeof(int)));
 
         return new decimal(bits);
     }

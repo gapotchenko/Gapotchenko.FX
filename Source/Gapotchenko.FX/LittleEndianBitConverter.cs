@@ -6,7 +6,7 @@ namespace Gapotchenko.FX;
 /// Converts base data types to a span or an array of bytes, and a span of bytes to base data types in little-endian byte order.
 /// </summary>
 /// <remarks>
-/// <seealso cref="BigEndianBitConverter"/> is a big-endian counterpart of <see cref="LittleEndianBitConverter"/>.
+/// <seealso cref="BigEndianBitConverter"/> is a big-endian counterpart of the <see cref="LittleEndianBitConverter"/>.
 /// </remarks>
 public sealed class LittleEndianBitConverter : IBitConverter
 {
