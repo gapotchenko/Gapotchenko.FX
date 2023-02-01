@@ -277,7 +277,7 @@ public static class StreamPolyfills
 #else
 
 #if !TFF_STREAM_READEXACTLY
-        static int ReadAtLeastCore(Stream stream, ArraySegment<byte> buffer, int minimumBytes, bool throwOnEndOfStream)
+    static int ReadAtLeastCore(Stream stream, ArraySegment<byte> buffer, int minimumBytes, bool throwOnEndOfStream)
     {
         Debug.Assert(minimumBytes <= buffer.Count);
 
