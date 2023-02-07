@@ -200,7 +200,7 @@ public sealed class UriQueryBuilder
     }
 
     /// <summary>
-    /// Removes all the characters from a query string in this instance.
+    /// Removes all the characters from the query string in this instance.
     /// </summary>
     /// <returns>The <see cref="UriQueryBuilder"/> instance.</returns>
     public UriQueryBuilder Clear()
