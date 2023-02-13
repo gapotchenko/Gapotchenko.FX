@@ -204,8 +204,7 @@ public static partial class EnumerableEx
         if (ReferenceEquals(source, value))
             return true;
 
-        if (comparer == null)
-            comparer = EqualityComparer<TSource>.Default;
+        comparer ??= EqualityComparer<TSource>.Default;
 
         value = value.Memoize();
         bool match = true;

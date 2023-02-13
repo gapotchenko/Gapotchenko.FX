@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-#if !TFF_ENUMERABLE_DISTINCTBY
+﻿#if !TFF_ENUMERABLE_DISTINCTBY
 
 namespace Gapotchenko.FX.Linq;
 
@@ -15,7 +13,7 @@ sealed class SelectedEqualityComparer<TSource, TResult> : IEqualityComparer<TSou
     readonly Func<TSource, TResult> m_Selector;
     readonly IEqualityComparer<TResult> m_Comparer;
 
-    public bool Equals([AllowNull] TSource x, [AllowNull] TSource y) =>
+    public bool Equals(TSource? x, TSource? y) =>
         (x is null && y is null) ||
         (x is not null) &&
         (y is not null) &&
