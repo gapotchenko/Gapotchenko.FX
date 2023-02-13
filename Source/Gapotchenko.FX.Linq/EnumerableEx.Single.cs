@@ -49,7 +49,7 @@ partial class EnumerableEx
 #endif
 
 #if !TFF_ENUMERABLE_SINGLEORDEFAULT_VALUE
-    static TSource SingleOrDefaultCore<TSource>(this IEnumerable<TSource> source, Func<TSource, bool>? predicate, TSource defaultValue)
+    static TSource SingleOrDefaultCore<TSource>(IEnumerable<TSource> source, Func<TSource, bool>? predicate, TSource defaultValue)
     {
         if (source == null)
             throw new ArgumentNullException(nameof(source));
