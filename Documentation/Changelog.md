@@ -12,6 +12,7 @@ Release date: not released yet
 - Added polyfill for required properties introduced in C# 11.0
 - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
 - Added `ExceptBy`, `IntersectBy` and `UnionBy` LINQ polyfills for `IEnumerable<T>`
+- Added `Order` and `OrderDescending` LINQ polyfills for `IEnumerable<T>`
 - Added polyfill for `System.ArraySegment<T>.Slice` method
 - Added polyfill for `System.IO.Path.GetRelativePath` method
 - Added polyfill for `System.IO.Path.TrimEndingDirectorySeparator` method
