@@ -96,7 +96,7 @@ public struct EvaluateOnce<T>
     void OnSerializing(StreamingContext context)
     {
         // Force evaluation before the value is serialized.
-        Fn.Ignore(Value);
+        _ = Value;
     }
 
     [MaybeNull]

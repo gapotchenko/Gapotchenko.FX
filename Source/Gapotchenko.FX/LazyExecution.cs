@@ -3,7 +3,7 @@
 namespace Gapotchenko.FX;
 
 /// <summary>
-/// Provides a strategy which delays the execution of an action until its explicitly asserted with <see cref="EnsureExecuted"/> method.
+/// Provides a strategy which delays the execution of an action until it is explicitly asserted with <see cref="EnsureExecuted"/> method.
 /// </summary>
 /// <remarks>
 /// <see cref="LazyExecution"/> is not thread-safe.

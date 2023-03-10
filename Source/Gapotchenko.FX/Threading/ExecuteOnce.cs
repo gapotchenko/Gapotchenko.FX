@@ -4,7 +4,7 @@ using System.Security.Permissions;
 namespace Gapotchenko.FX.Threading;
 
 /// <summary>
-/// Provides a thread-safe strategy which delays the execution of an action until its explicitly asserted with <see cref="EnsureExecuted"/> method.
+/// Provides a thread-safe strategy which delays the execution of an action until it is explicitly asserted with <see cref="EnsureExecuted"/> method.
 /// </summary>
 [DebuggerDisplay("IsExecuted={IsExecuted}")]
 #if TFF_HOST_PROTECTION
@@ -52,5 +52,5 @@ public struct ExecuteOnce
     /// <summary>
     /// Gets a value indicating whether the action was executed.
     /// </summary>
-    public bool IsExecuted => Volatile.Read(ref m_Action) == null && m_SyncLock != null; // check for _SyncLock is needed to cover uninitialized struct scenario
+    public bool IsExecuted => Volatile.Read(ref m_Action) == null && m_SyncLock != null; // a check for m_SyncLock is needed to cover the uninitialized struct scenario
 }
