@@ -78,7 +78,7 @@ public struct EvaluateOnce<T>
             Thread.MemoryBarrier();
             return
                 m_ValueFactory == null &&
-                m_SyncLock != null; // check for m_SyncLock is needed to cover uninitialized struct scenario
+                m_SyncLock != null; // a check for m_SyncLock is needed to cover the uninitialized struct scenario
         }
     }
 
