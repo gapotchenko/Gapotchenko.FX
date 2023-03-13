@@ -657,7 +657,7 @@ public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
     public string Pad(ReadOnlySpan<char> s) => PadCore(s);
 
     /// <summary>
-    /// Adds padding the encoded string.
+    /// Adds padding to the encoded string.
     /// </summary>
     /// <param name="s">The encoded string to add padding to.</param>
     /// <returns>The encoded string with added padding.</returns>

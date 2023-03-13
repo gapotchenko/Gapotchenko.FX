@@ -63,7 +63,7 @@ public interface ITextDataEncoding : IDataEncoding
     Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.None);
 
     /// <summary>
-    /// Adds padding the specified encoded read-only character span.
+    /// Adds padding to the specified encoded read-only character span.
     /// </summary>
     /// <remarks>
     /// In some encodings, the length of an encoded string representation must be a multiple of the predefined number of characters.
