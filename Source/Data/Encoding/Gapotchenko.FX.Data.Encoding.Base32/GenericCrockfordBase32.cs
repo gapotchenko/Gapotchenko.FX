@@ -249,10 +249,12 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
         int psi = -1; // previous symbol index
 
         var alphabet = Alphabet;
+        bool isCaseSensitive = alphabet.IsCaseSensitive;
+        var paddingChar = PaddingChar;
 
         foreach (var c in s)
         {
-            if (!checksum && c == PaddingChar)
+            if (!checksum && ImplementationFacilities.CharEqual(c, paddingChar, isCaseSensitive))
                 continue;
 
             int si = alphabet.IndexOf(c); // symbol index lookup
@@ -466,10 +468,11 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
         int psi = -1; // previous symbol index
 
         var alphabet = Alphabet;
+        var paddingChar = PaddingChar;
 
         foreach (var c in s)
         {
-            if (!checksum && c == PaddingChar)
+            if (!checksum && ImplementationFacilities.CharEqual(c, paddingChar, alphabet.IsCaseSensitive))
                 continue;
 
             int si = alphabet.IndexOf(c); // symbol index lookup
@@ -607,10 +610,12 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
         int psi = -1; // previous symbol index
 
         var alphabet = Alphabet;
+        bool isCaseSensitive = alphabet.IsCaseSensitive;
+        var paddingChar = PaddingChar;
 
         foreach (var c in s)
         {
-            if (!checksum && c == PaddingChar)
+            if (!checksum && ImplementationFacilities.CharEqual(c, paddingChar, isCaseSensitive))
                 continue;
 
             int si = alphabet.IndexOf(c); // symbol index lookup

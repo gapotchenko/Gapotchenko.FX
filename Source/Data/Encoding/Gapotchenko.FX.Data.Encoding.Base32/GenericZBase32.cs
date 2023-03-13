@@ -77,16 +77,7 @@ public abstract class GenericZBase32 : GenericBase32
             output.Write(m_Buffer, 0, i);
         }
 
-        char Capitalize(char c)
-        {
-            var options = m_Options;
-            if ((options & DataEncodingOptions.Lowercase) != 0)
-                return char.ToLowerInvariant(c);
-            else if ((options & DataEncodingOptions.Uppercase) != 0)
-                return char.ToUpperInvariant(c);
-            else
-                return c;
-        }
+        char Capitalize(char c) => ImplementationFacilities.Capitalize(c, m_Options);
     }
 
     sealed class ZBase32DecoderContext : DecoderContext

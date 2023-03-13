@@ -241,16 +241,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
             }
         }
 
-        char Capitalize(char c)
-        {
-            var options = m_Options;
-            if ((options & DataEncodingOptions.Lowercase) != 0)
-                return char.ToLowerInvariant(c);
-            else if ((options & DataEncodingOptions.Uppercase) != 0)
-                return char.ToUpperInvariant(c);
-            else
-                return c;
-        }
+        char Capitalize(char c) => ImplementationFacilities.Capitalize(c, m_Options);
     }
 
     sealed class DecoderContext : CodecContextBase, IDecoderContext
@@ -281,7 +272,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
 
             foreach (var c in input)
             {
-                if (c == paddingChar)
+                if (ImplementationFacilities.CharEqual(c, paddingChar, m_Alphabet.IsCaseSensitive))
                 {
                     if ((m_Options & DataEncodingOptions.Padding) != 0)
                         ValidatePaddingChar();

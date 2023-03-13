@@ -8,7 +8,7 @@ using Encoding = System.Text.Encoding;
 /// <summary>
 /// The base class for <see cref="ITextDataEncoding"/> implementations.
 /// </summary>
-public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
+public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
 {
     /// <summary>
     /// Initializes a new instance of <see cref="TextDataEncoding"/> class.
@@ -20,14 +20,15 @@ public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
     /// <inheritdoc/>
     public abstract bool IsCaseSensitive { get; }
 
+    const DataEncodingOptions CaseOptionsMask = DataEncodingOptions.Lowercase | DataEncodingOptions.Uppercase;
+
     /// <inheritdoc/>
     protected override DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
     {
         #region Case
 
-        const DataEncodingOptions CaseMask = DataEncodingOptions.Lowercase | DataEncodingOptions.Uppercase;
-        var @case = options & CaseMask;
-        if (@case == CaseMask)
+        var @case = options & CaseOptionsMask;
+        if (@case == CaseOptionsMask)
         {
             throw new ArgumentException(
                 string.Format(

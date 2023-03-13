@@ -151,16 +151,7 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
             }
         }
 
-        char Capitalize(char c)
-        {
-            var options = m_Options;
-            if ((options & DataEncodingOptions.Lowercase) != 0)
-                return char.ToLowerInvariant(c);
-            else if ((options & DataEncodingOptions.Uppercase) != 0)
-                return char.ToUpperInvariant(c);
-            else
-                return c;
-        }
+        char Capitalize(char c) => ImplementationFacilities.Capitalize(c, m_Options);
     }
 
     sealed class DecoderContext : CodecContextBase, IDecoderContext

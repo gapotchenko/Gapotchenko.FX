@@ -237,11 +237,12 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
             }
 
             var alphabet = m_Alphabet;
+            bool isCaseSensitive = alphabet.IsCaseSensitive;
             var paddingChar = m_PaddingChar;
 
             foreach (var c in input)
             {
-                if (c == paddingChar)
+                if (ImplementationFacilities.CharEqual(c, paddingChar, isCaseSensitive))
                 {
                     if ((m_Options & DataEncodingOptions.Padding) != 0)
                         ValidatePaddingChar();
