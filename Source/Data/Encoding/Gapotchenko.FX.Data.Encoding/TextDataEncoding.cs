@@ -660,7 +660,7 @@ public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
     /// Adds padding to the encoded string.
     /// </summary>
     /// <param name="s">The encoded string to add padding to.</param>
-    /// <returns>The encoded string with added padding.</returns>
+    /// <returns>An encoded string with added padding.</returns>
     protected virtual string PadCore(ReadOnlySpan<char> s) => s.ToString();
 
     /// <inheritdoc/>
@@ -670,7 +670,7 @@ public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
     /// Removes padding from the encoded string.
     /// </summary>
     /// <param name="s">The encoded string to remove padding from.</param>
-    /// <returns>The encoded string with removed padding.</returns>
+    /// <returns>An encoded string with removed padding.</returns>
     protected virtual ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => s;
 
     /// <inheritdoc/>

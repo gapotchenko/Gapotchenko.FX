@@ -70,14 +70,14 @@ public interface ITextDataEncoding : IDataEncoding
     /// This method concatenates the specified character span with padding characters to meet that requirement and returns the resulting string.
     /// </remarks>
     /// <param name="s">The read-only character span to add padding to.</param>
-    /// <returns>The encoded string with added padding.</returns>
+    /// <returns>An encoded string with added padding.</returns>
     string Pad(ReadOnlySpan<char> s);
 
     /// <summary>
     /// Removes padding from the specified encoded read-only character span.
     /// </summary>
     /// <param name="s">The read-only character span to remove padding from.</param>
-    /// <returns>The read-only character span with removed padding.</returns>
+    /// <returns>A read-only character span with removed padding.</returns>
     ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s);
 
     /// <summary>
