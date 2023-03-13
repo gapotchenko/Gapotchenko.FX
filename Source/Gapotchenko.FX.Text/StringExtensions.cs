@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Text;
 
 /// <summary>
-/// <see cref="String"/> extensions.
+/// Provides polyfill methods for <see cref="string"/> type.
 /// </summary>
 public static class StringExtensions
 {
@@ -19,7 +19,11 @@ public static class StringExtensions
 #if TFF_STRING_OPWITH_CHAR
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
-    public static bool StartsWith(this string s, char value)
+    public static bool StartsWith(
+#if !TFF_STRING_OPWITH_CHAR
+        this
+#endif
+        string s, char value)
     {
         if (s == null)
             throw new ArgumentNullException(nameof(s));
@@ -41,7 +45,11 @@ public static class StringExtensions
 #if TFF_STRING_OPWITH_CHAR
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
-    public static bool EndsWith(this string s, char value)
+    public static bool EndsWith(
+#if !TFF_STRING_OPWITH_CHAR
+        this
+#endif
+        string s, char value)
     {
         if (s == null)
             throw new ArgumentNullException(nameof(s));
@@ -64,7 +72,11 @@ public static class StringExtensions
 #if TFF_STRING_CONTAINS_CHAR
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
-    public static bool Contains(this string s, char value)
+    public static bool Contains(
+#if !TFF_STRING_CONTAINS_CHAR
+        this
+#endif
+        string s, char value)
     {
         if (s == null)
             throw new ArgumentNullException(nameof(s));
