@@ -151,7 +151,7 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
             }
         }
 
-        char Capitalize(char c) => ImplementationFacilities.Capitalize(c, m_Options);
+        char Capitalize(char c) => TextDataEncoding.Capitalize(c, m_Options);
     }
 
     sealed class DecoderContext : CodecContextBase, IDecoderContext

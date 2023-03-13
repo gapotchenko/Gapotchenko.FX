@@ -242,7 +242,7 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
 
             foreach (var c in input)
             {
-                if (ImplementationFacilities.CharEqual(c, paddingChar, isCaseSensitive))
+                if (CharEqual(c, paddingChar, isCaseSensitive))
                 {
                     if ((m_Options & DataEncodingOptions.Padding) != 0)
                         ValidatePaddingChar();

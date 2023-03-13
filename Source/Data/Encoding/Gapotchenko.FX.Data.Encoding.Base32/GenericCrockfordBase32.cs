@@ -255,7 +255,7 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
 
         foreach (var c in s)
         {
-            if (!checksum && ImplementationFacilities.CharEqual(c, paddingChar, isCaseSensitive))
+            if (!checksum && CharEqual(c, paddingChar, isCaseSensitive))
                 continue;
 
             int si = alphabet.IndexOf(c); // symbol index lookup
@@ -474,7 +474,7 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
 
         foreach (var c in s)
         {
-            if (!checksum && ImplementationFacilities.CharEqual(c, paddingChar, alphabet.IsCaseSensitive))
+            if (!checksum && CharEqual(c, paddingChar, alphabet.IsCaseSensitive))
                 continue;
 
             int si = alphabet.IndexOf(c); // symbol index lookup
@@ -618,7 +618,7 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
 
         foreach (var c in s)
         {
-            if (!checksum && ImplementationFacilities.CharEqual(c, paddingChar, isCaseSensitive))
+            if (!checksum && CharEqual(c, paddingChar, isCaseSensitive))
                 continue;
 
             int si = alphabet.IndexOf(c); // symbol index lookup
