@@ -80,7 +80,7 @@ public sealed class TextDataEncodingAlphabet
 
         var table = new byte[LookupTableSize];
 
-#if NETCOREAPP || (NETSTANDARD && !NETSTANDARD2_0)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
         Array.Fill(table, (byte)0xff);
 #else
         for (int i = 0; i < LookupTableSize; ++i)
@@ -128,6 +128,7 @@ public sealed class TextDataEncodingAlphabet
         var dictionary = new Dictionary<char, int>(symbolCount);
 
         for (int i = 0; i < symbolCount; ++i)
+        {
             foreach (var c in EnumerateSymbolVariations(symbols[i], caseSensitive, synonyms))
             {
                 if (dictionary.ContainsKey(c))
@@ -135,6 +136,7 @@ public sealed class TextDataEncodingAlphabet
 
                 dictionary[c] = (byte)i;
             }
+        }
 
         return dictionary;
     }
@@ -171,10 +173,10 @@ public sealed class TextDataEncodingAlphabet
         }
         else
         {
-            char c1 = char.ToLowerInvariant(symbol);
+            char c1 = char.ToUpperInvariant(symbol);
             yield return c1;
 
-            char c2 = char.ToUpperInvariant(symbol);
+            char c2 = char.ToLowerInvariant(symbol);
             if (c2 != c1)
                 yield return c2;
         }

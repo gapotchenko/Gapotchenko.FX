@@ -223,7 +223,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
             {
                 FlushFinalBlock();
 
-                if ((m_Options & DataEncodingOptions.NoOwnership) == 0)
+                if ((m_Options & DataEncodingOptions.LeaveOpen) == 0)
                     m_TextWriter.Dispose();
             }
         }
@@ -233,7 +233,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         {
             await FlushFinalBlockAsync().ConfigureAwait(false);
 
-            if ((m_Options & DataEncodingOptions.NoOwnership) == 0)
+            if ((m_Options & DataEncodingOptions.LeaveOpen) == 0)
                 await m_TextWriter.DisposeAsync().ConfigureAwait(false);
         }
 #endif
@@ -430,7 +430,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         {
             if (disposing)
             {
-                if ((m_Options & DataEncodingOptions.NoOwnership) == 0)
+                if ((m_Options & DataEncodingOptions.LeaveOpen) == 0)
                     m_TextReader.Dispose();
             }
         }

@@ -12,12 +12,12 @@ public enum DataEncodingOptions
     None = 0,
 
     /// <summary>
-    /// Inhibit padding generation in the encoding operation.
+    /// Inhibit generation of padding during the encoding operation.
     /// </summary>
     NoPadding = 1 << 0,
 
     /// <summary>
-    /// Inhibit padding generation in the encoding operation.
+    /// Inhibit generation of padding during the encoding operation.
     /// </summary>
     [Obsolete($"Use {nameof(NoPadding)} instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -34,10 +34,18 @@ public enum DataEncodingOptions
     Padding = 1 << 1,
 
     /// <summary>
-    /// Do not perform lifetime management of an underlying data object such as <see cref="Stream"/>, <see cref="TextReader"/> or <see cref="TextWriter"/>.
+    /// Leave an underlying data object such as <see cref="Stream"/>, <see cref="TextReader"/>, or <see cref="TextWriter"/> open.
     /// This option only applies to <see cref="IDataEncoding.CreateEncoder(Stream, DataEncodingOptions)"/>, <see cref="IDataEncoding.CreateDecoder(Stream, DataEncodingOptions)"/> and similar operations.
     /// </summary>
-    NoOwnership = 1 << 2,
+    LeaveOpen = 1 << 2,
+
+    /// <summary>
+    /// Leave an underlying data object such as <see cref="Stream"/>, <see cref="TextReader"/>, or <see cref="TextWriter"/> open.
+    /// This option only applies to <see cref="IDataEncoding.CreateEncoder(Stream, DataEncodingOptions)"/>, <see cref="IDataEncoding.CreateDecoder(Stream, DataEncodingOptions)"/> and similar operations.
+    /// </summary>
+    [Obsolete($"Use {nameof(LeaveOpen)} instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    NoOwnership = LeaveOpen,
 
     /// <summary>
     /// <para>

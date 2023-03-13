@@ -13,13 +13,14 @@ partial class TextDataEncoding
         /// <param name="c">The character to capitalize.</param>
         /// <param name="options">The options.</param>
         /// <returns>The capitalized character.</returns>
+        /// <exception cref="ArgumentException">Invalid data encoding <paramref name="options"/>.</exception>
         public static char Capitalize(char c, DataEncodingOptions options) =>
             (options & CaseOptionsMask) switch
             {
                 0 => c,
                 DataEncodingOptions.Lowercase => char.ToLowerInvariant(c),
                 DataEncodingOptions.Uppercase => char.ToUpperInvariant(c),
-                _ => throw new ArgumentException("Data encoding options are invalid.", nameof(options))
+                _ => throw new ArgumentException("Invalid data encoding options.", nameof(options))
             };
 
         /// <summary>
@@ -28,14 +29,14 @@ partial class TextDataEncoding
         /// </summary>
         /// <param name="a">The first character.</param>
         /// <param name="b">The second character.</param>
-        /// <param name="isCaseSensitive">The character comparison mode.</param>
+        /// <param name="caseSensitive">The character comparison mode.</param>
         /// <returns>
         /// <see langword="true"/> if the characters are the same;
         /// otherwise, <see langword="false"/>.
         /// </returns>
-        public static bool CharEqual(char a, char b, bool isCaseSensitive)
+        public static bool CharEqual(char a, char b, bool caseSensitive)
         {
-            if (isCaseSensitive)
+            if (caseSensitive)
             {
                 return a == b;
             }
