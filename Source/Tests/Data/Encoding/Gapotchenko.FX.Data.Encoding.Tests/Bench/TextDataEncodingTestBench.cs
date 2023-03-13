@@ -49,6 +49,10 @@ public static class TextDataEncodingTestBench
         DataEncodingOptions options = DataEncodingOptions.None,
         Encoding? textEncoding = null)
     {
+        // -----------------------------------------------------------------
+        // Parameters contract validation
+        // -----------------------------------------------------------------
+
         if (dataEncoding == null)
             throw new ArgumentNullException(nameof(dataEncoding));
         if (raw == null)
@@ -60,8 +64,7 @@ public static class TextDataEncodingTestBench
         // Parameters normalization
         // -----------------------------------------------------------------
 
-        if (textEncoding == null)
-            textEncoding = Encoding.UTF8;
+        textEncoding ??= Encoding.UTF8;
 
         // -----------------------------------------------------------------
         // Data preparation
@@ -83,6 +86,15 @@ public static class TextDataEncodingTestBench
                 Base16.GetString(raw, DataEncodingOptions.Indent),
                 Base16.GetString(actualDecoded, DataEncodingOptions.Indent),
                 "Decoding error.");
+        }
+
+        if (!dataEncoding.IsCaseSensitive)
+        {
+            actualDecoded = dataEncoding.GetBytes(actualEncoded.ToUpperInvariant().AsSpan(), options);
+            Assert.IsTrue(raw.SequenceEqual(actualDecoded), "Decoding error (uppercase)");
+
+            actualDecoded = dataEncoding.GetBytes(actualEncoded.ToLowerInvariant().AsSpan(), options);
+            Assert.IsTrue(raw.SequenceEqual(actualDecoded), "Decoding error (lowercase)");
         }
 
         // -----------------------------------------------------------------
@@ -127,7 +139,7 @@ public static class TextDataEncodingTestBench
         Assert.IsTrue(raw.SequenceEqual(actualDecodedBytes));
 
         // -----------------------------------------------------------------
-        // Check maximum count calculations
+        // Check calculations of a maximum character count
         // -----------------------------------------------------------------
 
         int maxCharCount = dataEncoding.GetMaxCharCount(raw.Length, options);
