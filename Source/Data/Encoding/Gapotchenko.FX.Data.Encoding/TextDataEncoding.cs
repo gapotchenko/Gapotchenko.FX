@@ -584,7 +584,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         int GetMaxCharCount(int byteCount) =>
             m_Encoding.GetMaxCharCount(
                 byteCount,
-                (m_Options & ~DataEncodingOptions.NoPadding) | DataEncodingOptions.Padding | DataEncodingOptions.Wrap | DataEncodingOptions.Indent);
+                m_Options & ~DataEncodingOptions.NoPadding | DataEncodingOptions.Padding | DataEncodingOptions.Wrap | DataEncodingOptions.Indent);
 
         void FillBuffer(int count)
         {
@@ -861,11 +861,11 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
 
     /// <summary>
     /// Determines whether the specified characters are the same
-    /// when compared using the specified comparison mode.
+    /// when compared using the specified case sensitivity.
     /// </summary>
     /// <param name="a">The first character.</param>
     /// <param name="b">The second character.</param>
-    /// <param name="caseSensitive">The character comparison mode.</param>
+    /// <param name="caseSensitive">The case sensitivity.</param>
     /// <returns>
     /// <see langword="true"/> if the characters are the same;
     /// otherwise, <see langword="false"/>.
