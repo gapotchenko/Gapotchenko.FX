@@ -1,5 +1,6 @@
 ﻿using Gapotchenko.FX.Text;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Gapotchenko.FX.Data.Encoding;
@@ -239,15 +240,14 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         }
 #endif
 
-#nullable disable
         readonly TextDataEncoding m_Encoding;
         readonly TextWriter m_TextWriter;
         readonly IEncoderContext m_Context;
         readonly DataEncodingOptions m_Options;
 
         readonly int m_BufferSize;
-        StringBuilder m_Buffer;
-        StringWriter m_BufferWriter;
+        StringBuilder? m_Buffer;
+        StringWriter? m_BufferWriter;
         int m_BufferCapacityByteCount;
 
         public override bool CanRead => false;
@@ -311,6 +311,8 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
 
         void EnsureBufferByteCapacity(int byteCount)
         {
+            Debug.Assert(m_Buffer != null);
+
             if (byteCount > m_BufferCapacityByteCount)
             {
                 int capacity = m_Encoding.GetMaxCharCount(byteCount, m_Options) + m_Encoding.Padding;
@@ -358,10 +360,15 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         }
 #endif
 
+        [MemberNotNull(nameof(m_Buffer))]
+        [MemberNotNull(nameof(m_BufferWriter))]
         void EnsureBufferCreated()
         {
             if (m_Buffer != null)
+            {
+                Debug.Assert(m_BufferWriter != null);
                 return;
+            }
 
             m_Buffer = new StringBuilder();
             m_BufferWriter =
@@ -376,7 +383,9 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
             if (m_Buffer == null)
                 return;
 
+            Debug.Assert(m_BufferWriter != null);
             m_BufferWriter.Flush();
+
             if (m_Buffer.Length != 0)
             {
 #if TFF_TEXT_IO_STRINGBUILDER
@@ -393,7 +402,9 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
             if (m_Buffer == null)
                 return;
 
+            Debug.Assert(m_BufferWriter != null);
             m_BufferWriter.Flush();
+
             if (m_Buffer.Length != 0)
             {
 #if TFF_TEXT_IO_STRINGBUILDER
@@ -407,7 +418,6 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
                 m_Buffer.Clear();
             }
         }
-#nullable restore
     }
 
     sealed class DecoderStream : Stream
