@@ -43,7 +43,7 @@ public abstract class GenericZBase32 : GenericBase32
                 s -= BitsPerSymbol;
 
                 int si = (int)Shift(bits, s) & SymbolMask; // symbol index
-                m_Buffer[i++] = alphabet[si]; // map symbol
+                m_Buffer[i++] = Capitalize(alphabet[si]); // map symbol
 
                 if (compress)
                 {
@@ -67,7 +67,7 @@ public abstract class GenericZBase32 : GenericBase32
 
             if ((m_Options & DataEncodingOptions.NoPadding) == 0)
             {
-                var paddingChar = ((GenericZBase32)m_Encoding).PaddingChar;
+                var paddingChar = Capitalize(((GenericZBase32)m_Encoding).PaddingChar);
 
                 while (i < SymbolsPerEncodedBlock)
                     m_Buffer[i++] = paddingChar;
@@ -75,6 +75,17 @@ public abstract class GenericZBase32 : GenericBase32
 
             EmitLineBreak(output);
             output.Write(m_Buffer, 0, i);
+        }
+
+        char Capitalize(char c)
+        {
+            var options = m_Options;
+            if ((options & DataEncodingOptions.Lowercase) != 0)
+                return char.ToLowerInvariant(c);
+            else if ((options & DataEncodingOptions.Uppercase) != 0)
+                return char.ToUpperInvariant(c);
+            else
+                return c;
         }
     }
 
