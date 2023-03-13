@@ -51,7 +51,7 @@ public enum DataEncodingOptions
 
     /// <summary>
     /// <para>
-    /// Produce a wrapped output if the encoding supports it natively.
+    /// Produce a line-wrapped text output if the encoding supports it natively.
     /// </para>
     /// <para>
     /// For example, Base64 encoding handles wrapping by inserting a new line separator for every 76 symbols of the output.
