@@ -56,7 +56,7 @@ static class NativeMethods
     /// Possible error codes include EFAULT, EINVAL, ENOMEM, ENOTDIR, EISDIR, ENOENT, and EPERM.
     /// </returns>
     [DllImport("libc")]
-    public static unsafe extern int sysctl(int[] mib, int lenmib, void* oldp, nint* oldlenp, void* newp, nint newlenp);
+    public static extern unsafe int sysctl(int[] mib, int lenmib, void* oldp, nint* oldlenp, void* newp, nint newlenp);
 
     /// <summary>
     /// Interrupt.

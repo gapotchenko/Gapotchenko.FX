@@ -17,6 +17,10 @@ public static class TextDataEncodingTestBench
         DataEncodingOptions options = DataEncodingOptions.None,
         Encoding? textEncoding = null)
     {
+        // -----------------------------------------------------------------
+        // Parameters contract validation
+        // -----------------------------------------------------------------
+
         if (dataEncoding == null)
             throw new ArgumentNullException(nameof(dataEncoding));
         if (raw == null)
@@ -28,8 +32,7 @@ public static class TextDataEncodingTestBench
         // Parameters normalization
         // -----------------------------------------------------------------
 
-        if (textEncoding == null)
-            textEncoding = Encoding.UTF8;
+        textEncoding ??= Encoding.UTF8;
 
         // -----------------------------------------------------------------
         // Data preparation
@@ -88,13 +91,34 @@ public static class TextDataEncodingTestBench
                 "Decoding error.");
         }
 
-        if (!dataEncoding.IsCaseSensitive)
+        var rawArray = raw.ToArray();
+
+        if (dataEncoding.IsCaseSensitive)
         {
+            // "Lowercase" option cannot be used with a case-sensitive data encoding.
+            Assert.ThrowsException<ArgumentException>(() => dataEncoding.GetString(rawArray, options | DataEncodingOptions.Lowercase));
+
+            // "Uppercase" option cannot be used with a case-sensitive data encoding.
+            Assert.ThrowsException<ArgumentException>(() => dataEncoding.GetString(rawArray, options | DataEncodingOptions.Uppercase));
+        }
+        else
+        {
+            Assert.AreEqual(
+                encoded.ToLowerInvariant(),
+                dataEncoding.GetString(raw, options | DataEncodingOptions.Lowercase),
+                "Encoding error (lowercase).");
+
             actualDecoded = dataEncoding.GetBytes(actualEncoded.ToUpperInvariant().AsSpan(), options);
             Assert.IsTrue(raw.SequenceEqual(actualDecoded), "Decoding error (uppercase)");
 
             actualDecoded = dataEncoding.GetBytes(actualEncoded.ToLowerInvariant().AsSpan(), options);
             Assert.IsTrue(raw.SequenceEqual(actualDecoded), "Decoding error (lowercase)");
+
+            // "Lowercase" and "Uppercase" data encoding options cannot be used simultaneously.
+            Assert.ThrowsException<ArgumentException>(() =>
+                dataEncoding.GetString(
+                    rawArray,
+                    options | DataEncodingOptions.Lowercase | DataEncodingOptions.Uppercase));
         }
 
         // -----------------------------------------------------------------

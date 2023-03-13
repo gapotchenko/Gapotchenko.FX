@@ -36,7 +36,7 @@ public static partial class ArrayEqualityComparer
     /// <param name="x">The first array to compare.</param>
     /// <param name="y">The second array to compare.</param>
     /// <returns><c>true</c> if the specified arrays are equal; otherwise, <c>false</c>.</returns>
-    public new static bool Equals(object? x, object? y)
+    public static new bool Equals(object? x, object? y)
     {
         if (x is null && y is null)
             return true;

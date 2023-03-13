@@ -10,7 +10,7 @@ public sealed class ExpressionEqualityComparer : EqualityComparer<Expression>
     /// <summary>
     /// Returns a default equality comparer for LINQ expressions.
     /// </summary>
-    public new static ExpressionEqualityComparer Default { get; } = new ExpressionEqualityComparer();
+    public static new ExpressionEqualityComparer Default { get; } = new ExpressionEqualityComparer();
 
     /// <summary>
     /// Determines whether two <see cref="Expression"/> objects are equal.

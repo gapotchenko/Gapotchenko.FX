@@ -29,7 +29,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// </summary>
     /// <param name="data">The byte span to encode.</param>
     /// <returns>The string with encoded data.</returns>
-    public new static string GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
+    public static new string GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
 
     /// <summary>
     /// Encodes all the bytes in the specified span into a string of Crockford Base 32 characters with specified options.
@@ -37,7 +37,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="data">The byte span to encode.</param>
     /// <param name="options">The options.</param>
     /// <returns>The string with encoded data.</returns>
-    public new static string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => Instance.GetString(data, options);
+    public static new string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => Instance.GetString(data, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into a byte array.
@@ -45,7 +45,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="s">The read-only character span to decode.</param>
     /// <returns>A byte array with decoded data.</returns>
     /// <exception cref="FormatException">Cannot decode the input string.</exception>
-    public new static byte[] GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
+    public static new byte[] GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into a byte array with specified options.
@@ -54,7 +54,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="options">The options.</param>
     /// <returns>A byte array with decoded data.</returns>
     /// <exception cref="FormatException">Cannot decode the input string.</exception>
-    public new static byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBytes(s, options);
+    public static new byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBytes(s, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified string into a byte array.
@@ -84,7 +84,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// </summary>
     /// <param name="value">The <see cref="Int32"/> value to encode.</param>
     /// <returns>The string with encoded <see cref="Int32"/> value.</returns>
-    public new static string GetString(int value) => Instance.GetString(value);
+    public static new string GetString(int value) => Instance.GetString(value);
 
     /// <summary>
     /// Encodes the specified <see cref="Int32"/> value into a string of Crockford Base 32 characters with specified options.
@@ -92,14 +92,14 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="value">The <see cref="Int32"/> value to encode.</param>
     /// <param name="options">The options.</param>
     /// <returns>The string with encoded <see cref="Int32"/> value.</returns>
-    public new static string GetString(int value, DataEncodingOptions options) => Instance.GetString(value, options);
+    public static new string GetString(int value, DataEncodingOptions options) => Instance.GetString(value, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="Int32"/> value.
     /// </summary>
     /// <param name="s">The read-only character span to decode.</param>
     /// <returns>The decoded <see cref="Int32"/> value.</returns>
-    public new static int GetInt32(ReadOnlySpan<char> s) => Instance.GetInt32(s);
+    public static new int GetInt32(ReadOnlySpan<char> s) => Instance.GetInt32(s);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="Int32"/> value with specified options.
@@ -107,7 +107,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="s">The read-only character span to decode.</param>
     /// <param name="options">The options.</param>
     /// <returns>The decoded <see cref="Int32"/> value.</returns>
-    public new static int GetInt32(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetInt32(s, options);
+    public static new int GetInt32(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetInt32(s, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified string into an <see cref="Int32"/> value.
@@ -131,7 +131,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="s">The read-only character span to decode.</param>
     /// <param name="value">When this method returns, contains the decoded <see cref="Int32"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
-    public new static bool TryGetInt32(ReadOnlySpan<char> s, out int value) => Instance.TryGetInt32(s, out value);
+    public static new bool TryGetInt32(ReadOnlySpan<char> s, out int value) => Instance.TryGetInt32(s, out value);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="Int32"/> value with specified options.
@@ -141,7 +141,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="value">When this method returns, contains the decoded <see cref="Int32"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
     /// <param name="options">The options.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
-    public new static bool TryGetInt32(ReadOnlySpan<char> s, out int value, DataEncodingOptions options) => Instance.TryGetInt32(s, out value, options);
+    public static new bool TryGetInt32(ReadOnlySpan<char> s, out int value, DataEncodingOptions options) => Instance.TryGetInt32(s, out value, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified string into an <see cref="Int32"/> value.
@@ -172,7 +172,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="value">The <see cref="UInt32"/> value to encode.</param>
     /// <returns>The string with encoded <see cref="UInt32"/> value.</returns>
     [CLSCompliant(false)]
-    public new static string GetString(uint value) => Instance.GetString(value);
+    public static new string GetString(uint value) => Instance.GetString(value);
 
     /// <summary>
     /// Encodes the specified <see cref="UInt32"/> value into a string of Crockford Base 32 characters with specified options.
@@ -181,7 +181,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="options">The options.</param>
     /// <returns>The string with encoded <see cref="UInt32"/> value.</returns>
     [CLSCompliant(false)]
-    public new static string GetString(uint value, DataEncodingOptions options) => Instance.GetString(value, options);
+    public static new string GetString(uint value, DataEncodingOptions options) => Instance.GetString(value, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="UInt32"/> value.
@@ -189,7 +189,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="s">The read-only character span to decode.</param>
     /// <returns>The decoded <see cref="UInt32"/> value.</returns>
     [CLSCompliant(false)]
-    public new static uint GetUInt32(ReadOnlySpan<char> s) => Instance.GetUInt32(s);
+    public static new uint GetUInt32(ReadOnlySpan<char> s) => Instance.GetUInt32(s);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="UInt32"/> value with specified options.
@@ -198,7 +198,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="options">The options.</param>
     /// <returns>The decoded <see cref="UInt32"/> value.</returns>
     [CLSCompliant(false)]
-    public new static uint GetUInt32(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetUInt32(s, options);
+    public static new uint GetUInt32(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetUInt32(s, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified string into an <see cref="UInt32"/> value.
@@ -225,7 +225,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="value">When this method returns, contains the decoded <see cref="UInt32"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
     [CLSCompliant(false)]
-    public new static bool TryGetUInt32(ReadOnlySpan<char> s, out uint value) => Instance.TryGetUInt32(s, out value);
+    public static new bool TryGetUInt32(ReadOnlySpan<char> s, out uint value) => Instance.TryGetUInt32(s, out value);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="UInt32"/> value with specified options.
@@ -236,7 +236,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="options">The options.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
     [CLSCompliant(false)]
-    public new static bool TryGetUInt32(ReadOnlySpan<char> s, out uint value, DataEncodingOptions options) => Instance.TryGetUInt32(s, out value, options);
+    public static new bool TryGetUInt32(ReadOnlySpan<char> s, out uint value, DataEncodingOptions options) => Instance.TryGetUInt32(s, out value, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified string into an <see cref="UInt32"/> value.
@@ -268,7 +268,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// </summary>
     /// <param name="value">The <see cref="Int64"/> value to encode.</param>
     /// <returns>The string with encoded <see cref="Int64"/> value.</returns>
-    public new static string GetString(long value) => Instance.GetString(value);
+    public static new string GetString(long value) => Instance.GetString(value);
 
     /// <summary>
     /// Encodes the specified <see cref="Int64"/> value into a string of Crockford Base 32 characters with specified options.
@@ -276,14 +276,14 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="value">The <see cref="Int64"/> value to encode.</param>
     /// <param name="options">The options.</param>
     /// <returns>The string with encoded <see cref="Int64"/> value.</returns>
-    public new static string GetString(long value, DataEncodingOptions options) => Instance.GetString(value, options);
+    public static new string GetString(long value, DataEncodingOptions options) => Instance.GetString(value, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="Int64"/> value.
     /// </summary>
     /// <param name="s">The read-only character span to decode.</param>
     /// <returns>The decoded <see cref="Int64"/> value.</returns>
-    public new static long GetInt64(ReadOnlySpan<char> s) => Instance.GetInt64(s);
+    public static new long GetInt64(ReadOnlySpan<char> s) => Instance.GetInt64(s);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="Int64"/> value with specified options.
@@ -291,7 +291,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="s">The read-only character span to decode.</param>
     /// <param name="options">The options.</param>
     /// <returns>The decoded <see cref="Int64"/> value.</returns>
-    public new static long GetInt64(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetInt64(s, options);
+    public static new long GetInt64(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetInt64(s, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified string into an <see cref="Int64"/> value.
@@ -315,7 +315,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="s">The read-only character span to decode.</param>
     /// <param name="value">When this method returns, contains the decoded <see cref="Int64"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
-    public new static bool TryGetInt64(ReadOnlySpan<char> s, out long value) => Instance.TryGetInt64(s, out value);
+    public static new bool TryGetInt64(ReadOnlySpan<char> s, out long value) => Instance.TryGetInt64(s, out value);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="Int64"/> value with specified options.
@@ -325,7 +325,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="value">When this method returns, contains the decoded <see cref="Int64"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
     /// <param name="options">The options.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
-    public new static bool TryGetInt64(ReadOnlySpan<char> s, out long value, DataEncodingOptions options) => Instance.TryGetInt64(s, out value, options);
+    public static new bool TryGetInt64(ReadOnlySpan<char> s, out long value, DataEncodingOptions options) => Instance.TryGetInt64(s, out value, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified string into an <see cref="Int64"/> value.
@@ -356,7 +356,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="value">The <see cref="UInt64"/> value to encode.</param>
     /// <returns>The string with encoded <see cref="UInt64"/> value.</returns>
     [CLSCompliant(false)]
-    public new static string GetString(ulong value) => Instance.GetString(value);
+    public static new string GetString(ulong value) => Instance.GetString(value);
 
     /// <summary>
     /// Encodes the specified <see cref="UInt64"/> value into a string of Crockford Base 32 characters with specified options.
@@ -365,7 +365,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="options">The options.</param>
     /// <returns>The string with encoded <see cref="UInt64"/> value.</returns>
     [CLSCompliant(false)]
-    public new static string GetString(ulong value, DataEncodingOptions options) => Instance.GetString(value, options);
+    public static new string GetString(ulong value, DataEncodingOptions options) => Instance.GetString(value, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="UInt64"/> value.
@@ -373,7 +373,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="s">The read-only character span to decode.</param>
     /// <returns>The decoded <see cref="UInt64"/> value.</returns>
     [CLSCompliant(false)]
-    public new static ulong GetUInt64(ReadOnlySpan<char> s) => Instance.GetUInt64(s);
+    public static new ulong GetUInt64(ReadOnlySpan<char> s) => Instance.GetUInt64(s);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="UInt64"/> value with specified options.
@@ -382,7 +382,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="options">The options.</param>
     /// <returns>The decoded <see cref="UInt64"/> value.</returns>
     [CLSCompliant(false)]
-    public new static ulong GetUInt64(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetUInt64(s, options);
+    public static new ulong GetUInt64(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetUInt64(s, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified string into an <see cref="UInt64"/> value.
@@ -409,7 +409,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="value">When this method returns, contains the decoded <see cref="UInt64"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
     [CLSCompliant(false)]
-    public new static bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value) => Instance.TryGetUInt64(s, out value);
+    public static new bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value) => Instance.TryGetUInt64(s, out value);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="UInt64"/> value with specified options.
@@ -420,7 +420,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="options">The options.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
     [CLSCompliant(false)]
-    public new static bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value, DataEncodingOptions options) => Instance.TryGetUInt64(s, out value, options);
+    public static new bool TryGetUInt64(ReadOnlySpan<char> s, out ulong value, DataEncodingOptions options) => Instance.TryGetUInt64(s, out value, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified string into an <see cref="UInt64"/> value.
@@ -452,7 +452,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// </summary>
     /// <param name="value">The <see cref="BigInteger"/> value to encode.</param>
     /// <returns>The string with encoded <see cref="BigInteger"/> value.</returns>
-    public new static string GetString(BigInteger value) => Instance.GetString(value);
+    public static new string GetString(BigInteger value) => Instance.GetString(value);
 
     /// <summary>
     /// Encodes the specified <see cref="BigInteger"/> value into a string of Crockford Base 32 characters with specified options.
@@ -460,14 +460,14 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="value">The <see cref="BigInteger"/> value to encode.</param>
     /// <param name="options">The options.</param>
     /// <returns>The string with encoded <see cref="BigInteger"/> value.</returns>
-    public new static string GetString(BigInteger value, DataEncodingOptions options) => Instance.GetString(value, options);
+    public static new string GetString(BigInteger value, DataEncodingOptions options) => Instance.GetString(value, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="BigInteger"/> value.
     /// </summary>
     /// <param name="s">The read-only character span to decode.</param>
     /// <returns>The decoded <see cref="BigInteger"/> value.</returns>
-    public new static BigInteger GetBigInteger(ReadOnlySpan<char> s) => Instance.GetBigInteger(s);
+    public static new BigInteger GetBigInteger(ReadOnlySpan<char> s) => Instance.GetBigInteger(s);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="BigInteger"/> value with specified options.
@@ -475,7 +475,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="s">The read-only character span to decode.</param>
     /// <param name="options">The options.</param>
     /// <returns>The decoded <see cref="BigInteger"/> value.</returns>
-    public new static BigInteger GetBigInteger(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBigInteger(s, options);
+    public static new BigInteger GetBigInteger(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBigInteger(s, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified string into an <see cref="BigInteger"/> value.
@@ -499,7 +499,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="s">The read-only character span to decode.</param>
     /// <param name="value">When this method returns, contains the decoded <see cref="BigInteger"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
-    public new static bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value) => Instance.TryGetBigInteger(s, out value);
+    public static new bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value) => Instance.TryGetBigInteger(s, out value);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified read-only span into an <see cref="BigInteger"/> value with specified options.
@@ -509,7 +509,7 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
     /// <param name="value">When this method returns, contains the decoded <see cref="BigInteger"/> value, if the decoding succeeded, or zero if the decoding failed.</param>
     /// <param name="options">The options.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was decoded successfully; otherwise, <see langword="false"/>.</returns>
-    public new static bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value, DataEncodingOptions options) => Instance.TryGetBigInteger(s, out value, options);
+    public static new bool TryGetBigInteger(ReadOnlySpan<char> s, out BigInteger value, DataEncodingOptions options) => Instance.TryGetBigInteger(s, out value, options);
 
     /// <summary>
     /// Decodes all Crockford Base 32 characters in the specified string into an <see cref="BigInteger"/> value.

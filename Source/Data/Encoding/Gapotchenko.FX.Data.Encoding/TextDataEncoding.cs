@@ -21,6 +21,36 @@ public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
     public abstract bool IsCaseSensitive { get; }
 
     /// <inheritdoc/>
+    protected override DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
+    {
+        #region Case
+
+        const DataEncodingOptions CaseMask = DataEncodingOptions.Lowercase | DataEncodingOptions.Uppercase;
+        var @case = options & CaseMask;
+        if (@case == CaseMask)
+        {
+            throw new ArgumentException(
+                string.Format(
+                    Properties.Resources.XAndYDataEncodingOptionsCannotBeUsedSimultaneously,
+                    nameof(DataEncodingOptions.Lowercase),
+                    nameof(DataEncodingOptions.Uppercase)),
+                nameof(options));
+        }
+        if (@case != 0 && IsCaseSensitive)
+        {
+            throw new ArgumentException(
+                string.Format(
+                    "'{0}' option cannot be used with a case-sensitive data encoding.",
+                    nameof(DataEncodingOptions.Lowercase)),
+                nameof(options));
+        }
+
+        #endregion
+
+        return base.GetEffectiveOptions(options);
+    }
+
+    /// <inheritdoc/>
     public string GetString(ReadOnlySpan<byte> data) => GetString(data, DataEncodingOptions.None);
 
     /// <inheritdoc/>

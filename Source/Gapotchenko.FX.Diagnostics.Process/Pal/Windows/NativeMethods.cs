@@ -84,7 +84,7 @@ static class NativeMethods
         ref int pSize);
 
     [DllImport("kernel32.dll", SetLastError = true)]
-    public static unsafe extern bool ReadProcessMemory(
+    public static extern unsafe bool ReadProcessMemory(
         IntPtr hProcess,
         IntPtr lpBaseAddress,
         void* lpBuffer,
@@ -92,7 +92,7 @@ static class NativeMethods
         ref nint lpNumberOfBytesRead);
 
     [DllImport("ntdll.dll", SetLastError = true)]
-    public static unsafe extern int NtWow64ReadVirtualMemory64(
+    public static extern unsafe int NtWow64ReadVirtualMemory64(
         IntPtr hProcess,
         long lpBaseAddress,
         void* lpBuffer,

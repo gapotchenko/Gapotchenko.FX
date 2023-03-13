@@ -38,18 +38,23 @@ public abstract class DataEncoding : IDataEncoding
     /// </summary>
     /// <param name="options">The options.</param>
     /// <returns>The effective encoding options to use.</returns>
+    /// <exception cref="ArgumentException"><paramref name="options"/> are invalid.</exception>
     protected virtual DataEncodingOptions GetEffectiveOptions(DataEncodingOptions options)
     {
-        const DataEncodingOptions PaddingConflictMask = DataEncodingOptions.Padding | DataEncodingOptions.NoPadding;
-        if ((options & PaddingConflictMask) == PaddingConflictMask)
+        #region Padding
+
+        const DataEncodingOptions PaddingMask = DataEncodingOptions.Padding | DataEncodingOptions.NoPadding;
+        if ((options & PaddingMask) == PaddingMask)
         {
             throw new ArgumentException(
                 string.Format(
-                    "'{0}' and '{1}' options cannot be used simultaneously.",
+                    Properties.Resources.XAndYDataEncodingOptionsCannotBeUsedSimultaneously,
                     nameof(DataEncodingOptions.Padding),
                     nameof(DataEncodingOptions.NoPadding)),
                 nameof(options));
         }
+
+        #endregion
 
         return options;
     }

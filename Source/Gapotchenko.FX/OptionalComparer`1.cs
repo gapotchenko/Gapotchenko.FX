@@ -12,7 +12,7 @@ sealed class OptionalComparer<T> : IComparer<Optional<T>>
 
     public int Compare(Optional<T> x, Optional<T> y) => CompareCore(x, y, m_ValueComparer);
 
-    static internal int CompareCore(Optional<T> x, Optional<T> y, IComparer<T> valueComparer)
+    internal static int CompareCore(Optional<T> x, Optional<T> y, IComparer<T> valueComparer)
     {
         if (x.HasValue)
         {

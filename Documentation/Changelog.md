@@ -1,12 +1,13 @@
 # What's New in Gapotchenko.FX
 
-## 2022
+## 2023
 
 ### Gapotchenko FX 2023.1
 
 Release date: not released yet
 
 - Introduced primitives for interval arithmetics represented by `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
+- Added ability to choose between lowercase or uppercase text output of case-insensitive data encodings
 - Added ability to create streams over contiguous memory regions represented by `System.Memory` and `System.ReadOnlyMemory` objects by using `ToStream` extension methods provided by `Gapotchenko.FX.Memory` module
 - Added polyfill for a LINQ-style pipe operator
 - Added polyfill for required properties introduced in C# 11.0
@@ -21,6 +22,8 @@ Release date: not released yet
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - .NET Framework 4.6 target is retired. The minimal supported .NET Framework version is 4.6.1
 - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
+
+## 2022
 
 ### Gapotchenko FX 2022.2
 

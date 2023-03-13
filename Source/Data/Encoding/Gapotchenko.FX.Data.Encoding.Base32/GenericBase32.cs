@@ -155,13 +155,13 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
             do
             {
                 s -= BitsPerSymbol;
-                m_Buffer[i++] = alphabet[(int)Shift(m_Bits, s) & SymbolMask];
+                m_Buffer[i++] = Capitalize(alphabet[(int)Shift(m_Bits, s) & SymbolMask]);
             }
             while (s > 0);
 
             if ((m_Options & DataEncodingOptions.NoPadding) == 0)
             {
-                var paddingChar = m_Encoding.PaddingChar;
+                var paddingChar = Capitalize(m_Encoding.PaddingChar);
 
                 while (i < SymbolsPerEncodedBlock)
                     m_Buffer[i++] = paddingChar;
@@ -216,7 +216,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                     m_Modulus = 0;
 
                     for (int i = 0; i < SymbolsPerEncodedBlock; ++i)
-                        m_Buffer[i] = alphabet[(int)(m_Bits >> ((SymbolsPerEncodedBlock - 1 - i) * BitsPerSymbol)) & SymbolMask];
+                        m_Buffer[i] = Capitalize(alphabet[(int)(m_Bits >> ((SymbolsPerEncodedBlock - 1 - i) * BitsPerSymbol)) & SymbolMask]);
 
                     EmitLineBreak(output);
                     output.Write(m_Buffer);
@@ -224,6 +224,17 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                     MoveLinePosition(SymbolsPerEncodedBlock);
                 }
             }
+        }
+
+        char Capitalize(char c)
+        {
+            var options = m_Options;
+            if ((options & DataEncodingOptions.Lowercase) != 0)
+                return char.ToLowerInvariant(c);
+            else if ((options & DataEncodingOptions.Uppercase) != 0)
+                return char.ToUpperInvariant(c);
+            else
+                return c;
         }
     }
 

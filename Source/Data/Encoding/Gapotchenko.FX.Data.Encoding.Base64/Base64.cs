@@ -28,7 +28,7 @@ public sealed class Base64 : GenericBase64
     /// </summary>
     /// <param name="data">The byte span to encode.</param>
     /// <returns>The string with encoded data.</returns>
-    public new static string GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
+    public static new string GetString(ReadOnlySpan<byte> data) => Instance.GetString(data);
 
     /// <summary>
     /// Encodes all the bytes in the specified span into a string of Base64 characters with specified options.
@@ -36,7 +36,7 @@ public sealed class Base64 : GenericBase64
     /// <param name="data">The byte span to encode.</param>
     /// <param name="options">The options.</param>
     /// <returns>The string with encoded data.</returns>
-    public new static string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => Instance.GetString(data, options);
+    public static new string GetString(ReadOnlySpan<byte> data, DataEncodingOptions options) => Instance.GetString(data, options);
 
     /// <summary>
     /// Decodes all Base64 characters in the specified read-only span into a byte array.
@@ -44,7 +44,7 @@ public sealed class Base64 : GenericBase64
     /// <param name="s">The read-only character span to decode.</param>
     /// <returns>A byte array with decoded data.</returns>
     /// <exception cref="FormatException">Cannot decode the input string.</exception>
-    public new static byte[] GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
+    public static new byte[] GetBytes(ReadOnlySpan<char> s) => Instance.GetBytes(s);
 
     /// <summary>
     /// Decodes all Base64 characters in the specified read-only span into a byte array with specified options.
@@ -53,7 +53,7 @@ public sealed class Base64 : GenericBase64
     /// <param name="options">The options.</param>
     /// <returns>A byte array with decoded data.</returns>
     /// <exception cref="FormatException">Cannot decode the input string.</exception>
-    public new static byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBytes(s, options);
+    public static new byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => Instance.GetBytes(s, options);
 
     /// <summary>
     /// Decodes all Base64 characters in the specified string into a byte array.
@@ -84,14 +84,14 @@ public sealed class Base64 : GenericBase64
     /// </summary>
     /// <param name="s">The read-only character span to pad.</param>
     /// <returns>The padded encoded string.</returns>
-    public new static string Pad(ReadOnlySpan<char> s) => Instance.Pad(s);
+    public static new string Pad(ReadOnlySpan<char> s) => Instance.Pad(s);
 
     /// <summary>
     /// Unpads the encoded read-only character span.
     /// </summary>
     /// <param name="s">The read-only character span to unpad.</param>
     /// <returns>The unpadded read-only character span.</returns>
-    public new static ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => Instance.Unpad(s);
+    public static new ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => Instance.Unpad(s);
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     static volatile IBase64? m_Instance;

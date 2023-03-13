@@ -13,5 +13,5 @@ public abstract class MemoryEqualityComparer<T> : EqualityComparer<ReadOnlyMemor
     /// <summary>
     /// Returns a default equality comparer for contiguous regions of memory with an element type specified by the generic argument <typeparamref name="T"/>.
     /// </summary>
-    public new static MemoryEqualityComparer<T> Default => DefaultFactory.Instance;
+    public static new MemoryEqualityComparer<T> Default => DefaultFactory.Instance;
 }

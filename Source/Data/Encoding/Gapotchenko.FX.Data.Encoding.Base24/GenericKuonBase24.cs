@@ -154,7 +154,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
                 var si = (int)(a % Base);
                 a /= Base;
 
-                m_Buffer[i++] = alphabet[si];
+                m_Buffer[i++] = Capitalize(alphabet[si]);
                 writtenBitCount += BitsPerSymbol;
 
                 if (a == 0 && writtenBitCount >= bitCount)
@@ -169,7 +169,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
 
             if ((m_Options & DataEncodingOptions.NoPadding) == 0)
             {
-                var paddingChar = m_PaddingChar;
+                var paddingChar = Capitalize(m_PaddingChar);
 
                 while (i < SymbolsPerEncodedBlock)
                     m_Buffer[i++] = paddingChar;
@@ -230,7 +230,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
                         var si = (int)(a % Base);
                         a /= Base;
 
-                        m_Buffer[i] = alphabet[si];
+                        m_Buffer[i] = Capitalize(alphabet[si]);
                     }
 
                     EmitLineBreak(output);
@@ -239,6 +239,17 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
                     MoveLinePosition(SymbolsPerEncodedBlock);
                 }
             }
+        }
+
+        char Capitalize(char c)
+        {
+            var options = m_Options;
+            if ((options & DataEncodingOptions.Lowercase) != 0)
+                return char.ToLowerInvariant(c);
+            else if ((options & DataEncodingOptions.Uppercase) != 0)
+                return char.ToUpperInvariant(c);
+            else
+                return c;
         }
     }
 

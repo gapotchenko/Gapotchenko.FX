@@ -265,7 +265,7 @@ public class MoreTextWriter : TextWriter
     }
 
     /// <inheritdoc/>
-    public async override Task FlushAsync()
+    public override async Task FlushAsync()
     {
         await base.FlushAsync().ConfigureAwait(false);
 

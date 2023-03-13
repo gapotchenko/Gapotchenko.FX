@@ -83,5 +83,15 @@ public enum DataEncodingOptions
     /// For example, ZBase32 encoding eliminates the insignificant bits from the output when this option is specified.
     /// </para>
     /// </summary>
-    Compress = 1 << 7
+    Compress = 1 << 7,
+
+    /// <summary>
+    /// Use lowercase characters for text output.
+    /// </summary>
+    Lowercase = 1 << 8,
+
+    /// <summary>
+    /// Use uppercase characters for text output.
+    /// </summary>
+    Uppercase = 1 << 9
 }

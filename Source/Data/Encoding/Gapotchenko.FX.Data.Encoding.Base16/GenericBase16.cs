@@ -141,14 +141,25 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
 
             foreach (var b in input)
             {
-                m_Buffer[0] = alphabet[(b >> BitsPerSymbol) & MaskSymbol];
-                m_Buffer[1] = alphabet[b & MaskSymbol];
+                m_Buffer[0] = Capitalize(alphabet[(b >> BitsPerSymbol) & MaskSymbol]);
+                m_Buffer[1] = Capitalize(alphabet[b & MaskSymbol]);
 
                 EmitBreak(output);
                 output.Write(m_Buffer);
 
                 MoveLinePosition(SymbolsPerEncodedBlock);
             }
+        }
+
+        char Capitalize(char c)
+        {
+            var options = m_Options;
+            if ((options & DataEncodingOptions.Lowercase) != 0)
+                return char.ToLowerInvariant(c);
+            else if ((options & DataEncodingOptions.Uppercase) != 0)
+                return char.ToUpperInvariant(c);
+            else
+                return c;
         }
     }
 

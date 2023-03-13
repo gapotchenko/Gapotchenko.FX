@@ -13,5 +13,5 @@ public abstract partial class ArrayEqualityComparer<T> : EqualityComparer<T[]>
     /// <summary>
     /// Returns a default equality comparer for one-dimensional array with an element type specified by the generic argument <typeparamref name="T"/>.
     /// </summary>
-    public new static ArrayEqualityComparer<T> Default => DefaultFactory.Instance;
+    public static new ArrayEqualityComparer<T> Default => DefaultFactory.Instance;
 }
