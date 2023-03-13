@@ -38,7 +38,7 @@ partial class MathEx
     /// <param name="val2">The second of two values to compare.</param>
     /// <param name="comparer">
     /// The optional comparer.
-    /// When this parameter is <c>null</c>, a default comparer for type <typeparamref name="T"/> is used.
+    /// When this parameter is <see langword="null"/>, a default comparer for type <typeparamref name="T"/> is used.
     /// </param>
     /// <returns>
     /// Parameter <paramref name="val1"/> or <paramref name="val2"/>, whichever is smaller.
@@ -96,7 +96,7 @@ partial class MathEx
     /// <param name="val2">The second of two values to compare.</param>
     /// <param name="comparer">
     /// The optional comparer.
-    /// When this parameter is <c>null</c>, a default comparer for type <typeparamref name="T"/> is used.
+    /// When this parameter is <see langword="null"/>, a default comparer for type <typeparamref name="T"/> is used.
     /// </param>
     /// <returns>
     /// Parameter <paramref name="val1"/> or <paramref name="val2"/>, whichever is larger.
@@ -145,7 +145,7 @@ partial class MathEx
     /// <param name="val3">The third of three values to compare.</param>
     /// <param name="comparer">
     /// The optional comparer.
-    /// When this parameter is <c>null</c>, a default comparer for type <typeparamref name="T"/> is used.
+    /// When this parameter is <see langword="null"/>, a default comparer for type <typeparamref name="T"/> is used.
     /// </param>
     /// <returns>
     /// Parameter <paramref name="val1"/>, <paramref name="val2"/> or <paramref name="val3"/>, whichever is smaller.
@@ -181,7 +181,7 @@ partial class MathEx
     /// <param name="val3">The third of three values to compare.</param>
     /// <param name="comparer">
     /// The optional comparer.
-    /// When this parameter is <c>null</c>, a default comparer for type <typeparamref name="T"/> is used.
+    /// When this parameter is <see langword="null"/>, a default comparer for type <typeparamref name="T"/> is used.
     /// </param>
     /// <returns>
     /// Parameter <paramref name="val1"/>, <paramref name="val2"/> or <paramref name="val3"/>, whichever is larger.

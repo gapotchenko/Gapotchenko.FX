@@ -27,7 +27,7 @@ public sealed record Interval<T> : IInterval<T>
     /// </param>
     /// <param name="comparer">
     /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
-    /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
+    /// or <see langword="null"/> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
     /// </param>
     public Interval(T from, T to, IComparer<T>? comparer = null) :
         this(IntervalBoundary.Inclusive(from), IntervalBoundary.Exclusive(to), comparer)
@@ -47,7 +47,7 @@ public sealed record Interval<T> : IInterval<T>
     /// </param>
     /// <param name="comparer">
     /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
-    /// or <c>null</c> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
+    /// or <see langword="null"/> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
     /// </param>
     public Interval(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer = null)
     {

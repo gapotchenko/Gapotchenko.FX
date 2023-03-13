@@ -11,7 +11,7 @@ public static class SetExtensions
     /// Indicates whether the specified set is null or empty.
     /// </summary>
     /// <param name="value">The set to test.</param>
-    /// <returns><c>true</c> if the <paramref name="value"/> parameter is null or an empty set; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the <paramref name="value"/> parameter is null or an empty set; otherwise, <see langword="false"/>.</returns>
     public static bool IsNullOrEmpty<T>(
         [NotNullWhen(false)]
 #if !TFF_HASHSET_IREADONLYCOLLECTION
@@ -27,8 +27,8 @@ public static class SetExtensions
     /// <param name="target">The set where the elements should be added to.</param>
     /// <param name="collection">The collection whose elements should be added.</param>
     /// <returns>
-    /// <c>true</c> if at least one element is added to the <paramref name="target">target set</paramref>;
-    /// <c>false</c> if all the elements are already present.
+    /// <see langword="true"/> if at least one element is added to the <paramref name="target">target set</paramref>;
+    /// <see langword="false"/> if all the elements are already present.
     /// </returns>
     public static bool AddRange<T>(this ISet<T> target, IEnumerable<T> collection)
     {
@@ -50,8 +50,8 @@ public static class SetExtensions
     /// <param name="target">The set where the elements should be added to.</param>
     /// <param name="collection">The collection whose elements should be added.</param>
     /// <returns>
-    /// <c>true</c> if at least one element is added to the <paramref name="target">target set</paramref>;
-    /// <c>false</c> if all the elements are already present.
+    /// <see langword="true"/> if at least one element is added to the <paramref name="target">target set</paramref>;
+    /// <see langword="false"/> if all the elements are already present.
     /// </returns>
     public static bool AddRange<T>(this ISet<T> target, params T[] collection) => AddRange(target, (IEnumerable<T>)collection);
 }

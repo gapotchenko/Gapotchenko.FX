@@ -16,7 +16,7 @@ public static class ReadOnlySpanExtensions
     /// </summary>
     /// <param name="span">The span.</param>
     /// <param name="value">The character to compare.</param>
-    /// <returns><c>true</c> if the span begins with the value; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the span begins with the value; otherwise, <see langword="false"/>.</returns>
     public static bool StartsWith(this ReadOnlySpan<char> span, char value) =>
         !span.IsEmpty &&
         span[0] == value;
@@ -31,7 +31,7 @@ public static class ReadOnlySpanExtensions
     /// </summary>
     /// <param name="span">The span.</param>
     /// <param name="value">The character to compare.</param>
-    /// <returns><c>true</c> if the span ends with the value; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the span ends with the value; otherwise, <see langword="false"/>.</returns>
     public static bool EndsWith(this ReadOnlySpan<char> span, char value)
     {
         int length = span.Length;

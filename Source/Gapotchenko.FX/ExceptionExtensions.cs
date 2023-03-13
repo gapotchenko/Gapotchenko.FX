@@ -17,7 +17,7 @@ public static class ExceptionExtensions
     /// </para>
     /// </summary>
     /// <param name="exception">The exception.</param>
-    /// <returns><c>true</c> if exception signifies a cancellation of a thread or task; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if exception signifies a cancellation of a thread or task; otherwise, <see langword="false"/>.</returns>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static bool IsCancellationException(this Exception exception) =>
         ConsiderAggregation(
@@ -44,7 +44,7 @@ public static class ExceptionExtensions
     /// </para>
     /// </summary>
     /// <param name="exception">The exception.</param>
-    /// <returns><c>true</c> if exception represents a control flow exception; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if exception represents a control flow exception; otherwise, <see langword="false"/>.</returns>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static bool IsControlFlowException(this Exception exception) =>
         ConsiderAggregation(

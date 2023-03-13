@@ -40,7 +40,7 @@ partial class EnumerableEx
     /// <typeparam name="TSource">The type of the elements of <paramref name="source" />.</typeparam>
     /// <param name="source">A sequence that contains elements to be counted.</param>
     /// <param name="value">The value to compare the count of elements in a sequence with.</param>
-    /// <returns><c>true</c> if the number of elements in a sequence is greater or equal to a specified <paramref name="value"/>; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the number of elements in a sequence is greater or equal to a specified <paramref name="value"/>; otherwise, <see langword="false"/>.</returns>
     public static bool CountIsAtLeast<TSource>(this IEnumerable<TSource> source, int value)
     {
         if (source == null)

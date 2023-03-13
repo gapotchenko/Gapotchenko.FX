@@ -247,7 +247,7 @@ public partial class Graph<TVertex> : IGraph<TVertex>
     /// </summary>
     /// <param name="from">The source vertex.</param>
     /// <param name="to">The target vertex.</param>
-    /// <returns><c>true</c> when the specified source vertex can reach the target via one or more intermediate vertices; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> when the specified source vertex can reach the target via one or more intermediate vertices; otherwise, <see langword="false"/>.</returns>
     bool HasTransitivePath(TVertex from, TVertex to) => new ReachibilityTraverser(this, to, false).CanBeReachedFrom(from);
 
     /// <inheritdoc/>

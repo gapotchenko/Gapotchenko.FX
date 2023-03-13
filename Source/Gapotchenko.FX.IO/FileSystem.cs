@@ -48,7 +48,7 @@ public static class FileSystem
     /// Gets a value indicating whether the file system under current operating system is case sensitive.
     /// </summary>
     /// <value>
-    /// <c>true</c> if the file system is case sensitive; otherwise, <c>false</c>.
+    /// <see langword="true"/> if the file system is case sensitive; otherwise, <see langword="false"/>.
     /// </value>
     public static bool IsCaseSensitive { get; } = _IsCaseSensitiveCore();
 
@@ -79,7 +79,7 @@ public static class FileSystem
     /// </summary>
     /// <param name="a">The file path A.</param>
     /// <param name="b">The file path B.</param>
-    /// <returns><c>true</c> when file paths are equivalent; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> when file paths are equivalent; otherwise, <see langword="false"/>.</returns>
     public static bool PathsAreEquivalent(string? a, string? b)
     {
         var pathComparison = PathComparison;
@@ -109,7 +109,7 @@ public static class FileSystem
     /// </summary>
     /// <param name="path">The path.</param>
     /// <param name="value">The value.</param>
-    /// <returns><c>true</c> when the beginning of the path matches the specified value in terms of file system equivalence; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> when the beginning of the path matches the specified value in terms of file system equivalence; otherwise, <see langword="false"/>.</returns>
     public static bool PathStartsWith(string? path, string? value)
     {
         var pathComparison = PathComparison;

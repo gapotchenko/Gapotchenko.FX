@@ -49,7 +49,7 @@ public class BitWriter : BinaryWriter
     /// <param name="output">The output stream.</param>
     /// <param name="bitConverter">The bit converter to use.</param>
     /// <param name="encoding">The encoding to use.</param>
-    /// <param name="leaveOpen"><c>true</c> to leave the stream open after the <see cref="BitWriter"/> object is disposed; otherwise, <c>false</c>.</param>
+    /// <param name="leaveOpen"><see langword="true"/> to leave the stream open after the <see cref="BitWriter"/> object is disposed; otherwise, <see langword="false"/>.</param>
     [CLSCompliant(false)]
     public BitWriter(Stream output, IBitConverter bitConverter, Encoding encoding, bool leaveOpen) :
         base(output, encoding, leaveOpen)

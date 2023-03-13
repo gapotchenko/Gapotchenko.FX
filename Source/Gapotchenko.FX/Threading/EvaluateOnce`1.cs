@@ -41,7 +41,7 @@ public struct EvaluateOnce<T>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     /// <param name="syncLock">
     /// An object used as the mutually exclusive lock for value evaluation.
-    /// When the given value is <c>null</c>, an unique synchronization lock object is used.
+    /// When the given value is <see langword="null"/>, an unique synchronization lock object is used.
     /// </param>
     public EvaluateOnce(Func<T> valueFactory, object? syncLock)
     {
@@ -87,7 +87,7 @@ public struct EvaluateOnce<T>
     /// </summary>
     /// <returns>
     /// The result of calling the <see cref="Object.ToString()"/> method on the <see cref="Value"/> property for this instance,
-    /// if the value has been created (that is, if the <see cref="IsValueCreated"/> property returns <c>true</c>).
+    /// if the value has been created (that is, if the <see cref="IsValueCreated"/> property returns <see langword="true"/>).
     /// Otherwise, a string indicating that the value has not been created.
     /// </returns>
     public override string? ToString() => IsValueCreated ? Value?.ToString() : Resources.ValueNotCreated;

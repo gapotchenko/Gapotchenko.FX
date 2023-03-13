@@ -40,7 +40,7 @@ public class BitReader : BinaryReader
     /// <param name="input">The input stream.</param>
     /// <param name="bitConverter">The bit converter to use.</param>
     /// <param name="encoding">The character encoding to use.</param>
-    /// <param name="leaveOpen"><c>true</c> to leave the stream open after the <see cref="BitReader"/> object is disposed; otherwise, <c>false</c>.</param>
+    /// <param name="leaveOpen"><see langword="true"/> to leave the stream open after the <see cref="BitReader"/> object is disposed; otherwise, <see langword="false"/>.</param>
     [CLSCompliant(false)]
     public BitReader(Stream input, IBitConverter bitConverter, Encoding encoding, bool leaveOpen) :
         base(input, encoding, leaveOpen)

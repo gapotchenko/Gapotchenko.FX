@@ -21,7 +21,7 @@ public sealed class CommandLineBuilder
     /// </summary>
     /// <param name="commandLine">
     /// The command line used to initialize the value of the instance.
-    /// If value is <c>null</c>, the new <see cref="CommandLineBuilder"/> will be empty.
+    /// If value is <see langword="null"/>, the new <see cref="CommandLineBuilder"/> will be empty.
     /// </param>
     public CommandLineBuilder(string? commandLine)
     {

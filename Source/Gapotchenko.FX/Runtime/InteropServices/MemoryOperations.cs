@@ -73,7 +73,7 @@ public static class MemoryOperations
     /// <param name="ptr1">A pointer to the first block to compare.</param>
     /// <param name="ptr2">A pointer to the second block to compare.</param>
     /// <param name="size">The amount of bytes to compare.</param>
-    /// <returns><c>true</c> if the specified blocks are equal; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the specified blocks are equal; otherwise, <see langword="false"/>.</returns>
     [CLSCompliant(false)]
     public static unsafe bool BlockEquals(void* ptr1, void* ptr2, int size)
     {

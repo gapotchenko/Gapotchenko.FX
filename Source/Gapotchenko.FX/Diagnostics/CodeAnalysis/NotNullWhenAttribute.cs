@@ -19,7 +19,7 @@ public sealed class NotNullWhenAttribute : Attribute
     /// </summary>
     /// <param name="returnValue">
     /// The return value condition.
-    /// If the method returns this value, the associated parameter will not be <c>null</c>.
+    /// If the method returns this value, the associated parameter will not be <see langword="null"/>.
     /// </param>
     public NotNullWhenAttribute(bool returnValue) => ReturnValue = returnValue;
 

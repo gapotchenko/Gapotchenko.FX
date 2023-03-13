@@ -12,6 +12,6 @@ public static class CollectionExtensions
     /// Indicates whether the specified collection is null or empty.
     /// </summary>
     /// <param name="value">The collection to test.</param>
-    /// <returns><c>true</c> if the <paramref name="value"/> parameter is null or an empty collection; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the <paramref name="value"/> parameter is null or an empty collection; otherwise, <see langword="false"/>.</returns>
     public static bool IsNullOrEmpty([NotNullWhen(false)] this ICollection? value) => value is null || value.Count == 0;
 }

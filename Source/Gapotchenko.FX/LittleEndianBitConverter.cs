@@ -623,7 +623,7 @@ public sealed class LittleEndianBitConverter : IBitConverter
     /// Returns a <see cref="Boolean"/> value converted from the first byte of a specified span.
     /// </summary>
     /// <param name="value">An array of bytes.</param>
-    /// <returns><c>true</c> if the first byte of a specified span is nonzero; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the first byte of a specified span is nonzero; otherwise, <see langword="false"/>.</returns>
     public static bool ToBoolean(ReadOnlySpan<byte> value)
     {
         BitConverterServices.ValidateToArguments(value, sizeof(bool));
@@ -635,7 +635,7 @@ public sealed class LittleEndianBitConverter : IBitConverter
     /// </summary>
     /// <param name="value">An array of bytes.</param>
     /// <param name="startIndex">The starting position within value.</param>
-    /// <returns><c>true</c> if the byte at startIndex in value is nonzero; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the byte at startIndex in value is nonzero; otherwise, <see langword="false"/>.</returns>
     public static bool ToBoolean(byte[] value, int startIndex) =>
         BitConverterServices.ToBooleanCore(
             BitConverterServices.ValidateToArguments(value, startIndex, sizeof(bool)));
@@ -644,7 +644,7 @@ public sealed class LittleEndianBitConverter : IBitConverter
     /// Returns a Boolean value converted from the first byte of a byte array.
     /// </summary>
     /// <param name="value">An array of bytes.</param>
-    /// <returns><c>true</c> if the first byte of a byte array is nonzero; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the first byte of a byte array is nonzero; otherwise, <see langword="false"/>.</returns>
     public static bool ToBoolean(byte[] value) => ToBoolean(value, 0);
 
     #region IBitConverter Implementation

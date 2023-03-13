@@ -9,7 +9,7 @@ public abstract class Disposable : DisposableBase
 {
     /// <summary>
     /// Tries to clear a disposable object at the specified reference
-    /// by calling <see cref="IDisposable.Dispose"/> method and setting its value to <c>null</c>.
+    /// by calling <see cref="IDisposable.Dispose"/> method and setting its value to <see langword="null"/>.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -21,7 +21,7 @@ public abstract class Disposable : DisposableBase
     /// </remarks>
     /// <typeparam name="T">The type of disposable object.</typeparam>
     /// <param name="value">The reference to disposable value.</param>
-    /// <returns><c>true</c> when the object has been disposed and the value cleared; <c>false</c> otherwise.</returns>
+    /// <returns><see langword="true"/> when the object has been disposed and the value cleared; <see langword="false"/> otherwise.</returns>
     public static bool Clear<T>(ref T? value) where T : class, IDisposable
     {
         // An intermediate loaded value is needed to eliminate the chance of NullReferenceException due to unconscious race condition.
@@ -58,19 +58,19 @@ public abstract class Disposable : DisposableBase
 
     /// <summary>
     /// Tries to clear a disposable object at the specified reference
-    /// by calling <see cref="IDisposable.Dispose"/> method and setting its value to <c>null</c>.
+    /// by calling <see cref="IDisposable.Dispose"/> method and setting its value to <see langword="null"/>.
     /// </summary>
     /// <remarks>
     /// <para>
     /// This method works in different thread safety modes depending on a value of <paramref name="isThreadSafe"/> parameter.
     /// </para>
     /// <para>
-    /// When <paramref name="isThreadSafe"/> is <c>false</c>, the method does not provide thread safety guarantees except memory model consistency.
+    /// When <paramref name="isThreadSafe"/> is <see langword="false"/>, the method does not provide thread safety guarantees except memory model consistency.
     /// As a result, the <see cref="IDisposable.Dispose"/> method of a disposable object may be invoked several times
     /// when the <see cref="Clear{T}(ref T, bool)"/> method is called concurrently from multiple threads.
     /// </para>
     /// <para>
-    /// When <paramref name="isThreadSafe"/> is <c>true</c>, the method provides a publication and execution thread safety.
+    /// When <paramref name="isThreadSafe"/> is <see langword="true"/>, the method provides a publication and execution thread safety.
     /// As a result, the <see cref="IDisposable.Dispose"/> method of a disposable object is invoked exactly once even
     /// when the <see cref="Clear{T}(ref T, bool)"/> method is called concurrently from multiple threads.
     /// </para>
@@ -78,10 +78,10 @@ public abstract class Disposable : DisposableBase
     /// <typeparam name="T">The type of disposable object.</typeparam>
     /// <param name="value">The reference to disposable value.</param>
     /// <param name="isThreadSafe">
-    /// <c>true</c> to make the method usable concurrently by multiple threads;
-    /// <c>false</c> to make the method usable by one thread at a time.
+    /// <see langword="true"/> to make the method usable concurrently by multiple threads;
+    /// <see langword="false"/> to make the method usable by one thread at a time.
     /// </param>
-    /// <returns><c>true</c> when the object has been disposed and the value cleared; <c>false</c> otherwise.</returns>
+    /// <returns><see langword="true"/> when the object has been disposed and the value cleared; <see langword="false"/> otherwise.</returns>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static bool Clear<T>(ref T? value, bool isThreadSafe) where T : class, IDisposable =>
         isThreadSafe ?
@@ -127,7 +127,7 @@ public abstract class Disposable : DisposableBase
     /// </remarks>
     /// <typeparam name="T">The type of disposable object.</typeparam>
     /// <param name="optional">The reference to an optional disposable value.</param>
-    /// <returns><c>true</c> when the object has been disposed and the value cleared; <c>false</c> otherwise.</returns>
+    /// <returns><see langword="true"/> when the object has been disposed and the value cleared; <see langword="false"/> otherwise.</returns>
     public static bool Clear<T>(ref Optional<T> optional) where T : class, IDisposable
     {
         if (optional.HasValue)

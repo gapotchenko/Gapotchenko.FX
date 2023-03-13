@@ -52,13 +52,13 @@ public static class Optional
 
     /// <summary>
     /// Either creates a new <see cref="Optional{T}"/> object initialized to a specified value or
-    /// returns an <see cref="Optional{T}"/> object without a value when the specified predicate returns <c>true</c>.
+    /// returns an <see cref="Optional{T}"/> object without a value when the specified predicate returns <see langword="true"/>.
     /// </summary>
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
     /// <param name="value">A value to discriminate.</param>
     /// <param name="nonePredicate">A predicate that indicates whether to treat the specified value as <seealso cref="Optional{T}.None"/>.</param>
     /// <returns>
-    /// An <see cref="Optional{T}"/> object without a value when the specified predicate returns <c>true</c>;
+    /// An <see cref="Optional{T}"/> object without a value when the specified predicate returns <see langword="true"/>;
     /// otherwise, an <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the <paramref name="value"/> parameter.
     /// </returns>
     public static Optional<T> Discriminate<T>(T value, Func<T, bool> nonePredicate)
@@ -76,7 +76,7 @@ public static class Optional
     /// <param name="x">The first optional value to compare.</param>
     /// <param name="y">The second optional value to compare.</param>
     /// <param name="valueComparer">The value equality comparer.</param>
-    /// <returns><c>true</c> if the specified objects are equal; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the specified objects are equal; otherwise, <see langword="false"/>.</returns>
     public static bool Equals<T>(Optional<T> x, Optional<T> y, IEqualityComparer<T>? valueComparer) =>
         OptionalEqualityComparer<T>.EqualsCore(x, y, valueComparer ?? EqualityComparer<T>.Default);
 
@@ -86,7 +86,7 @@ public static class Optional
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
     /// <param name="x">The first optional value to compare.</param>
     /// <param name="y">The second optional value to compare.</param>
-    /// <returns><c>true</c> if the specified objects are equal; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the specified objects are equal; otherwise, <see langword="false"/>.</returns>
     public static bool Equals<T>(Optional<T> x, Optional<T> y) => Equals(x, y, null);
 
     /// <summary>
@@ -133,7 +133,7 @@ public static class Optional
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
     /// <param name="valueComparer">
     /// The value comparer.
-    /// If the passed comparer is <c>null</c> then a default comparer for type <typeparamref name="T"/> is used.
+    /// If the passed comparer is <see langword="null"/> then a default comparer for type <typeparamref name="T"/> is used.
     /// </param>
     /// <returns>A new comparer for <see cref="Optional{T}"/> objects.</returns>
     public static IComparer<Optional<T>> CreateComparer<T>(IComparer<T>? valueComparer) =>
@@ -145,7 +145,7 @@ public static class Optional
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
     /// <param name="valueComparer">
     /// The value equality comparer.
-    /// If the passed comparer is <c>null</c> then a default equality comparer for type <typeparamref name="T"/> is used.
+    /// If the passed comparer is <see langword="null"/> then a default equality comparer for type <typeparamref name="T"/> is used.
     /// </param>
     /// <returns>A new equality comparer for <see cref="Optional{T}"/> objects.</returns>
     public static IEqualityComparer<Optional<T>> CreateEqualityComparer<T>(IEqualityComparer<T>? valueComparer) =>

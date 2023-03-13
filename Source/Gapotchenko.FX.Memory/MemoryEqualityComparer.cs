@@ -11,7 +11,7 @@ public static partial class MemoryEqualityComparer
     /// <typeparam name="T">The memory element type.</typeparam>
     /// <param name="x">The first read-only memory region to compare.</param>
     /// <param name="y">The second read-only memory region to compare.</param>
-    /// <returns><c>true</c> if the specified read-only memory regions are equal; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the specified read-only memory regions are equal; otherwise, <see langword="false"/>.</returns>
     public static bool Equals<T>(in ReadOnlyMemory<T> x, in ReadOnlyMemory<T> y) => MemoryEqualityComparer<T>.Default.Equals(x, y);
 
     /// <inheritdoc/>

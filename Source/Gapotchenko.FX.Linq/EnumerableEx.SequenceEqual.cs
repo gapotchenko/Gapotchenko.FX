@@ -11,9 +11,9 @@ partial class EnumerableEx
     /// <param name="second">An <see cref="IEnumerable{T}"/> to compare to the first sequence.</param>
     /// <param name="predicate">The equality predicate for sequence elements.</param>
     /// <returns>
-    /// <c>true</c> if both input sequences are of equal length and
+    /// <see langword="true"/> if both input sequences are of equal length and
     /// their corresponding elements are equal according to a specified <paramref name="predicate"/>;
-    /// otherwise, <c>false</c>.
+    /// otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="first"/>, <paramref name="second"/> or <paramref name="predicate"/> is null.</exception>
     public static bool SequenceEqual<TFirst, TSecond>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, bool> predicate)
@@ -64,9 +64,9 @@ partial class EnumerableEx
     /// <param name="second">An <see cref="IList{T}"/> to compare to the first list.</param>
     /// <param name="predicate">The equality predicate for sequence elements.</param>
     /// <returns>
-    /// <c>true</c> if both input lists are of equal length and
+    /// <see langword="true"/> if both input lists are of equal length and
     /// their corresponding elements are equal according to a specified <paramref name="predicate"/>;
-    /// otherwise, <c>false</c>.
+    /// otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="first"/>, <paramref name="second"/> or <paramref name="predicate"/> is null.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]

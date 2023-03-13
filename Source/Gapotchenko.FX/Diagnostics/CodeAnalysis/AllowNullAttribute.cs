@@ -4,7 +4,7 @@ namespace System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 /// <para>
-/// Specifies that <c>null</c> is allowed as an input even if the corresponding type disallows it.
+/// Specifies that <see langword="null"/> is allowed as an input even if the corresponding type disallows it.
 /// </para>
 /// <para>
 /// This is a polyfill provided by Gapotchenko.FX.

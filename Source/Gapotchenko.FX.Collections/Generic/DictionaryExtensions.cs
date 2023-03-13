@@ -16,8 +16,8 @@ public static class DictionaryExtensions
     /// <param name="key">The key of the value to add.</param>
     /// <param name="value">The value to add.</param>
     /// <returns>
-    /// <c>true</c> when the key and value are successfully added to the dictionary;
-    /// <c>false</c> when the dictionary already contains the specified key, in which case nothing gets added.
+    /// <see langword="true"/> when the key and value are successfully added to the dictionary;
+    /// <see langword="false"/> when the dictionary already contains the specified key, in which case nothing gets added.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
 #if TFF_DICTIONARY_TRYADD
@@ -56,12 +56,12 @@ public static class DictionaryExtensions
     /// <param name="dictionary">A dictionary with keys of type <typeparamref name="TKey"/> and values of type <typeparamref name="TValue"/>.</param>
     /// <param name="key">The key of the value to remove.</param>
     /// <param name="value">
-    /// When this method returns <c>true</c>, the removed value;
-    /// when this method returns <c>false</c>, the default value for <typeparamref name="TValue"/>.
+    /// When this method returns <see langword="true"/>, the removed value;
+    /// when this method returns <see langword="false"/>, the default value for <typeparamref name="TValue"/>.
     /// </param>
     /// <returns>
-    /// <c>true</c> when a value is found in the dictionary with the specified key;
-    /// <c>false</c> when the dictionary cannot find a value associated with the specified key.
+    /// <see langword="true"/> when a value is found in the dictionary with the specified key;
+    /// <see langword="false"/> when the dictionary cannot find a value associated with the specified key.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
 #if TFF_DICTIONARY_REMOVEANDGETVALUE

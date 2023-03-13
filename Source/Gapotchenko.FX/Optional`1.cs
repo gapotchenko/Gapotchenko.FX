@@ -34,7 +34,7 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// <summary>
     /// Gets the value of the current <see cref="Optional{T}"/> if it has been assigned a valid underlying value.
     /// </summary>
-    /// <exception cref="InvalidOperationException">The <see cref="Optional{T}.HasValue"/> property is <c>false</c>.</exception>
+    /// <exception cref="InvalidOperationException">The <see cref="Optional{T}.HasValue"/> property is <see langword="false"/>.</exception>
     public T Value
     {
         get
@@ -58,7 +58,7 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// Retrieves the value of the current <see cref="Optional{T}"/> object, or the object's default value.
     /// </summary>
     /// <returns>
-    /// The value of the <see cref="Value"/> property if the <see cref="HasValue"/> property is <c>true</c>;
+    /// The value of the <see cref="Value"/> property if the <see cref="HasValue"/> property is <see langword="true"/>;
     /// otherwise, the default value of <typeparamref name="T"/> type.
     /// </returns>
     public T GetValueOrDefault() => m_Value;
@@ -66,9 +66,9 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// <summary>
     ///  Retrieves the value of the current <see cref="Optional{T}"/> object, or the specified default value.
     /// </summary>
-    /// <param name="defaultValue">A value to return if the <see cref="HasValue"/> property is <c>false</c>.</param>
+    /// <param name="defaultValue">A value to return if the <see cref="HasValue"/> property is <see langword="false"/>.</param>
     /// <returns>
-    /// The value of the <see cref="Value"/> property if the <see cref="HasValue"/> property is <c>true</c>;
+    /// The value of the <see cref="Value"/> property if the <see cref="HasValue"/> property is <see langword="true"/>;
     /// otherwise, the <paramref name="defaultValue"/> parameter.
     /// </returns>
     public T GetValueOrDefault(T defaultValue) => m_HasValue ? m_Value : defaultValue;
@@ -77,29 +77,29 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified object.
     /// </summary>
     /// <param name="obj">An object.</param>
-    /// <returns><c>true</c> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <see langword="false"/>.</returns>
     public override bool Equals(object? obj) => OptionalEqualityComparer<T>.EqualsCore(this, obj, EqualityComparer<T>.Default);
 
     /// <summary>
     /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified optional value.
     /// </summary>
     /// <param name="other">An optional value.</param>
-    /// <returns><c>true</c> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <see langword="false"/>.</returns>
     public bool Equals(Optional<T> other) => Optional.Equals(this, other, null);
 
     /// <summary>
     /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified value.
     /// </summary>
     /// <param name="other">A value.</param>
-    /// <returns><c>true</c> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <see langword="false"/>.</returns>
     public bool Equals([AllowNull] T other) => OptionalEqualityComparer<T>.EqualsCore(this, other, EqualityComparer<T>.Default);
 
     /// <summary>
     /// Retrieves the hash code of the object returned by the <see cref="Value"/> property.
     /// </summary>
     /// <returns>
-    /// The hash code of the object returned by the <see cref="Value"/> property if the <see cref="HasValue"/> property is <c>true</c>,
-    /// or zero if the <see cref="HasValue"/> property is <c>false</c>.
+    /// The hash code of the object returned by the <see cref="Value"/> property if the <see cref="HasValue"/> property is <see langword="true"/>,
+    /// or zero if the <see cref="HasValue"/> property is <see langword="false"/>.
     /// </returns>
     public override int GetHashCode() => Optional.GetHashCode(this, null);
 
@@ -107,8 +107,8 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// Returns the text representation of the value of the current <see cref="Optional{T}"/> object.
     /// </summary>
     /// <returns>
-    /// The text representation of the value of the current <see cref="Optional{T}"/> object if the <see cref="HasValue"/> property is <c>true</c>,
-    /// or an empty string ("") if the <see cref="HasValue"/> property is <c>false</c>.
+    /// The text representation of the value of the current <see cref="Optional{T}"/> object if the <see cref="HasValue"/> property is <see langword="true"/>,
+    /// or an empty string ("") if the <see cref="HasValue"/> property is <see langword="false"/>.
     /// </returns>
     public override string? ToString() => m_HasValue ? m_Value?.ToString() : null;
 
@@ -133,7 +133,7 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// </para>
     /// </summary>
     /// <returns>
-    /// A <see cref="Optional{T}"/> object whose <see cref="HasValue"/> property is <c>false</c>.
+    /// A <see cref="Optional{T}"/> object whose <see cref="HasValue"/> property is <see langword="false"/>.
     /// </returns>
     public static Optional<T> None => default;
 
@@ -164,7 +164,7 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// </summary>
     /// <param name="optional1">The first <see cref="Optional{T}"/> object.</param>
     /// <param name="optional2">The second <see cref="Optional{T}"/> object.</param>
-    /// <returns><c>true</c> if <paramref name="optional1"/> equals <paramref name="optional2"/>; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if <paramref name="optional1"/> equals <paramref name="optional2"/>; otherwise, <see langword="false"/>.</returns>
     public static bool operator ==(Optional<T> optional1, Optional<T> optional2) => _EqualsOp(optional1, optional2);
 
     /// <summary>
@@ -172,7 +172,7 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// </summary>
     /// <param name="optional1">The first <see cref="Optional{T}"/> object.</param>
     /// <param name="optional2">The second <see cref="Optional{T}"/> object.</param>
-    /// <returns><c>true</c> if <paramref name="optional1"/> does not equal <paramref name="optional2"/>; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if <paramref name="optional1"/> does not equal <paramref name="optional2"/>; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(Optional<T> optional1, Optional<T> optional2) => !_EqualsOp(optional1, optional2);
 
 }

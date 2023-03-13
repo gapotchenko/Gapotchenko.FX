@@ -14,7 +14,7 @@ public static class StringExtensions
     /// <param name="input">The input string.</param>
     /// <param name="pattern">The regular expression pattern.</param>
     /// <param name="comparisionType">The string comparison type.</param>
-    /// <returns>An object that contains information about the match when it is successful; <c>null</c> otherwise.</returns>
+    /// <returns>An object that contains information about the match when it is successful; <see langword="null"/> otherwise.</returns>
     public static Match? MatchRegex(this string input, string? pattern, StringComparison comparisionType)
     {
         if (input == null)
@@ -57,7 +57,7 @@ public static class StringExtensions
     /// </summary>
     /// <param name="input">The input string.</param>
     /// <param name="pattern">The regular expression pattern.</param>
-    /// <returns>An object that contains information about the match when it is successful; <c>null</c> otherwise.</returns>
+    /// <returns>An object that contains information about the match when it is successful; <see langword="null"/> otherwise.</returns>
     public static Match? MatchRegex(this string input, string? pattern) => MatchRegex(input, pattern, StringComparison.CurrentCulture);
 
     /// <summary>
@@ -94,7 +94,7 @@ public static class StringExtensions
     /// <param name="input">The input string.</param>
     /// <param name="pattern">The regular expression pattern.</param>
     /// <param name="comparisionType">The string comparison type.</param>
-    /// <returns><c>true</c> if pattern matches the beginning of input string; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if pattern matches the beginning of input string; otherwise, <see langword="false"/>.</returns>
     public static bool StartsWithRegex(this string input, string pattern, StringComparison comparisionType)
     {
         if (pattern == null)
@@ -108,7 +108,7 @@ public static class StringExtensions
     /// </summary>
     /// <param name="input">The input string.</param>
     /// <param name="pattern">The regular expression pattern.</param>
-    /// <returns><c>true</c> if pattern matches the beginning of input string; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if pattern matches the beginning of input string; otherwise, <see langword="false"/>.</returns>
     public static bool StartsWithRegex(this string input, string pattern) => StartsWithRegex(input, pattern, StringComparison.CurrentCulture);
 
     /// <summary>
@@ -118,7 +118,7 @@ public static class StringExtensions
     /// <param name="input">The input string.</param>
     /// <param name="pattern">The regular expression pattern.</param>
     /// <param name="comparisionType">The string comparison type.</param>
-    /// <returns><c>true</c> if pattern matches the end of input string; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if pattern matches the end of input string; otherwise, <see langword="false"/>.</returns>
     public static bool EndsWithRegex(this string input, string pattern, StringComparison comparisionType)
     {
         if (pattern == null)
@@ -132,7 +132,7 @@ public static class StringExtensions
     /// </summary>
     /// <param name="input">The input string.</param>
     /// <param name="pattern">The regular expression pattern.</param>
-    /// <returns><c>true</c> if pattern matches the end of input string; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if pattern matches the end of input string; otherwise, <see langword="false"/>.</returns>
     public static bool EndsWithRegex(this string input, string pattern) => EndsWithRegex(input, pattern, StringComparison.CurrentCulture);
 
     /// <summary>
@@ -142,7 +142,7 @@ public static class StringExtensions
     /// <param name="input">The input string.</param>
     /// <param name="pattern">The regular expression pattern.</param>
     /// <param name="comparisionType">The string comparison type.</param>
-    /// <returns><c>true</c> if input string matches specified pattern; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if input string matches specified pattern; otherwise, <see langword="false"/>.</returns>
     public static bool EqualsRegex(this string input, string? pattern, StringComparison comparisionType)
     {
         if (input == null)
@@ -159,6 +159,6 @@ public static class StringExtensions
     /// </summary>
     /// <param name="input">The input string.</param>
     /// <param name="pattern">The regular expression pattern.</param>
-    /// <returns><c>true</c> if input string matches specified pattern; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if input string matches specified pattern; otherwise, <see langword="false"/>.</returns>
     public static bool EqualsRegex(this string input, string? pattern) => EqualsRegex(input, pattern, StringComparison.CurrentCulture);
 }

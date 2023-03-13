@@ -12,7 +12,7 @@ partial class ProcessExtensions
     /// <param name="process">The process.</param>
     /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to exit.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns><c>true</c> if the associated process has exited; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the associated process has exited; otherwise, <see langword="false"/>.</returns>
     public static Task<bool> WaitForExitAsync(this Process process, int millisecondsTimeout, CancellationToken cancellationToken = default)
     {
         if (process == null)

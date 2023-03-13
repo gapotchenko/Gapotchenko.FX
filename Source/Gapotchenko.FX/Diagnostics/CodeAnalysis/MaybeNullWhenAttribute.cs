@@ -5,7 +5,7 @@ namespace System.Diagnostics.CodeAnalysis;
 /// <summary>
 /// <para>
 /// Specifies that when a method returns <see cref="ReturnValue"/>,
-/// the parameter may be <c>null</c> even if the corresponding type disallows it.
+/// the parameter may be <see langword="null"/> even if the corresponding type disallows it.
 /// </para>
 /// <para>
 /// This is a polyfill provided by Gapotchenko.FX.

@@ -12,7 +12,7 @@ public static class GraphEdgeExtensions
     /// <param name="edgeSet">The set of graph edges.</param>
     /// <param name="from">The source vertex of the edge.</param>
     /// <param name="to">The destination vertex of the edge.</param>
-    /// <returns><c>true</c> if the edge is added to the graph; <c>false</c> if the edge is already present.</returns>
+    /// <returns><see langword="true"/> if the edge is added to the graph; <see langword="false"/> if the edge is already present.</returns>
     public static bool Add<TVertex>(this ISet<GraphEdge<TVertex>> edgeSet, TVertex from, TVertex to) =>
         (edgeSet ?? throw new ArgumentNullException(nameof(edgeSet))).Add(new GraphEdge<TVertex>(from, to));
 
@@ -22,7 +22,7 @@ public static class GraphEdgeExtensions
     /// <param name="edgeSet">The set of graph edges.</param>
     /// <param name="from">The source vertex of the edge.</param>
     /// <param name="to">The destination vertex of the edge.</param>
-    /// <returns><c>true</c> if the edge was removed from the graph; <c>false</c> if the edge is was not found.</returns>
+    /// <returns><see langword="true"/> if the edge was removed from the graph; <see langword="false"/> if the edge is was not found.</returns>
     public static bool Remove<TVertex>(this ISet<GraphEdge<TVertex>> edgeSet, TVertex from, TVertex to) =>
         (edgeSet ?? throw new ArgumentNullException(nameof(edgeSet))).Remove(new GraphEdge<TVertex>(from, to));
 
@@ -40,7 +40,7 @@ public static class GraphEdgeExtensions
     /// <param name="edgeSet">The set of graph edges.</param>
     /// <param name="from">The source vertex of the edge.</param>
     /// <param name="to">The destination vertex of the edge.</param>
-    /// <returns><c>true</c> when a specified vertex <paramref name="from">A</paramref> is adjacent to vertex <paramref name="to">B</paramref>; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> when a specified vertex <paramref name="from">A</paramref> is adjacent to vertex <paramref name="to">B</paramref>; otherwise, <see langword="false"/>.</returns>
     public static bool Contains<TVertex>(this ISet<GraphEdge<TVertex>> edgeSet, TVertex from, TVertex to) =>
         (edgeSet ?? throw new ArgumentNullException(nameof(edgeSet))).Contains(new GraphEdge<TVertex>(from, to));
 }

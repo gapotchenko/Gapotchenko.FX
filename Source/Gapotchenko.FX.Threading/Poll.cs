@@ -19,7 +19,7 @@ public static class Poll
     /// <param name="millisecondsInterval">The amount of time, in milliseconds, to wait between condition polling attempts.</param>
     /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the condition to come true.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns><c>true</c> when the wait condition is met; <c>false</c> when operation is timed out.</returns>
+    /// <returns><see langword="true"/> when the wait condition is met; <see langword="false"/> when operation is timed out.</returns>
     public static async Task<bool> WaitUntilAsync(
         Func<Task<bool>> condition,
         int millisecondsInterval,

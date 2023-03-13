@@ -115,8 +115,8 @@ public class AssemblyAutoLoader :
     /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
     /// </summary>
     /// <param name="assembly">The assembly.</param>
-    /// <returns><c>true</c> if the assembly is added; <c>false</c> if the assembly is already added.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
+    /// <returns><see langword="true"/> if the assembly is added; <see langword="false"/> if the assembly is already added.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <see langword="null"/>.</exception>
     public new bool AddAssembly(Assembly assembly) => AddAssembly(assembly, (IEnumerable<string?>?)null);
 
     /// <summary>
@@ -126,8 +126,8 @@ public class AssemblyAutoLoader :
     /// </summary>
     /// <param name="assembly">The assembly.</param>
     /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
-    /// <returns><c>true</c> if the assembly with the specified set of additional probing paths is added; <c>false</c> if the assembly with the specified set of additional probing paths is already added.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
+    /// <returns><see langword="true"/> if the assembly with the specified set of additional probing paths is added; <see langword="false"/> if the assembly with the specified set of additional probing paths is already added.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <see langword="null"/>.</exception>
     public new bool AddAssembly(Assembly assembly, params string?[]? additionalProbingPaths) =>
         AddAssembly(assembly, (IEnumerable<string?>?)additionalProbingPaths);
 
@@ -138,8 +138,8 @@ public class AssemblyAutoLoader :
     /// </summary>
     /// <param name="assembly">The assembly.</param>
     /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
-    /// <returns><c>true</c> if the assembly with the specified set of additional probing paths is added; <c>false</c> if the assembly with the specified set of additional probing paths is already added.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
+    /// <returns><see langword="true"/> if the assembly with the specified set of additional probing paths is added; <see langword="false"/> if the assembly with the specified set of additional probing paths is already added.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <see langword="null"/>.</exception>
     public bool AddAssembly(Assembly assembly, IEnumerable<string?>? additionalProbingPaths)
     {
         if (assembly == null)
@@ -165,8 +165,8 @@ public class AssemblyAutoLoader :
     /// Removes a specified assembly from the list of sources to consider during assembly resolution.
     /// </summary>
     /// <param name="assembly">The assembly.</param>
-    /// <returns><c>true</c> if the assembly is removed; <c>false</c> if the assembly already removed.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <c>null</c>.</exception>
+    /// <returns><see langword="true"/> if the assembly is removed; <see langword="false"/> if the assembly already removed.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <see langword="null"/>.</exception>
     public new bool RemoveAssembly(Assembly assembly)
     {
         if (assembly == null)
@@ -188,8 +188,8 @@ public class AssemblyAutoLoader :
     /// Once added, establishes the specified directory path as the location of assemblies to probe during assembly resolution.
     /// </summary>
     /// <param name="path">The probing path.</param>
-    /// <returns><c>true</c> if the probing path is added; <c>false</c> if the probing path is already added.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="path"/> parameter is <c>null</c>.</exception>
+    /// <returns><see langword="true"/> if the probing path is added; <see langword="false"/> if the probing path is already added.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> parameter is <see langword="null"/>.</exception>
     public new bool AddProbingPath(string path)
     {
         if (path == null)
@@ -214,8 +214,8 @@ public class AssemblyAutoLoader :
     /// Once removed, ceases to treat the specified directory path as the location of assemblies to probe during assembly resolution.
     /// </summary>
     /// <param name="path">The probing path.</param>
-    /// <returns><c>true</c> if the probing path is removed; <c>false</c> if the probing path is already removed.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="path"/> parameter is <c>null</c>.</exception>
+    /// <returns><see langword="true"/> if the probing path is removed; <see langword="false"/> if the probing path is already removed.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> parameter is <see langword="null"/>.</exception>
     public new bool RemoveProbingPath(string path)
     {
         if (path == null)
@@ -251,7 +251,7 @@ public class AssemblyAutoLoader :
     /// Resolves the file path of an assembly with specified name.
     /// </summary>
     /// <param name="assemblyName">The assembly name.</param>
-    /// <returns>The assembly file path or <c>null</c> if the assembly is unresolved.</returns>
+    /// <returns>The assembly file path or <see langword="null"/> if the assembly is unresolved.</returns>
     public string? ResolveAssemblyPath(AssemblyName assemblyName)
     {
         if (assemblyName == null)
@@ -266,7 +266,7 @@ public class AssemblyAutoLoader :
     /// Resolves the file path of an unmanaged DLL with specified name.
     /// </summary>
     /// <param name="unmanagedDllName">The name of unmanaged DLL.</param>
-    /// <returns>The DLL file path or <c>null</c> if the DLL is unresolved.</returns>
+    /// <returns>The DLL file path or <see langword="null"/> if the DLL is unresolved.</returns>
     public string? ResolveUnmanagedDllPath(string unmanagedDllName)
     {
         if (unmanagedDllName == null)
@@ -289,8 +289,8 @@ public class AssemblyAutoLoader :
     /// Releases the unmanaged resources and optionally releases the managed resources.
     /// </summary>
     /// <param name="disposing">
-    /// <c>true</c> to release both managed and unmanaged resources;
-    /// <c>false</c> to release only unmanaged resources.
+    /// <see langword="true"/> to release both managed and unmanaged resources;
+    /// <see langword="false"/> to release only unmanaged resources.
     /// </param>
     protected virtual void Dispose(bool disposing)
     {

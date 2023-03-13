@@ -121,7 +121,7 @@ public interface IIntervalOperations<T>
     /// Determines whether the specified element is contained within the interval.
     /// </summary>
     /// <param name="item">The element to check for containment.</param>
-    /// <returns><c>true</c> if element is contained within the interval; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if element is contained within the interval; otherwise, <see langword="false"/>.</returns>
     bool Contains(T item);
 
     /// <summary>

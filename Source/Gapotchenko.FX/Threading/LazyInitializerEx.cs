@@ -250,10 +250,10 @@ public static class LazyInitializerEx
     /// </summary>
     /// <typeparam name="TTarget">The type of the target to be initialized.</typeparam>
     /// <param name="target">A reference or value of type <typeparamref name="TTarget"/> to initialize if it hasn't already been initialized.</param>
-    /// <param name="syncLock">A reference to an object used as the mutually exclusive lock for initializing target. If <paramref name="syncLock"/> is <c>null</c>, a new object will be instantiated.</param>
+    /// <param name="syncLock">A reference to an object used as the mutually exclusive lock for initializing target. If <paramref name="syncLock"/> is <see langword="null"/>, a new object will be instantiated.</param>
     /// <param name="valueFactory">
     /// A reference to a function that is called to initialize the target.
-    /// Once target is initialized, the <paramref name="valueFactory"/> is set to <c>null</c> indicating that the target has already been initialized.
+    /// Once target is initialized, the <paramref name="valueFactory"/> is set to <see langword="null"/> indicating that the target has already been initialized.
     /// </param>
     public static TTarget EnsureInitialized<TTarget>([AllowNull] ref TTarget target, [NotNull] ref object? syncLock, ref Func<TTarget>? valueFactory)
     {

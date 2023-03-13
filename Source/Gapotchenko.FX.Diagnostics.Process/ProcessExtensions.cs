@@ -76,7 +76,7 @@ public static partial class ProcessExtensions
     /// Gets the parent process.
     /// </summary>
     /// <param name="process">The process to get the parent for.</param>
-    /// <returns>The parent process or <c>null</c> if it is no longer running or there is no parent.</returns>
+    /// <returns>The parent process or <see langword="null"/> if it is no longer running or there is no parent.</returns>
     public static Process? GetParent(this Process process)
     {
         if (process == null)

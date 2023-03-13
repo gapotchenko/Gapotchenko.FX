@@ -13,7 +13,7 @@ public static class ListExtensions
     /// <param name="list">The list.</param>
     /// <param name="comparer">
     /// The <see cref="IComparer{T}"/> implementation to use when comparing elements,
-    /// or <c>null</c> to use the default comparer.
+    /// or <see langword="null"/> to use the default comparer.
     /// </param>
     public static void StableSort<T>(this List<T> list, IComparer<T>? comparer)
     {

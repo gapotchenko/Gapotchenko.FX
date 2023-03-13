@@ -8,9 +8,9 @@ namespace Gapotchenko.FX.Collections;
 public static class ArrayExtensions
 {
     /// <summary>
-    /// Indicates whether the specified array is <c>null</c> or empty.
+    /// Indicates whether the specified array is <see langword="null"/> or empty.
     /// </summary>
     /// <param name="value">The array to test.</param>
-    /// <returns><c>true</c> if the <paramref name="value"/> parameter is null or an empty array; otherwise, <c>false</c>.</returns>        
+    /// <returns><see langword="true"/> if the <paramref name="value"/> parameter is null or an empty array; otherwise, <see langword="false"/>.</returns>        
     public static bool IsNullOrEmpty([NotNullWhen(false)] this Array? value) => value is null || value.Length == 0;
 }

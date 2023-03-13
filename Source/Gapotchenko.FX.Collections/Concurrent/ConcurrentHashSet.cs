@@ -65,7 +65,7 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
     /// Gets a value that indicates whether the <see cref="ConcurrentHashSet{T}"/> is empty.
     /// </summary>
     /// <value>
-    /// <c>true</c> if the <see cref="ConcurrentHashSet{T}"/> is empty; otherwise, <c>false</c>.
+    /// <see langword="true"/> if the <see cref="ConcurrentHashSet{T}"/> is empty; otherwise, <see langword="false"/>.
     /// </value>
     public bool IsEmpty
     {
@@ -289,7 +289,7 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
     /// Determines whether the <see cref="ConcurrentHashSet{T}"/> contains the specified item.
     /// </summary>
     /// <param name="item">The item to locate in the <see cref="ConcurrentHashSet{T}"/>.</param>
-    /// <returns><c>true</c> if the <see cref="ConcurrentHashSet{T}"/> contains the item; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the <see cref="ConcurrentHashSet{T}"/> contains the item; otherwise, <see langword="false"/>.</returns>
     public bool Contains(T item)
     {
         var hashcode = InternalGetHashCode(item);
@@ -319,7 +319,7 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
     /// Attempts to remove the item from the <see cref="ConcurrentHashSet{T}"/>.
     /// </summary>
     /// <param name="item">The item to remove.</param>
-    /// <returns><c>true</c> if an item was removed successfully; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if an item was removed successfully; otherwise, <see langword="false"/>.</returns>
     public bool TryRemove(T item)
     {
         var hashcode = InternalGetHashCode(item);

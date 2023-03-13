@@ -18,7 +18,7 @@ public sealed class ExpressionEqualityComparer : EqualityComparer<Expression>
     /// <param name="x">The first object to compare.</param>
     /// <param name="y">The second object to compare.</param>
     /// <returns>
-    /// <c>true</c> if the specified objects are equal; otherwise, <c>false</c>.
+    /// <see langword="true"/> if the specified objects are equal; otherwise, <see langword="false"/>.
     /// </returns>
     public override bool Equals(Expression? x, Expression? y)
     {

@@ -185,7 +185,7 @@ public sealed class UriQueryBuilder
     /// Checks whether a query in this instance has a parameter with the given name.
     /// </summary>
     /// <param name="name">The parameter name.</param>
-    /// <returns><c>true</c> if a query has a parameter with the given name; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if a query has a parameter with the given name; otherwise, <see langword="false"/>.</returns>
     public bool HasParameter(string name)
     {
         if (name == null)

@@ -22,7 +22,7 @@ interface IProcessMemoryAccessor
     /// Indicates whether to throw an exception on error.
     /// </para>
     /// <para>
-    /// The support of this flag is optional; an adapter may just prefer to return -1 even when the flag is <c>true</c>.
+    /// The support of this flag is optional; an adapter may just prefer to return -1 even when the flag is <see langword="true"/>.
     /// </para>
     /// </param>
     /// <returns>The count of read bytes or -1 on error.</returns>

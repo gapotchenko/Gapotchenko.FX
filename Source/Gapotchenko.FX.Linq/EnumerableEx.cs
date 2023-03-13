@@ -71,8 +71,8 @@ public static partial class EnumerableEx
     /// <param name="source">An <see cref="IEnumerable{T}"/> that contains the elements to apply the predicate to.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>
-    /// <c>true</c> if the source sequence is not empty and every element passes the test in the specified predicate;
-    /// otherwise, <c>false</c>.
+    /// <see langword="true"/> if the source sequence is not empty and every element passes the test in the specified predicate;
+    /// otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">Source or predicate is null.</exception>
     public static bool AnyAndAll<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
@@ -109,7 +109,7 @@ public static partial class EnumerableEx
     /// <param name="value">An <see cref="IEnumerable{T}"/> to compare to the source sequence.</param>
     /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to use to compare elements.</param>
     /// <returns>
-    /// <c>true</c> if the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence; otherwise, <c>false</c>.
+    /// <see langword="true"/> if the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is null.</exception>
     public static bool Contains<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource>? comparer)
@@ -159,7 +159,7 @@ public static partial class EnumerableEx
     /// <param name="source">The source sequence.</param>
     /// <param name="value">An <see cref="IEnumerable{T}"/> to compare to the source sequence.</param>
     /// <returns>
-    /// <c>true</c> if the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence; otherwise, <c>false</c>.
+    /// <see langword="true"/> if the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is null.</exception>
     public static bool Contains<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value) => Contains(source, value, null);
@@ -171,9 +171,9 @@ public static partial class EnumerableEx
     /// <param name="source">The source sequence.</param>
     /// <param name="value">An <see cref="IEnumerable{T}"/> value to match.</param>
     /// <returns>
-    /// <c>true</c> if <paramref name="value"/> sequence matches the beginning of the <paramref name="source"/> sequence; otherwise, <c>false</c>.
+    /// <see langword="true"/> if <paramref name="value"/> sequence matches the beginning of the <paramref name="source"/> sequence; otherwise, <see langword="false"/>.
     /// </returns>
-    /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is <see langword="null"/>.</exception>
     public static bool StartsWith<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value) => StartsWith(source, value, null);
 
     /// <summary>
@@ -184,9 +184,9 @@ public static partial class EnumerableEx
     /// <param name="value">An <see cref="IEnumerable{T}"/> value to match.</param>
     /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to use to compare elements.</param>
     /// <returns>
-    /// <c>true</c> if <paramref name="value"/> sequence matches the beginning of the <paramref name="source"/> sequence; otherwise, <c>false</c>.
+    /// <see langword="true"/> if <paramref name="value"/> sequence matches the beginning of the <paramref name="source"/> sequence; otherwise, <see langword="false"/>.
     /// </returns>
-    /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is <see langword="null"/>.</exception>
     public static bool StartsWith<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource>? comparer)
     {
         if (source == null)

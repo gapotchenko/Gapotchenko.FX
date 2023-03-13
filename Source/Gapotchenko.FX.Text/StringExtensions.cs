@@ -15,7 +15,7 @@ public static class StringExtensions
     /// </summary>
     /// <param name="s">The string instance.</param>
     /// <param name="value">The character to compare.</param>
-    /// <returns><c>true</c> if the string instance begins with the value; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the string instance begins with the value; otherwise, <see langword="false"/>.</returns>
 #if TFF_STRING_OPWITH_CHAR
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
@@ -41,7 +41,7 @@ public static class StringExtensions
     /// </summary>
     /// <param name="s">The string instance.</param>
     /// <param name="value">The character to compare.</param>
-    /// <returns><c>true</c> if the string instance ends with the value; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the string instance ends with the value; otherwise, <see langword="false"/>.</returns>
 #if TFF_STRING_OPWITH_CHAR
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
@@ -68,7 +68,7 @@ public static class StringExtensions
     /// </summary>
     /// <param name="s">The string instance.</param>
     /// <param name="value">The character to seek.</param>
-    /// <returns><c>true</c> if the <paramref name="value parameter"/> occurs within this string; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the <paramref name="value parameter"/> occurs within this string; otherwise, <see langword="false"/>.</returns>
 #if TFF_STRING_CONTAINS_CHAR
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif

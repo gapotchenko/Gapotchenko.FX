@@ -47,7 +47,7 @@ partial class MathEx
     /// <param name="max">The upper bound of the range.</param>
     /// <param name="comparer">
     /// The optional comparer.
-    /// When this parameter is <c>null</c>, a default comparer for type <typeparamref name="T"/> is used.
+    /// When this parameter is <see langword="null"/>, a default comparer for type <typeparamref name="T"/> is used.
     /// </param>
     /// <returns>
     /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>

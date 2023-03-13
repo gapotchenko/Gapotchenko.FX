@@ -13,7 +13,7 @@ public static partial class ArrayEqualityComparer
     /// <typeparam name="T">The array element type.</typeparam>
     /// <param name="x">The first array to compare.</param>
     /// <param name="y">The second array to compare.</param>
-    /// <returns><c>true</c> if the specified arrays are equal; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the specified arrays are equal; otherwise, <see langword="false"/>.</returns>
     public static bool Equals<T>(T[]? x, T[]? y) => ArrayEqualityComparer<T>.Default.Equals(x, y);
 
     /// <summary>
@@ -35,7 +35,7 @@ public static partial class ArrayEqualityComparer
     /// <remarks>This method overshadows <see cref="Object.Equals(object, object)"/> to avoid a comparison by reference pitfall.</remarks>
     /// <param name="x">The first array to compare.</param>
     /// <param name="y">The second array to compare.</param>
-    /// <returns><c>true</c> if the specified arrays are equal; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the specified arrays are equal; otherwise, <see langword="false"/>.</returns>
     public static new bool Equals(object? x, object? y)
     {
         if (x is null && y is null)

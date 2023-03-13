@@ -4,8 +4,8 @@ namespace System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 /// <para>
-/// Specifies that an output will not be <c>null</c> even if the corresponding type allows it.
-/// Specifies that an input argument was not <c>null</c> when the call returns.
+/// Specifies that an output will not be <see langword="null"/> even if the corresponding type allows it.
+/// Specifies that an input argument was not <see langword="null"/> when the call returns.
 /// </para>
 /// <para>
 /// This is a polyfill provided by Gapotchenko.FX.

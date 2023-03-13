@@ -32,7 +32,7 @@ public struct StringSpan : IEquatable<StringSpan>
     /// Indicates whether the current <see cref="StringSpan"/> struct is equal to another <see cref="StringSpan"/>.
     /// </summary>
     /// <param name="other">An <see cref="StringSpan"/> value to compare with this struct.</param>
-    /// <returns><c>true</c> if the specified object is equal to the current <see cref="StringSpan"/>; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the specified object is equal to the current <see cref="StringSpan"/>; otherwise, <see langword="false"/>.</returns>
     public bool Equals(StringSpan other) =>
         StartIndex == other.StartIndex &&
         Length == other.Length;
@@ -41,7 +41,7 @@ public struct StringSpan : IEquatable<StringSpan>
     /// Indicates whether the current <see cref="StringSpan"/> struct is equal to another object.
     /// </summary>
     /// <param name="obj">An object to compare with this <see cref="StringSpan"/>.</param>
-    /// <returns><c>true</c> if the specified object is equal to the current <see cref="StringSpan"/>; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the specified object is equal to the current <see cref="StringSpan"/>; otherwise, <see langword="false"/>.</returns>
     public override bool Equals(object? obj) => obj is StringSpan other && Equals(other);
 
     /// <summary>
@@ -55,7 +55,7 @@ public struct StringSpan : IEquatable<StringSpan>
     /// </summary>
     /// <param name="a">The first value to compare.</param>
     /// <param name="b">The second value to compare.</param>
-    /// <returns><c>true</c> if the specified <see cref="StringSpan"/> structs are equal; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the specified <see cref="StringSpan"/> structs are equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator ==(StringSpan a, StringSpan b) => a.Equals(b);
 
     /// <summary>
@@ -63,7 +63,7 @@ public struct StringSpan : IEquatable<StringSpan>
     /// </summary>
     /// <param name="a">The first value to compare.</param>
     /// <param name="b">The second value to compare.</param>
-    /// <returns><c>true</c> if the specified <see cref="StringSpan"/> structs are not equal; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the specified <see cref="StringSpan"/> structs are not equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(StringSpan a, StringSpan b) => !a.Equals(b);
 
     /// <summary>

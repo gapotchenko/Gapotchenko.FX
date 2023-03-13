@@ -14,7 +14,7 @@ class DefaultArrayEqualityComparer<T> : ArrayEqualityComparer<T>
     /// </summary>
     /// <param name="x">The first array to compare.</param>
     /// <param name="y">The second array to compare.</param>
-    /// <returns><c>true</c> if the specified arrays are equal; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="true"/> if the specified arrays are equal; otherwise, <see langword="false"/>.</returns>
     public override bool Equals(T[]? x, T[]? y)
     {
         if (x == y)
@@ -64,8 +64,8 @@ class DefaultArrayEqualityComparer<T> : ArrayEqualityComparer<T>
     /// </summary>
     /// <param name="obj">The object to compare with the current <see cref="ArrayEqualityComparer{T}"/>.</param>
     /// <returns>
-    /// <c>true</c> if the specified <see cref="Object"/> is equal to the current <see cref="ArrayEqualityComparer{T}"/>;
-    /// otherwise, <c>false</c>.
+    /// <see langword="true"/> if the specified <see cref="Object"/> is equal to the current <see cref="ArrayEqualityComparer{T}"/>;
+    /// otherwise, <see langword="false"/>.
     /// </returns>
     public override bool Equals(object? obj) => obj is ArrayEqualityComparer<T>;
 

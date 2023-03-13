@@ -74,7 +74,7 @@ public struct LazyEvaluation<T>
     /// </summary>
     /// <returns>
     /// The result of calling the <see cref="Object.ToString()"/> method on the <see cref="Value"/> property for this instance,
-    /// if the value has been created (that is, if the <see cref="IsValueCreated"/> property returns <c>true</c>).
+    /// if the value has been created (that is, if the <see cref="IsValueCreated"/> property returns <see langword="true"/>).
     /// Otherwise, a string indicating that the value has not been created.
     /// </returns>
     public override string? ToString() =>

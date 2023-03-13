@@ -4,7 +4,7 @@ namespace System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 /// <para>
-/// Specifies that an output may be <c>null</c> even if the corresponding type disallows it.
+/// Specifies that an output may be <see langword="null"/> even if the corresponding type disallows it.
 /// </para>
 /// <para>
 /// This is a polyfill provided by Gapotchenko.FX.
