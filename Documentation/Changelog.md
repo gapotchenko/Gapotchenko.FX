@@ -22,6 +22,7 @@ Release date: not released yet
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - .NET Framework 4.6 target is retired. The minimal supported .NET Framework version is 4.6.1
 - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
+- Fixed case-sensitivity of a text data encoding padding character. This is important for data encodings that use custom padding characters
 
 ## 2022
 
