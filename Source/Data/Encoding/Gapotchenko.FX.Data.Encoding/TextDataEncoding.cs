@@ -698,10 +698,20 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         if (!CanCanonicalize)
             return s.ToString();
 
-        var d = new char[s.Length];
-        CanonicalizeCore(s, d);
-
-        return new string(d);
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+        if (s.Length <= 256)
+        {
+            Span<char> d = stackalloc char[s.Length];
+            CanonicalizeCore(s, d);
+            return new string(d);
+        }
+        else
+#endif
+        {
+            var d = new char[s.Length];
+            CanonicalizeCore(s, d);
+            return new string(d);
+        }
     }
 
     /// <summary>
