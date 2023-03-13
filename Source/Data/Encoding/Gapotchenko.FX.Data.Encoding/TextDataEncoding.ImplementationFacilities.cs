@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Data.Encoding;
+﻿using Gapotchenko.FX.Text;
+
+namespace Gapotchenko.FX.Data.Encoding;
 
 partial class TextDataEncoding
 {
@@ -34,17 +36,9 @@ partial class TextDataEncoding
         /// <see langword="true"/> if the characters are the same;
         /// otherwise, <see langword="false"/>.
         /// </returns>
-        public static bool CharEqual(char a, char b, bool caseSensitive)
-        {
-            if (caseSensitive)
-            {
-                return a == b;
-            }
-            else
-            {
-                Span<char> span = stackalloc char[] { a, b };
-                return MemoryExtensions.Equals(span.Slice(0, 1), span.Slice(1, 1), StringComparison.OrdinalIgnoreCase);
-            }
-        }
+        public static bool CharEqual(char a, char b, bool caseSensitive) =>
+            caseSensitive ?
+                a == b :
+                a.Equals(b, StringComparison.OrdinalIgnoreCase);
     }
 }

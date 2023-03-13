@@ -19,6 +19,7 @@ Release date: not released yet
 - Added polyfill for `System.IO.Path.GetRelativePath` method
 - Added polyfill for `System.IO.Path.TrimEndingDirectorySeparator` method
 - Added polyfills for `ReadExactly` and `ReadAtLeast` methods of `System.IO.Stream` type
+- Added polyfill for `System.Char.Equals(System.Char, System.StringComparison)` method
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - .NET Framework 4.6 target is retired. The minimal supported .NET Framework version is 4.6.1
 - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
