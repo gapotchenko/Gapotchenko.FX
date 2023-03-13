@@ -40,9 +40,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         if (@case != 0 && IsCaseSensitive)
         {
             throw new ArgumentException(
-                string.Format(
-                    "'{0}' option cannot be used with a case-sensitive data encoding.",
-                    nameof(DataEncodingOptions.Lowercase)),
+                "Case-insensitive options cannot be used with a case-sensitive data encoding.",
                 nameof(options));
         }
 
@@ -139,7 +137,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         /// </summary>
         /// <param name="input">
         /// The input.
-        /// The <c>null</c> value signals a final block.
+        /// A <see langword="null"/> value signifies the final block.
         /// </param>
         /// <param name="output">The output.</param>
         void Encode(ReadOnlySpan<byte> input, TextWriter output);
@@ -162,7 +160,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         /// </summary>
         /// <param name="input">
         /// The input.
-        /// The <c>null</c> value signals a final block.
+        /// A <see langword="null"/> value signifies the final block.
         /// </param>
         /// <param name="output">The output.</param>
         void Decode(ReadOnlySpan<char> input, Stream output);
@@ -269,13 +267,15 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            m_Context.Encode(new ReadOnlySpan<byte>(buffer, offset, count), m_TextWriter);
+            m_Context.Encode(buffer.AsSpan(offset, count), m_TextWriter);
         }
 
-        public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             if (count != 0)
-                await WriteAsyncCore(new ReadOnlyMemory<byte>(buffer, offset, count), cancellationToken).ConfigureAwait(false);
+                return WriteAsyncCore(buffer.AsMemory(offset, count), cancellationToken);
+            else
+                return Task.CompletedTask;
         }
 
 #if TFF_VALUETASK && !NETCOREAPP2_0
