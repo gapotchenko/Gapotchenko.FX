@@ -657,20 +657,20 @@ public abstract class TextDataEncoding : DataEncoding, ITextDataEncoding
     public string Pad(ReadOnlySpan<char> s) => PadCore(s);
 
     /// <summary>
-    /// Pads the encoded string.
+    /// Adds padding the encoded string.
     /// </summary>
-    /// <param name="s">The encoded string to pad.</param>
-    /// <returns>The padded encoded string.</returns>
+    /// <param name="s">The encoded string to add padding to.</param>
+    /// <returns>The encoded string with added padding.</returns>
     protected virtual string PadCore(ReadOnlySpan<char> s) => s.ToString();
 
     /// <inheritdoc/>
     public ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => UnpadCore(s);
 
     /// <summary>
-    /// Unpads the encoded string.
+    /// Removes padding from the encoded string.
     /// </summary>
-    /// <param name="s">The encoded string to unpad.</param>
-    /// <returns>The unpadded encoded string.</returns>
+    /// <param name="s">The encoded string to remove padding from.</param>
+    /// <returns>The encoded string with removed padding.</returns>
     protected virtual ReadOnlySpan<char> UnpadCore(ReadOnlySpan<char> s) => s;
 
     /// <inheritdoc/>

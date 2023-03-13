@@ -63,21 +63,21 @@ public interface ITextDataEncoding : IDataEncoding
     Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.None);
 
     /// <summary>
-    /// Pads the encoded read-only character span.
+    /// Adds padding the specified encoded read-only character span.
     /// </summary>
     /// <remarks>
     /// In some encodings, the length of an encoded string representation must be a multiple of the predefined number of characters.
     /// This method concatenates the specified character span with padding characters to meet that requirement and returns the resulting string.
     /// </remarks>
-    /// <param name="s">The read-only character span to pad.</param>
-    /// <returns>The padded encoded string.</returns>
+    /// <param name="s">The read-only character span to add padding to.</param>
+    /// <returns>The encoded string with added padding.</returns>
     string Pad(ReadOnlySpan<char> s);
 
     /// <summary>
-    /// Unpads the encoded read-only character span.
+    /// Removes padding from the specified encoded read-only character span.
     /// </summary>
-    /// <param name="s">The read-only character span to unpad.</param>
-    /// <returns>The unpadded read-only character span.</returns>
+    /// <param name="s">The read-only character span to remove padding from.</param>
+    /// <returns>The read-only character span with removed padding.</returns>
     ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s);
 
     /// <summary>
