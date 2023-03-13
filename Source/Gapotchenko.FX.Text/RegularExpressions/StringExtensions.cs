@@ -5,6 +5,7 @@ namespace Gapotchenko.FX.Text.RegularExpressions;
 /// <summary>
 /// Provides drop-in alternatives to conventional string functions that allow to use regular expressions.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public static class StringExtensions
 {
     /// <summary>
@@ -23,27 +24,15 @@ public static class StringExtensions
         if (pattern == null)
             return null;
 
-        var options = RegexOptions.Singleline | RegexOptions.ExplicitCapture;
-
-        switch (comparisionType)
-        {
-            case StringComparison.CurrentCultureIgnoreCase:
-                options |= RegexOptions.IgnoreCase;
-                break;
-
-            case StringComparison.InvariantCulture:
-            case StringComparison.Ordinal:
-                options |= RegexOptions.CultureInvariant;
-                break;
-
-            case StringComparison.InvariantCultureIgnoreCase:
-            case StringComparison.OrdinalIgnoreCase:
-                options |= RegexOptions.CultureInvariant | RegexOptions.IgnoreCase;
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException(nameof(comparisionType));
-        }
+        var options =
+            RegexOptions.Singleline | RegexOptions.ExplicitCapture |
+            comparisionType switch
+            {
+                StringComparison.CurrentCultureIgnoreCase => RegexOptions.IgnoreCase,
+                StringComparison.InvariantCulture or StringComparison.Ordinal => RegexOptions.CultureInvariant,
+                StringComparison.InvariantCultureIgnoreCase or StringComparison.OrdinalIgnoreCase => RegexOptions.CultureInvariant | RegexOptions.IgnoreCase,
+                _ => throw new ArgumentOutOfRangeException(nameof(comparisionType)),
+            };
 
         var match = Regex.Match(input, pattern, options);
         if (!match.Success)
