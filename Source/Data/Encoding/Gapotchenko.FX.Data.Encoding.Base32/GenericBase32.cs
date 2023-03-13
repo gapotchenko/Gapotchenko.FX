@@ -244,10 +244,13 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
             if (m_Eof)
                 return;
 
+            var options = m_Options;
+            bool padding = (options & DataEncodingOptions.Padding) != 0;
+
             if (input == null)
             {
                 m_Eof = true;
-                if ((m_Options & DataEncodingOptions.Padding) != 0)
+                if (padding)
                     ValidatePaddingEof();
                 FlushDecode(output);
                 return;
@@ -256,12 +259,13 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
             var alphabet = m_Alphabet;
             bool isCaseSensitive = alphabet.IsCaseSensitive;
             var paddingChar = m_Encoding.PaddingChar;
+            bool relax = (options & DataEncodingOptions.Relax) != 0;
 
             foreach (var c in input)
             {
                 if (ImplementationFacilities.CharEqual(c, paddingChar, isCaseSensitive))
                 {
-                    if ((m_Options & DataEncodingOptions.Padding) != 0)
+                    if (padding)
                         ValidatePaddingChar();
                     FlushDecode(output);
                     continue;
@@ -270,7 +274,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                 int b = alphabet.IndexOf(c);
                 if (b == -1)
                 {
-                    if ((m_Options & DataEncodingOptions.Relax) == 0)
+                    if (!relax)
                     {
                         bool ok =
                             char.IsWhiteSpace(c) ||

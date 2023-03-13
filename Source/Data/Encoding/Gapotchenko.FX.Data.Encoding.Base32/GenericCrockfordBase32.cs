@@ -251,6 +251,7 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
         var alphabet = Alphabet;
         bool isCaseSensitive = alphabet.IsCaseSensitive;
         var paddingChar = PaddingChar;
+        bool relax = (options & DataEncodingOptions.Relax) != 0;
 
         foreach (var c in s)
         {
@@ -260,7 +261,7 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
             int si = alphabet.IndexOf(c); // symbol index lookup
             if (si == -1)
             {
-                if ((options & DataEncodingOptions.Relax) == 0)
+                if (!relax)
                 {
                     if (!IsValidSeparator(c))
                         return false;
@@ -469,6 +470,7 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
 
         var alphabet = Alphabet;
         var paddingChar = PaddingChar;
+        bool relax = (options & DataEncodingOptions.Relax) != 0;
 
         foreach (var c in s)
         {
@@ -478,7 +480,7 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
             int si = alphabet.IndexOf(c); // symbol index lookup
             if (si == -1)
             {
-                if ((options & DataEncodingOptions.Relax) == 0)
+                if (!relax)
                 {
                     if (!IsValidSeparator(c))
                         return false;
@@ -612,6 +614,7 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
         var alphabet = Alphabet;
         bool isCaseSensitive = alphabet.IsCaseSensitive;
         var paddingChar = PaddingChar;
+        bool relax = (options & DataEncodingOptions.Relax) != 0;
 
         foreach (var c in s)
         {
@@ -621,7 +624,7 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
             int si = alphabet.IndexOf(c); // symbol index lookup
             if (si == -1)
             {
-                if ((options & DataEncodingOptions.Relax) == 0)
+                if (!relax)
                 {
                     if (!IsValidSeparator(c))
                         return false;
