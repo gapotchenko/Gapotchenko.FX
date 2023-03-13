@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Buffers.Binary;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX;
 
@@ -22,14 +23,6 @@ public sealed class LittleEndianBitConverter : IBitConverter
 
     static short ToInt16Core(in ReadOnlySpan<byte> value) => (short)ToUInt16Core(value);
 
-    static uint ToUInt32Core(ReadOnlySpan<byte> value) =>
-        value[0] |
-        (uint)value[1] << 8 |
-        (uint)value[2] << 16 |
-        (uint)value[3] << 24;
-
-    static int ToInt32Core(in ReadOnlySpan<byte> value) => (int)ToUInt32Core(value);
-
     static ulong ToUInt64Core(ReadOnlySpan<byte> value) =>
         value[0] |
         (ulong)value[1] << 8 |
@@ -42,9 +35,9 @@ public sealed class LittleEndianBitConverter : IBitConverter
 
     static long ToInt64Core(in ReadOnlySpan<byte> value) => (long)ToUInt64Core(value);
 
-    static float ToSingleCore(ReadOnlySpan<byte> value) => BitConverterEx.Int32BitsToSingle(ToInt32Core(value));
+    static float ToSingleCore(ReadOnlySpan<byte> value) => BitConverterEx.Int32BitsToSingle(BinaryPrimitives.ReadInt32LittleEndian(value));
 
-    static double ToDoubleCore(ReadOnlySpan<byte> value) => BitConverter.Int64BitsToDouble(ToInt64Core(value));
+    static double ToDoubleCore(ReadOnlySpan<byte> value) => BitConverter.Int64BitsToDouble(BinaryPrimitives.ReadInt64LittleEndian(value));
 
     static decimal ToDecimalCore(ReadOnlySpan<byte> value)
     {
@@ -52,7 +45,7 @@ public sealed class LittleEndianBitConverter : IBitConverter
         var bits = new int[n];
 
         for (int i = 0; i < n; ++i)
-            bits[i] = ToInt32Core(value.Slice(i * sizeof(int)));
+            bits[i] = BinaryPrimitives.ReadInt32LittleEndian(value.Slice(i * sizeof(int)));
 
         return new decimal(bits);
     }
@@ -439,11 +432,7 @@ public sealed class LittleEndianBitConverter : IBitConverter
     /// </summary>
     /// <param name="value">The byte span.</param>
     /// <returns>A 32-bit signed integer formed by the first four bytes of a specified span.</returns>
-    public static int ToInt32(ReadOnlySpan<byte> value)
-    {
-        BitConverterServices.ValidateToArguments(value, sizeof(int));
-        return ToInt32Core(value);
-    }
+    public static int ToInt32(ReadOnlySpan<byte> value) => BinaryPrimitives.ReadInt32LittleEndian(value);
 
     /// <summary>
     /// Returns a 32-bit signed integer converted from four bytes at a specified position in a byte array.
@@ -452,8 +441,7 @@ public sealed class LittleEndianBitConverter : IBitConverter
     /// <param name="startIndex">The starting position within value.</param>
     /// <returns>A 32-bit signed integer formed by four bytes beginning at startIndex.</returns>
     public static int ToInt32(byte[] value, int startIndex) =>
-        ToInt32Core(
-            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(int)));
+        ToInt32((value ?? throw new ArgumentNullException(nameof(value))).AsSpan(startIndex));
 
     /// <summary>
     /// Returns a 32-bit signed integer converted from the first four bytes of a byte array.
@@ -468,11 +456,7 @@ public sealed class LittleEndianBitConverter : IBitConverter
     /// <param name="value">The byte span.</param>
     /// <returns>A 32-bit unsigned integer formed by the first four bytes of a specified span.</returns>
     [CLSCompliant(false)]
-    public static uint ToUInt32(ReadOnlySpan<byte> value)
-    {
-        BitConverterServices.ValidateToArguments(value, sizeof(uint));
-        return ToUInt32Core(value);
-    }
+    public static uint ToUInt32(ReadOnlySpan<byte> value) => BinaryPrimitives.ReadUInt32LittleEndian(value);
 
     /// <summary>
     /// Returns a 32-bit unsigned integer converted from four bytes at a specified position in a byte array.
@@ -482,8 +466,7 @@ public sealed class LittleEndianBitConverter : IBitConverter
     /// <returns>A 32-bit unsigned integer formed by four bytes beginning at startIndex.</returns>
     [CLSCompliant(false)]
     public static uint ToUInt32(byte[] value, int startIndex) =>
-        ToUInt32Core(
-            BitConverterServices.ValidateToArguments(value, startIndex, sizeof(uint)));
+        ToUInt32((value ?? throw new ArgumentNullException(nameof(value))).AsSpan(startIndex));
 
     /// <summary>
     /// Returns a 32-bit unsigned integer converted from the first four bytes of a byte array.
