@@ -94,12 +94,22 @@ public enum DataEncodingOptions
     Compress = 1 << 7,
 
     /// <summary>
+    /// <para>
     /// Use lowercase characters for text output.
+    /// </para>
+    /// <para>
+    /// This option can only be specified for case-insensitive text data encodings.
+    /// </para>
     /// </summary>
     Lowercase = 1 << 8,
 
     /// <summary>
+    /// <para>
     /// Use uppercase characters for text output.
+    /// </para>
+    /// <para>
+    /// This option can only be specified for case-insensitive text data encodings.
+    /// </para>
     /// </summary>
     Uppercase = 1 << 9
 }
