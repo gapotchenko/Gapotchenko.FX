@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
-/// Defines data encoding options.
+/// Specifies data encoding options.
 /// </summary>
 [Flags]
 public enum DataEncodingOptions
@@ -34,18 +34,14 @@ public enum DataEncodingOptions
     Padding = 1 << 1,
 
     /// <summary>
+    /// <para>
     /// Leave an underlying data object such as <see cref="Stream"/>, <see cref="TextReader"/>, or <see cref="TextWriter"/> open.
+    /// </para>
+    /// <para>
     /// This option only applies to <see cref="IDataEncoding.CreateEncoder(Stream, DataEncodingOptions)"/>, <see cref="IDataEncoding.CreateDecoder(Stream, DataEncodingOptions)"/> and similar operations.
+    /// </para>
     /// </summary>
-    LeaveOpen = 1 << 2,
-
-    /// <summary>
-    /// Leave an underlying data object such as <see cref="Stream"/>, <see cref="TextReader"/>, or <see cref="TextWriter"/> open.
-    /// This option only applies to <see cref="IDataEncoding.CreateEncoder(Stream, DataEncodingOptions)"/>, <see cref="IDataEncoding.CreateDecoder(Stream, DataEncodingOptions)"/> and similar operations.
-    /// </summary>
-    [Obsolete($"Use {nameof(LeaveOpen)} instead.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    NoOwnership = LeaveOpen,
+    NoOwnership = 1 << 2,
 
     /// <summary>
     /// <para>
