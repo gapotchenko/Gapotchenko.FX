@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace Gapotchenko.FX.Linq;
 
-partial class EnumerableExtensions
+partial class EnumerablePolyfills
 {
     /// <summary>
     /// Split the elements of a sequence into chunks of size at most <paramref name="size"/>.

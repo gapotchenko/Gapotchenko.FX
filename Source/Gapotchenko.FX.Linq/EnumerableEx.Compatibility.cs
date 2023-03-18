@@ -18,7 +18,7 @@ partial class EnumerableEx
     [Obsolete("Use IEnumerable<T>.ToHashSet() extension method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static HashSet<TSource> ToHashSet<TSource>(IEnumerable<TSource> source) =>
-        EnumerableExtensions.ToHashSet(source);
+        EnumerablePolyfills.ToHashSet(source);
 
     /// <summary>
     /// <para>
@@ -35,7 +35,7 @@ partial class EnumerableEx
     [Obsolete("Use IEnumerable<T>.ToHashSet(comparer) extension method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static HashSet<TSource> ToHashSet<TSource>(IEnumerable<TSource> source, IEqualityComparer<TSource>? comparer) =>
-        EnumerableExtensions.ToHashSet(source, comparer);
+        EnumerablePolyfills.ToHashSet(source, comparer);
 
     /// <summary>
     /// Returns distinct elements from a sequence by using the default equality comparer on the keys extracted by a specified selector function.
@@ -48,7 +48,7 @@ partial class EnumerableEx
     [Obsolete("Use IEnumerable<T>.DistinctBy(keySelector) extension method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static IEnumerable<TSource> DistinctBy<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector) =>
-        EnumerableExtensions.DistinctBy(source, keySelector);
+        EnumerablePolyfills.DistinctBy(source, keySelector);
 
     /// <summary>
     /// Returns distinct elements from a sequence by using a specified <see cref="IEqualityComparer{T}"/> on the keys extracted by a specified selector function.
@@ -62,5 +62,5 @@ partial class EnumerableEx
     [Obsolete("Use IEnumerable<T>.DistinctBy(keySelector, comparer) extension method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static IEnumerable<TSource> DistinctBy<TSource, TKey>(IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer) =>
-        EnumerableExtensions.DistinctBy(source, keySelector, comparer);
+        EnumerablePolyfills.DistinctBy(source, keySelector, comparer);
 }

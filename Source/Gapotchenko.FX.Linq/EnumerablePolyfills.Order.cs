@@ -4,7 +4,7 @@
 
 namespace Gapotchenko.FX.Linq;
 
-partial class EnumerableExtensions
+partial class EnumerablePolyfills
 {
     /// <summary>
     /// Sorts the elements of a sequence in ascending order.

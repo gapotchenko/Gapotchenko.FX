@@ -1,6 +1,6 @@
 ﻿namespace Gapotchenko.FX.Linq;
 
-partial class EnumerableExtensions
+partial class EnumerablePolyfills
 {
     /// <summary>
     /// <para>
