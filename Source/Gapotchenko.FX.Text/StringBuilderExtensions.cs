@@ -5,6 +5,7 @@ namespace Gapotchenko.FX.Text;
 /// <summary>
 /// <see cref="StringBuilder"/> extensions and polyfills.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public static class StringBuilderExtensions
 {
     /// <summary>
