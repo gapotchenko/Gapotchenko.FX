@@ -14,6 +14,19 @@ public static class SpanEqualityComparer
     /// <returns><see langword="true"/> if the specified read-only spans are equal; otherwise, <see langword="false"/>.</returns>
     public static bool Equals<T>(ReadOnlySpan<T> x, ReadOnlySpan<T> y) where T : IEquatable<T> =>
         x == y ||
+        x != null && y != null &&
+        x.SequenceEqual(y);
+
+    /// <summary>
+    /// Determines whether specified spans are equal.
+    /// </summary>
+    /// <typeparam name="T">The span element type.</typeparam>
+    /// <param name="x">The first read-only span to compare.</param>
+    /// <param name="y">The second read-only span to compare.</param>
+    /// <returns><see langword="true"/> if the specified spans are equal; otherwise, <see langword="false"/>.</returns>
+    public static bool Equals<T>(Span<T> x, Span<T> y) where T : IEquatable<T> =>
+        x == y ||
+        x != null && y != null &&
         x.SequenceEqual(y);
 
     /// <inheritdoc/>
@@ -40,11 +53,19 @@ public static class SpanEqualityComparer
     }
 
     /// <summary>
-    /// Returns a hash code for the specified read-only span.
+    /// Returns a hash code for the specified span.
     /// </summary>
-    /// <param name="span">The read-only span.</param>
-    /// <returns>A hash code for the specified read-only span.</returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    /// <typeparam name="T">The span element type.</typeparam>
+    /// <param name="span">The span.</param>
+    /// <returns>A hash code for the specified span.</returns>
+    public static int GetHashCode<T>(Span<T> span) where T : IEquatable<T> =>
+        GetHashCode((ReadOnlySpan<T>)span);
+
+    /// <summary>
+    /// Returns a hash code for the specified read-only span of bytes.
+    /// </summary>
+    /// <param name="span">The read-only span of bytes.</param>
+    /// <returns>A hash code for the specified read-only span of bytes.</returns>
     public static int GetHashCode(ReadOnlySpan<byte> span)
     {
         if (span == null)
@@ -56,4 +77,12 @@ public static class SpanEqualityComparer
             hash = (hash ^ i) * 16777619;
         return (int)hash;
     }
+
+    /// <summary>
+    /// Returns a hash code for the specified span of bytes.
+    /// </summary>
+    /// <param name="span">The span of bytes.</param>
+    /// <returns>A hash code for the specified span of bytes.</returns>
+    public static int GetHashCode(Span<byte> span) =>
+        GetHashCode((ReadOnlySpan<byte>)span);
 }
