@@ -41,15 +41,15 @@ partial class MemoryEqualityComparer
             // FNV-1a
             uint hash = 2166136261;
             foreach (var i in obj.Span)
-                hash = (hash ^ (uint)InternalGetHashCode(i, elementComparer)) * 16777619;
+                hash = (hash ^ (uint)SafeGetHashCode(i, elementComparer)) * 16777619;
             return (int)hash;
-        }
 
-        static int InternalGetHashCode(T value, IEqualityComparer<T> comparer)
-        {
-            if (value is null)
-                return 0;
-            return comparer.GetHashCode(value);
+            static int SafeGetHashCode(T value, IEqualityComparer<T> comparer)
+            {
+                if (value is null)
+                    return 0;
+                return comparer.GetHashCode(value);
+            }
         }
     }
 }

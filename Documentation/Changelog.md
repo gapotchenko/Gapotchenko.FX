@@ -7,8 +7,9 @@
 Release date: not released yet
 
 - Introduced primitives for interval arithmetics represented by `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
-- Added ability to choose between lowercase or uppercase text output of case-insensitive data encodings
+- Added ability to choose between lowercase or uppercase text output of a case-insensitive data encoding
 - Added ability to create streams over contiguous memory regions represented by `System.Memory` and `System.ReadOnlyMemory` objects by using `ToStream` extension methods provided by `Gapotchenko.FX.Memory` module
+- Added `Gapotchenko.FX.Memory.SpanEqualityComparer` that allows to compare read-only spans and calculate their hash codes
 - Added polyfill for a LINQ-style pipe operator
 - Added polyfill for required properties introduced in C# 11.0
 - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
