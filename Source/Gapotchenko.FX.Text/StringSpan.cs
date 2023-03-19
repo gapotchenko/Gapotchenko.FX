@@ -5,7 +5,7 @@ namespace Gapotchenko.FX.Text;
 /// <summary>
 /// Represents a string span.
 /// </summary>
-public struct StringSpan : IEquatable<StringSpan>
+public readonly struct StringSpan : IEquatable<StringSpan>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StringSpan"/> struct.
