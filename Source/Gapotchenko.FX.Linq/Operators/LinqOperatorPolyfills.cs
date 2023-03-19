@@ -1,10 +1,10 @@
 ﻿namespace Gapotchenko.FX.Linq.Operators;
 
 /// <summary>
-/// Provides extension methods for operator polyfills.
+/// Provides extension methods for LINQ operator polyfills.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public static class LinqOperatorExtensions
+public static class LinqOperatorPolyfills
 {
     /// <summary>
     /// A LINQ-style pipe operator.
