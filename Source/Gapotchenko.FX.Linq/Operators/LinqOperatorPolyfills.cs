@@ -9,9 +9,6 @@ public static class LinqOperatorPolyfills
     /// <summary>
     /// A LINQ-style pipe operator.
     /// </summary>
-    /// <remarks>
-    /// This is a polyfill provided by Gapotchenko.FX.
-    /// </remarks>
     /// <typeparam name="T">The type of pipe input.</typeparam>
     /// <typeparam name="TResult">The type of pipe result.</typeparam>
     /// <param name="input">The pipe input.</param>
@@ -25,9 +22,6 @@ public static class LinqOperatorPolyfills
     /// <summary>
     /// A LINQ-style pipe operator.
     /// </summary>
-    /// <remarks>
-    /// This is a polyfill provided by Gapotchenko.FX.
-    /// </remarks>
     /// <typeparam name="T">The type of pipe input.</typeparam>
     /// <param name="input">The pipe input.</param>
     /// <param name="action">The method that receives the specified pipe <paramref name="input"/>.</param>
