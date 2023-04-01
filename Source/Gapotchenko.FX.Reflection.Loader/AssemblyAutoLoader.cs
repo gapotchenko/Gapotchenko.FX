@@ -11,10 +11,10 @@ namespace Gapotchenko.FX.Reflection;
 /// <summary>
 /// Provides services for automatic assembly resolution and dynamic loading based on specified probing paths, binding redirects, and common sense heuristics.
 /// </summary>
-#pragma warning disable CS3009
+#pragma warning disable CS3009 // Base type is not CLS-compliant
 public class AssemblyAutoLoader :
 #pragma warning restore CS3009
-#pragma warning disable CS0618
+#pragma warning disable CS0618 // Type or member is obsolete
     _CompatibleAssemblyAutoLoader,
 #pragma warning restore CS0618
     IDisposable
@@ -70,13 +70,13 @@ public class AssemblyAutoLoader :
     /// <summary>
     /// Gets or configures the value indicating whether this <see cref="AssemblyAutoLoader"/> is attached
     /// to the associated <see cref="System.AppDomain"/> or <see cref="System.Runtime.Loader.AssemblyLoadContext"/>
-    /// as the assembly resolution handler.
+    /// as an assembly resolution handler.
     /// </summary>
 #else
     /// <summary>
     /// Gets or configures the value indicating whether this <see cref="AssemblyAutoLoader"/> is attached
     /// to the associated <see cref="System.AppDomain"/>
-    /// as the assembly resolution handler.
+    /// as an assembly resolution handler.
     /// </summary>
 #endif
     public bool IsAttached { get; init; } = true;
@@ -110,9 +110,9 @@ public class AssemblyAutoLoader :
 #endif
 
     /// <summary>
-    /// Adds a specified assembly to the list of sources to consider during assembly resolution.
-    /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
-    /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
+    /// Adds the location of a specified assembly to the list of sources to consider during assembly resolution.
+    /// Once added, the assembly loader automatically handles binding redirects according to the assembly configuration (<c>.config</c>) file.
+    /// If configuration file does not exist then binding redirects are automatically deducted according to the assembly compatibility heuristics.
     /// </summary>
     /// <param name="assembly">The assembly.</param>
     /// <returns><see langword="true"/> if the assembly is added; <see langword="false"/> if the assembly is already added.</returns>
@@ -120,9 +120,9 @@ public class AssemblyAutoLoader :
     public new bool AddAssembly(Assembly assembly) => AddAssembly(assembly, (IEnumerable<string?>?)null);
 
     /// <summary>
-    /// Adds a specified assembly to the list of sources to consider during assembly resolution.
-    /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
-    /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
+    /// Adds the location of a specified assembly to the list of sources to consider during assembly resolution.
+    /// Once added, the assembly loader automatically handles binding redirects according to the assembly configuration (<c>.config</c>) file.
+    /// If configuration file does not exist then binding redirects are automatically deducted according to the assembly compatibility heuristics.
     /// </summary>
     /// <param name="assembly">The assembly.</param>
     /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
@@ -132,9 +132,9 @@ public class AssemblyAutoLoader :
         AddAssembly(assembly, (IEnumerable<string?>?)additionalProbingPaths);
 
     /// <summary>
-    /// Adds a specified assembly to the list of sources to consider during assembly resolution.
-    /// Once added, the loader automatically handles binding redirects according to a corresponding assembly configuration (<c>.config</c>) file.
-    /// If configuration file is missing then binding redirects are automatically deducted according to the assembly compatibility heuristics.
+    /// Adds the location of a specified assembly to the list of sources to consider during assembly resolution.
+    /// Once added, the assembly loader automatically handles binding redirects according to the assembly configuration (<c>.config</c>) file.
+    /// If configuration file does not exist then binding redirects are automatically deducted according to the assembly compatibility heuristics.
     /// </summary>
     /// <param name="assembly">The assembly.</param>
     /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
@@ -162,7 +162,7 @@ public class AssemblyAutoLoader :
     }
 
     /// <summary>
-    /// Removes a specified assembly from the list of sources to consider during assembly resolution.
+    /// Removes the location of a specified assembly from the list of sources to consider during assembly resolution.
     /// </summary>
     /// <param name="assembly">The assembly.</param>
     /// <returns><see langword="true"/> if the assembly is removed; <see langword="false"/> if the assembly already removed.</returns>
