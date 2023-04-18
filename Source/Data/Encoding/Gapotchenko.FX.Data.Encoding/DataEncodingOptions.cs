@@ -91,7 +91,7 @@ public enum DataEncodingOptions
 
     /// <summary>
     /// <para>
-    /// Use lowercase characters for text output.
+    /// Use lowercase characters for a text output of the encoding instead of its default preference.
     /// </para>
     /// <para>
     /// This option can only be specified for case-insensitive text data encodings.
@@ -101,7 +101,7 @@ public enum DataEncodingOptions
 
     /// <summary>
     /// <para>
-    /// Use uppercase characters for text output.
+    /// Use uppercase characters for a text output of the encoding instead of its default preference.
     /// </para>
     /// <para>
     /// This option can only be specified for case-insensitive text data encodings.
