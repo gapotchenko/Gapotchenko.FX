@@ -50,9 +50,9 @@ public static class FileSystem
     /// <value>
     /// <see langword="true"/> if the file system is case sensitive; otherwise, <see langword="false"/>.
     /// </value>
-    public static bool IsCaseSensitive { get; } = _IsCaseSensitiveCore();
+    public static bool IsCaseSensitive { get; } = IsCaseSensitiveCore();
 
-    static bool _IsCaseSensitiveCore()
+    static bool IsCaseSensitiveCore()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX))  // HFS+ (the Mac file-system) is usually configured to be case insensitive.
@@ -325,7 +325,8 @@ public static class FileSystem
     /// <see langword="true"/> if path refers to an existing file or directory;
     /// <see langword="false"/> if neither directory nor file exists or an error occurs when trying to determine if the specified file system entry exists.
     /// </returns>
-    public static bool EntryExists(string? path) => File.Exists(path) || Directory.Exists(path);
+    public static bool EntryExists([NotNullWhen(true)] string? path) =>
+        File.Exists(path) || Directory.Exists(path);
 
     /// <summary>
     /// Waits for a read access to the file.
