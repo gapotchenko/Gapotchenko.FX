@@ -1,19 +1,33 @@
-﻿using System.Runtime.InteropServices;
-
-namespace Gapotchenko.FX.IO;
+﻿namespace Gapotchenko.FX.IO;
 
 /// <summary>
 /// Provides polyfills for <see cref="Path"/> class.
 /// </summary>
 public static class PathEx
 {
+#if NETCOREAPP3_0_OR_GREATER
     /// <summary>
     /// Trims one trailing directory separator beyond the root of the specified path.
     /// </summary>
+    /// <remarks>
+    /// This is a polyfill provided by Gapotchenko.FX for
+    /// <see cref="Path.TrimEndingDirectorySeparator(string)"/>
+    /// method.
+    /// </remarks>
     /// <param name="path">The path to trim.</param>
     /// <returns>The path without any trailing directory separators.</returns>
-#if NETCOREAPP3_0_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
+#else
+    /// <summary>
+    /// Trims one trailing directory separator beyond the root of the specified path.
+    /// </summary>
+    /// <remarks>
+    /// This is a polyfill provided by Gapotchenko.FX for
+    /// <c>System.IO.Path.TrimEndingDirectorySeparator(string)</c>
+    /// method.
+    /// </remarks>
+    /// <param name="path">The path to trim.</param>
+    /// <returns>The path without any trailing directory separators.</returns>
 #endif
     public static string TrimEndingDirectorySeparator(string path) =>
 #if NETCOREAPP3_0_OR_GREATER
@@ -23,9 +37,15 @@ public static class PathEx
         .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 #endif
 
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
     /// Returns a relative path from one path to another.
     /// </summary>
+    /// <remarks>
+    /// This is a polyfill provided by Gapotchenko.FX for
+    /// <see cref="Path.GetRelativePath(string, string)"/>
+    /// method.
+    /// </remarks>
     /// <param name="relativeTo">
     /// The source path the result should be relative to.
     /// This path is always considered to be a directory.
@@ -36,18 +56,36 @@ public static class PathEx
     /// <returns>
     /// The relative path, or <paramref name="path"/> if the paths do not share the same root.
     /// </returns>
-#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     [EditorBrowsable(EditorBrowsableState.Never)]
+#else
+    /// <summary>
+    /// Returns a relative path from one path to another.
+    /// </summary>
+    /// <remarks>
+    /// This is a polyfill provided by Gapotchenko.FX for
+    /// <c>System.IO.Path.GetRelativePath(string, string)</c>
+    /// method.
+    /// </remarks>
+    /// <param name="relativeTo">
+    /// The source path the result should be relative to.
+    /// This path is always considered to be a directory.
+    /// </param>
+    /// <param name="path">
+    /// The destination path.
+    /// </param>
+    /// <returns>
+    /// The relative path, or <paramref name="path"/> if the paths do not share the same root.
+    /// </returns>
 #endif
     public static string GetRelativePath(string relativeTo, string path) =>
 #if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         Path.GetRelativePath(relativeTo, path);
 #else
-        GetRelativePathPolyfill(relativeTo, path);
+        GetRelativePathCore(relativeTo, path);
 #endif
 
 #if !(NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
-    static string GetRelativePathPolyfill(string relativeTo, string path)
+    static string GetRelativePathCore(string relativeTo, string path)
     {
         if (relativeTo == null)
             throw new ArgumentNullException(nameof(relativeTo));
