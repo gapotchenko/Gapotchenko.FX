@@ -268,7 +268,6 @@ public static class StreamPolyfills
     {
         if (minimumBytes < 0)
             throw new ArgumentOutOfRangeException(nameof(minimumBytes), Resources.ArgumentOutOfRange_NonNegativeNumberRequired);
-
         if (bufferLength < minimumBytes)
             throw new ArgumentOutOfRangeException(nameof(minimumBytes), Resources.ArgumentOutOfRange_NotGreaterThanBufferLength);
     }
@@ -428,6 +427,7 @@ public static class StreamPolyfills
             throw new ArgumentOutOfRangeException(nameof(offset), Resources.ArgumentOutOfRange_NonNegativeNumberRequired);
         if (count < 0)
             throw new ArgumentOutOfRangeException(nameof(count), Resources.ArgumentOutOfRange_NonNegativeNumberRequired);
+
         if (buffer.Length - offset < count)
         {
             throw new ArgumentException(
