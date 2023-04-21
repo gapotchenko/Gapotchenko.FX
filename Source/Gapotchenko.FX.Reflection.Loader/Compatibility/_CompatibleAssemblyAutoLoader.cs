@@ -1,5 +1,8 @@
 ﻿using System.Reflection;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+#pragma warning disable IDE1006 // Naming Styles
+
 namespace Gapotchenko.FX.Reflection;
 
 /// <summary>
