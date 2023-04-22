@@ -29,7 +29,7 @@ A visual placement of the `Unit` type in .NET type system:
 
 ## Nullability
 
-Although the `Unit` type can only have one value, it is also a refererence type in terms of .NET type system.
+Although the `Unit` type can only have one value, it is also a reference type in terms of .NET type system.
 It means that it's possible for a `Unit` variable to have a `null` value as well:
 
 ``` csharp

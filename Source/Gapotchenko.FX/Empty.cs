@@ -22,6 +22,27 @@ public static class Empty
     }
 
     /// <summary>
+    /// Nullifies an empty value.
+    /// </summary>
+    /// <typeparam name="T">The type of value.</typeparam>
+    /// <param name="value">The value.</param>
+    /// <param name="reserved">The reserved parameter used for method signature resolution.</param>
+    /// <returns>The value or a <see langword="null"/> if the value is zero.</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static T? Nullify<T>(T? value, int reserved = default) where T : class, IEmptiable
+    {
+        // The reserved parameter is needed to avoid the method signature conflict with
+        // an existing method that should be kept to provide backwards binary compatibility
+        // between the module versions.
+        _ = reserved;
+
+        if (value is null || value.IsEmpty)
+            return null;
+        else
+            return value;
+    }
+
+    /// <summary>
     /// Nullifies an empty sequence.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
