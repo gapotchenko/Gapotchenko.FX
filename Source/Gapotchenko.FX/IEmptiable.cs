@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX;
 
 /// <summary>
-/// Represents an object that has the functional notion of emptiness.
+/// Represents an object that has the functional notion of emptiness and can be empty.
 /// </summary>
 /// <remarks>
 /// Types implementing this interface get automatic support of operations
