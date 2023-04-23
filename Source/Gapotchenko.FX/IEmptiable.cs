@@ -1,11 +1,11 @@
 ﻿namespace Gapotchenko.FX;
 
 /// <summary>
-/// Represents an object that has the functional notion of emptiness and can be empty.
+/// Defines the functional notion of emptiness
+/// representing an object that can be empty.
 /// </summary>
 /// <remarks>
-/// Types implementing this interface get automatic support of operations
-/// provided by <see cref="Empty"/> type.
+/// Types implementing this interface get automatic support of operations provided by <see cref="Empty"/> type.
 /// </remarks>
 public interface IEmptiable
 {

@@ -1,12 +1,12 @@
 ﻿namespace Gapotchenko.FX;
 
 /// <summary>
-/// Represents an object that has the functional notion of emptiness, can be empty,
-/// and statically provides an empty value (available since .NET 7.0).
+/// Defines the functional notion of emptiness
+/// representing an object that can be empty and statically provides an empty value.
 /// </summary>
 /// <remarks>
-/// Types implementing this interface get automatic support of operations
-/// provided by <see cref="FX.Empty"/> type.
+/// Types implementing this interface get automatic support of operations provided by <see cref="FX.Empty"/> type.
+/// A static empty value is available since .NET 7.0.
 /// </remarks>
 /// <typeparam name="T">The type of the emptiable object.</typeparam>
 public interface IEmptiable<out T> : IEmptiable
