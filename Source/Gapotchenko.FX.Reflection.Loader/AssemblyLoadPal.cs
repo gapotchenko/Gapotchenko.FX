@@ -7,7 +7,7 @@ using System.Runtime.Loader;
 namespace Gapotchenko.FX.Reflection;
 
 /// <summary>
-/// Platform abstraction layer for assembly loading functionality of a host environment.
+/// Platform abstraction layer for assembly loading functionality of a .NET host environment.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public sealed class AssemblyLoadPal

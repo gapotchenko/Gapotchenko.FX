@@ -6,7 +6,11 @@ namespace Gapotchenko.FX.Reflection.Loader;
 
 sealed class AssemblyDescriptor : IDisposable
 {
-    public AssemblyDescriptor(Assembly assembly, IEnumerable<string?>? additionalProbingPaths, AssemblyLoadPal assemblyLoadPal, AssemblyAutoLoader assemblyAutoLoader)
+    public AssemblyDescriptor(
+        Assembly assembly,
+        IEnumerable<string?>? additionalProbingPaths,
+        AssemblyLoadPal assemblyLoadPal,
+        AssemblyAutoLoader assemblyAutoLoader)
     {
         m_IsAttached = assemblyAutoLoader.IsAttached;
         m_AssemblyLoadPal = assemblyLoadPal;
@@ -14,7 +18,12 @@ sealed class AssemblyDescriptor : IDisposable
 
         string assemblyFilePath = new Uri(assembly.EscapedCodeBase).LocalPath;
 
-        if (BindingRedirectAssemblyLoaderBackend.TryCreate(assemblyFilePath, assemblyAutoLoader, m_AssemblyLoadPal, m_AssemblyDependencyTracker, out m_AssemblyLoaderBackend))
+        if (BindingRedirectAssemblyLoaderBackend.TryCreate(
+            assemblyFilePath,
+            assemblyAutoLoader,
+            m_AssemblyLoadPal,
+            m_AssemblyDependencyTracker,
+            out m_AssemblyLoaderBackend))
         {
             m_HasBindingRedirects = m_AssemblyLoaderBackend != null;
             AddProbingPaths(additionalProbingPaths);
@@ -28,9 +37,13 @@ sealed class AssemblyDescriptor : IDisposable
                 probingPaths.Add(path);
 
             if (additionalProbingPaths != null)
-                _AccumulateNewProbingPaths(probingPaths, additionalProbingPaths);
+                AccumulateNewProbingPaths(probingPaths, additionalProbingPaths);
 
-            m_AssemblyLoaderBackend = new HeuristicAssemblyLoaderBackend(m_IsAttached, m_AssemblyLoadPal, m_AssemblyDependencyTracker, probingPaths.ToArray());
+            m_AssemblyLoaderBackend = new HeuristicAssemblyLoaderBackend(
+                m_IsAttached,
+                m_AssemblyLoadPal,
+                m_AssemblyDependencyTracker,
+                probingPaths.ToArray());
         }
     }
 
@@ -56,7 +69,7 @@ sealed class AssemblyDescriptor : IDisposable
         }
     }
 
-    void _AccumulateNewProbingPaths(List<string> accumulator, IEnumerable<string?> probingPaths)
+    void AccumulateNewProbingPaths(List<string> accumulator, IEnumerable<string?> probingPaths)
     {
         foreach (var i in probingPaths)
         {
@@ -77,7 +90,7 @@ sealed class AssemblyDescriptor : IDisposable
             return false;
 
         var newProbingPaths = new List<string>();
-        _AccumulateNewProbingPaths(newProbingPaths, probingPaths);
+        AccumulateNewProbingPaths(newProbingPaths, probingPaths);
 
         if (newProbingPaths.Count == 0)
             return false;
