@@ -1,6 +1,6 @@
 ﻿namespace Gapotchenko.FX.Reflection.Loader.Polyfills;
 
-static class DictionaryExtensions
+static class DictionaryPolyfills
 {
 #if !TFF_DICTIONARY_REMOVEANDGETVALUE
     public static bool Remove<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, out TValue value)

@@ -1,4 +1,4 @@
-﻿// (c) Portions of code from the .NET project by Microsoft and .NET Foundation
+﻿// Portions © Microsoft and .NET Foundation
 
 using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System.Runtime.InteropServices;
@@ -46,13 +46,13 @@ readonly struct LibraryNameVariation
 
     static IEnumerable<LibraryNameVariation> Enumerate_Windows(string libName, bool isRelativePath, bool forOSLoader)
     {
-        // This is a copy of the logic in DetermineLibNameVariations in dllimport.cpp in CoreCLR
+        // This is a copy of logic from DetermineLibNameVariations function defined at dllimport.cpp file of CoreCLR.
 
         const string LibraryNameSuffix = ".dll";
 
         yield return new LibraryNameVariation(string.Empty, string.Empty);
 
-        // Follow LoadLibrary rules if forOSLoader is true
+        // Follow LoadLibrary rules if forOSLoader is true.
         if (isRelativePath &&
             (!forOSLoader || libName.Contains('.') && !libName.EndsWith('.')) &&
             !libName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) &&
@@ -65,7 +65,7 @@ readonly struct LibraryNameVariation
 #if NETCOREAPP
     static IEnumerable<LibraryNameVariation> Enumerate_Unix(string libName, bool isRelativePath, bool forOSLoader, string libraryNameSuffix = ".so")
     {
-        // This is a copy of the logic in DetermineLibNameVariations in dllimport.cpp in CoreCLR
+        // This is a copy of logic from DetermineLibNameVariations function defined at dllimport.cpp file of CoreCLR.
 
         const string LibraryNamePrefix = "lib";
 
@@ -87,28 +87,28 @@ readonly struct LibraryNameVariation
 
             if (containsSuffix)
             {
-                yield return new LibraryNameVariation(string.Empty, string.Empty);
+                yield return new(string.Empty, string.Empty);
                 if (!containsDelim)
                 {
-                    yield return new LibraryNameVariation(LibraryNamePrefix, string.Empty);
+                    yield return new(LibraryNamePrefix, string.Empty);
                 }
-                yield return new LibraryNameVariation(string.Empty, libraryNameSuffix);
+                yield return new(string.Empty, libraryNameSuffix);
                 if (!containsDelim)
                 {
-                    yield return new LibraryNameVariation(LibraryNamePrefix, libraryNameSuffix);
+                    yield return new(LibraryNamePrefix, libraryNameSuffix);
                 }
             }
             else
             {
-                yield return new LibraryNameVariation(string.Empty, libraryNameSuffix);
+                yield return new(string.Empty, libraryNameSuffix);
                 if (!containsDelim)
                 {
-                    yield return new LibraryNameVariation(LibraryNamePrefix, libraryNameSuffix);
+                    yield return new(LibraryNamePrefix, libraryNameSuffix);
                 }
-                yield return new LibraryNameVariation(string.Empty, string.Empty);
+                yield return new(string.Empty, string.Empty);
                 if (!containsDelim)
                 {
-                    yield return new LibraryNameVariation(LibraryNamePrefix, string.Empty);
+                    yield return new(LibraryNamePrefix, string.Empty);
                 }
             }
         }

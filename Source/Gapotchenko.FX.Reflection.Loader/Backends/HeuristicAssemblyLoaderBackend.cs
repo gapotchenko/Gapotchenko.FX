@@ -8,7 +8,7 @@ sealed class HeuristicAssemblyLoaderBackend : ProbingPathAssemblyLoaderBackend
         bool isAttached,
         AssemblyLoadPal assemblyLoadPal,
         AssemblyDependencyTracker assemblyDependencyTracker,
-        params string[] probingPaths) :
+        IReadOnlyList<string> probingPaths) :
         base(isAttached, assemblyLoadPal, probingPaths)
     {
         _AssemblyDependencyTracker = assemblyDependencyTracker;

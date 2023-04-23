@@ -6,7 +6,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends;
 
 class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
 {
-    public ProbingPathAssemblyLoaderBackend(bool isAttached, AssemblyLoadPal assemblyLoadPal, params string[] probingPaths)
+    public ProbingPathAssemblyLoaderBackend(bool isAttached, AssemblyLoadPal assemblyLoadPal, IReadOnlyList<string> probingPaths)
     {
         AssemblyLoadPal = assemblyLoadPal;
         m_ProbingPaths = probingPaths;
@@ -23,60 +23,60 @@ class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
     public bool StrictVersionMatch { get; init; }
 
     protected readonly AssemblyLoadPal AssemblyLoadPal;
-    readonly string[] m_ProbingPaths;
+    readonly IReadOnlyList<string> m_ProbingPaths;
 
-    static IEnumerable<string> _EnumerateAssemblies(string path) =>
-        Directory.EnumerateFiles(path, "*.dll")
-        .Concat(Directory.EnumerateFiles(path, "*.exe"));
+    static IEnumerable<string> EnumerateAssemblies(string directoryPath) =>
+        Directory.EnumerateFiles(directoryPath, "*.dll")
+        .Concat(Directory.EnumerateFiles(directoryPath, "*.exe"));
 
-    List<KeyValuePair<string, AssemblyName>>? _CachedProbingList;
+    List<KeyValuePair<string, AssemblyName>>? m_CachedProbingList;
 
-    List<KeyValuePair<string, AssemblyName>> _GetProbingList()
+    List<KeyValuePair<string, AssemblyName>> GetProbingList()
     {
-        if (_CachedProbingList == null)
+        if (m_CachedProbingList == null)
             lock (this)
-                if (_CachedProbingList == null)
-                {
-                    _CachedProbingList = new();
+                m_CachedProbingList ??= GetProbingListCore(m_ProbingPaths);
 
-                    foreach (string path in m_ProbingPaths)
-                    {
-                        if (!Directory.Exists(path))
-                            continue;
-
-                        foreach (string file in _EnumerateAssemblies(path))
-                        {
-                            AssemblyName definition;
-                            try
-                            {
-                                definition = AssemblyName.GetAssemblyName(file);
-                            }
-                            catch
-                            {
-                                continue;
-                            }
-                            _CachedProbingList.Add(new(file, definition));
-                        }
-                    }
-                }
-
-        return _CachedProbingList;
+        return m_CachedProbingList;
     }
 
-    readonly ConcurrentDictionary<string, Assembly?> _ResolvedAssembliesCache = new(StringComparer.OrdinalIgnoreCase);
+    static List<KeyValuePair<string, AssemblyName>> GetProbingListCore(IEnumerable<string> probingPaths)
+    {
+        var list = new List<KeyValuePair<string, AssemblyName>>();
 
-    bool _ReferenceMatchesDefinition(AssemblyName reference, AssemblyName definition) =>
+        foreach (string path in probingPaths)
+        {
+            if (!Directory.Exists(path))
+                continue;
+
+            foreach (string file in EnumerateAssemblies(path))
+            {
+                AssemblyName definition;
+                try
+                {
+                    definition = AssemblyName.GetAssemblyName(file);
+                }
+                catch
+                {
+                    continue;
+                }
+
+                list.Add(new(file, definition));
+            }
+        }
+
+        return list;
+    }
+
+    readonly ConcurrentDictionary<string, Assembly?> m_ResolvedAssembliesCache = new(StringComparer.OrdinalIgnoreCase);
+
+    bool ReferenceMatchesDefinition(AssemblyName reference, AssemblyName definition) =>
         StringComparer.OrdinalIgnoreCase.Equals(reference.Name, definition.Name) &&
-        _ReferenceMatchesDefinition(reference.Version, definition.Version) &&
+        ReferenceMatchesDefinition(reference.Version, definition.Version) &&
         ArrayEqualityComparer.Equals(reference.GetPublicKeyToken(), definition.GetPublicKeyToken()) &&
-#if NET40
-        (reference.CultureInfo is null && definition.CultureInfo is null || (reference.CultureInfo?.Equals(definition.CultureInfo) ?? false))
-#else
-        string.Equals(reference.CultureName, definition.CultureName, StringComparison.OrdinalIgnoreCase)
-#endif
-        ;
+        (reference.CultureInfo is null && definition.CultureInfo is null || (reference.CultureInfo?.Equals(definition.CultureInfo) ?? false));
 
-    bool _ReferenceMatchesDefinition(Version? reference, Version? definition)
+    bool ReferenceMatchesDefinition(Version? reference, Version? definition)
     {
         if (StrictVersionMatch)
         {
@@ -100,22 +100,22 @@ class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
 
         var name = args.FullName;
 
-        if (_ResolvedAssembliesCache.TryGetValue(name, out var assembly))
+        if (m_ResolvedAssembliesCache.TryGetValue(name, out var assembly))
             return assembly;
 
         var reference = args.Name;
 
-        foreach (var i in _GetProbingList())
+        foreach (var i in GetProbingList())
         {
             var definition = i.Value;
-            if (_ReferenceMatchesDefinition(reference, definition))
+            if (ReferenceMatchesDefinition(reference, definition))
             {
                 assembly = LoadAssembly(i.Key, definition);
                 break;
             }
         }
 
-        _ResolvedAssembliesCache.TryAdd(name, assembly);
+        m_ResolvedAssembliesCache.TryAdd(name, assembly);
         return assembly;
     }
 
@@ -125,15 +125,15 @@ class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
 
     public string? ResolveAssemblyPath(AssemblyName assemblyName)
     {
-        if (_ResolvedAssembliesCache.TryGetValue(assemblyName.FullName, out var assembly))
+        if (m_ResolvedAssembliesCache.TryGetValue(assemblyName.FullName, out var assembly))
             return assembly?.Location;
 
         var reference = assemblyName;
 
-        foreach (var i in _GetProbingList())
+        foreach (var i in GetProbingList())
         {
             var definition = i.Value;
-            if (_ReferenceMatchesDefinition(reference, definition))
+            if (ReferenceMatchesDefinition(reference, definition))
                 return i.Key;
         }
 

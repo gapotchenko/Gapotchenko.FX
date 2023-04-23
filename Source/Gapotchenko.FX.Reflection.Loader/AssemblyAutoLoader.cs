@@ -204,7 +204,7 @@ public class AssemblyAutoLoader :
             if (m_ProbingPathResolvers.ContainsKey(path))
                 return false;
 
-            m_ProbingPathResolvers.Add(path, new ProbingPathAssemblyLoaderBackend(IsAttached, m_AssemblyLoadPal, path));
+            m_ProbingPathResolvers.Add(path, new ProbingPathAssemblyLoaderBackend(IsAttached, m_AssemblyLoadPal, new[] { path }));
             return true;
         }
     }

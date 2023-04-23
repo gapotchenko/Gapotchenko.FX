@@ -16,16 +16,23 @@ sealed class AssemblyDescriptor : IDisposable
         m_AssemblyLoadPal = assemblyLoadPal;
         m_AssemblyDependencyTracker = new AssemblyDependencyTracker(assembly);
 
-        string assemblyFilePath = new Uri(assembly.EscapedCodeBase).LocalPath;
+        string assemblyFilePath =
+#if NET5_0_OR_GREATER
+            assembly.Location;
+#else
+            new Uri(assembly.EscapedCodeBase).LocalPath;
+#endif
 
         if (BindingRedirectAssemblyLoaderBackend.TryCreate(
             assemblyFilePath,
             assemblyAutoLoader,
             m_AssemblyLoadPal,
             m_AssemblyDependencyTracker,
-            out m_AssemblyLoaderBackend))
+            out m_AssemblyLoaderBackend,
+            out var bindingProbingPaths))
         {
             m_HasBindingRedirects = m_AssemblyLoaderBackend != null;
+            AddProbingPaths(bindingProbingPaths);
             AddProbingPaths(additionalProbingPaths);
         }
         else
@@ -78,8 +85,7 @@ sealed class AssemblyDescriptor : IDisposable
 
             string probingPath = Path.GetFullPath(i);
 
-            m_ProbingPaths ??= new HashSet<string>(FileSystem.PathComparer);
-            if (m_ProbingPaths.Add(probingPath))
+            if ((m_ProbingPaths ??= new(FileSystem.PathComparer)).Add(probingPath))
                 accumulator.Add(probingPath);
         }
     }
@@ -95,10 +101,12 @@ sealed class AssemblyDescriptor : IDisposable
         if (newProbingPaths.Count == 0)
             return false;
 
-        m_ProbingPathAssemblyLoaderBackends ??= new();
-
-        m_ProbingPathAssemblyLoaderBackends.Add(
-            new HeuristicAssemblyLoaderBackend(m_IsAttached, m_AssemblyLoadPal, m_AssemblyDependencyTracker, newProbingPaths.ToArray())
+        (m_ProbingPathAssemblyLoaderBackends ??= new()).Add(
+            new HeuristicAssemblyLoaderBackend(
+                m_IsAttached,
+                m_AssemblyLoadPal,
+                m_AssemblyDependencyTracker,
+                newProbingPaths.ToArray())
             {
                 StrictVersionMatch = m_HasBindingRedirects
             });
