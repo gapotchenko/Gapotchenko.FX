@@ -28,7 +28,7 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
 
     readonly AssemblyAutoLoader m_AssemblyAutoLoader;
 
-    struct BindingRedirect
+    readonly struct BindingRedirect
     {
         public BindingRedirect(Version fromA, Version fromB, Version to)
         {
@@ -65,44 +65,54 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
         if (!File.Exists(configFilePath))
             return false;
 
-        var bindingRedirects = _LoadBindingRedirects(configFilePath);
+        var bindingRedirects = LoadBindingRedirects(configFilePath);
         if (bindingRedirects != null)
-            backend = new BindingRedirectAssemblyLoaderBackend(assemblyAutoLoader.IsAttached, assemblyAutoLoader, bindingRedirects, assemblyLoadPal, assemblyDependencyTracker);
+        {
+            backend = new BindingRedirectAssemblyLoaderBackend(
+                assemblyAutoLoader.IsAttached,
+                assemblyAutoLoader,
+                bindingRedirects,
+                assemblyLoadPal,
+                assemblyDependencyTracker);
+        }
 
         return true;
     }
 
-    static Dictionary<string, BindingRedirect>? _LoadBindingRedirects(string configFilePath)
+    static Dictionary<string, BindingRedirect>? LoadBindingRedirects(string configFilePath)
     {
-        var xdoc = XDocument.Load(configFilePath);
+        var xDoc = XDocument.Load(configFilePath);
 
-        var xRuntime = xdoc.Element("configuration")?.Element("runtime");
+        var xRuntime = xDoc.Element("configuration")?.Element("runtime");
         if (xRuntime == null)
             return null;
 
         XNamespace ns = "urn:schemas-microsoft-com:asm.v1";
-        var xDependentAssemblies = xRuntime.Elements(ns + "assemblyBinding").SelectMany(x => x.Elements(ns + "dependentAssembly")).ToArray();
+        var xDependentAssemblies =
+            xRuntime.Elements(ns + "assemblyBinding")
+            .SelectMany(x => x.Elements(ns + "dependentAssembly"))
+            .ToList();
 
         Dictionary<string, BindingRedirect>? bindingRedirects = null;
 
         foreach (var xDependentAssembly in xDependentAssemblies)
         {
-            var xAsmID = xDependentAssembly.Element(ns + "assemblyIdentity");
-            if (xAsmID == null)
+            var xAsmId = xDependentAssembly.Element(ns + "assemblyIdentity");
+            if (xAsmId == null)
                 continue;
 
             var xBindingRedirect = xDependentAssembly.Element(ns + "bindingRedirect");
             if (xBindingRedirect == null)
                 continue;
 
-            string? asmIDName = xAsmID.Attribute("name")?.Value;
-            string? asmIDPublicKeyToken = xAsmID.Attribute("publicKeyToken")?.Value;
-            string? asmIDCulture = xAsmID.Attribute("culture")?.Value;
+            string? asmIdName = xAsmId.Attribute("name")?.Value;
+            string? asmIdPublicKeyToken = xAsmId.Attribute("publicKeyToken")?.Value;
+            string? asmIdCulture = xAsmId.Attribute("culture")?.Value;
 
-            if (asmIDName == null || asmIDPublicKeyToken == null || asmIDCulture == null)
+            if (asmIdName == null || asmIdPublicKeyToken == null || asmIdCulture == null)
                 continue;
 
-            string asmName = $"{asmIDName}, Culture={asmIDCulture}, PublicKeyToken={asmIDPublicKeyToken}";
+            string asmName = $"{asmIdName}, Culture={asmIdCulture}, PublicKeyToken={asmIdPublicKeyToken}";
 
             string? oldVersion = xBindingRedirect.Attribute("oldVersion")?.Value;
             string? newVersion = xBindingRedirect.Attribute("newVersion")?.Value;
@@ -110,15 +120,24 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
             if (oldVersion == null || newVersion == null)
                 continue;
 
-            var parts = oldVersion.Split(new[] { '-' }, 2, StringSplitOptions.None).Select(x => x.Trim()).ToList();
-            if (parts.Count == 0)
+            IReadOnlyList<string> parts = oldVersion
+#if NETCOREAPP3_1_OR_GREATER
+                .Split('-', 2, StringSplitOptions.TrimEntries);
+#else
+                .Split(new[] { '-' }, 2, StringSplitOptions.None)
+                .Select(x => x.Trim())
+                .ToList();
+#endif
+
+            int partCount = parts.Count;
+            if (partCount == 0)
                 continue;
 
             bindingRedirects ??= new(StringComparer.OrdinalIgnoreCase);
 
             bindingRedirects[asmName] = new BindingRedirect(
                 Version.Parse(parts[0]),
-                Version.Parse(parts.Last()),
+                Version.Parse(parts[partCount - 1]),
                 Version.Parse(newVersion));
         }
 
