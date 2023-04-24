@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Math.Topology;
+﻿using System.Diagnostics;
+
+namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
 /// Represents an edge of a graph.
@@ -41,6 +43,7 @@ public readonly struct GraphEdge<TVertex>
     /// Incident vertices of an edge are its end-vertices, <see cref="From"/> and <see cref="To"/>.
     /// </para>
     /// </summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public IEnumerable<TVertex> IncidentVertices => new[] { From, To };
 
     /// <inheritdoc/>
