@@ -6,6 +6,7 @@ namespace Gapotchenko.FX.Math.Topology;
 /// Represents an edge of a graph.
 /// </summary>
 /// <typeparam name="TVertex">The type of end-vertices in the edge.</typeparam>
+[DebuggerDisplay("{From} -> {To}")]
 public readonly struct GraphEdge<TVertex>
 {
     /// <summary>
