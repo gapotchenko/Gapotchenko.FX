@@ -7,13 +7,11 @@
 public static class LinqOperatorPolyfills
 {
     /// <summary>
-    /// <para>
     /// A LINQ-style pipe operator for programming languages that do not have a built-in pipe operator.
-    /// </para>
-    /// <para>
-    /// This is a polyfill provided by Gapotchenko.FX.
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </remarks>
     /// <typeparam name="TInput">The type of pipe input.</typeparam>
     /// <typeparam name="TOutput">The type of pipe output.</typeparam>
     /// <param name="input">The pipe input.</param>
@@ -25,13 +23,11 @@ public static class LinqOperatorPolyfills
         (input);
 
     /// <summary>
-    /// <para>
     /// A LINQ-style pipe operator for programming languages that do not have a built-in pipe operator.
-    /// </para>
-    /// <para>
-    /// This is a polyfill provided by Gapotchenko.FX.
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </remarks>
     /// <typeparam name="TInput">The type of pipe input.</typeparam>
     /// <param name="input">The pipe input.</param>
     /// <param name="action">The method that receives the specified pipe <paramref name="input"/>.</param>
