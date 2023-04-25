@@ -25,8 +25,12 @@ public static class GraphEdge
     /// Indicates whether the equality comparer is for directed edges.
     /// </param>
     /// <returns>A new instance of graph edge equality comparer.</returns>
-    public static IEqualityComparer<GraphEdge<TVertex>> CreateComparer<TVertex>(IEqualityComparer<TVertex> vertexComparer, bool directed) =>
-        directed ?
+    public static IEqualityComparer<GraphEdge<TVertex>> CreateComparer<TVertex>(IEqualityComparer<TVertex>? vertexComparer, bool directed)
+    {
+        vertexComparer ??= EqualityComparer<TVertex>.Default;
+
+        return directed ?
             new GraphEdgeEqualityComparer<TVertex>.Directed(vertexComparer) :
             new GraphEdgeEqualityComparer<TVertex>.Undirected(vertexComparer);
+    }
 }
