@@ -3,19 +3,28 @@
 partial class Graph<TVertex>
 {
     /// <inheritdoc/>
-    public bool IsCyclic
+    public bool IsCyclic => IsCyclicHint ??= IsCyclicCore();
+
+    bool? IsCyclicHint
     {
         get
         {
             if (m_CachedFlags[CF_IsCyclic_HasValue])
                 return m_CachedFlags[CF_IsCyclic_Value];
-
-            bool value = IsCyclicCore();
-
-            m_CachedFlags[CF_IsCyclic_Value] = value;
-            m_CachedFlags[CF_IsCyclic_HasValue] = true;
-
-            return value;
+            else
+                return null;
+        }
+        set
+        {
+            if (value.HasValue)
+            {
+                m_CachedFlags[CF_IsCyclic_HasValue] = true;
+                m_CachedFlags[CF_IsCyclic_Value] = value.Value;
+            }
+            else
+            {
+                m_CachedFlags[CF_IsCyclic_HasValue | CF_IsCyclic_Value] = false;
+            }
         }
     }
 

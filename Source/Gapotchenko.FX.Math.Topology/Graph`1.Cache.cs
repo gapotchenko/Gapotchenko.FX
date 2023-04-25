@@ -26,7 +26,7 @@ partial class Graph<TVertex>
 
     void InvalidateCachedRelations()
     {
-        m_CachedFlags[CF_IsCyclic_HasValue | CF_IsCyclic_Value] = false;
+        IsCyclicHint = null;
     }
 
     /// <summary>
