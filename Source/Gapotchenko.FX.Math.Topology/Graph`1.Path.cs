@@ -3,7 +3,9 @@
 partial class Graph<TVertex>
 {
     /// <inheritdoc/>
-    public bool HasPath(TVertex from, TVertex to) => Edges.Contains(from, to) || HasTransitivePath(from, to);
+    public bool HasPath(TVertex from, TVertex to) =>
+        Edges.Contains(from, to) || // happy path, free of memory allocations
+        HasTransitivePath(from, to); // transitions incur memory allocations
 
     /// <summary>
     /// Gets a value indicating whether there is a transitive path from the specified source vertex to the destination.
@@ -34,7 +36,7 @@ partial class Graph<TVertex>
 
         readonly HashSet<TVertex> m_VisitedNodes;
 
-        // Using the field instead of a function parameter to reduce the size of stack used by a recursive call chain.
+        // Using the field instead of a function parameter to reduce the size of a stack used by a recursive call chain.
         bool m_Adjacent;
 
         public bool CanBeReachedFrom(TVertex source)
