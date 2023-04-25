@@ -17,17 +17,32 @@ partial class Graph<TVertex>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     int? m_CachedSize = 0;
 
-    // Cached flags
+    #region Cached flags
+
     const int CF_IsCyclic_HasValue = 1 << 0;
     const int CF_IsCyclic_Value = 1 << 1;
     const int CF_IsCyclic_Mask = CF_IsCyclic_HasValue | CF_IsCyclic_Value;
 
+    const int CF_IsConnected_HasValue = 1 << 2;
+    const int CF_IsConnected_Value = 1 << 3;
+    const int CF_IsConnected_Mask = CF_IsConnected_HasValue | CF_IsConnected_Value;
+
+    const int CF_Connectivity_Mask = CF_IsConnected_Mask;
+    const int CF_Relations_Mask = CF_IsCyclic_Mask | CF_Connectivity_Mask;
+
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     BitVector32 m_CachedFlags;
 
+    #endregion
+
     void InvalidateCachedRelations()
     {
-        m_CachedFlags[CF_IsCyclic_Mask] = false;
+        m_CachedFlags[CF_Relations_Mask] = false;
+    }
+
+    void InvalidateCachedConnectivity()
+    {
+        m_CachedFlags[CF_Connectivity_Mask] = false;
     }
 
     /// <summary>
@@ -38,13 +53,19 @@ partial class Graph<TVertex>
     /// </remarks>
     protected void InvalidateCache()
     {
+        InvalidateCacheCore();
+        IncrementVersion();
+    }
+
+    /// <summary>
+    /// Invalidates the cache without incrementing <see cref="m_Version"/>.
+    /// </summary>
+    void InvalidateCacheCore()
+    {
         m_CachedOrder = null;
         m_CachedSize = null;
         m_ReverseAdjacencyList = null;
-
-        InvalidateCachedRelations();
-
-        IncrementVersion();
+        m_CachedFlags = default;
     }
 
     void CopyCacheFrom(Graph<TVertex> graph)

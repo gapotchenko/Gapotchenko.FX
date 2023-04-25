@@ -88,6 +88,15 @@ public interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVertex>>
     bool IsCyclic { get; }
 
     /// <summary>
+    /// Determines whether the current graph is connected.
+    /// </summary>
+    /// <remarks>
+    /// A graph is connected if every pair of vertices has a path between them.
+    /// A graph containing less than two vertices is connected by definition.
+    /// </remarks>
+    bool IsConnected { get; }
+
+    /// <summary>
     /// Gets a value indicating whether there is a path from the specified source vertex to the destination.
     /// </summary>
     /// <remarks>
@@ -95,7 +104,10 @@ public interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVertex>>
     /// </remarks>
     /// <param name="from">The source vertex.</param>
     /// <param name="to">The destination vertex.</param>
-    /// <returns><see langword="true"/> when the specified source vertex can reach the destination; otherwise, <see langword="false"/>.</returns>
+    /// <returns>
+    /// <see langword="true"/> when the specified source vertex can reach the destination;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
     bool HasPath(TVertex from, TVertex to);
 
     /// <summary>
@@ -108,7 +120,10 @@ public interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVertex>>
     /// </para>
     /// </summary>
     /// <param name="vertex">The vertex.</param>
-    /// <returns><see langword="true"/> when the specified vertex is isolated; otherwise, <see langword="false"/>.</returns>
+    /// <returns>
+    /// <see langword="true"/> when the specified vertex is isolated;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
     bool IsVertexIsolated(TVertex vertex);
 
     /// <summary>

@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Math.Topology;
+﻿using Gapotchenko.FX.Math.Topology.Utils;
+
+namespace Gapotchenko.FX.Math.Topology;
 
 partial class Graph<TVertex>
 {
@@ -7,25 +9,8 @@ partial class Graph<TVertex>
 
     bool? IsCyclicHint
     {
-        get
-        {
-            if (m_CachedFlags[CF_IsCyclic_HasValue])
-                return m_CachedFlags[CF_IsCyclic_Value];
-            else
-                return null;
-        }
-        set
-        {
-            if (value.HasValue)
-            {
-                m_CachedFlags[CF_IsCyclic_HasValue] = true;
-                m_CachedFlags[CF_IsCyclic_Value] = value.Value;
-            }
-            else
-            {
-                m_CachedFlags[CF_IsCyclic_Mask] = false;
-            }
-        }
+        get => m_CachedFlags.GetNullableBooleanValue(CF_IsCyclic_HasValue, CF_IsCyclic_Value);
+        set => m_CachedFlags.SetNullableBooleanValue(CF_IsCyclic_HasValue, CF_IsCyclic_Value, value);
     }
 
     bool IsCyclicCore()

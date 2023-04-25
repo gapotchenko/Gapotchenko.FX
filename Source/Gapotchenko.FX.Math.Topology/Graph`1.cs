@@ -188,10 +188,7 @@ public partial class Graph<TVertex> : IGraph<TVertex>
             return;
 
         m_AdjacencyList.Clear();
-        m_CachedOrder = 0;
-        m_CachedSize = 0;
-        m_ReverseAdjacencyList = null;
-        InvalidateCachedRelations();
+        InvalidateCacheCore();
 
 #if !TFF_DICTIONARY_ENUMERATION_REMOVE_ALLOWED
         IncrementVersion();

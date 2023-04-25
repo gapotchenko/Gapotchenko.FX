@@ -36,6 +36,7 @@ partial class Graph<TVertex>
             m_Graph.m_ReverseAdjacencyList?.Add(vertex, null);
 
             ++m_Graph.m_CachedOrder;
+            m_Graph.InvalidateCachedConnectivity();
             m_Graph.IncrementVersion();
 
             return true;
