@@ -17,6 +17,7 @@ partial class Graph<TVertex>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     int? m_CachedSize = 0;
 
+    // Cached flags
     const int CF_IsCyclic_HasValue = 1 << 0;
     const int CF_IsCyclic_Value = 1 << 1;
 
@@ -30,13 +31,16 @@ partial class Graph<TVertex>
 
     /// <summary>
     /// Invalidates the cache.
-    /// This method should be called if <see cref="AdjacencyList"/> is manipulated directly.
     /// </summary>
+    /// <remarks>
+    /// This method should be called after <see cref="AdjacencyList"/> was manipulated directly.
+    /// </remarks>
     protected void InvalidateCache()
     {
         m_CachedOrder = null;
         m_CachedSize = null;
         m_ReverseAdjacencyList = null;
+
         InvalidateCachedRelations();
 
         IncrementVersion();

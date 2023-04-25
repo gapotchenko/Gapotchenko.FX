@@ -4,16 +4,10 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
-/// <para>
 /// Represents a strongly-typed directional graph of objects.
-/// </para>
-/// <para>
-/// Graph is a set of vertices and edges.
-/// Vertices represent the objects, and edges represent the relations between them.
-/// </para>
 /// </summary>
-/// <typeparam name="TVertex">The type of vertices in the graph.</typeparam>
-[DebuggerDisplay("Order = {Vertices.Count}, Size = {Edges.Count}")]
+/// <inheritdoc cref="IGraph{TVertex}"/>
+[DebuggerDisplay($"Order = {nameof(Vertices)}.Count, Size = {nameof(Edges)}.Count")]
 [DebuggerTypeProxy(typeof(GraphDebugView<>))]
 public partial class Graph<TVertex> : IGraph<TVertex>
 {
@@ -162,9 +156,7 @@ public partial class Graph<TVertex> : IGraph<TVertex>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     VertexSet? m_CachedVertices;
 
-    /// <summary>
-    /// Gets a set containing the vertices of the graph.
-    /// </summary>
+    /// <inheritdoc cref="IGraph{TVertex}.Vertices"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public VertexSet Vertices => m_CachedVertices ??= new(this);
 
@@ -178,9 +170,7 @@ public partial class Graph<TVertex> : IGraph<TVertex>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     EdgeSet? m_CachedEdges;
 
-    /// <summary>
-    /// Gets a set containing the edges of the graph.
-    /// </summary>
+    /// <inheritdoc cref="IGraph{TVertex}.Edges"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public EdgeSet Edges => m_CachedEdges ??= new(this);
 
@@ -238,16 +228,17 @@ public partial class Graph<TVertex> : IGraph<TVertex>
     }
 
     /// <summary>
-    /// <para>
-    /// Gets a value indicating whether there is a transitive path from a specified source vertex to a destination.
-    /// </para>
-    /// <para>
-    /// A transitive path consists of two or more edges with at least one intermediate vertex.
-    /// </para>
+    /// Gets a value indicating whether there is a transitive path from the specified source vertex to a destination.
     /// </summary>
+    /// <remarks>
+    /// A transitive path consists of two or more edges with at least one intermediate vertex.
+    /// </remarks>
     /// <param name="from">The source vertex.</param>
-    /// <param name="to">The target vertex.</param>
-    /// <returns><see langword="true"/> when the specified source vertex can reach the target via one or more intermediate vertices; otherwise, <see langword="false"/>.</returns>
+    /// <param name="to">The destination vertex.</param>
+    /// <returns>
+    /// <see langword="true"/> when the specified source vertex can reach the destination via one or more intermediate vertices; 
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
     bool HasTransitivePath(TVertex from, TVertex to) => new ReachibilityTraverser(this, to, false).CanBeReachedFrom(from);
 
     /// <inheritdoc/>
@@ -328,9 +319,10 @@ public partial class Graph<TVertex> : IGraph<TVertex>
     }
 
     /// <summary>
-    /// Creates a new graph instance inheriting parent class settings such as comparer and edge direction awareness.
+    /// Creates a new graph instance inheriting parent object settings such as comparer and edge direction awareness,
+    /// but without inheriting vertices and edges.
     /// </summary>
-    /// <returns>The new graph instance.</returns>
+    /// <returns>A new graph instance.</returns>
     protected Graph<TVertex> NewGraph() =>
         new(VertexComparer)
         {

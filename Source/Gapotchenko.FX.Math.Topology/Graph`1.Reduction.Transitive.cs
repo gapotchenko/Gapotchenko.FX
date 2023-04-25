@@ -37,15 +37,7 @@ partial class Graph<TVertex>
             InvalidateCache();
     }
 
-    /// <summary>
-    /// <para>
-    /// Gets a transitively reduced graph.
-    /// </para>
-    /// <para>
-    /// Transitive reduction prunes the transitive relations that have shorter paths.
-    /// </para>
-    /// </summary>
-    /// <returns>The transitively reduced graph.</returns>
+    /// <inheritdoc cref="IGraph{TVertex}.GetTransitiveReduction"/>
     public Graph<TVertex> GetTransitiveReduction()
     {
         var graph = Clone();

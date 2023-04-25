@@ -10,7 +10,7 @@ public static class GraphEdge
     /// </summary>
     /// <param name="from">The source vertex of the edge.</param>
     /// <param name="to">The destination vertex of the edge.</param>
-    /// <returns>The new instance of <see cref="GraphEdge{TVertex}"/> object with specified source and destination vertices.</returns>
+    /// <returns>A new instance of <see cref="GraphEdge{TVertex}"/> object with specified source and destination vertices.</returns>
     public static GraphEdge<TVertex> Create<TVertex>(TVertex from, TVertex to) => new(from, to);
 
     /// <summary>

@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Math.Topology;
+﻿using System.Diagnostics;
+
+namespace Gapotchenko.FX.Math.Topology;
 
 partial class Graph<TVertex>
 {
@@ -22,10 +24,7 @@ partial class Graph<TVertex>
         }
     }
 
-    /// <summary>
-    /// Gets a graph transposition by reversing its edge directions.
-    /// </summary>
-    /// <returns>The transposed graph.</returns>
+    /// <inheritdoc cref="IGraph{TVertex}.GetTransposition"/>
     public Graph<TVertex> GetTransposition()
     {
         var graph = NewGraph();
@@ -36,6 +35,8 @@ partial class Graph<TVertex>
 
     static void TransposeCore(Graph<TVertex> graph, IEnumerable<GraphEdge<TVertex>> edges, IEnumerable<TVertex> vertices)
     {
+        Debug.Assert(graph.Vertices.Count == 0);
+
         graph.Edges.UnionWith(edges.Select(x => x.Reverse()));
         graph.Vertices.UnionWith(vertices);
     }

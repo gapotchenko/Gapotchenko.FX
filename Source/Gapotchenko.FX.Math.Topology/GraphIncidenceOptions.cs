@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
-/// Graph incidence options.
+/// Specifies graph incidence options.
 /// </summary>
 [Flags]
 public enum GraphIncidenceOptions
@@ -12,17 +12,20 @@ public enum GraphIncidenceOptions
     None,
 
     /// <summary>
-    /// <para>
-    /// Perform reflexive reduction by not calling a graph incidence function for all v → v edges where v ∈ V and V is a set of vertices of the graph.
-    /// </para>
-    /// <para>
-    /// This option eliminates loops (also called self-loops or buckles) from appearing in the resulting graph.
-    /// </para>
+    /// Specifies to perform a reflexive reduction
+    /// by not calling a graph incidence function for all <c>v → v</c> edges
+    /// where <c>v ∈ V</c> and <c>V</c> is a set of graph vertices.
     /// </summary>
+    /// <remarks>
+    /// This option eliminates loops (also called self-loops or buckles) from appearing in a resulting graph.
+    /// A loop exists when a vertex has an incident edge outgoing to itself.
+    /// The latter statement reflects the aforementioned <c>v → v</c> condition.
+    /// </remarks>
     ReflexiveReduction = 1 << 1,
 
     /// <summary>
-    /// Produce a connected graph by ignoring the vertices not connected by edges.
+    /// Specifies to produce a connected graph
+    /// by excluding vertices that are not incident with any edge.
     /// </summary>
     Connected = 1 << 2
 }

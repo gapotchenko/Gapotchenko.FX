@@ -1,25 +1,29 @@
 ﻿namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
-/// <para>
-/// Provides a read-only abstraction of a graph.
-/// </para>
-/// <para>
-/// Graph is a set of vertices and edges.
-/// Vertices represent the objects and edges represents the relations between them.
-/// </para>
+/// Provides a read-only graph abstraction.
 /// </summary>
-/// <typeparam name="TVertex">Vertex type.</typeparam>
+/// <remarks>
+/// Graph is a set of vertices and edges.
+/// Vertices represent the objects and edges represent the relations between them.
+/// </remarks>
+/// <typeparam name="TVertex">The type of vertices in the graph.</typeparam>
 public interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVertex>>
 {
     /// <summary>
-    /// Gets a set containing the vertices of the graph.
+    /// Gets a set containing vertices of the graph.
     /// </summary>
+    /// <remarks>
+    /// Vertices represent objects contained in a graph.
+    /// </remarks>
     IReadOnlySet<TVertex> Vertices { get; }
 
     /// <summary>
-    /// Gets a set containing the edges of the graph.
+    /// Gets a set containing edges of the graph.
     /// </summary>
+    /// <remarks>
+    /// Edges represent relations between graph vertices.
+    /// </remarks>
     IReadOnlySet<GraphEdge<TVertex>> Edges { get; }
 
     /// <summary>
@@ -84,16 +88,14 @@ public interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVertex>>
     bool IsCyclic { get; }
 
     /// <summary>
-    /// <para>
-    /// Gets a value indicating whether there is a path from a specified source vertex to a destination.
-    /// </para>
-    /// <para>
-    /// A path consists of one or more edges with or without intermediate vertices.
-    /// </para>
+    /// Gets a value indicating whether there is a path from the specified source vertex to the destination.
     /// </summary>
+    /// <remarks>
+    /// A path consists of one or more edges with or without intermediate vertices.
+    /// </remarks>
     /// <param name="from">The source vertex.</param>
     /// <param name="to">The destination vertex.</param>
-    /// <returns><see langword="true"/> when the specified source vertex can reach the target; otherwise, <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> when the specified source vertex can reach the destination; otherwise, <see langword="false"/>.</returns>
     bool HasPath(TVertex from, TVertex to);
 
     /// <summary>
@@ -110,86 +112,81 @@ public interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVertex>>
     bool IsVertexIsolated(TVertex vertex);
 
     /// <summary>
-    /// <para>
     /// Gets a sequence of isolated vertices of the current graph.
-    /// </para>
-    /// <para>
-    /// Isolated vertices are vertices with degree zero; that is, vertices that are not incident with any edges.
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// Isolated vertices are vertices with degree zero; that is, vertices that are not incident with any edges.
+    /// </remarks>
     IEnumerable<TVertex> IsolatedVertices { get; }
 
     /// <summary>
-    /// <para>
     /// Gets the indegree of a specified vertex.
-    /// </para>
-    /// <para>
-    /// Indegree of a vertex is the number of incoming incident edges.
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// Indegree of a vertex is the number of incoming incident edges.
+    /// </remarks>
     /// <param name="vertex">The vertex to find the indegree of.</param>
     /// <returns>The indegree of a vertex.</returns>
     int GetVertexIndegree(TVertex vertex);
 
     /// <summary>
-    /// <para>
     /// Gets the outdegree of a specified vertex.
-    /// </para>
-    /// <para>
-    /// Outdegree of a vertex is the number of outgoing incident edges.
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// Outdegree of a vertex is the number of outgoing incident edges.
+    /// </remarks>
     /// <param name="vertex">The vertex to find the outdegree of.</param>
     /// <returns>The outdegree of a vertex.</returns>
     int GetVertexOutdegree(TVertex vertex);
 
     /// <summary>
-    /// <para>
     /// Gets the degree of a specified vertex.
-    /// </para>
-    /// <para>
-    /// Degree of a vertex is the number of head and tail ends adjacent to the vertex.
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// Degree of a vertex is the number of head and tail ends adjacent to the vertex.
+    /// </remarks>
     /// <param name="vertex">The vertex to find the degree of.</param>
     /// <returns>The degree of a vertex.</returns>
     int GetVertexDegree(TVertex vertex);
 
     /// <summary>
-    /// Gets a vertex-induced subgraph of the current graph.
+    /// Gets a vertex-induced subgraph of the current graph from the specified vertices.
     /// </summary>
     /// <param name="vertices">The vertices to induce the subgraph from.</param>
-    /// <returns>The vertex-induced subgraph of the current graph.</returns>
+    /// <returns>A vertex-induced subgraph of the current graph.</returns>
     IReadOnlyGraph<TVertex> GetSubgraph(IEnumerable<TVertex> vertices);
 
     /// <summary>
-    /// Gets an edge-induced subgraph of the current graph.
+    /// Gets an edge-induced subgraph of the current graph from the specified edges.
     /// </summary>
     /// <param name="edges">The edges to induce the subgraph from.</param>
-    /// <returns>The edge-induced subgraph of the current graph.</returns>
+    /// <returns>An edge-induced subgraph of the current graph.</returns>
     IReadOnlyGraph<TVertex> GetSubgraph(IEnumerable<GraphEdge<TVertex>> edges);
 
     /// <summary>
     /// Gets a transposition of the current graph by reversing its edge directions.
     /// </summary>
-    /// <returns>The transposed graph.</returns>
+    /// <returns>A transposed graph.</returns>
     IReadOnlyGraph<TVertex> GetTransposition();
 
     /// <summary>
     /// Gets a transitive reduction of the current graph.
     /// </summary>
-    /// <returns>The transitively reduced graph.</returns>
+    /// <remarks>
+    /// Transitive reduction removes transitive relations with shorter alternative paths.
+    /// Estimated algorithmic complexity of the operation is <c>O(n^2.3729)</c> where <c>n</c> is a graph order (number of vertices).
+    /// </remarks>
+    /// <returns>A transitively reduced graph.</returns>
     IReadOnlyGraph<TVertex> GetTransitiveReduction();
 
     /// <summary>
-    /// <para>
     /// Gets a reflexive reduction of the current graph.
-    /// </para>
-    /// <para>
-    /// Reflexive reduction removes the loops (also called self-loops or buckles) from the graph.
-    /// </para>
     /// </summary>
-    /// <returns>The graph without the loops.</returns>
+    /// <remarks>
+    /// Reflexive reduction removes loops (also called self-loops or buckles) from a graph.
+    /// A loop exists when a vertex has an incident edge outgoing to itself.
+    /// </remarks>
+    /// <returns>A graph without loops.</returns>
     IReadOnlyGraph<TVertex> GetReflexiveReduction();
 
     /// <summary>
@@ -268,21 +265,21 @@ public interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVertex>>
     /// Gets a graph containing vertices and edges that are present in both the current and a specified graphs.
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
-    /// <returns>The graph containing vertices and edges that are present in both the current and a specified graphs.</returns>
+    /// <returns>A graph containing vertices and edges that are present in both the current and a specified graphs.</returns>
     IReadOnlyGraph<TVertex> Intersect(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
     /// Gets a graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both.
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
-    /// <returns>The graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both.</returns>
+    /// <returns>A graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both.</returns>
     IReadOnlyGraph<TVertex> Union(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
     /// Gets a graph containing vertices and edges that are present in the current graph but not in the specified graph.
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
-    /// <returns>The graph containing vertices and edges that are present in the current graph but not in the specified graph.</returns>
+    /// <returns>A graph containing vertices and edges that are present in the current graph but not in the specified graph.</returns>
     IReadOnlyGraph<TVertex> Except(IReadOnlyGraph<TVertex> other);
 
     /// <summary>

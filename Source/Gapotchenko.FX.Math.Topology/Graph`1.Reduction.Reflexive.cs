@@ -20,15 +20,7 @@ partial class Graph<TVertex>
             InvalidateCache();
     }
 
-    /// <summary>
-    /// <para>
-    /// Gets a reflexive reduction of the current graph.
-    /// </para>
-    /// <para>
-    /// Reflexive reduction removes the loops (also called self-loops or buckles) from the graph.
-    /// </para>
-    /// </summary>
-    /// <returns>The graph without the loops.</returns>
+    /// <inheritdoc cref="IGraph{TVertex}.GetReflexiveReduction"/>
     public Graph<TVertex> GetReflexiveReduction()
     {
         var graph = Clone();

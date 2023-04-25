@@ -11,11 +11,7 @@ partial class Graph<TVertex>
         Vertices.IntersectWith(vertices);
     }
 
-    /// <summary>
-    /// Gets a vertex-induced subgraph of the current graph.
-    /// </summary>
-    /// <param name="vertices">The vertices to induce the subgraph from.</param>
-    /// <returns>The vertex-induced subgraph of the current graph.</returns>
+    /// <inheritdoc cref="IGraph{TVertex}.GetSubgraph(IEnumerable{TVertex})"/>
     public Graph<TVertex> GetSubgraph(IEnumerable<TVertex> vertices)
     {
         if (vertices == null)
@@ -61,11 +57,7 @@ partial class Graph<TVertex>
         Vertices.IntersectWith(Edges.SelectMany(x => x.IncidentVertices));
     }
 
-    /// <summary>
-    /// Gets an edge-induced subgraph of the current graph.
-    /// </summary>
-    /// <param name="edges">The edges to induce the subgraph from.</param>
-    /// <returns>The edge-induced subgraph of the current graph.</returns>
+    /// <inheritdoc cref="IGraph{TVertex}.GetSubgraph(IEnumerable{GraphEdge{TVertex}})"/>
     public Graph<TVertex> GetSubgraph(IEnumerable<GraphEdge<TVertex>> edges)
     {
         if (edges == null)

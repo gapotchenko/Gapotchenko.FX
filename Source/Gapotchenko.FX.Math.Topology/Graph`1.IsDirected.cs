@@ -5,7 +5,7 @@ namespace Gapotchenko.FX.Math.Topology;
 partial class Graph<TVertex>
 {
     /// <summary>
-    /// Gets or configures a value indicating whether the current graph is directed.
+    /// Gets or initializes a value indicating whether the current graph is directed.
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public bool IsDirected

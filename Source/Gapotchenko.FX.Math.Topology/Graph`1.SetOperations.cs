@@ -134,11 +134,7 @@ partial class Graph<TVertex>
         Edges.IntersectWith(other.Edges);
     }
 
-    /// <summary>
-    /// Gets a graph containing vertices and edges that are present in both the current and a specified graphs.
-    /// </summary>
-    /// <param name="other">The graph to compare to the current one.</param>
-    /// <returns>The graph containing vertices and edges that are present in both the current and a specified graphs.</returns>
+    /// <inheritdoc cref="IGraph{TVertex}.Intersect(IReadOnlyGraph{TVertex})"/>
     public Graph<TVertex> Intersect(IReadOnlyGraph<TVertex> other)
     {
         if (other == null)
@@ -168,11 +164,7 @@ partial class Graph<TVertex>
 
     IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.Intersect(IReadOnlyGraph<TVertex> other) => Intersect(other);
 
-    /// <summary>
-    /// Gets a graph containing vertices and edges that are present in the current graph but not in the specified graph.
-    /// </summary>
-    /// <param name="other">The graph to compare to the current one.</param>
-    /// <returns>The graph containing vertices and edges that are present in the current graph but not in the specified graph.</returns>
+    /// <inheritdoc cref="IGraph{TVertex}.Except(IReadOnlyGraph{TVertex})"/>
     public Graph<TVertex> Except(IReadOnlyGraph<TVertex> other)
     {
         if (other == null)
@@ -202,11 +194,7 @@ partial class Graph<TVertex>
         Vertices.UnionWith(other.Vertices);
     }
 
-    /// <summary>
-    /// Gets a graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both.
-    /// </summary>
-    /// <param name="other">The graph to compare to the current one.</param>
-    /// <returns>The graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both.</returns>
+    /// <inheritdoc cref="IGraph{TVertex}.Union(IReadOnlyGraph{TVertex})"/>
     public Graph<TVertex> Union(IReadOnlyGraph<TVertex> other)
     {
         if (other == null)

@@ -217,7 +217,7 @@ public static class TopologicalSortExtensions
         // Note that this comparer does not support partial orders
         // and thus cannot be used with most other sorting algorithms,
         // unless they do a full scan as selection sort does.
-        bool compare(TKey x, TKey y)
+        bool Compare(TKey x, TKey y)
         {
             // If x depends on y and there is no circular dependency then topological order should prevail.
             // Otherwise, the positional order provided by the underlying sorting algorithm prevails.
@@ -231,7 +231,7 @@ public static class TopologicalSortExtensions
             int jMin = i;
             for (int j = i + 1; j < n; ++j)
             {
-                if (compare(keySelector(list[jMin]), keySelector(list[j])))
+                if (Compare(keySelector(list[jMin]), keySelector(list[j])))
                     jMin = j;
             }
 

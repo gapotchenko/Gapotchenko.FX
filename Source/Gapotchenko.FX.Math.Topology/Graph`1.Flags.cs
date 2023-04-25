@@ -5,6 +5,7 @@ namespace Gapotchenko.FX.Math.Topology;
 
 partial class Graph<TVertex>
 {
+    // Flags
     const int F_IsUndirected = 1 << 0;
     const int F_IsDirected_Initialized = 1 << 1;
 
