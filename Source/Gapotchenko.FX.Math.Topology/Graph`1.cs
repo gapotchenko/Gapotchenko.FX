@@ -259,7 +259,7 @@ public partial class Graph<TVertex> : IGraph<TVertex>
     /// Creates a new graph instance inheriting parent object settings such as comparer and edge direction awareness,
     /// but without inheriting vertices and edges.
     /// </summary>
-    /// <returns>A new graph instance.</returns>
+    /// <returns>A new graph instance with inherited parent object settings.</returns>
     protected Graph<TVertex> NewGraph() =>
         new(VertexComparer)
         {

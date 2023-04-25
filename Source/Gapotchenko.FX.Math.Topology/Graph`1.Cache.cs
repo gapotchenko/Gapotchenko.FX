@@ -20,13 +20,14 @@ partial class Graph<TVertex>
     // Cached flags
     const int CF_IsCyclic_HasValue = 1 << 0;
     const int CF_IsCyclic_Value = 1 << 1;
+    const int CF_IsCyclic_Mask = CF_IsCyclic_HasValue | CF_IsCyclic_Value;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     BitVector32 m_CachedFlags;
 
     void InvalidateCachedRelations()
     {
-        IsCyclicHint = null;
+        m_CachedFlags[CF_IsCyclic_Mask] = false;
     }
 
     /// <summary>

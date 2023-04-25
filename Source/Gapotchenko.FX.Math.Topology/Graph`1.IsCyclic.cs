@@ -23,7 +23,7 @@ partial class Graph<TVertex>
             }
             else
             {
-                m_CachedFlags[CF_IsCyclic_HasValue | CF_IsCyclic_Value] = false;
+                m_CachedFlags[CF_IsCyclic_Mask] = false;
             }
         }
     }
