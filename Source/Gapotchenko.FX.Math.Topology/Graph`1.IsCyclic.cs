@@ -29,7 +29,7 @@ partial class Graph<TVertex>
 
             recStack.Add(v);
 
-            foreach (var i in DestinationVerticesAdjacentTo(v))
+            foreach (var i in OutgoingVerticesAdjacentTo(v))
                 if (IsCyclicHelper(i))
                     return true;
 

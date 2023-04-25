@@ -44,7 +44,7 @@ public partial interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVe
     /// </remarks>
     /// <param name="vertex">The vertex to find the adjacent destination vertices for.</param>
     /// <returns>Sequence of destination vertices adjacent to the specified <paramref name="vertex"/>.</returns>
-    IEnumerable<TVertex> DestinationVerticesAdjacentTo(TVertex vertex);
+    IEnumerable<TVertex> OutgoingVerticesAdjacentTo(TVertex vertex);
 
     /// <summary>
     /// Gets vertices adjacent to a specified vertex.

@@ -204,7 +204,7 @@ public partial class Graph<TVertex> : IGraph<TVertex>
     }
 
     /// <inheritdoc/>
-    public IEnumerable<TVertex> DestinationVerticesAdjacentTo(TVertex vertex)
+    public IEnumerable<TVertex> OutgoingVerticesAdjacentTo(TVertex vertex)
     {
         var mg = new ModificationGuard(this);
         m_AdjacencyList.TryGetValue(vertex, out var adjRow);
@@ -214,7 +214,7 @@ public partial class Graph<TVertex> : IGraph<TVertex>
     /// <inheritdoc/>
     public IEnumerable<TVertex> VerticesAdjacentTo(TVertex vertex) =>
         IncomingVerticesAdjacentTo(vertex)
-        .Concat(DestinationVerticesAdjacentTo(vertex))
+        .Concat(OutgoingVerticesAdjacentTo(vertex))
         .Distinct(VertexComparer);
 
     /// <inheritdoc/>
@@ -224,7 +224,7 @@ public partial class Graph<TVertex> : IGraph<TVertex>
 
     /// <inheritdoc/>
     public IEnumerable<GraphEdge<TVertex>> OutgoingEdgesIncidentWith(TVertex vertex) =>
-        DestinationVerticesAdjacentTo(vertex)
+        OutgoingVerticesAdjacentTo(vertex)
         .Select(x => GraphEdge.Create(vertex, x));
 
     /// <inheritdoc/>

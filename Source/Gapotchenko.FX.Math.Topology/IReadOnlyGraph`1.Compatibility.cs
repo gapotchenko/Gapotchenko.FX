@@ -8,6 +8,11 @@ partial interface IReadOnlyGraph<TVertex>
     [Obsolete($"Use {nameof(IncomingVerticesAdjacentTo)} instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     IEnumerable<TVertex> SourceVerticesAdjacentTo(TVertex vertex) => IncomingVerticesAdjacentTo(vertex);
+
+    /// <inheritdoc cref="OutgoingVerticesAdjacentTo(TVertex)"/>
+    [Obsolete($"Use {nameof(OutgoingVerticesAdjacentTo)} instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IEnumerable<TVertex> DestinationVerticesAdjacentTo(TVertex vertex) => OutgoingVerticesAdjacentTo(vertex);
 }
 
 #endif

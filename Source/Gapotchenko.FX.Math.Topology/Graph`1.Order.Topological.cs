@@ -31,7 +31,7 @@ partial class Graph<TVertex>
 
             yield return vertex;
 
-            foreach (var adjacentVertex in DestinationVerticesAdjacentTo(vertex))
+            foreach (var adjacentVertex in OutgoingVerticesAdjacentTo(vertex))
             {
                 graph.Edges.Remove(adjacentVertex, vertex);
 
@@ -62,7 +62,7 @@ partial class Graph<TVertex>
 
             yield return vertex;
 
-            foreach (var adjacentVertex in DestinationVerticesAdjacentTo(vertex))
+            foreach (var adjacentVertex in OutgoingVerticesAdjacentTo(vertex))
             {
                 graph.Edges.Remove(adjacentVertex, vertex);
 

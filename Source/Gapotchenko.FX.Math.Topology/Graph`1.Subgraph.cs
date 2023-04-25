@@ -31,7 +31,7 @@ partial class Graph<TVertex>
 
         foreach (var vertex in subgraphVertices)
         {
-            foreach (var adjacentVertex in DestinationVerticesAdjacentTo(vertex))
+            foreach (var adjacentVertex in OutgoingVerticesAdjacentTo(vertex))
             {
                 if (subgraphVertices.Contains(adjacentVertex))
                     edgesToAdd.Add(GraphEdge.Create(vertex, adjacentVertex));

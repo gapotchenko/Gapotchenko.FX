@@ -8,6 +8,11 @@ partial class Graph<TVertex>
     [Obsolete($"Use {nameof(IncomingVerticesAdjacentTo)} instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public IEnumerable<TVertex> SourceVerticesAdjacentTo(TVertex vertex) => IncomingVerticesAdjacentTo(vertex);
+
+    /// <inheritdoc cref="OutgoingVerticesAdjacentTo(TVertex)"/>
+    [Obsolete($"Use {nameof(OutgoingVerticesAdjacentTo)} instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public IEnumerable<TVertex> DestinationVerticesAdjacentTo(TVertex vertex) => OutgoingVerticesAdjacentTo(vertex);
 }
 
 #endif
