@@ -8,7 +8,7 @@
 /// Vertices represent the objects and edges represent the relations between them.
 /// </remarks>
 /// <typeparam name="TVertex">The type of vertices in the graph.</typeparam>
-public interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVertex>>
+public partial interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVertex>>
 {
     /// <summary>
     /// Gets a set containing vertices of the graph.
@@ -27,14 +27,14 @@ public interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVertex>>
     IReadOnlySet<GraphEdge<TVertex>> Edges { get; }
 
     /// <summary>
-    /// Gets the source vertices adjacent to a specified vertex.
+    /// Gets incoming vertices adjacent to the specified vertex.
     /// </summary>
     /// <remarks>
-    /// Adjacent source vertices are end-vertices of the incoming edges incident with the specified vertex.
+    /// Adjacent incoming vertices are source end-vertices of the incoming edges incident with the specified vertex.
     /// </remarks>
-    /// <param name="vertex">The vertex to find the adjacent source vertices for.</param>
-    /// <returns>Sequence of source vertices adjacent to the specified <paramref name="vertex"/>.</returns>
-    IEnumerable<TVertex> SourceVerticesAdjacentTo(TVertex vertex);
+    /// <param name="vertex">The vertex to find the adjacent incoming vertices for.</param>
+    /// <returns>Sequence of incoming vertices adjacent to the specified <paramref name="vertex"/>.</returns>
+    IEnumerable<TVertex> IncomingVerticesAdjacentTo(TVertex vertex);
 
     /// <summary>
     /// Gets the destination vertices adjacent to a specified vertex.

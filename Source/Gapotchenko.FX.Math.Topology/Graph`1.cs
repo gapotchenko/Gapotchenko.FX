@@ -196,7 +196,7 @@ public partial class Graph<TVertex> : IGraph<TVertex>
     }
 
     /// <inheritdoc/>
-    public IEnumerable<TVertex> SourceVerticesAdjacentTo(TVertex vertex)
+    public IEnumerable<TVertex> IncomingVerticesAdjacentTo(TVertex vertex)
     {
         var mg = new ModificationGuard(this);
         ReverseAdjacencyList.TryGetValue(vertex, out var adjRow);
@@ -213,13 +213,13 @@ public partial class Graph<TVertex> : IGraph<TVertex>
 
     /// <inheritdoc/>
     public IEnumerable<TVertex> VerticesAdjacentTo(TVertex vertex) =>
-        SourceVerticesAdjacentTo(vertex)
+        IncomingVerticesAdjacentTo(vertex)
         .Concat(DestinationVerticesAdjacentTo(vertex))
         .Distinct(VertexComparer);
 
     /// <inheritdoc/>
     public IEnumerable<GraphEdge<TVertex>> IncomingEdgesIncidentWith(TVertex vertex) =>
-        SourceVerticesAdjacentTo(vertex)
+        IncomingVerticesAdjacentTo(vertex)
         .Select(x => GraphEdge.Create(x, vertex));
 
     /// <inheritdoc/>
