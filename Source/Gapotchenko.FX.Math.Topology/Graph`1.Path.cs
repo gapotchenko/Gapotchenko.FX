@@ -2,8 +2,11 @@
 
 partial class Graph<TVertex>
 {
+    /// <inheritdoc/>
+    public bool HasPath(TVertex from, TVertex to) => Edges.Contains(from, to) || HasTransitivePath(from, to);
+
     /// <summary>
-    /// Gets a value indicating whether there is a transitive path from the specified source vertex to a destination.
+    /// Gets a value indicating whether there is a transitive path from the specified source vertex to the destination.
     /// </summary>
     /// <remarks>
     /// A transitive path consists of two or more edges with at least one intermediate vertex.
@@ -14,26 +17,24 @@ partial class Graph<TVertex>
     /// <see langword="true"/> when the specified source vertex can reach the destination via one or more intermediate vertices; 
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    bool HasTransitivePath(TVertex from, TVertex to) => new PathTraverser(this, to, false).CanBeReachedFrom(from);
+    bool HasTransitivePath(TVertex from, TVertex to) => new TransitivePathTraverser(this, to).CanBeReachedFrom(from);
 
-    /// <inheritdoc/>
-    public bool HasPath(TVertex from, TVertex to) => Edges.Contains(from, to) || HasTransitivePath(from, to);
-
-    struct PathTraverser
+    ref struct TransitivePathTraverser
     {
-        public PathTraverser(Graph<TVertex> graph, TVertex destination, bool adjacent)
+        public TransitivePathTraverser(Graph<TVertex> graph, TVertex destination)
         {
             m_Graph = graph;
             m_Destination = destination;
 
             m_VisitedNodes = new HashSet<TVertex>(graph.VertexComparer);
-            m_Adjacent = adjacent;
         }
 
         readonly Graph<TVertex> m_Graph;
         readonly TVertex m_Destination;
 
         readonly HashSet<TVertex> m_VisitedNodes;
+
+        // Using the field instead of a function parameter to reduce the size of stack used by a recursive call chain.
         bool m_Adjacent;
 
         public bool CanBeReachedFrom(TVertex source)

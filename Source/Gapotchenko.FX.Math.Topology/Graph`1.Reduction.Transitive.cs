@@ -20,10 +20,7 @@ partial class Graph<TVertex>
             foreach (var to in adjRow)
             {
                 if (HasTransitivePath(from, to))
-                {
-                    removeList ??= new List<TVertex>();
-                    removeList.Add(to);
-                }
+                    (removeList ??= new()).Add(to);
             }
 
             if (removeList != null)
