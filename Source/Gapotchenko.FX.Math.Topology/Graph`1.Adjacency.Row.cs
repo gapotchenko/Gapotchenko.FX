@@ -7,7 +7,7 @@ partial class Graph<TVertex>
     /// <summary>
     /// Graph adjacency row represents a set of vertices that relate to another vertex.
     /// </summary>
-    protected internal sealed class AdjacencyRow : HashSet<TVertex>
+    protected sealed class AdjacencyRow : HashSet<TVertex>
     {
         internal AdjacencyRow(IEqualityComparer<TVertex>? comparer) :
             base(comparer)

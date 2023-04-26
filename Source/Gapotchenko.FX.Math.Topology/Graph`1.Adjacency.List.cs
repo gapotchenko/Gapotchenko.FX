@@ -16,7 +16,7 @@ partial class Graph<TVertex>
     /// The list consists of rows, each of them representing a set of vertices every item of which relates to another vertex.
     /// </remarks>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    protected internal IDictionary<TVertex, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
+    protected IDictionary<TVertex, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     AssociativeArray<TVertex, AdjacencyRow?>? m_ReverseAdjacencyList;

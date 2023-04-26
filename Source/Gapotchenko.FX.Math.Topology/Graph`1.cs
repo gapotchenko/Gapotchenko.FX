@@ -1,13 +1,9 @@
-﻿using System.Diagnostics;
-
-namespace Gapotchenko.FX.Math.Topology;
+﻿namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
 /// Represents a strongly-typed directional graph of objects.
 /// </summary>
 /// <inheritdoc cref="IGraph{TVertex}"/>
-[DebuggerDisplay($"Order = {{{nameof(Vertices)}.Count}}, Size = {{{nameof(Edges)}.Count}}")]
-[DebuggerTypeProxy(typeof(GraphDebugView<>))]
 public partial class Graph<TVertex> : IGraph<TVertex>
 {
     // This class is partial. Please take a look at the neighboring source files.
