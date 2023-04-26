@@ -95,78 +95,6 @@ public partial class GraphTests
     }
 
     [TestMethod]
-    public void Graph_Edges_Uniqueness()
-    {
-        var g = new Graph<int>
-        {
-            Edges = { (1, 2), (2, 3), (1, 2) }
-        };
-
-        Assert.AreEqual(3, g.Vertices.Count);
-        Assert.AreEqual(2, g.Edges.Count);
-    }
-
-    [TestMethod]
-    public void Graph_Edges_Reversibility()
-    {
-        var g = new Graph<int>();
-
-        Assert.IsTrue(g.Edges.Add(1, 2));
-        Assert.AreEqual(1, g.Edges.Count);
-
-        Assert.IsTrue(g.Edges.Contains(1, 2));
-        Assert.IsFalse(g.Edges.Contains(2, 1));
-
-        Assert.IsTrue(g.Edges.Add(2, 1));
-        Assert.AreEqual(2, g.Edges.Count);
-    }
-
-    [TestMethod]
-    public void Graph_Edges_Remove()
-    {
-        var g = new Graph<int>
-        {
-            Vertices = { 1, 2 },
-            Edges = { (1, 2), (2, 3) }
-        };
-
-        Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
-        Assert.AreEqual(2, g.Edges.Count);
-        Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
-
-        Assert.IsFalse(g.Edges.Remove(1, 3));
-        Assert.AreEqual(3, g.Vertices.Count);
-        Assert.AreEqual(2, g.Edges.Count);
-
-        Assert.IsTrue(g.Edges.Remove(2, 3));
-        Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
-        Assert.AreEqual(1, g.Edges.Count);
-        Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2) }));
-    }
-
-    [TestMethod]
-    public void Graph_Edges_Clear()
-    {
-        var g = new Graph<int>
-        {
-            Vertices = { 1, 2 },
-            Edges = { (1, 2), (2, 3) }
-        };
-
-        Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
-        Assert.AreEqual(2, g.Edges.Count);
-        Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
-
-        g.Edges.Clear();
-        Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
-        Assert.AreEqual(0, g.Edges.Count);
-    }
-
-    [TestMethod]
     public void Graph_Transpose()
     {
         var g = new Graph<int>
@@ -174,7 +102,9 @@ public partial class GraphTests
             Edges = { (1, 2), (2, 3) }
         };
 
+        var g0 = g.Clone();
         g.Transpose();
+        Assert.IsFalse(g.GraphEquals(g0), "Original graph instance should be modified.");
 
         Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
         Assert.IsTrue(g.Edges.SetEquals(new[] { (2, 1), (3, 2) }));
@@ -195,48 +125,6 @@ public partial class GraphTests
         Assert.AreNotSame(g, h);
         Assert.IsTrue(h.Vertices.SetEquals(new[] { 1, 2, 3 }));
         Assert.IsTrue(h.Edges.SetEquals(new[] { (2, 1), (3, 2) }));
-    }
-
-    [TestMethod]
-    public void Graph_Clone()
-    {
-        var g = new Graph<int>
-        {
-            Vertices = { 5 },
-            Edges = { (1, 2), (2, 3) }
-        };
-
-        var h = g.Clone();
-
-        Assert.AreNotSame(g, h);
-        Assert.IsTrue(h.Vertices.SetEquals(new[] { 1, 2, 3, 5 }));
-        Assert.IsTrue(h.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
-    }
-
-    [TestMethod]
-    public void Graph_HasPath()
-    {
-        IReadOnlyGraph<int> g = new Graph<int>
-        {
-            Vertices = { 5 },
-            Edges = { (1, 2), (2, 3), (4, 4) }
-        };
-
-        Assert.IsTrue(g.HasPath(1, 2));
-        Assert.IsFalse(g.HasPath(2, 1));
-
-        Assert.IsTrue(g.HasPath(1, 3));
-        Assert.IsFalse(g.HasPath(3, 1));
-
-        Assert.IsTrue(g.HasPath(4, 4));
-
-        Assert.IsFalse(g.HasPath(1, 5));
-        Assert.IsFalse(g.HasPath(5, 1));
-
-        Assert.IsFalse(g.HasPath(1, 10));
-        Assert.IsFalse(g.HasPath(10, 1));
-
-        Assert.IsFalse(g.HasPath(10, 20));
     }
 
     [TestMethod]
