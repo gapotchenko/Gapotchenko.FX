@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Gapotchenko.FX.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Math.Topology.Tests;
 
@@ -15,10 +16,26 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5) }
         };
 
-        var result = g.VerticesAdjacentTo(2).ToList();
-        Assert.AreEqual(4, result.Count);
+        Graph_VerticesAdjacentTo(g, 2, new HashSet<int> { 1, 3, 5, 7 });
+    }
 
-        Assert.IsTrue(new HashSet<int> { 1, 3, 5, 7 }.SetEquals(result));
+    static void Graph_VerticesAdjacentTo<T>(Graph<T> graph, T from, HashSet<T> expectedResult)
+    {
+        var actualResult = graph.VerticesAdjacentTo(from).ToList();
+        Graph_Directed_VerticesAdjacentTo(actualResult, expectedResult);
+        if (!graph.IsDirected)
+        {
+            Assert.IsTrue(actualResult.SequenceEqual(graph.IncomingVerticesAdjacentTo(from)));
+            Assert.IsTrue(actualResult.SequenceEqual(graph.OutgoingVerticesAdjacentTo(from)));
+        }
+    }
+
+    static void Graph_Directed_VerticesAdjacentTo<T>(IEnumerable<T> actualResult, HashSet<T> expectedResult)
+    {
+        actualResult = actualResult.Memoize();
+
+        Assert.AreEqual(expectedResult.Count, actualResult.Count(), "The result contains duplicates.");
+        Assert.IsTrue(expectedResult.SetEquals(actualResult));
     }
 
     [TestMethod]
@@ -32,10 +49,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5), (2, 2) }
         };
 
-        var result = g.VerticesAdjacentTo(2).ToList();
-        Assert.AreEqual(5, result.Count);
-
-        Assert.IsTrue(new HashSet<int> { 1, 2, 3, 5, 7 }.SetEquals(result));
+        Graph_VerticesAdjacentTo(g, 2, new HashSet<int> { 1, 2, 3, 5, 7 });
     }
 
     [TestMethod]
@@ -49,10 +63,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5), (5, 2) }
         };
 
-        var result = g.VerticesAdjacentTo(2).ToList();
-        Assert.AreEqual(4, result.Count);
-
-        Assert.IsTrue(new HashSet<int> { 1, 3, 5, 7 }.SetEquals(result));
+        Graph_VerticesAdjacentTo(g, 2, new HashSet<int> { 1, 3, 5, 7 });
     }
 
     #region Directed
@@ -65,10 +76,9 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5) }
         };
 
-        var result = g.IncomingVerticesAdjacentTo(2).ToList();
-        Assert.AreEqual(3, result.Count);
-
-        Assert.IsTrue(new HashSet<int> { 1, 3, 7 }.SetEquals(result));
+        Graph_Directed_VerticesAdjacentTo(
+            g.IncomingVerticesAdjacentTo(2),
+            new HashSet<int> { 1, 3, 7 });
     }
 
     [TestMethod]
@@ -79,10 +89,9 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5), (2, 2) }
         };
 
-        var result = g.IncomingVerticesAdjacentTo(2).ToList();
-        Assert.AreEqual(4, result.Count);
-
-        Assert.IsTrue(new HashSet<int> { 1, 2, 3, 7 }.SetEquals(result));
+        Graph_Directed_VerticesAdjacentTo(
+            g.IncomingVerticesAdjacentTo(2),
+            new HashSet<int> { 1, 2, 3, 7 });
     }
 
     [TestMethod]
@@ -93,10 +102,9 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5) }
         };
 
-        var result = g.OutgoingVerticesAdjacentTo(2).ToList();
-        Assert.AreEqual(1, result.Count);
-
-        Assert.IsTrue(new HashSet<int> { 5 }.SetEquals(result));
+        Graph_Directed_VerticesAdjacentTo(
+            g.OutgoingVerticesAdjacentTo(2),
+            new HashSet<int> { 5 });
     }
 
     [TestMethod]
@@ -107,16 +115,10 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5), (2, 2) }
         };
 
-        var result = g.OutgoingVerticesAdjacentTo(2).ToList();
-        Assert.AreEqual(2, result.Count);
-
-        Assert.IsTrue(new HashSet<int> { 2, 5 }.SetEquals(result));
+        Graph_Directed_VerticesAdjacentTo(
+            g.OutgoingVerticesAdjacentTo(2),
+            new HashSet<int> { 2, 5 });
     }
-
-    #endregion
-
-    #region Undirected
-
 
     #endregion
 }

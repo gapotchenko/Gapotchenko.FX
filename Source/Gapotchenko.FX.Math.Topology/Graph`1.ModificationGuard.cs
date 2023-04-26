@@ -47,7 +47,13 @@ partial class Graph<TVertex>
         /// Protects <see cref="IEnumerable{T}"/> against graph modifications.
         /// </summary>
         [return: NotNullIfNotNull(nameof(source))]
-        public IEnumerable<TVertex>? Protect(IEnumerable<TVertex>? source) => source is null ? null : ProtectCore(source);
+        public IEnumerable<TVertex>? Protect(IEnumerable<TVertex>? source) =>
+            source switch
+            {
+                null => null,
+                var x when ReferenceEquals(x, Enumerable.Empty<TVertex>()) => x,
+                _ => ProtectCore(source)
+            };
 
         IEnumerable<TVertex> ProtectCore(IEnumerable<TVertex> source)
         {
