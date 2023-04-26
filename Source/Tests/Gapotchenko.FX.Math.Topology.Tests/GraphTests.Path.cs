@@ -38,7 +38,6 @@ partial class GraphTests
     #region Undirected
 
     [TestMethod]
-    [Ignore("TODO")]
     public void Graph_Undirected_Path_HasPath()
     {
         IReadOnlyGraph<int> g = new Graph<int>

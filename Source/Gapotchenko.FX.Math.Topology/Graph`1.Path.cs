@@ -19,9 +19,17 @@ partial class Graph<TVertex>
     /// <see langword="true"/> when the specified source vertex can reach the destination via one or more intermediate vertices; 
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    bool HasTransitivePath(TVertex from, TVertex to)
+    bool HasTransitivePath(TVertex from, TVertex to) =>
+        IsDirected ?
+            HasDirectedTransitivePathCore(from, to) :
+            HasUndirectedTransitivePathCore(from, to);
+
+    bool HasDirectedTransitivePathCore(TVertex from, TVertex to)
     {
         var visitedVertices = new HashSet<TVertex>(VertexComparer);
+
+        // Using local variable instead of a function parameter to reduce the size of stack
+        // used by recursive call chain.
         bool adjacent = false;
 
         bool CanBeReachedFrom(TVertex from)
@@ -53,5 +61,43 @@ partial class Graph<TVertex>
         }
 
         return CanBeReachedFrom(from);
+    }
+
+    bool HasUndirectedTransitivePathCore(TVertex from, TVertex to)
+    {
+        var visitedVertices = new HashSet<TVertex>(VertexComparer);
+
+        bool CanBeReachedFrom(TVertex from, bool adjacent)
+        {
+            if (!visitedVertices.Add(from))
+                return false;
+
+            return
+                CanBeReachedUsingAdjacencyList(from, adjacent, m_AdjacencyList) ||
+                CanBeReachedUsingAdjacencyList(from, adjacent, ReverseAdjacencyList);
+
+            bool CanBeReachedUsingAdjacencyList(TVertex from, bool adjacent, IReadOnlyDictionary<TVertex, AdjacencyRow?> adjList)
+            {
+                if (adjList.TryGetValue(from, out var adjRow) &&
+                    adjRow != null)
+                {
+                    if (adjacent)
+                    {
+                        if (adjRow.Contains(to))
+                            return true;
+                    }
+
+                    foreach (var i in adjRow)
+                    {
+                        if (CanBeReachedFrom(i, true))
+                            return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        return CanBeReachedFrom(from, false);
     }
 }
