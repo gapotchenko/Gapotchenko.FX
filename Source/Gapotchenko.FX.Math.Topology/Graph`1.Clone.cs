@@ -16,7 +16,5 @@ partial class Graph<TVertex>
 
     IGraph<TVertex> ICloneable<IGraph<TVertex>>.Clone() => Clone();
 
-    IReadOnlyGraph<TVertex> ICloneable<IReadOnlyGraph<TVertex>>.Clone() => Clone();
-
     object ICloneable.Clone() => Clone();
 }

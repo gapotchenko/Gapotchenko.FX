@@ -8,7 +8,7 @@
 /// Vertices represent the objects and edges represent the relations between them.
 /// </remarks>
 /// <typeparam name="TVertex">The type of vertices in the graph.</typeparam>
-public partial interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVertex>>
+public partial interface IReadOnlyGraph<TVertex>
 {
     /// <summary>
     /// Gets a set containing vertices of the graph.
