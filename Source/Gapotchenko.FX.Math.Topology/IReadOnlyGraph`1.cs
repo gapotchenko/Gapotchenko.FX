@@ -57,6 +57,27 @@ public partial interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVe
     IEnumerable<TVertex> VerticesAdjacentTo(TVertex vertex);
 
     /// <summary>
+    /// Gets incoming vertices that have a path to the specified vertex.
+    /// </summary>
+    /// <param name="vertex">The vertex to find the incoming connected vertices for.</param>
+    /// <returns>Sequence of incoming vertices that have a path to the specified <paramref name="vertex"/>.</returns>
+    IEnumerable<TVertex> IncomingVerticesConnectedWith(TVertex vertex);
+
+    /// <summary>
+    /// Gets outgoing vertices that have a path from the specified vertex.
+    /// </summary>
+    /// <param name="vertex">The vertex to find the outgoing connected vertices for.</param>
+    /// <returns>Sequence of outgoing vertices that have a path from the specified <paramref name="vertex"/>.</returns>
+    IEnumerable<TVertex> OutgoingVerticesConnectedWith(TVertex vertex);
+
+    /// <summary>
+    /// Gets vertices that have a path from/to the specified vertex.
+    /// </summary>
+    /// <param name="vertex">The vertex to find the connected vertices for.</param>
+    /// <returns>Sequence of vertices that have a path from/to the specified <paramref name="vertex"/>.</returns>
+    IEnumerable<TVertex> VerticesConnectedWith(TVertex vertex);
+
+    /// <summary>
     /// Gets incoming edges incident with a specified vertex.
     /// </summary>
     /// <param name="vertex">The vertex to find the incoming incident edges for.</param>
@@ -92,7 +113,7 @@ public partial interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVe
     /// </summary>
     /// <remarks>
     /// A graph is connected if every pair of vertices has a path between them.
-    /// A graph containing less than two vertices is connected by definition.
+    /// A graph containing less than two vertices is connected by the definition.
     /// </remarks>
     bool IsConnected { get; }
 
@@ -101,6 +122,7 @@ public partial interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVe
     /// </summary>
     /// <remarks>
     /// A path consists of one or more edges with or without intermediate vertices.
+    /// The vertices that have a path between them are called connected vertices.
     /// </remarks>
     /// <param name="from">The source vertex.</param>
     /// <param name="to">The destination vertex.</param>

@@ -23,35 +23,35 @@ partial class Graph<TVertex>
 
     ref struct TransitivePathTraverser
     {
-        public TransitivePathTraverser(Graph<TVertex> graph, TVertex destination)
+        public TransitivePathTraverser(Graph<TVertex> graph, TVertex destinationVertex)
         {
             m_Graph = graph;
-            m_Destination = destination;
+            m_DestinationVertex = destinationVertex;
 
-            // No need to track visited nodes unless graph is cyclic.
-            if (m_Graph.IsCyclicHint != false)
-                m_VisitedNodes = new HashSet<TVertex>(graph.VertexComparer);
+            // No need to track visited vertices unless graph is cyclic.
+            if (graph.IsCyclicHint != false)
+                m_VisitedVertices = new HashSet<TVertex>(graph.VertexComparer);
         }
 
         readonly Graph<TVertex> m_Graph;
-        readonly TVertex m_Destination;
+        readonly TVertex m_DestinationVertex;
 
-        readonly HashSet<TVertex>? m_VisitedNodes;
+        readonly HashSet<TVertex>? m_VisitedVertices;
 
         // Using the field instead of a function parameter to reduce the size of a stack used by a recursive call chain.
         bool m_Adjacent;
 
-        public bool CanBeReachedFrom(TVertex source)
+        public bool CanBeReachedFrom(TVertex sourceVertex)
         {
-            if (m_VisitedNodes?.Add(source) == false)
+            if (m_VisitedVertices?.Add(sourceVertex) == false)
                 return false;
 
-            if (m_Graph.m_AdjacencyList.TryGetValue(source, out var adjRow) &&
+            if (m_Graph.m_AdjacencyList.TryGetValue(sourceVertex, out var adjRow) &&
                 adjRow != null)
             {
                 if (m_Adjacent)
                 {
-                    if (adjRow.Contains(m_Destination))
+                    if (adjRow.Contains(m_DestinationVertex))
                         return true;
                 }
                 else

@@ -17,6 +17,8 @@ partial class Graph<TVertex>
         /// <inheritdoc/>
         public override string ToString()
         {
+            // TODO: refactor to $"{{ {string.Join(", ", this)} }}".
+
             var sb = new StringBuilder();
             sb.Append("{ ");
 
