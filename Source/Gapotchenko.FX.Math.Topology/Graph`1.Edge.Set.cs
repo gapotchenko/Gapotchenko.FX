@@ -158,15 +158,15 @@ partial class Graph<TVertex>
         /// <inheritdoc/>
         public override bool Contains(GraphEdge<TVertex> edge)
         {
-            bool ContainsCore(TVertex from, TVertex to) =>
-                m_Graph.m_AdjacencyList.TryGetValue(from, out var adjRow) &&
+            bool ContainsCore(in GraphEdge<TVertex> edge) =>
+                m_Graph.m_AdjacencyList.TryGetValue(edge.From, out var adjRow) &&
                 adjRow != null &&
-                adjRow.Contains(to);
+                adjRow.Contains(edge.To);
 
             if (m_Graph.IsDirected)
-                return ContainsCore(edge.From, edge.To);
+                return ContainsCore(edge);
             else
-                return ContainsCore(edge.From, edge.To) || ContainsCore(edge.To, edge.From);
+                return ContainsCore(edge) || ContainsCore(edge.Reverse());
         }
 
         /// <inheritdoc/>
