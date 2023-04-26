@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.Topology.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math.Topology)
 
-The module provides data structures and primitives for working with abstract topologies.
+The module provides data structures and primitives for working with abstract topologies and graphs.
 
 In its classical meaning, the science of topology is concerned with the properties of geometric objects.
 However, such a definition may be considered as too narrow by some.
