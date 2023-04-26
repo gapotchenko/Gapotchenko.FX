@@ -83,10 +83,7 @@ partial class Graph<TVertex>
             }
 
             if (storeFrom)
-            {
-                if (!revAdjList.ContainsKey(from))
-                    revAdjList.Add(from, null);
-            }
+                revAdjList.TryAdd(from, null);
         }
 
         return revAdjList;
