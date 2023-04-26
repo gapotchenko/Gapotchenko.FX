@@ -2,10 +2,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-#if NETCOREAPP3_0
-#pragma warning disable CS8714
-#endif
-
 namespace Gapotchenko.FX.Math.Topology;
 
 partial class Graph<TVertex>

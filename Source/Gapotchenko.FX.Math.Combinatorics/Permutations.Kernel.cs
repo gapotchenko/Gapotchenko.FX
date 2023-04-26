@@ -1,4 +1,5 @@
-﻿using Gapotchenko.FX.Linq;
+﻿using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Linq;
 
 namespace Gapotchenko.FX.Math.Combinatorics;
 
@@ -19,22 +20,13 @@ partial class Permutations
         }
         else
         {
-#pragma warning disable CS8714
-            var map = new Dictionary<T, List<int>>(comparer);
-#pragma warning restore CS8714
-            List<int>? nullList = null;
+            var map = new AssociativeArray<T, List<int>>(comparer);
 
             for (int i = 0; i < length; ++i)
             {
                 var item = items[i];
 
-                List<int>? list;
-                if (item is null)
-                {
-                    nullList ??= new List<int>();
-                    list = nullList;
-                }
-                else if (!map.TryGetValue(item, out list))
+                if (!map.TryGetValue(item, out var list))
                 {
                     list = new List<int>();
                     map.Add(item, list);
@@ -44,8 +36,6 @@ partial class Permutations
             }
 
             var lists = map.Values.AsEnumerable();
-            if (nullList != null)
-                lists = lists.Prepend(nullList);
 
             int transformIndex = 0;
             int elementIndex = 0;

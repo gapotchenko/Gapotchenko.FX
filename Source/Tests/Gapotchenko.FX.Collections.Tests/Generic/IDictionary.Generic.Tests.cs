@@ -4,10 +4,6 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using Xunit;
 
-#if NETCOREAPP3_1
-#pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
-#endif
-
 namespace Gapotchenko.FX.Collections.Tests.Generic;
 
 /// <summary>
