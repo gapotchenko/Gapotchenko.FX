@@ -14,13 +14,11 @@ partial class Graph<TVertex>
     AssociativeArray<TVertex, AdjacencyRow?> m_AdjacencyList;
 
     /// <summary>
-    /// <para>
     /// Gets the graph adjacency list.
-    /// </para>
-    /// <para>
-    /// The list consists of a number of rows, each of them representing a set of vertices that relate to another vertex.
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// The list consists of rows, each of them representing a set of vertices every item of which relates to another vertex.
+    /// </remarks>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     protected internal IDictionary<TVertex, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
 
@@ -31,25 +29,16 @@ partial class Graph<TVertex>
     /// Gets a value indicating whether a reverse adjacency list for the current graph is created.
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    [MemberNotNull(nameof(m_ReverseAdjacencyList))]
-#pragma warning disable CS8774 // Member must have a non-null value when exiting.
+    [MemberNotNullWhen(true, nameof(m_ReverseAdjacencyList))]
     protected bool HasReverseAdjacencyList => m_ReverseAdjacencyList != null;
-#pragma warning restore CS8774 // Member must have a non-null value when exiting.
 
     /// <summary>
     /// Gets a reverse adjacency list for the current graph.
     /// </summary>
+    /// <remarks><inheritdoc cref="AdjacencyList"/></remarks>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    protected IReadOnlyDictionary<TVertex, AdjacencyRow?> ReverseAdjacencyList
-    {
-        get
-        {
-            if (!IsDirected)
-                throw new InvalidOperationException("Undirected graph cannot have a reverse adjacency list.");
-
-            return m_ReverseAdjacencyList ??= CreateReverseAdjacencyList();
-        }
-    }
+    protected IReadOnlyDictionary<TVertex, AdjacencyRow?> ReverseAdjacencyList =>
+        m_ReverseAdjacencyList ??= CreateReverseAdjacencyList();
 
     AssociativeArray<TVertex, AdjacencyRow?> CreateReverseAdjacencyList()
     {
