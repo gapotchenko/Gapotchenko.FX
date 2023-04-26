@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Gapotchenko.FX.Math.Topology.Tests;
 
 [TestClass]
-public partial class DirectedGraphTests
+public partial class GraphTests
 {
     [TestMethod]
     public void Graph_Vertices_Uniqueness()

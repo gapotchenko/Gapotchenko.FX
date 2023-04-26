@@ -2,8 +2,10 @@
 
 namespace Gapotchenko.FX.Math.Topology.Tests;
 
-partial class DirectedGraphTests
+partial class GraphTests
 {
+    #region Directed
+
     [TestMethod]
     public void Graph_Directed_VerticesConnectedWith_Incoming()
     {
@@ -101,4 +103,6 @@ partial class DirectedGraphTests
 
         Assert.IsTrue(new HashSet<int> { 0, 1, 2, 3, 5, 6, 8 }.SetEquals(result));
     }
+
+    #endregion
 }
