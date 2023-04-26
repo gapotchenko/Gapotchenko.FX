@@ -21,7 +21,7 @@ partial class GraphTests
     }
 
     [TestMethod]
-    public void Graph_Directed_VerticesConnectedWith_IncomingWithBuckle()
+    public void Graph_Directed_VerticesConnectedWith_Incoming_WithBuckle()
     {
         var g = new Graph<int>
         {
@@ -49,7 +49,7 @@ partial class GraphTests
     }
 
     [TestMethod]
-    public void Graph_Directed_VerticesConnectedWith_OutgoingWithBuckle()
+    public void Graph_Directed_VerticesConnectedWith_Outgoing_WithBuckle()
     {
         var g = new Graph<int>
         {
@@ -103,6 +103,10 @@ partial class GraphTests
 
         Assert.IsTrue(new HashSet<int> { 0, 1, 2, 3, 5, 6, 8 }.SetEquals(result));
     }
+
+    #endregion
+
+    #region Undirected
 
     #endregion
 }

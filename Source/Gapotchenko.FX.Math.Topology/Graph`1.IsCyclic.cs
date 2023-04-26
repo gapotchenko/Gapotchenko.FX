@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Math.Topology.Utils;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Topology;
 
@@ -7,6 +8,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public bool IsCyclic => IsCyclicHint ??= IsCyclicCore();
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool? IsCyclicHint
     {
         get => m_CachedFlags.GetNullableBooleanValue(CF_IsCyclic_HasValue, CF_IsCyclic_Value);

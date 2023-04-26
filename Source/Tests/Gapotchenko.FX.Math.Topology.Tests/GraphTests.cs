@@ -8,6 +8,8 @@ namespace Gapotchenko.FX.Math.Topology.Tests;
 [TestClass]
 public partial class GraphTests
 {
+    // This class is partial. Please take a look at the neighboring source files.
+
     [TestMethod]
     public void Graph_Vertices_Uniqueness()
     {
