@@ -19,12 +19,11 @@ public enum GraphIncidenceOptions
     /// <remarks>
     /// This option eliminates loops (also called self-loops or buckles) from appearing in a resulting graph.
     /// A loop exists when a vertex has an incident edge outgoing to itself.
-    /// The latter statement reflects the aforementioned <c>v → v</c> condition.
     /// </remarks>
     ReflexiveReduction = 1 << 1,
 
     /// <summary>
-    /// Specifies to produce a connected graph
+    /// Specifies to produce a mostly connected graph
     /// by excluding vertices that are not incident with any edge.
     /// </summary>
     Connected = 1 << 2
