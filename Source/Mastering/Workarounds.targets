@@ -8,6 +8,7 @@
       <_NullableSupportLevel Condition=" $(_NullableSupportLevel) == 1 AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '3.0')) ">3</_NullableSupportLevel>
       <NoWarn Condition=" $(_NullableSupportLevel) == 1 " >$(NoWarn),CS8602,CS8604,CS8774</NoWarn>
       <NoWarn Condition=" $(_NullableSupportLevel) == 2 " >$(NoWarn),CS8604</NoWarn>
+      <NoWarn Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '3.0')) " >$(NoWarn),CS8714</NoWarn>
     </PropertyGroup>
   </Target>
 

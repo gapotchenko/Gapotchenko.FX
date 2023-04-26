@@ -73,10 +73,10 @@ partial class Graph<TVertex>
                 return false;
 
             return
-                CanBeReachedUsingAdjacencyList(from, adjacent, m_AdjacencyList) ||
-                CanBeReachedUsingAdjacencyList(from, adjacent, ReverseAdjacencyList);
+                CanBeReachedUsingAdjacencyList(m_AdjacencyList) ||
+                CanBeReachedUsingAdjacencyList(ReverseAdjacencyList);
 
-            bool CanBeReachedUsingAdjacencyList(TVertex from, bool adjacent, IReadOnlyDictionary<TVertex, AdjacencyRow?> adjList)
+            bool CanBeReachedUsingAdjacencyList(IReadOnlyDictionary<TVertex, AdjacencyRow?> adjList)
             {
                 if (adjList.TryGetValue(from, out var adjRow) &&
                     adjRow != null)

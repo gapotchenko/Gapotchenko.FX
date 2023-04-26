@@ -4,10 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-#if NETCOREAPP3_0 || NETFRAMEWORK || NETSTANDARD2_0
-#pragma warning disable CS8714
-#endif
-
 namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
@@ -26,9 +22,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 {
 #pragma warning disable CS8714
     Dictionary<TKey, TValue> m_Dictionary;
-#if !NETCOREAPP3_0 && !NETFRAMEWORK && !NETSTANDARD2_0
 #pragma warning restore CS8714
-#endif
 
     Optional<TValue> m_NullSlot;
 
@@ -170,9 +164,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             case Dictionary<TKey, TValue> dictionary:
                 m_Dictionary = new(dictionary, comparer);
                 break;
-#if !NETCOREAPP3_0 && !NETFRAMEWORK && !NETSTANDARD2_0
 #pragma warning restore CS8714
-#endif
 
             default:
                 m_Dictionary = new(collection.TryGetNonEnumeratedCount() ?? 0, comparer);
@@ -363,7 +355,9 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         }
         else
         {
+#pragma warning disable CS8714
             return m_Dictionary.TryAdd(key, value);
+#pragma warning restore CS8714
         }
     }
 
@@ -476,7 +470,9 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         }
         else
         {
+#pragma warning disable CS8714
             return m_Dictionary.Remove(key, out value);
+#pragma warning restore CS8714
         }
     }
 
