@@ -7,6 +7,23 @@ namespace Gapotchenko.FX.Math.Topology;
 
 partial class Graph<TVertex>
 {
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    VertexSet? m_CachedVertices;
+
+    /// <inheritdoc cref="IGraph{TVertex}.Vertices"/>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public VertexSet Vertices => m_CachedVertices ??= new(this);
+
+    /// <inheritdoc/>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    ISet<TVertex> IGraph<TVertex>.Vertices => Vertices;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IReadOnlySet<TVertex> IReadOnlyGraph<TVertex>.Vertices => Vertices;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IEqualityComparer<TVertex> VertexComparer => m_AdjacencyList.Comparer;
+
     /// <summary>
     /// Represents a set of graph vertices.
     /// </summary>

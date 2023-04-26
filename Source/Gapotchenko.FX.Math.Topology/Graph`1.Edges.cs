@@ -6,6 +6,26 @@ namespace Gapotchenko.FX.Math.Topology;
 
 partial class Graph<TVertex>
 {
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    EdgeSet? m_CachedEdges;
+
+    /// <inheritdoc cref="IGraph{TVertex}.Edges"/>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    public EdgeSet Edges => m_CachedEdges ??= new(this);
+
+    /// <inheritdoc/>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    ISet<GraphEdge<TVertex>> IGraph<TVertex>.Edges => Edges;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IReadOnlySet<GraphEdge<TVertex>> IReadOnlyGraph<TVertex>.Edges => Edges;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IEqualityComparer<GraphEdge<TVertex>>? m_EdgeComparer;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IEqualityComparer<GraphEdge<TVertex>> EdgeComparer => m_EdgeComparer ??= GraphEdge.CreateComparer(VertexComparer, IsDirected);
+
     /// <summary>
     /// Represents a set of graph vertices.
     /// </summary>
