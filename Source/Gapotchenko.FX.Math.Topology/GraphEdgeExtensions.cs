@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
-/// Extensions for <see cref="GraphEdge{TVertex}"/> struct.
+/// Extensions for <see cref="GraphEdge{TVertex}"/> structure.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class GraphEdgeExtensions
@@ -16,7 +16,8 @@ public static class GraphEdgeExtensions
     /// <see langword="true"/> if the edge is added to the graph;
     /// <see langword="false"/> if the edge is already present.</returns>
     public static bool Add<TVertex>(this ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
-        (edges ?? throw new ArgumentNullException(nameof(edges))).Add(new GraphEdge<TVertex>(from, to));
+        (edges ?? throw new ArgumentNullException(nameof(edges)))
+        .Add(new GraphEdge<TVertex>(from, to));
 
     /// <summary>
     /// Removes the specified edge from the graph.
@@ -29,7 +30,8 @@ public static class GraphEdgeExtensions
     /// <see langword="false"/> if the edge is not found.
     /// </returns>
     public static bool Remove<TVertex>(this ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
-        (edges ?? throw new ArgumentNullException(nameof(edges))).Remove(new GraphEdge<TVertex>(from, to));
+        (edges ?? throw new ArgumentNullException(nameof(edges)))
+        .Remove(new GraphEdge<TVertex>(from, to));
 
     /// <summary>
     /// <para>
@@ -50,7 +52,8 @@ public static class GraphEdgeExtensions
     /// otherwise, <see langword="false"/>.
     /// </returns>
     public static bool Contains<TVertex>(this ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
-        (edges ?? throw new ArgumentNullException(nameof(edges))).Contains(new GraphEdge<TVertex>(from, to));
+        (edges ?? throw new ArgumentNullException(nameof(edges)))
+        .Contains(new GraphEdge<TVertex>(from, to));
 
     /// <summary>
     /// Adds the specified edge to the collection.
@@ -62,7 +65,8 @@ public static class GraphEdgeExtensions
     /// <see langword="true"/> if the edge is added to the graph;
     /// <see langword="false"/> if the edge is already present.</returns>
     public static void Add<TVertex>(this ICollection<GraphEdge<TVertex>> collection, TVertex from, TVertex to) =>
-        (collection ?? throw new ArgumentNullException(nameof(collection))).Add(new GraphEdge<TVertex>(from, to));
+        (collection ?? throw new ArgumentNullException(nameof(collection)))
+        .Add(new GraphEdge<TVertex>(from, to));
 
     /// <summary>
     /// Removes the specified edge from the collection.
@@ -75,5 +79,6 @@ public static class GraphEdgeExtensions
     /// <see langword="false"/> if the edge is not found.
     /// </returns>
     public static bool Remove<TVertex>(this ICollection<GraphEdge<TVertex>> collection, TVertex from, TVertex to) =>
-        (collection ?? throw new ArgumentNullException(nameof(collection))).Remove(new GraphEdge<TVertex>(from, to));
+        (collection ?? throw new ArgumentNullException(nameof(collection)))
+        .Remove(new GraphEdge<TVertex>(from, to));
 }
