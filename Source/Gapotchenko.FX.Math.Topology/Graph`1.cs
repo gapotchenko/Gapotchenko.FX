@@ -207,55 +207,6 @@ public partial class Graph<TVertex> : IGraph<TVertex>
     }
 
     /// <inheritdoc/>
-    public IEnumerable<TVertex> IncomingVerticesAdjacentTo(TVertex vertex)
-    {
-        if (IsDirected)
-        {
-            var mg = new ModificationGuard(this);
-            return mg.Protect(IncomingVerticesAdjacentToCore(vertex));
-        }
-        else
-        {
-            return VerticesAdjacentTo(vertex);
-        }
-    }
-
-    IEnumerable<TVertex> IncomingVerticesAdjacentToCore(TVertex vertex)
-    {
-        ReverseAdjacencyList.TryGetValue(vertex, out var adjRow);
-        return adjRow ?? Enumerable.Empty<TVertex>();
-    }
-
-    /// <inheritdoc/>
-    public IEnumerable<TVertex> OutgoingVerticesAdjacentTo(TVertex vertex)
-    {
-        if (IsDirected)
-        {
-            var mg = new ModificationGuard(this);
-            return mg.Protect(OutgoingVerticesAdjacentToCore(vertex));
-        }
-        else
-        {
-            return VerticesAdjacentTo(vertex);
-        }
-    }
-
-    IEnumerable<TVertex> OutgoingVerticesAdjacentToCore(TVertex vertex)
-    {
-        AdjacencyList.TryGetValue(vertex, out var adjRow);
-        return adjRow ?? Enumerable.Empty<TVertex>();
-    }
-
-    /// <inheritdoc/>
-    public IEnumerable<TVertex> VerticesAdjacentTo(TVertex vertex)
-    {
-        var mg = new ModificationGuard(this);
-        return mg.Protect(
-            IncomingVerticesAdjacentToCore(vertex)
-            .Union(OutgoingVerticesAdjacentToCore(vertex), VertexComparer));
-    }
-
-    /// <inheritdoc/>
     public IEnumerable<GraphEdge<TVertex>> IncomingEdgesIncidentWith(TVertex vertex) =>
         IncomingVerticesAdjacentTo(vertex)
         .Select(x => GraphEdge.Create(x, vertex));

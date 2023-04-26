@@ -35,8 +35,8 @@ partial class GraphTests
     {
         actualResult = actualResult.Memoize();
 
-        Assert.AreEqual(expectedResult.Count, actualResult.Count(), "The result contains duplicates.");
         Assert.IsTrue(expectedResult.SetEquals(actualResult));
+        Assert.AreEqual(expectedResult.Count, actualResult.Count(), "The result contains duplicates.");
     }
 
     [TestMethod]

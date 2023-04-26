@@ -24,9 +24,7 @@ partial class Graph<TVertex>
             return true;
 
         var vertex = vertices.First();
-
-        // TODO
-
-        throw new NotImplementedException();
+        var connectedVertices = UndirectedVerticesConnectedWithCore(vertex);
+        return connectedVertices.Count() == order;
     }
 }
