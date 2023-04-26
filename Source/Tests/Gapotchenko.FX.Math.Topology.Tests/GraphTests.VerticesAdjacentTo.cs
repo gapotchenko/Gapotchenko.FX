@@ -22,7 +22,8 @@ partial class GraphTests
     static void Graph_VerticesAdjacentTo<T>(Graph<T> graph, T from, HashSet<T> expectedResult)
     {
         var actualResult = graph.VerticesAdjacentTo(from).ToList();
-        Graph_Directed_VerticesAdjacentTo(actualResult, expectedResult);
+        Graph_VerticesAdjacentTo(actualResult, expectedResult);
+
         if (!graph.IsDirected)
         {
             Assert.IsTrue(actualResult.SequenceEqual(graph.IncomingVerticesAdjacentTo(from)));
@@ -30,7 +31,7 @@ partial class GraphTests
         }
     }
 
-    static void Graph_Directed_VerticesAdjacentTo<T>(IEnumerable<T> actualResult, HashSet<T> expectedResult)
+    static void Graph_VerticesAdjacentTo<T>(IEnumerable<T> actualResult, HashSet<T> expectedResult)
     {
         actualResult = actualResult.Memoize();
 
@@ -76,7 +77,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5) }
         };
 
-        Graph_Directed_VerticesAdjacentTo(
+        Graph_VerticesAdjacentTo(
             g.IncomingVerticesAdjacentTo(2),
             new HashSet<int> { 1, 3, 7 });
     }
@@ -89,7 +90,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5), (2, 2) }
         };
 
-        Graph_Directed_VerticesAdjacentTo(
+        Graph_VerticesAdjacentTo(
             g.IncomingVerticesAdjacentTo(2),
             new HashSet<int> { 1, 2, 3, 7 });
     }
@@ -102,7 +103,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5) }
         };
 
-        Graph_Directed_VerticesAdjacentTo(
+        Graph_VerticesAdjacentTo(
             g.OutgoingVerticesAdjacentTo(2),
             new HashSet<int> { 5 });
     }
@@ -115,7 +116,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5), (2, 2) }
         };
 
-        Graph_Directed_VerticesAdjacentTo(
+        Graph_VerticesAdjacentTo(
             g.OutgoingVerticesAdjacentTo(2),
             new HashSet<int> { 2, 5 });
     }
