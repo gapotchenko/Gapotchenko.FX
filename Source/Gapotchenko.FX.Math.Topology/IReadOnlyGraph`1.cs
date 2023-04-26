@@ -211,7 +211,8 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <remarks>
     /// Transitive reduction removes transitive relations with shorter alternative paths.
-    /// Estimated algorithmic complexity of the operation is <c>O(n^2.3729)</c> where <c>n</c> is a graph order (number of vertices).
+    /// The worst estimated algorithmic complexity of the operation is <c>O(n^2.3729)</c> where <c>n</c> is a graph order (number of vertices).
+    /// The actual complexity depends on a structure of the graph.
     /// </remarks>
     /// <returns>A transitively reduced graph.</returns>
     IReadOnlyGraph<TVertex> GetTransitiveReduction();

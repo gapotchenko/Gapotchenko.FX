@@ -1,6 +1,6 @@
 ﻿<Project>
 
-  <!-- Workaround for nullable checks under untraceable (not annotated) target frameworks. -->
+  <!-- Workaround for nullable checks under untraceable (not annotated or poorly annotated) target frameworks. -->
   <Target Name="SuppressUntraceableNullableChecks" BeforeTargets="CoreCompile">
     <PropertyGroup>
       <_NullableSupportLevel>1</_NullableSupportLevel>
