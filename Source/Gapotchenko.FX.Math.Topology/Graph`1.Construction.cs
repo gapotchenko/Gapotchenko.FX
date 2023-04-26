@@ -136,4 +136,15 @@ partial class Graph<TVertex>
                 Vertices.Add(from);
         }
     }
+
+    /// <summary>
+    /// Creates a new graph instance inheriting parent object settings such as comparer and edge direction awareness,
+    /// but without inheriting its contents (vertices and edges).
+    /// </summary>
+    /// <returns>A new graph instance with inherited parent object settings.</returns>
+    protected Graph<TVertex> NewGraph() =>
+        new(VertexComparer)
+        {
+            IsDirected = IsDirected
+        };
 }

@@ -41,12 +41,10 @@ partial class Graph<TVertex>
         var adjList = m_AdjacencyList;
         var revAdjList = new AssociativeArray<TVertex, AdjacencyRow?>(adjList.Comparer);
 
-        foreach (var i in adjList)
+        foreach (var (from, adjRow) in adjList)
         {
-            var from = i.Key;
-            bool storeFrom = true;
+            bool isolatedVertex = true;
 
-            var adjRow = i.Value;
             if (adjRow != null)
             {
                 foreach (var to in adjRow)
@@ -63,11 +61,11 @@ partial class Graph<TVertex>
                     }
 
                     revAdjRow.Add(from);
-                    storeFrom = false;
+                    isolatedVertex = false;
                 }
             }
 
-            if (storeFrom)
+            if (isolatedVertex)
                 revAdjList.TryAdd(from, null);
         }
 
