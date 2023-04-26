@@ -8,15 +8,21 @@ using System.Runtime.Loader;
 
 namespace Gapotchenko.FX.Reflection;
 
+#if !BINARY_COMPATIBILITY
+#pragma warning disable CS0109 // Member does not hide an accessible member. The new keyword is not required.
+#endif
+
 /// <summary>
 /// Provides services for automatic assembly resolution and dynamic loading based on specified probing paths, binding redirects, and common sense heuristics.
 /// </summary>
 #pragma warning disable CS3009 // Base type is not CLS-compliant
 public class AssemblyAutoLoader :
 #pragma warning restore CS3009
+#if BINARY_COMPATIBILITY
 #pragma warning disable CS0618 // Type or member is obsolete
     _CompatibleAssemblyAutoLoader,
 #pragma warning restore CS0618
+#endif
     IDisposable
 {
     /// <summary>
