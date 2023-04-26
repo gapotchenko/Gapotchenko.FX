@@ -18,7 +18,7 @@ static class GraphEdgeEqualityComparer<TVertex>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly IEqualityComparer<TVertex> m_vertexComparer;
 
-        // Needed for debug view.
+        // Needed for a debug view.
         public IEqualityComparer<TVertex> VertexComparer => m_vertexComparer;
 
         public bool Equals(GraphEdge<TVertex> x, GraphEdge<TVertex> y) =>
@@ -55,7 +55,7 @@ static class GraphEdgeEqualityComparer<TVertex>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly IEqualityComparer<TVertex> m_vertexComparer;
 
-        // Needed for debug view.
+        // Needed for a debug view.
         public IEqualityComparer<TVertex> VertexComparer => m_vertexComparer;
 
         public bool Equals(GraphEdge<TVertex> x, GraphEdge<TVertex> y) =>

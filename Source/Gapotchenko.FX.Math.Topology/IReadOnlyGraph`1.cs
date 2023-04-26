@@ -30,30 +30,30 @@ public partial interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVe
     /// Gets incoming vertices adjacent to the specified vertex.
     /// </summary>
     /// <remarks>
-    /// Adjacent incoming vertices are source end-vertices of the incoming edges incident with the specified vertex.
+    /// Adjacent incoming vertices are source end-vertices of incoming edges incident with the specified vertex.
     /// </remarks>
     /// <param name="vertex">The vertex to find the adjacent incoming vertices for.</param>
     /// <returns>Sequence of incoming vertices adjacent to the specified <paramref name="vertex"/>.</returns>
     IEnumerable<TVertex> IncomingVerticesAdjacentTo(TVertex vertex);
 
     /// <summary>
-    /// Gets the destination vertices adjacent to a specified vertex.
+    /// Gets outgoing vertices adjacent to the specified vertex.
     /// </summary>
     /// <remarks>
-    /// Adjacent destination vertices are end-vertices of the outgoing edges incident with the specified vertex.
+    /// Adjacent outgoing vertices are destination end-vertices of outgoing edges incident with the specified vertex.
     /// </remarks>
     /// <param name="vertex">The vertex to find the adjacent destination vertices for.</param>
-    /// <returns>Sequence of destination vertices adjacent to the specified <paramref name="vertex"/>.</returns>
+    /// <returns>Sequence of outgoing vertices adjacent to the specified <paramref name="vertex"/>.</returns>
     IEnumerable<TVertex> OutgoingVerticesAdjacentTo(TVertex vertex);
 
     /// <summary>
-    /// Gets vertices adjacent to a specified vertex.
+    /// Gets all vertices adjacent to the specified vertex.
     /// </summary>
     /// <remarks>
-    /// Adjacent vertices are end-vertices of the edges incident with the specified vertex.
+    /// Adjacent vertices are end-vertices of edges incident with the specified vertex.
     /// </remarks>
     /// <param name="vertex">The vertex to find the adjacent vertices for.</param>
-    /// <returns>Sequence of vertices adjacent to the specified <paramref name="vertex"/>.</returns>
+    /// <returns>Sequence of all vertices adjacent to the specified <paramref name="vertex"/>.</returns>
     IEnumerable<TVertex> VerticesAdjacentTo(TVertex vertex);
 
     /// <summary>
@@ -71,28 +71,28 @@ public partial interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVe
     IEnumerable<TVertex> OutgoingVerticesConnectedWith(TVertex vertex);
 
     /// <summary>
-    /// Gets vertices that have a path from/to the specified vertex.
+    /// Gets all vertices that have a path from/to the specified vertex.
     /// </summary>
     /// <param name="vertex">The vertex to find the connected vertices for.</param>
-    /// <returns>Sequence of vertices that have a path from/to the specified <paramref name="vertex"/>.</returns>
+    /// <returns>Sequence of all vertices that have a path from/to the specified <paramref name="vertex"/>.</returns>
     IEnumerable<TVertex> VerticesConnectedWith(TVertex vertex);
 
     /// <summary>
-    /// Gets incoming edges incident with a specified vertex.
+    /// Gets incoming edges incident with the specified vertex.
     /// </summary>
     /// <param name="vertex">The vertex to find the incoming incident edges for.</param>
     /// <returns>Sequence of incoming edges incident with the specified <paramref name="vertex"/>.</returns>
     IEnumerable<GraphEdge<TVertex>> IncomingEdgesIncidentWith(TVertex vertex);
 
     /// <summary>
-    /// Gets outgoing edges incident with a specified vertex.
+    /// Gets outgoing edges incident with the specified vertex.
     /// </summary>
     /// <param name="vertex">The vertex to find the outgoing incident edges for.</param>
     /// <returns>Sequence of outgoing edges incident with the specified <paramref name="vertex"/>.</returns>
     IEnumerable<GraphEdge<TVertex>> OutgoingEdgesIncidentWith(TVertex vertex);
 
     /// <summary>
-    /// Gets incoming and outgoing edges incident with a specified vertex.
+    /// Gets incoming and outgoing edges incident with the specified vertex.
     /// </summary>
     /// <param name="vertex">The vertex to find the incident edges for.</param>
     /// <returns>Sequence of edges incident with the specified <paramref name="vertex"/>.</returns>
@@ -157,33 +157,33 @@ public partial interface IReadOnlyGraph<TVertex> : ICloneable<IReadOnlyGraph<TVe
     IEnumerable<TVertex> IsolatedVertices { get; }
 
     /// <summary>
-    /// Gets the indegree of a specified vertex.
+    /// Gets an indegree of the specified vertex.
     /// </summary>
     /// <remarks>
-    /// Indegree of a vertex is the number of incoming incident edges.
+    /// Indegree of a vertex is a number of incoming edges incident with the vertex.
     /// </remarks>
-    /// <param name="vertex">The vertex to find the indegree of.</param>
-    /// <returns>The indegree of a vertex.</returns>
+    /// <param name="vertex">The vertex to find an indegree of.</param>
+    /// <returns>An indegree of the specified vertex.</returns>
     int GetVertexIndegree(TVertex vertex);
 
     /// <summary>
-    /// Gets the outdegree of a specified vertex.
+    /// Gets an outdegree of the specified vertex.
     /// </summary>
     /// <remarks>
-    /// Outdegree of a vertex is the number of outgoing incident edges.
+    /// Outdegree of a vertex is a number of outgoing edges incident with the vertex.
     /// </remarks>
-    /// <param name="vertex">The vertex to find the outdegree of.</param>
-    /// <returns>The outdegree of a vertex.</returns>
+    /// <param name="vertex">The vertex to find an outdegree of.</param>
+    /// <returns>An outdegree of the specified vertex.</returns>
     int GetVertexOutdegree(TVertex vertex);
 
     /// <summary>
-    /// Gets the degree of a specified vertex.
+    /// Gets a degree of the specified vertex.
     /// </summary>
     /// <remarks>
-    /// Degree of a vertex is the number of head and tail ends adjacent to the vertex.
+    /// Degree of a vertex is a number of all edges incident with the vertex.
     /// </remarks>
-    /// <param name="vertex">The vertex to find the degree of.</param>
-    /// <returns>The degree of a vertex.</returns>
+    /// <param name="vertex">The vertex to find a degree of.</param>
+    /// <returns>A degree of the specified vertex.</returns>
     int GetVertexDegree(TVertex vertex);
 
     /// <summary>
