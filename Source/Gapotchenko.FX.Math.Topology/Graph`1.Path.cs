@@ -19,44 +19,27 @@ partial class Graph<TVertex>
     /// <see langword="true"/> when the specified source vertex can reach the destination via one or more intermediate vertices; 
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    bool HasTransitivePath(TVertex from, TVertex to) => new TransitivePathTraverser(this, to).CanBeReachedFrom(from);
-
-    ref struct TransitivePathTraverser
+    bool HasTransitivePath(TVertex from, TVertex to)
     {
-        public TransitivePathTraverser(Graph<TVertex> graph, TVertex destinationVertex)
+        var visitedVertices = new HashSet<TVertex>(VertexComparer);
+        bool adjacent = false;
+
+        bool CanBeReachedFrom(TVertex from)
         {
-            m_Graph = graph;
-            m_DestinationVertex = destinationVertex;
-
-            // No need to track visited vertices unless graph is cyclic.
-            if (graph.IsCyclicHint != false)
-                m_VisitedVertices = new HashSet<TVertex>(graph.VertexComparer);
-        }
-
-        readonly Graph<TVertex> m_Graph;
-        readonly TVertex m_DestinationVertex;
-
-        readonly HashSet<TVertex>? m_VisitedVertices;
-
-        // Using the field instead of a function parameter to reduce the size of a stack used by a recursive call chain.
-        bool m_Adjacent;
-
-        public bool CanBeReachedFrom(TVertex sourceVertex)
-        {
-            if (m_VisitedVertices?.Add(sourceVertex) == false)
+            if (!visitedVertices.Add(from))
                 return false;
 
-            if (m_Graph.m_AdjacencyList.TryGetValue(sourceVertex, out var adjRow) &&
+            if (m_AdjacencyList.TryGetValue(from, out var adjRow) &&
                 adjRow != null)
             {
-                if (m_Adjacent)
+                if (adjacent)
                 {
-                    if (adjRow.Contains(m_DestinationVertex))
+                    if (adjRow.Contains(to))
                         return true;
                 }
                 else
                 {
-                    m_Adjacent = true;
+                    adjacent = true;
                 }
 
                 foreach (var i in adjRow)
@@ -68,5 +51,7 @@ partial class Graph<TVertex>
 
             return false;
         }
+
+        return CanBeReachedFrom(from);
     }
 }
