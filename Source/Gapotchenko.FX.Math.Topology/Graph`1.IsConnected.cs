@@ -18,13 +18,18 @@ partial class Graph<TVertex>
     bool IsConnectedCore()
     {
         var vertices = Vertices;
-
         int order = vertices.Count;
         if (order < 2)
+        {
+            // A graph containing less than two vertices is connected by the definition.
             return true;
-
-        var vertex = vertices.First();
-        var connectedVertices = VerticesConnectedWithUndirectedCore(vertex);
-        return connectedVertices.Count() == order;
+        }
+        else
+        {
+            // A graph is connected if every pair of vertices has a path between them.
+            var vertex = vertices.First();
+            var connectedVertices = VerticesConnectedWithUndirectedCore(vertex);
+            return connectedVertices.Count() == order;
+        }
     }
 }

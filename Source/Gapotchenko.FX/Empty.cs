@@ -32,7 +32,7 @@ public static class Empty
     public static T? Nullify<T>(T? value, int reserved = default) where T : class, IEmptiable
     {
         // The reserved parameter is needed to avoid the method signature conflict with
-        // an existing method that should be kept to provide backwards binary compatibility
+        // an existing method that should be kept to provide backward binary compatibility
         // between the module versions.
         _ = reserved;
 
