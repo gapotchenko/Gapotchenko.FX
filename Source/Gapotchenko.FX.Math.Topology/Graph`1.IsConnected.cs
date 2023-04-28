@@ -21,7 +21,7 @@ partial class Graph<TVertex>
         int order = vertices.Count;
         if (order < 2)
         {
-            // A graph containing less than two vertices is connected by the definition.
+            // A graph containing less than two vertices is connected by definition.
             return true;
         }
         else
