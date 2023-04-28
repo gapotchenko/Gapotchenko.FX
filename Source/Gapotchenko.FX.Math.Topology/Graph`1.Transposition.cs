@@ -16,13 +16,18 @@ partial class Graph<TVertex>
     /// <inheritdoc cref="IGraph{TVertex}.GetTransposition"/>
     public Graph<TVertex> GetTransposition()
     {
-        var graph = NewGraph();
         if (IsDirected)
         {
+            var graph = NewGraph();
             graph.Edges.UnionWith(Edges.Select(x => x.Reverse()));
             graph.Vertices.UnionWith(Vertices);
+            graph.CopyCacheFrom(this);
+            return graph;
         }
-        return graph;
+        else
+        {
+            return Clone();
+        }
     }
 
     IGraph<TVertex> IGraph<TVertex>.GetTransposition() => GetTransposition();
