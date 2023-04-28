@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Gapotchenko.FX.Math.Topology;
+﻿namespace Gapotchenko.FX.Math.Topology;
 
 partial class Graph<TVertex>
 {
@@ -10,18 +8,9 @@ partial class Graph<TVertex>
         if (!IsDirected)
             return;
 
-        if (HasReverseAdjacencyList)
-        {
-            MathEx.Swap(ref m_AdjacencyList, ref m_ReverseAdjacencyList);
-        }
-        else
-        {
-            var edges = Edges.ToList();
-            var vertices = Vertices.ToList();
-
-            Clear();
-            TransposeCore(this, edges, vertices);
-        }
+        var t = m_AdjacencyList;
+        m_AdjacencyList = ReverseAdjacencyListCore;
+        m_ReverseAdjacencyList = t;
     }
 
     /// <inheritdoc cref="IGraph{TVertex}.GetTransposition"/>
@@ -29,16 +18,11 @@ partial class Graph<TVertex>
     {
         var graph = NewGraph();
         if (IsDirected)
-            TransposeCore(graph, Edges, Vertices);
+        {
+            graph.Edges.UnionWith(Edges.Select(x => x.Reverse()));
+            graph.Vertices.UnionWith(Vertices);
+        }
         return graph;
-    }
-
-    static void TransposeCore(Graph<TVertex> graph, IEnumerable<GraphEdge<TVertex>> edges, IEnumerable<TVertex> vertices)
-    {
-        Debug.Assert(graph.Vertices.Count == 0);
-
-        graph.Edges.UnionWith(edges.Select(x => x.Reverse()));
-        graph.Vertices.UnionWith(vertices);
     }
 
     IGraph<TVertex> IGraph<TVertex>.GetTransposition() => GetTransposition();
