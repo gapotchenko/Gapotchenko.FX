@@ -51,7 +51,33 @@ public static class GraphEdgeExtensions
     /// <see langword="true"/> when a specified vertex <paramref name="from">A</paramref> is adjacent to vertex <paramref name="to">B</paramref>;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool Contains<TVertex>(this ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
+    public static bool Contains<TVertex>(this IReadOnlySet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
+        (edges ?? throw new ArgumentNullException(nameof(edges)))
+        .Contains(new GraphEdge<TVertex>(from, to));
+
+#if BINARY_COMPATIBILITY
+    /// <summary>
+    /// <para>
+    /// Determines whether the graph contains a specified edge.
+    /// </para>
+    /// <para>
+    /// The presence of an edge in the graph signifies that corresponding vertices are adjacent.
+    /// </para>
+    /// <para>
+    /// Adjacent vertices are those connected by one edge without intermediary vertices.
+    /// </para>
+    /// </summary>
+    /// <param name="edges">The set of graph edges.</param>
+    /// <param name="from">The source vertex of the edge.</param>
+    /// <param name="to">The destination vertex of the edge.</param>
+    /// <returns>
+    /// <see langword="true"/> when a specified vertex <paramref name="from">A</paramref> is adjacent to vertex <paramref name="to">B</paramref>;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public
+#endif
+    static bool Contains<TVertex>(ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
         (edges ?? throw new ArgumentNullException(nameof(edges)))
         .Contains(new GraphEdge<TVertex>(from, to));
 
@@ -75,9 +101,8 @@ public static class GraphEdgeExtensions
     /// otherwise, <see langword="false"/>.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static bool Contains<TVertex>(this IReadOnlySet<GraphEdge<TVertex>> edges, TVertex from, TVertex to, int reserved = default) =>
-        (edges ?? throw new ArgumentNullException(nameof(edges)))
-        .Contains(new GraphEdge<TVertex>(from, to));
+    public static bool Contains<TVertex>(this ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to, int reserved = default) =>
+        Contains(edges, from, to);
 
     /// <summary>
     /// Adds the specified edge to the collection.
