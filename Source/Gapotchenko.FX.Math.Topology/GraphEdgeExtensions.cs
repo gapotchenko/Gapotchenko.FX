@@ -56,6 +56,30 @@ public static class GraphEdgeExtensions
         .Contains(new GraphEdge<TVertex>(from, to));
 
     /// <summary>
+    /// <para>
+    /// Determines whether the graph contains a specified edge.
+    /// </para>
+    /// <para>
+    /// The presence of an edge in the graph signifies that corresponding vertices are adjacent.
+    /// </para>
+    /// <para>
+    /// Adjacent vertices are those connected by one edge without intermediary vertices.
+    /// </para>
+    /// </summary>
+    /// <param name="edges">The set of graph edges.</param>
+    /// <param name="from">The source vertex of the edge.</param>
+    /// <param name="to">The destination vertex of the edge.</param>
+    /// <param name="reserved">The reserved parameter used for method signature resolution.</param>
+    /// <returns>
+    /// <see langword="true"/> when a specified vertex <paramref name="from">A</paramref> is adjacent to vertex <paramref name="to">B</paramref>;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static bool Contains<TVertex>(this IReadOnlySet<GraphEdge<TVertex>> edges, TVertex from, TVertex to, int reserved = default) =>
+        (edges ?? throw new ArgumentNullException(nameof(edges)))
+        .Contains(new GraphEdge<TVertex>(from, to));
+
+    /// <summary>
     /// Adds the specified edge to the collection.
     /// </summary>
     /// <param name="collection">The collection of graph edges.</param>
