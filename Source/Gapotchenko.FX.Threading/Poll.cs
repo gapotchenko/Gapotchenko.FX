@@ -3,7 +3,7 @@
 namespace Gapotchenko.FX.Threading;
 
 /// <summary>
-/// Provides efficient primitives for polling.
+/// Provides primitives for efficient polling.
 /// </summary>
 public static class Poll
 {
@@ -12,14 +12,17 @@ public static class Poll
     /// This method can be used to bridge a poll operation to an asynchronous wait task.
     /// </summary>
     /// <remarks>
-    /// The efficiency of a polling strategy is achieved by randomizing the delays between the polling attempts.
-    /// In this way, the peak pressure on a thread pool is minimized by dispersing the thread activation requests in time.
+    /// The efficiency of the polling strategy is achieved by randomizing delays between polling attempts.
+    /// In this way, a peak pressure on a thread pool is minimized by dispersing thread activities in time.
+    /// The randomization also lowers the statistical rate of collisions between concurrent resource accessors.
     /// </remarks>
     /// <param name="condition">The asynchronous predicate which defines the condition to wait for.</param>
     /// <param name="millisecondsInterval">The amount of time, in milliseconds, to wait between condition polling attempts.</param>
     /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the condition to come true.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns><see langword="true"/> when the wait condition is met; <see langword="false"/> when operation is timed out.</returns>
+    /// <returns>
+    /// <see langword="true"/> when the wait condition is met in time;
+    /// <see langword="false"/> when the operation is timed out.</returns>
     public static async Task<bool> WaitUntilAsync(
         Func<Task<bool>> condition,
         int millisecondsInterval,
@@ -29,7 +32,7 @@ public static class Poll
         if (condition == null)
             throw new ArgumentNullException(nameof(condition));
         if (millisecondsTimeout < Timeout.Infinite)
-            throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), "The value needs to be either -1 (signifying an infinite timeout), 0 or a positive integer.");
+            throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), "The value needs to be either -1 (signifying an infinite timeout), 0, or a positive integer.");
 
         Stopwatch? sw = null;
 
