@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Threading.Tasks;
 /// or a parallel execution when no debugger is attached.
 /// </summary>
 /// <remarks>
-/// <see cref="DebuggableParallel"/> is used for writing a debug-friendly code that has a deterministic behavior under debugger.
+/// <see cref="DebuggableParallel"/> class is used for writing a debug-friendly code that has a deterministic and thus easy to debug behavior when a debugger is attached.
 /// </remarks>
 public static class DebuggableParallel
 {
@@ -51,17 +51,18 @@ public static class DebuggableParallel
             Sequential.For(fromInclusive, toExclusive, localInit, body, localFinally);
 
     /// <summary>
-    /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with 64-bit indexes and thread-local data in which iterations are run sequentially when the debugger is attached or in parallel otherwise,
-    /// and the state of the loop can be monitored and manipulated.
+    /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with 64-bit indexes and thread-local data in which iterations are run
+    /// sequentially when a debugger is attached,
+    /// or in parallel when no debugger is attached.
+    /// The state of the loop can be monitored and manipulated.
     /// </summary>
-    /// <typeparam name="TLocal">The type of the thread-local data.</typeparam>
-    /// <param name="fromInclusive">The start index, inclusive.</param>
-    /// <param name="toExclusive">The end index, exclusive.</param>
-    /// <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
-    /// <param name="body">The delegate that is invoked once per iteration.</param>
-    /// <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
-    /// <returns>A structure that contains information about which portion of the loop completed.</returns>
-    public static ParallelLoopResult For<TLocal>(long fromInclusive, long toExclusive, Func<TLocal> localInit, Func<long, ParallelLoopState, TLocal, TLocal> body, Action<TLocal> localFinally) =>
+    /// <inheritdoc cref="Parallel.For{TLocal}(long, long, Func{TLocal}, Func{long, ParallelLoopState, TLocal, TLocal}, Action{TLocal})"/>
+    public static ParallelLoopResult For<TLocal>(
+        long fromInclusive,
+        long toExclusive,
+        Func<TLocal> localInit,
+        Func<long, ParallelLoopState, TLocal, TLocal> body,
+        Action<TLocal> localFinally) =>
         IsParallel ?
             Parallel.For(fromInclusive, toExclusive, localInit, body, localFinally) :
             Sequential.For(fromInclusive, toExclusive, localInit, body, localFinally);
@@ -519,9 +520,11 @@ public static class DebuggableParallel
             Sequential.ForEach(source, parallelOptions, localInit, body, localFinally);
 
     /// <summary>
-    /// Executes each of the provided actions, sequentially when the debugger is attached or in parallel otherwise.
+    /// Executes each of the provided actions,
+    /// sequentially when a debugger is attached,
+    /// or in parallel when no debugger is attached.
     /// </summary>
-    /// <param name="actions">An array of <see cref="Action"/> to execute.</param>
+    /// <inheritdoc cref="Parallel.Invoke(Action[])"/>
     public static void Invoke(params Action[] actions)
     {
         if (IsParallel)
@@ -531,10 +534,12 @@ public static class DebuggableParallel
     }
 
     /// <summary>
-    /// Executes each of the provided actions, sequentially when the debugger is attached or in parallel otherwise.
+    /// Executes each of the provided actions,
+    /// sequentially when a debugger is attached,
+    /// or in parallel when no debugger is attached,
+    /// unless the operation is cancelled by the user.
     /// </summary>
-    /// <param name="parallelOptions">An object that configures the behavior of this operation.</param>
-    /// <param name="actions">An array of <see cref="Action"/> to execute.</param>
+    /// <inheritdoc cref="Parallel.Invoke(ParallelOptions, Action[])"/>
     public static void Invoke(ParallelOptions parallelOptions, params Action[] actions)
     {
         if (IsParallel)
