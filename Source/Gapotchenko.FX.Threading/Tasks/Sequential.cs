@@ -12,20 +12,14 @@ namespace Gapotchenko.FX.Threading.Tasks;
 public static class Sequential
 {
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static readonly ParallelOptions m_SequentialParallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 1 };
+    static readonly ParallelOptions m_SequentialParallelOptions = new() { MaxDegreeOfParallelism = 1 };
 
     /// <summary>
     /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with thread-local data in which iterations are run sequentially,
     /// loop options can be configured,
     /// and the state of the loop can be monitored and manipulated.
     /// </summary>
-    /// <typeparam name="TLocal">The type of the thread-local data.</typeparam>
-    /// <param name="fromInclusive">The start index, inclusive.</param>
-    /// <param name="toExclusive">The end index, exclusive.</param>
-    /// <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
-    /// <param name="body">The delegate that is invoked once per iteration.</param>
-    /// <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
-    /// <returns>A structure that contains information about which portion of the loop completed.</returns>
+    /// <inheritdoc cref="Parallel.For{TLocal}(int, int, Func{TLocal}, Func{int, ParallelLoopState, TLocal, TLocal}, Action{TLocal})"/>
     public static ParallelLoopResult For<TLocal>(int fromInclusive, int toExclusive, Func<TLocal> localInit, Func<int, ParallelLoopState, TLocal, TLocal> body, Action<TLocal> localFinally) =>
         Parallel.For(
             fromInclusive,
