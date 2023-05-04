@@ -6,9 +6,12 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Threading.Tasks;
 
 /// <summary>
-/// Provides a drop-in replacement for <see cref="Parallel"/> class that by default performs a sequential execution of operations when the debugger is attached and parallel execution otherwise.
-/// <see cref="DebuggableParallel"/> is used for writing a debug-friendly code that has a deterministic behavior under debugger.
+/// Provides a drop-in replacement for <see cref="Parallel"/> class that by default performs a sequential execution of operations when a debugger is attached,
+/// or a parallel execution when no debugger is attached.
 /// </summary>
+/// <remarks>
+/// <see cref="DebuggableParallel"/> is used for writing a debug-friendly code that has a deterministic behavior under debugger.
+/// </remarks>
 public static class DebuggableParallel
 {
     /// <summary>
@@ -17,40 +20,32 @@ public static class DebuggableParallel
     public static DebuggableParallelMode Mode { get; set; }
 
     /// <summary>
-    /// Gets a value indicating whether to perform parallel execution of operations in the current context.
-    /// By default, operations are executed sequentially when the debugger is attached or in parallel otherwise.
+    /// Gets a value indicating whether to perform a parallel execution of operations in the current context.
     /// </summary>
-    public static bool IsParallel
-    {
-        get
+    /// <remarks>
+    /// By default, operations are executed in parallel when no debugger is attached, and sequentially when a debugger is attached.
+    /// </remarks>
+    public static bool IsParallel =>
+        Mode switch
         {
-            switch (Mode)
-            {
-                default:
-                case DebuggableParallelMode.Auto:
-                    return !Debugger.IsAttached;
-
-                case DebuggableParallelMode.AlwaysSequential:
-                    return false;
-
-                case DebuggableParallelMode.AlwaysParallel:
-                    return true;
-            }
-        }
-    }
+            DebuggableParallelMode.AlwaysSequential => false,
+            DebuggableParallelMode.AlwaysParallel => true,
+            DebuggableParallelMode.Auto => !Debugger.IsAttached
+        };
 
     /// <summary>
-    /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with thread-local data in which iterations are run sequentially when the debugger is attached or in parallel otherwise,
-    /// and the state of the loop can be monitored and manipulated.
+    /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with thread-local data in which iterations are run
+    /// sequentially when a debugger is attached,
+    /// or in parallel when no debugger is attached.
+    /// The state of the loop can be monitored and manipulated.
     /// </summary>
-    /// <typeparam name="TLocal">The type of the thread-local data.</typeparam>
-    /// <param name="fromInclusive">The start index, inclusive.</param>
-    /// <param name="toExclusive">The end index, exclusive.</param>
-    /// <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
-    /// <param name="body">The delegate that is invoked once per iteration.</param>
-    /// <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
-    /// <returns>A structure that contains information about which portion of the loop completed.</returns>
-    public static ParallelLoopResult For<TLocal>(int fromInclusive, int toExclusive, Func<TLocal> localInit, Func<int, ParallelLoopState, TLocal, TLocal> body, Action<TLocal> localFinally) =>
+    /// <inheritdoc cref="Parallel.For{TLocal}(int, int, Func{TLocal}, Func{int, ParallelLoopState, TLocal, TLocal}, Action{TLocal})"/>
+    public static ParallelLoopResult For<TLocal>(
+        int fromInclusive,
+        int toExclusive,
+        Func<TLocal> localInit,
+        Func<int, ParallelLoopState, TLocal, TLocal> body,
+        Action<TLocal> localFinally) =>
         IsParallel ?
             Parallel.For(fromInclusive, toExclusive, localInit, body, localFinally) :
             Sequential.For(fromInclusive, toExclusive, localInit, body, localFinally);
