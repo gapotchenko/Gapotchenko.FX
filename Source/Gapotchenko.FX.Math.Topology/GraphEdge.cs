@@ -14,7 +14,7 @@ public static class GraphEdge
     public static GraphEdge<TVertex> Create<TVertex>(TVertex from, TVertex to) => new(from, to);
 
     /// <summary>
-    /// Creates graph edge equality comparer with specified vertex comparer and direction awareness.
+    /// Creates a graph edge equality comparer with specified vertex comparer and direction awareness.
     /// </summary>
     /// <param name="vertexComparer">
     /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the edge,
