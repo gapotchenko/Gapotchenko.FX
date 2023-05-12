@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net472;net6.0;net7.0</TargetFrameworks>
-    <Prefer32Bit>true</Prefer32Bit>
+    <!--<Prefer32Bit>true</Prefer32Bit>-->
     <Nullable>enable</Nullable>
     <LangVersion>11.0</LangVersion>
   </PropertyGroup>
