@@ -58,7 +58,10 @@ public interface IDataEncoding
     /// Gets a value indicating whether the current encoding supports streaming operations.
     /// </para>
     /// <para>
-    /// Streaming operations are represented by <see cref="CreateEncoder(Stream, DataEncodingOptions)"/> and <see cref="CreateDecoder(Stream, DataEncodingOptions)"/> methods.\
+    /// Streaming operations are represented by
+    /// <see cref="CreateEncoder(Stream, DataEncodingOptions)"/> and
+    /// <see cref="CreateDecoder(Stream, DataEncodingOptions)"/>
+    /// methods.
     /// </para>
     /// </summary>
     bool CanStream { get; }
@@ -94,7 +97,7 @@ public interface IDataEncoding
     int Padding { get; }
 
     /// <summary>
-    /// Gets a value indicating whether the current encoding prefers to produce the padded output.
+    /// Gets a value indicating whether the current encoding prefers to produce a padded output.
     /// </summary>
     bool PrefersPadding { get; }
 }

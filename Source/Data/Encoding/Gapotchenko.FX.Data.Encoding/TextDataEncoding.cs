@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Data.Encoding;
 using Encoding = System.Text.Encoding;
 
 /// <summary>
-/// The base class for <see cref="ITextDataEncoding"/> implementations.
+/// The base class for an <see cref="ITextDataEncoding"/> implementation.
 /// </summary>
 public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
 {

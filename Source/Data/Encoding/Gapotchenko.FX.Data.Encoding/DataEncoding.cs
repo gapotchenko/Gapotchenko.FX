@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
-/// The base class for <see cref="IDataEncoding"/> implementations.
+/// The base class for an <see cref="IDataEncoding"/> implementation.
 /// </summary>
 public abstract class DataEncoding : IDataEncoding
 {
