@@ -1,16 +1,24 @@
 ﻿// Portions © .NET Foundation
 
+// --------------------------------------------------------------------------
+
 #if NET8_0_OR_GREATER
 #define TFF_READONLYSPAN_CHAR_SPLIT
 #endif
 
-#if !NET
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#if NET5_0_OR_GREATER
+#define TFF_STRINGSPLITOPTIONS_TRIMENTRIES
 #endif
+
+// --------------------------------------------------------------------------
 
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+
+#if !TFF_STRINGSPLITOPTIONS_TRIMENTRIES
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#endif
 
 namespace Gapotchenko.FX.Memory;
 
@@ -124,7 +132,7 @@ partial class ReadOnlySpanPolyfills
             {
                 int startInclusive = 0, endExclusive = source.Length;
 
-#if NET
+#if TFF_STRINGSPLITOPTIONS_TRIMENTRIES
                 if ((options & StringSplitOptions.TrimEntries) != 0)
                 {
                     (startInclusive, endExclusive) = TrimSplitEntry(source, startInclusive, endExclusive);
@@ -192,7 +200,7 @@ partial class ReadOnlySpanPolyfills
 #else
         ValidateStringSplitOptions(options);
 
-#if NET
+#if TFF_STRINGSPLITOPTIONS_TRIMENTRIES
         // If the separators list is empty, whitespace is used as separators.
         // In that case, we want to ignore TrimEntries if specified, since TrimEntries also impacts whitespace.
         // The TrimEntries flag must be left intact if we are constrained by count because we need to process last substring.
@@ -251,7 +259,7 @@ partial class ReadOnlySpanPolyfills
 #else
         ValidateStringSplitOptions(options);
 
-#if NET
+#if TFF_STRINGSPLITOPTIONS_TRIMENTRIES
         // If the separators list is empty, whitespace is used as separators.
         // In that case, we want to ignore TrimEntries if specified, since TrimEntries also impacts whitespace.
         // The TrimEntries flag must be left intact if we are constrained by count because we need to process last substring.
@@ -290,7 +298,7 @@ partial class ReadOnlySpanPolyfills
 
         bool keepEmptyEntries = (options & StringSplitOptions.RemoveEmptyEntries) == 0;
         bool trimEntries =
-#if NET
+#if TFF_STRINGSPLITOPTIONS_TRIMENTRIES
             (options & StringSplitOptions.TrimEntries) != 0;
 #else
             false;
