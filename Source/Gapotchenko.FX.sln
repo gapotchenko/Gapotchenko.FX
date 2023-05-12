@@ -123,9 +123,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{3F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cryptography", "Cryptography", "{C81ADA83-9C02-492E-B752-EC8E967C030C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography", "Security\Cryptography\Gapotchenko.FX.Security.Cryptography\Gapotchenko.FX.Security.Cryptography.csproj", "{A38AD358-B8AE-41F6-A859-FC3EECF6F6AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography", "Gapotchenko.FX.Security.Cryptography\Gapotchenko.FX.Security.Cryptography.csproj", "{A38AD358-B8AE-41F6-A859-FC3EECF6F6AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography.Tests", "Tests\Security\Cryptography\Gapotchenko.FX.Security.Cryptography.Tests\Gapotchenko.FX.Security.Cryptography.Tests.csproj", "{CF09BAAB-7778-49F4-A8D5-123444D6CF00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography.Tests", "Tests\Gapotchenko.FX.Security.Cryptography.Tests\Gapotchenko.FX.Security.Cryptography.Tests.csproj", "{CF09BAAB-7778-49F4-A8D5-123444D6CF00}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Checksum", "Checksum", "{87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}"
 EndProject
