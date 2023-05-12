@@ -13,14 +13,11 @@
 
   <PropertyGroup>
     <MasteringDir>$(MSBuildThisFileDirectory)</MasteringDir>
-
-    <IsPublicProject>false</IsPublicProject>
-    <IsPublicProject Condition=" '$(MasteringProjectKind)' == 'module' ">true</IsPublicProject>
   </PropertyGroup>
 
   <PropertyGroup>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <GenerateDocumentationFile>$(IsPublicProject)</GenerateDocumentationFile>
+    <GenerateDocumentationFile Condition=" '$(MasteringProjectKind)' == 'module' ">true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
