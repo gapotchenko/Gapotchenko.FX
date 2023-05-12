@@ -6,19 +6,19 @@
 public interface IDataEncoding
 {
     /// <summary>
-    /// Gets the average encoding efficiency.
+    /// Gets the average efficiency of the encoding.
     /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
     /// </summary>
     float Efficiency { get; }
 
     /// <summary>
-    /// Gets the maximum encoding efficiency.
+    /// Gets the maximal efficiency of the encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     float MaxEfficiency { get; }
 
     /// <summary>
-    /// Gets the minimum encoding efficiency.
+    /// Gets the minimal efficiency of the encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     float MinEfficiency { get; }
