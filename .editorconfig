@@ -3,9 +3,6 @@
 [*.{cs,vb}]
 dotnet_style_require_accessibility_modifiers=omit_if_default:warning
 
-# IDE0005: Using directive is unnecessary
-dotnet_diagnostic.IDE0005.severity = warning
-
 # IDE0036: Order modifiers
 dotnet_diagnostic.IDE0036.severity = warning
 
