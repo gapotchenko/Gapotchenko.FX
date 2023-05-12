@@ -1,14 +1,17 @@
 <Project>
 
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants),BINARY_COMPATIBILITY</DefineConstants>
-    <!-- Disables NETSDK1138 warning: -->
-    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <TargetFrameworks Condition=" '$(MasteringProjectKind)' == 'module' ">net461;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.0;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(MasteringProjectKind)' == 'test' ">net472;netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" $(IsPublicProject) ">
-    <TargetFrameworks>net461;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.0;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+  <PropertyGroup>
+    <!-- Disables NETSDK1138 warning -->
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <DefineConstants>$(DefineConstants),BINARY_COMPATIBILITY</DefineConstants>
   </PropertyGroup>
+
+  <!-- ================================================================== -->
 
   <PropertyGroup>
     <MasteringFrameworkIdentifier>$([MSBuild]::GetTargetFrameworkIdentifier($(TargetFramework)))</MasteringFrameworkIdentifier>

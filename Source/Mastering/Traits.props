@@ -1,0 +1,19 @@
+<Project>
+
+  <PropertyGroup Condition=" '$(MasteringProjectKind)' == '' ">
+    <MasteringProjectKind>none</MasteringProjectKind>
+    <MasteringProjectKind Condition=" $(MSBuildProjectName.Equals('$(MasteringProjectModulePrefix)')) OR $(MSBuildProjectName.StartsWith('$(MasteringProjectModulePrefix).')) ">module</MasteringProjectKind>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(MasteringTestKind)' == '' ">
+    <MasteringTestKind>none</MasteringTestKind>
+    <MasteringTestKind Condition=" '$(MasteringProjectKind)' != 'none' AND ('$(MSBuildProjectName)' == 'Harness' OR $(MSBuildProjectName.EndsWith('.Harness')) OR $(MSBuildProjectName.Contains('.Harness.'))) ">harness</MasteringTestKind>
+    <MasteringTestKind Condition=" '$(MasteringProjectKind)' != 'none' AND ($(MSBuildProjectName.EndsWith('.Test')) OR $(MSBuildProjectName.EndsWith('.Tests')) OR $(MSBuildProjectName.EndsWith('.Testing'))) ">unit</MasteringTestKind>
+    <MasteringTestKind Condition=" '$(MasteringProjectKind)' != 'none' AND ($(MSBuildProjectName.Contains('.Tests.')) OR $(MSBuildProjectName.Contains('.Testing.'))) ">integration</MasteringTestKind>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <MasteringProjectKind Condition=" '$(MasteringProjectKind)' != 'none' AND '$(MasteringTestKind)' != 'none' ">test</MasteringProjectKind>
+  </PropertyGroup>
+
+</Project>

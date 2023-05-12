@@ -1,7 +1,11 @@
 ﻿<Project>
 
-  <Import Project="Workarounds.props" />
+  <PropertyGroup>
+    <MasteringProjectModulePrefix>Gapotchenko.FX</MasteringProjectModulePrefix>
+  </PropertyGroup>
 
+  <Import Project="Traits.props" />
+  <Import Project="Workarounds.props" />
   <Import Project="Version.props" />
   <Import Project="Product.props" />
 
@@ -9,8 +13,9 @@
 
   <PropertyGroup>
     <MasteringDir>$(MSBuildThisFileDirectory)</MasteringDir>
+
     <IsPublicProject>false</IsPublicProject>
-    <IsPublicProject Condition=" !($(MSBuildProjectName.EndsWith('.Test')) OR $(MSBuildProjectName.EndsWith('.Tests')) OR $(MSBuildProjectName.Contains('.Test.')) OR $(MSBuildProjectName.Contains('.Tests.')) OR $(MSBuildProjectName.EndsWith('.Harness')) OR $(MSBuildProjectName.Contains('.Harness.')) OR $(MSBuildProjectName.Contains('.Utilities.'))) ">true</IsPublicProject>
+    <IsPublicProject Condition=" '$(MasteringProjectKind)' == 'module' ">true</IsPublicProject>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -28,10 +33,9 @@
   <Import Project="Language.props" />
   <Import Project="NuGet.props" />
   <Import Project="Targeting.props" />
-  <Import Project="AssemblySignature.props" />
   <Import Project="Optimization.props" Condition=" Exists('Optimization.props') " />
+  <Import Project="AssemblySignature.props" />
   <Import Project="AuthenticodeSignature.props" />
-
   <Import Project="Polyfills.props" />
 
 </Project>
