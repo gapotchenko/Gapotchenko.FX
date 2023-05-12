@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <DefineConstants>$(DefineConstants),BINARY_COMPATIBILITY</DefineConstants>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition=" $(IsPublicProject) ">
-    <TargetFrameworks>net461;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.0;net5.0;net6.0;net7.0</TargetFrameworks>
-    <!-- Disables NETSDK1138 warning -->
+    <!-- Disables NETSDK1138 warning: -->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" $(IsPublicProject) ">
+    <TargetFrameworks>net461;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.0;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
