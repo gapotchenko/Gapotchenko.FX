@@ -24,7 +24,7 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
     /// <summary>
     /// The encoding alphabet.
     /// </summary>
-    protected readonly TextDataEncodingAlphabet Alphabet;
+    protected TextDataEncodingAlphabet Alphabet { get; }
 
     #region Parameters
 

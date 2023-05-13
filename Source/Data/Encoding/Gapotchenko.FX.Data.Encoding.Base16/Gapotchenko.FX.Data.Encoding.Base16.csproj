@@ -16,6 +16,12 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.Data.Encoding.Base16" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <AnalysisMode>All</AnalysisMode>
+    <WarningsAsErrors>$(WarningsAsErrors),CA1307,CA1309,CA1310</WarningsAsErrors>
+    <NoWarn>$(NoWarn),CA1305,CA1510,CA1720</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj" />

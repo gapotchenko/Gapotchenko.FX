@@ -48,24 +48,24 @@ public interface ITextDataEncoding : IDataEncoding
     /// Tries to decode all the characters in the specified read-only span into a byte array.
     /// </summary>
     /// <param name="s">The read-only character span to decode.</param>
-    /// <param name="result">A byte array with decoded data.</param>
+    /// <param name="data">A byte array with decoded data.</param>
     /// <returns>
     /// <see langword="true"/> if the <paramref name="s"/> parameter was decoded successfully;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    bool TryGetBytes(ReadOnlySpan<char> s, [NotNullWhen(true)] out byte[]? result);
+    bool TryGetBytes(ReadOnlySpan<char> s, [NotNullWhen(true)] out byte[]? data);
 
     /// <summary>
     /// Tries to decode all the characters in the specified read-only span into a byte array with specified options.
     /// </summary>
     /// <param name="s">The read-only character span to decode.</param>
     /// <param name="options">The options.</param>
-    /// <param name="result">A byte array with decoded data.</param>
+    /// <param name="data">A byte array with decoded data.</param>
     /// <returns>
     /// <see langword="true"/> if the <paramref name="s"/> parameter was decoded successfully;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    bool TryGetBytes(ReadOnlySpan<char> s, DataEncodingOptions options, [NotNullWhen(true)] out byte[]? result);
+    bool TryGetBytes(ReadOnlySpan<char> s, DataEncodingOptions options, [NotNullWhen(true)] out byte[]? data);
 
     /// <summary>
     /// Tries to decode all the characters in the specified read-only span into a byte array.
