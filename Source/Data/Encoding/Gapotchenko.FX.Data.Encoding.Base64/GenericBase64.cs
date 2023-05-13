@@ -27,7 +27,7 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
     /// <summary>
     /// The encoding alphabet.
     /// </summary>
-    protected readonly TextDataEncodingAlphabet Alphabet;
+    protected TextDataEncodingAlphabet Alphabet { get; }
 
     #region Parameters
 
@@ -409,7 +409,7 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
             return true;
         }
 
-        static Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid {Name} padding.");
+        static InvalidDataException CreateInvalidPaddingException() => new($"Invalid {Name} padding.");
     }
 
     /// <inheritdoc/>
@@ -447,7 +447,7 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
     /// <summary>
     /// The padding character.
     /// </summary>
-    protected readonly char PaddingChar;
+    protected char PaddingChar { get; }
 
     /// <inheritdoc/>
     protected override string PadCore(ReadOnlySpan<char> s) => PadRight(s, PaddingChar);

@@ -88,12 +88,12 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         throw new FormatException("The input string cannot be decoded.");
 
     /// <inheritdoc/>
-    public bool TryGetBytes(ReadOnlySpan<char> s, [NotNullWhen(true)] out byte[]? result) =>
-        TryGetBytes(s, DataEncodingOptions.None, out result);
+    public bool TryGetBytes(ReadOnlySpan<char> s, [NotNullWhen(true)] out byte[]? data) =>
+        TryGetBytes(s, DataEncodingOptions.None, out data);
 
     /// <inheritdoc/>
-    public bool TryGetBytes(ReadOnlySpan<char> s, DataEncodingOptions options, [NotNullWhen(true)] out byte[]? result) =>
-        (result = TryGetBytes(s, options)) != null;
+    public bool TryGetBytes(ReadOnlySpan<char> s, DataEncodingOptions options, [NotNullWhen(true)] out byte[]? data) =>
+        (data = TryGetBytes(s, options)) != null;
 
     /// <inheritdoc/>
     public byte[]? TryGetBytes(ReadOnlySpan<char> s) => TryGetBytes(s, DataEncodingOptions.None);
@@ -267,6 +267,8 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
                 if ((m_Options & DataEncodingOptions.NoOwnership) == 0)
                     m_TextWriter.Dispose();
             }
+
+            base.Dispose(disposing);
         }
 
 #if TFF_ASYNC_DISPOSABLE
@@ -276,6 +278,8 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
 
             if ((m_Options & DataEncodingOptions.NoOwnership) == 0)
                 await m_TextWriter.DisposeAsync().ConfigureAwait(false);
+
+            await base.DisposeAsync().ConfigureAwait(false);
         }
 #endif
 
@@ -442,7 +446,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
                 return;
 
             Debug.Assert(m_BufferWriter != null);
-            m_BufferWriter.Flush();
+            await m_BufferWriter.FlushAsync().ConfigureAwait(false);
 
             if (m_Buffer.Length != 0)
             {
@@ -484,6 +488,8 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
                 if ((m_Options & DataEncodingOptions.NoOwnership) == 0)
                     m_TextReader.Dispose();
             }
+
+            base.Dispose(disposing);
         }
 
         readonly TextDataEncoding m_Encoding;

@@ -2,16 +2,8 @@
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <PackageDescription>Provides a quasi-universal framework for data encodings. Supports both synchronous and asynchronous data processing models, including the iterative transcoding.</PackageDescription>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
-    <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
@@ -26,6 +18,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
+    <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
 
   <Import Project="$(MasteringDir)\OOB\System.Memory.props" />

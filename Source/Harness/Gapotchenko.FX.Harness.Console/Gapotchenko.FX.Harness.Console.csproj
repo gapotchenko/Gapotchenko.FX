@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net472;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <!--<Prefer32Bit>true</Prefer32Bit>-->
     <Nullable>enable</Nullable>
     <LangVersion>11.0</LangVersion>
@@ -13,7 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16\Gapotchenko.FX.Data.Encoding.Base16.csproj" />
     <ProjectReference Include="..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base32\Gapotchenko.FX.Data.Encoding.Base32.csproj" />
+    <ProjectReference Include="..\..\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64\Gapotchenko.FX.Data.Encoding.Base64.csproj" />
     <ProjectReference Include="..\..\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc16\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.csproj" />
     <ProjectReference Include="..\..\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc32\Gapotchenko.FX.Data.Integrity.Checksum.Crc32.csproj" />
     <ProjectReference Include="..\..\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc8\Gapotchenko.FX.Data.Integrity.Checksum.Crc8.csproj" />

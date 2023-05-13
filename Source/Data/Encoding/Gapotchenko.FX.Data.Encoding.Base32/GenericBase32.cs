@@ -25,6 +25,9 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
     /// <param name="alphabet">The alphabet.</param>
     protected virtual void ValidateAlphabet(TextDataEncodingAlphabet alphabet)
     {
+        if (alphabet is null)
+            throw new ArgumentNullException(nameof(alphabet));
+
         if (alphabet.Size != Base)
         {
             throw new ArgumentException(
@@ -36,7 +39,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
     /// <summary>
     /// The encoding alphabet.
     /// </summary>
-    protected readonly TextDataEncodingAlphabet Alphabet;
+    protected TextDataEncodingAlphabet Alphabet { get; }
 
     #region Parameters
 
@@ -479,7 +482,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
             return true;
         }
 
-        Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid padding for {m_Encoding} encoding.");
+        InvalidDataException CreateInvalidPaddingException() => new($"Invalid padding for {m_Encoding} encoding.");
     }
 
     /// <inheritdoc/>
@@ -515,7 +518,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
     /// <summary>
     /// The padding character.
     /// </summary>
-    protected readonly char PaddingChar;
+    protected char PaddingChar { get; }
 
     /// <inheritdoc/>
     protected override string PadCore(ReadOnlySpan<char> s) => PadRight(s, PaddingChar);

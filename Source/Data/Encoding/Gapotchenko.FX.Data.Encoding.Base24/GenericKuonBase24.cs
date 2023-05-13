@@ -22,7 +22,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
     /// <summary>
     /// The encoding alphabet.
     /// </summary>
-    protected readonly TextDataEncodingAlphabet Alphabet;
+    protected TextDataEncodingAlphabet Alphabet { get; }
 
     /// <summary>
     /// Validates alphabet.
@@ -30,6 +30,9 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
     /// <param name="alphabet">The alphabet.</param>
     protected virtual void ValidateAlphabet(TextDataEncodingAlphabet alphabet)
     {
+        if (alphabet is null)
+            throw new ArgumentNullException(nameof(alphabet));
+
         if (alphabet.Size != Base)
         {
             throw new ArgumentException(
@@ -418,7 +421,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
             return true;
         }
 
-        static Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid {Name} padding.");
+        static InvalidDataException CreateInvalidPaddingException() => new InvalidDataException($"Invalid {Name} padding.");
     }
 
     /// <inheritdoc/>
@@ -456,7 +459,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
     /// <summary>
     /// The padding character.
     /// </summary>
-    protected readonly char PaddingChar;
+    protected char PaddingChar { get; }
 
     /// <inheritdoc/>
     protected override string PadCore(ReadOnlySpan<char> s) => PadRight(s, PaddingChar);

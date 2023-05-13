@@ -1,7 +1,7 @@
 ﻿#region Usings
 using Gapotchenko.FX.AppModel;
 using Gapotchenko.FX.Data.Integrity.Checksum;
-//using Gapotchenko.FX.Data.Encoding;
+using Gapotchenko.FX.Data.Encoding;
 using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Math;
@@ -174,7 +174,7 @@ class Program
 
         Console.WriteLine(Encoding.UTF8.GetString(Base16.GetBytes(s)));
 
-        Console.WriteLine(Base58.Efficiency);
+        //Console.WriteLine(Base58.Efficiency);
 
         //string e = Base64.GetString(Encoding.UTF8.GetBytes(s), DataEncodingOptions.Indent);
 

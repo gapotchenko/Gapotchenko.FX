@@ -2,17 +2,11 @@
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <PackageDescription>Standards-compliant implementation of data encoding algorithms belonging to the Base16 family.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageTag Include="base16;rfc4648" />
-  </ItemGroup>
-
-  <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Data.Encoding.Base16" />
   </ItemGroup>
 
