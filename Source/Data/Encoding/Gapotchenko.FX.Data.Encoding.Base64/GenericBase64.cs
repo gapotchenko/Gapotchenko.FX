@@ -222,18 +222,22 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
 
         readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
 
-        public void Decode(ReadOnlySpan<char> input, Stream output)
+        public bool Decode(ReadOnlySpan<char> input, Stream output, bool throwOnError)
         {
             if (m_Eof)
-                return;
+                return true;
 
             if (input == null)
             {
                 m_Eof = true;
+
                 if ((m_Options & DataEncodingOptions.Padding) != 0)
-                    ValidatePaddingEof();
-                FlushDecode(output);
-                return;
+                {
+                    if (!ValidatePaddingEof(throwOnError))
+                        return false;
+                }
+
+                return FlushDecode(output, throwOnError);
             }
 
             var alphabet = m_Alphabet;
@@ -245,8 +249,14 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
                 if (CharEqual(c, paddingChar, isCaseSensitive))
                 {
                     if ((m_Options & DataEncodingOptions.Padding) != 0)
-                        ValidatePaddingChar();
-                    FlushDecode(output);
+                    {
+                        if (!ValidatePaddingChar(throwOnError))
+                            return false;
+                    }
+
+                    if (!FlushDecode(output, throwOnError))
+                        return false;
+
                     continue;
                 }
 
@@ -256,12 +266,18 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
                     if ((m_Options & DataEncodingOptions.Relax) == 0)
                     {
                         if (!char.IsWhiteSpace(c))
-                            throw new InvalidDataException($"Encountered a non-{Name} character.");
+                        {
+                            if (throwOnError)
+                                throw new InvalidDataException($"Encountered a non-{Name} character.");
+                            return false;
+                        }
                     }
+
                     continue;
                 }
 
-                ValidatePaddingState();
+                if (!ValidatePaddingState(throwOnError))
+                    return false;
 
                 // Accumulate data bits.
                 m_Bits = (m_Bits << BitsPerSymbol) | b;
@@ -277,30 +293,35 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
                     output.Write(m_Buffer, 0, BytesPerDecodedBlock);
                 }
             }
+
+            return true;
         }
 
-        void FlushDecode(Stream output)
+        bool FlushDecode(Stream output, bool throwOnError)
         {
             switch (m_Modulus)
             {
                 case 0:
                     // Nothing to do.
-                    return;
+                    return true;
 
                 case 1:
                     // 6 bits
-                    ValidateIncompleteByte();
+                    if (!ValidateIncompleteByte(throwOnError))
+                        return false;
                     break;
 
                 case 2:
                     // 2 * 6 bits = 12 = 8 + 4
-                    ValidateLastSymbol(Mask4Bits);
+                    if (!ValidateLastSymbol(Mask4Bits, throwOnError))
+                        return false;
                     output.WriteByte((byte)(m_Bits >> 4));
                     break;
 
                 case 3:
                     // 3 * 6 bits = 18 = 2 * 8 + 2
-                    ValidateLastSymbol(Mask2Bits);
+                    if (!ValidateLastSymbol(Mask2Bits, throwOnError))
+                        return false;
 
                     m_Buffer[0] = (byte)(m_Bits >> 10);
                     m_Buffer[1] = (byte)(m_Bits >> 2);
@@ -313,59 +334,91 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
             }
 
             m_Modulus = 0;
+            return true;
         }
 
-        void ValidateIncompleteByte()
+        bool ValidateIncompleteByte(bool throwOnError)
         {
             if ((m_Options & DataEncodingOptions.Relax) == 0)
-                throw new InvalidDataException($"Cannot decode the last byte due to a missing {Name} symbol.");
+            {
+                if (throwOnError)
+                    throw new InvalidDataException($"Cannot decode the last byte due to a missing {Name} symbol.");
+                return false;
+            }
+
+            return true;
         }
 
-        void ValidateLastSymbol(int zeroMask)
+        bool ValidateLastSymbol(int zeroMask, bool throwOnError)
         {
             if ((m_Options & DataEncodingOptions.Relax) == 0 &&
                 (m_Bits & zeroMask) != 0)
             {
-                throw new InvalidDataException($"The insignificant bits of the last {Name} symbol are expected to be zero.");
+                if (throwOnError)
+                    throw new InvalidDataException($"The insignificant bits of the last {Name} symbol are expected to be zero.");
+                return false;
             }
+
+            return true;
         }
 
         int m_Padding;
 
-        void ValidatePaddingChar()
+        bool ValidatePaddingChar(bool throwOnError)
         {
             if (m_Padding == 0)
             {
                 if (m_Modulus == 0)
-                    throw CreateInvalidPaddingException();
+                {
+                    if (throwOnError)
+                        throw CreateInvalidPaddingException();
+                    return false;
+                }
+
                 m_Padding = m_Modulus;
             }
 
             if (++m_Padding == SymbolsPerEncodedBlock)
                 m_Padding = 0;
+
+            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        void ValidatePaddingState()
+        bool ValidatePaddingState(bool throwOnError)
         {
             if (m_Padding != 0)
-                throw CreateInvalidPaddingException();
+            {
+                if (throwOnError)
+                    throw CreateInvalidPaddingException();
+                return false;
+            }
+
+            return true;
         }
 
-        void ValidatePaddingEof()
+        bool ValidatePaddingEof(bool throwOnError)
         {
             if (m_Modulus != 0 || m_Padding != 0)
-                throw CreateInvalidPaddingException();
+            {
+                if (throwOnError)
+                    throw CreateInvalidPaddingException();
+                return false;
+            }
+
+            return true;
         }
 
         static Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid {Name} padding.");
     }
 
     /// <inheritdoc/>
-    protected sealed override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => CreateEncoderContextCore(Alphabet, options);
+    protected sealed override IEncoderContext CreateEncoderContext(DataEncodingOptions options) =>
+        CreateEncoderContextCore(Alphabet, options);
 
     /// <inheritdoc/>
-    protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => CreateDecoderContextCore(Alphabet, options);
+    protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) =>
+        CreateDecoderContextCore(Alphabet, options);
 
     /// <summary>
     /// Creates encoder context with specified alphabet and options.

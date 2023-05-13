@@ -253,10 +253,10 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
 
         readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
 
-        public void Decode(ReadOnlySpan<char> input, Stream output)
+        public bool Decode(ReadOnlySpan<char> input, Stream output, bool throwOnError)
         {
             if (m_Eof)
-                return;
+                return true;
 
             var options = m_Options;
             bool padding = (options & DataEncodingOptions.Padding) != 0;
@@ -264,10 +264,15 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
             if (input == null)
             {
                 m_Eof = true;
+
                 if (padding)
-                    ValidatePaddingEof();
+                {
+                    if (!ValidatePaddingEof(throwOnError))
+                        return false;
+                }
+
                 FlushDecode(output);
-                return;
+                return true;
             }
 
             var alphabet = m_Alphabet;
@@ -280,7 +285,11 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
                 if (CharEqual(c, paddingChar, isCaseSensitive))
                 {
                     if (padding)
-                        ValidatePaddingChar();
+                    {
+                        if (!ValidatePaddingChar(throwOnError))
+                            return false;
+                    }
+
                     FlushDecode(output);
                     continue;
                 }
@@ -291,12 +300,17 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
                     if (!relax)
                     {
                         if (!char.IsWhiteSpace(c))
-                            throw new InvalidDataException($"Encountered an invalid {Name} character.");
+                        {
+                            if (throwOnError)
+                                throw new InvalidDataException($"Encountered an invalid {Name} character.");
+                            return false;
+                        }
                     }
                     continue;
                 }
 
-                ValidatePaddingState();
+                if (!ValidatePaddingState(throwOnError))
+                    return false;
 
                 // Accumulate data bits.
                 m_Bits = m_Bits * Base + (byte)b;
@@ -315,6 +329,8 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
                     m_Bits = 0;
                 }
             }
+
+            return true;
         }
 
         void ReadBits(Stream output, float bitCount)
@@ -357,40 +373,61 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
 
         int m_Padding;
 
-        void ValidatePaddingChar()
+        bool ValidatePaddingChar(bool throwOnError)
         {
             if (m_Padding == 0)
             {
                 if (m_Modulus == 0)
-                    throw CreateInvalidPaddingException();
+                {
+                    if (throwOnError)
+                        throw CreateInvalidPaddingException();
+                    return false;
+                }
+
                 m_Padding = m_Modulus;
             }
 
             if (++m_Padding == SymbolsPerEncodedBlock)
                 m_Padding = 0;
+
+            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        void ValidatePaddingState()
+        bool ValidatePaddingState(bool throwOnError)
         {
             if (m_Padding != 0)
-                throw CreateInvalidPaddingException();
+            {
+                if (throwOnError)
+                    throw CreateInvalidPaddingException();
+                return false;
+            }
+
+            return true;
         }
 
-        void ValidatePaddingEof()
+        bool ValidatePaddingEof(bool throwOnError)
         {
             if (m_Modulus != 0 || m_Padding != 0)
-                throw CreateInvalidPaddingException();
+            {
+                if (throwOnError)
+                    throw CreateInvalidPaddingException();
+                return false;
+            }
+
+            return true;
         }
 
         static Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid {Name} padding.");
     }
 
     /// <inheritdoc/>
-    protected sealed override IEncoderContext CreateEncoderContext(DataEncodingOptions options) => CreateEncoderContextCore(Alphabet, options);
+    protected sealed override IEncoderContext CreateEncoderContext(DataEncodingOptions options) =>
+        CreateEncoderContextCore(Alphabet, options);
 
     /// <inheritdoc/>
-    protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => CreateDecoderContextCore(Alphabet, options);
+    protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) =>
+        CreateDecoderContextCore(Alphabet, options);
 
     /// <summary>
     /// Creates encoder context with specified alphabet and options.
@@ -406,7 +443,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
     /// </summary>
     /// <param name="alphabet">The alphabet.</param>
     /// <param name="options">The options.</param>
-    /// <returns>The decoder context.</returns>
+    /// <returns>A decoder context instance.</returns>
     protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
         new DecoderContext(alphabet, PaddingChar, options);
 

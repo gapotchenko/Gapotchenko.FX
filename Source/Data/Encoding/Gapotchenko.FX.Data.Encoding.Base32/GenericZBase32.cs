@@ -112,7 +112,7 @@ public abstract class GenericZBase32 : GenericBase32
             output.Write(m_Buffer, 0, li);
         }
 
-        protected override void FlushDecodeCore(Stream output)
+        protected override bool FlushDecodeCore(Stream output, bool throwOnError)
         {
             switch (m_Modulus)
             {
@@ -123,6 +123,8 @@ public abstract class GenericZBase32 : GenericBase32
                 default:
                     throw new InvalidOperationException();
             }
+
+            return true;
         }
     }
 

@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Data.Encoding;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
 /// Defines the interface of a binary-to-text encoding.
@@ -41,6 +43,29 @@ public interface ITextDataEncoding : IDataEncoding
     /// <returns>A byte array with decoded data.</returns>
     /// <exception cref="FormatException">Cannot decode the input string.</exception>
     byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options);
+
+    /// <summary>
+    /// Tries to decode all the characters in the specified read-only span into a byte array.
+    /// </summary>
+    /// <param name="s">The read-only character span to decode.</param>
+    /// <param name="result">A byte array with decoded data.</param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="s"/> parameter was decoded successfully;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    bool TryGetBytes(ReadOnlySpan<char> s, [NotNullWhen(true)] out byte[]? result);
+
+    /// <summary>
+    /// Tries to decode all the characters in the specified read-only span into a byte array with specified option.
+    /// </summary>
+    /// <param name="s">The read-only character span to decode.</param>
+    /// <param name="options">The options.</param>
+    /// <param name="result">A byte array with decoded data.</param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="s"/> parameter was decoded successfully;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    bool TryGetBytes(ReadOnlySpan<char> s, DataEncodingOptions options, [NotNullWhen(true)] out byte[]? result);
 
     /// <summary>
     /// Creates a streaming encoder.

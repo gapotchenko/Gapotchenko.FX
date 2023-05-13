@@ -83,15 +83,32 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
     public byte[] GetBytes(ReadOnlySpan<char> s) => GetBytes(s, DataEncodingOptions.None);
 
     /// <inheritdoc/>
-    public byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) => GetBytesCore(s, GetEffectiveOptions(options));
+    public byte[] GetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) =>
+        GetBytesCore(s, GetEffectiveOptions(options), true) ??
+        throw new FormatException("The input string cannot be decoded.");
+
+    /// <inheritdoc/>
+    public bool TryGetBytes(ReadOnlySpan<char> s, [NotNullWhen(true)] out byte[]? result) =>
+        TryGetBytes(s, DataEncodingOptions.None, out result);
+
+    /// <inheritdoc/>
+    public bool TryGetBytes(ReadOnlySpan<char> s, DataEncodingOptions options, [NotNullWhen(true)] out byte[]? result) =>
+        (result = GetBytesCore(s, GetEffectiveOptions(options), false)) != null;
 
     /// <summary>
     /// Decodes the specified string to an equivalent array of bytes.
     /// </summary>
     /// <param name="s">The string to decode.</param>
     /// <param name="options">The options.</param>
-    /// <returns>An array of bytes that is equivalent to <paramref name="s"/>.</returns>
-    protected virtual byte[] GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options)
+    /// <param name="throwOnError">
+    /// <see langword="true"/> to throw an exception if the input string cannot be decoded;
+    /// <see langword="false"/> to return <see langword="null"/>.
+    /// </param>
+    /// <returns>
+    /// An array of bytes that is equivalent to <paramref name="s"/>, 
+    /// or <see langword="null"/> if an error occurred when <paramref name="throwOnError"/> is <see langword="false"/>.
+    /// </returns>
+    protected virtual byte[]? GetBytesCore(ReadOnlySpan<char> s, DataEncodingOptions options, bool throwOnError)
     {
         var capacity = GetMaxByteCountCore(s.Length, options);
 
@@ -100,12 +117,17 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         var context = CreateDecoderContext(options);
         try
         {
-            context.Decode(s, ms);
-            context.Decode(null, ms);
+            if (!context.Decode(s, ms, throwOnError))
+                return null;
+
+            if (!context.Decode(null, ms, throwOnError))
+                return null;
         }
         catch (InvalidDataException e)
         {
-            throw new FormatException(e.Message);
+            if (throwOnError)
+                throw new FormatException(e.Message);
+            return null;
         }
 
         Debug.Assert(ms.Length <= capacity, "Invalid capacity.");
@@ -127,10 +149,12 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
 #endif
             )
             .AsSpan(),
-            options);
+            options,
+            true) ??
+        throw new FormatException("Input data cannot be decoded");
 
     /// <summary>
-    /// The encoder context.
+    /// Defines the interface of an encoder context.
     /// </summary>
     protected interface IEncoderContext
     {
@@ -146,14 +170,14 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
     }
 
     /// <summary>
-    /// Creates encoder context.
+    /// Creates an encoder context.
     /// </summary>
     /// <param name="options">The options.</param>
-    /// <returns>The encoder context.</returns>
+    /// <returns>An encoder context instance.</returns>
     protected abstract IEncoderContext CreateEncoderContext(DataEncodingOptions options);
 
     /// <summary>
-    /// The decoder context.
+    /// Defines the interface of a decoder context.
     /// </summary>
     protected interface IDecoderContext
     {
@@ -165,14 +189,22 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         /// A <see langword="null"/> value signifies the final block.
         /// </param>
         /// <param name="output">The output.</param>
-        void Decode(ReadOnlySpan<char> input, Stream output);
+        /// <param name="throwOnError">
+        /// <see langword="true"/> to throw an exception if the input cannot be decoded;
+        /// <see langword="false"/> to return <see langword="false"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if the input was decoded successfully;
+        /// otherwise, <see langword="false"/> when <paramref name="throwOnError"/> is <see langword="false"/>.
+        /// </returns>
+        bool Decode(ReadOnlySpan<char> input, Stream output, bool throwOnError);
     }
 
     /// <summary>
-    /// Creates decoder context.
+    /// Creates a decoder context.
     /// </summary>
     /// <param name="options">The options.</param>
-    /// <returns>The decoder context.</returns>
+    /// <returns>A decoder context instance.</returns>
     protected abstract IDecoderContext CreateDecoderContext(DataEncodingOptions options);
 
     const int StreamBufferSize = 2048;
@@ -600,11 +632,11 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
                 if (r == 0)
                 {
                     // Final block.
-                    m_Context.Decode(null, m_Buffer);
+                    m_Context.Decode(null, m_Buffer, true);
                     break;
                 }
 
-                m_Context.Decode(text.AsSpan(0, r), m_Buffer);
+                m_Context.Decode(text.AsSpan(0, r), m_Buffer, true);
             }
 
             m_Buffer.Position = 0;
@@ -630,11 +662,11 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
                 if (r == 0)
                 {
                     // Final block.
-                    m_Context.Decode(null, m_Buffer);
+                    m_Context.Decode(null, m_Buffer, true);
                     break;
                 }
 
-                m_Context.Decode(text.AsSpan(0, r), m_Buffer);
+                m_Context.Decode(text.AsSpan(0, r), m_Buffer, true);
             }
 
             m_Buffer.Position = 0;

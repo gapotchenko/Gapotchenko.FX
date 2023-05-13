@@ -164,16 +164,15 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
         byte m_Bits;
         int m_Modulus;
 
-        public void Decode(ReadOnlySpan<char> input, Stream output)
+        public bool Decode(ReadOnlySpan<char> input, Stream output, bool throwOnError)
         {
             if (m_Eof)
-                return;
+                return true;
 
             if (input == null)
             {
                 m_Eof = true;
-                FlushDecode();
-                return;
+                return FlushDecode(throwOnError);
             }
 
             var alphabet = m_Alphabet;
@@ -190,7 +189,11 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
                             char.IsWhiteSpace(c);
 
                         if (!ok)
-                            throw new InvalidDataException($"Encountered a non-{Name} character.");
+                        {
+                            if (throwOnError)
+                                throw new InvalidDataException($"Encountered a non-{Name} character.");
+                            return false;
+                        }
                     }
                     continue;
                 }
@@ -204,19 +207,22 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
                     output.WriteByte(m_Bits);
                 }
             }
+
+            return true;
         }
 
-        void FlushDecode()
+        bool FlushDecode(bool throwOnError)
         {
             switch (m_Modulus)
             {
                 case 0:
                     // Nothing to do.
-                    return;
+                    return true;
 
                 case 1:
                     // 4 bits
-                    ValidateIncompleteByte();
+                    if (!ValidateIncompleteByte(throwOnError))
+                        return false;
                     break;
 
                 default:
@@ -224,15 +230,26 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
             }
 
             m_Modulus = 0;
+            return true;
         }
 
-        void ValidateIncompleteByte()
+        bool ValidateIncompleteByte(bool throwOnError)
         {
             if ((m_Options & DataEncodingOptions.Padding) != 0)
-                throw new InvalidDataException($"Invalid {Name} padding.");
+            {
+                if (throwOnError)
+                    throw new InvalidDataException($"Invalid {Name} padding.");
+                return false;
+            }
 
             if ((m_Options & DataEncodingOptions.Relax) == 0)
-                throw new InvalidDataException($"Cannot decode the last byte due to missing {Name} symbol.");
+            {
+                if (throwOnError)
+                    throw new InvalidDataException($"Cannot decode the last byte due to a missing {Name} input symbol.");
+                return false;
+            }
+
+            return true;
         }
     }
 
@@ -248,15 +265,16 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
     /// <param name="alphabet">The alphabet.</param>
     /// <param name="options">The options.</param>
     /// <returns>The encoder context.</returns>
-    protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new EncoderContext(alphabet, options);
+    protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
+        new EncoderContext(alphabet, options);
 
     /// <summary>
     /// Creates decoder context with specified alphabet and options.
     /// </summary>
     /// <param name="alphabet">The alphabet.</param>
     /// <param name="options">The options.</param>
-    /// <returns>The decoder context.</returns>
-    protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new DecoderContext(alphabet, options);
+    protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
+        new DecoderContext(alphabet, options);
 
     /// <inheritdoc/>
     public sealed override bool IsCaseSensitive => Alphabet.IsCaseSensitive;

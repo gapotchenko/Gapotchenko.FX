@@ -236,13 +236,14 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
         {
         }
 
-        public char? Separator;
         protected readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
 
-        public void Decode(ReadOnlySpan<char> input, Stream output)
+        public char? Separator { get; init; }
+
+        public bool Decode(ReadOnlySpan<char> input, Stream output, bool throwOnError)
         {
             if (m_Eof)
-                return;
+                return true;
 
             var options = m_Options;
             bool padding = (options & DataEncodingOptions.Padding) != 0;
@@ -250,10 +251,14 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
             if (input == null)
             {
                 m_Eof = true;
+
                 if (padding)
-                    ValidatePaddingEof();
-                FlushDecode(output);
-                return;
+                {
+                    if (!ValidatePaddingEof(throwOnError))
+                        return false;
+                }
+
+                return FlushDecode(output, throwOnError);
             }
 
             var alphabet = m_Alphabet;
@@ -266,8 +271,14 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                 if (CharEqual(c, paddingChar, isCaseSensitive))
                 {
                     if (padding)
-                        ValidatePaddingChar();
-                    FlushDecode(output);
+                    {
+                        if (!ValidatePaddingChar(throwOnError))
+                            return false;
+                    }
+
+                    if (!FlushDecode(output, throwOnError))
+                        return false;
+
                     continue;
                 }
 
@@ -281,12 +292,17 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                             c == Separator;
 
                         if (!ok)
-                            throw new InvalidDataException($"Encountered an invalid character for {m_Encoding} encoding.");
+                        {
+                            if (throwOnError)
+                                throw new InvalidDataException($"Encountered an invalid input character for {m_Encoding} encoding.");
+                            return false;
+                        }
                     }
                     continue;
                 }
 
-                ValidatePaddingState();
+                if (!ValidatePaddingState(throwOnError))
+                    return false;
 
                 // Accumulate data bits.
                 m_Bits = (m_Bits << BitsPerSymbol) | (byte)b;
@@ -304,37 +320,45 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                     output.Write(m_Buffer, 0, BytesPerDecodedBlock);
                 }
             }
+
+            return true;
         }
 
-        void FlushDecode(Stream output)
+        bool FlushDecode(Stream output, bool throwOnError)
         {
             if (m_Modulus != 0)
             {
-                FlushDecodeCore(output);
+                if (!FlushDecodeCore(output, throwOnError))
+                    return false;
                 m_Modulus = 0;
             }
+            return true;
         }
 
-        protected virtual void FlushDecodeCore(Stream output)
+        protected virtual bool FlushDecodeCore(Stream output, bool throwOnError)
         {
             switch (m_Modulus)
             {
                 case 1:  // 5 bits
-                    ValidateIncompleteByte();
+                    if (!ValidateIncompleteByte(throwOnError))
+                        return false;
                     break;
 
                 case 2:  // 2 * 5 bits = 10 = 8 + 2
-                    ValidateLastSymbol(Mask2Bits);
+                    if (!ValidateLastSymbol(Mask2Bits, throwOnError))
+                        return false;
                     output.WriteByte((byte)(m_Bits >> 2));
                     break;
 
                 case 3:  // 3 * 5 bits = 15 = 8 + 7
-                    ValidateIncompleteByte();
+                    if (!ValidateIncompleteByte(throwOnError))
+                        return false;
                     output.WriteByte((byte)(m_Bits >> 7));
                     break;
 
                 case 4:  // 4 * 5 bits = 20 = 2 * 8 + 4
-                    ValidateLastSymbol(Mask4Bits);
+                    if (!ValidateLastSymbol(Mask4Bits, throwOnError))
+                        return false;
 
                     m_Buffer[0] = (byte)(m_Bits >> 12);
                     m_Buffer[1] = (byte)(m_Bits >> 4);
@@ -343,7 +367,8 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                     break;
 
                 case 5:  // 5 * 5 bits = 25 = 3 * 8 + 1
-                    ValidateLastSymbol(Mask1Bit);
+                    if (!ValidateLastSymbol(Mask1Bit, throwOnError))
+                        return false;
 
                     m_Buffer[0] = (byte)(m_Bits >> 17);
                     m_Buffer[1] = (byte)(m_Bits >> 9);
@@ -353,7 +378,8 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                     break;
 
                 case 6:  // 6 * 5 bits = 30 = 3 * 8 + 6
-                    ValidateIncompleteByte();
+                    if (!ValidateIncompleteByte(throwOnError))
+                        return false;
 
                     m_Buffer[0] = (byte)(m_Bits >> 22);
                     m_Buffer[1] = (byte)(m_Bits >> 14);
@@ -363,7 +389,8 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                     break;
 
                 case 7:  // 7 * 5 bits = 35 = 4 * 8 + 3
-                    ValidateLastSymbol(Mask3Bits);
+                    if (!ValidateLastSymbol(Mask3Bits, throwOnError))
+                        return false;
 
                     m_Buffer[0] = (byte)(m_Bits >> 27);
                     m_Buffer[1] = (byte)(m_Bits >> 19);
@@ -376,49 +403,80 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                 default:
                     throw new InvalidOperationException();
             }
+
+            return true;
         }
 
-        protected void ValidateIncompleteByte()
+        protected bool ValidateIncompleteByte(bool throwOnError)
         {
             if ((m_Options & DataEncodingOptions.Relax) == 0)
-                throw new InvalidDataException($"Cannot decode the last byte of {m_Encoding} encoding due to a missing symbol.");
+            {
+                if (throwOnError)
+                    throw new InvalidDataException($"Cannot decode the last byte of {m_Encoding} encoding due to a missing symbol.");
+                return false;
+            }
+
+            return true;
         }
 
-        protected void ValidateLastSymbol(ulong zeroMask)
+        protected bool ValidateLastSymbol(ulong zeroMask, bool throwOnError)
         {
             if ((m_Options & DataEncodingOptions.Relax) == 0 &&
                 (m_Bits & zeroMask) != 0)
             {
-                throw new InvalidDataException($"The insignificant bits of the last symbol in {m_Encoding} encoding are expected to be zero.");
+                if (throwOnError)
+                    throw new InvalidDataException($"The insignificant bits of the last symbol in {m_Encoding} encoding are expected to be zero.");
+                return false;
             }
+
+            return true;
         }
 
         int m_Padding;
 
-        void ValidatePaddingChar()
+        bool ValidatePaddingChar(bool throwOnError)
         {
             if (m_Padding == 0)
             {
                 if (m_Modulus == 0)
-                    throw CreateInvalidPaddingException();
+                {
+                    if (throwOnError)
+                        throw CreateInvalidPaddingException();
+                    return false;
+                }
+
                 m_Padding = m_Modulus;
             }
 
             if (++m_Padding == SymbolsPerEncodedBlock)
                 m_Padding = 0;
+
+            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        void ValidatePaddingState()
+        bool ValidatePaddingState(bool throwOnError)
         {
             if (m_Padding != 0)
-                throw CreateInvalidPaddingException();
+            {
+                if (throwOnError)
+                    throw CreateInvalidPaddingException();
+                return false;
+            }
+
+            return true;
         }
 
-        void ValidatePaddingEof()
+        bool ValidatePaddingEof(bool throwOnError)
         {
             if (m_Modulus != 0 || m_Padding != 0)
-                throw CreateInvalidPaddingException();
+            {
+                if (throwOnError)
+                    throw CreateInvalidPaddingException();
+                return false;
+            }
+
+            return true;
         }
 
         Exception CreateInvalidPaddingException() => new InvalidDataException($"Invalid padding for {m_Encoding} encoding.");
@@ -431,20 +489,22 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
     protected sealed override IDecoderContext CreateDecoderContext(DataEncodingOptions options) => CreateDecoderContextCore(Alphabet, options);
 
     /// <summary>
-    /// Creates encoder context with specified alphabet and options.
+    /// Creates an encoder context with specified alphabet and options.
     /// </summary>
     /// <param name="alphabet">The alphabet.</param>
     /// <param name="options">The options.</param>
-    /// <returns>The encoder context.</returns>
-    protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new EncoderContext(this, alphabet, options);
+    /// <returns>An encoder context instance.</returns>
+    protected virtual IEncoderContext CreateEncoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
+        new EncoderContext(this, alphabet, options);
 
     /// <summary>
-    /// Creates decoder context with specified alphabet and options.
+    /// Creates a decoder context with specified alphabet and options.
     /// </summary>
     /// <param name="alphabet">The alphabet.</param>
     /// <param name="options">The options.</param>
-    /// <returns>The decoder context.</returns>
-    protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) => new DecoderContext(this, alphabet, options);
+    /// <returns>A decoder context instance.</returns>
+    protected virtual IDecoderContext CreateDecoderContextCore(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) =>
+        new DecoderContext(this, alphabet, options);
 
     /// <inheritdoc/>
     public sealed override bool IsCaseSensitive => Alphabet.IsCaseSensitive;
