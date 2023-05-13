@@ -30,7 +30,7 @@ public interface IChecksumAlgorithm
     /// </summary>
     /// <param name="stream">The input stream to compute the checksum for.</param>
     /// <returns>The computed checksum.</returns>
-    /// <exception cref="ArgumentNullException">The argument is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
     object ComputeChecksum(Stream stream);
 
     /// <summary>
@@ -39,7 +39,7 @@ public interface IChecksumAlgorithm
     /// <param name="stream">The input stream to compute the checksum for.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The computed checksum.</returns>
-    /// <exception cref="ArgumentNullException">The argument is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
     Task<object> ComputeChecksumAsync(Stream stream, CancellationToken cancellationToken = default);
 
     /// <summary>
