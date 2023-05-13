@@ -43,14 +43,14 @@ public interface IChecksumAlgorithm
     Task<object> ComputeChecksumAsync(Stream stream, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Creates an iterator for checksum computation.
+    /// Creates an iterator for a checksum computation.
     /// </summary>
-    /// <returns>An iterator for checksum computation.</returns>
+    /// <returns>An iterator for a checksum computation.</returns>
     IChecksumIterator CreateIterator();
 
     /// <summary>
-    /// Creates a hash algorithm for checksum computation.
+    /// Creates a hash algorithm for a checksum computation.
     /// </summary>
-    /// <returns>A hash algorithm for checksum computation.</returns>
+    /// <returns>A hash algorithm for a checksum computation.</returns>
     HashAlgorithm CreateHashAlgorithm();
 }

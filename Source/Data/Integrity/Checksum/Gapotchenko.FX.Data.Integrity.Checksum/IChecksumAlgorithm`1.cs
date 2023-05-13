@@ -13,33 +13,15 @@ namespace Gapotchenko.FX.Data.Integrity.Checksum;
 public interface IChecksumAlgorithm<T> : IChecksumAlgorithm
     where T : struct
 {
-    /// <summary>
-    /// Computes the checksum for the specified byte span.
-    /// </summary>
-    /// <param name="data">The input data to compute the checksum for.</param>
-    /// <returns>The computed checksum.</returns>
+    /// <inheritdoc cref="IChecksumAlgorithm.ComputeChecksum(ReadOnlySpan{byte})"/>
     new T ComputeChecksum(ReadOnlySpan<byte> data);
 
-    /// <summary>
-    /// Computes the checksum for the specified <see cref="Stream"/> object.
-    /// </summary>
-    /// <param name="stream">The input stream to compute the checksum for.</param>
-    /// <returns>The computed checksum.</returns>
-    /// <exception cref="ArgumentNullException">The argument is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="IChecksumAlgorithm.ComputeChecksum(Stream)"/>
     new T ComputeChecksum(Stream stream);
 
-    /// <summary>
-    /// Asynchronously computes the checksum for the specified <see cref="Stream"/> object.
-    /// </summary>
-    /// <param name="stream">The input stream to compute the checksum for.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>The computed checksum.</returns>
-    /// <exception cref="ArgumentNullException">The argument is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="IChecksumAlgorithm.ComputeChecksumAsync(Stream, CancellationToken)"/>
     new Task<T> ComputeChecksumAsync(Stream stream, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Creates an iterator for checksum computation.
-    /// </summary>
-    /// <returns>An iterator for checksum computation.</returns>
+    /// <inheritdoc cref="IChecksumAlgorithm.CreateIterator"/>
     new IChecksumIterator<T> CreateIterator();
 }

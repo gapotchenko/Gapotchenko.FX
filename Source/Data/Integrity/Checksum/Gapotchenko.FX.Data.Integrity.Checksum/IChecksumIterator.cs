@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.Data.Integrity.Checksum;
 
 /// <summary>
-/// Represents an iterator for generic checksum computation.
+/// Represents an iterator for a checksum computation.
 /// </summary>
 public interface IChecksumIterator
 {
