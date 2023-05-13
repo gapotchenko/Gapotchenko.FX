@@ -332,4 +332,5 @@ ASALocalRun/
 # Custom
 Publish/*
 !Publish/README.md
-Source/Metadata/Optimization.proj
+Source/Mastering/Optimization.props
+Source/Mastering/Optimization.targets
