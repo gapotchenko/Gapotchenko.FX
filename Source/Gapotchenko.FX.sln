@@ -60,6 +60,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mastering", "Mastering", "{
 	ProjectSection(SolutionItems) = preProject
 		Mastering\Language.props = Mastering\Language.props
 		Mastering\NuGet.targets = Mastering\NuGet.targets
+		Mastering\TargetFrameworkFeatures.props = Mastering\TargetFrameworkFeatures.props
 		Mastering\Targeting.props = Mastering\Targeting.props
 		Mastering\Version.props = Mastering\Version.props
 	EndProjectSection
@@ -235,7 +236,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Intrinsics", "Intrinsics", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InteropServices", "InteropServices", "{ED4D80A7-33AD-4A3E-A837-75C326715B0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Runtime.InteropServices", "Gapotchenko.FX.Runtime.InteropServices\Gapotchenko.FX.Runtime.InteropServices.csproj", "{3697DB1D-0118-473B-9320-678D5DB1B5EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.InteropServices", "Gapotchenko.FX.Runtime.InteropServices\Gapotchenko.FX.Runtime.InteropServices.csproj", "{3697DB1D-0118-473B-9320-678D5DB1B5EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
