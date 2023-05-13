@@ -93,7 +93,14 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
 
     /// <inheritdoc/>
     public bool TryGetBytes(ReadOnlySpan<char> s, DataEncodingOptions options, [NotNullWhen(true)] out byte[]? result) =>
-        (result = GetBytesCore(s, GetEffectiveOptions(options), false)) != null;
+        (result = TryGetBytes(s, options)) != null;
+
+    /// <inheritdoc/>
+    public byte[]? TryGetBytes(ReadOnlySpan<char> s) => TryGetBytes(s, DataEncodingOptions.None);
+
+    /// <inheritdoc/>
+    public byte[]? TryGetBytes(ReadOnlySpan<char> s, DataEncodingOptions options) =>
+        GetBytesCore(s, GetEffectiveOptions(options), false);
 
     /// <summary>
     /// Decodes the specified string to an equivalent array of bytes.

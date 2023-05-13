@@ -56,7 +56,7 @@ public interface ITextDataEncoding : IDataEncoding
     bool TryGetBytes(ReadOnlySpan<char> s, [NotNullWhen(true)] out byte[]? result);
 
     /// <summary>
-    /// Tries to decode all the characters in the specified read-only span into a byte array with specified option.
+    /// Tries to decode all the characters in the specified read-only span into a byte array with specified options.
     /// </summary>
     /// <param name="s">The read-only character span to decode.</param>
     /// <param name="options">The options.</param>
@@ -66,6 +66,27 @@ public interface ITextDataEncoding : IDataEncoding
     /// otherwise, <see langword="false"/>.
     /// </returns>
     bool TryGetBytes(ReadOnlySpan<char> s, DataEncodingOptions options, [NotNullWhen(true)] out byte[]? result);
+
+    /// <summary>
+    /// Tries to decode all the characters in the specified read-only span into a byte array.
+    /// </summary>
+    /// <param name="s">The read-only character span to decode.</param>
+    /// <returns>
+    /// A byte array with decoded data,
+    /// or <see langword="null"/> if the decoding was not successful.
+    /// </returns>
+    byte[]? TryGetBytes(ReadOnlySpan<char> s);
+
+    /// <summary>
+    /// Tries to decode all the characters in the specified read-only span into a byte array with specified options.
+    /// </summary>
+    /// <param name="s">The read-only character span to decode.</param>
+    /// <param name="options">The options.</param>
+    /// <returns>
+    /// A byte array with decoded data,
+    /// or <see langword="null"/> if the decoding was not successful.
+    /// </returns>
+    byte[]? TryGetBytes(ReadOnlySpan<char> s, DataEncodingOptions options);
 
     /// <summary>
     /// Creates a streaming encoder.
