@@ -1,11 +1,17 @@
-﻿namespace Gapotchenko.FX.Data.Integrity.Checksum;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+namespace Gapotchenko.FX.Data.Integrity.Checksum;
 
 partial class Crc8
 {
     /// <summary>
     /// <para>
     /// Gets the standard CRC-8 algorithm
-    /// which performs checksum computation using x^8 + x^2 + x + 1 polynomial with initial value of 0.
+    /// which performs checksum computation using <c>x^8 + x^2 + x + 1</c> polynomial with the initial value of 0.
     /// </para>
     /// <para>
     /// Alias: CRC-8/SMBUS.
@@ -26,7 +32,7 @@ partial class Crc8
         /// <summary>
         /// <para>
         /// Gets CRC-8/TECH-3250 algorithm
-        /// which performs checksum computation using x^8 + x^4 + x^3 + x^2 + 1 polynomial with initial value of 0xFF.
+        /// which performs checksum computation using <c>x^8 + x^4 + x^3 + x^2 + 1</c> polynomial with the initial value of 0xFF.
         /// </para>
         /// <para>
         /// Aliases: CRC-8/AES, CRC-8/EBU.
@@ -42,7 +48,7 @@ partial class Crc8
         /// <summary>
         /// <para>
         /// Gets CRC-8/SAE-J1850 algorithm
-        /// which performs checksum computation using x^8 + x^4 + x^3 + x^2 + 1 polynomial with initial value of 0xFF.
+        /// which performs checksum computation using <c>x^8 + x^4 + x^3 + x^2 + 1</c> polynomial with the initial value of 0xFF.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -55,7 +61,7 @@ partial class Crc8
         /// <summary>
         /// <para>
         /// Gets CRC-8/OPENSAFETY algorithm
-        /// which performs checksum computation using x^8 + x^5 + x^3 + x^2 + x + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^8 + x^5 + x^3 + x^2 + x + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -68,7 +74,7 @@ partial class Crc8
         /// <summary>
         /// <para>
         /// Gets CRC-8/NRSC-5 algorithm
-        /// which performs checksum computation using x^8 + x^5 + x^4 + 1 polynomial with initial value of 0xFF.
+        /// which performs checksum computation using <c>x^8 + x^5 + x^4 + 1</c> polynomial with the initial value of 0xFF.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -81,7 +87,7 @@ partial class Crc8
         /// <summary>
         /// <para>
         /// Gets CRC-8/MIFARE-MAD algorithm
-        /// which performs checksum computation using x^8 + x^4 + x^3 + x^2 + 1 polynomial with initial value of 0xC7.
+        /// which performs checksum computation using <c>x^8 + x^4 + x^3 + x^2 + 1</c> polynomial with the initial value of 0xC7.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -94,7 +100,7 @@ partial class Crc8
         /// <summary>
         /// <para>
         /// Gets CRC-8/MAXIM algorithm
-        /// which performs checksum computation using x^8 + x^5 + x^4 + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^8 + x^5 + x^4 + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// <para>
         /// Aliases: CRC-8/MAXIM-DOW, DOW-CRC.
@@ -110,7 +116,7 @@ partial class Crc8
         /// <summary>
         /// <para>
         /// Gets CRC-8/I-CODE algorithm
-        /// which performs checksum computation using x^8 + x^4 + x^3 + x^2 + 1 polynomial with initial value of 0xFD.
+        /// which performs checksum computation using <c>x^8 + x^4 + x^3 + x^2 + 1</c> polynomial with the initial value of 0xFD.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -123,7 +129,7 @@ partial class Crc8
         /// <summary>
         /// <para>
         /// Gets CRC-8/HITAG algorithm
-        /// which performs checksum computation using x^8 + x^4 + x^3 + x^2 + 1 polynomial with initial value of 0xFF.
+        /// which performs checksum computation using <c>x^8 + x^4 + x^3 + x^2 + 1</c> polynomial with the initial value of 0xFF.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -136,7 +142,7 @@ partial class Crc8
         /// <summary>
         /// <para>
         /// Gets CRC-8/DARC algorithm
-        /// which performs checksum computation using x^8 + x^5 + x^4 + x^3 + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^8 + x^5 + x^4 + x^3 + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -149,7 +155,7 @@ partial class Crc8
         /// <summary>
         /// <para>
         /// Gets CRC-8/BLUETOOTH algorithm
-        /// which performs checksum computation using x^8 + x^7 + x^5 + x^2 + x + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^8 + x^7 + x^5 + x^2 + x + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -162,7 +168,7 @@ partial class Crc8
         /// <summary>
         /// <para>
         /// Gets CRC-8/AUTOSAR algorithm
-        /// which performs checksum computation using x^8 + x^5 + x^3 + x^2 + x + 1  polynomial with initial value of 0xFF.
+        /// which performs checksum computation using <c>x^8 + x^5 + x^3 + x^2 + x + 1</c>  polynomial with the initial value of 0xFF.
         /// </para>
         /// </summary>
         /// <remarks>

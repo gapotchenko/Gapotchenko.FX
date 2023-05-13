@@ -1,11 +1,17 @@
-﻿namespace Gapotchenko.FX.Data.Integrity.Checksum;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+namespace Gapotchenko.FX.Data.Integrity.Checksum;
 
 partial class Crc32
 {
     /// <summary>
     /// <para>
     /// Gets the standard CRC-32 algorithm
-    /// which performs checksum computation using x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1 polynomial with initial value of 0xFFFFFFFF.
+    /// which performs checksum computation using <c>x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1</c> polynomial with the initial value of 0xFFFFFFFF.
     /// </para>
     /// <para>
     /// Aliases: CRC-32/ISO-HDLC, CRC-32/ADCCP, CRC-32/V-42, CRC-32/XZ, PKZIP.
@@ -26,7 +32,7 @@ partial class Crc32
         /// <summary>
         /// <para>
         /// Gets CRC-32C algorithm
-        /// which performs checksum computation using x^32 + x^28 + x^27 + x^26 + x^25 + x^23 + x^22 + x^20 + x^19 + x^18 + x^14 + x^13 + x^11 + x^10 + x^9 + x^8 + x^6 + 1 polynomial with initial value of 0xFFFFFFFF.
+        /// which performs checksum computation using <c>x^32 + x^28 + x^27 + x^26 + x^25 + x^23 + x^22 + x^20 + x^19 + x^18 + x^14 + x^13 + x^11 + x^10 + x^9 + x^8 + x^6 + 1</c> polynomial with the initial value of 0xFFFFFFFF.
         /// </para>
         /// <para>
         /// Aliases: CRC-32/BASE91-C, CRC-32/CASTAGNOLI, CRC-32/INTERLAKEN, CRC-32/ISCSI.
@@ -42,7 +48,7 @@ partial class Crc32
         /// <summary>
         /// <para>
         /// Gets CRC-32Q algorithm
-        /// which performs checksum computation using x^32 + x^31 + x^24 + x^22 + x^16 + x^14 + x^8 + x^7 + x^5 + x^3 + x + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^32 + x^31 + x^24 + x^22 + x^16 + x^14 + x^8 + x^7 + x^5 + x^3 + x + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// <para>
         /// Alias: CRC-32/AIXM.
@@ -58,7 +64,7 @@ partial class Crc32
         /// <summary>
         /// <para>
         /// Gets CRC-32/AUTOSAR algorithm
-        /// which performs checksum computation using x^32 + x^31 + x^30 + x^29 + x^28 + x^26 + x^23 + x^21 + x^19 + x^18 + x^15 + x^14 + x^13 + x^12 + x^11 + x^9 + x^8 + x^4 + x + 1 polynomial with initial value of 0xFFFFFFFF.
+        /// which performs checksum computation using <c>x^32 + x^31 + x^30 + x^29 + x^28 + x^26 + x^23 + x^21 + x^19 + x^18 + x^15 + x^14 + x^13 + x^12 + x^11 + x^9 + x^8 + x^4 + x + 1</c> polynomial with the initial value of 0xFFFFFFFF.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -71,7 +77,7 @@ partial class Crc32
         /// <summary>
         /// <para>
         /// Gets CRC-32/POSIX algorithm
-        /// which performs checksum computation using x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// <para>
         /// Aliases: CRC-32/CKSUM, CKSUM.
@@ -87,7 +93,7 @@ partial class Crc32
         /// <summary>
         /// <para>
         /// Gets CRC-32/BZIP2 algorithm
-        /// which performs checksum computation using x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1 polynomial with initial value of 0xFFFFFFFF.
+        /// which performs checksum computation using <c>x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1</c> polynomial with the initial value of 0xFFFFFFFF.
         /// </para>
         /// <para>
         /// Aliases: CRC-32/DECT-B, CRC-32/AAL5, B-CRC-32.
@@ -103,7 +109,7 @@ partial class Crc32
         /// <summary>
         /// <para>
         /// Gets CRC-32/MEF algorithm
-        /// which performs checksum computation using x^32 + x^30 + x^29 + x^28 + x^26 + x^20 + x^19 + x^17 + x^16 + x^15 + x^11 + x^10 + x^7 + x^6 + x^4 + x^2 + x + 1 polynomial with initial value of 0xFFFFFFFF.
+        /// which performs checksum computation using <c>x^32 + x^30 + x^29 + x^28 + x^26 + x^20 + x^19 + x^17 + x^16 + x^15 + x^11 + x^10 + x^7 + x^6 + x^4 + x^2 + x + 1</c> polynomial with the initial value of 0xFFFFFFFF.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -116,7 +122,7 @@ partial class Crc32
         /// <summary>
         /// <para>
         /// Gets CRC-32/MPEG-2 algorithm
-        /// which performs checksum computation using x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1 polynomial with initial value of 0xFFFFFFFF.
+        /// which performs checksum computation using <c>x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1</c> polynomial with the initial value of 0xFFFFFFFF.
         /// </para>
         /// </summary>
         /// <remarks>

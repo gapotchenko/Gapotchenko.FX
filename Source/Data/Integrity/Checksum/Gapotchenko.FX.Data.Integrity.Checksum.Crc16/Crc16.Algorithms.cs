@@ -1,11 +1,17 @@
-﻿namespace Gapotchenko.FX.Data.Integrity.Checksum;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+namespace Gapotchenko.FX.Data.Integrity.Checksum;
 
 partial class Crc16
 {
     /// <summary>
     /// <para>
     /// Gets the standard CRC-16 algorithm
-    /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0.
+    /// which performs checksum computation using <c>x^16 + x^15 + x^2 + 1</c> polynomial with the initial value of 0.
     /// </para>
     /// <para>
     /// Aliases: CRC-16/ARC, CRC-IBM, CRC-16/LHA.
@@ -26,7 +32,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/CCITT algorithm
-        /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^16 + x^12 + x^5 + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// <para>
         /// Aliases: CRC-16/KERMIT, CRC-16/CCITT-TRUE, CRC-16/V-41-LSB, CRC-CCITT, KERMIT.
@@ -42,7 +48,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/ISO-IEC-14443-3-A algorithm
-        /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xC6C6.
+        /// which performs checksum computation using <c>x^16 + x^12 + x^5 + 1</c> polynomial with the initial value of 0xC6C6.
         /// </para>
         /// <para>
         /// Alias: CRC-A.
@@ -58,7 +64,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/ISO-IEC-14443-3-B algorithm
-        /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xFFFF.
+        /// which performs checksum computation using <c>x^16 + x^12 + x^5 + 1</c> polynomial with the initial value of 0xFFFF.
         /// </para>
         /// <para>
         /// Aliases: CRC-16/IBM-SDLC, CRC-16/ISO-HDLC, CRC-16/X-25, CRC-B, X-25.
@@ -74,7 +80,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/NRSC-5 algorithm
-        /// which performs checksum computation using x^16 + x^11 + x^3 + x + 1 polynomial with initial value of 0xFFFF.
+        /// which performs checksum computation using <c>x^16 + x^11 + x^3 + x + 1</c> polynomial with the initial value of 0xFFFF.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -87,7 +93,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/MAXIM algorithm
-        /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^16 + x^15 + x^2 + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// <para>
         /// Alias: CRC-16/MAXIM-DOW.
@@ -103,7 +109,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/SPI-FUJITSU algorithm
-        /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0x1D0F.
+        /// which performs checksum computation using <c>x^16 + x^12 + x^5 + 1</c> polynomial with the initial value of 0x1D0F.
         /// </para>
         /// <para>
         /// Alias: CRC-16/AUG-CCITT.
@@ -119,7 +125,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/UMTS algorithm
-        /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^16 + x^15 + x^2 + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// <para>
         /// Aliases: CRC-16/VERIFONE, CRC-16/BUYPASS.
@@ -135,7 +141,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/USB algorithm
-        /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^16 + x^15 + x^2 + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -148,7 +154,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/XMODEM algorithm
-        /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^16 + x^12 + x^5 + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// <para>
         /// Aliases: CRC-16/ACORN, CRC-16/LTE, CRC-16/V-41-MSB, XMODEM, ZMODEM.
@@ -164,7 +170,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/PROFIBUS algorithm
-        /// which performs checksum computation using x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^6 + x^3 + x^2 + x + 1 polynomial with initial value of 0xFFFF.
+        /// which performs checksum computation using <c>x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^6 + x^3 + x^2 + x + 1</c> polynomial with the initial value of 0xFFFF.
         /// </para>
         /// <para>
         /// Alias: CRC-16/IEC-61158-2.
@@ -180,7 +186,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/MODBUS algorithm
-        /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0xFFFF.
+        /// which performs checksum computation using <c>x^16 + x^15 + x^2 + 1</c> polynomial with the initial value of 0xFFFF.
         /// </para>
         /// <para>
         /// Alias: MODBUS.
@@ -196,7 +202,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/GENIBUS algorithm
-        /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xFFFF.
+        /// which performs checksum computation using <c>x^16 + x^12 + x^5 + 1</c> polynomial with the initial value of 0xFFFF.
         /// </para>
         /// <para>
         /// Aliases: CRC-16/DARC, CRC-16/EPC, CRC-16/EPC-C1G2, CRC-16/I-CODE.
@@ -212,7 +218,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/GSM algorithm
-        /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^16 + x^12 + x^5 + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -225,7 +231,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/OPENSAFETY-A algorithm
-        /// which performs checksum computation using x^16 + x^14 + x^12 + x^11 + x^8 + x^5 + x^4 + x^2 + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^16 + x^14 + x^12 + x^11 + x^8 + x^5 + x^4 + x^2 + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -238,7 +244,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/OPENSAFETY-B algorithm
-        /// which performs checksum computation using x^16 + x^14 + x^13 + x^12 + x^10 + x^8 + x^6 + x^4 + x^3 + x + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^16 + x^14 + x^13 + x^12 + x^10 + x^8 + x^6 + x^4 + x^3 + x + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -251,7 +257,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/TMS37157 algorithm
-        /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0x89EC.
+        /// which performs checksum computation using <c>x^16 + x^12 + x^5 + 1</c> polynomial with the initial value of 0x89EC.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -264,7 +270,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/MCRF4XX algorithm
-        /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xFFFF.
+        /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with the initial value of 0xFFFF.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -277,7 +283,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/DECT-R algorithm
-        /// which performs checksum computation using x^16 + x^10 + x^8 + x^7 + x^3 + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^16 + x^10 + x^8 + x^7 + x^3 + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// <para>
         /// Alias: R-CRC-16.
@@ -293,7 +299,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/DECT-X algorithm
-        /// which performs checksum computation using x^16 + x^10 + x^8 + x^7 + x^3 + 1 polynomial with initial value of 0.
+        /// which performs checksum computation using <c>x^16 + x^10 + x^8 + x^7 + x^3 + 1</c> polynomial with the initial value of 0.
         /// </para>
         /// <para>
         /// Alias: X-CRC-16.
@@ -309,7 +315,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/DDS-110 algorithm
-        /// which performs checksum computation using x^16 + x^15 + x^2 + 1 polynomial with initial value of 0x800D.
+        /// which performs checksum computation using <c>x^16 + x^15 + x^2 + 1</c> polynomial with the initial value of 0x800D.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -322,7 +328,7 @@ partial class Crc16
         /// <summary>
         /// <para>
         /// Gets CRC-16/CCITT-FALSE algorithm
-        /// which performs checksum computation using x^16 + x^12 + x^5 + 1 polynomial with initial value of 0xFFFF.
+        /// which performs checksum computation using <c>x^16 + x^12 + x^5 + 1</c> polynomial with the initial value of 0xFFFF.
         /// </para>
         /// <para>
         /// Aliases: CRC-16/AUTOSAR, CRC-16/IBM-3740.

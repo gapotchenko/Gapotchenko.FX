@@ -128,12 +128,10 @@ class Program
         var iterator = Crc16.Standard.CreateIterator();
         iterator = Crc16.Attested.Ccitt.CreateIterator();
 
-        //var ha = Crc16.Attested.Ccitt.CreateHashAlgorithm();
+        var ha = Crc16.Attested.Ccitt.CreateHashAlgorithm();
 
         var checksum = Crc8.Standard.ComputeChecksum(Encoding.ASCII.GetBytes("123456789"));
         Console.WriteLine("Checksum = 0x{0:x}", checksum);
-
-        Gapotchenko.FX.Data.Encoding.Base32.GetBytes("xzczxcSKaspo;sdasdas;");
     }
 
     static async Task _RunAsync(CancellationToken ct)

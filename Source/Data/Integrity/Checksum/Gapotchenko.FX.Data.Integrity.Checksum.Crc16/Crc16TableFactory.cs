@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Numerics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using Gapotchenko.FX.Numerics;
 using System.Collections.Concurrent;
 
 namespace Gapotchenko.FX.Data.Integrity.Checksum;
