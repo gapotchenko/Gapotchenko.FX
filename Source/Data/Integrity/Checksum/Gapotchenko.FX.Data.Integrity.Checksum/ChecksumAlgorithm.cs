@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2021
 
+using System.Buffers;
 using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Data.Integrity.Checksum;
@@ -37,13 +38,21 @@ public abstract partial class ChecksumAlgorithm<T> : IChecksumAlgorithm<T>
 
         var iterator = CreateIterator();
 
-        var buffer = new byte[BufferSize];
-        for (; ; )
+        var pool = ArrayPool<byte>.Shared;
+        var buffer = pool.Rent(BufferSize);
+        try
         {
-            int bytesRead = stream.Read(buffer, 0, BufferSize);
-            if (bytesRead <= 0)
-                break;
-            iterator.ComputeBlock(buffer.AsSpan(0, bytesRead));
+            for (; ; )
+            {
+                int bytesRead = stream.Read(buffer, 0, BufferSize);
+                if (bytesRead <= 0)
+                    break;
+                iterator.ComputeBlock(buffer.AsSpan(0, bytesRead));
+            }
+        }
+        finally
+        {
+            pool.Return(buffer);
         }
 
         return iterator.ComputeFinal();
@@ -59,19 +68,23 @@ public abstract partial class ChecksumAlgorithm<T> : IChecksumAlgorithm<T>
 
         var iterator = CreateIterator();
 
-        var buffer = new byte[BufferSize];
-        for (; ; )
+        var pool = ArrayPool<byte>.Shared;
+        var buffer = pool.Rent(BufferSize);
+        try
         {
-            int bytesRead = await
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-                stream.ReadAsync(buffer, cancellationToken)
-#else
-                stream.ReadAsync(buffer, 0, BufferSize, cancellationToken)
-#endif
-                .ConfigureAwait(false);
-            if (bytesRead <= 0)
-                break;
-            iterator.ComputeBlock(buffer.AsSpan(0, bytesRead));
+            for (; ; )
+            {
+                int bytesRead = await
+                    stream.ReadAsync(buffer, 0, BufferSize, cancellationToken)
+                    .ConfigureAwait(false);
+                if (bytesRead <= 0)
+                    break;
+                iterator.ComputeBlock(buffer.AsSpan(0, bytesRead));
+            }
+        }
+        finally
+        {
+            pool.Return(buffer);
         }
 
         return iterator.ComputeFinal();
