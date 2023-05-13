@@ -843,14 +843,18 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                 }
             }
 
-            m_SourceEnumerator ??= m_Source.GetEnumerator();
-            var moveNext = m_SourceEnumerator.MoveNext();
-            Current = m_SourceEnumerator.Current;
+            var enumerator = m_SourceEnumerator ??= m_Source.GetEnumerator();
 
+            var moveNext = enumerator.MoveNext();
             if (!moveNext)
+            {
                 m_EndOfData = true;
+            }
             else
+            {
+                Current = enumerator.Current;
                 m_Index++;
+            }
 
             return moveNext;
         }

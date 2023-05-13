@@ -32,6 +32,7 @@ Release date: not released yet
   - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
 - .NET Framework 4.6 support is retired. The minimal supported .NET Framework version is 4.6.1
 - Fixed case-sensitivity of a text data encoding padding character. This is important for data encodings that use custom padding characters
+- Fixed issue in `Gapotchenko.FX.Collections.Generic.AssociativeArray<TKey, TValue>` type with accessing `IEnumerable<T>.Current` property without checking the result of a prior call to `MoveNext` method
 
 ## 2022
 
