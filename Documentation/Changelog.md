@@ -6,29 +6,31 @@
 
 Release date: not released yet
 
+- Preliminary .NET 8.0 support
 - Introduced primitives for interval arithmetics represented by `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
 - Added ability to choose between lowercase or uppercase text output of a case-insensitive data encoding
 - Added ability to create streams over contiguous memory regions represented by `System.Memory` and `System.ReadOnlyMemory` objects by using `ToStream` extension methods provided by `Gapotchenko.FX.Memory` module
 - Added `Gapotchenko.FX.Memory.SpanEqualityComparer` that allows to compare read-only spans and calculate their hash codes
 - `AssemblyAutoLoader` now understands probing paths defined by assembly binding redirects
-- Added polyfill for a LINQ-style pipe operator
-- Added polyfill for required properties introduced in C# 11.0
-- Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
-- Added `ExceptBy`, `IntersectBy` and `UnionBy` LINQ polyfills for `IEnumerable<T>`
-- Added `Order` and `OrderDescending` LINQ polyfills for `IEnumerable<T>`
-- Added `Chunk` LINQ polyfill for `IEnumerable<T>`
-- Added polyfill for `System.ArraySegment<T>.Slice` method
-- Added polyfill for `System.IO.Path.GetRelativePath` method
-- Added polyfill for `System.IO.Path.TrimEndingDirectorySeparator` method
-- Added polyfills for `ReadExactly` and `ReadAtLeast` methods of `System.IO.Stream` type
-- Added polyfill for `System.Char.Equals(System.Char, System.StringComparison)` method
-- Added polyfill for `System.String.Contains(System.Char, System.StringComparison)` method
-- Added polyfill for `System.String.GetHashCode(System.StringComparison)` method
-- Added polyfills for `Split` and `SplitAny` methods of `System.ReadOnlySpan<char>` type
-- Added polyfill for `ReadSpan` method of `System.Runtime.InteropServices.SafeBuffer` type
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
-- .NET Framework 4.6 target is retired. The minimal supported .NET Framework version is 4.6.1
-- Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
+- Polyfills:
+  - Added polyfill for a LINQ-style pipe operator
+  - Added polyfill for required properties introduced in C# 11.0
+  - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
+  - Added `ExceptBy`, `IntersectBy` and `UnionBy` LINQ polyfills for `IEnumerable<T>`
+  - Added `Order` and `OrderDescending` LINQ polyfills for `IEnumerable<T>`
+  - Added `Chunk` LINQ polyfill for `IEnumerable<T>`
+  - Added polyfill for `System.ArraySegment<T>.Slice` method
+  - Added polyfill for `System.IO.Path.GetRelativePath` method
+  - Added polyfill for `System.IO.Path.TrimEndingDirectorySeparator` method
+  - Added polyfills for `ReadExactly` and `ReadAtLeast` methods of `System.IO.Stream` type
+  - Added polyfill for `System.Char.Equals(System.Char, System.StringComparison)` method
+  - Added polyfill for `System.String.Contains(System.Char, System.StringComparison)` method
+  - Added polyfill for `System.String.GetHashCode(System.StringComparison)` method
+  - Added polyfills for `Split` and `SplitAny` methods of `System.ReadOnlySpan<char>` type
+  - Added polyfill for `ReadSpan` method of `System.Runtime.InteropServices.SafeBuffer` type
+  - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
+- .NET Framework 4.6 support is retired. The minimal supported .NET Framework version is 4.6.1
 - Fixed case-sensitivity of a text data encoding padding character. This is important for data encodings that use custom padding characters
 
 ## 2022
