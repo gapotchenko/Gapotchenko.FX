@@ -168,8 +168,9 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
   - [Gapotchenko.FX.Math.Geometry](../Gapotchenko.FX.Math.Geometry)
   - [Gapotchenko.FX.Math.Topology](../Gapotchenko.FX.Math.Topology)
 - [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
-- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
+- [Gapotchenko.FX.Security.Cryptography](../Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
+- [Gapotchenko.FX.ValueTuple](../Gapotchenko.FX.ValueTuple)
 
 Or look at the [full list of modules](..#available-modules).

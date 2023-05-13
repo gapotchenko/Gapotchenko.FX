@@ -120,8 +120,10 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
 - [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
-- [Gapotchenko.FX.Security.Cryptography](../Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
+- [Gapotchenko.FX.Runtime.InteropServices](../Gapotchenko.FX.Runtime.InteropServices)
+- [Gapotchenko.FX.Security.Cryptography](../Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
 - &#x27B4; [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
+- [Gapotchenko.FX.ValueTuple](../Gapotchenko.FX.ValueTuple)
 
 Or look at the [full list of modules](..#available-modules).

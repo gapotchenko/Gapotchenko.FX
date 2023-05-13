@@ -53,7 +53,7 @@ static class GenerateTocCommand
         {
             (".", false),
             ("Data", true),
-            ("Security", true)
+            //("Security", true)
         };
 
         var projectFolders = Enumerable.Empty<string>();

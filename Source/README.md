@@ -40,9 +40,11 @@ The full list of Gapotchenko.FX modules is presented in the table below.
 - [Gapotchenko.FX.Numerics](Gapotchenko.FX.Numerics) ✱
 - [Gapotchenko.FX.Reflection.Loader](Gapotchenko.FX.Reflection.Loader) ✱
 - [Gapotchenko.FX.Runtime.CompilerServices.Intrinsics](Gapotchenko.FX.Runtime.CompilerServices.Intrinsics) ✱✱
-- [Gapotchenko.FX.Security.Cryptography](Security/Cryptography/Gapotchenko.FX.Security.Cryptography)
+- [Gapotchenko.FX.Runtime.InteropServices](Gapotchenko.FX.Runtime.InteropServices)
+- [Gapotchenko.FX.Security.Cryptography](Gapotchenko.FX.Security.Cryptography)
 - [Gapotchenko.FX.Text](Gapotchenko.FX.Text)
 - [Gapotchenko.FX.Threading](Gapotchenko.FX.Threading)
+- [Gapotchenko.FX.ValueTuple](Gapotchenko.FX.ValueTuple)
 
 ### Legend
 
