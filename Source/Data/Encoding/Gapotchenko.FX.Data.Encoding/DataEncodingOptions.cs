@@ -108,5 +108,15 @@ public enum DataEncodingOptions
     /// This option can only be specified for case-insensitive text data encodings.
     /// </para>
     /// </summary>
-    Uppercase = 1 << 9
+    Uppercase = 1 << 9,
+
+    /// <summary>
+    /// <para>
+    /// Disallows characters not present in the encoding alphabet.
+    /// </para>
+    /// <para>
+    /// If this option is specified, the text data encoding does not tolerate insignificant characters such as white spaces during decoding operation.
+    /// </para>
+    /// </summary>
+    Pure = 1 << 10
 }

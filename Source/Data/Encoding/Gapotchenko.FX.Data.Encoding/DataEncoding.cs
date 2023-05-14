@@ -56,6 +56,32 @@ public abstract class DataEncoding : IDataEncoding
 
         #endregion
 
+        #region Pure
+
+        const DataEncodingOptions PureMask1 = DataEncodingOptions.Pure | DataEncodingOptions.Indent;
+        if ((options & PureMask1) == PureMask1)
+        {
+            throw new ArgumentException(
+                string.Format(
+                    Properties.Resources.XAndYDataEncodingOptionsCannotBeUsedSimultaneously,
+                    nameof(DataEncodingOptions.Pure),
+                    nameof(DataEncodingOptions.Indent)),
+                nameof(options));
+        }
+
+        const DataEncodingOptions PureMask2 = DataEncodingOptions.Pure | DataEncodingOptions.Relax;
+        if ((options & PureMask2) == PureMask2)
+        {
+            throw new ArgumentException(
+                string.Format(
+                    Properties.Resources.XAndYDataEncodingOptionsCannotBeUsedSimultaneously,
+                    nameof(DataEncodingOptions.Pure),
+                    nameof(DataEncodingOptions.Relax)),
+                nameof(options));
+        }
+
+        #endregion
+
         return options;
     }
 

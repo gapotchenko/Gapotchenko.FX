@@ -185,8 +185,9 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
                     if ((m_Options & DataEncodingOptions.Relax) == 0)
                     {
                         bool ok =
-                            c == '-' ||
-                            char.IsWhiteSpace(c);
+                            (m_Options & DataEncodingOptions.Pure) == 0 &&
+                            (c == '-' ||
+                            char.IsWhiteSpace(c));
 
                         if (!ok)
                         {

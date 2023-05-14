@@ -265,7 +265,8 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
                 {
                     if ((m_Options & DataEncodingOptions.Relax) == 0)
                     {
-                        if (!char.IsWhiteSpace(c))
+                        if ((m_Options & DataEncodingOptions.Pure) != 0 ||
+                            !char.IsWhiteSpace(c))
                         {
                             if (throwOnError)
                                 throw new InvalidDataException($"Encountered a non-{Name} character.");

@@ -302,7 +302,8 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
                 {
                     if (!relax)
                     {
-                        if (!char.IsWhiteSpace(c))
+                        if ((m_Options & DataEncodingOptions.Pure) != 0 ||
+                            !char.IsWhiteSpace(c))
                         {
                             if (throwOnError)
                                 throw new InvalidDataException($"Encountered an invalid {Name} character.");

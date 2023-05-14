@@ -268,6 +268,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
             bool isCaseSensitive = alphabet.IsCaseSensitive;
             var paddingChar = m_Encoding.PaddingChar;
             bool relax = (options & DataEncodingOptions.Relax) != 0;
+            bool pure = (m_Options & DataEncodingOptions.Pure) != 0;
 
             foreach (var c in input)
             {
@@ -291,8 +292,9 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                     if (!relax)
                     {
                         bool ok =
-                            char.IsWhiteSpace(c) ||
-                            c == Separator;
+                            !pure &&
+                            (char.IsWhiteSpace(c) ||
+                            c == Separator);
 
                         if (!ok)
                         {
