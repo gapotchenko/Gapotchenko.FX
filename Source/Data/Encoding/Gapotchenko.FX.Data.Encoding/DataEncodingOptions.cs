@@ -25,9 +25,9 @@ public enum DataEncodingOptions
     /// Validate the padding in decoding operation or enforce its generation in encoding operation.
     /// </summary>
     /// <remarks>
-    /// In some data encodings, the length of an output-encoded string must be a multiple of the predefined number of characters.
-    /// The encoder adds padding characters at the end of the output as needed in order to meet this requirement.
-    /// The added suffix is called padding.
+    /// In some data encodings, the length of an encoded string must be a multiple of the predefined number of characters.
+    /// If this is the case, an encoder may add padding characters to the output string as needed in order to meet this requirement.
+    /// This added suffix is called padding.
     /// </remarks>
     Padding = 1 << 1,
 
@@ -36,7 +36,10 @@ public enum DataEncodingOptions
     /// Leave an underlying data object such as <see cref="Stream"/>, <see cref="TextReader"/>, or <see cref="TextWriter"/> open.
     /// </para>
     /// <para>
-    /// This option only applies to <see cref="IDataEncoding.CreateEncoder(Stream, DataEncodingOptions)"/>, <see cref="IDataEncoding.CreateDecoder(Stream, DataEncodingOptions)"/> and similar operations.
+    /// This option only applies to
+    /// <see cref="IDataEncoding.CreateEncoder(Stream, DataEncodingOptions)"/>,
+    /// <see cref="IDataEncoding.CreateDecoder(Stream, DataEncodingOptions)"/>,
+    /// and similar operations.
     /// </para>
     /// </summary>
     NoOwnership = 1 << 2,
