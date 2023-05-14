@@ -212,19 +212,38 @@ public static class TextDataEncodingTestBench
     public static void RoundTrip(ITextDataEncoding encoding, ReadOnlySpan<byte> raw, DataEncodingOptions options = default)
     {
         string actualEncoded = encoding.GetString(raw, options);
-        var actualDecoded = encoding.GetBytes(actualEncoded.AsSpan(), options);
 
-        if (!raw.SequenceEqual(actualDecoded))
+        static void VerifyDecoding(ITextDataEncoding encoding, ReadOnlySpan<byte> raw, string encoded, DataEncodingOptions options)
         {
-            Assert.Fail(
-                "Encoding round trip error for data block {0}. Actual decoded data are {1}.",
-                Base16.GetString(raw, DataEncodingOptions.Indent),
-                Base16.GetString(actualDecoded, DataEncodingOptions.Indent));
+            var actualDecoded = encoding.GetBytes(encoded.AsSpan(), options);
+
+            if (!raw.SequenceEqual(actualDecoded))
+            {
+                Assert.Fail(
+                    "Encoding round trip error for data block {0}. Actual decoded data are {1}.",
+                    Base16.GetString(raw, DataEncodingOptions.Indent),
+                    Base16.GetString(actualDecoded, DataEncodingOptions.Indent));
+            }
+        }
+
+        VerifyDecoding(encoding, raw, actualEncoded, options);
+
+        if (!encoding.IsCaseSensitive)
+        {
+            VerifyDecoding(encoding, raw, actualEncoded.ToUpperInvariant(), options);
+            VerifyDecoding(encoding, raw, actualEncoded.ToLowerInvariant(), options);
         }
     }
 
-    public static void RoundTrip(ITextDataEncoding encoding, string s, Encoding stringEncoding, DataEncodingOptions options = default) =>
-        RoundTrip(encoding, stringEncoding.GetBytes(s), options);
+    public static void RoundTrip(ITextDataEncoding encoding, string s, Encoding stringEncoding, DataEncodingOptions options = default)
+    {
+        var raw = stringEncoding.GetBytes(s);
+
+        RoundTrip(encoding, raw, options);
+
+        if ((options & (DataEncodingOptions.Pure | DataEncodingOptions.Indent | DataEncodingOptions.Relax)) == 0)
+            RoundTrip(encoding, raw, options | DataEncodingOptions.Pure);
+    }
 
     public static void RoundTrip(ITextDataEncoding encoding, string s, DataEncodingOptions options = default)
     {
