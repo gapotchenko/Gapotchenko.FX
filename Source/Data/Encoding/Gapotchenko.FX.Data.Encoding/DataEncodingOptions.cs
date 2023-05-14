@@ -12,13 +12,11 @@ public enum DataEncodingOptions
     None = 0,
 
     /// <summary>
-    /// Inhibit generation of padding during the encoding operation.
+    /// Inhibit generation of a padding during the encoding operation.
     /// </summary>
     NoPadding = 1 << 0,
 
-    /// <summary>
-    /// Inhibit generation of padding during the encoding operation.
-    /// </summary>
+    /// <inheritdoc cref="NoPadding"/>
     [Obsolete($"Use {nameof(NoPadding)} instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     Unpad = NoPadding,
