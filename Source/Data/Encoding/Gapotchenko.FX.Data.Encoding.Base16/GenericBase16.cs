@@ -56,6 +56,11 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
     /// </summary>
     public new const float Efficiency = (float)BytesPerDecodedBlock / SymbolsPerEncodedBlock;
 
+    /// <summary>
+    /// Gets the number of Base16 symbols per encoded byte of data.
+    /// </summary>
+    public const int SymbolsPerByte = SymbolsPerEncodedBlock / BytesPerDecodedBlock;
+
     #endregion
 
     /// <inheritdoc/>
