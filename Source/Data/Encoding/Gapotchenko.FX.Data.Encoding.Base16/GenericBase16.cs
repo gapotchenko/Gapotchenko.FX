@@ -28,6 +28,8 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
 
     #region Parameters
 
+    private protected const string Name = "Base16";
+
     /// <summary>
     /// The base of the encoding.
     /// </summary>
@@ -79,8 +81,6 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
         protected readonly DataEncodingOptions m_Options;
 
         #region Parameters
-
-        protected const string Name = "Base16";
 
         protected const int MaskSymbol = (1 << BitsPerSymbol) - 1;
 

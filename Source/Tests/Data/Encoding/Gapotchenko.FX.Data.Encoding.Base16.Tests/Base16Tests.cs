@@ -20,6 +20,9 @@ public class Base16Tests
         var actualDecoded = Base16.GetBytes(actualEncoded);
         Assert.IsTrue(rawBytes.SequenceEqual(actualDecoded));
 
+        actualDecoded = Base16.GetBytes(actualEncoded, DataEncodingOptions.Pure);
+        Assert.IsTrue(rawBytes.SequenceEqual(actualDecoded));
+
         // -----------------------------------------------------------------
 
         var instance = Base16.Instance;
@@ -37,25 +40,14 @@ public class Base16Tests
     }
 
     [TestMethod]
-    public void Base16_Rfc4648_TV1() => TestVector("", "");
-
-    [TestMethod]
-    public void Base16_Rfc4648_TV2() => TestVector("f", "66");
-
-    [TestMethod]
-    public void Base16_Rfc4648_TV3() => TestVector("fo", "666F");
-
-    [TestMethod]
-    public void Base16_Rfc4648_TV4() => TestVector("foo", "666F6F");
-
-    [TestMethod]
-    public void Base16_Rfc4648_TV5() => TestVector("foob", "666F6F62");
-
-    [TestMethod]
-    public void Base16_Rfc4648_TV6() => TestVector("fooba", "666F6F6261");
-
-    [TestMethod]
-    public void Base16_Rfc4648_TV7() => TestVector("foobar", "666F6F626172");
+    [DataRow("", "")]
+    [DataRow("f", "66")]
+    [DataRow("fo", "666F")]
+    [DataRow("foo", "666F6F")]
+    [DataRow("foob", "666F6F62")]
+    [DataRow("fooba", "666F6F6261")]
+    [DataRow("foobar", "666F6F626172")]
+    public void Base16_Rfc4648_TV(string raw, string encoded) => TestVector(raw, encoded);
 
     [TestMethod]
     public void Base16_RT_Random() => TextDataEncodingTestBench.RandomRoundTrip(Base16.Instance, 16, 100000);
