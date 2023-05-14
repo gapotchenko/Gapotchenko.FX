@@ -16,10 +16,12 @@ public enum DataEncodingOptions
     /// </summary>
     NoPadding = 1 << 0,
 
+#if BINARY_COMPATIBILITY
     /// <inheritdoc cref="NoPadding"/>
     [Obsolete($"Use {nameof(NoPadding)} instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     Unpad = NoPadding,
+#endif
 
     /// <summary>
     /// Validate the padding in decoding operation or enforce its generation in encoding operation.
