@@ -43,7 +43,7 @@ public static class SafeBufferPolyfills
             throw new ArgumentNullException(nameof(safeBuffer));
 
 #if TFF_SAFEBUFFER_READSPAN
-        safeBuffer.ReadSpan<byte>(byteOffset, buffer);
+        safeBuffer.ReadSpan(byteOffset, buffer);
 #else
         byte* handle = null;
 #if !NET5_0_OR_GREATER
