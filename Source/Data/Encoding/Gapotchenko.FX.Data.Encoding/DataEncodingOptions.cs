@@ -115,7 +115,7 @@ public enum DataEncodingOptions
     /// Disallows characters not present in the encoding alphabet.
     /// </para>
     /// <para>
-    /// If this option is specified, the text data encoding does not tolerate insignificant characters such as white spaces during decoding operation.
+    /// If this option is specified, the text data encoding will not allow non-significant characters such as white spaces during decoding operation treating them as invalid characters.
     /// </para>
     /// </summary>
     Pure = 1 << 10
