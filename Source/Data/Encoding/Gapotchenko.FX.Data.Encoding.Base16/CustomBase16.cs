@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
-/// Customizable Base16 encoding.
+/// Provides implementation of a customizable Base16 encoding.
 /// </summary>
 public class CustomBase16 : GenericBase16
 {
