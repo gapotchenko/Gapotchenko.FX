@@ -5,7 +5,7 @@ partial class Base16
     static class FastDecoder
     {
         public static bool SupportsOptions(DataEncodingOptions options) =>
-            (options & DataEncodingOptions.Pure) != 0;
+            (options & (DataEncodingOptions.Pure | DataEncodingOptions.Indent | DataEncodingOptions.Relax)) == DataEncodingOptions.Pure;
 
         public static byte[]? GetBytes(ReadOnlySpan<char> input, bool throwOnError)
         {
