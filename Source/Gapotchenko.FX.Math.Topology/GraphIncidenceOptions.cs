@@ -23,8 +23,11 @@ public enum GraphIncidenceOptions
     ReflexiveReduction = 1 << 1,
 
     /// <summary>
-    /// Specifies to produce a mostly connected graph
+    /// Specifies to produce a connected graph
     /// by excluding vertices that are not incident with any edge.
     /// </summary>
+    /// <remarks>
+    /// A singleton graph (containing only one vertex) is always connected by definition.
+    /// </remarks>
     Connected = 1 << 2
 }
