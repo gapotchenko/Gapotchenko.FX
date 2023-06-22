@@ -18,4 +18,12 @@ static class ArrayEqualityComparer
 
         return true;
     }
+
+    public static int GetHashCode(byte[] obj)
+    {
+        uint hash = 2166136261;
+        foreach (var i in obj)
+            hash = (hash ^ i) * 16777619;
+        return (int)hash;
+    }
 }

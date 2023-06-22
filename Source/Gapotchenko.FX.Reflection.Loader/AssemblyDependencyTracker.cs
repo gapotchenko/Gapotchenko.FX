@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Gapotchenko.FX.Reflection.Loader.Util;
+using System.Reflection;
 
 namespace Gapotchenko.FX.Reflection.Loader;
 
@@ -15,7 +16,7 @@ sealed class AssemblyDependencyTracker
         //    _TrackedAssemblyNames.Add(i);
     }
 
-    readonly HashSet<AssemblyName> _TrackedAssemblyNames = new();
+    readonly HashSet<AssemblyName> _TrackedAssemblyNames = new(AssemblyNameEqualityComparer.Instance);
 
     public bool IsAssemblyResolutionInhibited(Assembly? requestingAssembly)
     {
