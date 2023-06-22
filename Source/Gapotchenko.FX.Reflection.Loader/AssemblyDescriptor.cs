@@ -109,7 +109,8 @@ sealed class AssemblyDescriptor : IDisposable
         if (newProbingPaths.Count == 0)
             return false;
 
-        (m_ProbingPathAssemblyLoaderBackends ??= new()).Add(
+        (m_ProbingPathAssemblyLoaderBackends ??= new())
+        .Add(
             new HeuristicAssemblyLoaderBackend(
                 m_IsAttached,
                 m_AssemblyLoadPal,

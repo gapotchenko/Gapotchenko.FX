@@ -10,21 +10,21 @@ sealed class AssemblyDependencyTracker
         if (assembly == null)
             throw new ArgumentNullException(nameof(assembly));
 
-        _TrackedAssemblyNames.Add(assembly.GetName());
+        m_TrackedAssemblyNames.Add(assembly.GetName());
 
         //foreach (var i in assembly.GetReferencedAssemblies())
         //    _TrackedAssemblyNames.Add(i);
     }
 
-    readonly HashSet<AssemblyName> _TrackedAssemblyNames = new(AssemblyNameEqualityComparer.Instance);
+    readonly HashSet<AssemblyName> m_TrackedAssemblyNames = new(AssemblyNameEqualityComparer.Instance);
 
     public bool IsAssemblyResolutionInhibited(Assembly? requestingAssembly)
     {
         if (requestingAssembly != null)
         {
             var name = requestingAssembly.GetName();
-            lock (_TrackedAssemblyNames)
-                if (!_TrackedAssemblyNames.Contains(name))
+            lock (m_TrackedAssemblyNames)
+                if (!m_TrackedAssemblyNames.Contains(name))
                     return true;
         }
         return false;
@@ -32,13 +32,13 @@ sealed class AssemblyDependencyTracker
 
     public bool RegisterReferencedAssembly(AssemblyName assemblyName)
     {
-        lock (_TrackedAssemblyNames)
-            return _TrackedAssemblyNames.Add(assemblyName);
+        lock (m_TrackedAssemblyNames)
+            return m_TrackedAssemblyNames.Add(assemblyName);
     }
 
     public void UnregisterReferencedAssembly(AssemblyName assemblyName)
     {
-        lock (_TrackedAssemblyNames)
-            _TrackedAssemblyNames.Remove(assemblyName);
+        lock (m_TrackedAssemblyNames)
+            m_TrackedAssemblyNames.Remove(assemblyName);
     }
 }
