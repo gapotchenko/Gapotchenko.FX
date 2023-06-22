@@ -23,6 +23,8 @@ sealed class AssemblyDescriptor : IDisposable
             new Uri(assembly.EscapedCodeBase).LocalPath;
 #endif
 
+        string? assemblyDirectoryPath = Path.GetDirectoryName(assemblyFilePath);
+
         if (BindingRedirectAssemblyLoaderBackend.TryCreate(
             assemblyFilePath,
             assemblyAutoLoader,
@@ -32,16 +34,22 @@ sealed class AssemblyDescriptor : IDisposable
             out var bindingProbingPaths))
         {
             m_HasBindingRedirects = m_AssemblyLoaderBackend != null;
-            AddProbingPaths(bindingProbingPaths);
+
+            var probingPaths = new List<string>();
+            if (bindingProbingPaths != null)
+                probingPaths.AddRange(bindingProbingPaths);
+            if (!string.IsNullOrEmpty(assemblyDirectoryPath))
+                probingPaths.Add(assemblyDirectoryPath);
+            AddProbingPaths(probingPaths);
+
             AddProbingPaths(additionalProbingPaths);
         }
         else
         {
             var probingPaths = new List<string>();
 
-            var path = Path.GetDirectoryName(assemblyFilePath);
-            if (!string.IsNullOrEmpty(path))
-                probingPaths.Add(path);
+            if (!string.IsNullOrEmpty(assemblyDirectoryPath))
+                probingPaths.Add(assemblyDirectoryPath);
 
             if (additionalProbingPaths != null)
                 AccumulateNewProbingPaths(probingPaths, additionalProbingPaths);
