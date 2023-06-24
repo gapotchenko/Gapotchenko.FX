@@ -191,11 +191,10 @@ class Program
         Console.WriteLine(appInfo.ProductName);
         Console.WriteLine(appInfo.InformationalVersion);
 
-        var cs = new AsyncCriticalSection();
-        using (await cs.EnterScopeAsync())
+        var mutex = new AsyncMutex();
+
+        using (await mutex.ScopedLockAsync())
         {
-
-
             await Console.Out.WriteLineAsync("123");
         }
     }
