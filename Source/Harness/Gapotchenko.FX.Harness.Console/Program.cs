@@ -14,6 +14,8 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
+using Gapotchenko.FX.Threading;
+using Gapotchenko.FX.Linq.Operators;
 #endregion
 
 #nullable enable
@@ -188,5 +190,13 @@ class Program
         Console.WriteLine(appInfo.Copyright);
         Console.WriteLine(appInfo.ProductName);
         Console.WriteLine(appInfo.InformationalVersion);
+
+        var cs = new AsyncCriticalSection();
+        using (await cs.EnterScopeAsync())
+        {
+
+
+            await Console.Out.WriteLineAsync("123");
+        }
     }
 }
