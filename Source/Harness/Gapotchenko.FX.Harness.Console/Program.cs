@@ -26,7 +26,19 @@ using Console = System.Console;
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main()
+    {
+        try
+        {
+            await _RunAsync(default);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    static void Main2(string[] args)
     {
         try
         {
@@ -138,7 +150,7 @@ class Program
 
     static async Task _RunAsync(CancellationToken ct)
     {
-        await Task.Yield();
+        //await Task.Yield();
 
 #if false
         string s = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit, lectus et dapibus ultricies, sem nulla finibus dolor, vitae pharetra urna risus eget nunc. Nunc laoreet condimentum magna, a varius massa auctor in. Mauris cursus sodales justo eget faucibus. Nullam nec nisi eget lorem faucibus feugiat. Fusce sed iaculis turpis, ut vestibulum ipsum.";
@@ -191,10 +203,17 @@ class Program
         Console.WriteLine(appInfo.ProductName);
         Console.WriteLine(appInfo.InformationalVersion);
 
-        var mutex = new AsyncMutex();
+        var mutex = new AsyncRecursiveMutex();
 
         using (await mutex.LockScopeAsync())
         {
+            using (await mutex.LockScopeAsync())
+            {
+                await Task.Yield();
+                await Console.Out.WriteLineAsync("345").ConfigureAwait(false);
+            }
+
+            await Task.Yield();
             await Console.Out.WriteLineAsync("123");
         }
     }
