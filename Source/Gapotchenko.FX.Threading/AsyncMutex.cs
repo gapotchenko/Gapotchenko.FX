@@ -10,17 +10,14 @@ namespace Gapotchenko.FX.Threading;
 public sealed class AsyncMutex
 {
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly SemaphoreSlim m_Semaphore = new(1);
+    AsyncMutexCoreImpl m_CoreImpl = new();
 
     /// <summary>
     /// Blocks the current thread until it can lock the <see cref="AsyncMutex"/>.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public void Lock(CancellationToken cancellationToken = default)
-    {
-        m_Semaphore.Wait(cancellationToken);
-    }
+    public void Lock(CancellationToken cancellationToken = default) => m_CoreImpl.Lock(cancellationToken);
 
     /// <summary>
     /// Tries to lock the <see cref="AsyncMutex"/>.
@@ -52,10 +49,8 @@ public sealed class AsyncMutex
     /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public bool TryLock(TimeSpan timeout, CancellationToken cancellationToken = default)
-    {
-        return m_Semaphore.Wait(timeout, cancellationToken);
-    }
+    public bool TryLock(TimeSpan timeout, CancellationToken cancellationToken = default) =>
+        m_CoreImpl.TryLock(timeout, cancellationToken);
 
     /// <summary>
     /// Blocks the current thread until it can lock the <see cref="AsyncMutex"/>,
@@ -78,10 +73,8 @@ public sealed class AsyncMutex
     /// <paramref name="millisecondsTimeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public bool TryLock(int millisecondsTimeout, CancellationToken cancellationToken = default)
-    {
-        return m_Semaphore.Wait(millisecondsTimeout, cancellationToken);
-    }
+    public bool TryLock(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
+        m_CoreImpl.TryLock(millisecondsTimeout, cancellationToken);
 
     /// <summary>
     /// Asynchronously waits to lock the <see cref="AsyncMutex"/>.
@@ -91,10 +84,7 @@ public sealed class AsyncMutex
     /// A task that will complete when the <see cref="AsyncMutex"/> has been locked.
     /// </returns>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public Task LockAsync(CancellationToken cancellationToken = default)
-    {
-        return m_Semaphore.WaitAsync(cancellationToken);
-    }
+    public Task LockAsync(CancellationToken cancellationToken = default) => m_CoreImpl.LockAsync(cancellationToken);
 
     /// <summary>
     /// Asynchronously waits to lock the <see cref="AsyncMutex"/>,
@@ -117,10 +107,8 @@ public sealed class AsyncMutex
     /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
-    {
-        return m_Semaphore.WaitAsync(timeout, cancellationToken);
-    }
+    public Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
+        m_CoreImpl.TryLockAsync(timeout, cancellationToken);
 
     /// <summary>
     /// Asynchronously waits to lock the <see cref="AsyncMutex"/>,
@@ -143,31 +131,19 @@ public sealed class AsyncMutex
     /// <paramref name="millisecondsTimeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken = default)
-    {
-        return m_Semaphore.WaitAsync(millisecondsTimeout, cancellationToken);
-    }
+    public Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
+        m_CoreImpl.TryLockAsync(millisecondsTimeout, cancellationToken);
 
     /// <summary>
     /// Unlocks the <see cref="AsyncMutex"/>.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Cannot unlock a non-locked critical section.</exception>
-    public void Unlock()
-    {
-        try
-        {
-            m_Semaphore.Release();
-        }
-        catch (SemaphoreFullException)
-        {
-            throw new InvalidOperationException("Cannot unlock a non-locked mutex.");
-        }
-    }
+    /// <exception cref="InvalidOperationException">Cannot unlock a non-locked <see cref="AsyncMutex"/>.</exception>
+    public void Unlock() => m_CoreImpl.Unlock();
 
     /// <summary>
     /// Gets a value indicating whether the <see cref="AsyncMutex"/> is locked by a thread.
     /// </summary>
-    public bool IsLocked => m_Semaphore.CurrentCount != 1;
+    public bool IsLocked => m_CoreImpl.IsLocked;
 
     /// <summary>
     /// Defines a disposable scope of an <see cref="AsyncMutex"/> access to a resource.
@@ -204,7 +180,7 @@ public sealed class AsyncMutex
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A scope that can be disposed to unlock the <see cref="AsyncMutex"/>.</returns>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public Scope ScopedLock(CancellationToken cancellationToken = default)
+    public Scope LockScope(CancellationToken cancellationToken = default)
     {
         Lock(cancellationToken);
         return new Scope(this);
@@ -218,7 +194,7 @@ public sealed class AsyncMutex
     /// A scope that can be disposed to unlock the <see cref="AsyncMutex"/>.
     /// <see cref="Scope.WasLocked"/> property indicates whether the current thread successfully locked the <see cref="AsyncMutex"/>.
     /// </returns>
-    public Scope TryScopedLock() => TryScopedLock(0);
+    public Scope TryLockScope() => TryLockScope(0);
 
     /// <summary>
     /// Blocks the current thread until it can lock the <see cref="AsyncMutex"/>,
@@ -242,7 +218,7 @@ public sealed class AsyncMutex
     /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public Scope TryScopedLock(TimeSpan timeout, CancellationToken cancellationToken = default) =>
+    public Scope TryLockScope(TimeSpan timeout, CancellationToken cancellationToken = default) =>
         new(TryLock(timeout, cancellationToken) ? this : null);
 
     /// <summary>
@@ -267,7 +243,7 @@ public sealed class AsyncMutex
     /// <paramref name="millisecondsTimeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public Scope TryScopedLock(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
+    public Scope TryLockScope(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         new(TryLock(millisecondsTimeout, cancellationToken) ? this : null);
 
     /// <summary>
@@ -279,7 +255,7 @@ public sealed class AsyncMutex
     /// </returns>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public async Task<Scope> ScopedLockAsync(CancellationToken cancellationToken = default)
+    public async Task<Scope> LockScopeAsync(CancellationToken cancellationToken = default)
     {
         await LockAsync(cancellationToken).ConfigureAwait(false);
         return new Scope(this);
@@ -307,7 +283,7 @@ public sealed class AsyncMutex
     /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public async Task<Scope> TryScopedLockAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
+    public async Task<Scope> TryLockScopeAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
         new(await TryLockAsync(timeout, cancellationToken).ConfigureAwait(false) ? this : null);
 
     /// <summary>
@@ -332,6 +308,6 @@ public sealed class AsyncMutex
     /// <paramref name="millisecondsTimeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public async Task<Scope> TryScopedLockAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
+    public async Task<Scope> TryLockScopeAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         new(await TryLockAsync(millisecondsTimeout, cancellationToken).ConfigureAwait(false) ? this : null);
 }

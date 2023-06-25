@@ -193,7 +193,7 @@ class Program
 
         var mutex = new AsyncMutex();
 
-        using (await mutex.ScopedLockAsync())
+        using (await mutex.LockScopeAsync())
         {
             await Console.Out.WriteLineAsync("123");
         }
