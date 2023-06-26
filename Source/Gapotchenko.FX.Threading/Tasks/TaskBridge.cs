@@ -122,34 +122,32 @@ public static class TaskBridge
         try
         {
             var savedContext = SynchronizationContext.Current;
-            using (var cts = new CancellationTokenSource())
+            using var cts = new CancellationTokenSource();
+            Task? pendingTask = null;
+            var context = new ExclusiveSynchronizationContext();
+            try
             {
-                Task? pendingTask = null;
-                var context = new ExclusiveSynchronizationContext();
-                try
-                {
-                    SynchronizationContext.SetSynchronizationContext(context);
-                    context.Execute(() => pendingTask = task(cts.Token));
-                    pendingTask = null;
-                }
-                catch (Exception ex) when (ex is ThreadAbortException || ex is ThreadInterruptedException)
-                {
-                    cts.Cancel();
+                SynchronizationContext.SetSynchronizationContext(context);
+                context.Execute(() => pendingTask = task(cts.Token));
+                pendingTask = null;
+            }
+            catch (Exception ex) when (ex is ThreadAbortException || ex is ThreadInterruptedException)
+            {
+                cts.Cancel();
 
-                    if (pendingTask != null)
-                    {
-                        context.ExceptionFilter = exception => !(exception is TaskCanceledException);
-
-                        // Execute remaining asynchronous iterations and finalizers.
-                        context.Execute(() => pendingTask);
-                    }
-
-                    throw;
-                }
-                finally
+                if (pendingTask != null)
                 {
-                    SynchronizationContext.SetSynchronizationContext(savedContext);
+                    context.ExceptionFilter = exception => exception is not TaskCanceledException;
+
+                    // Execute remaining asynchronous iterations and finalizers.
+                    context.Execute(() => pendingTask);
                 }
+
+                throw;
+            }
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(savedContext);
             }
         }
         catch (AggregateException e) when (e.InnerExceptions.Count == 1)
