@@ -50,11 +50,14 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
                 throw;
             }
 
+            // Suppress the flow of the execution context to be able to propagate a possible rollback.
             var flowControl = ExecutionContext.SuppressFlow();
+
             return task.ContinueWith(
                 task =>
                 {
                     flowControl.Undo();
+
                     if (task.Status is TaskStatus.Faulted or TaskStatus.Canceled)
                     {
                         // Rollback.
@@ -69,7 +72,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
         }
         else
         {
-            // Already locked.
+            // Already locked by the current thread.
             return Task.CompletedTask;
         }
     }
@@ -96,16 +99,20 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             }
             catch
             {
+                // Rollback.
                 m_RecursionTracker.Leave();
                 throw;
             }
             if (!locked)
+            {
+                // Rollback.
                 m_RecursionTracker.Leave();
+            }
             return locked;
         }
         else
         {
-            // Already locked.
+            // Already locked by the current thread.
             return true;
         }
     }
@@ -135,11 +142,14 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
                 throw;
             }
 
+            // Suppress the flow of the execution context to be able to propagate a possible rollback.
             var flowControl = ExecutionContext.SuppressFlow();
+
             return task.ContinueWith(
                 task =>
                 {
                     flowControl.Undo();
+
                     if (task.Status is TaskStatus.Faulted or TaskStatus.Canceled)
                     {
                         // Rollback.
@@ -163,7 +173,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
         }
         else
         {
-            // Already locked.
+            // Already locked by the current thread.
             return Task.FromResult(true);
         }
     }

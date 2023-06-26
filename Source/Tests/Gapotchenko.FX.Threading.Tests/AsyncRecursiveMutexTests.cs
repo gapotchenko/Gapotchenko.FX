@@ -5,143 +5,53 @@ namespace Gapotchenko.FX.Threading.Tests;
 [TestClass]
 public class AsyncRecursiveMutexTests
 {
-    [TestMethod]
-    public void AsyncRecursiveMutex_Construction()
-    {
-        var mutex = new AsyncRecursiveMutex();
-        Assert.IsFalse(mutex.IsLocked);
-    }
+    static readonly AsyncLockableTestsImpl m_LockableTestsImpl =
+        new(
+            () => new AsyncRecursiveMutex(),
+            lockable => ((IAsyncMutex)lockable).IsLocked);
 
     [TestMethod]
-    public async Task AsyncRecursiveMutex_LockAsync_Nesting()
-    {
-        var mutex = new AsyncRecursiveMutex();
-
-        await mutex.LockAsync();
-        Assert.IsTrue(mutex.IsLocked);
-
-        Assert.IsTrue(mutex.TryLock());
-        Assert.IsTrue(mutex.IsLocked);
-
-        mutex.Unlock();
-        Assert.IsTrue(mutex.IsLocked);
-
-        mutex.Unlock();
-        Assert.IsFalse(mutex.IsLocked);
-    }
+    public void AsyncRecursiveMutex_Construction() => m_LockableTestsImpl.Constuction();
 
     [TestMethod]
-    public async Task AsyncRecursiveMutex_LockAsync_Rollback()
-    {
-        var mutex = new AsyncRecursiveMutex();
-
-        var cts = new CancellationTokenSource();
-        cts.Cancel();
-
-        bool wasCanceled = false;
-        try
-        {
-            await mutex.LockAsync(cts.Token);
-        }
-        catch
-        {
-            wasCanceled = true;
-        }
-        Assert.IsTrue(wasCanceled);
-
-        Assert.IsFalse(mutex.IsLocked);
-
-        Assert.IsTrue(mutex.TryLock());
-        Assert.IsTrue(mutex.IsLocked);
-    }
+    public void AsyncRecursiveMutex_Lock_Nesting() => m_LockableTestsImpl.Lock_Nesting();
 
     [TestMethod]
-    public async Task AsyncRecursiveMutex_TryLockAsync_TimeSpan_Nesting()
-    {
-        var mutex = new AsyncRecursiveMutex();
-        var timeout = TimeSpan.FromMilliseconds(0);
-
-        Assert.IsTrue(await mutex.TryLockAsync(timeout));
-        Assert.IsTrue(mutex.IsLocked);
-
-        Assert.IsTrue(await mutex.TryLockAsync(timeout));
-        Assert.IsTrue(mutex.IsLocked);
-
-        mutex.Unlock();
-        Assert.IsTrue(mutex.IsLocked);
-
-        mutex.Unlock();
-        Assert.IsFalse(mutex.IsLocked);
-    }
+    public void AsyncRecursiveMutex_Lock_Rollback() => m_LockableTestsImpl.Lock_Rollback();
 
     [TestMethod]
-    public async Task AsyncRecursiveMutex_TryLockAsync_TimeSpan_Rollback()
-    {
-        var mutex = new AsyncRecursiveMutex();
-        var timeout = Timeout.InfiniteTimeSpan;
-
-        var cts = new CancellationTokenSource();
-        cts.Cancel();
-
-        bool wasCanceled = false;
-        try
-        {
-            await mutex.TryLockAsync(timeout, cts.Token);
-        }
-        catch
-        {
-            wasCanceled = true;
-        }
-        Assert.IsTrue(wasCanceled);
-
-        Assert.IsFalse(mutex.IsLocked);
-
-        Assert.IsTrue(mutex.TryLock());
-        Assert.IsTrue(mutex.IsLocked);
-    }
+    public Task AsyncRecursiveMutex_LockAsync_Nesting() => m_LockableTestsImpl.LockAsync_Nesting();
 
     [TestMethod]
-    public async Task AsyncRecursiveMutex_TryLockAsync_Int32_Nesting()
-    {
-        var mutex = new AsyncRecursiveMutex();
-        var timeout = 0;
-
-        Assert.IsTrue(await mutex.TryLockAsync(timeout));
-        Assert.IsTrue(mutex.IsLocked);
-
-        Assert.IsTrue(await mutex.TryLockAsync(timeout));
-        Assert.IsTrue(mutex.IsLocked);
-
-        mutex.Unlock();
-        Assert.IsTrue(mutex.IsLocked);
-
-        mutex.Unlock();
-        Assert.IsFalse(mutex.IsLocked);
-    }
+    public Task AsyncRecursiveMutex_LockAsync_Rollback() => m_LockableTestsImpl.LockAsync_Rollback();
 
     [TestMethod]
-    public async Task AsyncRecursiveMutex_TryLockAsync_Int32_Rollback()
-    {
-        var mutex = new AsyncRecursiveMutex();
-        var timeout = Timeout.Infinite;
+    public void AsyncRecursiveMutex_TryLock_Nesting() => m_LockableTestsImpl.TryLock_Nesting();
 
-        var cts = new CancellationTokenSource();
-        cts.Cancel();
+    [TestMethod]
+    public void AsyncRecursiveMutex_TryLock_TimeSpan_Nesting() => m_LockableTestsImpl.TryLock_TimeSpan_Nesting();
 
-        bool wasCanceled = false;
-        try
-        {
-            await mutex.TryLockAsync(timeout, cts.Token);
-        }
-        catch
-        {
-            wasCanceled = true;
-        }
-        Assert.IsTrue(wasCanceled);
+    [TestMethod]
+    public void AsyncRecursiveMutex_TryLock_Int32_Nesting() => m_LockableTestsImpl.TryLock_Int32_Nesting();
 
-        Assert.IsFalse(mutex.IsLocked);
+    [TestMethod]
+    public void AsyncRecursiveMutex_TryLock_TimeSpan_Rollback() => m_LockableTestsImpl.TryLock_TimeSpan_Rollback();
 
-        Assert.IsTrue(mutex.TryLock());
-        Assert.IsTrue(mutex.IsLocked);
-    }
+    [TestMethod]
+    public void AsyncRecursiveMutex_TryLock_Int32_Rollback() => m_LockableTestsImpl.TryLock_Int32_Rollback();
+
+    [TestMethod]
+    public Task AsyncRecursiveMutex_TryLockAsync_TimeSpan_Nesting() => m_LockableTestsImpl.TryLockAsync_TimeSpan_Nesting();
+
+    [TestMethod]
+    public Task AsyncRecursiveMutex_TryLockAsync_Int32_Nesting() => m_LockableTestsImpl.TryLockAsync_Int32_Nesting();
+
+    [TestMethod]
+    public Task AsyncRecursiveMutex_TryLockAsync_TimeSpan_Rollback() => m_LockableTestsImpl.TryLockAsync_TimeSpan_Rollback();
+
+    [TestMethod]
+    public Task AsyncRecursiveMutex_TryLockAsync_Int32_Rollback() => m_LockableTestsImpl.TryLockAsync_Int32_Rollback();
+
+    [TestMethod]
+    public void AsyncRecursiveMutex_Unlock_NonLocked() => m_LockableTestsImpl.Unlock_NonLocked();
 }

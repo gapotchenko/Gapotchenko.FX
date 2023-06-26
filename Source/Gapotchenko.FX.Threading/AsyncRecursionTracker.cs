@@ -13,7 +13,7 @@ struct AsyncRecursionTracker
     {
     }
 
-    readonly AsyncLocal<int> m_AsyncRecursionCounter = new();
+    readonly AsyncLocal<int> m_RecursionCounter = new();
 
     /// <summary>
     /// Enters the scope.
@@ -23,7 +23,7 @@ struct AsyncRecursionTracker
     /// </returns>
     public bool Enter()
     {
-        int recursionCounter = m_AsyncRecursionCounter.Value++;
+        int recursionCounter = m_RecursionCounter.Value++;
         return recursionCounter == 0;
     }
 
@@ -33,13 +33,13 @@ struct AsyncRecursionTracker
     /// <returns>
     /// <see langword="true"/> if the final scope was left; otherwise, <see langword="false"/>.
     /// </returns>
-    /// <exception cref="LockRecursionException">Unbalanced lock/unlock acquisitions of a thread synchronization primitive.</exception>
+    /// <exception cref="InvalidOperationException">Unbalanced lock/unlock acquisitions of a thread synchronization primitive.</exception>
     public bool Leave()
     {
-        int recursionCounter = m_AsyncRecursionCounter.Value - 1;
+        int recursionCounter = m_RecursionCounter.Value - 1;
         if (recursionCounter < 0)
-            throw new LockRecursionException("Unbalanced lock/unlock acquisitions of a thread synchronization primitive.");
-        m_AsyncRecursionCounter.Value = recursionCounter;
+            throw new InvalidOperationException("Unbalanced lock/unlock acquisitions of a thread synchronization primitive.");
+        m_RecursionCounter.Value = recursionCounter;
         return recursionCounter == 0;
     }
 }
