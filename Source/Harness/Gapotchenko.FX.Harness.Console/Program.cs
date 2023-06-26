@@ -203,31 +203,17 @@ class Program
         Console.WriteLine(appInfo.ProductName);
         Console.WriteLine(appInfo.InformationalVersion);
 
-        var mutex = new AsyncRecursiveMutex();
+        var mutex = new AsyncMutex();
 
-
-        var cts = new CancellationTokenSource();
-        cts.Cancel();
-        try
-        {
-            await mutex.LockAsync(cts.Token);
-        }
-        catch
-        {
-            Console.WriteLine("Cancelled");
-        }
-
-        await mutex.LockAsync();
-
-        await mutex.LockAsync();
+        mutex.Unlock();
 
         using (await mutex.LockScopeAsync())
         {
-            using (await mutex.LockScopeAsync())
-            {
-                await Task.Yield();
-                await Console.Out.WriteLineAsync("345").ConfigureAwait(false);
-            }
+            //using (await mutex.LockScopeAsync())
+            //{
+            //    await Task.Yield();
+            //    await Console.Out.WriteLineAsync("345").ConfigureAwait(false);
+            //}
 
             await Task.Yield();
             await Console.Out.WriteLineAsync("123");

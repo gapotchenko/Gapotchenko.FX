@@ -5,10 +5,7 @@ namespace Gapotchenko.FX.Threading.Tests;
 [TestClass]
 public class AsyncRecursiveMutexTests
 {
-    static readonly AsyncLockableTestsImpl m_LockableTestsImpl =
-        new(
-            () => new AsyncRecursiveMutex(),
-            lockable => ((IAsyncMutex)lockable).IsLocked);
+    static readonly AsyncLockableTestsImpl m_LockableTestsImpl = new(() => new AsyncRecursiveMutex());
 
     [TestMethod]
     public void AsyncRecursiveMutex_Construction() => m_LockableTestsImpl.Constuction();

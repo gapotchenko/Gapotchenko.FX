@@ -3,7 +3,7 @@
 struct AsyncMutexCoreImpl
 {
     // The implementation is based on a semaphore.
-    AsyncSemaphoreCoreImpl m_Semaphore = new(1);
+    AsyncSemaphoreCoreImpl m_Semaphore = new(1, 1);
 
     public AsyncMutexCoreImpl()
     {

@@ -128,4 +128,14 @@ public interface IAsyncLockable
     /// </summary>
     /// <exception cref="InvalidOperationException">Unbalanced lock/unlock acquisitions of a thread synchronization primitive.</exception>
     void Unlock();
+
+    /// <summary>
+    /// Gets a value indicating whether the synchronization primitive is locked by a thread.
+    /// </summary>
+    bool IsLocked { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the synchronization primitive supports locking recursion.
+    /// </summary>
+    bool IsRecursive { get; }
 }

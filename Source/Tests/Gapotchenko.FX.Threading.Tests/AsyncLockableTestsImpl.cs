@@ -5,31 +5,21 @@ namespace Gapotchenko.FX.Threading.Tests;
 
 readonly struct AsyncLockableTestsImpl
 {
-    public AsyncLockableTestsImpl(
-        Func<IAsyncLockable> createLockableFunc,
-        Func<IAsyncLockable, bool>? isLockedFunc)
+    public AsyncLockableTestsImpl(Func<IAsyncLockable> createLockableFunc)
     {
         m_CreateLockableFunc = createLockableFunc;
-        m_IsLockedFunc = isLockedFunc;
     }
 
     readonly Func<IAsyncLockable> m_CreateLockableFunc;
-    readonly Func<IAsyncLockable, bool>? m_IsLockedFunc;
 
     IAsyncLockable CreateLockable() => m_CreateLockableFunc();
-
-    bool? IsLocked(IAsyncLockable lockable) => m_IsLockedFunc?.Invoke(lockable);
-
-    void AssertIsLocked(IAsyncLockable lockable) => IsLocked(lockable)?.PipeOperator(Assert.IsTrue);
-
-    void AssertIsNotLocked(IAsyncLockable lockable) => IsLocked(lockable)?.PipeOperator(Assert.IsFalse);
 
     // ----------------------------------------------------------------------
 
     public void Constuction()
     {
         var lockable = CreateLockable();
-        AssertIsNotLocked(lockable);
+        Assert.IsFalse(lockable.IsLocked);
     }
 
     // ----------------------------------------------------------------------
@@ -38,17 +28,31 @@ readonly struct AsyncLockableTestsImpl
     {
         var lockable = CreateLockable();
 
-        lockable.Lock();
-        AssertIsLocked(lockable);
+        if (lockable.IsRecursive)
+        {
+            lockable.Lock();
+            Assert.IsTrue(lockable.IsLocked);
 
-        Assert.IsTrue(lockable.TryLock());
-        AssertIsLocked(lockable);
+            Assert.IsTrue(lockable.TryLock());
+            Assert.IsTrue(lockable.IsLocked);
 
-        lockable.Unlock();
-        AssertIsLocked(lockable);
+            lockable.Unlock();
+            Assert.IsTrue(lockable.IsLocked);
 
-        lockable.Unlock();
-        AssertIsNotLocked(lockable);
+            lockable.Unlock();
+            Assert.IsFalse(lockable.IsLocked);
+        }
+        else
+        {
+            lockable.Lock();
+            Assert.IsTrue(lockable.IsLocked);
+
+            Assert.IsFalse(lockable.TryLock());
+            Assert.IsTrue(lockable.IsLocked);
+
+            lockable.Unlock();
+            Assert.IsFalse(lockable.IsLocked);
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -68,10 +72,10 @@ readonly struct AsyncLockableTestsImpl
         }
         Assert.IsTrue(wasCanceled);
 
-        AssertIsNotLocked(lockable);
+        Assert.IsFalse(lockable.IsLocked);
 
         Assert.IsTrue(lockable.TryLock());
-        AssertIsLocked(lockable);
+        Assert.IsTrue(lockable.IsLocked);
     }
 
     // ----------------------------------------------------------------------
@@ -80,17 +84,31 @@ readonly struct AsyncLockableTestsImpl
     {
         var lockable = CreateLockable();
 
-        await lockable.LockAsync();
-        AssertIsLocked(lockable);
+        if (lockable.IsRecursive)
+        {
+            await lockable.LockAsync();
+            Assert.IsTrue(lockable.IsLocked);
 
-        Assert.IsTrue(lockable.TryLock());
-        AssertIsLocked(lockable);
+            Assert.IsTrue(lockable.TryLock());
+            Assert.IsTrue(lockable.IsLocked);
 
-        lockable.Unlock();
-        AssertIsLocked(lockable);
+            lockable.Unlock();
+            Assert.IsTrue(lockable.IsLocked);
 
-        lockable.Unlock();
-        AssertIsNotLocked(lockable);
+            lockable.Unlock();
+            Assert.IsFalse(lockable.IsLocked);
+        }
+        else
+        {
+            await lockable.LockAsync();
+            Assert.IsTrue(lockable.IsLocked);
+
+            Assert.IsFalse(lockable.TryLock());
+            Assert.IsTrue(lockable.IsLocked);
+
+            lockable.Unlock();
+            Assert.IsFalse(lockable.IsLocked);
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -110,10 +128,10 @@ readonly struct AsyncLockableTestsImpl
         }
         Assert.IsTrue(wasCanceled);
 
-        AssertIsNotLocked(lockable);
+        Assert.IsFalse(lockable.IsLocked);
 
         Assert.IsTrue(lockable.TryLock());
-        AssertIsLocked(lockable);
+        Assert.IsTrue(lockable.IsLocked);
     }
 
     // ----------------------------------------------------------------------
@@ -141,17 +159,31 @@ readonly struct AsyncLockableTestsImpl
 
     void TryLock_Nesting_Core(IAsyncLockable lockable, Func<IAsyncLockable, bool> tryLockFunc)
     {
-        Assert.IsTrue(tryLockFunc(lockable));
-        AssertIsLocked(lockable);
+        if (lockable.IsRecursive)
+        {
+            Assert.IsTrue(tryLockFunc(lockable));
+            Assert.IsTrue(lockable.IsLocked);
 
-        Assert.IsTrue(tryLockFunc(lockable));
-        AssertIsLocked(lockable);
+            Assert.IsTrue(tryLockFunc(lockable));
+            Assert.IsTrue(lockable.IsLocked);
 
-        lockable.Unlock();
-        AssertIsLocked(lockable);
+            lockable.Unlock();
+            Assert.IsTrue(lockable.IsLocked);
 
-        lockable.Unlock();
-        AssertIsNotLocked(lockable);
+            lockable.Unlock();
+            Assert.IsFalse(lockable.IsLocked);
+        }
+        else
+        {
+            Assert.IsTrue(tryLockFunc(lockable));
+            Assert.IsTrue(lockable.IsLocked);
+
+            Assert.IsFalse(tryLockFunc(lockable));
+            Assert.IsTrue(lockable.IsLocked);
+
+            lockable.Unlock();
+            Assert.IsFalse(lockable.IsLocked);
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -179,10 +211,10 @@ readonly struct AsyncLockableTestsImpl
         }
         Assert.IsTrue(wasCanceled);
 
-        AssertIsNotLocked(lockable);
+        Assert.IsFalse(lockable.IsLocked);
 
         Assert.IsTrue(lockable.TryLock());
-        AssertIsLocked(lockable);
+        Assert.IsTrue(lockable.IsLocked);
     }
 
     // ----------------------------------------------------------------------
@@ -190,16 +222,16 @@ readonly struct AsyncLockableTestsImpl
     async Task TryLockAsync_Nesting_Core(IAsyncLockable lockable, Func<Task<bool>> tryLockAsyncFunc)
     {
         Assert.IsTrue(await tryLockAsyncFunc());
-        AssertIsLocked(lockable);
+        Assert.IsTrue(lockable.IsLocked);
 
         Assert.IsTrue(await tryLockAsyncFunc());
-        AssertIsLocked(lockable);
+        Assert.IsTrue(lockable.IsLocked);
 
         lockable.Unlock();
-        AssertIsLocked(lockable);
+        Assert.IsTrue(lockable.IsLocked);
 
         lockable.Unlock();
-        AssertIsNotLocked(lockable);
+        Assert.IsFalse(lockable.IsLocked);
     }
 
     // ----------------------------------------------------------------------
@@ -226,17 +258,31 @@ readonly struct AsyncLockableTestsImpl
 
     async Task TryLockAsync_Nesting_Core(IAsyncLockable lockable, Func<IAsyncLockable, Task<bool>> tryLockAsyncFunc)
     {
-        Assert.IsTrue(await tryLockAsyncFunc(lockable));
-        AssertIsLocked(lockable);
+        if (lockable.IsRecursive)
+        {
+            Assert.IsTrue(await tryLockAsyncFunc(lockable));
+            Assert.IsTrue(lockable.IsLocked);
 
-        Assert.IsTrue(await tryLockAsyncFunc(lockable));
-        AssertIsLocked(lockable);
+            Assert.IsTrue(await tryLockAsyncFunc(lockable));
+            Assert.IsTrue(lockable.IsLocked);
 
-        lockable.Unlock();
-        AssertIsLocked(lockable);
+            lockable.Unlock();
+            Assert.IsTrue(lockable.IsLocked);
 
-        lockable.Unlock();
-        AssertIsNotLocked(lockable);
+            lockable.Unlock();
+            Assert.IsFalse(lockable.IsLocked);
+        }
+        else
+        {
+            Assert.IsTrue(await tryLockAsyncFunc(lockable));
+            Assert.IsTrue(lockable.IsLocked);
+
+            Assert.IsFalse(await tryLockAsyncFunc(lockable));
+            Assert.IsTrue(lockable.IsLocked);
+
+            lockable.Unlock();
+            Assert.IsFalse(lockable.IsLocked);
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -264,10 +310,10 @@ readonly struct AsyncLockableTestsImpl
         }
         Assert.IsTrue(wasCanceled);
 
-        AssertIsNotLocked(lockable);
+        Assert.IsFalse(lockable.IsLocked);
 
         Assert.IsTrue(lockable.TryLock());
-        AssertIsLocked(lockable);
+        Assert.IsTrue(lockable.IsLocked);
     }
 
     // ----------------------------------------------------------------------

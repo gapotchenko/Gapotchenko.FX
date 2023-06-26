@@ -11,6 +11,11 @@ struct AsyncSemaphoreCoreImpl
         m_Semaphore = new(initialCount);
     }
 
+    public AsyncSemaphoreCoreImpl(int initialCount, int maxCount)
+    {
+        m_Semaphore = new(initialCount, maxCount);
+    }
+
     public void Wait(CancellationToken cancellationToken)
     {
         m_Semaphore.Wait(cancellationToken);

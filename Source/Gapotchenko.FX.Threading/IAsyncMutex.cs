@@ -6,8 +6,4 @@
 /// </summary>
 public interface IAsyncMutex : IAsyncLockable
 {
-    /// <summary>
-    /// Gets a value indicating whether the mutex is locked by a thread.
-    /// </summary>
-    bool IsLocked { get; }
 }
