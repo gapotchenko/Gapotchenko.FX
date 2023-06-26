@@ -45,6 +45,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             }
             catch
             {
+                // Rollback.
                 m_RecursionTracker.Leave();
                 throw;
             }
@@ -120,25 +121,50 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     Task<bool> TryLockAsyncCore(Func<Task<bool>> func)
     {
         if (m_RecursionTracker.Enter())
-            return Inner(func);
-        else
-            return Task.FromResult(true);
-
-        async Task<bool> Inner(Func<Task<bool>> func)
         {
-            bool locked;
+            Task<bool> task;
+
             try
             {
-                locked = await func().ConfigureAwait(false);
+                task = func();
             }
             catch
             {
+                // Rollback.
                 m_RecursionTracker.Leave();
                 throw;
             }
-            if (!locked)
-                m_RecursionTracker.Leave();
-            return locked;
+
+            var flowControl = ExecutionContext.SuppressFlow();
+            return task.ContinueWith(
+                task =>
+                {
+                    flowControl.Undo();
+                    if (task.Status is TaskStatus.Faulted or TaskStatus.Canceled)
+                    {
+                        // Rollback.
+                        m_RecursionTracker.Leave();
+                        // Rethrow the exception.
+                        task.GetAwaiter().GetResult();
+                    }
+
+                    bool locked = task.Result;
+                    if (!locked)
+                    {
+                        // Rollback.
+                        m_RecursionTracker.Leave();
+                    }
+
+                    return locked;
+                },
+                CancellationToken.None,
+                TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
+                TaskScheduler.Default);
+        }
+        else
+        {
+            // Already locked.
+            return Task.FromResult(true);
         }
     }
 
