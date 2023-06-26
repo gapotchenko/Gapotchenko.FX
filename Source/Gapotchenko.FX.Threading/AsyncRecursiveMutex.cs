@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Threading;
 
 namespace Gapotchenko.FX.Threading;
 
@@ -27,6 +26,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             }
             catch
             {
+                // Rollback.
                 m_RecursionTracker.Leave();
                 throw;
             }
@@ -37,21 +37,39 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     public Task LockAsync(CancellationToken cancellationToken = default)
     {
         if (m_RecursionTracker.Enter())
-            return Inner(cancellationToken);
-        else
-            return Task.CompletedTask;
-
-        async Task Inner(CancellationToken cancellationToken)
         {
+            Task task;
             try
             {
-                await m_CoreImpl.LockAsync(cancellationToken).ConfigureAwait(false);
+                task = m_CoreImpl.LockAsync(cancellationToken);
             }
             catch
             {
                 m_RecursionTracker.Leave();
                 throw;
             }
+
+            var flowControl = ExecutionContext.SuppressFlow();
+            return task.ContinueWith(
+                task =>
+                {
+                    flowControl.Undo();
+                    if (task.Status is TaskStatus.Faulted or TaskStatus.Canceled)
+                    {
+                        // Rollback.
+                        m_RecursionTracker.Leave();
+                        // Rethrow the exception.
+                        task.GetAwaiter().GetResult();
+                    }
+                },
+                CancellationToken.None,
+                TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
+                TaskScheduler.Default);
+        }
+        else
+        {
+            // Already locked.
+            return Task.CompletedTask;
         }
     }
 
@@ -86,6 +104,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
         }
         else
         {
+            // Already locked.
             return true;
         }
     }
@@ -107,26 +126,19 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
 
         async Task<bool> Inner(Func<Task<bool>> func)
         {
-            if (m_RecursionTracker.Enter())
+            bool locked;
+            try
             {
-                bool locked;
-                try
-                {
-                    locked = await func().ConfigureAwait(false);
-                }
-                catch
-                {
-                    m_RecursionTracker.Leave();
-                    throw;
-                }
-                if (!locked)
-                    m_RecursionTracker.Leave();
-                return locked;
+                locked = await func().ConfigureAwait(false);
             }
-            else
+            catch
             {
-                return true;
+                m_RecursionTracker.Leave();
+                throw;
             }
+            if (!locked)
+                m_RecursionTracker.Leave();
+            return locked;
         }
     }
 

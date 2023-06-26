@@ -205,6 +205,22 @@ class Program
 
         var mutex = new AsyncRecursiveMutex();
 
+
+        var cts = new CancellationTokenSource();
+        cts.Cancel();
+        try
+        {
+            await mutex.LockAsync(cts.Token);
+        }
+        catch
+        {
+            Console.WriteLine("Cancelled");
+        }
+
+        await mutex.LockAsync();
+
+        await mutex.LockAsync();
+
         using (await mutex.LockScopeAsync())
         {
             using (await mutex.LockScopeAsync())
