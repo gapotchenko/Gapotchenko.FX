@@ -1,5 +1,4 @@
-﻿using Gapotchenko.FX.Linq.Operators;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Threading.Tests;
 

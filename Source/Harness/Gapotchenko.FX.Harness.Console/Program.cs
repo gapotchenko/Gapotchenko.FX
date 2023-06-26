@@ -203,9 +203,24 @@ class Program
         Console.WriteLine(appInfo.ProductName);
         Console.WriteLine(appInfo.InformationalVersion);
 
-        var mutex = new AsyncMutex();
 
-        mutex.Unlock();
+        var random = new Random();
+        Parallel.ForEach(
+            Enumerable.Range(1, 1000),
+            i =>
+            {
+                var mutex = new AsyncRecursiveMutex();
+
+                int n;
+                lock (random)
+                    n = random.Next(1, 20);
+
+                TaskBridge.Execute(VerifyNesting(mutex, n));
+            });
+
+        var mutex = new AsyncRecursiveMutex();
+
+        //await VerifyNesting(mutex, 1);
 
         using (await mutex.LockScopeAsync())
         {
@@ -218,5 +233,45 @@ class Program
             await Task.Yield();
             await Console.Out.WriteLineAsync("123");
         }
+    }
+
+    static async Task VerifyNesting(IAsyncLockable lockable, int depth)
+    {
+        bool wasCanceled = false;
+        try
+        {
+            await lockable.LockAsync(new CancellationToken(true));
+        }
+        catch (OperationCanceledException)
+        {
+            wasCanceled = true;
+        }
+        if (!wasCanceled)
+            throw new InvalidOperationException("F6");
+
+        await lockable.LockAsync();
+        if (!lockable.IsLocked)
+            throw new InvalidOperationException("F1");
+
+        for (int i = 0; i < depth; ++i)
+        {
+            if (!await lockable.TryLockAsync(0))
+                throw new InvalidOperationException($"F2.{i}");
+            if (!lockable.IsLocked)
+                throw new InvalidOperationException($"F3.{i}");
+        }
+
+        await Task.Yield();
+
+        for (int i = 0; i < depth; ++i)
+        {
+            lockable.Unlock();
+            if (!lockable.IsLocked)
+                throw new InvalidOperationException($"F4.{i}");
+        }
+
+        lockable.Unlock();
+        if (lockable.IsLocked)
+            throw new InvalidOperationException("F5");
     }
 }
