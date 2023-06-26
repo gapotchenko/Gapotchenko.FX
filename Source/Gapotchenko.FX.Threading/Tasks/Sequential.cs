@@ -6,8 +6,8 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Threading.Tasks;
 
 /// <summary>
-/// Provides a drop-in replacement for <see cref="Parallel"/> class that performs a sequential execution of operations instead of parallel.
-/// Such a replacement is useful for debugging purposes.
+/// Provides a drop-in replacement for <see cref="Parallel"/> class that performs a sequential execution of operations instead of a parallel execution.
+/// Sequential execution is useful for debugging purposes.
 /// </summary>
 public static class Sequential
 {

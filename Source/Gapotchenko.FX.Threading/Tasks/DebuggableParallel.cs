@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Threading.Tasks;
 /// or a parallel execution when no debugger is attached.
 /// </summary>
 /// <remarks>
-/// <see cref="DebuggableParallel"/> class is used for writing a debug-friendly code that has a deterministic and thus easy to debug behavior when a debugger is attached.
+/// <see cref="DebuggableParallel"/> class can be used for writing debug-friendly code that has a deterministic and easy to debug behavior when a debugger is attached.
 /// </remarks>
 public static class DebuggableParallel
 {
