@@ -51,7 +51,7 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
                 {
                     m_ExceptionDispatchInfo = ExceptionDispatchInfo.Capture(e);
 
-#if !NETCOREAPP
+#if !(NETCOREAPP || NETSTANDARD2_1_OR_GREATER)
                     if (e is ThreadAbortException)
                         Thread.ResetAbort();
 #endif
