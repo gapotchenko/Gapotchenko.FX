@@ -1,4 +1,8 @@
-﻿namespace Gapotchenko.FX.Threading.Tasks;
+﻿#if !(NETCOREAPP || NET || NETSTANDARD2_1_OR_GREATER)
+#define TFF_THREAD_ABORT
+#endif
+
+namespace Gapotchenko.FX.Threading.Tasks;
 
 /// <summary>
 /// Bridges synchronous and asynchronous task execution models together.
@@ -249,7 +253,7 @@ public static class TaskBridge
 
     static Task ExecuteAsyncCore(Action action, CancellationToken cancellationToken)
     {
-#if NETCOREAPP || NET
+#if !TFF_THREAD_ABORT
         return RunLongTask(action, cancellationToken);
 #else
         if (!cancellationToken.CanBeCanceled)
