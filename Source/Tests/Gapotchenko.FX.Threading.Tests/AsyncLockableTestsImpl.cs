@@ -1,6 +1,8 @@
 ﻿using Gapotchenko.FX.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
+using System.Threading;
 
 namespace Gapotchenko.FX.Threading.Tests;
 
@@ -85,6 +87,16 @@ readonly struct AsyncLockableTestsImpl
         IAsyncLockable lockable,
         Func<IAsyncLockable, CancellationToken, Task> lockAsyncFunc)
     {
+        await VerifyLockingSemanticsAsync_Cancellation(lockable, lockAsyncFunc);
+#if NET6_0_OR_GREATER
+        await VerifyLockingSemanticsAsync_Concurrency(lockable, lockAsyncFunc);
+#endif
+    }
+
+    static async Task VerifyLockingSemanticsAsync_Cancellation(
+        IAsyncLockable lockable,
+        Func<IAsyncLockable, CancellationToken, Task> lockAsyncFunc)
+    {
         var lockEvent = new ManualResetEventSlim();
         var unlockEvent = new ManualResetEventSlim();
         var lockerTask = TaskBridge.ExecuteAsync(
@@ -131,6 +143,89 @@ readonly struct AsyncLockableTestsImpl
         Assert.IsFalse(lockable.IsLocked);
     }
 
+#if NET6_0_OR_GREATER
+    static async Task VerifyLockingSemanticsAsync_Concurrency(
+        IAsyncLockable lockable,
+        Func<IAsyncLockable, CancellationToken, Task> lockAsyncFunc)
+    {
+        Func<int> getRecursionLevel;
+        if (lockable.IsRecursive)
+        {
+            var random = new Random();
+            getRecursionLevel =
+                () =>
+                {
+                    lock (random)
+                        return random.Next(0, 20);
+                };
+        }
+        else
+        {
+            getRecursionLevel = Fn.Default<int>;
+        }
+
+        var cts = new CancellationTokenSource();
+        ExceptionDispatchInfo? exceptionInfo = null;
+
+        var task =
+            Parallel.ForEachAsync(
+                Enumerable.Range(1, 32),
+                cts.Token,
+                async (_, cancellationToken) =>
+                {
+                    try
+                    {
+                        await Thread(lockable, getRecursionLevel(), cancellationToken, lockAsyncFunc);
+                    }
+                    catch (Exception e)
+                    {
+                        exceptionInfo ??= ExceptionDispatchInfo.Capture(e);
+                        cts.Cancel();
+                        throw;
+                    }
+
+                    static async Task Thread(
+                        IAsyncLockable lockable,
+                        int recursionDepth,
+                        CancellationToken cancellationToken,
+                        Func<IAsyncLockable, CancellationToken, Task> lockAsyncFunc)
+                    {
+                        await lockAsyncFunc(lockable, cancellationToken);
+                        Assert.IsTrue(lockable.IsLocked, "TP1");
+
+                        for (int i = 0; i < recursionDepth; ++i)
+                        {
+                            Assert.IsTrue(await lockable.TryLockAsync(0, cancellationToken), $"TP2 #{i}");
+                            Assert.IsTrue(lockable.IsLocked, $"TP3 #{i}");
+                        }
+
+                        await Task.Yield();
+
+                        for (int i = 0; i < recursionDepth; ++i)
+                        {
+                            lockable.Unlock();
+                            Assert.IsTrue(lockable.IsLocked, $"TP4 #{i}");
+                        }
+
+                        lockable.Unlock();
+                    }
+                });
+
+        try
+        {
+            // Some threads may be in a non-cancelable state.
+            await task.WaitAsync(cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            if (exceptionInfo != null)
+                exceptionInfo.Throw();
+            else
+                throw;
+        }
+    }
+#endif
+
     // ----------------------------------------------------------------------
 
     public async Task LockAsync_Nesting()
@@ -145,6 +240,8 @@ readonly struct AsyncLockableTestsImpl
             Assert.IsTrue(lockable.TryLock());
             Assert.IsTrue(lockable.IsLocked);
 
+            await Task.Yield();
+
             lockable.Unlock();
             Assert.IsTrue(lockable.IsLocked);
 
@@ -158,6 +255,8 @@ readonly struct AsyncLockableTestsImpl
 
             Assert.IsFalse(lockable.TryLock());
             Assert.IsTrue(lockable.IsLocked);
+
+            await Task.Yield();
 
             lockable.Unlock();
             Assert.IsFalse(lockable.IsLocked);
@@ -331,6 +430,8 @@ readonly struct AsyncLockableTestsImpl
             Assert.IsTrue(await tryLockAsyncFunc(lockable));
             Assert.IsTrue(lockable.IsLocked);
 
+            await Task.Yield();
+
             lockable.Unlock();
             Assert.IsTrue(lockable.IsLocked);
 
@@ -344,6 +445,8 @@ readonly struct AsyncLockableTestsImpl
 
             Assert.IsFalse(await tryLockAsyncFunc(lockable));
             Assert.IsTrue(lockable.IsLocked);
+
+            await Task.Yield();
 
             lockable.Unlock();
             Assert.IsFalse(lockable.IsLocked);
