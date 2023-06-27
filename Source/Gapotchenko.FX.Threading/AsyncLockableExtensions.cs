@@ -92,7 +92,7 @@ public static class AsyncLockableExtensions
     /// </summary>
     /// <param name="lockable">The lockable synchronization primitive.</param>
     /// <returns>
-    /// A task that will complete when the synchronization primitive has been locked with a result of the scope that can be disposed to unlock it.
+    /// A task that will complete when the synchronization primitive has been locked with a result of the scope that can be disposed to unlock the synchronization primitive.
     /// </returns>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>

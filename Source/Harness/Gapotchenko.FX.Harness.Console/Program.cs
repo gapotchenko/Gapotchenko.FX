@@ -267,30 +267,35 @@ class Program
         //if (!wasCanceled)
         //    throw new InvalidOperationException("F6");
 
-        await lockable.LockAsync();
-        if (!lockable.IsLocked)
-            throw new InvalidOperationException("F1");
-        Console.WriteLine("Entered #{0}", id);
-
-        for (int i = 0; i < recursionDepth; ++i)
+        using (var scope = await lockable.LockScopeAsync())
         {
-            if (!await lockable.TryLockAsync(0))
-                throw new InvalidOperationException($"F2.{i}");
+            //await lockable.LockAsync();
+
+
             if (!lockable.IsLocked)
-                throw new InvalidOperationException($"F3.{i}");
+                throw new InvalidOperationException("F1");
+            Console.WriteLine("Entered #{0}", id);
+
+            for (int i = 0; i < recursionDepth; ++i)
+            {
+                if (!await lockable.TryLockAsync(0))
+                    throw new InvalidOperationException($"F2.{i}");
+                if (!lockable.IsLocked)
+                    throw new InvalidOperationException($"F3.{i}");
+            }
+
+            await Task.Yield();
+
+            for (int i = 0; i < recursionDepth; ++i)
+            {
+                lockable.Unlock();
+                if (!lockable.IsLocked)
+                    throw new InvalidOperationException($"F4.{i}");
+            }
+
+            Console.WriteLine("Exited");
         }
 
-        //await Task.Yield();
-
-        for (int i = 0; i < recursionDepth; ++i)
-        {
-            lockable.Unlock();
-            if (!lockable.IsLocked)
-                throw new InvalidOperationException($"F4.{i}");
-        }
-
-        Console.WriteLine("Exited");
-        lockable.Unlock();
         //if (lockable.IsLocked)
         //    throw new InvalidOperationException("F5");
     }

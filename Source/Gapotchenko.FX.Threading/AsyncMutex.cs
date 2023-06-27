@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Threading;
 public sealed class AsyncMutex : IAsyncMutex
 {
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    AsyncMutexCoreImpl m_CoreImpl = new();
+    AsyncMutexImpl m_CoreImpl = new();
 
     /// <inheritdoc/>
     public void Lock(CancellationToken cancellationToken = default) => m_CoreImpl.Lock(cancellationToken);

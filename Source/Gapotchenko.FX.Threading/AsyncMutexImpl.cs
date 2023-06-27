@@ -1,11 +1,11 @@
 ﻿namespace Gapotchenko.FX.Threading;
 
-struct AsyncMutexCoreImpl
+struct AsyncMutexImpl
 {
     // The implementation is based on a semaphore.
     AsyncSemaphoreCoreImpl m_Semaphore = new(1, 1);
 
-    public AsyncMutexCoreImpl()
+    public AsyncMutexImpl()
     {
     }
 

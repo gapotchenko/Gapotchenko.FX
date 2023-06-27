@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Threading;
 public sealed class AsyncRecursiveMutex : IAsyncMutex
 {
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    AsyncMutexCoreImpl m_CoreImpl = new();
+    AsyncMutexImpl m_CoreImpl = new();
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     AsyncRecursionTracker m_RecursionTracker = new();
@@ -18,7 +18,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     /// <inheritdoc/>
     public void Lock(CancellationToken cancellationToken = default)
     {
-        if (m_RecursionTracker.IsFirstLevel)
+        if (m_RecursionTracker.IsRoot)
             m_CoreImpl.Lock(cancellationToken);
         m_RecursionTracker.Enter();
     }
@@ -26,11 +26,11 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     /// <inheritdoc/>
     public Task LockAsync(CancellationToken cancellationToken = default)
     {
-        if (m_RecursionTracker.IsFirstLevel)
+        if (m_RecursionTracker.IsRoot)
         {
             var task = m_CoreImpl.LockAsync(cancellationToken);
 
-            // Suppress the flow of the execution context to be able to propagate a possible rollback.
+            // Suppress the flow of the execution context to be able to propagate the recursion tracking information.
             ExecutionContext.SuppressFlow();
 
             return task.ContinueWith(
@@ -39,7 +39,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
                     if (ExecutionContext.IsFlowSuppressed())
                         ExecutionContext.RestoreFlow();
 
-                    // Rethrow the exception if any.
+                    // Rethrow the task exception, if any.
                     task.GetAwaiter().GetResult();
 
                     m_RecursionTracker.Enter();
@@ -69,7 +69,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
 
     bool TryLockCore(Func<bool> func)
     {
-        if (m_RecursionTracker.IsFirstLevel)
+        if (m_RecursionTracker.IsRoot)
         {
             bool locked = func();
             if (locked)
@@ -94,11 +94,11 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
 
     Task<bool> TryLockAsyncCore(Func<Task<bool>> func)
     {
-        if (m_RecursionTracker.IsFirstLevel)
+        if (m_RecursionTracker.IsRoot)
         {
             var task = func();
 
-            // Suppress the flow of the execution context to be able to propagate a possible rollback.
+            // Suppress the flow of the execution context to be able to propagate the recursion tracking information.
             ExecutionContext.SuppressFlow();
 
             return task.ContinueWith(
