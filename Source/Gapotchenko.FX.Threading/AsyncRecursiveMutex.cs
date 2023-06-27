@@ -36,19 +36,9 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     /// <inheritdoc/>
     public Task LockAsync(CancellationToken cancellationToken = default)
     {
-        if (m_RecursionTracker.Enter())
+        if (m_RecursionTracker.IsFirstLevel)
         {
-            Task task;
-            try
-            {
-                task = m_CoreImpl.LockAsync(cancellationToken);
-            }
-            catch
-            {
-                // Rollback.
-                m_RecursionTracker.Leave();
-                throw;
-            }
+            var task = m_CoreImpl.LockAsync(cancellationToken);
 
             // Suppress the flow of the execution context to be able to propagate a possible rollback.
             ExecutionContext.SuppressFlow();
@@ -59,13 +49,10 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
                     if (ExecutionContext.IsFlowSuppressed())
                         ExecutionContext.RestoreFlow();
 
-                    if (task.Status is TaskStatus.Faulted or TaskStatus.Canceled)
-                    {
-                        // Rollback.
-                        m_RecursionTracker.Leave();
-                        // Rethrow the exception.
-                        task.GetAwaiter().GetResult();
-                    }
+                    // Rethrow the exception if any.
+                    task.GetAwaiter().GetResult();
+
+                    m_RecursionTracker.Enter();
                 },
                 CancellationToken.None,
                 TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
@@ -74,6 +61,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
         else
         {
             // Already locked by the current thread.
+            m_RecursionTracker.Enter();
             return Task.CompletedTask;
         }
     }
@@ -128,19 +116,9 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
 
     Task<bool> TryLockAsyncCore(Func<Task<bool>> func)
     {
-        if (m_RecursionTracker.Enter())
+        if (m_RecursionTracker.IsFirstLevel)
         {
-            Task<bool> task;
-            try
-            {
-                task = func();
-            }
-            catch
-            {
-                // Rollback.
-                m_RecursionTracker.Leave();
-                throw;
-            }
+            var task = func();
 
             // Suppress the flow of the execution context to be able to propagate a possible rollback.
             ExecutionContext.SuppressFlow();
@@ -151,20 +129,9 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
                     if (ExecutionContext.IsFlowSuppressed())
                         ExecutionContext.RestoreFlow();
 
-                    if (task.Status is TaskStatus.Faulted or TaskStatus.Canceled)
-                    {
-                        // Rollback.
-                        m_RecursionTracker.Leave();
-                        // Rethrow the exception.
-                        task.GetAwaiter().GetResult();
-                    }
-
-                    bool locked = task.Result;
-                    if (!locked)
-                    {
-                        // Rollback.
-                        m_RecursionTracker.Leave();
-                    }
+                    bool locked = task.GetAwaiter().GetResult();
+                    if (locked)
+                        m_RecursionTracker.Enter();
 
                     return locked;
                 },
@@ -175,6 +142,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
         else
         {
             // Already locked by the current thread.
+            m_RecursionTracker.Enter();
             return Task.FromResult(true);
         }
     }
