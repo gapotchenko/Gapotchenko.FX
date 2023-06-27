@@ -173,16 +173,20 @@ readonly struct AsyncLockableTestsImpl
                 {
                     try
                     {
-                        await Thread(lockable, getRecursionLevel(), cancellationToken, lockAsyncFunc);
+                        await ThreadEntry(lockable, getRecursionLevel(), cancellationToken, lockAsyncFunc);
                     }
-                    catch (Exception e)
+                    catch (Exception e) when (!e.IsControlFlowException())
                     {
+                        // Capture the first exception.
                         exceptionInfo ??= ExceptionDispatchInfo.Capture(e);
+
+                        // Cancel the remaining tasks.
                         cts.Cancel();
+
                         throw;
                     }
 
-                    static async Task Thread(
+                    static async Task ThreadEntry(
                         IAsyncLockable lockable,
                         int recursionDepth,
                         CancellationToken cancellationToken,
@@ -197,6 +201,7 @@ readonly struct AsyncLockableTestsImpl
                             Assert.IsTrue(lockable.IsLocked, $"TP3 #{i}");
                         }
 
+                        // Switch the context to verify that the lock recursion information is flowing.
                         await Task.Yield();
 
                         for (int i = 0; i < recursionDepth; ++i)
@@ -205,6 +210,7 @@ readonly struct AsyncLockableTestsImpl
                             Assert.IsTrue(lockable.IsLocked, $"TP4 #{i}");
                         }
 
+                        // Switch the context to verify that the lock recursion information is flowing.
                         await Task.Yield();
 
                         for (int i = 0; i < recursionDepth; ++i)
@@ -213,6 +219,7 @@ readonly struct AsyncLockableTestsImpl
                             Assert.IsTrue(lockable.IsLocked, $"TP5 #{i}");
                         }
 
+                        // Switch the context to verify that the lock recursion information is flowing.
                         await Task.Yield();
 
                         for (int i = 0; i < recursionDepth; ++i)
@@ -227,7 +234,9 @@ readonly struct AsyncLockableTestsImpl
 
         try
         {
-            // Some threads may be in a non-cancelable state.
+            // Some threads may be in a non-cancelable state due to bugs in the code being tested.
+            // Hence canceling the task as a whole here, just in case.
+            // Otherwise, the test may just hang.
             await task.WaitAsync(cts.Token);
         }
         catch (OperationCanceledException)
@@ -254,6 +263,7 @@ readonly struct AsyncLockableTestsImpl
             Assert.IsTrue(lockable.TryLock());
             Assert.IsTrue(lockable.IsLocked);
 
+            // Switch the context to verify that the lock recursion information is flowing.
             await Task.Yield();
 
             lockable.Unlock();
@@ -270,6 +280,7 @@ readonly struct AsyncLockableTestsImpl
             Assert.IsFalse(lockable.TryLock());
             Assert.IsTrue(lockable.IsLocked);
 
+            // Switch the context to verify that the lock recursion information is flowing.
             await Task.Yield();
 
             lockable.Unlock();
@@ -329,7 +340,7 @@ readonly struct AsyncLockableTestsImpl
         TryLock_Nesting_Core(lockable, x => x.TryLock(timeout, CancellationToken.None));
     }
 
-    void TryLock_Nesting_Core(IAsyncLockable lockable, Func<IAsyncLockable, bool> tryLockFunc)
+    static void TryLock_Nesting_Core(IAsyncLockable lockable, Func<IAsyncLockable, bool> tryLockFunc)
     {
         if (lockable.IsRecursive)
         {
@@ -370,7 +381,7 @@ readonly struct AsyncLockableTestsImpl
             CreateLockable(),
             (x, ct) => x.TryLock(Timeout.Infinite, ct));
 
-    void TryLock_Rollback_Core(IAsyncLockable lockable, Func<IAsyncLockable, CancellationToken, bool> tryLockFunc)
+    static void TryLock_Rollback_Core(IAsyncLockable lockable, Func<IAsyncLockable, CancellationToken, bool> tryLockFunc)
     {
         bool wasCanceled = false;
         try
@@ -431,7 +442,7 @@ readonly struct AsyncLockableTestsImpl
             LockAsync);
     }
 
-    async Task TryLockAsync_Nesting_Core(
+    static async Task TryLockAsync_Nesting_Core(
         IAsyncLockable lockable,
         Func<IAsyncLockable, Task<bool>> tryLockAsyncFunc,
         Func<IAsyncLockable, CancellationToken, Task> lockAsyncFunc)
@@ -444,6 +455,7 @@ readonly struct AsyncLockableTestsImpl
             Assert.IsTrue(await tryLockAsyncFunc(lockable));
             Assert.IsTrue(lockable.IsLocked);
 
+            // Switch the context to verify that the lock recursion information is flowing.
             await Task.Yield();
 
             lockable.Unlock();
@@ -460,6 +472,7 @@ readonly struct AsyncLockableTestsImpl
             Assert.IsFalse(await tryLockAsyncFunc(lockable));
             Assert.IsTrue(lockable.IsLocked);
 
+            // Switch the context to verify that the lock recursion information is flowing.
             await Task.Yield();
 
             lockable.Unlock();
@@ -483,7 +496,7 @@ readonly struct AsyncLockableTestsImpl
             CreateLockable(),
             (x, ct) => x.TryLockAsync(Timeout.Infinite, ct));
 
-    async Task TryLockAsync_Rollback_Core(IAsyncLockable lockable, Func<IAsyncLockable, CancellationToken, Task<bool>> tryLockAsyncFunc)
+    static async Task TryLockAsync_Rollback_Core(IAsyncLockable lockable, Func<IAsyncLockable, CancellationToken, Task<bool>> tryLockAsyncFunc)
     {
         bool wasCanceled = false;
         try
