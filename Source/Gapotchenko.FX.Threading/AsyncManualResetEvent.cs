@@ -1,12 +1,15 @@
-﻿namespace Gapotchenko.FX.Threading;
+﻿using System.Diagnostics;
+
+namespace Gapotchenko.FX.Threading;
 
 // TODO
 
 /// <summary>
-/// Represents a synchronization event primitive that, when signaled, must be reset manually.
+/// Represents a synchronization primitive that, when signaled, allows one or more threads waiting on it to proceed.
+/// <see cref="AsyncManualResetEvent"/> must be reset manually.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
-public sealed class AsyncManualResetEvent
+public sealed class AsyncManualResetEvent : IAsyncEvent
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AsyncManualResetEvent"/> class
@@ -26,29 +29,30 @@ public sealed class AsyncManualResetEvent
     /// </param>
     public AsyncManualResetEvent(bool initialState)
     {
+        m_State = initialState ? 1 : 0;
     }
 
-    /// <summary>
-    /// Sets the state of the event to signaled,
-    /// which allows one or more threads waiting on the event to proceed.
-    /// </summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    volatile int m_State;
+
+    /// <inheritdoc/>
     public void Set()
     {
+        if (Interlocked.Exchange(ref m_State, 1) == 0)
+        {
+            // TODO
+        }
     }
 
-    /// <summary>
-    /// Sets the state of the event to non-signaled,
-    /// which causes threads to block.
-    /// </summary>
+    /// <inheritdoc/>
     public void Reset()
     {
-
+        m_State = 0;
     }
 
-    /// <summary>
-    /// Indicates whether the event is set.
-    /// </summary>
-    public bool IsSet { get; }
+    /// <inheritdoc/>
+    public bool IsSet => m_State != 0;
 
+    bool IAsyncEvent.IsAutoReset => false;
 }
 
