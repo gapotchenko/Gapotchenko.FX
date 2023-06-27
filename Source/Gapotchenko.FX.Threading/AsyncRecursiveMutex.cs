@@ -51,19 +51,13 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             }
 
             // Suppress the flow of the execution context to be able to propagate a possible rollback.
-            var flowControl = ExecutionContext.SuppressFlow();
+            ExecutionContext.SuppressFlow();
 
             return task.ContinueWith(
                 task =>
                 {
-                    try
-                    {
-                        flowControl.Undo();
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        m_RecursionTracker.EnsureEntered();
-                    }
+                    if (ExecutionContext.IsFlowSuppressed())
+                        ExecutionContext.RestoreFlow();
 
                     if (task.Status is TaskStatus.Faulted or TaskStatus.Canceled)
                     {
@@ -149,19 +143,13 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             }
 
             // Suppress the flow of the execution context to be able to propagate a possible rollback.
-            var flowControl = ExecutionContext.SuppressFlow();
+            ExecutionContext.SuppressFlow();
 
             return task.ContinueWith(
                 task =>
                 {
-                    try
-                    {
-                        flowControl.Undo();
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        m_RecursionTracker.EnsureEntered();
-                    }
+                    if (ExecutionContext.IsFlowSuppressed())
+                        ExecutionContext.RestoreFlow();
 
                     if (task.Status is TaskStatus.Faulted or TaskStatus.Canceled)
                     {

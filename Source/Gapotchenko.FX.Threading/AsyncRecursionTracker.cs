@@ -15,8 +15,6 @@ readonly struct AsyncRecursionTracker
 
     readonly AsyncLocal<int> m_RecursionCounter = new();
 
-    public bool IsFirstLevel => m_RecursionCounter.Value == 0;
-
     /// <summary>
     /// Enters the recursion level.
     /// </summary>
@@ -27,19 +25,6 @@ readonly struct AsyncRecursionTracker
     {
         int recursionCounter = m_RecursionCounter.Value++;
         return recursionCounter == 0;
-    }
-
-    public bool EnsureEntered()
-    {
-        if (m_RecursionCounter.Value == 0)
-        {
-            m_RecursionCounter.Value = 1;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     /// <summary>
