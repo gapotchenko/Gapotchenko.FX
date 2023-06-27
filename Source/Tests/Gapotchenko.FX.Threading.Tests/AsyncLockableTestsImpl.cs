@@ -1,8 +1,6 @@
 ﻿using Gapotchenko.FX.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
-using System.Threading;
 
 namespace Gapotchenko.FX.Threading.Tests;
 
@@ -205,6 +203,22 @@ readonly struct AsyncLockableTestsImpl
                         {
                             lockable.Unlock();
                             Assert.IsTrue(lockable.IsLocked, $"TP4 #{i}");
+                        }
+
+                        await Task.Yield();
+
+                        for (int i = 0; i < recursionDepth; ++i)
+                        {
+                            await lockAsyncFunc(lockable, cancellationToken);
+                            Assert.IsTrue(lockable.IsLocked, $"TP5 #{i}");
+                        }
+
+                        await Task.Yield();
+
+                        for (int i = 0; i < recursionDepth; ++i)
+                        {
+                            lockable.Unlock();
+                            Assert.IsTrue(lockable.IsLocked, $"TP6 #{i}");
                         }
 
                         lockable.Unlock();
