@@ -507,6 +507,6 @@ readonly struct AsyncLockableTestsImpl
     public void Unlock_NonLocked()
     {
         var lockable = CreateLockable();
-        Assert.ThrowsException<InvalidOperationException>(lockable.Unlock);
+        Assert.ThrowsException<SynchronizationLockException>(lockable.Unlock);
     }
 }

@@ -126,7 +126,7 @@ public interface IAsyncLockable
     /// <summary>
     /// Unlocks the synchronization primitive.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Unbalanced lock/unlock acquisitions of a thread synchronization primitive.</exception>
+    /// <exception cref="SynchronizationLockException">The thread synchronization primitive is being unlocked without being locked.</exception>
     void Unlock();
 
     /// <summary>

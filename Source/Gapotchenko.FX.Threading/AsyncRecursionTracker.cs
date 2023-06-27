@@ -34,14 +34,14 @@ readonly struct AsyncRecursionTracker
     /// <returns>
     /// <see langword="true"/> if the root recursion level was reached; otherwise, <see langword="false"/>.
     /// </returns>
-    /// <exception cref="InvalidOperationException">Unbalanced lock/unlock acquisitions of a thread synchronization primitive.</exception>
+    /// <exception cref="SynchronizationLockException">The thread synchronization primitive is being unlocked without being locked.</exception>
     public bool Leave()
     {
         int recursionLevel = m_RecursionLevel.Value - 1;
         if (recursionLevel < 0)
         {
             // Recursion level underflow.
-            throw new InvalidOperationException("Unbalanced lock/unlock acquisitions of a thread synchronization primitive.");
+            throw new SynchronizationLockException("The thread synchronization primitive is being unlocked without being locked.");
         }
 
         m_RecursionLevel.Value = recursionLevel;

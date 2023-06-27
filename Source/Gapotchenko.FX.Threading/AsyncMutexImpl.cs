@@ -42,7 +42,7 @@ struct AsyncMutexImpl
     /// <summary>
     /// Unlocks the mutex.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Cannot unlock a non-locked mutex.</exception>
+    /// <exception cref="SynchronizationLockException">The mutex is being unlocked without being locked.</exception>
     public void Unlock()
     {
         try
@@ -51,7 +51,7 @@ struct AsyncMutexImpl
         }
         catch (SemaphoreFullException)
         {
-            throw new InvalidOperationException("Cannot unlock a non-locked mutex.");
+            throw new SynchronizationLockException("The mutex is being unlocked without being locked.");
         }
     }
 
