@@ -7,7 +7,7 @@
 /// <summary>
 /// Provides the recursion tracking among thread and asynchronous tasks.
 /// </summary>
-struct AsyncRecursionTracker
+readonly struct AsyncRecursionTracker
 {
     public AsyncRecursionTracker()
     {
@@ -15,11 +15,13 @@ struct AsyncRecursionTracker
 
     readonly AsyncLocal<int> m_RecursionCounter = new();
 
+    public bool IsFirstLevel => m_RecursionCounter.Value == 0;
+
     /// <summary>
-    /// Enters the scope.
+    /// Enters the recursion level.
     /// </summary>
     /// <returns>
-    /// <see langword="true"/> if the first scope was entered; otherwise, <see langword="false"/>.
+    /// <see langword="true"/> if the first recursion level was entered; otherwise, <see langword="false"/>.
     /// </returns>
     public bool Enter()
     {
@@ -27,11 +29,24 @@ struct AsyncRecursionTracker
         return recursionCounter == 0;
     }
 
+    public bool EnsureEntered()
+    {
+        if (m_RecursionCounter.Value == 0)
+        {
+            m_RecursionCounter.Value = 1;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     /// <summary>
-    /// Leaves the scope.
+    /// Leaves the recursion level.
     /// </summary>
     /// <returns>
-    /// <see langword="true"/> if the final scope was left; otherwise, <see langword="false"/>.
+    /// <see langword="true"/> if the final recursion level was left; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="InvalidOperationException">Unbalanced lock/unlock acquisitions of a thread synchronization primitive.</exception>
     public bool Leave()

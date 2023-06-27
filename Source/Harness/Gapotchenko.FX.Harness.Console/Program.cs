@@ -206,19 +206,29 @@ class Program
 
         var mutex = new AsyncRecursiveMutex();
 
+        //var t1 = VerifyNesting(1, mutex, 1000000);
+        //var t2 = VerifyNesting(2, mutex, 1000000);
+        //await Task.WhenAll(t1, t2);
+        //return;
+
         var random = new Random();
         Parallel.ForEach(
-            Enumerable.Range(1, 10),
+            Enumerable.Range(1, 2),
             i =>
             {
-
                 int n;
-                lock (random)
-                    n = random.Next(1, 20);
+                //lock (random)
+                //    n = random.Next(1, 20);
+                n = 10;
 
                 try
                 {
-                    TaskBridge.Execute(VerifyNesting(mutex, n));
+                    VerifyNesting(i, mutex, n).Wait();
+                    //TaskBridge.Execute(
+                    //    async () =>
+                    //    {
+                    //        await VerifyNesting(i, mutex, n);
+                    //    });
                 }
                 catch (Exception e)
                 {
@@ -243,7 +253,7 @@ class Program
         }
     }
 
-    static async Task VerifyNesting(IAsyncLockable lockable, int depth)
+    static async Task VerifyNesting(int id, IAsyncLockable lockable, int recursionDepth)
     {
         //bool wasCanceled = false;
         //try
@@ -260,8 +270,9 @@ class Program
         await lockable.LockAsync();
         if (!lockable.IsLocked)
             throw new InvalidOperationException("F1");
+        Console.WriteLine("Entered #{0}", id);
 
-        for (int i = 0; i < depth; ++i)
+        for (int i = 0; i < recursionDepth; ++i)
         {
             if (!await lockable.TryLockAsync(0))
                 throw new InvalidOperationException($"F2.{i}");
@@ -271,13 +282,14 @@ class Program
 
         //await Task.Yield();
 
-        for (int i = 0; i < depth; ++i)
+        for (int i = 0; i < recursionDepth; ++i)
         {
             lockable.Unlock();
             if (!lockable.IsLocked)
                 throw new InvalidOperationException($"F4.{i}");
         }
 
+        Console.WriteLine("Exited");
         lockable.Unlock();
         //if (lockable.IsLocked)
         //    throw new InvalidOperationException("F5");
