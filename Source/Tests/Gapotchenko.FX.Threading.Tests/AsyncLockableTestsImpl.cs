@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Gapotchenko.FX.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Threading.Tests;
 
@@ -79,6 +81,58 @@ readonly struct AsyncLockableTestsImpl
 
     // ----------------------------------------------------------------------
 
+    static async Task VerifyLockingSemanticsAsync(
+        IAsyncLockable lockable,
+        Func<IAsyncLockable, CancellationToken, Task> lockAsyncFunc)
+    {
+        var lockEvent = new ManualResetEventSlim();
+        var unlockEvent = new ManualResetEventSlim();
+        var lockerTask = TaskBridge.ExecuteAsync(
+            () =>
+            {
+                lockable.Lock();
+                lockEvent.Set();
+                unlockEvent.Wait();
+                lockable.Unlock();
+            });
+
+        try
+        {
+            var cts = new CancellationTokenSource();
+            lockEvent.Wait();
+            cts.CancelAfter(1);
+
+            bool wasCanceled = false;
+            try
+            {
+                await lockAsyncFunc(lockable, cts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                wasCanceled = true;
+            }
+            Assert.IsTrue(wasCanceled);
+
+            Assert.IsTrue(lockable.IsLocked);
+            Assert.IsFalse(lockable.TryLock());
+        }
+        finally
+        {
+            unlockEvent.Set();
+            await lockerTask;
+        }
+
+        Assert.IsFalse(lockable.IsLocked);
+
+        Assert.IsTrue(lockable.TryLock());
+        Assert.IsTrue(lockable.IsLocked);
+
+        lockable.Unlock();
+        Assert.IsFalse(lockable.IsLocked);
+    }
+
+    // ----------------------------------------------------------------------
+
     public async Task LockAsync_Nesting()
     {
         var lockable = CreateLockable();
@@ -108,6 +162,12 @@ readonly struct AsyncLockableTestsImpl
             lockable.Unlock();
             Assert.IsFalse(lockable.IsLocked);
         }
+
+        // --------------------------------------------
+
+        await VerifyLockingSemanticsAsync(
+            lockable,
+            (x, ct) => x.LockAsync(ct));
     }
 
     // ----------------------------------------------------------------------
@@ -218,31 +278,24 @@ readonly struct AsyncLockableTestsImpl
 
     // ----------------------------------------------------------------------
 
-    async Task TryLockAsync_Nesting_Core(IAsyncLockable lockable, Func<Task<bool>> tryLockAsyncFunc)
-    {
-        Assert.IsTrue(await tryLockAsyncFunc());
-        Assert.IsTrue(lockable.IsLocked);
-
-        Assert.IsTrue(await tryLockAsyncFunc());
-        Assert.IsTrue(lockable.IsLocked);
-
-        lockable.Unlock();
-        Assert.IsTrue(lockable.IsLocked);
-
-        lockable.Unlock();
-        Assert.IsFalse(lockable.IsLocked);
-    }
-
-    // ----------------------------------------------------------------------
-
     [TestMethod]
     public async Task TryLockAsync_TimeSpan_Nesting()
     {
         var lockable = CreateLockable();
         var timeout = TimeSpan.Zero;
 
-        await TryLockAsync_Nesting_Core(lockable, x => x.TryLockAsync(timeout));
-        await TryLockAsync_Nesting_Core(lockable, x => x.TryLockAsync(timeout, CancellationToken.None));
+        static Task LockAsync(IAsyncLockable lockable, CancellationToken cancellationToken) =>
+            lockable.TryLockAsync(Timeout.InfiniteTimeSpan, cancellationToken);
+
+        await TryLockAsync_Nesting_Core(
+            lockable,
+            x => x.TryLockAsync(timeout),
+            LockAsync);
+
+        await TryLockAsync_Nesting_Core(
+            lockable,
+            x => x.TryLockAsync(timeout, CancellationToken.None),
+            LockAsync);
     }
 
     [TestMethod]
@@ -251,11 +304,24 @@ readonly struct AsyncLockableTestsImpl
         var lockable = CreateLockable();
         var timeout = 0;
 
-        await TryLockAsync_Nesting_Core(lockable, x => x.TryLockAsync(timeout));
-        await TryLockAsync_Nesting_Core(lockable, x => x.TryLockAsync(timeout, CancellationToken.None));
+        static Task LockAsync(IAsyncLockable lockable, CancellationToken cancellationToken) =>
+            lockable.TryLockAsync(Timeout.Infinite, cancellationToken);
+
+        await TryLockAsync_Nesting_Core(
+            lockable,
+            x => x.TryLockAsync(timeout),
+            LockAsync);
+
+        await TryLockAsync_Nesting_Core(
+            lockable,
+            x => x.TryLockAsync(timeout, CancellationToken.None),
+            LockAsync);
     }
 
-    async Task TryLockAsync_Nesting_Core(IAsyncLockable lockable, Func<IAsyncLockable, Task<bool>> tryLockAsyncFunc)
+    async Task TryLockAsync_Nesting_Core(
+        IAsyncLockable lockable,
+        Func<IAsyncLockable, Task<bool>> tryLockAsyncFunc,
+        Func<IAsyncLockable, CancellationToken, Task> lockAsyncFunc)
     {
         if (lockable.IsRecursive)
         {
@@ -282,6 +348,10 @@ readonly struct AsyncLockableTestsImpl
             lockable.Unlock();
             Assert.IsFalse(lockable.IsLocked);
         }
+
+        // --------------------------------------------
+
+        await VerifyLockingSemanticsAsync(lockable, lockAsyncFunc);
     }
 
     // ----------------------------------------------------------------------
