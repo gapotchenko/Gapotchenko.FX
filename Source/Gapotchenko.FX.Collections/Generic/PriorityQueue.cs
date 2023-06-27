@@ -11,7 +11,8 @@ namespace System.Collections.Generic;
 
 /// <summary>
 /// <para>
-/// Represents a min priority queue.
+/// Represents a collection of items that have a value and a priority.
+/// On dequeue, the item with the lowest priority value is removed.
 /// </para>
 /// <para>
 /// This is a polyfill provided by Gapotchenko.FX.
@@ -19,10 +20,6 @@ namespace System.Collections.Generic;
 /// </summary>
 /// <typeparam name="TElement">Specifies the type of elements in the queue.</typeparam>
 /// <typeparam name="TPriority">Specifies the type of priority associated with enqueued elements.</typeparam>
-/// <remarks>
-///  Implements an array-backed quaternary min-heap. Each element is enqueued with an associated priority
-///  that determines the dequeue order: elements with the lowest priority get dequeued first.
-/// </remarks>
 [DebuggerDisplay("Count = {Count}")]
 [DebuggerTypeProxy(typeof(PriorityQueueDebugView<,>))]
 public class PriorityQueue<TElement, TPriority>
@@ -73,7 +70,7 @@ public class PriorityQueue<TElement, TPriority>
 #endif
 
     /// <summary>
-    ///  Initializes a new instance of the <see cref="PriorityQueue{TElement, TPriority}"/> class.
+    /// Initializes a new instance of the <see cref="PriorityQueue{TElement, TPriority}"/> class.
     /// </summary>
     public PriorityQueue()
     {
@@ -82,12 +79,12 @@ public class PriorityQueue<TElement, TPriority>
     }
 
     /// <summary>
-    ///  Initializes a new instance of the <see cref="PriorityQueue{TElement, TPriority}"/> class
-    ///  with the specified initial capacity.
+    /// Initializes a new instance of the <see cref="PriorityQueue{TElement, TPriority}"/> class
+    /// with the specified initial capacity.
     /// </summary>
     /// <param name="initialCapacity">Initial capacity to allocate in the underlying heap array.</param>
     /// <exception cref="ArgumentOutOfRangeException">
-    ///  The specified <paramref name="initialCapacity"/> was negative.
+    /// The specified <paramref name="initialCapacity"/> was negative.
     /// </exception>
     public PriorityQueue(int initialCapacity)
         : this(initialCapacity, comparer: null)
