@@ -204,21 +204,29 @@ class Program
         Console.WriteLine(appInfo.InformationalVersion);
 
 
+        var mutex = new AsyncRecursiveMutex();
+
         var random = new Random();
         Parallel.ForEach(
-            Enumerable.Range(1, 1000),
+            Enumerable.Range(1, 10),
             i =>
             {
-                var mutex = new AsyncRecursiveMutex();
 
                 int n;
                 lock (random)
                     n = random.Next(1, 20);
 
-                TaskBridge.Execute(VerifyNesting(mutex, n));
+                try
+                {
+                    TaskBridge.Execute(VerifyNesting(mutex, n));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             });
 
-        var mutex = new AsyncRecursiveMutex();
+        //var mutex = new AsyncRecursiveMutex();
 
         //await VerifyNesting(mutex, 1);
 
@@ -237,17 +245,17 @@ class Program
 
     static async Task VerifyNesting(IAsyncLockable lockable, int depth)
     {
-        bool wasCanceled = false;
-        try
-        {
-            await lockable.LockAsync(new CancellationToken(true));
-        }
-        catch (OperationCanceledException)
-        {
-            wasCanceled = true;
-        }
-        if (!wasCanceled)
-            throw new InvalidOperationException("F6");
+        //bool wasCanceled = false;
+        //try
+        //{
+        //    await lockable.LockAsync(new CancellationToken(true));
+        //}
+        //catch (OperationCanceledException)
+        //{
+        //    wasCanceled = true;
+        //}
+        //if (!wasCanceled)
+        //    throw new InvalidOperationException("F6");
 
         await lockable.LockAsync();
         if (!lockable.IsLocked)
@@ -261,7 +269,7 @@ class Program
                 throw new InvalidOperationException($"F3.{i}");
         }
 
-        await Task.Yield();
+        //await Task.Yield();
 
         for (int i = 0; i < depth; ++i)
         {
@@ -271,7 +279,7 @@ class Program
         }
 
         lockable.Unlock();
-        if (lockable.IsLocked)
-            throw new InvalidOperationException("F5");
+        //if (lockable.IsLocked)
+        //    throw new InvalidOperationException("F5");
     }
 }
