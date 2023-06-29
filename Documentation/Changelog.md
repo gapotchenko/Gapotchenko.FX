@@ -14,7 +14,6 @@ Release date: not released yet
 - `AssemblyAutoLoader` now understands probing paths defined by assembly binding redirects
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - Polyfills:
-  - Added polyfill for a LINQ-style pipe operator
   - Added polyfill for required properties introduced in C# 11.0
   - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
   - Added `ExceptBy`, `IntersectBy` and `UnionBy` LINQ polyfills for `IEnumerable<T>`
@@ -29,6 +28,8 @@ Release date: not released yet
   - Added polyfill for `System.String.GetHashCode(System.StringComparison)` method
   - Added polyfills for `Split` and `SplitAny` methods of `System.ReadOnlySpan<char>` type
   - Added polyfill for `ReadSpan` method of `System.Runtime.InteropServices.SafeBuffer` type
+  - Added polyfill for `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` type
+  - Added polyfill for a LINQ-style pipe operator
   - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
 - .NET Framework 4.6 support is retired. The minimal supported .NET Framework version is 4.6.1
 - Fixed case-sensitivity of a text data encoding padding character. This is important for data encodings that use custom padding characters
