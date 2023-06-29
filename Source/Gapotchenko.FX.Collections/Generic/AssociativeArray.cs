@@ -233,7 +233,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         }
         set
         {
-            ExceptionHelper.ValidateNullArgumentLegality<TValue>(value, nameof(value));
+            ExceptionHelper.ValidateNullArgumentLegality<TValue>(value);
 
             try
             {
@@ -311,7 +311,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     void IDictionary.Add(object key, object? value)
     {
-        ExceptionHelper.ValidateNullArgumentLegality<TValue>(value, nameof(value));
+        ExceptionHelper.ValidateNullArgumentLegality<TValue>(value);
 
         if (key is null)
         {

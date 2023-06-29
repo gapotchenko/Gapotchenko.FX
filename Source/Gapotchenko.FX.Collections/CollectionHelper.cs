@@ -1,8 +1,12 @@
-﻿namespace Gapotchenko.FX.Collections;
+﻿using System.Runtime.CompilerServices;
+
+namespace Gapotchenko.FX.Collections;
 
 static class CollectionHelper
 {
-    public static T GetCompatibleValue<T>(object? value, string parameterName)
+    public static T GetCompatibleValue<T>(
+        object? value,
+        [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         ExceptionHelper.ValidateNullArgumentLegality<T>(value, parameterName);
 

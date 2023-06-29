@@ -1,5 +1,6 @@
 ﻿using Gapotchenko.FX.Threading;
 using System.Collections;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Collections.Generic;
@@ -42,23 +43,35 @@ public class Deque<T> : IList, IList<T>, IReadOnlyList<T>
         throw new NotImplementedException();
     }
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    int m_Count;
+
     /// <summary>
     /// Gets the number of elements contained in the <see cref="Deque{T}"/>.
     /// </summary>
-    public int Count => throw new NotImplementedException();
+    public int Count => m_Count;
 
     /// <summary>
     /// Gets or sets the element at the specified index.
     /// </summary>
     /// <param name="index">The zero-based index of the element to get or set.</param>
     /// <returns>The element at the specified index.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="index"/> is not a valid index in the <see cref="Deque{T}"/>.
-    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is greater than or equal to <see cref="Count"/>.</exception>
     public T this[int index]
     {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
+        get
+        {
+            ExceptionHelper.ValidateIndexArgumentRange(index, m_Count);
+
+            throw new NotImplementedException();
+        }
+        set
+        {
+            ExceptionHelper.ValidateIndexArgumentRange(index, m_Count);
+
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
@@ -257,6 +270,8 @@ public class Deque<T> : IList, IList<T>, IReadOnlyList<T>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is greater than <see cref="Count"/>.</exception>
     public void Insert(int index, T item)
     {
+        ExceptionHelper.ValidateIndexArgumentBounds(index, m_Count);
+
         throw new NotImplementedException();
     }
 
@@ -279,10 +294,27 @@ public class Deque<T> : IList, IList<T>, IReadOnlyList<T>
     /// </summary>
     /// <param name="index">The zero-based index of the element to remove.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than 0.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is greater than <see cref="Count"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is greater than or equal to <see cref="Count"/>.</exception>
     public void RemoveAt(int index)
     {
+        ExceptionHelper.ValidateIndexArgumentRange(index, m_Count);
+
         throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Ensures that the capacity of the <see cref="Deque{T}"/> is greater than or equal to the specified <paramref name="capacity"/>.
+    /// Otherwise, the <see cref="Deque{T}"/> capacity will be doubled until it reaches or exceeds the specified value.
+    /// </summary>
+    /// <param name="capacity">The minimum capacity to provision.</param>
+    /// <returns>The new capacity of the <see cref="Deque{T}"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
+    public int EnsureCapacity(int capacity)
+    {
+        ExceptionHelper.ThrowIfArgumentIsNegative(capacity);
+
+        throw new NotImplementedException();
+
     }
 
     #region Enumeration
@@ -357,13 +389,13 @@ public class Deque<T> : IList, IList<T>, IReadOnlyList<T>
     object? IList.this[int index]
     {
         get => this[index];
-        set => this[index] = CollectionHelper.GetCompatibleValue<T>(value, nameof(value));
+        set => this[index] = CollectionHelper.GetCompatibleValue<T>(value);
     }
 
     int IList.Add(object? value)
     {
-        PushToBack(CollectionHelper.GetCompatibleValue<T>(value, nameof(value)));
-        return Count - 1;
+        PushToBack(CollectionHelper.GetCompatibleValue<T>(value));
+        return m_Count - 1;
     }
 
     bool IList.Contains(object? value) =>
@@ -379,7 +411,7 @@ public class Deque<T> : IList, IList<T>, IReadOnlyList<T>
     }
 
     void IList.Insert(int index, object? value) =>
-        Insert(index, CollectionHelper.GetCompatibleValue<T>(value, nameof(value)));
+        Insert(index, CollectionHelper.GetCompatibleValue<T>(value));
 
     void IList.Remove(object? value)
     {
