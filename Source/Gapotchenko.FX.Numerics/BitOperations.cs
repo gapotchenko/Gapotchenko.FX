@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 
 #if !TFF_BITOPERATIONS
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+
 namespace System.Numerics;
 
 /// <summary>
