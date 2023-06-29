@@ -233,7 +233,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         }
         set
         {
-            Throw.IfNullAndNullsAreIllegal<TValue>(value, nameof(value));
+            ExceptionHelper.ValidateNullArgumentLegality<TValue>(value, nameof(value));
 
             try
             {
@@ -244,12 +244,12 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                 }
                 catch (InvalidCastException)
                 {
-                    Throw.InvalidArgumentTypeException(value, typeof(TValue), nameof(value));
+                    throw ExceptionHelper.CreateInvalidArgumentTypeException(value, typeof(TValue), nameof(value));
                 }
             }
             catch (InvalidCastException)
             {
-                Throw.InvalidArgumentTypeException(key, typeof(TKey), nameof(key));
+                throw ExceptionHelper.CreateInvalidArgumentTypeException(key, typeof(TKey), nameof(key));
             }
         }
     }
@@ -311,12 +311,12 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     void IDictionary.Add(object key, object? value)
     {
+        ExceptionHelper.ValidateNullArgumentLegality<TValue>(value, nameof(value));
+
         if (key is null)
         {
-            Throw.IfNullAndNullsAreIllegal<TValue>(value, nameof(value));
-
             if (value is not null && value is not TValue)
-                Throw.InvalidArgumentTypeException(value, typeof(TValue), nameof(value));
+                throw ExceptionHelper.CreateInvalidArgumentTypeException(value, typeof(TValue), nameof(value));
 
             if (!m_NullSlot.HasValue)
             {

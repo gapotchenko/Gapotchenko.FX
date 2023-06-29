@@ -4,15 +4,15 @@ static class CollectionHelper
 {
     public static T GetCompatibleValue<T>(object? value, string parameterName)
     {
-        Throw.IfNullAndNullsAreIllegal<T>(value, parameterName);
+        ExceptionHelper.ValidateNullArgumentLegality<T>(value, parameterName);
+
         try
         {
             return (T)value!;
         }
         catch (InvalidOperationException)
         {
-            Throw.InvalidArgumentTypeException(value, typeof(T), parameterName);
-            throw; // never reached
+            throw ExceptionHelper.CreateInvalidArgumentTypeException(value, typeof(T), parameterName);
         }
     }
 
