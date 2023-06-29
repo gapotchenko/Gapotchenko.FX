@@ -1,4 +1,4 @@
-﻿// (c) Portions of code from the .NET project by Microsoft and .NET Foundation
+﻿// Portions © .NET Foundation
 
 #if !TFF_PRIORITYQUEUE
 
@@ -971,7 +971,6 @@ sealed class PriorityQueueDebugView<TElement, TPriority>
 
 #else
 
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 [assembly: TypeForwardedTo(typeof(PriorityQueue<,>))]

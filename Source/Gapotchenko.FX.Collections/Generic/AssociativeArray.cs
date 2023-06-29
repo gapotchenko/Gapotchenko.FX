@@ -233,7 +233,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         }
         set
         {
-            ThrowHelper.IfNullAndNullsAreIllegalThenThrow<TValue>(value, nameof(value));
+            Throw.IfNullAndNullsAreIllegal<TValue>(value, nameof(value));
 
             try
             {
@@ -244,12 +244,12 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                 }
                 catch (InvalidCastException)
                 {
-                    ThrowHelper.ThrowWrongValueTypeArgumentException(value, typeof(TValue));
+                    Throw.InvalidArgumentTypeException(value, typeof(TValue), nameof(value));
                 }
             }
             catch (InvalidCastException)
             {
-                ThrowHelper.ThrowWrongKeyTypeArgumentException(key, typeof(TKey));
+                Throw.InvalidArgumentTypeException(key, typeof(TKey), nameof(key));
             }
         }
     }
@@ -313,10 +313,10 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     {
         if (key is null)
         {
-            ThrowHelper.IfNullAndNullsAreIllegalThenThrow<TValue>(value, nameof(value));
+            Throw.IfNullAndNullsAreIllegal<TValue>(value, nameof(value));
 
             if (value is not null && value is not TValue)
-                ThrowHelper.ThrowWrongValueTypeArgumentException(value, typeof(TValue));
+                Throw.InvalidArgumentTypeException(value, typeof(TValue), nameof(value));
 
             if (!m_NullSlot.HasValue)
             {
@@ -871,27 +871,6 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     static class ThrowHelper
     {
-        // Allow nulls for reference types and Nullable<U>, but not for value types.
-        // Aggressively inline so the JIT evaluates the if in place and either drops
-        // the call altogether or leaves the body as is.
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void IfNullAndNullsAreIllegalThenThrow<T>(object? value, string argName)
-        {
-            // Note that default(T) is not equal to null for value types except when T is Nullable<U>.
-            if (!(default(T) == null) && value == null)
-                throw new ArgumentNullException(argName);
-        }
-
-        const string WrongArgumentTypeMessage = "The value '{0}' is not of type '{1}' and cannot be used in this generic collection.";
-
-        [DoesNotReturn]
-        public static void ThrowWrongValueTypeArgumentException<T>(T value, Type targetType) =>
-            throw new ArgumentException(string.Format(WrongArgumentTypeMessage, value, targetType), nameof(value));
-
-        [DoesNotReturn]
-        public static void ThrowWrongKeyTypeArgumentException<T>(T key, Type targetType) =>
-            throw new ArgumentException(string.Format(WrongArgumentTypeMessage, key, targetType), nameof(key));
-
         [DoesNotReturn]
         public static void ThrowKeyNotFoundException(TKey? key) =>
             throw new KeyNotFoundException($"The given key '{key}' was not present in the associative array.");
