@@ -9,10 +9,14 @@
     <WarningsAsErrors>$(WarningsAsErrors),CS8509</WarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+  </PropertyGroup>
+
   <ItemGroup>
     <Using Include="System.ComponentModel" />
     <Using Include="System.FormattableString" Static="true" />
     <Using Include="System.Runtime.Versioning" />
   </ItemGroup>
-  
+
 </Project>
