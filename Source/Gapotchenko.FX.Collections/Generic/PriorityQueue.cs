@@ -1,8 +1,10 @@
-﻿// Portions © .NET Foundation
+﻿// Portions © .NET Foundation and its licensors
 
 #if !TFF_PRIORITYQUEUE
 
 using Gapotchenko.FX;
+using Gapotchenko.FX.Collections;
+using Gapotchenko.FX.Collections.Utils;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -24,8 +26,6 @@ namespace System.Collections.Generic;
 [DebuggerTypeProxy(typeof(PriorityQueueDebugView<,>))]
 public class PriorityQueue<TElement, TPriority>
 {
-    const int ArrayMaxLength = 0x7FFFFFC7;
-
     /// <summary>
     /// Represents an implicit heap-ordered complete d-ary tree, stored as an array.
     /// </summary>
@@ -509,21 +509,16 @@ public class PriorityQueue<TElement, TPriority>
     }
 
     /// <summary>
-    ///  Sets the capacity to the actual number of items in the <see cref="PriorityQueue{TElement, TPriority}"/>,
-    ///  if that is less than 90 percent of current capacity.
+    /// Sets the capacity to the actual number of elements in the <see cref="PriorityQueue{TElement, TPriority}"/>,
+    /// if that number is less than a threshold value.
     /// </summary>
     /// <remarks>
-    ///  This method can be used to minimize a collection's memory overhead
-    ///  if no new elements will be added to the collection.
+    /// This method can be used to minimize a collection's memory overhead
+    /// if no new elements will be added to the collection.
     /// </remarks>
     public void TrimExcess()
     {
-        int threshold = (int)(_nodes.Length * 0.9);
-        if (_size < threshold)
-        {
-            Array.Resize(ref _nodes, _size);
-            _version++;
-        }
+        CollectionHelpers.TrimExcess(ref _nodes, _size);
     }
 
     /// <summary>
@@ -538,9 +533,11 @@ public class PriorityQueue<TElement, TPriority>
 
         int newcapacity = GrowFactor * _nodes.Length;
 
+        int arrayMaxLength = ArrayHelpers.ArrayMaxLength;
+
         // Allow the queue to grow to maximum possible capacity (~2G elements) before encountering overflow.
         // Note that this check works even when _nodes.Length overflowed thanks to the (uint) cast
-        if ((uint)newcapacity > ArrayMaxLength) newcapacity = ArrayMaxLength;
+        if ((uint)newcapacity > arrayMaxLength) newcapacity = arrayMaxLength;
 
         // Ensure minimum growth is respected.
         newcapacity = Math.Max(newcapacity, _nodes.Length + MinimumGrow);
@@ -898,10 +895,7 @@ public class PriorityQueue<TElement, TPriority>
 
             bool MoveNextRare()
             {
-                if (_version != _queue._version)
-                {
-                    throw new InvalidOperationException("Collection was modified after the enumerator was instantiated.");
-                }
+                ValidateVersion();
 
                 _index = _queue._size + 1;
                 _current = default;
@@ -916,13 +910,16 @@ public class PriorityQueue<TElement, TPriority>
 
             void IEnumerator.Reset()
             {
-                if (_version != _queue._version)
-                {
-                    throw new InvalidOperationException("Collection was modified after the enumerator was instantiated.");
-                }
+                ValidateVersion();
 
                 _index = 0;
                 _current = default;
+            }
+
+            void ValidateVersion()
+            {
+                if (_version != _queue._version)
+                    throw ExceptionHelpers.CreateEnumeratedCollectionWasModifiedException();
             }
         }
 

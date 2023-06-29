@@ -1,9 +1,15 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Gapotchenko.FX.Collections;
+namespace Gapotchenko.FX.Collections.Utils;
 
-static class ExceptionHelper
+static class ExceptionHelpers
 {
+    public static void ThrowIfArgumentIsNull(object? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
+    {
+        if (value is null)
+            throw new ArgumentNullException(parameterName);
+    }
+
     public static void ThrowIfArgumentIsNegative(int value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
 #if NET8_0_OR_GREATER
@@ -18,6 +24,12 @@ static class ExceptionHelper
                     parameterName));
         }
 #endif
+    }
+
+    public static void ThrowIfArrayArgumentIsMultiDimensional(Array array, [CallerArgumentExpression(nameof(array))] string? parameterName = null)
+    {
+        if (array.Rank != 1)
+            throw new ArgumentException("Only single dimensional arrays are supported for the requested action.", parameterName);
     }
 
     /// <summary>
@@ -69,4 +81,13 @@ static class ExceptionHelper
                 actualValue,
                 expectedType),
             parameterName);
+
+    public static Exception CreateIncompatibleArrayTypeException() =>
+        new ArgumentException("Target array type is not compatible with the type of items in the collection.");
+
+    public static Exception CreateEnumeratedCollectionWasModifiedException() =>
+        new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
+
+    public static Exception CreateEmptyCollectionException() =>
+        new InvalidOperationException("The collection is empty.");
 }

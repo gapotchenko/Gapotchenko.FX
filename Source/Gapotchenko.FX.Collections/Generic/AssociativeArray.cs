@@ -1,4 +1,5 @@
-﻿using Gapotchenko.FX.Linq;
+﻿using Gapotchenko.FX.Collections.Utils;
+using Gapotchenko.FX.Linq;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -233,7 +234,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         }
         set
         {
-            ExceptionHelper.ValidateNullArgumentLegality<TValue>(value);
+            ExceptionHelpers.ValidateNullArgumentLegality<TValue>(value);
 
             try
             {
@@ -244,12 +245,12 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                 }
                 catch (InvalidCastException)
                 {
-                    throw ExceptionHelper.CreateInvalidArgumentTypeException(value, typeof(TValue), nameof(value));
+                    throw ExceptionHelpers.CreateInvalidArgumentTypeException(value, typeof(TValue), nameof(value));
                 }
             }
             catch (InvalidCastException)
             {
-                throw ExceptionHelper.CreateInvalidArgumentTypeException(key, typeof(TKey), nameof(key));
+                throw ExceptionHelpers.CreateInvalidArgumentTypeException(key, typeof(TKey), nameof(key));
             }
         }
     }
@@ -311,12 +312,12 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     void IDictionary.Add(object key, object? value)
     {
-        ExceptionHelper.ValidateNullArgumentLegality<TValue>(value);
+        ExceptionHelpers.ValidateNullArgumentLegality<TValue>(value);
 
         if (key is null)
         {
             if (value is not null && value is not TValue)
-                throw ExceptionHelper.CreateInvalidArgumentTypeException(value, typeof(TValue), nameof(value));
+                throw ExceptionHelpers.CreateInvalidArgumentTypeException(value, typeof(TValue), nameof(value));
 
             if (!m_NullSlot.HasValue)
             {
