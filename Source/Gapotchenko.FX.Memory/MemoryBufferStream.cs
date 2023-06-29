@@ -260,16 +260,9 @@ class MemoryBufferStream : Stream, IHasMemory<byte>, IHasReadOnlyMemory<byte>
         if (desiredCapacity <= existingCapacity)
             return -1; // no need to expand
 
-        const int minCapacity = 256;
-        int arrayMaxLength =
-#if NET6_0_OR_GREATER
-            Array.MaxLength;
-#else
-            0x7fffffc7; // the value is hardcoded in .NET BCL
-#endif
-
         uint extent = (uint)existingCapacity * 2; // using uint to avoid overflow
 
+        int arrayMaxLength = ArrayHelpers.ArrayMaxLength;
         if (extent > arrayMaxLength)
         {
             // The capacity should be <= Array.MaxLength, but the user should be able to override that.
@@ -277,6 +270,7 @@ class MemoryBufferStream : Stream, IHasMemory<byte>, IHasReadOnlyMemory<byte>
         }
         else
         {
+            const int minCapacity = 256;
             return Math.Max(Math.Max(desiredCapacity, minCapacity), (int)extent);
         }
     }

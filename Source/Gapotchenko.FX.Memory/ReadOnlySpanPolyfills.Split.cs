@@ -1,4 +1,4 @@
-﻿// Portions © .NET Foundation
+﻿// Portions © .NET Foundation and its licensors
 
 // --------------------------------------------------------------------------
 
@@ -641,13 +641,6 @@ partial class ReadOnlySpanPolyfills
 
         void Grow()
         {
-            int ArrayMaxLength =
-#if NET6_0_OR_GREATER
-                Array.MaxLength;
-#else
-                0x7FFFFFC7; // same as Array.MaxLength
-#endif
-
             // Double the size of the span.  If it's currently empty, default to size 4,
             // although it'll be increased in Rent to the pool's minimum bucket size.
             int nextCapacity = _span.Length != 0 ? _span.Length * 2 : 4;
@@ -658,9 +651,10 @@ partial class ReadOnlySpanPolyfills
             // which case it'll result in an OOM when calling Rent below.  In the exceedingly rare
             // case where _span.Length is already int.MaxValue (in which case it couldn't be a managed
             // array), just use that same value again and let it OOM in Rent as well.
-            if ((uint)nextCapacity > ArrayMaxLength)
+            int arrayMaxLength = ArrayHelpers.ArrayMaxLength;
+            if ((uint)nextCapacity > arrayMaxLength)
             {
-                nextCapacity = Math.Max(Math.Max(_span.Length + 1, ArrayMaxLength), _span.Length);
+                nextCapacity = Math.Max(Math.Max(_span.Length + 1, arrayMaxLength), _span.Length);
             }
 
             T[] array = ArrayPool<T>.Shared.Rent(nextCapacity);
