@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Linq;
 
@@ -222,7 +221,7 @@ public static partial class EnumerableEx
     /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">The source sequence.</param>
     /// <returns>A list view of a source sequence.</returns>
-    [return: NotNullIfNotNull("source")]
+    [return: NotNullIfNotNull(nameof(source))]
     public static List<TSource>? AsList<TSource>(IEnumerable<TSource>? source) =>
         source switch
         {
@@ -242,7 +241,7 @@ public static partial class EnumerableEx
     /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">The source sequence.</param>
     /// <returns>An array view of a source sequence.</returns>
-    [return: NotNullIfNotNull("source")]
+    [return: NotNullIfNotNull(nameof(source))]
     public static TSource[]? AsArray<TSource>(IEnumerable<TSource>? source) =>
         source switch
         {
@@ -250,30 +249,6 @@ public static partial class EnumerableEx
             TSource[] array => array,
             _ => source.ToArray()
         };
-
-#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
-    /// <inheritdoc cref="EnumerableExtensions.ReifyList{TSource}(IEnumerable{TSource})"/>
-    [Obsolete("Use ReifyList extension method instead.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [return: NotNullIfNotNull(nameof(source))]
-    public static IReadOnlyList<TSource>? AsReadOnlyList<TSource>(
-#if SOURCE_COMPATIBILITY
-        this
-#endif
-        IEnumerable<TSource>? source) => source?.ReifyList();
-#endif
-
-#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
-    /// <inheritdoc cref="EnumerableExtensions.ReifyList{TSource}(IEnumerable{TSource})"/>
-    [Obsolete("Use ReifyList extension method instead.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [return: NotNullIfNotNull(nameof(source))]
-    public static IReadOnlyList<TSource>? AsReadOnly<TSource>(
-#if SOURCE_COMPATIBILITY
-        this
-#endif
-        IEnumerable<TSource>? source) => source?.ReifyList();
-#endif
 
     /// <summary>
     /// Determines whether any elements of a sequence satisfy the specified conditions.

@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Linq;
 
@@ -15,8 +14,7 @@ partial class EnumerableEx
     /// <typeparam name="T">The type of the elements of source.</typeparam>
     /// <param name="source">The source sequence.</param>
     /// <returns>The sequence that fully replicates the source with all elements being memoized.</returns>
-    [return: NotNullIfNotNull("source")]
-    public static IEnumerable<T>? Memoize<T>(this IEnumerable<T>? source) => Memoize(source, false);
+    public static IEnumerable<T> Memoize<T>(this IEnumerable<T> source) => Memoize(source, false);
 
     /// <summary>
     /// Memoize all elements of a sequence by ensuring that every element is retrieved only once.
@@ -25,13 +23,12 @@ partial class EnumerableEx
     /// <param name="source">The source sequence.</param>
     /// <param name="isThreadSafe">Indicates whether resulting sequence is thread safe.</param>
     /// <returns>The sequence that fully replicates the source with all elements being memoized.</returns>
-    [return: NotNullIfNotNull("source")]
-    public static IEnumerable<T>? Memoize<T>(this IEnumerable<T>? source, bool isThreadSafe)
+    public static IEnumerable<T> Memoize<T>(this IEnumerable<T> source, bool isThreadSafe)
     {
         switch (source)
         {
             case null:
-                return null;
+                return null!; // for binary compatibility
 
             case CachedEnumerable<T> existingCachedEnumerable:
                 if (!isThreadSafe || existingCachedEnumerable is ThreadSafeCachedEnumerable<T>)
@@ -58,14 +55,14 @@ partial class EnumerableEx
     {
         public CachedEnumerable(IEnumerable<T> source)
         {
-            _Source = source;
+            m_Source = source;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<T>? _Source;
+        IEnumerable<T>? m_Source;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerator<T>? _SourceEnumerator;
+        IEnumerator<T>? m_SourceEnumerator;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly IList<T> Cache = new List<T>();
@@ -79,17 +76,17 @@ partial class EnumerableEx
             }
         }
 
-        protected bool CacheIsBuilt => _Source == null && _SourceEnumerator == null;
+        protected bool CacheIsBuilt => m_Source == null && m_SourceEnumerator == null;
 
         bool _TryCacheElementNoLock()
         {
-            if (_SourceEnumerator == null)
+            if (m_SourceEnumerator == null)
             {
-                if (_Source != null)
+                if (m_Source != null)
                 {
                     // The first access.
-                    _SourceEnumerator = _Source.GetEnumerator();
-                    _Source = null;
+                    m_SourceEnumerator = m_Source.GetEnumerator();
+                    m_Source = null;
                 }
                 else
                 {
@@ -98,15 +95,15 @@ partial class EnumerableEx
                 }
             }
 
-            if (_SourceEnumerator.MoveNext())
+            if (m_SourceEnumerator.MoveNext())
             {
-                Cache.Add(_SourceEnumerator.Current);
+                Cache.Add(m_SourceEnumerator.Current);
                 return true;
             }
             else
             {
                 // Source enumerator has reached the end, so it is no longer needed.
-                _SourceEnumerator.Dispose();
+                m_SourceEnumerator.Dispose();
                 ClearSourceEnumerator();
                 return false;
             }
@@ -114,7 +111,7 @@ partial class EnumerableEx
 
         protected virtual void ClearSourceEnumerator()
         {
-            _SourceEnumerator = null;
+            m_SourceEnumerator = null;
         }
 
         public virtual T this[int index]
@@ -187,7 +184,7 @@ partial class EnumerableEx
         }
 
         internal override bool EnsureItemIsCached(int index)
-        {                
+        {
             if (CacheIsBuilt)
             {
                 return base.EnsureItemIsCached(index);
@@ -221,27 +218,25 @@ partial class EnumerableEx
 
     sealed class CachedEnumerator<T> : IEnumerator<T>
     {
-        CachedEnumerable<T>? _CachedEnumerable;
+        CachedEnumerable<T>? m_CachedEnumerable;
 
         const int InitialIndex = -1;
         const int EofIndex = -2;
 
-        int _Index = InitialIndex;
+        int m_Index = InitialIndex;
 
         public CachedEnumerator(CachedEnumerable<T> cachedEnumerable)
         {
-            _CachedEnumerable = cachedEnumerable;
+            m_CachedEnumerable = cachedEnumerable;
         }
 
         public T Current
         {
             get
             {
-                var cachedEnumerable = _CachedEnumerable;
-                if (cachedEnumerable == null)
-                    throw new InvalidOperationException();
+                var cachedEnumerable = m_CachedEnumerable ?? throw new InvalidOperationException();
 
-                var index = _Index;
+                var index = m_Index;
                 if (index < 0)
                     throw new InvalidOperationException();
 
@@ -253,25 +248,25 @@ partial class EnumerableEx
 
         public void Dispose()
         {
-            _CachedEnumerable = null;
+            m_CachedEnumerable = null;
         }
 
         public bool MoveNext()
         {
-            var cachedEnumerable = _CachedEnumerable;
+            var cachedEnumerable = m_CachedEnumerable;
             if (cachedEnumerable == null)
             {
                 // Disposed.
                 return false;
             }
 
-            if (_Index == EofIndex)
+            if (m_Index == EofIndex)
                 return false;
 
-            _Index++;
-            if (!cachedEnumerable.EnsureItemIsCached(_Index))
+            m_Index++;
+            if (!cachedEnumerable.EnsureItemIsCached(m_Index))
             {
-                _Index = EofIndex;
+                m_Index = EofIndex;
                 return false;
             }
             else
@@ -282,7 +277,7 @@ partial class EnumerableEx
 
         public void Reset()
         {
-            _Index = InitialIndex;
+            m_Index = InitialIndex;
         }
     }
 }
