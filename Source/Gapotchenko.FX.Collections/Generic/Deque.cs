@@ -1,8 +1,16 @@
-﻿#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 #define TFF_ISREFERENCEORCONTAINSREFERENCES
 #endif
 
 using Gapotchenko.FX.Collections.Utils;
+using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Threading;
 using System.Collections;
 using System.Diagnostics;
@@ -425,7 +433,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         ExceptionHelpers.ValidateIndexArgumentBounds(index, m_Size);
         ExceptionHelpers.ThrowIfArgumentIsNull(collection);
 
-        InsertRangeCore(index, collection);
+        InsertRangeCore(index, collection.AsReadOnlyList());
     }
 
     /// <summary>
@@ -493,7 +501,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         ExceptionHelpers.ThrowIfArgumentIsNegative(capacity);
 
-        if (Capacity < capacity)
+        if (capacity > Capacity)
             Grow(capacity);
         return Capacity;
     }
@@ -547,7 +555,13 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     /// <param name="elementIndex">The collection element index.</param>
     /// <returns>The array index.</returns>
-    int GetArrayIndex(int elementIndex) => (m_Offset + elementIndex) % Capacity;
+    int GetArrayIndex(int elementIndex)
+    {
+        Debug.Assert(elementIndex >= 0);
+        Debug.Assert(elementIndex < Capacity);
+
+        return (m_Offset + elementIndex) % Capacity;
+    }
 
     void CopyToArrayCore(Array array, int arrayIndex)
     {
@@ -598,7 +612,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         m_Array[GetArrayIndex(size)] = value;
     }
 
-    void InsertRangeCore(int index, IEnumerable<T> collection)
+    void InsertRangeCore(int index, IReadOnlyCollection<T> collection)
     {
         Debug.Assert(index >= 0);
         Debug.Assert(index <= m_Size);
@@ -658,6 +672,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     void Grow(int capacity)
     {
+        Debug.Assert(capacity > Capacity);
+
         CollectionHelpers.GrowCapacity(ref m_Array, capacity, DefaultCapacity);
     }
 

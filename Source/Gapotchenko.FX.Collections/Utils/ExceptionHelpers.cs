@@ -1,4 +1,10 @@
-﻿// Portions © .NET Foundation and its licensors
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
