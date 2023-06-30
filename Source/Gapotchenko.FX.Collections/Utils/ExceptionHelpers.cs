@@ -1,4 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+﻿// Portions © .NET Foundation and its licensors
+
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Collections.Utils;
 
@@ -33,11 +36,13 @@ static class ExceptionHelpers
     }
 
     /// <summary>
-    /// Ensures that <paramref name="index"/> is non-negative and less than <paramref name="count"/>. 
+    /// Ensures that <paramref name="index"/> is non-negative and less than <paramref name="size"/>. 
     /// </summary>
-    public static void ValidateIndexArgumentRange(int index, int count, [CallerArgumentExpression(nameof(index))] string? parameterName = null)
+    public static void ValidateIndexArgumentRange(int index, int size, [CallerArgumentExpression(nameof(index))] string? parameterName = null)
     {
-        if (index < 0 || index >= count)
+        Debug.Assert(size >= 0);
+
+        if ((uint)index >= (uint)size)
         {
             throw new ArgumentOutOfRangeException(
                 parameterName,
@@ -46,16 +51,30 @@ static class ExceptionHelpers
     }
 
     /// <summary>
-    /// Ensures that <paramref name="index"/> is non-negative and not greater than <paramref name="count"/>. 
+    /// Ensures that <paramref name="index"/> is non-negative and not greater than <paramref name="size"/>. 
     /// </summary>
-    public static void ValidateIndexArgumentBounds(int index, int count, [CallerArgumentExpression(nameof(index))] string? parameterName = null)
+    public static void ValidateIndexArgumentBounds(int index, int size, [CallerArgumentExpression(nameof(index))] string? parameterName = null)
     {
-        if (index < 0 || index > count)
+        Debug.Assert(size >= 0);
+
+        if ((uint)index > (uint)size)
         {
             throw new ArgumentOutOfRangeException(
                 parameterName,
                 "Index must be within the bounds of the collection.");
         }
+    }
+
+    public static void ValidateIndexAndCountArgumentsRange(
+        int index, int count, int size,
+        [CallerArgumentExpression(nameof(index))] string? indexParameterName = null,
+        [CallerArgumentExpression(nameof(count))] string? countParameterName = null)
+    {
+        ThrowIfArgumentIsNegative(index, indexParameterName);
+        ThrowIfArgumentIsNegative(count, countParameterName);
+
+        if (count > size - index) // overflow-safe equivalent of "index + count > size"
+            throw new ArgumentException("Count is greater than the number of elements from index to the end of the collection.");
     }
 
     // Allow nulls for reference types and Nullable<U>, but not for value types.

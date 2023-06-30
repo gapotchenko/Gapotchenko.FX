@@ -51,10 +51,10 @@ static class CollectionHelpers
         Array.Resize(ref array, newCapacity);
     }
 
-    public static void TrimExcess<T>(ref T[] array, int count)
+    public static void TrimExcess<T>(ref T[] array, int size)
     {
         int threshold = (int)(array.Length * 0.9);
-        if (count < threshold)
-            Array.Resize(ref array, count);
+        if (size < threshold)
+            Array.Resize(ref array, size);
     }
 }

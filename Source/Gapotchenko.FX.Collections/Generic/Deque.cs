@@ -1,4 +1,8 @@
-﻿using Gapotchenko.FX.Collections.Utils;
+﻿#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#define TFF_ISREFERENCEORCONTAINSREFERENCES
+#endif
+
+using Gapotchenko.FX.Collections.Utils;
 using Gapotchenko.FX.Threading;
 using System.Collections;
 using System.Diagnostics;
@@ -59,8 +63,11 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     int m_Offset;
 
+    /// <summary>
+    /// The number of elements in the <see cref="Deque{T}"/>.
+    /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    int m_Count;
+    int m_Size;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     int m_Version;
@@ -70,7 +77,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <summary>
     /// Gets the number of elements contained in the <see cref="Deque{T}"/>.
     /// </summary>
-    public int Count => m_Count;
+    public int Count => m_Size;
 
     /// <summary>
     /// Gets or sets the element at the specified index.
@@ -83,16 +90,16 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         get
         {
-            ExceptionHelpers.ValidateIndexArgumentRange(index, m_Count);
+            ExceptionHelpers.ValidateIndexArgumentRange(index, m_Size);
 
             return GetItemCore(index);
         }
         set
         {
-            ExceptionHelpers.ValidateIndexArgumentRange(index, m_Count);
+            ExceptionHelpers.ValidateIndexArgumentRange(index, m_Size);
 
-            m_Array[GetArrayIndex(index)] = value;
             UpdateVersion();
+            m_Array[GetArrayIndex(index)] = value;
         }
     }
 
@@ -103,25 +110,26 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         UpdateVersion();
 
-        if (m_Count != 0)
+        if (m_Size != 0)
         {
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if TFF_ISREFERENCEORCONTAINSREFERENCES
             if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
 #endif
             {
+                // Allow garbage collected memory to be freed.
                 if (IsSplit)
                 {
                     int n = Capacity - m_Offset;
                     Array.Clear(m_Array, m_Offset, n);
-                    Array.Clear(m_Array, 0, m_Count - n);
+                    Array.Clear(m_Array, 0, m_Size - n);
                 }
                 else
                 {
-                    Array.Clear(m_Array, m_Offset, m_Count);
+                    Array.Clear(m_Array, m_Offset, m_Size);
                 }
             }
 
-            m_Count = 0;
+            m_Size = 0;
         }
 
         m_Offset = 0;
@@ -135,7 +143,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <see langword="true"/> if <paramref name="item"/> is found in the <see cref="Deque{T}"/>;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public bool Contains(T item) => m_Count != 0 && IndexOf(item) != -1;
+    public bool Contains(T item) => m_Size != 0 && IndexOf(item) != -1;
 
     /// <summary>
     /// Copies the elements of the <see cref="Deque{T}"/> to an <see cref="Array"/>,
@@ -155,6 +163,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     public void CopyTo(T[] array, int arrayIndex)
     {
         ExceptionHelpers.ThrowIfArgumentIsNull(array);
+        ExceptionHelpers.ThrowIfArgumentIsNegative(arrayIndex);
 
         CopyToArrayCore(array, arrayIndex);
     }
@@ -178,13 +187,13 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             if (index != -1)
                 return index - m_Offset;
 
-            index = Array.IndexOf(m_Array, item, 0, m_Count - n);
+            index = Array.IndexOf(m_Array, item, 0, m_Size - n);
             if (index != -1)
                 return index + n;
         }
         else
         {
-            int index = Array.IndexOf(m_Array, item, m_Offset, m_Count);
+            int index = Array.IndexOf(m_Array, item, m_Offset, m_Size);
             if (index != -1)
                 return index - m_Offset;
         }
@@ -252,17 +261,19 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </returns>
     public bool TryPopFromFront([MaybeNullWhen(false)] out T result)
     {
-        int count = m_Count;
-        if (count == 0)
+        int size = m_Size;
+        if (size == 0)
         {
             result = default;
             return false;
         }
         else
         {
-            result = m_Array[PostIncrementOffset(1)];
-            m_Count = count - 1;
             UpdateVersion();
+            m_Size = size - 1;
+            int index = PostIncrementOffset(1);
+            result = m_Array[index];
+            ClearAt(index);
             return true;
         }
     }
@@ -281,16 +292,18 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </returns>
     public bool TryPopFromBack([MaybeNullWhen(false)] out T result)
     {
-        int count = m_Count;
-        if (count == 0)
+        int size = m_Size;
+        if (size == 0)
         {
             result = default;
             return false;
         }
         else
         {
-            result = m_Array[GetArrayIndex(m_Count = count - 1)];
             UpdateVersion();
+            int index = GetArrayIndex(m_Size = size - 1);
+            result = m_Array[index];
+            ClearAt(index);
             return true;
         }
     }
@@ -338,7 +351,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </returns>
     public bool TryPeekFromFront([MaybeNullWhen(false)] out T result)
     {
-        if (m_Count == 0)
+        if (m_Size == 0)
         {
             result = default;
             return false;
@@ -365,15 +378,15 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </returns>
     public bool TryPeekFromBack([MaybeNullWhen(false)] out T result)
     {
-        int count = m_Count;
-        if (count == 0)
+        int size = m_Size;
+        if (size == 0)
         {
             result = default;
             return false;
         }
         else
         {
-            result = GetItemCore(count - 1);
+            result = GetItemCore(size - 1);
             return true;
         }
     }
@@ -388,23 +401,31 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is greater than <see cref="Count"/>.</exception>
     public void Insert(int index, T item)
     {
-        int count = m_Count;
-        ExceptionHelpers.ValidateIndexArgumentBounds(index, count);
+        int size = m_Size;
+        ExceptionHelpers.ValidateIndexArgumentBounds(index, size);
 
         EnsureCapacityForOneElement();
 
         if (index == 0)
-        {
             PushToFrontCore(item);
-        }
-        else if (index == count)
-        {
+        else if (index == size)
             PushToBackCore(item);
-        }
         else
-        {
-            throw new NotImplementedException();
-        }
+            InsertRangeCore(index, new[] { item });
+    }
+
+    /// <summary>
+    /// Inserts the elements of a collection into the <see cref="Deque{T}"/>
+    /// at the specified index.
+    /// </summary>
+    /// <param name="index">The zero-based index at which the new elements should be inserted.</param>
+    /// <param name="collection">The collection whose elements should be inserted into the <see cref="Deque{T}"/>.</param>
+    public void InsertRange(int index, IEnumerable<T> collection)
+    {
+        ExceptionHelpers.ValidateIndexArgumentBounds(index, m_Size);
+        ExceptionHelpers.ThrowIfArgumentIsNull(collection);
+
+        InsertRangeCore(index, collection);
     }
 
     /// <summary>
@@ -418,7 +439,16 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </returns>
     public bool Remove(T item)
     {
-        throw new NotImplementedException();
+        int index = IndexOf(item);
+        if (index != -1)
+        {
+            RemoveAtCore(index);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /// <summary>
@@ -429,9 +459,27 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is greater than or equal to <see cref="Count"/>.</exception>
     public void RemoveAt(int index)
     {
-        ExceptionHelpers.ValidateIndexArgumentRange(index, m_Count);
+        ExceptionHelpers.ValidateIndexArgumentRange(index, m_Size);
 
-        throw new NotImplementedException();
+        RemoveAtCore(index);
+    }
+
+    /// <summary>
+    /// Removes a range of elements from the <see cref="Deque{T}"/>.
+    /// </summary>
+    /// <param name="index">The zero-based starting index of the range of elements to remove.</param>
+    /// <param name="count">The number of elements to remove.</param>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is less than 0.</exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="index"/> and <paramref name="count"/>
+    /// do not denote a valid range of elements in the <see cref="Deque{T}"/>.
+    /// </exception>
+    public void RemoveRange(int index, int count)
+    {
+        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
+
+        RemoveRangeCore(index, count);
     }
 
     /// <summary>
@@ -447,7 +495,6 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
         if (Capacity < capacity)
             Grow(capacity);
-
         return Capacity;
     }
 
@@ -457,7 +504,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     public void TrimExcess()
     {
-        CollectionHelpers.TrimExcess(ref m_Array, m_Count);
+        CollectionHelpers.TrimExcess(ref m_Array, m_Size);
     }
 
     /// <summary>
@@ -466,14 +513,14 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <returns>A new array containing copies of the elements of the <see cref="Deque{T}"/>.</returns>
     public T[] ToArray()
     {
-        int count = m_Count;
-        if (count == 0)
+        int size = m_Size;
+        if (size == 0)
         {
             return Array.Empty<T>();
         }
         else
         {
-            var result = new T[count];
+            var result = new T[size];
             CopyToArrayCore(result, 0);
             return result;
         }
@@ -487,7 +534,13 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     // ----------------------------------------------------------------------
 
-    T GetItemCore(int index) => m_Array[GetArrayIndex(index)];
+    T GetItemCore(int index)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(index < m_Size);
+
+        return m_Array[GetArrayIndex(index)];
+    }
 
     /// <summary>
     /// Gets an array index by the index of a collection element.
@@ -498,17 +551,18 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     void CopyToArrayCore(Array array, int arrayIndex)
     {
-        ExceptionHelpers.ThrowIfArgumentIsNegative(arrayIndex);
+        Debug.Assert(array != null);
+        Debug.Assert(arrayIndex >= 0);
 
         if (IsSplit)
         {
             int n = Capacity - m_Offset;
             Array.Copy(m_Array, m_Offset, array, arrayIndex, n);
-            Array.Copy(m_Array, 0, array, arrayIndex + n, m_Count - n);
+            Array.Copy(m_Array, 0, array, arrayIndex + n, m_Size - n);
         }
         else
         {
-            Array.Copy(m_Array, m_Offset, array, arrayIndex, m_Count);
+            Array.Copy(m_Array, m_Offset, array, arrayIndex, m_Size);
         }
     }
 
@@ -531,17 +585,73 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     void PushToFrontCore(T value)
     {
-        m_Array[PreDecrementOffset(1)] = value;
-        ++m_Count;
         UpdateVersion();
+        ++m_Size;
+        m_Array[PreDecrementOffset(1)] = value;
     }
 
     void PushToBackCore(T value)
     {
-        int count = m_Count;
-        m_Array[GetArrayIndex(count)] = value;
-        m_Count = count + 1;
         UpdateVersion();
+        int size = m_Size;
+        m_Size = size + 1;
+        m_Array[GetArrayIndex(size)] = value;
+    }
+
+    void InsertRangeCore(int index, IEnumerable<T> collection)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(index <= m_Size);
+
+        throw new NotImplementedException();
+    }
+
+    void RemoveAtCore(int index)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(index < m_Size);
+
+        int size = m_Size - 1;
+
+        if (index == 0)
+        {
+            // Remove from front.
+            UpdateVersion();
+            m_Size = size;
+            ClearAt(PostIncrementOffset(1));
+        }
+        else if (index == size)
+        {
+            // Remove from back.
+            UpdateVersion();
+            ClearAt(GetArrayIndex(m_Size = size));
+        }
+        else
+        {
+            RemoveRangeCore(index, 1);
+        }
+    }
+
+    void RemoveRangeCore(int index, int count)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(index < m_Size - count);
+
+        throw new NotImplementedException();
+    }
+
+    void ClearAt(int arrayIndex)
+    {
+        Debug.Assert(arrayIndex >= 0);
+        Debug.Assert(arrayIndex < Capacity);
+
+#if TFF_ISREFERENCEORCONTAINSREFERENCES
+        if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+#endif
+        {
+            // Allow garbage collected memory to be freed.
+            m_Array[arrayIndex] = default!;
+        }
     }
 
     int Capacity => m_Array.Length;
@@ -553,9 +663,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     void EnsureCapacityForOneElement()
     {
-        int count = m_Count;
-        if (count == Capacity)
-            Grow(count + 1);
+        int size = m_Size;
+        if (size == Capacity)
+            Grow(size + 1);
     }
 
     /// <summary>
@@ -563,7 +673,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// meaning that the beginning of the collection is stored at a later array index than the end.
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    bool IsSplit => m_Offset > Capacity - m_Count; // overflow-safe equivalent of "m_Offset + m_Count > Capacity"
+    bool IsSplit => m_Offset > Capacity - m_Size; // overflow-safe equivalent of "m_Offset + m_Count > Capacity"
 
     /// <summary>
     /// Enumerates the elements of a <see cref="Deque{T}"/>.
@@ -593,7 +703,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         {
             get
             {
-                if (m_Index == 0 || m_Index > m_Deque.m_Count)
+                if (m_Index == 0 || m_Index > m_Deque.m_Size)
                     throw new InvalidOperationException("Enumeration has either not started or has already finished.");
 
                 return Current;
@@ -619,7 +729,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         {
             var deque = m_Deque;
 
-            if (m_Version == deque.m_Version && (uint)m_Index < deque.m_Count)
+            if (m_Version == deque.m_Version && (uint)m_Index < deque.m_Size)
             {
                 m_Current = deque.GetItemCore(m_Index++);
                 return true;
@@ -634,7 +744,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         {
             ValidateVersion();
 
-            m_Index = m_Deque.m_Count + 1;
+            m_Index = m_Deque.m_Size + 1;
             m_Current = default;
             return false;
         }
@@ -675,7 +785,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     int IList.Add(object? value)
     {
         PushToBack(CollectionHelpers.GetCompatibleValue<T>(value));
-        return m_Count - 1;
+        return m_Size - 1;
     }
 
     bool IList.Contains(object? value) =>
@@ -711,6 +821,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         ExceptionHelpers.ThrowIfArgumentIsNull(array);
         ExceptionHelpers.ThrowIfArrayArgumentIsMultiDimensional(array);
+        ExceptionHelpers.ThrowIfArgumentIsNegative(index);
 
         try
         {
