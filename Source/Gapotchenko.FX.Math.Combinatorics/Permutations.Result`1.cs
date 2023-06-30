@@ -165,7 +165,7 @@ partial class Permutations
     internal static IResult<T> PermuteAccelerated<T>(IEnumerable<T> sequence)
     {
         if (!Utility.IsSet(sequence))
-            sequence = sequence.AsReadOnlyList();
+            sequence = sequence.ReifyList();
 
         return new Result<T>(ResultMode.Default, sequence, null);
     }

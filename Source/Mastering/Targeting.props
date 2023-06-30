@@ -8,7 +8,7 @@
   <PropertyGroup>
     <!-- Disables NETSDK1138 warning -->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
-    <DefineConstants>$(DefineConstants),BINARY_COMPATIBILITY</DefineConstants>
+    <DefineConstants>$(DefineConstants),SOURCE_COMPATIBILITY,BINARY_COMPATIBILITY</DefineConstants>
   </PropertyGroup>
 
   <!-- ================================================================== -->

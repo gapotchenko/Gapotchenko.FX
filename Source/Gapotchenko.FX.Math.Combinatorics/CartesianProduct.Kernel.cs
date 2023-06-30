@@ -6,7 +6,7 @@ partial class CartesianProduct
 {
     static IEnumerable<IRow<T>> Multiply<T>(IEnumerable<IEnumerable<T>> factors)
     {
-        var items = MemoizeMultipliers(factors).AsReadOnlyList();
+        var items = MemoizeMultipliers(factors).ReifyList();
         int rank = items.Count;
 
         if (rank == 0)

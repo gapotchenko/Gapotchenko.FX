@@ -7,7 +7,7 @@ partial class Permutations
 {
     static IEnumerable<IRow<T>> Permute<T>(IEnumerable<T> sequence, bool distinct, IEqualityComparer<T>? comparer)
     {
-        var items = sequence.AsReadOnlyList();
+        var items = sequence.ReifyList();
 
         int length = items.Count;
         var transform = new (int First, int Second)[length];

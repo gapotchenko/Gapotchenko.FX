@@ -10,8 +10,8 @@ static class MinimalDistanceProof
         IEnumerable<T> destination,
         Func<T, T, bool> df)
     {
-        var s = source.AsReadOnlyList();
-        var d = destination.AsReadOnlyList();
+        var s = source.ReifyList();
+        var d = destination.ReifyList();
 
         int actualDistance = StringMetrics.LevenshteinDistance(s, d);
         if (actualDistance == 0)

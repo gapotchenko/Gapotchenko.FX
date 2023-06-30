@@ -433,7 +433,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         ExceptionHelpers.ValidateIndexArgumentBounds(index, m_Size);
         ExceptionHelpers.ThrowIfArgumentIsNull(collection);
 
-        InsertRangeCore(index, collection.AsReadOnlyList());
+        InsertRangeCore(index, collection.ReifyList());
     }
 
     /// <summary>

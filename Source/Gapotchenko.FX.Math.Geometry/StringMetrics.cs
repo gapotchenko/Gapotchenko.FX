@@ -161,8 +161,8 @@ public static class StringMetrics
         if (ReferenceEquals(a, b))
             return 0;
 
-        var sRow = b.AsReadOnlyList();
-        var sCol = a.AsReadOnlyList();
+        var sRow = b.ReifyList();
+        var sCol = a.ReifyList();
 
         int rowLen = sRow.Count;
         int colLen = sCol.Count;
@@ -362,8 +362,8 @@ public static class StringMetrics
         if (ReferenceEquals(a, b))
             return 0;
 
-        var aList = a.AsReadOnlyList();
-        var bList = b.AsReadOnlyList();
+        var aList = a.ReifyList();
+        var bList = b.ReifyList();
 
         if (aList.Count == 0)
         {
@@ -479,8 +479,8 @@ public static class StringMetrics
         if (ReferenceEquals(a, b))
             return 0;
 
-        var aList = a.AsReadOnlyList();
-        var bList = b.AsReadOnlyList();
+        var aList = a.ReifyList();
+        var bList = b.ReifyList();
 
         int aLength = aList.Count;
         int bLength = bList.Count;

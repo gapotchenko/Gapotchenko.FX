@@ -36,7 +36,7 @@ abstract class ExpressionVisitor<TResult> where TResult : struct
         if (expressions == null)
             return null;
         else
-            return expressions.Select(Visit).AsReadOnlyList();
+            return expressions.Select(Visit).ReifyList();
     }
 
     protected abstract TResult VisitBinary(BinaryExpression expression);

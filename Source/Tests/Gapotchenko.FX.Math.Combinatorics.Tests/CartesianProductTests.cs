@@ -40,7 +40,7 @@ public class CartesianProductTests
         int cardinality = CartesianProduct.Cardinality(factors.Select(x => x.Length));
         Assert.AreEqual(l1 * l2, cardinality);
 
-        var p = CartesianProduct.Of(factors).AsReadOnlyList();
+        var p = CartesianProduct.Of(factors).ReifyList();
 
         Assert.AreEqual(cardinality, p.Count);
 
@@ -66,7 +66,7 @@ public class CartesianProductTests
                 new int[l1] { 1, 2 },
                 new string[l2] { "A", "B", "C" },
                 ValueTuple.Create)
-            .AsReadOnlyList();
+            .ReifyList();
 
         Assert.AreEqual(cardinality, p.Count);
 

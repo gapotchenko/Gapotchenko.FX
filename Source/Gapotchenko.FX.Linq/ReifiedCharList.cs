@@ -2,9 +2,9 @@
 
 namespace Gapotchenko.FX.Linq;
 
-sealed class ReadOnlyCharList : IReadOnlyList<char>
+sealed class ReifiedCharList : IReadOnlyList<char>
 {
-    public ReadOnlyCharList(string source)
+    public ReifiedCharList(string source)
     {
         m_Source = source;
     }

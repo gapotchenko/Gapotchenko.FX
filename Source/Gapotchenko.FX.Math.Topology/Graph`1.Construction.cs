@@ -104,7 +104,7 @@ partial class Graph<TVertex>
         if (incidenceFunction == null)
             throw new ArgumentNullException(nameof(incidenceFunction));
 
-        var list = vertices.AsReadOnlyList();
+        var list = vertices.ReifyList();
         int count = list.Count;
 
         bool reflexiveReducion = (options & GraphIncidenceOptions.ReflexiveReduction) != 0;

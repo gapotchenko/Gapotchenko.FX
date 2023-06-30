@@ -251,43 +251,29 @@ public static partial class EnumerableEx
             _ => source.ToArray()
         };
 
-    /// <summary>
-    /// <para>
-    /// Returns a read-only list view of a source sequence.
-    /// </para>
-    /// <para>
-    /// Depending on a source sequence type, the result is either a read-only wrapper, a directly-casted instance, or a copied in-memory list.
-    /// </para>
-    /// </summary>
-    /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
-    /// <param name="source">The source sequence.</param>
-    /// <returns>A read-only view of a source sequence.</returns>
-    [return: NotNullIfNotNull("source")]
-    public static IReadOnlyList<TSource>? AsReadOnlyList<TSource>(this IEnumerable<TSource>? source) =>
-        source switch
-        {
-            null => null,
-            IReadOnlyList<TSource> readOnlyList => readOnlyList,
-            IList<TSource> list => new ReadOnlyCollection<TSource>(list),
-            string s => (IReadOnlyList<TSource>)(object)new ReadOnlyCharList(s),
-            _ => AsList(source).AsReadOnly()
-        };
-
-    /// <summary>
-    /// <para>
-    /// Returns a read-only list view of a source sequence.
-    /// </para>
-    /// <para>
-    /// Depending on a source sequence type, the result is either a read-only wrapper, a directly-casted instance, or a copied in-memory list.
-    /// </para>
-    /// </summary>
-    /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
-    /// <param name="source">The source sequence.</param>
-    /// <returns>A read-only view of a source sequence.</returns>
-    [Obsolete("Use AsReadOnlyList method instead.")]
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
+    /// <inheritdoc cref="EnumerableExtensions.ReifyList{TSource}(IEnumerable{TSource})"/>
+    [Obsolete("Use ReifyList extension method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [return: NotNullIfNotNull("source")]
-    public static IReadOnlyList<TSource>? AsReadOnly<TSource>(this IEnumerable<TSource>? source) => AsReadOnlyList(source);
+    [return: NotNullIfNotNull(nameof(source))]
+    public static IReadOnlyList<TSource>? AsReadOnlyList<TSource>(
+#if SOURCE_COMPATIBILITY
+        this
+#endif
+        IEnumerable<TSource>? source) => source?.ReifyList();
+#endif
+
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
+    /// <inheritdoc cref="EnumerableExtensions.ReifyList{TSource}(IEnumerable{TSource})"/>
+    [Obsolete("Use ReifyList extension method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [return: NotNullIfNotNull(nameof(source))]
+    public static IReadOnlyList<TSource>? AsReadOnly<TSource>(
+#if SOURCE_COMPATIBILITY
+        this
+#endif
+        IEnumerable<TSource>? source) => source?.ReifyList();
+#endif
 
     /// <summary>
     /// Determines whether any elements of a sequence satisfy the specified conditions.
