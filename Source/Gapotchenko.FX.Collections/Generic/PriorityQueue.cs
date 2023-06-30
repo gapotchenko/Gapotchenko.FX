@@ -1,4 +1,4 @@
-﻿// Portions © .NET Foundation and its licensors
+﻿// Portions © .NET Foundation and its Licensors
 
 #if !TFF_PRIORITYQUEUE
 
@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
+#pragma warning disable IDE1006 // Naming Styles
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 
 namespace System.Collections.Generic;
