@@ -15,7 +15,7 @@ static class CollectionHelpers
         {
             return (T)value!;
         }
-        catch (InvalidOperationException)
+        catch (InvalidCastException)
         {
             throw ExceptionHelpers.CreateInvalidArgumentTypeException(value, typeof(T), parameterName);
         }
@@ -37,7 +37,9 @@ static class CollectionHelpers
 
     public static void GrowCapacity<T>(ref T[] array, int capacity, int defaultCapacity)
     {
-        Debug.Assert(array.Length < capacity);
+        Debug.Assert(array != null);
+        Debug.Assert(capacity > array.Length);
+        Debug.Assert(defaultCapacity >= 0);
 
         int newCapacity = array.Length == 0 ? defaultCapacity : array.Length * 2;
 
@@ -53,6 +55,9 @@ static class CollectionHelpers
 
     public static void TrimExcess<T>(ref T[] array, int size)
     {
+        Debug.Assert(array != null);
+        Debug.Assert(size >= 0);
+
         int threshold = (int)(array.Length * 0.9);
         if (size < threshold)
             Array.Resize(ref array, size);

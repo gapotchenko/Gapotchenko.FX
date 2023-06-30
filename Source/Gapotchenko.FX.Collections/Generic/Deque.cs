@@ -63,7 +63,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    T[] m_Array = Array.Empty<T>();
+    T[] m_Array;
 
     /// <summary>
     /// The index of the first collection element in the <see cref="m_Array"/>.
@@ -72,7 +72,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     int m_Offset;
 
     /// <summary>
-    /// The number of elements in the <see cref="Deque{T}"/>.
+    /// The number of elements contained in the <see cref="Deque{T}"/>.
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     int m_Size;
@@ -100,7 +100,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         {
             ExceptionHelpers.ValidateIndexArgumentRange(index, m_Size);
 
-            return GetItemCore(index);
+            return GetElementCore(index);
         }
         set
         {
@@ -394,7 +394,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
         else
         {
-            result = GetItemCore(size - 1);
+            result = GetElementCore(size - 1);
             return true;
         }
     }
@@ -430,10 +430,14 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <param name="collection">The collection whose elements should be inserted into the <see cref="Deque{T}"/>.</param>
     public void InsertRange(int index, IEnumerable<T> collection)
     {
-        ExceptionHelpers.ValidateIndexArgumentBounds(index, m_Size);
+        int size = m_Size;
+        ExceptionHelpers.ValidateIndexArgumentBounds(index, size);
         ExceptionHelpers.ThrowIfArgumentIsNull(collection);
 
-        InsertRangeCore(index, collection.ReifyList());
+        var reifiedCollection = collection.ReifyCollection();
+
+        EnsureCapacityCore(size + reifiedCollection.Count);
+        InsertRangeCore(index, reifiedCollection);
     }
 
     /// <summary>
@@ -501,8 +505,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         ExceptionHelpers.ThrowIfArgumentIsNegative(capacity);
 
-        if (capacity > Capacity)
-            Grow(capacity);
+        EnsureCapacityCore(capacity);
         return Capacity;
     }
 
@@ -542,7 +545,10 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     // ----------------------------------------------------------------------
 
-    T GetItemCore(int index)
+    /// <summary>
+    /// Gets a collection element by the specified index.
+    /// </summary>
+    T GetElementCore(int index)
     {
         Debug.Assert(index >= 0);
         Debug.Assert(index < m_Size);
@@ -670,11 +676,12 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     int Capacity => m_Array.Length;
 
-    void Grow(int capacity)
+    void EnsureCapacityCore(int capacity)
     {
-        Debug.Assert(capacity > Capacity);
+        Debug.Assert(capacity >= 0);
 
-        CollectionHelpers.GrowCapacity(ref m_Array, capacity, DefaultCapacity);
+        if (capacity > Capacity)
+            Grow(capacity);
     }
 
     void EnsureCapacityForOneElement()
@@ -682,6 +689,13 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         int size = m_Size;
         if (size == Capacity)
             Grow(size + 1);
+    }
+
+    void Grow(int capacity)
+    {
+        Debug.Assert(capacity > Capacity);
+
+        CollectionHelpers.GrowCapacity(ref m_Array, capacity, DefaultCapacity);
     }
 
     /// <summary>
@@ -747,7 +761,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
             if (m_Version == deque.m_Version && (uint)m_Index < deque.m_Size)
             {
-                m_Current = deque.GetItemCore(m_Index++);
+                m_Current = deque.GetElementCore(m_Index++);
                 return true;
             }
             else
