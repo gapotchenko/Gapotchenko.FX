@@ -13,6 +13,7 @@ Release date: not released yet
 - Added `Gapotchenko.FX.Memory.SpanEqualityComparer` that allows to compare read-only spans and calculate their hash codes
 - `AssemblyAutoLoader` now understands probing paths defined by assembly binding redirects
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
+- Added `ReifyCollection` LINQ extension method for `IEnumerable<T>`
 - Polyfills:
   - Added polyfill for required properties introduced in C# 11.0
   - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
