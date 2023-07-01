@@ -1,7 +1,7 @@
 ﻿// Credits:
 // The implementation is based on a work from Bar Arnon: https://github.com/i3arnon/ConcurrentHashSet
 
-using Gapotchenko.FX.Threading;
+using Gapotchenko.FX.Collections.Utils;
 using System.Collections;
 using System.Diagnostics;
 
@@ -26,7 +26,7 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
     int _budget;
     volatile Tables _tables;
 
-    static int DefaultConcurrencyLevel => ThreadingCapabilities.LogicalProcessorCount;
+    static int DefaultConcurrencyLevel => ThreadingHelpers.LogicalProcessorCount;
 
     /// <summary>
     /// Gets the number of items contained in the <see cref="ConcurrentHashSet{T}"/>.
