@@ -1,6 +1,9 @@
-﻿namespace Gapotchenko.FX.Collections.Utils;
+﻿namespace Gapotchenko.FX.Threading;
 
-static class ThreadingHelpers
+/// <summary>
+/// Provides information about multithreading capabilities.
+/// </summary>
+public static class ThreadingCapabilities
 {
     const int LogicalProcessorCountRefreshIntervalMS = 30000;
 

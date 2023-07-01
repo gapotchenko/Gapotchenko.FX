@@ -19,18 +19,18 @@ sealed class TopologicalOrderProof
 
     public Func<Graph<int>, IEnumerable<int>>? GraphSorter { get; init; }
 
-    int _CountOfBits;
+    int m_CountOfBits;
 
     public void Run()
     {
         if (PredicateSorter == null && GraphSorter == null)
             throw new InvalidOperationException("Sorter is not set.");
 
-        _CountOfBits = VerticesCount * VerticesCount;
-        if (_CountOfBits > 64)
+        m_CountOfBits = VerticesCount * VerticesCount;
+        if (m_CountOfBits > 64)
             throw new InvalidOperationException("Too many bits.");
 
-        ulong maxIterator = (1UL << _CountOfBits) - 1UL;
+        ulong maxIterator = (1UL << m_CountOfBits) - 1UL;
 
         var iterators = _EnumerateIterators(maxIterator);
 
