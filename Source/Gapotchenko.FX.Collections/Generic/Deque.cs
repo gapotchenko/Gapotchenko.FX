@@ -299,7 +299,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             m_Size = size - 1;
             int index = PostIncrementOffset(1);
             result = m_Array[index];
-            ClearAtArray(index);
+            ClearArrayAt(index);
             return true;
         }
     }
@@ -329,7 +329,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             UpdateVersion();
             int index = GetArrayIndex(m_Size = size - 1);
             result = m_Array[index];
-            ClearAtArray(index);
+            ClearArrayAt(index);
             return true;
         }
     }
@@ -720,7 +720,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             // Remove from the beginning.
             UpdateVersion();
             m_Size = size;
-            ClearAtArray(PostIncrementOffset(1));
+            ClearArrayAt(PostIncrementOffset(1));
         }
         else if (index == size)
         {
@@ -776,7 +776,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
     }
 
-    void ClearAtArray(int arrayIndex)
+    void ClearArrayAt(int arrayIndex)
     {
         Debug.Assert(arrayIndex >= 0);
         Debug.Assert(arrayIndex < Capacity);
@@ -800,8 +800,29 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
 #endif
         {
+#if false
+            // Canonical Algorithm
+
             for (int i = 0; i < count; ++i)
                 SetElementCore(index + i, default!);
+#else
+            // Fast Algorithm
+
+            var array = m_Array;
+            var capacity = array.Length;
+            var arrayIndex = GetArrayIndex(index);
+
+            if (arrayIndex <= capacity - count)
+            {
+                Array.Clear(array, arrayIndex, count);
+            }
+            else
+            {
+                int n = capacity - arrayIndex;
+                Array.Clear(array, arrayIndex, n);
+                Array.Clear(array, 0, count - n);
+            }
+#endif
         }
     }
 
