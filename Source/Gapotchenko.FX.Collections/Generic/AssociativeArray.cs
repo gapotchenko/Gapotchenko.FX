@@ -528,7 +528,9 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     void IDictionary.Clear() => Clear();
 
-    bool IDictionary.Contains(object key) => key is TKey tKey && ContainsKey(tKey);
+    bool IDictionary.Contains(object key) =>
+        CollectionHelpers.TryGetCompatibleValue<TKey>(key, out var tKey) &&
+        ContainsKey(tKey);
 
     bool IReadOnlyDictionary<TKey, TValue>.ContainsKey(TKey key) => ContainsKey(key);
 
