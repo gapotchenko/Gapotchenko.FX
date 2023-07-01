@@ -35,31 +35,34 @@ static class CollectionHelpers
         }
     }
 
-    public static void GrowCapacity<T>(ref T[] array, int capacity, int defaultCapacity)
+    public static int GrowCapacity(int existingCapacity, int desiredCapacity, int defaultCapacity)
     {
-        Debug.Assert(array != null);
-        Debug.Assert(capacity > array.Length);
+        Debug.Assert(existingCapacity >= 0);
+        Debug.Assert(desiredCapacity > existingCapacity);
         Debug.Assert(defaultCapacity >= 0);
 
-        int newCapacity = array.Length == 0 ? defaultCapacity : array.Length * 2;
+        int newCapacity = existingCapacity == 0 ? defaultCapacity : existingCapacity * 2;
 
         int arrayMaxLength = ArrayHelpers.ArrayMaxLength;
         if ((uint)newCapacity > arrayMaxLength)
             newCapacity = arrayMaxLength;
 
-        if (newCapacity < capacity)
-            newCapacity = capacity;
+        if (newCapacity < desiredCapacity)
+            newCapacity = desiredCapacity;
 
-        Array.Resize(ref array, newCapacity);
+        return newCapacity;
     }
 
-    public static void TrimExcess<T>(ref T[] array, int size)
+    public static int TrimExcess(int capacity, int size)
     {
-        Debug.Assert(array != null);
+        Debug.Assert(capacity >= 0);
         Debug.Assert(size >= 0);
+        Debug.Assert(size <= capacity);
 
-        int threshold = (int)(array.Length * 0.9);
+        int threshold = (int)(capacity * 0.9);
         if (size < threshold)
-            Array.Resize(ref array, size);
+            return size;
+        else
+            return capacity;
     }
 }

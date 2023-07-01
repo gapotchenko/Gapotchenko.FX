@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Linq.Operators;
+using Gapotchenko.FX.Collections.Generic;
 #endregion
 
 #nullable enable
@@ -31,6 +32,23 @@ class Program
         try
         {
             await _RunAsync(default);
+
+            Console.WriteLine();
+
+            var deque = new Deque<string>();
+
+            deque.PushBack("Z");
+            deque.PushBack("A");
+            deque.PushBack("B");
+            deque.PushBack("C");
+
+            deque.Insert(1, ".");
+
+            deque.InsertRange(1, new[] { ".", ":" });
+
+            deque.RemoveRange(deque.Count - 2, 1);
+
+            Console.WriteLine(string.Join("", deque));
         }
         catch (Exception e)
         {

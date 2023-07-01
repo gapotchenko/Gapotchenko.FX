@@ -13,12 +13,14 @@ namespace Gapotchenko.FX.Collections.Utils;
 
 static class ExceptionHelpers
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ThrowIfArgumentIsNull(object? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value is null)
             throw new ArgumentNullException(parameterName);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ThrowIfArgumentIsNegative(int value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
 #if NET8_0_OR_GREATER
@@ -35,6 +37,7 @@ static class ExceptionHelpers
 #endif
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ThrowIfArrayArgumentIsMultiDimensional(Array array, [CallerArgumentExpression(nameof(array))] string? parameterName = null)
     {
         if (array.Rank != 1)
@@ -44,6 +47,7 @@ static class ExceptionHelpers
     /// <summary>
     /// Ensures that <paramref name="index"/> is non-negative and less than <paramref name="size"/>. 
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ValidateIndexArgumentRange(int index, int size, [CallerArgumentExpression(nameof(index))] string? parameterName = null)
     {
         Debug.Assert(size >= 0);
@@ -59,6 +63,7 @@ static class ExceptionHelpers
     /// <summary>
     /// Ensures that <paramref name="index"/> is non-negative and not greater than <paramref name="size"/>. 
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ValidateIndexArgumentBounds(int index, int size, [CallerArgumentExpression(nameof(index))] string? parameterName = null)
     {
         Debug.Assert(size >= 0);
@@ -71,6 +76,7 @@ static class ExceptionHelpers
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ValidateIndexAndCountArgumentsRange(
         int index, int count, int size,
         [CallerArgumentExpression(nameof(index))] string? indexParameterName = null,

@@ -1,6 +1,8 @@
 ﻿// Gapotchenko.FX
 //
 // Copyright © Gapotchenko and Contributors
+// Portions © Stephen Cleary
+// Portions © Masashi Mizuno
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
@@ -25,6 +27,8 @@ namespace Gapotchenko.FX.Collections.Generic;
 /// <remarks>
 /// The name "deque" is acronym for "<u>d</u>ouble <u>e</u>nded <u>que</u>ue" and is usually pronounced "deck".
 /// </remarks>
+[DebuggerDisplay("Count = {Count}")]
+[DebuggerTypeProxy(typeof(CollectionDebugView<>))]
 public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 {
     /// <summary>
@@ -107,7 +111,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             ExceptionHelpers.ValidateIndexArgumentRange(index, m_Size);
 
             UpdateVersion();
-            m_Array[GetArrayIndex(index)] = value;
+            SetElementCore(index, value);
         }
     }
 
@@ -213,30 +217,44 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// Inserts an object at the beginning of the <see cref="Deque{T}"/>.
     /// </summary>
     /// <param name="item">The object to be inserted at the beginning of the <see cref="Deque{T}"/>.</param>
-    public void PushToFront(T item)
+    public void PushFront(T item)
     {
         EnsureCapacityForOneElement();
-        PushToFrontCore(item);
+        PushFrontCore(item);
     }
 
     /// <summary>
     /// Adds an object to the end of the <see cref="Deque{T}"/>.
     /// </summary>
     /// <param name="item">The object to be added to the end of the <see cref="Deque{T}"/>.</param>
-    public void PushToBack(T item)
+    public void PushBack(T item)
     {
         EnsureCapacityForOneElement();
-        PushToBackCore(item);
+        PushBackCore(item);
     }
+
+    /// <summary>
+    /// Inserts the elements of the specified collection at the beginning of the <see cref="Deque{T}"/>.
+    /// </summary>
+    /// <param name="collection">The collection whole elements should be inserted at the beginning of the <see cref="Deque{T}"/>.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
+    public void PushFrontRange(IEnumerable<T> collection) => InsertRange(0, collection);
+
+    /// <summary>
+    /// Adds the elements of the specified collection to the end of the <see cref="Deque{T}"/>.
+    /// </summary>
+    /// <param name="collection">The collection whole elements should be added to the end of the <see cref="Deque{T}"/>.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
+    public void PushBackRange(IEnumerable<T> collection) => InsertRange(m_Size, collection);
 
     /// <summary>
     /// Removes and returns the object at the beginning of the <see cref="Deque{T}"/>.
     /// </summary>
     /// <returns>The object removed from the beginning of the <see cref="Deque{T}"/>.</returns>
     /// <exception cref="InvalidOperationException">The <see cref="Deque{T}"/> is empty.</exception>
-    public T PopFromFront()
+    public T PopFront()
     {
-        if (TryPopFromFront(out var value))
+        if (TryPopFront(out var value))
             return value;
         else
             throw ExceptionHelpers.CreateEmptyCollectionException();
@@ -247,9 +265,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     /// <returns>The object removed from the end of the <see cref="Deque{T}"/>.</returns>
     /// <exception cref="InvalidOperationException">The <see cref="Deque{T}"/> is empty.</exception>
-    public T PopFromBack()
+    public T PopBack()
     {
-        if (TryPopFromBack(out var value))
+        if (TryPopBack(out var value))
             return value;
         else
             throw ExceptionHelpers.CreateEmptyCollectionException();
@@ -267,7 +285,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <see langword="true"/> if there is an object at the beginning of <see cref="Deque{T}"/>;
     /// <see langword="false"/> if the <see cref="Deque{T}"/> is empty.
     /// </returns>
-    public bool TryPopFromFront([MaybeNullWhen(false)] out T result)
+    public bool TryPopFront([MaybeNullWhen(false)] out T result)
     {
         int size = m_Size;
         if (size == 0)
@@ -281,7 +299,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             m_Size = size - 1;
             int index = PostIncrementOffset(1);
             result = m_Array[index];
-            ClearAt(index);
+            ClearAtArray(index);
             return true;
         }
     }
@@ -298,7 +316,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <see langword="true"/> if there is an object at the end of <see cref="Deque{T}"/>;
     /// <see langword="false"/> if the <see cref="Deque{T}"/> is empty.
     /// </returns>
-    public bool TryPopFromBack([MaybeNullWhen(false)] out T result)
+    public bool TryPopBack([MaybeNullWhen(false)] out T result)
     {
         int size = m_Size;
         if (size == 0)
@@ -311,7 +329,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             UpdateVersion();
             int index = GetArrayIndex(m_Size = size - 1);
             result = m_Array[index];
-            ClearAt(index);
+            ClearAtArray(index);
             return true;
         }
     }
@@ -322,9 +340,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     /// <returns>The object at the beginning of the <see cref="Deque{T}"/>.</returns>
     /// <exception cref="InvalidOperationException">The <see cref="Deque{T}"/> is empty.</exception>
-    public T PeekFromFront()
+    public T PeekFront()
     {
-        if (TryPeekFromFront(out var value))
+        if (TryPeekFront(out var value))
             return value;
         else
             throw ExceptionHelpers.CreateEmptyCollectionException();
@@ -336,9 +354,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     /// <returns>The object at the end of the <see cref="Deque{T}"/>.</returns>
     /// <exception cref="InvalidOperationException">The <see cref="Deque{T}"/> is empty.</exception>
-    public T PeekFromBack()
+    public T PeekBack()
     {
-        if (TryPeekFromBack(out var value))
+        if (TryPeekBack(out var value))
             return value;
         else
             throw ExceptionHelpers.CreateEmptyCollectionException();
@@ -357,7 +375,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <see langword="true"/> if there is an object at the beginning of <see cref="Deque{T}"/>;
     /// <see langword="false"/> if the <see cref="Deque{T}"/> is empty.
     /// </returns>
-    public bool TryPeekFromFront([MaybeNullWhen(false)] out T result)
+    public bool TryPeekFront([MaybeNullWhen(false)] out T result)
     {
         if (m_Size == 0)
         {
@@ -384,7 +402,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <see langword="true"/> if there is an object at the end of <see cref="Deque{T}"/>;
     /// <see langword="false"/> if the <see cref="Deque{T}"/> is empty.
     /// </returns>
-    public bool TryPeekFromBack([MaybeNullWhen(false)] out T result)
+    public bool TryPeekBack([MaybeNullWhen(false)] out T result)
     {
         int size = m_Size;
         if (size == 0)
@@ -415,11 +433,18 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         EnsureCapacityForOneElement();
 
         if (index == 0)
-            PushToFrontCore(item);
+        {
+            PushFrontCore(item);
+        }
         else if (index == size)
-            PushToBackCore(item);
+        {
+            PushBackCore(item);
+        }
         else
-            InsertRangeCore(index, new[] { item });
+        {
+            InsertRangePlaceholder(index, 1);
+            SetElementCore(index, item);
+        }
     }
 
     /// <summary>
@@ -428,6 +453,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     /// <param name="index">The zero-based index at which the new elements should be inserted.</param>
     /// <param name="collection">The collection whose elements should be inserted into the <see cref="Deque{T}"/>.</param>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is greater than <see cref="Count"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
     public void InsertRange(int index, IEnumerable<T> collection)
     {
         int size = m_Size;
@@ -436,8 +464,16 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
         var reifiedCollection = collection.ReifyCollection();
 
-        EnsureCapacityCore(size + reifiedCollection.Count);
-        InsertRangeCore(index, reifiedCollection);
+        int count = reifiedCollection.Count;
+        if (count == 0)
+            return;
+
+        EnsureCapacityCore(size + count);
+        InsertRangePlaceholder(index, count);
+
+        int i = index;
+        foreach (var item in collection)
+            SetElementCore(i++, item);
     }
 
     /// <summary>
@@ -491,7 +527,31 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         ExceptionHelpers.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
 
-        RemoveRangeCore(index, count);
+        if (count == 0)
+            return;
+
+        int size = m_Size;
+
+        if (index == 0)
+        {
+            // Remove from the beginning.
+            ClearRange(0, count);
+            UpdateVersion();
+            m_Size = size - count;
+            PostIncrementOffset(count);
+        }
+        else if (index == size - count)
+        {
+            // Remove from the end.
+            ClearRange(index, count);
+            UpdateVersion();
+            m_Size = index;
+        }
+        else
+        {
+            // Remove in the middle.
+            RemoveMiddleRange(index, count);
+        }
     }
 
     /// <summary>
@@ -515,7 +575,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     public void TrimExcess()
     {
-        CollectionHelpers.TrimExcess(ref m_Array, m_Size);
+        int newCapacity = CollectionHelpers.TrimExcess(Capacity, m_Size);
+        ChangeCapacity(newCapacity);
     }
 
     /// <summary>
@@ -554,6 +615,17 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         Debug.Assert(index < m_Size);
 
         return m_Array[GetArrayIndex(index)];
+    }
+
+    /// <summary>
+    /// Sets a collection element by the specified index.
+    /// </summary>
+    void SetElementCore(int index, T value)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(index < Capacity);
+
+        m_Array[GetArrayIndex(index)] = value;
     }
 
     /// <summary>
@@ -603,64 +675,108 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         return m_Offset = offset;
     }
 
-    void PushToFrontCore(T value)
+    void PushFrontCore(T value)
     {
         UpdateVersion();
         ++m_Size;
         m_Array[PreDecrementOffset(1)] = value;
     }
 
-    void PushToBackCore(T value)
+    void PushBackCore(T value)
     {
         UpdateVersion();
         int size = m_Size;
         m_Size = size + 1;
-        m_Array[GetArrayIndex(size)] = value;
+        SetElementCore(size, value);
     }
 
-    void InsertRangeCore(int index, IReadOnlyCollection<T> collection)
+    void InsertRangePlaceholder(int index, int count)
     {
-        Debug.Assert(index >= 0);
-        Debug.Assert(index <= m_Size);
+        int size = m_Size;
 
-        throw new NotImplementedException();
+        if (IsFirstHalf(index))
+        {
+            CopyRange(0, Capacity - count, index);
+            PreDecrementOffset(count);
+        }
+        else
+        {
+            CopyRange(index, index + count, size - index);
+        }
+
+        m_Size = size + count;
+        UpdateVersion();
     }
 
     void RemoveAtCore(int index)
     {
         Debug.Assert(index >= 0);
-        Debug.Assert(index < m_Size);
+        Debug.Assert(index <= m_Size - 1);
 
         int size = m_Size - 1;
 
         if (index == 0)
         {
-            // Remove from front.
+            // Remove from the beginning.
             UpdateVersion();
             m_Size = size;
-            ClearAt(PostIncrementOffset(1));
+            ClearAtArray(PostIncrementOffset(1));
         }
         else if (index == size)
         {
-            // Remove from back.
+            // Remove from the end.
             UpdateVersion();
-            ClearAt(GetArrayIndex(m_Size = size));
+            ClearAt(m_Size = size);
         }
         else
         {
-            RemoveRangeCore(index, 1);
+            // Remove in the middle.
+            RemoveMiddleRange(index, 1);
         }
     }
 
-    void RemoveRangeCore(int index, int count)
+    void RemoveMiddleRange(int index, int count)
     {
-        Debug.Assert(index >= 0);
+        Debug.Assert(index > 0);
+        Debug.Assert(count > 0);
         Debug.Assert(index < m_Size - count);
 
-        throw new NotImplementedException();
+        int size = m_Size;
+        int rangeEnd = checked(index + count);
+
+        if (index < size - rangeEnd)
+        {
+            // Removing from the first half of the collection.
+            CopyRange(0, count, index);
+            ClearRange(0, count);
+            PostIncrementOffset(count);
+        }
+        else
+        {
+            // Removing from the second half of the collection.
+            CopyRange(rangeEnd, index, size - rangeEnd);
+            ClearRange(size - count, count);
+        }
+
+        m_Size = size - count;
+        UpdateVersion();
     }
 
-    void ClearAt(int arrayIndex)
+    void ClearAt(int index)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(index < Capacity);
+
+#if TFF_ISREFERENCEORCONTAINSREFERENCES
+        if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+#endif
+        {
+            // Allow garbage collected memory to be freed.
+            m_Array[GetArrayIndex(index)] = default!;
+        }
+    }
+
+    void ClearAtArray(int arrayIndex)
     {
         Debug.Assert(arrayIndex >= 0);
         Debug.Assert(arrayIndex < Capacity);
@@ -671,6 +787,46 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         {
             // Allow garbage collected memory to be freed.
             m_Array[arrayIndex] = default!;
+        }
+    }
+
+    void ClearRange(int index, int count)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(count >= 0);
+        Debug.Assert(index <= m_Size - count);
+
+#if TFF_ISREFERENCEORCONTAINSREFERENCES
+        if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+#endif
+        {
+            for (int i = 0; i < count; ++i)
+                SetElementCore(index + i, default!);
+        }
+    }
+
+    void CopyRange(int fromIndex, int toIndex, int count)
+    {
+        Debug.Assert(fromIndex >= 0);
+        Debug.Assert(fromIndex < Capacity);
+        Debug.Assert(toIndex >= 0);
+        Debug.Assert(toIndex < Capacity);
+        Debug.Assert(count >= 0);
+        Debug.Assert(fromIndex <= Capacity - count);
+        Debug.Assert(toIndex <= Capacity - count);
+
+        if (count == 0 || fromIndex == toIndex)
+            return;
+
+        if (fromIndex > toIndex)
+        {
+            for (int i = 0; i < count; ++i)
+                SetElementCore(toIndex + i, GetElementCore(fromIndex + i));
+        }
+        else
+        {
+            for (int i = count - 1; i >= 0; --i)
+                SetElementCore(toIndex + i, GetElementCore(fromIndex + i));
         }
     }
 
@@ -695,7 +851,20 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         Debug.Assert(capacity > Capacity);
 
-        CollectionHelpers.GrowCapacity(ref m_Array, capacity, DefaultCapacity);
+        int newCapacity = CollectionHelpers.GrowCapacity(Capacity, capacity, DefaultCapacity);
+        ChangeCapacity(newCapacity);
+    }
+
+    void ChangeCapacity(int newCapacity)
+    {
+        if (Capacity == newCapacity)
+            return;
+
+        var newArray = new T[newCapacity];
+        CopyToArrayCore(newArray, 0);
+
+        m_Array = newArray;
+        m_Offset = 0;
     }
 
     /// <summary>
@@ -704,6 +873,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool IsSplit => m_Offset > Capacity - m_Size; // overflow-safe equivalent of "m_Offset + m_Count > Capacity"
+
+    bool IsFirstHalf(int index) => index < m_Size - index;
 
     /// <summary>
     /// Enumerates the elements of a <see cref="Deque{T}"/>.
@@ -796,10 +967,25 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     #region Compatibility
 
+    /// <summary>
+    /// Do not use this method.
+    /// Instead, use <see cref="PushBackRange(IEnumerable{T})"/> method.
+    /// </summary>
+    /// <inheritdoc cref="PushBackRange(IEnumerable{T})"/>
+    [Obsolete("Use PushBackRange method instead.", true)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public void AddRange(IEnumerable<T> collection) => PushBackRange(collection);
+
+    /// <inheritdoc cref="AddRange(IEnumerable{T})"/>
+    [Obsolete("Use PushBackRange method instead.", true)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public void AddRange(params T[] collection) => PushBackRange(collection);
+
     #region ICollection<T>
 
-    void ICollection<T>.Add(T item) => PushToBack(item);
+    void ICollection<T>.Add(T item) => PushBack(item);
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool ICollection<T>.IsReadOnly => false;
 
     #endregion
@@ -814,7 +1000,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     int IList.Add(object? value)
     {
-        PushToBack(CollectionHelpers.GetCompatibleValue<T>(value));
+        PushBack(CollectionHelpers.GetCompatibleValue<T>(value));
         return m_Size - 1;
     }
 
@@ -839,8 +1025,10 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             Remove(compatibleValue);
     }
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool IList.IsReadOnly => false;
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool IList.IsFixedSize => false;
 
     #endregion
@@ -863,10 +1051,13 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
     }
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool ICollection.IsSynchronized => false;
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     static object? m_SyncRoot;
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     object ICollection.SyncRoot => LazyInitializerEx.EnsureInitialized(ref m_SyncRoot);
 
     #endregion

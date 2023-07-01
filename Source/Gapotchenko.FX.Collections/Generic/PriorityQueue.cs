@@ -521,7 +521,9 @@ public class PriorityQueue<TElement, TPriority>
     /// </remarks>
     public void TrimExcess()
     {
-        CollectionHelpers.TrimExcess(ref _nodes, _size);
+        Array.Resize(
+            ref _nodes,
+            CollectionHelpers.TrimExcess(_nodes.Length, _size));
     }
 
     /// <summary>
