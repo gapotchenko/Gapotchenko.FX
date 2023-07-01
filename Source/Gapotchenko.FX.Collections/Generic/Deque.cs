@@ -215,6 +215,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <param name="item">The object to be inserted at the beginning of the <see cref="Deque{T}"/>.</param>
     public void PushFront(T item)
     {
+        UpdateVersion();
         EnsureCapacityForOneElement();
         PushFrontCore(item);
     }
@@ -225,6 +226,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <param name="item">The object to be added to the end of the <see cref="Deque{T}"/>.</param>
     public void PushBack(T item)
     {
+        UpdateVersion();
         EnsureCapacityForOneElement();
         PushBackCore(item);
     }
@@ -423,24 +425,10 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is greater than <see cref="Count"/>.</exception>
     public void Insert(int index, T item)
     {
-        int size = m_Size;
-        ExceptionHelpers.ValidateIndexArgumentBounds(index, size);
+        ExceptionHelpers.ValidateIndexArgumentBounds(index, m_Size);
 
-        EnsureCapacityForOneElement();
-
-        if (index == 0)
-        {
-            PushFrontCore(item);
-        }
-        else if (index == size)
-        {
-            PushBackCore(item);
-        }
-        else
-        {
-            InsertRangePlaceholder(index, 1);
-            SetElement(index, item);
-        }
+        UpdateVersion();
+        InsertCore(index, item);
     }
 
     /// <summary>
@@ -458,18 +446,29 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         ExceptionHelpers.ValidateIndexArgumentBounds(index, size);
         ExceptionHelpers.ThrowIfArgumentIsNull(collection);
 
-        var reifiedCollection = collection.ReifyCollection();
+        if (collection.TryReifyNonEnumeratedCollection(out var reifiedCollection))
+        {
+            int count = reifiedCollection.Count;
+            if (count != 0)
+            {
+                UpdateVersion();
+                EnsureCapacityCore(size + count);
+                InsertRangePlaceholder(index, count);
 
-        int count = reifiedCollection.Count;
-        if (count == 0)
-            return;
+                int i = index;
+                foreach (var item in collection)
+                    SetElement(i++, item);
+            }
+        }
+        else
+        {
+            int i = index;
+            foreach (var item in collection)
+                InsertCore(i++, item);
 
-        EnsureCapacityCore(size + count);
-        InsertRangePlaceholder(index, count);
-
-        int i = index;
-        foreach (var item in collection)
-            SetElement(i++, item);
+            if (i != index)
+                UpdateVersion();
+        }
     }
 
     /// <summary>
@@ -819,17 +818,34 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     void PushFrontCore(T value)
     {
-        UpdateVersion();
         ++m_Size;
         m_Array[PreDecrementOffset(1)] = value;
     }
 
     void PushBackCore(T value)
     {
-        UpdateVersion();
         int size = m_Size;
         m_Size = size + 1;
         SetElement(size, value);
+    }
+
+    void InsertCore(int index, T item)
+    {
+        EnsureCapacityForOneElement();
+
+        if (index == 0)
+        {
+            PushFrontCore(item);
+        }
+        else if (index == m_Size)
+        {
+            PushBackCore(item);
+        }
+        else
+        {
+            InsertRangePlaceholder(index, 1);
+            SetElement(index, item);
+        }
     }
 
     void InsertRangePlaceholder(int index, int count)
@@ -851,7 +867,6 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
 
         m_Size = size + count;
-        UpdateVersion();
     }
 
     void RemoveAtCore(int index)
