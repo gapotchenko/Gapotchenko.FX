@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Gapotchenko.FX.Threading.Utils;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading;
 
@@ -31,13 +32,12 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             var task = m_CoreImpl.LockAsync(cancellationToken);
 
             // Suppress the flow of the execution context to be able to propagate the recursion tracking information.
-            ExecutionContext.SuppressFlow();
+            var flowScope = ExecutionContextHelpers.SuppressFlow();
 
             return task.ContinueWith(
                 task =>
                 {
-                    if (ExecutionContext.IsFlowSuppressed())
-                        ExecutionContext.RestoreFlow();
+                    flowScope.Restore();
 
                     // Rethrow the task exception, if any.
                     task.GetAwaiter().GetResult();
@@ -99,13 +99,12 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             var task = func();
 
             // Suppress the flow of the execution context to be able to propagate the recursion tracking information.
-            ExecutionContext.SuppressFlow();
+            var flowScope = ExecutionContextHelpers.SuppressFlow();
 
             return task.ContinueWith(
                 task =>
                 {
-                    if (ExecutionContext.IsFlowSuppressed())
-                        ExecutionContext.RestoreFlow();
+                    flowScope.Restore();
 
                     bool locked = task.GetAwaiter().GetResult();
                     if (locked)
