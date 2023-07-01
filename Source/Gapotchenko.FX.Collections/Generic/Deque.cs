@@ -15,6 +15,7 @@ using Gapotchenko.FX.Collections.Utils;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Threading;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -177,7 +178,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         ExceptionHelpers.ThrowIfArgumentIsNull(array);
         ExceptionHelpers.ThrowIfArgumentIsNegative(arrayIndex);
 
-        CopyToArrayCore(array, arrayIndex);
+        CopyToCore(array, arrayIndex);
     }
 
     /// <summary>
@@ -619,6 +620,80 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     }
 
     /// <summary>
+    /// Sorts the elements in the entire <see cref="Deque{T}"/>
+    /// using the default comparer.
+    /// </summary>
+    public void Sort() => Sort((IComparer<T>?)null);
+
+    /// <summary>
+    /// Sorts the elements in the entire <see cref="Deque{T}"/>
+    /// using the specified comparer.
+    /// </summary>
+    /// <param name="comparer">
+    /// The <see cref="IComparer{T}"/> implementation to use when comparing elements,
+    /// or <see langword="null"/> to use the default comparer <see cref="Comparer{T}.Default"/>.
+    /// </param>
+    public void Sort(IComparer<T>? comparer) => SortCore(0, m_Size, comparer);
+
+    /// <summary>
+    /// Sorts the elements in a range of elements in <see cref="Deque{T}"/>
+    /// using the specified comparer.
+    /// </summary>
+    /// <param name="index">The zero-based starting index of the range to sort.</param>
+    /// <param name="count">The length of the range to sort.</param>
+    /// <param name="comparer">
+    /// The <see cref="IComparer{T}"/> implementation to use when comparing elements,
+    /// or <see langword="null"/> to use the default comparer <see cref="Comparer{T}.Default"/>.
+    /// </param>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is less than 0.</exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="index"/> and <paramref name="count"/>
+    /// do not denote a valid range of elements in the <see cref="Deque{T}"/>.
+    /// </exception>
+    public void Sort(int index, int count, IComparer<T>? comparer)
+    {
+        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
+
+        SortCore(index, count, comparer);
+    }
+
+    /// <summary>
+    /// Sorts the elements in the entire <see cref="Deque{T}"/>
+    /// using the specified <see cref="Comparison{T}"/>.
+    /// </summary>
+    /// <param name="comparison">The method to use when comparing elements.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="comparison"/> is <see langword="null"/>.</exception>
+    public void Sort(Comparison<T> comparison)
+    {
+        ExceptionHelpers.ThrowIfArgumentIsNull(comparison);
+
+        SortCore(0, m_Size, comparison);
+    }
+
+    /// <summary>
+    /// Sorts the elements in a range of elements in <see cref="Deque{T}"/>
+    /// using the specified <see cref="Comparison{T}"/>.
+    /// </summary>
+    /// <param name="index">The zero-based starting index of the range to sort.</param>
+    /// <param name="count">The length of the range to sort.</param>
+    /// <param name="comparison">The method to use when comparing elements.</param>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is less than 0.</exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="index"/> and <paramref name="count"/>
+    /// do not denote a valid range of elements in the <see cref="Deque{T}"/>.
+    /// </exception>
+    /// <exception cref="ArgumentNullException"><paramref name="comparison"/> is <see langword="null"/>.</exception>
+    public void Sort(int index, int count, Comparison<T> comparison)
+    {
+        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
+        ExceptionHelpers.ThrowIfArgumentIsNull(comparison);
+
+        SortCore(index, count, comparison);
+    }
+
+    /// <summary>
     /// Ensures that the capacity of the <see cref="Deque{T}"/> is greater than or equal to the specified <paramref name="capacity"/>.
     /// Otherwise, the <see cref="Deque{T}"/> capacity will be doubled until it reaches or exceeds the specified value.
     /// </summary>
@@ -660,7 +735,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         else
         {
             var result = new T[size];
-            CopyToArrayCore(result, 0);
+            CopyToCore(result, 0);
             return result;
         }
     }
@@ -710,7 +785,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         return (m_Offset + elementIndex) % Capacity;
     }
 
-    void CopyToArrayCore(Array array, int arrayIndex)
+    void CopyToCore(Array array, int arrayIndex)
     {
         Debug.Assert(array != null);
         Debug.Assert(arrayIndex >= 0);
@@ -845,16 +920,37 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         Debug.Assert(index <= m_Size - count);
 
         UpdateVersion();
+        EnsureContiguous(index, count);
 
-        if (IsContiguousRange(index, count))
-        {
-            Array.Reverse(m_Array, GetArrayIndex(index), count);
-        }
-        else
-        {
-            MakeContiguous();
-            Array.Reverse(m_Array, index, count);
-        }
+        Array.Reverse(m_Array, m_Offset + index, count);
+    }
+
+    void SortCore(int index, int count, IComparer<T>? comparer)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(count >= 0);
+        Debug.Assert(index <= m_Size - count);
+
+        UpdateVersion();
+        EnsureContiguous(index, count);
+
+        Array.Sort(m_Array, m_Offset + index, count, comparer);
+    }
+
+    void SortCore(int index, int count, Comparison<T> comparison)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(count >= 0);
+        Debug.Assert(index <= m_Size - count);
+
+        UpdateVersion();
+        EnsureContiguous(index, count);
+
+#if NET5_0_OR_GREATER
+        new Span<T>(m_Array, m_Offset + index, count).Sort(comparison);
+#else
+        Array.Sort(m_Array, m_Offset + index, count, Comparer<T>.Create(comparison));
+#endif
     }
 
     void ClearAt(int index)
@@ -986,6 +1082,16 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         ReallocateArray(Capacity);
     }
 
+    void EnsureContiguous(int index, int count)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(count >= 0);
+        Debug.Assert(index <= m_Size - count);
+
+        if (!IsContiguousRange(index, count))
+            MakeContiguous();
+    }
+
     /// <summary>
     /// Reallocates <see cref="m_Array"/> for it:
     /// <list type="bullet">
@@ -1002,7 +1108,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         Debug.Assert(capacity >= m_Size); // ensure that existing elements stored in array are not capped
 
         var newArray = new T[capacity];
-        CopyToArrayCore(newArray, 0);
+        CopyToCore(newArray, 0);
 
         // Changing both array and offset fields is a non-atomic operation.
         m_Array = newArray;
@@ -1189,7 +1295,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
         try
         {
-            CopyToArrayCore(array, index);
+            CopyToCore(array, index);
         }
         catch (ArrayTypeMismatchException)
         {
