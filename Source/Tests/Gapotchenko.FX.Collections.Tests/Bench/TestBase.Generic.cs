@@ -1,7 +1,10 @@
-// (c) Portions of code from the .NET project by Microsoft and .NET Foundation
+// Portions © .NET Foundation and its Licensors
 
 using System.Diagnostics;
 using Xunit;
+
+#pragma warning disable IDE0040 // Add accessibility modifiers
+#pragma warning disable IDE1006 // Naming Styles
 
 namespace Gapotchenko.FX.Collections.Tests.Bench;
 

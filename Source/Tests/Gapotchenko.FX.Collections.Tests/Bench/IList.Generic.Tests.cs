@@ -1,4 +1,9 @@
-﻿using Xunit;
+﻿// Portions © .NET Foundation and its Licensors
+
+using Xunit;
+
+#pragma warning disable IDE0040 // Add accessibility modifiers
+#pragma warning disable IDE1006 // Naming Styles
 
 #nullable disable
 
