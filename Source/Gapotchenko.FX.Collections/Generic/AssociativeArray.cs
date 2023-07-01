@@ -221,13 +221,13 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         set => this[key] = value;
     }
 
-    TValue IReadOnlyDictionary<TKey, TValue>.this[TKey key] => this[key]!;
+    TValue IReadOnlyDictionary<TKey, TValue>.this[TKey key] => this[key];
 
     object? IDictionary.this[object key]
     {
         get
         {
-            if (key is TKey tKey)
+            if (CollectionHelpers.TryGetCompatibleValue<TKey>(key, out var tKey))
                 return this[tKey];
             else
                 return null;
