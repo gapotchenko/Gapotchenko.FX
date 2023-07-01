@@ -573,7 +573,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     void IDictionary.Remove(object key)
     {
-        if (key is TKey tKey)
+        if (CollectionHelpers.TryGetCompatibleValue<TKey>(key, out var tKey))
             Remove(tKey);
     }
 
