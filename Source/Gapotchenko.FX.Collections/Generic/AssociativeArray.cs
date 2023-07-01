@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Collections.Utils;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Kirill Rode
+// Year of introduction: 2021
+
+using Gapotchenko.FX.Collections.Utils;
 using Gapotchenko.FX.Linq;
 using System.Collections;
 using System.Diagnostics;
@@ -16,8 +22,8 @@ namespace Gapotchenko.FX.Collections.Generic;
 /// </summary>
 /// <typeparam name="TKey">The type of the keys in the associative array.</typeparam>
 /// <typeparam name="TValue">The type of the values in the associative array.</typeparam>
-[DebuggerTypeProxy(typeof(AssociativeArrayDebugView<,>))]
 [DebuggerDisplay("Count = {Count}")]
+[DebuggerTypeProxy(typeof(DictionaryDebugView<,>))]
 public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>
 {
 #pragma warning disable CS8714
@@ -234,23 +240,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         set
         {
             ExceptionHelpers.ValidateNullArgumentLegality<TValue>(value);
-
-            try
-            {
-                var tempKey = (TKey)key;
-                try
-                {
-                    this[tempKey] = (TValue)value!;
-                }
-                catch (InvalidCastException)
-                {
-                    throw ExceptionHelpers.CreateInvalidArgumentTypeException(value, typeof(TValue), nameof(value));
-                }
-            }
-            catch (InvalidCastException)
-            {
-                throw ExceptionHelpers.CreateInvalidArgumentTypeException(key, typeof(TKey), nameof(key));
-            }
+            this[CollectionHelpers.GetCompatibleValue<TKey>(key)] = CollectionHelpers.GetCompatibleValue<TValue>(value);
         }
     }
 
@@ -662,8 +652,8 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         public void Reset() => m_Enumerator.Reset();
     }
 
-    [DebuggerTypeProxy(typeof(AssociativeArrayKeyValueCollectionDebugView<,,>))]
     [DebuggerDisplay("Count = {Count}")]
+    [DebuggerTypeProxy(typeof(DictionaryKeyValueCollectionDebugView<,,>))]
     abstract class KeyValueCollection<T> : ICollection<T>, ICollection
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
