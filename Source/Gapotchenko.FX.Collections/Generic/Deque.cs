@@ -7,15 +7,10 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-#define TFF_ISREFERENCEORCONTAINSREFERENCES
-#endif
-
 using Gapotchenko.FX.Collections.Utils;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Threading;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -125,7 +120,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
         if (m_Size != 0)
         {
-#if TFF_ISREFERENCEORCONTAINSREFERENCES
+#if TFF_RUNTIMEHELPERS_ISREFERENCEORCONTAINSREFERENCES
             if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
 #endif
             {
@@ -958,7 +953,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         Debug.Assert(index >= 0);
         Debug.Assert(index < Capacity);
 
-#if TFF_ISREFERENCEORCONTAINSREFERENCES
+#if TFF_RUNTIMEHELPERS_ISREFERENCEORCONTAINSREFERENCES
         if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
 #endif
         {
@@ -972,7 +967,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         Debug.Assert(arrayIndex >= 0);
         Debug.Assert(arrayIndex < Capacity);
 
-#if TFF_ISREFERENCEORCONTAINSREFERENCES
+#if TFF_RUNTIMEHELPERS_ISREFERENCEORCONTAINSREFERENCES
         if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
 #endif
         {
@@ -987,7 +982,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         Debug.Assert(count >= 0);
         Debug.Assert(index <= m_Size - count);
 
-#if TFF_ISREFERENCEORCONTAINSREFERENCES
+#if TFF_RUNTIMEHELPERS_ISREFERENCEORCONTAINSREFERENCES
         if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
 #endif
         {
@@ -1033,6 +1028,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         if (count == 0 || sourceIndex == destinationIndex)
             return;
 
+#if false
+        // Canonical Algorithm
+
         if (sourceIndex > destinationIndex)
         {
             for (int i = 0; i < count; ++i)
@@ -1043,6 +1041,155 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             for (int i = count - 1; i >= 0; --i)
                 CopyElement(sourceIndex + i, destinationIndex + i);
         }
+#else
+        // Fast Algorithm (by Masashi Mizuno)
+
+        var array = m_Array;
+        var capacity = array.Length;
+        var srcIndex = GetArrayIndex(sourceIndex);
+        var dstIndex = GetArrayIndex(destinationIndex);
+
+        if (srcIndex <= dstIndex)
+        {
+            var a = Math.Min(capacity - dstIndex, count);
+            var c = Math.Max(srcIndex + count - capacity, 0);
+            var b = count - (a + c);
+
+            if (srcIndex + count <= dstIndex)
+            {
+                //  s                               |
+                //  +---------------+               |
+                //  |       A       |               |
+                //  +---------------+               |
+                //  |               +---------------+
+                //  |               |       A'      |
+                //  |               +---------------+
+                //  |               d               |
+
+                //  |  s                            |
+                //  |  +---------+-----+            |
+                //  |  |    A    |  B  |            |
+                //  |  +---------+-----+            |
+                //  |                     +---------+-----+
+                //  |                     |    A'   |  B' |
+                //  |                     +---------+-----+
+                //  |                     d         |
+
+                // In this case, A' ∩ B = ∅ holds.
+                Array.Copy(array, srcIndex, array, dstIndex, a);
+                if (b > 0)
+                    Array.Copy(array, srcIndex + a, array, 0, b);
+            }
+            else
+            {
+                // By (*), d + count ≤ s + Capacity.
+
+                //  |   s                           |   s + Capacity
+                //  |   +---------------+           |   +---
+                //  |   |       A       |           |   |
+                //  |   +---------------+           |   +---
+                //  |           +---------------+   |
+                //  |           |       A'      |   |
+                //  |           +---------------+   |
+                //  |           d                   |
+
+                //  |           s                   |           s + Capacity
+                //  |           +-----------+---+   |           +---
+                //  |           |     A     | B |   |           |
+                //  |           +-----------+---+   |           +---
+                //  |                   +-----------+---+
+                //  |                   |     A'    | B'|
+                //  |                   +-----------+---+
+                //  |                   d           |
+
+                //  |                   s           |                   s + Capacity
+                //  |                   +---+-------+---+               +---
+                //  |                   | A |   B   | C |               |
+                //  |                   +---+-------+---+               +---
+                //  |                           +---+-------+---+
+                //  |                           | A'|   B'  | C'|
+                //  |                           +---+-------+---+
+                //  |                           d   |
+
+                // In this case, C' ∩ (A ∪ B) = ∅ and B' ∩ A = ∅ hold.
+                if (c > 0)
+                    Array.Copy(array, 0, array, b, c);
+                if (b > 0)
+                    Array.Copy(array, srcIndex + a, array, 0, b);
+                Array.Copy(array, srcIndex, array, dstIndex, a);
+            }
+        }
+        else
+        {
+            var a = Math.Min(capacity - srcIndex, count);
+            var c = Math.Max(dstIndex + count - capacity, 0);
+            var b = count - (a + c);
+
+            if (dstIndex + count <= srcIndex)
+            {
+                //  |               s               |
+                //  |               +---------------+
+                //  |               |       A       |
+                //  |               +---------------+
+                //  +---------------+               |
+                //  |       A'      |               |
+                //  +---------------+               |
+                //  d                               |
+
+                //  |                     s         |
+                //  |                     +---------+-----+
+                //  |                     |    A    |  B  |
+                //  |                     +---------+-----+
+                //  |  +---------+-----+            |
+                //  |  |    A'   |  B' |            |
+                //  |  +---------+-----+            |
+                //  |  d                            |
+
+                // In this case, B' ∩ A = ∅ holds.
+                if (b > 0)
+                    Array.Copy(array, 0, array, dstIndex + a, b);
+                Array.Copy(array, srcIndex, array, dstIndex, a);
+            }
+            else
+            {
+                // By (*), s + count ≤ d + Capacity.
+
+                //  |           s                   |
+                //  |           +---------------+   |
+                //  |           |       A       |   |
+                //  |           +---------------+   |
+                //  |   +---------------+           |   +---
+                //  |   |       A'      |           |   |
+                //  |   +---------------+           |   +---
+                //  |   d                           |   d + Capacity
+
+                //  |                   s           |
+                //  |                   +-----------+---+
+                //  |                   |     A     | B |
+                //  |                   +-----------+---+
+                //  |           +-----------+---+   |           +---
+                //  |           |     A'    | B'|   |           |
+                //  |           +-----------+---+   |           +---
+                //  |           d                   |           d + Capacity
+
+                //  |                           s   |
+                //  |                           +---+-------+---+
+                //  |                           | A |   B   | C |
+                //  |                           +---+-------+---+
+                //  |                   +---+-------+---+               +---
+                //  |                   | A'|   B'  | C'|               |
+                //  |                   +---+-------+---+               +---
+                //  |                   d           |                   d + Capacity
+
+                // In this case, A' ∩ (B ∪ C) = ∅ and B' ∩ C = ∅ hold.
+                Array.Copy(array, srcIndex, array, dstIndex, a);
+                if (b > 0)
+                    Array.Copy(array, 0, array, dstIndex + a, b);
+                if (c > 0)
+                    Array.Copy(array, b, array, 0, c);
+            }
+        }
+#endif
     }
 
     int Capacity => m_Array.Length;
