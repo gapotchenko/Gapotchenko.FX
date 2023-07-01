@@ -1,6 +1,6 @@
 ﻿// Gapotchenko.FX
-//
 // Copyright © Gapotchenko and Contributors
+//
 // Portions © Stephen Cleary
 // Portions © Masashi Mizuno
 //

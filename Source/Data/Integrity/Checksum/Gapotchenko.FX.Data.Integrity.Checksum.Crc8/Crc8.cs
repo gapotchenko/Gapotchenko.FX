@@ -1,5 +1,4 @@
 ﻿// Gapotchenko.FX
-//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
