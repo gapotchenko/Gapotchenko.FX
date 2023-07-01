@@ -197,14 +197,9 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             if (key is null)
             {
                 if (m_NullSlot.HasValue)
-                {
                     return m_NullSlot.Value;
-                }
                 else
-                {
-                    ThrowHelper.ThrowKeyNotFoundException(key);
-                    return default!;
-                }
+                    throw ThrowHelper.CreateKeyNotFoundException(key);
             }
             else
             {
@@ -891,8 +886,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     static class ThrowHelper
     {
-        [DoesNotReturn]
-        public static void ThrowKeyNotFoundException(TKey? key) =>
+        public static Exception CreateKeyNotFoundException(TKey? key) =>
             throw new KeyNotFoundException($"The given key '{key}' was not present in the associative array.");
 
         [DoesNotReturn]
