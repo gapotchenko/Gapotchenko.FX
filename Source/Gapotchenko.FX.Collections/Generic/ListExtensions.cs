@@ -3,7 +3,7 @@
 namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
-/// <see cref="List{T}"/> extensions.
+/// Provides extension methods for <see cref="List{T}"/>.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ListExtensions
