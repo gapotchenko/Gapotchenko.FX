@@ -68,6 +68,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{0EC93163-AEB9-4D7B-ADC2-F665157CE38C}"
 	ProjectSection(SolutionItems) = preProject
 		..\Documentation\Changelog.md = ..\Documentation\Changelog.md
+		..\CONTRIBUTORS.md = ..\CONTRIBUTORS.md
 		..\Documentation\README.md = ..\Documentation\README.md
 	EndProjectSection
 EndProject
