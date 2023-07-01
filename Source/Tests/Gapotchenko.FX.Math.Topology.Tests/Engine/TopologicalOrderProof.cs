@@ -39,23 +39,23 @@ sealed class TopologicalOrderProof
 
         Console.WriteLine("Count of graph configurations: {0}", iterators.Count());
 
-        _TotalCountOfExperiments = 0;
-        _TotalCountOfExperimentsWithViolatedMinimalDistance = 0;
+        m_TotalCountOfExperiments = 0;
+        m_TotalCountOfExperimentsWithViolatedMinimalDistance = 0;
 
         DebuggableParallel.ForEach(iterators, _CheckIterator);
 
-        if (_TotalCountOfExperimentsWithViolatedMinimalDistance != 0)
+        if (m_TotalCountOfExperimentsWithViolatedMinimalDistance != 0)
         {
             throw new Exception(string.Format(
                 "Minimal distance is not reached in {0:P2} of experiments ({1} from {2}).",
-                ((double)_TotalCountOfExperimentsWithViolatedMinimalDistance / _TotalCountOfExperiments),
-                _TotalCountOfExperimentsWithViolatedMinimalDistance,
-                _TotalCountOfExperiments));
+                ((double)m_TotalCountOfExperimentsWithViolatedMinimalDistance / m_TotalCountOfExperiments),
+                m_TotalCountOfExperimentsWithViolatedMinimalDistance,
+                m_TotalCountOfExperiments));
         }
     }
 
-    long _TotalCountOfExperiments;
-    long _TotalCountOfExperimentsWithViolatedMinimalDistance;
+    long m_TotalCountOfExperiments;
+    long m_TotalCountOfExperimentsWithViolatedMinimalDistance;
 
     bool DF(int x, int y, ulong iterator)
     {
@@ -109,7 +109,7 @@ sealed class TopologicalOrderProof
         {
             foreach (var currentSource in source.Permute())
             {
-                Interlocked.Increment(ref _TotalCountOfExperiments);
+                Interlocked.Increment(ref m_TotalCountOfExperiments);
 
                 IEnumerable<int> result;
 
@@ -141,7 +141,7 @@ sealed class TopologicalOrderProof
                     if (Debugger.IsAttached)
                         throw new Exception("Minimal distance not reached.");
                     else
-                        Interlocked.Increment(ref _TotalCountOfExperimentsWithViolatedMinimalDistance);
+                        Interlocked.Increment(ref m_TotalCountOfExperimentsWithViolatedMinimalDistance);
                 }
             }
         }
@@ -193,7 +193,7 @@ sealed class TopologicalOrderProof
             throw new Exception("Topological order is violated.");
     }
 
-    static object _ConsoleSync = new object();
+    static readonly object m_ConsoleSync = new();
 
     static void _DumpTopology<T>(
         IEnumerable<T> source,
@@ -202,7 +202,7 @@ sealed class TopologicalOrderProof
     {
         var equalityComparer = EqualityComparer<T>.Default;
 
-        lock (_ConsoleSync)
+        lock (m_ConsoleSync)
         {
             Console.WriteLine();
             Console.WriteLine("*** Topology Dump ***");
