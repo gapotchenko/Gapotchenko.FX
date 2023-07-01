@@ -154,8 +154,30 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     public bool Contains(T item) => m_Size != 0 && IndexOf(item) != -1;
 
     /// <summary>
+    /// Copies the elements of the <see cref="Deque{T}"/> to an <see cref="Array"/>.
+    /// </summary>
+    /// <param name="array">
+    /// The one-dimensional <see cref="Array"/> that is the destination of the elements copied from <see cref="Deque{T}"/>.
+    /// The <see cref="Array"/> must have zero-based indexing.
+    /// </param>
+    /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException">
+    /// The number of elements in the source <see cref="Deque{T}"/>
+    /// is greater than the available space in the destination array.
+    /// </exception>
+    public void CopyTo(T[] array)
+    {
+        ExceptionHelpers.ThrowIfArgumentIsNull(array);
+        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(
+            0, m_Size, array.Length,
+            indexParameterName: null, countParameterName: null);
+
+        CopyToCore(array, 0);
+    }
+
+    /// <summary>
     /// Copies the elements of the <see cref="Deque{T}"/> to an <see cref="Array"/>,
-    /// starting at a particular <see cref="Array"/> index.
+    /// starting at the specified <see cref="Array"/> index.
     /// </summary>
     /// <param name="array">
     /// The one-dimensional <see cref="Array"/> that is the destination of the elements copied from <see cref="Deque{T}"/>.
@@ -171,9 +193,66 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     public void CopyTo(T[] array, int arrayIndex)
     {
         ExceptionHelpers.ThrowIfArgumentIsNull(array);
-        ExceptionHelpers.ThrowIfArgumentIsNegative(arrayIndex);
+        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(
+            arrayIndex, m_Size, array.Length,
+            countParameterName: null);
 
         CopyToCore(array, arrayIndex);
+    }
+
+    /// <summary>
+    /// Copies the specified number of elements of the <see cref="Deque{T}"/> to an <see cref="Array"/>,
+    /// starting at the specified <see cref="Array"/> index.
+    /// </summary>
+    /// <param name="array">
+    /// The one-dimensional <see cref="Array"/> that is the destination of the elements copied from <see cref="Deque{T}"/>.
+    /// The <see cref="Array"/> must have zero-based indexing.
+    /// </param>
+    /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+    /// <param name="count">The number of elements to copy.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception>
+    /// <exception cref="ArgumentException">
+    /// The number of elements in the source <see cref="Deque{T}"/>
+    /// is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.
+    /// </exception>
+    public void CopyTo(T[] array, int arrayIndex, int count)
+    {
+        ExceptionHelpers.ThrowIfArgumentIsNull(array);
+        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(arrayIndex, count, array.Length);
+
+        CopyToCore(0, array, arrayIndex, count);
+    }
+
+    /// <summary>
+    /// Copies a range of elements from the <see cref="Deque{T}"/> to an <see cref="Array"/>,
+    /// starting at the specified <see cref="Array"/> index.
+    /// </summary>
+    /// <param name="array">
+    /// The one-dimensional <see cref="Array"/> that is the destination of the elements copied from <see cref="Deque{T}"/>.
+    /// The <see cref="Array"/> must have zero-based indexing.
+    /// </param>
+    /// <param name="index">The zero-based index in the source <see cref="Deque{T}"/> at which copying begins.</param>
+    /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+    /// <param name="count">The number of elements to copy.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="index"/> and <paramref name="count"/>
+    /// do not denote a valid range of elements in the <see cref="Deque{T}"/>.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// The number of elements in the source <see cref="Deque{T}"/>
+    /// is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.
+    /// </exception>
+    public void CopyTo(int index, T[] array, int arrayIndex, int count)
+    {
+        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
+        ExceptionHelpers.ThrowIfArgumentIsNull(array);
+        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(arrayIndex, count, array.Length);
+
+        CopyToCore(index, array, arrayIndex, count);
     }
 
     /// <summary>
@@ -779,10 +858,25 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         return (m_Offset + elementIndex) % Capacity;
     }
 
+    /// <summary>
+    /// Gets an array index by the index of a collection element in a contiguous range.
+    /// </summary>
+    /// <param name="elementIndex">The collection element index in a contiguous range.</param>
+    /// <returns>The array index.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    int GetContiguousArrayIndex(int elementIndex)
+    {
+        Debug.Assert(elementIndex >= 0);
+        Debug.Assert(elementIndex < Capacity - m_Offset);
+
+        return m_Offset + elementIndex;
+    }
+
     void CopyToCore(Array array, int arrayIndex)
     {
         Debug.Assert(array != null);
         Debug.Assert(arrayIndex >= 0);
+        Debug.Assert(arrayIndex <= array.Length - m_Size);
 
         if (IsSplit)
         {
@@ -793,6 +887,35 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         else
         {
             Array.Copy(m_Array, m_Offset, array, arrayIndex, m_Size);
+        }
+    }
+
+    void CopyToCore(int index, Array array, int arrayIndex, int count)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(array != null);
+        Debug.Assert(arrayIndex >= 0);
+        Debug.Assert(count >= 0);
+        Debug.Assert(index <= m_Size - count);
+        Debug.Assert(arrayIndex <= array.Length - count);
+
+        if (IsContiguousRange(index, count))
+        {
+            Array.Copy(m_Array, GetContiguousArrayIndex(index), array, arrayIndex, count);
+        }
+        else
+        {
+            var n = Math.Max(Capacity - m_Offset - index, count);
+            if (n >= 0)
+            {
+                Array.Copy(m_Array, m_Offset + index, array, arrayIndex, n);
+                if (count > n)
+                    Array.Copy(m_Array, 0, array, arrayIndex + n, count - n);
+            }
+            else
+            {
+                Array.Copy(m_Array, -n, array, arrayIndex, count);
+            }
         }
     }
 
@@ -932,7 +1055,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         UpdateVersion();
         EnsureContiguous(index, count);
 
-        Array.Reverse(m_Array, m_Offset + index, count);
+        Array.Reverse(m_Array, GetContiguousArrayIndex(index), count);
     }
 
     void SortCore(int index, int count, IComparer<T>? comparer)
@@ -944,7 +1067,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         UpdateVersion();
         EnsureContiguous(index, count);
 
-        Array.Sort(m_Array, m_Offset + index, count, comparer);
+        Array.Sort(m_Array, GetContiguousArrayIndex(index), count, comparer);
     }
 
     void SortCore(int index, int count, Comparison<T> comparison)
@@ -957,9 +1080,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         EnsureContiguous(index, count);
 
 #if NET5_0_OR_GREATER
-        new Span<T>(m_Array, m_Offset + index, count).Sort(comparison);
+        new Span<T>(m_Array, GetContiguousArrayIndex(index), count).Sort(comparison);
 #else
-        Array.Sort(m_Array, m_Offset + index, count, Comparer<T>.Create(comparison));
+        Array.Sort(m_Array, GetContiguousArrayIndex(index), count, Comparer<T>.Create(comparison));
 #endif
     }
 
