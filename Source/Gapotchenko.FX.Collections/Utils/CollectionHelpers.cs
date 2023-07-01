@@ -47,10 +47,7 @@ static class CollectionHelpers
         if ((uint)newCapacity > arrayMaxLength)
             newCapacity = arrayMaxLength;
 
-        if (newCapacity < desiredCapacity)
-            newCapacity = desiredCapacity;
-
-        return newCapacity;
+        return Math.Max(newCapacity, desiredCapacity);
     }
 
     public static int TrimExcess(int capacity, int size)
@@ -61,8 +58,8 @@ static class CollectionHelpers
 
         int threshold = (int)(capacity * 0.9);
         if (size < threshold)
-            return size;
+            return size; // trim
         else
-            return capacity;
+            return capacity; // leave as it is
     }
 }

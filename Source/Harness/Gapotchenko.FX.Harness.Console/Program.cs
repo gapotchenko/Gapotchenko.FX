@@ -46,7 +46,8 @@ class Program
 
             deque.InsertRange(1, new[] { ".", ":" });
 
-            deque.RemoveRange(deque.Count - 2, 1);
+            //deque.Reverse();
+            //deque.RemoveRange(deque.Count - 2, 1);
 
             Console.WriteLine(string.Join("", deque));
         }

@@ -104,14 +104,14 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         {
             ExceptionHelpers.ValidateIndexArgumentRange(index, m_Size);
 
-            return GetElementCore(index);
+            return GetElement(index);
         }
         set
         {
             ExceptionHelpers.ValidateIndexArgumentRange(index, m_Size);
 
             UpdateVersion();
-            SetElementCore(index, value);
+            SetElement(index, value);
         }
     }
 
@@ -412,7 +412,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
         else
         {
-            result = GetElementCore(size - 1);
+            result = GetElement(size - 1);
             return true;
         }
     }
@@ -443,7 +443,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         else
         {
             InsertRangePlaceholder(index, 1);
-            SetElementCore(index, item);
+            SetElement(index, item);
         }
     }
 
@@ -473,7 +473,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
         int i = index;
         foreach (var item in collection)
-            SetElementCore(i++, item);
+            SetElement(i++, item);
     }
 
     /// <summary>
@@ -555,6 +555,70 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     }
 
     /// <summary>
+    /// Removes all elements that match the conditions defined by the specified predicate from the <see cref="Deque{T}"/>.
+    /// </summary>
+    /// <param name="match">The <see cref="Predicate{T}"/> delegate that defines the conditions of the elements to remove.</param>
+    /// <returns>The number of elements that were removed from the <see cref="Deque{T}"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="match"/> is <see langword="null"/>.</exception>
+    public int RemoveWhere(Predicate<T> match)
+    {
+        ExceptionHelpers.ThrowIfArgumentIsNull(match);
+
+        var size = m_Size;
+
+        int i;
+        for (i = 0; i < size; ++i)
+            if (match(GetElement(i)))
+                break;
+
+        if (i == size)
+            return 0;
+
+        for (var j = i + 1; ; ++i, ++j)
+        {
+            for (; j < size; ++j)
+                if (!match(GetElement(j)))
+                    break;
+
+            if (j == size)
+                break;
+
+            CopyElement(j, i);
+        }
+
+        int count = size - i;
+        ClearRange(i, count);
+
+        m_Size = i;
+        UpdateVersion();
+
+        return count;
+    }
+
+    /// <summary>
+    /// Reverses the order of the elements in the entire <see cref="Deque{T}"/>.
+    /// </summary>
+    public void Reverse() => ReverseCore(0, m_Size);
+
+    /// <summary>
+    /// Reverses the order of the elements in the specified range.
+    /// </summary>
+    /// <param name="index">The zero-based starting index of the range to reverse.</param>
+    /// <param name="count">The number of elements in the range to reverse.</param>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is less than 0.</exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="index"/> and <paramref name="count"/>
+    /// do not denote a valid range of elements in the <see cref="Deque{T}"/>.
+    /// </exception>
+    public void Reverse(int index, int count)
+    {
+        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
+
+        ReverseCore(index, count);
+    }
+
+    /// <summary>
     /// Ensures that the capacity of the <see cref="Deque{T}"/> is greater than or equal to the specified <paramref name="capacity"/>.
     /// Otherwise, the <see cref="Deque{T}"/> capacity will be doubled until it reaches or exceeds the specified value.
     /// </summary>
@@ -565,6 +629,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         ExceptionHelpers.ThrowIfArgumentIsNegative(capacity);
 
+        // Always update the version to catch concurrent enumeration errors better.
+        UpdateVersion();
         EnsureCapacityCore(capacity);
         return Capacity;
     }
@@ -575,8 +641,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     public void TrimExcess()
     {
-        int newCapacity = CollectionHelpers.TrimExcess(Capacity, m_Size);
-        ChangeCapacity(newCapacity);
+        // Always update the version to catch concurrent enumeration errors better.
+        UpdateVersion();
+        SetCapacity(CollectionHelpers.TrimExcess(Capacity, m_Size));
     }
 
     /// <summary>
@@ -609,7 +676,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <summary>
     /// Gets a collection element by the specified index.
     /// </summary>
-    T GetElementCore(int index)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    T GetElement(int index)
     {
         Debug.Assert(index >= 0);
         Debug.Assert(index < m_Size);
@@ -620,7 +688,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <summary>
     /// Sets a collection element by the specified index.
     /// </summary>
-    void SetElementCore(int index, T value)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void SetElement(int index, T value)
     {
         Debug.Assert(index >= 0);
         Debug.Assert(index < Capacity);
@@ -658,6 +727,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
     }
 
+    /// <summary>
+    /// Increases version to invalidate concurrent enumerations.
+    /// </summary>
     void UpdateVersion() => ++m_Version;
 
     int PostIncrementOffset(int addend)
@@ -687,11 +759,15 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         UpdateVersion();
         int size = m_Size;
         m_Size = size + 1;
-        SetElementCore(size, value);
+        SetElement(size, value);
     }
 
     void InsertRangePlaceholder(int index, int count)
     {
+        Debug.Assert(index >= 0);
+        Debug.Assert(count >= 0);
+        Debug.Assert(index <= m_Size - count);
+
         int size = m_Size;
 
         if (IsFirstHalf(index))
@@ -762,6 +838,25 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         UpdateVersion();
     }
 
+    void ReverseCore(int index, int count)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(count >= 0);
+        Debug.Assert(index <= m_Size - count);
+
+        UpdateVersion();
+
+        if (IsContiguousRange(index, count))
+        {
+            Array.Reverse(m_Array, GetArrayIndex(index), count);
+        }
+        else
+        {
+            MakeContiguous();
+            Array.Reverse(m_Array, index, count);
+        }
+    }
+
     void ClearAt(int index)
     {
         Debug.Assert(index >= 0);
@@ -804,7 +899,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             // Canonical Algorithm
 
             for (int i = 0; i < count; ++i)
-                SetElementCore(index + i, default!);
+                SetElement(index + i, default!);
 #else
             // Fast Algorithm
 
@@ -826,28 +921,31 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
     }
 
-    void CopyRange(int fromIndex, int toIndex, int count)
-    {
-        Debug.Assert(fromIndex >= 0);
-        Debug.Assert(fromIndex < Capacity);
-        Debug.Assert(toIndex >= 0);
-        Debug.Assert(toIndex < Capacity);
-        Debug.Assert(count >= 0);
-        Debug.Assert(fromIndex <= Capacity - count);
-        Debug.Assert(toIndex <= Capacity - count);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void CopyElement(int sourceIndex, int destinationIndex) => SetElement(destinationIndex, GetElement(sourceIndex));
 
-        if (count == 0 || fromIndex == toIndex)
+    void CopyRange(int sourceIndex, int destinationIndex, int count)
+    {
+        Debug.Assert(sourceIndex >= 0);
+        Debug.Assert(sourceIndex < Capacity);
+        Debug.Assert(destinationIndex >= 0);
+        Debug.Assert(destinationIndex < Capacity);
+        Debug.Assert(count >= 0);
+        Debug.Assert(sourceIndex <= Capacity - count);
+        Debug.Assert(destinationIndex <= Capacity - count);
+
+        if (count == 0 || sourceIndex == destinationIndex)
             return;
 
-        if (fromIndex > toIndex)
+        if (sourceIndex > destinationIndex)
         {
             for (int i = 0; i < count; ++i)
-                SetElementCore(toIndex + i, GetElementCore(fromIndex + i));
+                CopyElement(sourceIndex + i, destinationIndex + i);
         }
         else
         {
             for (int i = count - 1; i >= 0; --i)
-                SetElementCore(toIndex + i, GetElementCore(fromIndex + i));
+                CopyElement(sourceIndex + i, destinationIndex + i);
         }
     }
 
@@ -872,18 +970,41 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         Debug.Assert(capacity > Capacity);
 
-        int newCapacity = CollectionHelpers.GrowCapacity(Capacity, capacity, DefaultCapacity);
-        ChangeCapacity(newCapacity);
+        SetCapacity(CollectionHelpers.GrowCapacity(Capacity, capacity, DefaultCapacity));
     }
 
-    void ChangeCapacity(int newCapacity)
+    void SetCapacity(int capacity)
     {
-        if (Capacity == newCapacity)
-            return;
+        if (capacity != Capacity)
+            ReallocateArray(capacity);
+    }
 
-        var newArray = new T[newCapacity];
+    void MakeContiguous()
+    {
+        Debug.Assert(IsSplit);
+
+        ReallocateArray(Capacity);
+    }
+
+    /// <summary>
+    /// Reallocates <see cref="m_Array"/> for it:
+    /// <list type="bullet">
+    /// <item>to accommodate the specified number of elements, and</item>
+    /// <item>to become contiguous.</item>
+    /// </list>
+    /// </summary>
+    /// <remarks>
+    /// This is a non-atomic operation requiring a version update in a calling algorithm.
+    /// </remarks>
+    /// <param name="capacity">The number of elements <see cref="m_Array"/> should be able to accommodate.</param>
+    void ReallocateArray(int capacity)
+    {
+        Debug.Assert(capacity >= m_Size); // ensure that existing elements stored in array are not capped
+
+        var newArray = new T[capacity];
         CopyToArrayCore(newArray, 0);
 
+        // Changing both array and offset fields is a non-atomic operation.
         m_Array = newArray;
         m_Offset = 0;
     }
@@ -896,6 +1017,10 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     bool IsSplit => m_Offset > Capacity - m_Size; // overflow-safe equivalent of "m_Offset + m_Count > Capacity"
 
     bool IsFirstHalf(int index) => index < m_Size - index;
+
+    bool IsContiguousRange(int index, int count) =>
+        count == 0 ||
+        GetArrayIndex(index) <= GetArrayIndex(index + count - 1);
 
     /// <summary>
     /// Enumerates the elements of a <see cref="Deque{T}"/>.
@@ -953,7 +1078,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
             if (m_Version == deque.m_Version && (uint)m_Index < deque.m_Size)
             {
-                m_Current = deque.GetElementCore(m_Index++);
+                m_Current = deque.GetElement(m_Index++);
                 return true;
             }
             else
