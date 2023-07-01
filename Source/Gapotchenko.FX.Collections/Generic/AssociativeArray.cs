@@ -199,7 +199,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                 if (m_NullSlot.HasValue)
                     return m_NullSlot.Value;
                 else
-                    throw ThrowHelper.CreateKeyNotFoundException(key);
+                    throw ExceptionHelpers.CreateKeyNotFoundException(key);
             }
             else
             {
@@ -227,14 +227,20 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     {
         get
         {
-            if (CollectionHelpers.TryGetCompatibleValue<TKey>(key, out var tKey))
-                return this[tKey];
+            if (CollectionHelpers.TryGetCompatibleValue<TKey>(key, out var tKey) &&
+                TryGetValue(tKey, out var value))
+            {
+                return value;
+            }
             else
+            {
                 return null;
+            }
         }
         set
         {
             ExceptionHelpers.ValidateNullArgumentLegality<TValue>(value);
+
             this[CollectionHelpers.GetCompatibleValue<TKey>(key)] = CollectionHelpers.GetCompatibleValue<TValue>(value);
         }
     }
@@ -888,9 +894,6 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     static class ThrowHelper
     {
-        public static Exception CreateKeyNotFoundException(TKey? key) =>
-            throw new KeyNotFoundException($"The given key '{key}' was not present in the associative array.");
-
         [DoesNotReturn]
         public static void ThrowArgumentException_Argument_InvalidArrayType() =>
             throw new ArgumentException("Target array type is not compatible with the type of items in the collection.");

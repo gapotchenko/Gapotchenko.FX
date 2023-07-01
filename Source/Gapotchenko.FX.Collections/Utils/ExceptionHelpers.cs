@@ -121,4 +121,10 @@ static class ExceptionHelpers
 
     public static Exception CreateEmptyCollectionException() =>
         new InvalidOperationException("The collection is empty.");
+
+    public static Exception CreateKeyNotFoundException<TKey>(TKey? key) =>
+        new KeyNotFoundException(
+            string.Format(
+                "The given key '{0}' was not present in the dictionary.",
+                key));
 }

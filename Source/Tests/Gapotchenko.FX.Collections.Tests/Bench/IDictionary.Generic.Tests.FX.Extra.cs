@@ -68,4 +68,20 @@ partial class IDictionary_Generic_Tests<TKey, TValue>
             Assert.Equal(value, iDictionary[key]);
         }
     }
+
+    [Theory]
+    [MemberData(nameof(ValidCollectionSizes))]
+    public void IDictionary_NonGeneric_Indexer_GetsDefaultByNonExistingKey(int count)
+    {
+        if (DefaultValueAllowed && !IsReadOnly && count > 0)
+        {
+            var dictionary = GenericIDictionaryFactory(count);
+
+            var key = dictionary.First().Key;
+            dictionary.Remove(key);
+
+            var iDictionary = (IDictionary)dictionary;
+            Assert.Equal(default, iDictionary[key]);
+        }
+    }
 }
