@@ -1,6 +1,11 @@
-// (c) Portions of code from the .NET project by Microsoft and .NET Foundation
+// Portions © .NET Foundation and its Licensors
 
 namespace Gapotchenko.FX.Collections.Tests.Bench;
+
+#pragma warning disable IDE0040 // Add accessibility modifiers
+#pragma warning disable IDE1006 // Naming Styles
+
+#nullable disable
 
 /// <summary>
 /// Provides a base set of nongeneric operations that are used by all other testing interfaces.
