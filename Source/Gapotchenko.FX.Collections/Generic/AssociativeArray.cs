@@ -3,7 +3,6 @@ using Gapotchenko.FX.Linq;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Collections.Generic;
 
@@ -561,14 +560,24 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         if (m_NullSlot.HasValue)
         {
-            if (array is KeyValuePair<TKey, TValue>[] pairs)
-                pairs[arrayIndex] = new(default!, m_NullSlot.Value);
-            else if (array is DictionaryEntry[] dictEntryArray)
-                dictEntryArray[arrayIndex] = new(default!, m_NullSlot.Value);
-            else if (array is object[] objArray)
-                objArray[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullSlot.Value);
-            else
-                ThrowHelper.ThrowArgumentException_Argument_InvalidArrayType();
+            switch (array)
+            {
+                case KeyValuePair<TKey, TValue>[] pairs:
+                    pairs[arrayIndex] = new(default!, m_NullSlot.Value);
+                    break;
+
+                case DictionaryEntry[] dictEntryArray:
+                    dictEntryArray[arrayIndex] = new(default!, m_NullSlot.Value);
+                    break;
+
+                case object[] objArray:
+                    objArray[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullSlot.Value);
+                    break;
+
+                default:
+                    ThrowHelper.ThrowArgumentException_Argument_InvalidArrayType();
+                    break;
+            }
         }
     }
 
@@ -584,8 +593,8 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// <returns>An <see cref="IEnumerator{T}"/> for the <see cref="AssociativeArray{TKey, TValue}"/>.</returns>
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() =>
         new PrependEnumerator<KeyValuePair<TKey, TValue>>(
-            () => m_NullSlot.HasValue ? new Optional<KeyValuePair<TKey, TValue>>(new(default!, m_NullSlot.Value)) : default,
-            m_Dictionary);
+            m_Dictionary.GetEnumerator(),
+            () => m_NullSlot.HasValue ? new Optional<KeyValuePair<TKey, TValue>>(new(default!, m_NullSlot.Value)) : default);
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -732,7 +741,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             }
         }
 
-        public IEnumerator<T> GetEnumerator() => new PrependEnumerator<T>(() => NullSlot, m_Collection);
+        public IEnumerator<T> GetEnumerator() => new PrependEnumerator<T>(m_Collection.GetEnumerator(), () => NullSlot);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -795,29 +804,31 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     sealed class PrependEnumerator<T> : IEnumerator<T>
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        int m_Index;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool m_EndOfData;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Func<Optional<T>> m_ElementGetter;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<T> m_Source;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerator<T>? m_SourceEnumerator;
-
         public PrependEnumerator(
-            Func<Optional<T>> elementGetter,
-            IEnumerable<T> source)
+            IEnumerator<T> sourceEnumerator,
+            Func<Optional<T>> elementGetter)
         {
             m_ElementGetter = elementGetter;
-            m_Source = source;
+            m_SourceEnumerator = sourceEnumerator;
             Current = default!;
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly IEnumerator<T> m_SourceEnumerator;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly Func<Optional<T>> m_ElementGetter;
+
+        enum State
+        {
+            Reset,
+            Source,
+            Element,
+            End
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        State m_State;
 
         public T Current { get; private set; }
 
@@ -825,7 +836,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         {
             get
             {
-                if (m_Index == 0 || m_EndOfData)
+                if (m_State is State.Reset or State.End)
                     ThrowHelper.ThrowInvalidOperationException_InvalidOperation_EnumOpCantHappen();
                 return Current!;
             }
@@ -833,41 +844,59 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         public bool MoveNext()
         {
-            if (m_Index == 0)
+            var enumerator = m_SourceEnumerator;
+
+            if (m_State == State.Reset)
+                m_State = State.Element;
+
+            if (m_State == State.Element)
             {
                 var element = m_ElementGetter();
+                m_State = State.Source;
                 if (element.HasValue)
                 {
+                    // Cause a check of an out-of-band modification.
+                    enumerator.Reset();
+
                     Current = element.Value;
-                    m_Index++;
                     return true;
                 }
             }
 
-            var enumerator = m_SourceEnumerator ??= m_Source.GetEnumerator();
-
-            var moveNext = enumerator.MoveNext();
-            if (!moveNext)
+            if (m_State == State.Source)
             {
-                m_EndOfData = true;
-            }
-            else
-            {
-                Current = enumerator.Current;
-                m_Index++;
+                if (enumerator.MoveNext())
+                {
+                    Current = enumerator.Current;
+                    return true;
+                }
+                else
+                {
+                    m_State = State.End;
+                }
             }
 
-            return moveNext;
+            if (m_State == State.End)
+            {
+                // Cause a check of an out-of-band modification.
+                bool result = enumerator.MoveNext();
+                Debug.Assert(!result);
+                return result;
+            }
+
+            // Should be unreachable.
+            throw new InvalidOperationException();
         }
 
         public void Reset()
         {
-            m_Index = 0;
-            m_EndOfData = false;
-            m_SourceEnumerator?.Reset();
+            m_State = State.Reset;
+            m_SourceEnumerator.Reset();
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+        }
     }
 
     static class ThrowHelper

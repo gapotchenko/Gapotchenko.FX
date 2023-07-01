@@ -13,12 +13,22 @@ public abstract class AssociativeArray_Tests<TKey, TValue> : IDictionary_Generic
 {
     protected override ModifyOperation ModifyEnumeratorThrows =>
         // REM: version tracking required.
-        // ModifyOperation.Add | ModifyOperation.Insert;
+        //ModifyOperation.Add | ModifyOperation.Insert;
         ModifyOperation.None;
 
-    protected override bool IDictionary_Generic_Keys_Values_Enumeration_ThrowsInvalidOperation_WhenParentModified => false;
-
-    protected override bool Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException => false;
+    protected override bool Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException
+    {
+        get
+        {
+            // This parameter is dictated by System.Collections.Generic.Dictionary<TKey, TValue> type
+            // which is a part of .NET BCL and thus can change depending on .NET version.
+#if NET8_0_OR_GREATER
+            return false;
+#else
+            return true;
+#endif
+        }
+    }
 
 #if NET5_0_OR_GREATER
     protected override ModifyOperation ModifyEnumeratorAllowed => ModifyOperation.Overwrite | ModifyOperation.Remove | ModifyOperation.Clear;
