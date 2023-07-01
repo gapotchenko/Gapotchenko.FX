@@ -6,6 +6,8 @@ using Xunit;
 #pragma warning disable IDE0040 // Add accessibility modifiers
 #pragma warning disable IDE1006 // Naming Styles
 
+#nullable disable
+
 namespace Gapotchenko.FX.Collections.Tests.Bench;
 
 /// <summary>
@@ -62,6 +64,31 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
     protected virtual bool Enumerator_Current_UndefinedOperation_Throws => false;
 
     /// <summary>
+    /// When calling MoveNext or Reset after modification of the enumeration, the resulting behavior is
+    /// undefined. Tests are included to cover two behavioral scenarios:
+    ///   - Throwing an InvalidOperationException
+    ///   - Execute MoveNext or Reset.
+    ///
+    /// If this property is set to true, the tests ensure that the exception is thrown. The default value is
+    /// true.
+    /// </summary>
+    protected virtual bool Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException => true;
+
+    /// <summary>
+    /// When calling MoveNext or Reset after modification of an empty enumeration, the resulting behavior is
+    /// undefined. Tests are included to cover two behavioral scenarios:
+    ///   - Throwing an InvalidOperationException
+    ///   - Execute MoveNext or Reset.
+    ///
+    /// If this property is set to true, the tests ensure that the exception is thrown. The default value is
+    /// <see cref="Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException"/>.
+    /// </summary>
+    protected virtual bool Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException => Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException;
+
+    /// <summary>Whether the enumerator returned from GetEnumerator is a singleton instance when the collection is empty.</summary>
+    protected virtual bool Enumerator_Empty_UsesSingletonInstance => false;
+
+    /// <summary>
     /// Whether the collection can be serialized.
     /// </summary>
     protected virtual bool SupportsSerialization => true;
@@ -84,6 +111,30 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
 
     #region GetEnumerator()
 
+    [Fact]
+    public void IEnumerable_NonGeneric_GetEnumerator_EmptyCollection_UsesSingleton()
+    {
+        IEnumerable enumerable = NonGenericIEnumerableFactory(0);
+
+        IEnumerator enumerator1 = enumerable.GetEnumerator();
+        try
+        {
+            IEnumerator enumerator2 = enumerable.GetEnumerator();
+            try
+            {
+                Assert.Equal(Enumerator_Empty_UsesSingletonInstance, ReferenceEquals(enumerator1, enumerator2));
+            }
+            finally
+            {
+                if (enumerator2 is IDisposable d2) d2.Dispose();
+            }
+        }
+        finally
+        {
+            if (enumerator1 is IDisposable d1) d1.Dispose();
+        }
+    }
+
     [Theory]
     [MemberData(nameof(ValidCollectionSizes))]
     public void IEnumerable_NonGeneric_GetEnumerator_NoExceptionsWhileGetting(int count)
@@ -99,9 +150,9 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
         //Tests that the enumerators returned by GetEnumerator operate independently of one another
         IEnumerable enumerable = NonGenericIEnumerableFactory(count);
         int iterations = 0;
-        foreach (var item in enumerable)
-            foreach (var item2 in enumerable)
-                foreach (var item3 in enumerable)
+        foreach (object item in enumerable)
+            foreach (object item2 in enumerable)
+                foreach (object item3 in enumerable)
                     iterations++;
         Assert.Equal(count * count * count, iterations);
     }
@@ -142,7 +193,16 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
             IEnumerable enumerable = NonGenericIEnumerableFactory(count);
             IEnumerator enumerator = enumerable.GetEnumerator();
             if (ModifyEnumerable(enumerable))
-                Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
+            {
+                if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                {
+                    Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
+                }
+                else
+                {
+                    _ = enumerator.MoveNext();
+                }
+            }
         });
     }
 
@@ -154,10 +214,21 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
         {
             IEnumerable enumerable = NonGenericIEnumerableFactory(count);
             IEnumerator enumerator = enumerable.GetEnumerator();
+
             for (int i = 0; i < count / 2; i++)
                 enumerator.MoveNext();
+
             if (ModifyEnumerable(enumerable))
-                Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
+            {
+                if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                {
+                    Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
+                }
+                else
+                {
+                    enumerator.MoveNext();
+                }
+            }
         });
     }
 
@@ -171,7 +242,16 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
             IEnumerator enumerator = enumerable.GetEnumerator();
             while (enumerator.MoveNext()) ;
             if (ModifyEnumerable(enumerable))
-                Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
+            {
+                if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                {
+                    Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
+                }
+                else
+                {
+                    _ = enumerator.MoveNext();
+                }
+            }
         });
     }
 
@@ -184,7 +264,7 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
     public void IEnumerable_NonGeneric_Enumerator_Current_FromStartToFinish(int count)
     {
         IEnumerator enumerator = NonGenericIEnumerableFactory(count).GetEnumerator();
-        object? current;
+        object current;
         while (enumerator.MoveNext())
             current = enumerator.Current;
     }
@@ -196,7 +276,7 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
         IEnumerator enumerator = NonGenericIEnumerableFactory(count).GetEnumerator();
         while (enumerator.MoveNext())
         {
-            var current = enumerator.Current;
+            object current = enumerator.Current;
             Assert.Equal(current, enumerator.Current);
             Assert.Equal(current, enumerator.Current);
             Assert.Equal(current, enumerator.Current);
@@ -212,12 +292,12 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
         IEnumerable enumerable = NonGenericIEnumerableFactory(count);
         Dictionary<object, int> firstValues = new Dictionary<object, int>(count);
         Dictionary<object, int> secondValues = new Dictionary<object, int>(count);
-        foreach (var item in enumerable)
-            firstValues[item!] = firstValues.ContainsKey(item!) ? firstValues[item!]++ : 1;
-        foreach (var item in enumerable)
-            secondValues[item!] = secondValues.ContainsKey(item!) ? secondValues[item!]++ : 1;
+        foreach (object item in enumerable)
+            firstValues[item] = firstValues.ContainsKey(item) ? firstValues[item]++ : 1;
+        foreach (object item in enumerable)
+            secondValues[item] = secondValues.ContainsKey(item) ? secondValues[item]++ : 1;
         Assert.Equal(firstValues.Count, secondValues.Count);
-        foreach (var key in firstValues.Keys)
+        foreach (object key in firstValues.Keys)
             Assert.Equal(firstValues[key], secondValues[key]);
     }
 
@@ -225,7 +305,7 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
     [MemberData(nameof(ValidCollectionSizes))]
     public virtual void Enumerator_Current_BeforeFirstMoveNext_UndefinedBehavior(int count)
     {
-        object? current;
+        object current;
         IEnumerable enumerable = NonGenericIEnumerableFactory(count);
         IEnumerator enumerator = enumerable.GetEnumerator();
         if (Enumerator_Current_UndefinedOperation_Throws)
@@ -238,7 +318,7 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
     [MemberData(nameof(ValidCollectionSizes))]
     public virtual void Enumerator_Current_AfterEndOfEnumerable_UndefinedBehavior(int count)
     {
-        object? current;
+        object current;
         IEnumerable enumerable = NonGenericIEnumerableFactory(count);
         IEnumerator enumerator = enumerable.GetEnumerator();
         while (enumerator.MoveNext()) ;
@@ -254,7 +334,7 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
     {
         Assert.All(GetModifyEnumerables(ModifyEnumeratorThrows), ModifyEnumerable =>
         {
-            object? current;
+            object current;
             IEnumerable enumerable = NonGenericIEnumerableFactory(count);
             IEnumerator enumerator = enumerable.GetEnumerator();
             if (ModifyEnumerable(enumerable))
@@ -291,7 +371,16 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
             IEnumerable enumerable = NonGenericIEnumerableFactory(count);
             IEnumerator enumerator = enumerable.GetEnumerator();
             if (ModifyEnumerable(enumerable))
-                Assert.Throws<InvalidOperationException>(() => enumerator.Reset());
+            {
+                if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                {
+                    Assert.Throws<InvalidOperationException>(() => enumerator.Reset());
+                }
+                else
+                {
+                    enumerator.Reset();
+                }
+            }
         });
     }
 
@@ -303,10 +392,21 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
         {
             IEnumerable enumerable = NonGenericIEnumerableFactory(count);
             IEnumerator enumerator = enumerable.GetEnumerator();
+
             for (int i = 0; i < count / 2; i++)
                 enumerator.MoveNext();
+
             if (ModifyEnumerable(enumerable))
-                Assert.Throws<InvalidOperationException>(() => enumerator.Reset());
+            {
+                if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                {
+                    Assert.Throws<InvalidOperationException>(() => enumerator.Reset());
+                }
+                else
+                {
+                    enumerator.Reset();
+                }
+            }
         });
     }
 
@@ -320,7 +420,16 @@ public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
             IEnumerator enumerator = enumerable.GetEnumerator();
             while (enumerator.MoveNext()) ;
             if (ModifyEnumerable(enumerable))
-                Assert.Throws<InvalidOperationException>(() => enumerator.Reset());
+            {
+                if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                {
+                    Assert.Throws<InvalidOperationException>(() => enumerator.Reset());
+                }
+                else
+                {
+                    enumerator.Reset();
+                }
+            }
         });
     }
 
