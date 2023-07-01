@@ -1,5 +1,5 @@
 using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.Collections.Tests.NonGeneric;
+using Gapotchenko.FX.Collections.Tests.Bench;
 using System.Collections;
 using System.Diagnostics;
 using Xunit;
@@ -25,19 +25,6 @@ public class AssociativeArray_Tests_Values : ICollection_Generic_Tests<string>
         for (int i = 0; i < count; i++)
             list.Add(i == 0 ? null : CreateT(seed++), CreateT(seed++));
         return list.Values;
-    }
-
-    protected override ICollection<string> GenericICollectionFactory(IEnumerable<string> elements)
-    {
-        var array = new AssociativeArray<string?, string>();
-        int seed = 13453;
-        var isFirstElement = true;
-        foreach (var element in elements)
-        {
-            array.Add(isFirstElement ? null : CreateT(seed++), element);
-            isFirstElement = false;
-        }
-        return array.Values;
     }
 
     protected override string CreateT(int seed)

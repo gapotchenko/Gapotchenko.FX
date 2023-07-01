@@ -1,6 +1,6 @@
 // (c) Portions of code from the .NET project by Microsoft and .NET Foundation
 
-namespace Gapotchenko.FX.Collections.Tests.NonGeneric;
+namespace Gapotchenko.FX.Collections.Tests.Bench;
 
 /// <summary>
 /// Provides a base set of nongeneric operations that are used by all other testing interfaces.

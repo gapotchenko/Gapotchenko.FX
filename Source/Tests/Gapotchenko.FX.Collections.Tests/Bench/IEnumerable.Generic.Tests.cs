@@ -3,7 +3,10 @@
 using System.Collections;
 using Xunit;
 
-namespace Gapotchenko.FX.Collections.Tests.Generic;
+#pragma warning disable IDE0040 // Add accessibility modifiers
+#nullable disable
+
+namespace Gapotchenko.FX.Collections.Tests.Bench;
 
 /// <summary>
 /// Contains tests that ensure the correctness of any class that implements the generic
@@ -59,6 +62,18 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
     protected virtual bool Enumerator_Current_UndefinedOperation_Throws => false;
 
     /// <summary>
+    /// When calling Current of the empty enumerator before the first MoveNext, after the end of the collection,
+    /// or after modification of the enumeration, the resulting behavior is undefined. Tests are included
+    /// to cover two behavioral scenarios:
+    ///   - Throwing an InvalidOperationException
+    ///   - Returning an undefined value.
+    ///
+    /// If this property is set to true, the tests ensure that the exception is thrown. The default value is
+    /// <see cref="Enumerator_Current_UndefinedOperation_Throws"/>.
+    /// </summary>
+    protected virtual bool Enumerator_Empty_Current_UndefinedOperation_Throws => Enumerator_Current_UndefinedOperation_Throws;
+
+    /// <summary>
     /// When calling MoveNext or Reset after modification of the enumeration, the resulting behavior is
     /// undefined. Tests are included to cover two behavioral scenarios:
     ///   - Throwing an InvalidOperationException
@@ -68,6 +83,20 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
     /// true.
     /// </summary>
     protected virtual bool Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException => true;
+
+    /// <summary>
+    /// When calling MoveNext or Reset after modification of an empty enumeration, the resulting behavior is
+    /// undefined. Tests are included to cover two behavioral scenarios:
+    ///   - Throwing an InvalidOperationException
+    ///   - Execute MoveNext or Reset.
+    ///
+    /// If this property is set to true, the tests ensure that the exception is thrown. The default value is
+    /// <see cref="Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException"/>.
+    /// </summary>
+    protected virtual bool Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException => Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException;
+
+    /// <summary>Whether the enumerator returned from GetEnumerator is a singleton instance when the collection is empty.</summary>
+    protected virtual bool Enumerator_Empty_UsesSingletonInstance => false;
 
     /// <summary>
     /// Specifies whether this IEnumerable follows some sort of ordering pattern.
@@ -87,14 +116,14 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
 
     #region Validation
 
-    void RepeatTest(
+    private void RepeatTest(
         Action<IEnumerator<T>, T[], int> testCode,
         int iters = 3)
     {
         IEnumerable<T> enumerable = GenericIEnumerableFactory(32);
         T[] items = enumerable.ToArray();
         IEnumerator<T> enumerator = enumerable.GetEnumerator();
-        for (var i = 0; i < iters; i++)
+        for (int i = 0; i < iters; i++)
         {
             testCode(enumerator, items, i);
             if (!ResetImplemented)
@@ -108,14 +137,14 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
         }
     }
 
-    void RepeatTest(
+    private void RepeatTest(
         Action<IEnumerator<T>, T[]> testCode,
         int iters = 3)
     {
         RepeatTest((e, i, it) => testCode(e, i), iters);
     }
 
-    void VerifyModifiedEnumerator(
+    private void VerifyModifiedEnumerator(
         IEnumerator<T> enumerator,
         object expectedCurrent,
         bool expectCurrentThrow,
@@ -128,10 +157,10 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
         }
         else
         {
-            var current = enumerator.Current;
-            for (var i = 0; i < 3; i++)
+            object current = enumerator.Current;
+            for (int i = 0; i < 3; i++)
             {
-                Assert.Equal(expectedCurrent, current!);
+                Assert.Equal(expectedCurrent, current);
                 current = enumerator.Current;
             }
         }
@@ -146,7 +175,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
         }
     }
 
-    void VerifyEnumerator(
+    private void VerifyEnumerator(
         IEnumerator<T> enumerator,
         T[] expectedItems)
     {
@@ -159,7 +188,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
             true);
     }
 
-    void VerifyEnumerator(
+    private void VerifyEnumerator(
         IEnumerator<T> enumerator,
         T[] expectedItems,
         int startIndex,
@@ -170,7 +199,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
         bool needToMatchAllExpectedItems = count - startIndex == expectedItems.Length;
         if (validateStart)
         {
-            for (var i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
             {
                 if (Enumerator_Current_UndefinedOperation_Throws)
                 {
@@ -178,7 +207,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
                 }
                 else
                 {
-                    var cur = enumerator.Current;
+                    _ = enumerator.Current;
                 }
             }
         }
@@ -196,9 +225,9 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
                  iterations < count && enumerator.MoveNext();
                  iterations++)
             {
-                var currentItem = enumerator.Current;
-                var itemFound = false;
-                for (var i = 0; i < itemsVisited.Length; ++i)
+                object currentItem = enumerator.Current;
+                bool itemFound = false;
+                for (int i = 0; i < itemsVisited.Length; ++i)
                 {
                     if (!itemsVisited[i]
                         && Equals(
@@ -216,23 +245,23 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
                 }
                 Assert.True(itemFound, "itemFound");
 
-                for (var i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++)
                 {
-                    var tempItem = enumerator.Current;
+                    object tempItem = enumerator.Current;
                     Assert.Equal(currentItem, tempItem);
                 }
             }
             if (needToMatchAllExpectedItems)
             {
-                for (var i = 0; i < itemsVisited.Length; i++)
+                for (int i = 0; i < itemsVisited.Length; i++)
                 {
                     Assert.True(itemsVisited[i]);
                 }
             }
             else
             {
-                var visitedItemCount = 0;
-                for (var i = 0; i < itemsVisited.Length; i++)
+                int visitedItemCount = 0;
+                for (int i = 0; i < itemsVisited.Length; i++)
                 {
                     if (itemsVisited[i])
                     {
@@ -248,11 +277,11 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
                  iterations < count && enumerator.MoveNext();
                  iterations++)
             {
-                var currentItem = enumerator.Current;
+                object currentItem = enumerator.Current;
                 Assert.Equal(expectedItems[iterations], currentItem);
-                for (var i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++)
                 {
-                    var tempItem = enumerator.Current;
+                    object tempItem = enumerator.Current;
                     Assert.Equal(currentItem, tempItem);
                 }
             }
@@ -266,7 +295,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
 
         if (validateEnd)
         {
-            for (var i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
             {
                 Assert.False(enumerator.MoveNext(), "enumerator.MoveNext() returned true past the expected end.");
 
@@ -276,7 +305,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
                 }
                 else
                 {
-                    var cur = enumerator.Current;
+                    _ = enumerator.Current;
                 }
             }
         }
@@ -285,6 +314,30 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
     #endregion
 
     #region GetEnumerator()
+
+    [Fact]
+    public void IEnumerable_NonGeneric_GetEnumerator_EmptyCollection_UsesSingleton()
+    {
+        IEnumerable enumerable = GenericIEnumerableFactory(0);
+
+        IEnumerator enumerator1 = enumerable.GetEnumerator();
+        try
+        {
+            IEnumerator enumerator2 = enumerable.GetEnumerator();
+            try
+            {
+                Assert.Equal(Enumerator_Empty_UsesSingletonInstance, ReferenceEquals(enumerator1, enumerator2));
+            }
+            finally
+            {
+                if (enumerator2 is IDisposable d2) d2.Dispose();
+            }
+        }
+        finally
+        {
+            if (enumerator1 is IDisposable d1) d1.Dispose();
+        }
+    }
 
     [Theory]
     [MemberData(nameof(ValidCollectionSizes))]
@@ -365,7 +418,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
             {
                 if (ModifyEnumerable(enumerable))
                 {
-                    if (Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                    if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
                     {
                         Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
                     }
@@ -411,7 +464,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
                     enumerator.MoveNext();
                 if (ModifyEnumerable(enumerable))
                 {
-                    if (Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                    if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
                     {
                         Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
                     }
@@ -455,7 +508,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
                 while (enumerator.MoveNext()) ;
                 if (ModifyEnumerable(enumerable))
                 {
-                    if (Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                    if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
                     {
                         Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
                     }
@@ -493,7 +546,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
         RepeatTest(
             (enumerator, items) =>
             {
-                var iterations = 0;
+                int iterations = 0;
                 while (enumerator.MoveNext())
                 {
                     iterations++;
@@ -566,13 +619,9 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
     {
         // Ensures that the elements returned from enumeration are exactly the same collection of
         // elements returned from a previous enumeration
-        var enumerable = GenericIEnumerableFactory(count);
-
-#pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
-        var firstValues = new Dictionary<T, int>(count);
-        var secondValues = new Dictionary<T, int>(count);
-#pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
-
+        IEnumerable<T> enumerable = GenericIEnumerableFactory(count);
+        Dictionary<T, int> firstValues = new Dictionary<T, int>(count);
+        Dictionary<T, int> secondValues = new Dictionary<T, int>(count);
         foreach (T item in enumerable)
             firstValues[item] = firstValues.ContainsKey(item) ? firstValues[item]++ : 1;
         foreach (T item in enumerable)
@@ -590,7 +639,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
         IEnumerable<T> enumerable = GenericIEnumerableFactory(count);
         using (IEnumerator<T> enumerator = enumerable.GetEnumerator())
         {
-            if (Enumerator_Current_UndefinedOperation_Throws)
+            if (count == 0 ? Enumerator_Empty_Current_UndefinedOperation_Throws : Enumerator_Current_UndefinedOperation_Throws)
                 Assert.Throws<InvalidOperationException>(() => enumerator.Current);
             else
                 current = enumerator.Current;
@@ -606,7 +655,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
         using (IEnumerator<T> enumerator = enumerable.GetEnumerator())
         {
             while (enumerator.MoveNext()) ;
-            if (Enumerator_Current_UndefinedOperation_Throws)
+            if (count == 0 ? Enumerator_Empty_Current_UndefinedOperation_Throws : Enumerator_Current_UndefinedOperation_Throws)
                 Assert.Throws<InvalidOperationException>(() => enumerator.Current);
             else
                 current = enumerator.Current;
@@ -625,7 +674,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
             {
                 if (ModifyEnumerable(enumerable))
                 {
-                    if (Enumerator_Current_UndefinedOperation_Throws)
+                    if (count == 0 ? Enumerator_Empty_Current_UndefinedOperation_Throws : Enumerator_Current_UndefinedOperation_Throws)
                         Assert.Throws<InvalidOperationException>(() => enumerator.Current);
                     else
                         current = enumerator.Current;
@@ -680,7 +729,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
             {
                 if (ModifyEnumerable(enumerable))
                 {
-                    if (Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                    if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
                     {
                         Assert.Throws<InvalidOperationException>(() => enumerator.Reset());
                     }
@@ -723,7 +772,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
                     enumerator.MoveNext();
                 if (ModifyEnumerable(enumerable))
                 {
-                    if (Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                    if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
                     {
                         Assert.Throws<InvalidOperationException>(() => enumerator.Reset());
                     }
@@ -767,7 +816,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
                 while (enumerator.MoveNext()) ;
                 if (ModifyEnumerable(enumerable))
                 {
-                    if (Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
+                    if (count == 0 ? Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException : Enumerator_ModifiedDuringEnumeration_ThrowsInvalidOperationException)
                     {
                         Assert.Throws<InvalidOperationException>(() => enumerator.Reset());
                     }
@@ -822,7 +871,7 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
                             items.Length / 2,
                             true,
                             false);
-                        for (var i = 0; i < 3; i++)
+                        for (int i = 0; i < 3; i++)
                         {
                             Assert.Throws<NotSupportedException>(
                                 () => enumerator.Reset());
@@ -831,14 +880,14 @@ public abstract partial class IEnumerable_Generic_Tests<T> : TestBase<T>
                             enumerator,
                             items,
                             items.Length / 2,
-                            items.Length - (items.Length / 2),
+                            items.Length - items.Length / 2,
                             false,
                             true);
                     }
                     else if (iter == 2)
                     {
                         VerifyEnumerator(enumerator, items);
-                        for (var i = 0; i < 3; i++)
+                        for (int i = 0; i < 3; i++)
                         {
                             Assert.Throws<NotSupportedException>(
                                 () => enumerator.Reset());

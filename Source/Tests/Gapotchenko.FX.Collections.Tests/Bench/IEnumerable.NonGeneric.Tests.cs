@@ -3,7 +3,7 @@
 using System.Collections;
 using Xunit;
 
-namespace Gapotchenko.FX.Collections.Tests.NonGeneric;
+namespace Gapotchenko.FX.Collections.Tests.Bench;
 
 /// <summary>
 /// Contains tests that ensure the correctness of any class that implements the nongeneric

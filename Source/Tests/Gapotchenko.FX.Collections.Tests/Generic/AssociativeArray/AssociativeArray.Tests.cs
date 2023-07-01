@@ -1,4 +1,5 @@
 using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Collections.Tests.Bench;
 using Xunit;
 
 #pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
@@ -14,7 +15,10 @@ public abstract class AssociativeArray_Tests<TKey, TValue> : IDictionary_Generic
         // REM: version tracking required.
         // ModifyOperation.Add | ModifyOperation.Insert;
         ModifyOperation.None;
+
     protected override bool IDictionary_Generic_Keys_Values_Enumeration_ThrowsInvalidOperation_WhenParentModified => false;
+
+    protected override bool Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException => false;
 
 #if NET5_0_OR_GREATER
     protected override ModifyOperation ModifyEnumeratorAllowed => ModifyOperation.Overwrite | ModifyOperation.Remove | ModifyOperation.Clear;
