@@ -21,8 +21,10 @@ public abstract class AssociativeArray_ICollection_NonGeneric_Tests<TKey, TValue
         for (int i = 0; i < numberOfItemsToAdd; ++i)
         {
             var entry = CreateT(seed++);
-            if (!dictionary.ContainsKey(entry.Key))
-                dictionary.Add(entry);
+            while (dictionary.ContainsKey(entry.Key))
+                entry = CreateT(seed++);
+
+            dictionary.Add(entry);
         }
     }
 

@@ -1,6 +1,13 @@
+// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Kirill Rode
+// Year of introduction: 2021
+
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Collections.Tests.Bench;
-using System.Collections;
 using Xunit;
 
 #pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
@@ -305,7 +312,7 @@ public abstract class AssociativeArray_Tests<TKey, TValue> : IDictionary_Generic
     #region EnsureCapacity
 
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
-    [Theory(Skip = "Version tracking.")]
+    [Theory]
     [MemberData(nameof(ValidCollectionSizes))]
     public void EnsureCapacity_Generic_RequestingLargerCapacity_DoesInvalidateEnumeration(int count)
     {
@@ -626,7 +633,7 @@ public abstract class AssociativeArray_Tests<TKey, TValue> : IDictionary_Generic
         Assert.True(dictionary.TryGetValue(chained[1], out val));
     }
 
-    [Fact(Skip = "Version tracking.")]
+    [Fact]
     public void TrimExcess_Generic_DoesInvalidateEnumeration()
     {
         var dictionary = new AssociativeArray<TKey, TValue>(20);
