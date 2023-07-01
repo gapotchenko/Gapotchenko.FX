@@ -33,9 +33,13 @@ Release date: not released yet
   - Added polyfill for a LINQ-style pipe operator
   - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
 - .NET Framework 4.6 support is retired. The minimal supported .NET Framework version is 4.6.1
-- Fixed case-sensitivity of a text data encoding padding character. This is important for data encodings that use custom padding characters
-- Fixed issue in `Gapotchenko.FX.Collections.Generic.AssociativeArray<TKey, TValue>` type with accessing `IEnumerable<T>.Current` property without checking the result of a prior call to `MoveNext` method
-- Fixed assembly name comparison bug in `Gapotchenko.FX.Reflection.Loader` module
+- Fixes:
+  - Fixed case-sensitivity of a text data encoding padding character. This is important for data encodings that use custom padding characters
+  - Fixed issue in `Gapotchenko.FX.Collections.Generic.AssociativeArray<TKey, TValue>` type with accessing `IEnumerable<T>.Current` property without checking the result of a prior call to `MoveNext` method
+  - Fixed assembly name comparison bug in `Gapotchenko.FX.Reflection.Loader` module
+  - Fixed a bug with the `null` key in `IDictionary.Remove` method of `AssociativeArray<TKey, TValue>` type
+  - Fixed a bug with the `null` key in `IDictionary.Contains` method of `AssociativeArray<TKey, TValue>` type
+  - Fixed a bug with the `null` key in `IDictionary.this[TKey]` getter method of `AssociativeArray<TKey, TValue>` type
 
 ## 2022
 
