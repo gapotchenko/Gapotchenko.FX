@@ -10,7 +10,7 @@ public static class EnumeratorEx
     /// </summary>
     /// <typeparam name="T">The type of elements in the enumerator.</typeparam>
     /// <param name="enumerator">The enumerator.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> that provides the remaining elements in the <see cref="IEnumerator{T}"/>.</returns>
+    /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the remaining elements in the <see cref="IEnumerator{T}"/>.</returns>
     public static IEnumerable<T> Rest<T>(this IEnumerator<T> enumerator)
     {
         if (enumerator == null)
