@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 
 public sealed class Deque_Tests_String : Deque_Tests<string>
 {

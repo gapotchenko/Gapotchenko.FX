@@ -59,7 +59,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         ExceptionHelper.ThrowIfArgumentIsNull(collection);
 
-        m_Array = EnumerableHelper.ToArray(collection);
+        var array = EnumerableHelper.ToArray(collection);
+        m_Array = array;
+        m_Size = array.Length;
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
