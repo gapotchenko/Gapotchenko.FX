@@ -41,7 +41,7 @@ partial class Graph<TVertex>
         public override IEqualityComparer<TVertex> Comparer => m_Graph.VertexComparer;
 
         /// <inheritdoc/>
-        public override int Count => m_Graph.m_CachedOrder ??= GetEnumerator().Rest().Count();
+        public override int Count => m_Graph.m_CachedOrder ??= this.Stream().Count();
 
         /// <inheritdoc/>
         public override bool Add(TVertex vertex)
