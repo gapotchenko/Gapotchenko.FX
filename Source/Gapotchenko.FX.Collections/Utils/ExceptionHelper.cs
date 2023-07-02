@@ -130,7 +130,7 @@ static class ExceptionHelper
                 "The given key '{0}' was not present in the dictionary.",
                 key));
 
-    public static InvalidOperationException CreateEnumerationNeitherStarterNorFinishedException() =>
+    public static InvalidOperationException CreateEnumerationEitherNotStarterOrFinishedException() =>
         new("Enumeration has either not started or has already finished.");
 
     public static ArgumentException CreateDuplicateKeyArgumentException<T>(T? key) =>

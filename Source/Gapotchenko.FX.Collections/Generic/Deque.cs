@@ -1507,7 +1507,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             get
             {
                 if (m_Index == 0 || m_Index > m_Deque.m_Size)
-                    throw ExceptionHelper.CreateEnumerationNeitherStarterNorFinishedException();
+                    throw ExceptionHelper.CreateEnumerationEitherNotStarterOrFinishedException();
 
                 return Current;
             }

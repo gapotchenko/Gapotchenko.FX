@@ -872,6 +872,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         public void Dispose()
         {
+            m_SourceEnumerator.Dispose();
         }
 
         #region Compatibility
@@ -881,7 +882,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             get
             {
                 if (m_State is State.Reset or State.End)
-                    throw ExceptionHelper.CreateEnumerationNeitherStarterNorFinishedException();
+                    throw ExceptionHelper.CreateEnumerationEitherNotStarterOrFinishedException();
 
                 return Current;
             }
