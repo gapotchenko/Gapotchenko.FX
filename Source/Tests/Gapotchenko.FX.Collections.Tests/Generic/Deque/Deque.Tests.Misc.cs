@@ -162,4 +162,87 @@ partial class Deque_Tests<T>
         deque.RemoveAt(1);
         Assert.Equal(new[] { value, data[1] }, deque);
     }
+
+    [Fact]
+    public void RemoveAt_Index0_IsSameAsPopFront()
+    {
+        var data = Enumerable.Range(1, 2).Select(CreateT).Distinct().Memoize();
+
+        var deque1 = new Deque<T>(data);
+        var deque2 = new Deque<T>(data);
+        deque1.RemoveAt(0);
+        deque2.PopFront();
+        Assert.Equal(deque1, deque2);
+    }
+
+    [Fact]
+    public void RemoveAt_LastIndex_IsSameAsPopBack()
+    {
+        var data = Enumerable.Range(1, 2).Select(CreateT).Distinct().Memoize();
+
+        var deque1 = new Deque<T>(data);
+        var deque2 = new Deque<T>(data);
+        deque1.RemoveAt(deque1.Count - 1);
+        deque2.PopBack();
+        Assert.Equal(deque1, deque2);
+    }
+
+    [Theory(Skip = "TODO")]
+    [InlineData(3, 2)]
+    [InlineData(4, 2)]
+    public void Insert_Multiple(int initialCount, int itemCount)
+    {
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+
+        InsertTest(
+            source.Take(initialCount).ReifyCollection(),
+            source.Take(itemCount).ReifyCollection());
+    }
+
+    [Fact]
+    public void Insert_Multiple_Debug()
+    {
+        InsertTest(new[] { 1, 2, 3 }, new[] { 7, 13 });
+        //InsertTest(new[] { 1, 2, 3, 4 }, new[] { 7, 13 });
+    }
+
+    static void InsertTest<TElement>(IReadOnlyCollection<TElement> initial, IReadOnlyCollection<TElement> items)
+    {
+        var totalCapacity = initial.Count + items.Count;
+        for (int rotated = 0; rotated <= totalCapacity; ++rotated)
+        {
+            for (int index = 0; index <= initial.Count; ++index)
+            {
+                // Calculate the expected result using the slower List<int>.
+                var result = new List<TElement>(initial);
+                for (int i = 0; i != rotated; ++i)
+                {
+                    var item = result[0];
+                    result.RemoveAt(0);
+                    result.Add(item);
+                }
+                result.InsertRange(index, items);
+
+                // First, start off the deque with the initial items.
+                var deque = new Deque<TElement>(initial);
+
+                // Ensure there's enough room for the inserted items.
+                //deque.Capacity += items.Count;
+
+                // Rotate the existing items.
+                for (int i = 0; i != rotated; ++i)
+                {
+                    var item = deque[0];
+                    deque.PopFront();
+                    deque.PushBack(item);
+                }
+
+                // Do the insert.
+                deque.InsertRange(index, items);
+
+                // Ensure the results are as expected.
+                Assert.Equal(result, deque);
+            }
+        }
+    }
 }
