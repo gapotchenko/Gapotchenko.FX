@@ -8,6 +8,7 @@
 // Year of introduction: 2023
 
 using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Linq;
 using Xunit;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
@@ -32,7 +33,8 @@ partial class Deque_Tests<T>
     [Fact]
     public void Constructor_Collection_GetsAdded()
     {
-        var data = Enumerable.Range(1, 3).Select(CreateT).ToArray();
+        var data = Enumerable.Range(1, 3).Select(CreateT).Memoize();
+
         var deque = new Deque<T>(data);
         Assert.Equal(data, deque);
     }
@@ -42,6 +44,7 @@ partial class Deque_Tests<T>
     public void Constructor_Collection_SetsCapacity(int capacity)
     {
         var data = Enumerable.Range(1, capacity).Select(CreateT);
+
         var deque = new Deque<T>(data);
         Assert.Equal(capacity, deque.EnsureCapacity(0));
     }
