@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Collections.Utils;
 
-static class ExceptionHelpers
+static class ExceptionHelper
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ThrowIfArgumentIsNull(object? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
@@ -102,29 +102,37 @@ static class ExceptionHelpers
             throw new ArgumentNullException(parameterName);
     }
 
-    public static Exception CreateInvalidArgumentTypeException(
-        object? actualValue,
+    public static ArgumentException CreateInvalidArgumentTypeException<T>(
+        T? actualValue,
         Type expectedType,
         [CallerArgumentExpression(nameof(actualValue))] string? parameterName = null) =>
-        new ArgumentException(
+        new(
             string.Format(
                 "The value '{0}' is not of type '{1}' and cannot be used in this generic collection.",
                 actualValue,
                 expectedType),
             parameterName);
 
-    public static Exception CreateIncompatibleArrayTypeException() =>
-        new ArgumentException("Target array type is not compatible with the type of items in the collection.");
+    public static ArgumentException CreateIncompatibleArrayTypeArgumentException(string? parameterName = null) =>
+        new(
+            "Target array type is not compatible with the type of items in the collection.",
+            parameterName);
 
-    public static Exception CreateEnumeratedCollectionWasModifiedException() =>
-        new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
+    public static InvalidOperationException CreateEnumeratedCollectionWasModifiedException() =>
+        new("Collection was modified; enumeration operation may not execute.");
 
-    public static Exception CreateEmptyCollectionException() =>
-        new InvalidOperationException("The collection is empty.");
+    public static InvalidOperationException CreateEmptyCollectionException() =>
+        new("The collection is empty.");
 
-    public static Exception CreateKeyNotFoundException<TKey>(TKey? key) =>
-        new KeyNotFoundException(
+    public static KeyNotFoundException CreateKeyNotFoundException<TKey>(TKey? key) =>
+        new(
             string.Format(
                 "The given key '{0}' was not present in the dictionary.",
                 key));
+
+    public static InvalidOperationException CreateEnumerationNeitherStarterNorFinishedException() =>
+        new("Enumeration has either not started or has already finished.");
+
+    public static ArgumentException CreateDuplicateKeyArgumentException<T>(T? key) =>
+        new($"An item with the same key has already been added. Key: '{key}'.");
 }

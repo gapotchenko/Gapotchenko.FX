@@ -523,7 +523,7 @@ public class PriorityQueue<TElement, TPriority>
     {
         Array.Resize(
             ref _nodes,
-            CollectionHelpers.TrimExcess(_nodes.Length, _size));
+            CollectionHelper.TrimExcess(_nodes.Length, _size));
     }
 
     /// <summary>
@@ -538,7 +538,7 @@ public class PriorityQueue<TElement, TPriority>
 
         int newcapacity = GrowFactor * _nodes.Length;
 
-        int arrayMaxLength = ArrayHelpers.ArrayMaxLength;
+        int arrayMaxLength = ArrayHelper.ArrayMaxLength;
 
         // Allow the queue to grow to maximum possible capacity (~2G elements) before encountering overflow.
         // Note that this check works even when _nodes.Length overflowed thanks to the (uint) cast
@@ -924,7 +924,7 @@ public class PriorityQueue<TElement, TPriority>
             void ValidateVersion()
             {
                 if (_version != _queue._version)
-                    throw ExceptionHelpers.CreateEnumeratedCollectionWasModifiedException();
+                    throw ExceptionHelper.CreateEnumeratedCollectionWasModifiedException();
             }
         }
 

@@ -44,7 +44,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
     public Deque(int capacity)
     {
-        ExceptionHelpers.ThrowIfArgumentIsNegative(capacity);
+        ExceptionHelper.ThrowIfArgumentIsNegative(capacity);
 
         m_Array = new T[capacity];
     }
@@ -57,9 +57,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <param name="collection">The collection to copy elements from.</param>
     public Deque(IEnumerable<T> collection)
     {
-        ExceptionHelpers.ThrowIfArgumentIsNull(collection);
+        ExceptionHelper.ThrowIfArgumentIsNull(collection);
 
-        m_Array = EnumerableHelpers.ToArray(collection);
+        m_Array = EnumerableHelper.ToArray(collection);
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,13 +98,13 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         get
         {
-            ExceptionHelpers.ValidateIndexArgumentRange(index, m_Size);
+            ExceptionHelper.ValidateIndexArgumentRange(index, m_Size);
 
             return GetElement(index);
         }
         set
         {
-            ExceptionHelpers.ValidateIndexArgumentRange(index, m_Size);
+            ExceptionHelper.ValidateIndexArgumentRange(index, m_Size);
 
             UpdateVersion();
             SetElement(index, value);
@@ -167,8 +167,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void CopyTo(T[] array)
     {
-        ExceptionHelpers.ThrowIfArgumentIsNull(array);
-        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(
+        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ExceptionHelper.ValidateIndexAndCountArgumentsRange(
             0, m_Size, array.Length,
             indexParameterName: null, countParameterName: null);
 
@@ -192,8 +192,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void CopyTo(T[] array, int arrayIndex)
     {
-        ExceptionHelpers.ThrowIfArgumentIsNull(array);
-        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(
+        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ExceptionHelper.ValidateIndexAndCountArgumentsRange(
             arrayIndex, m_Size, array.Length,
             countParameterName: null);
 
@@ -218,8 +218,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void CopyTo(T[] array, int arrayIndex, int count)
     {
-        ExceptionHelpers.ThrowIfArgumentIsNull(array);
-        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(arrayIndex, count, array.Length);
+        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ExceptionHelper.ValidateIndexAndCountArgumentsRange(arrayIndex, count, array.Length);
 
         CopyToCore(0, array, arrayIndex, count);
     }
@@ -248,9 +248,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void CopyTo(int index, T[] array, int arrayIndex, int count)
     {
-        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
-        ExceptionHelpers.ThrowIfArgumentIsNull(array);
-        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(arrayIndex, count, array.Length);
+        ExceptionHelper.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
+        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ExceptionHelper.ValidateIndexAndCountArgumentsRange(arrayIndex, count, array.Length);
 
         CopyToCore(index, array, arrayIndex, count);
     }
@@ -334,7 +334,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         if (TryPopFront(out var value))
             return value;
         else
-            throw ExceptionHelpers.CreateEmptyCollectionException();
+            throw ExceptionHelper.CreateEmptyCollectionException();
     }
 
     /// <summary>
@@ -347,7 +347,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         if (TryPopBack(out var value))
             return value;
         else
-            throw ExceptionHelpers.CreateEmptyCollectionException();
+            throw ExceptionHelper.CreateEmptyCollectionException();
     }
 
     /// <summary>
@@ -422,7 +422,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         if (TryPeekFront(out var value))
             return value;
         else
-            throw ExceptionHelpers.CreateEmptyCollectionException();
+            throw ExceptionHelper.CreateEmptyCollectionException();
     }
 
     /// <summary>
@@ -436,7 +436,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         if (TryPeekBack(out var value))
             return value;
         else
-            throw ExceptionHelpers.CreateEmptyCollectionException();
+            throw ExceptionHelper.CreateEmptyCollectionException();
     }
 
     /// <summary>
@@ -504,7 +504,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is greater than <see cref="Count"/>.</exception>
     public void Insert(int index, T item)
     {
-        ExceptionHelpers.ValidateIndexArgumentBounds(index, m_Size);
+        ExceptionHelper.ValidateIndexArgumentBounds(index, m_Size);
 
         UpdateVersion();
         InsertCore(index, item);
@@ -522,8 +522,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     public void InsertRange(int index, IEnumerable<T> collection)
     {
         int size = m_Size;
-        ExceptionHelpers.ValidateIndexArgumentBounds(index, size);
-        ExceptionHelpers.ThrowIfArgumentIsNull(collection);
+        ExceptionHelper.ValidateIndexArgumentBounds(index, size);
+        ExceptionHelper.ThrowIfArgumentIsNull(collection);
 
         if (collection.TryReifyNonEnumeratedCollection(out var reifiedCollection))
         {
@@ -581,7 +581,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is greater than or equal to <see cref="Count"/>.</exception>
     public void RemoveAt(int index)
     {
-        ExceptionHelpers.ValidateIndexArgumentRange(index, m_Size);
+        ExceptionHelper.ValidateIndexArgumentRange(index, m_Size);
 
         RemoveAtCore(index);
     }
@@ -599,7 +599,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void RemoveRange(int index, int count)
     {
-        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
+        ExceptionHelper.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
 
         if (count == 0)
             return;
@@ -636,7 +636,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="match"/> is <see langword="null"/>.</exception>
     public int RemoveWhere(Predicate<T> match)
     {
-        ExceptionHelpers.ThrowIfArgumentIsNull(match);
+        ExceptionHelper.ThrowIfArgumentIsNull(match);
 
         var size = m_Size;
 
@@ -687,7 +687,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void Reverse(int index, int count)
     {
-        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
+        ExceptionHelper.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
 
         ReverseCore(index, count);
     }
@@ -726,7 +726,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void Sort(int index, int count, IComparer<T>? comparer)
     {
-        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
+        ExceptionHelper.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
 
         SortCore(index, count, comparer);
     }
@@ -739,7 +739,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="comparison"/> is <see langword="null"/>.</exception>
     public void Sort(Comparison<T> comparison)
     {
-        ExceptionHelpers.ThrowIfArgumentIsNull(comparison);
+        ExceptionHelper.ThrowIfArgumentIsNull(comparison);
 
         SortCore(0, m_Size, comparison);
     }
@@ -760,8 +760,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="comparison"/> is <see langword="null"/>.</exception>
     public void Sort(int index, int count, Comparison<T> comparison)
     {
-        ExceptionHelpers.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
-        ExceptionHelpers.ThrowIfArgumentIsNull(comparison);
+        ExceptionHelper.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
+        ExceptionHelper.ThrowIfArgumentIsNull(comparison);
 
         SortCore(index, count, comparison);
     }
@@ -775,7 +775,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
     public int EnsureCapacity(int capacity)
     {
-        ExceptionHelpers.ThrowIfArgumentIsNegative(capacity);
+        ExceptionHelper.ThrowIfArgumentIsNegative(capacity);
 
         // Always update the version to catch concurrent enumeration errors better.
         UpdateVersion();
@@ -791,7 +791,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         // Always update the version to catch concurrent enumeration errors better.
         UpdateVersion();
-        SetCapacity(CollectionHelpers.TrimExcess(Capacity, m_Size));
+        SetCapacity(CollectionHelper.TrimExcess(Capacity, m_Size));
     }
 
     /// <summary>
@@ -1351,7 +1351,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         Debug.Assert(capacity > Capacity);
 
-        SetCapacity(CollectionHelpers.GrowCapacity(Capacity, capacity, DefaultCapacity));
+        SetCapacity(CollectionHelper.GrowCapacity(Capacity, capacity, DefaultCapacity));
     }
 
     void SetCapacity(int capacity)
@@ -1442,7 +1442,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             get
             {
                 if (m_Index == 0 || m_Index > m_Deque.m_Size)
-                    throw new InvalidOperationException("Enumeration has either not started or has already finished.");
+                    throw ExceptionHelper.CreateEnumerationNeitherStarterNorFinishedException();
 
                 return Current;
             }
@@ -1498,7 +1498,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         void ValidateVersion()
         {
             if (m_Version != m_Deque.m_Version)
-                throw ExceptionHelpers.CreateEnumeratedCollectionWasModifiedException();
+                throw ExceptionHelper.CreateEnumeratedCollectionWasModifiedException();
         }
     }
 
@@ -1532,33 +1532,33 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     object? IList.this[int index]
     {
         get => this[index];
-        set => this[index] = CollectionHelpers.GetCompatibleValue<T>(value);
+        set => this[index] = CollectionHelper.GetCompatibleValue<T>(value);
     }
 
     int IList.Add(object? value)
     {
-        PushBack(CollectionHelpers.GetCompatibleValue<T>(value));
+        PushBack(CollectionHelper.GetCompatibleValue<T>(value));
         return m_Size - 1;
     }
 
     bool IList.Contains(object? value) =>
-        CollectionHelpers.TryGetCompatibleValue<T>(value, out var compatibleValue) &&
+        CollectionHelper.TryGetCompatibleValue<T>(value, out var compatibleValue) &&
         Contains(compatibleValue);
 
     int IList.IndexOf(object? value)
     {
-        if (CollectionHelpers.TryGetCompatibleValue<T>(value, out var compatibleValue))
+        if (CollectionHelper.TryGetCompatibleValue<T>(value, out var compatibleValue))
             return IndexOf(compatibleValue);
         else
             return -1;
     }
 
     void IList.Insert(int index, object? value) =>
-        Insert(index, CollectionHelpers.GetCompatibleValue<T>(value));
+        Insert(index, CollectionHelper.GetCompatibleValue<T>(value));
 
     void IList.Remove(object? value)
     {
-        if (CollectionHelpers.TryGetCompatibleValue<T>(value, out var compatibleValue))
+        if (CollectionHelper.TryGetCompatibleValue<T>(value, out var compatibleValue))
             Remove(compatibleValue);
     }
 
@@ -1574,9 +1574,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     void ICollection.CopyTo(Array array, int index)
     {
-        ExceptionHelpers.ThrowIfArgumentIsNull(array);
-        ExceptionHelpers.ThrowIfArrayArgumentIsMultiDimensional(array);
-        ExceptionHelpers.ThrowIfArgumentIsNegative(index);
+        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ExceptionHelper.ThrowIfArrayArgumentIsMultiDimensional(array);
+        ExceptionHelper.ThrowIfArgumentIsNegative(index);
 
         try
         {
@@ -1584,7 +1584,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
         catch (ArrayTypeMismatchException)
         {
-            throw ExceptionHelpers.CreateIncompatibleArrayTypeException();
+            throw ExceptionHelper.CreateIncompatibleArrayTypeArgumentException();
         }
     }
 

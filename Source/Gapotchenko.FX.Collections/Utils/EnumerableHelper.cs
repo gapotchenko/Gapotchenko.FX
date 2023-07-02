@@ -2,7 +2,7 @@
 
 namespace Gapotchenko.FX.Collections.Utils;
 
-static class EnumerableHelpers
+static class EnumerableHelper
 {
     public static T[] ToArray<T>(IEnumerable<T> source)
     {

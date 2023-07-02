@@ -21,7 +21,7 @@ public static class ListExtensions
     /// </param>
     public static void StableSort<T>(this List<T> list, IComparer<T>? comparer)
     {
-        ExceptionHelpers.ThrowIfArgumentIsNull(list);
+        ExceptionHelper.ThrowIfArgumentIsNull(list);
 
         if (list.Count < 2)
             return;

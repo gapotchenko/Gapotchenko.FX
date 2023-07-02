@@ -3,13 +3,13 @@ using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Collections.Utils;
 
-static class CollectionHelpers
+static class CollectionHelper
 {
     public static T GetCompatibleValue<T>(
         object? value,
         [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
-        ExceptionHelpers.ValidateNullArgumentLegality<T>(value, parameterName);
+        ExceptionHelper.ValidateNullArgumentLegality<T>(value, parameterName);
 
         try
         {
@@ -17,7 +17,7 @@ static class CollectionHelpers
         }
         catch (InvalidCastException)
         {
-            throw ExceptionHelpers.CreateInvalidArgumentTypeException(value, typeof(T), parameterName);
+            throw ExceptionHelper.CreateInvalidArgumentTypeException(value, typeof(T), parameterName);
         }
     }
 
@@ -43,7 +43,7 @@ static class CollectionHelpers
 
         int newCapacity = existingCapacity == 0 ? defaultCapacity : existingCapacity * 2;
 
-        int arrayMaxLength = ArrayHelpers.ArrayMaxLength;
+        int arrayMaxLength = ArrayHelper.ArrayMaxLength;
         if ((uint)newCapacity > arrayMaxLength)
             newCapacity = arrayMaxLength;
 

@@ -1,6 +1,6 @@
 ﻿namespace Gapotchenko.FX.Collections.Utils;
 
-static class ArrayHelpers
+static class ArrayHelper
 {
     public static int ArrayMaxLength =>
 #if NET6_0_OR_GREATER

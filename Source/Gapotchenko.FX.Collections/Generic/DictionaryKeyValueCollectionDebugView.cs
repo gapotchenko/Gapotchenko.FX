@@ -4,8 +4,10 @@ namespace Gapotchenko.FX.Collections.Generic;
 
 sealed class DictionaryKeyValueCollectionDebugView<TKey, TValue, T>
 {
-    public DictionaryKeyValueCollectionDebugView(ICollection<T> collection) =>
-        m_Collection = collection ?? throw new ArgumentNullException(nameof(collection));
+    public DictionaryKeyValueCollectionDebugView(ICollection<T> collection)
+    {
+        m_Collection = collection;
+    }
 
     readonly ICollection<T> m_Collection;
 

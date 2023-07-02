@@ -89,10 +89,10 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// The <see cref="IReadOnlyDictionary{TKey, TValue}"/> whose elements are copied to the new 
     /// <see cref="AssociativeArray{TKey, TValue}"/>.
     /// </param>
-    /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="dictionary"/> contains one or more duplicated keys.</exception>
-    public AssociativeArray(IReadOnlyDictionary<TKey, TValue> dictionary)
-        : this(dictionary, null)
+    public AssociativeArray(IReadOnlyDictionary<TKey, TValue> dictionary) :
+        this(dictionary, null)
     {
     }
 
@@ -109,12 +109,11 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or null to use the default 
     /// <see cref="IEqualityComparer{T}"/> for the type of the key.
     /// </param>
-    /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="dictionary"/> contains one or more duplicated keys.</exception>
     public AssociativeArray(IReadOnlyDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
     {
-        if (dictionary == null)
-            throw new ArgumentNullException(nameof(dictionary));
+        ExceptionHelper.ThrowIfArgumentIsNull(dictionary);
 
         AddRange(dictionary, comparer);
     }
@@ -127,10 +126,10 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// <param name="collection">
     /// The <see cref="IEnumerable{T}"/> whose elements are copied to the new <see cref="AssociativeArray{TKey, TValue}"/>.
     /// </param>
-    /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="collection"/> contains one or more duplicated keys.</exception>
-    public AssociativeArray(IEnumerable<KeyValuePair<TKey, TValue>> collection)
-        : this(collection, null)
+    public AssociativeArray(IEnumerable<KeyValuePair<TKey, TValue>> collection) :
+        this(collection, null)
     {
     }
 
@@ -146,12 +145,11 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or null to use the default 
     /// <see cref="IEqualityComparer{T}"/> for the type of the key.
     /// </param>
-    /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="collection"/> contains one or more duplicated keys.</exception>
     public AssociativeArray(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
     {
-        if (collection == null)
-            throw new ArgumentNullException(nameof(collection));
+        ExceptionHelper.ThrowIfArgumentIsNull(collection);
 
         AddRange(collection, comparer);
     }
@@ -199,7 +197,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                 if (m_NullSlot.HasValue)
                     return m_NullSlot.Value;
                 else
-                    throw ExceptionHelpers.CreateKeyNotFoundException(key);
+                    throw ExceptionHelper.CreateKeyNotFoundException(key);
             }
             else
             {
@@ -227,7 +225,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     {
         get
         {
-            if (CollectionHelpers.TryGetCompatibleValue<TKey>(key, out var tKey) &&
+            if (CollectionHelper.TryGetCompatibleValue<TKey>(key, out var tKey) &&
                 TryGetValue(tKey, out var value))
             {
                 return value;
@@ -239,9 +237,9 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         }
         set
         {
-            ExceptionHelpers.ValidateNullArgumentLegality<TValue>(value);
+            ExceptionHelper.ValidateNullArgumentLegality<TValue>(value);
 
-            this[CollectionHelpers.GetCompatibleValue<TKey>(key)] = CollectionHelpers.GetCompatibleValue<TValue>(value);
+            this[CollectionHelper.GetCompatibleValue<TKey>(key)] = CollectionHelper.GetCompatibleValue<TValue>(value);
         }
     }
 
@@ -290,7 +288,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             if (!m_NullSlot.HasValue)
                 m_NullSlot = value;
             else
-                ThrowHelper.ThrowAddingDuplicateWithKeyArgumentException(key);
+                throw ExceptionHelper.CreateDuplicateKeyArgumentException(key);
         }
         else
         {
@@ -302,21 +300,17 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     void IDictionary.Add(object key, object? value)
     {
-        ExceptionHelpers.ValidateNullArgumentLegality<TValue>(value);
+        ExceptionHelper.ValidateNullArgumentLegality<TValue>(value);
 
         if (key is null)
         {
             if (value is not null && value is not TValue)
-                throw ExceptionHelpers.CreateInvalidArgumentTypeException(value, typeof(TValue), nameof(value));
+                throw ExceptionHelper.CreateInvalidArgumentTypeException(value, typeof(TValue), nameof(value));
 
             if (!m_NullSlot.HasValue)
-            {
                 m_NullSlot = (TValue)value!;
-            }
             else
-            {
-                ThrowHelper.ThrowAddingDuplicateWithKeyArgumentException(default);
-            }
+                throw ExceptionHelper.CreateDuplicateKeyArgumentException(key);
         }
         else
         {
@@ -398,8 +392,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
     {
-        if (array == null)
-            throw new ArgumentNullException(nameof(array));
+        ExceptionHelper.ThrowIfArgumentIsNull(array);
         if ((uint)arrayIndex > (uint)array.Length)
             ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
         if (array.Length - arrayIndex < Count)
@@ -535,15 +528,14 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     void IDictionary.Clear() => Clear();
 
     bool IDictionary.Contains(object key) =>
-        CollectionHelpers.TryGetCompatibleValue<TKey>(key, out var tKey) &&
+        CollectionHelper.TryGetCompatibleValue<TKey>(key, out var tKey) &&
         ContainsKey(tKey);
 
     bool IReadOnlyDictionary<TKey, TValue>.ContainsKey(TKey key) => ContainsKey(key);
 
     void ICollection.CopyTo(Array array, int arrayIndex)
     {
-        if (array == null)
-            throw new ArgumentNullException(nameof(array));
+        ExceptionHelper.ThrowIfArgumentIsNull(array);
         if ((uint)arrayIndex > (uint)array.Length)
             ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
         if (array.Length - arrayIndex < Count)
@@ -568,15 +560,14 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                     break;
 
                 default:
-                    ThrowHelper.ThrowArgumentException_Argument_InvalidArrayType();
-                    break;
+                    throw ExceptionHelper.CreateIncompatibleArrayTypeArgumentException();
             }
         }
     }
 
     void IDictionary.Remove(object key)
     {
-        if (CollectionHelpers.TryGetCompatibleValue<TKey>(key, out var tKey))
+        if (CollectionHelper.TryGetCompatibleValue<TKey>(key, out var tKey))
             Remove(tKey);
     }
 
@@ -695,8 +686,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if (array == null)
-                throw new ArgumentNullException(nameof(array));
+            ExceptionHelper.ThrowIfArgumentIsNull(array);
             if ((uint)arrayIndex > (uint)array.Length)
                 ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
             if (array.Length - arrayIndex < Count)
@@ -712,8 +702,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         public void CopyTo(Array array, int arrayIndex)
         {
-            if (array == null)
-                throw new ArgumentNullException(nameof(array));
+            ExceptionHelper.ThrowIfArgumentIsNull(array);
             if ((uint)arrayIndex > (uint)array.Length)
                 ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
             if (array.Length - arrayIndex < Count)
@@ -730,7 +719,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                 else if (array is object[] objArray)
                     objArray[arrayIndex] = nullSlot.Value!;
                 else
-                    ThrowHelper.ThrowArgumentException_Argument_InvalidArrayType();
+                    throw ExceptionHelper.CreateIncompatibleArrayTypeArgumentException();
             }
         }
 
@@ -764,7 +753,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         [DoesNotReturn]
         protected override void ThrowMutationNotAllowed() =>
-            throw new NotSupportedException($"Mutating a key collection retrieved from an associative array is not allowed.");
+            throw new NotSupportedException("Mutating a key collection retrieved from an associative array is not allowed.");
     }
 
     sealed class ValueCollection : KeyValueCollection<TValue>
@@ -792,7 +781,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         [DoesNotReturn]
         protected override void ThrowMutationNotAllowed() =>
-            throw new NotSupportedException($"Mutating a value collection retrieved from an associative array is not allowed.");
+            throw new NotSupportedException("Mutating a value collection retrieved from an associative array is not allowed.");
     }
 
     sealed class PrependEnumerator<T> : IEnumerator<T>
@@ -825,13 +814,14 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         public T Current { get; private set; }
 
-        object IEnumerator.Current
+        object? IEnumerator.Current
         {
             get
             {
                 if (m_State is State.Reset or State.End)
-                    ThrowHelper.ThrowInvalidOperationException_InvalidOperation_EnumOpCantHappen();
-                return Current!;
+                    throw ExceptionHelper.CreateEnumerationNeitherStarterNorFinishedException();
+
+                return Current;
             }
         }
 
@@ -895,23 +885,11 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     static class ThrowHelper
     {
         [DoesNotReturn]
-        public static void ThrowArgumentException_Argument_InvalidArrayType() =>
-            throw new ArgumentException("Target array type is not compatible with the type of items in the collection.");
-
-        [DoesNotReturn]
-        public static void ThrowAddingDuplicateWithKeyArgumentException(TKey? key) =>
-            throw new ArgumentException($"An item with the same key has already been added. Key: '{key}'.");
-
-        [DoesNotReturn]
         public static void ThrowIndexArgumentOutOfRange_NeedNonNegNumException(string argName) =>
             throw new ArgumentOutOfRangeException(argName, "Non-negative number required.");
 
         [DoesNotReturn]
         public static void ThrowArgumentException_ArrayPlusOffTooSmall() =>
             throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
-
-        [DoesNotReturn]
-        public static void ThrowInvalidOperationException_InvalidOperation_EnumOpCantHappen() =>
-            throw new InvalidOperationException("Enumeration has either not started or has already finished.");
     }
 }
