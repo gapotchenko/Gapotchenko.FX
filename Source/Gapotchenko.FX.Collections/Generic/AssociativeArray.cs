@@ -829,8 +829,15 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                 m_State = State.Source;
                 if (element.HasValue)
                 {
-                    // Cause a check of an out-of-band modification.
-                    enumerator.Reset();
+                    try
+                    {
+                        // Cause a check of an out-of-band modification.
+                        enumerator.Reset();
+                    }
+                    catch (NotSupportedException)
+                    {
+                        // Enumerator implementation may not support reset.
+                    }
 
                     m_Current = element.Value;
                     return true;
