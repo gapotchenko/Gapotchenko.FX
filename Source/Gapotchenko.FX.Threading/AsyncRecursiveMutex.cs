@@ -32,7 +32,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             var task = m_CoreImpl.LockAsync(cancellationToken);
 
             // Suppress the flow of the execution context to be able to propagate the recursion tracking information.
-            var flowScope = ExecutionContextHelpers.SuppressFlow();
+            var flowScope = ExecutionContextHelper.SuppressFlow();
 
             return task.ContinueWith(
                 task =>
@@ -99,7 +99,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             var task = func();
 
             // Suppress the flow of the execution context to be able to propagate the recursion tracking information.
-            var flowScope = ExecutionContextHelpers.SuppressFlow();
+            var flowScope = ExecutionContextHelper.SuppressFlow();
 
             return task.ContinueWith(
                 task =>

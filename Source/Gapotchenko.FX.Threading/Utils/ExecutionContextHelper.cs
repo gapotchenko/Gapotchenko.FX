@@ -1,6 +1,6 @@
 ﻿namespace Gapotchenko.FX.Threading.Utils;
 
-static class ExecutionContextHelpers
+static class ExecutionContextHelper
 {
     /// <summary>
     /// Suppresses the flow of the execution context across synchronous threads if it was not suppressed yet.
