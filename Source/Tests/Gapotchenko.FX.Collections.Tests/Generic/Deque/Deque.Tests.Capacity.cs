@@ -12,6 +12,8 @@ using Xunit;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 
+using Math = System.Math;
+
 partial class Deque_Tests<T>
 {
     public static IEnumerable<object[]> ValidCapacityValues()
@@ -29,8 +31,33 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
+    [MemberData(nameof(InvalidCapacityValues))]
+    public void Capacity_Ensure_ThrowsOnInvalidValue(int capacity)
+    {
+        var deque = new Deque<int>();
+        Assert.Throws<ArgumentOutOfRangeException>(nameof(capacity), () => deque.EnsureCapacity(capacity));
+    }
+
+    [Theory]
     [MemberData(nameof(ValidCapacityValues))]
-    public void Capacity_SetToExistingValueDoesNothing(int capacity)
+    public void Capacity_Ensure_UsesSpecifiedValue(int capacity)
+    {
+        var deque = new Deque<int>(Math.Min(capacity, 1));
+        Assert.Equal(capacity, deque.EnsureCapacity(capacity));
+    }
+
+    [Theory]
+    [MemberData(nameof(ValidCapacityValues))]
+    public void Capacity_Ensure_SmallerValueDoesNothing(int capacity)
+    {
+        var deque = new Deque<int>(capacity);
+        int newCapacity = Math.Max(capacity - 1, 0);
+        Assert.Equal(capacity, deque.EnsureCapacity(newCapacity));
+    }
+
+    [Theory]
+    [MemberData(nameof(ValidCapacityValues))]
+    public void Capacity_Ensure_ExistingValueDoesNothing(int capacity)
     {
         var deque = new Deque<int>(capacity);
         Assert.Equal(capacity, deque.EnsureCapacity(capacity));
@@ -38,11 +65,19 @@ partial class Deque_Tests<T>
 
     [Theory]
     [MemberData(nameof(ValidCapacityValues))]
-    public void Capacity_ChangePreservesData(int capacity)
+    public void Capacity_Ensure_ChangePreservesData(int capacity)
     {
         var data = Enumerable.Range(1, 3).Select(CreateT).ToArray();
         var deque = new Deque<T>(data);
         deque.EnsureCapacity(capacity);
         Assert.Equal(data, deque);
+    }
+
+    [Fact]
+    public void Capacity_OnAddGrowsFromZero()
+    {
+        var deque = new Deque<T>(0);
+        deque.PushBack(CreateT(0));
+        Assert.True(deque.EnsureCapacity(0) > 0);
     }
 }

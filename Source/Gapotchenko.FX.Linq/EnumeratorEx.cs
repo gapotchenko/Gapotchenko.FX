@@ -6,11 +6,11 @@
 public static class EnumeratorEx
 {
     /// <summary>
-    /// Returns the enumeration of remaining elements for the given enumerator.
+    /// Returns an enumeration of remaining elements in the <see cref="IEnumerator{T}"/>.
     /// </summary>
-    /// <typeparam name="T">The type of elements in enumerator.</typeparam>
+    /// <typeparam name="T">The type of elements in the enumerator.</typeparam>
     /// <param name="enumerator">The enumerator.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> that contains the remaining elements of the given enumerator.</returns>
+    /// <returns>An <see cref="IEnumerable{T}"/> that provides the remaining elements in the <see cref="IEnumerator{T}"/>.</returns>
     public static IEnumerable<T> Rest<T>(this IEnumerator<T> enumerator)
     {
         if (enumerator == null)

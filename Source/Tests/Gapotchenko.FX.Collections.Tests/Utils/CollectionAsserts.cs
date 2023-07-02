@@ -3,7 +3,7 @@
 using System.Collections;
 using Xunit;
 
-namespace Gapotchenko.FX.Collections.Tests;
+namespace Gapotchenko.FX.Collections.Tests.Utils;
 
 static class CollectionAsserts
 {

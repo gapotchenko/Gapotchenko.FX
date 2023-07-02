@@ -1,6 +1,6 @@
 ﻿// (c) Portions of code from the .NET project by Microsoft and .NET Foundation
 
-namespace Gapotchenko.FX.Collections.Tests;
+namespace Gapotchenko.FX.Collections.Tests.Utils;
 
 static class RandomExtensions
 {

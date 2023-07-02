@@ -1,6 +1,7 @@
 // Portions © .NET Foundation and its Licensors
 
 using System.Runtime.CompilerServices;
+using Gapotchenko.FX.Collections.Tests.Utils;
 using Xunit;
 
 #pragma warning disable IDE0040 // Add accessibility modifiers

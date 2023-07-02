@@ -16,24 +16,33 @@ partial class Deque_Tests<T>
 {
     [Theory]
     [MemberData(nameof(InvalidCapacityValues))]
-    public void Constructor_Capacity_ThrowsOnInvalid(int capacity)
+    public void Constructor_Capacity_ThrowsOnInvalidValue(int capacity)
     {
         Assert.Throws<ArgumentOutOfRangeException>(nameof(capacity), () => new Deque<T>(capacity));
     }
 
     [Theory]
     [MemberData(nameof(ValidCapacityValues))]
-    public void Constructor_Capacity_SpecifiedIsUsed(int capacity)
+    public void Constructor_Capacity_UsesSpecifiedValue(int capacity)
     {
         var deque = new Deque<T>(capacity);
         Assert.Equal(capacity, deque.EnsureCapacity(0));
     }
 
     [Fact]
-    public void Constructor_Collection_IsAdded()
+    public void Constructor_Collection_GetsAdded()
     {
         var data = Enumerable.Range(1, 3).Select(CreateT).ToArray();
         var deque = new Deque<T>(data);
         Assert.Equal(data, deque);
+    }
+
+    [Theory]
+    [MemberData(nameof(ValidCapacityValues))]
+    public void Constructor_Collection_SetsCapacity(int capacity)
+    {
+        var data = Enumerable.Range(1, capacity).Select(CreateT);
+        var deque = new Deque<T>(data);
+        Assert.Equal(capacity, deque.EnsureCapacity(0));
     }
 }
