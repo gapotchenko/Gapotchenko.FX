@@ -8,7 +8,6 @@
 // Year of introduction: 2023
 
 using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.Collections.Tests.Utils;
 using Gapotchenko.FX.Linq;
 using Xunit;
 
@@ -32,9 +31,9 @@ partial class Deque_Tests<T>
     [Fact]
     public void IndexOf_ItemNotPresent_ReturnsNegativeOne()
     {
-        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().GetEnumerator();
-        var data = source.Rest().Take(3);
-        var value = source.Rest().First();
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(3);
+        var value = source.First();
 
         var deque = new Deque<T>(data);
         var result = deque.IndexOf(value);
@@ -44,9 +43,9 @@ partial class Deque_Tests<T>
     [Fact]
     public void IndexOf_ItemPresentAndSplit_ReturnsItemIndex()
     {
-        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().GetEnumerator();
-        var data = source.Rest().Take(3).ReifyList();
-        var value = source.Rest().First();
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(3).ReifyList();
+        var value = source.First();
 
         var deque = new Deque<T>(data);
         deque.PopBack();
@@ -69,9 +68,9 @@ partial class Deque_Tests<T>
     [Fact]
     public void Contains_ItemNotPresent_ReturnsFalse()
     {
-        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().GetEnumerator();
-        var data = source.Rest().Take(2);
-        var value = source.Rest().First();
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(2);
+        var value = source.First();
 
         var deque = new Deque<T>(data);
         Assert.False(deque.Contains(value));
@@ -80,9 +79,9 @@ partial class Deque_Tests<T>
     [Fact]
     public void Contains_ItemPresentAndSplit_ReturnsTrue()
     {
-        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().GetEnumerator();
-        var data = source.Rest().Take(3).ReifyList();
-        var value = source.Rest().First();
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(3).ReifyList();
+        var value = source.First();
 
         var deque = new Deque<T>(data);
         deque.PopBack();
@@ -96,9 +95,9 @@ partial class Deque_Tests<T>
     [Fact]
     public void Add_IsPushBack()
     {
-        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().GetEnumerator();
-        var data = source.Rest().Take(2).ReifyList();
-        var value = source.Rest().First();
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(2).ReifyList();
+        var value = source.First();
 
         var deque1 = new Deque<T>(data);
         var deque2 = new Deque<T>(data);
@@ -125,9 +124,9 @@ partial class Deque_Tests<T>
     [Fact]
     public void Insert_AtIndex0_IsSameAsPushFront()
     {
-        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().GetEnumerator();
-        var data = source.Rest().Take(2).Memoize();
-        var value = source.Rest().First();
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(2).Memoize();
+        var value = source.First();
 
         var deque1 = new Deque<T>(data);
         var deque2 = new Deque<T>(data);
@@ -139,9 +138,9 @@ partial class Deque_Tests<T>
     [Fact]
     public void Insert_AtCount_IsSameAsPushBack()
     {
-        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().GetEnumerator();
-        var data = source.Rest().Take(2).Memoize();
-        var value = source.Rest().First();
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(2).Memoize();
+        var value = source.First();
 
         var deque1 = new Deque<T>(data);
         var deque2 = new Deque<T>(data);
@@ -153,9 +152,9 @@ partial class Deque_Tests<T>
     [Fact]
     public void RemoveAt_RemovesElementAtIndex()
     {
-        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().GetEnumerator();
-        var data = source.Rest().Take(3).ReifyList();
-        var value = source.Rest().First();
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(3).ReifyList();
+        var value = source.First();
 
         var deque = new Deque<T>(data);
         deque.PopBack();
