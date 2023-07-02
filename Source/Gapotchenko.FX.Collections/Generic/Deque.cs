@@ -1424,9 +1424,16 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             m_Version = deque.m_Version;
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly Deque<T> m_Deque;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly int m_Version;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         int m_Index;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         T? m_Current;
 
         /// <summary>
@@ -1436,24 +1443,6 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         /// The element in the <see cref="Deque{T}"/> at the current position of the enumerator.
         /// </value>
         public readonly T Current => m_Current!;
-
-        readonly object? IEnumerator.Current
-        {
-            get
-            {
-                if (m_Index == 0 || m_Index > m_Deque.m_Size)
-                    throw ExceptionHelper.CreateEnumerationNeitherStarterNorFinishedException();
-
-                return Current;
-            }
-        }
-
-        /// <summary>
-        /// Releases all resources used by the <see cref="Enumerator"/>.
-        /// </summary>
-        public void Dispose()
-        {
-        }
 
         /// <summary>
         /// Advances the enumerator to the next element of the <see cref="Deque{T}"/>.
@@ -1478,6 +1467,24 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             }
         }
 
+        /// <inheritdoc/>
+        public void Reset()
+        {
+            ValidateVersion();
+
+            m_Index = 0;
+            m_Current = default;
+        }
+
+        /// <summary>
+        /// Releases all resources used by the <see cref="Enumerator"/>.
+        /// </summary>
+        public void Dispose()
+        {
+        }
+
+        // ------------------------------------------------------------------
+
         bool MoveNextRare()
         {
             ValidateVersion();
@@ -1487,19 +1494,26 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             return false;
         }
 
-        void IEnumerator.Reset()
-        {
-            ValidateVersion();
-
-            m_Index = 0;
-            m_Current = default;
-        }
-
-        void ValidateVersion()
+        readonly void ValidateVersion()
         {
             if (m_Version != m_Deque.m_Version)
                 throw ExceptionHelper.CreateEnumeratedCollectionWasModifiedException();
         }
+
+        #region Compatibility
+
+        readonly object? IEnumerator.Current
+        {
+            get
+            {
+                if (m_Index == 0 || m_Index > m_Deque.m_Size)
+                    throw ExceptionHelper.CreateEnumerationNeitherStarterNorFinishedException();
+
+                return Current;
+            }
+        }
+
+        #endregion
     }
 
     #region Compatibility
