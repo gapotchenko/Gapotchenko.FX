@@ -792,7 +792,6 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         {
             m_ElementGetter = elementGetter;
             m_SourceEnumerator = sourceEnumerator;
-            Current = default!;
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -812,18 +811,10 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         State m_State;
 
-        public T Current { get; private set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        T? m_Current;
 
-        object? IEnumerator.Current
-        {
-            get
-            {
-                if (m_State is State.Reset or State.End)
-                    throw ExceptionHelper.CreateEnumerationNeitherStarterNorFinishedException();
-
-                return Current;
-            }
-        }
+        public T Current => m_Current!;
 
         public bool MoveNext()
         {
@@ -841,7 +832,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                     // Cause a check of an out-of-band modification.
                     enumerator.Reset();
 
-                    Current = element.Value;
+                    m_Current = element.Value;
                     return true;
                 }
             }
@@ -850,21 +841,22 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             {
                 if (enumerator.MoveNext())
                 {
-                    Current = enumerator.Current;
+                    m_Current = enumerator.Current;
                     return true;
                 }
                 else
                 {
                     m_State = State.End;
+                    m_Current = default;
                 }
             }
 
             if (m_State == State.End)
             {
                 // Cause a check of an out-of-band modification.
-                bool result = enumerator.MoveNext();
-                Debug.Assert(!result);
-                return result;
+                bool hasElement = enumerator.MoveNext();
+                Debug.Assert(!hasElement);
+                return hasElement;
             }
 
             // Should be unreachable.
@@ -873,13 +865,29 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         public void Reset()
         {
-            m_State = State.Reset;
             m_SourceEnumerator.Reset();
+            m_State = State.Reset;
+            m_Current = default;
         }
 
         public void Dispose()
         {
         }
+
+        #region Compatibility
+
+        object? IEnumerator.Current
+        {
+            get
+            {
+                if (m_State is State.Reset or State.End)
+                    throw ExceptionHelper.CreateEnumerationNeitherStarterNorFinishedException();
+
+                return Current;
+            }
+        }
+
+        #endregion
     }
 
     static class ThrowHelper
