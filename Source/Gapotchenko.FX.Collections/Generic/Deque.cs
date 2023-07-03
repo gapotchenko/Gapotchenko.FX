@@ -869,7 +869,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     int GetContiguousArrayIndex(int elementIndex)
     {
         Debug.Assert(elementIndex >= 0);
-        Debug.Assert(elementIndex < Capacity - m_Offset);
+        Debug.Assert(elementIndex <= Capacity - m_Offset);
 
         return m_Offset + elementIndex;
     }
@@ -977,7 +977,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         Debug.Assert(index >= 0);
         Debug.Assert(count >= 0);
-        Debug.Assert(index <= m_Size - count);
+        Debug.Assert(index <= m_Size);
 
         int size = m_Size;
 
