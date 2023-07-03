@@ -7,6 +7,7 @@
 // Year of introduction: 2023
 
 using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Collections.Tests.Utils;
 using Gapotchenko.FX.Linq;
 using Xunit;
 
@@ -20,7 +21,9 @@ partial class Deque_Tests<T>
     public void Sort_HandlesEmpty()
     {
         var deque = new Deque<T>();
-        deque.Sort();
+        CollectionModificationVerifier.EnsureModified(
+            deque,
+            () => deque.Sort());
         Assert.Empty(deque);
     }
 
@@ -33,7 +36,9 @@ partial class Deque_Tests<T>
         list.Sort();
 
         var deque = new Deque<T>(data);
-        deque.Sort();
+        CollectionModificationVerifier.EnsureModified(
+            deque,
+            () => deque.Sort());
 
         Assert.Equal(list, deque);
     }
@@ -41,7 +46,9 @@ partial class Deque_Tests<T>
     static void Sort_IComparer_HandlesEmpty_Core(IComparer<T>? comparer)
     {
         var deque = new Deque<T>();
-        deque.Sort(comparer);
+        CollectionModificationVerifier.EnsureModified(
+            deque,
+            () => deque.Sort(comparer));
         Assert.Empty(deque);
     }
 
@@ -53,7 +60,9 @@ partial class Deque_Tests<T>
         list.Sort(comparer);
 
         var deque = new Deque<T>(data);
-        deque.Sort(comparer);
+        CollectionModificationVerifier.EnsureModified(
+            deque,
+            () => deque.Sort(comparer));
 
         Assert.Equal(list, deque);
     }
@@ -89,14 +98,18 @@ partial class Deque_Tests<T>
     public void Sort_Comparison_ThrowsOnNull()
     {
         var deque = new Deque<T>();
-        Assert.Throws<ArgumentNullException>(() => deque.Sort((Comparison<T>)null!));
+        CollectionModificationVerifier.EnsureNotModified(
+            deque,
+            () => Assert.Throws<ArgumentNullException>(() => deque.Sort((Comparison<T>)null!)));
     }
 
     [Fact]
     public void Sort_Comparison_HandlesEmpty()
     {
         var deque = new Deque<T>();
-        deque.Sort(Comparer<T>.Default.Compare);
+        CollectionModificationVerifier.EnsureModified(
+            deque,
+            () => deque.Sort(Comparer<T>.Default.Compare));
         Assert.Empty(deque);
     }
 
@@ -108,7 +121,9 @@ partial class Deque_Tests<T>
         list.Sort(comparison);
 
         var deque = new Deque<T>(data);
-        deque.Sort(comparison);
+        CollectionModificationVerifier.EnsureModified(
+            deque,
+            () => deque.Sort(comparison));
 
         Assert.Equal(list, deque);
     }
@@ -139,7 +154,9 @@ partial class Deque_Tests<T>
         list.Sort(index, count, comparer);
 
         var deque = new Deque<T>(data);
-        deque.Sort(index, count, comparer);
+        CollectionModificationVerifier.EnsureModified(
+            deque,
+            () => deque.Sort(index, count, comparer));
 
         Assert.Equal(list, deque);
     }
@@ -156,7 +173,9 @@ partial class Deque_Tests<T>
         list.Sort(index, count, Comparer<T>.Create(comparison));
 
         var deque = new Deque<T>(data);
-        deque.Sort(index, count, comparison);
+        CollectionModificationVerifier.EnsureModified(
+            deque,
+            () => deque.Sort(index, count, comparison));
 
         Assert.Equal(list, deque);
     }
