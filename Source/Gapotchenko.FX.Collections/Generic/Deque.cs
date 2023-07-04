@@ -64,22 +64,30 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         m_Size = array.Length;
     }
 
+#if !DEBUG
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+#endif
     T[] m_Array;
 
     /// <summary>
     /// The index of the first collection element in the <see cref="m_Array"/>.
     /// </summary>
+#if !DEBUG
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+#endif
     int m_Offset;
 
     /// <summary>
     /// The number of elements contained in the <see cref="Deque{T}"/>.
     /// </summary>
+#if !DEBUG
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+#endif
     int m_Size;
 
+#if !DEBUG
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+#endif
     int m_Version;
 
     const int DefaultCapacity = 4;
@@ -1167,9 +1175,10 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         Debug.Assert(sourceIndex >= 0);
         Debug.Assert(destinationIndex >= 0);
+        Debug.Assert(destinationIndex <= Capacity);
         Debug.Assert(count >= 0);
+        Debug.Assert(count <= Capacity);
         Debug.Assert(sourceIndex <= Capacity - count);
-        Debug.Assert(destinationIndex <= Capacity - count);
 
         if (count == 0 || sourceIndex == destinationIndex)
             return;
