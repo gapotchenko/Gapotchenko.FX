@@ -25,6 +25,64 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
+    #region PushFrontRange
+
+    [Fact]
+    public void PushFrongRange_ThrowsOnNull()
+    {
+        var deque = new Deque<T>();
+        Assert.Throws<ArgumentNullException>(() => deque.PushFrontRange(null!));
+    }
+
+    [Fact]
+    public void PushFrontRange_Collection()
+    {
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(3).ReifyCollection();
+        var items = source.Take(2).ReifyCollection();
+
+        var list = new List<T>(data);
+        var deque = new Deque<T>(data);
+
+        list.InsertRange(0, items);
+        ModificationTrackingVerifier.EnsureModified(
+            deque,
+            () => deque.PushFrontRange(items));
+
+        Assert.Equal(list, deque);
+    }
+
+    [Fact]
+    public void PushFrontRange_Enumerable()
+    {
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(3).ReifyCollection();
+        var items = source.Take(2).ReifyCollection();
+
+        var list = new List<T>(data);
+        var deque = new Deque<T>(data);
+
+        list.InsertRange(0, items);
+        ModificationTrackingVerifier.EnsureModified(
+            deque,
+            () => deque.PushFrontRange(items.Enumerate()));
+
+        Assert.Equal(list, deque);
+    }
+
+    [Fact]
+    public void PushFrontRange_Enumerable_ThrowsOnShortCircuit()
+    {
+        var data = Enumerable.Range(1, 3).Select(CreateT).Distinct();
+
+        var deque = new Deque<T>(data);
+        ModificationTrackingVerifier.EnsureModified(
+            deque,
+            () => Assert.Throws<InvalidOperationException>(() => deque.PushFrontRange(deque.Enumerate())));
+    }
+
+    #endregion
+
     [Fact]
     public void PushBack()
     {
@@ -46,7 +104,14 @@ partial class Deque_Tests<T>
     #region PushBackRange
 
     [Fact]
-    public void PushBackRange()
+    public void PushBackRange_ThrowsOnNull()
+    {
+        var deque = new Deque<T>();
+        Assert.Throws<ArgumentNullException>(() => deque.PushBackRange(null!));
+    }
+
+    [Fact]
+    public void PushBackRange_Collection()
     {
         var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
         var data = source.Take(3).ReifyCollection();
@@ -64,10 +129,21 @@ partial class Deque_Tests<T>
     }
 
     [Fact]
-    public void PushBackRange_ThrowsOnNull()
+    public void PushBackRange_Enumerable()
     {
-        var deque = new Deque<T>();
-        Assert.Throws<ArgumentNullException>(() => deque.PushBackRange(null!));
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(3).ReifyCollection();
+        var items = source.Take(2).ReifyCollection();
+
+        var list = new List<T>(data);
+        var deque = new Deque<T>(data);
+
+        list.AddRange(items);
+        ModificationTrackingVerifier.EnsureModified(
+            deque,
+            () => deque.PushBackRange(items.Enumerate()));
+
+        Assert.Equal(list, deque);
     }
 
     [Fact]
@@ -87,12 +163,14 @@ partial class Deque_Tests<T>
     }
 
     [Fact]
-    public void PushBackRange_Enumerable_ThrowsOnSelf()
+    public void PushBackRange_Enumerable_ThrowsOnShortCircuit()
     {
         var data = Enumerable.Range(1, 3).Select(CreateT).Distinct();
 
         var deque = new Deque<T>(data);
-        Assert.Throws<InvalidOperationException>(() => deque.PushBackRange(deque.Enumerate()));
+        ModificationTrackingVerifier.EnsureModified(
+            deque,
+            () => Assert.Throws<InvalidOperationException>(() => deque.PushBackRange(deque.Enumerate())));
     }
 
     #endregion
