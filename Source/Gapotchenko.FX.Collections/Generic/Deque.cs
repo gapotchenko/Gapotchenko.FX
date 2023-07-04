@@ -543,15 +543,23 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
                 EnsureCapacityCore(size + count);
                 InsertRangePlaceholder(index, count);
 
-                using var enumerator = reifiedCollection.GetEnumerator();
-                for (int i = 0; i < count; ++i)
+                if (ReferenceEquals(reifiedCollection, this))
                 {
-                    if (!enumerator.MoveNext())
+                    CopyRange(0, index, index);
+                    CopyRange(index + count, index * 2, count - index);
+                }
+                else
+                {
+                    using var enumerator = reifiedCollection.GetEnumerator();
+                    for (int i = 0; i < count; ++i)
                     {
-                        Debug.Fail("Source collection preliminary ended.");
-                        break;
+                        if (!enumerator.MoveNext())
+                        {
+                            Debug.Fail("Source collection preliminary ended.");
+                            break;
+                        }
+                        SetElement(index + i, enumerator.Current);
                     }
-                    SetElement(index + i, enumerator.Current);
                 }
             }
         }

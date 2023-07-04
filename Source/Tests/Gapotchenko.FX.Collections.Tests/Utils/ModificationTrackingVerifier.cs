@@ -4,6 +4,24 @@ namespace Gapotchenko.FX.Collections.Tests.Utils;
 
 static class ModificationTrackingVerifier
 {
+    public static bool IsModified<T>(IEnumerable<T> collection, Action action)
+    {
+        var enumerator = collection.GetEnumerator();
+
+        action();
+
+        try
+        {
+            // Check whether out-of-band modification logic is triggered.
+            enumerator.MoveNext();
+        }
+        catch (InvalidOperationException)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public static void EnsureModified<T>(IEnumerable<T> collection, Action action)
     {
         var enumerator = collection.GetEnumerator();
