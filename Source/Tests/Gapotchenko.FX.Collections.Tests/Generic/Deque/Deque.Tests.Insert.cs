@@ -41,6 +41,12 @@ partial class Deque_Tests<T>
             yield return new object[] { i };
     }
 
+    public static IEnumerable<object[]> Insert_AllValidIndeces()
+    {
+        for (int i = 0; i <= Insert_DataSize; ++i)
+            yield return new object[] { i };
+    }
+
     public static IEnumerable<object[]> Insert_InvalidIndeces()
     {
         const int n = Insert_DataSize;
@@ -70,7 +76,7 @@ partial class Deque_Tests<T>
 
     [Theory]
     [MemberData(nameof(Insert_InvalidIndeces))]
-    public void Insert_InvalidIndex(int index)
+    public void Insert_ThrowsOnInvalidIndex(int index)
     {
         var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
         var data = source.Take(Insert_DataSize).ReifyCollection();
@@ -130,7 +136,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(Insert_ValidIndeces))]
+    [MemberData(nameof(Insert_AllValidIndeces))]
     public void InsertRange_Collection_Self(int index)
     {
         var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(Insert_DataSize).Memoize();
@@ -156,6 +162,20 @@ partial class Deque_Tests<T>
         ModificationTrackingVerifier.EnsureModified(
             deque,
             () => Assert.Throws<InvalidOperationException>(() => deque.InsertRange(index, deque.Enumerate())));
+    }
+
+    [Theory]
+    [MemberData(nameof(Insert_InvalidIndeces))]
+    public void InsertRange_ThrowsOnInvalidIndex(int index)
+    {
+        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
+        var data = source.Take(Insert_DataSize).ReifyCollection();
+        var items = source.Take(3).ReifyCollection();
+
+        var deque = new Deque<T>(data);
+        ModificationTrackingVerifier.EnsureNotModified(
+            deque,
+            () => Assert.Throws<ArgumentOutOfRangeException>(() => deque.InsertRange(index, items)));
     }
 
     #endregion

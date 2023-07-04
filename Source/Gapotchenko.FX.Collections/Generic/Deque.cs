@@ -325,14 +325,24 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     /// <param name="collection">The collection whole elements should be inserted at the beginning of the <see cref="Deque{T}"/>.</param>
     /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
-    public void PushFrontRange(IEnumerable<T> collection) => InsertRange(0, collection);
+    public void PushFrontRange(IEnumerable<T> collection)
+    {
+        ExceptionHelper.ThrowIfArgumentIsNull(collection);
+
+        InsertRangeCore(0, collection);
+    }
 
     /// <summary>
     /// Adds the elements of the specified collection to the end of the <see cref="Deque{T}"/>.
     /// </summary>
     /// <param name="collection">The collection whole elements should be added to the end of the <see cref="Deque{T}"/>.</param>
     /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
-    public void PushBackRange(IEnumerable<T> collection) => InsertRange(m_Size, collection);
+    public void PushBackRange(IEnumerable<T> collection)
+    {
+        ExceptionHelper.ThrowIfArgumentIsNull(collection);
+
+        InsertRangeCore(m_Size, collection);
+    }
 
     /// <summary>
     /// Removes and returns the object at the beginning of the <see cref="Deque{T}"/>.
@@ -530,49 +540,10 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
     public void InsertRange(int index, IEnumerable<T> collection)
     {
-        int size = m_Size;
-        ExceptionHelper.ValidateIndexArgumentBounds(index, size);
+        ExceptionHelper.ValidateIndexArgumentBounds(index, m_Size);
         ExceptionHelper.ThrowIfArgumentIsNull(collection);
 
-        if (collection.TryReifyNonEnumeratedCollection(out var reifiedCollection))
-        {
-            int count = reifiedCollection.Count;
-            if (count > 0)
-            {
-                UpdateVersion();
-                EnsureCapacityCore(size + count);
-                InsertRangePlaceholder(index, count);
-
-                if (ReferenceEquals(reifiedCollection, this))
-                {
-                    CopyRange(0, index, index);
-                    CopyRange(index + count, index * 2, count - index);
-                }
-                else
-                {
-                    using var enumerator = reifiedCollection.GetEnumerator();
-                    for (int i = 0; i < count; ++i)
-                    {
-                        if (!enumerator.MoveNext())
-                        {
-                            Debug.Fail("Source collection preliminary ended.");
-                            break;
-                        }
-                        SetElement(index + i, enumerator.Current);
-                    }
-                }
-            }
-        }
-        else
-        {
-            int i = index;
-            foreach (var item in collection)
-            {
-                // The collection version gets updated on each iteration by design
-                // to avoid a short circuit between enumerable sources and destinations.
-                InsertCore(i++, item);
-            }
-        }
+        InsertRangeCore(index, collection);
     }
 
     /// <summary>
@@ -883,20 +854,6 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         return (m_Offset + elementIndex) % Capacity;
     }
 
-    /// <summary>
-    /// Gets an array index by the index of a collection element in a contiguous range.
-    /// </summary>
-    /// <param name="elementIndex">The collection element index in a contiguous range.</param>
-    /// <returns>The array index.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    int GetContiguousArrayIndex(int elementIndex)
-    {
-        Debug.Assert(elementIndex >= 0);
-        Debug.Assert(elementIndex <= Capacity - m_Offset);
-
-        return m_Offset + elementIndex;
-    }
-
     void CopyToCore(Array array, int arrayIndex)
     {
         Debug.Assert(array != null);
@@ -926,7 +883,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
         if (IsContiguousRange(index, count))
         {
-            Array.Copy(m_Array, GetContiguousArrayIndex(index), array, arrayIndex, count);
+            Array.Copy(m_Array, GetArrayIndex(index), array, arrayIndex, count);
         }
         else
         {
@@ -992,12 +949,61 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
         else
         {
-            InsertRangePlaceholder(index, 1);
+            m_Size = InsertRangePlaceholder(index, 1);
             SetElement(index, item);
         }
     }
 
-    void InsertRangePlaceholder(int index, int count)
+    void InsertRangeCore(int index, IEnumerable<T> items)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(index <= m_Size);
+        Debug.Assert(items != null);
+
+        if (items.TryReifyNonEnumeratedCollection(out var reifiedCollection))
+        {
+            int count = reifiedCollection.Count;
+            if (count > 0)
+            {
+                UpdateVersion();
+                EnsureCapacityCore(m_Size + count);
+                int newSize = InsertRangePlaceholder(index, count);
+
+                if (ReferenceEquals(reifiedCollection, this))
+                {
+                    CopyRange(0, index, index);
+                    CopyRange(index + count, index * 2, count - index);
+                }
+                else if (reifiedCollection is ICollection<T> collection &&
+                    IsContiguousRange(index, count))
+                {
+                    collection.CopyTo(m_Array, GetArrayIndex(index));
+                }
+                else
+                {
+                    int i = index;
+                    foreach (var item in reifiedCollection)
+                        SetElement(i++, item);
+                }
+
+                // Set the size of the target collection afterwards,
+                // just in case it has a short circuit with the source collection.
+                m_Size = newSize;
+            }
+        }
+        else
+        {
+            int i = index;
+            foreach (var item in items)
+            {
+                // The destination collection version gets updated on each iteration by design
+                // to avoid a short circuit between the source and destination collections.
+                InsertCore(i++, item);
+            }
+        }
+    }
+
+    int InsertRangePlaceholder(int index, int count)
     {
         Debug.Assert(index >= 0);
         Debug.Assert(count >= 0);
@@ -1015,7 +1021,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             CopyRange(index, index + count, size - index);
         }
 
-        m_Size = size + count;
+        return size + count;
     }
 
     void RemoveAtCore(int index)
@@ -1081,7 +1087,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         UpdateVersion();
         EnsureContiguous(index, count);
 
-        Array.Reverse(m_Array, GetContiguousArrayIndex(index), count);
+        Array.Reverse(m_Array, GetArrayIndex(index), count);
     }
 
     void SortCore(int index, int count, IComparer<T>? comparer)
@@ -1091,9 +1097,13 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         Debug.Assert(index <= m_Size - count);
 
         UpdateVersion();
+
+        if (m_Size == 0)
+            return;
+
         EnsureContiguous(index, count);
 
-        Array.Sort(m_Array, GetContiguousArrayIndex(index), count, comparer);
+        Array.Sort(m_Array, GetArrayIndex(index), count, comparer);
     }
 
     void SortCore(int index, int count, Comparison<T> comparison)
@@ -1103,12 +1113,16 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         Debug.Assert(index <= m_Size - count);
 
         UpdateVersion();
+
+        if (m_Size == 0)
+            return;
+
         EnsureContiguous(index, count);
 
 #if NET5_0_OR_GREATER
-        new Span<T>(m_Array, GetContiguousArrayIndex(index), count).Sort(comparison);
+        new Span<T>(m_Array, GetArrayIndex(index), count).Sort(comparison);
 #else
-        Array.Sort(m_Array, GetContiguousArrayIndex(index), count, Comparer<T>.Create(comparison));
+        Array.Sort(m_Array, GetArrayIndex(index), count, Comparer<T>.Create(comparison));
 #endif
     }
 
