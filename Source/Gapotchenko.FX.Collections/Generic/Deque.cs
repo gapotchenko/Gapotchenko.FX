@@ -508,7 +508,6 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         ExceptionHelper.ValidateIndexArgumentBounds(index, m_Size);
 
-        UpdateVersion();
         InsertCore(index, item);
     }
 
@@ -530,25 +529,33 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         if (collection.TryReifyNonEnumeratedCollection(out var reifiedCollection))
         {
             int count = reifiedCollection.Count;
-            if (count != 0)
+            if (count > 0)
             {
                 UpdateVersion();
                 EnsureCapacityCore(size + count);
                 InsertRangePlaceholder(index, count);
 
-                int i = index;
-                foreach (var item in collection)
-                    SetElement(i++, item);
+                using var enumerator = reifiedCollection.GetEnumerator();
+                for (int i = 0; i < count; ++i)
+                {
+                    if (!enumerator.MoveNext())
+                    {
+                        Debug.Fail("Source collection preliminary ended.");
+                        break;
+                    }
+                    SetElement(index + i, enumerator.Current);
+                }
             }
         }
         else
         {
             int i = index;
             foreach (var item in collection)
+            {
+                // The collection version gets updated on each iteration by design
+                // to avoid a short circuit between enumerable sources and destinations.
                 InsertCore(i++, item);
-
-            if (i != index)
-                UpdateVersion();
+            }
         }
     }
 
@@ -956,6 +963,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     void InsertCore(int index, T item)
     {
+        UpdateVersion();
         EnsureCapacityForOneElement();
 
         if (index == 0)
@@ -1158,9 +1166,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     void CopyRange(int sourceIndex, int destinationIndex, int count)
     {
         Debug.Assert(sourceIndex >= 0);
-        Debug.Assert(sourceIndex < Capacity);
         Debug.Assert(destinationIndex >= 0);
-        Debug.Assert(destinationIndex < Capacity);
         Debug.Assert(count >= 0);
         Debug.Assert(sourceIndex <= Capacity - count);
         Debug.Assert(destinationIndex <= Capacity - count);

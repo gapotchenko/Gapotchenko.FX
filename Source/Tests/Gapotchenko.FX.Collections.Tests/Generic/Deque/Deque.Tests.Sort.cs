@@ -21,7 +21,7 @@ partial class Deque_Tests<T>
     public void Sort_HandlesEmpty()
     {
         var deque = new Deque<T>();
-        CollectionModificationVerifier.EnsureModified(
+        ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort());
         Assert.Empty(deque);
@@ -36,7 +36,7 @@ partial class Deque_Tests<T>
         list.Sort();
 
         var deque = new Deque<T>(data);
-        CollectionModificationVerifier.EnsureModified(
+        ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort());
 
@@ -46,7 +46,7 @@ partial class Deque_Tests<T>
     static void Sort_IComparer_HandlesEmpty_Core(IComparer<T>? comparer)
     {
         var deque = new Deque<T>();
-        CollectionModificationVerifier.EnsureModified(
+        ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort(comparer));
         Assert.Empty(deque);
@@ -60,7 +60,7 @@ partial class Deque_Tests<T>
         list.Sort(comparer);
 
         var deque = new Deque<T>(data);
-        CollectionModificationVerifier.EnsureModified(
+        ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort(comparer));
 
@@ -98,7 +98,7 @@ partial class Deque_Tests<T>
     public void Sort_Comparison_ThrowsOnNull()
     {
         var deque = new Deque<T>();
-        CollectionModificationVerifier.EnsureNotModified(
+        ModificationTrackingVerifier.EnsureNotModified(
             deque,
             () => Assert.Throws<ArgumentNullException>(() => deque.Sort((Comparison<T>)null!)));
     }
@@ -107,7 +107,7 @@ partial class Deque_Tests<T>
     public void Sort_Comparison_HandlesEmpty()
     {
         var deque = new Deque<T>();
-        CollectionModificationVerifier.EnsureModified(
+        ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort(Comparer<T>.Default.Compare));
         Assert.Empty(deque);
@@ -121,7 +121,7 @@ partial class Deque_Tests<T>
         list.Sort(comparison);
 
         var deque = new Deque<T>(data);
-        CollectionModificationVerifier.EnsureModified(
+        ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort(comparison));
 
@@ -154,7 +154,7 @@ partial class Deque_Tests<T>
         list.Sort(index, count, comparer);
 
         var deque = new Deque<T>(data);
-        CollectionModificationVerifier.EnsureModified(
+        ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort(index, count, comparer));
 
@@ -173,7 +173,7 @@ partial class Deque_Tests<T>
         list.Sort(index, count, Comparer<T>.Create(comparison));
 
         var deque = new Deque<T>(data);
-        CollectionModificationVerifier.EnsureModified(
+        ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort(index, count, comparison));
 

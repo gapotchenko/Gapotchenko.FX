@@ -2,7 +2,7 @@
 
 namespace Gapotchenko.FX.Collections.Tests.Utils;
 
-static class CollectionModificationVerifier
+static class ModificationTrackingVerifier
 {
     public static void EnsureModified<T>(IEnumerable<T> collection, Action action)
     {
