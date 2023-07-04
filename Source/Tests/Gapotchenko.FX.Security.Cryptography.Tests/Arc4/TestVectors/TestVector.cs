@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a test vector for Alleged Rivest Cipher 4 (ARC4) algorithm.
 /// </summary>
-internal sealed class TestVector
+sealed class TestVector
 {
     /// <summary>
     /// Gets or sets the key length in bits.

@@ -2,9 +2,9 @@
 
 namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors;
 
-internal static class TestVectorReader
+static class TestVectorReader
 {
-    private enum State
+    enum State
     {
         KeyLength,
         Key,
