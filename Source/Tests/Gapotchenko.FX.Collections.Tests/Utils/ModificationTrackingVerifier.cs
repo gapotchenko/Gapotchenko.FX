@@ -14,6 +14,13 @@ static class ModificationTrackingVerifier
         Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
     }
 
+    public static T EnsureModified<T>(IEnumerable<T> collection, Func<T> func)
+    {
+        T result = default!;
+        EnsureModified(collection, new Action(() => result = func()));
+        return result;
+    }
+
     public static void EnsureNotModified<T>(IEnumerable<T> collection, Action action)
     {
         var data = collection.ToArray();

@@ -17,6 +17,9 @@ partial class Deque_Tests<T>
 {
     const int Sort_ShuffledDataSize = 50;
 
+    IEnumerable<T> Sort_GetShuffledData() =>
+        Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(Sort_ShuffledDataSize);
+
     [Fact]
     public void Sort_HandlesEmpty()
     {
@@ -30,7 +33,7 @@ partial class Deque_Tests<T>
     [Fact]
     public void Sort_SortsShuffledData()
     {
-        var data = Enumerable.Range(1, Sort_ShuffledDataSize).Select(CreateT).Distinct().Memoize();
+        var data = Sort_GetShuffledData().Memoize();
 
         var list = new List<T>(data);
         list.Sort();
@@ -54,7 +57,7 @@ partial class Deque_Tests<T>
 
     void Sort_IComparer_SortsShuffledData_Core(IComparer<T>? comparer)
     {
-        var data = Enumerable.Range(1, Sort_ShuffledDataSize).Select(CreateT).Distinct().Memoize();
+        var data = Sort_GetShuffledData().Memoize();
 
         var list = new List<T>(data);
         list.Sort(comparer);
@@ -115,7 +118,7 @@ partial class Deque_Tests<T>
 
     void Sort_Comparison_SortsShuffledData_Core(Comparison<T> comparison)
     {
-        var data = Enumerable.Range(1, Sort_ShuffledDataSize).Select(CreateT).Distinct().Memoize();
+        var data = Sort_GetShuffledData().Memoize();
 
         var list = new List<T>(data);
         list.Sort(comparison);
@@ -146,7 +149,7 @@ partial class Deque_Tests<T>
     [MemberData(nameof(SortRange_ValidRanges))]
     public void SortRange_IComparer_SortsShuffledData(int index, int count)
     {
-        var data = Enumerable.Range(1, Sort_ShuffledDataSize).Select(CreateT).Distinct().Memoize();
+        var data = Sort_GetShuffledData().Memoize();
 
         var comparer = Comparer<T>.Default;
 
@@ -165,7 +168,7 @@ partial class Deque_Tests<T>
     [MemberData(nameof(SortRange_ValidRanges))]
     public void SortRange_Comparison_SortsShuffledData(int index, int count)
     {
-        var data = Enumerable.Range(1, Sort_ShuffledDataSize).Select(CreateT).Distinct().Memoize();
+        var data = Sort_GetShuffledData().Memoize();
 
         Comparison<T> comparison = Comparer<T>.Default.Compare;
 

@@ -66,7 +66,7 @@ partial class Deque_Tests<T>
     [Fact]
     public void NonGenericEnumerator_EnumeratesItems()
     {
-        var data = Enumerable.Range(1, 2).Select(CreateT).Distinct();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(2);
 
         var deque = new Deque<T>(data);
 
@@ -123,7 +123,7 @@ partial class Deque_Tests<T>
     [Fact]
     public void RemoveAt_Index0_IsSameAsPopFront()
     {
-        var data = Enumerable.Range(1, 2).Select(CreateT).Distinct().Memoize();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(2).Memoize();
 
         var deque1 = new Deque<T>(data);
         var deque2 = new Deque<T>(data);
@@ -135,7 +135,7 @@ partial class Deque_Tests<T>
     [Fact]
     public void RemoveAt_LastIndex_IsSameAsPopBack()
     {
-        var data = Enumerable.Range(1, 2).Select(CreateT).Distinct().Memoize();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(2).Memoize();
 
         var deque1 = new Deque<T>(data);
         var deque2 = new Deque<T>(data);
@@ -199,7 +199,7 @@ partial class Deque_Tests<T>
     [Fact]
     public void InsertRange_EmptyHasNoEffect()
     {
-        var data = Enumerable.Range(1, 2).Select(CreateT).Distinct().Memoize();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(2).Memoize();
 
         var deque = new Deque<T>(data);
         deque.InsertRange(1, Array.Empty<T>());
@@ -224,7 +224,7 @@ partial class Deque_Tests<T>
     [InlineData(4)]
     public void RemoveRange_Rotate(int count)
     {
-        var data = Enumerable.Range(1, count).Select(CreateT).Distinct().ReifyCollection();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(count).ReifyCollection();
 
         RemoveRange_Rotate_Core(data);
     }
