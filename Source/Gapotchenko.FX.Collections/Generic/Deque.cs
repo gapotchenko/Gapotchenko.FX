@@ -881,6 +881,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         Debug.Assert(index <= m_Size - count);
         Debug.Assert(arrayIndex <= array.Length - count);
 
+        if (count == 0)
+            return;
+
         if (IsContiguousRange(index, count))
         {
             Array.Copy(m_Array, GetArrayIndex(index), array, arrayIndex, count);
