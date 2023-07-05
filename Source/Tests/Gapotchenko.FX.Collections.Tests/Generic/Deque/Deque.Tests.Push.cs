@@ -15,15 +15,16 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 
 partial class Deque_Tests<T>
 {
-    [Fact]
-    public void PushFront()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 0, 8)]
+    public void PushFront(int size, Deque<T> deque)
     {
         var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
-        var data = source.Take(3).ReifyCollection();
+        var data = source.Take(size).ReifyCollection();
         var item = source.First();
 
         var list = new List<T>(data);
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
 
         list.Insert(0, item);
         ModificationTrackingVerifier.EnsureModified(
@@ -33,15 +34,16 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
-    [Fact]
-    public void PushBack()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 0, 8)]
+    public void PushBack(int size, Deque<T> deque)
     {
         var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
-        var data = source.Take(3).ReifyCollection();
+        var data = source.Take(size).ReifyCollection();
         var item = source.First();
 
         var list = new List<T>(data);
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
 
         list.Add(item);
         ModificationTrackingVerifier.EnsureModified(
@@ -60,38 +62,34 @@ partial class Deque_Tests<T>
         Assert.Throws<ArgumentNullException>(() => deque.PushFrontRange(null!));
     }
 
-    [Fact]
-    public void PushFrontRange_Collection()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithRangeLength), 0, 8, 0, 2)]
+    public void PushFrontRange_Collection(int size, Deque<T> deque, int length) =>
+        PushFrontRange_Core(size, deque, length, Fn.Identity);
+
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithRangeLength), 0, 8, 0, 2)]
+    public void PushFrontRange_Enumerable(int size, Deque<T> deque, int length) =>
+        PushFrontRange_Core(size, deque, length, x => x.Enumerate());
+
+    void PushFrontRange_Core(
+        int size, Deque<T> deque,
+        int length,
+        Func<IReadOnlyCollection<T>, IEnumerable<T>> collectionSelector)
     {
         var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
-        var data = source.Take(3).ReifyCollection();
-        var items = source.Take(2).ReifyCollection();
+        var data = source.Take(size).ReifyCollection();
+        var items = collectionSelector(source.Take(length).ReifyCollection());
 
         var list = new List<T>(data);
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
 
         list.InsertRange(0, items);
-        ModificationTrackingVerifier.EnsureModified(
-            deque,
-            () => deque.PushFrontRange(items));
-
-        Assert.Equal(list, deque);
-    }
-
-    [Fact]
-    public void PushFrontRange_Enumerable()
-    {
-        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
-        var data = source.Take(3).ReifyCollection();
-        var items = source.Take(2).ReifyCollection();
-
-        var list = new List<T>(data);
-        var deque = new Deque<T>(data);
-
-        list.InsertRange(0, items);
-        ModificationTrackingVerifier.EnsureModified(
-            deque,
-            () => deque.PushFrontRange(items.Enumerate()));
+        Assert.Equal(
+            length != 0,
+            ModificationTrackingVerifier.IsModified(
+                deque,
+                () => deque.PushFrontRange(items)));
 
         Assert.Equal(list, deque);
     }
@@ -118,38 +116,31 @@ partial class Deque_Tests<T>
         Assert.Throws<ArgumentNullException>(() => deque.PushBackRange(null!));
     }
 
-    [Fact]
-    public void PushBackRange_Collection()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithRangeLength), 0, 8, 0, 2)]
+    public void PushBackRange_Collection(int size, Deque<T> deque, int length) =>
+        PushBackRange_Core(size, deque, length, Fn.Identity);
+
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithRangeLength), 0, 8, 0, 2)]
+    public void PushBackRange_Enumerable(int size, Deque<T> deque, int length) =>
+        PushBackRange_Core(size, deque, length, x => x.Enumerate());
+
+    void PushBackRange_Core(int size, Deque<T> deque, int length, Func<IReadOnlyCollection<T>, IEnumerable<T>> collectionSelector)
     {
         var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
-        var data = source.Take(3).ReifyCollection();
-        var items = source.Take(2).ReifyCollection();
+        var data = source.Take(size).ReifyCollection();
+        var items = collectionSelector(source.Take(length).ReifyCollection());
 
         var list = new List<T>(data);
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
 
         list.AddRange(items);
-        ModificationTrackingVerifier.EnsureModified(
-            deque,
-            () => deque.PushBackRange(items));
-
-        Assert.Equal(list, deque);
-    }
-
-    [Fact]
-    public void PushBackRange_Enumerable()
-    {
-        var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
-        var data = source.Take(3).ReifyCollection();
-        var items = source.Take(2).ReifyCollection();
-
-        var list = new List<T>(data);
-        var deque = new Deque<T>(data);
-
-        list.AddRange(items);
-        ModificationTrackingVerifier.EnsureModified(
-            deque,
-            () => deque.PushBackRange(items.Enumerate()));
+        Assert.Equal(
+            length != 0,
+            ModificationTrackingVerifier.IsModified(
+                deque,
+                () => deque.PushBackRange(items)));
 
         Assert.Equal(list, deque);
     }
