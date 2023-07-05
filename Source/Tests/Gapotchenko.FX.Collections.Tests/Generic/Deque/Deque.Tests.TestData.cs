@@ -22,9 +22,9 @@ partial class Deque_Tests<T>
     }
 
     /// <summary>
-    /// Enumerates all possible combinations of collection sizes
-    /// and internal storage layouts of a <see cref="Deque{T}"/>
-    /// for the specified max collection size.
+    /// Enumerates all possible combinations of
+    /// internal storage layouts of a <see cref="Deque{T}"/>
+    /// for the specified collection size interval.
     /// </summary>
     public static IEnumerable<object[]> TestData_DequeLayoutCombinations(int minSize, int maxSize)
     {

@@ -890,17 +890,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
         else
         {
-            var n = Math.Max(Capacity - m_Offset - index, count);
-            if (n >= 0)
-            {
-                Array.Copy(m_Array, m_Offset + index, array, arrayIndex, n);
-                if (count > n)
-                    Array.Copy(m_Array, 0, array, arrayIndex + n, count - n);
-            }
-            else
-            {
-                Array.Copy(m_Array, -n, array, arrayIndex, count);
-            }
+            var n = Capacity - m_Offset - index;
+            Array.Copy(m_Array, m_Offset + index, array, arrayIndex, n);
+            Array.Copy(m_Array, 0, array, arrayIndex + n, count - n);
         }
     }
 
