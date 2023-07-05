@@ -94,12 +94,14 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
-    [Fact]
-    public void PushFrontRange_Enumerable_ThrowsOnShortCircuit()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    public void PushFrontRange_Enumerable_ThrowsOnShortCircuit(int size, Deque<T> deque)
     {
-        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(3);
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size);
 
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
+
         ModificationTrackingVerifier.EnsureModified(
             deque,
             () => Assert.Throws<InvalidOperationException>(() => deque.PushFrontRange(deque.Enumerate())));
@@ -145,13 +147,14 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
-    [Fact]
-    public void PushBackRange_Collection_DuplicatesSelf()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    public void PushBackRange_Collection_DuplicatesSelf(int size, Deque<T> deque)
     {
-        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(3).Memoize();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).Memoize();
 
         var list = new List<T>(data);
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
 
         list.AddRange(list);
         ModificationTrackingVerifier.EnsureModified(
@@ -161,12 +164,14 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
-    [Fact]
-    public void PushBackRange_Enumerable_ThrowsOnShortCircuit()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    public void PushBackRange_Enumerable_ThrowsOnShortCircuit(int size, Deque<T> deque)
     {
-        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(3);
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size);
 
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
+
         ModificationTrackingVerifier.EnsureModified(
             deque,
             () => Assert.Throws<InvalidOperationException>(() => deque.PushBackRange(deque.Enumerate())));

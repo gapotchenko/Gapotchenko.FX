@@ -26,6 +26,27 @@ partial class Deque_Tests<T>
     /// and internal storage layouts of a <see cref="Deque{T}"/>
     /// for the specified max collection size.
     /// </summary>
+    public static IEnumerable<object[]> TestData_DequeLayoutCombinations(int minSize, int maxSize)
+    {
+        var sampleQueue = new Deque<T>(); // used for capacity calculation only
+        var handledCapacities = new HashSet<int>();
+
+        for (int size = minSize; size <= maxSize; ++size)
+        {
+            var capacity = sampleQueue.EnsureCapacity(size);
+            if (!handledCapacities.Add(capacity))
+                continue;
+
+            foreach (int layoutOffset in TestData_EnumerateDequeLayoutOffsets(capacity))
+                yield return new object[] { TestData_MakeDequeLayout(capacity, layoutOffset) };
+        }
+    }
+
+    /// <summary>
+    /// Enumerates all possible combinations of collection sizes
+    /// and internal storage layouts of a <see cref="Deque{T}"/>
+    /// for the specified max collection size.
+    /// </summary>
     public static IEnumerable<object[]> TestData_SizeAndDequeLayoutCombinations(int minSize, int maxSize)
     {
         var sampleQueue = new Deque<T>(); // used for capacity calculation only
@@ -59,7 +80,7 @@ partial class Deque_Tests<T>
 
     /// <summary>
     /// Enumerates layout offsets that target specific cells of the deque's internal storage array
-    /// to hopefully produce all combinations of all possible data layouts in the array.
+    /// to be able to produce all combinations of all possible data layouts in the array.
     /// </summary>
     static IEnumerable<int> TestData_EnumerateDequeLayoutOffsets(int capacity)
     {

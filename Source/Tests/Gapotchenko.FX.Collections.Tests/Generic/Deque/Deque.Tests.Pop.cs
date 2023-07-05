@@ -17,13 +17,14 @@ partial class Deque_Tests<T>
 {
     #region PopFront
 
-    [Fact]
-    public void PopFront()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    public void PopFront(int size, Deque<T> deque)
     {
-        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(3).ReifyList();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
 
         var list = new List<T>(data);
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
 
         list.RemoveAt(0);
         Assert.Equal(
@@ -35,10 +36,10 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
-    [Fact]
-    public void PopFront_ThrowsOnEmpty()
+    [Theory]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    public void PopFront_ThrowsOnEmpty(Deque<T> deque)
     {
-        var deque = new Deque<T>();
         Assert.Throws<InvalidOperationException>(() => deque.PopFront());
     }
 
@@ -46,13 +47,14 @@ partial class Deque_Tests<T>
 
     #region PopBack
 
-    [Fact]
-    public void PopBack()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    public void PopBack(int size, Deque<T> deque)
     {
-        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(3).ReifyList();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
 
         var list = new List<T>(data);
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
 
         list.RemoveAt(list.Count - 1);
         Assert.Equal(
@@ -64,10 +66,10 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
-    [Fact]
-    public void PopBack_ThrowsOnEmpty()
+    [Theory]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    public void PopBack_ThrowsOnEmpty(Deque<T> deque)
     {
-        var deque = new Deque<T>();
         Assert.Throws<InvalidOperationException>(() => deque.PopBack());
     }
 
@@ -75,13 +77,14 @@ partial class Deque_Tests<T>
 
     #region TryPopFront
 
-    [Fact]
-    public void TryPopFront()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    public void TryPopFront(int size, Deque<T> deque)
     {
-        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(3).ReifyList();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
 
         var list = new List<T>(data);
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
 
         list.RemoveAt(0);
 
@@ -96,10 +99,10 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
-    [Fact]
-    public void TryPopFront_Empty()
+    [Theory]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    public void TryPopFront_Empty(Deque<T> deque)
     {
-        var deque = new Deque<T>();
         Assert.False(deque.TryPopFront(out _));
     }
 
@@ -107,13 +110,14 @@ partial class Deque_Tests<T>
 
     #region TryPopBack
 
-    [Fact]
-    public void TryPopBack()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    public void TryPopBack(int size, Deque<T> deque)
     {
-        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(3).ReifyList();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
 
         var list = new List<T>(data);
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
 
         list.RemoveAt(list.Count - 1);
 
@@ -128,10 +132,10 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
-    [Fact]
-    public void TryPopBack_Empty()
+    [Theory]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    public void TryPopBack_Empty(Deque<T> deque)
     {
-        var deque = new Deque<T>();
         Assert.False(deque.TryPopBack(out _));
     }
 
