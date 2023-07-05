@@ -33,7 +33,9 @@ partial class Deque_Tests<T>
     [Fact]
     public void Constructor_Collection_GetsAdded()
     {
-        var data = Enumerable.Range(1, 3).Select(CreateT).Memoize();
+        const int size = TestData_SampleSize;
+
+        var data = Enumerable.Range(1, size).Select(CreateT).Memoize();
 
         var deque = new Deque<T>(data);
         Assert.Equal(data, deque);

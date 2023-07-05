@@ -12,6 +12,8 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 
 partial class Deque_Tests<T>
 {
+    protected const int TestData_SampleSize = 3;
+
     public static IEnumerable<object[]> TestData_Capacity_ValidValues()
     {
         yield return new object[] { 0 };

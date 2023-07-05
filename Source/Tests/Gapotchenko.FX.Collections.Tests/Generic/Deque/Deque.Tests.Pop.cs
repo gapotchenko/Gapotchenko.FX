@@ -15,10 +15,12 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 
 partial class Deque_Tests<T>
 {
+    const int Pop_TestData_Size = 8;
+
     #region PopFront
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, Pop_TestData_Size)]
     public void PopFront(int size, Deque<T> deque)
     {
         var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
@@ -37,7 +39,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, Pop_TestData_Size)]
     public void PopFront_ThrowsOnEmpty(Deque<T> deque)
     {
         Assert.Throws<InvalidOperationException>(() => deque.PopFront());
@@ -48,7 +50,7 @@ partial class Deque_Tests<T>
     #region PopBack
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, Pop_TestData_Size)]
     public void PopBack(int size, Deque<T> deque)
     {
         var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
@@ -67,7 +69,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, Pop_TestData_Size)]
     public void PopBack_ThrowsOnEmpty(Deque<T> deque)
     {
         Assert.Throws<InvalidOperationException>(() => deque.PopBack());
@@ -78,7 +80,7 @@ partial class Deque_Tests<T>
     #region TryPopFront
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, Pop_TestData_Size)]
     public void TryPopFront(int size, Deque<T> deque)
     {
         var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
@@ -100,7 +102,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, Pop_TestData_Size)]
     public void TryPopFront_Empty(Deque<T> deque)
     {
         Assert.False(deque.TryPopFront(out _));
@@ -111,7 +113,7 @@ partial class Deque_Tests<T>
     #region TryPopBack
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, Pop_TestData_Size)]
     public void TryPopBack(int size, Deque<T> deque)
     {
         var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
@@ -133,7 +135,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, Pop_TestData_Size)]
     public void TryPopBack_Empty(Deque<T> deque)
     {
         Assert.False(deque.TryPopBack(out _));

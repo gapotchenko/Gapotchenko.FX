@@ -42,7 +42,7 @@ partial class Deque_Tests<T>
     [Fact]
     public void Insert_T_ThrowsOnInvalidIndex()
     {
-        const int size = 3;
+        const int size = TestData_SampleSize;
 
         var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
         var data = source.Take(size).ReifyCollection();
@@ -142,7 +142,7 @@ partial class Deque_Tests<T>
     [Fact]
     public void Insert_Int32_T_ThrowsOnInvalidIndex()
     {
-        const int size = 3;
+        const int size = TestData_SampleSize;
 
         var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
         var data = source.Take(size).ReifyCollection();

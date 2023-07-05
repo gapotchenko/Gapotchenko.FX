@@ -120,12 +120,12 @@ partial class Deque_Tests<T>
     [Fact]
     public void CopyTo_Array_Int32_Int32_ThrowsOnOutOfRangeArguments()
     {
-        const int length = 3;
+        const int size = TestData_SampleSize;
 
-        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(length);
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size);
 
         var deque = new Deque<T>(data);
-        var array = new T[length];
+        var array = new T[size];
 
         ModificationTrackingVerifier.EnsureNotModified(
             deque,
@@ -135,9 +135,9 @@ partial class Deque_Tests<T>
                 Assert.Throws<ArgumentOutOfRangeException>(() => deque.CopyTo(array, -1, 0));
                 Assert.Throws<ArgumentOutOfRangeException>(() => deque.CopyTo(array, 0, -1));
                 Assert.Throws<ArgumentException>(() => deque.CopyTo(array, 0, count + 1));
-                Assert.Throws<ArgumentException>(() => deque.CopyTo(array, length + 1, 0));
-                Assert.Throws<ArgumentException>(() => deque.CopyTo(array, length, 1));
-                Assert.Throws<ArgumentException>(() => deque.CopyTo(array, 0, length + 1));
+                Assert.Throws<ArgumentException>(() => deque.CopyTo(array, size + 1, 0));
+                Assert.Throws<ArgumentException>(() => deque.CopyTo(array, size, 1));
+                Assert.Throws<ArgumentException>(() => deque.CopyTo(array, 0, size + 1));
             });
     }
 
@@ -181,12 +181,12 @@ partial class Deque_Tests<T>
     [Fact]
     public void CopyTo_Int32_Array_Int32_Int32_ThrowsOnOutOfRangeArguments()
     {
-        const int length = 3;
+        const int size = TestData_SampleSize;
 
-        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(length);
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size);
 
         var deque = new Deque<T>(data);
-        var array = new T[length];
+        var array = new T[size];
 
         ModificationTrackingVerifier.EnsureNotModified(
             deque,
@@ -199,9 +199,9 @@ partial class Deque_Tests<T>
                 Assert.Throws<ArgumentException>(() => deque.CopyTo(count + 1, array, 0, 0));
                 Assert.Throws<ArgumentException>(() => deque.CopyTo(count, array, 0, 1));
                 Assert.Throws<ArgumentException>(() => deque.CopyTo(0, array, 0, count + 1));
-                Assert.Throws<ArgumentException>(() => deque.CopyTo(0, array, length + 1, 0));
-                Assert.Throws<ArgumentException>(() => deque.CopyTo(0, array, length, 1));
-                Assert.Throws<ArgumentException>(() => deque.CopyTo(0, array, 0, length + 1));
+                Assert.Throws<ArgumentException>(() => deque.CopyTo(0, array, size + 1, 0));
+                Assert.Throws<ArgumentException>(() => deque.CopyTo(0, array, size, 1));
+                Assert.Throws<ArgumentException>(() => deque.CopyTo(0, array, 0, size + 1));
             });
     }
 

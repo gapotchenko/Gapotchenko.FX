@@ -14,10 +14,12 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 
 partial class Deque_Tests<T>
 {
+    const int Peek_TestData_Size = 8;
+
     #region PeekFront
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, Peek_TestData_Size)]
     public void PeekFront(int size, Deque<T> deque)
     {
         var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
@@ -28,7 +30,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, Peek_TestData_Size)]
     public void PeekFront_ThrowsOnEmpty(Deque<T> deque)
     {
         Assert.Throws<InvalidOperationException>(() => deque.PeekFront());
@@ -39,7 +41,7 @@ partial class Deque_Tests<T>
     #region PeekBack
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, Peek_TestData_Size)]
     public void PeekBack(int size, Deque<T> deque)
     {
         var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
@@ -50,7 +52,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, Peek_TestData_Size)]
     public void PeekBack_ThrowsOnEmpty(Deque<T> deque)
     {
         Assert.Throws<InvalidOperationException>(() => deque.PeekBack());
@@ -61,7 +63,7 @@ partial class Deque_Tests<T>
     #region TryPeekFront
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, Peek_TestData_Size)]
     public void TryPeekFront(int size, Deque<T> deque)
     {
         var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
@@ -73,7 +75,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, Peek_TestData_Size)]
     public void TryPeekFront_Empty(Deque<T> deque)
     {
         Assert.False(deque.TryPeekFront(out _));
@@ -84,7 +86,7 @@ partial class Deque_Tests<T>
     #region TryPeekBack
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, 8)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 1, Peek_TestData_Size)]
     public void TryPeekBack(int size, Deque<T> deque)
     {
         var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).ReifyList();
@@ -96,7 +98,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, 8)]
+    [MemberData(nameof(TestData_DequeLayoutCombinations), 0, Peek_TestData_Size)]
     public void TryPeekBack_Empty(Deque<T> deque)
     {
         Assert.False(deque.TryPeekBack(out _));

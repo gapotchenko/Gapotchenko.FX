@@ -54,7 +54,9 @@ partial class Deque_Tests<T>
     [MemberData(nameof(TestData_Capacity_ValidValues))]
     public void Capacity_Ensure_ChangePreservesData(int capacity)
     {
-        var data = Enumerable.Range(1, 3).Select(CreateT).Memoize();
+        const int size = TestData_SampleSize;
+
+        var data = Enumerable.Range(1, size).Select(CreateT).Memoize();
 
         var deque = new Deque<T>(data);
         deque.EnsureCapacity(capacity);
