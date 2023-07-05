@@ -18,11 +18,11 @@ partial class Deque_Tests<T>
     const int Insert_TestData_Size = 8;
     const int Insert_TestData_InsertionSize = 2;
 
-    #region Insert(T)
+    #region Insert
 
     [Theory]
     [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionIndex), 0, Insert_TestData_Size)]
-    public void Insert_T(int size, Deque<T> deque, int index)
+    public void Insert(int size, Deque<T> deque, int index)
     {
         var source = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Stream();
         var data = source.Take(size).ReifyCollection();
@@ -40,7 +40,7 @@ partial class Deque_Tests<T>
     }
 
     [Fact]
-    public void Insert_T_ThrowsOnInvalidIndex()
+    public void Insert_ThrowsOnInvalidIndex()
     {
         const int size = TestData_SampleSize;
 
@@ -60,10 +60,10 @@ partial class Deque_Tests<T>
 
     #endregion
 
-    #region Insert(int, T)
+    #region InsertRange
 
     [Fact]
-    public void Insert_Int32_T_ThrowsOnNull()
+    public void InsertRange_ThrowsOnNull()
     {
         var deque = new Deque<T>();
         Assert.Throws<ArgumentNullException>(() => deque.InsertRange(0, null!));
@@ -74,18 +74,18 @@ partial class Deque_Tests<T>
         nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionIndexAndCount),
         0, Insert_TestData_Size,
         0, Insert_TestData_InsertionSize)]
-    public void Insert_Int32_T_Collection(int size, Deque<T> deque, int index, int count) =>
-        Insert_Int32_T_Core(size, deque, index, count, Fn.Identity);
+    public void InsertRange_Collection(int size, Deque<T> deque, int index, int count) =>
+        InsertRange_Core(size, deque, index, count, Fn.Identity);
 
     [Theory]
     [MemberData(
         nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionIndexAndCount),
         0, Insert_TestData_Size,
         0, Insert_TestData_InsertionSize)]
-    public void Insert_Int32_T_Enumeration(int size, Deque<T> deque, int index, int count) =>
-        Insert_Int32_T_Core(size, deque, index, count, x => x.Enumerate());
+    public void InsertRange_Enumeration(int size, Deque<T> deque, int index, int count) =>
+        InsertRange_Core(size, deque, index, count, x => x.Enumerate());
 
-    void Insert_Int32_T_Core(
+    void InsertRange_Core(
         int size, Deque<T> deque,
         int index, int count,
         Func<IReadOnlyCollection<T>, IEnumerable<T>> collectionSelector)
@@ -109,7 +109,7 @@ partial class Deque_Tests<T>
 
     [Theory]
     [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionIndex), 0, Insert_TestData_Size)]
-    public void Insert_Int32_T_Collection_Self(int size, Deque<T> deque, int index)
+    public void InsertRange_Collection_Self(int size, Deque<T> deque, int index)
     {
         var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).Memoize();
 
@@ -128,7 +128,7 @@ partial class Deque_Tests<T>
 
     [Theory]
     [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionIndex), 1, Insert_TestData_Size)]
-    public void Insert_Int32_T_Enumeration_ThrowsOnShortCircuit(int size, Deque<T> deque, int index)
+    public void InsertRange_Enumeration_ThrowsOnShortCircuit(int size, Deque<T> deque, int index)
     {
         var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size);
 
@@ -140,7 +140,7 @@ partial class Deque_Tests<T>
     }
 
     [Fact]
-    public void Insert_Int32_T_ThrowsOnInvalidIndex()
+    public void InsertRange_ThrowsOnInvalidIndex()
     {
         const int size = TestData_SampleSize;
 
@@ -149,6 +149,7 @@ partial class Deque_Tests<T>
         var items = source.Take(Insert_TestData_InsertionSize).ReifyCollection();
 
         var deque = new Deque<T>(data);
+
         ModificationTrackingVerifier.EnsureNotModified(
             deque,
             () =>

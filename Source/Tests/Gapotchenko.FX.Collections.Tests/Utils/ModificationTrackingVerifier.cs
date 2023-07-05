@@ -56,7 +56,7 @@ static class ModificationTrackingVerifier
         }
         catch (InvalidOperationException)
         {
-            Assert.Fail("Collection is considered as out-of-band modified while it should not.");
+            Assert.Fail("Collection is out-of-band modified while it should not be.");
         }
     }
 }

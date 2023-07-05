@@ -46,7 +46,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         ExceptionHelper.ThrowIfArgumentIsNegative(capacity);
 
-        m_Array = new T[capacity];
+        m_Array = capacity == 0 ? Array.Empty<T>() : new T[capacity];
     }
 
     /// <summary>

@@ -75,6 +75,23 @@ partial class Deque_Tests<T>
     }
 
     /// <summary>
+    /// Enumerates all possible combinations of collection sizes
+    /// and internal storage layouts of a <see cref="Deque{T}"/>
+    /// for the specified collection size interval.
+    /// </summary>
+    public static IEnumerable<object[]> TestData_SizeAndDequeLayoutCombinationsWithRandom(int minSize, int maxSize)
+    {
+        var random = new Random(maxSize + minSize * 57139);
+        var sampleQueue = new Deque<T>(); // used for capacity calculation only
+        for (int size = minSize; size <= maxSize; ++size)
+        {
+            var capacity = sampleQueue.EnsureCapacity(size);
+            foreach (int layoutOffset in TestData_EnumerateDequeLayoutOffsets(capacity))
+                yield return new object[] { size, TestData_MakeDequeLayout(size, layoutOffset), random };
+        }
+    }
+
+    /// <summary>
     /// Enumerates all possible combinations of collection sizes,
     /// internal storage layouts of a <see cref="Deque{T}"/>,
     /// and indices
