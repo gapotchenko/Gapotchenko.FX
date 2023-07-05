@@ -63,12 +63,12 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionLength), 0, 8, 0, 2)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionCount), 0, 8, 0, 2)]
     public void PushFrontRange_Collection(int size, Deque<T> deque, int length) =>
         PushFrontRange_Core(size, deque, length, Fn.Identity);
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionLength), 0, 8, 0, 2)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionCount), 0, 8, 0, 2)]
     public void PushFrontRange_Enumerable(int size, Deque<T> deque, int length) =>
         PushFrontRange_Core(size, deque, length, x => x.Enumerate());
 
@@ -119,12 +119,12 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionLength), 0, 8, 0, 2)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionCount), 0, 8, 0, 2)]
     public void PushBackRange_Collection(int size, Deque<T> deque, int length) =>
         PushBackRange_Core(size, deque, length, Fn.Identity);
 
     [Theory]
-    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionLength), 0, 8, 0, 2)]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithInsertionCount), 0, 8, 0, 2)]
     public void PushBackRange_Enumerable(int size, Deque<T> deque, int length) =>
         PushBackRange_Core(size, deque, length, x => x.Enumerate());
 

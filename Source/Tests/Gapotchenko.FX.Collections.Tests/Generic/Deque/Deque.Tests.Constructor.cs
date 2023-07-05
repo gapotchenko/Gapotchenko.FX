@@ -16,14 +16,14 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 partial class Deque_Tests<T>
 {
     [Theory]
-    [MemberData(nameof(InvalidCapacityValues))]
+    [MemberData(nameof(TestData_Capacity_InvalidValues))]
     public void Constructor_Capacity_ThrowsOnInvalidValue(int capacity)
     {
         Assert.Throws<ArgumentOutOfRangeException>(nameof(capacity), () => new Deque<T>(capacity));
     }
 
     [Theory]
-    [MemberData(nameof(ValidCapacityValues))]
+    [MemberData(nameof(TestData_Capacity_ValidValues))]
     public void Constructor_Capacity_UsesSpecifiedValue(int capacity)
     {
         var deque = new Deque<T>(capacity);
@@ -40,7 +40,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(ValidCapacityValues))]
+    [MemberData(nameof(TestData_Capacity_ValidValues))]
     public void Constructor_Collection_SetsCapacity(int capacity)
     {
         var data = Enumerable.Range(1, capacity).Select(CreateT);

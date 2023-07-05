@@ -12,6 +12,20 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 
 partial class Deque_Tests<T>
 {
+    public static IEnumerable<object[]> TestData_Capacity_ValidValues()
+    {
+        yield return new object[] { 0 };
+        yield return new object[] { 1 };
+        yield return new object[] { 17 };
+    }
+
+    public static IEnumerable<object[]> TestData_Capacity_InvalidValues()
+    {
+        yield return new object[] { -1 };
+        yield return new object[] { -2 };
+        yield return new object[] { int.MinValue };
+    }
+
     /// <summary>
     /// Adds the specified data to <see cref="Deque{T}"/> while preserving the layout of its internal storage.
     /// </summary>
@@ -99,22 +113,63 @@ partial class Deque_Tests<T>
     /// <summary>
     /// Enumerates all possible combinations of collection sizes,
     /// internal storage layouts of a <see cref="Deque{T}"/>,
-    /// and range lengths
-    /// for the specified collection size and range length intervals.
+    /// and insertion indices
+    /// for the specified collection size.
     /// </summary>
-    public static IEnumerable<object[]> TestData_SizeAndDequeLayoutCombinationsWithInsertionLength(
-        int minSize, int maxSize,
-        int minLength, int maxLength)
+    public static IEnumerable<object[]> TestData_SizeAndDequeLayoutCombinationsWithInsertionIndex(int minSize, int maxSize)
     {
         var sampleQueue = new Deque<T>(); // used for capacity calculation only
         for (int size = minSize; size <= maxSize; ++size)
         {
             var capacity = sampleQueue.EnsureCapacity(size);
             foreach (int layoutOffset in TestData_EnumerateDequeLayoutOffsets(capacity))
-                for (int length = minLength; length <= maxLength; ++length)
-                    yield return new object[] { size, TestData_MakeDequeLayout(size, layoutOffset), length };
+                for (var index = 0; index <= size; ++index)
+                    yield return new object[] { size, TestData_MakeDequeLayout(size, layoutOffset), index };
         }
     }
+
+    /// <summary>
+    /// Enumerates all possible combinations of collection sizes,
+    /// internal storage layouts of a <see cref="Deque{T}"/>,
+    /// and insertion ranges
+    /// for the specified collection size and insertion range length intervals.
+    /// </summary>
+    public static IEnumerable<object[]> TestData_SizeAndDequeLayoutCombinationsWithInsertionIndexAndCount(
+        int minSize, int maxSize,
+        int minCount, int maxCount)
+    {
+        var sampleQueue = new Deque<T>(); // used for capacity calculation only
+        for (int size = minSize; size <= maxSize; ++size)
+        {
+            var capacity = sampleQueue.EnsureCapacity(size);
+            foreach (int layoutOffset in TestData_EnumerateDequeLayoutOffsets(capacity))
+                for (var index = 0; index <= size; ++index)
+                    for (int count = minCount; count <= maxCount; ++count)
+                        yield return new object[] { size, TestData_MakeDequeLayout(size, layoutOffset), index, count };
+        }
+    }
+
+    /// <summary>
+    /// Enumerates all possible combinations of collection sizes,
+    /// internal storage layouts of a <see cref="Deque{T}"/>,
+    /// and range lengths
+    /// for the specified collection size and range length intervals.
+    /// </summary>
+    public static IEnumerable<object[]> TestData_SizeAndDequeLayoutCombinationsWithInsertionCount(
+        int minSize, int maxSize,
+        int minCount, int maxCount)
+    {
+        var sampleQueue = new Deque<T>(); // used for capacity calculation only
+        for (int size = minSize; size <= maxSize; ++size)
+        {
+            var capacity = sampleQueue.EnsureCapacity(size);
+            foreach (int layoutOffset in TestData_EnumerateDequeLayoutOffsets(capacity))
+                for (int count = minCount; count <= maxCount; ++count)
+                    yield return new object[] { size, TestData_MakeDequeLayout(size, layoutOffset), count };
+        }
+    }
+
+    //-----------------------------------------------------------------------
 
     /// <summary>
     /// Enumerates layout offsets that target specific cells of the deque's internal storage array

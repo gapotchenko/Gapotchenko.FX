@@ -17,22 +17,8 @@ using Math = System.Math;
 
 partial class Deque_Tests<T>
 {
-    public static IEnumerable<object[]> ValidCapacityValues()
-    {
-        yield return new object[] { 0 };
-        yield return new object[] { 1 };
-        yield return new object[] { 17 };
-    }
-
-    public static IEnumerable<object[]> InvalidCapacityValues()
-    {
-        yield return new object[] { -1 };
-        yield return new object[] { -2 };
-        yield return new object[] { int.MinValue };
-    }
-
     [Theory]
-    [MemberData(nameof(InvalidCapacityValues))]
+    [MemberData(nameof(TestData_Capacity_InvalidValues))]
     public void Capacity_Ensure_ThrowsOnInvalidValue(int capacity)
     {
         var deque = new Deque<T>();
@@ -40,7 +26,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(ValidCapacityValues))]
+    [MemberData(nameof(TestData_Capacity_ValidValues))]
     public void Capacity_Ensure_UsesSpecifiedValue(int capacity)
     {
         var deque = new Deque<T>(Math.Min(capacity, 1));
@@ -48,7 +34,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(ValidCapacityValues))]
+    [MemberData(nameof(TestData_Capacity_ValidValues))]
     public void Capacity_Ensure_SmallerValueDoesNothing(int capacity)
     {
         var deque = new Deque<T>(capacity);
@@ -57,7 +43,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(ValidCapacityValues))]
+    [MemberData(nameof(TestData_Capacity_ValidValues))]
     public void Capacity_Ensure_ExistingValueDoesNothing(int capacity)
     {
         var deque = new Deque<T>(capacity);
@@ -65,7 +51,7 @@ partial class Deque_Tests<T>
     }
 
     [Theory]
-    [MemberData(nameof(ValidCapacityValues))]
+    [MemberData(nameof(TestData_Capacity_ValidValues))]
     public void Capacity_Ensure_ChangePreservesData(int capacity)
     {
         var data = Enumerable.Range(1, 3).Select(CreateT).Memoize();
