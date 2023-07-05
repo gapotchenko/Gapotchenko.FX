@@ -45,7 +45,7 @@ partial class Deque_Tests<T>
     /// <summary>
     /// Enumerates all possible combinations of collection sizes
     /// and internal storage layouts of a <see cref="Deque{T}"/>
-    /// for the specified max collection size.
+    /// for the specified collection size interval.
     /// </summary>
     public static IEnumerable<object[]> TestData_SizeAndDequeLayoutCombinations(int minSize, int maxSize)
     {
@@ -61,10 +61,48 @@ partial class Deque_Tests<T>
     /// <summary>
     /// Enumerates all possible combinations of collection sizes,
     /// internal storage layouts of a <see cref="Deque{T}"/>,
-    /// and range lengths
-    /// for the specified max collection size and the max range length.
+    /// and indices
+    /// for the specified collection size interval.
     /// </summary>
-    public static IEnumerable<object[]> TestData_SizeAndDequeLayoutCombinationsWithRangeLength(
+    public static IEnumerable<object[]> TestData_SizeAndDequeLayoutCombinationsWithIndex(int minSize, int maxSize)
+    {
+        var sampleQueue = new Deque<T>(); // used for capacity calculation only
+        for (int size = minSize; size <= maxSize; ++size)
+        {
+            var capacity = sampleQueue.EnsureCapacity(size);
+            foreach (int layoutOffset in TestData_EnumerateDequeLayoutOffsets(capacity))
+                for (var index = 0; index < size; ++index)
+                    yield return new object[] { size, TestData_MakeDequeLayout(size, layoutOffset), index };
+        }
+    }
+
+    /// <summary>
+    /// Enumerates all possible combinations of collection sizes,
+    /// internal storage layouts of a <see cref="Deque{T}"/>,
+    /// indices,
+    /// and counts
+    /// for the specified collection size interval.
+    /// </summary>
+    public static IEnumerable<object[]> TestData_SizeAndDequeLayoutCombinationsWithIndexAndCount(int minSize, int maxSize, int minCount)
+    {
+        var sampleQueue = new Deque<T>(); // used for capacity calculation only
+        for (int size = minSize; size <= maxSize; ++size)
+        {
+            var capacity = sampleQueue.EnsureCapacity(size);
+            foreach (int layoutOffset in TestData_EnumerateDequeLayoutOffsets(capacity))
+                for (var index = 0; index < size; ++index)
+                    for (var count = minCount; index + count <= size; ++count)
+                        yield return new object[] { size, TestData_MakeDequeLayout(size, layoutOffset), index, count };
+        }
+    }
+
+    /// <summary>
+    /// Enumerates all possible combinations of collection sizes,
+    /// internal storage layouts of a <see cref="Deque{T}"/>,
+    /// and range lengths
+    /// for the specified collection size and range length intervals.
+    /// </summary>
+    public static IEnumerable<object[]> TestData_SizeAndDequeLayoutCombinationsWithInsertionLength(
         int minSize, int maxSize,
         int minLength, int maxLength)
     {

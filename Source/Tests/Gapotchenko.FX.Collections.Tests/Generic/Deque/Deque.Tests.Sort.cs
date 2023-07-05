@@ -15,30 +15,20 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 
 partial class Deque_Tests<T>
 {
-    const int Sort_ShuffledDataSize = 50;
+    const int Sort_TestData_Size = 5;
 
-    IEnumerable<T> Sort_GetShuffledData() =>
-        Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(Sort_ShuffledDataSize);
+    #region Sort
 
-    [Fact]
-    public void Sort_HandlesEmpty()
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 0, Sort_TestData_Size)]
+    public void Sort(int size, Deque<T> deque)
     {
-        var deque = new Deque<T>();
-        ModificationTrackingVerifier.EnsureModified(
-            deque,
-            () => deque.Sort());
-        Assert.Empty(deque);
-    }
-
-    [Fact]
-    public void Sort_SortsShuffledData()
-    {
-        var data = Sort_GetShuffledData().Memoize();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).Memoize();
 
         var list = new List<T>(data);
         list.Sort();
 
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
         ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort());
@@ -46,23 +36,33 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
-    static void Sort_IComparer_HandlesEmpty_Core(IComparer<T>? comparer)
-    {
-        var deque = new Deque<T>();
-        ModificationTrackingVerifier.EnsureModified(
-            deque,
-            () => deque.Sort(comparer));
-        Assert.Empty(deque);
-    }
+    #endregion
 
-    void Sort_IComparer_SortsShuffledData_Core(IComparer<T>? comparer)
+    #region Sort(IComparer)
+
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 0, Sort_TestData_Size)]
+    public void Sort_IComparer_Null(int size, Deque<T> deque) =>
+        Sort_IComparer_Core(size, deque, null);
+
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 0, Sort_TestData_Size)]
+    public void Sort_IComparer_Default(int size, Deque<T> deque) =>
+        Sort_IComparer_Core(size, deque, Comparer<T>.Default);
+
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 0, Sort_TestData_Size)]
+    public void Sort_IComparer_Reverse(int size, Deque<T> deque) =>
+        Sort_IComparer_Core(size, deque, Comparer<T>.Default.Reverse());
+
+    void Sort_IComparer_Core(int size, Deque<T> deque, IComparer<T>? comparer)
     {
-        var data = Sort_GetShuffledData().Memoize();
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).Memoize();
 
         var list = new List<T>(data);
         list.Sort(comparer);
 
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
         ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort(comparer));
@@ -70,32 +70,34 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
-    [Fact]
-    public void Sort_IComparer_Null_HandlesEmpty() =>
-        Sort_IComparer_HandlesEmpty_Core(null);
+    #endregion
 
-    [Fact]
-    public void Sort_IComparer_Null_SortsShuffledData() =>
-        Sort_IComparer_SortsShuffledData_Core(null);
+    #region Sort(Comparison)
 
-    static IComparer<TElement> CreateReverseComparer<TElement>(IComparer<TElement> comparer) =>
-        Comparer<TElement>.Create((a, b) => comparer.Compare(b, a));
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 0, Sort_TestData_Size)]
+    public void Sort_Comparison_Default(int size, Deque<T> deque) =>
+        Sort_Comparison_Core(size, deque, Comparer<T>.Default.Compare);
 
-    [Fact]
-    public void Sort_IComparer_Default_HandlesEmpty() =>
-        Sort_IComparer_HandlesEmpty_Core(Comparer<T>.Default);
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinations), 0, Sort_TestData_Size)]
+    public void Sort_Comparison_Reverse(int size, Deque<T> deque) =>
+        Sort_Comparison_Core(size, deque, (a, b) => Comparer<T>.Default.Compare(b, a));
 
-    [Fact]
-    public void Sort_IComparer_Default_SortsShuffledData() =>
-        Sort_IComparer_SortsShuffledData_Core(Comparer<T>.Default);
+    void Sort_Comparison_Core(int size, Deque<T> deque, Comparison<T> comparison)
+    {
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).Memoize();
 
-    [Fact]
-    public void Sort_IComparer_Reverse_HandlesEmpty() =>
-        Sort_IComparer_HandlesEmpty_Core(CreateReverseComparer<T>(Comparer<T>.Default));
+        var list = new List<T>(data);
+        list.Sort(comparison);
 
-    [Fact]
-    public void Sort_IComparer_Reverse_SortsShuffledData() =>
-        Sort_IComparer_SortsShuffledData_Core(CreateReverseComparer<T>(Comparer<T>.Default));
+        TestData_FillDeque(deque, data);
+        ModificationTrackingVerifier.EnsureModified(
+            deque,
+            () => deque.Sort(comparison));
+
+        Assert.Equal(list, deque);
+    }
 
     [Fact]
     public void Sort_Comparison_ThrowsOnNull()
@@ -106,57 +108,36 @@ partial class Deque_Tests<T>
             () => Assert.Throws<ArgumentNullException>(() => deque.Sort((Comparison<T>)null!)));
     }
 
-    [Fact]
-    public void Sort_Comparison_HandlesEmpty()
-    {
-        var deque = new Deque<T>();
-        ModificationTrackingVerifier.EnsureModified(
-            deque,
-            () => deque.Sort(Comparer<T>.Default.Compare));
-        Assert.Empty(deque);
-    }
+    #endregion
 
-    void Sort_Comparison_SortsShuffledData_Core(Comparison<T> comparison)
-    {
-        var data = Sort_GetShuffledData().Memoize();
-
-        var list = new List<T>(data);
-        list.Sort(comparison);
-
-        var deque = new Deque<T>(data);
-        ModificationTrackingVerifier.EnsureModified(
-            deque,
-            () => deque.Sort(comparison));
-
-        Assert.Equal(list, deque);
-    }
-
-    [Fact]
-    public void Sort_Comparison_Default_SortsShuffledData() =>
-        Sort_Comparison_SortsShuffledData_Core(Comparer<T>.Default.Compare);
-
-    [Fact]
-    public void Sort_Comparison_Reverse_SortsShuffledData() =>
-        Sort_Comparison_SortsShuffledData_Core((a, b) => Comparer<T>.Default.Compare(b, a));
-
-    public static IEnumerable<object[]> SortRange_ValidRanges()
-    {
-        yield return new object[] { 10, 5 };
-        yield return new object[] { 20, 10 };
-    }
+    #region Sort(int, int, IComparer)
 
     [Theory]
-    [MemberData(nameof(SortRange_ValidRanges))]
-    public void SortRange_IComparer_SortsShuffledData(int index, int count)
-    {
-        var data = Sort_GetShuffledData().Memoize();
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithIndexAndCount), 0, Sort_TestData_Size, 0)]
+    public void Sort_Int32_Int32_IComparer_Null(int size, Deque<T> deque, int index, int count) =>
+        Sort_Int32_Int32_IComparer_Core(size, deque, index, count, null);
 
-        var comparer = Comparer<T>.Default;
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithIndexAndCount), 0, Sort_TestData_Size, 0)]
+    public void Sort_Int32_Int32_IComparer_Default(int size, Deque<T> deque, int index, int count) =>
+        Sort_Int32_Int32_IComparer_Core(size, deque, index, count, Comparer<T>.Default);
+
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithIndexAndCount), 0, Sort_TestData_Size, 0)]
+    public void Sort_Int32_Int32_IComparer_Reverse(int size, Deque<T> deque, int index, int count) =>
+        Sort_Int32_Int32_IComparer_Core(size, deque, index, count, Comparer<T>.Default.Reverse());
+
+    void Sort_Int32_Int32_IComparer_Core(
+        int size, Deque<T> deque,
+        int index, int count,
+        IComparer<T>? comparer)
+    {
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).Memoize();
 
         var list = new List<T>(data);
         list.Sort(index, count, comparer);
 
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
         ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort(index, count, comparer));
@@ -164,22 +145,52 @@ partial class Deque_Tests<T>
         Assert.Equal(list, deque);
     }
 
-    [Theory]
-    [MemberData(nameof(SortRange_ValidRanges))]
-    public void SortRange_Comparison_SortsShuffledData(int index, int count)
-    {
-        var data = Sort_GetShuffledData().Memoize();
+    #endregion
 
-        Comparison<T> comparison = Comparer<T>.Default.Compare;
+    #region Sort(int, int, Comparison)
+
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithIndexAndCount), 0, Sort_TestData_Size, 0)]
+    public void Sort_Int32_Int32_Comparison_Default(int size, Deque<T> deque, int index, int count) =>
+        Sort_Int32_Int32_Comparison_Core(
+            size, deque,
+            index, count,
+            Comparer<T>.Default.Compare);
+
+    [Theory]
+    [MemberData(nameof(TestData_SizeAndDequeLayoutCombinationsWithIndexAndCount), 0, Sort_TestData_Size, 0)]
+    public void Sort_Int32_Int32_Comparison_Reverse(int size, Deque<T> deque, int index, int count) =>
+        Sort_Int32_Int32_Comparison_Core(
+            size, deque,
+            index, count,
+            (a, b) => Comparer<T>.Default.Compare(b, a));
+
+    void Sort_Int32_Int32_Comparison_Core(
+        int size, Deque<T> deque,
+        int index, int count,
+        Comparison<T> comparison)
+    {
+        var data = Enumerable.Range(1, int.MaxValue).Select(CreateT).Distinct().Take(size).Memoize();
 
         var list = new List<T>(data);
         list.Sort(index, count, Comparer<T>.Create(comparison));
 
-        var deque = new Deque<T>(data);
+        TestData_FillDeque(deque, data);
         ModificationTrackingVerifier.EnsureModified(
             deque,
             () => deque.Sort(index, count, comparison));
 
         Assert.Equal(list, deque);
     }
+
+    [Fact]
+    public void Sort_Int32_Int32_Comparison_ThrowsOnNull()
+    {
+        var deque = new Deque<T>();
+        ModificationTrackingVerifier.EnsureNotModified(
+            deque,
+            () => Assert.Throws<ArgumentNullException>(() => deque.Sort(0, 0, (Comparison<T>)null!)));
+    }
+
+    #endregion
 }
