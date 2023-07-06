@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray;
+﻿using Gapotchenko.FX.Collections.Tests.Utils;
+
+namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray;
 
 public sealed class AssociativeArray_Tests_string_string : AssociativeArray_Tests<string, string>
 {
@@ -7,21 +9,12 @@ public sealed class AssociativeArray_Tests_string_string : AssociativeArray_Test
     protected override KeyValuePair<string, string> CreateT(int seed)
     {
         var random = new Random(seed);
-        return new(CreateString(random), CreateString(random));
+        return new(TestData.CreateString(random), TestData.CreateString(random));
     }
 
-    protected override string CreateTKey(int seed) => CreateString(new Random(seed));
+    protected override string CreateTKey(int seed) => TestData.CreateString(new Random(seed));
 
-    protected override string CreateTValue(int seed) => CreateString(new Random(seed));
-
-    static string CreateString(Random random)
-    {
-        int length = random.Next(5, 15);
-        var bytes = new byte[length];
-        random.NextBytes(bytes);
-
-        return Convert.ToBase64String(bytes);
-    }
+    protected override string CreateTValue(int seed) => TestData.CreateString(new Random(seed));
 }
 
 public sealed class AssociativeArray_Tests_int_int : AssociativeArray_Tests<int, int>
@@ -31,14 +24,12 @@ public sealed class AssociativeArray_Tests_int_int : AssociativeArray_Tests<int,
     protected override KeyValuePair<int, int> CreateT(int seed)
     {
         var random = new Random(seed);
-        return new(CreateInt32(random), CreateInt32(random));
+        return new(TestData.CreateInt32(random), TestData.CreateInt32(random));
     }
 
-    protected override int CreateTKey(int seed) => CreateInt32(new Random(seed));
+    protected override int CreateTKey(int seed) => TestData.CreateInt32(new Random(seed));
 
-    protected override int CreateTValue(int seed) => CreateInt32(new Random(seed));
-
-    static int CreateInt32(Random random) => random.Next();
+    protected override int CreateTValue(int seed) => TestData.CreateInt32(new Random(seed));
 }
 
 public sealed class AssociativeArray_Tests_SimpleInt_int_With_Comparer_WrapStructural_SimpleInt : AssociativeArray_Tests<SimpleInt, int>
@@ -64,9 +55,5 @@ public sealed class AssociativeArray_Tests_SimpleInt_int_With_Comparer_WrapStruc
         return new SimpleInt(random.Next());
     }
 
-    protected override int CreateTValue(int seed)
-    {
-        var random = new Random(seed);
-        return random.Next();
-    }
+    protected override int CreateTValue(int seed) => TestData.CreateInt32(new Random(seed));
 }

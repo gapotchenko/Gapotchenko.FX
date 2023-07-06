@@ -1,5 +1,6 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Collections.Tests.Bench;
+using Gapotchenko.FX.Collections.Tests.Utils;
 using System.Collections;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
@@ -31,23 +32,12 @@ public abstract class Deque_IList_NonGeneric_Tests<T> : IList_NonGeneric_Tests
 
 public sealed class Deque_IList_NonGeneric_Tests_String : Deque_IList_NonGeneric_Tests<string>
 {
-    protected override object CreateT(int seed) => CreateString(new Random(seed));
-
-    static string CreateString(Random random)
-    {
-        int length = random.Next(5, 15);
-        var bytes = new byte[length];
-        random.NextBytes(bytes);
-
-        return Convert.ToBase64String(bytes);
-    }
+    protected override object CreateT(int seed) => TestData.CreateString(new Random(seed));
 }
 
 public sealed class Deque_IList_NonGeneric_Tests_Int32 : Deque_IList_NonGeneric_Tests<int>
 {
-    protected override object CreateT(int seed) => CreateInt32(new Random(seed));
-
-    static int CreateInt32(Random random) => random.Next();
+    protected override object CreateT(int seed) => TestData.CreateInt32(new Random(seed));
 
     protected override bool NullAllowed => false;
 }

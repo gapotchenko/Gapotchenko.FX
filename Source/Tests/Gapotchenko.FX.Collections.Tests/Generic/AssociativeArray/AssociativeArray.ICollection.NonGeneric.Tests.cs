@@ -1,5 +1,6 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Collections.Tests.Bench;
+using Gapotchenko.FX.Collections.Tests.Utils;
 using System.Collections;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray;
@@ -36,16 +37,7 @@ public sealed class AssociativeArray_ICollection_NonGeneric_Tests_String_String 
     protected override KeyValuePair<string, string> CreateT(int seed)
     {
         var random = new Random(seed);
-        return new(CreateString(random), CreateString(random));
-    }
-
-    static string CreateString(Random random)
-    {
-        int length = random.Next(5, 15);
-        var bytes = new byte[length];
-        random.NextBytes(bytes);
-
-        return Convert.ToBase64String(bytes);
+        return new(TestData.CreateString(random), TestData.CreateString(random));
     }
 }
 
@@ -54,8 +46,6 @@ public sealed class AssociativeArray_ICollection_NonGeneric_Tests_Int32_Int32 : 
     protected override KeyValuePair<int, int> CreateT(int seed)
     {
         var random = new Random(seed);
-        return new(CreateInt32(random), CreateInt32(random));
+        return new(TestData.CreateInt32(random), TestData.CreateInt32(random));
     }
-
-    static int CreateInt32(Random random) => random.Next();
 }
