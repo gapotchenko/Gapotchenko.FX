@@ -22,7 +22,7 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
     {
         while (m_Queue.TryTake(out var task, Timeout.Infinite))
         {
-            // Execute task.
+            // Execute the task.
             task.Key(task.Value);
 
             var edi = m_ExceptionDispatchInfo;
@@ -39,13 +39,13 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
 
     void End() =>
         Post(
-            x => ((ExclusiveSynchronizationContext)x).m_Queue.CompleteAdding(),
+            x => ((ExclusiveSynchronizationContext)x!).m_Queue.CompleteAdding(),
             this);
 
     public void Execute(Func<Task> task)
     {
         Post(
-            async (_) =>
+            async _ =>
             {
                 try
                 {
@@ -55,7 +55,7 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
                 {
                     m_ExceptionDispatchInfo = ExceptionDispatchInfo.Capture(e);
 
-#if !(NETCOREAPP || NETSTANDARD2_1_OR_GREATER)
+#if TFF_THREAD_ABORT
                     if (e is ThreadAbortException)
                     {
                         try

@@ -1,8 +1,4 @@
-﻿#if !(NETCOREAPP || NETSTANDARD2_1_OR_GREATER)
-#define TFF_THREAD_ABORT
-#endif
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Security;
 
 namespace Gapotchenko.FX.Threading.Tasks;
