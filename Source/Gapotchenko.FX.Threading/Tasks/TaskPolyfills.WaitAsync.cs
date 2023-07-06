@@ -272,7 +272,7 @@ partial class TaskPolyfills
         {
             using var cts = new CancellationTokenSource();
 
-            // Link the control task cancellation token source with the specified cancellation token.
+            // Link the control task cancellation token source with the specified token.
             using var ctr = canBeCanceled ? cancellationToken.Register(cts.Cancel) : default;
 
             var controlTask = Task.Delay(timeout, cts.Token);
@@ -331,7 +331,7 @@ partial class TaskPolyfills
         {
             using var cts = new CancellationTokenSource();
 
-            // Link the control task cancellation token source with the specified cancellation token.
+            // Link the control task cancellation token source with the specified token.
             using var ctr = canBeCanceled ? cancellationToken.Register(cts.Cancel) : default;
 
             var ct = cts.Token;

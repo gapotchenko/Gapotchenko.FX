@@ -57,7 +57,7 @@ partial class TaskPolyfillTests
             {
                 await waitAsync(task, cancellationToken);
                 Assert.IsTrue(task.IsCompleted);
-                return task.Result;
+                return task.GetAwaiter().GetResult();
             },
             TestData_ExpectedResult);
 
@@ -100,7 +100,7 @@ partial class TaskPolyfillTests
             {
                 await waitAsync(task, timeout);
                 Assert.IsTrue(task.IsCompleted);
-                return task.Result;
+                return task.GetAwaiter().GetResult();
             },
             TestData_ExpectedResult);
 
@@ -140,7 +140,7 @@ partial class TaskPolyfillTests
             {
                 await waitAsync(task, timeout);
                 Assert.IsTrue(task.IsCompleted);
-                return task.Result;
+                return task.GetAwaiter().GetResult();
             },
             TestData_ExpectedResult);
 
@@ -167,6 +167,34 @@ partial class TaskPolyfillTests
     #endregion
 
     #region WaitAsync(TimeSpan, CancellationToken)
+
+    [TestMethod]
+    public Task Task_WaitAsync_TimeSpan_CancellationToken() =>
+        Task_WaitAsync_TResult_TimeSpan_CancellationToken_Core(
+            async (task, timeout, cancellationToken) =>
+            {
+                await ((Task)task).WaitAsync(timeout, cancellationToken);
+                Assert.IsTrue(task.IsCompleted);
+                return task.GetAwaiter().GetResult();
+            },
+            TestData_ExpectedResult);
+
+    [TestMethod]
+    public Task Task_WaitAsync_TResult_TimeSpan_CancellationToken() =>
+        Task_WaitAsync_TResult_TimeSpan_CancellationToken_Core(
+            (task, timeout, cancellationToken) => task.WaitAsync(timeout, cancellationToken),
+            TestData_ExpectedResult);
+
+    async Task Task_WaitAsync_TResult_TimeSpan_CancellationToken_Core<TResult>(
+        Func<Task<TResult>, TimeSpan, CancellationToken, Task<TResult>> waitAsync,
+        TResult expectedResult)
+    {
+        var completedTask = Task.FromResult(expectedResult);
+        Assert.AreEqual(expectedResult, await waitAsync(completedTask, TimeSpan.Zero, new CancellationToken(true)));
+
+        var infiniteTask = CreateInfiniteTask<TResult>();
+        await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => waitAsync(infiniteTask, TimeSpan.Zero, new CancellationToken(true)));
+    }
 
     [TestMethod]
     public Task Task_WaitAsync_TimeSpan_CancellationToken_TimeSpanScenario() =>
