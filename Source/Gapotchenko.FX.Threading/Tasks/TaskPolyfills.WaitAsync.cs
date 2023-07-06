@@ -28,6 +28,11 @@ partial class TaskPolyfills
     /// The <see cref="Task"/> representing the asynchronous wait.
     /// It may or may not be the same instance as the current instance.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="task"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="timeout"/> value needs to translate in milliseconds to -1 (signifying an infinite timeout), 0,
+    /// or a positive integer less than or equal to the maximum allowed timer duration.
+    /// </exception>
 #if TFF_TASK_WAITASYNC
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
@@ -60,6 +65,11 @@ partial class TaskPolyfills
     /// The <see cref="Task{TResult}"/> representing the asynchronous wait.
     /// It may or may not be the same instance as the current instance.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="task"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="timeout"/> value needs to translate in milliseconds to -1 (signifying an infinite timeout), 0,
+    /// or a positive integer less than or equal to the maximum allowed timer duration.
+    /// </exception>
 #if TFF_TASK_WAITASYNC
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
@@ -91,6 +101,8 @@ partial class TaskPolyfills
     /// The <see cref="Task"/> representing the asynchronous wait.
     /// It may or may not be the same instance as the current instance.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="task"/> is <see langword="null"/>.</exception>
+    /// <exception cref="TaskCanceledException">The task has been canceled.</exception>
 #if TFF_TASK_WAITASYNC
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
@@ -121,6 +133,8 @@ partial class TaskPolyfills
     /// The <see cref="Task{TResult}"/> representing the asynchronous wait.
     /// It may or may not be the same instance as the current instance.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="task"/> is <see langword="null"/>.</exception>
+    /// <exception cref="TaskCanceledException">The task has been canceled.</exception>
 #if TFF_TASK_WAITASYNC
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
@@ -156,6 +170,12 @@ partial class TaskPolyfills
     /// The <see cref="Task"/> representing the asynchronous wait.
     /// It may or may not be the same instance as the current instance.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="task"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="timeout"/> value needs to translate in milliseconds to -1 (signifying an infinite timeout), 0,
+    /// or a positive integer less than or equal to the maximum allowed timer duration.
+    /// </exception>
+    /// <exception cref="TaskCanceledException">The task has been canceled.</exception>
 #if TFF_TASK_WAITASYNC
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
@@ -192,6 +212,12 @@ partial class TaskPolyfills
     /// The <see cref="Task{TResult}"/> representing the asynchronous wait.
     /// It may or may not be the same instance as the current instance.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="task"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="timeout"/> value needs to translate in milliseconds to -1 (signifying an infinite timeout), 0,
+    /// or a positive integer less than or equal to the maximum allowed timer duration.
+    /// </exception>
+    /// <exception cref="TaskCanceledException">The task has been canceled.</exception>
 #if TFF_TASK_WAITASYNC
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
@@ -303,9 +329,9 @@ partial class TaskPolyfills
             var ct = cts.Token;
             var controlTask =
                 Task.Delay(timeout, ct)
-                // Adapt the control task result to TResult to make compiler happy.
+                // Adapt the control task result to TResult to make a compiler happy.
                 .ContinueWith(
-                    _ => default(TResult)!, // this value will be discarded, it's only needed for type system integrity
+                    _ => default(TResult)!, // this value will be discarded, it's only needed for the type system integrity
                     ct,
                     TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.Default);
