@@ -7,17 +7,19 @@
 public static class ExceptionExtensions
 {
     /// <summary>
-    /// <para>
-    /// Checks whether exception signifies a cancellation of a thread or task.
-    /// </para>
-    /// <para>
+    /// Gets a value indicating whether the exception signifies a thread or task cancellation.
+    /// </summary>
+    /// <remarks>
     /// There is a predefined set of such exceptions:
     /// <see cref="ThreadInterruptedException"/>, <see cref="ThreadAbortException"/>, <see cref="TaskCanceledException"/> and
     /// <see cref="OperationCanceledException"/>.
-    /// </para>
-    /// </summary>
+    /// </remarks>
     /// <param name="exception">The exception.</param>
-    /// <returns><see langword="true"/> if exception signifies a cancellation of a thread or task; otherwise, <see langword="false"/>.</returns>
+    /// <returns>
+    /// <see langword="true"/> if the exception signifies a thread or task cancellation;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="exception"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static bool IsCancellationException(this Exception exception) =>
         ConsiderAggregation(
@@ -27,8 +29,7 @@ public static class ExceptionExtensions
     static bool IsCancellationExceptionCore(Exception exception) =>
         exception is ThreadAbortException ||
         exception is ThreadInterruptedException ||
-        exception is OperationCanceledException ||
-        exception is TaskCanceledException;
+        exception is OperationCanceledException;
 
     /// <summary>
     /// <para>
@@ -97,7 +98,8 @@ public static class ExceptionExtensions
     }
 
     /// <summary>
-    /// Rethrows a control flow exception if it is represented by the exception itself, or there is any in a chain of its inner exceptions.
+    /// Rethrows a control flow exception if it is represented by the exception itself,
+    /// or there is one in the chain of its inner exceptions.
     /// </summary>
     /// <param name="exception">The exception.</param>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
