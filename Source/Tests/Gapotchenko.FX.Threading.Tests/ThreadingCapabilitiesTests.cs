@@ -3,7 +3,7 @@
 namespace Gapotchenko.FX.Threading.Tests;
 
 [TestClass]
-public class ThreadingCapabilitiesTests
+public sealed class ThreadingCapabilitiesTests
 {
     [TestMethod]
     public void ThreadingCapabilities_LogicalProcessorCount()

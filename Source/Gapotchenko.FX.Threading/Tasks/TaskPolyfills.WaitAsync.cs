@@ -245,6 +245,9 @@ partial class TaskPolyfills
 
     static Task WaitAsyncCore(Task task, TimeSpan timeout, CancellationToken cancellationToken)
     {
+        if (task.IsCompleted)
+            return task;
+
         bool canBeCanceled = cancellationToken.CanBeCanceled;
         bool canBeTimedOut = timeout != Timeout.InfiniteTimeSpan;
 
@@ -299,8 +302,11 @@ partial class TaskPolyfills
         }
     }
 
-    static Task<TResult> WaitAsyncCore<TResult>(this Task<TResult> task, TimeSpan timeout, CancellationToken cancellationToken)
+    static Task<TResult> WaitAsyncCore<TResult>(Task<TResult> task, TimeSpan timeout, CancellationToken cancellationToken)
     {
+        if (task.IsCompleted)
+            return task;
+
         bool canBeCanceled = cancellationToken.CanBeCanceled;
         bool canBeTimedOut = timeout != Timeout.InfiniteTimeSpan;
 

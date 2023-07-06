@@ -4,14 +4,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Gapotchenko.FX.Threading.Tests.Tasks;
 
 [TestClass]
-public class TaskBridgeTests
+public sealed class TaskBridgeTests
 {
     [TestMethod]
     public void TaskBridge_ThreadAffinity()
     {
         var map = new Dictionary<int, int>();
 
-        static async Task _ThreadAffinityChecker(Dictionary<int, int> mapArg)
+        static async Task Run(Dictionary<int, int> mapArg)
         {
             for (int i = 0; i < 10000; i++)
             {
@@ -21,7 +21,7 @@ public class TaskBridgeTests
             }
         }
 
-        TaskBridge.Execute(() => _ThreadAffinityChecker(map));
+        TaskBridge.Execute(() => Run(map));
 
         Assert.AreEqual(1, map.Count);
         Assert.AreEqual(10000, map.Single().Value);

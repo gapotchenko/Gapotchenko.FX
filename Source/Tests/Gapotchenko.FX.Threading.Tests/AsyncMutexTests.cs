@@ -3,7 +3,7 @@
 namespace Gapotchenko.FX.Threading.Tests;
 
 [TestClass]
-public class AsyncMutexTests
+public sealed class AsyncMutexTests
 {
     static readonly AsyncLockableTestsImpl m_LockableTestsImpl = new(() => new AsyncMutex());
 
