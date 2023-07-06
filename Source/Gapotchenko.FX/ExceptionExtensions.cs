@@ -32,9 +32,9 @@ public static class ExceptionExtensions
         exception is OperationCanceledException;
 
     /// <summary>
-    /// <para>
-    /// Checks whether exception is intended to affect the control flow of code execution.
-    /// </para>
+    /// Gets a value indicating whether the exception is intended to affect the control flow of the code execution.
+    /// </summary>
+    /// <remarks>
     /// <para>
     /// There is a predefined set of such exceptions:
     /// all the cancellation exceptions reported by <see cref="IsCancellationException(Exception)"/>, and
@@ -43,9 +43,13 @@ public static class ExceptionExtensions
     /// <para>
     /// The list can be semantically extended by deriving a custom exception from <see cref="IControlFlowException"/>.
     /// </para>
-    /// </summary>
+    /// </remarks>
     /// <param name="exception">The exception.</param>
-    /// <returns><see langword="true"/> if exception represents a control flow exception; otherwise, <see langword="false"/>.</returns>
+    /// <returns>
+    /// <see langword="true"/> if the exception represents a control flow exception;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="exception"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static bool IsControlFlowException(this Exception exception) =>
         ConsiderAggregation(
@@ -102,6 +106,7 @@ public static class ExceptionExtensions
     /// or there is one in the chain of its inner exceptions.
     /// </summary>
     /// <param name="exception">The exception.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="exception"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static void RethrowControlFlowException(this Exception exception)
     {
@@ -120,6 +125,7 @@ public static class ExceptionExtensions
     /// </summary>
     /// <param name="exception">The current exception.</param>
     /// <returns>An <see cref="IEnumerable{T}"/> of nested inner <see cref="Exception"/> values that caused the current exception.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="exception"/> is <see langword="null"/>.</exception>
     public static IEnumerable<Exception> InnerExceptions(this Exception exception)
     {
         var i = exception ?? throw new ArgumentNullException(nameof(exception));
@@ -137,7 +143,7 @@ public static class ExceptionExtensions
     /// </summary>
     /// <param name="exception">The current exception.</param>
     /// <returns>An <see cref="IEnumerable{T}"/> of nested inner <see cref="Exception"/> values that caused the current exception including self.</returns>
-    [EditorBrowsable(EditorBrowsableState.Advanced)]
+    /// <exception cref="ArgumentNullException"><paramref name="exception"/> is <see langword="null"/>.</exception>
     public static IEnumerable<Exception> SelfAndInnerExceptions(this Exception exception)
     {
         var i = exception ?? throw new ArgumentNullException(nameof(exception));
