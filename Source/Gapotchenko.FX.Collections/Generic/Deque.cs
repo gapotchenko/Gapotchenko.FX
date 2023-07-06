@@ -1624,7 +1624,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         ExceptionHelper.ThrowIfArgumentIsNull(array);
         ExceptionHelper.ThrowIfArrayArgumentIsMultiDimensional(array);
-        ExceptionHelper.ThrowIfArgumentIsNegative(index);
+        ExceptionHelper.ValidateIndexAndCountArgumentsRange(
+            index, m_Size, array.Length,
+            countParameterName: null);
 
         try
         {
@@ -1640,7 +1642,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     bool ICollection.IsSynchronized => false;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static object? m_SyncRoot;
+    object? m_SyncRoot;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     object ICollection.SyncRoot => LazyInitializerEx.EnsureInitialized(ref m_SyncRoot);

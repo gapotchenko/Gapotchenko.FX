@@ -6,12 +6,13 @@
 
 Release date: not released yet
 
-- Preliminary .NET 8.0 support
+- Added support for .NET 8.0 target framework
 - Introduced primitives for interval arithmetics represented by `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
+- Introduced `Gapotchenko.FX.Collection.Generic.Deque<T>` primitive representing a linear collection that supports element insertion and removal at both ends with O(1) algorithmic complexity
 - Added ability to choose between lowercase or uppercase text output of a case-insensitive data encoding
-- Added ability to create streams over contiguous memory regions represented by `System.Memory` and `System.ReadOnlyMemory` objects by using `ToStream` extension methods provided by `Gapotchenko.FX.Memory` module
-- Added `Gapotchenko.FX.Memory.SpanEqualityComparer` that allows to compare read-only spans and calculate their hash codes
-- `AssemblyAutoLoader` now understands probing paths defined by assembly binding redirects
+- Added ability to create streams over contiguous memory regions represented by `System.Memory` and `System.ReadOnlyMemory` objects by using `ToStream` extension method provided by `Gapotchenko.FX.Memory` module
+- Added `Gapotchenko.FX.Memory.SpanEqualityComparer` class that allows to compare read-only spans and calculate their hash codes
+- `AssemblyAutoLoader` now automatically handles probing paths defined by assembly binding redirects
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - Added `ReifyCollection` LINQ extension method for `IEnumerable<T>`
 - Polyfills:
@@ -32,7 +33,7 @@ Release date: not released yet
   - Added polyfill for `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` type
   - Added polyfill for a LINQ-style pipe operator
   - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
-- .NET Framework 4.6 support is retired. The minimal supported .NET Framework version is 4.6.1
+- .NET Framework 4.6 support is retired. The minimal supported version of .NET Framework is 4.6.1
 - Fixed issues:
   - Fixed case-sensitivity of a text data encoding padding character. This is important for data encodings that use custom padding characters
   - Fixed issue in `Gapotchenko.FX.Collections.Generic.AssociativeArray<TKey, TValue>` type with accessing `IEnumerable<T>.Current` property without checking the result of a prior call to `MoveNext` method
