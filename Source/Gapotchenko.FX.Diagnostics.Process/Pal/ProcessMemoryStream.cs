@@ -1,4 +1,14 @@
-﻿namespace Gapotchenko.FX.Diagnostics.Pal;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+//
+// Contributors:
+//   - Oleksiy Gapotchenko (development)
+//   - Kevin Gosse (fixes)
+
+namespace Gapotchenko.FX.Diagnostics.Pal;
 
 sealed class ProcessMemoryStream : Stream
 {

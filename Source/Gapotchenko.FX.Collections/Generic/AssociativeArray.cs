@@ -3,6 +3,13 @@
 //
 // File introduced by: Kirill Rode
 // Year of introduction: 2021
+//
+// Contributors:
+//   - Oleksiy Gapotchenko (development)
+//   - Kirill Rode (development)
+//
+// AssociativeArray<TKey, TValue> is a collection of key/value pairs that
+// supports nullable keys.
 
 using Gapotchenko.FX.Collections.Utils;
 using Gapotchenko.FX.Linq;
@@ -17,7 +24,8 @@ namespace Gapotchenko.FX.Collections.Generic;
 /// Represents a collection of keys and values.
 /// </para>
 /// <para>
-/// In contrast to <see cref="Dictionary{TKey, TValue}"/>, <see cref="AssociativeArray{TKey, TValue}"/> supports keys with <see langword="null"/> values.
+/// In contrast to <see cref="Dictionary{TKey, TValue}"/>,
+/// <see cref="AssociativeArray{TKey, TValue}"/> supports keys with <see langword="null"/> values.
 /// </para>
 /// </summary>
 /// <typeparam name="TKey">The type of the keys in the associative array.</typeparam>
@@ -803,8 +811,8 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         enum State
         {
             Reset,
-            Source,
             Element,
+            Source,
             End
         }
 

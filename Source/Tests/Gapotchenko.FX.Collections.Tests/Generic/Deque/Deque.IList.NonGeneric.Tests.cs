@@ -1,4 +1,17 @@
-﻿using Gapotchenko.FX.Collections.Generic;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+//
+// Contributors:
+//   - Oleksiy Gapotchenko (development)
+//   - Kevin Goose (fixes)
+//
+// Deque<T> is a linear collection that supports element insertion and removal
+// at both ends with O(1) algorithmic complexity.
+
+using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Collections.Tests.Bench;
 using Gapotchenko.FX.Collections.Tests.Utils;
 using System.Collections;
