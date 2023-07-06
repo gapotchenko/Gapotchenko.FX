@@ -322,6 +322,10 @@ public static class TaskBridge
                     // Allow the task to finish gracefully.
                     Thread.ResetAbort();
                 }
+                catch (ThreadStateException)
+                {
+                    // Was not aborted with Thread.Abort().
+                }
                 catch (PlatformNotSupportedException)
                 {
                     Debug.Fail("A thread abort exception should not be raised when it is unsupported by the host platform.");
@@ -352,9 +356,11 @@ public static class TaskBridge
             }
             catch (SecurityException)
             {
+                // Not allowed.
             }
             catch (PlatformNotSupportedException)
             {
+                // Not supported.
             }
         }
 

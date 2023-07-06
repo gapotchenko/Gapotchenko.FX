@@ -64,9 +64,11 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
                         }
                         catch (ThreadStateException)
                         {
+                            // Was not aborted with Thread.Abort().
                         }
                         catch (PlatformNotSupportedException)
                         {
+                            // Not supported.
                         }
                     }
 #endif
