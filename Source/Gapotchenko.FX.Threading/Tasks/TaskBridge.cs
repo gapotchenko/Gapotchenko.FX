@@ -41,9 +41,9 @@ public static class TaskBridge
             throw new ArgumentNullException(nameof(task));
 
         // Use a short path when possible.
-        if (task.Status == TaskStatus.RanToCompletion)
+        if (task.IsCompleted)
         {
-            // Task.Status property issues an acquire memory barrier internally.
+            task.GetAwaiter().GetResult(); // rethrow the task exception, if any
             return;
         }
 
@@ -58,9 +58,9 @@ public static class TaskBridge
     public static void Execute(in ValueTask task)
     {
         // Use a short path when possible.
-        if (task.IsCompletedSuccessfully)
+        if (task.IsCompleted)
         {
-            // ValueTask.IsCompletedSuccessfully property issues an acquire memory barrier internally.
+            task.GetAwaiter().GetResult(); // rethrow the task exception, if any
             return;
         }
 
@@ -80,11 +80,8 @@ public static class TaskBridge
             throw new ArgumentNullException(nameof(task));
 
         // Use a short path when possible.
-        if (task.Status == TaskStatus.RanToCompletion)
-        {
-            // Task.Status property issues an acquire memory barrier internally.
-            return task.Result;
-        }
+        if (task.IsCompleted)
+            return task.GetAwaiter().GetResult();
 
         return Execute(() => task);
     }
@@ -99,10 +96,7 @@ public static class TaskBridge
     {
         // Use a short path when possible.
         if (task.IsCompleted)
-        {
-            // ValueTask<T>.IsCompleted property issues an acquire memory barrier internally.
-            return task.Result;
-        }
+            return task.GetAwaiter().GetResult();
 
         var t = task.AsTask();
         return Execute(() => t);
