@@ -1,4 +1,10 @@
-﻿#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 #define TFF_TASK_ISCOMPLETEDSUCCESSFULLY
 #endif
 
@@ -6,6 +12,9 @@ using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Threading.Utils;
 
+/// <summary>
+/// Provides internal polyfill methods for <see cref="Task"/>.
+/// </summary>
 static class TaskPolyfills
 {
 #if TFF_TASK_ISCOMPLETEDSUCCESSFULLY
