@@ -31,7 +31,7 @@ static class ExceptionHelper
     public static void ValidateTimeoutArgument(TimeSpan value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         long milliseconds = (long)value.TotalMilliseconds;
-        if (milliseconds < -1 || milliseconds > int.MaxValue)
+        if (milliseconds < -1 || milliseconds >= uint.MaxValue)
         {
             throw new ArgumentOutOfRangeException(
                 parameterName,

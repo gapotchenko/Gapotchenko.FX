@@ -14,8 +14,9 @@ partial class TaskPolyfillTests
     #region Settings
 
 #pragma warning disable IDE1006 // Naming Styles
-    static readonly TimeSpan TestData_Delay = TimeSpan.FromMilliseconds(50);
-    static readonly TimeSpan TestData_WaitTimeout = TimeSpan.FromMilliseconds(200);
+    static readonly TimeSpan TestData_Delay = TimeSpan.FromMilliseconds(20);
+    static readonly TimeSpan TestData_NegativeWaitTimeout = TimeSpan.FromMilliseconds(200);
+    static readonly TimeSpan TestData_PositiveWaitTimeout = TimeSpan.FromMilliseconds(30000);
 #pragma warning restore IDE1006 // Naming Styles
     const int TestData_ExpectedResult = 123;
 
@@ -71,16 +72,16 @@ partial class TaskPolyfillTests
         TResult expectedResult)
     {
         var completedTask = Task.FromResult(expectedResult);
-        Assert.AreEqual(expectedResult, await waitAsync(completedTask, new CancellationTokenSource(TestData_WaitTimeout).Token));
+        Assert.AreEqual(expectedResult, await waitAsync(completedTask, new CancellationTokenSource(TestData_PositiveWaitTimeout).Token));
         Assert.AreEqual(expectedResult, await waitAsync(completedTask, new CancellationToken(true)));
 
         var infiniteTask = CreateInfiniteTask<TResult>();
-        await Assert.ThrowsExceptionAsync<TaskCanceledException>(async () => await waitAsync(infiniteTask, new CancellationTokenSource(TestData_WaitTimeout).Token));
+        await Assert.ThrowsExceptionAsync<TaskCanceledException>(async () => await waitAsync(infiniteTask, new CancellationTokenSource(TestData_NegativeWaitTimeout).Token));
         await Assert.ThrowsExceptionAsync<TaskCanceledException>(async () => await waitAsync(infiniteTask, new CancellationToken(true)));
 
         var delayedTask = CreateDelayedTask(TestData_Delay, expectedResult);
         await Assert.ThrowsExceptionAsync<TaskCanceledException>(async () => await waitAsync(delayedTask, new CancellationToken(true)));
-        Assert.AreEqual(expectedResult, await waitAsync(delayedTask, new CancellationTokenSource(TestData_WaitTimeout).Token));
+        Assert.AreEqual(expectedResult, await waitAsync(delayedTask, new CancellationTokenSource(TestData_PositiveWaitTimeout).Token));
         Assert.IsTrue(delayedTask.IsCompleted);
     }
 
@@ -114,17 +115,17 @@ partial class TaskPolyfillTests
         TResult expectedResult)
     {
         var completedTask = Task.FromResult(expectedResult);
-        Assert.AreEqual(expectedResult, await waitAsync(completedTask, TestData_WaitTimeout));
+        Assert.AreEqual(expectedResult, await waitAsync(completedTask, TestData_PositiveWaitTimeout));
         Assert.AreEqual(expectedResult, await waitAsync(completedTask, Timeout.InfiniteTimeSpan));
         Assert.AreEqual(expectedResult, await waitAsync(completedTask, TimeSpan.Zero));
 
         var infiniteTask = CreateInfiniteTask<TResult>();
-        await Assert.ThrowsExceptionAsync<TimeoutException>(async () => await waitAsync(infiniteTask, TestData_WaitTimeout));
+        await Assert.ThrowsExceptionAsync<TimeoutException>(async () => await waitAsync(infiniteTask, TestData_NegativeWaitTimeout));
         await Assert.ThrowsExceptionAsync<TimeoutException>(async () => await waitAsync(infiniteTask, TimeSpan.Zero));
 
         var delayedTask = CreateDelayedTask(TestData_Delay, expectedResult);
         await Assert.ThrowsExceptionAsync<TimeoutException>(async () => await waitAsync(delayedTask, TimeSpan.Zero));
-        Assert.AreEqual(expectedResult, await waitAsync(delayedTask, TestData_WaitTimeout));
+        Assert.AreEqual(expectedResult, await waitAsync(delayedTask, TestData_PositiveWaitTimeout));
         Assert.IsTrue(delayedTask.IsCompleted);
     }
 
@@ -155,6 +156,11 @@ partial class TaskPolyfillTests
     {
         var task = Task.FromResult(expectedResult);
         await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() => waitAsync(task, TimeSpan.FromMilliseconds(-2)));
+        await waitAsync(task, TimeSpan.FromMilliseconds(-1));
+        await waitAsync(task, TimeSpan.FromMilliseconds(0));
+        await waitAsync(task, TimeSpan.FromMilliseconds(int.MaxValue));
+        await waitAsync(task, TimeSpan.FromMilliseconds(uint.MaxValue - 1));
+        await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() => waitAsync(task, TimeSpan.FromMilliseconds(uint.MaxValue)));
         await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() => waitAsync(task, TimeSpan.MaxValue));
     }
 
