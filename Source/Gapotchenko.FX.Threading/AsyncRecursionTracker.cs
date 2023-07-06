@@ -16,7 +16,7 @@ readonly struct AsyncRecursionTracker
     readonly AsyncLocal<int> m_RecursionLevel = new();
 
     /// <summary>
-    /// Indicates whether the current recursion level is root.
+    /// Indicates whether the current recursion level is the root level.
     /// </summary>
     public bool IsRoot => m_RecursionLevel.Value == 0;
 

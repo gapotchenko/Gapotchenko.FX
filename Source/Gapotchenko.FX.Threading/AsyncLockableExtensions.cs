@@ -102,7 +102,7 @@ public static class AsyncLockableExtensions
         .ContinueWith(
             _ => new AsyncLockableScope(lockable),
             cancellationToken,
-            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.NotOnFaulted | TaskContinuationOptions.NotOnCanceled,
+            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
             TaskScheduler.Default);
 
     /// <summary>
@@ -167,6 +167,6 @@ public static class AsyncLockableExtensions
         task.ContinueWith(
             task => new AsyncLockableScope(task.Result ? lockable : null),
             cancellationToken,
-            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.NotOnCanceled | TaskContinuationOptions.NotOnFaulted,
+            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
             TaskScheduler.Default);
 }
