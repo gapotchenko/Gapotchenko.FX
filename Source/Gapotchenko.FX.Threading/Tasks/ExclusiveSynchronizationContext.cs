@@ -65,9 +65,6 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
                         catch (ThreadStateException)
                         {
                         }
-                        catch (SecurityException)
-                        {
-                        }
                         catch (PlatformNotSupportedException)
                         {
                         }
