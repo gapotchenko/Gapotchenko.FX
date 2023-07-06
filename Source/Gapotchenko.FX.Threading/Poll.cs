@@ -16,12 +16,16 @@ public static class Poll
 {
     /// <summary>
     /// Asynchronously waits for a condition to come true by executing an efficient polling strategy.
-    /// This method can be used to bridge a poll operation to an asynchronous wait task.
     /// </summary>
     /// <remarks>
+    /// <para>
+    /// This method can be used to turn a polling operation to an asynchronous wait task.
+    /// </para>
+    /// <para>
     /// The efficiency of the polling strategy is achieved by randomizing delays between polling attempts.
     /// In this way, a peak pressure on a thread pool is minimized by dispersing thread activities in time.
     /// The randomization also lowers the statistical rate of collisions between concurrent resource accessors.
+    /// </para>
     /// </remarks>
     /// <param name="condition">The asynchronous predicate which defines the condition to wait for.</param>
     /// <param name="millisecondsInterval">The amount of time, in milliseconds, to wait between condition polling attempts.</param>

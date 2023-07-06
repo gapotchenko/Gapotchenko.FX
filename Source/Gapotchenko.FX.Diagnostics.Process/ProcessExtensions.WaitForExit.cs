@@ -21,9 +21,10 @@ partial class ProcessExtensions
         // IMPROVE: Needs a more efficient implementation without polling.
 
         return Poll.WaitUntilAsync(
-            () => Task.FromResult(process.WaitForExit(0)), // this is not a call to Process.HasExited property in order to inherit the desired exception behavior
+            () => Task.FromResult(process.WaitForExit(0)), // this is not a call to Process.HasExited property to preserve a desired exception semantics
             100,
-            millisecondsTimeout);
+            millisecondsTimeout,
+            cancellationToken);
     }
 
     /// <summary>
