@@ -1,4 +1,11 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using Gapotchenko.FX.Threading.Utils;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading;
 
@@ -29,10 +36,8 @@ public static class Poll
         int millisecondsTimeout,
         CancellationToken cancellationToken = default)
     {
-        if (condition == null)
-            throw new ArgumentNullException(nameof(condition));
-        if (millisecondsTimeout < Timeout.Infinite)
-            throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), "The value needs to be either -1 (signifying an infinite timeout), 0, or a positive integer.");
+        ExceptionHelper.ThrowIfArgumentIsNull(condition);
+        ExceptionHelper.ValidateTimeoutArgument(millisecondsTimeout);
 
         Stopwatch? sw = null;
 

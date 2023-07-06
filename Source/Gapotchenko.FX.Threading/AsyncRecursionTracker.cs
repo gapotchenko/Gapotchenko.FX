@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Threading;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+namespace Gapotchenko.FX.Threading;
 
 #if NETFRAMEWORK || NETSTANDARD || !NETCOREAPP3_0_OR_GREATER
 #pragma warning disable CS8603

@@ -18,6 +18,16 @@ static class ExceptionHelper
             throw new ArgumentNullException(parameterName);
     }
 
+    public static void ValidateTimeoutArgument(int value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
+    {
+        if (value < Timeout.Infinite)
+        {
+            throw new ArgumentOutOfRangeException(
+                parameterName,
+                "The value needs to be either -1 (signifying an infinite timeout), 0, or a positive integer.");
+        }
+    }
+
     public static void ValidateTimeoutArgument(TimeSpan value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         long milliseconds = (long)value.TotalMilliseconds;
