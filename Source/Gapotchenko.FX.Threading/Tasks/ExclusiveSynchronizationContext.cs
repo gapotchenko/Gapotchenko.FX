@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Runtime.ExceptionServices;
+using System.Security;
 
 namespace Gapotchenko.FX.Threading.Tasks;
 
@@ -36,7 +37,10 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
         }
     }
 
-    void End() => Post(_ => m_Queue.CompleteAdding(), null);
+    void End() =>
+        Post(
+            x => ((ExclusiveSynchronizationContext)x).m_Queue.CompleteAdding(),
+            this);
 
     public void Execute(Func<Task> task)
     {
@@ -53,7 +57,21 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
 
 #if !(NETCOREAPP || NETSTANDARD2_1_OR_GREATER)
                     if (e is ThreadAbortException)
-                        Thread.ResetAbort();
+                    {
+                        try
+                        {
+                            Thread.ResetAbort();
+                        }
+                        catch (ThreadStateException)
+                        {
+                        }
+                        catch (SecurityException)
+                        {
+                        }
+                        catch (PlatformNotSupportedException)
+                        {
+                        }
+                    }
 #endif
                 }
                 finally
