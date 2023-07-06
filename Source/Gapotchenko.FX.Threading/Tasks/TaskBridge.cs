@@ -2,6 +2,9 @@
 #define TFF_THREAD_ABORT
 #endif
 
+using System.Diagnostics;
+using System.Security;
+
 namespace Gapotchenko.FX.Threading.Tasks;
 
 /// <summary>
@@ -9,6 +12,10 @@ namespace Gapotchenko.FX.Threading.Tasks;
 /// </summary>
 public static class TaskBridge
 {
+    // ----------------------------------------------------------------------
+    // Public Facade
+    // ----------------------------------------------------------------------
+
     /// <summary>
     /// Synchronously completes the execution of an already started asynchronous <see cref="Task"/>.
     /// </summary>
@@ -173,8 +180,8 @@ public static class TaskBridge
     }
 
     /// <summary>
-    /// Asynchronously executes a synchronous and cancelable long-running action.
-    /// If the asynchronous task is canceled via cancellation token then a thread abort is issued for the execution thread of a synchronous action.
+    /// Asynchronously executes a synchronous long-running action.
+    /// If a cancellation is requested then a thread abort is issued for the execution thread of a synchronous function.
     /// </summary>
     /// <param name="action">The cancelable synchronous action to execute.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
@@ -185,8 +192,8 @@ public static class TaskBridge
             cancellationToken);
 
     /// <summary>
-    /// Asynchronously executes a synchronous and cancelable long-running function.
-    /// If the asynchronous task is canceled via cancellation token then a thread abort is issued for the execution thread of a synchronous function.
+    /// Asynchronously executes a synchronous long-running function.
+    /// If a cancellation is requested then a thread abort is issued for the execution thread of a synchronous function.
     /// </summary>
     /// <param name="func">The cancelable synchronous function to execute.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
@@ -210,6 +217,8 @@ public static class TaskBridge
         return result.Value;
     }
 
+    // ----------------------------------------------------------------------
+    // Core Implementation
     // ----------------------------------------------------------------------
 
     static void ExecuteCore(Func<Task> task)
@@ -286,66 +295,88 @@ public static class TaskBridge
 #if !TFF_THREAD_ABORT
         return RunLongTask(action, cancellationToken);
 #else
+        // Use a quick path when possible.
         if (!cancellationToken.CanBeCanceled)
             return ExecuteAsyncCore(action);
 
-        Thread? taskThread = null;
-        using (cancellationToken.Register(
-            () =>
-            {
-                var thread = taskThread;
-                if (thread != null)
-                {
-                    try
-                    {
-                        thread.Abort();
-                    }
-                    catch (PlatformNotSupportedException)
-                    {
-                    }
-                    catch (ThreadStateException)
-                    {
-                    }
-                }
-            },
-            false))
+        Thread? executionThread = null;
+        Task? executionTask = null;
+
+        void Task()
         {
-            return RunLongTask(
-                () =>
+            try
+            {
+                Volatile.Write(ref executionThread, Thread.CurrentThread);
+                try
                 {
-                    try
-                    {
-                        taskThread = Thread.CurrentThread;
-                        try
-                        {
-                            cancellationToken.ThrowIfCancellationRequested();
-                            action();
-                        }
-                        finally
-                        {
-                            taskThread = null;
-                        }
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        try
-                        {
-                            Thread.ResetAbort();
-                        }
-                        catch (PlatformNotSupportedException)
-                        {
-                        }
-                        throw new TaskCanceledException();
-                    }
-                },
-                cancellationToken);
+                    // Use the last chance graceful cancellation opportunity.
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    action();
+                }
+                finally
+                {
+                    Volatile.Write(ref executionThread, null);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                try
+                {
+                    // Allow the task to finish gracefully.
+                    Thread.ResetAbort();
+                }
+                catch (SecurityException)
+                {
+                }
+                catch (PlatformNotSupportedException)
+                {
+                    Debug.Fail("A thread abort exception should not be raised when it is unsupported by the host platform.");
+                }
+
+                // Translate any thread abort to a task cancellation exception.
+                throw new TaskCanceledException(Volatile.Read(ref executionTask));
+            }
+            catch (ThreadInterruptedException)
+            {
+                throw new TaskCanceledException(Volatile.Read(ref executionTask));
+            }
         }
+
+        void Cancel()
+        {
+            var thread = Volatile.Read(ref executionThread);
+            if (thread == null)
+                return;
+
+            try
+            {
+                thread.Abort();
+            }
+            catch (ThreadStateException)
+            {
+                // Already aborted or no longer running.
+            }
+            catch (SecurityException)
+            {
+            }
+            catch (PlatformNotSupportedException)
+            {
+            }
+        }
+
+        using var ctr = cancellationToken.Register(Cancel);
+
+        var task = RunLongTask(Task, cancellationToken);
+        Volatile.Write(ref executionTask, task);
+
+        return task;
 #endif
     }
 
     static Task RunLongTask(Action action, CancellationToken cancellationToken) =>
         // Running a synchronous action in a long-running task prevents thread pool pollution.
-        // In this way, task acts as a standalone thread.
+        // In this way, the task acts as a standalone thread.
         Task.Factory.StartNew(
             action,
             cancellationToken,
