@@ -1,6 +1,4 @@
-﻿using Gapotchenko.FX.Collections.Concurrent;
-
-namespace Gapotchenko.FX.Threading.Utils;
+﻿namespace Gapotchenko.FX.Threading.Utils;
 
 static class ExecutionContextHelper
 {
@@ -22,52 +20,55 @@ static class ExecutionContextHelper
         {
             m_Action = action;
 
-            m_FlowTracker =
-                new AsyncLocal<FlowState>(FlowStateChanged)
-                {
-                    Value = new FlowState(true, false)
-                };
+            m_FlowTracker = new(FlowStateChanged)
+            {
+                Value = new FlowState(false, this)
+            };
         }
 
         readonly Action<TValue> m_Action;
-        readonly AsyncLocal<FlowState> m_FlowTracker;
+        readonly AsyncLocal<FlowState?> m_FlowTracker;
 
-        record struct FlowState(bool IsActive, bool ActionHandled);
+        record FlowState(bool ActionHandled, object GCRoot);
 
-        void FlowStateChanged(AsyncLocalValueChangedArgs<FlowState> args)
+        void FlowStateChanged(AsyncLocalValueChangedArgs<FlowState?> args)
         {
-            if (args.ThreadContextChanged &&
-                m_Committed &&
+            if (!args.ThreadContextChanged)
+                return;
+
+            if (m_Committed &&
                 args.CurrentValue != args.PreviousValue)
             {
                 var state = args.CurrentValue;
-                if (state.IsActive)
+                if (state != null)
                     UpdateFlowState(state);
             }
         }
 
-        void UpdateFlowState(in FlowState state)
+        void UpdateFlowState(FlowState state)
         {
             var newState = TickFlowState(state);
-            if (newState != state) // avoid boxing if the state hasn't been changed
+            if (newState != state)
                 m_FlowTracker.Value = newState;
         }
 
-        FlowState TickFlowState(FlowState state)
+        FlowState? TickFlowState(FlowState state)
         {
-            if (!state.ActionHandled)
+            bool actionHandled = state.ActionHandled;
+
+            if (!actionHandled)
             {
                 m_Action(m_CommittedValue.Value!);
-                state.ActionHandled = true;
+                actionHandled = true;
             }
 
-            if (state.ActionHandled)
-            {
-                state = default;
-                m_GCRoots.TryRemove(this);
-            }
+            FlowState? newState;
+            if (actionHandled)
+                newState = null;
+            else
+                newState = state;
 
-            return state;
+            return newState;
         }
 
         Volatile<TValue?> m_CommittedValue;
@@ -84,17 +85,12 @@ static class ExecutionContextHelper
             m_CommittedValue.Value = value;
 
             var state = m_FlowTracker.Value;
-            if (state.IsActive)
+            if (state != null)
                 UpdateFlowState(state);
             else
-            {
                 m_Action(value);
-                m_GCRoots.Add(this);
-            }
 
             m_Committed = true;
         }
-
-        static ConcurrentHashSet<AsyncLocalModificationContext<TValue>> m_GCRoots = new();
     }
 }
