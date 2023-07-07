@@ -38,17 +38,27 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             var task = m_CoreImpl.LockAsync(cancellationToken);
 
             // Suppress the flow of the execution context to be able to propagate the recursion tracking information.
-            var flowScope = ExecutionContextHelper.SuppressFlow();
+            var flowScope = ExecutionContextHelper.SuppressFlow(
+                locked =>
+                {
+                    if (locked)
+                        m_RecursionTracker.Enter();
+                });
 
             return task.ContinueWith(
                 task =>
                 {
-                    flowScope.Restore();
-
-                    // Rethrow the task exception, if any.
-                    task.GetAwaiter().GetResult();
-
-                    m_RecursionTracker.Enter();
+                    bool locked = false;
+                    try
+                    {
+                        // Rethrow the task exception, if any.
+                        task.GetAwaiter().GetResult();
+                        locked = true;
+                    }
+                    finally
+                    {
+                        flowScope.Restore(locked);
+                    }
                 },
                 CancellationToken.None,
                 TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
@@ -91,12 +101,19 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     }
 
     /// <inheritdoc/>
-    public Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
-        TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(timeout, cancellationToken));
+    public Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
+    {
+        //using (ExecutionContext.SuppressFlow())
+        return TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(timeout, cancellationToken));
+    }
 
     /// <inheritdoc/>
-    public Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
-        TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(millisecondsTimeout, cancellationToken));
+    public Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken = default)
+    {
+        //using (ExecutionContext.SuppressFlow())
+        return TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(millisecondsTimeout, cancellationToken));
+    }
+
 
     Task<bool> TryLockAsyncCore(Func<Task<bool>> func)
     {
@@ -105,16 +122,25 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             var task = func();
 
             // Suppress the flow of the execution context to be able to propagate the recursion tracking information.
-            var flowScope = ExecutionContextHelper.SuppressFlow();
+            var flowScope = ExecutionContextHelper.SuppressFlow(
+                locked =>
+                {
+                    if (locked)
+                        m_RecursionTracker.Enter();
+                });
 
             return task.ContinueWith(
                 task =>
                 {
-                    flowScope.Restore();
-
-                    bool locked = task.GetAwaiter().GetResult();
-                    if (locked)
-                        m_RecursionTracker.Enter();
+                    bool locked = false;
+                    try
+                    {
+                        locked = task.GetAwaiter().GetResult();
+                    }
+                    finally
+                    {
+                        flowScope.Restore(locked);
+                    }
 
                     return locked;
                 },

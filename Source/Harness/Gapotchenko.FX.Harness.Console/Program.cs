@@ -225,6 +225,9 @@ class Program
 
         var mutex = new AsyncRecursiveMutex();
 
+        if (await mutex.TryLockAsync(0))
+            mutex.Unlock();
+
         //var t1 = VerifyNesting(1, mutex, 1000000);
         //var t2 = VerifyNesting(2, mutex, 1000000);
         //await Task.WhenAll(t1, t2);
