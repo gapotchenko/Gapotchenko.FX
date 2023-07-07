@@ -9,28 +9,25 @@ static class ExecutionContextHelper
     /// </summary>
     public static FlowScope SuppressFlow(Action<bool> action)
     {
-        bool flowHandled = ExecutionContext.IsFlowSuppressed();
-        //if (!flowHandled)
-        //    ExecutionContext.SuppressFlow();
-        return new(true, action);
+        return new(action);
     }
 
     public class FlowScope
     {
-        internal FlowScope(bool flowHandled, Action<bool> action)
+        internal FlowScope(Action<bool> action)
         {
             m_Action = action;
 
             m_Tracker = new AsyncLocal<FlowState>(Handler)
             {
-                Value = new FlowState(true, false, flowHandled)
+                Value = new FlowState(true, false)
             };
         }
 
         readonly Action<bool> m_Action;
         readonly AsyncLocal<FlowState> m_Tracker;
 
-        record struct FlowState(bool Active, bool ActionHandled, bool FlowHandled);
+        record struct FlowState(bool Active, bool ActionHandled);
 
         void Handler(AsyncLocalValueChangedArgs<FlowState> args)
         {
@@ -50,29 +47,13 @@ static class ExecutionContextHelper
         {
             if (state.Active)
             {
-                if (!state.FlowHandled)
-                {
-                    if (ExecutionContext.IsFlowSuppressed())
-                    {
-                        ExecutionContext.RestoreFlow();
-                        state.FlowHandled = true;
-                    }
-                }
-
                 if (!state.ActionHandled)
                 {
-                    if (state.FlowHandled)
-                    {
-                        m_Action(m_Value);
-                        state.ActionHandled = true;
-                    }
-                    else
-                    {
-                        m_Action(m_Value);
-                    }
+                    m_Action(m_Value);
+                    state.ActionHandled = true;
                 }
 
-                if (state.FlowHandled && state.ActionHandled)
+                if (state.ActionHandled)
                 {
                     m_GCRoots.TryRemove(this);
                     state = default;
