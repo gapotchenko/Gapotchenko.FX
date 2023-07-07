@@ -35,8 +35,6 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     {
         if (m_RecursionTracker.IsRoot)
         {
-            var task = m_CoreImpl.LockAsync(cancellationToken);
-
             // Suppress the flow of the execution context to be able to propagate the recursion tracking information.
             var flowScope = ExecutionContextHelper.SuppressFlow(
                 locked =>
@@ -44,6 +42,8 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
                     if (locked)
                         m_RecursionTracker.Enter();
                 });
+
+            var task = m_CoreImpl.LockAsync(cancellationToken);
 
             return task.ContinueWith(
                 task =>
@@ -119,8 +119,6 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     {
         if (m_RecursionTracker.IsRoot)
         {
-            var task = func();
-
             // Suppress the flow of the execution context to be able to propagate the recursion tracking information.
             var flowScope = ExecutionContextHelper.SuppressFlow(
                 locked =>
@@ -128,6 +126,8 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
                     if (locked)
                         m_RecursionTracker.Enter();
                 });
+
+            var task = func();
 
             return task.ContinueWith(
                 task =>

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using static Gapotchenko.FX.Threading.Utils.ExecutionContextHelper;
+﻿using Gapotchenko.FX.Collections.Concurrent;
 
 namespace Gapotchenko.FX.Threading.Utils;
 
@@ -29,10 +28,9 @@ static class ExecutionContextHelper
         }
 
         readonly Action<bool> m_Action;
+        readonly AsyncLocal<FlowState> m_Tracker;
 
         record struct FlowState(bool Active, bool ActionHandled, bool FlowHandled);
-
-        readonly AsyncLocal<FlowState>? m_Tracker;
 
         void Handler(AsyncLocalValueChangedArgs<FlowState> args)
         {
@@ -75,7 +73,10 @@ static class ExecutionContextHelper
                 }
 
                 if (state.FlowHandled && state.ActionHandled)
+                {
+                    m_GCRoots.TryRemove(this);
                     state = default;
+                }
 
                 m_Tracker.Value = state;
             }
@@ -100,9 +101,12 @@ static class ExecutionContextHelper
             else
             {
                 m_Action(m_Value);
+                m_GCRoots.Add(this);
             }
 
             m_Restored = true;
         }
+
+        static ConcurrentHashSet<FlowScope> m_GCRoots = new();
     }
 }
