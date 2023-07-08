@@ -35,34 +35,36 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     {
         if (m_RecursionTracker.IsRoot)
         {
-            var asyncLocalChange = ExecutionContextHelper.ModifyAsyncLocal<bool>(
-                locked =>
-                {
-                    if (locked)
-                        m_RecursionTracker.Enter();
-                });
+            var asyncLocalScope = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
+            try
+            {
+                return m_CoreImpl
+                    .LockAsync(cancellationToken)
+                    .ContinueWith(
+                        task =>
+                        {
+                            try
+                            {
+                                // Rethrow the task exception, if any.
+                                task.GetAwaiter().GetResult();
 
-            var task = m_CoreImpl.LockAsync(cancellationToken);
-
-            return task.ContinueWith(
-                task =>
-                {
-                    bool locked = false;
-                    try
-                    {
-                        // Rethrow the task exception, if any.
-                        task.GetAwaiter().GetResult();
-                        locked = true;
-                    }
-                    finally
-                    {
-                        // Propagate the recursion tracking information.
-                        asyncLocalChange.Commit(locked);
-                    }
-                },
-                CancellationToken.None,
-                TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
-                TaskScheduler.Default);
+                                // Propagate the recursion tracking information.
+                                asyncLocalScope.Commit();
+                            }
+                            finally
+                            {
+                                asyncLocalScope.Dispose();
+                            }
+                        },
+                        CancellationToken.None,
+                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
+                        TaskScheduler.Default);
+            }
+            catch
+            {
+                asyncLocalScope.Dispose();
+                throw;
+            }
         }
         else
         {
@@ -114,39 +116,42 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
         return TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(millisecondsTimeout, cancellationToken));
     }
 
-
     Task<bool> TryLockAsyncCore(Func<Task<bool>> func)
     {
         if (m_RecursionTracker.IsRoot)
         {
-            var asyncLocalChange = ExecutionContextHelper.ModifyAsyncLocal<bool>(
-                locked =>
-                {
-                    if (locked)
-                        m_RecursionTracker.Enter();
-                });
+            var asyncLocalScope = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
+            try
+            {
+                return
+                    func()
+                    .ContinueWith(
+                        task =>
+                        {
+                            try
+                            {
+                                bool locked = task.GetAwaiter().GetResult();
 
-            var task = func();
+                                // Propagate the recursion tracking information.
+                                if (locked)
+                                    asyncLocalScope.Commit();
 
-            return task.ContinueWith(
-                task =>
-                {
-                    bool locked = false;
-                    try
-                    {
-                        locked = task.GetAwaiter().GetResult();
-                    }
-                    finally
-                    {
-                        // Propagate the recursion tracking information.
-                        asyncLocalChange.Commit(locked);
-                    }
-
-                    return locked;
-                },
-                CancellationToken.None,
-                TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
-                TaskScheduler.Default);
+                                return locked;
+                            }
+                            finally
+                            {
+                                asyncLocalScope.Dispose();
+                            }
+                        },
+                        CancellationToken.None,
+                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
+                        TaskScheduler.Default);
+            }
+            catch
+            {
+                asyncLocalScope.Dispose();
+                throw;
+            }
         }
         else
         {

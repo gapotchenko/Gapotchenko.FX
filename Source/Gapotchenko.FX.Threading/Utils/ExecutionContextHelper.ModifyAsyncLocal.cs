@@ -3,13 +3,13 @@
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
-//
+
 // ATTENTION: A holy grail algorithm ahead!
 //
 // This file contains an implementation of the backbone algorithm that makes
-// reentrancy tracking in asynchronous .NET code possible. Before that, the
-// tricks like that were thought to be impossible in .NET because
-// AsyncLocal<T> class only supports the inward flow of ambient data.
+// reentrancy tracking in asynchronous .NET code possible. Before that, it
+// was widely considered inconceivable in .NET circles because AsyncLocal<T>
+// class only supports the inward flow of ambient data.
 //
 // Needless to say, this whole situation even led to some industry stagnation
 // circa 2015-2022 because nobody had enough persistence in solving that
@@ -42,25 +42,25 @@ partial class ExecutionContextHelper
     /// <summary>
     /// Modifies ambient data that is local to a given asynchronous control flow
     /// by automatically replaying the specified action in all control flow branches
-    /// to make the data equivalent in all of them.
+    /// to make the changes equivalent in all of them.
     /// </summary>
     /// <remarks>
     /// This approach allows to overcome the limitations imposed by <see cref="AsyncLocal{T}"/> class
     /// which only supports the inward flow of the ambient data.
     /// </remarks>
     /// <param name="action">The <see cref="Action{T}"/> that directly or indirectly modifies an <see cref="AsyncLocal{T}.Value"/> property.</param>
-    /// <returns>An <see cref="AsyncLocalModificationContext"/> instance that can be used to either commit or discard the change.</returns>
-    public static AsyncLocalModificationContext ModifyAsyncLocal(Action action) =>
+    /// <returns>An <see cref="AsyncLocalModificationScope"/> instance that can be used to either commit or discard the modification.</returns>
+    public static AsyncLocalModificationScope ModifyAsyncLocal(Action action) =>
         new(action);
 
-    /// <returns>An <see cref="AsyncLocalModificationContext{TValue}"/> instance that can be used to either commit or discard the change.</returns>
+    /// <returns>An <see cref="AsyncLocalModificationScope{TValue}"/> instance that can be used to either commit or discard the modification.</returns>
     /// <inheritdoc cref="ModifyAsyncLocal(Action)"/>
-    public static AsyncLocalModificationContext<TValue> ModifyAsyncLocal<TValue>(Action<TValue> action) =>
+    public static AsyncLocalModificationScope<TValue> ModifyAsyncLocal<TValue>(Action<TValue> action) =>
         new(action);
 
-    public abstract class AsyncLocalModificationContextBase : IDisposable
+    public abstract class AsyncLocalModificationScopeBase : IDisposable
     {
-        protected AsyncLocalModificationContextBase()
+        protected AsyncLocalModificationScopeBase()
         {
             Debug.Assert(
                 m_FlowState.Value is var flowState &&
@@ -70,7 +70,7 @@ partial class ExecutionContextHelper
             m_FlowState.Value = new FlowState(this, false);
         }
 
-        record FlowState(AsyncLocalModificationContextBase Context, bool ActionHandled);
+        record FlowState(AsyncLocalModificationScopeBase Context, bool ActionHandled);
 
         static readonly AsyncLocal<FlowState?> m_FlowState = new(FlowStateChanged);
 
@@ -146,7 +146,7 @@ partial class ExecutionContextHelper
             Discarded
         }
 
-        // Using volatile access to ensure that a committed value is always visible in the committed state.
+        // Using volatile access to ensure that a state is always visible.
         volatile State m_State;
 
         protected void ValidateCommit()
@@ -198,9 +198,9 @@ partial class ExecutionContextHelper
         }
     }
 
-    public sealed class AsyncLocalModificationContext : AsyncLocalModificationContextBase
+    public sealed class AsyncLocalModificationScope : AsyncLocalModificationScopeBase
     {
-        internal AsyncLocalModificationContext(Action action)
+        internal AsyncLocalModificationScope(Action action)
         {
             m_Action = action;
         }
@@ -223,9 +223,9 @@ partial class ExecutionContextHelper
         }
     }
 
-    public sealed class AsyncLocalModificationContext<TValue> : AsyncLocalModificationContextBase
+    public sealed class AsyncLocalModificationScope<TValue> : AsyncLocalModificationScopeBase
     {
-        internal AsyncLocalModificationContext(Action<TValue> action)
+        internal AsyncLocalModificationScope(Action<TValue> action)
         {
             m_Action = action;
         }
