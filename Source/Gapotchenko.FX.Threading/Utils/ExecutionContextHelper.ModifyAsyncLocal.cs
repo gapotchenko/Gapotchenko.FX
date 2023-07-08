@@ -6,13 +6,24 @@
 
 // ATTENTION: A holy grail algorithm ahead!
 //
+//    _________
+//   |o^o^o^o^o|
+//   {   _!_   }
+//    \   !   /
+//     `.   .'
+//       )=(
+//      ( + )
+//       ) (
+//   .--'   `--.
+//   `---------'
+//
 // This file contains an implementation of the backbone algorithm that makes
 // reentrancy tracking in asynchronous .NET code possible. Before this
 // invention, reentrancy tracking was widely considered to be inconceivable in
 // asynchronous .NET code because AsyncLocal<T> class only supports the inward
 // flow of ambient data.
 //
-// Needless to say, this whole situation even led to some industry stagnation
+// Needless to say, this whole situation even led to some industry downdraft
 // circa 2015-2022 because nobody had enough persistence in solving that
 // puzzle. In turn, that led to a plethora of half-baked attempts of cracking
 // asynchronous recursion that never really worked - they were either too slow
@@ -30,11 +41,14 @@
 // another destination state D' knowing only a source state S' and the state
 // modification function F, we apply the same transform: D' = F(S'). This can
 // be repeated again and again, until we apply the changes to all the states
-// of interest, thus making the changes equal in all those states as if they
-// were propagated naturally. In this way, the barrier of outward state
+// of interest, thus making the changes in all these states equivalent as if
+// they were propagated naturally. In this way, the barrier of outward state
 // propagation imposed by AsyncLocal<T> primitive ceases to exist, enabling
 // the existence of algorithms that use not only inward but outward
 // propagation of ambient data.
+//
+// Copyright © 2023 Oleksiy Gapotchenko
+// Published under MIT license terms and conditions.
 
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
 
@@ -124,13 +138,6 @@ partial class ExecutionContextHelper
             }
         }
 
-        static void UpdateFlowState_Old(FlowState currentFlowState)
-        {
-            var newFlowState = GetNextFlowState(currentFlowState);
-            if (newFlowState != currentFlowState)
-                m_FlowState.Value = newFlowState;
-        }
-
         /// <summary>
         /// Gets a next flow state of the finite state machine.
         /// </summary>
@@ -193,8 +200,8 @@ partial class ExecutionContextHelper
             // Apply the changes to the current control flow branch.
             if (m_FlowState.Value is not null and var flowState)
                 UpdateFlowState(flowState); // either using the flow state
-            //else
-            //    ApplyChanges(); // or directly
+            else
+                ApplyChanges(); // or directly
         }
 
         /// <summary>

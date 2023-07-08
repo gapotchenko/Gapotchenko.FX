@@ -35,18 +35,36 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     {
         if (!m_RecursionTracker.IsEntered)
         {
-            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
-
-            async Task ExecuteAsync()
+            var asyncLocalScope = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
+            try
             {
-                using (asyncLocalChanges)
-                {
-                    await m_CoreImpl.LockAsync(cancellationToken).ConfigureAwait(false);
-                    asyncLocalChanges.Commit();
-                }
-            }
+                return m_CoreImpl
+                    .LockAsync(cancellationToken)
+                    .ContinueWith(
+                        task =>
+                        {
+                            try
+                            {
+                                // Rethrow the task exception, if any.
+                                task.GetAwaiter().GetResult();
 
-            return ExecuteAsync();
+                                // Propagate the recursion tracking information.
+                                asyncLocalScope.Commit();
+                            }
+                            finally
+                            {
+                                asyncLocalScope.Dispose();
+                            }
+                        },
+                        CancellationToken.None,
+                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
+                        TaskScheduler.Default);
+            }
+            catch
+            {
+                asyncLocalScope.Dispose();
+                throw;
+            }
         }
         else
         {
@@ -100,20 +118,38 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     {
         if (!m_RecursionTracker.IsEntered)
         {
-            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
-
-            async Task<bool> ExecuteAsync()
+            var asyncLocalScope = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
+            try
             {
-                using (asyncLocalChanges)
-                {
-                    bool locked = await func().ConfigureAwait(false);
-                    if (locked)
-                        asyncLocalChanges.Commit();
-                    return locked;
-                }
-            }
+                return
+                    func()
+                    .ContinueWith(
+                        task =>
+                        {
+                            try
+                            {
+                                bool locked = task.GetAwaiter().GetResult();
 
-            return ExecuteAsync();
+                                // Propagate the recursion tracking information.
+                                if (locked)
+                                    asyncLocalScope.Commit();
+
+                                return locked;
+                            }
+                            finally
+                            {
+                                asyncLocalScope.Dispose();
+                            }
+                        },
+                        CancellationToken.None,
+                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
+                        TaskScheduler.Default);
+            }
+            catch
+            {
+                asyncLocalScope.Dispose();
+                throw;
+            }
         }
         else
         {
