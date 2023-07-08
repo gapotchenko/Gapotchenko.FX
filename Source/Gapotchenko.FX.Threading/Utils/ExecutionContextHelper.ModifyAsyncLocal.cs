@@ -11,15 +11,27 @@
 // tricks like that were thought to be impossible in .NET because
 // AsyncLocal<T> class only supports the inward flow of ambient data.
 //
-// Needless to say that this whole situation led to the industry stagnation
+// Needless to say, this whole situation even led to some industry stagnation
 // circa 2015-2022 because nobody had enough persistence in solving that
 // puzzle. In turn, that led to a plethora of half-baked attempts in cracking
 // asynchronous recursion that never really worked - they were either too slow
 // (by using StackTrace) or unreliable (by using Task.CurrentId which is prone
-// to collisions).
+// to collisions). That translated to all sorts of problems and pains when
+// people were trying to write asynchronous .NET code to solve their business
+// needs.
 //
 // In contrast, this algorithm is fast and mathematically sound making
 // primitives like AsyncRecursiveMutex realistically possible in .NET.
+//
+// The idea behind the algorithm is based on an obvious mathematical property:
+// to go from a source state S to a destination state D we apply the state
+// modification function F. So, D = F(S). Now, whenever we want to go to
+// another destination state D' knowing only a source state S' and the state
+// modification function F, we apply the same transform: D' = F(S'). This can
+// be repeated again and again, until we apply the changes to all the states
+// of interest, thus making the changes equal in all those states as if they
+// were propagated. In this way, the barrier of outward state propagation
+// imposed by AsyncLocal<T> primitive ceases to exist.
 
 using System.Diagnostics;
 
