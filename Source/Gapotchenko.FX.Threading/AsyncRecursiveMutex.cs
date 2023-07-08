@@ -25,7 +25,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     /// <inheritdoc/>
     public void Lock(CancellationToken cancellationToken = default)
     {
-        if (m_RecursionTracker.IsRoot)
+        if (!m_RecursionTracker.IsEntered)
             m_CoreImpl.Lock(cancellationToken);
         m_RecursionTracker.Enter();
     }
@@ -33,9 +33,9 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     /// <inheritdoc/>
     public Task LockAsync(CancellationToken cancellationToken = default)
     {
-        if (m_RecursionTracker.IsRoot)
+        if (!m_RecursionTracker.IsEntered)
         {
-            var asyncLocalScope = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
+            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
             try
             {
                 return m_CoreImpl
@@ -49,11 +49,11 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
                                 task.GetAwaiter().GetResult();
 
                                 // Propagate the recursion tracking information.
-                                asyncLocalScope.Commit();
+                                asyncLocalChanges.Commit();
                             }
                             finally
                             {
-                                asyncLocalScope.Dispose();
+                                asyncLocalChanges.Dispose();
                             }
                         },
                         CancellationToken.None,
@@ -62,7 +62,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             }
             catch
             {
-                asyncLocalScope.Dispose();
+                asyncLocalChanges.Dispose();
                 throw;
             }
         }
@@ -87,7 +87,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
 
     bool TryLockCore(Func<bool> func)
     {
-        if (m_RecursionTracker.IsRoot)
+        if (!m_RecursionTracker.IsEntered)
         {
             bool locked = func();
             if (locked)
@@ -118,9 +118,9 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
 
     Task<bool> TryLockAsyncCore(Func<Task<bool>> func)
     {
-        if (m_RecursionTracker.IsRoot)
+        if (!m_RecursionTracker.IsEntered)
         {
-            var asyncLocalScope = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
+            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
             try
             {
                 return
@@ -134,13 +134,13 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
 
                                 // Propagate the recursion tracking information.
                                 if (locked)
-                                    asyncLocalScope.Commit();
+                                    asyncLocalChanges.Commit();
 
                                 return locked;
                             }
                             finally
                             {
-                                asyncLocalScope.Dispose();
+                                asyncLocalChanges.Dispose();
                             }
                         },
                         CancellationToken.None,
@@ -149,7 +149,7 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
             }
             catch
             {
-                asyncLocalScope.Dispose();
+                asyncLocalChanges.Dispose();
                 throw;
             }
         }

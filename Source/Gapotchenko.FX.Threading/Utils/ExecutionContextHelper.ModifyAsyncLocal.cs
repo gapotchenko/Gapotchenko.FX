@@ -7,9 +7,10 @@
 // ATTENTION: A holy grail algorithm ahead!
 //
 // This file contains an implementation of the backbone algorithm that makes
-// reentrancy tracking in asynchronous .NET code possible. Before that, it
-// was widely considered inconceivable in .NET circles because AsyncLocal<T>
-// class only supports the inward flow of ambient data.
+// reentrancy tracking in asynchronous .NET code possible. Before this
+// invention, reentrancy tracking was widely considered to be inconceivable in
+// asynchronous .NET code because AsyncLocal<T> class only supports the inward
+// flow of ambient data.
 //
 // Needless to say, this whole situation even led to some industry stagnation
 // circa 2015-2022 because nobody had enough persistence in solving that
@@ -49,28 +50,28 @@ partial class ExecutionContextHelper
     /// which only supports the inward flow of the ambient data.
     /// </remarks>
     /// <param name="action">The <see cref="Action{T}"/> that directly or indirectly modifies an <see cref="AsyncLocal{T}.Value"/> property.</param>
-    /// <returns>An <see cref="AsyncLocalModificationScope"/> instance that can be used to either commit or discard the modification.</returns>
-    public static AsyncLocalModificationScope ModifyAsyncLocal(Action action) =>
+    /// <returns>An <see cref="AsyncLocalModificationOperation"/> instance that can be used to either commit or discard the modification.</returns>
+    public static AsyncLocalModificationOperation ModifyAsyncLocal(Action action) =>
         new(action);
 
-    /// <returns>An <see cref="AsyncLocalModificationScope{TValue}"/> instance that can be used to either commit or discard the modification.</returns>
+    /// <returns>An <see cref="AsyncLocalModificationOperation{T}"/> instance that can be used to either commit or discard the modification.</returns>
     /// <inheritdoc cref="ModifyAsyncLocal(Action)"/>
-    public static AsyncLocalModificationScope<TValue> ModifyAsyncLocal<TValue>(Action<TValue> action) =>
+    public static AsyncLocalModificationOperation<T> ModifyAsyncLocal<T>(Action<T> action) =>
         new(action);
 
-    public abstract class AsyncLocalModificationScopeBase : IDisposable
+    public abstract class AsyncLocalModificationOperationBase : IDisposable
     {
-        protected AsyncLocalModificationScopeBase()
+        protected AsyncLocalModificationOperationBase()
         {
             Debug.Assert(
                 m_FlowState.Value is var flowState &&
-                (flowState == null || flowState.Context.m_State is State.Committed or State.Discarded),
-                $"{nameof(ModifyAsyncLocal)} does not support recursion - be sure to Commit or Discard the previously created context before creating a new one.");
+                (flowState == null || flowState.Operation.m_State is State.Committed or State.Discarded),
+                $"{nameof(ModifyAsyncLocal)} does not support recursion - be sure to commit, discard, or dispose the previously created modification operation before creating a new one.");
 
             m_FlowState.Value = new FlowState(this, false);
         }
 
-        record FlowState(AsyncLocalModificationScopeBase Context, bool ActionHandled);
+        record FlowState(AsyncLocalModificationOperationBase Operation, bool ActionHandled);
 
         static readonly AsyncLocal<FlowState?> m_FlowState = new(FlowStateChanged);
 
@@ -83,14 +84,14 @@ partial class ExecutionContextHelper
             if (flowState == null)
                 return;
 
-            switch (flowState.Context.m_State)
+            switch (flowState.Operation.m_State)
             {
                 case State.Initialized:
                     // Nothing is ready yet.
                     break;
 
                 case State.Committed:
-                    if (args.CurrentValue != args.PreviousValue)
+                    if (flowState != args.PreviousValue)
                     {
                         // Propagate the changes to the current control flow branch.
                         UpdateFlowState(flowState);
@@ -98,7 +99,7 @@ partial class ExecutionContextHelper
                     break;
 
                 case State.Discarded:
-                    // Delete any existing flow state - they all are discarded.
+                    // Delete all existing flow states.
                     m_FlowState.Value = null;
                     break;
 
@@ -107,6 +108,10 @@ partial class ExecutionContextHelper
             }
         }
 
+        /// <summary>
+        /// Updates the flow state using the finite state machine.
+        /// </summary>
+        /// <param name="state">The existing flow state.</param>
         static void UpdateFlowState(FlowState state)
         {
             var newState = GetNextFlowState(state);
@@ -114,14 +119,25 @@ partial class ExecutionContextHelper
                 m_FlowState.Value = newState;
         }
 
+        /// <summary>
+        /// Gets a next flow state of the finite state machine.
+        /// </summary>
+        /// <param name="state">The existing flow state.</param>
         static FlowState? GetNextFlowState(FlowState state)
         {
+            // A full FSM (Finite State Machine) coding style is used here,
+            // despite the fact that FlowState.ActionHandled = true is never stored in the state
+            // (such a state is considered as completed and gets erased by null).
+
+            // A low-hanging optimization is not to have ActionHandled field at all,
+            // but that would make the code more entangled and harder to maintain.
+
             bool actionHandled = state.ActionHandled;
 
             if (!actionHandled)
             {
                 // Replay the changes to the current control flow branch.
-                state.Context.DoAction();
+                state.Operation.ApplyChanges();
                 actionHandled = true;
             }
 
@@ -157,13 +173,15 @@ partial class ExecutionContextHelper
 
         protected void DoCommit()
         {
+            Debug.Assert(m_State == State.Initialized);
+
             m_State = State.Committed;
 
             // Apply the changes to the current control flow branch.
             if (m_FlowState.Value is not null and var flowState)
                 UpdateFlowState(flowState); // either using the flow state
             else
-                DoAction(); // or directly
+                ApplyChanges(); // or directly
         }
 
         /// <summary>
@@ -174,33 +192,45 @@ partial class ExecutionContextHelper
             if (m_State != State.Initialized)
                 throw new InvalidOperationException();
 
-            DoDiscard();
+            DiscardCore();
         }
 
-        void DoDiscard()
+        void DiscardCore()
         {
-            if (m_FlowState.Value is not null)
-                m_FlowState.Value = null;
+            Debug.Assert(m_State == State.Initialized);
 
             m_State = State.Discarded;
+
+            if (m_FlowState.Value is not null)
+                m_FlowState.Value = null;
         }
 
-        protected virtual void DoAction()
+        /// <summary>
+        /// Applies the changes to the current state.
+        /// </summary>
+        void ApplyChanges()
         {
             Debug.Assert(m_State == State.Committed);
+
+            DoAction();
         }
+
+        /// <summary>
+        /// Executes the state-modifying action.
+        /// </summary>
+        protected abstract void DoAction();
 
         public void Dispose()
         {
-            // Discard unless an explicit command was received.
+            // Discard unless an explicit order was received.
             if (m_State == State.Initialized)
-                DoDiscard();
+                DiscardCore();
         }
     }
 
-    public sealed class AsyncLocalModificationScope : AsyncLocalModificationScopeBase
+    public sealed class AsyncLocalModificationOperation : AsyncLocalModificationOperationBase
     {
-        internal AsyncLocalModificationScope(Action action)
+        internal AsyncLocalModificationOperation(Action action)
         {
             m_Action = action;
         }
@@ -218,27 +248,26 @@ partial class ExecutionContextHelper
 
         protected override void DoAction()
         {
-            base.DoAction();
             m_Action();
         }
     }
 
-    public sealed class AsyncLocalModificationScope<TValue> : AsyncLocalModificationScopeBase
+    public sealed class AsyncLocalModificationOperation<T> : AsyncLocalModificationOperationBase
     {
-        internal AsyncLocalModificationScope(Action<TValue> action)
+        internal AsyncLocalModificationOperation(Action<T> action)
         {
             m_Action = action;
         }
 
-        readonly Action<TValue> m_Action;
+        readonly Action<T> m_Action;
 
         // Using volatile access to ensure that a committed value is always visible in the committed state.
-        Volatile<TValue?> m_CommittedValue;
+        Volatile<T?> m_CommittedValue;
 
         /// <summary>
         /// Commits the changes.
         /// </summary>
-        public void Commit(TValue value)
+        public void Commit(T value)
         {
             ValidateCommit();
             m_CommittedValue.Value = value;
@@ -247,7 +276,6 @@ partial class ExecutionContextHelper
 
         protected override void DoAction()
         {
-            base.DoAction();
             m_Action(m_CommittedValue.Value!);
         }
     }

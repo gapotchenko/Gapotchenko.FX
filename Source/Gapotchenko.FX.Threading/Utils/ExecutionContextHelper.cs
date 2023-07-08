@@ -8,6 +8,5 @@ namespace Gapotchenko.FX.Threading.Utils;
 
 static partial class ExecutionContextHelper
 {
-    // This class is partial.
-    // For more code, please take a look at the neighboring source files.
+    // This is a partial class that has most of its code in the neighboring files.
 }
