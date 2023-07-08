@@ -11,7 +11,7 @@
 //   - Stephen Cleary (inspiration, parts of the code)
 //   - Oleksiy Gapotchenko (development)
 //   - Masashi Mizuno (inspiration, parts of the code)
-//
+
 // Deque<T> is a linear collection that supports element insertion and removal
 // at both ends with O(1) algorithmic complexity.
 
