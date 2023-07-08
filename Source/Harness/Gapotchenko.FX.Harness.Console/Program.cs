@@ -225,6 +225,38 @@ class Program
 
         var mutex = new AsyncRecursiveMutex();
 
+        Console.WriteLine("Running lock/unlock loop...");
+        var sw = Stopwatch.StartNew();
+        for (ulong i = 0; ; ++i)
+        {
+            using var d = await mutex.LockScopeAsync().ConfigureAwait(false);
+
+            //Console.WriteLine("Iteration: {0}", i);
+
+            if (i % 1000 == 0)
+            {
+                Console.WriteLine("{0} ms per 1000.", sw.ElapsedMilliseconds);
+                sw.Restart();
+            }
+
+            if (Console.KeyAvailable)
+            {
+                var key = Console.ReadKey(true);
+
+                switch (key.Key)
+                {
+                    case ConsoleKey.I:
+                        Console.WriteLine("Iteration: {0}", i);
+                        break;
+
+                    case ConsoleKey.G:
+                        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+                        break;
+                }
+
+            }
+        }
+
         if (await mutex.TryLockAsync(0))
             mutex.Unlock();
 
