@@ -14,7 +14,7 @@
 //
 // Needless to say, this whole situation even led to some industry stagnation
 // circa 2015-2022 because nobody had enough persistence in solving that
-// puzzle. In turn, that led to a plethora of half-baked attempts in cracking
+// puzzle. In turn, that led to a plethora of half-baked attempts of cracking
 // asynchronous recursion that never really worked - they were either too slow
 // (by using StackTrace) or unreliable (by using Task.CurrentId which is prone
 // to collisions). That translated to all sorts of problems and pains when
@@ -31,8 +31,10 @@
 // modification function F, we apply the same transform: D' = F(S'). This can
 // be repeated again and again, until we apply the changes to all the states
 // of interest, thus making the changes equal in all those states as if they
-// were propagated. In this way, the barrier of outward state propagation
-// imposed by AsyncLocal<T> primitive ceases to exist.
+// were propagated naturally. In this way, the barrier of outward state
+// propagation imposed by AsyncLocal<T> primitive ceases to exist, enabling
+// the existence of algorithms that use not only inward but outward
+// propagation of ambient data.
 
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
 
@@ -86,17 +88,29 @@ partial class ExecutionContextHelper
             if (flowState == null)
                 return;
 
-            switch (flowState.Operation.m_State)
+            UpdateFlowState(flowState, args.PreviousValue);
+        }
+
+        /// <summary>
+        /// Updates the flow state using the finite state machine.
+        /// </summary>
+        /// <param name="currentFlowState">The current flow state.</param>
+        /// <param name="previousFlowState">The previous flow state.</param>
+        static void UpdateFlowState(FlowState currentFlowState, Optional<FlowState?> previousFlowState = default)
+        {
+            switch (currentFlowState.Operation.m_State)
             {
                 case State.Initialized:
                     // Nothing is ready yet.
                     break;
 
                 case State.Committed:
-                    if (flowState != args.PreviousValue)
+                    if (!previousFlowState.HasValue || currentFlowState != previousFlowState.Value)
                     {
                         // Propagate the changes to the current control flow branch.
-                        UpdateFlowState(flowState);
+                        var newFlowState = GetNextFlowState(currentFlowState);
+                        if (newFlowState != currentFlowState)
+                            m_FlowState.Value = newFlowState;
                     }
                     break;
 
@@ -110,15 +124,11 @@ partial class ExecutionContextHelper
             }
         }
 
-        /// <summary>
-        /// Updates the flow state using the finite state machine.
-        /// </summary>
-        /// <param name="state">The existing flow state.</param>
-        static void UpdateFlowState(FlowState state)
+        static void UpdateFlowState_Old(FlowState currentFlowState)
         {
-            var newState = GetNextFlowState(state);
-            if (newState != state)
-                m_FlowState.Value = newState;
+            var newFlowState = GetNextFlowState(currentFlowState);
+            if (newFlowState != currentFlowState)
+                m_FlowState.Value = newFlowState;
         }
 
         /// <summary>
@@ -129,7 +139,8 @@ partial class ExecutionContextHelper
         {
             // A full FSM (Finite State Machine) coding style is used here,
             // despite the fact that FlowState.ActionHandled = true is never stored in the state
-            // (such a state is considered as completed and gets erased by null).
+            // (such a state is considered as completed and gets erased with a null value for
+            // memory preservation).
 
             // A low-hanging optimization is not to have ActionHandled field at all,
             // but that would make the code more entangled and harder to maintain.
@@ -182,8 +193,8 @@ partial class ExecutionContextHelper
             // Apply the changes to the current control flow branch.
             if (m_FlowState.Value is not null and var flowState)
                 UpdateFlowState(flowState); // either using the flow state
-            else
-                ApplyChanges(); // or directly
+            //else
+            //    ApplyChanges(); // or directly
         }
 
         /// <summary>
@@ -193,13 +204,13 @@ partial class ExecutionContextHelper
         {
             Debug.Assert(m_State == State.Committed);
 
-            DoAction();
+            InvokeAction();
         }
 
         /// <summary>
         /// Executes the state-modifying action.
         /// </summary>
-        protected abstract void DoAction();
+        protected abstract void InvokeAction();
 
         /// <summary>
         /// Discards the changes.
@@ -218,8 +229,8 @@ partial class ExecutionContextHelper
 
             m_State = State.Discarded;
 
-            if (m_FlowState.Value is not null)
-                m_FlowState.Value = null;
+            if (m_FlowState.Value is not null and var flowState)
+                UpdateFlowState(flowState);
 
             ForgetAction();
         }
@@ -242,7 +253,6 @@ partial class ExecutionContextHelper
         internal AsyncLocalModificationOperation(Action action)
         {
             Debug.Assert(action != null);
-
             m_Action = action;
         }
 
@@ -257,10 +267,9 @@ partial class ExecutionContextHelper
             DoCommit();
         }
 
-        protected override void DoAction()
+        protected override void InvokeAction()
         {
             Debug.Assert(m_Action != null);
-
             m_Action();
         }
 
@@ -275,7 +284,6 @@ partial class ExecutionContextHelper
         internal AsyncLocalModificationOperation(Action<T> action)
         {
             Debug.Assert(action != null);
-
             m_Action = action;
         }
 
@@ -290,15 +298,13 @@ partial class ExecutionContextHelper
         public void Commit(T value)
         {
             ValidateCommit();
-
             m_CommittedValue.Value = value;
             DoCommit();
         }
 
-        protected override void DoAction()
+        protected override void InvokeAction()
         {
             Debug.Assert(m_Action != null);
-
             m_Action(m_CommittedValue.Value!);
         }
 
