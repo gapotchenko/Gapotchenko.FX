@@ -34,6 +34,8 @@
 // were propagated. In this way, the barrier of outward state propagation
 // imposed by AsyncLocal<T> primitive ceases to exist.
 
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
+
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading.Utils;
@@ -185,6 +187,21 @@ partial class ExecutionContextHelper
         }
 
         /// <summary>
+        /// Applies the changes to the current state.
+        /// </summary>
+        void ApplyChanges()
+        {
+            Debug.Assert(m_State == State.Committed);
+
+            DoAction();
+        }
+
+        /// <summary>
+        /// Executes the state-modifying action.
+        /// </summary>
+        protected abstract void DoAction();
+
+        /// <summary>
         /// Discards the changes.
         /// </summary>
         public void Discard()
@@ -203,22 +220,14 @@ partial class ExecutionContextHelper
 
             if (m_FlowState.Value is not null)
                 m_FlowState.Value = null;
+
+            ForgetAction();
         }
 
         /// <summary>
-        /// Applies the changes to the current state.
+        /// Forgets the state-modifying action for a quicker memory reclamation.
         /// </summary>
-        void ApplyChanges()
-        {
-            Debug.Assert(m_State == State.Committed);
-
-            DoAction();
-        }
-
-        /// <summary>
-        /// Executes the state-modifying action.
-        /// </summary>
-        protected abstract void DoAction();
+        protected abstract void ForgetAction();
 
         public void Dispose()
         {
@@ -232,10 +241,12 @@ partial class ExecutionContextHelper
     {
         internal AsyncLocalModificationOperation(Action action)
         {
+            Debug.Assert(action != null);
+
             m_Action = action;
         }
 
-        readonly Action m_Action;
+        Action? m_Action;
 
         /// <summary>
         /// Commits the changes.
@@ -248,7 +259,14 @@ partial class ExecutionContextHelper
 
         protected override void DoAction()
         {
+            Debug.Assert(m_Action != null);
+
             m_Action();
+        }
+
+        protected override void ForgetAction()
+        {
+            m_Action = null;
         }
     }
 
@@ -256,10 +274,12 @@ partial class ExecutionContextHelper
     {
         internal AsyncLocalModificationOperation(Action<T> action)
         {
+            Debug.Assert(action != null);
+
             m_Action = action;
         }
 
-        readonly Action<T> m_Action;
+        Action<T>? m_Action;
 
         // Using volatile access to ensure that a committed value is always visible in the committed state.
         Volatile<T?> m_CommittedValue;
@@ -270,13 +290,21 @@ partial class ExecutionContextHelper
         public void Commit(T value)
         {
             ValidateCommit();
+
             m_CommittedValue.Value = value;
             DoCommit();
         }
 
         protected override void DoAction()
         {
+            Debug.Assert(m_Action != null);
+
             m_Action(m_CommittedValue.Value!);
+        }
+
+        protected override void ForgetAction()
+        {
+            m_Action = null;
         }
     }
 }
