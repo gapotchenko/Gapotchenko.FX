@@ -17,6 +17,9 @@
 //   .--'   `--.
 //   `---------'
 //
+// Copyright © 2023 Oleksiy Gapotchenko
+// Published under MIT license terms and conditions.
+//
 // This file contains an implementation of the backbone algorithm that makes
 // reentrancy tracking in asynchronous .NET code possible. Before this
 // invention, reentrancy tracking was widely considered to be inconceivable in
@@ -46,9 +49,6 @@
 // propagation imposed by AsyncLocal<T> primitive ceases to exist, enabling
 // the existence of algorithms that use not only inward but outward
 // propagation of ambient data.
-//
-// Copyright © 2023 Oleksiy Gapotchenko
-// Published under MIT license terms and conditions.
 
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
 
@@ -324,6 +324,7 @@ partial class ExecutionContextHelper
         protected override void ForgetAction()
         {
             m_Action = null;
+            m_CommittedValue = default;
         }
     }
 }
