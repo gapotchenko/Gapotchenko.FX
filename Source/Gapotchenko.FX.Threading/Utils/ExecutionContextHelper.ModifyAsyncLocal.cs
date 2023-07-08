@@ -40,7 +40,7 @@
 // modification function F. So, D = F(S). Now, whenever we want to go to
 // another destination state D' knowing only a source state S' and the state
 // modification function F, we apply the same transform: D' = F(S'). This can
-// be repeated again and again, until we apply the changes to all the states
+// be repeated over and over, until we apply the changes to all the states
 // of interest, thus making the changes in all these states equivalent as if
 // they were propagated naturally. In this way, the barrier of outward state
 // propagation imposed by AsyncLocal<T> primitive ceases to exist, enabling
@@ -83,7 +83,7 @@ partial class ExecutionContextHelper
         {
             Debug.Assert(
                 m_FlowState.Value is var flowState &&
-                (flowState == null || flowState.Operation.m_State is State.Committed or State.Discarded),
+                (flowState == null || flowState.Operation.m_State is OperationState.Committed or OperationState.Discarded),
                 $"{nameof(ModifyAsyncLocal)} does not support recursion - be sure to commit, discard, or dispose the previously created modification operation before creating a new one.");
 
             m_FlowState.Value = new FlowState(this, false);
@@ -114,11 +114,11 @@ partial class ExecutionContextHelper
         {
             switch (currentFlowState.Operation.m_State)
             {
-                case State.Initialized:
-                    // Nothing is ready yet.
+                case OperationState.Initialized:
+                    // Operation is not completed yet.
                     break;
 
-                case State.Committed:
+                case OperationState.Committed:
                     if (!previousFlowState.HasValue || currentFlowState != previousFlowState.Value)
                     {
                         // Propagate the changes to the current control flow branch.
@@ -128,8 +128,8 @@ partial class ExecutionContextHelper
                     }
                     break;
 
-                case State.Discarded:
-                    // Delete all existing flow states.
+                case OperationState.Discarded:
+                    // Delete all existing flow states for the operation.
                     m_FlowState.Value = null;
                     break;
 
@@ -139,7 +139,7 @@ partial class ExecutionContextHelper
         }
 
         /// <summary>
-        /// Gets a next flow state of the finite state machine.
+        /// Gets a next flow state.
         /// </summary>
         /// <param name="state">The existing flow state.</param>
         static FlowState? GetNextFlowState(FlowState state)
@@ -156,7 +156,7 @@ partial class ExecutionContextHelper
 
             if (!actionHandled)
             {
-                // Replay the changes to the current control flow branch.
+                // Replay the changes in the current control flow branch.
                 state.Operation.ApplyChanges();
                 actionHandled = true;
             }
@@ -175,7 +175,7 @@ partial class ExecutionContextHelper
             return newState;
         }
 
-        enum State
+        enum OperationState
         {
             Initialized,
             Committed,
@@ -183,25 +183,31 @@ partial class ExecutionContextHelper
         }
 
         // Using volatile access to ensure that a state is always visible.
-        volatile State m_State;
+        volatile OperationState m_State;
 
         protected void ValidateCommit()
         {
-            if (m_State != State.Initialized)
+            if (m_State != OperationState.Initialized)
                 throw new InvalidOperationException();
         }
 
         protected void DoCommit()
         {
-            Debug.Assert(m_State == State.Initialized);
+            Debug.Assert(m_State == OperationState.Initialized);
 
-            m_State = State.Committed;
+            m_State = OperationState.Committed;
+
+            bool applied = false;
 
             // Apply the changes to the current control flow branch.
             if (m_FlowState.Value is not null and var flowState)
-                UpdateFlowState(flowState); // either using the flow state
-            else
-                ApplyChanges(); // or directly
+            {
+                UpdateFlowState(flowState);
+                applied = flowState.Operation == this;
+            }
+
+            if (!applied)
+                ApplyChanges();
         }
 
         /// <summary>
@@ -209,7 +215,7 @@ partial class ExecutionContextHelper
         /// </summary>
         void ApplyChanges()
         {
-            Debug.Assert(m_State == State.Committed);
+            Debug.Assert(m_State == OperationState.Committed);
 
             InvokeAction();
         }
@@ -224,17 +230,17 @@ partial class ExecutionContextHelper
         /// </summary>
         public void Discard()
         {
-            if (m_State != State.Initialized)
+            if (m_State != OperationState.Initialized)
                 throw new InvalidOperationException();
 
-            DiscardCore();
+            DoDiscard();
         }
 
-        void DiscardCore()
+        void DoDiscard()
         {
-            Debug.Assert(m_State == State.Initialized);
+            Debug.Assert(m_State == OperationState.Initialized);
 
-            m_State = State.Discarded;
+            m_State = OperationState.Discarded;
 
             if (m_FlowState.Value is not null and var flowState)
                 UpdateFlowState(flowState);
@@ -249,9 +255,9 @@ partial class ExecutionContextHelper
 
         public void Dispose()
         {
-            // Discard unless an explicit order was received.
-            if (m_State == State.Initialized)
-                DiscardCore();
+            // Discard the operation unless an explicit order was received.
+            if (m_State == OperationState.Initialized)
+                DoDiscard();
         }
     }
 
