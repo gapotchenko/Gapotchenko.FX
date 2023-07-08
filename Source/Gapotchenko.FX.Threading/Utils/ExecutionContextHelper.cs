@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
+using System.Diagnostics;
+
 namespace Gapotchenko.FX.Threading.Utils;
 
 static class ExecutionContextHelper
@@ -27,26 +29,29 @@ static class ExecutionContextHelper
         {
             m_Action = action;
 
-            m_FlowState = new(FlowStateChanged)
-            {
-                // GC root in the flow state record holds a reference to this context
-                // so it could continue to receive notifications on the flow state changes
-                // even after the context goes out of the visibility scope in the code that uses it.
-                Value = new FlowState(this, false)
-            };
+            Debug.Assert(
+                m_FlowState.Value is var flowState &&
+                (flowState == null || flowState.Context.m_State is State.Committed or State.Discarded),
+                $"{nameof(ModifyAsyncLocal)} does not support recursion.");
+            m_FlowState.Value = new FlowState(this, false);
         }
 
         readonly Action<TValue> m_Action;
-        readonly AsyncLocal<FlowState?> m_FlowState;
 
-        record FlowState(object GCRoot, bool ActionHandled);
+        record FlowState(AsyncLocalModificationContext<TValue> Context, bool ActionHandled);
 
-        void FlowStateChanged(AsyncLocalValueChangedArgs<FlowState?> args)
+        static readonly AsyncLocal<FlowState?> m_FlowState = new(FlowStateChanged);
+
+        static void FlowStateChanged(AsyncLocalValueChangedArgs<FlowState?> args)
         {
             if (!args.ThreadContextChanged)
                 return;
 
-            switch (m_State)
+            var flowState = args.CurrentValue;
+            if (flowState == null)
+                return;
+
+            switch (flowState.Context.m_State)
             {
                 case State.Initialized:
                     // Nothing is ready yet.
@@ -55,20 +60,14 @@ static class ExecutionContextHelper
                 case State.Committed:
                     if (args.CurrentValue != args.PreviousValue)
                     {
-                        if (args.CurrentValue is not null and var flowState)
-                        {
-                            // Propagate the changes to the current control flow branch.
-                            UpdateFlowState(flowState);
-                        }
+                        // Propagate the changes to the current control flow branch.
+                        UpdateFlowState(flowState);
                     }
                     break;
 
                 case State.Discarded:
-                    if (args.CurrentValue is not null)
-                    {
-                        // Delete any existing flow state - they all are discarded.
-                        m_FlowState.Value = null;
-                    }
+                    // Delete any existing flow state - they all are discarded.
+                    m_FlowState.Value = null;
                     break;
 
                 default:
@@ -76,21 +75,21 @@ static class ExecutionContextHelper
             }
         }
 
-        void UpdateFlowState(FlowState state)
+        static void UpdateFlowState(FlowState state)
         {
             var newState = GetNextFlowState(state);
             if (newState != state)
                 m_FlowState.Value = newState;
         }
 
-        FlowState? GetNextFlowState(FlowState state)
+        static FlowState? GetNextFlowState(FlowState state)
         {
             bool actionHandled = state.ActionHandled;
 
             if (!actionHandled)
             {
                 // Replay the changes to the current control flow branch.
-                m_Action(m_CommittedValue.Value!);
+                state.Context.DoAction();
                 actionHandled = true;
             }
 
@@ -128,14 +127,13 @@ static class ExecutionContextHelper
                 throw new InvalidOperationException();
 
             m_CommittedValue.Value = value;
+            m_State = State.Committed;
 
             // Apply the changes to the current control flow branch.
             if (m_FlowState.Value is not null and var flowState)
                 UpdateFlowState(flowState); // either using the flow state
             else
                 m_Action(value); // or directly
-
-            m_State = State.Committed;
         }
 
         /// <summary>
@@ -150,6 +148,13 @@ static class ExecutionContextHelper
                 m_FlowState.Value = null;
 
             m_State = State.Discarded;
+        }
+
+        void DoAction()
+        {
+            Debug.Assert(m_State == State.Committed);
+
+            m_Action(m_CommittedValue.Value!);
         }
     }
 }

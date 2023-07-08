@@ -229,13 +229,14 @@ class Program
         var sw = Stopwatch.StartNew();
         for (ulong i = 0; ; ++i)
         {
-            using var d = await mutex.LockScopeAsync().ConfigureAwait(false);
+            using var d = await mutex.LockScopeAsync();
 
             //Console.WriteLine("Iteration: {0}", i);
 
             if (i % 1000 == 0)
             {
-                Console.WriteLine("{0} ms per 1000.", sw.ElapsedMilliseconds);
+                var t = sw.ElapsedMilliseconds;
+                await Console.Out.WriteLineAsync(string.Format("{0} ms per 1000.", t));
                 sw.Restart();
             }
 
