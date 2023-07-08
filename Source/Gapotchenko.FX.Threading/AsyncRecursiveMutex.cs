@@ -36,35 +36,17 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
         if (!m_RecursionTracker.IsEntered)
         {
             var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
-            try
-            {
-                return m_CoreImpl
-                    .LockAsync(cancellationToken)
-                    .ContinueWith(
-                        task =>
-                        {
-                            try
-                            {
-                                // Rethrow the task exception, if any.
-                                task.GetAwaiter().GetResult();
 
-                                // Propagate the recursion tracking information.
-                                asyncLocalChanges.Commit();
-                            }
-                            finally
-                            {
-                                asyncLocalChanges.Dispose();
-                            }
-                        },
-                        CancellationToken.None,
-                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
-                        TaskScheduler.Default);
-            }
-            catch
+            async Task ExecuteAsync()
             {
-                asyncLocalChanges.Dispose();
-                throw;
+                using (asyncLocalChanges)
+                {
+                    await m_CoreImpl.LockAsync(cancellationToken).ConfigureAwait(false);
+                    asyncLocalChanges.Commit();
+                }
             }
+
+            return ExecuteAsync();
         }
         else
         {
@@ -105,14 +87,12 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
     /// <inheritdoc/>
     public Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
-        //using (ExecutionContext.SuppressFlow())
         return TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(timeout, cancellationToken));
     }
 
     /// <inheritdoc/>
     public Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken = default)
     {
-        //using (ExecutionContext.SuppressFlow())
         return TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(millisecondsTimeout, cancellationToken));
     }
 
@@ -121,37 +101,19 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
         if (!m_RecursionTracker.IsEntered)
         {
             var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
-            try
-            {
-                return
-                    func()
-                    .ContinueWith(
-                        task =>
-                        {
-                            try
-                            {
-                                bool locked = task.GetAwaiter().GetResult();
 
-                                // Propagate the recursion tracking information.
-                                if (locked)
-                                    asyncLocalChanges.Commit();
-
-                                return locked;
-                            }
-                            finally
-                            {
-                                asyncLocalChanges.Dispose();
-                            }
-                        },
-                        CancellationToken.None,
-                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
-                        TaskScheduler.Default);
-            }
-            catch
+            async Task<bool> ExecuteAsync()
             {
-                asyncLocalChanges.Dispose();
-                throw;
+                using (asyncLocalChanges)
+                {
+                    bool locked = await func().ConfigureAwait(false);
+                    if (locked)
+                        asyncLocalChanges.Commit();
+                    return locked;
+                }
             }
+
+            return ExecuteAsync();
         }
         else
         {
