@@ -84,10 +84,7 @@ partial class ExecutionContextHelper
     {
         protected AsyncLocalModificationOperationBase()
         {
-            // Flush a pending operation first, if any.
-            var flowState = m_FlowState.Value;
-            if (flowState != null)
-                UpdateFsm(flowState);
+            UpdateCurrentFsm();
 
             Debug.Assert(
                 m_FlowState.Value is null,
@@ -112,13 +109,21 @@ partial class ExecutionContextHelper
         /// <summary>
         /// Updates a finite state machine associated with the current asynchronous control flow.
         /// </summary>
-        void UpdateFsm()
+        static void UpdateCurrentFsm()
         {
-            var flowState = m_FlowState.Value;
-            if (flowState != null)
+            if (m_FlowState.Value is not null and var flowState)
+                UpdateFsm(flowState);
+        }
+
+        /// <summary>
+        /// Updates a finite state machine associated with the current asynchronous control
+        /// flow for the current operation.
+        /// </summary>
+        void UpdateOperationFsm()
+        {
+            if (m_FlowState.Value is not null and var flowState &&
+                flowState.Operation == this)
             {
-                if (flowState.Operation != this)
-                    return;
                 UpdateFsm(flowState);
             }
         }
@@ -255,7 +260,7 @@ partial class ExecutionContextHelper
             m_State = state;
 
             // Notify FSM about the operation state change so it could be acted upon.
-            UpdateFsm();
+            UpdateOperationFsm();
         }
 
         public void Dispose()
