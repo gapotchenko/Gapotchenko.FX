@@ -84,16 +84,16 @@ partial class ExecutionContextHelper
     {
         protected AsyncLocalModificationOperationBase()
         {
-            UpdateCurrentFsm();
+            //UpdateCurrentFsm();
 
-            Debug.Assert(
-                m_FlowState.Value is null,
-                $"{nameof(ModifyAsyncLocal)} does not support recursion. Before creating a new modification operation, the previously created operation must be committed, discarded, or disposed.");
+            //Debug.Assert(
+            //    m_FlowState.Value is null,
+            //    $"{nameof(ModifyAsyncLocal)} does not support recursion. Before creating a new modification operation, the previously created operation must be committed, discarded, or disposed.");
 
-            m_FlowState.Value = new FlowState(this, false);
+            m_FlowState.Value = new FlowState(this, false, m_FlowState.Value);
         }
 
-        record FlowState(AsyncLocalModificationOperationBase Operation, bool ActionHandled);
+        record FlowState(AsyncLocalModificationOperationBase Operation, bool ActionHandled, FlowState? ParentState);
 
         static readonly AsyncLocal<FlowState?> m_FlowState = new(FlowStateChanged);
 
@@ -134,64 +134,63 @@ partial class ExecutionContextHelper
         /// <param name="currentFlowState">The current flow state.</param>
         static void UpdateFsm(FlowState currentFlowState)
         {
-            switch (currentFlowState.Operation.m_State)
-            {
-                case OperationState.Initialized:
-                    // Operation is not completed yet.
-                    break;
-
-                case OperationState.Committed:
-                    // Propagate the changes to the current control flow branch.
-                    var newFlowState = GetNextCommittedFlowState(currentFlowState);
-                    if (newFlowState != currentFlowState)
-                        m_FlowState.Value = newFlowState;
-                    break;
-
-                case OperationState.Discarded:
-                    // Delete all existing flow states for the operation.
-                    m_FlowState.Value = null;
-                    break;
-
-                default:
-                    throw new InvalidOperationException();
-            }
+            var newFlowState = TraverseNextFlowState(currentFlowState);
+            if (newFlowState != currentFlowState)
+                m_FlowState.Value = newFlowState;
         }
 
-        /// <summary>
-        /// Gets a next flow state of a committed operation.
-        /// </summary>
-        /// <param name="state">The current flow state.</param>
-        static FlowState? GetNextCommittedFlowState(FlowState state)
+        static FlowState? TraverseNextFlowState(FlowState? state)
         {
-            // A full FSM (Finite State Machine) coding style is used here,
-            // despite the fact that FlowState.ActionHandled = true is never stored in the state
-            // (such a state is considered as completed and gets erased with a null value for
-            // better memory reclamation).
-
-            // A low-hanging optimization is not to have ActionHandled field at all,
-            // but that would make the code more entangled and harder to maintain.
-
-            bool actionHandled = state.ActionHandled;
-
-            if (!actionHandled)
-            {
-                // Replay the changes in the current control flow branch.
-                state.Operation.ApplyChanges();
-                actionHandled = true;
-            }
-
-            FlowState? newState;
-            if (actionHandled)
-            {
-                // All actions are done - no need to hold a flow state anymore.
-                newState = null;
-            }
+            if (state is null)
+                return null;
+            else if (GetNextFlowState(state) is not null and var newState)
+                return newState;
             else
-            {
-                newState = state;
-            }
+                return TraverseNextFlowState(state.ParentState);
+        }
 
-            return newState;
+        static FlowState? GetNextFlowState(FlowState state)
+        {
+            return state.Operation.m_State switch
+            {
+                OperationState.Initialized => state, // operation is not completed yet
+                OperationState.Committed => HandleCommittedState(state), // propagate the changes to the current control flow branch
+                OperationState.Discarded => null, // discard all existing flow states associated with the operation
+                _ => throw new InvalidOperationException(),
+            };
+
+            static FlowState? HandleCommittedState(FlowState state)
+            {
+                // A full FSM (Finite State Machine) coding style is used here,
+                // despite the fact that FlowState.ActionHandled = true is never stored in the state
+                // (such a state is considered as completed and gets erased with a null value for
+                // better memory reclamation).
+
+                // A low-hanging optimization is not to have ActionHandled field at all,
+                // but that would make the code more entangled and harder to maintain.
+
+                bool actionHandled = state.ActionHandled;
+
+                if (!actionHandled)
+                {
+                    // Replay the changes in the current control flow branch.
+                    state.Operation.ApplyChanges();
+                    actionHandled = true;
+                }
+
+                FlowState? newState;
+                if (actionHandled)
+                {
+                    // All actions are done - no need to hold a flow state anymore.
+                    newState = null;
+                }
+                else
+                {
+                    newState = state;
+                }
+
+                return newState;
+            }
         }
 
         enum OperationState
@@ -268,6 +267,8 @@ partial class ExecutionContextHelper
             // Discard the operation unless an explicit order was received.
             if (m_State == OperationState.Initialized)
                 DoDiscard();
+            //else
+            //    UpdateOperationFsm();
         }
     }
 
