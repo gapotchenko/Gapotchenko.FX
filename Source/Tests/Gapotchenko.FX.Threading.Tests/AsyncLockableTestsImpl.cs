@@ -165,86 +165,89 @@ readonly struct AsyncLockableTestsImpl
         var cts = new CancellationTokenSource();
         ExceptionDispatchInfo? exceptionInfo = null;
 
-        var task =
-            Parallel.ForEachAsync(
-                Enumerable.Range(1, 32),
-                cts.Token,
-                async (_, cancellationToken) =>
-                {
-                    try
+        for (int i = 0; i < 1000; ++i)
+        {
+            var task =
+                Parallel.ForEachAsync(
+                    Enumerable.Range(1, ThreadingCapabilities.LogicalProcessorCount),
+                    cts.Token,
+                    async (_, cancellationToken) =>
                     {
-                        await ThreadEntry(lockable, getRecursionLevel(), cancellationToken, lockAsyncFunc);
-                    }
-                    catch (Exception e) when (!e.IsControlFlowException())
-                    {
-                        // Capture the first exception.
-                        exceptionInfo ??= ExceptionDispatchInfo.Capture(e);
-
-                        // Cancel the remaining tasks.
-                        cts.Cancel();
-
-                        throw;
-                    }
-
-                    static async Task ThreadEntry(
-                        IAsyncLockable lockable,
-                        int recursionDepth,
-                        CancellationToken cancellationToken,
-                        Func<IAsyncLockable, CancellationToken, Task> lockAsyncFunc)
-                    {
-                        await lockAsyncFunc(lockable, cancellationToken);
-                        Assert.IsTrue(lockable.IsLocked, "TP1");
-
-                        for (int i = 0; i < recursionDepth; ++i)
+                        try
                         {
-                            Assert.IsTrue(await lockable.TryLockAsync(0, cancellationToken), $"TP2 #{i}");
-                            Assert.IsTrue(lockable.IsLocked, $"TP3 #{i}");
+                            await ThreadEntry(lockable, getRecursionLevel(), cancellationToken, lockAsyncFunc);
+                        }
+                        catch (Exception e) when (!e.IsControlFlowException())
+                        {
+                            // Capture the first exception.
+                            exceptionInfo ??= ExceptionDispatchInfo.Capture(e);
+
+                            // Cancel the remaining tasks.
+                            cts.Cancel();
+
+                            throw;
                         }
 
-                        // Switch the context to verify that the lock recursion information is flowing.
-                        await Task.Yield();
-
-                        for (int i = 0; i < recursionDepth; ++i)
-                        {
-                            lockable.Unlock();
-                            Assert.IsTrue(lockable.IsLocked, $"TP4 #{i}");
-                        }
-
-                        // Switch the context to verify that the lock recursion information is flowing.
-                        await Task.Yield();
-
-                        for (int i = 0; i < recursionDepth; ++i)
+                        static async Task ThreadEntry(
+                            IAsyncLockable lockable,
+                            int recursionDepth,
+                            CancellationToken cancellationToken,
+                            Func<IAsyncLockable, CancellationToken, Task> lockAsyncFunc)
                         {
                             await lockAsyncFunc(lockable, cancellationToken);
-                            Assert.IsTrue(lockable.IsLocked, $"TP5 #{i}");
-                        }
+                            Assert.IsTrue(lockable.IsLocked, "TP1");
 
-                        // Switch the context to verify that the lock recursion information is flowing.
-                        await Task.Yield();
+                            for (int i = 0; i < recursionDepth; ++i)
+                            {
+                                Assert.IsTrue(await lockable.TryLockAsync(0, cancellationToken), $"TP2 #{i}");
+                                Assert.IsTrue(lockable.IsLocked, $"TP3 #{i}");
+                            }
 
-                        for (int i = 0; i < recursionDepth; ++i)
-                        {
+                            // Switch the context to verify that the lock recursion information is flowing.
+                            await Task.Yield();
+
+                            for (int i = 0; i < recursionDepth; ++i)
+                            {
+                                lockable.Unlock();
+                                Assert.IsTrue(lockable.IsLocked, $"TP4 #{i}");
+                            }
+
+                            // Switch the context to verify that the lock recursion information is flowing.
+                            await Task.Yield();
+
+                            for (int i = 0; i < recursionDepth; ++i)
+                            {
+                                await lockAsyncFunc(lockable, cancellationToken);
+                                Assert.IsTrue(lockable.IsLocked, $"TP5 #{i}");
+                            }
+
+                            // Switch the context to verify that the lock recursion information is flowing.
+                            await Task.Yield();
+
+                            for (int i = 0; i < recursionDepth; ++i)
+                            {
+                                lockable.Unlock();
+                                Assert.IsTrue(lockable.IsLocked, $"TP6 #{i}");
+                            }
+
                             lockable.Unlock();
-                            Assert.IsTrue(lockable.IsLocked, $"TP6 #{i}");
                         }
+                    });
 
-                        lockable.Unlock();
-                    }
-                });
-
-        try
-        {
-            // Some threads may be in a non-cancelable state due to bugs in the code being tested.
-            // Hence canceling the task as a whole here, just in case.
-            // Otherwise, the test may just hang.
-            await task.WaitAsync(cts.Token);
-        }
-        catch (OperationCanceledException)
-        {
-            if (exceptionInfo != null)
-                exceptionInfo.Throw();
-            else
-                throw;
+            try
+            {
+                // Some threads may be in a non-cancelable state due to bugs in the code being tested.
+                // Hence canceling the task as a whole here, just in case.
+                // Otherwise, the test may just hang.
+                await task.WaitAsync(cts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                if (exceptionInfo != null)
+                    exceptionInfo.Throw();
+                else
+                    throw;
+            }
         }
     }
 #endif
