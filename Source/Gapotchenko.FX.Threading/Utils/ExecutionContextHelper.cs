@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.Threading.Utils;
 
 /// <summary>
-/// Provides additional functionality for managing the execution context for the current thread.
+/// Provides additional functionality for managing the execution context of the current thread.
 /// </summary>
 static partial class ExecutionContextHelper
 {
