@@ -78,18 +78,19 @@ partial class ExecutionContextHelper
         new(action);
 
     /// <summary>
+    /// Synchronizes <see cref="AsyncLocal{T}"/> data access as follows:
+    /// data modifications made prior to the call to <see cref="AsyncLocalBarrier"/>
+    /// cannot be reordered to execute after the call to <see cref="AsyncLocalBarrier"/>.
+    /// </summary>
+    public static void AsyncLocalBarrier() => AsyncLocalModificationOperationBase.Barrier();
+
+    /// <summary>
     /// Represents an operation that modifies ambient data associated with an asynchronous control flow.
     /// </summary>
     public abstract class AsyncLocalModificationOperationBase : IDisposable
     {
         protected AsyncLocalModificationOperationBase()
         {
-            //UpdateCurrentFsm();
-
-            //Debug.Assert(
-            //    m_FlowState.Value is null,
-            //    $"{nameof(ModifyAsyncLocal)} does not support recursion. Before creating a new modification operation, the previously created operation must be committed, discarded, or disposed.");
-
             m_FlowState.Value = new FlowState(this, false, m_FlowState.Value);
         }
 
@@ -101,28 +102,6 @@ partial class ExecutionContextHelper
         {
             if (args.ThreadContextChanged &&
                 args.CurrentValue is not null and var flowState)
-            {
-                UpdateFsm(flowState);
-            }
-        }
-
-        /// <summary>
-        /// Updates a finite state machine associated with the current asynchronous control flow.
-        /// </summary>
-        static void UpdateCurrentFsm()
-        {
-            if (m_FlowState.Value is not null and var flowState)
-                UpdateFsm(flowState);
-        }
-
-        /// <summary>
-        /// Updates a finite state machine associated with the current asynchronous control
-        /// flow for the current operation.
-        /// </summary>
-        void UpdateOperationFsm()
-        {
-            if (m_FlowState.Value is not null and var flowState &&
-                flowState.Operation == this)
             {
                 UpdateFsm(flowState);
             }
@@ -191,6 +170,25 @@ partial class ExecutionContextHelper
 
                 return newState;
             }
+        }
+
+        /// <summary>
+        /// Updates a finite state machine associated with the current asynchronous control flow
+        /// and operation.
+        /// </summary>
+        void UpdateOperationFsm()
+        {
+            if (m_FlowState.Value is not null and var flowState &&
+                flowState.Operation == this)
+            {
+                UpdateFsm(flowState);
+            }
+        }
+
+        internal static void Barrier()
+        {
+            if (m_FlowState.Value is not null and var flowState)
+                UpdateFsm(flowState);
         }
 
         enum OperationState
@@ -267,8 +265,6 @@ partial class ExecutionContextHelper
             // Discard the operation unless an explicit order was received.
             if (m_State == OperationState.Initialized)
                 DoDiscard();
-            //else
-            //    UpdateOperationFsm();
         }
     }
 
