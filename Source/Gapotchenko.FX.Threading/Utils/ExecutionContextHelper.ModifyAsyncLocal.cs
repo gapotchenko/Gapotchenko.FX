@@ -17,9 +17,6 @@
 //   .--'   `--.
 //   `---------'
 //
-// Copyright © 2023 Oleksiy Gapotchenko
-// Published under MIT license terms and conditions.
-//
 // This file contains an implementation of the backbone algorithm that makes
 // reentrancy tracking in asynchronous .NET code possible. Before this
 // invention, reentrancy tracking was widely considered to be inconceivable in
@@ -49,6 +46,9 @@
 // propagation imposed by AsyncLocal<T> primitive ceases to exist, enabling
 // the existence of algorithms that use not only inward but outward
 // propagation of ambient data.
+//
+// Copyright © 2023 Oleksiy Gapotchenko
+// Published under MIT license terms and conditions.
 
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
 
@@ -77,14 +77,21 @@ partial class ExecutionContextHelper
     public static AsyncLocalModificationOperation<T> ModifyAsyncLocal<T>(Action<T> action) =>
         new(action);
 
+    /// <summary>
+    /// Represents an operation that modifies ambient data associated with an asynchronous control flow.
+    /// </summary>
     public abstract class AsyncLocalModificationOperationBase : IDisposable
     {
         protected AsyncLocalModificationOperationBase()
         {
+            // Flush a pending operation first, if any.
+            var flowState = m_FlowState.Value;
+            if (flowState != null)
+                UpdateFsm(flowState);
+
             Debug.Assert(
-                m_FlowState.Value is var flowState &&
-                (flowState == null || flowState.Operation.m_State is OperationState.Committed or OperationState.Discarded),
-                $"{nameof(ModifyAsyncLocal)} does not support recursion - be sure to commit, discard, or dispose the previously created modification operation before creating a new one.");
+                m_FlowState.Value is null,
+                $"{nameof(ModifyAsyncLocal)} does not support recursion. Before creating a new modification operation, the previously created operation must be committed, discarded, or disposed.");
 
             m_FlowState.Value = new FlowState(this, false);
         }
@@ -95,22 +102,32 @@ partial class ExecutionContextHelper
 
         static void FlowStateChanged(AsyncLocalValueChangedArgs<FlowState?> args)
         {
-            if (!args.ThreadContextChanged)
-                return;
-
-            var flowState = args.CurrentValue;
-            if (flowState == null)
-                return;
-
-            UpdateFlowState(flowState, args.PreviousValue);
+            if (args.ThreadContextChanged &&
+                args.CurrentValue is not null and var flowState)
+            {
+                UpdateFsm(flowState);
+            }
         }
 
         /// <summary>
-        /// Updates the flow state using the finite state machine.
+        /// Updates a finite state machine associated with the current asynchronous control flow.
+        /// </summary>
+        void UpdateFsm()
+        {
+            var flowState = m_FlowState.Value;
+            if (flowState != null)
+            {
+                if (flowState.Operation != this)
+                    return;
+                UpdateFsm(flowState);
+            }
+        }
+
+        /// <summary>
+        /// Updates a finite state machine associated with the specified flow state.
         /// </summary>
         /// <param name="currentFlowState">The current flow state.</param>
-        /// <param name="previousFlowState">The previous flow state.</param>
-        static void UpdateFlowState(FlowState currentFlowState, Optional<FlowState?> previousFlowState = default)
+        static void UpdateFsm(FlowState currentFlowState)
         {
             switch (currentFlowState.Operation.m_State)
             {
@@ -119,13 +136,10 @@ partial class ExecutionContextHelper
                     break;
 
                 case OperationState.Committed:
-                    if (!previousFlowState.HasValue || currentFlowState != previousFlowState.Value)
-                    {
-                        // Propagate the changes to the current control flow branch.
-                        var newFlowState = GetNextFlowState(currentFlowState);
-                        if (newFlowState != currentFlowState)
-                            m_FlowState.Value = newFlowState;
-                    }
+                    // Propagate the changes to the current control flow branch.
+                    var newFlowState = GetNextCommittedFlowState(currentFlowState);
+                    if (newFlowState != currentFlowState)
+                        m_FlowState.Value = newFlowState;
                     break;
 
                 case OperationState.Discarded:
@@ -139,15 +153,15 @@ partial class ExecutionContextHelper
         }
 
         /// <summary>
-        /// Gets a next flow state.
+        /// Gets a next flow state of a committed operation.
         /// </summary>
-        /// <param name="state">The existing flow state.</param>
-        static FlowState? GetNextFlowState(FlowState state)
+        /// <param name="state">The current flow state.</param>
+        static FlowState? GetNextCommittedFlowState(FlowState state)
         {
             // A full FSM (Finite State Machine) coding style is used here,
             // despite the fact that FlowState.ActionHandled = true is never stored in the state
             // (such a state is considered as completed and gets erased with a null value for
-            // memory preservation).
+            // better memory reclamation).
 
             // A low-hanging optimization is not to have ActionHandled field at all,
             // but that would make the code more entangled and harder to maintain.
@@ -193,8 +207,6 @@ partial class ExecutionContextHelper
 
         protected void DoCommit()
         {
-            Debug.Assert(m_State == OperationState.Initialized);
-
             ChangeState(OperationState.Committed);
         }
 
@@ -226,8 +238,6 @@ partial class ExecutionContextHelper
 
         void DoDiscard()
         {
-            Debug.Assert(m_State == OperationState.Initialized);
-
             ChangeState(OperationState.Discarded);
             ForgetAction();
         }
@@ -239,10 +249,13 @@ partial class ExecutionContextHelper
 
         void ChangeState(OperationState state)
         {
+            Debug.Assert(state != OperationState.Initialized);
+            Debug.Assert(m_State == OperationState.Initialized);
+
             m_State = state;
 
-            if (m_FlowState.Value is not null and var flowState)
-                UpdateFlowState(flowState);
+            // Notify FSM about the operation state change so it could be acted upon.
+            UpdateFsm();
         }
 
         public void Dispose()
@@ -253,6 +266,7 @@ partial class ExecutionContextHelper
         }
     }
 
+    /// <inheritdoc/>
     public sealed class AsyncLocalModificationOperation : AsyncLocalModificationOperationBase
     {
         internal AsyncLocalModificationOperation(Action action)
@@ -284,6 +298,7 @@ partial class ExecutionContextHelper
         }
     }
 
+    /// <inheritdoc/>
     public sealed class AsyncLocalModificationOperation<T> : AsyncLocalModificationOperationBase
     {
         internal AsyncLocalModificationOperation(Action<T> action)
