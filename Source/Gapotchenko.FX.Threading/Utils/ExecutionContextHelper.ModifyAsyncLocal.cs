@@ -195,19 +195,7 @@ partial class ExecutionContextHelper
         {
             Debug.Assert(m_State == OperationState.Initialized);
 
-            m_State = OperationState.Committed;
-
-            bool applied = false;
-
-            // Apply the changes to the current control flow branch.
-            if (m_FlowState.Value is not null and var flowState)
-            {
-                UpdateFlowState(flowState);
-                applied = flowState.Operation == this;
-            }
-
-            if (!applied)
-                ApplyChanges();
+            ChangeState(OperationState.Committed);
         }
 
         /// <summary>
@@ -240,11 +228,7 @@ partial class ExecutionContextHelper
         {
             Debug.Assert(m_State == OperationState.Initialized);
 
-            m_State = OperationState.Discarded;
-
-            if (m_FlowState.Value is not null and var flowState)
-                UpdateFlowState(flowState);
-
+            ChangeState(OperationState.Discarded);
             ForgetAction();
         }
 
@@ -252,6 +236,14 @@ partial class ExecutionContextHelper
         /// Forgets the state-modifying action for a quicker memory reclamation.
         /// </summary>
         protected abstract void ForgetAction();
+
+        void ChangeState(OperationState state)
+        {
+            m_State = state;
+
+            if (m_FlowState.Value is not null and var flowState)
+                UpdateFlowState(flowState);
+        }
 
         public void Dispose()
         {
