@@ -165,7 +165,8 @@ readonly struct AsyncLockableTestsImpl
         var cts = new CancellationTokenSource();
         ExceptionDispatchInfo? exceptionInfo = null;
 
-        for (int i = 0; i < 1000; ++i)
+        const int iterationCount = 1000;
+        for (int iteration = 1; iteration <= iterationCount; ++iteration)
         {
             var task =
                 Parallel.ForEachAsync(
@@ -175,7 +176,9 @@ readonly struct AsyncLockableTestsImpl
                     {
                         try
                         {
-                            await ThreadEntry(lockable, getRecursionLevel(), cancellationToken, lockAsyncFunc);
+                            await ThreadEntry(
+                                lockable, getRecursionLevel(), cancellationToken, lockAsyncFunc,
+                                iteration, iterationCount);
                         }
                         catch (Exception e) when (!e.IsControlFlowException())
                         {
@@ -192,15 +195,18 @@ readonly struct AsyncLockableTestsImpl
                             IAsyncLockable lockable,
                             int recursionDepth,
                             CancellationToken cancellationToken,
-                            Func<IAsyncLockable, CancellationToken, Task> lockAsyncFunc)
+                            Func<IAsyncLockable, CancellationToken, Task> lockAsyncFunc,
+                            int iteration, int iterationCount)
                         {
                             await lockAsyncFunc(lockable, cancellationToken);
                             Assert.IsTrue(lockable.IsLocked, "TP1");
 
+                            string GetTestPointText(string id, int i) => $"{id} #{i} ♽ {iteration}/{iterationCount}";
+
                             for (int i = 0; i < recursionDepth; ++i)
                             {
-                                Assert.IsTrue(await lockable.TryLockAsync(0, cancellationToken), $"TP2 #{i}");
-                                Assert.IsTrue(lockable.IsLocked, $"TP3 #{i}");
+                                Assert.IsTrue(await lockable.TryLockAsync(0, cancellationToken), GetTestPointText("TP2", i));
+                                Assert.IsTrue(lockable.IsLocked, GetTestPointText("TP3", i));
                             }
 
                             // Switch the context to verify that the lock recursion information is flowing.
@@ -209,7 +215,7 @@ readonly struct AsyncLockableTestsImpl
                             for (int i = 0; i < recursionDepth; ++i)
                             {
                                 lockable.Unlock();
-                                Assert.IsTrue(lockable.IsLocked, $"TP4 #{i}");
+                                Assert.IsTrue(lockable.IsLocked, GetTestPointText("TP4", i));
                             }
 
                             // Switch the context to verify that the lock recursion information is flowing.
@@ -218,7 +224,7 @@ readonly struct AsyncLockableTestsImpl
                             for (int i = 0; i < recursionDepth; ++i)
                             {
                                 await lockAsyncFunc(lockable, cancellationToken);
-                                Assert.IsTrue(lockable.IsLocked, $"TP5 #{i}");
+                                Assert.IsTrue(lockable.IsLocked, GetTestPointText("TP5", i));
                             }
 
                             // Switch the context to verify that the lock recursion information is flowing.
@@ -227,7 +233,7 @@ readonly struct AsyncLockableTestsImpl
                             for (int i = 0; i < recursionDepth; ++i)
                             {
                                 lockable.Unlock();
-                                Assert.IsTrue(lockable.IsLocked, $"TP6 #{i}");
+                                Assert.IsTrue(lockable.IsLocked, GetTestPointText("TP6", i));
                             }
 
                             lockable.Unlock();
