@@ -1,7 +1,17 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading.Utils;
 
+/// <summary>
+/// Volatile access modifier for a value of type <typeparamref name="T"/>.
+/// </summary>
+/// <typeparam name="T">The type of a value to provide the volatile access for.</typeparam>
 [DebuggerDisplay("{Value}")]
 struct Volatile<T>
 {

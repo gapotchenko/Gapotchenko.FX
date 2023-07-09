@@ -165,7 +165,9 @@ readonly struct AsyncLockableTestsImpl
         var cts = new CancellationTokenSource();
         ExceptionDispatchInfo? exceptionInfo = null;
 
+        // Doing this many times increases the chances of catching a concurrency bug.
         const int iterationCount = 1000;
+
         for (int iteration = 1; iteration <= iterationCount; ++iteration)
         {
             var task =
@@ -242,9 +244,9 @@ readonly struct AsyncLockableTestsImpl
 
             try
             {
-                // Some threads may be in a non-cancelable state due to bugs in the code being tested.
+                // Some threads may be in a non-cancelable state due to bugs in the tested code.
                 // Hence canceling the task as a whole here, just in case.
-                // Otherwise, the test may just hang.
+                // Otherwise, the test may just hang forever.
                 await task.WaitAsync(cts.Token);
             }
             catch (OperationCanceledException)

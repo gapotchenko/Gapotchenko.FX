@@ -26,7 +26,7 @@
 // Needless to say, this whole situation even led to some industry downdraft
 // circa 2015-2022 because nobody had enough persistence in solving that
 // puzzle. In turn, that led to a plethora of half-baked attempts at cracking
-// asynchronous recursion which never really worked - they were either too slow
+// asynchronous recursion that never really worked - they were either too slow
 // (by using StackTrace) or unreliable (by using Task.CurrentId which is prone
 // to collisions). That translated to all sorts of problems and pains when
 // people were trying to write asynchronous .NET code to solve their business
@@ -39,13 +39,13 @@
 // to go from a source state S to a destination state D we apply the state
 // modification function F. So, D = F(S). Now, whenever we want to go to
 // another destination state D' knowing only a source state S' and the state
-// modification function F, we apply the same transform: D' = F(S'). This can
-// be repeated over and over, until we apply the changes to all the states
-// of interest, thus making the changes in all these states equivalent as if
-// they were propagated naturally. In this way, the barrier of outward state
-// propagation imposed by AsyncLocal<T> primitive ceases to exist, enabling
-// the existence of algorithms that use not only inward but outward
-// propagation of ambient data.
+// modification function F, we apply the same transformation: D' = F(S'). The
+// process can be repeated over and over, until we apply the changes to all
+// the states of interest, thus making the changes in all these states
+// equivalent as if they were propagated naturally. In this way, the barrier
+// of outward state propagation imposed by AsyncLocal<T> ceases to exist. This
+// makes it possible to implement algorithms that use not only inward, but
+// also outward propagation of the ambient data.
 //
 // Copyright © 2023 Oleksiy Gapotchenko
 // Published under the terms and conditions of MIT License.
@@ -96,21 +96,31 @@ partial class ExecutionContextHelper
             m_FlowState.Value = new FlowState(this, false);
         }
 
-        record FlowState(AsyncLocalModificationOperationBase Operation, bool ActionHandled);
+        record FlowState(AsyncLocalModificationOperationBase Operation, bool ChangesApplied);
 
         static readonly AsyncLocal<FlowState?> m_FlowState = new(FlowStateChanged);
 
         static void FlowStateChanged(AsyncLocalValueChangedArgs<FlowState?> args)
         {
+            // This is a state transition function which is invoked on a thread context change.
+            // It allows us to propagate accumulated state modifications to the currently executing
+            // asynchronous control flow.
+
+            // The existence of a state transition function is not obligatory as its absence can be
+            // compensated by the presence of strategically placed barriers (see Barrier() method).
+            // This would lead to a worse memory reclamation, however.
+
             if (args.ThreadContextChanged &&
                 args.CurrentValue is not null and var flowState)
             {
+                // The flow state is managed by a finite state machine (FSM).
                 UpdateFsm(flowState);
             }
         }
 
         /// <summary>
-        /// Updates a finite state machine associated with the specified flow state.
+        /// Updates a finite state machine (FSM) associated with the specified flow state,
+        /// and sets the current flow state to the new value calculated by the FSM.
         /// </summary>
         /// <param name="currentFlowState">The current flow state.</param>
         static void UpdateFsm(FlowState currentFlowState)
@@ -133,26 +143,26 @@ partial class ExecutionContextHelper
             static FlowState? HandleCommittedState(FlowState state)
             {
                 // A full FSM (Finite State Machine) coding style is used here,
-                // despite the fact that FlowState.ActionHandled = true is never stored in the state
-                // (such a state is considered as completed and gets erased with a null value for
-                // better memory reclamation).
+                // despite the fact that FlowState.ChangesApplied = true property is never stored in
+                // the state object (such a state is considered as completed and gets erased with
+                // a null value for better memory reclamation).
 
-                // A low-hanging optimization is not to have ActionHandled field at all,
-                // but that would make the code more entangled and harder to maintain.
+                // A low-hanging optimization is not to have ChangesApplied property at all,
+                // but that would make the code more entangled and harder to understand and maintain.
 
-                bool actionHandled = state.ActionHandled;
+                bool changesApplied = state.ChangesApplied;
 
-                if (!actionHandled)
+                if (!changesApplied)
                 {
-                    // Replay the changes in the current control flow branch.
+                    // Apply the changes to the current control flow branch if they weren't applied yet.
                     state.Operation.ApplyChanges();
-                    actionHandled = true;
+                    changesApplied = true;
                 }
 
                 FlowState? newState;
-                if (actionHandled)
+                if (changesApplied)
                 {
-                    // All actions are done - no need to hold a flow state anymore.
+                    // All actions are taken - no need to hold the flow state anymore.
                     newState = null;
                 }
                 else
@@ -165,8 +175,7 @@ partial class ExecutionContextHelper
         }
 
         /// <summary>
-        /// Updates a finite state machine associated with the current asynchronous control flow
-        /// and operation.
+        /// Updates a finite state machine associated with the operation.
         /// </summary>
         void UpdateOperationFsm()
         {
@@ -179,7 +188,9 @@ partial class ExecutionContextHelper
 
         internal static void Barrier()
         {
-            // Update the FSM to "flush" any pending activities.
+            // Updating the FSM to complete any pending activities
+            // creates an ordered relation between operations
+            // that were issued before and after the barrier.
             if (m_FlowState.Value is not null and var flowState)
                 UpdateFsm(flowState);
         }
@@ -191,7 +202,7 @@ partial class ExecutionContextHelper
             Discarded
         }
 
-        // Using volatile access to ensure that a state is always visible.
+        // Using volatile access modifier to ensure that the operation state is always visible.
         volatile OperationState m_State;
 
         protected void ValidateCommit()
@@ -206,8 +217,12 @@ partial class ExecutionContextHelper
         }
 
         /// <summary>
-        /// Applies the changes to the current state.
+        /// Applies the changes to the current asynchronous control flow state
+        /// by invoking a state-modifying function supplied by the user.
         /// </summary>
+        /// <remarks>
+        /// This approach allows the changes to be "replayed" numerous times.
+        /// </remarks>
         void ApplyChanges()
         {
             Debug.Assert(m_State == OperationState.Committed);
@@ -304,12 +319,13 @@ partial class ExecutionContextHelper
 
         Action<T>? m_Action;
 
-        // Using volatile access to ensure that a committed value is always visible in the committed state.
+        // Using volatile access modifier to ensure that a committed value is always visible in the committed state.
         Volatile<T?> m_CommittedValue;
 
         /// <summary>
         /// Commits the changes.
         /// </summary>
+        /// <param name="value">The value that will be passed to a state-modifying action.</param>
         public void Commit(T value)
         {
             ValidateCommit();

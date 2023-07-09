@@ -40,7 +40,7 @@ readonly struct AsyncRecursionTracker
     /// </summary>
     public void Enter()
     {
-        ++m_RecursionLevel.Value;
+        m_RecursionLevel.Value = checked(m_RecursionLevel.Value + 1);
     }
 
     /// <summary>
