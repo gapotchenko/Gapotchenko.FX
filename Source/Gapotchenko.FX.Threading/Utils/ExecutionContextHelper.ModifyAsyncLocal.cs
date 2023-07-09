@@ -21,19 +21,19 @@
 // reentrancy tracking in asynchronous .NET code possible. Before this
 // invention, reentrancy tracking was widely considered to be inconceivable in
 // asynchronous .NET code because AsyncLocal<T> class only supports the inward
-// flow of ambient data.
+// flow of ambient data that is local to a given asynchronous control flow.
 //
 // Needless to say, this whole situation even led to some industry downdraft
 // circa 2015-2022 because nobody had enough persistence in solving that
-// puzzle. In turn, that led to a plethora of half-baked attempts of cracking
-// asynchronous recursion that never really worked - they were either too slow
+// puzzle. In turn, that led to a plethora of half-baked attempts at cracking
+// asynchronous recursion which never really worked - they were either too slow
 // (by using StackTrace) or unreliable (by using Task.CurrentId which is prone
 // to collisions). That translated to all sorts of problems and pains when
 // people were trying to write asynchronous .NET code to solve their business
 // needs.
 //
-// In contrast, this algorithm is fast and mathematically sound making
-// primitives like AsyncRecursiveMutex realistically possible in .NET.
+// In contrast, the proposed algorithm is fast and mathematically sound,
+// making primitives like AsyncRecursiveMutex realistically possible in .NET.
 //
 // The idea behind the algorithm is based on an obvious mathematical property:
 // to go from a source state S to a destination state D we apply the state
@@ -48,7 +48,7 @@
 // propagation of ambient data.
 //
 // Copyright © 2023 Oleksiy Gapotchenko
-// Published under MIT license terms and conditions.
+// Published under the terms and conditions of MIT License.
 
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
 
@@ -69,13 +69,11 @@ partial class ExecutionContextHelper
     /// </remarks>
     /// <param name="action">The <see cref="Action{T}"/> that directly or indirectly modifies an <see cref="AsyncLocal{T}.Value"/> property.</param>
     /// <returns>An <see cref="AsyncLocalModificationOperation"/> instance that can be used to either commit or discard the modification.</returns>
-    public static AsyncLocalModificationOperation ModifyAsyncLocal(Action action) =>
-        new(action);
+    public static AsyncLocalModificationOperation ModifyAsyncLocal(Action action) => new(action);
 
     /// <returns>An <see cref="AsyncLocalModificationOperation{T}"/> instance that can be used to either commit or discard the modification.</returns>
     /// <inheritdoc cref="ModifyAsyncLocal(Action)"/>
-    public static AsyncLocalModificationOperation<T> ModifyAsyncLocal<T>(Action<T> action) =>
-        new(action);
+    public static AsyncLocalModificationOperation<T> ModifyAsyncLocal<T>(Action<T> action) => new(action);
 
     /// <summary>
     /// Synchronizes <see cref="AsyncLocal{T}"/> data access as follows:
@@ -91,10 +89,14 @@ partial class ExecutionContextHelper
     {
         protected AsyncLocalModificationOperationBase()
         {
-            m_FlowState.Value = new FlowState(this, false, m_FlowState.Value);
+            Debug.Assert(
+                m_FlowState.Value is null,
+                $"{nameof(ModifyAsyncLocal)} does not support recursion. Before creating a new modification operation, the previously created operation must be committed, discarded, or disposed. Additionally, a call to {nameof(AsyncLocalBarrier)} may be required.");
+
+            m_FlowState.Value = new FlowState(this, false);
         }
 
-        record FlowState(AsyncLocalModificationOperationBase Operation, bool ActionHandled, FlowState? ParentState);
+        record FlowState(AsyncLocalModificationOperationBase Operation, bool ActionHandled);
 
         static readonly AsyncLocal<FlowState?> m_FlowState = new(FlowStateChanged);
 
@@ -113,19 +115,9 @@ partial class ExecutionContextHelper
         /// <param name="currentFlowState">The current flow state.</param>
         static void UpdateFsm(FlowState currentFlowState)
         {
-            var newFlowState = TraverseNextFlowState(currentFlowState);
+            var newFlowState = GetNextFlowState(currentFlowState);
             if (newFlowState != currentFlowState)
                 m_FlowState.Value = newFlowState;
-        }
-
-        static FlowState? TraverseNextFlowState(FlowState? state)
-        {
-            if (state is null)
-                return null;
-            else if (GetNextFlowState(state) is not null and var newState)
-                return newState;
-            else
-                return TraverseNextFlowState(state.ParentState);
         }
 
         static FlowState? GetNextFlowState(FlowState state)
@@ -187,6 +179,7 @@ partial class ExecutionContextHelper
 
         internal static void Barrier()
         {
+            // Update the FSM to "flush" any pending activities.
             if (m_FlowState.Value is not null and var flowState)
                 UpdateFsm(flowState);
         }
