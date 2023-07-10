@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using Gapotchenko.FX.Threading.Utils;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Security;
 
 namespace Gapotchenko.FX.Threading.Tasks;
@@ -116,10 +118,22 @@ public static class TaskBridge
     /// <param name="task">The cancelable asynchronous <see cref="Task"/> to execute.</param>
     public static void Execute(Func<CancellationToken, Task> task)
     {
-        if (task == null)
-            throw new ArgumentNullException(nameof(task));
+        ExceptionHelper.ThrowIfArgumentIsNull(task);
 
         ExecuteCore(task);
+    }
+
+    /// <summary>
+    /// Synchronously executes a cancelable asynchronous <see cref="Task"/>.
+    /// If the current thread is being aborted or interrupted then a cancellation is requested for the specified task.
+    /// </summary>
+    /// <param name="task">The cancelable asynchronous <see cref="Task"/> to execute.</param>
+    /// <param name="cancellationToken">The additional cancellation token to propagate to the executed task.</param>
+    public static void Execute(Func<CancellationToken, Task> task, CancellationToken cancellationToken)
+    {
+        ExceptionHelper.ThrowIfArgumentIsNull(task);
+
+        ExecuteCore(task, cancellationToken);
     }
 
     /// <summary>
@@ -128,10 +142,19 @@ public static class TaskBridge
     /// </summary>
     /// <param name="task">The cancelable asynchronous <see cref="Task{TResult}"/> to execute.</param>
     /// <returns>A result of the executed task.</returns>
-    public static TResult Execute<TResult>(Func<CancellationToken, Task<TResult>> task)
+    public static TResult Execute<TResult>(Func<CancellationToken, Task<TResult>> task) =>
+        Execute(task, CancellationToken.None);
+
+    /// <summary>
+    /// Synchronously executes an asynchronous <see cref="Task{TResult}"/>.
+    /// If the current thread is being aborted or interrupted then a cancellation is requested for the specified task.
+    /// </summary>
+    /// <param name="task">The cancelable asynchronous <see cref="Task{TResult}"/> to execute.</param>
+    /// <param name="cancellationToken">The additional cancellation token to propagate to the executed task.</param>
+    /// <returns>A result of the executed task.</returns>
+    public static TResult Execute<TResult>(Func<CancellationToken, Task<TResult>> task, CancellationToken cancellationToken)
     {
-        if (task == null)
-            throw new ArgumentNullException(nameof(task));
+        ExceptionHelper.ThrowIfArgumentIsNull(task);
 
         var result = Optional<TResult>.None;
 
@@ -139,7 +162,8 @@ public static class TaskBridge
             async cancellationToken =>
             {
                 result = await task(cancellationToken).ConfigureAwait(false);
-            });
+            },
+            cancellationToken);
 
         return result.Value;
     }
@@ -247,10 +271,28 @@ public static class TaskBridge
 
     static void ExecuteCore(Func<CancellationToken, Task> task)
     {
+        using var cts = new CancellationTokenSource();
+        ExecuteCore(task, cts);
+    }
+
+    static void ExecuteCore(Func<CancellationToken, Task> task, CancellationToken cancellationToken)
+    {
+        if (!cancellationToken.CanBeCanceled)
+        {
+            ExecuteCore(task);
+            return;
+        }
+
+        using var cts = new CancellationTokenSource();
+        using var ctr = cancellationToken.Register(cts.Cancel);
+        ExecuteCore(task, cts);
+    }
+
+    static void ExecuteCore(Func<CancellationToken, Task> task, CancellationTokenSource cts)
+    {
         try
         {
             var savedContext = SynchronizationContext.Current;
-            using var cts = new CancellationTokenSource();
             Task? pendingTask = null;
             var context = new ExclusiveSynchronizationContext();
             try
