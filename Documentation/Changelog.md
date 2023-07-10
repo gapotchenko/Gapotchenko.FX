@@ -32,7 +32,8 @@ Release date: not released yet
   - Added polyfill for `ReadSpan` method of `System.Runtime.InteropServices.SafeBuffer` type
   - Added polyfill for `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` type
   - Added polyfills for `System.Threading.Tasks.Task.WaitAsync` and `System.Threading.Tasks.Task<TResult>.WaitAsync` methods
-  - Added polyfill for a LINQ-style pipe operator
+  - Added polyfill for `System.Diagnostics.StackTraceHiddenAttribute` type
+- - Added polyfill for a LINQ-style pipe operator
   - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
 - .NET Framework 4.6 support is retired. The minimal supported version of .NET Framework is 4.6.1
 - Fixed issues:
