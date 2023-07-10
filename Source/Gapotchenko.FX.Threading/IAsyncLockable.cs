@@ -7,7 +7,8 @@
 namespace Gapotchenko.FX.Threading;
 
 /// <summary>
-/// The interface of a lockable synchronization primitive that supports both synchronous and asynchronous operations.
+/// The interface of a lockable synchronization primitive
+/// that supports both synchronous and asynchronous operations.
 /// </summary>
 public interface IAsyncLockable
 {

@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Threading;
 /// that ensures that only one thread can access a resource at any given time.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
-public sealed class AsyncRecursiveMutex : IAsyncMutex
+public sealed class AsyncRecursiveMutex : IAsyncRecursiveMutex
 {
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     AsyncMutexImpl m_CoreImpl = new();
@@ -132,6 +132,9 @@ public sealed class AsyncRecursiveMutex : IAsyncMutex
 
     /// <inheritdoc/>
     public bool IsLocked => m_CoreImpl.IsLocked;
+
+    /// <inheritdoc/>
+    public bool IsEntered => m_RecursionTracker.IsEntered;
 
     bool IAsyncLockable.IsRecursive => true;
 }
