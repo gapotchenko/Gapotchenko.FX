@@ -106,7 +106,9 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
     // ----------------------------------------------------------------------
 
     bool DoWaitOne(TimeSpan timeout, CancellationToken cancellationToken) =>
-        TaskBridge.Execute(DoWaitOneAsync(timeout, cancellationToken));
+        TaskBridge.Execute(
+            ct => DoWaitOneAsync(timeout, ct),
+            cancellationToken);
 
     Task<bool> DoWaitOneAsync(TimeSpan timeout, CancellationToken cancellationToken)
     {
