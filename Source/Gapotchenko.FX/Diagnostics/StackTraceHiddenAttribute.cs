@@ -6,9 +6,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-
 #if !NET6_0_OR_GREATER
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
@@ -34,6 +31,9 @@ public sealed class StackTraceHiddenAttribute : Attribute
 }
 
 #else
+
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 [assembly: TypeForwardedTo(typeof(StackTraceHiddenAttribute))]
 

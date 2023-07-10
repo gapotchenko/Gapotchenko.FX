@@ -1,4 +1,14 @@
-﻿// Portions © .NET Foundation and its Licensors
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Kirill Rode
+// Year of introduction: 2021
+
+#if NET6_0_OR_GREATER
+#define TFF_PRIORITYQUEUE
+#endif
 
 #if !TFF_PRIORITYQUEUE
 

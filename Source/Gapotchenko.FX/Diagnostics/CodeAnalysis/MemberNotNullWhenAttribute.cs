@@ -1,17 +1,23 @@
-﻿#if !TFF_MEMBERNOTNULLATTRIBUTE
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+#if !TFF_MEMBERNOTNULLATTRIBUTE
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 
 namespace System.Diagnostics.CodeAnalysis;
 
 /// <summary>
-/// <para>
 /// Specifies that the method or property will ensure that the listed field and property members have not-null values.
-/// </para>
-/// <para>
-/// This is a polyfill provided by Gapotchenko.FX.
-/// </para>
 /// </summary>
+/// <remarks>
+/// This is a polyfill provided by Gapotchenko.FX.
+/// </remarks>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, Inherited = false, AllowMultiple = true)]
 public sealed class MemberNotNullWhenAttribute : Attribute
 {

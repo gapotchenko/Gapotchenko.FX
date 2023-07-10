@@ -1,18 +1,24 @@
-﻿#if !TFF_REQUIREDMEMBERATTRIBUTE
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+#if !TFF_REQUIREDMEMBERATTRIBUTE
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 
 namespace System.Diagnostics.CodeAnalysis;
 
 /// <summary>
-/// <para>
 /// Specifies that this constructor sets all required members for the current type,
 /// and callers do not need to set any required members themselves.
-/// </para>
-/// <para>
-/// This is a polyfill provided by Gapotchenko.FX.
-/// </para>
 /// </summary>
+/// <remarks>
+/// This is a polyfill provided by Gapotchenko.FX.
+/// </remarks>
 [AttributeUsage(AttributeTargets.Constructor, AllowMultiple = false, Inherited = false)]
 public sealed class SetsRequiredMembersAttribute : Attribute
 {
