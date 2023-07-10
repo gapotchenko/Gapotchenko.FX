@@ -364,25 +364,39 @@ public static class TaskBridge
         if (!cancellationToken.CanBeCanceled)
             return ExecuteAsyncCore(action);
 
-        Thread? executionThread = null;
+        static void CancelThread(object state)
+        {
+            var thread = (Thread)state;
+
+            try
+            {
+                thread.Abort();
+            }
+            catch (ThreadStateException)
+            {
+                // Already aborted or no longer running.
+            }
+            catch (SecurityException)
+            {
+                // Not allowed.
+            }
+            catch (PlatformNotSupportedException)
+            {
+                // Not supported.
+            }
+        }
+
         Task? executionTask = null;
 
         void Task()
         {
+            // Use a graceful cancellation opportunity.
+            cancellationToken.ThrowIfCancellationRequested();
+
             try
             {
-                Volatile.Write(ref executionThread, Thread.CurrentThread);
-                try
-                {
-                    // Use the last chance graceful cancellation opportunity.
-                    cancellationToken.ThrowIfCancellationRequested();
-
+                using (cancellationToken.Register(CancelThread, Thread.CurrentThread))
                     action();
-                }
-                finally
-                {
-                    Volatile.Write(ref executionThread, null);
-                }
             }
             catch (ThreadAbortException)
             {
@@ -408,32 +422,6 @@ public static class TaskBridge
                 throw new TaskCanceledException(Volatile.Read(ref executionTask));
             }
         }
-
-        void Cancel()
-        {
-            var thread = Volatile.Read(ref executionThread);
-            if (thread == null)
-                return;
-
-            try
-            {
-                thread.Abort();
-            }
-            catch (ThreadStateException)
-            {
-                // Already aborted or no longer running.
-            }
-            catch (SecurityException)
-            {
-                // Not allowed.
-            }
-            catch (PlatformNotSupportedException)
-            {
-                // Not supported.
-            }
-        }
-
-        using var ctr = cancellationToken.Register(Cancel);
 
         var task = RunLongTask(Task, cancellationToken);
         Volatile.Write(ref executionTask, task);
