@@ -30,6 +30,87 @@ public interface IAsyncEvent
     bool IsSet { get; }
 
     /// <summary>
+    /// Blocks the current thread until the event receives a signal.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    void WaitOne(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Blocks the current thread until the event receives a signal,
+    /// using a 32-bit signed integer that specifies the timeout in milliseconds.
+    /// </summary>
+    /// <param name="millisecondsTimeout">
+    /// The number of milliseconds to wait,
+    /// <see cref="Timeout.Infinite"/> which has the value of <c>-1</c> to wait indefinitely,
+    /// or <c>0</c> to try to lock the synchronization primitive and return immediately.
+    /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>
+    /// <see langword="true"/> if the event receives a signal,
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="millisecondsTimeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="millisecondsTimeout"/> is greater than <see cref="int.MaxValue"/>.
+    /// </exception>
+    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    bool WaitOne(int millisecondsTimeout, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Blocks the current thread until the event receives a signal,
+    /// using a <see cref="TimeSpan"/> to measure the time interval.
+    /// </summary>
+    /// <param name="timeout">
+    /// A <see cref="TimeSpan"/> that represents the number of milliseconds to wait,
+    /// a <see cref="TimeSpan"/> that represents <c>-1</c> milliseconds to wait indefinitely,
+    /// or a <see cref="TimeSpan"/> that represents <c>0</c> milliseconds to try to lock the synchronization primitive and return immediately.
+    /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>
+    /// <see langword="true"/> if the event receives a signal,
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="timeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
+    /// </exception>
+    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    bool WaitOne(TimeSpan timeout, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Asynchronously waits until the event receives a signal.
+    /// </summary>
+    /// <inheritdoc cref="WaitOne(CancellationToken)"/>
+    Task WaitOneAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Asynchronously waits until the event receives a signal,
+    /// using a 32-bit signed integer that specifies the timeout in milliseconds.
+    /// </summary>
+    /// <returns>
+    /// A task that will complete with a result of <see langword="true"/> if the event receives a signal,
+    /// otherwise with a result of <see langword="false"/>.
+    /// </returns>
+    /// <inheritdoc cref="WaitOne(int, CancellationToken)"/>
+    Task<bool> WaitOneAsync(int millisecondsTimeout, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Asynchronously waits until the event receives a signal,
+    /// using a 32-bit signed integer that specifies the timeout in milliseconds.
+    /// </summary>
+    /// <returns>
+    /// A task that will complete with a result of <see langword="true"/> if the event receives a signal,
+    /// otherwise with a result of <see langword="false"/>.
+    /// </returns>
+    /// <inheritdoc cref="WaitOne(TimeSpan, CancellationToken)"/>
+    Task<bool> WaitOneAsync(TimeSpan timeout, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Gets a value indicating whether the event is an auto reset event as opposed to a manual reset event.
     /// </summary>
     bool IsAutoReset { get; }

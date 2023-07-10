@@ -5,12 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AsyncManualResetEvent.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageTag Include="async;recursive;reentrant;threading;bridge;mutex;lock;monitor;event;condition variable" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.TaskBridge" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncMutex" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncRecursiveMutex" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncMonitor" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncRecursiveMonitor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="AsyncManualResetEvent.cs" />
   </ItemGroup>
 
   <ItemGroup>
