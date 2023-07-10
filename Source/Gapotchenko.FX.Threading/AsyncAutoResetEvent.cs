@@ -33,7 +33,7 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    volatile bool m_Set;
+    bool m_Set;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly AsyncWaitQueue<bool> m_Queue = new();
@@ -51,16 +51,16 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
     /// <inheritdoc/>
     public void Reset()
     {
-        m_Set = false;
+        Volatile.Write(ref m_Set, false);
     }
 
     /// <inheritdoc/>
-    public bool IsSet => m_Set;
+    public bool IsSet => Volatile.Read(ref m_Set);
 
     /// <inheritdoc/>
     public void WaitOne(CancellationToken cancellationToken = default)
     {
-        WaitOneCore(Timeout.InfiniteTimeSpan, cancellationToken);
+        DoWaitOne(Timeout.InfiniteTimeSpan, cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -68,7 +68,7 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
     {
         ExceptionHelper.ValidateTimeoutArgument(millisecondsTimeout);
 
-        return WaitOneCore(TimeSpan.FromMilliseconds(millisecondsTimeout), cancellationToken);
+        return DoWaitOne(TimeSpan.FromMilliseconds(millisecondsTimeout), cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -76,13 +76,13 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
     {
         ExceptionHelper.ValidateTimeoutArgument(timeout);
 
-        return WaitOneCore(timeout, cancellationToken);
+        return DoWaitOne(timeout, cancellationToken);
     }
 
     /// <inheritdoc/>
     public Task WaitOneAsync(CancellationToken cancellationToken = default)
     {
-        return WaitOneCoreAsync(Timeout.InfiniteTimeSpan, cancellationToken);
+        return DoWaitOneAsync(Timeout.InfiniteTimeSpan, cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -90,7 +90,7 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
     {
         ExceptionHelper.ValidateTimeoutArgument(millisecondsTimeout);
 
-        return WaitOneCoreAsync(TimeSpan.FromMilliseconds(millisecondsTimeout), cancellationToken);
+        return DoWaitOneAsync(TimeSpan.FromMilliseconds(millisecondsTimeout), cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -98,29 +98,33 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
     {
         ExceptionHelper.ValidateTimeoutArgument(timeout);
 
-        return WaitOneCoreAsync(timeout, cancellationToken);
+        return DoWaitOneAsync(timeout, cancellationToken);
     }
 
     bool IAsyncEvent.IsAutoReset => true;
 
     // ----------------------------------------------------------------------
 
-    bool WaitOneCore(TimeSpan timeout, CancellationToken cancellationToken) =>
-        TaskBridge.Execute(WaitOneCoreAsync(timeout, cancellationToken));
+    bool DoWaitOne(TimeSpan timeout, CancellationToken cancellationToken) =>
+        TaskBridge.Execute(DoWaitOneAsync(timeout, cancellationToken));
 
-    Task<bool> WaitOneCoreAsync(TimeSpan timeout, CancellationToken cancellationToken)
+    Task<bool> DoWaitOneAsync(TimeSpan timeout, CancellationToken cancellationToken)
     {
+        Debug.Assert(ExceptionHelper.IsValidTimeout(timeout));
+
         lock (m_Queue.SyncRoot)
         {
             if (m_Set)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                if (cancellationToken.IsCancellationRequested)
+                    return Task.FromCanceled<bool>(cancellationToken);
+
                 m_Set = false;
                 return Task.FromResult(true);
             }
             else
             {
-                return m_Queue.Enqueue(timeout, cancellationToken);
+                return m_Queue.Enqueue(timeout, false, cancellationToken);
             }
         }
     }

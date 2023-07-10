@@ -21,10 +21,10 @@ readonly partial struct AsyncWaitQueue<T>
     public bool IsEmpty => m_Queue.Count == 0;
 
     /// <summary>
-    /// Enqueues a task that will be completed when it is dequeued.
+    /// Enqueues a task that will be completed when it is dequeued from the <see cref="AsyncWaitQueue{T}"/>.
     /// </summary>
     /// <param name="state">The state to use as the underlying <see cref="Task.AsyncState"/>.</param>
-    /// <returns>A task that will be completed when it is dequeued.</returns>
+    /// <returns>A task that will be completed when it is dequeued from the <see cref="AsyncWaitQueue{T}"/>.</returns>
     public Task<T> Enqueue(object? state)
     {
         var tcs = new TaskCompletionSource<T>(state, TaskCreationOptions.RunContinuationsAsynchronously);
