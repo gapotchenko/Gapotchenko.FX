@@ -12,5 +12,6 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="value">The array to test.</param>
     /// <returns><see langword="true"/> if the <paramref name="value"/> parameter is null or an empty array; otherwise, <see langword="false"/>.</returns>        
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool IsNullOrEmpty([NotNullWhen(false)] this Array? value) => value is null || value.Length == 0;
 }

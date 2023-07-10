@@ -12,5 +12,6 @@ public static class ReadOnlyCollectionExtensions
     /// </summary>
     /// <param name="value">The collection to test.</param>
     /// <returns><see langword="true"/> if the <paramref name="value"/> parameter is null or an empty collection; otherwise, <see langword="false"/>.</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IReadOnlyCollection<T>? value) => value is null || value.Count == 0;
 }

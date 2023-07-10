@@ -12,6 +12,7 @@ public static class SetExtensions
     /// </summary>
     /// <param name="value">The set to test.</param>
     /// <returns><see langword="true"/> if the <paramref name="value"/> parameter is null or an empty set; otherwise, <see langword="false"/>.</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool IsNullOrEmpty<T>(
         [NotNullWhen(false)]
 #if !TFF_HASHSET_IREADONLYCOLLECTION
