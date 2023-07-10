@@ -1,11 +1,30 @@
-﻿using Gapotchenko.FX.Threading.Tasks;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using Gapotchenko.FX.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading.Tests.Tasks;
 
 [TestClass]
 public sealed class TaskBridgeTests
 {
+    #region Settings
+
+#pragma warning disable IDE1006 // Naming Styles
+
+    static readonly TimeSpan TestData_CancellationDelay = TimeSpan.FromMilliseconds(200);
+    static readonly TimeSpan TestData_PositiveTimeout = TimeSpan.FromMilliseconds(30000);
+    static readonly TimeSpan TestData_NegativeTimeout = TimeSpan.FromMilliseconds(200);
+
+#pragma warning restore IDE1006 // Naming Styles
+
+    #endregion
+
     [TestMethod]
     public void TaskBridge_ThreadAffinity()
     {
@@ -133,7 +152,6 @@ public sealed class TaskBridgeTests
         }
 
         var exception = Assert.ThrowsException<Exception>(() => TaskBridge.Execute(F));
-        Assert.AreEqual(typeof(Exception), exception.GetType());
         Assert.AreEqual("Expected exception.", exception.Message);
     }
 
@@ -152,5 +170,56 @@ public sealed class TaskBridgeTests
 
         Assert.AreEqual(100, value1);
         Assert.AreEqual(200, value2);
+    }
+
+    [TestMethod]
+    public async Task TaskBridge_CancelSync()
+    {
+        using var startSemaphore = new SemaphoreSlim(0, 1);
+        using var barrierSemaphore = new SemaphoreSlim(0, 1);
+        using var exitSemaphore = new SemaphoreSlim(0, 1);
+        Exception? exitException = null;
+
+        void SyncProcedure()
+        {
+            try
+            {
+                startSemaphore.Release();
+                barrierSemaphore.Wait();
+            }
+            catch (Exception e)
+            {
+                exitException = e;
+                exitSemaphore.Release();
+                throw;
+            }
+            throw new UnreachableException();
+        }
+
+        try
+        {
+            var cts = new CancellationTokenSource();
+
+            var task = TaskBridge.ExecuteAsync(SyncProcedure, cts.Token);
+            await startSemaphore.WaitAsync();
+
+            cts.CancelAfter(TestData_CancellationDelay);
+
+            var cancellationException = await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => task.WaitAsync(TestData_PositiveTimeout));
+            Assert.AreEqual(task, cancellationException.Task);
+        }
+        finally
+        {
+            // Allow a synchronous thread to exit if it wasn't canceled for some reason.
+            barrierSemaphore.Release();
+        }
+
+        Assert.IsTrue(await exitSemaphore.WaitAsync(TestData_PositiveTimeout));
+
+#if NETFRAMEWORK
+        Assert.IsInstanceOfType<ThreadAbortException>(exitException);
+#elif NETCOREAPP
+        Assert.IsInstanceOfType<ThreadInterruptedException>(exitException);
+#endif
     }
 }

@@ -350,41 +350,16 @@ public static class TaskBridge
     {
         Debug.Assert(action is not null);
 
-        return RunLongTask(action, CancellationToken.None);
+        return StartLongRunningTask(action, CancellationToken.None);
     }
 
     static Task ExecuteAsyncCore(Action action, CancellationToken cancellationToken)
     {
         Debug.Assert(action is not null);
 
-#if !TFF_THREAD_ABORT
-        return RunLongTask(action, cancellationToken);
-#else
         // Use a quick path when possible.
         if (!cancellationToken.CanBeCanceled)
             return ExecuteAsyncCore(action);
-
-        static void CancelThread(object state)
-        {
-            var thread = (Thread)state;
-
-            try
-            {
-                thread.Abort();
-            }
-            catch (ThreadStateException)
-            {
-                // Already aborted or no longer running.
-            }
-            catch (SecurityException)
-            {
-                // Not allowed.
-            }
-            catch (PlatformNotSupportedException)
-            {
-                // Not supported.
-            }
-        }
 
         Task? executionTask = null;
 
@@ -392,14 +367,18 @@ public static class TaskBridge
         {
             // Use a graceful cancellation opportunity.
             cancellationToken.ThrowIfCancellationRequested();
-
             try
             {
-                using (cancellationToken.Register(CancelThread, Thread.CurrentThread))
+                using (cancellationToken.Register(
+                    state => TryCancelThread((Thread)state!),
+                    Thread.CurrentThread))
+                {
                     action();
+                }
             }
             catch (ThreadAbortException)
             {
+#if TFF_THREAD_ABORT
                 try
                 {
                     // Allow the task to finish gracefully.
@@ -413,6 +392,7 @@ public static class TaskBridge
                 {
                     Debug.Fail("A thread abort exception should not be thrown when it is unsupported by the host platform.");
                 }
+#endif
 
                 // Translate any thread abort to a task cancellation exception.
                 throw new TaskCanceledException(Volatile.Read(ref executionTask));
@@ -423,14 +403,56 @@ public static class TaskBridge
             }
         }
 
-        var task = RunLongTask(Task, cancellationToken);
+        var task = StartLongRunningTask(Task, cancellationToken);
         Volatile.Write(ref executionTask, task);
 
         return task;
-#endif
     }
 
-    static Task RunLongTask(Action action, CancellationToken cancellationToken)
+    /// <summary>
+    /// Tries to cancel a synchronous thread.
+    /// </summary>
+    /// <param name="thread">The thread to cancel.</param>
+    static bool TryCancelThread(Thread thread)
+    {
+#if TFF_THREAD_ABORT
+        try
+        {
+            thread.Abort();
+            return true;
+        }
+        catch (ThreadStateException)
+        {
+            // Already aborted or no longer running.
+        }
+        catch (SecurityException)
+        {
+            // Not allowed.
+        }
+        catch (PlatformNotSupportedException)
+        {
+            // Not supported.
+        }
+#endif
+
+        try
+        {
+            thread.Interrupt();
+            return true;
+        }
+        catch (SecurityException)
+        {
+            // Not allowed.
+        }
+        catch (PlatformNotSupportedException)
+        {
+            // Not supported.
+        }
+
+        return false;
+    }
+
+    static Task StartLongRunningTask(Action action, CancellationToken cancellationToken)
     {
         Debug.Assert(action is not null);
 
