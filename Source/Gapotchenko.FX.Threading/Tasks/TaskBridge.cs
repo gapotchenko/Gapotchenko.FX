@@ -1,6 +1,11 @@
-﻿using Gapotchenko.FX.Threading.Utils;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using Gapotchenko.FX.Threading.Utils;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Security;
 
 namespace Gapotchenko.FX.Threading.Tasks;
@@ -20,8 +25,7 @@ public static class TaskBridge
     /// <param name="task">The asynchronous <see cref="Task"/> to execute.</param>
     public static void Execute(Task task)
     {
-        if (task == null)
-            throw new ArgumentNullException(nameof(task));
+        ExceptionHelper.ThrowIfArgumentIsNull(task);
 
         // Use a quick path when possible.
         if (task.IsCompleted)
@@ -58,8 +62,7 @@ public static class TaskBridge
     /// <param name="task">The function that returns an asynchronous <see cref="Task"/> to execute.</param>
     public static void Execute(Func<Task> task)
     {
-        if (task == null)
-            throw new ArgumentNullException(nameof(task));
+        ExceptionHelper.ThrowIfArgumentIsNull(task);
 
         ExecuteCore(task);
     }
@@ -71,8 +74,7 @@ public static class TaskBridge
     /// <returns>A result of the executed task.</returns>
     public static TResult Execute<TResult>(Task<TResult> task)
     {
-        if (task == null)
-            throw new ArgumentNullException(nameof(task));
+        ExceptionHelper.ThrowIfArgumentIsNull(task);
 
         // Use a quick path when possible.
         if (task.IsCompleted)
@@ -105,8 +107,7 @@ public static class TaskBridge
     /// <returns>A result of the executed task.</returns>
     public static TResult Execute<TResult>(Func<Task<TResult>> task)
     {
-        if (task == null)
-            throw new ArgumentNullException(nameof(task));
+        ExceptionHelper.ThrowIfArgumentIsNull(task);
 
         return ExecuteCore(task);
     }
@@ -142,8 +143,12 @@ public static class TaskBridge
     /// </summary>
     /// <param name="task">The cancelable asynchronous <see cref="Task{TResult}"/> to execute.</param>
     /// <returns>A result of the executed task.</returns>
-    public static TResult Execute<TResult>(Func<CancellationToken, Task<TResult>> task) =>
-        Execute(task, CancellationToken.None);
+    public static TResult Execute<TResult>(Func<CancellationToken, Task<TResult>> task)
+    {
+        ExceptionHelper.ThrowIfArgumentIsNull(task);
+
+        return ExecuteCore(task, CancellationToken.None);
+    }
 
     /// <summary>
     /// Synchronously executes an asynchronous <see cref="Task{TResult}"/>.
@@ -156,16 +161,7 @@ public static class TaskBridge
     {
         ExceptionHelper.ThrowIfArgumentIsNull(task);
 
-        var result = Optional<TResult>.None;
-
-        ExecuteCore(
-            async cancellationToken =>
-            {
-                result = await task(cancellationToken).ConfigureAwait(false);
-            },
-            cancellationToken);
-
-        return result.Value;
+        return ExecuteCore(task, cancellationToken);
     }
 
     /// <summary>
@@ -183,8 +179,7 @@ public static class TaskBridge
     /// <returns>A <see cref="Task{TResult}"/> that executes the specified function.</returns>
     public static async Task<TResult> ExecuteAsync<TResult>(Func<TResult> func)
     {
-        if (func == null)
-            throw new ArgumentNullException(nameof(func));
+        ExceptionHelper.ThrowIfArgumentIsNull(func);
 
         var result = Optional<TResult>.None;
 
@@ -220,8 +215,7 @@ public static class TaskBridge
     /// <returns>A <see cref="Task{TResult}"/> that executes the specified function.</returns>
     public static async Task<TResult> ExecuteAsync<TResult>(Func<TResult> func, CancellationToken cancellationToken)
     {
-        if (func == null)
-            throw new ArgumentNullException(nameof(func));
+        ExceptionHelper.ThrowIfArgumentIsNull(func);
 
         var result = Optional<TResult>.None;
 
@@ -243,6 +237,8 @@ public static class TaskBridge
 
     static void ExecuteCore(Func<Task> task)
     {
+        Debug.Assert(task is not null);
+
         var savedContext = SynchronizationContext.Current;
         var context = new ExclusiveSynchronizationContext();
         try
@@ -258,6 +254,8 @@ public static class TaskBridge
 
     static TResult ExecuteCore<TResult>(Func<Task<TResult>> task)
     {
+        Debug.Assert(task is not null);
+
         var result = Optional<TResult>.None;
 
         ExecuteCore(
@@ -269,14 +267,26 @@ public static class TaskBridge
         return result.Value;
     }
 
-    static void ExecuteCore(Func<CancellationToken, Task> task)
+    static TResult ExecuteCore<TResult>(Func<CancellationToken, Task<TResult>> task, CancellationToken cancellationToken)
     {
-        using var cts = new CancellationTokenSource();
-        ExecuteCore(task, cts);
+        Debug.Assert(task is not null);
+
+        var result = Optional<TResult>.None;
+
+        ExecuteCore(
+            async cancellationToken =>
+            {
+                result = await task(cancellationToken).ConfigureAwait(false);
+            },
+            cancellationToken);
+
+        return result.Value;
     }
 
     static void ExecuteCore(Func<CancellationToken, Task> task, CancellationToken cancellationToken)
     {
+        Debug.Assert(task is not null);
+
         if (!cancellationToken.CanBeCanceled)
         {
             ExecuteCore(task);
@@ -288,8 +298,18 @@ public static class TaskBridge
         ExecuteCore(task, cts);
     }
 
+    static void ExecuteCore(Func<CancellationToken, Task> task)
+    {
+        Debug.Assert(task is not null);
+
+        using var cts = new CancellationTokenSource();
+        ExecuteCore(task, cts);
+    }
+
     static void ExecuteCore(Func<CancellationToken, Task> task, CancellationTokenSource cts)
     {
+        Debug.Assert(task is not null);
+
         try
         {
             var savedContext = SynchronizationContext.Current;
@@ -326,10 +346,17 @@ public static class TaskBridge
         }
     }
 
-    static Task ExecuteAsyncCore(Action action) => RunLongTask(action, CancellationToken.None);
+    static Task ExecuteAsyncCore(Action action)
+    {
+        Debug.Assert(action is not null);
+
+        return RunLongTask(action, CancellationToken.None);
+    }
 
     static Task ExecuteAsyncCore(Action action, CancellationToken cancellationToken)
     {
+        Debug.Assert(action is not null);
+
 #if !TFF_THREAD_ABORT
         return RunLongTask(action, cancellationToken);
 #else
@@ -370,7 +397,7 @@ public static class TaskBridge
                 }
                 catch (PlatformNotSupportedException)
                 {
-                    Debug.Fail("A thread abort exception should not be raised when it is unsupported by the host platform.");
+                    Debug.Fail("A thread abort exception should not be thrown when it is unsupported by the host platform.");
                 }
 
                 // Translate any thread abort to a task cancellation exception.
@@ -415,12 +442,16 @@ public static class TaskBridge
 #endif
     }
 
-    static Task RunLongTask(Action action, CancellationToken cancellationToken) =>
+    static Task RunLongTask(Action action, CancellationToken cancellationToken)
+    {
+        Debug.Assert(action is not null);
+
         // Running a synchronous action in a long-running task prevents thread pool pollution.
         // In this way, the task acts as a standalone thread.
-        Task.Factory.StartNew(
+        return Task.Factory.StartNew(
             action,
             cancellationToken,
             TaskCreationOptions.LongRunning | TaskCreationOptions.DenyChildAttach,
             TaskScheduler.Default);
+    }
 }
