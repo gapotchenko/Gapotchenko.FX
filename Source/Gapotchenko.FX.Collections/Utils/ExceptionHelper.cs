@@ -21,6 +21,12 @@ static class ExceptionHelper
             throw new ArgumentNullException(parameterName);
     }
 
+    public static void ThrowIfThisIsNull([NotNull] object? @this)
+    {
+        if (@this is null)
+            throw new NullReferenceException();
+    }
+
 #if NET8_0_OR_GREATER
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
