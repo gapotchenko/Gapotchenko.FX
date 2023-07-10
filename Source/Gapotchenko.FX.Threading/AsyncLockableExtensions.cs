@@ -36,7 +36,7 @@ public static class AsyncLockableExtensions
     /// <param name="lockable">The lockable synchronization primitive.</param>
     /// <returns>
     /// A scope that can be disposed to unlock the synchronization primitive.
-    /// <see cref="AsyncLockableScope.WasLocked"/> property indicates whether the current thread successfully locked the synchronization primitive.
+    /// <see cref="AsyncLockableScope.IsLocked"/> property indicates whether the current thread successfully locked the synchronization primitive.
     /// </returns>
     public static AsyncLockableScope TryLockScope(this IAsyncLockable lockable) => TryLockScope(lockable, 0);
 
@@ -54,7 +54,7 @@ public static class AsyncLockableExtensions
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     /// A scope that can be disposed to unlock the synchronization primitive.
-    /// <see cref="AsyncLockableScope.WasLocked"/> property indicates whether the current thread successfully locked the synchronization primitive.
+    /// <see cref="AsyncLockableScope.IsLocked"/> property indicates whether the current thread successfully locked the synchronization primitive.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="timeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
@@ -80,7 +80,7 @@ public static class AsyncLockableExtensions
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     /// A scope that can be disposed to unlock the synchronization primitive.
-    /// <see cref="AsyncLockableScope.WasLocked"/> property indicates whether the current thread successfully locked the synchronization primitive.
+    /// <see cref="AsyncLockableScope.IsLocked"/> property indicates whether the current thread successfully locked the synchronization primitive.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="millisecondsTimeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
@@ -125,7 +125,7 @@ public static class AsyncLockableExtensions
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     /// A task that will complete with a result of the scope that can be disposed to unlock the synchronization primitive.
-    /// <see cref="AsyncLockableScope.WasLocked"/> property indicates whether the current thread successfully locked the synchronization primitive.
+    /// <see cref="AsyncLockableScope.IsLocked"/> property indicates whether the current thread successfully locked the synchronization primitive.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="timeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
@@ -154,7 +154,7 @@ public static class AsyncLockableExtensions
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     /// A task that will complete with a result of the scope that can be disposed to unlock the synchronization primitive.
-    /// <see cref="AsyncLockableScope.WasLocked"/> property indicates whether the current thread successfully locked the synchronization primitive.
+    /// <see cref="AsyncLockableScope.IsLocked"/> property indicates whether the current thread successfully locked the synchronization primitive.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="millisecondsTimeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.

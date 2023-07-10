@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Threading.Tasks;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+using Gapotchenko.FX.Threading.Tasks;
 using Gapotchenko.FX.Threading.Tests.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Runtime.ExceptionServices;
@@ -14,18 +20,14 @@ readonly struct AsyncLockableTestsImpl
 
     readonly Func<IAsyncLockable> m_CreateLockableFunc;
 
-    IAsyncLockable CreateLockable()
-    {
-        var lockable = m_CreateLockableFunc();
-        Assert.IsTrue(lockable.IsRecursive == lockable is IAsyncRecursiveLockable);
-        return lockable;
-    }
+    IAsyncLockable CreateLockable() => m_CreateLockableFunc();
 
     // ----------------------------------------------------------------------
 
     public void Constuction()
     {
         var lockable = CreateLockable();
+        Assert.AreEqual(lockable is IAsyncRecursiveLockable, lockable.IsRecursive);
         Assert.IsFalse(lockable.IsLocked);
         if (lockable is IAsyncRecursiveLockable recursiveLockable)
             Assert.IsFalse(recursiveLockable.IsEntered);
@@ -381,6 +383,7 @@ readonly struct AsyncLockableTestsImpl
     public async Task LockAsync_Rollback()
     {
         var lockable = CreateLockable();
+        var recursiveLockable = lockable as IAsyncRecursiveLockable;
 
         bool wasCanceled = false;
         try
@@ -394,9 +397,13 @@ readonly struct AsyncLockableTestsImpl
         Assert.IsTrue(wasCanceled);
 
         Assert.IsFalse(lockable.IsLocked);
+        if (recursiveLockable != null)
+            Assert.IsFalse(recursiveLockable.IsEntered);
 
         Assert.IsTrue(lockable.TryLock());
         Assert.IsTrue(lockable.IsLocked);
+        if (recursiveLockable != null)
+            Assert.IsTrue(recursiveLockable.IsEntered);
     }
 
     // ----------------------------------------------------------------------

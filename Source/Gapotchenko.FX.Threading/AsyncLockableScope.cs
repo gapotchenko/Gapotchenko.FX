@@ -4,8 +4,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-using System.Diagnostics;
-
 namespace Gapotchenko.FX.Threading;
 
 /// <summary>
@@ -19,16 +17,15 @@ public readonly struct AsyncLockableScope : IDisposable
         m_Lockable = lockable;
     }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly IAsyncLockable? m_Lockable;
 
     /// <summary>
-    /// Gets a value indicating whether the synchronization primitive was locked in this scope.
+    /// Gets a value indicating whether the synchronization primitive is locked by this scope.
     /// </summary>
-    public bool WasLocked => m_Lockable != null;
+    public bool IsLocked => m_Lockable != null;
 
     /// <summary>
-    /// Unlocks the synchronization primitive if it was locked in this scope.
+    /// Unlocks the synchronization primitive if it ші locked by this scope.
     /// </summary>
     public void Dispose()
     {

@@ -15,7 +15,6 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using Gapotchenko.FX.Threading;
-using Gapotchenko.FX.Linq.Operators;
 using Gapotchenko.FX.Collections.Generic;
 #endregion
 
@@ -322,10 +321,9 @@ class Program
         //if (!wasCanceled)
         //    throw new InvalidOperationException("F6");
 
-        using (var scope = await lockable.LockScopeAsync())
+        using (var scope = await lockable.TryLockScopeAsync(0))
         {
             //await lockable.LockAsync();
-
 
             if (!lockable.IsLocked)
                 throw new InvalidOperationException("F1");
