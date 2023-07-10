@@ -5,12 +5,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageDescription>Provides additional data collections and primitives for .NET.</PackageDescription>
+    <PackageDescription><![CDATA[Provides additional data collections, primitives and polyfills for .NET: ConcurrentHashSet<T>, AssociativeArray<T>, PriorityQueue<T>, Deque<T>.]]></PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>
-    <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Concurrent.ConcurrentHashSet" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Generic.AssociativeArray" />
+    <PackageTag Include="concurrent;hashset;associative array;priority queue;deque" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Concurrent.ConcurrentHashSet&lt;T&gt;" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Generic.AssociativeArray&lt;T&gt;" />
   </ItemGroup>
 
   <ItemGroup>
