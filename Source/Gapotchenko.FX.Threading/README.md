@@ -98,6 +98,35 @@ That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, a drop
 It allows you to make the switch by just changing the class name from `Parallel` to `Sequential` in a corresponding function call.
 So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now executed sequentially allowing you to isolate that pesky multithreading bug you were hunting for.
 
+## `DebuggableParallel`, an automatic selector between `Parallel` and `Sequential`
+
+`System.Threading.Tasks.Parallel` class allows you to execute tasks in parallel,
+while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to do the same,
+but sequentially.
+
+But what if you want to get the best of two worlds?
+Meet `Gapotchenko.FX.Threading.Tasks.DebuggableParallel` class that does an automatic contextful choice for you.
+When a project has an attached debugger, `DebuggableParallel` primitive executes the specified tasks sequentially.
+When there is no debugger attached, `DebuggableParallel` will execute the tasks in parallel.
+And of course, it's a drop-in replacement for the ubiquitous `System.Threading.Tasks.Parallel` class.
+
+The automatic selection of the task execution mode enables multi-threaded code to be effortlessly debugged,
+while preserving the multi-core efficiency when no debugger is present.
+The selection can also be overridden from code.
+For example, if you want to disallow that debugger friendliness in `Release` configuration,
+you can correspondingly configure the `DebuggableParallel` class at the very start of a program:
+
+``` csharp
+using Gapotchenko.FX.Threading.Tasks;
+
+#if !DEBUG
+DebuggableParallel.Mode = DebuggableParallelMode.AlwaysParallel;
+#endif
+```
+
+This makes the behavior of `DebuggableParallel` class to be essentially indistinguishable from `System.Threading.Tasks.Parallel`
+without changing any other code.
+
 ## Usage
 
 `Gapotchenko.FX.Threading` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Threading):

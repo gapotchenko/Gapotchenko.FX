@@ -5,16 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageTag Include="async" />
-    <PackageTag Include="bridge" />
-    <PackageTag Include="recursive" />
-    <PackageTag Include="reentrant" />
-    <PackageTag Include="threading" />
-    <PackageTag Include="mutex" />
-    <PackageTag Include="lock" />
+    <PackageTag Include="async;recursive;reentrant;threading;bridge;mutex;lock;monitor;event;condition variable" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.TaskBridge" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncMutex" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncRecursiveMutex" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncMonitor" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncRecursiveMonitor" />
   </ItemGroup>
 
   <ItemGroup>

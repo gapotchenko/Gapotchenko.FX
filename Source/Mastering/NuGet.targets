@@ -34,7 +34,7 @@
 
     <PropertyGroup>
       <PackageDescription Condition=" '$(OrigPackageDescription)' == '' AND '$(NLP_PackageDir)' != '' ">$([System.IO.File]::ReadAllText("$(NLP_PackageDir)/Description.txt"))</PackageDescription>
-      <PackageTags>@(PackageTag) $(PackageTags)</PackageTags>
+      <PackageTags>@(PackageTag->ToLowerInvariant()->Replace(' ', '-')) $(PackageTags)</PackageTags>
     </PropertyGroup>
   </Target>
 
