@@ -906,6 +906,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         #endregion
     }
 
+    [StackTraceHidden]
     static class ThrowHelper
     {
         [DoesNotReturn]

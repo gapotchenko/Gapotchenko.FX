@@ -7,20 +7,23 @@
 // Year of introduction: 2023
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Collections.Utils;
 
+[StackTraceHidden]
 static class ExceptionHelper
 {
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void ThrowIfArgumentIsNull(object? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
+    public static void ThrowIfArgumentIsNull([NotNull] object? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value is null)
             throw new ArgumentNullException(parameterName);
     }
 
+#if NET8_0_OR_GREATER
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
     public static void ThrowIfArgumentIsNegative(int value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
 #if NET8_0_OR_GREATER
@@ -37,7 +40,6 @@ static class ExceptionHelper
 #endif
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ThrowIfArrayArgumentIsMultiDimensional(Array array, [CallerArgumentExpression(nameof(array))] string? parameterName = null)
     {
         if (array.Rank != 1)
@@ -47,7 +49,6 @@ static class ExceptionHelper
     /// <summary>
     /// Ensures that <paramref name="index"/> is non-negative and less than <paramref name="size"/>. 
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ValidateIndexArgumentRange(int index, int size, [CallerArgumentExpression(nameof(index))] string? parameterName = null)
     {
         Debug.Assert(size >= 0);
@@ -63,7 +64,6 @@ static class ExceptionHelper
     /// <summary>
     /// Ensures that <paramref name="index"/> is non-negative and not greater than <paramref name="size"/>. 
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ValidateIndexArgumentBounds(int index, int size, [CallerArgumentExpression(nameof(index))] string? parameterName = null)
     {
         Debug.Assert(size >= 0);
@@ -76,7 +76,6 @@ static class ExceptionHelper
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ValidateIndexAndCountArgumentsRange(
         int index, int count, int size,
         [CallerArgumentExpression(nameof(index))] string? indexParameterName = null,
@@ -92,7 +91,6 @@ static class ExceptionHelper
     // Allow nulls for reference types and Nullable<U>, but not for value types.
     // Aggressively inline so the JIT evaluates the if in place and either drops
     // the call altogether or leaves the body as is.
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ValidateNullArgumentLegality<T>(
         object? value,
         [CallerArgumentExpression(nameof(value))] string? parameterName = null)

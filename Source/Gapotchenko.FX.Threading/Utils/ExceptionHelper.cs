@@ -6,13 +6,16 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Threading.Utils;
 
+[StackTraceHidden]
 static class ExceptionHelper
 {
-    public static void ThrowIfArgumentIsNull(object? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
+    public static void ThrowIfArgumentIsNull([NotNull] object? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value is null)
             throw new ArgumentNullException(parameterName);
