@@ -63,7 +63,7 @@ public interface IAsyncLockable
 
     /// <summary>
     /// Blocks the current thread until it can lock the synchronization primitive,
-    /// using a 32-bit signed integer that specifies the timeout.
+    /// using a 32-bit signed integer that specifies the timeout in milliseconds.
     /// </summary>
     /// <param name="millisecondsTimeout">
     /// The number of milliseconds to wait,
@@ -79,7 +79,7 @@ public interface IAsyncLockable
     /// <paramref name="millisecondsTimeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="millisecondsTimeout"/> is greater than <see cref="Int32.MaxValue"/>.
+    /// <paramref name="millisecondsTimeout"/> is greater than <see cref="int.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
     bool TryLock(int millisecondsTimeout, CancellationToken cancellationToken = default);
