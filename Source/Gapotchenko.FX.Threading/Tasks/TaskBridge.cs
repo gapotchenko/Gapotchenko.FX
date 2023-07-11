@@ -239,11 +239,12 @@ public static class TaskBridge
     {
         Debug.Assert(task is not null);
 
-        var savedContext = SynchronizationContext.Current;
         var context = new ExclusiveSynchronizationContext();
+
+        var savedContext = SynchronizationContext.Current;
+        SynchronizationContext.SetSynchronizationContext(context);
         try
         {
-            SynchronizationContext.SetSynchronizationContext(context);
             context.Execute(task);
         }
         finally
@@ -312,12 +313,13 @@ public static class TaskBridge
 
         try
         {
-            var savedContext = SynchronizationContext.Current;
-            Task? pendingTask = null;
             var context = new ExclusiveSynchronizationContext();
+            Task? pendingTask = null;
+
+            var savedContext = SynchronizationContext.Current;
+            SynchronizationContext.SetSynchronizationContext(context);
             try
             {
-                SynchronizationContext.SetSynchronizationContext(context);
                 context.Execute(() => pendingTask = task(cts.Token));
                 pendingTask = null;
             }
@@ -378,21 +380,7 @@ public static class TaskBridge
             }
             catch (ThreadAbortException)
             {
-#if TFF_THREAD_ABORT
-                try
-                {
-                    // Allow the task to finish gracefully.
-                    Thread.ResetAbort();
-                }
-                catch (ThreadStateException)
-                {
-                    // Was not aborted with Thread.Abort().
-                }
-                catch (PlatformNotSupportedException)
-                {
-                    Debug.Fail("A thread abort exception should not be thrown when it is unsupported by the host platform.");
-                }
-#endif
+                TaskHelper.ClearThreadAbort();
 
                 // Translate any thread abort to a task cancellation exception.
                 throw new TaskCanceledException(Volatile.Read(ref executionTask));

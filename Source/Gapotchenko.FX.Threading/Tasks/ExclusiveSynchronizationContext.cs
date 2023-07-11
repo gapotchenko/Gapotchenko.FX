@@ -1,6 +1,6 @@
-﻿using System.Collections.Concurrent;
+﻿using Gapotchenko.FX.Threading.Utils;
+using System.Collections.Concurrent;
 using System.Runtime.ExceptionServices;
-using System.Security;
 
 namespace Gapotchenko.FX.Threading.Tasks;
 
@@ -18,30 +18,6 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
 
     public Func<Exception, bool>? ExceptionFilter { get; set; }
 
-    void Loop()
-    {
-        while (m_Queue.TryTake(out var task, Timeout.Infinite))
-        {
-            // Execute the task.
-            task.Key(task.Value);
-
-            var edi = m_ExceptionDispatchInfo;
-            if (edi != null)
-            {
-                var fiter = ExceptionFilter;
-                if (fiter == null || fiter(edi.SourceException))
-                    edi.Throw();
-                else
-                    m_ExceptionDispatchInfo = null;
-            }
-        }
-    }
-
-    void End() =>
-        Post(
-            x => ((ExclusiveSynchronizationContext)x!).m_Queue.CompleteAdding(),
-            this);
-
     public void Execute(Func<Task> task)
     {
         Post(
@@ -57,20 +33,7 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
 
 #if TFF_THREAD_ABORT
                     if (e is ThreadAbortException)
-                    {
-                        try
-                        {
-                            Thread.ResetAbort();
-                        }
-                        catch (ThreadStateException)
-                        {
-                            // Was not aborted with Thread.Abort().
-                        }
-                        catch (PlatformNotSupportedException)
-                        {
-                            // Not supported.
-                        }
-                    }
+                        TaskHelper.ClearThreadAbort();
 #endif
                 }
                 finally
@@ -81,5 +44,28 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
             null);
 
         Loop();
+    }
+
+    void End() =>
+        Post(
+            x => ((ExclusiveSynchronizationContext)x!).m_Queue.CompleteAdding(),
+            this);
+
+    void Loop()
+    {
+        while (m_Queue.TryTake(out var task, Timeout.Infinite))
+        {
+            // Execute the task.
+            task.Key(task.Value);
+
+            var edi = m_ExceptionDispatchInfo;
+            if (edi != null)
+            {
+                if (ExceptionFilter?.Invoke(edi.SourceException) != false)
+                    edi.Throw();
+                else
+                    m_ExceptionDispatchInfo = null;
+            }
+        }
     }
 }
