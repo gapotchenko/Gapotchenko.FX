@@ -53,6 +53,7 @@
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
 
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Threading.Utils;
 
@@ -342,7 +343,13 @@ partial class ExecutionContextHelper
         protected override void ForgetAction()
         {
             m_Action = null;
-            m_CommittedValue = default;
+
+#if TFF_RUNTIMEHELPERS_ISREFERENCEORCONTAINSREFERENCES
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+#endif
+            {
+                m_CommittedValue = default;
+            }
         }
     }
 }

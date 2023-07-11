@@ -34,7 +34,7 @@ public interface IAsyncEvent
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    void WaitOne(CancellationToken cancellationToken = default);
+    void Wait(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Blocks the current thread until the event receives a signal,
@@ -57,7 +57,7 @@ public interface IAsyncEvent
     /// <paramref name="millisecondsTimeout"/> is greater than <see cref="int.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    bool WaitOne(int millisecondsTimeout, CancellationToken cancellationToken = default);
+    bool Wait(int millisecondsTimeout, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Blocks the current thread until the event receives a signal,
@@ -80,13 +80,13 @@ public interface IAsyncEvent
     /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    bool WaitOne(TimeSpan timeout, CancellationToken cancellationToken = default);
+    bool Wait(TimeSpan timeout, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously waits until the event receives a signal.
     /// </summary>
-    /// <inheritdoc cref="WaitOne(CancellationToken)"/>
-    Task WaitOneAsync(CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="Wait(CancellationToken)"/>
+    Task WaitAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously waits until the event receives a signal,
@@ -96,8 +96,8 @@ public interface IAsyncEvent
     /// A task that will complete with a result of <see langword="true"/> if the event receives a signal,
     /// otherwise with a result of <see langword="false"/>.
     /// </returns>
-    /// <inheritdoc cref="WaitOne(int, CancellationToken)"/>
-    Task<bool> WaitOneAsync(int millisecondsTimeout, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="Wait(int, CancellationToken)"/>
+    Task<bool> WaitAsync(int millisecondsTimeout, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously waits until the event receives a signal,
@@ -107,8 +107,8 @@ public interface IAsyncEvent
     /// A task that will complete with a result of <see langword="true"/> if the event receives a signal,
     /// otherwise with a result of <see langword="false"/>.
     /// </returns>
-    /// <inheritdoc cref="WaitOne(TimeSpan, CancellationToken)"/>
-    Task<bool> WaitOneAsync(TimeSpan timeout, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="Wait(TimeSpan, CancellationToken)"/>
+    Task<bool> WaitAsync(TimeSpan timeout, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets a value indicating whether the event is an auto reset event as opposed to a manual reset event.

@@ -19,6 +19,10 @@ namespace Gapotchenko.FX.Threading;
 /// </summary>
 public sealed class AsyncAutoResetEvent : IAsyncEvent
 {
+    // ----------------------------------------------------------------------
+    // Public Facade
+    // ----------------------------------------------------------------------
+
     /// <summary>
     /// Initializes a new instance of the <see cref="AsyncAutoResetEvent"/> class
     /// with a Boolean value indicating whether to set the initial state to signaled.
@@ -57,13 +61,13 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
     /// <inheritdoc/>
     public bool IsSet => Volatile.Read(ref m_Set);
 
-    /// <inheritdoc/>
+    /// <inheritdoc cref="IAsyncEvent.Wait(CancellationToken)"/>
     public void WaitOne(CancellationToken cancellationToken = default)
     {
         DoWaitOne(Timeout.InfiniteTimeSpan, cancellationToken);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc cref="IAsyncEvent.Wait(int, CancellationToken)"/>
     public bool WaitOne(int millisecondsTimeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(millisecondsTimeout);
@@ -71,7 +75,7 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
         return DoWaitOne(TimeSpan.FromMilliseconds(millisecondsTimeout), cancellationToken);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc cref="IAsyncEvent.Wait(TimeSpan, CancellationToken)"/>
     public bool WaitOne(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(timeout);
@@ -79,13 +83,13 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
         return DoWaitOne(timeout, cancellationToken);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc cref="IAsyncEvent.WaitAsync(CancellationToken)"/>
     public Task WaitOneAsync(CancellationToken cancellationToken = default)
     {
         return DoWaitOneAsync(Timeout.InfiniteTimeSpan, cancellationToken);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc cref="IAsyncEvent.WaitAsync(int, CancellationToken)"/>
     public Task<bool> WaitOneAsync(int millisecondsTimeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(millisecondsTimeout);
@@ -93,7 +97,7 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
         return DoWaitOneAsync(TimeSpan.FromMilliseconds(millisecondsTimeout), cancellationToken);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc cref="IAsyncEvent.WaitAsync(TimeSpan, CancellationToken)"/>
     public Task<bool> WaitOneAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(timeout);
@@ -103,6 +107,8 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
 
     bool IAsyncEvent.IsAutoReset => true;
 
+    // ----------------------------------------------------------------------
+    // Core Implementation
     // ----------------------------------------------------------------------
 
     bool DoWaitOne(TimeSpan timeout, CancellationToken cancellationToken) =>
@@ -130,4 +136,20 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
             }
         }
     }
+
+    #region Compatibility
+
+    void IAsyncEvent.Wait(CancellationToken cancellationToken) => WaitOne(cancellationToken);
+
+    bool IAsyncEvent.Wait(int millisecondsTimeout, CancellationToken cancellationToken) => WaitOne(millisecondsTimeout, cancellationToken);
+
+    bool IAsyncEvent.Wait(TimeSpan timeout, CancellationToken cancellationToken) => WaitOne(timeout, cancellationToken);
+
+    Task IAsyncEvent.WaitAsync(CancellationToken cancellationToken) => WaitOneAsync(cancellationToken);
+
+    Task<bool> IAsyncEvent.WaitAsync(int millisecondsTimeout, CancellationToken cancellationToken) => WaitOneAsync(millisecondsTimeout, cancellationToken);
+
+    Task<bool> IAsyncEvent.WaitAsync(TimeSpan timeout, CancellationToken cancellationToken) => WaitOneAsync(timeout, cancellationToken);
+
+    #endregion
 }
