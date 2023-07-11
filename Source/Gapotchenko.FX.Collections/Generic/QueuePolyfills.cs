@@ -18,6 +18,7 @@ namespace Gapotchenko.FX.Collections.Generic;
 /// <summary>
 /// Provides polyfill extension methods for <see cref="Queue{T}"/>.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public static class QueuePolyfills
 {
     /// <summary>
