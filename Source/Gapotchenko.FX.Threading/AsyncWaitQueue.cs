@@ -51,7 +51,7 @@ readonly partial struct AsyncWaitQueue<T>
     }
 
     /// <summary>
-    /// Dequeues and completes all tasks with the specified result value.
+    /// Dequeues all tasks from the <see cref="AsyncWaitQueue{T}"/> and completes them with the specified result value.
     /// </summary>
     /// <param name="result">The result value to complete dequeued tasks with.</param>
     /// <returns>The number of dequeued and completed tasks.</returns>
@@ -95,7 +95,7 @@ readonly partial struct AsyncWaitQueue<T>
     }
 
     /// <summary>
-    /// Removes and cancels all tasks using the specified cancellation token.
+    /// Removes all tasks from the <see cref="AsyncWaitQueue{T}"/> and cancels them using the specified cancellation token.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token to cancel removed tasks with.</param>
     /// <returns>The number of removed and canceled tasks.</returns>
@@ -113,7 +113,7 @@ readonly partial struct AsyncWaitQueue<T>
 
     /// <summary>
     /// Gets the synchronization object
-    /// that can be used for thread-safe access to the <see cref="AsyncWaitQueue{T}"/>.
+    /// that can be used for a thread-safe access to the <see cref="AsyncWaitQueue{T}"/>.
     /// </summary>
     public object SyncRoot => m_Queue;
 }
