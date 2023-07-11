@@ -35,6 +35,10 @@ namespace Gapotchenko.FX.Collections.Generic;
 [DebuggerTypeProxy(typeof(CollectionDebugView<>))]
 public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 {
+    // ----------------------------------------------------------------------
+    // Public Facade
+    // ----------------------------------------------------------------------
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Deque{T}"/> class that is empty
     /// and has the default initial capacity.
@@ -823,6 +827,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <returns>A <see cref="Enumerator"/> for the <see cref="Deque{T}"/>.</returns>
     public Enumerator GetEnumerator() => new(this);
 
+    // ----------------------------------------------------------------------
+    // Core Implementation
     // ----------------------------------------------------------------------
 
     /// <summary>
