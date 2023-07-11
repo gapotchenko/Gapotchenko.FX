@@ -48,7 +48,7 @@ partial struct AsyncWaitQueue<T>
                 queue.TryCancel(task, cancellationToken);
         }
 
-        TaskHelper.EnqueueDisposeOnCompletion(task, cancellationToken.Register(Cancel));
+        TaskHelper.ContinueWithDispose(task, cancellationToken.Register(Cancel));
 
         return task;
     }

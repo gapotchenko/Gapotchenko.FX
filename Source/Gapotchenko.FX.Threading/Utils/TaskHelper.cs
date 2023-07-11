@@ -39,7 +39,25 @@ static partial class TaskHelper
 #endif
     }
 
-    public static void EnqueueDisposeOnCompletion(Task task, IDisposable disposable)
+    /// <summary>
+    /// Disposes the specified disposable object when the task completes.
+    /// </summary>
+    /// <param name="task">The task.</param>
+    /// <param name="disposable">The disposable object that will be disposed when the task completes.</param>
+    public static void ContinueWithDispose(Task task, IDisposable disposable)
+    {
+        task.ContinueWith(
+            _ => disposable.Dispose(),
+            CancellationToken.None,
+            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach,
+            TaskScheduler.Default);
+    }
+
+    // This optimized implementation helps to avoid boxing of value types.
+    /// <inheritdoc cref="ContinueWithDispose(Task, IDisposable)"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void ContinueWithDispose<TDisposable>(Task task, TDisposable disposable)
+        where TDisposable : struct, IDisposable
     {
         task.ContinueWith(
             _ => disposable.Dispose(),
