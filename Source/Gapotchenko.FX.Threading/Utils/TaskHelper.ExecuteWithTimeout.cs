@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Threading.Utils;
 partial class TaskHelper
 {
     /// <summary>
-    /// Executes the specified asynchronous function during the specified timeout.
+    /// Executes the specified function with the specified timeout.
     /// If the timeout expires before the function completes, it will be canceled
     /// and the method will throw a <see cref="TimeoutException"/>.
     /// </summary>
@@ -17,13 +17,14 @@ partial class TaskHelper
     /// <param name="timeout">The timeout.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A function result.</returns>
+    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
     /// <exception cref="TimeoutException">The operation has timed out.</exception>
-    public static Task<TResult> ExecuteWithTimeoutAsync<TResult>(
+    public static Task<TResult> ExecuteWithTimeout<TResult>(
         Func<CancellationToken, Task<TResult>> func,
         TimeSpan timeout,
         CancellationToken cancellationToken = default)
     {
-        return DoExecuteWithTimeoutAsync(
+        return DoExecuteWithTimeout(
             func,
             timeout,
             Optional<TResult>.None,
@@ -31,7 +32,7 @@ partial class TaskHelper
     }
 
     /// <summary>
-    /// Executes the specified asynchronous function during the specified timeout.
+    /// Executes the specified function with the specified timeout.
     /// If the timeout expires before the function completes, it will be canceled
     /// and the method will return the specified timeout result.
     /// </summary>
@@ -43,21 +44,21 @@ partial class TaskHelper
     /// A result of <paramref name="func"/> execution if it completes before <paramref name="timeout"/> expires,
     /// or <paramref name="timeoutResult"/> if the timeout expires before the function completes.
     /// </returns>
-    /// <exception cref="TimeoutException">The operation has timed out.</exception>
-    public static Task<TResult> ExecuteWithTimeoutAsync<TResult>(
+    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    public static Task<TResult> ExecuteWithTimeout<TResult>(
         Func<CancellationToken, Task<TResult>> func,
         TimeSpan timeout,
         TResult timeoutResult,
         CancellationToken cancellationToken = default)
     {
-        return DoExecuteWithTimeoutAsync(
+        return DoExecuteWithTimeout(
             func,
             timeout,
             timeoutResult,
             cancellationToken);
     }
 
-    static Task<TResult> DoExecuteWithTimeoutAsync<TResult>(
+    static Task<TResult> DoExecuteWithTimeout<TResult>(
         Func<CancellationToken, Task<TResult>> func,
         TimeSpan timeout,
         Optional<TResult> timeoutResult,
@@ -88,7 +89,7 @@ partial class TaskHelper
             {
                 if (cts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
                 {
-                    // Timeout is expired.
+                    // Timeout has expired.
                     if (timeoutResult.HasValue)
                         return timeoutResult.Value;
                     else

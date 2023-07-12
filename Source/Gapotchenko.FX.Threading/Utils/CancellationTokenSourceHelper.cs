@@ -19,9 +19,19 @@ static class CancellationTokenSourceHelper
 
     public static CancellationTokenSource CreateLinked(CancellationToken cancellationToken, TimeSpan timeout)
     {
-        var cts = CreateLinked(cancellationToken);
-        if (timeout != Timeout.InfiniteTimeSpan)
-            cts.CancelAfter(timeout);
-        return cts;
+        if (cancellationToken.CanBeCanceled)
+        {
+            var cts = CreateLinked(cancellationToken);
+            if (timeout != Timeout.InfiniteTimeSpan)
+                cts.CancelAfter(timeout);
+            return cts;
+        }
+        else
+        {
+            if (timeout != Timeout.InfiniteTimeSpan)
+                return new CancellationTokenSource(timeout);
+            else
+                return new CancellationTokenSource();
+        }
     }
 }

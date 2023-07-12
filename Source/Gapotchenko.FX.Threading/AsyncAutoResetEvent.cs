@@ -62,19 +62,19 @@ public sealed class AsyncAutoResetEvent : IAsyncResetEvent
     /// <inheritdoc/>
     public bool IsSet => Volatile.Read(ref m_Set);
 
-    /// <inheritdoc cref="IAsyncEvent.Wait()"/>
+    /// <inheritdoc cref="IAsyncAwaitable.Wait()"/>
     public void WaitOne()
     {
         DoWaitOne(Timeout.InfiniteTimeSpan, CancellationToken.None);
     }
 
-    /// <inheritdoc cref="IAsyncEvent.Wait(CancellationToken)"/>
+    /// <inheritdoc cref="IAsyncAwaitable.Wait(CancellationToken)"/>
     public void WaitOne(CancellationToken cancellationToken)
     {
         DoWaitOne(Timeout.InfiniteTimeSpan, cancellationToken);
     }
 
-    /// <inheritdoc cref="IAsyncEvent.Wait(int, CancellationToken)"/>
+    /// <inheritdoc cref="IAsyncAwaitable.Wait(int, CancellationToken)"/>
     public bool WaitOne(int millisecondsTimeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(millisecondsTimeout);
@@ -82,7 +82,7 @@ public sealed class AsyncAutoResetEvent : IAsyncResetEvent
         return DoWaitOne(TimeSpan.FromMilliseconds(millisecondsTimeout), cancellationToken);
     }
 
-    /// <inheritdoc cref="IAsyncEvent.Wait(TimeSpan, CancellationToken)"/>
+    /// <inheritdoc cref="IAsyncAwaitable.Wait(TimeSpan, CancellationToken)"/>
     public bool WaitOne(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(timeout);
@@ -90,19 +90,19 @@ public sealed class AsyncAutoResetEvent : IAsyncResetEvent
         return DoWaitOne(timeout, cancellationToken);
     }
 
-    /// <inheritdoc cref="IAsyncEvent.WaitAsync()"/>
+    /// <inheritdoc cref="IAsyncAwaitable.WaitAsync()"/>
     public Task WaitOneAsync()
     {
         return DoWaitOneAsync(Timeout.InfiniteTimeSpan, CancellationToken.None);
     }
 
-    /// <inheritdoc cref="IAsyncEvent.WaitAsync(CancellationToken)"/>
+    /// <inheritdoc cref="IAsyncAwaitable.WaitAsync(CancellationToken)"/>
     public Task WaitOneAsync(CancellationToken cancellationToken)
     {
         return DoWaitOneAsync(Timeout.InfiniteTimeSpan, cancellationToken);
     }
 
-    /// <inheritdoc cref="IAsyncEvent.WaitAsync(int, CancellationToken)"/>
+    /// <inheritdoc cref="IAsyncAwaitable.WaitAsync(int, CancellationToken)"/>
     public Task<bool> WaitOneAsync(int millisecondsTimeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(millisecondsTimeout);
@@ -110,7 +110,7 @@ public sealed class AsyncAutoResetEvent : IAsyncResetEvent
         return DoWaitOneAsync(TimeSpan.FromMilliseconds(millisecondsTimeout), cancellationToken);
     }
 
-    /// <inheritdoc cref="IAsyncEvent.WaitAsync(TimeSpan, CancellationToken)"/>
+    /// <inheritdoc cref="IAsyncAwaitable.WaitAsync(TimeSpan, CancellationToken)"/>
     public Task<bool> WaitOneAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(timeout);
@@ -149,28 +149,28 @@ public sealed class AsyncAutoResetEvent : IAsyncResetEvent
             }
             else
             {
-                return m_Queue.Enqueue(timeout, false, cancellationToken);
+                return TaskHelper.ExecuteWithTimeout(m_Queue.Enqueue, timeout, false, cancellationToken);
             }
         }
     }
 
     #region Compatibility
 
-    void IAsyncEvent.Wait() => WaitOne();
+    void IAsyncAwaitable.Wait() => WaitOne();
 
-    void IAsyncEvent.Wait(CancellationToken cancellationToken) => WaitOne(cancellationToken);
+    void IAsyncAwaitable.Wait(CancellationToken cancellationToken) => WaitOne(cancellationToken);
 
-    bool IAsyncEvent.Wait(int millisecondsTimeout, CancellationToken cancellationToken) => WaitOne(millisecondsTimeout, cancellationToken);
+    bool IAsyncAwaitable.Wait(int millisecondsTimeout, CancellationToken cancellationToken) => WaitOne(millisecondsTimeout, cancellationToken);
 
-    bool IAsyncEvent.Wait(TimeSpan timeout, CancellationToken cancellationToken) => WaitOne(timeout, cancellationToken);
+    bool IAsyncAwaitable.Wait(TimeSpan timeout, CancellationToken cancellationToken) => WaitOne(timeout, cancellationToken);
 
-    Task IAsyncEvent.WaitAsync() => WaitOneAsync();
+    Task IAsyncAwaitable.WaitAsync() => WaitOneAsync();
 
-    Task IAsyncEvent.WaitAsync(CancellationToken cancellationToken) => WaitOneAsync(cancellationToken);
+    Task IAsyncAwaitable.WaitAsync(CancellationToken cancellationToken) => WaitOneAsync(cancellationToken);
 
-    Task<bool> IAsyncEvent.WaitAsync(int millisecondsTimeout, CancellationToken cancellationToken) => WaitOneAsync(millisecondsTimeout, cancellationToken);
+    Task<bool> IAsyncAwaitable.WaitAsync(int millisecondsTimeout, CancellationToken cancellationToken) => WaitOneAsync(millisecondsTimeout, cancellationToken);
 
-    Task<bool> IAsyncEvent.WaitAsync(TimeSpan timeout, CancellationToken cancellationToken) => WaitOneAsync(timeout, cancellationToken);
+    Task<bool> IAsyncAwaitable.WaitAsync(TimeSpan timeout, CancellationToken cancellationToken) => WaitOneAsync(timeout, cancellationToken);
 
     #endregion
 }

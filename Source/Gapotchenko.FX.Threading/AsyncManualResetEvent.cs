@@ -161,7 +161,7 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
     {
         Debug.Assert(ExceptionHelper.IsValidTimeout(timeout));
 
-        return TaskHelper.ExecuteWithTimeoutAsync(DoWaitAsync, timeout, false, cancellationToken);
+        return TaskHelper.ExecuteWithTimeout(DoWaitAsync, timeout, false, cancellationToken);
     }
 
     static TaskCompletionSource<bool> CreateTaskCompletionSource() => new(TaskCreationOptions.RunContinuationsAsynchronously);

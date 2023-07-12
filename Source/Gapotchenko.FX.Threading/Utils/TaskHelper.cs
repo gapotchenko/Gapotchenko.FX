@@ -40,7 +40,7 @@ static partial class TaskHelper
     }
 
     /// <summary>
-    /// Disposes the specified disposable object when the task completes.
+    /// Synchronously disposes the specified disposable object when the task completes.
     /// </summary>
     /// <param name="task">The task.</param>
     /// <param name="disposable">The disposable object that will be disposed when the task completes.</param>
@@ -53,7 +53,7 @@ static partial class TaskHelper
             TaskScheduler.Default);
     }
 
-    // This optimized implementation helps to avoid boxing of value types.
+    // This is an optimized implementation to avoid boxing of disposable value types.
     /// <inheritdoc cref="ContinueWithDispose(Task, IDisposable)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static void ContinueWithDispose<TDisposable>(Task task, TDisposable disposable)
