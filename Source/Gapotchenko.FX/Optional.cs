@@ -14,7 +14,7 @@ public static class Optional
     /// </para>
     /// <para>
     /// Use <seealso cref="Optional{T}.None"/> property to get an <see cref="Optional{T}"/> object without a value.
-    /// Alternatively, it can be obtained by using the <c>default</c> (C#) or <c>Nothing</c> (VB.NET) compiler keyword.
+    /// Alternatively, it can be obtained by using the <c>default</c> (C#) or <c>Nothing</c> (VB.NET) programming language keyword.
     /// </para>
     /// </summary>
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
@@ -25,11 +25,11 @@ public static class Optional
     public static Optional<T> Some<T>(T value) => new Optional<T>(value);
 
     /// <summary>
-    /// Either creates a new <see cref="Optional{T}"/> object initialized to a specified value or
-    /// returns an <see cref="Optional{T}"/> object without a value when it equals to the default value of type <typeparamref name="T"/>.
+    /// Either creates a new <see cref="Optional{T}"/> object initialized to the specified value,
+    /// or returns <see cref="Optional{T}.None"/> when the specified value equals to the default value of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
-    /// <param name="value">A value to discriminate.</param>
+    /// <param name="value">The value to discriminate.</param>
     /// <returns>
     /// An <see cref="Optional{T}"/> object without a value when the specified parameter equals to the default value of type <typeparamref name="T"/>;
     /// otherwise, an <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the <paramref name="value"/> parameter.
@@ -37,8 +37,8 @@ public static class Optional
     public static Optional<T> Discriminate<T>(T value) => Discriminate(value, default(T)!);
 
     /// <summary>
-    /// Either creates a new <see cref="Optional{T}"/> object initialized to a specified value or
-    /// returns an <see cref="Optional{T}"/> object without a value when it equals to the <paramref name="noneValue"/>.
+    /// Either creates a new <see cref="Optional{T}"/> object initialized to the specified value,
+    /// or returns <see cref="Optional{T}.None"/> when the specified value equals to the <paramref name="noneValue"/>.
     /// </summary>
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
     /// <param name="value">A value to discriminate.</param>
