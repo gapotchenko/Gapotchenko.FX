@@ -34,7 +34,7 @@ public sealed class TaskBridgeTests
         {
             for (int i = 0; i < 10000; i++)
             {
-                int tid = Thread.CurrentThread.ManagedThreadId;
+                int tid = Environment.CurrentManagedThreadId;
                 mapArg[tid] = mapArg.TryGetValue(tid, out var count) ? count + 1 : 1;
                 await Task.Yield();
             }
@@ -49,10 +49,10 @@ public sealed class TaskBridgeTests
     [TestMethod]
     public void TaskBridge_CancelWait()
     {
-        var cts = new CancellationTokenSource();
+        using var cts = new CancellationTokenSource();
         var ct = cts.Token;
 
-        var ev = new ManualResetEventSlim();
+        using var ev = new ManualResetEventSlim();
 
         var task = Task.Factory.StartNew(
             () =>
@@ -75,10 +75,10 @@ public sealed class TaskBridgeTests
     [TestMethod]
     public void TaskBridge_CancelWaitAggregate()
     {
-        var cts = new CancellationTokenSource();
+        using var cts = new CancellationTokenSource();
         var ct = cts.Token;
 
-        var ev = new ManualResetEventSlim();
+        using var ev = new ManualResetEventSlim();
 
         var task = Task.Factory.StartNew(
             () =>
@@ -198,7 +198,7 @@ public sealed class TaskBridgeTests
 
         try
         {
-            var cts = new CancellationTokenSource();
+            using var cts = new CancellationTokenSource();
 
             var task = TaskBridge.ExecuteAsync(SyncProcedure, cts.Token);
             await startSemaphore.WaitAsync();
@@ -210,7 +210,7 @@ public sealed class TaskBridgeTests
         }
         finally
         {
-            // Allow a synchronous thread to exit if it wasn't canceled for some reason.
+            // Allow a synchronous thread to exit if it hasn't been canceled for some reason.
             barrierSemaphore.Release();
         }
 
