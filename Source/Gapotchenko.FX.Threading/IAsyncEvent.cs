@@ -22,11 +22,9 @@ public interface IAsyncEvent
     /// </summary>
     void Wait();
 
-    /// <summary>
-    /// Blocks the current thread until the event receives a signal.
-    /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    /// <inheritdoc cref="Wait()"/>
     void Wait(CancellationToken cancellationToken);
 
     /// <summary>

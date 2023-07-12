@@ -17,6 +17,7 @@ namespace Gapotchenko.FX.Threading;
 /// <see cref="AsyncAutoResetEvent"/> resets automatically after releasing a single waiting thread.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
+[DebuggerDisplay("IsSet = {IsSet}")]
 public sealed class AsyncAutoResetEvent : IAsyncResetEvent
 {
     // ----------------------------------------------------------------------

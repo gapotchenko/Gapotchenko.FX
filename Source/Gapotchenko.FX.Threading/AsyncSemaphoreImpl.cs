@@ -6,18 +6,18 @@
 
 namespace Gapotchenko.FX.Threading;
 
-struct AsyncSemaphoreCoreImpl
+struct AsyncSemaphoreImpl
 {
     // The implementation is currently based on SemaphoreSlim provided by .NET BCL.
     // Not sure if this is the best idea because SemaphoreSlim seems to use OS resources (wait handles).
     readonly SemaphoreSlim m_Semaphore;
 
-    public AsyncSemaphoreCoreImpl(int initialCount)
+    public AsyncSemaphoreImpl(int initialCount)
     {
         m_Semaphore = new(initialCount);
     }
 
-    public AsyncSemaphoreCoreImpl(int initialCount, int maxCount)
+    public AsyncSemaphoreImpl(int initialCount, int maxCount)
     {
         m_Semaphore = new(initialCount, maxCount);
     }

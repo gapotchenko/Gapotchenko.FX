@@ -17,6 +17,7 @@ namespace Gapotchenko.FX.Threading;
 /// <see cref="AsyncManualResetEvent"/> must be reset manually.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
+[DebuggerDisplay("IsSet = {IsSet}")]
 public sealed class AsyncManualResetEvent : IAsyncResetEvent
 {
     // ----------------------------------------------------------------------
