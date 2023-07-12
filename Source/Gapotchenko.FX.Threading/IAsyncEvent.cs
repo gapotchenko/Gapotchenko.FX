@@ -13,18 +13,6 @@ namespace Gapotchenko.FX.Threading;
 public interface IAsyncEvent
 {
     /// <summary>
-    /// Sets the state of the event to signaled,
-    /// allowing one or more threads waiting on the event to proceed.
-    /// </summary>
-    void Set();
-
-    /// <summary>
-    /// Sets the state of the event to non-signaled,
-    /// causing threads to block.
-    /// </summary>
-    void Reset();
-
-    /// <summary>
     /// Gets a value indicating whether the event is set.
     /// </summary>
     bool IsSet { get; }
@@ -32,9 +20,14 @@ public interface IAsyncEvent
     /// <summary>
     /// Blocks the current thread until the event receives a signal.
     /// </summary>
+    void Wait();
+
+    /// <summary>
+    /// Blocks the current thread until the event receives a signal.
+    /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    void Wait(CancellationToken cancellationToken = default);
+    void Wait(CancellationToken cancellationToken);
 
     /// <summary>
     /// Blocks the current thread until the event receives a signal,
@@ -85,8 +78,14 @@ public interface IAsyncEvent
     /// <summary>
     /// Asynchronously waits until the event receives a signal.
     /// </summary>
+    /// <inheritdoc cref="Wait()"/>
+    Task WaitAsync();
+
+    /// <summary>
+    /// Asynchronously waits until the event receives a signal.
+    /// </summary>
     /// <inheritdoc cref="Wait(CancellationToken)"/>
-    Task WaitAsync(CancellationToken cancellationToken = default);
+    Task WaitAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously waits until the event receives a signal,
@@ -109,9 +108,4 @@ public interface IAsyncEvent
     /// </returns>
     /// <inheritdoc cref="Wait(TimeSpan, CancellationToken)"/>
     Task<bool> WaitAsync(TimeSpan timeout, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Gets a value indicating whether the event is an auto reset event as opposed to a manual reset event.
-    /// </summary>
-    bool IsAutoReset { get; }
 }

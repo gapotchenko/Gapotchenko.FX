@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Threading;
 /// <see cref="AsyncAutoResetEvent"/> resets automatically after releasing a single waiting thread.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
-public sealed class AsyncAutoResetEvent : IAsyncEvent
+public sealed class AsyncAutoResetEvent : IAsyncResetEvent
 {
     // ----------------------------------------------------------------------
     // Public Facade
@@ -61,8 +61,14 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
     /// <inheritdoc/>
     public bool IsSet => Volatile.Read(ref m_Set);
 
+    /// <inheritdoc cref="IAsyncEvent.Wait()"/>
+    public void WaitOne()
+    {
+        DoWaitOne(Timeout.InfiniteTimeSpan, CancellationToken.None);
+    }
+
     /// <inheritdoc cref="IAsyncEvent.Wait(CancellationToken)"/>
-    public void WaitOne(CancellationToken cancellationToken = default)
+    public void WaitOne(CancellationToken cancellationToken)
     {
         DoWaitOne(Timeout.InfiniteTimeSpan, cancellationToken);
     }
@@ -83,8 +89,14 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
         return DoWaitOne(timeout, cancellationToken);
     }
 
+    /// <inheritdoc cref="IAsyncEvent.WaitAsync()"/>
+    public Task WaitOneAsync()
+    {
+        return DoWaitOneAsync(Timeout.InfiniteTimeSpan, CancellationToken.None);
+    }
+
     /// <inheritdoc cref="IAsyncEvent.WaitAsync(CancellationToken)"/>
-    public Task WaitOneAsync(CancellationToken cancellationToken = default)
+    public Task WaitOneAsync(CancellationToken cancellationToken)
     {
         return DoWaitOneAsync(Timeout.InfiniteTimeSpan, cancellationToken);
     }
@@ -105,16 +117,20 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
         return DoWaitOneAsync(timeout, cancellationToken);
     }
 
-    bool IAsyncEvent.IsAutoReset => true;
+    bool IAsyncResetEvent.IsAutoReset => true;
 
     // ----------------------------------------------------------------------
     // Core Implementation
     // ----------------------------------------------------------------------
 
-    bool DoWaitOne(TimeSpan timeout, CancellationToken cancellationToken) =>
-        TaskBridge.Execute(
+    bool DoWaitOne(TimeSpan timeout, CancellationToken cancellationToken)
+    {
+        Debug.Assert(ExceptionHelper.IsValidTimeout(timeout));
+
+        return TaskBridge.Execute(
             ct => DoWaitOneAsync(timeout, ct),
             cancellationToken);
+    }
 
     Task<bool> DoWaitOneAsync(TimeSpan timeout, CancellationToken cancellationToken)
     {
@@ -139,11 +155,15 @@ public sealed class AsyncAutoResetEvent : IAsyncEvent
 
     #region Compatibility
 
+    void IAsyncEvent.Wait() => WaitOne();
+
     void IAsyncEvent.Wait(CancellationToken cancellationToken) => WaitOne(cancellationToken);
 
     bool IAsyncEvent.Wait(int millisecondsTimeout, CancellationToken cancellationToken) => WaitOne(millisecondsTimeout, cancellationToken);
 
     bool IAsyncEvent.Wait(TimeSpan timeout, CancellationToken cancellationToken) => WaitOne(timeout, cancellationToken);
+
+    Task IAsyncEvent.WaitAsync() => WaitOneAsync();
 
     Task IAsyncEvent.WaitAsync(CancellationToken cancellationToken) => WaitOneAsync(cancellationToken);
 
