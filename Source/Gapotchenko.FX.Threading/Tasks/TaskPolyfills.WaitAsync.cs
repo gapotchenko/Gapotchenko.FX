@@ -270,10 +270,7 @@ partial class TaskPolyfills
 
         async Task ExecuteAsync()
         {
-            using var cts = new CancellationTokenSource();
-
-            // Link the control task cancellation token source with the specified token.
-            using var ctr = canBeCanceled ? cancellationToken.Register(cts.Cancel) : default;
+            using var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken);
 
             var controlTask = Task.Delay(timeout, cts.Token);
 
@@ -329,10 +326,7 @@ partial class TaskPolyfills
 
         async Task<TResult> ExecuteAsync()
         {
-            using var cts = new CancellationTokenSource();
-
-            // Link the control task cancellation token source with the specified token.
-            using var ctr = canBeCanceled ? cancellationToken.Register(cts.Cancel) : default;
+            using var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken);
 
             var ct = cts.Token;
             var controlTask =

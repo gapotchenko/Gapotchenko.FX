@@ -294,8 +294,7 @@ public static class TaskBridge
             return;
         }
 
-        using var cts = new CancellationTokenSource();
-        using var ctr = cancellationToken.Register(cts.Cancel);
+        using var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken);
         ExecuteCore(task, cts);
     }
 

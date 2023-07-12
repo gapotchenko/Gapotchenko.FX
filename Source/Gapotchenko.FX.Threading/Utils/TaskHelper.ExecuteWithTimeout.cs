@@ -79,11 +79,7 @@ partial class TaskHelper
 
         async Task<TResult> ExecuteAsync()
         {
-            using var cts = new CancellationTokenSource(timeout);
-
-            // Link the cancellation token source with the user-supplied token.
-            using var ctr = cancellationToken.Register(cts.Cancel);
-
+            using var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken, timeout);
             try
             {
                 return await func(cts.Token).ConfigureAwait(false);
