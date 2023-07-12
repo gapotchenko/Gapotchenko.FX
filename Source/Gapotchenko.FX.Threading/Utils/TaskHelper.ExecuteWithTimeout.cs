@@ -26,7 +26,7 @@ partial class TaskHelper
         return DoExecuteWithTimeoutAsync(
             func,
             timeout,
-            () => throw new TimeoutException(),
+            Optional<TResult>.None,
             cancellationToken);
     }
 
@@ -53,15 +53,15 @@ partial class TaskHelper
         return DoExecuteWithTimeoutAsync(
             func,
             timeout,
-            () => timeoutResult,
+            timeoutResult,
             cancellationToken);
     }
 
     static Task<TResult> DoExecuteWithTimeoutAsync<TResult>(
         Func<CancellationToken, Task<TResult>> func,
         TimeSpan timeout,
-        Func<TResult> getTimeoutResult,
-        CancellationToken cancellationToken = default)
+        Optional<TResult> timeoutResult,
+        CancellationToken cancellationToken)
     {
         if (timeout == Timeout.InfiniteTimeSpan)
             return func(cancellationToken);
@@ -69,12 +69,17 @@ partial class TaskHelper
         if (cancellationToken.IsCancellationRequested)
             return Task.FromCanceled<TResult>(cancellationToken);
 
+        if (timeout == TimeSpan.Zero)
+        {
+            if (timeoutResult.HasValue)
+                return Task.FromResult(timeoutResult.Value);
+            else
+                return Task.FromException<TResult>(new TimeoutException());
+        }
+
         async Task<TResult> ExecuteAsync()
         {
-            if (timeout == TimeSpan.Zero)
-                return getTimeoutResult();
-
-            var cts = new CancellationTokenSource(timeout);
+            using var cts = new CancellationTokenSource(timeout);
 
             // Link the cancellation token source with the user-supplied token.
             using var ctr = cancellationToken.Register(cts.Cancel);
@@ -86,9 +91,17 @@ partial class TaskHelper
             catch (OperationCanceledException)
             {
                 if (cts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
-                    return getTimeoutResult();
+                {
+                    // Timeout is expired.
+                    if (timeoutResult.HasValue)
+                        return timeoutResult.Value;
+                    else
+                        throw new TimeoutException();
+                }
                 else
+                {
                     throw;
+                }
             }
         }
 
