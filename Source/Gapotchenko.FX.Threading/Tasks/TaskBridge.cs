@@ -313,15 +313,6 @@ public static class TaskBridge
         {
             var context = new ExclusiveSynchronizationContext();
 
-            void Cancel()
-            {
-                // Cancel the asynchronous task.
-                cts.Cancel();
-
-                // Execute remaining asynchronous operations following the cancellation.
-                context.Loop();
-            }
-
             var savedContext = SynchronizationContext.Current;
             SynchronizationContext.SetSynchronizationContext(context);
             try
@@ -356,6 +347,15 @@ public static class TaskBridge
             finally
             {
                 SynchronizationContext.SetSynchronizationContext(savedContext);
+            }
+
+            void Cancel()
+            {
+                // Cancel the asynchronous task.
+                cts.Cancel();
+
+                // Execute remaining asynchronous operations following the task cancellation.
+                context.Loop();
             }
         }
         catch (AggregateException e) when (e.InnerExceptions.Count == 1)
