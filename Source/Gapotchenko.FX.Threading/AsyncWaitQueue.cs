@@ -55,28 +55,18 @@ readonly partial struct AsyncWaitQueue<T>
     /// </summary>
     /// <param name="result">The result value to complete dequeued tasks with.</param>
     /// <returns>The number of dequeued and completed tasks.</returns>
-    public int DequeAll(T result)
-    {
-        int count = 0;
-        foreach (var tcs in m_Queue)
-        {
-            if (tcs.TrySetResult(result))
-                ++count;
-        }
-        m_Queue.Clear();
-        return count;
-    }
+    public int DequeAll(T result) => CompleteAll(tcs => tcs.TrySetResult(result));
 
     /// <summary>
-    /// Tries to remove and cancel the specified task using the specified cancellation token.
+    /// Tries to remove and complete the specified task using the specified completion function.
     /// </summary>
-    /// <param name="task">The task to cancel.</param>
-    /// <param name="cancellationToken">The cancellation token to cancel the task with.</param>
+    /// <param name="task">The task to remove and complete.</param>
+    /// <param name="completionFunc">The task completion function.</param>
     /// <returns>
-    /// <see langword="true"/> if the task was removed and canceled;
+    /// <see langword="true"/> if the task was removed and completed;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public bool TryCancel(Task task, CancellationToken cancellationToken)
+    public bool TryComplete(Task task, Func<TaskCompletionSource<T>, bool> completionFunc)
     {
         var queue = m_Queue;
         int count = queue.Count;
@@ -86,8 +76,14 @@ readonly partial struct AsyncWaitQueue<T>
             var tcs = queue[i];
             if (tcs.Task == task)
             {
+                // It's important to change the task state *before* removing it from the queue
+                // in order to avoid logical integrity violations when this method is thread-aborted.
+                // Otherwise, the task theoretically can become removed but not completed,
+                // causing a deadlock on the waiters' side as nobody would be able to ever change the state
+                // of the already removed task.
+                var completed = completionFunc(tcs);
                 queue.RemoveAt(i);
-                return tcs.TrySetCanceled(cancellationToken);
+                return completed;
             }
         }
 
@@ -95,16 +91,16 @@ readonly partial struct AsyncWaitQueue<T>
     }
 
     /// <summary>
-    /// Removes all tasks from the <see cref="AsyncWaitQueue{T}"/> and cancels them using the specified cancellation token.
+    /// Removes all tasks from the <see cref="AsyncWaitQueue{T}"/> and completes them using the specified completion function.
     /// </summary>
-    /// <param name="cancellationToken">The cancellation token to cancel removed tasks with.</param>
-    /// <returns>The number of removed and canceled tasks.</returns>
-    public int CancelAll(CancellationToken cancellationToken)
+    /// <param name="completionFunc">The task completion function.</param>
+    /// <returns>The number of removed and completed tasks.</returns>
+    public int CompleteAll(Func<TaskCompletionSource<T>, bool> completionFunc)
     {
         int count = 0;
         foreach (var tcs in m_Queue)
         {
-            if (tcs.TrySetCanceled(cancellationToken))
+            if (completionFunc(tcs))
                 ++count;
         }
         m_Queue.Clear();

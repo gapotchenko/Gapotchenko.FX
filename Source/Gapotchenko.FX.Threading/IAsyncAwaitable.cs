@@ -1,7 +1,8 @@
 ﻿namespace Gapotchenko.FX.Threading;
 
 /// <summary>
-/// Defines the interface of an awaitable synchronization primitive that supports both synchronous and asynchronous operations.
+/// Defines the interface of a synchronization primitive that can be awaited,
+/// and supports both synchronous and asynchronous operations.
 /// </summary>
 public interface IAsyncAwaitable
 {

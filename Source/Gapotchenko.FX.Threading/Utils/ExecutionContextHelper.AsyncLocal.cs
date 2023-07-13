@@ -45,7 +45,7 @@
 // equivalent as if they were propagated naturally. In this way, the barrier
 // of outward state propagation imposed by AsyncLocal<T> ceases to exist. This
 // makes it possible to implement algorithms that use not only inward, but
-// also outward propagation of the ambient data.
+// also outward propagation of the AsyncLocal<T> data.
 //
 // Copyright © 2023 Oleksiy Gapotchenko
 // Published under the terms and conditions of MIT License.
@@ -60,13 +60,14 @@ namespace Gapotchenko.FX.Threading.Utils;
 partial class ExecutionContextHelper
 {
     /// <summary>
-    /// Modifies ambient data that is local to a given asynchronous control flow
+    /// Modifies <see cref="AsyncLocal{T}"/> ambient data that is local to a given asynchronous control flow
     /// by automatically replaying the specified action in all control flow branches
-    /// to make the changes equivalent in all of them.
+    /// to make equivalent <see cref="AsyncLocal{T}"/> data changes in all of them.
     /// </summary>
     /// <remarks>
     /// This approach allows to overcome the limitations imposed by <see cref="AsyncLocal{T}"/> class
     /// which only supports the inward flow of the ambient data.
+    /// With this method, the outward flow of data is also possible.
     /// </remarks>
     /// <param name="action">The <see cref="Action{T}"/> that directly or indirectly modifies an <see cref="AsyncLocal{T}.Value"/> property.</param>
     /// <returns>An <see cref="AsyncLocalModificationOperation"/> instance that can be used to either commit or discard the modification.</returns>
@@ -78,13 +79,13 @@ partial class ExecutionContextHelper
 
     /// <summary>
     /// Synchronizes <see cref="AsyncLocal{T}"/> data access as follows:
-    /// data modifications made prior to the call to <see cref="AsyncLocalBarrier"/>
+    /// <see cref="AsyncLocal{T}"/> data modifications made prior to the call to <see cref="AsyncLocalBarrier"/>
     /// cannot be reordered to execute after the call to <see cref="AsyncLocalBarrier"/>.
     /// </summary>
     public static void AsyncLocalBarrier() => AsyncLocalModificationOperationBase.Barrier();
 
     /// <summary>
-    /// Represents an operation that modifies ambient data associated with an asynchronous control flow.
+    /// Represents an operation that modifies ambient <see cref="AsyncLocal{T}"/> data associated with an asynchronous control flow.
     /// </summary>
     public abstract class AsyncLocalModificationOperationBase : IDisposable
     {
@@ -104,7 +105,7 @@ partial class ExecutionContextHelper
         static void FlowStateChanged(AsyncLocalValueChangedArgs<FlowState?> args)
         {
             // This is a state transition function which is invoked on a thread context change.
-            // It allows us to propagate accumulated state modifications to the currently executing
+            // It allows us to propagate accumulated data modifications to the currently executing
             // asynchronous control flow.
 
             // The existence of a state transition function is not obligatory as its absence can be
@@ -121,7 +122,7 @@ partial class ExecutionContextHelper
 
         /// <summary>
         /// Updates a finite state machine (FSM) associated with the specified flow state,
-        /// and sets the current flow state to the new value calculated by the FSM.
+        /// and sets the current flow state to a new value calculated by the FSM.
         /// </summary>
         /// <param name="currentFlowState">The current flow state.</param>
         static void UpdateFsm(FlowState currentFlowState)
@@ -145,11 +146,11 @@ partial class ExecutionContextHelper
             {
                 // A full FSM (Finite State Machine) coding style is used here,
                 // despite the fact that FlowState.ChangesApplied = true property is never stored in
-                // the state object (such a state is considered as completed and gets erased with
-                // a null value for better memory reclamation).
+                // the state object (such a state is considered as completed and thus the object gets
+                // erased with a null value for better memory reclamation).
 
                 // A low-hanging optimization is not to have ChangesApplied property at all,
-                // but that would make the code more entangled and harder to understand and maintain.
+                // but that would make the code more entangled and harder to understand or maintain.
 
                 bool changesApplied = state.ChangesApplied;
 
@@ -163,7 +164,7 @@ partial class ExecutionContextHelper
                 FlowState? newState;
                 if (changesApplied)
                 {
-                    // All actions are taken - no need to hold the flow state anymore.
+                    // All actions are taken - no need to hold the flow state object anymore.
                     newState = null;
                 }
                 else
@@ -189,8 +190,8 @@ partial class ExecutionContextHelper
 
         internal static void Barrier()
         {
-            // Updating the FSM to complete any pending activities
-            // creates an ordered relation between operations
+            // Updating the current FSM to complete any pending activities
+            // creates an ordered relation between AsyncLocal<T> operations
             // that were issued before and after the barrier.
             if (m_FlowState.Value is not null and var flowState)
                 UpdateFsm(flowState);

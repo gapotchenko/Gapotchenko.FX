@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Threading;
 public interface IAsyncRecursiveLockable : IAsyncLockable
 {
     /// <summary>
-    /// Gets a value indicating whether the current thread holds the lock on this synchronization primitive.
+    /// Gets a value indicating whether the current thread holds a lock on this synchronization primitive.
     /// </summary>
-    bool IsEntered { get; }
+    bool IsLockHeld { get; }
 }

@@ -221,7 +221,6 @@ class Program
         Console.WriteLine(appInfo.ProductName);
         Console.WriteLine(appInfo.InformationalVersion);
 
-
         var mutex = new AsyncRecursiveMutex();
 
         Console.WriteLine("Running lock/unlock loop...");

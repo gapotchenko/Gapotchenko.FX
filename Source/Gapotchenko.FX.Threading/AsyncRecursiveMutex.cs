@@ -134,7 +134,7 @@ public sealed class AsyncRecursiveMutex : IAsyncRecursiveMutex
     public bool IsLocked => m_CoreImpl.IsLocked;
 
     /// <inheritdoc/>
-    public bool IsEntered => m_RecursionTracker.IsEntered;
+    public bool IsLockHeld => m_RecursionTracker.IsEntered;
 
     bool IAsyncLockable.IsRecursive => true;
 }
