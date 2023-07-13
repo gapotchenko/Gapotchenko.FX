@@ -20,7 +20,7 @@ static partial class TaskHelper
     }
 
     [Conditional("TFF_THREAD_ABORT")]
-    public static void ClearThreadAbort()
+    public static void ResetThreadAbort()
     {
 #if TFF_THREAD_ABORT
         try
@@ -30,7 +30,7 @@ static partial class TaskHelper
         }
         catch (ThreadStateException)
         {
-            // Was not aborted with Thread.Abort().
+            // Was not aborted by Thread.Abort().
         }
         catch (PlatformNotSupportedException)
         {
@@ -44,7 +44,7 @@ static partial class TaskHelper
     /// </summary>
     /// <param name="task">The task.</param>
     /// <param name="disposable">The disposable object that will be disposed when the task completes.</param>
-    public static void ContinueWithDispose(Task task, IDisposable disposable)
+    public static void DisposeOnCompetion(Task task, IDisposable disposable)
     {
         task.ContinueWith(
             _ => disposable.Dispose(),
@@ -54,9 +54,9 @@ static partial class TaskHelper
     }
 
     // This is an optimized implementation to avoid boxing of disposable value types.
-    /// <inheritdoc cref="ContinueWithDispose(Task, IDisposable)"/>
+    /// <inheritdoc cref="DisposeOnCompetion(Task, IDisposable)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void ContinueWithDispose<TDisposable>(Task task, TDisposable disposable)
+    public static void DisposeOnCompetion<TDisposable>(Task task, TDisposable disposable)
         where TDisposable : struct, IDisposable
     {
         task.ContinueWith(

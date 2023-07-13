@@ -33,7 +33,7 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
 
 #if TFF_THREAD_ABORT
                     if (e is ThreadAbortException)
-                        TaskHelper.ClearThreadAbort();
+                        TaskHelper.ResetThreadAbort();
 #endif
                 }
                 finally

@@ -379,9 +379,8 @@ public static class TaskBridge
             }
             catch (ThreadAbortException)
             {
-                TaskHelper.ClearThreadAbort();
+                TaskHelper.ResetThreadAbort();
 
-                // Translate any thread abort to a task cancellation exception.
                 throw new TaskCanceledException(Volatile.Read(ref executionTask));
             }
             catch (ThreadInterruptedException)
@@ -431,10 +430,6 @@ public static class TaskBridge
         {
             // Not allowed.
         }
-        catch (PlatformNotSupportedException)
-        {
-            // Not supported.
-        }
 
         return false;
     }
@@ -444,7 +439,7 @@ public static class TaskBridge
         Debug.Assert(action is not null);
 
         // Running a synchronous action in a long-running task prevents thread pool pollution.
-        // In this way, the task acts as a standalone thread.
+        // In this way, the task mostly acts as a standalone thread.
         return Task.Factory.StartNew(
             action,
             cancellationToken,
