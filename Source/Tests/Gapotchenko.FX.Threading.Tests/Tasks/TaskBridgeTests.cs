@@ -222,4 +222,111 @@ public sealed class TaskBridgeTests
         Assert.IsInstanceOfType<ThreadInterruptedException>(exitException);
 #endif
     }
+
+    [TestMethod]
+    public void TaskBridge_ExceptionHandlerExecution()
+    {
+        int hitCountA = 0;
+        int hitCountB = 0;
+        const string exceptionMessage = "Expected";
+
+        async Task RunAsync()
+        {
+            try
+            {
+                try
+                {
+                    ++hitCountA;
+                    await Task.Yield();
+                    ++hitCountA;
+                    if (hitCountA == 2)
+                        throw new Exception(exceptionMessage);
+                    ++hitCountA;
+                }
+                catch
+                {
+                    await Task.Yield();
+                    ++hitCountA;
+                    await Task.Yield();
+                    throw;
+                }
+                finally
+                {
+                    hitCountA += 40;
+                }
+            }
+            finally
+            {
+                ++hitCountB;
+                await Task.Yield();
+                ++hitCountB;
+            }
+        }
+
+        var exception = Assert.ThrowsException<Exception>(() => TaskBridge.Execute(RunAsync));
+        Assert.AreEqual(exceptionMessage, exception.Message);
+
+        Assert.AreEqual(43, hitCountA);
+        Assert.AreEqual(2, hitCountB);
+    }
+
+    [TestMethod]
+    public async Task TaskBridge_ExceptionHandlerExecutionOnSyncAbort()
+    {
+        int hitCountA = 0;
+        int hitCountB = 0;
+        var flagA = new AsyncManualResetEvent();
+
+        async Task RunAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                try
+                {
+                    ++hitCountA;
+                    await Task.Yield();
+                    ++hitCountA;
+                    flagA.Set();
+                    await Task.Delay(Timeout.Infinite, cancellationToken);
+                    ++hitCountA;
+                }
+                catch
+                {
+                    await Task.Yield();
+                    ++hitCountA;
+                    await Task.Yield();
+                    throw;
+                }
+                finally
+                {
+                    hitCountA += 40;
+                }
+            }
+            finally
+            {
+                ++hitCountB;
+                await Task.Yield();
+                ++hitCountB;
+            }
+        }
+
+        var cts = new CancellationTokenSource();
+
+        async Task ControlTask()
+        {
+            await flagA.WaitAsync();
+            cts.Cancel();
+        }
+
+        var controlTask = ControlTask();
+        await Assert.ThrowsExceptionAsync<TaskCanceledException>(
+            () => TaskBridge.ExecuteAsync(
+                () => TaskBridge.Execute(RunAsync),
+                cts.Token));
+
+        await controlTask;
+
+        Assert.AreEqual(43, hitCountA);
+        Assert.AreEqual(2, hitCountB);
+    }
 }
