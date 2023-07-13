@@ -84,9 +84,9 @@ public static class TaskBridge
 
 #if TFF_VALUETASK
     /// <summary>
-    /// Synchronously completes the execution of an already started asynchronous <see cref="Task{TResult}"/>.
+    /// Synchronously completes the execution of an already started asynchronous <see cref="ValueTask{TResult}"/>.
     /// </summary>
-    /// <param name="task">The asynchronous <see cref="Task{TResult}"/> to execute.</param>
+    /// <param name="task">The asynchronous <see cref="ValueTask{TResult}"/> to execute.</param>
     /// <returns>A result of the executed task.</returns>
     public static TResult Execute<TResult>(in ValueTask<TResult> task)
     {
