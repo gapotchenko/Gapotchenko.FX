@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Threading.Utils;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using Gapotchenko.FX.Threading.Utils;
 using System.Collections.Concurrent;
 using System.Runtime.ExceptionServices;
 
@@ -10,13 +16,7 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
 
     public override void Post(SendOrPostCallback d, object? state) => m_Queue.Add(new(d, state));
 
-    public override void Send(SendOrPostCallback d, object? state) => d(state);
-
     public override SynchronizationContext CreateCopy() => this;
-
-    volatile ExceptionDispatchInfo? m_ExceptionDispatchInfo;
-
-    public Func<Exception, bool>? ExceptionFilter { get; set; }
 
     public void Execute(Func<Task> task)
     {
@@ -29,12 +29,21 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
                 }
                 catch (Exception e)
                 {
-                    m_ExceptionDispatchInfo = ExceptionDispatchInfo.Capture(e);
-
 #if TFF_THREAD_ABORT
                     if (e is ThreadAbortException)
-                        TaskHelper.ResetThreadAbort();
+                    {
+                        // Allows the task to continue interacting with a task scheduler.
+                        ThreadHelper.TryResetAbort();
+                    }
 #endif
+
+                    Post(
+                        static state =>
+                        {
+                            var edi = (ExceptionDispatchInfo)state!;
+                            edi.Throw();
+                        },
+                        ExceptionDispatchInfo.Capture(e));
                 }
                 finally
                 {
@@ -46,26 +55,19 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
         Loop();
     }
 
-    void End() =>
-        Post(
-            x => ((ExclusiveSynchronizationContext)x!).m_Queue.CompleteAdding(),
-            this);
-
-    void Loop()
+    public void Loop()
     {
         while (m_Queue.TryTake(out var task, Timeout.Infinite))
         {
             // Execute the task.
             task.Key(task.Value);
-
-            var edi = m_ExceptionDispatchInfo;
-            if (edi != null)
-            {
-                if (ExceptionFilter?.Invoke(edi.SourceException) != false)
-                    edi.Throw();
-                else
-                    m_ExceptionDispatchInfo = null;
-            }
         }
+    }
+
+    void End()
+    {
+        Post(
+            static x => ((ExclusiveSynchronizationContext)x!).m_Queue.CompleteAdding(),
+            this);
     }
 }

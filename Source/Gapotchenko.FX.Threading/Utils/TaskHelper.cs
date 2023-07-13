@@ -4,8 +4,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-using System.Diagnostics;
-
 namespace Gapotchenko.FX.Threading.Utils;
 
 static partial class TaskHelper
@@ -17,26 +15,6 @@ static partial class TaskHelper
     /// </summary>
     public struct VoidResult
     {
-    }
-
-    [Conditional("TFF_THREAD_ABORT")]
-    public static void ResetThreadAbort()
-    {
-#if TFF_THREAD_ABORT
-        try
-        {
-            // Allow the task to finish gracefully.
-            Thread.ResetAbort();
-        }
-        catch (ThreadStateException)
-        {
-            // Was not aborted by Thread.Abort().
-        }
-        catch (PlatformNotSupportedException)
-        {
-            // Not supported.
-        }
-#endif
     }
 
     /// <summary>

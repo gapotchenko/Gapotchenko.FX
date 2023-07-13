@@ -226,8 +226,7 @@ public sealed class TaskBridgeTests
     [TestMethod]
     public void TaskBridge_ExceptionHandlerExecution()
     {
-        int hitCountA = 0;
-        int hitCountB = 0;
+        int trace = 0;
         const string exceptionMessage = "Expected";
 
         async Task RunAsync()
@@ -236,46 +235,45 @@ public sealed class TaskBridgeTests
             {
                 try
                 {
-                    ++hitCountA;
+                    ++trace;
                     await Task.Yield();
-                    ++hitCountA;
-                    if (hitCountA == 2)
+                    ++trace;
+                    if (trace == 2)
                         throw new Exception(exceptionMessage);
-                    ++hitCountA;
+                    ++trace;
                 }
                 catch
                 {
                     await Task.Yield();
-                    ++hitCountA;
+                    trace += 10;
                     await Task.Yield();
+                    trace += 10;
                     throw;
                 }
                 finally
                 {
-                    hitCountA += 40;
+                    trace += 100;
                 }
             }
             finally
             {
-                ++hitCountB;
+                trace += 1000;
                 await Task.Yield();
-                ++hitCountB;
+                trace += 1000;
             }
         }
 
         var exception = Assert.ThrowsException<Exception>(() => TaskBridge.Execute(RunAsync));
         Assert.AreEqual(exceptionMessage, exception.Message);
 
-        Assert.AreEqual(43, hitCountA);
-        Assert.AreEqual(2, hitCountB);
+        Assert.AreEqual(2122, trace);
     }
 
     [TestMethod]
     public async Task TaskBridge_ExceptionHandlerExecutionOnSyncAbort()
     {
-        int hitCountA = 0;
-        int hitCountB = 0;
-        var flagA = new AsyncManualResetEvent();
+        int trace = 0;
+        var flag = new AsyncManualResetEvent();
 
         async Task RunAsync(CancellationToken cancellationToken)
         {
@@ -283,30 +281,31 @@ public sealed class TaskBridgeTests
             {
                 try
                 {
-                    ++hitCountA;
+                    ++trace;
                     await Task.Yield();
-                    ++hitCountA;
-                    flagA.Set();
+                    ++trace;
+                    flag.Set();
                     await Task.Delay(Timeout.Infinite, cancellationToken);
-                    ++hitCountA;
+                    ++trace;
                 }
                 catch
                 {
                     await Task.Yield();
-                    ++hitCountA;
+                    trace += 10;
                     await Task.Yield();
+                    trace += 10;
                     throw;
                 }
                 finally
                 {
-                    hitCountA += 40;
+                    trace += 100;
                 }
             }
             finally
             {
-                ++hitCountB;
+                trace += 1000;
                 await Task.Yield();
-                ++hitCountB;
+                trace += 1000;
             }
         }
 
@@ -314,7 +313,7 @@ public sealed class TaskBridgeTests
 
         async Task ControlTask()
         {
-            await flagA.WaitAsync();
+            await flag.WaitAsync();
             cts.Cancel();
         }
 
@@ -326,7 +325,6 @@ public sealed class TaskBridgeTests
 
         await controlTask;
 
-        Assert.AreEqual(43, hitCountA);
-        Assert.AreEqual(2, hitCountB);
+        Assert.AreEqual(2122, trace);
     }
 }

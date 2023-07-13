@@ -6,7 +6,6 @@
 
 using Gapotchenko.FX.Threading.Utils;
 using System.Diagnostics;
-using System.Security;
 
 namespace Gapotchenko.FX.Threading.Tasks;
 
@@ -313,29 +312,47 @@ public static class TaskBridge
         try
         {
             var context = new ExclusiveSynchronizationContext();
-            Task? pendingTask = null;
+
+            void Cancel()
+            {
+                // Cancel the asynchronous task.
+                cts.Cancel();
+
+                // Execute remaining asynchronous operations following the cancellation.
+                context.Loop();
+            }
 
             var savedContext = SynchronizationContext.Current;
             SynchronizationContext.SetSynchronizationContext(context);
             try
             {
-                context.Execute(() => pendingTask = task(cts.Token));
-                pendingTask = null;
+                context.Execute(() => task(cts.Token));
             }
-            catch (Exception ex) when (ex is ThreadAbortException || ex is ThreadInterruptedException)
+            catch (ThreadInterruptedException)
             {
-                cts.Cancel();
-
-                if (pendingTask != null)
+                Cancel();
+                throw;
+            }
+#if TFF_THREAD_ABORT
+            catch (ThreadAbortException)
+            {
+                // Allow the task to continue interacting with a task scheduler.
+                if (ThreadHelper.TryResetAbort())
                 {
-                    context.ExceptionFilter = exception => exception is not TaskCanceledException;
-
-                    // Execute remaining asynchronous iterations and finalizers.
-                    context.Execute(() => pendingTask);
+                    try
+                    {
+                        Cancel();
+                    }
+                    finally
+                    {
+                        // Restore the thread abort condition once all is done.
+                        ThreadHelper.TryAbort(Thread.CurrentThread);
+                    }
                 }
 
                 throw;
             }
+#endif
             finally
             {
                 SynchronizationContext.SetSynchronizationContext(savedContext);
@@ -368,10 +385,12 @@ public static class TaskBridge
         {
             // Use a graceful cancellation opportunity.
             cancellationToken.ThrowIfCancellationRequested();
+
+            // Execute a cancelable synchronous action.
             try
             {
                 using (cancellationToken.Register(
-                    state => TryCancelThread((Thread)state!),
+                    static state => ThreadHelper.TryCancel((Thread)state!),
                     Thread.CurrentThread))
                 {
                     action();
@@ -379,7 +398,8 @@ public static class TaskBridge
             }
             catch (ThreadAbortException)
             {
-                TaskHelper.ResetThreadAbort();
+                // Allow the task to continue interacting with a task scheduler.
+                ThreadHelper.TryResetAbort();
 
                 throw new TaskCanceledException(Volatile.Read(ref executionTask));
             }
@@ -393,45 +413,6 @@ public static class TaskBridge
         Volatile.Write(ref executionTask, task);
 
         return task;
-    }
-
-    /// <summary>
-    /// Tries to cancel a synchronous thread.
-    /// </summary>
-    /// <param name="thread">The thread to cancel.</param>
-    static bool TryCancelThread(Thread thread)
-    {
-#if TFF_THREAD_ABORT
-        try
-        {
-            thread.Abort();
-            return true;
-        }
-        catch (ThreadStateException)
-        {
-            // Already aborted or no longer running.
-        }
-        catch (SecurityException)
-        {
-            // Not allowed.
-        }
-        catch (PlatformNotSupportedException)
-        {
-            // Not supported.
-        }
-#endif
-
-        try
-        {
-            thread.Interrupt();
-            return true;
-        }
-        catch (SecurityException)
-        {
-            // Not allowed.
-        }
-
-        return false;
     }
 
     static Task StartLongRunningTask(Action action, CancellationToken cancellationToken)
