@@ -224,7 +224,7 @@ public sealed class TaskBridgeTests
     }
 
     [TestMethod]
-    public void TaskBridge_ExceptionHandlerExecution()
+    public void TaskBridge_TaskCompletion()
     {
         int trace = 0;
         const string exceptionMessage = "Expected";
@@ -270,7 +270,7 @@ public sealed class TaskBridgeTests
     }
 
     [TestMethod]
-    public async Task TaskBridge_ExceptionHandlerExecutionOnSyncAbort()
+    public async Task TaskBridge_TaskCompletionOnSyncCancel()
     {
         int trace = 0;
         var flag = new AsyncManualResetEvent();
@@ -326,5 +326,60 @@ public sealed class TaskBridgeTests
         await controlTask;
 
         Assert.AreEqual(2122, trace);
+    }
+
+    [TestMethod]
+    [Timeout(5 * 60 * 1000)]
+    public async Task TaskBridge_TaskCompletionOnSyncAbort()
+    {
+        int trace = 0;
+        var flag1 = new AsyncManualResetEvent();
+        var flag2 = new AsyncManualResetEvent();
+
+        async Task RunAsync()
+        {
+            try
+            {
+                ++trace;
+                await Task.Yield();
+                ++trace;
+                flag1.Set();
+                await flag2.WaitAsync();
+                ++trace;
+            }
+            finally
+            {
+                trace += 100;
+                await Task.Yield();
+                trace += 100;
+            }
+        }
+
+        var cts = new CancellationTokenSource();
+
+        async Task ControlTask()
+        {
+            await flag1.WaitAsync();
+            cts.Cancel();
+        }
+
+        Task? pendingTask = null;
+
+        var controlTask = ControlTask();
+        await Assert.ThrowsExceptionAsync<TaskCanceledException>(
+            () => TaskBridge.ExecuteAsync(
+                () => TaskBridge.Execute(() => pendingTask = RunAsync()),
+                cts.Token));
+
+        await controlTask;
+
+        Assert.AreEqual(2, trace);
+
+        flag2.Set();
+
+        Assert.IsNotNull(pendingTask);
+        await pendingTask;
+
+        Assert.AreEqual(203, trace);
     }
 }

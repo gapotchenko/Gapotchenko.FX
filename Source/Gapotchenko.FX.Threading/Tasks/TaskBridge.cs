@@ -238,17 +238,75 @@ public static class TaskBridge
     {
         Debug.Assert(task is not null);
 
-        using var context = new ExclusiveSynchronizationContext();
-
-        var savedContext = SynchronizationContext.Current;
-        SynchronizationContext.SetSynchronizationContext(context);
+        bool disposeContext = true;
+        var context = new ExclusiveSynchronizationContext();
         try
         {
-            context.Execute(task);
+            var savedContext = SynchronizationContext.Current;
+            SynchronizationContext.SetSynchronizationContext(context);
+            try
+            {
+                context.Execute(task);
+            }
+            catch (ThreadInterruptedException)
+            {
+                Cancel();
+                throw;
+            }
+#if TFF_THREAD_ABORT
+            catch (ThreadAbortException)
+            {
+                // Allow the task to continue interacting with a task scheduler.
+                if (ThreadHelper.TryResetAbort())
+                {
+                    try
+                    {
+                        Cancel();
+                    }
+                    finally
+                    {
+                        // Restore the thread abort condition.
+                        ThreadHelper.TryAbort(Thread.CurrentThread);
+                    }
+                }
+
+                throw;
+            }
+#endif
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(savedContext);
+            }
         }
         finally
         {
-            SynchronizationContext.SetSynchronizationContext(savedContext);
+            if (disposeContext)
+                context.Dispose();
+        }
+
+        void Cancel()
+        {
+            // Detach synchronization context from the current thread.
+            disposeContext = false;
+
+            void DetachedRun()
+            {
+                var savedContext = SynchronizationContext.Current;
+                SynchronizationContext.SetSynchronizationContext(context);
+                try
+                {
+                    // Continue the task execution until completion.
+                    context.Loop();
+                }
+                finally
+                {
+                    SynchronizationContext.SetSynchronizationContext(savedContext);
+                    context.Dispose();
+                }
+            }
+
+            // Run the task in the background.
+            StartLongRunningTask(DetachedRun);
         }
     }
 
@@ -359,7 +417,7 @@ public static class TaskBridge
     {
         Debug.Assert(action is not null);
 
-        return StartLongRunningTask(action, CancellationToken.None);
+        return StartLongRunningTask(action);
     }
 
     static Task ExecuteAsyncCore(Action action, CancellationToken cancellationToken)
@@ -406,7 +464,7 @@ public static class TaskBridge
         return task;
     }
 
-    static Task StartLongRunningTask(Action action, CancellationToken cancellationToken)
+    static Task StartLongRunningTask(Action action, CancellationToken cancellationToken = default)
     {
         Debug.Assert(action is not null);
 
