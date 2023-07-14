@@ -1,4 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+using Gapotchenko.FX.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Threading.Tests;
 
@@ -138,5 +145,61 @@ public sealed class AsyncAutoResetEventTests
         var e = new AsyncAutoResetEvent(true);
         await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => e.WaitOneAsync(0, new CancellationToken(true)));
         Assert.IsTrue(e.IsSet);
+    }
+
+    [TestMethod]
+    public void AsyncAutoResetEvent_Scenario_A1_Sync()
+    {
+        var e1 = new AsyncAutoResetEvent(false);
+        var e2 = new AsyncAutoResetEvent(false);
+        int trace = 0;
+
+        void TaskEntry()
+        {
+            trace = 10;
+            e1.Set();
+            if (e2.WaitOne(Timeout.Infinite))
+                trace *= 20;
+            if (e2.WaitOne(0))
+                ++trace;
+        }
+
+        var task = TaskBridge.ExecuteAsync(TaskEntry);
+        e1.WaitOne();
+        if (e1.WaitOne(0))
+            trace += 2;
+        Assert.AreEqual(10, trace);
+        e2.Set();
+
+        TaskBridge.Execute(task);
+        Assert.AreEqual(200, trace);
+    }
+
+    [TestMethod]
+    public async Task AsyncAutoResetEvent_Scenario_A1_Async()
+    {
+        var e1 = new AsyncAutoResetEvent(false);
+        var e2 = new AsyncAutoResetEvent(false);
+        int trace = 0;
+
+        async Task TaskEntry()
+        {
+            trace = 10;
+            e1.Set();
+            if (await e2.WaitOneAsync(Timeout.Infinite))
+                trace *= 20;
+            if (await e2.WaitOneAsync(0))
+                ++trace;
+        }
+
+        var task = TaskEntry();
+        await e1.WaitOneAsync();
+        if (await e1.WaitOneAsync(0))
+            trace += 2;
+        Assert.AreEqual(10, trace);
+        e2.Set();
+
+        await task;
+        Assert.AreEqual(200, trace);
     }
 }
