@@ -270,6 +270,7 @@ public sealed class TaskBridgeTests
     }
 
     [TestMethod]
+    [Timeout(2 * 60 * 1000)]
     public async Task TaskBridge_TaskCompletionOnSyncCancel()
     {
         int trace = 0;
@@ -329,7 +330,7 @@ public sealed class TaskBridgeTests
     }
 
     [TestMethod]
-    [Timeout(5 * 60 * 1000)]
+    [Timeout(2 * 60 * 1000)]
     public async Task TaskBridge_TaskCompletionOnSyncAbort()
     {
         int trace = 0;
