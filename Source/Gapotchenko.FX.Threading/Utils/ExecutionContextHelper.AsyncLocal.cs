@@ -67,13 +67,22 @@ partial class ExecutionContextHelper
     /// <remarks>
     /// This approach allows to overcome the limitations imposed by <see cref="AsyncLocal{T}"/> class
     /// which only supports the inward flow of the ambient data.
-    /// With this method, the outward flow of data is also possible.
+    /// By using this method, the outward flow of data is also possible.
+    /// The upper limit of the outward flow is determined by the location of the call to this method.
     /// </remarks>
     /// <param name="action">The <see cref="Action{T}"/> that directly or indirectly modifies an <see cref="AsyncLocal{T}.Value"/> property.</param>
-    /// <returns>An <see cref="AsyncLocalModificationOperation"/> instance that can be used to either commit or discard the modification.</returns>
+    /// <returns>
+    /// An <see cref="AsyncLocalModificationOperation"/> instance
+    /// that can be used to either commit or discard <see cref="AsyncLocal{T}"/> modifications
+    /// performed by the specified <paramref name="action"/>.
+    /// </returns>
     public static AsyncLocalModificationOperation ModifyAsyncLocal(Action action) => new(action);
 
-    /// <returns>An <see cref="AsyncLocalModificationOperation{T}"/> instance that can be used to either commit or discard the modification.</returns>
+    /// <returns>
+    /// An <see cref="AsyncLocalModificationOperation{T}"/> instance
+    /// that can be used to either commit or discard <see cref="AsyncLocal{T}"/> modifications
+    /// performed by the specified <paramref name="action"/>.
+    /// </returns>
     /// <inheritdoc cref="ModifyAsyncLocal(Action)"/>
     public static AsyncLocalModificationOperation<T> ModifyAsyncLocal<T>(Action<T> action) => new(action);
 
