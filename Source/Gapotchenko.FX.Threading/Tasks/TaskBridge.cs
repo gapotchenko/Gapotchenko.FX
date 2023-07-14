@@ -238,7 +238,7 @@ public static class TaskBridge
     {
         Debug.Assert(task is not null);
 
-        var context = new ExclusiveSynchronizationContext();
+        using var context = new ExclusiveSynchronizationContext();
 
         var savedContext = SynchronizationContext.Current;
         SynchronizationContext.SetSynchronizationContext(context);
@@ -287,12 +287,6 @@ public static class TaskBridge
     {
         Debug.Assert(task is not null);
 
-        if (!cancellationToken.CanBeCanceled)
-        {
-            ExecuteCore(task);
-            return;
-        }
-
         using var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken);
         ExecuteCore(task, cts);
     }
@@ -309,58 +303,55 @@ public static class TaskBridge
     {
         Debug.Assert(task is not null);
 
+        using var context = new ExclusiveSynchronizationContext();
+
+        var savedContext = SynchronizationContext.Current;
+        SynchronizationContext.SetSynchronizationContext(context);
         try
         {
-            var context = new ExclusiveSynchronizationContext();
-
-            var savedContext = SynchronizationContext.Current;
-            SynchronizationContext.SetSynchronizationContext(context);
-            try
-            {
-                context.Execute(() => task(cts.Token));
-            }
-            catch (ThreadInterruptedException)
-            {
-                Cancel();
-                throw;
-            }
-#if TFF_THREAD_ABORT
-            catch (ThreadAbortException)
-            {
-                // Allow the task to continue interacting with a task scheduler.
-                if (ThreadHelper.TryResetAbort())
-                {
-                    try
-                    {
-                        Cancel();
-                    }
-                    finally
-                    {
-                        // Restore the thread abort condition once all is done.
-                        ThreadHelper.TryAbort(Thread.CurrentThread);
-                    }
-                }
-
-                throw;
-            }
-#endif
-            finally
-            {
-                SynchronizationContext.SetSynchronizationContext(savedContext);
-            }
-
-            void Cancel()
-            {
-                // Cancel the asynchronous task.
-                cts.Cancel();
-
-                // Execute remaining asynchronous operations following the task cancellation.
-                context.Loop();
-            }
+            context.Execute(() => task(cts.Token));
         }
+        catch (ThreadInterruptedException)
+        {
+            Cancel();
+            throw;
+        }
+#if TFF_THREAD_ABORT
+        catch (ThreadAbortException)
+        {
+            // Allow the task to continue interacting with a task scheduler.
+            if (ThreadHelper.TryResetAbort())
+            {
+                try
+                {
+                    Cancel();
+                }
+                finally
+                {
+                    // Restore the thread abort condition.
+                    ThreadHelper.TryAbort(Thread.CurrentThread);
+                }
+            }
+
+            throw;
+        }
+#endif
         catch (AggregateException e) when (e.InnerExceptions.Count == 1)
         {
             throw e.InnerExceptions[0];
+        }
+        finally
+        {
+            SynchronizationContext.SetSynchronizationContext(savedContext);
+        }
+
+        void Cancel()
+        {
+            // Cancel the asynchronous task.
+            cts.Cancel();
+
+            // Execute remaining asynchronous operations following the task cancellation.
+            context.Loop();
         }
     }
 
@@ -419,8 +410,8 @@ public static class TaskBridge
     {
         Debug.Assert(action is not null);
 
-        // Running a synchronous action in a long-running task prevents thread pool pollution.
-        // In this way, the task mostly acts as a standalone thread.
+        // Running a synchronous action as a long-running task prevents thread pool pollution.
+        // In this way, the task mostly acts as a standalone managed thread.
         return Task.Factory.StartNew(
             action,
             cancellationToken,

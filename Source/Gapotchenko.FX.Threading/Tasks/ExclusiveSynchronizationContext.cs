@@ -10,7 +10,7 @@ using System.Runtime.ExceptionServices;
 
 namespace Gapotchenko.FX.Threading.Tasks;
 
-sealed class ExclusiveSynchronizationContext : SynchronizationContext
+sealed class ExclusiveSynchronizationContext : SynchronizationContext, IDisposable
 {
     readonly BlockingCollection<KeyValuePair<SendOrPostCallback, object?>> m_Queue = new();
 
@@ -57,10 +57,10 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
 
     public void Loop()
     {
-        while (m_Queue.TryTake(out var task, Timeout.Infinite))
+        while (m_Queue.TryTake(out var item, Timeout.Infinite))
         {
-            // Execute the task.
-            task.Key(task.Value);
+            // Execute the queued callback.
+            item.Key(item.Value);
         }
     }
 
@@ -69,5 +69,10 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext
         Post(
             static x => ((ExclusiveSynchronizationContext)x!).m_Queue.CompleteAdding(),
             this);
+    }
+
+    public void Dispose()
+    {
+        m_Queue.Dispose();
     }
 }
