@@ -147,6 +147,13 @@ public sealed class AsyncAutoResetEvent : IAsyncResetEvent
                 m_Set = false;
                 return Task.FromResult(true);
             }
+            else if (timeout == TimeSpan.Zero) // use a quick path when possible
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    return Task.FromCanceled<bool>(cancellationToken);
+
+                return Task.FromResult(false);
+            }
             else
             {
                 return TaskHelper.ExecuteWithTimeout(m_Queue.Enqueue, timeout, false, cancellationToken);
