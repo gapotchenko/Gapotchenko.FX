@@ -16,11 +16,15 @@ namespace Gapotchenko.FX.Threading;
 /// </summary>
 public sealed class AsyncRecursiveMutex : IAsyncRecursiveMutex
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    AsyncMutexImpl m_CoreImpl = new();
+    // ----------------------------------------------------------------------
+    // Public Facade
+    // ----------------------------------------------------------------------
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    AsyncRecursionTracker m_RecursionTracker = new();
+    readonly AsyncMutexImpl m_CoreImpl = new();
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly AsyncRecursionTracker m_RecursionTracker = new();
 
     /// <inheritdoc/>
     public void Lock(CancellationToken cancellationToken = default)
@@ -67,6 +71,33 @@ public sealed class AsyncRecursiveMutex : IAsyncRecursiveMutex
     public bool TryLock(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         TryLockCore(() => m_CoreImpl.TryLock(millisecondsTimeout, cancellationToken));
 
+    /// <inheritdoc/>
+    public Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
+        TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(timeout, cancellationToken));
+
+    /// <inheritdoc/>
+    public Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
+        TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(millisecondsTimeout, cancellationToken));
+
+    /// <inheritdoc/>
+    public void Unlock()
+    {
+        if (m_RecursionTracker.Leave())
+            m_CoreImpl.Unlock();
+    }
+
+    /// <inheritdoc/>
+    public bool IsLocked => m_CoreImpl.IsLocked;
+
+    /// <inheritdoc/>
+    public bool IsLockHeld => m_RecursionTracker.IsEntered;
+
+    bool IAsyncLockable.IsRecursive => true;
+
+    // ----------------------------------------------------------------------
+    // Core Implementation
+    // ----------------------------------------------------------------------
+
     bool TryLockCore(Func<bool> func)
     {
         if (!m_RecursionTracker.IsEntered)
@@ -82,18 +113,6 @@ public sealed class AsyncRecursiveMutex : IAsyncRecursiveMutex
             m_RecursionTracker.Enter();
             return true;
         }
-    }
-
-    /// <inheritdoc/>
-    public Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
-    {
-        return TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(timeout, cancellationToken));
-    }
-
-    /// <inheritdoc/>
-    public Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken = default)
-    {
-        return TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(millisecondsTimeout, cancellationToken));
     }
 
     Task<bool> TryLockAsyncCore(Func<Task<bool>> func)
@@ -122,19 +141,4 @@ public sealed class AsyncRecursiveMutex : IAsyncRecursiveMutex
             return Task.FromResult(true);
         }
     }
-
-    /// <inheritdoc/>
-    public void Unlock()
-    {
-        if (m_RecursionTracker.Leave())
-            m_CoreImpl.Unlock();
-    }
-
-    /// <inheritdoc/>
-    public bool IsLocked => m_CoreImpl.IsLocked;
-
-    /// <inheritdoc/>
-    public bool IsLockHeld => m_RecursionTracker.IsEntered;
-
-    bool IAsyncLockable.IsRecursive => true;
 }

@@ -6,7 +6,7 @@
 
 namespace Gapotchenko.FX.Threading;
 
-struct AsyncSemaphoreImpl
+readonly struct AsyncSemaphoreImpl
 {
     // The implementation is currently based on SemaphoreSlim provided by .NET BCL.
     // Not sure if this is the best idea because SemaphoreSlim seems to use OS resources (wait handles).
