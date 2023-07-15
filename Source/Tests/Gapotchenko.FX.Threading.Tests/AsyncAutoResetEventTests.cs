@@ -63,13 +63,13 @@ public sealed class AsyncAutoResetEventTests
     [DataRow(0, true)]
     [DataRow(10, false)]
     [DataRow(10, true)]
-    public void AsyncAutoResetEvent_WaitOne_Immediate(int timeout, bool initialState)
+    public void AsyncAutoResetEvent_Wait_Immediate(int timeout, bool initialState)
     {
         var e = new AsyncAutoResetEvent(initialState);
-        Assert.AreEqual(initialState, e.WaitOne(timeout));
+        Assert.AreEqual(initialState, e.Wait(timeout));
 
         e = new AsyncAutoResetEvent(initialState);
-        Assert.AreEqual(initialState, e.WaitOne(timeout, CancellationToken.None));
+        Assert.AreEqual(initialState, e.Wait(timeout, CancellationToken.None));
     }
 
     [TestMethod]
@@ -77,73 +77,73 @@ public sealed class AsyncAutoResetEventTests
     [DataRow(0, true)]
     [DataRow(10, false)]
     [DataRow(10, true)]
-    public async Task AsyncAutoResetEvent_WaitOneAsync_Immediate(int timeout, bool initialState)
+    public async Task AsyncAutoResetEvent_WaitAsync_Immediate(int timeout, bool initialState)
     {
         var e = new AsyncAutoResetEvent(initialState);
-        var t1 = e.WaitOneAsync(timeout);
+        var t1 = e.WaitAsync(timeout);
 
         e = new AsyncAutoResetEvent(initialState);
-        var t2 = e.WaitOneAsync(timeout, CancellationToken.None);
+        var t2 = e.WaitAsync(timeout, CancellationToken.None);
 
         Assert.AreEqual(initialState, await t1);
         Assert.AreEqual(initialState, await t2);
     }
 
     [TestMethod]
-    public void AsyncAutoResetEvent_WaitOne_AutoReset()
+    public void AsyncAutoResetEvent_Wait_AutoReset()
     {
         var e = new AsyncAutoResetEvent(true);
-        Assert.IsTrue(e.WaitOne(0));
+        Assert.IsTrue(e.Wait(0));
         Assert.IsFalse(e.IsSet);
-        Assert.IsFalse(e.WaitOne(0));
+        Assert.IsFalse(e.Wait(0));
     }
 
     [TestMethod]
-    public async Task AsyncAutoResetEvent_WaitOneAsync_AutoReset()
+    public async Task AsyncAutoResetEvent_WaitAsync_AutoReset()
     {
         var e = new AsyncAutoResetEvent(true);
-        Assert.IsTrue(await e.WaitOneAsync(0));
+        Assert.IsTrue(await e.WaitAsync(0));
         Assert.IsFalse(e.IsSet);
-        Assert.IsFalse(await e.WaitOneAsync(0));
+        Assert.IsFalse(await e.WaitAsync(0));
     }
 
     [TestMethod]
-    public void AsyncAutoResetEvent_WaitOne_DoubleSetAutoReset()
+    public void AsyncAutoResetEvent_Wait_DoubleSetAutoReset()
     {
         var e = new AsyncAutoResetEvent(false);
         e.Set();
         e.Set();
-        Assert.IsTrue(e.WaitOne(0));
+        Assert.IsTrue(e.Wait(0));
         Assert.IsFalse(e.IsSet);
-        Assert.IsFalse(e.WaitOne(0));
+        Assert.IsFalse(e.Wait(0));
         Assert.IsFalse(e.IsSet);
     }
 
     [TestMethod]
-    public async Task AsyncAutoResetEvent_WaitOneAsync_DoubleSetAutoReset()
+    public async Task AsyncAutoResetEvent_WaitAsync_DoubleSetAutoReset()
     {
         var e = new AsyncAutoResetEvent(false);
         e.Set();
         e.Set();
-        Assert.IsTrue(await e.WaitOneAsync(0));
+        Assert.IsTrue(await e.WaitAsync(0));
         Assert.IsFalse(e.IsSet);
-        Assert.IsFalse(await e.WaitOneAsync(0));
+        Assert.IsFalse(await e.WaitAsync(0));
         Assert.IsFalse(e.IsSet);
     }
 
     [TestMethod]
-    public void AsyncAutoResetEvent_WaitOne_CanceledAutoReset()
+    public void AsyncAutoResetEvent_Wait_CanceledAutoReset()
     {
         var e = new AsyncAutoResetEvent(true);
-        Assert.ThrowsException<TaskCanceledException>(() => e.WaitOne(0, new CancellationToken(true)));
+        Assert.ThrowsException<TaskCanceledException>(() => e.Wait(0, new CancellationToken(true)));
         Assert.IsTrue(e.IsSet);
     }
 
     [TestMethod]
-    public async Task AsyncAutoResetEvent_WaitOneAsync_CanceledAutoReset()
+    public async Task AsyncAutoResetEvent_WaitAsync_CanceledAutoReset()
     {
         var e = new AsyncAutoResetEvent(true);
-        await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => e.WaitOneAsync(0, new CancellationToken(true)));
+        await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => e.WaitAsync(0, new CancellationToken(true)));
         Assert.IsTrue(e.IsSet);
     }
 
@@ -158,15 +158,15 @@ public sealed class AsyncAutoResetEventTests
         {
             trace = 10;
             e1.Set();
-            if (e2.WaitOne(Timeout.Infinite))
+            if (e2.Wait(Timeout.Infinite))
                 trace *= 20;
-            if (e2.WaitOne(0))
+            if (e2.Wait(0))
                 ++trace;
         }
 
         var task = TaskBridge.ExecuteAsync(TaskEntry);
-        e1.WaitOne();
-        if (e1.WaitOne(0))
+        e1.Wait();
+        if (e1.Wait(0))
             trace += 2;
         Assert.AreEqual(10, trace);
         e2.Set();
@@ -186,15 +186,15 @@ public sealed class AsyncAutoResetEventTests
         {
             trace = 10;
             e1.Set();
-            if (await e2.WaitOneAsync(Timeout.Infinite))
+            if (await e2.WaitAsync(Timeout.Infinite))
                 trace *= 20;
-            if (await e2.WaitOneAsync(0))
+            if (await e2.WaitAsync(0))
                 ++trace;
         }
 
         var task = TaskEntry();
-        await e1.WaitOneAsync();
-        if (await e1.WaitOneAsync(0))
+        await e1.WaitAsync();
+        if (await e1.WaitAsync(0))
             trace += 2;
         Assert.AreEqual(10, trace);
         e2.Set();
