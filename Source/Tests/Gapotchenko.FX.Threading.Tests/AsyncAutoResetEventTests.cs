@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Threading.Tests;
 
 [TestClass]
 [TestCategory("auto")]
-public sealed class AsyncAutoResetEventTests : AsyncResetEventTestsBase
+public sealed class AsyncAutoResetEventTests : IAsyncResetEventTests
 {
     protected override bool IsAutoReset => true;
 

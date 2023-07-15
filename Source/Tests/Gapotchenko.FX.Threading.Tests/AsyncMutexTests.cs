@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Threading.Tests;
 
 [TestClass]
 [TestCategory("mutex")]
-public sealed class AsyncMutexTests : AsyncLockableTestsBase
+public sealed class AsyncMutexTests : IAsyncLockableTests
 {
     protected override IAsyncLockable CreateAsyncLockable() => new AsyncMutex();
 }

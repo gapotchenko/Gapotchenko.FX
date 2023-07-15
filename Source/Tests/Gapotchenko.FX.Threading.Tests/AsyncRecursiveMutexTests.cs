@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Threading.Tests;
 [TestClass]
 [TestCategory("mutex")]
 [TestCategory("recursive")]
-public sealed class AsyncRecursiveMutexTests : AsyncLockableTestsBase
+public sealed class AsyncRecursiveMutexTests : IAsyncLockableTests
 {
     protected override IAsyncLockable CreateAsyncLockable() => new AsyncRecursiveMutex();
 }

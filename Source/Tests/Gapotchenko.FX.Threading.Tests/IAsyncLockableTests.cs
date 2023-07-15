@@ -11,33 +11,26 @@ using System.Runtime.ExceptionServices;
 
 namespace Gapotchenko.FX.Threading.Tests;
 
-readonly struct AsyncLockableTestsImpl
+[TestCategory("async")]
+[TestCategory("lockable")]
+public abstract class IAsyncLockableTests
 {
-    public AsyncLockableTestsImpl(Func<IAsyncLockable> createLockableFunc)
+    protected abstract IAsyncLockable CreateAsyncLockable();
+
+    [TestMethod]
+    public void IAsyncLockable_Construction()
     {
-        m_CreateLockableFunc = createLockableFunc;
-    }
-
-    readonly Func<IAsyncLockable> m_CreateLockableFunc;
-
-    IAsyncLockable CreateLockable() => m_CreateLockableFunc();
-
-    // ----------------------------------------------------------------------
-
-    public void Constuction()
-    {
-        var lockable = CreateLockable();
+        var lockable = CreateAsyncLockable();
         Assert.AreEqual(lockable is IAsyncRecursiveLockable, lockable.IsRecursive);
         Assert.IsFalse(lockable.IsLocked);
         if (lockable is IAsyncRecursiveLockable recursiveLockable)
             Assert.IsFalse(recursiveLockable.IsLockHeld);
     }
 
-    // ----------------------------------------------------------------------
-
-    public void Lock_Nesting()
+    [TestMethod]
+    public void IAsyncLockable_Lock_Nesting()
     {
-        var lockable = CreateLockable();
+        var lockable = CreateAsyncLockable();
 
         if (lockable is IAsyncRecursiveLockable recursiveLockable)
         {
@@ -70,11 +63,10 @@ readonly struct AsyncLockableTestsImpl
         }
     }
 
-    // ----------------------------------------------------------------------
-
-    public void Lock_Rollback()
+    [TestMethod]
+    public void IAsyncLockable_Lock_Rollback()
     {
-        var lockable = CreateLockable();
+        var lockable = CreateAsyncLockable();
 
         bool wasCanceled = false;
         try
@@ -331,9 +323,10 @@ readonly struct AsyncLockableTestsImpl
 
     // ----------------------------------------------------------------------
 
-    public async Task LockAsync_Nesting()
+    [TestMethod]
+    public async Task IAsyncLockable_LockAsync_Nesting()
     {
-        var lockable = CreateLockable();
+        var lockable = CreateAsyncLockable();
 
         if (lockable is IAsyncRecursiveLockable recursiveLockable)
         {
@@ -378,11 +371,11 @@ readonly struct AsyncLockableTestsImpl
             (x, ct) => x.LockAsync(ct));
     }
 
-    // ----------------------------------------------------------------------
 
-    public async Task LockAsync_Rollback()
+    [TestMethod]
+    public async Task IAsyncLockable_LockAsync_Rollback()
     {
-        var lockable = CreateLockable();
+        var lockable = CreateAsyncLockable();
         var recursiveLockable = lockable as IAsyncRecursiveLockable;
 
         bool wasCanceled = false;
@@ -408,21 +401,24 @@ readonly struct AsyncLockableTestsImpl
 
     // ----------------------------------------------------------------------
 
-    public void TryLock_Nesting() =>
-        TryLock_Nesting_Core(CreateLockable(), x => x.TryLock());
+    [TestMethod]
+    public void IAsyncLockable_TryLock_Nesting() =>
+        TryLock_Nesting_Core(CreateAsyncLockable(), x => x.TryLock());
 
-    public void TryLock_TimeSpan_Nesting()
+    [TestMethod]
+    public void IAsyncLockable_TryLock_TimeSpan_Nesting()
     {
-        var lockable = CreateLockable();
+        var lockable = CreateAsyncLockable();
         var timeout = TimeSpan.Zero;
 
         TryLock_Nesting_Core(lockable, x => x.TryLock(timeout));
         TryLock_Nesting_Core(lockable, x => x.TryLock(timeout, CancellationToken.None));
     }
 
-    public void TryLock_Int32_Nesting()
+    [TestMethod]
+    public void IAsyncLockable_TryLock_Int32_Nesting()
     {
-        var lockable = CreateLockable();
+        var lockable = CreateAsyncLockable();
         var timeout = 0;
 
         TryLock_Nesting_Core(lockable, x => x.TryLock(timeout));
@@ -464,14 +460,16 @@ readonly struct AsyncLockableTestsImpl
 
     // ----------------------------------------------------------------------
 
-    public void TryLock_TimeSpan_Rollback() =>
+    [TestMethod]
+    public void IAsyncLockable_TryLock_TimeSpan_Rollback() =>
         TryLock_Rollback_Core(
-            CreateLockable(),
+            CreateAsyncLockable(),
             (x, ct) => x.TryLock(Timeout.InfiniteTimeSpan, ct));
 
-    public void TryLock_Int32_Rollback() =>
+    [TestMethod]
+    public void IAsyncLockable_TryLock_Int32_Rollback() =>
         TryLock_Rollback_Core(
-            CreateLockable(),
+            CreateAsyncLockable(),
             (x, ct) => x.TryLock(Timeout.Infinite, ct));
 
     static void TryLock_Rollback_Core(IAsyncLockable lockable, Func<IAsyncLockable, CancellationToken, bool> tryLockFunc)
@@ -496,9 +494,9 @@ readonly struct AsyncLockableTestsImpl
     // ----------------------------------------------------------------------
 
     [TestMethod]
-    public async Task TryLockAsync_TimeSpan_Nesting()
+    public async Task IAsyncLockable_TryLockAsync_TimeSpan_Nesting()
     {
-        var lockable = CreateLockable();
+        var lockable = CreateAsyncLockable();
         var timeout = TimeSpan.Zero;
 
         static Task LockAsync(IAsyncLockable lockable, CancellationToken cancellationToken) =>
@@ -516,9 +514,9 @@ readonly struct AsyncLockableTestsImpl
     }
 
     [TestMethod]
-    public async Task TryLockAsync_Int32_Nesting()
+    public async Task IAsyncLockable_TryLockAsync_Int32_Nesting()
     {
-        var lockable = CreateLockable();
+        var lockable = CreateAsyncLockable();
         var timeout = 0;
 
         static Task LockAsync(IAsyncLockable lockable, CancellationToken cancellationToken) =>
@@ -583,14 +581,16 @@ readonly struct AsyncLockableTestsImpl
 
     // ----------------------------------------------------------------------
 
-    public Task TryLockAsync_TimeSpan_Rollback() =>
+    [TestMethod]
+    public Task IAsyncLockable_TryLockAsync_TimeSpan_Rollback() =>
         TryLockAsync_Rollback_Core(
-            CreateLockable(),
+            CreateAsyncLockable(),
             (x, ct) => x.TryLockAsync(Timeout.InfiniteTimeSpan, ct));
 
-    public Task TryLockAsync_Int32_Rollback() =>
+    [TestMethod]
+    public Task IAsyncLockable_TryLockAsync_Int32_Rollback() =>
         TryLockAsync_Rollback_Core(
-            CreateLockable(),
+            CreateAsyncLockable(),
             (x, ct) => x.TryLockAsync(Timeout.Infinite, ct));
 
     static async Task TryLockAsync_Rollback_Core(IAsyncLockable lockable, Func<IAsyncLockable, CancellationToken, Task<bool>> tryLockAsyncFunc)
@@ -614,9 +614,10 @@ readonly struct AsyncLockableTestsImpl
 
     // ----------------------------------------------------------------------
 
-    public void Unlock_NonLocked()
+    [TestMethod]
+    public void IAsyncLockable_Unlock_NonLocked()
     {
-        var lockable = CreateLockable();
+        var lockable = CreateAsyncLockable();
         Assert.ThrowsException<SynchronizationLockException>(lockable.Unlock);
     }
 }

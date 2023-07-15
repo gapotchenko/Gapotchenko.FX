@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Threading.Tests;
 [TestCategory("async")]
 [TestCategory("event")]
 [TestCategory("reset")]
-public abstract class AsyncResetEventTestsBase
+public abstract class IAsyncResetEventTests
 {
     protected virtual IAsyncResetEvent CreateAsyncResetEvent() => CreateAsyncResetEvent(false);
 
@@ -21,7 +21,7 @@ public abstract class AsyncResetEventTestsBase
     protected abstract bool IsAutoReset { get; }
 
     [TestMethod]
-    public void AsyncResetEvent_Constructor()
+    public void IAsyncResetEvent_Constructor()
     {
         var e = CreateAsyncResetEvent();
         Assert.AreEqual(IsAutoReset, e.IsAutoReset);
@@ -31,7 +31,7 @@ public abstract class AsyncResetEventTestsBase
     [TestMethod]
     [DataRow(false)]
     [DataRow(true)]
-    public void AsyncResetEvent_Constructor_InitialState(bool initialState)
+    public void IAsyncResetEvent_Constructor_InitialState(bool initialState)
     {
         var e = CreateAsyncResetEvent(initialState);
         Assert.AreEqual(IsAutoReset, e.IsAutoReset);
@@ -39,7 +39,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public void AsyncResetEvent_Set()
+    public void IAsyncResetEvent_Set()
     {
         var e = CreateAsyncResetEvent();
         e.Set();
@@ -47,7 +47,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public void AsyncResetEvent_Reset()
+    public void IAsyncResetEvent_Reset()
     {
         var e = CreateAsyncResetEvent(true);
         e.Reset();
@@ -55,7 +55,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public void AsyncResetEvent_SetReset()
+    public void IAsyncResetEvent_SetReset()
     {
         var e = CreateAsyncResetEvent();
         e.Set();
@@ -65,7 +65,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public void AsyncResetEvent_ResetSet()
+    public void IAsyncResetEvent_ResetSet()
     {
         var e = CreateAsyncResetEvent(true);
         e.Reset();
@@ -79,7 +79,7 @@ public abstract class AsyncResetEventTestsBase
     [DataRow(0, true)]
     [DataRow(10, false)]
     [DataRow(10, true)]
-    public void AsyncResetEvent_Wait_Immediate(int timeout, bool initialState)
+    public void IAsyncResetEvent_Wait_Immediate(int timeout, bool initialState)
     {
         var e = CreateAsyncResetEvent(initialState);
         Assert.AreEqual(initialState, e.Wait(timeout));
@@ -94,7 +94,7 @@ public abstract class AsyncResetEventTestsBase
     [DataRow(0, true)]
     [DataRow(10, false)]
     [DataRow(10, true)]
-    public async Task AsyncResetEvent_WaitAsync_Immediate(int timeout, bool initialState)
+    public async Task IAsyncResetEvent_WaitAsync_Immediate(int timeout, bool initialState)
     {
         var e = CreateAsyncResetEvent(initialState);
         var t1 = e.WaitAsync(timeout);
@@ -108,7 +108,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public void AsyncResetEvent_Wait_AutoReset()
+    public void IAsyncResetEvent_Wait_AutoReset()
     {
         var e = CreateAsyncResetEvent(true);
         Assert.IsTrue(e.Wait(0));
@@ -125,7 +125,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public async Task AsyncResetEvent_WaitAsync_AutoReset()
+    public async Task IAsyncResetEvent_WaitAsync_AutoReset()
     {
         var e = CreateAsyncResetEvent(true);
         Assert.IsTrue(await e.WaitAsync(0));
@@ -142,7 +142,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public void AsyncResetEvent_Wait_DoubleSetAutoReset()
+    public void IAsyncResetEvent_Wait_DoubleSetAutoReset()
     {
         var e = CreateAsyncResetEvent();
         e.Set();
@@ -157,7 +157,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public async Task AsyncResetEvent_WaitAsync_DoubleSetAutoReset()
+    public async Task IAsyncResetEvent_WaitAsync_DoubleSetAutoReset()
     {
         var e = CreateAsyncResetEvent();
         e.Set();
@@ -172,7 +172,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public void AsyncResetEvent_Wait_CanceledAutoReset()
+    public void IAsyncResetEvent_Wait_CanceledAutoReset()
     {
         var e = CreateAsyncResetEvent(true);
         Assert.ThrowsException<TaskCanceledException>(() => e.Wait(0, new CancellationToken(true)));
@@ -180,7 +180,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public async Task AsyncResetEvent_WaitAsync_CanceledAutoReset()
+    public async Task IAsyncResetEvent_WaitAsync_CanceledAutoReset()
     {
         var e = CreateAsyncResetEvent(true);
         await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => e.WaitAsync(0, new CancellationToken(true)));
@@ -188,7 +188,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public void AsyncResetEvent_Scenario_A1_Sync()
+    public void IAsyncResetEvent_Scenario_A1_Sync()
     {
         var e1 = CreateAsyncResetEvent();
         var e2 = CreateAsyncResetEvent();
@@ -218,7 +218,7 @@ public abstract class AsyncResetEventTestsBase
     }
 
     [TestMethod]
-    public async Task AsyncResetEvent_Scenario_A1_Async()
+    public async Task IAsyncResetEvent_Scenario_A1_Async()
     {
         var e1 = CreateAsyncResetEvent();
         var e2 = CreateAsyncResetEvent();
