@@ -81,7 +81,7 @@ public sealed class AsyncManualResetEventTests
     [DataRow(0, true)]
     [DataRow(10, false)]
     [DataRow(10, true)]
-    public async Task AsyncManualResetEvent_WaitOneAsync_Immediate(int timeout, bool initialState)
+    public async Task AsyncManualResetEvent_WaitAsync_Immediate(int timeout, bool initialState)
     {
         var e = new AsyncManualResetEvent(initialState);
         var t1 = e.WaitAsync(timeout);
@@ -89,5 +89,23 @@ public sealed class AsyncManualResetEventTests
 
         Assert.AreEqual(initialState, await t1);
         Assert.AreEqual(initialState, await t2);
+    }
+
+    [TestMethod]
+    public void AsyncManualResetEvent_Wait_ManualReset()
+    {
+        var e = new AsyncManualResetEvent(true);
+        Assert.IsTrue(e.Wait(0));
+        Assert.IsTrue(e.Wait(0));
+        Assert.IsTrue(e.IsSet);
+    }
+
+    [TestMethod]
+    public async Task AsyncManualResetEvent_WaitAsync_ManualReset()
+    {
+        var e = new AsyncManualResetEvent(true);
+        Assert.IsTrue(await e.WaitAsync(0));
+        Assert.IsTrue(await e.WaitAsync(0));
+        Assert.IsTrue(e.IsSet);
     }
 }
