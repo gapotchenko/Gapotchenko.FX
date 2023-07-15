@@ -11,6 +11,7 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Threading.Tests.Tasks;
 
 [TestClass]
+[TestCategory("task")]
 public sealed class TaskBridgeTests
 {
     #region Settings

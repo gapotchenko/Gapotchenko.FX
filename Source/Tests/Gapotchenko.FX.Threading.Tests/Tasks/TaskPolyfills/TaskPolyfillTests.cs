@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Gapotchenko.FX.Threading.Tests.Tasks.TaskPolyfills;
 
 [TestClass]
+[TestCategory("task")]
 public sealed partial class TaskPolyfillTests
 {
     // This class is partial.

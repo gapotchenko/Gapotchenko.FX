@@ -9,6 +9,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Threading.Tests;
 
+[TestCategory("async")]
+[TestCategory("event")]
+[TestCategory("reset")]
 public abstract class AsyncResetEventTestsBase
 {
     protected virtual IAsyncResetEvent CreateAsyncResetEvent() => CreateAsyncResetEvent(false);
