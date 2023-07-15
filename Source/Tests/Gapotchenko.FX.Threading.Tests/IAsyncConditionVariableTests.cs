@@ -7,6 +7,7 @@
 // Year of introduction: 2023
 
 using Gapotchenko.FX.Threading.Tasks;
+using Gapotchenko.FX.Threading.Tests.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Threading.Tests;
@@ -27,10 +28,28 @@ public abstract class IAsyncConditionVariableTests
     // ----------------------------------------------------------------------
 
     [TestMethod]
+    public void IAsyncConditionVariable_Notify_ThrowsWhenUnlocked()
+    {
+        var cv = CreateAsyncConditionVariable();
+
+        Assert.ThrowsException<SynchronizationLockException>(cv.Notify);
+    }
+
+    [TestMethod]
+    public void IAsyncConditionVariable_NotifyAll_ThrowsWhenUnlocked()
+    {
+        var cv = CreateAsyncConditionVariable();
+
+        Assert.ThrowsException<SynchronizationLockException>(cv.NotifyAll);
+    }
+
+    // ----------------------------------------------------------------------
+
+    [TestMethod]
     [DataRow(0)]
     [DataRow(10)]
     [DataRow(Timeout.Infinite)]
-    public void IAsyncConditionVariable_Wait_ThrowsOnUnlockedLockable(int millisecondsTimeout)
+    public void IAsyncConditionVariable_Wait_ThrowsWhenUnlocked(int millisecondsTimeout)
     {
         var cv = CreateAsyncConditionVariable();
 
@@ -49,7 +68,7 @@ public abstract class IAsyncConditionVariableTests
     [DataRow(0)]
     [DataRow(10)]
     [DataRow(Timeout.Infinite)]
-    public async Task IAsyncConditionVariable_WaitAsync_ThrowsOnUnlockedLockable(int millisecondsTimeout)
+    public async Task IAsyncConditionVariable_WaitAsync_ThrowsWhenUnlocked(int millisecondsTimeout)
     {
         var cv = CreateAsyncConditionVariable();
 
@@ -76,18 +95,18 @@ public abstract class IAsyncConditionVariableTests
         using var lockScope = lockable.LockScope();
 
         Assert.IsFalse(cv.Wait(millisecondsTimeout));
-        Assert.IsTrue(IsLockHeld(lockable));
+        Assert.IsTrue(AsyncLockableHelper.IsLockHeld(lockable));
 
         Assert.IsFalse(cv.Wait(millisecondsTimeout, CancellationToken.None));
-        Assert.IsTrue(IsLockHeld(lockable));
+        Assert.IsTrue(AsyncLockableHelper.IsLockHeld(lockable));
 
         var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
 
         Assert.IsFalse(cv.Wait(timeout));
-        Assert.IsTrue(IsLockHeld(lockable));
+        Assert.IsTrue(AsyncLockableHelper.IsLockHeld(lockable));
 
         Assert.IsFalse(cv.Wait(timeout, CancellationToken.None));
-        Assert.IsTrue(IsLockHeld(lockable));
+        Assert.IsTrue(AsyncLockableHelper.IsLockHeld(lockable));
     }
 
     [TestMethod]
@@ -100,18 +119,18 @@ public abstract class IAsyncConditionVariableTests
         using var lockScope = await lockable.LockScopeAsync();
 
         Assert.IsFalse(await cv.WaitAsync(millisecondsTimeout));
-        Assert.IsTrue(IsLockHeld(lockable));
+        Assert.IsTrue(AsyncLockableHelper.IsLockHeld(lockable));
 
         Assert.IsFalse(await cv.WaitAsync(millisecondsTimeout, CancellationToken.None));
-        Assert.IsTrue(IsLockHeld(lockable));
+        Assert.IsTrue(AsyncLockableHelper.IsLockHeld(lockable));
 
         var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
 
         Assert.IsFalse(await cv.WaitAsync(timeout));
-        Assert.IsTrue(IsLockHeld(lockable));
+        Assert.IsTrue(AsyncLockableHelper.IsLockHeld(lockable));
 
         Assert.IsFalse(await cv.WaitAsync(timeout, CancellationToken.None));
-        Assert.IsTrue(IsLockHeld(lockable));
+        Assert.IsTrue(AsyncLockableHelper.IsLockHeld(lockable));
     }
 
     // ----------------------------------------------------------------------
@@ -171,7 +190,7 @@ public abstract class IAsyncConditionVariableTests
         using var lockScope = GetAsyncLockable(cv).LockScope();
 
         var timeout = IAsyncConditionVariable_NegativeTimeout;
-        var millisecondsTimeout = GetMillisecondsTimeout(timeout);
+        var millisecondsTimeout = TimeoutHelper.GetMillisecondsTimeout(timeout);
 
         Assert.IsFalse(cv.Wait(millisecondsTimeout));
         Assert.IsFalse(cv.Wait(millisecondsTimeout, CancellationToken.None));
@@ -186,7 +205,7 @@ public abstract class IAsyncConditionVariableTests
         using var lockScope = await GetAsyncLockable(cv).LockScopeAsync();
 
         var timeout = IAsyncConditionVariable_NegativeTimeout;
-        var millisecondsTimeout = GetMillisecondsTimeout(timeout);
+        var millisecondsTimeout = TimeoutHelper.GetMillisecondsTimeout(timeout);
 
         Assert.IsFalse(await cv.WaitAsync(millisecondsTimeout));
         Assert.IsFalse(await cv.WaitAsync(millisecondsTimeout, CancellationToken.None));
@@ -203,11 +222,11 @@ public abstract class IAsyncConditionVariableTests
 
         IAsyncConditionVariable_Wait_CompletesAfterNotify_Core(
             cv,
-            timeout => cv.Wait(GetMillisecondsTimeout(timeout)));
+            timeout => cv.Wait(TimeoutHelper.GetMillisecondsTimeout(timeout)));
 
         IAsyncConditionVariable_Wait_CompletesAfterNotify_Core(
             cv,
-            timeout => cv.Wait(GetMillisecondsTimeout(timeout), CancellationToken.None));
+            timeout => cv.Wait(TimeoutHelper.GetMillisecondsTimeout(timeout), CancellationToken.None));
 
         IAsyncConditionVariable_Wait_CompletesAfterNotify_Core(
             cv,
@@ -216,6 +235,22 @@ public abstract class IAsyncConditionVariableTests
         IAsyncConditionVariable_Wait_CompletesAfterNotify_Core(
             cv,
             timeout => cv.Wait(timeout, CancellationToken.None));
+
+        IAsyncConditionVariable_Wait_CompletesAfterNotify_Core(
+            cv,
+            timeout =>
+            {
+                cv.Wait();
+                return true;
+            });
+
+        IAsyncConditionVariable_Wait_CompletesAfterNotify_Core(
+            cv,
+            timeout =>
+            {
+                cv.Wait(CancellationToken.None);
+                return true;
+            });
     }
 
     [TestMethod]
@@ -225,11 +260,11 @@ public abstract class IAsyncConditionVariableTests
 
         await IAsyncConditionVariable_WaitAsync_CompletesAfterNotify_Core(
             cv,
-            timeout => cv.WaitAsync(GetMillisecondsTimeout(timeout)));
+            timeout => cv.WaitAsync(TimeoutHelper.GetMillisecondsTimeout(timeout)));
 
         await IAsyncConditionVariable_WaitAsync_CompletesAfterNotify_Core(
             cv,
-            timeout => cv.WaitAsync(GetMillisecondsTimeout(timeout), CancellationToken.None));
+            timeout => cv.WaitAsync(TimeoutHelper.GetMillisecondsTimeout(timeout), CancellationToken.None));
 
         await IAsyncConditionVariable_WaitAsync_CompletesAfterNotify_Core(
             cv,
@@ -238,6 +273,22 @@ public abstract class IAsyncConditionVariableTests
         await IAsyncConditionVariable_WaitAsync_CompletesAfterNotify_Core(
             cv,
             timeout => cv.WaitAsync(timeout, CancellationToken.None));
+
+        await IAsyncConditionVariable_WaitAsync_CompletesAfterNotify_Core(
+            cv,
+            async timeout =>
+            {
+                await cv.WaitAsync();
+                return true;
+            });
+
+        await IAsyncConditionVariable_WaitAsync_CompletesAfterNotify_Core(
+            cv,
+            async timeout =>
+            {
+                await cv.WaitAsync(CancellationToken.None);
+                return true;
+            });
     }
 
     void IAsyncConditionVariable_Wait_CompletesAfterNotify_Core(
@@ -317,16 +368,4 @@ public abstract class IAsyncConditionVariableTests
         Assert.IsTrue(await waitFunc(timeout));
         await notificationTask;
     }
-
-    // ----------------------------------------------------------------------
-
-    static bool IsLockHeld(IAsyncLockable lockable)
-    {
-        if (lockable is IAsyncRecursiveLockable recursiveLockable)
-            return recursiveLockable.IsLockHeld;
-        else
-            return lockable.IsLocked;
-    }
-
-    static int GetMillisecondsTimeout(TimeSpan timeout) => checked((int)timeout.TotalMilliseconds);
 }

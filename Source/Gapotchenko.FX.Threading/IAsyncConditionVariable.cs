@@ -17,10 +17,12 @@ public interface IAsyncConditionVariable : IAsyncAwaitable
     /// <summary>
     /// Notifies a thread in the waiting queue of a change in the locked shared variable.
     /// </summary>
+    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     void Notify();
 
     /// <summary>
     /// Notifies all waiting threads of a change in the locked shared variable.
     /// </summary>
+    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     void NotifyAll();
 }

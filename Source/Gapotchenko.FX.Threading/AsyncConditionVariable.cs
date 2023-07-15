@@ -49,6 +49,8 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     /// <inheritdoc/>
     public void Notify()
     {
+        ValidateNotify();
+
         lock (m_Queue.SyncRoot)
             m_Queue.TryDeque(true);
     }
@@ -56,6 +58,8 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     /// <inheritdoc/>
     public void NotifyAll()
     {
+        ValidateNotify();
+
         lock (m_Queue.SyncRoot)
             m_Queue.DequeAll(true);
     }
@@ -266,6 +270,12 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     {
         lock (m_Queue.SyncRoot)
             return m_Queue.Enqueue(cancellationToken);
+    }
+
+    [StackTraceHidden]
+    void ValidateNotify()
+    {
+        AsyncLockableHelper.ValidateLockOwnership(m_Lockable);
     }
 
     [StackTraceHidden]
