@@ -6,7 +6,6 @@
 
 using Gapotchenko.FX.Threading.Utils;
 using System.Diagnostics;
-using System.Runtime.ExceptionServices;
 
 namespace Gapotchenko.FX.Threading.Tasks;
 
@@ -355,7 +354,8 @@ public static class TaskBridge
         void Task()
         {
             // Use a graceful cancellation opportunity.
-            cancellationToken.ThrowIfCancellationRequested();
+            if (cancellationToken.IsCancellationRequested)
+                throw new TaskCanceledException(Volatile.Read(ref executionTask));
 
             // Execute a cancelable synchronous action.
             try

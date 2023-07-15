@@ -26,7 +26,8 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext, IDisposab
         {
             Debug.Fail("Asynchronous task cannot execute after the synchronization context has been disposed.");
 
-            // Do no rethrow the exception here because it may crash the whole process.
+            // This situation should never happen.
+            // However, do not rethrow the exception here because it may crash the whole process.
         }
     }
 
