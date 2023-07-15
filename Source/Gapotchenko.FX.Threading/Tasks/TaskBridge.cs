@@ -242,41 +242,7 @@ public static class TaskBridge
         var context = new ExclusiveSynchronizationContext();
         try
         {
-            var savedContext = SynchronizationContext.Current;
-            SynchronizationContext.SetSynchronizationContext(context);
-            try
-            {
-                context.Execute(task);
-            }
-            catch (ThreadInterruptedException)
-            {
-                Cancel();
-                throw;
-            }
-#if TFF_THREAD_ABORT
-            catch (ThreadAbortException)
-            {
-                // Allow the task to continue interacting with a task scheduler.
-                if (ThreadHelper.TryResetAbort())
-                {
-                    try
-                    {
-                        Cancel();
-                    }
-                    finally
-                    {
-                        // Restore the thread abort condition.
-                        ThreadHelper.TryAbort(Thread.CurrentThread);
-                    }
-                }
-
-                throw;
-            }
-#endif
-            finally
-            {
-                SynchronizationContext.SetSynchronizationContext(savedContext);
-            }
+            ExecuteInContext(context, task, Cancel);
         }
         finally
         {
@@ -291,17 +257,10 @@ public static class TaskBridge
 
             void DetachedRun()
             {
-                var savedContext = SynchronizationContext.Current;
-                SynchronizationContext.SetSynchronizationContext(context);
-                try
+                using (context)
                 {
-                    // Continue the task execution until completion.
-                    context.Loop();
-                }
-                finally
-                {
-                    SynchronizationContext.SetSynchronizationContext(savedContext);
-                    context.Dispose();
+                    // Continue the task execution until its completion.
+                    ExecuteInContext(context, null, null);
                 }
             }
 
@@ -363,45 +322,7 @@ public static class TaskBridge
 
         using var context = new ExclusiveSynchronizationContext();
 
-        var savedContext = SynchronizationContext.Current;
-        SynchronizationContext.SetSynchronizationContext(context);
-        try
-        {
-            context.Execute(() => task(cts.Token));
-        }
-        catch (ThreadInterruptedException)
-        {
-            Cancel();
-            throw;
-        }
-#if TFF_THREAD_ABORT
-        catch (ThreadAbortException)
-        {
-            // Allow the task to continue interacting with a task scheduler.
-            if (ThreadHelper.TryResetAbort())
-            {
-                try
-                {
-                    Cancel();
-                }
-                finally
-                {
-                    // Restore the thread abort condition.
-                    ThreadHelper.TryAbort(Thread.CurrentThread);
-                }
-            }
-
-            throw;
-        }
-#endif
-        catch (AggregateException e) when (e.InnerExceptions.Count == 1)
-        {
-            throw e.InnerExceptions[0];
-        }
-        finally
-        {
-            SynchronizationContext.SetSynchronizationContext(savedContext);
-        }
+        ExecuteInContext(context, () => task(cts.Token), Cancel);
 
         void Cancel()
         {
@@ -462,6 +383,63 @@ public static class TaskBridge
         Volatile.Write(ref executionTask, task);
 
         return task;
+    }
+
+    static void ExecuteInContext(ExclusiveSynchronizationContext context, Func<Task>? task, Action? cancel)
+    {
+        var savedContext = SynchronizationContext.Current;
+        SynchronizationContext.SetSynchronizationContext(context);
+        try
+        {
+            bool canceled = false;
+            try
+            {
+                if (task != null)
+                    context.Execute(task);
+                else
+                    context.Loop();
+            }
+            catch (ThreadInterruptedException) when (cancel != null)
+            {
+                cancel();
+                canceled = true;
+                throw;
+            }
+#if TFF_THREAD_ABORT
+            catch (ThreadAbortException) when (cancel != null)
+            {
+                // Allow the task to continue interacting with a task scheduler.
+                if (ThreadHelper.TryResetAbort())
+                {
+                    try
+                    {
+                        cancel();
+                        canceled = true;
+                    }
+                    finally
+                    {
+                        // Restore the thread abort condition.
+                        ThreadHelper.TryAbort(Thread.CurrentThread);
+                    }
+                }
+
+                throw;
+            }
+#endif
+            finally
+            {
+                if (!canceled)
+                    context.Loop();
+            }
+        }
+        catch (AggregateException e) when (e.InnerExceptions.Count == 1)
+        {
+            throw e.InnerExceptions[0];
+        }
+        finally
+        {
+            SynchronizationContext.SetSynchronizationContext(savedContext);
+        }
     }
 
     static Task StartLongRunningTask(Action action, CancellationToken cancellationToken = default)
