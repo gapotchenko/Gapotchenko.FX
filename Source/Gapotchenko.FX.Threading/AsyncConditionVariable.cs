@@ -61,12 +61,14 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     }
 
     /// <inheritdoc/>
+    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public void Wait()
     {
         Wait(CancellationToken.None);
     }
 
     /// <inheritdoc/>
+    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public void Wait(CancellationToken cancellationToken)
     {
         ValidateWait();
@@ -74,6 +76,7 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     }
 
     /// <inheritdoc/>
+    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public bool Wait(int millisecondsTimeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(millisecondsTimeout);
@@ -83,6 +86,7 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     }
 
     /// <inheritdoc/>
+    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public bool Wait(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(timeout);
@@ -92,12 +96,14 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     }
 
     /// <inheritdoc/>
+    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task WaitAsync()
     {
         return WaitAsync(CancellationToken.None);
     }
 
     /// <inheritdoc/>
+    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task WaitAsync(CancellationToken cancellationToken)
     {
         ValidateWait();
@@ -105,6 +111,7 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     }
 
     /// <inheritdoc/>
+    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task<bool> WaitAsync(int millisecondsTimeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(millisecondsTimeout);
@@ -114,6 +121,7 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     }
 
     /// <inheritdoc/>
+    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task<bool> WaitAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ValidateTimeoutArgument(timeout);
@@ -126,16 +134,27 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     // Core Implementation
     // ----------------------------------------------------------------------
 
-    void DoWait(CancellationToken cancellationToken)
+    bool DoWait(CancellationToken cancellationToken)
     {
-        m_Lockable.Unlock();
+        var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken);
         try
         {
-            TaskBridge.Execute(AllocateWaitHandleAsync, cancellationToken);
+            var waitHandle = AllocateWaitHandle(cts.Token);
+
+            m_Lockable.Unlock();
+            try
+            {
+                return TaskBridge.Execute(waitHandle);
+            }
+            finally
+            {
+                m_Lockable.Lock();
+            }
         }
         finally
         {
-            m_Lockable.Lock();
+            cts.Cancel();
+            cts.Dispose();
         }
     }
 
@@ -143,46 +162,46 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     {
         Debug.Assert(ExceptionHelper.IsValidTimeout(timeout));
 
+        if (timeout == Timeout.InfiniteTimeSpan)
+            return DoWait(cancellationToken);
+
         cancellationToken.ThrowIfCancellationRequested();
 
         if (timeout == TimeSpan.Zero)
-        {
             return false;
-        }
-        else
+
+        var cts = new CancellationTokenSource();
+        try
         {
-            using var cts = new CancellationTokenSource();
+            var waitHandle = AllocateWaitHandle(cts.Token);
+
+            m_Lockable.Unlock();
             try
             {
-                var waitHandle = AllocateWaitHandle(cts.Token);
-
-                m_Lockable.Unlock();
-                try
-                {
-                    return TaskBridge.Execute(
-                        ct =>
-                        {
-                            return TaskHelper.ExecuteWithTimeout(
-                                async ct =>
-                                {
-                                    using var ctr = ct.Register(cts.Cancel);
+                return TaskBridge.Execute(
+                    ct =>
+                    {
+                        return TaskHelper.ExecuteWithTimeout(
+                            async ct =>
+                            {
+                                using (ct.Register(cts.Cancel))
                                     return await waitHandle.ConfigureAwait(false);
-                                },
-                                timeout,
-                                false,
-                                ct);
-                        },
-                        cancellationToken);
-                }
-                finally
-                {
-                    m_Lockable.Lock();
-                }
+                            },
+                            timeout,
+                            false,
+                            ct);
+                    },
+                    cancellationToken);
             }
             finally
             {
-                cts.Cancel();
+                m_Lockable.Lock();
             }
+        }
+        finally
+        {
+            cts.Cancel();
+            cts.Dispose();
         }
     }
 
@@ -249,21 +268,9 @@ public class AsyncConditionVariable : IAsyncConditionVariable
             return m_Queue.Enqueue(cancellationToken);
     }
 
+    [StackTraceHidden]
     void ValidateWait()
     {
-        ValidateLockOwnership();
-    }
-
-    void ValidateLockOwnership()
-    {
-        if (m_Lockable is IAsyncRecursiveLockable recursiveLockable)
-        {
-            if (!recursiveLockable.IsLockHeld)
-                throw new SynchronizationLockException();
-        }
-        else if (!m_Lockable.IsLocked)
-        {
-            throw new SynchronizationLockException();
-        }
+        AsyncLockableHelper.ValidateLockOwnership(m_Lockable);
     }
 }

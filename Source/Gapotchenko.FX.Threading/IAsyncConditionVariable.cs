@@ -15,12 +15,12 @@ namespace Gapotchenko.FX.Threading;
 public interface IAsyncConditionVariable : IAsyncAwaitable
 {
     /// <summary>
-    /// Notifies a thread in the waiting queue of a change in the locked shared state.
+    /// Notifies a thread in the waiting queue of a change in the locked shared variable.
     /// </summary>
     void Notify();
 
     /// <summary>
-    /// Notifies all waiting threads of a change in the locked shared state.
+    /// Notifies all waiting threads of a change in the locked shared variable.
     /// </summary>
     void NotifyAll();
 }

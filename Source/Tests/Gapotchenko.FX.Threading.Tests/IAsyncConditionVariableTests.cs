@@ -114,14 +114,6 @@ public abstract class IAsyncConditionVariableTests
         Assert.IsTrue(IsLockHeld(lockable));
     }
 
-    static bool IsLockHeld(IAsyncLockable lockable)
-    {
-        if (lockable is IAsyncRecursiveLockable recursiveLockable)
-            return recursiveLockable.IsLockHeld;
-        else
-            return lockable.IsLocked;
-    }
-
     // ----------------------------------------------------------------------
 
     [TestMethod]
@@ -324,6 +316,16 @@ public abstract class IAsyncConditionVariableTests
 
         Assert.IsTrue(await waitFunc(timeout));
         await notificationTask;
+    }
+
+    // ----------------------------------------------------------------------
+
+    static bool IsLockHeld(IAsyncLockable lockable)
+    {
+        if (lockable is IAsyncRecursiveLockable recursiveLockable)
+            return recursiveLockable.IsLockHeld;
+        else
+            return lockable.IsLocked;
     }
 
     static int GetMillisecondsTimeout(TimeSpan timeout) => checked((int)timeout.TotalMilliseconds);
