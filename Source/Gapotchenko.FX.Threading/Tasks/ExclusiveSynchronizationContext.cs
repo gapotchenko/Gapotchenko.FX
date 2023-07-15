@@ -32,45 +32,67 @@ sealed class ExclusiveSynchronizationContext : SynchronizationContext, IDisposab
 
     public override SynchronizationContext CreateCopy() => this;
 
-    public void Execute(Func<Task> task)
+    volatile bool m_Started;
+
+    public void Start(Func<Task> task)
     {
-        Post(
-            async _ =>
-            {
-                try
+        if (m_Started)
+            throw new InvalidOperationException();
+
+#if TFF_CER
+        // Execute the chunk of work related to an asynchronous task in a constrained region.
+        RuntimeHelpers.PrepareConstrainedRegionsNoOP();
+        try
+        {
+        }
+        finally
+#endif
+        {
+            Post(
+                async _ =>
                 {
-                    await task().ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-#if TFF_THREAD_ABORT
-                    if (e is ThreadAbortException)
+                    try
                     {
-                        // Allows the task to continue interacting with a task scheduler.
-                        ThreadHelper.TryResetAbort();
+                        await task().ConfigureAwait(false);
                     }
+                    catch (Exception e)
+                    {
+#if TFF_THREAD_ABORT
+                        if (e is ThreadAbortException)
+                        {
+                            // Allows the task to continue interacting with a task scheduler.
+                            ThreadHelper.TryResetAbort();
+                        }
 #endif
 
-                    Post(
-                        static state =>
-                        {
-                            var edi = (ExceptionDispatchInfo)state!;
-                            edi.Throw();
-                        },
-                        ExceptionDispatchInfo.Capture(e));
-                }
-                finally
-                {
-                    End();
-                }
-            },
-            null);
+                        Post(
+                            static state =>
+                            {
+                                var edi = (ExceptionDispatchInfo)state!;
+                                edi.Throw();
+                            },
+                            ExceptionDispatchInfo.Capture(e));
+                    }
+                    finally
+                    {
+                        End();
+                    }
+                },
+                null);
 
-        Loop();
+            m_Started = true;
+        }
     }
 
-    public void Loop()
+    public void Run()
     {
+#if !TFF_THREAD_ABORT
+        Debug.Assert(m_Started);
+#endif
+
+        if (!m_Started)
+            return;
+
         while (m_Queue.TryTake(out var item, Timeout.Infinite))
         {
 #if TFF_CER

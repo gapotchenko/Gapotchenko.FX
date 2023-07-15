@@ -242,7 +242,7 @@ public static class TaskBridge
         var context = new ExclusiveSynchronizationContext();
         try
         {
-            ExecuteInContext(context, task, Cancel);
+            RunInContext(context, task, Cancel);
         }
         finally
         {
@@ -260,7 +260,7 @@ public static class TaskBridge
                 using (context)
                 {
                     // Continue the task execution until its completion.
-                    ExecuteInContext(context, null, null);
+                    RunInContext(context, null, null);
                 }
             }
 
@@ -322,7 +322,7 @@ public static class TaskBridge
 
         using var context = new ExclusiveSynchronizationContext();
 
-        ExecuteInContext(context, () => task(cts.Token), Cancel);
+        RunInContext(context, () => task(cts.Token), Cancel);
 
         void Cancel()
         {
@@ -330,7 +330,7 @@ public static class TaskBridge
             cts.Cancel();
 
             // Execute remaining asynchronous operations following the task cancellation.
-            context.Loop();
+            context.Run();
         }
     }
 
@@ -385,7 +385,7 @@ public static class TaskBridge
         return task;
     }
 
-    static void ExecuteInContext(ExclusiveSynchronizationContext context, Func<Task>? task, Action? cancel)
+    static void RunInContext(ExclusiveSynchronizationContext context, Func<Task>? task, Action? cancel)
     {
         var savedContext = SynchronizationContext.Current;
         SynchronizationContext.SetSynchronizationContext(context);
@@ -395,9 +395,9 @@ public static class TaskBridge
             try
             {
                 if (task != null)
-                    context.Execute(task);
-                else
-                    context.Loop();
+                    context.Start(task);
+
+                context.Run();
             }
             catch (ThreadInterruptedException) when (cancel != null)
             {
@@ -429,7 +429,7 @@ public static class TaskBridge
             finally
             {
                 if (!canceled)
-                    context.Loop();
+                    context.Run();
             }
         }
         catch (AggregateException e) when (e.InnerExceptions.Count == 1)
