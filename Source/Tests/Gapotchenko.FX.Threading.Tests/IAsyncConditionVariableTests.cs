@@ -17,29 +17,41 @@ public abstract class IAsyncConditionVariableTests
     protected abstract IAsyncLockable GetAsyncLockable(IAsyncConditionVariable conditionVariable);
 
     [TestMethod]
-    public void IAsyncConditionVariable_Wait_ThrowsOnUnlockedLockable()
+    [DataRow(0)]
+    [DataRow(10)]
+    [DataRow(Timeout.Infinite)]
+    public void IAsyncConditionVariable_Wait_ThrowsOnUnlockedLockable(int millisecondsTimeout)
     {
         var cv = CreateAsyncConditionVariable();
 
         Assert.ThrowsException<SynchronizationLockException>(cv.Wait);
         Assert.ThrowsException<SynchronizationLockException>(() => cv.Wait(CancellationToken.None));
-        Assert.ThrowsException<SynchronizationLockException>(() => cv.Wait(0));
-        Assert.ThrowsException<SynchronizationLockException>(() => cv.Wait(0, CancellationToken.None));
-        Assert.ThrowsException<SynchronizationLockException>(() => cv.Wait(TimeSpan.Zero));
-        Assert.ThrowsException<SynchronizationLockException>(() => cv.Wait(TimeSpan.Zero, CancellationToken.None));
+
+        Assert.ThrowsException<SynchronizationLockException>(() => cv.Wait(millisecondsTimeout));
+        Assert.ThrowsException<SynchronizationLockException>(() => cv.Wait(millisecondsTimeout, CancellationToken.None));
+
+        var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
+        Assert.ThrowsException<SynchronizationLockException>(() => cv.Wait(timeout));
+        Assert.ThrowsException<SynchronizationLockException>(() => cv.Wait(timeout, CancellationToken.None));
     }
 
     [TestMethod]
-    public async Task IAsyncConditionVariable_WaitAsync_ThrowsOnUnlockedLockable()
+    [DataRow(0)]
+    [DataRow(10)]
+    [DataRow(Timeout.Infinite)]
+    public async Task IAsyncConditionVariable_WaitAsync_ThrowsOnUnlockedLockable(int millisecondsTimeout)
     {
         var cv = CreateAsyncConditionVariable();
 
         await Assert.ThrowsExceptionAsync<SynchronizationLockException>(cv.WaitAsync);
         await Assert.ThrowsExceptionAsync<SynchronizationLockException>(() => cv.WaitAsync(CancellationToken.None));
-        await Assert.ThrowsExceptionAsync<SynchronizationLockException>(() => cv.WaitAsync(0));
-        await Assert.ThrowsExceptionAsync<SynchronizationLockException>(() => cv.WaitAsync(0, CancellationToken.None));
-        await Assert.ThrowsExceptionAsync<SynchronizationLockException>(() => cv.WaitAsync(TimeSpan.Zero));
-        await Assert.ThrowsExceptionAsync<SynchronizationLockException>(() => cv.WaitAsync(TimeSpan.Zero, CancellationToken.None));
+
+        await Assert.ThrowsExceptionAsync<SynchronizationLockException>(() => cv.WaitAsync(millisecondsTimeout));
+        await Assert.ThrowsExceptionAsync<SynchronizationLockException>(() => cv.WaitAsync(millisecondsTimeout, CancellationToken.None));
+
+        var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
+        await Assert.ThrowsExceptionAsync<SynchronizationLockException>(() => cv.WaitAsync(timeout));
+        await Assert.ThrowsExceptionAsync<SynchronizationLockException>(() => cv.WaitAsync(timeout, CancellationToken.None));
     }
 
     [TestMethod]
