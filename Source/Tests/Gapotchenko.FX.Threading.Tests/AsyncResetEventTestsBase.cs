@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Threading.Tests;
 
-public abstract class AsyncResetEventTests
+public abstract class AsyncResetEventTestsBase
 {
     protected virtual IAsyncResetEvent CreateAsyncResetEvent() => CreateAsyncResetEvent(false);
 

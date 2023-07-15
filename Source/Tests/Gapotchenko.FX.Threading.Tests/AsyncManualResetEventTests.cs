@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Gapotchenko.FX.Threading.Tests;
 
 [TestClass]
-public sealed class AsyncManualResetEventTests : AsyncResetEventTests
+public sealed class AsyncManualResetEventTests : AsyncResetEventTestsBase
 {
     protected override bool IsAutoReset => false;
 

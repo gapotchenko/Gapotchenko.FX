@@ -11,9 +11,9 @@ static partial class TaskHelper
     // This is a partial class that has most of its code in the neighboring files.
 
     /// <summary>
-    /// Represents a non-existing task result.
+    /// Represents a void task result.
     /// </summary>
-    public struct VoidResult
+    public struct Void
     {
     }
 
