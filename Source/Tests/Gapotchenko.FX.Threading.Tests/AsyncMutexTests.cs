@@ -9,8 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Gapotchenko.FX.Threading.Tests;
 
 [TestClass]
-[TestCategory("mutex")]
-public sealed class AsyncMutexTests : IAsyncLockableTests
+public sealed class AsyncMutexTests : IAsyncMutexTests
 {
-    protected override IAsyncLockable CreateAsyncLockable() => new AsyncMutex();
+    protected override IAsyncMutex CreateAsyncMutex() => new AsyncMutex();
 }
