@@ -9,6 +9,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 
 namespace Gapotchenko.FX.Threading.Utils;
 
@@ -46,4 +47,18 @@ static class ExceptionHelper
                 "The value needs to translate in milliseconds to -1 (signifying an infinite timeout), 0, or a positive integer less than or equal to the maximum allowed timer duration.");
         }
     }
+
+#if !(NETCOREAPP2_2_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
+#pragma warning disable CS8763 // A method marked [DoesNotReturn] should not return.
+#endif
+    [DoesNotReturn]
+    public static void Rethrow(Exception exception)
+    {
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        ExceptionDispatchInfo.Throw(exception);
+#else
+        ExceptionDispatchInfo.Capture(exception).Throw();
+#endif
+    }
+#pragma warning restore CS8763 // A method marked [DoesNotReturn] should not return.
 }

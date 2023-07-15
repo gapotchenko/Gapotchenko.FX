@@ -6,6 +6,7 @@
 
 using Gapotchenko.FX.Threading.Utils;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 
 namespace Gapotchenko.FX.Threading.Tasks;
 
@@ -434,7 +435,7 @@ public static class TaskBridge
         }
         catch (AggregateException e) when (e.InnerExceptions.Count == 1)
         {
-            throw e.InnerExceptions[0];
+            ExceptionHelper.Rethrow(e.InnerExceptions[0]);
         }
         finally
         {
