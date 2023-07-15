@@ -164,7 +164,7 @@ public static class TaskBridge
     }
 
     /// <summary>
-    /// Asynchronously executes a synchronous long-running action.
+    /// Asynchronously executes a synchronous long-running <see cref="Action"/>.
     /// </summary>
     /// <param name="action">The synchronous action to execute.</param>
     /// <returns>A <see cref="Task"/> that executes the specified action.</returns>
@@ -172,7 +172,7 @@ public static class TaskBridge
         ExecuteAsyncCore(action ?? throw new ArgumentNullException(nameof(action)));
 
     /// <summary>
-    /// Asynchronously executes a synchronous long-running function.
+    /// Asynchronously executes a synchronous long-running <see cref="Func{TResult}"/>.
     /// </summary>
     /// <param name="func">The synchronous function to execute.</param>
     /// <returns>A <see cref="Task{TResult}"/> that executes the specified function.</returns>
@@ -194,8 +194,8 @@ public static class TaskBridge
     }
 
     /// <summary>
-    /// Asynchronously executes a synchronous long-running action.
-    /// If a cancellation is requested then a thread abort is issued for the execution thread of a synchronous function.
+    /// Asynchronously executes a synchronous long-running <see cref="Action"/>.
+    /// If a cancellation is requested then a thread abort is issued for the execution thread of a synchronous action.
     /// </summary>
     /// <param name="action">The cancelable synchronous action to execute.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
@@ -206,7 +206,7 @@ public static class TaskBridge
             cancellationToken);
 
     /// <summary>
-    /// Asynchronously executes a synchronous long-running function.
+    /// Asynchronously executes a synchronous long-running <see cref="Func{TResult}"/>.
     /// If a cancellation is requested then a thread abort is issued for the execution thread of a synchronous function.
     /// </summary>
     /// <param name="func">The cancelable synchronous function to execute.</param>
