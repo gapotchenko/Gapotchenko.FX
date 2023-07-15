@@ -9,6 +9,7 @@
 using Gapotchenko.FX.Threading.Tasks;
 using Gapotchenko.FX.Threading.Utils;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Threading;
 
@@ -130,7 +131,7 @@ public class AsyncConditionVariable : IAsyncConditionVariable
         m_Lockable.Unlock();
         try
         {
-            TaskBridge.Execute(GetAwaiter, cancellationToken);
+            TaskBridge.Execute(AllocateWaitHandleAsync, cancellationToken);
         }
         finally
         {
@@ -150,30 +151,51 @@ public class AsyncConditionVariable : IAsyncConditionVariable
         }
         else
         {
-            m_Lockable.Unlock();
+            using var cts = new CancellationTokenSource();
             try
             {
-                return TaskBridge.Execute(
-                    ct => TaskHelper.ExecuteWithTimeout(GetAwaiter, timeout, false, ct),
-                    cancellationToken);
+                var waitHandle = AllocateWaitHandle(cts.Token);
+
+                m_Lockable.Unlock();
+                try
+                {
+                    return TaskBridge.Execute(
+                        ct =>
+                        {
+                            return TaskHelper.ExecuteWithTimeout(
+                                async ct =>
+                                {
+                                    using var ctr = ct.Register(cts.Cancel);
+                                    return await waitHandle.ConfigureAwait(false);
+                                },
+                                timeout,
+                                false,
+                                ct);
+                        },
+                        cancellationToken);
+                }
+                finally
+                {
+                    m_Lockable.Lock();
+                }
             }
             finally
             {
-                m_Lockable.Lock();
+                cts.Cancel();
             }
         }
     }
 
     Task<bool> DoWaitAsync(CancellationToken cancellationToken)
     {
-        var task = GetAwaiter(cancellationToken);
+        var waitHandle = AllocateWaitHandleAsync(cancellationToken);
 
         async Task<bool> ExecuteAsync()
         {
             m_Lockable.Unlock();
             try
             {
-                return await task.ConfigureAwait(false);
+                return await waitHandle.ConfigureAwait(false);
             }
             finally
             {
@@ -201,7 +223,27 @@ public class AsyncConditionVariable : IAsyncConditionVariable
         }
     }
 
-    Task<bool> GetAwaiter(CancellationToken cancellationToken)
+    Task<bool> AllocateWaitHandle(CancellationToken cancellationToken)
+    {
+        Task<bool> result;
+
+#if TFF_CER
+        // Execute the chunk of work related to an asynchronous task in a constrained region
+        // because the task cannot interact with a task scheduler after the thread is aborted.
+        RuntimeHelpers.PrepareConstrainedRegionsNoOP();
+        try
+        {
+        }
+        finally
+#endif
+        {
+            result = AllocateWaitHandleAsync(cancellationToken);
+        }
+
+        return result;
+    }
+
+    Task<bool> AllocateWaitHandleAsync(CancellationToken cancellationToken)
     {
         lock (m_Queue.SyncRoot)
             return m_Queue.Enqueue(cancellationToken);
@@ -209,10 +251,10 @@ public class AsyncConditionVariable : IAsyncConditionVariable
 
     void ValidateWait()
     {
-        ValidateLockIsHeld();
+        ValidateLockOwnership();
     }
 
-    void ValidateLockIsHeld()
+    void ValidateLockOwnership()
     {
         if (m_Lockable is IAsyncRecursiveLockable recursiveLockable)
         {

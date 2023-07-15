@@ -1,6 +1,8 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
 //
+// Portions © Stephen Cleary
+//
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 

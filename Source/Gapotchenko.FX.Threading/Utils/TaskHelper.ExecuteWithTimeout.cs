@@ -72,7 +72,7 @@ partial class TaskHelper
 
         if (timeout == TimeSpan.Zero)
         {
-            var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken);
+            using var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken);
             var task = func(cts.Token);
             if (task.IsCompleted)
             {

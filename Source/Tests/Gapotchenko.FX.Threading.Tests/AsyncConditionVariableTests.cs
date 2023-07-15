@@ -8,13 +8,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Threading.Tests;
 
-[TestClass]
-public sealed class AsyncConditionVariableTests : IAsyncConditionVariableTests
+public abstract class AsyncConditionVariableTests : IAsyncConditionVariableTests
 {
-    protected override IAsyncConditionVariable CreateAsyncConditionVariable() =>
-        new AsyncConditionVariable(new AsyncMutex());
+    protected abstract IAsyncLockable CreateAsyncLockable();
 
-    protected override IAsyncLockable GetAsyncLockable(IAsyncConditionVariable conditionVariable) =>
+    protected sealed override IAsyncConditionVariable CreateAsyncConditionVariable() =>
+        new AsyncConditionVariable(CreateAsyncLockable());
+
+    protected sealed override IAsyncLockable GetAsyncLockable(IAsyncConditionVariable conditionVariable) =>
         ((AsyncConditionVariable)conditionVariable).Lockable;
 
     [TestMethod]
@@ -22,4 +23,16 @@ public sealed class AsyncConditionVariableTests : IAsyncConditionVariableTests
     {
         Assert.ThrowsException<ArgumentNullException>(() => new AsyncConditionVariable(null!));
     }
+}
+
+[TestClass]
+public sealed class AsyncConditionVariableTests_NonRecursive : AsyncConditionVariableTests
+{
+    protected override IAsyncLockable CreateAsyncLockable() => new AsyncMutex();
+}
+
+[TestClass]
+public sealed class AsyncConditionVariableTests_Recursive : AsyncConditionVariableTests
+{
+    protected override IAsyncLockable CreateAsyncLockable() => new AsyncRecursiveMutex();
 }
