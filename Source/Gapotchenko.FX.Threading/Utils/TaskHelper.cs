@@ -22,7 +22,7 @@ static partial class TaskHelper
     /// </summary>
     /// <param name="task">The task.</param>
     /// <param name="disposable">The disposable object that will be disposed when the task completes.</param>
-    public static void DisposeOnCompetion(Task task, IDisposable disposable)
+    public static void DisposeOnCompletion(Task task, IDisposable disposable)
     {
         task.ContinueWith(
             _ => disposable.Dispose(),
@@ -32,9 +32,9 @@ static partial class TaskHelper
     }
 
     // This is an optimized implementation to avoid boxing of disposable value types.
-    /// <inheritdoc cref="DisposeOnCompetion(Task, IDisposable)"/>
+    /// <inheritdoc cref="DisposeOnCompletion(Task, IDisposable)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void DisposeOnCompetion<TDisposable>(Task task, TDisposable disposable)
+    public static void DisposeOnCompletion<TDisposable>(Task task, TDisposable disposable)
         where TDisposable : struct, IDisposable
     {
         task.ContinueWith(

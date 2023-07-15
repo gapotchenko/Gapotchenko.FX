@@ -1,4 +1,10 @@
-﻿using System.Security;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+using System.Security;
 
 namespace Gapotchenko.FX.Threading.Utils;
 
