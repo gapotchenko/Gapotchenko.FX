@@ -54,24 +54,24 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     TaskCompletionSource<bool> m_TaskCompletionSource;
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    TaskCompletionSource<bool> TaskCompletionSource => Volatile.Read(ref m_TaskCompletionSource);
+
     /// <inheritdoc/>
     public void Set()
     {
-        Volatile.Read(ref m_TaskCompletionSource).TrySetResult(true);
+        TaskCompletionSource.TrySetResult(true);
     }
 
     /// <inheritdoc/>
     public void Reset()
     {
-        lock (m_SyncRoot)
-        {
-            if (m_TaskCompletionSource.Task.IsCompleted)
-                m_TaskCompletionSource = CreateTaskCompletionSource();
-        }
+        if (IsSet)
+            ResetCore();
     }
 
     /// <inheritdoc/>
-    public bool IsSet => Volatile.Read(ref m_TaskCompletionSource).Task.IsCompleted;
+    public bool IsSet => DoWaitAsync().IsCompleted;
 
     /// <inheritdoc/>
     public void Wait()
@@ -138,6 +138,15 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
     // Core Implementation
     // ----------------------------------------------------------------------
 
+    void ResetCore()
+    {
+        lock (m_SyncRoot)
+        {
+            if (m_TaskCompletionSource.Task.IsCompleted)
+                m_TaskCompletionSource = CreateTaskCompletionSource();
+        }
+    }
+
     bool DoWait(TimeSpan timeout, CancellationToken cancellationToken)
     {
         Debug.Assert(ExceptionHelper.IsValidTimeout(timeout));
@@ -149,7 +158,7 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
 
     Task<bool> DoWaitAsync()
     {
-        return Volatile.Read(ref m_TaskCompletionSource).Task;
+        return TaskCompletionSource.Task;
     }
 
     Task<bool> DoWaitAsync(CancellationToken cancellationToken)
@@ -161,7 +170,21 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
     {
         Debug.Assert(ExceptionHelper.IsValidTimeout(timeout));
 
-        return TaskHelper.ExecuteWithTimeout(DoWaitAsync, timeout, false, cancellationToken);
+        if (timeout == TimeSpan.Zero) // use a quick path when possible
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return Task.FromCanceled<bool>(cancellationToken);
+
+            var task = DoWaitAsync();
+            if (task.IsCompleted)
+                return task;
+            else
+                return Task.FromResult(false);
+        }
+        else
+        {
+            return TaskHelper.ExecuteWithTimeout(DoWaitAsync, timeout, false, cancellationToken);
+        }
     }
 
     static TaskCompletionSource<bool> CreateTaskCompletionSource() => new(TaskCreationOptions.RunContinuationsAsynchronously);

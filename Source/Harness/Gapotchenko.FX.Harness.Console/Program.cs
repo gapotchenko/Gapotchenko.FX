@@ -221,6 +221,11 @@ class Program
         Console.WriteLine(appInfo.ProductName);
         Console.WriteLine(appInfo.InformationalVersion);
 
+        var e = new AsyncManualResetEvent(true);
+        Console.WriteLine(await e.WaitAsync(0));
+        return;
+
+
         var mutex = new AsyncRecursiveMutex();
 
         Console.WriteLine("Running lock/unlock loop...");

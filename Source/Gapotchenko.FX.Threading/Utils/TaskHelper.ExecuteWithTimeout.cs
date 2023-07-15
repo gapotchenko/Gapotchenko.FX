@@ -72,22 +72,32 @@ partial class TaskHelper
 
         if (timeout == TimeSpan.Zero)
         {
-            if (timeoutResult.HasValue)
-                return Task.FromResult(timeoutResult.Value);
-            else
-                return Task.FromException<TResult>(new TimeoutException());
-        }
-
-        async Task<TResult> ExecuteAsync()
-        {
-            using var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken, timeout);
-            try
+            var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken);
+            var task = func(cts.Token);
+            if (task.IsCompleted)
             {
-                return await func(cts.Token).ConfigureAwait(false);
+                return task;
             }
-            catch (OperationCanceledException)
+            else
             {
-                if (cts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+                cts.Cancel();
+
+                if (timeoutResult.HasValue)
+                    return Task.FromResult(timeoutResult.Value);
+                else
+                    return Task.FromException<TResult>(new TimeoutException());
+            }
+        }
+        else
+        {
+            async Task<TResult> ExecuteAsync()
+            {
+                using var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken, timeout);
+                try
+                {
+                    return await func(cts.Token).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException) when (cts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
                 {
                     // Timeout has expired.
                     if (timeoutResult.HasValue)
@@ -95,13 +105,9 @@ partial class TaskHelper
                     else
                         throw new TimeoutException();
                 }
-                else
-                {
-                    throw;
-                }
             }
-        }
 
-        return ExecuteAsync();
+            return ExecuteAsync();
+        }
     }
 }
