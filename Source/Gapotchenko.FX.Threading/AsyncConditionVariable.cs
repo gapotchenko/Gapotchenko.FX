@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Threading;
 
 /// <summary>
 /// Represents a synchronization primitive that is used in conjunction with an <see cref="IAsyncLockable"/>
-/// to block one or more threads until another thread modifies a shared variable (the condition)
+/// to block one or more threads until another thread modifies a shared variable or state (the condition)
 /// and notifies the <see cref="AsyncConditionVariable"/> about the change.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
