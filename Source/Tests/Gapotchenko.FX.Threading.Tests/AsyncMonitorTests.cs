@@ -12,6 +12,8 @@ namespace Gapotchenko.FX.Threading.Tests;
 public sealed class AsyncMonitorTests : IAsyncMonitorTests
 {
     protected override IAsyncMonitor CreateAsyncMonitor() => new AsyncMonitor();
+
+    protected override IAsyncMonitor GetAsyncMonitorFor(object obj) => AsyncMonitor.For(obj);
 }
 
 [TestClass]

@@ -223,8 +223,10 @@ class Program
 
         var e = new AsyncManualResetEvent(true);
         Console.WriteLine(await e.WaitAsync(0));
-        return;
 
+        using var scope = await AsyncMonitor.For(e).LockScopeAsync();
+
+        return;
 
         var mutex = new AsyncRecursiveMutex();
 
