@@ -58,14 +58,14 @@ static class AsyncMonitorObjectTable
         var descriptors = m_Descriptors;
         lock (descriptors)
         {
-            if (m_Descriptors.TryGetValue(obj, out var descriptor))
+            if (descriptors.TryGetValue(obj, out var descriptor))
             {
                 return descriptor;
             }
             else
             {
                 descriptor = new Descriptor();
-                m_Descriptors.Add(obj, descriptor);
+                descriptors.Add(obj, descriptor);
                 return descriptor;
             }
         }
