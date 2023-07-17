@@ -6,7 +6,7 @@
 
 namespace Gapotchenko.FX.Threading;
 
-readonly struct AsyncMutexImpl
+readonly struct AsyncMutexImpl : IAsyncMutex
 {
     // The implementation is based on a semaphore.
     readonly AsyncSemaphoreImpl m_Semaphore = new(1, 1);
@@ -19,6 +19,8 @@ readonly struct AsyncMutexImpl
     {
         m_Semaphore.Wait(cancellationToken);
     }
+
+    public bool TryLock() => TryLock(0, CancellationToken.None);
 
     public bool TryLock(TimeSpan timeout, CancellationToken cancellationToken)
     {
@@ -62,4 +64,6 @@ readonly struct AsyncMutexImpl
     }
 
     public readonly bool IsLocked => m_Semaphore.CurrentCount != 1;
+
+    bool IAsyncLockable.IsRecursive => false;
 }

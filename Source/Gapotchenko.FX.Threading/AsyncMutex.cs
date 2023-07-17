@@ -25,7 +25,7 @@ public sealed class AsyncMutex : IAsyncMutex
     public Task LockAsync(CancellationToken cancellationToken = default) => m_CoreImpl.LockAsync(cancellationToken);
 
     /// <inheritdoc/>
-    public bool TryLock() => TryLock(0);
+    public bool TryLock() => m_CoreImpl.TryLock();
 
     /// <inheritdoc/>
     public bool TryLock(TimeSpan timeout, CancellationToken cancellationToken = default) =>

@@ -4,7 +4,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-using Gapotchenko.FX.Threading.Utils;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading;
@@ -16,129 +15,42 @@ namespace Gapotchenko.FX.Threading;
 /// </summary>
 public sealed class AsyncRecursiveMutex : IAsyncRecursiveMutex
 {
-    // ----------------------------------------------------------------------
-    // Public Facade
-    // ----------------------------------------------------------------------
-
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly AsyncMutexImpl m_CoreImpl = new();
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly AsyncRecursionTracker m_RecursionTracker = new();
+    readonly AsyncRecursiveLockableImpl<AsyncMutexImpl> m_CoreImpl = new(new());
 
     /// <inheritdoc/>
-    public void Lock(CancellationToken cancellationToken = default)
-    {
-        if (!m_RecursionTracker.IsEntered)
-            m_CoreImpl.Lock(cancellationToken);
-        m_RecursionTracker.Enter();
-    }
+    public void Lock(CancellationToken cancellationToken = default) => m_CoreImpl.Lock(cancellationToken);
 
     /// <inheritdoc/>
-    public Task LockAsync(CancellationToken cancellationToken = default)
-    {
-        if (!m_RecursionTracker.IsEntered)
-        {
-            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
-
-            async Task ExecuteAsync()
-            {
-                using (asyncLocalChanges)
-                {
-                    await m_CoreImpl.LockAsync(cancellationToken).ConfigureAwait(false);
-                    asyncLocalChanges.Commit();
-                }
-            }
-
-            return ExecuteAsync();
-        }
-        else
-        {
-            // Already locked by the current thread.
-            m_RecursionTracker.Enter();
-            return Task.CompletedTask;
-        }
-    }
+    public Task LockAsync(CancellationToken cancellationToken = default) => m_CoreImpl.LockAsync(cancellationToken);
 
     /// <inheritdoc/>
-    public bool TryLock() => TryLock(0);
+    public bool TryLock() => m_CoreImpl.TryLock();
 
     /// <inheritdoc/>
     public bool TryLock(TimeSpan timeout, CancellationToken cancellationToken = default) =>
-        TryLockCore(() => m_CoreImpl.TryLock(timeout, cancellationToken));
+        m_CoreImpl.TryLock(timeout, cancellationToken);
 
     /// <inheritdoc/>
     public bool TryLock(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
-        TryLockCore(() => m_CoreImpl.TryLock(millisecondsTimeout, cancellationToken));
+        m_CoreImpl.TryLock(millisecondsTimeout, cancellationToken);
 
     /// <inheritdoc/>
     public Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
-        TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(timeout, cancellationToken));
+        m_CoreImpl.TryLockAsync(timeout, cancellationToken);
 
     /// <inheritdoc/>
     public Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
-        TryLockAsyncCore(() => m_CoreImpl.TryLockAsync(millisecondsTimeout, cancellationToken));
+        m_CoreImpl.TryLockAsync(millisecondsTimeout, cancellationToken);
 
     /// <inheritdoc/>
-    public void Unlock()
-    {
-        if (m_RecursionTracker.Leave())
-            m_CoreImpl.Unlock();
-    }
+    public void Unlock() => m_CoreImpl.Unlock();
 
     /// <inheritdoc/>
     public bool IsLocked => m_CoreImpl.IsLocked;
 
     /// <inheritdoc/>
-    public bool IsLockHeld => m_RecursionTracker.IsEntered;
+    public bool IsLockHeld => m_CoreImpl.IsLockHeld;
 
     bool IAsyncLockable.IsRecursive => true;
-
-    // ----------------------------------------------------------------------
-    // Core Implementation
-    // ----------------------------------------------------------------------
-
-    bool TryLockCore(Func<bool> func)
-    {
-        if (!m_RecursionTracker.IsEntered)
-        {
-            bool locked = func();
-            if (locked)
-                m_RecursionTracker.Enter();
-            return locked;
-        }
-        else
-        {
-            // Already locked by the current thread.
-            m_RecursionTracker.Enter();
-            return true;
-        }
-    }
-
-    Task<bool> TryLockAsyncCore(Func<Task<bool>> func)
-    {
-        if (!m_RecursionTracker.IsEntered)
-        {
-            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
-
-            async Task<bool> ExecuteAsync()
-            {
-                using (asyncLocalChanges)
-                {
-                    bool locked = await func().ConfigureAwait(false);
-                    if (locked)
-                        asyncLocalChanges.Commit();
-                    return locked;
-                }
-            }
-
-            return ExecuteAsync();
-        }
-        else
-        {
-            // Already locked by the current thread.
-            m_RecursionTracker.Enter();
-            return Task.FromResult(true);
-        }
-    }
 }

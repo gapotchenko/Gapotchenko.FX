@@ -11,13 +11,13 @@ namespace Gapotchenko.FX.Threading;
 /// that provides a mechanism that synchronizes access to objects.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
-public sealed class AsyncMonitor : AsyncMonitorImpl<AsyncMutex>
+public sealed class AsyncMonitor : AsyncMonitorImpl<IAsyncMutex>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AsyncMonitor"/> class.
     /// </summary>
     public AsyncMonitor() :
-        base(new AsyncMutex())
+        base(new AsyncMutex(), new AsyncConditionVariableImpl())
     {
     }
 }

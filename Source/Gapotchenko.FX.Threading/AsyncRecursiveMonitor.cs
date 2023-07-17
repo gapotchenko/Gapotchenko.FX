@@ -11,16 +11,16 @@ namespace Gapotchenko.FX.Threading;
 /// that provides a mechanism that synchronizes access to objects.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
-public sealed class AsyncRecursiveMonitor : AsyncMonitorImpl<AsyncRecursiveMutex>, IAsyncRecursiveMonitor
+public sealed class AsyncRecursiveMonitor : AsyncMonitorImpl<IAsyncRecursiveMutex>, IAsyncRecursiveMonitor
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AsyncRecursiveMonitor"/> class.
     /// </summary>
     public AsyncRecursiveMonitor() :
-        base(new AsyncRecursiveMutex())
+        base(new AsyncRecursiveMutex(), new AsyncConditionVariableImpl())
     {
     }
 
     /// <inheritdoc/>
-    public bool IsLockHeld => Lockable.IsLockHeld;
+    public bool IsLockHeld => Mutex.IsLockHeld;
 }
