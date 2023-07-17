@@ -2,7 +2,6 @@
 
 namespace Gapotchenko.FX.Threading.Utils;
 
-[StackTraceHidden]
 static class AsyncLockableHelper
 {
     /// <summary>
@@ -10,6 +9,7 @@ static class AsyncLockableHelper
     /// </summary>
     /// <param name="lockable">The lockable synchronization primitive.</param>
     /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
+    [StackTraceHidden]
     public static void ValidateLockOwnership(IAsyncLockable lockable)
     {
         if (!IsLockHeld(lockable))
