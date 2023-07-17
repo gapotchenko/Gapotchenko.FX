@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Gapotchenko.FX.Threading.Tests;
 
 [TestClass]
+[TestCategory("recursive")]
 public sealed class AsyncRecursiveMonitorTests : IAsyncMonitorTests
 {
     protected override IAsyncMonitor CreateAsyncMonitor() => new AsyncRecursiveMonitor();
@@ -18,6 +19,7 @@ public sealed class AsyncRecursiveMonitorTests : IAsyncMonitorTests
 
 [TestClass]
 [TestCategory("monitor")]
+[TestCategory("recursive")]
 public sealed class AsyncRecursiveMonitorTests_IAsyncLockable : IAsyncLockableTests
 {
     protected override IAsyncLockable CreateAsyncLockable() => new AsyncRecursiveMonitor();
