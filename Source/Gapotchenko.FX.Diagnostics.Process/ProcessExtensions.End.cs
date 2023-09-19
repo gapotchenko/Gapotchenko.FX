@@ -131,6 +131,8 @@ partial class ProcessExtensions
     /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The mode in which the process has been ended.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="process"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> needs to be either -1 (signifying an infinite timeout), 0 or a positive integer..</exception>
     public static async Task<ProcessEndMode> EndAsync(
         this Process process,
         ProcessEndMode mode,
