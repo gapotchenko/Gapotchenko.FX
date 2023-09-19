@@ -8,18 +8,14 @@ namespace Gapotchenko.FX.Diagnostics;
 partial class CommandLine
 {
     /// <summary>
-    /// <para>
-    /// Gets command line OEM encoding.
-    /// </para>
-    /// <para>
-    /// OEM encoding is used by Windows console applications, and can be considered as a holdover from DOS and the original IBM PC architecture.
-    /// Operating systems other than Windows have no concept of OEM encoding.
-    /// </para>
-    /// <para>
-    /// The value of this property can be universally used under any host OS.
-    /// If a host OS has no notion of OEM encoding then <see cref="Encoding.Default"/> value is returned instead.
-    /// </para>
+    /// Gets a command-line OEM encoding.
     /// </summary>
+    /// <remarks>
+    /// OEM encoding is used by Windows console applications, and can be considered as a holdover from DOS and the original IBM PC era.
+    /// Operating systems other than Windows have no concept of OEM encoding.
+    /// However, the value of this property can be universally used under any host OS.
+    /// If a host OS has no notion of OEM encoding, the property returns <see cref="Encoding.Default"/> instead.
+    /// </remarks>
     public static Encoding OemEncoding => m_OemEncoding ??= GetOemEncodingCore();
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

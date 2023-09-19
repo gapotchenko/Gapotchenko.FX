@@ -9,7 +9,7 @@ partial class ProcessExtensions
     const int DefaultEndTimeout = 3000;
 
     /// <summary>
-    /// Ends a process with default timeout.
+    /// Ends a process with a default timeout.
     /// </summary>
     /// <remarks>
     /// The default timeout is 3 seconds.
@@ -28,7 +28,7 @@ partial class ProcessExtensions
         End(process, ProcessEndMode.Complete, millisecondsTimeout);
 
     /// <summary>
-    /// Ends a process according to a specified mode with default timeout.
+    /// Ends a process using the specified mode with a default timeout.
     /// </summary>
     /// <remarks>
     /// The default timeout is 3 seconds.
@@ -39,7 +39,7 @@ partial class ProcessExtensions
     public static ProcessEndMode End(this Process process, ProcessEndMode mode) => End(process, mode, DefaultEndTimeout);
 
     /// <summary>
-    /// Ends a process according to a specified mode and timeout.
+    /// Ends a process using the specified mode and timeout.
     /// </summary>
     /// <param name="process">The process to end.</param>
     /// <param name="mode">The mode of ending a process.</param>
@@ -49,7 +49,7 @@ partial class ProcessExtensions
         TaskBridge.Execute(ct => EndAsync(process, mode, millisecondsTimeout, ct));
 
     /// <summary>
-    /// Ends a process asynchronously according to a specified mode and timeout.
+    /// Ends a process asynchronously using the specified mode and timeout.
     /// </summary>
     /// <param name="process">The process to end.</param>
     /// <param name="mode">The mode of ending a process.</param>
@@ -67,18 +67,18 @@ partial class ProcessExtensions
         if (millisecondsTimeout < Timeout.Infinite)
             throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), "The value needs to be either -1 (signifying an infinite timeout), 0 or a positive integer.");
 
-        mode = _ConditionEndMode(mode, ProcessEndMode.Graceful, ProcessEndMode.Close | ProcessEndMode.Interrupt);
+        mode = InterpretEndMode(mode, ProcessEndMode.Graceful, ProcessEndMode.Close | ProcessEndMode.Interrupt);
 
         if ((mode & ProcessEndMode.Graceful) != 0)
         {
             if ((mode & ProcessEndMode.Close) == ProcessEndMode.Close &&
-                await _TryCloseProcessAsync(process, cancellationToken).ConfigureAwait(false))
+                await TryCloseProcessAsync(process, cancellationToken).ConfigureAwait(false))
             {
                 return ProcessEndMode.Close;
             }
 
             if ((mode & ProcessEndMode.Interrupt) == ProcessEndMode.Interrupt &&
-                await _TryInterruptProcessAsync(process, cancellationToken).ConfigureAwait(false))
+                await TryInterruptProcessAsync(process, cancellationToken).ConfigureAwait(false))
             {
                 return ProcessEndMode.Interrupt;
             }
@@ -87,18 +87,18 @@ partial class ProcessExtensions
                 return ProcessEndMode.Graceful;
         }
 
-        mode = _ConditionEndMode(mode, ProcessEndMode.Forceful, ProcessEndMode.Kill | ProcessEndMode.Exit);
+        mode = InterpretEndMode(mode, ProcessEndMode.Forceful, ProcessEndMode.Kill | ProcessEndMode.Exit);
 
         if ((mode & ProcessEndMode.Forceful) != 0)
         {
             if ((mode & ProcessEndMode.Exit) == ProcessEndMode.Exit &&
-                _TryExitProcess(process))
+                TryExitProcess(process))
             {
                 return ProcessEndMode.Exit;
             }
 
             if ((mode & ProcessEndMode.Kill) == ProcessEndMode.Kill &&
-                await _TryKillProcessAsync(process, cancellationToken).ConfigureAwait(false))
+                await TryKillProcessAsync(process, cancellationToken).ConfigureAwait(false))
             {
                 return ProcessEndMode.Kill;
             }
@@ -108,7 +108,7 @@ partial class ProcessExtensions
     }
 
     /// <summary>
-    /// Ends a process asynchronously according to a specified mode with default timeout.
+    /// Ends a process asynchronously using the specified mode and a default timeout.
     /// </summary>
     /// <remarks>
     /// The default timeout is 3 seconds.
@@ -121,7 +121,7 @@ partial class ProcessExtensions
         EndAsync(process, mode, DefaultEndTimeout, cancellationToken);
 
     /// <summary>
-    /// Ends a process asynchronously according to a specified mode and timeout.
+    /// Ends a process asynchronously using the specified mode and timeout.
     /// </summary>
     /// <param name="process">The process to end.</param>
     /// <param name="mode">The mode of ending a process.</param>
@@ -131,7 +131,7 @@ partial class ProcessExtensions
         EndAsync(process, mode, millisecondsTimeout, CancellationToken.None);
 
     /// <summary>
-    /// Ends a process asynchronously according to a specified mode with default timeout.
+    /// Ends a process asynchronously using the specified mode and a default timeout.
     /// </summary>
     /// <remarks>
     /// The default timeout is 3 seconds.
@@ -142,7 +142,7 @@ partial class ProcessExtensions
     public static Task<ProcessEndMode> EndAsync(this Process process, ProcessEndMode mode) => EndAsync(process, mode, DefaultEndTimeout);
 
     /// <summary>
-    /// Ends a process asynchronously with a specified timeout.
+    /// Ends a process asynchronously with the specified timeout.
     /// </summary>
     /// <param name="process">The process to end.</param>
     /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
@@ -151,7 +151,7 @@ partial class ProcessExtensions
         EndAsync(process, ProcessEndMode.Complete, millisecondsTimeout);
 
     /// <summary>
-    /// Ends a process asynchronously with default timeout.
+    /// Ends a process asynchronously with a default timeout.
     /// </summary>
     /// <remarks>
     /// The default timeout is 3 seconds.
@@ -161,7 +161,7 @@ partial class ProcessExtensions
     public static Task<ProcessEndMode> EndAsync(this Process process) => EndAsync(process, DefaultEndTimeout);
 
     /// <summary>
-    /// Ends a process asynchronously with a specified timeout.
+    /// Ends a process asynchronously with the specified timeout.
     /// </summary>
     /// <param name="process">The process to end.</param>
     /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
@@ -171,7 +171,7 @@ partial class ProcessExtensions
         EndAsync(process, ProcessEndMode.Complete, millisecondsTimeout, cancellationToken);
 
     /// <summary>
-    /// Ends a process asynchronously with default timeout.
+    /// Ends a process asynchronously with a default timeout.
     /// </summary>
     /// <remarks>
     /// The default timeout is 3 seconds.
@@ -182,7 +182,7 @@ partial class ProcessExtensions
     public static Task<ProcessEndMode> EndAsync(this Process process, CancellationToken cancellationToken) =>
         EndAsync(process, DefaultEndTimeout, cancellationToken);
 
-    static ProcessEndMode _ConditionEndMode(ProcessEndMode mode, ProcessEndMode group, ProcessEndMode groupModes)
+    static ProcessEndMode InterpretEndMode(ProcessEndMode mode, ProcessEndMode group, ProcessEndMode groupModes)
     {
         var mask = groupModes & ~group;
         var maskedMode = mode & mask;
@@ -200,7 +200,7 @@ partial class ProcessExtensions
         return mode;
     }
 
-    static async Task<bool> _TryCloseProcessAsync(Process process, CancellationToken cancellationToken)
+    static async Task<bool> TryCloseProcessAsync(Process process, CancellationToken cancellationToken)
     {
         try
         {
@@ -237,7 +237,7 @@ partial class ProcessExtensions
         return false;
     }
 
-    static async Task<bool> _TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
+    static async Task<bool> TryInterruptProcessAsync(Process process, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -248,7 +248,7 @@ partial class ProcessExtensions
             return false;
     }
 
-    static bool _TryExitProcess(Process process)
+    static bool TryExitProcess(Process process)
     {
         if (!ProcessHelper.IsCurrentProcess(process))
             return false;
@@ -256,7 +256,7 @@ partial class ProcessExtensions
         return true;
     }
 
-    static async Task<bool> _TryKillProcessAsync(Process process, CancellationToken cancellationToken)
+    static async Task<bool> TryKillProcessAsync(Process process, CancellationToken cancellationToken)
     {
         for (int i = 0; i < 5; ++i)
         {
