@@ -49,6 +49,81 @@ partial class ProcessExtensions
         TaskBridge.Execute(ct => EndAsync(process, mode, millisecondsTimeout, ct));
 
     /// <summary>
+    /// Ends a process asynchronously using the specified mode and a default timeout.
+    /// </summary>
+    /// <remarks>
+    /// The default timeout is 3 seconds.
+    /// </remarks>
+    /// <param name="process">The process to end.</param>
+    /// <param name="mode">The mode of ending a process.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The mode in which the process has been ended.</returns>
+    public static Task<ProcessEndMode> EndAsync(this Process process, ProcessEndMode mode, CancellationToken cancellationToken) =>
+        EndAsync(process, mode, DefaultEndTimeout, cancellationToken);
+
+    /// <summary>
+    /// Ends a process asynchronously using the specified mode and a default timeout.
+    /// </summary>
+    /// <remarks>
+    /// The default timeout is 3 seconds.
+    /// </remarks>
+    /// <param name="process">The process to end.</param>
+    /// <param name="mode">The mode of ending a process.</param>
+    /// <returns>The mode in which the process has been ended.</returns>
+    public static Task<ProcessEndMode> EndAsync(this Process process, ProcessEndMode mode) => EndAsync(process, mode, DefaultEndTimeout);
+
+    /// <summary>
+    /// Ends a process asynchronously with a default timeout.
+    /// </summary>
+    /// <remarks>
+    /// The default timeout is 3 seconds.
+    /// </remarks>
+    /// <param name="process">The process to end.</param>
+    /// <returns>The mode in which the process has been ended.</returns>
+    public static Task<ProcessEndMode> EndAsync(this Process process) => EndAsync(process, DefaultEndTimeout);
+
+    /// <summary>
+    /// Ends a process asynchronously with the specified timeout.
+    /// </summary>
+    /// <param name="process">The process to end.</param>
+    /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
+    /// <returns>The mode in which the process has been ended.</returns>
+    public static Task<ProcessEndMode> EndAsync(this Process process, int millisecondsTimeout) =>
+        EndAsync(process, ProcessEndMode.Complete, millisecondsTimeout);
+
+    /// <summary>
+    /// Ends a process asynchronously using the specified mode and timeout.
+    /// </summary>
+    /// <param name="process">The process to end.</param>
+    /// <param name="mode">The mode of ending a process.</param>
+    /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
+    /// <returns>The mode in which the process has been ended.</returns>
+    public static Task<ProcessEndMode> EndAsync(this Process process, ProcessEndMode mode, int millisecondsTimeout) =>
+        EndAsync(process, mode, millisecondsTimeout, CancellationToken.None);
+
+    /// <summary>
+    /// Ends a process asynchronously with a default timeout.
+    /// </summary>
+    /// <remarks>
+    /// The default timeout is 3 seconds.
+    /// </remarks>
+    /// <param name="process">The process to end.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The mode in which the process has been ended.</returns>
+    public static Task<ProcessEndMode> EndAsync(this Process process, CancellationToken cancellationToken) =>
+        EndAsync(process, DefaultEndTimeout, cancellationToken);
+
+    /// <summary>
+    /// Ends a process asynchronously with the specified timeout.
+    /// </summary>
+    /// <param name="process">The process to end.</param>
+    /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The mode in which the process has been ended.</returns>
+    public static Task<ProcessEndMode> EndAsync(this Process process, int millisecondsTimeout, CancellationToken cancellationToken) =>
+        EndAsync(process, ProcessEndMode.Complete, millisecondsTimeout, cancellationToken);
+
+    /// <summary>
     /// Ends a process asynchronously using the specified mode and timeout.
     /// </summary>
     /// <param name="process">The process to end.</param>
@@ -106,81 +181,6 @@ partial class ProcessExtensions
 
         return ProcessEndMode.None;
     }
-
-    /// <summary>
-    /// Ends a process asynchronously using the specified mode and a default timeout.
-    /// </summary>
-    /// <remarks>
-    /// The default timeout is 3 seconds.
-    /// </remarks>
-    /// <param name="process">The process to end.</param>
-    /// <param name="mode">The mode of ending a process.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>The mode in which the process has been ended.</returns>
-    public static Task<ProcessEndMode> EndAsync(this Process process, ProcessEndMode mode, CancellationToken cancellationToken) =>
-        EndAsync(process, mode, DefaultEndTimeout, cancellationToken);
-
-    /// <summary>
-    /// Ends a process asynchronously using the specified mode and timeout.
-    /// </summary>
-    /// <param name="process">The process to end.</param>
-    /// <param name="mode">The mode of ending a process.</param>
-    /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
-    /// <returns>The mode in which the process has been ended.</returns>
-    public static Task<ProcessEndMode> EndAsync(this Process process, ProcessEndMode mode, int millisecondsTimeout) =>
-        EndAsync(process, mode, millisecondsTimeout, CancellationToken.None);
-
-    /// <summary>
-    /// Ends a process asynchronously using the specified mode and a default timeout.
-    /// </summary>
-    /// <remarks>
-    /// The default timeout is 3 seconds.
-    /// </remarks>
-    /// <param name="process">The process to end.</param>
-    /// <param name="mode">The mode of ending a process.</param>
-    /// <returns>The mode in which the process has been ended.</returns>
-    public static Task<ProcessEndMode> EndAsync(this Process process, ProcessEndMode mode) => EndAsync(process, mode, DefaultEndTimeout);
-
-    /// <summary>
-    /// Ends a process asynchronously with the specified timeout.
-    /// </summary>
-    /// <param name="process">The process to end.</param>
-    /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
-    /// <returns>The mode in which the process has been ended.</returns>
-    public static Task<ProcessEndMode> EndAsync(this Process process, int millisecondsTimeout) =>
-        EndAsync(process, ProcessEndMode.Complete, millisecondsTimeout);
-
-    /// <summary>
-    /// Ends a process asynchronously with a default timeout.
-    /// </summary>
-    /// <remarks>
-    /// The default timeout is 3 seconds.
-    /// </remarks>
-    /// <param name="process">The process to end.</param>
-    /// <returns>The mode in which the process has been ended.</returns>
-    public static Task<ProcessEndMode> EndAsync(this Process process) => EndAsync(process, DefaultEndTimeout);
-
-    /// <summary>
-    /// Ends a process asynchronously with the specified timeout.
-    /// </summary>
-    /// <param name="process">The process to end.</param>
-    /// <param name="millisecondsTimeout">The amount of time, in milliseconds, to wait for the associated process to end.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>The mode in which the process has been ended.</returns>
-    public static Task<ProcessEndMode> EndAsync(this Process process, int millisecondsTimeout, CancellationToken cancellationToken) =>
-        EndAsync(process, ProcessEndMode.Complete, millisecondsTimeout, cancellationToken);
-
-    /// <summary>
-    /// Ends a process asynchronously with a default timeout.
-    /// </summary>
-    /// <remarks>
-    /// The default timeout is 3 seconds.
-    /// </remarks>
-    /// <param name="process">The process to end.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>The mode in which the process has been ended.</returns>
-    public static Task<ProcessEndMode> EndAsync(this Process process, CancellationToken cancellationToken) =>
-        EndAsync(process, DefaultEndTimeout, cancellationToken);
 
     static ProcessEndMode InterpretEndMode(ProcessEndMode mode, ProcessEndMode group, ProcessEndMode groupModes)
     {
@@ -280,5 +280,4 @@ partial class ProcessExtensions
 
         return false;
     }
-
 }
