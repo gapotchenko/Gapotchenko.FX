@@ -7,6 +7,7 @@ namespace Gapotchenko.FX.Diagnostics;
 /// <summary>
 /// Provides extended operations for <see cref="Process"/> class.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
 public static partial class ProcessExtensions
 {
     /// <summary>
