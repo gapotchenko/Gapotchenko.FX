@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Diagnostics;
 partial class CommandLine
 {
     /// <summary>
-    /// Gets a command-line OEM encoding.
+    /// Gets the current command-line OEM encoding.
     /// </summary>
     /// <remarks>
     /// OEM encoding is used by Windows console applications, and can be considered as a holdover from DOS and the original IBM PC era.
