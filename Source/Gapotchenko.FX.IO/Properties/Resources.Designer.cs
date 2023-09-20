@@ -79,6 +79,15 @@ namespace Gapotchenko.FX.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find file or directory &apos;{0}&apos;. File system entry does not exist..
+        /// </summary>
+        internal static string FileSystemEntryXDoesNotExsit {
+            get {
+                return ResourceManager.GetString("FileSystemEntryXDoesNotExsit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Path &apos;{0}&apos; points to a directory instead of file and thus cannot be enlisted in the file transaction..
         /// </summary>
         internal static string PathPointsToDirectoryNotFileTX {

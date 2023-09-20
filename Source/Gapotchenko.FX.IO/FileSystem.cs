@@ -1,4 +1,6 @@
-﻿using Gapotchenko.FX.Text;
+﻿using Gapotchenko.FX.IO.Pal;
+using Gapotchenko.FX.IO.Properties;
+using Gapotchenko.FX.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
@@ -54,24 +56,17 @@ public static class FileSystem
 
     static bool IsCaseSensitiveCore()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX))  // HFS+ (the Mac file-system) is usually configured to be case insensitive.
-        {
+        var pal = PalServices.AdapterOrDefault;
+        if (pal != null)
+            return pal.IsCaseSensitive;
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))  // HFS+ (the Mac file-system) is usually configured to be case insensitive.
             return false;
-        }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
             return true;
-        }
         else if (Environment.OSVersion.Platform == PlatformID.Unix)
-        {
             return true;
-        }
         else
-        {
-            // A sane default.
-            return false;
-        }
+            return false; // a sane default
     }
 
     /// <summary>
@@ -128,7 +123,7 @@ public static class FileSystem
         return path.StartsWith(value, pathComparison);
     }
 
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     internal static string? NormalizePath(string? path, bool? trailingSlash = null)
     {
         if (string.IsNullOrEmpty(path))
@@ -193,47 +188,38 @@ public static class FileSystem
     public static string? CanonicalizePath(string? path) => NormalizePath(path);
 
     /// <summary>
-    /// Gets a short version of a specified file path.
+    /// Gets a short version of the specified file system entry path.
     /// </summary>
-    /// <param name="filePath">The file path.</param>
-    /// <returns>A short version of the file path or the file path if its short version is unavailable.</returns>
-    [return: NotNullIfNotNull("filePath")]
-    public static string? GetShortPath(string? filePath)
+    /// <param name="path">The path of a file system entry.</param>
+    /// <returns>
+    /// A short version of the specified file system entry path,
+    /// or unmodified path if its short version is unavailable.
+    /// </returns>
+    [return: NotNullIfNotNull(nameof(path))]
+    public static string? GetShortPath(string? path)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            if (string.IsNullOrEmpty(filePath))
-                return filePath;
+        if (string.IsNullOrEmpty(path))
+            return path;
 
-            int bufferSize = filePath.Length;
-
-            var sb = new StringBuilder(bufferSize);
-            int r = NativeMethods.GetShortPathName(filePath, sb, bufferSize);
-            if (r == 0 || r > bufferSize)
-                return filePath;
-
-            return sb.ToString();
-        }
+        var pal = PalServices.AdapterOrDefault;
+        if (pal != null)
+            return pal.GetShortPath(path);
         else
-        {
-            return filePath;
-        }
+            return path;
     }
 
     /// <summary>
-    /// <para>
     /// Enumerates subpaths of a path.
-    /// </para>
-    /// <para>
-    /// For example, the subpaths of C:\Users\Tester\Documents path are:
-    /// <list type="bullet">
-    /// <item>C:\Users\Tester\Documents</item>
-    /// <item>C:\Users\Tester</item>
-    /// <item>C:\Users</item>
-    /// <item>C:\</item>
-    /// </list>
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// For example, the subpaths of <c>C:\Users\Tester\Documents</c> path are:
+    /// <list type="bullet">
+    /// <item><c>C:\Users\Tester\Documents</c></item>
+    /// <item><c>C:\Users\Tester</c></item>
+    /// <item><c>C:\Users</c></item>
+    /// <item><c>C:\</c></item>
+    /// </list>
+    /// </remarks>
     /// <param name="path">The path.</param>
     /// <returns>The sequence of subpaths.</returns>
     public static IEnumerable<string> EnumerateSubpaths(string? path)
@@ -247,21 +233,19 @@ public static class FileSystem
     }
 
     /// <summary>
-    /// <para>
     /// Splits a specified path into a sequence of file system entry names.
-    /// </para>
-    /// <para>
-    /// For example, the entry names of "C:\Users\Tester\Documents" path are:
-    /// <list type="bullet">
-    /// <item>C:\</item>
-    /// <item>Users</item>
-    /// <item>Tester</item>
-    /// <item>Documents</item>
-    /// </list>
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// For example, the entry names of <c>C:\Users\Tester\Documents</c> path are:
+    /// <list type="bullet">
+    /// <item><c>C:\</c></item>
+    /// <item><c>Users</c></item>
+    /// <item><c>Tester</c></item>
+    /// <item><c>Documents</c></item>
+    /// </list>
+    /// </remarks>
     /// <param name="path">The path.</param>
-    /// <returns>The sequence of entry names.</returns>
+    /// <returns>The sequence of file system entry names.</returns>
     public static IEnumerable<string> SplitPath(string? path) =>
         EnumerateSubpaths(path)
         .Reverse()
@@ -274,6 +258,8 @@ public static class FileSystem
     /// <param name="index">The index to insert the subpath at.</param>
     /// <param name="subpath">The subpath to insert.</param>
     /// <returns>The path with the inserted subpath.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="subpath"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The specified index is out of range.</exception>
     public static string InsertSubpath(string path, Index index, string subpath)
     {
@@ -289,8 +275,8 @@ public static class FileSystem
 
             case (true, 1):
                 {
-                    var directory = Path.GetDirectoryName(path);
-                    if (directory == null)
+                    var directory =
+                        Path.GetDirectoryName(path) ??
                         throw new ArgumentOutOfRangeException(nameof(index));
                     directory = Path.Combine(directory, subpath);
                     return Path.Combine(directory, Path.GetFileName(path));
@@ -486,10 +472,10 @@ public static class FileSystem
 #endif
 
     /// <summary>
-    /// Enumerates the content of a binary file.
+    /// Enumerates content of the specified binary file.
     /// </summary>
     /// <param name="path">The file path.</param>
-    /// <returns>The sequence of bytes representing the content of a binary file.</returns>
+    /// <returns>A sequence of bytes representing the binary file content.</returns>
     public static IEnumerable<byte> EnumerateFileBytes(string path)
     {
         using var stream = File.OpenRead(path);
@@ -507,5 +493,35 @@ public static class FileSystem
         // TODO: Use native API to eliminate object allocation.
         // GetFileAttributesEx is the fastest candidate on Windows.
         return new FileInfo(path).Length;
+    }
+
+    /// <summary>
+    /// Gets a canonicalized absolute path of the specified file system entry.
+    /// </summary>
+    /// <remarks>
+    /// This method expands all symbolic links and resolves references to
+    /// <c>.</c> and <c>..</c> special directories.
+    /// It also normalizes consequent directory separators to the canonical form.
+    /// </remarks>
+    /// <param name="path">The path of a file system entry.</param>
+    /// <returns>A canonicalized absolute path of the specified file system entry.</returns>
+    [return: NotNullIfNotNull(nameof(path))]
+    public static string? GetRealPath(string? path)
+    {
+        if (path is null)
+            return null;
+
+        var pal = PalServices.AdapterOrDefault;
+        if (pal != null)
+        {
+            return pal.GetRealPath(path);
+        }
+        else
+        {
+            if (!EntryExists(path))
+                throw new IOException(string.Format(Resources.FileSystemEntryXDoesNotExsit, path));
+
+            return Path.GetFullPath(PathEx.TrimEndingDirectorySeparator(path));
+        }
     }
 }

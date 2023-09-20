@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.IO;
 #endregion
 
 #nullable enable
@@ -26,29 +27,11 @@ using Console = System.Console;
 
 class Program
 {
-    static async Task Main()
+    static void Main(string[] args)
     {
         try
         {
-            await _RunAsync(default);
-
-            Console.WriteLine();
-
-            var deque = new Deque<string>();
-
-            deque.PushBack("Z");
-            deque.PushBack("A");
-            deque.PushBack("B");
-            deque.PushBack("C");
-
-            deque.Insert(1, ".");
-
-            deque.InsertRange(1, new[] { ".", ":" });
-
-            //deque.Reverse();
-            deque.RemoveRange(deque.Count - 2, 1);
-
-            Console.WriteLine(string.Join("", deque));
+            Console.WriteLine(FileSystem.GetRealPath(args[0]));
         }
         catch (Exception e)
         {
