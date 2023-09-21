@@ -16,4 +16,6 @@ interface IPalAdapter
     string GetShortPath(string path);
 
     string GetRealPath(string path);
+
+    int GetRootPathLength(ReadOnlySpan<char> path);
 }

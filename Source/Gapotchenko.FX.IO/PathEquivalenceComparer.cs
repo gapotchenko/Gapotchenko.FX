@@ -18,7 +18,7 @@ sealed class PathEquivalenceComparer : StringComparer
         if (path == null)
             return null;
 
-        path = FileSystem.NormalizePath(path, false);
+        path = PathUtil.Normalize(path, false);
         path = Path.GetFullPath(path);
 
         return path;

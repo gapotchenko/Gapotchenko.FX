@@ -1,11 +1,26 @@
-﻿namespace Gapotchenko.FX.IO;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2022
+
+#if NETCOREAPP3_0_OR_GREATER
+#define TFF_PATH_TRIM_ENDING_DIRECTORY_SEPARATOR
+#endif
+
+using Gapotchenko.FX.IO.Pal;
+using System.Diagnostics.CodeAnalysis;
+
+namespace Gapotchenko.FX.IO;
 
 /// <summary>
 /// Provides polyfills for <see cref="Path"/> class.
 /// </summary>
 public static class PathEx
 {
-#if NETCOREAPP3_0_OR_GREATER
+#if TFF_PATH_TRIM_ENDING_DIRECTORY_SEPARATOR
     /// <summary>
     /// Trims one trailing directory separator beyond the root of the specified path.
     /// </summary>
@@ -30,11 +45,79 @@ public static class PathEx
     /// <returns>The path without any trailing directory separators.</returns>
 #endif
     public static string TrimEndingDirectorySeparator(string path) =>
-#if NETCOREAPP3_0_OR_GREATER
+#if TFF_PATH_TRIM_ENDING_DIRECTORY_SEPARATOR
         Path.TrimEndingDirectorySeparator(path);
 #else
-        (path ?? throw new ArgumentNullException(nameof(path)))
-        .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        TrimEndingDirectorySeparatorCore(path);
+#endif
+
+#if TFF_PATH_TRIM_ENDING_DIRECTORY_SEPARATOR
+    /// <summary>
+    /// Trims one trailing directory separator beyond the root of the specified path.
+    /// </summary>
+    /// <remarks>
+    /// This is a polyfill provided by Gapotchenko.FX for
+    /// <see cref="Path.TrimEndingDirectorySeparator(string)"/>
+    /// method.
+    /// </remarks>
+    /// <param name="path">The path to trim.</param>
+    /// <returns>The path without any trailing directory separators.</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#else
+    /// <summary>
+    /// Trims one trailing directory separator beyond the root of the specified path.
+    /// </summary>
+    /// <remarks>
+    /// This is a polyfill provided by Gapotchenko.FX for
+    /// <c>System.IO.Path.TrimEndingDirectorySeparator(ReadOnlySpan&lt;char&gt;)</c>
+    /// method.
+    /// </remarks>
+    /// <param name="path">The path to trim.</param>
+    /// <returns>The path without any trailing directory separators.</returns>
+#endif
+    public static ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) =>
+#if TFF_PATH_TRIM_ENDING_DIRECTORY_SEPARATOR
+        Path.TrimEndingDirectorySeparator(path);
+#else
+        TrimEndingDirectorySeparatorCore(path);
+#endif
+
+#if !TFF_PATH_TRIM_ENDING_DIRECTORY_SEPARATOR
+
+    [return: NotNullIfNotNull(nameof(path))]
+    static string? TrimEndingDirectorySeparatorCore(string? path) =>
+        path != null && EndsInDirectorySeparator(path.AsSpan()) && !IsRootPath(path.AsSpan()) ?
+            path[..^1] :
+            path;
+
+    static ReadOnlySpan<char> TrimEndingDirectorySeparatorCore(ReadOnlySpan<char> path) =>
+        EndsInDirectorySeparator(path) && !IsRootPath(path) ?
+            path[..^1] :
+            path;
+
+    static bool EndsInDirectorySeparator(ReadOnlySpan<char> path) =>
+        path.Length > 0 &&
+        IsDirectorySeparator(path[^1]);
+
+    static bool IsRootPath(ReadOnlySpan<char> path) => path.Length == GetRootPathLength(path);
+
+    static int GetRootPathLength(ReadOnlySpan<char> path)
+    {
+        if (PalServices.AdapterOrDefault is not null and var pal)
+        {
+            return pal.GetRootPathLength(path);
+        }
+        else
+        {
+            // A graceful fallback.
+            return path.Length > 0 && IsDirectorySeparator(path[0]) ? 1 : 0;
+        }
+    }
+
+    static bool IsDirectorySeparator(char c) =>
+        c == Path.DirectorySeparatorChar ||
+        c == Path.AltDirectorySeparatorChar;
+
 #endif
 
 #if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER

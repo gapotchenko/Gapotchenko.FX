@@ -84,8 +84,8 @@ public static class FileSystem
         if (a == null || b == null)
             return false;
 
-        a = NormalizePath(a, false);
-        b = NormalizePath(b, false);
+        a = PathUtil.Normalize(a, false);
+        b = PathUtil.Normalize(b, false);
 
         if (a.Equals(b, pathComparison))
         {
@@ -114,63 +114,13 @@ public static class FileSystem
         if (path == null || value == null)
             return false;
 
-        path = NormalizePath(path, true);
-        value = NormalizePath(value, true);
+        path = PathUtil.Normalize(path, true);
+        value = PathUtil.Normalize(value, true);
 
         path = Path.GetFullPath(path);
         value = Path.GetFullPath(value);
 
         return path.StartsWith(value, pathComparison);
-    }
-
-    [return: NotNullIfNotNull(nameof(path))]
-    internal static string? NormalizePath(string? path, bool? trailingSlash = null)
-    {
-        if (string.IsNullOrEmpty(path))
-            return path;
-
-        path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-
-        static string RemoveAdjacentChars(string value, char c, int startIndex)
-        {
-            int n = value.Length;
-
-            ++startIndex;
-            if (startIndex >= n)
-                return value;
-
-            var sb = new StringBuilder(value, 0, startIndex, n);
-
-            char prevChar = value[startIndex - 1];
-            for (int i = startIndex; i != n; ++i)
-            {
-                char ch = value[i];
-                if (ch == c && ch == prevChar)
-                    continue;
-                prevChar = ch;
-                sb.Append(ch);
-            }
-
-            return sb.ToString();
-        }
-
-        path = RemoveAdjacentChars(path, Path.DirectorySeparatorChar, 1);
-
-        if (trailingSlash.HasValue)
-        {
-            if (trailingSlash.Value)
-            {
-                if (!path.EndsWith(Path.DirectorySeparatorChar))
-                    path += Path.DirectorySeparatorChar;
-            }
-            else
-            {
-                if (path.EndsWith(Path.DirectorySeparatorChar))
-                    path = path.Substring(0, path.Length - 1);
-            }
-        }
-
-        return path;
     }
 
     /// <summary>
@@ -185,7 +135,7 @@ public static class FileSystem
     /// <param name="path">The path.</param>
     /// <returns>The canonicalized path.</returns>
     [return: NotNullIfNotNull(nameof(path))]
-    public static string? CanonicalizePath(string? path) => NormalizePath(path);
+    public static string? CanonicalizePath(string? path) => PathUtil.Normalize(path);
 
     /// <summary>
     /// Gets a short version of the specified file system entry path.

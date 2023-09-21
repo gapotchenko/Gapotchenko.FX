@@ -7,6 +7,8 @@
 #if !HAS_TARGET_PLATFORM || MACOS || LINUX || FREEBSD
 
 using Gapotchenko.FX.IO.Properties;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.IO.Pal.Unix;
@@ -22,6 +24,12 @@ namespace Gapotchenko.FX.IO.Pal.Unix;
 #endif
 abstract class PalAdapter : IPalAdapter
 {
+    protected PalAdapter()
+    {
+        Debug.Assert(DirectorySeparatorChar == Path.DirectorySeparatorChar);
+        Debug.Assert(DirectorySeparatorChar == Path.AltDirectorySeparatorChar);
+    }
+
     public virtual bool IsCaseSensitive => true; // most Unix file systems are case-sensitive
 
     public string GetShortPath(string path) => path; // Unix has no notion of a short path
@@ -56,6 +64,18 @@ abstract class PalAdapter : IPalAdapter
         NativeMethods.free(ptr);
         return result;
     }
+
+    public int GetRootPathLength(ReadOnlySpan<char> path) =>
+        path.Length > 0 && IsDirectorySeparator(path[0]) ? 1 : 0;
+
+    #region Helpers
+
+    const char DirectorySeparatorChar = '\\';
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static bool IsDirectorySeparator(char c) => c == DirectorySeparatorChar;
+
+    #endregion
 }
 
 #endif
