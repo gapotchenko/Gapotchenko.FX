@@ -129,6 +129,9 @@
   <data name="FileSystemEntryXDoesNotExsit" xml:space="preserve">
     <value>Could not find file or directory '{0}'. File system entry does not exist.</value>
   </data>
+  <data name="PathIsEmpty" xml:space="preserve">
+    <value>The path is empty.</value>
+  </data>
   <data name="PathPointsToDirectoryNotFileTX" xml:space="preserve">
     <value>Path '{0}' points to a directory instead of file and thus cannot be enlisted in the file transaction.</value>
   </data>

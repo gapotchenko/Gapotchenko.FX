@@ -197,15 +197,15 @@ static class FileSystemTransactionManager
 
     #endregion
 
-    struct TransactionEnlistedEntries
+    readonly struct TransactionEnlistedEntries
     {
         public TransactionEnlistedEntries()
         {
         }
 
-        Dictionary<string, HashSet<string>> m_Entries = new(StringComparer.Ordinal);
+        readonly Dictionary<string, HashSet<string>> m_Entries = new(StringComparer.Ordinal);
 
-        public bool Add(string transactionKey, string entryPath)
+        public readonly bool Add(string transactionKey, string entryPath)
         {
             lock (m_Entries)
             {
@@ -219,7 +219,7 @@ static class FileSystemTransactionManager
             }
         }
 
-        public void Remove(string transactionKey, string entryPath)
+        public readonly void Remove(string transactionKey, string entryPath)
         {
             lock (m_Entries)
             {

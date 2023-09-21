@@ -24,6 +24,8 @@ static class PalServices
             return Windows.PalAdapter.Instance;
 #elif MACOS
             return MacOS.PalAdapter.Instance;
+#elif LINUX
+            return Linux.PalAdapter.Instance;
 #else
             return null;
 #endif
@@ -32,6 +34,8 @@ static class PalServices
                 return Windows.PalAdapter.Instance;
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 return MacOS.PalAdapter.Instance;
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return Linux.PalAdapter.Instance;
             else
                 return null;
 #endif

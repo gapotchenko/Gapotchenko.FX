@@ -97,6 +97,15 @@ namespace Gapotchenko.FX.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The path is empty..
+        /// </summary>
+        internal static string PathIsEmpty {
+            get {
+                return ResourceManager.GetString("PathIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Path &apos;{0}&apos; points to a directory instead of file and thus cannot be enlisted in the file transaction..
         /// </summary>
         internal static string PathPointsToDirectoryNotFileTX {

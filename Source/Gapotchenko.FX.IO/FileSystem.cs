@@ -3,8 +3,6 @@ using Gapotchenko.FX.IO.Properties;
 using Gapotchenko.FX.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
-using System.Security;
 using System.Text;
 #if TFF_TRANSACTIONS
 using System.Transactions;
@@ -57,17 +55,18 @@ public static class FileSystem
 
     static bool IsCaseSensitiveCore()
     {
-        var pal = PalServices.AdapterOrDefault;
-        if (pal != null)
+        if (PalServices.AdapterOrDefault is not null and var pal)
+        {
             return pal.IsCaseSensitive;
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))  // HFS+ (the Mac file-system) is usually configured to be case insensitive.
-            return false;
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            return true;
-        else if (Environment.OSVersion.Platform == PlatformID.Unix)
-            return true;
+        }
         else
-            return false; // a sane default
+        {
+            // A graceful fallback.
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+                return true;
+            else
+                return false; // a sane default
+        }
     }
 
     /// <summary>
@@ -185,7 +184,7 @@ public static class FileSystem
     /// </summary>
     /// <param name="path">The path.</param>
     /// <returns>The canonicalized path.</returns>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     public static string? CanonicalizePath(string? path) => NormalizePath(path);
 
     /// <summary>
@@ -201,9 +200,7 @@ public static class FileSystem
     {
         if (string.IsNullOrEmpty(path))
             return path;
-
-        var pal = PalServices.AdapterOrDefault;
-        if (pal != null)
+        else if (PalServices.AdapterOrDefault is not null and var pal)
             return pal.GetShortPath(path);
         else
             return path;
@@ -421,7 +418,7 @@ public static class FileSystem
 #if TFF_TRANSACTIONS
 
     /// <summary>
-    /// Enlists file in a specified <see cref="Transaction"/>.
+    /// Enlists file in the specified <see cref="Transaction"/>.
     /// </summary>
     /// <param name="path">The file path.</param>
     /// <param name="transaction">
@@ -444,7 +441,7 @@ public static class FileSystem
     public static void EnlistFileInTransaction(string path) => EnlistFileInTransaction(path, null);
 
     /// <summary>
-    /// Enlists directory in a specified <see cref="Transaction"/>.
+    /// Enlists directory in the specified <see cref="Transaction"/>.
     /// </summary>
     /// <param name="path">The directory path.</param>
     /// <param name="transaction">
@@ -506,6 +503,7 @@ public static class FileSystem
     /// </remarks>
     /// <param name="path">The path of a file system entry.</param>
     /// <returns>A canonicalized absolute path of the specified file system entry.</returns>
+    /// <exception cref="ArgumentException"><paramref name="path"/> is empty.</exception>
     /// <exception cref="IOException">Could not find the specified file or directory. File system entry does not exist.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
     /// <exception cref="Win32Exception">An operating system error.</exception>
@@ -513,19 +511,24 @@ public static class FileSystem
     public static string? GetRealPath(string? path)
     {
         if (path is null)
+        {
             return null;
-
-        var pal = PalServices.AdapterOrDefault;
-        if (pal != null)
+        }
+        else if (path.Length == 0)
+        {
+            throw new ArgumentException(Resources.PathIsEmpty, nameof(path));
+        }
+        else if (PalServices.AdapterOrDefault is not null and var pal)
         {
             return pal.GetRealPath(path);
         }
         else
         {
+            // A graceful fallback.
             if (!EntryExists(path))
                 throw new IOException(string.Format(Resources.FileSystemEntryXDoesNotExsit, path));
-
-            return Path.GetFullPath(PathEx.TrimEndingDirectorySeparator(path));
+            else
+                return Path.GetFullPath(PathEx.TrimEndingDirectorySeparator(path));
         }
     }
 }
