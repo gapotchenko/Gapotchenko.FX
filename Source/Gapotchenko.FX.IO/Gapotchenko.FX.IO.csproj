@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
+    <TargetPlatforms>any;windows</TargetPlatforms>
   </PropertyGroup>
 
   <ItemGroup>

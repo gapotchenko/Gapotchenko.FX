@@ -7,7 +7,7 @@
 public static class ExceptionExtensions
 {
     /// <summary>
-    /// Gets a value indicating whether the exception signifies a thread or task cancellation.
+    /// Gets a value indicating whether the exception signifies a thread, task or operation cancellation.
     /// </summary>
     /// <remarks>
     /// There is a predefined set of such exceptions:

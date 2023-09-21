@@ -1,13 +1,7 @@
 ﻿#if !HAS_TARGET_PLATFORM || MACOS
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Runtime.Versioning;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.MacOS;
 

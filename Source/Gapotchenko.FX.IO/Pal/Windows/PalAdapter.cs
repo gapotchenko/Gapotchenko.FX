@@ -1,7 +1,14 @@
-﻿#if !HAS_TARGET_PLATFORM || WINDOWS
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+#if !HAS_TARGET_PLATFORM || WINDOWS
 
 using Gapotchenko.FX.IO.Properties;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 
 namespace Gapotchenko.FX.IO.Pal.Windows;
@@ -44,21 +51,33 @@ sealed class PalAdapter : IPalAdapter
 
         if (handle.IsInvalid)
         {
+            var error = Marshal.GetLastWin32Error();
             throw
-                Marshal.GetLastWin32Error() switch
+                error switch
                 {
-                    NativeMethods.ERROR_PATH_NOT_FOUND => new IOException(string.Format(Resources.FileSystemEntryXDoesNotExsit, path)),
-                    var error => new Win32Exception(error)
+                    NativeMethods.ERROR_ACCESS_DENIED =>
+                        new UnauthorizedAccessException(
+                            string.Format(Resources.AccessToPathXDenied, path),
+                            new Win32Exception(error)),
+
+                    NativeMethods.ERROR_FILE_NOT_FOUND or
+                    NativeMethods.ERROR_PATH_NOT_FOUND =>
+                        new IOException(
+                            string.Format(Resources.FileSystemEntryXDoesNotExsit, path),
+                            new Win32Exception(error)),
+
+                    _ =>
+                        new Win32Exception(error)
                 };
         }
 
-        var buffer = new StringBuilder(10);
+        var buffer = new StringBuilder(NativeMethods.MAX_PATH);
         for (; ; )
         {
             int result = NativeMethods.GetFinalPathNameByHandle(handle, buffer, buffer.Capacity, NativeMethods.FILE_NAME_NORMALIZED);
             if (result == 0)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
-            if (result > buffer.Capacity)
+            else if (result > buffer.Capacity)
                 buffer.EnsureCapacity(result);
             else
                 break;

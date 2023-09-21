@@ -4,6 +4,7 @@ using Gapotchenko.FX.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 #if TFF_TRANSACTIONS
 using System.Transactions;
@@ -505,6 +506,9 @@ public static class FileSystem
     /// </remarks>
     /// <param name="path">The path of a file system entry.</param>
     /// <returns>A canonicalized absolute path of the specified file system entry.</returns>
+    /// <exception cref="IOException">Could not find the specified file or directory. File system entry does not exist.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
+    /// <exception cref="Win32Exception">An operating system error.</exception>
     [return: NotNullIfNotNull(nameof(path))]
     public static string? GetRealPath(string? path)
     {

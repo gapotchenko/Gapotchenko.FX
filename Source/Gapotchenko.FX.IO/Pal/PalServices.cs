@@ -1,7 +1,16 @@
-﻿using System.Runtime.InteropServices;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.IO.Pal;
 
+/// <summary>
+/// Provides platform abstraction layer (PAL) services.
+/// </summary>
 static class PalServices
 {
     static class AdapterFactory
@@ -13,12 +22,16 @@ static class PalServices
 #if HAS_TARGET_PLATFORM
 #if WINDOWS
             return Windows.PalAdapter.Instance;
+#elif MACOS
+            return MacOS.PalAdapter.Instance;
 #else
             return null;
 #endif
 #else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 return Windows.PalAdapter.Instance;
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                return MacOS.PalAdapter.Instance;
             else
                 return null;
 #endif

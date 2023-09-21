@@ -61,6 +61,15 @@ namespace Gapotchenko.FX.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access to the path &apos;{0}&apos; is denied..
+        /// </summary>
+        internal static string AccessToPathXDenied {
+            get {
+                return ResourceManager.GetString("AccessToPathXDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Non-negative number required..
         /// </summary>
         internal static string ArgumentOutOfRange_NonNegativeNumberRequired {
