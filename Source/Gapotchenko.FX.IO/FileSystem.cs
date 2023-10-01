@@ -481,4 +481,20 @@ public static class FileSystem
                 return Path.GetFullPath(PathEx.TrimEndingDirectorySeparator(path));
         }
     }
+
+    /// <summary>
+    /// Determines whether a file system entry with the specified path is a symbolic link.
+    /// </summary>
+    /// <param name="path">The path of a file system entry.</param>
+    /// <returns>
+    /// <see langword="true"/> if the specified file system entry exists and is a symbolic link;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool IsSymbolicLink([NotNullWhen(true)] string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return false;
+        else
+            return PalServices.Adapter.IsSymbolicLink(path);
+    }
 }

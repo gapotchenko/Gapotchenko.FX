@@ -88,7 +88,7 @@ namespace Gapotchenko.FX.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not find file or directory &apos;{0}&apos;. File system entry does not exist..
+        ///   Looks up a localized string similar to Could not find file or directory &apos;{0}&apos;. The file system entry does not exist..
         /// </summary>
         internal static string FileSystemEntryXDoesNotExsit {
             get {

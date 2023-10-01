@@ -17,7 +17,7 @@ sealed class PalAdapter : Unix.PalAdapter
     {
     }
 
-    public static PalAdapter Instance { get; } = new PalAdapter();
+    public static PalAdapter Instance { get; } = new();
 
     public override bool IsCaseSensitive => false; // HFS+ (the macOS file-system) is usually configured to be case insensitive
 }

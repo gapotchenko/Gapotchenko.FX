@@ -9,8 +9,6 @@
 #if !HAS_TARGET_PLATFORM || WINDOWS
 
 using Gapotchenko.FX.IO.Properties;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -21,14 +19,7 @@ namespace Gapotchenko.FX.IO.Pal.Windows;
 #endif
 sealed class PalAdapter : IPalAdapter
 {
-    PalAdapter()
-    {
-        Debug.Assert(VolumeSeparatorChar == Path.VolumeSeparatorChar);
-        Debug.Assert(DirectorySeparatorChar == Path.DirectorySeparatorChar);
-        Debug.Assert(AltDirectorySeparatorChar == Path.AltDirectorySeparatorChar);
-    }
-
-    public static PalAdapter Instance { get; } = new PalAdapter();
+    public static PalAdapter Instance { get; } = new();
 
     public bool IsCaseSensitive => false;
 
@@ -56,33 +47,14 @@ sealed class PalAdapter : IPalAdapter
             IntPtr.Zero);
 
         if (handle.IsInvalid)
-        {
-            var error = Marshal.GetLastWin32Error();
-            throw
-                error switch
-                {
-                    NativeMethods.ERROR_ACCESS_DENIED =>
-                        new UnauthorizedAccessException(
-                            string.Format(Resources.AccessToPathXDenied, path),
-                            new Win32Exception(error)),
-
-                    NativeMethods.ERROR_FILE_NOT_FOUND or
-                    NativeMethods.ERROR_PATH_NOT_FOUND =>
-                        new IOException(
-                            string.Format(Resources.FileSystemEntryXDoesNotExsit, path),
-                            new Win32Exception(error)),
-
-                    _ =>
-                        new Win32Exception(error)
-                };
-        }
+            throw TranslateWin32ErrorToException(Marshal.GetLastWin32Error(), path);
 
         var buffer = new StringBuilder(NativeMethods.MAX_PATH);
         for (; ; )
         {
             int result = NativeMethods.GetFinalPathNameByHandle(handle, buffer, buffer.Capacity, NativeMethods.FILE_NAME_NORMALIZED);
             if (result == 0)
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+                throw TranslateWin32ErrorToException(Marshal.GetLastWin32Error(), path);
             else if (result > buffer.Capacity)
                 buffer.EnsureCapacity(result);
             else
@@ -90,14 +62,14 @@ sealed class PalAdapter : IPalAdapter
         }
 
         // Remove a device prefix if it is not present in the original path.
-        if (buffer.Length >= DevicePrefixLength && !IsDevice(path.AsSpan()))
+        if (buffer.Length >= PalHelpers.DevicePrefixLength && !PalHelpers.IsDevice(path.AsSpan()))
         {
-            Span<char> prefix = stackalloc char[DevicePrefixLength];
-            for (int i = 0; i < DevicePrefixLength; ++i)
+            Span<char> prefix = stackalloc char[PalHelpers.DevicePrefixLength];
+            for (int i = 0; i < PalHelpers.DevicePrefixLength; ++i)
                 prefix[i] = buffer[i];
 
-            if (IsDevice(prefix))
-                return buffer.ToString(DevicePrefixLength, buffer.Length - DevicePrefixLength);
+            if (PalHelpers.IsDevice(prefix))
+                return buffer.ToString(PalHelpers.DevicePrefixLength, buffer.Length - PalHelpers.DevicePrefixLength);
         }
 
         return buffer.ToString();
@@ -111,22 +83,22 @@ sealed class PalAdapter : IPalAdapter
         int pathLength = path.Length;
         int i = 0;
 
-        bool deviceSyntax = IsDevice(path);
-        bool deviceUnc = deviceSyntax && IsDeviceUnc(path);
+        bool deviceSyntax = PalHelpers.IsDevice(path);
+        bool deviceUnc = deviceSyntax && PalHelpers.IsDeviceUnc(path);
 
-        if ((!deviceSyntax || deviceUnc) && pathLength > 0 && IsDirectorySeparator(path[0]))
+        if ((!deviceSyntax || deviceUnc) && pathLength > 0 && PalHelpers.IsDirectorySeparator(path[0]))
         {
             // UNC or simple rooted path (e.g. "\foo", NOT "\\?\C:\foo")
-            if (deviceUnc || (pathLength > 1 && IsDirectorySeparator(path[1])))
+            if (deviceUnc || (pathLength > 1 && PalHelpers.IsDirectorySeparator(path[1])))
             {
                 // UNC (\\?\UNC\ or \\), scan past server\share
 
                 // Start past the prefix ("\\" or "\\?\UNC\")
-                i = deviceUnc ? DeviceUncPrefixLength : UncPrefixLength;
+                i = deviceUnc ? PalHelpers.DeviceUncPrefixLength : PalHelpers.UncPrefixLength;
 
                 // Skip two separators at most
                 int n = 2;
-                while (i < pathLength && (!IsDirectorySeparator(path[i]) || --n > 0))
+                while (i < pathLength && (!PalHelpers.IsDirectorySeparator(path[i]) || --n > 0))
                     i++;
             }
             else
@@ -139,110 +111,68 @@ sealed class PalAdapter : IPalAdapter
         {
             // Device path (e.g. "\\?\.", "\\.\")
             // Skip any characters following the prefix that aren't a separator
-            i = DevicePrefixLength;
-            while (i < pathLength && !IsDirectorySeparator(path[i]))
+            i = PalHelpers.DevicePrefixLength;
+            while (i < pathLength && !PalHelpers.IsDirectorySeparator(path[i]))
                 i++;
 
             // If there is another separator take it, as long as we have had at least one
             // non-separator after the prefix (e.g. don't take "\\?\\", but take "\\?\a\")
-            if (i < pathLength && i > DevicePrefixLength && IsDirectorySeparator(path[i]))
+            if (i < pathLength && i > PalHelpers.DevicePrefixLength && PalHelpers.IsDirectorySeparator(path[i]))
                 i++;
         }
         else if (pathLength >= 2
-            && path[1] == VolumeSeparatorChar
-            && IsValidDriveChar(path[0]))
+            && path[1] == PalHelpers.VolumeSeparatorChar
+            && PalHelpers.IsValidDriveChar(path[0]))
         {
             // Valid drive specified path ("C:", "D:", etc.)
             i = 2;
 
             // If the colon is followed by a directory separator, move past it (e.g "C:\")
-            if (pathLength > 2 && IsDirectorySeparator(path[2]))
+            if (pathLength > 2 && PalHelpers.IsDirectorySeparator(path[2]))
                 i++;
         }
 
         return i;
     }
 
-    #region Helpers
-
-    #region Volumes
-
-    // C:, D:
-    const char VolumeSeparatorChar = ':';
-
-    /// <summary>
-    /// Returns true if the given character is a valid drive letter
-    /// </summary>
-    static bool IsValidDriveChar(char value) => (uint)((value | 0x20) - 'a') <= 'z' - 'a';
-
-    #endregion
-
-    #region UNC
-
-    // \\
-    const int UncPrefixLength = 2;
-
-    // \\?\UNC\, \\.\UNC\
-    const int DeviceUncPrefixLength = 8;
-
-    /// <summary>
-    /// Returns true if the path is a device UNC (\\?\UNC\, \\.\UNC\)
-    /// </summary>
-    static bool IsDeviceUnc(ReadOnlySpan<char> path) =>
-        path.Length >= DeviceUncPrefixLength &&
-        IsDevice(path) &&
-        path[4] == 'U' &&
-        path[5] == 'N' &&
-        path[6] == 'C' &&
-        IsDirectorySeparator(path[7]);
-
-    #endregion
-
-    #region Devices
-
-    const int DevicePrefixLength = 4;
-
-    /// <summary>
-    /// Returns true if the path uses any of the DOS device path syntaxes. ("\\.\", "\\?\", or "\??\")
-    /// </summary>
-    static bool IsDevice(ReadOnlySpan<char> path)
+    public bool IsSymbolicLink(string path)
     {
-        // If the path begins with any two separators is will be recognized and normalized and prepped with
-        // "\??\" for internal usage correctly. "\??\" is recognized and handled, "/??/" is not.
-        return
-            path.Length >= DevicePrefixLength &&
-            (IsExtended(path) || IsTypical(path));
+        var attrs = NativeMethods.GetFileAttributes(path);
 
-        static bool IsTypical(ReadOnlySpan<char> path) =>
-            IsDirectorySeparator(path[0]) &&
-            IsDirectorySeparator(path[1]) &&
-            path[2] is '.' or '?' &&
-            IsDirectorySeparator(path[3]);
-
-        // Returns true if the path uses the canonical form of extended syntax ("\\?\" or "\??\"). If the
-        // path matches exactly (cannot use alternate directory separators) Windows will skip normalization
-        // and path length checks.
-        static bool IsExtended(ReadOnlySpan<char> path)
+        if (attrs == NativeMethods.INVALID_FILE_ATTRIBUTES)
         {
-            // While paths like "//?/C:/" will work, they're treated the same as "\\.\" paths.
-            // Skipping of normalization will *only* occur if back slashes ('\') are used.
-            return path[..4] is ['\\', '\\' or '?', '?', '\\'];
+            return
+                Marshal.GetLastWin32Error() switch
+                {
+                    NativeMethods.ERROR_FILE_NOT_FOUND or
+                    NativeMethods.ERROR_PATH_NOT_FOUND =>
+                        false,
+
+                    var error =>
+                        throw TranslateWin32ErrorToException(error, path)
+                };
         }
+
+        return (attrs & NativeMethods.FILE_ATTRIBUTE_REPARSE_POINT) != 0;
     }
 
-    #endregion
+    static Exception TranslateWin32ErrorToException(int error, string path) =>
+        error switch
+        {
+            NativeMethods.ERROR_ACCESS_DENIED =>
+                new UnauthorizedAccessException(
+                    string.Format(Resources.AccessToPathXDenied, path),
+                    new Win32Exception(error)),
 
-    #region Directories
+            NativeMethods.ERROR_FILE_NOT_FOUND or
+            NativeMethods.ERROR_PATH_NOT_FOUND =>
+                new IOException(
+                    string.Format(Resources.FileSystemEntryXDoesNotExsit, path),
+                    new Win32Exception(error)),
 
-    const char DirectorySeparatorChar = '\\';
-    const char AltDirectorySeparatorChar = '/';
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    static bool IsDirectorySeparator(char c) => c is DirectorySeparatorChar or AltDirectorySeparatorChar;
-
-    #endregion
-
-    #endregion
+            _ =>
+                new Win32Exception(error)
+        };
 }
 
 #endif

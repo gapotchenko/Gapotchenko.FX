@@ -31,7 +31,7 @@ class Program
     {
         try
         {
-            Console.WriteLine(FileSystem.GetRealPath(args[0]));
+            Console.WriteLine(FileSystem.IsSymbolicLink(@"P:\Eazfuscator.NET"));
         }
         catch (Exception e)
         {

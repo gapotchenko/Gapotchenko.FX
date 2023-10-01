@@ -18,4 +18,6 @@ interface IPalAdapter
     string GetRealPath(string path);
 
     int GetRootPathLength(ReadOnlySpan<char> path);
+
+    bool IsSymbolicLink(string path);
 }

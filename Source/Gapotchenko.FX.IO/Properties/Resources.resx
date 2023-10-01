@@ -127,7 +127,7 @@
     <value>Must not be greater than the length of the buffer.</value>
   </data>
   <data name="FileSystemEntryXDoesNotExsit" xml:space="preserve">
-    <value>Could not find file or directory '{0}'. File system entry does not exist.</value>
+    <value>Could not find file or directory '{0}'. The file system entry does not exist.</value>
   </data>
   <data name="PathIsEmpty" xml:space="preserve">
     <value>The path is empty.</value>
