@@ -135,27 +135,6 @@ sealed class PalAdapter : IPalAdapter
         return i;
     }
 
-    public bool IsSymbolicLink(string path)
-    {
-        var attrs = NativeMethods.GetFileAttributes(path);
-
-        if (attrs == NativeMethods.INVALID_FILE_ATTRIBUTES)
-        {
-            return
-                Marshal.GetLastWin32Error() switch
-                {
-                    NativeMethods.ERROR_FILE_NOT_FOUND or
-                    NativeMethods.ERROR_PATH_NOT_FOUND =>
-                        false,
-
-                    var error =>
-                        throw TranslateWin32ErrorToException(error, path)
-                };
-        }
-
-        return (attrs & NativeMethods.FILE_ATTRIBUTE_REPARSE_POINT) != 0;
-    }
-
     static Exception TranslateWin32ErrorToException(int error, string path) =>
         error switch
         {

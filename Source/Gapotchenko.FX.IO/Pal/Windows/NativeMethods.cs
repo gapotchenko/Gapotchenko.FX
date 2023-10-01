@@ -55,12 +55,6 @@ static class NativeMethods
     public const int ERROR_FILE_NOT_FOUND = 0x2;
     public const int ERROR_PATH_NOT_FOUND = 0x3;
     public const int ERROR_ACCESS_DENIED = 0x5;
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern int GetFileAttributes(string lpFileName);
-
-    public const int INVALID_FILE_ATTRIBUTES = -1;
-    public const int FILE_ATTRIBUTE_REPARSE_POINT = 0x00000400;
 }
 
 #endif

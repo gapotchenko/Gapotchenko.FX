@@ -59,11 +59,6 @@ abstract class PalAdapter : IPalAdapter
 
     public int GetRootPathLength(ReadOnlySpan<char> path) =>
         path.Length > 0 && PalHelpers.IsDirectorySeparator(path[0]) ? 1 : 0;
-
-    public bool IsSymbolicLink(string path)
-    {
-        throw new NotImplementedException();
-    }
 }
 
 #endif
