@@ -197,7 +197,22 @@ public static class FileSystem
     public static IEnumerable<string> SplitPath(string? path) =>
         EnumerateSubpaths(path)
         .Reverse()
-        .Select(subpath => Path.GetFileName(subpath));
+        .Select(
+            subpath =>
+            {
+                string part = Path.GetFileName(subpath);
+
+                if (part.Length == 0)
+                {
+                    var directoryName = Path.GetDirectoryName(subpath);
+                    if (directoryName is null)
+                        part = subpath;
+                    else
+                        part = subpath[^1..^0];
+                }
+
+                return part;
+            });
 
     /// <summary>
     /// Inserts a subpath into the path at the specified index.
@@ -221,32 +236,20 @@ public static class FileSystem
             case (true, 0):
                 return Path.Combine(path, subpath);
 
-            case (true, 1):
-                {
-                    var directory =
-                        Path.GetDirectoryName(path) ??
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                    directory = Path.Combine(directory, subpath);
-                    return Path.Combine(directory, Path.GetFileName(path));
-                }
-
             case (false, 0):
                 return Path.Combine(subpath, path);
 
             default:
                 {
-                    var parts = new List<string>();
-                    for (string? i = path; !string.IsNullOrEmpty(i); i = Path.GetDirectoryName(i))
-                        parts.Add(Path.GetFileName(i));
+                    var parts = SplitPath(path).ToList();
 
                     int n = parts.Count;
                     int offset = index.GetOffset(n);
                     if (offset < 0 || offset > n)
                         throw new ArgumentOutOfRangeException(nameof(index));
 
-                    parts.Reverse();
                     parts.Insert(offset, subpath);
-                    return Path.Combine(parts.ToArray());
+                    return PathEx.Join(parts);
                 }
         }
     }
