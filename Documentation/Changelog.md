@@ -22,6 +22,7 @@ Release date: not released yet
   - Added `ExceptBy`, `IntersectBy` and `UnionBy` LINQ polyfills for `IEnumerable<T>`
   - Added `Order` and `OrderDescending` LINQ polyfills for `IEnumerable<T>`
   - Added `Chunk` LINQ polyfill for `IEnumerable<T>`
+  - Added `EndsWith` LINQ polyfill for `IEnumerable<T>`
   - Added polyfill for `System.ArraySegment<T>.Slice` method
   - Added polyfill for `System.IO.Path.GetRelativePath` method
   - Added polyfill for `System.IO.Path.TrimEndingDirectorySeparator` method
