@@ -31,7 +31,8 @@ class Program
     {
         try
         {
-            Console.WriteLine(FileSystem.GetRealPath(args[0]));
+            //Console.WriteLine(FileSystem.InsertSubpath(@"C:\1\2\3\", 1, "A"));
+            Console.WriteLine(FileSystem.GetSubpath(@"C:\1\2\3\", ..^2));
         }
         catch (Exception e)
         {

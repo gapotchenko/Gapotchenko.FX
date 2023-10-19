@@ -157,7 +157,7 @@ public static class FileSystem
     }
 
     /// <summary>
-    /// Enumerates subpaths of a path.
+    /// Enumerates subpaths of the specified path.
     /// </summary>
     /// <remarks>
     /// For example, the subpaths of <c>C:\Users\Tester\Documents</c> path are:
@@ -168,8 +168,8 @@ public static class FileSystem
     /// <item><c>C:\</c></item>
     /// </list>
     /// </remarks>
-    /// <param name="path">The path.</param>
-    /// <returns>The sequence of subpaths.</returns>
+    /// <param name="path">The path to enumerate subpaths for.</param>
+    /// <returns>The sequence of subpaths of the specified path.</returns>
     public static IEnumerable<string> EnumerateSubpaths(string? path)
     {
         for (var i = path; !string.IsNullOrEmpty(i); i = Path.GetDirectoryName(i))
@@ -192,7 +192,7 @@ public static class FileSystem
     /// <item><c>Documents</c></item>
     /// </list>
     /// </remarks>
-    /// <param name="path">The path.</param>
+    /// <param name="path">The path to split.</param>
     /// <returns>The sequence of file system entry names.</returns>
     public static IEnumerable<string> SplitPath(string? path) =>
         EnumerateSubpaths(path)
@@ -252,6 +252,24 @@ public static class FileSystem
                     return PathEx.Join(parts);
                 }
         }
+    }
+
+    /// <summary>
+    /// Gets a subpath of the specified path.
+    /// </summary>
+    /// <param name="path">The path to get a subpath for.</param>
+    /// <param name="range">The range of a subpath to get from the <paramref name="path"/>.</param>
+    /// <returns>The subpath of the specified path.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="range"/> is out of the range of valid values.</exception>
+    public static string GetSubpath(string path, Range range)
+    {
+        if (path is null)
+            throw new ArgumentNullException(nameof(path));
+
+        var parts = SplitPath(path).ToList();
+        var (offset, length) = range.GetOffsetAndLength(parts.Count);
+        return PathEx.Join(parts.Skip(offset).Take(length));
     }
 
     /// <summary>
