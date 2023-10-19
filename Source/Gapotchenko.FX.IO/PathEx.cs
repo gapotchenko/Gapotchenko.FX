@@ -8,10 +8,12 @@
 
 #if NETCOREAPP3_0_OR_GREATER
 #define TFF_PATH_TRIM_ENDING_DIRECTORY_SEPARATOR
+#define TFF_PATH_JOIN
 #endif
 
 using Gapotchenko.FX.IO.Pal;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace Gapotchenko.FX.IO;
 
@@ -25,7 +27,7 @@ public static class PathEx
     /// Trims one trailing directory separator beyond the root of the specified path.
     /// </summary>
     /// <remarks>
-    /// This is a polyfill provided by Gapotchenko.FX for
+    /// This is Gapotchenko.FX polyfill for
     /// <see cref="Path.TrimEndingDirectorySeparator(string)"/>
     /// method.
     /// </remarks>
@@ -56,7 +58,7 @@ public static class PathEx
     /// Trims one trailing directory separator beyond the root of the specified path.
     /// </summary>
     /// <remarks>
-    /// This is a polyfill provided by Gapotchenko.FX for
+    /// This is Gapotchenko.FX polyfill for
     /// <see cref="Path.TrimEndingDirectorySeparator(string)"/>
     /// method.
     /// </remarks>
@@ -68,7 +70,7 @@ public static class PathEx
     /// Trims one trailing directory separator beyond the root of the specified path.
     /// </summary>
     /// <remarks>
-    /// This is a polyfill provided by Gapotchenko.FX for
+    /// This is Gapotchenko.FX polyfill for
     /// <c>System.IO.Path.TrimEndingDirectorySeparator(ReadOnlySpan&lt;char&gt;)</c>
     /// method.
     /// </remarks>
@@ -114,18 +116,18 @@ public static class PathEx
         }
     }
 
+#endif
+
     static bool IsDirectorySeparator(char c) =>
         c == Path.DirectorySeparatorChar ||
         c == Path.AltDirectorySeparatorChar;
-
-#endif
 
 #if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <summary>
     /// Returns a relative path from one path to another.
     /// </summary>
     /// <remarks>
-    /// This is a polyfill provided by Gapotchenko.FX for
+    /// This is Gapotchenko.FX polyfill provided for
     /// <see cref="Path.GetRelativePath(string, string)"/>
     /// method.
     /// </remarks>
@@ -145,7 +147,7 @@ public static class PathEx
     /// Returns a relative path from one path to another.
     /// </summary>
     /// <remarks>
-    /// This is a polyfill provided by Gapotchenko.FX for
+    /// This is Gapotchenko.FX polyfill provided for
     /// <c>System.IO.Path.GetRelativePath(string, string)</c>
     /// method.
     /// </remarks>
@@ -211,4 +213,71 @@ public static class PathEx
         return relativePath;
     }
 #endif
+
+#if TFF_PATH_JOIN
+    /// <summary>
+    /// Concatenates path components into a single path.
+    /// </summary>
+    /// <remarks>
+    /// This is Gapotchenko.FX polyfill for
+    /// <see cref="Path.Join(string?[])"/>
+    /// method.
+    /// </remarks>
+    /// <param name="paths">The path components.</param>
+    /// <returns>The combined paths.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#else
+    /// <summary>
+    /// Concatenates path components into a single path.
+    /// </summary>
+    /// <remarks>
+    /// This is Gapotchenko.FX polyfill for
+    /// <c>Path.Join(string?[])</c>
+    /// method.
+    /// </remarks>
+    /// <param name="paths">The path components.</param>
+    /// <returns>The combined paths.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
+#endif
+    public static string Join(params string?[] paths) =>
+#if TFF_PATH_JOIN
+        Path.Join(paths);
+#else
+        Join((IEnumerable<string?>)paths);
+#endif
+
+    /// <summary>
+    /// Concatenates path components into a single path.
+    /// </summary>
+    /// <param name="paths">The path components.</param>
+    /// <returns>The combined paths.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
+    public static string Join(IEnumerable<string?> paths)
+    {
+        if (paths == null)
+            throw new ArgumentNullException(nameof(paths));
+
+        var builder = new StringBuilder();
+
+        foreach (var path in paths)
+        {
+            if (string.IsNullOrEmpty(path))
+                continue;
+
+            if (builder.Length == 0)
+            {
+                builder.Append(path);
+            }
+            else
+            {
+                if (!IsDirectorySeparator(builder[^1]) && !IsDirectorySeparator(path[0]))
+                    builder.Append(Path.DirectorySeparatorChar);
+
+                builder.Append(path);
+            }
+        }
+
+        return builder.ToString();
+    }
 }
