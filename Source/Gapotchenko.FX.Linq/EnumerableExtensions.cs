@@ -10,7 +10,7 @@ public static partial class EnumerableExtensions
     // For more code, please take a look at the neighboring source files.
 
     /// <summary>
-    /// Streams all elements of a sequence by ensuring that every element is retrieved only once.
+    /// Streams all elements of a sequence, ensuring that each element is retrieved only once, despite enumeration restarts.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of the source sequence.</typeparam>
     /// <param name="source">A sequence that contains elements to stream.</param>
@@ -56,7 +56,7 @@ public static partial class EnumerableExtensions
         if (ReferenceEquals(source, value))
             return true;
 
-        if (EnumerableEx.TryGetNonEnumeratedCount(source, out var count))
+        if (EnumerableEx.TryGetNonEnumeratedCount(value, out var count))
         {
             return source.TakeLast(count).SequenceEqual(value, comparer);
         }
