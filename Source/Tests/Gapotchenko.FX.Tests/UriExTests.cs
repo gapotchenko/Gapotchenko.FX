@@ -113,4 +113,11 @@ public class UriExTests
     {
         Assert.AreEqual("test/abc?a=100&b=200", UriEx.Combine("test?a=100", "abc?b=200"));
     }
+
+    [TestMethod]
+    public void UriEx_Combine_I1()
+    {
+        Assert.AreEqual("abc", UriEx.Combine("abc", ""));
+        Assert.AreEqual("abc", UriEx.Combine("", "abc"));
+    }
 }

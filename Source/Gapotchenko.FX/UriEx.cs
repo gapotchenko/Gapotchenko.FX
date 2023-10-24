@@ -69,7 +69,15 @@ public static class UriEx
         if (uri2.IsAbsoluteUri)
             return uri2;
 
-        if (uri1.IsAbsoluteUri)
+        if (uri1.OriginalString.Length == 0)
+        {
+            return uri2;
+        }
+        else if (uri2.OriginalString.Length == 0)
+        {
+            return uri1;
+        }
+        else if (uri1.IsAbsoluteUri)
         {
             return CombineCore(uri1, uri2);
         }
@@ -123,10 +131,9 @@ public static class UriEx
                 ub.Path += rub.Path;
             }
 
-            ub.Fragment =
-                rub.Fragment
+            ub.Fragment = rub.Fragment
 #if !(NETCOREAPP || NETSTANDARD2_1_OR_GREATER)
-                    .TrimStart('#')
+                .TrimStart('#')
 #endif
                 ;
 
