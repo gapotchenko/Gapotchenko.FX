@@ -243,8 +243,8 @@ public sealed class UriQueryBuilder
     /// <param name="uri">The URI.</param>
     /// <param name="query">The query.</param>
     /// <returns>The combined URI.</returns>
-    [return: NotNullIfNotNull("uri")]
-    [return: NotNullIfNotNull("query")]
+    [return: NotNullIfNotNull(nameof(uri))]
+    [return: NotNullIfNotNull(nameof(query))]
     public static string? CombineWithUri(string? uri, string? query)
     {
         if (string.IsNullOrEmpty(query))
@@ -260,8 +260,9 @@ public sealed class UriQueryBuilder
         if (fsi != -1)
             ql = fsi;
 
-        int qsi = uri.IndexOf(QuerySeparator, 0, ql);
+        query = query.TrimStart(QuerySeparator);
 
+        int qsi = uri.IndexOf(QuerySeparator, 0, ql);
         if (qsi == ql - 1)
         {
             return InsertOrConcat(uri, fsi, query);

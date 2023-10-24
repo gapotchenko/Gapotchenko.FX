@@ -185,4 +185,11 @@ public class UriQueryBuilderTests
     {
         Assert.AreEqual("", UriQueryBuilder.CombineWithUri("", null));
     }
+
+    [TestMethod]
+    public void UriQueryBuilder_C4()
+    {
+        Assert.AreEqual("https://example.com/test?a=100", UriQueryBuilder.CombineWithUri("https://example.com/test", "a=100"));
+        Assert.AreEqual("https://example.com/test?a=100", UriQueryBuilder.CombineWithUri("https://example.com/test", "?a=100"));
+    }
 }
