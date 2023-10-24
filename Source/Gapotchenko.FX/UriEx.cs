@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
+using System.Diagnostics;
+
 namespace Gapotchenko.FX;
 
 /// <summary>
@@ -12,7 +14,7 @@ namespace Gapotchenko.FX;
 public static class UriEx
 {
     /// <summary>
-    /// Combines two strings into a URI.
+    /// Combines two specified strings into a URI.
     /// </summary>
     /// <param name="uri1">The first URI to combine.</param>
     /// <param name="uri2">The second URI to combine.</param>
@@ -41,12 +43,12 @@ public static class UriEx
     }
 
     /// <summary>
-    /// Combines two relative or absolute URIs into a resulting URI.
+    /// Combines two specified URIs into a combined URI.
     /// </summary>
     /// <param name="uri1">The first URI to combine.</param>
     /// <param name="uri2">The second URI to combine.</param>
     /// <returns>
-    /// The combined URIs.
+    /// The combined URI.
     /// If one of the specified URIs is empty, this method returns the other URI.
     /// If <paramref name="uri2"/> contains an absolute URI, this method returns <paramref name="uri2"/>.
     /// </returns>
@@ -71,26 +73,87 @@ public static class UriEx
         {
             return CombineCore(uri1, uri2);
         }
+        else if (IsRootedRelativeUri(uri2))
+        {
+            return uri2;
+        }
         else
         {
-            var dummyUri = new Uri("http://example.com/");
-            return dummyUri.MakeRelativeUri(CombineCore(new Uri(dummyUri, uri1), uri2));
+            var dummyUri = GetDummyAbsoluteUri();
+            var uri = dummyUri.MakeRelativeUri(
+                CombineCore(
+                    new Uri(dummyUri, uri1),
+                    uri2));
+            if (IsRootedRelativeUri(uri1.OriginalString))
+                uri = new Uri("/" + uri.ToString(), UriKind.Relative);
+            return uri;
         }
 
         static Uri CombineCore(Uri baseUri, Uri relativeUri)
         {
+            Debug.Assert(baseUri.IsAbsoluteUri);
+            Debug.Assert(!relativeUri.IsAbsoluteUri);
+
+            var nru = new Uri(GetDummyAbsoluteUri(), relativeUri);
+
             var ub = new UriBuilder(baseUri);
-            var rub = new UriBuilder(new Uri(baseUri, relativeUri));
+            var rub = new UriBuilder(nru);
 
+            bool absoluteAuthority = false;
             var ruos = relativeUri.OriginalString;
-            if (ruos.StartsWith("/", StringComparison.Ordinal) || ruos.StartsWith(@"\", StringComparison.Ordinal))
-                ub.Path = rub.Path;
-            else if (ub.Path is var ubPath && (ubPath.EndsWith("/", StringComparison.Ordinal) || ubPath.EndsWith(@"\", StringComparison.Ordinal)))
-                ub.Path += rub.Path[1..];
-            else
-                ub.Path += rub.Path;
 
-            return UriQueryBuilder.CombineWithUri(ub.Uri, rub.Query);
+            if (IsRootedRelativeUri(ruos))
+            {
+                if (ruos.StartsWith("//", StringComparison.Ordinal))
+                {
+                    ub.Host = rub.Host;
+                    if (!nru.IsDefaultPort)
+                        ub.Port = rub.Port;
+                    absoluteAuthority = true;
+                }
+
+                ub.Path = rub.Path;
+            }
+            else if (ub.Path is var ubPath && (ubPath.EndsWith("/", StringComparison.Ordinal) || ubPath.EndsWith(@"\", StringComparison.Ordinal)))
+            {
+                ub.Path += rub.Path[1..];
+            }
+            else
+            {
+                ub.Path += rub.Path;
+            }
+
+            ub.Fragment =
+                rub.Fragment
+#if !(NETCOREAPP || NETSTANDARD2_1_OR_GREATER)
+                    .TrimStart('#')
+#endif
+                ;
+
+            if (absoluteAuthority)
+            {
+                ub.Query = rub.Query
+#if !(NETCOREAPP || NETSTANDARD2_1_OR_GREATER)
+                    .TrimStart(UriQueryBuilder.QuerySeparator)
+#endif
+                    ;
+
+                return ub.Uri;
+            }
+            else
+            {
+                return UriQueryBuilder.CombineWithUri(ub.Uri, rub.Query);
+            }
         }
     }
+
+    static Uri GetDummyAbsoluteUri() => new("http://x/");
+
+    static bool IsRootedRelativeUri(Uri uri) =>
+        !uri.IsAbsoluteUri &&
+        IsRootedRelativeUri(uri.OriginalString);
+
+    static bool IsRootedRelativeUri(string uri) =>
+        uri.Length > 0 &&
+        uri[0] is '/' or '\\';
 }
