@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Gapotchenko.FX;
 
 /// <summary>
-/// Provides polyfills for <see cref="Uri"/> class.
+/// Provides polyfill methods for <see cref="Uri"/> class.
 /// </summary>
 public static class UriEx
 {
