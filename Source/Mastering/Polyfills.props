@@ -1,12 +1,5 @@
 <Project>
 
-  <!-- Polyfill for missing Trademark property support -->
-  <ItemGroup Condition=" '$(Trademark)' != '' ">
-    <AssemblyAttribute Include="System.Reflection.AssemblyTrademarkAttribute">
-      <_Parameter1>$(Trademark)</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
-
   <!-- Polyfill for missing CLSCompliant property support -->
   <ItemGroup Condition=" '$(CLSCompliant)' == 'true' ">
     <AssemblyAttribute Include="System.CLSCompliantAttribute">
