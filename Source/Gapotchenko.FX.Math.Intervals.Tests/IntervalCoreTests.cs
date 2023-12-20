@@ -1,6 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Gapotchenko.FX.Math.Intervals;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Gapotchenko.FX.Math.Tests;
+namespace Gapotchenko.FX.Math.Intervals.Tests;
 
 public abstract class IntervalCoreTests
 {

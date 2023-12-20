@@ -1,4 +1,4 @@
-﻿namespace Gapotchenko.FX.Math;
+﻿namespace Gapotchenko.FX.Math.Intervals;
 
 /// <summary>
 /// Provides the interface for continuous interval abstraction.

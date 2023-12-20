@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Gapotchenko.FX.Math;
+namespace Gapotchenko.FX.Math.Intervals;
 
 /// <summary>
 /// Represents a continuous value interval.

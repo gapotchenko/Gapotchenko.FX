@@ -235,6 +235,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InteropServices", "InteropS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.InteropServices", "Gapotchenko.FX.Runtime.InteropServices\Gapotchenko.FX.Runtime.InteropServices.csproj", "{3697DB1D-0118-473B-9320-678D5DB1B5EC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Intervals", "Intervals", "{9307A1DA-7774-4574-BA0D-45B6912E9F47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Math.Intervals", "Gapotchenko.FX.Math.Intervals\Gapotchenko.FX.Math.Intervals.csproj", "{D74013BA-D2A3-428D-93CF-C617096BE48F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Math.Intervals.Tests", "Gapotchenko.FX.Math.Intervals.Tests\Gapotchenko.FX.Math.Intervals.Tests.csproj", "{902A6207-2743-435E-AF79-BA31AD319877}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -473,6 +479,14 @@ Global
 		{3697DB1D-0118-473B-9320-678D5DB1B5EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3697DB1D-0118-473B-9320-678D5DB1B5EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3697DB1D-0118-473B-9320-678D5DB1B5EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D74013BA-D2A3-428D-93CF-C617096BE48F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D74013BA-D2A3-428D-93CF-C617096BE48F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D74013BA-D2A3-428D-93CF-C617096BE48F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D74013BA-D2A3-428D-93CF-C617096BE48F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{902A6207-2743-435E-AF79-BA31AD319877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{902A6207-2743-435E-AF79-BA31AD319877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{902A6207-2743-435E-AF79-BA31AD319877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{902A6207-2743-435E-AF79-BA31AD319877}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -579,6 +593,9 @@ Global
 		{0EB8C5E6-8189-4B9C-8586-C4FB1CB95A6B} = {B5BF77CE-31B3-4A7E-B04B-DC55EACE9765}
 		{ED4D80A7-33AD-4A3E-A837-75C326715B0E} = {C5F4CA41-BEE9-4E7A-9648-74259932FC90}
 		{3697DB1D-0118-473B-9320-678D5DB1B5EC} = {ED4D80A7-33AD-4A3E-A837-75C326715B0E}
+		{9307A1DA-7774-4574-BA0D-45B6912E9F47} = {9BF93356-2C42-4B31-AEB1-7E394D27F500}
+		{D74013BA-D2A3-428D-93CF-C617096BE48F} = {9307A1DA-7774-4574-BA0D-45B6912E9F47}
+		{902A6207-2743-435E-AF79-BA31AD319877} = {9307A1DA-7774-4574-BA0D-45B6912E9F47}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}

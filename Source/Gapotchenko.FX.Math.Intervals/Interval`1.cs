@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-namespace Gapotchenko.FX.Math;
+namespace Gapotchenko.FX.Math.Intervals;
 
 /// <summary>
 /// Represents a continuous interval.

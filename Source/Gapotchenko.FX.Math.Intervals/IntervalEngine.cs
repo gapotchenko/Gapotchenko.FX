@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Gapotchenko.FX.Math;
+namespace Gapotchenko.FX.Math.Intervals;
 
 static class IntervalEngine
 {

@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Math;
+﻿using Gapotchenko.FX.Math.Intervals;
+
+namespace Gapotchenko.FX.Math;
 
 /// <summary>
 /// Extension methods for <see cref="IInterval{T}"/>.

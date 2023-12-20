@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Gapotchenko.FX.Math;
+namespace Gapotchenko.FX.Math.Intervals;
 
 /// <summary>
 /// Represents an interval boundary.

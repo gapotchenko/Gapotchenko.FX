@@ -1,4 +1,4 @@
-﻿namespace Gapotchenko.FX.Math;
+﻿namespace Gapotchenko.FX.Math.Intervals;
 
 /// <summary>
 /// Defines the types of interval boundaries.
