@@ -37,6 +37,9 @@ public class ProgramExitException : Exception, IControlFlowException
     /// <param name="context">
     /// The <see cref="StreamingContext"/> that contains contextual information about the source or destination.
     /// </param>
+#if NET8_0_OR_GREATER
+    [Obsolete(DiagnosticId = "SYSLIB0051")]
+#endif
     protected ProgramExitException(SerializationInfo info, StreamingContext context) :
         base(info, context)
     {
@@ -48,6 +51,9 @@ public class ProgramExitException : Exception, IControlFlowException
     /// </summary>
     /// <param name="info">Serialization information.</param>
     /// <param name="context">Streaming context.</param>
+#if NET8_0_OR_GREATER
+    [Obsolete(DiagnosticId = "SYSLIB0051")]
+#endif
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         base.GetObjectData(info, context);

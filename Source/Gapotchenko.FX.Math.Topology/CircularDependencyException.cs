@@ -44,6 +44,9 @@ public class CircularDependencyException : Exception
     /// </summary>
     /// <param name="info"><inheritdoc/></param>
     /// <param name="context"><inheritdoc/></param>
+#if NET8_0_OR_GREATER
+    [Obsolete(DiagnosticId = "SYSLIB0051")]
+#endif
     protected CircularDependencyException(SerializationInfo info, StreamingContext context) :
         base(info, context)
     {

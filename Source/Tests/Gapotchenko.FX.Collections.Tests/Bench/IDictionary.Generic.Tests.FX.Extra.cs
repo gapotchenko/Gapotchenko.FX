@@ -89,7 +89,13 @@ partial class IDictionary_Generic_Tests<TKey, TValue>
             dictionary.Remove(key);
 
             var iDictionary = (IDictionary)dictionary;
-            Assert.Equal(default, iDictionary[key]);
+            Assert.Equal(
+                default,
+                iDictionary[key
+#if NETCOREAPP3_1
+                !
+#endif
+                ]);
         }
     }
 }

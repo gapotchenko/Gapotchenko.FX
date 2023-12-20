@@ -273,12 +273,7 @@ public class AppInformation : IAppInformation
     /// <inheritdoc/>
     public Version ProductVersion
     {
-        get
-        {
-            if (m_ProductVersion == null)
-                m_ProductVersion = RetrieveProductVersion();
-            return m_ProductVersion;
-        }
+        get => m_ProductVersion ??= RetrieveProductVersion();
         protected set => m_ProductVersion = value;
     }
 
@@ -295,9 +290,8 @@ public class AppInformation : IAppInformation
         if (entryAssembly != null)
         {
             var attribute = entryAssembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
-            if (attribute != null)
-                if (Version.TryParse(attribute.Version, out var version))
-                    return version;
+            if (attribute != null && Version.TryParse(attribute.Version, out var version))
+                return version;
         }
 
         var entryFileVersionInfo = EntryFileVersionInfo;
@@ -311,12 +305,7 @@ public class AppInformation : IAppInformation
     /// <inheritdoc/>
     public string InformationalVersion
     {
-        get
-        {
-            if (m_InformationalVersion == null)
-                m_InformationalVersion = RetrieveInformationalVersion();
-            return m_InformationalVersion;
-        }
+        get => m_InformationalVersion ??= RetrieveInformationalVersion();
         protected set => m_InformationalVersion = value;
     }
 
@@ -454,15 +443,7 @@ public class AppInformation : IAppInformation
     }
 
     /// <inheritdoc/>
-    public string? Trademark
-    {
-        get
-        {
-            if (m_Trademark == null)
-                m_Trademark = RetrieveTrademark() ?? string.Empty;
-            return Empty.Nullify(m_Trademark);
-        }
-    }
+    public string? Trademark => m_Trademark ??= (RetrieveTrademark() ?? string.Empty);
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     volatile string? m_Trademark;
@@ -497,12 +478,7 @@ public class AppInformation : IAppInformation
     /// <inheritdoc/>
     public string ExecutablePath
     {
-        get
-        {
-            if (m_ExecutablePath == null)
-                m_ExecutablePath = RetrieveExecutablePath();
-            return m_ExecutablePath;
-        }
+        get => m_ExecutablePath ??= RetrieveExecutablePath();
         protected set => m_ExecutablePath = value;
     }
 
@@ -523,45 +499,48 @@ public class AppInformation : IAppInformation
         }
         else
         {
+#if NET5_0_OR_GREATER
+            return GetLocalExecutablePath(entryAssembly.Location);
+#else
             var codeBase = entryAssembly.CodeBase;
             if (codeBase != null)
             {
                 var uri = new Uri(codeBase);
                 if (uri.IsFile)
-                {
-                    string localPath = uri.LocalPath;
-
-#if NETSTANDARD || NETCOREAPP || NET
-                    if (localPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
-                    {
-#if !(NETCOREAPP3_0 || NETCOREAPP3_1 || NET)
-                        string frameworkDescription = RuntimeInformation.FrameworkDescription;
-                        if (frameworkDescription.StartsWith(".NET Core ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 3 ||
-                            frameworkDescription.StartsWith(".NET ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 5)
-#endif
-                        {
-                            string? exeExtension;
-                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                                exeExtension = ".exe";
-                            else
-                                exeExtension = null;
-
-                            string exePath = Path.ChangeExtension(localPath, exeExtension);
-                            if (File.Exists(exePath))
-                                localPath = exePath;
-                        }
-                    }
-#endif
-
-                    return localPath + Uri.UnescapeDataString(uri.Fragment);
-                }
+                    return GetLocalExecutablePath(uri.LocalPath) + Uri.UnescapeDataString(uri.Fragment);
                 else
-                {
                     return uri.ToString();
-                }
             }
+#endif
         }
 
         throw new Exception("Unable to determine app executable file path.");
+    }
+
+    static string GetLocalExecutablePath(string localPath)
+    {
+#if NETSTANDARD || NETCOREAPP || NET
+        if (localPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+        {
+#if !(NETCOREAPP3_0 || NETCOREAPP3_1 || NET)
+            string frameworkDescription = RuntimeInformation.FrameworkDescription;
+            if (frameworkDescription.StartsWith(".NET Core ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 3 ||
+                frameworkDescription.StartsWith(".NET ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 5)
+#endif
+            {
+                string? exeExtension;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    exeExtension = ".exe";
+                else
+                    exeExtension = null;
+
+                string exePath = Path.ChangeExtension(localPath, exeExtension);
+                if (File.Exists(exePath))
+                    localPath = exePath;
+            }
+        }
+#endif
+
+        return localPath;
     }
 }
