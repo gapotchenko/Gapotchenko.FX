@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Math.Topology;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+namespace Gapotchenko.FX.Math.Topology;
 
 partial class Graph<TVertex>
 {
@@ -43,6 +49,8 @@ partial class Graph<TVertex>
         var visitedVertices = new HashSet<TVertex>(VertexComparer);
         bool self = false;
 
+        return Traverse(vertex);
+
         IEnumerable<TVertex> Traverse(TVertex vertex)
         {
             if (self)
@@ -63,7 +71,5 @@ partial class Graph<TVertex>
                     yield return j;
             }
         }
-
-        return Traverse(vertex);
     }
 }

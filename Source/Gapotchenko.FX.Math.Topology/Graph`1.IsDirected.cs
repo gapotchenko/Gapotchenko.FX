@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Topology;
 
@@ -7,7 +13,7 @@ partial class Graph<TVertex>
     /// <summary>
     /// Gets or initializes a value indicating whether the current graph is directed.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Graph direction is already initialized.</exception>
+    /// <exception cref="InvalidOperationException">The graph direction is already initialized.</exception>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public bool IsDirected
     {
@@ -15,7 +21,7 @@ partial class Graph<TVertex>
         init
         {
             if (m_Flags[F_IsUndirected_Initialized])
-                throw new InvalidOperationException("Graph direction is already initialized.");
+                throw new InvalidOperationException("The graph direction is already initialized.");
 
             if (!value)
                 ConvertToUndirected();
@@ -27,7 +33,7 @@ partial class Graph<TVertex>
     void ConvertToUndirected()
     {
         if (m_EdgeComparer != null)
-            throw new InvalidOperationException("Graph direction can no longer be changed.");
+            throw new InvalidOperationException("The graph direction can no longer be changed.");
 
         var edges = Edges;
         var savedEdges = edges.ToList();

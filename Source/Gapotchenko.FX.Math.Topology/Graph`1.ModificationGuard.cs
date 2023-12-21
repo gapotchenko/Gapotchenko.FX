@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Math.Topology;
@@ -16,16 +22,9 @@ partial class Graph<TVertex>
     /// </summary>
     void IncrementVersion() => ++m_Version;
 
-    readonly struct ModificationGuard
+    readonly struct ModificationGuard(Graph<TVertex> graph)
     {
-        public ModificationGuard(Graph<TVertex> graph)
-        {
-            m_Graph = graph;
-            m_Version = graph.m_Version;
-        }
-
-        readonly Graph<TVertex> m_Graph;
-        readonly int m_Version;
+        readonly int m_Version = graph.m_Version;
 
         /// <summary>
         /// Throws a graph modification exception.
@@ -39,7 +38,7 @@ partial class Graph<TVertex>
         /// </summary>
         public void Checkpoint()
         {
-            if (m_Graph.m_Version != m_Version)
+            if (graph.m_Version != m_Version)
                 Throw();
         }
 

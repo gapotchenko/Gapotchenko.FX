@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Math.Topology;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
 /// Provides a graph abstraction.

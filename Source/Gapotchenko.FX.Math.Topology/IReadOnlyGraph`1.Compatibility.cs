@@ -1,4 +1,10 @@
-﻿#if BINARY_COMPATIBILITY && TFF_DEFAULT_INTERFACE
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+#if BINARY_COMPATIBILITY && TFF_DEFAULT_INTERFACE
 
 namespace Gapotchenko.FX.Math.Topology;
 

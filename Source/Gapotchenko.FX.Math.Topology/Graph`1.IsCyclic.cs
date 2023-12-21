@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Math.Topology.Utils;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using Gapotchenko.FX.Math.Topology.Utils;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Topology;

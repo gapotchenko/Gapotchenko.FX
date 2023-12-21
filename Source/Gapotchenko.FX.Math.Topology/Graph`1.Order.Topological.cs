@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Collections.Generic;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using Gapotchenko.FX.Collections.Generic;
 using System.Collections;
 
 namespace Gapotchenko.FX.Math.Topology;
@@ -71,7 +77,7 @@ partial class Graph<TVertex>
             }
         }
 
-        if (graph.Edges.Count is > 0)
+        if (graph.Edges.Count > 0)
             throw new CircularDependencyException();
     }
 

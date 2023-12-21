@@ -1,4 +1,10 @@
-﻿using System.Text;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using System.Text;
 
 namespace Gapotchenko.FX.Math.Topology;
 

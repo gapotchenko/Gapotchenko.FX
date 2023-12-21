@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Collections.Generic;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Collections.Generic.Kit;
 using Gapotchenko.FX.Linq;
 using System.Diagnostics;
@@ -49,12 +55,14 @@ partial class Graph<TVertex>
             if (Contains(vertex))
                 return false;
 
-            m_Graph.m_AdjacencyList.Add(vertex, null);
-            m_Graph.m_ReverseAdjacencyList?.Add(vertex, null);
+            var graph = m_Graph;
 
-            ++m_Graph.m_CachedOrder;
-            m_Graph.InvalidateCachedConnectivity();
-            m_Graph.IncrementVersion();
+            graph.m_AdjacencyList.Add(vertex, null);
+            graph.m_ReverseAdjacencyList?.Add(vertex, null);
+
+            ++graph.m_CachedOrder;
+            graph.InvalidateCachedConnectivity();
+            graph.IncrementVersion();
 
             return true;
         }
@@ -62,6 +70,25 @@ partial class Graph<TVertex>
         /// <inheritdoc/>
         public override bool Remove(TVertex vertex)
         {
+            var graph = m_Graph;
+
+            if (!RemoveFromAdjacencyList(graph.m_AdjacencyList, vertex))
+                return false;
+
+            var reverseAdjacencyList = graph.m_ReverseAdjacencyList;
+            if (reverseAdjacencyList != null)
+            {
+                bool hit = RemoveFromAdjacencyList(reverseAdjacencyList, vertex);
+                Debug.Assert(hit);
+            }
+
+            --graph.m_CachedOrder;
+            graph.m_CachedSize = null;
+            graph.InvalidateCachedRelations();
+            graph.IncrementVersion();
+
+            return true;
+
             static bool RemoveFromAdjacencyList(AssociativeArray<TVertex, AdjacencyRow?> adjacencyList, TVertex vertex)
             {
                 bool hit = adjacencyList.Remove(vertex);
@@ -75,23 +102,6 @@ partial class Graph<TVertex>
 
                 return hit;
             }
-
-            if (!RemoveFromAdjacencyList(m_Graph.m_AdjacencyList, vertex))
-                return false;
-
-            var reverseAdjacencyList = m_Graph.m_ReverseAdjacencyList;
-            if (reverseAdjacencyList != null)
-            {
-                bool hit = RemoveFromAdjacencyList(reverseAdjacencyList, vertex);
-                Debug.Assert(hit);
-            }
-
-            --m_Graph.m_CachedOrder;
-            m_Graph.m_CachedSize = null;
-            m_Graph.InvalidateCachedRelations();
-            m_Graph.IncrementVersion();
-
-            return true;
         }
 
         /// <inheritdoc/>

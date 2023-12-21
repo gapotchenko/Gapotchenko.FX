@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Topology;
 
@@ -6,21 +12,14 @@ namespace Gapotchenko.FX.Math.Topology;
 [DebuggerTypeProxy(typeof(Graph<>.DebugView))]
 partial class Graph<TVertex>
 {
-    sealed class DebugView
+    sealed class DebugView(Graph<TVertex> graph)
     {
-        public DebugView(Graph<TVertex> graph)
-        {
-            m_Graph = graph;
-        }
+        public object Vertices => graph.Vertices;
 
-        readonly Graph<TVertex> m_Graph;
+        public object Edges => graph.Edges;
 
-        public object Vertices => m_Graph.Vertices;
+        public bool IsDirected => graph.IsDirected;
 
-        public object Edges => m_Graph.Edges;
-
-        public bool IsDirected => m_Graph.IsDirected;
-
-        public object AdjacencyList => m_Graph.AdjacencyList;
+        public object AdjacencyList => graph.AdjacencyList;
     }
 }

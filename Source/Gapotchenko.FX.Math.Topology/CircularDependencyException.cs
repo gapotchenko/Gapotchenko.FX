@@ -1,9 +1,15 @@
-﻿using System.Runtime.Serialization;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using System.Runtime.Serialization;
 
 namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
-/// Thrown when a topology (graph) has an unresolved circular reference.
+/// Thrown when a topology has an unresolved circular reference.
 /// </summary>
 [Serializable]
 public class CircularDependencyException : Exception
@@ -12,7 +18,7 @@ public class CircularDependencyException : Exception
     /// Initializes a new instance of the <see cref="CircularDependencyException"/> class.
     /// </summary>
     public CircularDependencyException() :
-        this("The graph contains a circular reference.")
+        this("The topology contains a circular reference.")
     {
     }
 

@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Linq;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using Gapotchenko.FX.Linq;
 
 namespace Gapotchenko.FX.Math.Topology;
 
