@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2022
+
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Intervals;
 
@@ -26,14 +32,6 @@ public readonly struct IntervalBoundary<T>
     public bool IsInfinity => Kind is IntervalBoundaryKind.NegativeInfinity or IntervalBoundaryKind.PositiveInfinity;
 
     /// <summary>
-    /// Gets a value indicating whether the current interval boundary has a bound limit point, e.g. is bounded.
-    /// </summary>
-    public bool HasValue => !(IsInfinity || Kind is IntervalBoundaryKind.Empty);
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly T m_Value;
-
-    /// <summary>
     /// Gets the value of a bound limit point.
     /// </summary>
     public T Value
@@ -45,6 +43,14 @@ public readonly struct IntervalBoundary<T>
             return m_Value;
         }
     }
+
+    /// <summary>
+    /// Gets a value indicating whether the current interval boundary has a bound limit point, e.g. is bounded.
+    /// </summary>
+    public bool HasValue => !(IsInfinity || Kind is IntervalBoundaryKind.Empty);
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly T m_Value;
 
     /// <summary>
     /// Gets the value of a bound limit point, or the default value of the underlying type <typeparamref name="T"/> when the boundary is unbounded.

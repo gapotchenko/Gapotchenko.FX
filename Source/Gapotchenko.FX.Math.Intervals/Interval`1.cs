@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Runtime.CompilerServices;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2022
+
+using Gapotchenko.FX.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -306,18 +312,6 @@ public sealed record Interval<T> : IInterval<T>
         x is not null &&
         y is not null &&
         x.IntervalEquals(y);
-
-#if false && NET7_0_OR_GREATER
-    static bool IInterval<T>.operator ==(IInterval<T>? x, IInterval<T>? y) => EqualityOperator(x, y);
-
-    static bool IInterval<T>.operator !=(IInterval<T>? x, IInterval<T>? y) => !EqualityOperator(x, y);
-
-    static bool EqualityOperator(IInterval<T>? x, IInterval<T>? y) =>
-        ReferenceEquals(x, y) ||
-        x is not null &&
-        y is not null &&
-        x.IntervalEquals(y);
-#endif
 
     // Minify unused record method.
     bool PrintMembers(StringBuilder _) => false;

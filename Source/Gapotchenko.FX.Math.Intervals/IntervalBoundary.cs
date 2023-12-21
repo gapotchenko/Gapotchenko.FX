@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Math.Intervals;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2022
+
+namespace Gapotchenko.FX.Math.Intervals;
 
 /// <summary>
 /// Provides static methods for creating interval boundaries.

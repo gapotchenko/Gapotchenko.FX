@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Math.Intervals;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2022
+
+using Gapotchenko.FX.Math.Intervals;
 
 namespace Gapotchenko.FX.Math;
 

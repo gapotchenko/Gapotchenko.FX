@@ -1,4 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2022
+
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Gapotchenko.FX.Math.Intervals;
@@ -36,28 +42,6 @@ static class IntervalEngine
         where TInterval : IIntervalOperations<TBound>;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    static TInterval WithInclusiveBounds<TInterval, TBound>(
-        in TInterval interval,
-        bool inclusive,
-        Constructor<TInterval, TBound> constructor)
-        where TInterval : IIntervalOperations<TBound>
-    {
-        static IntervalBoundary<TBound> WithInclusiveBoundary(IntervalBoundary<TBound> boundary, bool inclusive)
-        {
-            if (boundary.IsInfinity)
-                return boundary;
-            else if (inclusive)
-                return IntervalBoundary.Inclusive(boundary.Value);
-            else
-                return IntervalBoundary.Exclusive(boundary.Value);
-        }
-
-        return constructor(
-            WithInclusiveBoundary(interval.From, inclusive),
-            WithInclusiveBoundary(interval.To, inclusive));
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TInterval Interior<TInterval, TBound>(in TInterval interval, Constructor<TInterval, TBound> constructor)
         where TInterval : IIntervalOperations<TBound> =>
         IsOpen<TInterval, TBound>(interval) ?
@@ -70,6 +54,28 @@ static class IntervalEngine
         IsClosed<TInterval, TBound>(interval) ?
             interval :
             WithInclusiveBounds(interval, true, constructor);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static TInterval WithInclusiveBounds<TInterval, TBound>(
+        in TInterval interval,
+        bool inclusive,
+        Constructor<TInterval, TBound> constructor)
+        where TInterval : IIntervalOperations<TBound>
+    {
+        return constructor(
+            WithInclusiveBoundary(interval.From, inclusive),
+            WithInclusiveBoundary(interval.To, inclusive));
+
+        static IntervalBoundary<TBound> WithInclusiveBoundary(IntervalBoundary<TBound> boundary, bool inclusive)
+        {
+            if (boundary.IsInfinity)
+                return boundary;
+            else if (inclusive)
+                return IntervalBoundary.Inclusive(boundary.Value);
+            else
+                return IntervalBoundary.Exclusive(boundary.Value);
+        }
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsEmpty<TInterval, TBound>(in TInterval interval, IComparer<TBound> comparer)

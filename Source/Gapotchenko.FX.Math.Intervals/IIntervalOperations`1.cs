@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Math.Intervals;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2022
+
+namespace Gapotchenko.FX.Math.Intervals;
 
 /// <summary>
 /// Defines the base operations for <see cref="IInterval{T}"/>.

@@ -290,18 +290,6 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
         y is not null &&
         x.IntervalEquals(y);
 
-#if false && NET7_0_OR_GREATER
-    static bool IInterval<T>.operator ==(IInterval<T>? x, IInterval<T>? y) => EqualityOperator(x, y);
-
-    static bool IInterval<T>.operator !=(IInterval<T>? x, IInterval<T>? y) => !EqualityOperator(x, y);
-
-    static bool EqualityOperator(IInterval<T>? x, IInterval<T>? y) =>
-        ReferenceEquals(x, y) ||
-        x is not null &&
-        y is not null &&
-        x.IntervalEquals(y);
-#endif
-
     /// <inheritdoc/>
     public bool Equals(ValueInterval<T> other) => IntervalEngine.IntervalsEqual(this, other, Comparer<T>.Default);
 
