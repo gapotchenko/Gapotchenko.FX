@@ -6,47 +6,47 @@
 public interface IAppInformation
 {
     /// <summary>
-    /// Gets app title.
+    /// Gets the app title.
     /// </summary>
     string? Title { get; }
 
     /// <summary>
-    /// Gets app description.
+    /// Gets the app description.
     /// </summary>
     string? Description { get; }
 
     /// <summary>
-    /// Gets product name.
+    /// Gets the product name.
     /// </summary>
     string? ProductName { get; }
 
     /// <summary>
-    /// Gets product version.
+    /// Gets the product version.
     /// </summary>
     Version ProductVersion { get; }
 
     /// <summary>
-    /// Gets product informational version.
+    /// Gets the product informational version.
     /// </summary>
     string InformationalVersion { get; }
 
     /// <summary>
-    /// Gets company name.
+    /// Gets the company name.
     /// </summary>
     string? CompanyName { get; }
 
     /// <summary>
-    /// Gets app copyright information.
+    /// Gets the app copyright information.
     /// </summary>
     string? Copyright { get; }
 
     /// <summary>
-    /// Gets app trademark information.
+    /// Gets the app trademark information.
     /// </summary>
     string? Trademark { get; }
 
     /// <summary>
-    /// Gets app executable path.
+    /// Gets the app executable path.
     /// </summary>
     string ExecutablePath { get; }
 }

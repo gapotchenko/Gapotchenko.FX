@@ -61,12 +61,7 @@ public class AppInformation : IAppInformation
     /// <inheritdoc/>
     public string? Title
     {
-        get
-        {
-            if (m_Title == null)
-                m_Title = RetrieveTitle() ?? string.Empty;
-            return Empty.Nullify(m_Title);
-        }
+        get => Empty.Nullify(m_Title ??= RetrieveTitle() ?? string.Empty);
         protected set => m_Title = value;
     }
 
@@ -103,12 +98,7 @@ public class AppInformation : IAppInformation
     /// <inheritdoc/>
     public string? Description
     {
-        get
-        {
-            if (m_Description == null)
-                m_Description = RetrieveDescription() ?? string.Empty;
-            return Empty.Nullify(m_Description);
-        }
+        get => Empty.Nullify(m_Description ??= RetrieveDescription() ?? string.Empty);
         protected set => m_Description = value;
     }
 
@@ -148,12 +138,7 @@ public class AppInformation : IAppInformation
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     protected Type? EntryType
     {
-        get
-        {
-            if (m_EntryType == null)
-                m_EntryType = RetrieveEntryType() ?? Empty.Type;
-            return Empty.Nullify(m_EntryType);
-        }
+        get => Empty.Nullify(m_EntryType ??= RetrieveEntryType() ?? Empty.Type);
         set => m_EntryType = value;
     }
 
@@ -172,12 +157,7 @@ public class AppInformation : IAppInformation
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     protected Assembly? EntryAssembly
     {
-        get
-        {
-            if (m_EntryAssembly == null)
-                m_EntryAssembly = RetrieveEntryAssembly();
-            return m_EntryAssembly;
-        }
+        get => m_EntryAssembly ??= RetrieveEntryAssembly();
         set => m_EntryAssembly = value;
     }
 
@@ -190,7 +170,11 @@ public class AppInformation : IAppInformation
     /// <returns>The app entry assembly.</returns>
     protected virtual Assembly? RetrieveEntryAssembly() => EntryType?.Assembly ?? Assembly.GetEntryAssembly();
 
-    FileVersionInfo EntryFileVersionInfo => LazyInitializerEx.EnsureInitialized(ref m_CachedEntryFileVersionInfo, this, RetrieveEntryFileVersionInfo);
+    FileVersionInfo EntryFileVersionInfo =>
+        LazyInitializerEx.EnsureInitialized(
+            ref m_CachedEntryFileVersionInfo,
+            this,
+            RetrieveEntryFileVersionInfo);
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     FileVersionInfo? m_CachedEntryFileVersionInfo;
@@ -211,12 +195,7 @@ public class AppInformation : IAppInformation
     /// <inheritdoc/>
     public string? ProductName
     {
-        get
-        {
-            if (m_ProductName == null)
-                m_ProductName = RetrieveProductName() ?? string.Empty;
-            return Empty.Nullify(m_ProductName);
-        }
+        get => Empty.Nullify(m_ProductName ??= RetrieveProductName() ?? string.Empty);
         protected set => m_ProductName = value;
     }
 
@@ -342,12 +321,7 @@ public class AppInformation : IAppInformation
     /// <inheritdoc/>
     public string? CompanyName
     {
-        get
-        {
-            if (m_CompanyName == null)
-                m_CompanyName = RetrieveCompanyName() ?? string.Empty;
-            return Empty.Nullify(m_CompanyName);
-        }
+        get => Empty.Nullify(m_CompanyName ??= RetrieveCompanyName() ?? string.Empty);
         protected set => m_CompanyName = value;
     }
 
@@ -399,12 +373,7 @@ public class AppInformation : IAppInformation
     /// <inheritdoc/>
     public string? Copyright
     {
-        get
-        {
-            if (m_Copyright == null)
-                m_Copyright = RetrieveCopyright() ?? string.Empty;
-            return Empty.Nullify(m_Copyright);
-        }
+        get => Empty.Nullify(m_Copyright ??= RetrieveCopyright() ?? string.Empty);
         protected set => m_Copyright = value;
     }
 
@@ -443,7 +412,7 @@ public class AppInformation : IAppInformation
     }
 
     /// <inheritdoc/>
-    public string? Trademark => m_Trademark ??= (RetrieveTrademark() ?? string.Empty);
+    public string? Trademark => m_Trademark ??= RetrieveTrademark() ?? string.Empty;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     volatile string? m_Trademark;

@@ -4,7 +4,7 @@ namespace Gapotchenko.FX.AppModel;
 
 sealed class CurrentAppInformation : AppInformation
 {
-    public static readonly CurrentAppInformation Instance = new CurrentAppInformation();
+    public static readonly CurrentAppInformation Instance = new();
 
     protected override Assembly? RetrieveEntryAssembly() => Assembly.GetEntryAssembly();
 
