@@ -1,5 +1,4 @@
-﻿using Gapotchenko.FX.Linq;
-using Gapotchenko.FX.Math.Combinatorics;
+﻿using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Math.Topology.Tests.Engine;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -30,16 +29,16 @@ public partial class GraphTests
         };
 
         Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3]));
 
         Assert.IsFalse(g.Vertices.Remove(4));
         Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3]));
         Assert.AreEqual(0, g.Edges.Count);
 
         Assert.IsTrue(g.Vertices.Remove(3));
         Assert.AreEqual(2, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2 }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2]));
         Assert.AreEqual(0, g.Edges.Count);
     }
 
@@ -68,9 +67,9 @@ public partial class GraphTests
         };
 
         Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3]));
         Assert.AreEqual(2, g.Edges.Count);
-        Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
+        Assert.IsTrue(g.Edges.SetEquals([(1, 2), (2, 3)]));
 
         g.Vertices.Clear();
         Assert.AreEqual(0, g.Vertices.Count);
@@ -106,8 +105,8 @@ public partial class GraphTests
         g.Transpose();
         Assert.IsFalse(g.GraphEquals(g0), "Original graph instance should be modified.");
 
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
-        Assert.IsTrue(g.Edges.SetEquals(new[] { (2, 1), (3, 2) }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3]));
+        Assert.IsTrue(g.Edges.SetEquals([(2, 1), (3, 2)]));
     }
 
     [TestMethod]
@@ -123,8 +122,8 @@ public partial class GraphTests
         Assert.IsTrue(g.GraphEquals(g0), "Original graph instance should not be modified.");
 
         Assert.AreNotSame(g, h);
-        Assert.IsTrue(h.Vertices.SetEquals(new[] { 1, 2, 3 }));
-        Assert.IsTrue(h.Edges.SetEquals(new[] { (2, 1), (3, 2) }));
+        Assert.IsTrue(h.Vertices.SetEquals([1, 2, 3]));
+        Assert.IsTrue(h.Edges.SetEquals([(2, 1), (3, 2)]));
     }
 
     [TestMethod]
@@ -165,7 +164,7 @@ public partial class GraphTests
             Edges = { (1, 2), (2, 3), (4, 4) }
         };
 
-        Assert.IsTrue(g.IsolatedVertices.ToHashSet().SetEquals(new[] { 5 }));
+        Assert.IsTrue(g.IsolatedVertices.ToHashSet().SetEquals([5]));
 
         /***************/
 
@@ -252,8 +251,8 @@ public partial class GraphTests
             Edges = { (1, 1), (1, 2), (2, 3), (3, 3) }
         };
 
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3, 5 }));
-        Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 1), (1, 2), (2, 3), (3, 3) }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3, 5]));
+        Assert.IsTrue(g.Edges.SetEquals([(1, 1), (1, 2), (2, 3), (3, 3)]));
     }
 
     [TestMethod]
@@ -267,8 +266,8 @@ public partial class GraphTests
 
         g.ReduceReflexes();
 
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3, 5 }));
-        Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3, 5]));
+        Assert.IsTrue(g.Edges.SetEquals([(1, 2), (2, 3)]));
     }
 
     [TestMethod]
@@ -285,8 +284,8 @@ public partial class GraphTests
         Assert.IsTrue(g.GraphEquals(g0), "Original graph instance should not be modified.");
 
         Assert.AreNotSame(g, h);
-        Assert.IsTrue(h.Vertices.SetEquals(new[] { 1, 2, 3, 5 }));
-        Assert.IsTrue(h.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
+        Assert.IsTrue(h.Vertices.SetEquals([1, 2, 3, 5]));
+        Assert.IsTrue(h.Edges.SetEquals([(1, 2), (2, 3)]));
     }
 
     [TestMethod]
@@ -790,27 +789,27 @@ public partial class GraphTests
         {
             Vertices = { 'b' }
         };
-        TestCore(g, new[] { 'b' }, expectedSubgraph);
+        TestCore(g, ['b'], expectedSubgraph);
 
         expectedSubgraph = new Graph<char>
         {
             Edges = { ('a', 'b'), ('a', 'e') }
         };
-        TestCore(g, new[] { 'a', 'b', 'e' }, expectedSubgraph);
+        TestCore(g, ['a', 'b', 'e'], expectedSubgraph);
 
         expectedSubgraph = new Graph<char>
         {
             Edges = { ('c', 'e'), ('d', 'e'), ('e', 'f') }
         };
-        TestCore(g, new[] { 'c', 'd', 'e', 'f' }, expectedSubgraph);
+        TestCore(g, ['c', 'd', 'e', 'f'], expectedSubgraph);
 
         expectedSubgraph = new Graph<char>
         {
             Vertices = { 'b' }
         };
-        TestCore(g, new[] { 'x', 'b' }, expectedSubgraph);
+        TestCore(g, ['x', 'b'], expectedSubgraph);
 
-        TestCore(g, new char[] { }, new Graph<char>());
+        TestCore(g, [], new Graph<char>());
 
         static void TestCore<T>(Graph<T> g, IEnumerable<T> subgraphVertices, IReadOnlyGraph<T> expectedSubgraph)
         {
