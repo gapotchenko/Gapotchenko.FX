@@ -1603,4 +1603,58 @@ public partial class GraphTests
         };
         proof.Run();
     }
+
+    [TestMethod]
+    public void Graph_ConnectedComponents()
+    {
+        var g = new Graph<int>
+        {
+            Edges =
+            {
+                // g0
+                (1, 7), (9, 7),
+                (7, 2), (7, 4), (7, 8), (7, 10),
+                (2, 4),
+                // g1
+                (5, 11),
+                // g2
+                (6, 3), (6, 12)
+            }
+        };
+
+        var connectedComponents = g.ConnectedComponents.ToHashSet(GraphEqualityComparer<int>.Default);
+        Assert.AreEqual(3, connectedComponents.Count);
+
+        Assert.IsTrue(
+            connectedComponents.Contains(
+                new Graph<int>
+                {
+                    Edges =
+                    {
+                        (1, 7), (9, 7),
+                        (7, 2), (7, 4), (7, 8), (7, 10),
+                        (2, 4),
+                    }
+                }));
+
+        Assert.IsTrue(
+            connectedComponents.Contains(
+                new Graph<int>
+                {
+                    Edges =
+                    {
+                        (5, 11)
+                    }
+                }));
+
+        Assert.IsTrue(
+            connectedComponents.Contains(
+                new Graph<int>
+                {
+                    Edges =
+                    {
+                        (6, 3), (6, 12)
+                    }
+                }));
+    }
 }

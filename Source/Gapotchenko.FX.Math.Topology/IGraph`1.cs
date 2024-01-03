@@ -18,6 +18,9 @@ public interface IGraph<TVertex> : IReadOnlyGraph<TVertex>, ICloneable<IGraph<TV
     /// <inheritdoc cref="IReadOnlyGraph{TVertex}.Edges"/>
     new ISet<GraphEdge<TVertex>> Edges { get; }
 
+    /// <inheritdoc cref="IReadOnlyGraph{TVertex}.ConnectedComponents"/>
+    new IEnumerable<IGraph<TVertex>> ConnectedComponents { get; }
+
     /// <summary>
     /// Removes all vertices and edges from the graph.
     /// </summary>

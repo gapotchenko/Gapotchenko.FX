@@ -163,6 +163,15 @@ public partial interface IReadOnlyGraph<TVertex>
     IEnumerable<TVertex> IsolatedVertices { get; }
 
     /// <summary>
+    /// Gets a sequence of connected components of the current graph.
+    /// </summary>
+    /// <remarks>
+    /// A connected component or simply component of a graph is a subgraph
+    /// in which each pair of vertices is connected with each other via a path.
+    /// </remarks>
+    IEnumerable<IReadOnlyGraph<TVertex>> ConnectedComponents { get; }
+
+    /// <summary>
     /// Gets an indegree of the specified vertex.
     /// </summary>
     /// <remarks>

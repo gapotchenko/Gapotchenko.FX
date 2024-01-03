@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2021
 
+using Gapotchenko.FX.Collections.Generic;
+
 namespace Gapotchenko.FX.Math.Topology;
 
 /// <summary>
@@ -27,4 +29,43 @@ public partial class Graph<TVertex> : IGraph<TVertex>
         IncrementVersion();
 #endif
     }
+
+    /// <inheritdoc cref="IGraph{TVertex}.ConnectedComponents"/>
+    public IEnumerable<Graph<TVertex>> ConnectedComponents
+    {
+        get
+        {
+            var vertices = Vertices;
+
+            var comparer = vertices.Comparer;
+            var seen = new HashSet<TVertex>(comparer);
+
+            foreach (var v in vertices)
+            {
+                if (seen.Contains(v))
+                    continue;
+
+                var connectedVertices = new HashSet<TVertex>(comparer) { v };
+
+                var queue = new Queue<TVertex>();
+                queue.Enqueue(v);
+                while (queue.Count > 0)
+                {
+                    var current = queue.Dequeue();
+                    foreach (var adjacent in VerticesAdjacentTo(current))
+                        if (connectedVertices.Add(adjacent))
+                            queue.Enqueue(adjacent);
+                }
+
+                seen.AddRange(connectedVertices);
+
+                var connectedSubgraph = GetSubgraph(connectedVertices);
+                yield return connectedSubgraph;
+            }
+        }
+    }
+
+    IEnumerable<IGraph<TVertex>> IGraph<TVertex>.ConnectedComponents => ConnectedComponents;
+
+    IEnumerable<IReadOnlyGraph<TVertex>> IReadOnlyGraph<TVertex>.ConnectedComponents => ConnectedComponents;
 }
