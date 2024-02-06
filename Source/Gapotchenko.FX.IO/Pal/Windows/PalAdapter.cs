@@ -54,11 +54,25 @@ sealed class PalAdapter : IPalAdapter
         {
             int result = NativeMethods.GetFinalPathNameByHandle(handle, buffer, buffer.Capacity, NativeMethods.FILE_NAME_NORMALIZED);
             if (result == 0)
-                throw TranslateWin32ErrorToException(Marshal.GetLastWin32Error(), path);
+            {
+                var errorCode = Marshal.GetLastWin32Error();
+                switch (errorCode)
+                {
+                    case NativeMethods.ERROR_INVALID_FUNCTION:
+                        // GetFinalPathNameByHandle may fail for files on a RAM disk (IMDISK).
+                        return path;
+                    default:
+                        throw TranslateWin32ErrorToException(errorCode, path);
+                }
+            }
             else if (result > buffer.Capacity)
+            {
                 buffer.EnsureCapacity(result);
+            }
             else
+            {
                 break;
+            }
         }
 
         // Remove a device prefix if it is not present in the original path.
