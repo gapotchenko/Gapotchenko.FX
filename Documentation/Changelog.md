@@ -15,7 +15,8 @@ Release date: not released yet
 - `AssemblyAutoLoader` now automatically handles probing paths defined by assembly binding redirects
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - Added `ReifyCollection` LINQ extension method for `IEnumerable<T>`
-- The synchronous execution of an asynchronous task in `Gapotchenko.FX.Threading.Tasks.TaskBridge` can take additional cancellation token now
+- Added ability to supply an additional cancellation token to the synchronous execution of an asynchronous task in `Gapotchenko.FX.Threading.Tasks.TaskBridge`
+- Added ability to retrieve connected components of a graph by using `Graph<T>.ConnectedComponents` property
 - Polyfills:
   - Added polyfill for required properties introduced in C# 11.0
   - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
