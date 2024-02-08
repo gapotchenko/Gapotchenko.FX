@@ -155,7 +155,7 @@ public partial interface IReadOnlyGraph<TVertex>
     bool IsVertexIsolated(TVertex vertex);
 
     /// <summary>
-    /// Gets a sequence of isolated vertices of the current graph.
+    /// Gets a sequence of isolated vertices for the current graph.
     /// </summary>
     /// <remarks>
     /// Isolated vertices are vertices with degree zero; that is, vertices that are not incident with any edges.
@@ -163,10 +163,10 @@ public partial interface IReadOnlyGraph<TVertex>
     IEnumerable<TVertex> IsolatedVertices { get; }
 
     /// <summary>
-    /// Gets a sequence of connected components of the current graph.
+    /// Gets a sequence of connected components for the current graph.
     /// </summary>
     /// <remarks>
-    /// A connected component or simply component of a graph is a subgraph
+    /// A connected component (or simply a component) of the graph is a subgraph
     /// in which each pair of vertices is connected with each other via a path.
     /// </remarks>
     IEnumerable<IReadOnlyGraph<TVertex>> ConnectedComponents { get; }
