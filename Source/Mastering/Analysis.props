@@ -1,0 +1,13 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- Language agnostic -->
+    <NoWarn>$(NoWarn),CA1510,CA1859,SYSLIB1054</NoWarn>
+    <WarningsAsErrors>$(WarningsAsErrors),CA2248</WarningsAsErrors>
+
+    <!-- C# -->
+    <NoWarn>$(NoWarn),CS8524</NoWarn>
+    <WarningsAsErrors>$(WarningsAsErrors),CS8509</WarningsAsErrors>
+  </PropertyGroup>
+
+</Project>

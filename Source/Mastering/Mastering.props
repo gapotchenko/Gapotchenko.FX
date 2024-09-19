@@ -28,6 +28,7 @@
   <!-- =================================================================== -->
 
   <Import Project="Language.props" />
+  <Import Project="Analysis.props" />
   <Import Project="NuGet.props" />
   <Import Project="Targeting.props" />
   <Import Project="Optimization.props" Condition=" Exists('Optimization.props') " />
