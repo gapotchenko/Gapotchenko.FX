@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+#pragma warning disable CA1825 // Avoid zero-length array allocations
 #pragma warning disable IDE0300 // Simplify collection initialization
 #pragma warning disable IDE0301 // Simplify collection initialization
 
@@ -31,14 +32,10 @@ public class SpanEqualityComparerTests
         var empty = Array.Empty<byte>();
 
         Assert.IsTrue(SpanEqualityComparer.Equals(new ReadOnlySpan<byte>(empty), empty));
-#pragma warning disable CA1825 // Avoid zero-length array allocations
         Assert.IsTrue(SpanEqualityComparer.Equals(new ReadOnlySpan<byte>(new byte[0]), new byte[0]));
-#pragma warning restore CA1825
 
         Assert.IsTrue(SpanEqualityComparer.Equals(empty.AsSpan(), empty));
-#pragma warning disable CA1825 // Avoid zero-length array allocations
         Assert.IsTrue(SpanEqualityComparer.Equals((new byte[0]).AsSpan(), new byte[0]));
-#pragma warning restore CA1825
     }
 
     [TestMethod]
