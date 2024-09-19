@@ -57,7 +57,7 @@ public static partial class CartesianProduct
         if (first == null ||
             second == null)
         {
-            return Enumerable.Empty<TResult>();
+            return [];
         }
 
         return Multiply(first, second, resultSelector);

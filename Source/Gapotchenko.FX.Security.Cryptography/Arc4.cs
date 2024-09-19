@@ -10,9 +10,9 @@ public abstract class Arc4 : SymmetricAlgorithm
 {
     const int BLOCK_SIZE_BITS = 8;
 
-    static readonly KeySizes[] m_LegalBlockSizes = { new(BLOCK_SIZE_BITS, BLOCK_SIZE_BITS, 0) };
+    static readonly KeySizes[] m_LegalBlockSizes = [new(BLOCK_SIZE_BITS, BLOCK_SIZE_BITS, 0)];
 
-    static readonly KeySizes[] m_LegalKeySizes = { new(40, 2048, 8) };
+    static readonly KeySizes[] m_LegalKeySizes = [new(40, 2048, 8)];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Arc4"/> class.
@@ -28,7 +28,7 @@ public abstract class Arc4 : SymmetricAlgorithm
         ModeValue = CipherMode.ECB;
         PaddingValue = PaddingMode.None;
 
-        IVValue = Array.Empty<byte>();
+        IVValue = [];
     }
 
     /// <inheritdoc/>

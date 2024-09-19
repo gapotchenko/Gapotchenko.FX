@@ -23,8 +23,8 @@ public class PermutationTests
 
         Assert.AreEqual(cardinality, s.Count);
 
-        Assert.IsTrue(s.Contains(new[] { 1, 2 }));
-        Assert.IsTrue(s.Contains(new[] { 2, 1 }));
+        Assert.IsTrue(s.Contains([1, 2]));
+        Assert.IsTrue(s.Contains([2, 1]));
     }
 
     [DataTestMethod]
@@ -44,8 +44,8 @@ public class PermutationTests
 
         Assert.AreEqual(cardinality, s.Count);
 
-        Assert.IsTrue(s.Contains(new[] { 1, 2 }));
-        Assert.IsTrue(s.Contains(new[] { 2, 1 }));
+        Assert.IsTrue(s.Contains([1, 2]));
+        Assert.IsTrue(s.Contains([2, 1]));
     }
 
     [DataTestMethod]
@@ -79,7 +79,7 @@ public class PermutationTests
         int distinctCardinality = cardinality / countOfDuplicateElements;
         Assert.AreEqual(distinctCardinality, s.Count);
 
-        Assert.IsTrue(s.TryGetValue(new[] { 1, 1 }, out var count) && count == 2);
+        Assert.IsTrue(s.TryGetValue([1, 1], out var count) && count == 2);
     }
 
     [TestMethod]
@@ -100,7 +100,7 @@ public class PermutationTests
 
         Assert.AreEqual(cardinality, s.Count);
 
-        Assert.IsTrue(s.Contains(new[] { 1, 1 }));
+        Assert.IsTrue(s.Contains([1, 1]));
     }
 
     [TestMethod]
@@ -137,12 +137,12 @@ public class PermutationTests
 
         Assert.AreEqual(cardinality, s.Count);
 
-        Assert.IsTrue(s.Contains(new[] { 1, 2, 3 }));
-        Assert.IsTrue(s.Contains(new[] { 1, 3, 2 }));
-        Assert.IsTrue(s.Contains(new[] { 2, 1, 3 }));
-        Assert.IsTrue(s.Contains(new[] { 2, 3, 1 }));
-        Assert.IsTrue(s.Contains(new[] { 3, 1, 2 }));
-        Assert.IsTrue(s.Contains(new[] { 3, 2, 1 }));
+        Assert.IsTrue(s.Contains([1, 2, 3]));
+        Assert.IsTrue(s.Contains([1, 3, 2]));
+        Assert.IsTrue(s.Contains([2, 1, 3]));
+        Assert.IsTrue(s.Contains([2, 3, 1]));
+        Assert.IsTrue(s.Contains([3, 1, 2]));
+        Assert.IsTrue(s.Contains([3, 2, 1]));
     }
 
     [DataTestMethod]
@@ -166,12 +166,12 @@ public class PermutationTests
 
         Assert.AreEqual(cardinality, s.Count);
 
-        Assert.IsTrue(s.Contains(new[] { 1, 2, 3 }));
-        Assert.IsTrue(s.Contains(new[] { 1, 3, 2 }));
-        Assert.IsTrue(s.Contains(new[] { 2, 1, 3 }));
-        Assert.IsTrue(s.Contains(new[] { 2, 3, 1 }));
-        Assert.IsTrue(s.Contains(new[] { 3, 1, 2 }));
-        Assert.IsTrue(s.Contains(new[] { 3, 2, 1 }));
+        Assert.IsTrue(s.Contains([1, 2, 3]));
+        Assert.IsTrue(s.Contains([1, 3, 2]));
+        Assert.IsTrue(s.Contains([2, 1, 3]));
+        Assert.IsTrue(s.Contains([2, 3, 1]));
+        Assert.IsTrue(s.Contains([3, 1, 2]));
+        Assert.IsTrue(s.Contains([3, 2, 1]));
     }
 
     [DataTestMethod]
@@ -211,9 +211,9 @@ public class PermutationTests
         int distinctCardinality = cardinality / countOfDuplicateElements;
         Assert.AreEqual(distinctCardinality, s.Count);
 
-        { Assert.IsTrue(s.TryGetValue(new[] { 1, 2, 2 }, out var count) && count == 2); }
-        { Assert.IsTrue(s.TryGetValue(new[] { 2, 1, 2 }, out var count) && count == 2); }
-        { Assert.IsTrue(s.TryGetValue(new[] { 2, 2, 1 }, out var count) && count == 2); }
+        { Assert.IsTrue(s.TryGetValue([1, 2, 2], out var count) && count == 2); }
+        { Assert.IsTrue(s.TryGetValue([2, 1, 2], out var count) && count == 2); }
+        { Assert.IsTrue(s.TryGetValue([2, 2, 1], out var count) && count == 2); }
     }
 
     [DataTestMethod]
@@ -236,9 +236,9 @@ public class PermutationTests
 
         Assert.AreEqual(cardinality, s.Count);
 
-        Assert.IsTrue(s.Contains(new[] { 1, 2, 2 }));
-        Assert.IsTrue(s.Contains(new[] { 2, 1, 2 }));
-        Assert.IsTrue(s.Contains(new[] { 2, 2, 1 }));
+        Assert.IsTrue(s.Contains([1, 2, 2]));
+        Assert.IsTrue(s.Contains([2, 1, 2]));
+        Assert.IsTrue(s.Contains([2, 2, 1]));
     }
 
     [DataTestMethod]
@@ -276,8 +276,8 @@ public class PermutationTests
 
         Assert.AreEqual(cardinality, s.Count);
 
-        Assert.IsTrue(s.Contains(new[] { 1, 2, 2 }));
-        Assert.IsTrue(s.Contains(new[] { 2, 1, 2 }));
-        Assert.IsTrue(s.Contains(new[] { 2, 2, 1 }));
+        Assert.IsTrue(s.Contains([1, 2, 2]));
+        Assert.IsTrue(s.Contains([2, 1, 2]));
+        Assert.IsTrue(s.Contains([2, 2, 1]));
     }
 }

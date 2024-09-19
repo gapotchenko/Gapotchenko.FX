@@ -11,12 +11,10 @@ public static class Empty<T>
     /// </summary>
     [Obsolete("Use System.Array.Empty<T>() instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static T[] Array => System.Array.Empty<T>();
-
-    static class TaskFactory
-    {
-        public static readonly Task<T> Task = System.Threading.Tasks.Task.FromResult(default(T)!);
-    }
+    public static T[] Array =>
+#pragma warning disable IDE0301 // Simplify collection initialization
+        System.Array.Empty<T>();
+#pragma warning restore IDE0301 // Simplify collection initialization
 
     /// <summary>
     /// Returns an empty <see cref="Task{TResult}"/> that has already completed successfully with the default result.
@@ -25,4 +23,9 @@ public static class Empty<T>
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
     public static Task<T> Task => TaskFactory.Task;
+
+    static class TaskFactory
+    {
+        public static readonly Task<T> Task = System.Threading.Tasks.Task.FromResult(default(T)!);
+    }
 }

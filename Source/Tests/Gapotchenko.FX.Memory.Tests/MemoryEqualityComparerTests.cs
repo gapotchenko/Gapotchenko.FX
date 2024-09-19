@@ -8,7 +8,7 @@ public class MemoryEqualityComparerTests
     [TestMethod]
     public void MemoryEqualityComparer_1()
     {
-        byte[] bytes = new byte[] { 1, 2, 3, 4, 5, 6 };
+        byte[] bytes = [1, 2, 3, 4, 5, 6];
         var memory = bytes.AsMemory();
 
         var map = new Dictionary<ReadOnlyMemory<byte>, string>(MemoryEqualityComparer<byte>.Default)

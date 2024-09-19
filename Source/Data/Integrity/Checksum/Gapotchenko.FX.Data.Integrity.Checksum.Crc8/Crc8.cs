@@ -40,7 +40,7 @@ public abstract partial class Crc8 : ChecksumAlgorithm<byte>, ICrc8
     public override byte ComputeChecksum(ReadOnlySpan<byte> data) => ComputeFinal(ComputeBlock(InitialValue, data));
 
     /// <inheritdoc/>
-    protected override byte[] GetHashBytesCore(byte checksum, IBitConverter bitConverter) => new[] { checksum };
+    protected override byte[] GetHashBytesCore(byte checksum, IBitConverter bitConverter) => [checksum];
 
     /// <summary>
     /// Creates an iterator for checksum computation.

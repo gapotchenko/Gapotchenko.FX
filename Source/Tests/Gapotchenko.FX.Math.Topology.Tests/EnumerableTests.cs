@@ -57,7 +57,7 @@ public class EnumerableTests
             v switch
             {
                 'A' => new[] { 'B' },
-                'B' => new[] { 'D' },
+                'B' => ['D'],
                 _ => null,
             };
 
@@ -537,8 +537,8 @@ public class EnumerableTests
             v switch
             {
                 'A' => new[] { 'B' },
-                'D' => new[] { 'C' },
-                'E' => new[] { 'D' },
+                'D' => ['C'],
+                'E' => ['D'],
                 _ => null,
             };
 

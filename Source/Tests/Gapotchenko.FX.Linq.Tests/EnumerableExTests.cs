@@ -66,7 +66,7 @@ public partial class EnumerableExTests
     public void Linq_Enumerable_StartsWith_8()
     {
         int[]? seq1 = null;
-        int[] seq2 = new int[] { 1, 2, 3 };
+        int[] seq2 = [1, 2, 3];
         seq1!.StartsWith(seq2);
     }
 
@@ -74,7 +74,7 @@ public partial class EnumerableExTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void Linq_Enumerable_StartsWith_9()
     {
-        int[] seq1 = new int[] { 1, 2, 3 };
+        int[] seq1 = [1, 2, 3];
         int[]? seq2 = null;
         seq1.StartsWith(seq2!);
     }

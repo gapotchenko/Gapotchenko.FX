@@ -21,11 +21,11 @@ public class AssociativeArray_Tests_Misc
         array.Remove(null);
         Assert.False(array.ContainsKey(null));
 
-        array.AddRange(new[]
-        {
+        array.AddRange(
+        [
             new KeyValuePair<string?, string?>(null, string.Empty),
             new KeyValuePair<string?, string?>(string.Empty, null),
-        });
+        ]);
         Assert.Equal(2, array.Count);
         Assert.Equal(new[] { null, string.Empty }, array.Keys);
         Assert.Equal(new[] { string.Empty, null }, array.Values);

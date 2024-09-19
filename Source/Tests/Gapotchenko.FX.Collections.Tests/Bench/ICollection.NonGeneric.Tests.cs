@@ -194,7 +194,7 @@ public abstract class ICollection_NonGeneric_Tests : IEnumerable_NonGeneric_Test
     public virtual void ICollection_NonGeneric_CopyTo_NonZeroLowerBound(int count)
     {
         ICollection collection = NonGenericICollectionFactory(count);
-        Array arr = Array.CreateInstance(typeof(object), new int[1] { count }, new int[1] { 2 });
+        Array arr = Array.CreateInstance(typeof(object), [count], [2]);
         Assert.Equal(1, arr.Rank);
         Assert.Equal(2, arr.GetLowerBound(0));
         Assert.Throws(ICollection_NonGeneric_CopyTo_NonZeroLowerBound_ThrowType, () => collection.CopyTo(arr, 0));

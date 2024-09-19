@@ -13,7 +13,7 @@ sealed class TestVector
     /// <summary>
     /// Gets or sets the key.
     /// </summary>
-    public byte[] Key { get; set; } = Array.Empty<byte>();
+    public byte[] Key { get; set; } = [];
 
     /// <summary>
     /// Represents a chunk of data in the key stream at the given offset.
@@ -28,7 +28,7 @@ sealed class TestVector
         /// <summary>
         /// Gets or sets the data representing an expected key stream at the given offset.
         /// </summary>
-        public byte[] Data { get; set; } = Array.Empty<byte>();
+        public byte[] Data { get; set; } = [];
     }
 
     /// <summary>

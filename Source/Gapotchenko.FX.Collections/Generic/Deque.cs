@@ -45,7 +45,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     public Deque()
     {
-        m_Array = Array.Empty<T>();
+        m_Array = [];
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     {
         ExceptionHelper.ThrowIfArgumentIsNegative(capacity);
 
-        m_Array = capacity == 0 ? Array.Empty<T>() : new T[capacity];
+        m_Array = capacity == 0 ? [] : new T[capacity];
     }
 
     /// <summary>
@@ -811,7 +811,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         int size = m_Size;
         if (size == 0)
         {
-            return Array.Empty<T>();
+            return [];
         }
         else
         {

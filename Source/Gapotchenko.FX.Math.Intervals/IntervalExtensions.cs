@@ -77,7 +77,7 @@ public static partial class IntervalExtensions
             throw new ArgumentNullException(nameof(keySelector));
 
         if (interval.IsEmpty)
-            return Enumerable.Empty<TSource>();
+            return [];
         else if (interval.IsInfinite)
             return source;
         else
@@ -147,7 +147,7 @@ public static partial class IntervalExtensions
             throw new ArgumentNullException(nameof(keySelector));
 
         if (interval.IsInfinite)
-            return Enumerable.Empty<TSource>();
+            return [];
         else if (interval.IsEmpty)
             return source;
         else

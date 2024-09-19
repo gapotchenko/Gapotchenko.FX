@@ -13,7 +13,7 @@ static class EnumerableHelper
             int count = collection.Count;
             if (count == 0)
             {
-                return Array.Empty<T>();
+                return [];
             }
             else
             {

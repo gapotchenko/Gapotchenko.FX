@@ -205,7 +205,7 @@ public class MoreTextWriter : TextWriter
             // probing is deferred till the next better character sequence is encountered.
             bool canProbeNow =
                 !value.EndsWith('\r') &&
-                value.AsSpan().Trim(new[] { '\n', '\r', '\b' }).Length != 0;
+                value.AsSpan().Trim(['\n', '\r', '\b']).Length != 0;
 
             if (!canProbeNow)
             {

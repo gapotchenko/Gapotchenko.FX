@@ -87,7 +87,7 @@ public class PriorityQueue<TElement, TPriority>
     /// </summary>
     public PriorityQueue()
     {
-        _nodes = Array.Empty<(TElement, TPriority)>();
+        _nodes = [];
         _comparer = InitializeComparer(null);
     }
 
@@ -114,7 +114,7 @@ public class PriorityQueue<TElement, TPriority>
     /// </param>
     public PriorityQueue(IComparer<TPriority>? comparer)
     {
-        _nodes = Array.Empty<(TElement, TPriority)>();
+        _nodes = [];
         _comparer = InitializeComparer(comparer);
     }
 

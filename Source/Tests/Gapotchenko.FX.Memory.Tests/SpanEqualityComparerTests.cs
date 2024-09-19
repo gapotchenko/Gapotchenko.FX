@@ -1,5 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+#pragma warning disable IDE0300 // Simplify collection initialization
+#pragma warning disable IDE0301 // Simplify collection initialization
+
 namespace Gapotchenko.FX.Memory.Tests;
 
 [TestClass]

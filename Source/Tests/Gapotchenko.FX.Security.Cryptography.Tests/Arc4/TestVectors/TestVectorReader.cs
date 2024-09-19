@@ -89,7 +89,7 @@ static class TestVectorReader
 
                 case State.Chunks:
                     {
-                        var parts = line.Split(new[] { ':' }, 2);
+                        var parts = line.Split([':'], 2);
                         if (parts.Length != 2)
                             throw new InvalidDataException("Cannot parse data statement.");
 

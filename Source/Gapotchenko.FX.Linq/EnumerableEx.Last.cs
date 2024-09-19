@@ -137,7 +137,7 @@ partial class EnumerableEx
         }
 
         return count <= 0 ?
-            Enumerable.Empty<TSource>() :
+            [] :
             Iterator(source, count);
     }
 #endif
