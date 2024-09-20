@@ -71,7 +71,7 @@ public static class BitOperations
         // https://en.wikipedia.org/wiki/SSE4#POPCNT_and_LZCNT
 
         var x = value;
-        x = x - ((x >> 1) & 0x55555555);
+        x -= (x >> 1) & 0x55555555;
         x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
         x = (x + (x >> 4)) & 0x0f0f0f0f;
         x += x >> 8;
@@ -91,7 +91,7 @@ public static class BitOperations
         const ulong Mask00110011 = 0x3333333333333333UL;
         const ulong Mask00001111 = 0x0F0F0F0F0F0F0F0FUL;
         const ulong Mask00000001 = 0x0101010101010101UL;
-        value -= ((value >> 1) & Mask01010101);
+        value -= (value >> 1) & Mask01010101;
         value = (value & Mask00110011) + ((value >> 2) & Mask00110011);
         return (int)(unchecked(((value + (value >> 4)) & Mask00001111) * Mask00000001) >> 56);
     }
