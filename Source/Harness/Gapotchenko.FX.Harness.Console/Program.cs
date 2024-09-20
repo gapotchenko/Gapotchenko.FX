@@ -7,7 +7,7 @@ using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Math;
 using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Math.Intervals;
-using Gapotchenko.FX.Math.Topology;
+using Gapotchenko.FX.Math.Graphs;
 using Gapotchenko.FX.Reflection;
 using Gapotchenko.FX.Threading.Tasks;
 using System.Collections;

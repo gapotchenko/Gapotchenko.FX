@@ -111,11 +111,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory", "Ga
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory.Tests", "Tests\Gapotchenko.FX.Memory.Tests\Gapotchenko.FX.Memory.Tests.csproj", "{69636576-F657-4629-B6B3-D8D4A568B6D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Topology", "Gapotchenko.FX.Math.Topology\Gapotchenko.FX.Math.Topology.csproj", "{3DC3319C-595A-4336-AF43-71785AE86D11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Graphs", "Gapotchenko.FX.Math.Graphs\Gapotchenko.FX.Math.Graphs.csproj", "{3DC3319C-595A-4336-AF43-71785AE86D11}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Geometry.Tests", "Tests\Gapotchenko.FX.Math.Geometry.Tests\Gapotchenko.FX.Math.Geometry.Tests.csproj", "{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Topology.Tests", "Tests\Gapotchenko.FX.Math.Topology.Tests\Gapotchenko.FX.Math.Topology.Tests.csproj", "{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Graphs.Tests", "Tests\Gapotchenko.FX.Math.Graphs.Tests\Gapotchenko.FX.Math.Graphs.Tests.csproj", "{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{3FAE141A-F711-4E62-8BD6-55C98470C2C7}"
 EndProject
@@ -155,7 +155,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Combinatorics", "Combinator
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Geometry", "Geometry", "{E97995BC-B043-459B-9E36-1F25C57D743E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Topology", "Topology", "{D04EE9D1-7B2B-401A-8835-5D4DE9921802}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graphs", "Graphs", "{D04EE9D1-7B2B-401A-8835-5D4DE9921802}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc8.Tests", "Tests\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc8.Tests\Gapotchenko.FX.Data.Integrity.Checksum.Crc8.Tests.csproj", "{DA25EA25-D604-450E-A001-62E561EF6817}"
 EndProject
@@ -237,9 +237,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.Inte
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Intervals", "Intervals", "{9307A1DA-7774-4574-BA0D-45B6912E9F47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Math.Intervals", "Gapotchenko.FX.Math.Intervals\Gapotchenko.FX.Math.Intervals.csproj", "{D74013BA-D2A3-428D-93CF-C617096BE48F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Intervals", "Gapotchenko.FX.Math.Intervals\Gapotchenko.FX.Math.Intervals.csproj", "{D74013BA-D2A3-428D-93CF-C617096BE48F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Math.Intervals.Tests", "Gapotchenko.FX.Math.Intervals.Tests\Gapotchenko.FX.Math.Intervals.Tests.csproj", "{902A6207-2743-435E-AF79-BA31AD319877}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Intervals.Tests", "Gapotchenko.FX.Math.Intervals.Tests\Gapotchenko.FX.Math.Intervals.Tests.csproj", "{902A6207-2743-435E-AF79-BA31AD319877}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
