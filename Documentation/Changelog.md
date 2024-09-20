@@ -1,12 +1,12 @@
 # What's New in Gapotchenko.FX
 
-## 2023
+## 2024
 
-### Gapotchenko FX 2023.1
+### Gapotchenko FX 2024.1
 
 Release date: not released yet
 
-- Added support for .NET 8.0 target framework
+- Added support for .NET 8.0 and .NET 9.0 target frameworks
 - Introduced primitives for interval arithmetics represented by `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
 - Introduced `Gapotchenko.FX.Collection.Generic.Deque<T>` primitive representing a linear collection that supports element insertion and removal at both ends with O(1) algorithmic complexity
 - Added ability to choose between lowercase or uppercase text output of a case-insensitive data encoding
@@ -16,6 +16,7 @@ Release date: not released yet
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - Added `ReifyCollection` LINQ extension method for `IEnumerable<T>`
 - The synchronous execution of an asynchronous task in `Gapotchenko.FX.Threading.Tasks.TaskBridge` can take additional cancellation token now
+- Use hardware-accelerated CRC32C checksum algorithm implementation when available
 - Polyfills:
   - Added polyfill for required properties introduced in C# 11.0
   - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax

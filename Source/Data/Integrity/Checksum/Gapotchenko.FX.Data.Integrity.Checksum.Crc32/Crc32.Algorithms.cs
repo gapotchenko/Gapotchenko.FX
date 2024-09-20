@@ -4,6 +4,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2021
 
+
+using System.Numerics;
+
 namespace Gapotchenko.FX.Data.Integrity.Checksum;
 
 partial class Crc32
@@ -143,8 +146,24 @@ partial class Crc32
 
         public sealed class C : GenericCrc32
         {
-            C() : base(0x1edc6f41, 0xffffffff, true, true, 0xffffffff) { }
             public static readonly C Instance = new();
+
+            C() : base(
+                0x1edc6f41, 0xffffffff, true, true, 0xffffffff
+#if NET8_0_OR_GREATER
+                , useTable: false
+#endif
+                )
+            { }
+
+#if NET8_0_OR_GREATER
+            protected override uint ComputeBlock(uint register, ReadOnlySpan<byte> data)
+            {
+                foreach (var b in data)
+                    register = BitOperations.Crc32C(register, b);
+                return register;
+            }
+#endif
         }
 
         public sealed class Q : GenericCrc32

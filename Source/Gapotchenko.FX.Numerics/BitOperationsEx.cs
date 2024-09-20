@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Numerics;
+﻿using System.Numerics;
+
+namespace Gapotchenko.FX.Numerics;
 
 /// <summary>
 /// Provides extended methods for intrinsic bit-twiddling operations.
