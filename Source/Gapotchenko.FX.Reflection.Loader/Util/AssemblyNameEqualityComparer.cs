@@ -24,7 +24,7 @@ sealed class AssemblyNameEqualityComparer : IEqualityComparer<AssemblyName>
             string.Equals(x.Name, y.Name, StringComparison.OrdinalIgnoreCase) &&
             ArrayEqualityComparer.Equals(x.GetPublicKeyToken(), y.GetPublicKeyToken()) &&
             // CultureInfo '==' operator compares references, not values.
-            // Using the default equality comparer to workaround that.
+            // Using the default equality comparer allows to workaround that.
             EqualityComparer<CultureInfo>.Default.Equals(x.CultureInfo, y.CultureInfo);
     }
 
