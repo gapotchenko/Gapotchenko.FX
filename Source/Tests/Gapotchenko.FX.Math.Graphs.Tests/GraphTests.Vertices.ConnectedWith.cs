@@ -37,7 +37,7 @@ partial class GraphTests
 
         Graph_VerticesConnectedWith(
             g.IncomingVerticesConnectedWith(2),
-            new HashSet<int> { 0, 1, 3, 7 });
+            [0, 1, 3, 7]);
     }
 
     [TestMethod]
@@ -50,7 +50,7 @@ partial class GraphTests
 
         Graph_VerticesConnectedWith(
             g.IncomingVerticesConnectedWith(2),
-            new HashSet<int> { 0, 1, 2, 3, 7 });
+            [0, 1, 2, 3, 7]);
     }
 
     [TestMethod]
@@ -63,7 +63,7 @@ partial class GraphTests
 
         Graph_VerticesConnectedWith(
             g.OutgoingVerticesConnectedWith(2),
-            new HashSet<int> { 0, 1, 3, 7 });
+            [0, 1, 3, 7]);
     }
 
     [TestMethod]
@@ -76,7 +76,7 @@ partial class GraphTests
 
         Graph_VerticesConnectedWith(
             g.OutgoingVerticesConnectedWith(2),
-            new HashSet<int> { 0, 1, 2, 3, 7 });
+            [0, 1, 2, 3, 7]);
     }
 
     [TestMethod]
@@ -87,7 +87,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 5) }
         };
 
-        Graph_VerticesConnectedWith(g, 2, new HashSet<int> { 0, 1, 3, 5 });
+        Graph_VerticesConnectedWith(g, 2, [0, 1, 3, 5]);
     }
 
     [TestMethod]
@@ -98,7 +98,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 5), (2, 2) }
         };
 
-        Graph_VerticesConnectedWith(g, 2, new HashSet<int> { 0, 1, 2, 3, 5 });
+        Graph_VerticesConnectedWith(g, 2, [0, 1, 2, 3, 5]);
     }
 
     [TestMethod]
@@ -109,7 +109,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 5), (2, 6), (6, 8), (8, 0) }
         };
 
-        Graph_VerticesConnectedWith(g, 2, new HashSet<int> { 0, 1, 2, 3, 5, 6, 8 });
+        Graph_VerticesConnectedWith(g, 2, [0, 1, 2, 3, 5, 6, 8]);
     }
 
     #endregion
@@ -125,7 +125,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 5) }
         };
 
-        Graph_VerticesConnectedWith(g, 2, new HashSet<int> { 0, 1, 2, 3, 5, 7 });
+        Graph_VerticesConnectedWith(g, 2, [0, 1, 2, 3, 5, 7]);
     }
 
     #endregion

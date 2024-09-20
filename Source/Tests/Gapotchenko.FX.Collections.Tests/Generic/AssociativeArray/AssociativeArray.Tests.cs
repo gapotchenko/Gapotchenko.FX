@@ -429,10 +429,10 @@ public abstract class AssociativeArray_Tests<TKey, TValue> : IDictionary_Generic
         var dictionary = new AssociativeArray<TKey, TValue>();
         Assert.Equal(17, dictionary.EnsureCapacity(17));
 
-        dictionary = new AssociativeArray<TKey, TValue>();
+        dictionary = [];
         Assert.Equal(17, dictionary.EnsureCapacity(15));
 
-        dictionary = new AssociativeArray<TKey, TValue>();
+        dictionary = [];
         Assert.Equal(17, dictionary.EnsureCapacity(13));
     }
 #endif

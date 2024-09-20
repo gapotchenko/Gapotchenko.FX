@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Threading.Tasks;
 
 sealed class ExclusiveSynchronizationContext : SynchronizationContext, IDisposable
 {
-    readonly BlockingCollection<KeyValuePair<SendOrPostCallback, object?>> m_Queue = new();
+    readonly BlockingCollection<KeyValuePair<SendOrPostCallback, object?>> m_Queue = [];
 
     public override void Post(SendOrPostCallback d, object? state)
     {

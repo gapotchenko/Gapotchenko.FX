@@ -109,7 +109,7 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
                 {
                     var paths = privatePath.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     if (paths.Length != 0)
-                        (probingPathList ??= new()).AddRange(paths);
+                        (probingPathList ??= []).AddRange(paths);
                 }
             }
 

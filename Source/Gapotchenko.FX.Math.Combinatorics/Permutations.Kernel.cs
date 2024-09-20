@@ -28,7 +28,7 @@ partial class Permutations
 
                 if (!map.TryGetValue(item, out var list))
                 {
-                    list = new List<int>();
+                    list = [];
                     map.Add(item, list);
                 }
 

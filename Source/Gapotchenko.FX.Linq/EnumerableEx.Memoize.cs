@@ -65,7 +65,7 @@ partial class EnumerableEx
         IEnumerator<T>? m_SourceEnumerator;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly IList<T> Cache = new List<T>();
+        protected readonly IList<T> Cache = [];
 
         public virtual int Count
         {

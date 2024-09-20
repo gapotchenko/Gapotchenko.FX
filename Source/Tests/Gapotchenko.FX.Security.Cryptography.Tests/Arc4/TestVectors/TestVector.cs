@@ -34,5 +34,5 @@ sealed class TestVector
     /// <summary>
     /// Gets the list of data chunks in the key stream.
     /// </summary>
-    public IList<Chunk> Chunks { get; } = new List<Chunk>();
+    public IList<Chunk> Chunks { get; } = [];
 }

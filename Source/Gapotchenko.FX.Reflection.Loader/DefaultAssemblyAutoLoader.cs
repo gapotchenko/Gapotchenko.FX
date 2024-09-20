@@ -46,7 +46,7 @@ sealed class DefaultAssemblyAutoLoader : AssemblyAutoLoader
         }
     }
 
-    static readonly ConditionalWeakTable<AssemblyLoadContext, DefaultAssemblyAutoLoader> m_Instances = new();
+    static readonly ConditionalWeakTable<AssemblyLoadContext, DefaultAssemblyAutoLoader> m_Instances = [];
 #else
     public static DefaultAssemblyAutoLoader Instance { get; } = new(AssemblyLoadContexts.Local);
 #endif

@@ -32,7 +32,7 @@ public class SetBaseTests
     [Fact]
     public void SetBase_ExceptWith()
     {
-        var s1 = new SetChimera<int>(new HashSet<int> { 1, 2, 3, 4, 5 });
+        var s1 = new SetChimera<int>([1, 2, 3, 4, 5]);
         s1.ExceptWith(new[] { 1, 3 });
         s1.SetEquals(new[] { 2, 4, 5 });
 
@@ -43,24 +43,24 @@ public class SetBaseTests
     [Fact]
     public void SetBase_IntersectWith()
     {
-        var s1 = new SetChimera<int>(new HashSet<int>());
+        var s1 = new SetChimera<int>([]);
         s1.IntersectWith(new[] { 1, 2, 3 });
         Assert.Equal(0, s1.Count);
 
-        s1 = new SetChimera<int>(new HashSet<int> { 1, 2, 3 });
+        s1 = new SetChimera<int>([1, 2, 3]);
         s1.IntersectWith(Array.Empty<int>());
         Assert.Equal(0, s1.Count);
 
         foreach (var s2 in Util.Sets(Array.Empty<int>()))
         {
-            s1 = new SetChimera<int>(new HashSet<int> { 1, 2, 3, 4, 5 });
+            s1 = new SetChimera<int>([1, 2, 3, 4, 5]);
             s1.IntersectWith(s2);
             Assert.Equal(0, s1.Count);
         }
 
         foreach (var s2 in Util.Sets(new[] { 10, 2, 3, 40 }))
         {
-            s1 = new SetChimera<int>(new HashSet<int> { 1, 2, 3, 4, 5 });
+            s1 = new SetChimera<int>([1, 2, 3, 4, 5]);
             s1.IntersectWith(s2);
             s1.SetEquals(new[] { 2, 3 });
         }
@@ -71,7 +71,7 @@ public class SetBaseTests
     {
         foreach (var s2 in Util.Sets(new[] { 3, 4, 5 }))
         {
-            var s1 = new SetChimera<int>(new HashSet<int> { 1, 2, 3 });
+            var s1 = new SetChimera<int>([1, 2, 3]);
             s1.SymmetricExceptWith(s2);
             s1.SetEquals(new[] { 1, 2, 4, 5 });
         }
@@ -80,7 +80,7 @@ public class SetBaseTests
     [Fact]
     public void SetBase_UnionWith()
     {
-        var s1 = new SetChimera<int>(new HashSet<int> { 1, 2, 3 });
+        var s1 = new SetChimera<int>([1, 2, 3]);
         s1.UnionWith(new[] { 3, 4, 5 });
         s1.SetEquals(new[] { 1, 2, 3, 4, 5 });
     }

@@ -4,7 +4,7 @@ namespace Gapotchenko.FX.Linq.Expressions;
 
 sealed class ParameterExpressionRegistry
 {
-    readonly List<ParameterExpression> m_Indeces = new List<ParameterExpression>();
+    readonly List<ParameterExpression> m_Indeces = [];
 
     public int GetIndex(ParameterExpression parameter)
     {

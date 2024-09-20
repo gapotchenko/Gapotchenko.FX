@@ -38,7 +38,7 @@ public sealed class StringEditor
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    List<Operation> m_Operations = new List<Operation>();
+    readonly List<Operation> m_Operations = [];
 
     /// <summary>
     /// Validates a string span.

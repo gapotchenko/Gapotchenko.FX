@@ -7,7 +7,7 @@ public class ReadOnlySetBaseTests
     [Fact]
     public void ReadOnlySetBase_IsProperSubsetOf()
     {
-        var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 3, 2, 1 });
+        var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
         foreach (var s in Util.Sets(new[] { 1, 2, 3, 4 }))
             Assert.True(s1.IsProperSubsetOf(s));
@@ -36,7 +36,7 @@ public class ReadOnlySetBaseTests
     [Fact]
     public void ReadOnlySetBase_IsProperSupersetOf()
     {
-        var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 3, 2, 1 });
+        var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
         foreach (var s in Util.Sets(Array.Empty<int>()))
             Assert.True(s1.IsProperSupersetOf(s));
@@ -68,7 +68,7 @@ public class ReadOnlySetBaseTests
     [Fact]
     public void ReadOnlySetBase_IsSubsetOf()
     {
-        var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 3, 2, 1 });
+        var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
         foreach (var s in Util.Sets(new[] { 1, 2, 3, 4 }))
             Assert.True(s1.IsSubsetOf(s));
@@ -97,7 +97,7 @@ public class ReadOnlySetBaseTests
     [Fact]
     public void ReadOnlySetBase_IsSupersetOf()
     {
-        var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 3, 2, 1 });
+        var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
         foreach (var s in Util.Sets(Array.Empty<int>()))
             Assert.True(s1.IsSupersetOf(s));
@@ -118,7 +118,7 @@ public class ReadOnlySetBaseTests
     [Fact]
     public void ReadOnlySetBase_Overlaps()
     {
-        var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 3, 2, 1 });
+        var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
         foreach (var s in Util.Sets(Array.Empty<int>()))
             Assert.False(s1.Overlaps(s));
@@ -162,7 +162,7 @@ public class ReadOnlySetBaseTests
     [Fact]
     public void ReadOnlySetBase_SetEquals()
     {
-        var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 3, 2, 1 });
+        var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
         foreach (var s in Util.Sets(Array.Empty<int>()))
             Assert.False(s1.SetEquals(s));
@@ -180,7 +180,7 @@ public class ReadOnlySetBaseTests
     [Fact]
     public void ReadOnlySetBase_CopyTo()
     {
-        var s1 = new ReadOnlySetChimera<int>(new HashSet<int> { 1, 2, 3 });
+        var s1 = new ReadOnlySetChimera<int>([1, 2, 3]);
 
         int[] arr;
 

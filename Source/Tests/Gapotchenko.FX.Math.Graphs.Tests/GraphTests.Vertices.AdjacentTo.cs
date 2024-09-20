@@ -16,7 +16,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5) }
         };
 
-        Graph_VerticesAdjacentTo(g, 2, new HashSet<int> { 1, 3, 5, 7 });
+        Graph_VerticesAdjacentTo(g, 2, [1, 3, 5, 7]);
     }
 
     static void Graph_VerticesAdjacentTo<T>(Graph<T> graph, T from, HashSet<T> expectedResult)
@@ -50,7 +50,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5), (2, 2) }
         };
 
-        Graph_VerticesAdjacentTo(g, 2, new HashSet<int> { 1, 2, 3, 5, 7 });
+        Graph_VerticesAdjacentTo(g, 2, [1, 2, 3, 5, 7]);
     }
 
     [TestMethod]
@@ -64,7 +64,7 @@ partial class GraphTests
             Edges = { (0, 1), (1, 2), (3, 2), (2, 5), (7, 1), (7, 2), (7, 5), (5, 2) }
         };
 
-        Graph_VerticesAdjacentTo(g, 2, new HashSet<int> { 1, 3, 5, 7 });
+        Graph_VerticesAdjacentTo(g, 2, [1, 3, 5, 7]);
     }
 
     #region Directed
@@ -79,7 +79,7 @@ partial class GraphTests
 
         Graph_VerticesAdjacentTo(
             g.IncomingVerticesAdjacentTo(2),
-            new HashSet<int> { 1, 3, 7 });
+            [1, 3, 7]);
     }
 
     [TestMethod]
@@ -92,7 +92,7 @@ partial class GraphTests
 
         Graph_VerticesAdjacentTo(
             g.IncomingVerticesAdjacentTo(2),
-            new HashSet<int> { 1, 2, 3, 7 });
+            [1, 2, 3, 7]);
     }
 
     [TestMethod]
@@ -105,7 +105,7 @@ partial class GraphTests
 
         Graph_VerticesAdjacentTo(
             g.OutgoingVerticesAdjacentTo(2),
-            new HashSet<int> { 5 });
+            [5]);
     }
 
     [TestMethod]
@@ -118,7 +118,7 @@ partial class GraphTests
 
         Graph_VerticesAdjacentTo(
             g.OutgoingVerticesAdjacentTo(2),
-            new HashSet<int> { 2, 5 });
+            [2, 5]);
     }
 
     #endregion

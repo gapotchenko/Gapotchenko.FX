@@ -101,7 +101,7 @@ public class AssemblyAutoLoader :
     public static AssemblyAutoLoader Default => DefaultAssemblyAutoLoader.Instance;
 
     readonly AssemblyLoadPal m_AssemblyLoadPal;
-    readonly Dictionary<Assembly, AssemblyDescriptor> m_AssemblyDescriptors = new();
+    readonly Dictionary<Assembly, AssemblyDescriptor> m_AssemblyDescriptors = [];
 
     /// <summary>
     /// Gets the associated app domain.

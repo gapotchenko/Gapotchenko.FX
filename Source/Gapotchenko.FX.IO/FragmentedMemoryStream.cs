@@ -64,7 +64,7 @@ public class FragmentedMemoryStream : Stream
 
     const long BlockSize = 65536;
 
-    readonly List<byte[]> m_Blocks = new();
+    readonly List<byte[]> m_Blocks = [];
 
     /// <summary>
     /// The block of memory currently addressed by Position

@@ -23,6 +23,6 @@ sealed class ReadOnlySetChimera<T> : ReadOnlySetBase<T>
 
     static class EmptyFactory
     {
-        public static ReadOnlySetChimera<T> Instance { get; } = new(new());
+        public static ReadOnlySetChimera<T> Instance { get; } = new([]);
     }
 }
