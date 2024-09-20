@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Gapotchenko.FX;
+﻿namespace Gapotchenko.FX;
 
 partial class Fn
 {

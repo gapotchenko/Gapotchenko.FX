@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Gapotchenko.FX.Collections.Generic;
+﻿namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
 /// Generic dictionary extensions.

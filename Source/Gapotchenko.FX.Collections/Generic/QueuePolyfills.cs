@@ -11,7 +11,6 @@
 #endif
 
 using Gapotchenko.FX.Collections.Utils;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Collections.Generic;
 

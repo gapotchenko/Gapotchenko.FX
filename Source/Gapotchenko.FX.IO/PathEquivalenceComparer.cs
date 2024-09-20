@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Gapotchenko.FX.IO;
+﻿namespace Gapotchenko.FX.IO;
 
 sealed class PathEquivalenceComparer : StringComparer
 {

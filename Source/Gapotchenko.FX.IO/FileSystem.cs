@@ -2,8 +2,6 @@
 using Gapotchenko.FX.IO.Properties;
 using Gapotchenko.FX.Text;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
 #if TFF_TRANSACTIONS
 using System.Transactions;
 #endif

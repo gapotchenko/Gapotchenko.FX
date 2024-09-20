@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Memory.Properties;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Memory;
 

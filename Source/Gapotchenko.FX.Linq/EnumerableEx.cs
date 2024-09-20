@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Gapotchenko.FX.Linq;
+﻿namespace Gapotchenko.FX.Linq;
 
 /// <summary>
 /// Provides an extended set of static methods for querying objects that implement <see cref="IEnumerable{T}"/>.

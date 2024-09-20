@@ -1,5 +1,4 @@
-﻿using Gapotchenko.FX.Math.Intervals;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Math.Intervals.Tests;
 

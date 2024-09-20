@@ -6,7 +6,6 @@
 
 using Gapotchenko.FX.Runtime.CompilerServices;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Gapotchenko.FX.Math.Intervals;

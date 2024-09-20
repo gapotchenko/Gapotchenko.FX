@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace Gapotchenko.FX.Data.Encoding;

@@ -12,7 +12,6 @@
 #endif
 
 using Gapotchenko.FX.IO.Pal;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Gapotchenko.FX.IO;

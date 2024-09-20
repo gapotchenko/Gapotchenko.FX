@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Gapotchenko.FX.Collections;
+﻿namespace Gapotchenko.FX.Collections;
 
 /// <summary>
 /// Array extensions.

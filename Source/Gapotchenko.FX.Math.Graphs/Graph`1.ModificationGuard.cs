@@ -5,7 +5,6 @@
 // Year of introduction: 2021
 
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Math.Graphs;
 

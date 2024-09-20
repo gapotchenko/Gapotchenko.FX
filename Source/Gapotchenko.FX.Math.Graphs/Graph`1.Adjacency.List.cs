@@ -6,7 +6,6 @@
 
 using Gapotchenko.FX.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Math.Graphs;
 

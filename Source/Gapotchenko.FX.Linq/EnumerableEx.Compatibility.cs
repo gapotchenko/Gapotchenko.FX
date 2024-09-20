@@ -1,7 +1,5 @@
 ﻿// API compatibility layer.
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace Gapotchenko.FX.Linq;
 
 partial class EnumerableEx

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Gapotchenko.FX.Math;
+﻿namespace Gapotchenko.FX.Math;
 
 using Math = System.Math;
 

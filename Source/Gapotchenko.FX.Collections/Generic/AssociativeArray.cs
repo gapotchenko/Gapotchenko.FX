@@ -15,7 +15,6 @@ using Gapotchenko.FX.Collections.Utils;
 using Gapotchenko.FX.Linq;
 using System.Collections;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX.Collections.Generic;
 

@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Runtime.CompilerServices;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Gapotchenko.FX;
 

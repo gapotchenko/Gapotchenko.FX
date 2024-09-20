@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Console.Emulation;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Console;
