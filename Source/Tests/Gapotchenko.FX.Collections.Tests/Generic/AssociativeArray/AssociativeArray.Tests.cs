@@ -95,7 +95,9 @@ public abstract class AssociativeArray_Tests<TKey, TValue> : IDictionary_Generic
     public void AssociativeArray_Constructor_int(int count)
     {
         IDictionary<TKey, TValue> dictionary = new AssociativeArray<TKey, TValue>(count);
+#pragma warning disable xUnit2013 // Do not use equality check to check for collection size.
         Assert.Equal(0, dictionary.Count);
+#pragma warning restore xUnit2013 // Do not use equality check to check for collection size.
     }
 
     [Theory]

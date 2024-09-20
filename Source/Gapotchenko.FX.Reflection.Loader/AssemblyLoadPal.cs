@@ -4,7 +4,9 @@ using System.Reflection;
 using System.Runtime.Loader;
 #endif
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Gapotchenko.FX.Reflection;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Platform abstraction layer for assembly loading functionality of a .NET host environment.

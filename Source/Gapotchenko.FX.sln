@@ -56,6 +56,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Collections.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mastering", "Mastering", "{68BA92DB-7296-463D-9C99-01357420A1A0}"
 	ProjectSection(SolutionItems) = preProject
+		Mastering\Analysis.props = Mastering\Analysis.props
 		Mastering\Language.props = Mastering\Language.props
 		Mastering\NuGet.targets = Mastering\NuGet.targets
 		Mastering\TargetFrameworkFeatures.props = Mastering\TargetFrameworkFeatures.props

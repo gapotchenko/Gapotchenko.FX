@@ -6,7 +6,9 @@ using System.Reflection;
 using System.Runtime.Loader;
 #endif
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Gapotchenko.FX.Reflection;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 #if !BINARY_COMPATIBILITY
 #pragma warning disable CS0109 // Member does not hide an accessible member. The new keyword is not required.
