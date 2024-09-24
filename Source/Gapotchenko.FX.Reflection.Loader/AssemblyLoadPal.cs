@@ -1,12 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 #if TFF_ASSEMBLYLOADCONTEXT
 using System.Runtime.Loader;
 #endif
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
+
 namespace Gapotchenko.FX.Reflection;
-#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Platform abstraction layer for assembly loading functionality of a .NET host environment.
@@ -229,7 +230,14 @@ public sealed class AssemblyLoadPal
         if (m_AppDomain != null)
         {
 #if !TFF_SINGLE_APPDOMAIN
-            // TODO: handle non-current domains by calling a corresponding app domain's method, set AssemblyName.CodeBase to cause loading from the file.
+            if (m_AppDomain != AppDomain.CurrentDomain)
+            {
+                return m_AppDomain.Load(
+                    new AssemblyName
+                    {
+                        CodeBase = assemblyFile
+                    });
+            }
 #endif
             return Assembly.LoadFrom(assemblyFile);
         }
