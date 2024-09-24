@@ -16,7 +16,8 @@ Release date: not released yet
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - Added `ReifyCollection` LINQ extension method for `IEnumerable<T>`
 - The synchronous execution of an asynchronous task in `Gapotchenko.FX.Threading.Tasks.TaskBridge` can take additional cancellation token now
-- Use hardware-accelerated CRC32C checksum algorithm implementation when available
+- Use hardware-accelerated CRC-32C checksum algorithm implementation when available
+- Deprecated `Gapotchenko.FX.Math.Topology` module in favor of a formalized `Gapotchenko.FX.Math.Graphs` module
 - Polyfills:
   - Added polyfill for required properties introduced in C# 11.0
   - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
@@ -109,7 +110,7 @@ Release date: July 6, 2021
 - Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
 - Added `AppInformation.For(assembly)` static function that retrieves app information for a specified assembly
 - Added LINQ function that simultaneously determines whether any elements of a sequence satisfy the specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` with higher dimensional overloads)
-- Added `ConsoleEx.ReadPassword` function for reading a password from the console
+- Added `ConsoleEx.ReadPassword` function for securely reading a password from the console
 - Added `System.Runtime.CompilerServices.ModuleInitializerAttribute` polyfill
 - Added `SkipLast` and `TakeLast` LINQ polyfills
 - Added `System.Collections.Generic.ReferenceEqualityComparer` polyfill

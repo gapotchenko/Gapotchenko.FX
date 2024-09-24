@@ -28,18 +28,11 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
 
     readonly AssemblyAutoLoader m_AssemblyAutoLoader;
 
-    readonly struct BindingRedirect
+    readonly struct BindingRedirect(Version fromA, Version fromB, Version to)
     {
-        public BindingRedirect(Version fromA, Version fromB, Version to)
-        {
-            FromA = fromA;
-            FromB = fromB;
-            To = to;
-        }
-
-        public Version FromA { get; }
-        public Version FromB { get; }
-        public Version To { get; }
+        public Version FromA { get; } = fromA;
+        public Version FromB { get; } = fromB;
+        public Version To { get; } = to;
 
 #if DEBUG
         public override string ToString() => $"{FromA}-{FromB} -> {To}";
@@ -142,7 +135,7 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
 #if NETCOREAPP3_1_OR_GREATER
                     .Split('-', 2, StringSplitOptions.TrimEntries);
 #else
-                    .Split(new[] { '-' }, 2, StringSplitOptions.None)
+                    .Split(['-'], 2, StringSplitOptions.None)
                     .Select(x => x.Trim())
                     .ToList();
 #endif
@@ -151,9 +144,8 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
                 if (partCount == 0)
                     continue;
 
-                bindingRedirects ??= new(StringComparer.OrdinalIgnoreCase);
-
-                bindingRedirects[asmName] = new BindingRedirect(
+                (bindingRedirects ??= new(StringComparer.OrdinalIgnoreCase))
+                [asmName] = new BindingRedirect(
                     Version.Parse(parts[0]),
                     Version.Parse(parts[partCount - 1]),
                     Version.Parse(newVersion));

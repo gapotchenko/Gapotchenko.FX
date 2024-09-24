@@ -4,7 +4,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2021
 
-
 using System.Numerics;
 
 namespace Gapotchenko.FX.Data.Integrity.Checksum;
@@ -159,6 +158,7 @@ partial class Crc32
 #if NET8_0_OR_GREATER
             protected override uint ComputeBlock(uint register, ReadOnlySpan<byte> data)
             {
+                // Calculate the checksum using a hardware-accelerated CRC-32C primitive.
                 foreach (var b in data)
                     register = BitOperations.Crc32C(register, b);
                 return register;

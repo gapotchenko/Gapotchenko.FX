@@ -48,6 +48,8 @@ static class Crc32TableFactory
         return table;
     }
 
+    static readonly ConcurrentDictionary<(uint, bool), WeakReference<uint[]>> m_Cache = new();
+
     static uint[] CreateTable(uint polynomial, bool reflectedInput)
     {
         const int Width = 32;
@@ -96,6 +98,4 @@ static class Crc32TableFactory
 
         return table;
     }
-
-    static readonly ConcurrentDictionary<(uint, bool), WeakReference<uint[]>> m_Cache = new();
 }
