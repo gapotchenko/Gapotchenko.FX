@@ -6,10 +6,11 @@
 
 Release date: not released yet
 
-- Added support for .NET 8.0 and .NET 9.0 target frameworks
+- Added preliminary support for .NET 9.0 target framework
+- Added support for .NET 8.0 target framework
 - Introduced primitives for interval arithmetics represented by `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
 - Introduced `Gapotchenko.FX.Collection.Generic.Deque<T>` primitive representing a linear collection that supports element insertion and removal at both ends with O(1) algorithmic complexity
-- Added ability to choose between lowercase or uppercase text output of a case-insensitive data encoding
+- Added ability to choose between lowercase or uppercase text output of a case-insensitive data encoding by using `DataEncodingOptions.Lowercase` and `DataEncodingOptions.Uppercase` flags
 - Added ability to create streams over contiguous memory regions represented by `System.Memory` and `System.ReadOnlyMemory` objects by using `ToStream` extension method provided by `Gapotchenko.FX.Memory` module
 - Added `Gapotchenko.FX.Memory.SpanEqualityComparer` class that allows to compare read-only spans and calculate their hash codes
 - `AssemblyAutoLoader` now automatically handles probing paths defined by assembly binding redirects
