@@ -13,10 +13,6 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public bool IsVertexIsolated(TVertex vertex)
     {
-        static bool IsAssociatedKeyVertex(AssociativeArray<TVertex, AdjacencyRow?> adjList, TVertex vertex) =>
-            adjList.TryGetValue(vertex, out var adjRow) &&
-            adjRow?.Count > 0;
-
         var adjList = m_AdjacencyList;
 
         if (IsAssociatedKeyVertex(adjList, vertex))
@@ -42,6 +38,10 @@ partial class Graph<TVertex>
         }
 
         return true;
+
+        static bool IsAssociatedKeyVertex(AssociativeArray<TVertex, AdjacencyRow?> adjList, TVertex vertex) =>
+            adjList.TryGetValue(vertex, out var adjRow) &&
+            adjRow?.Count > 0;
     }
 
     /// <inheritdoc/>
@@ -59,9 +59,9 @@ partial class Graph<TVertex>
                         map[u] = false;
                     map[v] = false;
                 }
-                else if (!map.ContainsKey(v))
+                else
                 {
-                    map.Add(v, true);
+                    map.TryAdd(v, true);
                 }
             }
 

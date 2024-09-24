@@ -26,22 +26,6 @@ partial class Graph<TVertex>
         readonly int m_Version = graph.m_Version;
 
         /// <summary>
-        /// Throws a graph modification exception.
-        /// </summary>
-        [DoesNotReturn]
-        public static void Throw() =>
-            throw new InvalidOperationException("Graph was modified; enumeration operation may not execute.");
-
-        /// <summary>
-        /// Ensures that the graph hasn't been modified since the moment the current guard was initialized.
-        /// </summary>
-        public void Checkpoint()
-        {
-            if (graph.m_Version != m_Version)
-                Throw();
-        }
-
-        /// <summary>
         /// Protects <see cref="IEnumerable{T}"/> against graph modifications.
         /// </summary>
         [return: NotNullIfNotNull(nameof(source))]
@@ -61,5 +45,21 @@ partial class Graph<TVertex>
                 yield return i;
             }
         }
+
+        /// <summary>
+        /// Ensures that the graph hasn't been modified since the moment the current guard was initialized.
+        /// </summary>
+        public void Checkpoint()
+        {
+            if (graph.m_Version != m_Version)
+                Throw();
+        }
+
+        /// <summary>
+        /// Throws a graph modification exception.
+        /// </summary>
+        [DoesNotReturn]
+        public static void Throw() =>
+            throw new InvalidOperationException("Graph was modified; enumeration operation may not execute.");
     }
 }
