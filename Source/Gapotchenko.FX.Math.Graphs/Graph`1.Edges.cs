@@ -205,7 +205,7 @@ partial class Graph<TVertex>
         /// <inheritdoc/>
         public override IEnumerator<GraphEdge<TVertex>> GetEnumerator()
         {
-            var version = m_Graph.m_Version;
+            var modificationGuard = new ModificationGuard(m_Graph);
 
             foreach (var i in m_Graph.m_AdjacencyList)
             {
@@ -215,9 +215,7 @@ partial class Graph<TVertex>
                     var from = i.Key;
                     foreach (var to in adjacencyRow)
                     {
-                        if (m_Graph.m_Version != version)
-                            ModificationGuard.Throw();
-
+                        modificationGuard.Checkpoint();
                         yield return GraphEdge.Create(from, to);
                     }
                 }

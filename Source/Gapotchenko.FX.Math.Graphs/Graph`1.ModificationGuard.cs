@@ -23,8 +23,6 @@ partial class Graph<TVertex>
 
     readonly struct ModificationGuard(Graph<TVertex> graph)
     {
-        readonly int m_Version = graph.m_Version;
-
         /// <summary>
         /// Protects <see cref="IEnumerable{T}"/> against graph modifications.
         /// </summary>
@@ -49,16 +47,20 @@ partial class Graph<TVertex>
         /// <summary>
         /// Ensures that the graph hasn't been modified since the moment the current guard was initialized.
         /// </summary>
+        [StackTraceHidden]
         public void Checkpoint()
         {
             if (graph.m_Version != m_Version)
                 Throw();
         }
 
+        readonly int m_Version = graph.m_Version;
+
         /// <summary>
         /// Throws a graph modification exception.
         /// </summary>
         [DoesNotReturn]
+        [StackTraceHidden]
         public static void Throw() =>
             throw new InvalidOperationException("Graph was modified; enumeration operation may not execute.");
     }

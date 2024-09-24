@@ -47,7 +47,10 @@ partial class Graph<TVertex>
         public override IEqualityComparer<TVertex> Comparer => m_Graph.VertexComparer;
 
         /// <inheritdoc/>
-        public override int Count => m_Graph.m_CachedOrder ??= this.Stream().Count();
+        public override int Count =>
+            // The streaming of enumerable elements is used to decouple the Count() method
+            // from trying to call the Count property directly, thus causing a stack overflow.
+            m_Graph.m_CachedOrder ??= this.Stream().Count();
 
         /// <inheritdoc/>
         public override bool Add(TVertex vertex)
@@ -124,19 +127,13 @@ partial class Graph<TVertex>
         /// <inheritdoc/>
         public override IEnumerator<TVertex> GetEnumerator()
         {
-            var version = m_Graph.m_Version;
+            var modificationGuard = new ModificationGuard(m_Graph);
 
             var query = m_Graph.m_AdjacencyList
                 .SelectMany(x => (x.Value ?? Enumerable.Empty<TVertex>()).Prepend(x.Key))
                 .Distinct(m_Graph.VertexComparer);
 
-            foreach (var i in query)
-            {
-                if (m_Graph.m_Version != version)
-                    ModificationGuard.Throw();
-
-                yield return i;
-            }
+            return modificationGuard.Protect(query).GetEnumerator();
         }
     }
 }

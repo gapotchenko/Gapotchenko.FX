@@ -40,8 +40,8 @@ public static class TopologicalSortExtensions
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         Func<TKey, TKey, bool> dependencyFunction,
-        IEqualityComparer<TKey>? comparer = null)
-        => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, false);
+        IEqualityComparer<TKey>? comparer = null) =>
+        OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, false);
 
     /// <summary>
     /// <para>
@@ -66,8 +66,8 @@ public static class TopologicalSortExtensions
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         Func<TKey, TKey, bool> dependencyFunction,
-        IEqualityComparer<TKey>? comparer = null)
-        => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, true);
+        IEqualityComparer<TKey>? comparer = null) =>
+        OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, true);
 
     static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
         IEnumerable<TSource> source,
@@ -119,8 +119,8 @@ public static class TopologicalSortExtensions
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         Func<TKey, IEnumerable<TKey>?> dependencyFunction,
-        IEqualityComparer<TKey>? comparer = null)
-        => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, false);
+        IEqualityComparer<TKey>? comparer = null) =>
+        OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, false);
 
     /// <summary>
     /// <para>
@@ -145,8 +145,8 @@ public static class TopologicalSortExtensions
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         Func<TKey, IEnumerable<TKey>?> dependencyFunction,
-        IEqualityComparer<TKey>? comparer = null)
-        => OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, true);
+        IEqualityComparer<TKey>? comparer = null) =>
+        OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, true);
 
     static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
         this IEnumerable<TSource> source,
@@ -220,15 +220,8 @@ public static class TopologicalSortExtensions
         if (list == source)
             list = list.Clone();
 
-        // Note that this comparer does not support partial orders
-        // and thus cannot be used with most other sorting algorithms,
-        // unless they do a full scan as selection sort does.
-        bool Compare(TKey x, TKey y)
-        {
-            // If x depends on y and there is no circular dependency then topological order should prevail.
-            // Otherwise, the positional order provided by the underlying sorting algorithm prevails.
-            return g.HasPath(x, y) && !g.HasPath(y, x);
-        }
+        // Algorithm author: Oleksiy Gapotchenko, 2014. Property of public domain.
+        // https://blog.gapotchenko.com/stable-topological-sort
 
         // Selection sort algorithm compensates the lack of partial order support in comparer by
         // doing a full scan through the whole range of candidate elements.
@@ -237,7 +230,7 @@ public static class TopologicalSortExtensions
             int jMin = i;
             for (int j = i + 1; j < n; ++j)
             {
-                if (Compare(keySelector(list[jMin]), keySelector(list[j])))
+                if (Compare(g, keySelector(list[jMin]), keySelector(list[j])))
                     jMin = j;
             }
 
@@ -251,6 +244,16 @@ public static class TopologicalSortExtensions
         }
 
         return list;
+
+        // Note that this comparer does not support partial orders
+        // and thus cannot be used with most other sorting algorithms,
+        // unless they do a full scan as selection sort does.
+        static bool Compare(IReadOnlyGraph<TKey> g, TKey x, TKey y)
+        {
+            // If x depends on y and there is no circular dependency then topological order should prevail.
+            // Otherwise, the positional order provided by the underlying sorting algorithm prevails.
+            return g.HasPath(x, y) && !g.HasPath(y, x);
+        }
     }
 
     abstract class TopologicallyOrderedEnumerable
@@ -298,8 +301,8 @@ public static class TopologicalSortExtensions
         IOrderedEnumerable<TSource> IOrderedEnumerable<TSource>.CreateOrderedEnumerable<TSubsequentKey>(
             Func<TSource, TSubsequentKey> keySelector,
             IComparer<TSubsequentKey>? comparer,
-            bool descending)
-            => new SubsequentTopologicallyOrderedEnumerable<TSource, TSubsequentKey>(keySelector, comparer, descending, this);
+            bool descending) =>
+            new SubsequentTopologicallyOrderedEnumerable<TSource, TSubsequentKey>(keySelector, comparer, descending, this);
     }
 
     abstract class SubsequentTopologicallyOrderedEnumerable<TSource> : TopologicallyOrderedEnumerable
@@ -320,8 +323,8 @@ public static class TopologicalSortExtensions
             Func<TSource, TKey> keySelector,
             IComparer<TKey>? comparer,
             bool descending,
-            TopologicallyOrderedEnumerable parent)
-            : base(parent)
+            TopologicallyOrderedEnumerable parent) :
+            base(parent)
         {
             if (keySelector == null)
                 throw new ArgumentNullException(nameof(keySelector));
@@ -391,7 +394,7 @@ public static class TopologicalSortExtensions
         IOrderedEnumerable<TSource> IOrderedEnumerable<TSource>.CreateOrderedEnumerable<TSubsequentKey>(
             Func<TSource, TSubsequentKey> keySelector,
             IComparer<TSubsequentKey>? comparer,
-            bool descending)
-            => new SubsequentTopologicallyOrderedEnumerable<TSource, TSubsequentKey>(keySelector, comparer, descending, this);
+            bool descending) =>
+            new SubsequentTopologicallyOrderedEnumerable<TSource, TSubsequentKey>(keySelector, comparer, descending, this);
     }
 }
