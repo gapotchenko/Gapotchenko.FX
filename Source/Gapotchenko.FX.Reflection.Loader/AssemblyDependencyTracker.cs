@@ -19,21 +19,23 @@ sealed class AssemblyDependencyTracker
         m_TrackedAssemblyNames.Add(assembly.GetName());
 
         //foreach (var i in assembly.GetReferencedAssemblies())
-        //    _TrackedAssemblyNames.Add(i);
+        //    m_TrackedAssemblyNames.Add(i);
     }
 
     readonly HashSet<AssemblyName> m_TrackedAssemblyNames = new(AssemblyNameEqualityComparer.Instance);
 
     public bool IsAssemblyResolutionInhibited(Assembly? requestingAssembly)
     {
-        if (requestingAssembly != null)
+        if (requestingAssembly == null)
+        {
+            return false;
+        }
+        else
         {
             var name = requestingAssembly.GetName();
             lock (m_TrackedAssemblyNames)
-                if (!m_TrackedAssemblyNames.Contains(name))
-                    return true;
+                return !m_TrackedAssemblyNames.Contains(name);
         }
-        return false;
     }
 
     public bool RegisterReferencedAssembly(AssemblyName assemblyName)

@@ -3,7 +3,7 @@
 // Portions © Microsoft and .NET Foundation
 //
 // File introduced by: Oleksiy Gapotchenko
-// Year of introduction: 2019
+// Year of introduction: 2021
 
 using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System.Runtime.InteropServices;
@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Reflection.Loader.Backends;
 
 readonly struct LibraryNameVariation
 {
-    public LibraryNameVariation(string prefix, string suffix)
+    LibraryNameVariation(string prefix, string suffix)
     {
         Prefix = prefix;
         Suffix = suffix;
@@ -42,7 +42,7 @@ readonly struct LibraryNameVariation
         }
         else
         {
-            return new[] { new LibraryNameVariation(string.Empty, string.Empty) };
+            return [new LibraryNameVariation(string.Empty, string.Empty)];
         }
 #else
         return Enumerate_Windows(libName, isRelativePath, forOSLoader);

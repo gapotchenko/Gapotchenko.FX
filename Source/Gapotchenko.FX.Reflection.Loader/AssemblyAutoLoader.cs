@@ -218,7 +218,7 @@ public class AssemblyAutoLoader :
             if (m_ProbingPathResolvers.ContainsKey(path))
                 return false;
 
-            m_ProbingPathResolvers.Add(path, new ProbingPathAssemblyLoaderBackend(IsAttached, m_AssemblyLoadPal, new[] { path }));
+            m_ProbingPathResolvers.Add(path, new ProbingPathAssemblyLoaderBackend(IsAttached, m_AssemblyLoadPal, [path]));
             return true;
         }
     }
@@ -291,12 +291,28 @@ public class AssemblyAutoLoader :
             .FirstOrDefault(x => x != null);
     }
 
-    bool m_Disposed;
-
     void EnsureNotDisposed()
     {
         if (m_Disposed)
             throw new ObjectDisposedException(null);
+    }
+
+    /// <summary>
+    /// Finalizes the instance of <see cref="AssemblyAutoLoader"/> class.
+    /// </summary>
+    ~AssemblyAutoLoader()
+    {
+        Dispose(false);
+    }
+
+    /// <summary>
+    /// Unregisters all added probing paths and assemblies.
+    /// Releases all resources used by the <see cref="AssemblyAutoLoader"/>.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -331,21 +347,5 @@ public class AssemblyAutoLoader :
             i.Dispose();
     }
 
-    /// <summary>
-    /// Finalizes the instance of <see cref="AssemblyAutoLoader"/> class.
-    /// </summary>
-    ~AssemblyAutoLoader()
-    {
-        Dispose(false);
-    }
-
-    /// <summary>
-    /// Unregisters all added probing paths and assemblies.
-    /// Releases all resources used by the <see cref="AssemblyAutoLoader"/>.
-    /// </summary>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
+    bool m_Disposed;
 }

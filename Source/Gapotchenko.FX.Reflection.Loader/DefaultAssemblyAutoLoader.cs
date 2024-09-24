@@ -2,7 +2,7 @@
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
-// Year of introduction: 2019
+// Year of introduction: 2021
 
 using System.Runtime.CompilerServices;
 #if TFF_ASSEMBLYLOADCONTEXT
@@ -25,6 +25,7 @@ sealed class DefaultAssemblyAutoLoader : AssemblyAutoLoader
 #endif
 
 #if TFF_ASSEMBLYLOADCONTEXT
+
 #if NETCOREAPP3_0_OR_GREATER
     public static DefaultAssemblyAutoLoader Instance
     {
@@ -56,8 +57,11 @@ sealed class DefaultAssemblyAutoLoader : AssemblyAutoLoader
 #else
     public static DefaultAssemblyAutoLoader Instance { get; } = new(AssemblyLoadContexts.Local);
 #endif
+
 #else
+
     public static DefaultAssemblyAutoLoader Instance { get; } = new();
+
 #endif
 
     protected override void Dispose(bool disposing)
