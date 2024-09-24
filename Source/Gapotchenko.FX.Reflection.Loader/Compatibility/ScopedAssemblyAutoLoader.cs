@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Reflection;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+namespace Gapotchenko.FX.Reflection;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 

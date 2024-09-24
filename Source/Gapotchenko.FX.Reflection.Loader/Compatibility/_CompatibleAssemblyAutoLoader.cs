@@ -1,4 +1,10 @@
-﻿#if BINARY_COMPATIBILITY
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+#if BINARY_COMPATIBILITY
 
 using System.Reflection;
 

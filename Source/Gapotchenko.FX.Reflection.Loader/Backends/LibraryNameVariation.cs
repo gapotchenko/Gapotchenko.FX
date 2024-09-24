@@ -1,4 +1,9 @@
-﻿// Portions © Microsoft and .NET Foundation
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+// Portions © Microsoft and .NET Foundation
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
 
 using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System.Runtime.InteropServices;

@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Reflection.Loader.Backends;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using Gapotchenko.FX.Reflection.Loader.Backends;
 using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System.Reflection;
 

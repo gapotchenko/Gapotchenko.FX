@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 #if TFF_ASSEMBLYLOADCONTEXT

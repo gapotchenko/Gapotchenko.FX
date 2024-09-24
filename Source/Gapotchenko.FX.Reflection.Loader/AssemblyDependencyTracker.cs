@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Reflection.Loader.Util;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using Gapotchenko.FX.Reflection.Loader.Util;
 using System.Reflection;
 
 namespace Gapotchenko.FX.Reflection.Loader;
