@@ -837,17 +837,17 @@ public partial class GraphTests
         {
             Edges = { ('a', 'b'), ('a', 'e') }
         };
-        TestCore(g, new GraphEdge<char>[] { ('a', 'b'), ('a', 'e') }, expectedSubgraph);
+        TestCore(g, [('a', 'b'), ('a', 'e')], expectedSubgraph);
 
         expectedSubgraph = new Graph<char>
         {
             Edges = { ('a', 'b') }
         };
-        TestCore(g, new GraphEdge<char>[] { ('a', 'b'), ('e', 'a') }, expectedSubgraph);
+        TestCore(g, [('a', 'b'), ('e', 'a')], expectedSubgraph);
 
-        TestCore(g, new GraphEdge<char>[] { ('e', 'a') }, new Graph<char>());
+        TestCore(g, [('e', 'a')], new Graph<char>());
 
-        TestCore(g, new GraphEdge<char>[] { }, new Graph<char>());
+        TestCore(g, [], new Graph<char>());
 
         static void TestCore<T>(Graph<T> g, IEnumerable<GraphEdge<T>> subgraphEdges, IReadOnlyGraph<T> expectedSubgraph)
         {

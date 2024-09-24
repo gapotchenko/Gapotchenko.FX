@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Collections.Generic;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using Gapotchenko.FX.Collections.Generic;
 
 namespace Gapotchenko.FX.Math.Graphs;
 

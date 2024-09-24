@@ -20,7 +20,7 @@ partial class GraphTests
 
         Assert.AreNotSame(g, h);
         Assert.IsTrue(h.IsDirected);
-        Assert.IsTrue(h.Vertices.SetEquals(new[] { 1, 2, 3, 5 }));
+        Assert.IsTrue(h.Vertices.SetEquals([1, 2, 3, 5]));
         Assert.IsTrue(h.Edges.SetEquals(new[] { (1, 2), (2, 3), (3, 2) }));
     }
 
@@ -42,7 +42,7 @@ partial class GraphTests
 
         Assert.AreNotSame(g, h);
         Assert.IsFalse(h.IsDirected);
-        Assert.IsTrue(h.Vertices.SetEquals(new[] { 1, 2, 3, 5 }));
+        Assert.IsTrue(h.Vertices.SetEquals([1, 2, 3, 5]));
         Assert.IsTrue(h.Edges.SetEquals(new[] { (2, 1), (2, 3) }));
 
         Assert.IsTrue(h.GraphEquals(g));

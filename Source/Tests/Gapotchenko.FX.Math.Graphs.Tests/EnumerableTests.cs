@@ -745,11 +745,11 @@ public class EnumerableTests
 
         /***************/
 
-        IEnumerable<(int a, int b)> seq_001 = new[]
-        {
+        IEnumerable<(int a, int b)> seq_001 =
+        [
             (1, 0), (1, 1), (1, 2), (1, 3),
             (2, 0), (2, 1), (2, 2), (2, 3)
-        };
+        ];
 
         static bool df_001((int, int) x, (int, int) y) =>
             (x, y) switch
@@ -1002,11 +1002,11 @@ public class EnumerableTests
 
         /***************/
 
-        IEnumerable<(int a, int b)> seq_001 = new[]
-        {
+        IEnumerable<(int a, int b)> seq_001 =
+        [
             (1, 0), (1, 1), (1, 2), (1, 3),
             (2, 0), (2, 1), (2, 2), (2, 3)
-        };
+        ];
 
         static bool df_001((int, int) x, (int, int) y) =>
             (x, y) switch

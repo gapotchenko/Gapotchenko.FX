@@ -107,7 +107,7 @@ partial class EnumerableExTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void Linq_Enumerable_ScalarOrDefault_Predicate_Value_NullPredicateArg()
     {
-        EnumerableEx.ScalarOrDefault(new int[0], null!, 10);
+        EnumerableEx.ScalarOrDefault([], null!, 10);
     }
 
     [TestMethod]

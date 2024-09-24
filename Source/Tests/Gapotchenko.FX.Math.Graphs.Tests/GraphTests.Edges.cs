@@ -44,7 +44,7 @@ partial class GraphTests
         };
 
         Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3]));
         Assert.AreEqual(2, g.Edges.Count);
         Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
 
@@ -54,7 +54,7 @@ partial class GraphTests
 
         Assert.IsTrue(g.Edges.Remove(2, 3));
         Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3]));
         Assert.AreEqual(1, g.Edges.Count);
         Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2) }));
     }
@@ -72,13 +72,13 @@ partial class GraphTests
         };
 
         Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3]));
         Assert.AreEqual(2, g.Edges.Count);
         Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
 
         g.Edges.Clear();
         Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3]));
         Assert.AreEqual(0, g.Edges.Count);
     }
 
@@ -125,7 +125,7 @@ partial class GraphTests
         };
 
         Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3]));
         Assert.AreEqual(2, g.Edges.Count);
         Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2), (2, 3) }));
         Assert.IsTrue(g.Edges.SetEquals(new[] { (2, 1), (3, 2) }));
@@ -136,7 +136,7 @@ partial class GraphTests
 
         Assert.IsTrue(g.Edges.Remove(3, 2));
         Assert.AreEqual(3, g.Vertices.Count);
-        Assert.IsTrue(g.Vertices.SetEquals(new[] { 1, 2, 3 }));
+        Assert.IsTrue(g.Vertices.SetEquals([1, 2, 3]));
         Assert.AreEqual(1, g.Edges.Count);
         Assert.IsTrue(g.Edges.SetEquals(new[] { (1, 2) }));
         Assert.IsTrue(g.Edges.SetEquals(new[] { (2, 1) }));

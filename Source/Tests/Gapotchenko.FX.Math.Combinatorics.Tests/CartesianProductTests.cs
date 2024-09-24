@@ -44,12 +44,12 @@ public class CartesianProductTests
 
         Assert.AreEqual(cardinality, p.Count);
 
-        Assert.IsTrue(p[0].SequenceEqual(new[] { 1, 5 }));
-        Assert.IsTrue(p[1].SequenceEqual(new[] { 2, 5 }));
-        Assert.IsTrue(p[2].SequenceEqual(new[] { 1, 6 }));
-        Assert.IsTrue(p[3].SequenceEqual(new[] { 2, 6 }));
-        Assert.IsTrue(p[4].SequenceEqual(new[] { 1, 7 }));
-        Assert.IsTrue(p[5].SequenceEqual(new[] { 2, 7 }));
+        Assert.IsTrue(p[0].SequenceEqual([1, 5]));
+        Assert.IsTrue(p[1].SequenceEqual([2, 5]));
+        Assert.IsTrue(p[2].SequenceEqual([1, 6]));
+        Assert.IsTrue(p[3].SequenceEqual([2, 6]));
+        Assert.IsTrue(p[4].SequenceEqual([1, 7]));
+        Assert.IsTrue(p[5].SequenceEqual([2, 7]));
     }
 
     [TestMethod]

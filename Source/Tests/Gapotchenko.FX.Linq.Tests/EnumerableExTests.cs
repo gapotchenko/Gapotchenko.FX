@@ -90,21 +90,21 @@ public partial class EnumerableExTests
     [TestMethod]
     public void Linq_Enumerable_IndexOf_1()
     {
-        IEnumerable<int> seq = new int[] { 10, 20, 30 };
+        IEnumerable<int> seq = [10, 20, 30];
         Assert.AreEqual(2, seq.IndexOf(30));
     }
 
     [TestMethod]
     public void Linq_Enumerable_IndexOf_2()
     {
-        IEnumerable<int> seq = new int[] { 10, 20, 30 };
+        IEnumerable<int> seq = [10, 20, 30];
         Assert.AreEqual(-1, seq.IndexOf(100));
     }
 
     [TestMethod]
     public void Linq_Enumerable_IndexOf_3()
     {
-        IEnumerable<char> seq = new char[] { 'A', 'B', 'C' };
+        IEnumerable<char> seq = ['A', 'B', 'C'];
         Assert.AreEqual(1, seq.IndexOf('B'));
     }
 
@@ -283,7 +283,7 @@ public partial class EnumerableExTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void Linq_Enumerable_AnyAndAll_NullArg_2()
     {
-        IEnumerable<int> source = new int[0];
+        IEnumerable<int> source = [];
         Func<int, bool>? predicate = null;
         source.AnyAndAll(predicate!);
     }

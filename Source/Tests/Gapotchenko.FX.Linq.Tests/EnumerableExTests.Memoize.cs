@@ -246,7 +246,7 @@ partial class EnumerableExTests
     [TestMethod]
     public void Linq_Memoize_A7()
     {
-        var te = new TracedEnumerable<int>(new int[] { 1, 2, 3 });
+        var te = new TracedEnumerable<int>([1, 2, 3]);
         Assert.IsFalse(te.EnumeratorRetrieved);
 
         var me = te.Memoize();

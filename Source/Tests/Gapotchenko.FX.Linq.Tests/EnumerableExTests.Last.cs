@@ -46,7 +46,7 @@ partial class EnumerableExTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void Linq_Enumerable_LastOrDefault_Predicate_Value_NullPredicateArg()
     {
-        EnumerableEx.LastOrDefault(new int[0], null!, 10);
+        EnumerableEx.LastOrDefault([], null!, 10);
     }
 
     [TestMethod]

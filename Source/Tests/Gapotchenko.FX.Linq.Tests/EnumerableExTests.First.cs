@@ -46,7 +46,7 @@ partial class EnumerableExTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void Linq_Enumerable_FirstOrDefault_Predicate_Value_NullPredicateArg()
     {
-        EnumerableEx.FirstOrDefault(new int[0], null!, 10);
+        EnumerableEx.FirstOrDefault([], null!, 10);
     }
 
     [TestMethod]

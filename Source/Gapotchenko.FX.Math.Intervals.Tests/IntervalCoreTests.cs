@@ -961,7 +961,7 @@ public abstract class IntervalCoreTests
         var interval = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(4));
 
         var result = sequence.Intersect(interval);
-        Assert.IsTrue(result.SequenceEqual(new[] { 2, 3, 4 }));
+        Assert.IsTrue(result.SequenceEqual([2, 3, 4]));
     }
 
     [TestMethod]
@@ -981,7 +981,7 @@ public abstract class IntervalCoreTests
         var interval = NewInterval(ValueInterval<int>.Infinite);
 
         var result = sequence.Intersect(interval);
-        Assert.IsTrue(result.SequenceEqual(new[] { 1, 2, 3, 4, 5 }));
+        Assert.IsTrue(result.SequenceEqual([1, 2, 3, 4, 5]));
     }
 
     #endregion
@@ -995,7 +995,7 @@ public abstract class IntervalCoreTests
         var interval = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Inclusive(4));
 
         var result = sequence.Except(interval);
-        Assert.IsTrue(result.SequenceEqual(new[] { 1, 5 }));
+        Assert.IsTrue(result.SequenceEqual([1, 5]));
     }
 
     [TestMethod]
@@ -1005,7 +1005,7 @@ public abstract class IntervalCoreTests
         var interval = NewInterval(ValueInterval<int>.Empty);
 
         var result = sequence.Except(interval);
-        Assert.IsTrue(result.SequenceEqual(new[] { 1, 2, 3, 4, 5 }));
+        Assert.IsTrue(result.SequenceEqual([1, 2, 3, 4, 5]));
     }
 
     [TestMethod]
@@ -1030,7 +1030,7 @@ public abstract class IntervalCoreTests
 
         set.IntersectWith(interval);
 
-        Assert.IsTrue(set.SetEquals(new[] { 2, 3, 5, 6 }));
+        Assert.IsTrue(set.SetEquals([2, 3, 5, 6]));
     }
 
     [TestMethod]
@@ -1052,7 +1052,7 @@ public abstract class IntervalCoreTests
 
         set.IntersectWith(interval);
 
-        Assert.IsTrue(set.SetEquals(new[] { 1, 2, 3, 4, 5 }));
+        Assert.IsTrue(set.SetEquals([1, 2, 3, 4, 5]));
     }
 
     #endregion
@@ -1067,7 +1067,7 @@ public abstract class IntervalCoreTests
 
         set.ExceptWith(interval);
 
-        Assert.IsTrue(set.SetEquals(new[] { 1, 7 }));
+        Assert.IsTrue(set.SetEquals([1, 7]));
     }
 
     [TestMethod]
@@ -1078,7 +1078,7 @@ public abstract class IntervalCoreTests
 
         set.ExceptWith(interval);
 
-        Assert.IsTrue(set.SetEquals(new[] { 1, 2, 3, 4, 5 }));
+        Assert.IsTrue(set.SetEquals([1, 2, 3, 4, 5]));
     }
 
     [TestMethod]

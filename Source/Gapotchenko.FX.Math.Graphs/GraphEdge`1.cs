@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Graphs;
 
@@ -6,29 +12,23 @@ namespace Gapotchenko.FX.Math.Graphs;
 /// Represents an edge of a graph.
 /// </summary>
 /// <typeparam name="TVertex">The type of end-vertices in the edge.</typeparam>
+/// <remarks>
+/// Initializes a new instance of <see cref="GraphEdge{TVertex}"/> struct with source and destination end-vertices.
+/// </remarks>
+/// <param name="from">The source vertex.</param>
+/// <param name="to">The destination vertex.</param>
 [DebuggerDisplay($"{{{nameof(From)}}} -> {{{nameof(To)}}}")]
-public readonly struct GraphEdge<TVertex>
+public readonly struct GraphEdge<TVertex>(TVertex from, TVertex to)
 {
-    /// <summary>
-    /// Initializes a new instance of <see cref="GraphEdge{TVertex}"/> struct with source and destination end-vertices.
-    /// </summary>
-    /// <param name="from">The source vertex.</param>
-    /// <param name="to">The destination vertex.</param>
-    public GraphEdge(TVertex from, TVertex to)
-    {
-        From = from;
-        To = to;
-    }
-
     /// <summary>
     /// The source end-vertex of the edge.
     /// </summary>
-    public TVertex From { get; init; }
+    public TVertex From { get; init; } = from;
 
     /// <summary>
     /// The destination end-vertex of the edge.
     /// </summary>
-    public TVertex To { get; init; }
+    public TVertex To { get; init; } = to;
 
     /// <summary>
     /// Reverses the edge direction by swapping source and destination end-vertices.
@@ -45,7 +45,7 @@ public readonly struct GraphEdge<TVertex>
     /// </para>
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    public IEnumerable<TVertex> IncidentVertices => new[] { From, To };
+    public IEnumerable<TVertex> IncidentVertices => [From, To];
 
     /// <inheritdoc/>
     public override string ToString() => $"{From} -> {To}";
