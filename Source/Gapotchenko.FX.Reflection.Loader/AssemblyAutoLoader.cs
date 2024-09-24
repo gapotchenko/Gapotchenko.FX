@@ -82,16 +82,40 @@ public class AssemblyAutoLoader :
 
 #if TFF_ASSEMBLYLOADCONTEXT
     /// <summary>
+    /// <para>
     /// Gets or configures the value indicating whether this <see cref="AssemblyAutoLoader"/> is attached
     /// to the associated <see cref="System.AppDomain"/> or <see cref="System.Runtime.Loader.AssemblyLoadContext"/>
     /// as an assembly resolution handler.
+    /// </para>
+    /// <para>
+    /// The default value is <see langword="true"/>.
+    /// </para>
     /// </summary>
+    /// <remarks>
+    /// The idea behind the attachment is that some <see cref="AssemblyAutoLoader"/> instances
+    /// may be used just as standalone (i.e. non-attached) resolvers utilized only by code which calls
+    /// <see cref="AssemblyAutoLoader.ResolveAssemblyPath(AssemblyName)"/> and
+    /// <see cref="AssemblyAutoLoader.ResolveUnmanagedDllPath(string)"/>
+    /// methods explicitly.
+    /// </remarks>
 #else
     /// <summary>
+    /// <para>
     /// Gets or configures the value indicating whether this <see cref="AssemblyAutoLoader"/> is attached
     /// to the associated <see cref="System.AppDomain"/>
     /// as an assembly resolution handler.
+    /// </para>
+    /// <para>
+    /// The default value is <see langword="true"/>.
+    /// </para>
     /// </summary>
+    /// <remarks>
+    /// The idea behind the attachment is that some <see cref="AssemblyAutoLoader"/> instances
+    /// may be used just as standalone (i.e. non-attached) resolvers utilized only by code which calls
+    /// <see cref="AssemblyAutoLoader.ResolveAssemblyPath(AssemblyName)"/> and
+    /// <see cref="AssemblyAutoLoader.ResolveUnmanagedDllPath(string)"/>
+    /// methods explicitly.
+    /// </remarks>
 #endif
     public bool IsAttached { get; init; } = true;
 
