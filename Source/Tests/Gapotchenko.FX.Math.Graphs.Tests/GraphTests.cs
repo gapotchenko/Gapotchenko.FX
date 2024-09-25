@@ -1310,7 +1310,7 @@ public partial class GraphTests
     public void Graph_OrderTopologicallyInReverse()
     {
         var g = new Graph<char>();
-        IEnumerable<char> order = g.OrderTopologicallyInReverse();
+        IEnumerable<char> order = g.OrderTopologically().Reverse();
         Assert.AreEqual(0, order.Count());
 
         /***************/
@@ -1320,7 +1320,7 @@ public partial class GraphTests
             Vertices = { 'a' }
         };
 
-        order = g.OrderTopologicallyInReverse();
+        order = g.OrderTopologically().Reverse();
         Assert.AreEqual("a", string.Join(" ", order));
 
         /***************/
@@ -1331,7 +1331,7 @@ public partial class GraphTests
             g = new();
             g.Edges.UnionWith(edges);
 
-            var topoOrder = g.OrderTopologicallyInReverse();
+            var topoOrder = g.OrderTopologically().Reverse();
             Assert.AreEqual("3 2 1 0", string.Join(" ", topoOrder));
         }
 
@@ -1342,7 +1342,7 @@ public partial class GraphTests
             Edges = { ('a', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologicallyInReverse().ToList());
+        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ToList());
 
         /***************/
 
@@ -1351,7 +1351,7 @@ public partial class GraphTests
             Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologicallyInReverse().ToList());
+        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ToList());
     }
 
     [TestMethod]
@@ -1359,7 +1359,7 @@ public partial class GraphTests
     {
         var g = new Graph<char>();
 
-        IEnumerable<char> order = g.OrderTopologicallyInReverse().ThenBy(Fn.Identity);
+        IEnumerable<char> order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual(0, order.Count());
 
         /***************/
@@ -1369,7 +1369,7 @@ public partial class GraphTests
             Vertices = { 'a' }
         };
 
-        order = g.OrderTopologicallyInReverse().ThenBy(Fn.Identity);
+        order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("a", string.Join(" ", order));
 
         /***************/
@@ -1379,18 +1379,18 @@ public partial class GraphTests
             Vertices = { 'a', 'b' }
         };
 
-        order = g.OrderTopologicallyInReverse().ThenBy(Fn.Identity);
+        order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("a b", string.Join(" ", order));
 
-        order = g.OrderTopologicallyInReverse().ThenBy(x => -x);
+        order = g.OrderTopologically().Reverse().ThenBy(x => -x);
         Assert.AreEqual("b a", string.Join(" ", order));
 
         var customComparer = Comparer<char>.Create((x, y) => x.CompareTo(y));
-        order = g.OrderTopologicallyInReverse().ThenBy(Fn.Identity, customComparer);
+        order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity, customComparer);
         Assert.AreEqual("a b", string.Join(" ", order));
 
         customComparer = Comparer<char>.Create((x, y) => -x.CompareTo(y));
-        order = g.OrderTopologicallyInReverse().ThenBy(Fn.Identity, customComparer);
+        order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity, customComparer);
         Assert.AreEqual("b a", string.Join(" ", order));
 
         /***************/
@@ -1400,7 +1400,7 @@ public partial class GraphTests
             Edges = { ('1', '0'), ('2', '0'), ('3', '0') }
         };
 
-        order = g.OrderTopologicallyInReverse().ThenBy(Fn.Identity);
+        order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("0 1 2 3", string.Join(" ", order));
 
         /***************/
@@ -1414,7 +1414,7 @@ public partial class GraphTests
             }
         };
 
-        order = g.OrderTopologicallyInReverse().ThenBy(Fn.Identity);
+        order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("0 3 1 2 4 5", string.Join(" ", order));
 
         /***************/
@@ -1429,7 +1429,7 @@ public partial class GraphTests
             }
         };
 
-        order = g.OrderTopologicallyInReverse().ThenBy(Fn.Identity);
+        order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("e f y Z z d c b a", string.Join(" ", order));
 
         /***************/
@@ -1444,7 +1444,7 @@ public partial class GraphTests
             }
         };
 
-        order = g.OrderTopologicallyInReverse().ThenBy(Fn.Identity);
+        order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("2 4 7 6 5 3 1 0", string.Join(" ", order));
 
         /***************/
@@ -1460,7 +1460,7 @@ public partial class GraphTests
             }
         };
 
-        order = g.OrderTopologicallyInReverse().ThenBy(Fn.Identity);
+        order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("5 9 4 6 a 7 8 3 2 1", string.Join(" ", order));
 
         /***************/
@@ -1470,7 +1470,7 @@ public partial class GraphTests
             Edges = { ('a', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologicallyInReverse().ThenBy(Fn.Identity).ToList());
+        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ThenBy(Fn.Identity).ToList());
 
         /***************/
 
@@ -1479,7 +1479,7 @@ public partial class GraphTests
             Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologicallyInReverse().ThenBy(Fn.Identity).ToList());
+        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ThenBy(Fn.Identity).ToList());
 
         /***************/
 
@@ -1501,10 +1501,10 @@ public partial class GraphTests
         g = new Graph<char>();
         g.Vertices.UnionWith(vertices);
 
-        order = g.OrderTopologicallyInReverse().ThenBy(x => Array.IndexOf(vertices, x));
+        order = g.OrderTopologically().Reverse().ThenBy(x => Array.IndexOf(vertices, x));
         Assert.AreEqual("a b c d e", string.Join(" ", order));
 
-        order = g.OrderTopologicallyInReverse().ThenBy(x => -Array.IndexOf(vertices, x));
+        order = g.OrderTopologically().Reverse().ThenBy(x => -Array.IndexOf(vertices, x));
         Assert.AreEqual("e d c b a", string.Join(" ", order));
 
         /***************/
@@ -1520,25 +1520,29 @@ public partial class GraphTests
         };
 
         var order_001 = g_001
-            .OrderTopologicallyInReverse()
+            .OrderTopologically()
+            .Reverse()
             .ThenBy(x => x.a)
             .ThenBy(x => x.b);
         Assert.AreEqual("11 12 13 20 10 21 22 23", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = g_001
-            .OrderTopologicallyInReverse()
+            .OrderTopologically()
+            .Reverse()
             .ThenByDescending(x => x.a)
             .ThenBy(x => x.b);
         Assert.AreEqual("20 21 22 23 10 11 12 13", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = g_001
-            .OrderTopologicallyInReverse()
+            .OrderTopologically()
+            .Reverse()
             .ThenBy(x => x.a)
             .ThenByDescending(x => x.b);
         Assert.AreEqual("13 12 11 23 22 21 20 10", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = g_001
-            .OrderTopologicallyInReverse()
+            .OrderTopologically()
+            .Reverse()
             .ThenByDescending(x => x.a)
             .ThenByDescending(x => x.b);
         Assert.AreEqual("23 22 21 20 13 12 11 10", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
@@ -1550,19 +1554,22 @@ public partial class GraphTests
         Assert.AreEqual("10 20 11 21 12 22 13 23", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = g_001
-            .OrderTopologicallyInReverse()
+            .OrderTopologically()
+            .Reverse()
             .ThenByDescending(x => x.b)
             .ThenBy(x => x.a);
         Assert.AreEqual("13 23 12 22 11 21 20 10", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = g_001
-            .OrderTopologicallyInReverse()
+            .OrderTopologically()
+            .Reverse()
             .ThenBy(x => x.b)
             .ThenByDescending(x => x.a);
         Assert.AreEqual("20 10 21 11 22 12 23 13", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = g_001
-            .OrderTopologicallyInReverse()
+            .OrderTopologically()
+            .Reverse()
             .ThenByDescending(x => x.b)
             .ThenByDescending(x => x.a);
         Assert.AreEqual("23 13 22 12 21 11 20 10", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
@@ -1585,7 +1592,7 @@ public partial class GraphTests
     {
         var proof = new TopologicalOrderProof
         {
-            GraphSorter = g => g.GetTransposition().OrderTopologicallyInReverse(),
+            GraphSorter = g => g.GetTransposition().OrderTopologically().Reverse(),
             VerticesCount = 4,
             CircularDependenciesEnabled = false
         };
@@ -1611,13 +1618,15 @@ public partial class GraphTests
         {
             Edges =
             {
-                // g0
+                // Subgraph 1
                 (1, 7), (9, 7),
                 (7, 2), (7, 4), (7, 8), (7, 10),
                 (2, 4),
-                // g1
+
+                // Subgraph 2
                 (5, 11),
-                // g2
+
+                // Subgraph 3
                 (6, 3), (6, 12)
             }
         };
@@ -1635,7 +1644,8 @@ public partial class GraphTests
                         (7, 2), (7, 4), (7, 8), (7, 10),
                         (2, 4),
                     }
-                }));
+                }),
+            "Subgraph 1 is missing.");
 
         Assert.IsTrue(
             connectedComponents.Contains(
@@ -1645,7 +1655,8 @@ public partial class GraphTests
                     {
                         (5, 11)
                     }
-                }));
+                }),
+            "Subgraph 2 is missing.");
 
         Assert.IsTrue(
             connectedComponents.Contains(
@@ -1655,6 +1666,7 @@ public partial class GraphTests
                     {
                         (6, 3), (6, 12)
                     }
-                }));
+                }),
+            "Subgraph 3 is missing.");
     }
 }

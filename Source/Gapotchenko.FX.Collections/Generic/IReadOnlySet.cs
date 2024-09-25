@@ -29,7 +29,7 @@ public interface IReadOnlySet<T> : IReadOnlyCollection<T>
     /// </summary>
     /// <param name="other">The collection to compare to the current set.</param>
     /// <returns><see langword="true" /> if the current set is a proper subset of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsProperSubsetOf(IEnumerable<T> other);
 
     /// <summary>
@@ -37,7 +37,7 @@ public interface IReadOnlySet<T> : IReadOnlyCollection<T>
     /// </summary>
     /// <param name="other">The collection to compare to the current set.</param>
     /// <returns><see langword="true" /> if the collection is a proper superset of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsProperSupersetOf(IEnumerable<T> other);
 
     /// <summary>
@@ -45,7 +45,7 @@ public interface IReadOnlySet<T> : IReadOnlyCollection<T>
     /// </summary>
     /// <param name="other">The collection to compare to the current set.</param>
     /// <returns><see langword="true" /> if the current set is a subset of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsSubsetOf(IEnumerable<T> other);
 
     /// <summary>
@@ -53,7 +53,7 @@ public interface IReadOnlySet<T> : IReadOnlyCollection<T>
     /// </summary>
     /// <param name="other">The collection to compare to the current set.</param>
     /// <returns><see langword="true" /> if the current set is a superset of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsSupersetOf(IEnumerable<T> other);
 
     /// <summary>
@@ -61,7 +61,7 @@ public interface IReadOnlySet<T> : IReadOnlyCollection<T>
     /// </summary>
     /// <param name="other">The collection to compare to the current set.</param>
     /// <returns><see langword="true" /> if the current set and other share at least one common element; otherwise, <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool Overlaps(IEnumerable<T> other);
 
     /// <summary>
@@ -69,7 +69,7 @@ public interface IReadOnlySet<T> : IReadOnlyCollection<T>
     /// </summary>
     /// <param name="other">The collection to compare to the current set.</param>
     /// <returns><see langword="true" /> if the current set is equal to other; otherwise, <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool SetEquals(IEnumerable<T> other);
 }
 

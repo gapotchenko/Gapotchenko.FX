@@ -166,7 +166,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// Gets a sequence of connected components of the current graph.
     /// </summary>
     /// <remarks>
-    /// A connected component or simply component of a graph is a subgraph
+    /// A connected component, or simply a component of a graph, is a subgraph
     /// in which each pair of vertices is connected with each other via a path.
     /// </remarks>
     IEnumerable<IReadOnlyGraph<TVertex>> ConnectedComponents { get; }
@@ -206,6 +206,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="vertices">The vertices to induce the subgraph from.</param>
     /// <returns>A vertex-induced subgraph of the current graph.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="vertices"/> is <see langword="null" />.</exception>
     IReadOnlyGraph<TVertex> GetSubgraph(IEnumerable<TVertex> vertices);
 
     /// <summary>
@@ -213,6 +214,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="edges">The edges to induce the subgraph from.</param>
     /// <returns>An edge-induced subgraph of the current graph.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="edges"/> is <see langword="null" />.</exception>
     IReadOnlyGraph<TVertex> GetSubgraph(IEnumerable<GraphEdge<TVertex>> edges);
 
     /// <summary>
@@ -247,7 +249,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns><see langword="true"/> if the current graph is equal to other; otherwise, <see langword="false"/>.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
     bool GraphEquals(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -255,7 +257,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns><see langword="true" /> if the current graph is an edge-induced subgraph of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsEdgeInducedSubgraphOf(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -263,7 +265,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns><see langword="true" /> if the current graph is an edge-induced supergraph of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsEdgeInducedSupergraphOf(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -271,7 +273,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns><see langword="true" /> if the current graph is a proper subgraph of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsProperSubgraphOf(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -279,7 +281,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns><see langword="true" /> if the current graph is a proper supergraph of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsProperSupergraphOf(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -287,7 +289,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns><see langword="true" /> if the current graph is a subgraph of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsSubgraphOf(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -295,7 +297,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns><see langword="true" /> if the current graph is a supergraph of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsSupergraphOf(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -303,7 +305,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns><see langword="true" /> if the current graph is a vertex-induced subgraph of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsVertexInducedSubgraphOf(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -311,7 +313,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns><see langword="true" /> if the current graph is a vertex-induced supergraph of other; otherwise <see langword="false" />.</returns>
-    /// <exception cref="ArgumentNullException">other is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     bool IsVertexInducedSupergraphOf(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -319,6 +321,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns>A graph containing vertices and edges that are present in both the current and a specified graphs.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     IReadOnlyGraph<TVertex> Intersect(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -326,6 +329,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns>A graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     IReadOnlyGraph<TVertex> Union(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -333,6 +337,7 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </summary>
     /// <param name="other">The graph to compare to the current one.</param>
     /// <returns>A graph containing vertices and edges that are present in the current graph but not in the specified graph.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     IReadOnlyGraph<TVertex> Except(IReadOnlyGraph<TVertex> other);
 
     /// <summary>
@@ -343,15 +348,5 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </remarks>
     /// <returns>Sequence of graph vertices sorted in topological order.</returns>
     /// <exception cref="GraphCircularReferenceException">Graph contains a cycle.</exception>
-    IOrderedEnumerable<TVertex> OrderTopologically();
-
-    /// <summary>
-    /// Gets a sequence of graph vertices sorted in reverse topological order.
-    /// </summary>
-    /// <remarks>
-    /// Reverse topological order of a directed graph is an order of its vertices such that for every directed edge u → v, v comes before u.
-    /// </remarks>
-    /// <returns>Sequence of graph vertices sorted in reverse topological order.</returns>
-    /// <exception cref="GraphCircularReferenceException">Graph contains a cycle.</exception>
-    IOrderedEnumerable<TVertex> OrderTopologicallyInReverse();
+    ITopologicallyOrderedEnumerable<TVertex> OrderTopologically();
 }

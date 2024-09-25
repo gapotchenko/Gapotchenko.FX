@@ -7,7 +7,6 @@
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Linq;
 using System.Collections;
-using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Graphs;
 
@@ -31,50 +30,20 @@ public static class TopologicalSortExtensions
     /// <param name="source">The sequence of values to order.</param>
     /// <param name="keySelector">The function to extract a key from an element.</param>
     /// <param name="dependencyFunction">
+    /// <para>
     /// The dependency function that defines dependencies between the elements of a sequence.
+    /// </para>
+    /// <para>
     /// Given a pair of element keys as <c>arg1</c> and <c>arg2</c>, returns a Boolean value indicating whether <c>arg2</c> should appear before <c>arg1</c> in the resulting order.
+    /// </para>
     /// </param>
     /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
     /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to a key and specified dependency function.</returns>
-    public static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
+    public static ITopologicallyOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         Func<TKey, TKey, bool> dependencyFunction,
-        IEqualityComparer<TKey>? comparer = null) =>
-        OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, false);
-
-    /// <summary>
-    /// <para>
-    /// Sorts the elements of a sequence in reverse topological order according to a key and specified dependency function.
-    /// </para>
-    /// <para>
-    /// The sort is stable.
-    /// Circular dependencies are ignored and resolved according to the original order of elements in the sequence.
-    /// </para>
-    /// </summary>
-    /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-    /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-    /// <param name="source">The sequence of values to order.</param>
-    /// <param name="keySelector">The function to extract a key from an element.</param>
-    /// <param name="dependencyFunction">
-    /// The dependency function that defines dependencies between the elements of a sequence.
-    /// Given a pair of element keys as <c>arg1</c> and <c>arg2</c>, returns a Boolean value indicating whether <c>arg2</c> should appear after <c>arg1</c> in the resulting order.
-    /// </param>
-    /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted according in reverse topological order to a key and specified dependency function.</returns>
-    public static IOrderedEnumerable<TSource> OrderTopologicallyByReverse<TSource, TKey>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        Func<TKey, TKey, bool> dependencyFunction,
-        IEqualityComparer<TKey>? comparer = null) =>
-        OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, true);
-
-    static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
-        IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        Func<TKey, TKey, bool> dependencyFunction,
-        IEqualityComparer<TKey>? comparer,
-        bool reverse)
+        IEqualityComparer<TKey>? comparer = null)
     {
         if (source == null)
             throw new ArgumentNullException(nameof(source));
@@ -83,15 +52,13 @@ public static class TopologicalSortExtensions
         if (dependencyFunction == null)
             throw new ArgumentNullException(nameof(dependencyFunction));
 
-        return OrderTopologicallyBy(
+        return new TopologicallyOrderedEnumerable<TSource, TKey>(
             source,
             keySelector,
             comparer,
             vertices => new Graph<TKey>(
                 vertices,
-                reverse ?
-                    (a, b) => dependencyFunction(b, a) :
-                    new GraphIncidenceFunction<TKey>(dependencyFunction),
+                new GraphIncidenceFunction<TKey>(dependencyFunction),
                 comparer,
                 GraphIncidenceOptions.ReflexiveReduction | GraphIncidenceOptions.Connected));
     }
@@ -115,45 +82,11 @@ public static class TopologicalSortExtensions
     /// </param>
     /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
     /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to a key and specified dependency function.</returns>
-    public static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
+    public static ITopologicallyOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         Func<TKey, IEnumerable<TKey>?> dependencyFunction,
-        IEqualityComparer<TKey>? comparer = null) =>
-        OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, false);
-
-    /// <summary>
-    /// <para>
-    /// Sorts the elements of a sequence in reverse topological order according to a key and specified dependency function.
-    /// </para>
-    /// <para>
-    /// The sort is stable.
-    /// Circular dependencies are ignored and resolved according to the original order of elements in the sequence.
-    /// </para>
-    /// </summary>
-    /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-    /// <typeparam name="TKey">The type of the key returned by <paramref name="keySelector"/>.</typeparam>
-    /// <param name="source">The sequence of values to order.</param>
-    /// <param name="keySelector">The function to extract a key from an element.</param>
-    /// <param name="dependencyFunction">
-    /// The dependency function that defines dependencies between the elements of a sequence.
-    /// Given an element key, returns a set of element keys which must appear after it in the resulting order.
-    /// </param>
-    /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in reverse topological order according to a key and specified dependency function.</returns>
-    public static IOrderedEnumerable<TSource> OrderTopologicallyByReverse<TSource, TKey>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        Func<TKey, IEnumerable<TKey>?> dependencyFunction,
-        IEqualityComparer<TKey>? comparer = null) =>
-        OrderTopologicallyBy(source, keySelector, dependencyFunction, comparer, true);
-
-    static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
-        this IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        Func<TKey, IEnumerable<TKey>?> dependencyFunction,
-        IEqualityComparer<TKey>? comparer,
-        bool reverse)
+        IEqualityComparer<TKey>? comparer = null)
     {
         if (source == null)
             throw new ArgumentNullException(nameof(source));
@@ -162,7 +95,7 @@ public static class TopologicalSortExtensions
         if (dependencyFunction == null)
             throw new ArgumentNullException(nameof(dependencyFunction));
 
-        return OrderTopologicallyBy(
+        return new TopologicallyOrderedEnumerable<TSource, TKey>(
             source,
             keySelector,
             comparer,
@@ -177,12 +110,7 @@ public static class TopologicalSortExtensions
                     if (adjacentVertices != null)
                     {
                         foreach (var adjacentVertex in adjacentVertices)
-                        {
-                            if (reverse)
-                                edges.Add(adjacentVertex, vertex);
-                            else
-                                edges.Add(vertex, adjacentVertex);
-                        }
+                            edges.Add(vertex, adjacentVertex);
                     }
                 }
 
@@ -190,24 +118,51 @@ public static class TopologicalSortExtensions
             });
     }
 
-    static IOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
-        IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector,
-        IEqualityComparer<TKey>? comparer,
-        Func<IEnumerable<TKey>, Graph<TKey>> graphFactory)
+    abstract class TopologicallyOrderedEnumerable
     {
-        return new TopologicallyOrderedEnumerable<TSource, TKey>(
-            source,
-            keySelector,
-            comparer,
-            graphFactory);
     }
 
-    static IEnumerable<TSource> OrderTopologicallyByCore<TSource, TKey>(
+    abstract class TopologicallyOrderedEnumerable<TSource>(IEnumerable<TSource> source) : TopologicallyOrderedEnumerable
+    {
+        public IEnumerable<TSource> Source { get; } = source;
+
+        public abstract IEnumerable<TSource> Order(IEnumerable<TSource> source);
+    }
+
+    sealed class TopologicallyOrderedEnumerable<TSource, TKey>(
         IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         IEqualityComparer<TKey>? comparer,
-        Func<IEnumerable<TKey>, Graph<TKey>> graphFactory)
+        Func<IEnumerable<TKey>, Graph<TKey>> graphFactory) :
+        TopologicallyOrderedEnumerable<TSource>(source), ITopologicallyOrderedEnumerable<TSource>
+    {
+        public IEnumerator<TSource> GetEnumerator() => Order(Source).GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public override IEnumerable<TSource> Order(IEnumerable<TSource> source) => DoOrderTopologicallyBy(source, keySelector, comparer, graphFactory, Reversed);
+
+        public ITopologicallyOrderedEnumerable<TSource> Reverse() =>
+            new TopologicallyOrderedEnumerable<TSource, TKey>(Source, keySelector, comparer, graphFactory)
+            {
+                Reversed = !Reversed
+            };
+
+        bool Reversed { get; init; }
+
+        IOrderedEnumerable<TSource> IOrderedEnumerable<TSource>.CreateOrderedEnumerable<TSubsequentKey>(
+            Func<TSource, TSubsequentKey> keySelector,
+            IComparer<TSubsequentKey>? comparer,
+            bool descending) =>
+            new NestedTopologicallyOrderedEnumerable<TSource, TSubsequentKey>(this, keySelector, comparer, descending);
+    }
+
+    static IEnumerable<TSource> DoOrderTopologicallyBy<TSource, TKey>(
+        IEnumerable<TSource> source,
+        Func<TSource, TKey> keySelector,
+        IEqualityComparer<TKey>? comparer,
+        Func<IEnumerable<TKey>, Graph<TKey>> graphFactory,
+        bool reversed)
     {
         var list = EnumerableEx.AsList(source);
         int n = list.Count;
@@ -220,7 +175,7 @@ public static class TopologicalSortExtensions
         if (list == source)
             list = list.Clone();
 
-        // Algorithm author: Oleksiy Gapotchenko, 2014. Property of public domain.
+        // Algorithm: Oleksiy Gapotchenko, 2014. Property of public domain.
         // https://blog.gapotchenko.com/stable-topological-sort
 
         // Selection sort algorithm compensates the lack of partial order support in comparer by
@@ -230,7 +185,8 @@ public static class TopologicalSortExtensions
             int jMin = i;
             for (int j = i + 1; j < n; ++j)
             {
-                if (Compare(g, keySelector(list[jMin]), keySelector(list[j])))
+                var (a, b) = reversed ? (j, jMin) : (jMin, j);
+                if (Compare(g, keySelector(list[a]), keySelector(list[b])))
                     jMin = j;
             }
 
@@ -256,74 +212,20 @@ public static class TopologicalSortExtensions
         }
     }
 
-    abstract class TopologicallyOrderedEnumerable
+    abstract class NestedTopologicallyOrderedEnumerable<TSource>(TopologicallyOrderedEnumerable parent) : TopologicallyOrderedEnumerable
     {
-    }
-
-    abstract class TopologicallyOrderedEnumerable<TSource> : TopologicallyOrderedEnumerable
-    {
-        public TopologicallyOrderedEnumerable(IEnumerable<TSource> source)
-        {
-            Source = source;
-        }
-
-        public IEnumerable<TSource> Source { get; }
-
-        public abstract IEnumerable<TSource> Order(IEnumerable<TSource> source);
-    }
-
-    sealed class TopologicallyOrderedEnumerable<TSource, TKey> : TopologicallyOrderedEnumerable<TSource>, IOrderedEnumerable<TSource>
-    {
-        public TopologicallyOrderedEnumerable(
-            IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector,
-            IEqualityComparer<TKey>? comparer,
-            Func<IEnumerable<TKey>, Graph<TKey>> graphFactory) :
-            base(source)
-        {
-            m_KeySelector = keySelector;
-            m_Comparer = comparer;
-            m_GraphFactory = graphFactory;
-        }
-
-        readonly Func<TSource, TKey> m_KeySelector;
-        readonly IEqualityComparer<TKey>? m_Comparer;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly Func<IEnumerable<TKey>, Graph<TKey>> m_GraphFactory;
-
-        public override IEnumerable<TSource> Order(IEnumerable<TSource> source) => OrderTopologicallyByCore(source, m_KeySelector, m_Comparer, m_GraphFactory);
-
-        public IEnumerator<TSource> GetEnumerator() => Order(Source).GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        IOrderedEnumerable<TSource> IOrderedEnumerable<TSource>.CreateOrderedEnumerable<TSubsequentKey>(
-            Func<TSource, TSubsequentKey> keySelector,
-            IComparer<TSubsequentKey>? comparer,
-            bool descending) =>
-            new SubsequentTopologicallyOrderedEnumerable<TSource, TSubsequentKey>(keySelector, comparer, descending, this);
-    }
-
-    abstract class SubsequentTopologicallyOrderedEnumerable<TSource> : TopologicallyOrderedEnumerable
-    {
-        public SubsequentTopologicallyOrderedEnumerable(TopologicallyOrderedEnumerable parent)
-        {
-            Parent = parent;
-        }
-
-        public TopologicallyOrderedEnumerable Parent { get; }
+        public TopologicallyOrderedEnumerable Parent { get; } = parent;
 
         public abstract IOrderedEnumerable<TSource> Order(IEnumerable<TSource> source);
     }
 
-    sealed class SubsequentTopologicallyOrderedEnumerable<TSource, TKey> : SubsequentTopologicallyOrderedEnumerable<TSource>, IOrderedEnumerable<TSource>
+    sealed class NestedTopologicallyOrderedEnumerable<TSource, TKey> : NestedTopologicallyOrderedEnumerable<TSource>, IOrderedEnumerable<TSource>
     {
-        public SubsequentTopologicallyOrderedEnumerable(
+        public NestedTopologicallyOrderedEnumerable(
+            TopologicallyOrderedEnumerable parent,
             Func<TSource, TKey> keySelector,
             IComparer<TKey>? comparer,
-            bool descending,
-            TopologicallyOrderedEnumerable parent) :
+            bool descending) :
             base(parent)
         {
             if (keySelector == null)
@@ -334,9 +236,38 @@ public static class TopologicalSortExtensions
             m_Descending = descending;
         }
 
-        readonly Func<TSource, TKey> m_KeySelector;
-        readonly IComparer<TKey>? m_Comparer;
-        readonly bool m_Descending;
+        public IEnumerator<TSource> GetEnumerator()
+        {
+            var list = new List<NestedTopologicallyOrderedEnumerable<TSource>>();
+            TopologicallyOrderedEnumerable<TSource> root;
+
+            for (NestedTopologicallyOrderedEnumerable<TSource> i = this; ;)
+            {
+                list.Add(i);
+
+                var parent = i.Parent;
+                if (parent is NestedTopologicallyOrderedEnumerable<TSource> nested)
+                {
+                    i = nested;
+                }
+                else
+                {
+                    root = (TopologicallyOrderedEnumerable<TSource>)parent;
+                    break;
+                }
+            }
+
+            var query = root.Source;
+
+            for (int i = list.Count - 1; i >= 0; --i)
+                query = list[i].Order(query);
+
+            query = root.Order(query);
+
+            return query.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public override IOrderedEnumerable<TSource> Order(IEnumerable<TSource> source)
         {
@@ -358,43 +289,14 @@ public static class TopologicalSortExtensions
             }
         }
 
-        public IEnumerator<TSource> GetEnumerator()
-        {
-            var list = new List<SubsequentTopologicallyOrderedEnumerable<TSource>>();
-            TopologicallyOrderedEnumerable<TSource> root;
-
-            for (SubsequentTopologicallyOrderedEnumerable<TSource> i = this; ;)
-            {
-                list.Add(i);
-
-                var parent = i.Parent;
-                if (parent is SubsequentTopologicallyOrderedEnumerable<TSource> subsequent)
-                {
-                    i = subsequent;
-                }
-                else
-                {
-                    root = (TopologicallyOrderedEnumerable<TSource>)parent;
-                    break;
-                }
-            }
-
-            var query = root.Source;
-
-            for (int i = list.Count - 1; i >= 0; --i)
-                query = list[i].Order(query);
-
-            query = root.Order(query);
-
-            return query.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        readonly IComparer<TKey>? m_Comparer;
+        readonly Func<TSource, TKey> m_KeySelector;
+        readonly bool m_Descending;
 
         IOrderedEnumerable<TSource> IOrderedEnumerable<TSource>.CreateOrderedEnumerable<TSubsequentKey>(
             Func<TSource, TSubsequentKey> keySelector,
             IComparer<TSubsequentKey>? comparer,
             bool descending) =>
-            new SubsequentTopologicallyOrderedEnumerable<TSource, TSubsequentKey>(keySelector, comparer, descending, this);
+            new NestedTopologicallyOrderedEnumerable<TSource, TSubsequentKey>(this, keySelector, comparer, descending);
     }
 }

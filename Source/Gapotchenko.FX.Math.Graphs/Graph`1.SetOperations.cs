@@ -125,6 +125,21 @@ partial class Graph<TVertex>
     static bool VertexInducedSubgraphEdgesEqual(IReadOnlyGraph<TVertex> a, IReadOnlyGraph<TVertex> b) =>
         a.Edges.SetEquals(GetInducedSubgraphEdges(a, b));
 
+    /// <inheritdoc cref="IGraph{TVertex}.Intersect(IReadOnlyGraph{TVertex})"/>
+    public Graph<TVertex> Intersect(IReadOnlyGraph<TVertex> other)
+    {
+        if (other == null)
+            throw new ArgumentNullException(nameof(other));
+
+        var graph = Clone();
+        graph.IntersectWithCore(other);
+        return graph;
+    }
+
+    IGraph<TVertex> IGraph<TVertex>.Intersect(IReadOnlyGraph<TVertex> other) => Intersect(other);
+
+    IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.Intersect(IReadOnlyGraph<TVertex> other) => Intersect(other);
+
     /// <inheritdoc/>
     public void IntersectWith(IReadOnlyGraph<TVertex> other)
     {
@@ -139,36 +154,6 @@ partial class Graph<TVertex>
         Vertices.IntersectWith(other.Vertices);
         Edges.IntersectWith(other.Edges);
     }
-
-    /// <inheritdoc cref="IGraph{TVertex}.Intersect(IReadOnlyGraph{TVertex})"/>
-    public Graph<TVertex> Intersect(IReadOnlyGraph<TVertex> other)
-    {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
-
-        var graph = Clone();
-        graph.IntersectWithCore(other);
-        return graph;
-    }
-
-    /// <inheritdoc/>
-    public void ExceptWith(IReadOnlyGraph<TVertex> other)
-    {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
-
-        ExceptWithCore(other);
-    }
-
-    void ExceptWithCore(IReadOnlyGraph<TVertex> other)
-    {
-        Vertices.ExceptWith(other.Vertices);
-        Edges.ExceptWith(other.Edges);
-    }
-
-    IGraph<TVertex> IGraph<TVertex>.Intersect(IReadOnlyGraph<TVertex> other) => Intersect(other);
-
-    IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.Intersect(IReadOnlyGraph<TVertex> other) => Intersect(other);
 
     /// <inheritdoc cref="IGraph{TVertex}.Except(IReadOnlyGraph{TVertex})"/>
     public Graph<TVertex> Except(IReadOnlyGraph<TVertex> other)
@@ -186,18 +171,18 @@ partial class Graph<TVertex>
     IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.Except(IReadOnlyGraph<TVertex> other) => Except(other);
 
     /// <inheritdoc/>
-    public void UnionWith(IReadOnlyGraph<TVertex> other)
+    public void ExceptWith(IReadOnlyGraph<TVertex> other)
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
 
-        UnionWithCore(other);
+        ExceptWithCore(other);
     }
 
-    void UnionWithCore(IReadOnlyGraph<TVertex> other)
+    void ExceptWithCore(IReadOnlyGraph<TVertex> other)
     {
-        Edges.UnionWith(other.Edges);
-        Vertices.UnionWith(other.Vertices);
+        Vertices.ExceptWith(other.Vertices);
+        Edges.ExceptWith(other.Edges);
     }
 
     /// <inheritdoc cref="IGraph{TVertex}.Union(IReadOnlyGraph{TVertex})"/>
@@ -214,4 +199,19 @@ partial class Graph<TVertex>
     IGraph<TVertex> IGraph<TVertex>.Union(IReadOnlyGraph<TVertex> other) => Union(other);
 
     IReadOnlyGraph<TVertex> IReadOnlyGraph<TVertex>.Union(IReadOnlyGraph<TVertex> other) => Union(other);
+
+    /// <inheritdoc/>
+    public void UnionWith(IReadOnlyGraph<TVertex> other)
+    {
+        if (other == null)
+            throw new ArgumentNullException(nameof(other));
+
+        UnionWithCore(other);
+    }
+
+    void UnionWithCore(IReadOnlyGraph<TVertex> other)
+    {
+        Edges.UnionWith(other.Edges);
+        Vertices.UnionWith(other.Vertices);
+    }
 }

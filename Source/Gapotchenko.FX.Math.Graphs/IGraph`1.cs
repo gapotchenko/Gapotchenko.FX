@@ -74,6 +74,7 @@ public interface IGraph<TVertex> : IReadOnlyGraph<TVertex>, ICloneable<IGraph<TV
     /// Removes all vertices and edges in the specified graph from the current graph.
     /// </summary>
     /// <param name="other"><inheritdoc cref="Except(IReadOnlyGraph{TVertex})"/></param>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     void ExceptWith(IReadOnlyGraph<TVertex> other);
 
     /// <inheritdoc cref="IReadOnlyGraph{TVertex}.Except(IReadOnlyGraph{TVertex})"/>
@@ -83,6 +84,7 @@ public interface IGraph<TVertex> : IReadOnlyGraph<TVertex>, ICloneable<IGraph<TV
     /// Modifies the current graph so that it contains only vertices and edges that are also present in a specified graph.
     /// </summary>
     /// <param name="other"><inheritdoc cref="Intersect(IReadOnlyGraph{TVertex})"/></param>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     void IntersectWith(IReadOnlyGraph<TVertex> other);
 
     /// <inheritdoc cref="IReadOnlyGraph{TVertex}.Intersect(IReadOnlyGraph{TVertex})"/>
@@ -92,6 +94,7 @@ public interface IGraph<TVertex> : IReadOnlyGraph<TVertex>, ICloneable<IGraph<TV
     /// Modifies the current graph so that it contains all vertices and edges that are present in the current graph, in the specified graph, or in both.
     /// </summary>
     /// <param name="other"><inheritdoc cref="Union(IReadOnlyGraph{TVertex})"/></param>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null" />.</exception>
     void UnionWith(IReadOnlyGraph<TVertex> other);
 
     /// <inheritdoc cref="IReadOnlyGraph{TVertex}.Union(IReadOnlyGraph{TVertex})"/>

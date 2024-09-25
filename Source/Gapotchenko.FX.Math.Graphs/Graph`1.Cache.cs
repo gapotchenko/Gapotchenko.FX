@@ -41,15 +41,11 @@ partial class Graph<TVertex>
 
     #endregion
 
-    void InvalidateCachedRelations()
-    {
-        m_CachedFlags[CF_Relations_Mask] = false;
-    }
+    void InvalidateCachedRelations() => InvalidateCached(CF_Relations_Mask);
 
-    void InvalidateCachedConnectivity()
-    {
-        m_CachedFlags[CF_Connectivity_Mask] = false;
-    }
+    void InvalidateCachedConnectivity() => InvalidateCached(CF_Connectivity_Mask);
+
+    void InvalidateCached(int flags) => m_CachedFlags[flags] = false;
 
     /// <summary>
     /// Invalidates the cache.

@@ -23,8 +23,8 @@ namespace Gapotchenko.FX.Collections.Generic;
 /// Represents a collection of keys and values.
 /// </para>
 /// <para>
-/// In contrast to <see cref="Dictionary{TKey, TValue}"/>,
-/// <see cref="AssociativeArray{TKey, TValue}"/> supports keys with <see langword="null"/> values.
+/// <see cref="AssociativeArray{TKey, TValue}"/> supports keys with <see langword="null"/> values
+/// in contrast to <see cref = "Dictionary{TKey, TValue}" />.
 /// </para>
 /// </summary>
 /// <typeparam name="TKey">The type of the keys in the associative array.</typeparam>

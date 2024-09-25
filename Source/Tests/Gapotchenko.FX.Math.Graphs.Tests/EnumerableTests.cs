@@ -45,7 +45,7 @@ public class EnumerableTests
         AssertTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("BACDEF", result);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("ABCDEF", result);
     }
@@ -56,7 +56,7 @@ public class EnumerableTests
         static IEnumerable<char>? df(char v) =>
             v switch
             {
-                'A' => new[] { 'B' },
+                'A' => ['B'],
                 'B' => ['D'],
                 _ => null,
             };
@@ -66,27 +66,20 @@ public class EnumerableTests
         string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
         Assert.AreEqual("DBACEF", result);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         Assert.AreEqual("ABCDEF", result);
     }
 
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_2()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a, b) switch
             {
-                case "A depends on B":
-                    return true;
-
-                case "B depends on C":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                ('A', 'B') => true,
+                ('B', 'C') => true,
+                _ => false,
+            }; ;
 
         var source = "ABCDEF";
 
@@ -94,7 +87,7 @@ public class EnumerableTests
         AssertTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("CBADEF", result);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("ABCDEF", result);
     }
@@ -102,23 +95,14 @@ public class EnumerableTests
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_3()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a, b) switch
             {
-                case "A depends on B":
-                    return true;
-
-                case "B depends on C":
-                    return true;
-
-                case "C depends on A":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                ('A', 'B') => true,
+                ('B', 'C') => true,
+                ('C', 'A') => true,
+                _ => false,
+            }; ;
 
         var source = "ABCDEF";
 
@@ -126,7 +110,7 @@ public class EnumerableTests
         AssertTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("ABCDEF", result);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("ABCDEF", result);
     }
@@ -134,20 +118,13 @@ public class EnumerableTests
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_4()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a + " depends on " + b) switch
             {
-                case "B depends on C":
-                    return true;
-
-                case "C depends on B":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                "B depends on C" => true,
+                "C depends on B" => true,
+                _ => false,
+            }; ;
 
         var source = "ABCDEF";
 
@@ -155,7 +132,7 @@ public class EnumerableTests
         AssertTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("ABCDEF", result);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("ABCDEF", result);
     }
@@ -163,20 +140,13 @@ public class EnumerableTests
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_5()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a + " depends on " + b) switch
             {
-                case "A depends on C":
-                    return true;
-
-                case "B depends on C":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                "A depends on C" => true,
+                "B depends on C" => true,
+                _ => false,
+            }; ;
 
         var source = "ABCDEF";
 
@@ -184,7 +154,7 @@ public class EnumerableTests
         AssertTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("CABDEF", result);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("ABCDEF", result);
     }
@@ -192,158 +162,103 @@ public class EnumerableTests
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_6()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a + " depends on " + b) switch
             {
-                case "A depends on C":
-                    return true;
-
-                case "B depends on C":
-                    return true;
-
-                case "C depends on E":
-                    return true;
-
-                case "E depends on F":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                "A depends on C" => true,
+                "B depends on C" => true,
+                "C depends on E" => true,
+                "E depends on F" => true,
+                _ => false,
+            }; ;
 
         var source = "ABCDEF";
 
         string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
         AssertTopologicalOrderIsCorrect(source, result, df, minProof: false);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df, minProof: false);
     }
 
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_7()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a + " depends on " + b) switch
             {
-                case "A depends on C":
-                    return true;
-
-                case "B depends on C":
-                    return true;
-
-                case "C depends on E":
-                    return true;
-
-                case "E depends on F":
-                    return true;
-
-                case "B depends on E":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                "A depends on C" => true,
+                "B depends on C" => true,
+                "C depends on E" => true,
+                "E depends on F" => true,
+                "B depends on E" => true,
+                _ => false,
+            }; ;
 
         var source = "ABCDEF";
 
         string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
         AssertTopologicalOrderIsCorrect(source, result, df, minProof: false);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df, minProof: false);
     }
 
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_8()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a + " depends on " + b) switch
             {
-                case "A depends on C":
-                    return true;
-
-                case "B depends on C":
-                    return true;
-
-                case "C depends on E":
-                    return true;
-
-                case "E depends on F":
-                    return true;
-
-                case "F depends on A":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                "A depends on C" => true,
+                "B depends on C" => true,
+                "C depends on E" => true,
+                "E depends on F" => true,
+                "F depends on A" => true,
+                _ => false,
+            }; ;
 
         var source = "ABCDEF";
 
         string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
         AssertTopologicalOrderIsCorrect(source, result, df, minProof: false);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df, minProof: false);
     }
 
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_9()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a + " depends on " + b) switch
             {
-                case "A depends on C":
-                    return true;
-
-                case "B depends on C":
-                    return true;
-
-                case "C depends on E":
-                    return true;
-
-                case "E depends on F":
-                    return true;
-
-                case "E depends on E":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                "A depends on C" => true,
+                "B depends on C" => true,
+                "C depends on E" => true,
+                "E depends on F" => true,
+                "E depends on E" => true,
+                _ => false,
+            }; ;
 
         var source = "ABCDEF";
 
         string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
         AssertTopologicalOrderIsCorrect(source, result, df, minProof: false);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df, minProof: false);
     }
 
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_10()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a + " depends on " + b) switch
             {
-                case "B depends on D":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                "B depends on D" => true,
+                _ => false,
+            }; ;
 
         var source = "ABCDEF";
 
@@ -351,7 +266,7 @@ public class EnumerableTests
         AssertTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("ADBCEF", result);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("ABCDEF", result);
     }
@@ -359,76 +274,51 @@ public class EnumerableTests
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_11()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a + " depends on " + b) switch
             {
-                case "B depends on E":
-                    return true;
-
-                case "E depends on D":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                "B depends on E" => true,
+                "E depends on D" => true,
+                _ => false,
+            }; ;
 
         var source = "ABCDEF";
 
         string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
         AssertTopologicalOrderIsCorrect(source, result, df, minProof: false);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df, minProof: false);
     }
 
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_12()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a + " depends on " + b) switch
             {
-                case "A depends on C":
-                case "A depends on E":
-                case "B depends on A":
-                case "B depends on C":
-                case "D depends on C":
-                case "E depends on C":
-                case "F depends on C":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                "A depends on C" or "A depends on E" or "B depends on A" or "B depends on C" or "D depends on C" or "E depends on C" or "F depends on C" => true,
+                _ => false,
+            };
 
         var source = "ABCDEF";
 
         string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
         AssertTopologicalOrderIsCorrect(source, result, df);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df);
     }
 
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_22()
     {
-        static bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a + " depends on " + b) switch
             {
-                case "2 depends on 1":
-                case "3 depends on 0":
-                case "1 depends on 0":
-                    return true;
-
-                default:
-                    return false;
-            }
-        };
+                "2 depends on 1" or "3 depends on 0" or "1 depends on 0" => true,
+                _ => false,
+            };
 
         var source = "02431";
 
@@ -436,7 +326,7 @@ public class EnumerableTests
         AssertTopologicalOrderIsCorrect(source, result, df, minProof: false);
         //Assert.AreEqual("01243", result);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df, minProof: false);
     }
 
@@ -456,7 +346,7 @@ public class EnumerableTests
         AssertTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("0132", result);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("1320", result);
     }
@@ -464,48 +354,38 @@ public class EnumerableTests
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_26()
     {
-        bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        static bool df(char a, char b) =>
+            (a, b) switch
             {
-                case "0 depends on 1":
-                case "2 depends on 0":
-                    return true;
-                default:
-                    return false;
-            }
-        }
+                ('0', '1') or ('2', '0') => true,
+                _ => false,
+            };
 
         var source = "0321";
 
         string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
         AssertTopologicalOrderIsCorrect(source, result, df);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df);
     }
 
     [TestMethod]
     public void Enumerable_OrderTopologicallyBy_27()
     {
-        bool df(char a, char b)
-        {
-            switch (a + " depends on " + b)
+        bool df(char a, char b) =>
+            (a + " depends on " + b) switch
             {
-                case "2 depends on 1":
-                case "3 depends on 0":
-                    return true;
-                default:
-                    return false;
-            }
-        }
+                "2 depends on 1" or "3 depends on 0" => true,
+                _ => false,
+            };
 
         var source = "2130";
 
         string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
         AssertTopologicalOrderIsCorrect(source, result, df, minProof: false);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df, minProof: false);
     }
 
@@ -525,7 +405,7 @@ public class EnumerableTests
         AssertTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("BACDEF", result);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         AssertReverseTopologicalOrderIsCorrect(source, result, df);
         Assert.AreEqual("ABEDCF", result);
     }
@@ -547,7 +427,7 @@ public class EnumerableTests
         string result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df));
         Assert.AreEqual("BACDEF", result);
 
-        result = string.Concat(source.OrderTopologicallyByReverse(Fn.Identity, df));
+        result = string.Concat(source.OrderTopologicallyBy(Fn.Identity, df).Reverse());
         Assert.AreEqual("ABEDCF", result);
     }
 
@@ -813,32 +693,32 @@ public class EnumerableTests
     {
         IEnumerable<char> seq = "";
 
-        IEnumerable<char> order = seq.OrderTopologicallyByReverse(Fn.Identity, (a, b) => false).ThenBy(Fn.Identity);
+        IEnumerable<char> order = seq.OrderTopologicallyBy(Fn.Identity, (a, b) => false).Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual(0, order.Count());
 
         /***************/
 
         seq = "a";
 
-        order = seq.OrderTopologicallyByReverse(Fn.Identity, (a, b) => false).ThenBy(Fn.Identity);
+        order = seq.OrderTopologicallyBy(Fn.Identity, (a, b) => false).Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("a", string.Concat(order));
 
         /***************/
 
         seq = "ab";
 
-        order = seq.OrderTopologicallyByReverse(Fn.Identity, (a, b) => false).ThenBy(Fn.Identity);
+        order = seq.OrderTopologicallyBy(Fn.Identity, (a, b) => false).Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("ab", string.Concat(order));
 
-        order = seq.OrderTopologicallyByReverse(Fn.Identity, (a, b) => false).ThenBy(x => -x);
+        order = seq.OrderTopologicallyBy(Fn.Identity, (a, b) => false).Reverse().ThenBy(x => -x);
         Assert.AreEqual("ba", string.Concat(order));
 
         var customComparer = Comparer<char>.Create((x, y) => x.CompareTo(y));
-        order = seq.OrderTopologicallyByReverse(Fn.Identity, (a, b) => false).ThenBy(Fn.Identity, customComparer);
+        order = seq.OrderTopologicallyBy(Fn.Identity, (a, b) => false).Reverse().ThenBy(Fn.Identity, customComparer);
         Assert.AreEqual("ab", string.Concat(order));
 
         customComparer = Comparer<char>.Create((x, y) => y.CompareTo(x));
-        order = seq.OrderTopologicallyByReverse(Fn.Identity, (a, b) => false).ThenBy(Fn.Identity, customComparer);
+        order = seq.OrderTopologicallyBy(Fn.Identity, (a, b) => false).Reverse().ThenBy(Fn.Identity, customComparer);
         Assert.AreEqual("ba", string.Concat(order));
 
         /***************/
@@ -855,7 +735,7 @@ public class EnumerableTests
 
         foreach (var p in Permutations.Of(seq))
         {
-            order = p.OrderTopologicallyByReverse(Fn.Identity, df).ThenBy(Fn.Identity);
+            order = p.OrderTopologicallyBy(Fn.Identity, df).Reverse().ThenBy(Fn.Identity);
             Assert.AreEqual("0123", string.Concat(order));
         }
 
@@ -876,7 +756,7 @@ public class EnumerableTests
 
         foreach (var p in Permutations.Of(seq))
         {
-            order = p.OrderTopologicallyByReverse(Fn.Identity, df).ThenBy(Fn.Identity);
+            order = p.OrderTopologicallyBy(Fn.Identity, df).Reverse().ThenBy(Fn.Identity);
             Assert.AreEqual("031245", string.Concat(order));
         }
 
@@ -900,7 +780,7 @@ public class EnumerableTests
                     _ => false
                 };
 
-        order = seq.OrderTopologicallyByReverse(Fn.Identity, df).ThenBy(Fn.Identity);
+        order = seq.OrderTopologicallyBy(Fn.Identity, df).Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("yZefzdcba", string.Concat(order));
 
         /***************/
@@ -922,7 +802,7 @@ public class EnumerableTests
                     _ => false
                 };
 
-        order = seq.OrderTopologicallyByReverse(Fn.Identity, df).ThenByDescending(Fn.Identity);
+        order = seq.OrderTopologicallyBy(Fn.Identity, df).Reverse().ThenByDescending(Fn.Identity);
         Assert.AreEqual("76543210", string.Concat(order));
 
         /***************/
@@ -949,7 +829,7 @@ public class EnumerableTests
                     _ => false
                 };
 
-        order = seq.OrderTopologicallyByReverse(Fn.Identity, df).ThenByDescending(Fn.Identity);
+        order = seq.OrderTopologicallyBy(Fn.Identity, df).Reverse().ThenByDescending(Fn.Identity);
         Assert.AreEqual("a987654321", string.Concat(order));
 
         /***************/
@@ -964,7 +844,7 @@ public class EnumerableTests
                     _ => false
                 };
 
-        order = seq.OrderTopologicallyByReverse(Fn.Identity, df).ThenBy(Fn.Identity);
+        order = seq.OrderTopologicallyBy(Fn.Identity, df).Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("aaapprstu", string.Concat(order));
 
         /***************/
@@ -979,7 +859,7 @@ public class EnumerableTests
                     _ => false
                 };
 
-        order = seq.OrderTopologicallyByReverse(Fn.Identity, df).ThenBy(Fn.Identity);
+        order = seq.OrderTopologicallyBy(Fn.Identity, df).Reverse().ThenBy(Fn.Identity);
         Assert.AreEqual("abc", string.Concat(order));
 
         /***************/
@@ -1016,50 +896,58 @@ public class EnumerableTests
             };
 
         var order_001 = seq_001
-            .OrderTopologicallyByReverse(Fn.Identity, df_001)
+            .OrderTopologicallyBy(Fn.Identity, df_001)
+            .Reverse()
             .ThenBy(x => x.a)
             .ThenBy(x => x.b)
             .AsEnumerable();
         Assert.AreEqual("10 11 12 13 20 21 22 23", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = seq_001
-            .OrderTopologicallyByReverse(Fn.Identity, df_001)
+            .OrderTopologicallyBy(Fn.Identity, df_001)
+            .Reverse()
             .ThenByDescending(x => x.a)
             .ThenBy(x => x.b);
         Assert.AreEqual("10 20 21 22 23 11 12 13", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = seq_001
-            .OrderTopologicallyByReverse(Fn.Identity, df_001)
+            .OrderTopologicallyBy(Fn.Identity, df_001)
+            .Reverse()
             .ThenBy(x => x.a)
             .ThenByDescending(x => x.b);
         Assert.AreEqual("13 12 11 10 23 22 21 20", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = seq_001
-            .OrderTopologicallyByReverse(Fn.Identity, df_001)
+            .OrderTopologicallyBy(Fn.Identity, df_001)
+            .Reverse()
             .ThenByDescending(x => x.a)
             .ThenByDescending(x => x.b);
         Assert.AreEqual("23 22 21 10 20 13 12 11", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = seq_001
-            .OrderTopologicallyByReverse(Fn.Identity, df_001)
+            .OrderTopologicallyBy(Fn.Identity, df_001)
+            .Reverse()
             .ThenBy(x => x.b)
             .ThenBy(x => x.a);
         Assert.AreEqual("10 20 11 21 12 22 13 23", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = seq_001
-            .OrderTopologicallyByReverse(Fn.Identity, df_001)
+            .OrderTopologicallyBy(Fn.Identity, df_001)
+            .Reverse()
             .ThenByDescending(x => x.b)
             .ThenBy(x => x.a);
         Assert.AreEqual("13 23 12 22 11 21 10 20", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = seq_001
-            .OrderTopologicallyByReverse(Fn.Identity, df_001)
+            .OrderTopologicallyBy(Fn.Identity, df_001)
+            .Reverse()
             .ThenBy(x => x.b)
             .ThenByDescending(x => x.a);
         Assert.AreEqual("10 20 21 11 22 12 23 13", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
 
         order_001 = seq_001
-            .OrderTopologicallyByReverse(Fn.Identity, df_001)
+            .OrderTopologicallyBy(Fn.Identity, df_001)
+            .Reverse()
             .ThenByDescending(x => x.b)
             .ThenByDescending(x => x.a);
         Assert.AreEqual("23 13 22 12 21 11 10 20", string.Join(" ", order_001.Select(x => $"{x.a}{x.b}")));
@@ -1082,7 +970,7 @@ public class EnumerableTests
     {
         var proof = new TopologicalOrderProof
         {
-            PredicateSorter = (source, df) => source.OrderTopologicallyByReverse(Fn.Identity, (a, b) => df(b, a)),
+            PredicateSorter = (source, df) => source.OrderTopologicallyBy(Fn.Identity, (a, b) => df(b, a)).Reverse(),
             VerticesCount = 4,
             //VerifyMinimalDistance = true,
         };
