@@ -25,4 +25,52 @@ partial class GraphTests
 
         Assert.IsTrue(g.IsConnected);
     }
+
+    [TestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void Graph_IsConnected_Disconnect(bool directed)
+    {
+        var g = new Graph<int>
+        {
+            IsDirected = directed,
+            Edges =
+            {
+                (1, 2), (3, 4), (2, 3)
+            }
+        };
+
+        Assert.IsTrue(g.IsConnected);
+
+        g.Vertices.Remove(2);
+
+        Assert.IsFalse(g.IsConnected);
+    }
+
+    [TestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void Graph_IsConnected_Empty(bool directed)
+    {
+        var g = new Graph<int>
+        {
+            IsDirected = directed
+        };
+
+        Assert.IsTrue(g.IsConnected);
+    }
+
+    [TestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void Graph_IsConnected_Single(bool directed)
+    {
+        var g = new Graph<int>
+        {
+            IsDirected = directed,
+            Vertices = { 1 }
+        };
+
+        Assert.IsTrue(g.IsConnected);
+    }
 }
