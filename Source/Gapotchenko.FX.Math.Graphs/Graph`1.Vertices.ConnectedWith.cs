@@ -37,9 +37,9 @@ partial class Graph<TVertex>
             IncomingVerticesConnectedWithCore(vertex).Union(
                 OutgoingVerticesConnectedWithCore(vertex),
                 VertexComparer) :
-            VerticesConnectedWithUndirectedCore(vertex);
+            VerticesConnectedUnidirectionallyWithCore(vertex);
 
-    IEnumerable<TVertex> VerticesConnectedWithUndirectedCore(TVertex vertex) =>
+    IEnumerable<TVertex> VerticesConnectedUnidirectionallyWithCore(TVertex vertex) =>
         EnumerateVerticesConnectedWith(vertex, VerticesAdjacentToCore);
 
     IEnumerable<TVertex> EnumerateVerticesConnectedWith(

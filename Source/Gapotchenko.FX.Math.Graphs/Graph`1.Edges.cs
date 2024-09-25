@@ -12,12 +12,12 @@ namespace Gapotchenko.FX.Math.Graphs;
 
 partial class Graph<TVertex>
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    EdgeSet? m_CachedEdges;
-
     /// <inheritdoc cref="IGraph{TVertex}.Edges"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public EdgeSet Edges => m_CachedEdges ??= new(this);
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    EdgeSet? m_CachedEdges;
 
     /// <inheritdoc/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -2,8 +2,6 @@
 
 static class Util
 {
-    static IEnumerable<GraphEdge<T>> Conv<T>(IEnumerable<(T, T)> other) => other.Select(x => (GraphEdge<T>)x);
-
     public static bool SetEquals<T>(this ISet<GraphEdge<T>> edgeSet, IEnumerable<(T From, T To)> other)
     {
         if (edgeSet == null)
@@ -13,4 +11,6 @@ static class Util
 
         return edgeSet.SetEquals(Conv(other));
     }
+
+    static IEnumerable<GraphEdge<T>> Conv<T>(IEnumerable<(T, T)> other) => other.Select(x => (GraphEdge<T>)x);
 }

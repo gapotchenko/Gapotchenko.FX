@@ -13,12 +13,12 @@ namespace Gapotchenko.FX.Math.Graphs;
 
 partial class Graph<TVertex>
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    VertexSet? m_CachedVertices;
-
     /// <inheritdoc cref="IGraph{TVertex}.Vertices"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public VertexSet Vertices => m_CachedVertices ??= new(this);
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    VertexSet? m_CachedVertices;
 
     /// <inheritdoc/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -48,8 +48,8 @@ partial class Graph<TVertex>
 
         /// <inheritdoc/>
         public override int Count =>
-            // The streaming of enumerable elements is used to decouple the Count() method
-            // from trying to call the Count property directly, thus causing a stack overflow.
+            // The streaming of enumerable elements is used to decouple the Count() LINQ method
+            // from trying to call the Count property of this class directly, thus causing a stack overflow.
             m_Graph.m_CachedOrder ??= this.Stream().Count();
 
         /// <inheritdoc/>

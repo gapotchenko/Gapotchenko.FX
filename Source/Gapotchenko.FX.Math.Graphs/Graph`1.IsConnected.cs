@@ -25,17 +25,11 @@ partial class Graph<TVertex>
     {
         var vertices = Vertices;
         int order = vertices.Count;
-        if (order < 2)
-        {
+
+        return
             // A graph containing less than two vertices is connected by definition.
-            return true;
-        }
-        else
-        {
+            order < 2 ||
             // A graph is connected if every pair of vertices has a path between them.
-            var vertex = vertices.First();
-            var connectedVertices = VerticesConnectedWithUndirectedCore(vertex);
-            return connectedVertices.Count() == order;
-        }
+            VerticesConnectedUnidirectionallyWithCore(vertices.First()).Count() == order;
     }
 }

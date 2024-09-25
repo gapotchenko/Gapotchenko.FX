@@ -990,4 +990,42 @@ public class EnumerableTests
         };
         proof.Run();
     }
+
+    [TestMethod]
+    public void Enumerable_OrderTopologicallyBy_Graph_1()
+    {
+        foreach (var edges in
+            Permutations.Of<GraphEdge<char>>([('0', '1'), ('1', '2'), ('2', '3')]))
+        {
+            var g = new Graph<char>();
+            g.Edges.UnionWith(edges);
+
+            var graphOrder = g.OrderTopologically();
+            Assert.AreEqual("0 1 2 3", string.Join(" ", graphOrder));
+
+            // --------------------------------------------------------------
+
+            var sequenceOrder = new char[] { '3', '1', '0', '2', '4' }.OrderTopologically(g);
+            Assert.AreEqual("0 1 2 3 4", string.Join(" ", sequenceOrder));
+
+            sequenceOrder = new char[] { '4', '3', '1', '0', '2' }.OrderTopologically(g);
+            Assert.AreEqual("4 0 1 2 3", string.Join(" ", sequenceOrder));
+
+            // --------------------------------------------------------------
+
+            sequenceOrder = new char[] { '2', '1' }.OrderTopologically(g);
+            Assert.AreEqual("1 2", string.Join(" ", sequenceOrder));
+
+            sequenceOrder = new char[] { '1', '2' }.OrderTopologically(g);
+            Assert.AreEqual("1 2", string.Join(" ", sequenceOrder));
+
+            // --------------------------------------------------------------
+
+            sequenceOrder = new char[] { '2', '1', '4' }.OrderTopologically(g);
+            Assert.AreEqual("1 2 4", string.Join(" ", sequenceOrder));
+
+            sequenceOrder = new char[] { '4', '2', '1' }.OrderTopologically(g);
+            Assert.AreEqual("4 1 2", string.Join(" ", sequenceOrder));
+        }
+    }
 }
