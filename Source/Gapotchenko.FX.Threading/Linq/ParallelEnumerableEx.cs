@@ -1,6 +1,8 @@
 ﻿using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Threading.Tasks;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+
 namespace Gapotchenko.FX.Linq;
 
 /// <summary>

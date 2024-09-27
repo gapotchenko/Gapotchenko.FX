@@ -1,8 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 
-#nullable disable
-
 namespace Gapotchenko.FX.Threading.Tasks;
 
 /// <summary>
@@ -11,9 +9,6 @@ namespace Gapotchenko.FX.Threading.Tasks;
 /// </summary>
 public static class Sequential
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static readonly ParallelOptions m_ParallelOptionsForSequentialExecution = new() { MaxDegreeOfParallelism = 1 };
-
     /// <summary>
     /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with thread-local data in which iterations are run sequentially,
     /// and the state of the loop can be monitored and manipulated.
@@ -41,34 +36,6 @@ public static class Sequential
             localInit,
             body,
             localFinally);
-
-    static ParallelOptions MakeSequential(ParallelOptions parallelOptions)
-    {
-        if (parallelOptions == null)
-            return null;
-
-        int maxDegreeOfParallelism = parallelOptions.MaxDegreeOfParallelism;
-        if (maxDegreeOfParallelism <= 1 && maxDegreeOfParallelism != -1)
-        {
-            // Already sequential or out of range.
-            return parallelOptions;
-        }
-        else if (parallelOptions.TaskScheduler == null && !parallelOptions.CancellationToken.CanBeCanceled)
-        {
-            // Avoid object allocation.
-            return m_ParallelOptionsForSequentialExecution;
-        }
-        else
-        {
-            // Limit max degree of parallelism to sequential.
-            return new ParallelOptions
-            {
-                TaskScheduler = parallelOptions.TaskScheduler,
-                CancellationToken = parallelOptions.CancellationToken,
-                MaxDegreeOfParallelism = 1
-            };
-        }
-    }
 
     /// <summary>
     /// Executes a <c>for</c> (<c>For</c> in Visual Basic) loop with thread-local data in which iterations are run sequentially,
@@ -599,4 +566,36 @@ public static class Sequential
         Parallel.Invoke(
             MakeSequential(parallelOptions),
             actions);
+
+    [return: NotNullIfNotNull(nameof(parallelOptions))]
+    static ParallelOptions? MakeSequential(ParallelOptions? parallelOptions)
+    {
+        if (parallelOptions == null)
+            return null;
+
+        int maxDegreeOfParallelism = parallelOptions.MaxDegreeOfParallelism;
+        if (maxDegreeOfParallelism <= 1 && maxDegreeOfParallelism != -1)
+        {
+            // Already sequential or out of range.
+            return parallelOptions;
+        }
+        else if (parallelOptions.TaskScheduler == null && !parallelOptions.CancellationToken.CanBeCanceled)
+        {
+            // Avoid object allocation.
+            return m_ParallelOptionsForSequentialExecution;
+        }
+        else
+        {
+            // Limit max degree of parallelism to sequential.
+            return new ParallelOptions
+            {
+                TaskScheduler = parallelOptions.TaskScheduler,
+                CancellationToken = parallelOptions.CancellationToken,
+                MaxDegreeOfParallelism = 1
+            };
+        }
+    }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static readonly ParallelOptions m_ParallelOptionsForSequentialExecution = new() { MaxDegreeOfParallelism = 1 };
 }

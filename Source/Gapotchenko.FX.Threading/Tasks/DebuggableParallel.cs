@@ -1,8 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 
-#nullable disable
-
 namespace Gapotchenko.FX.Threading.Tasks;
 
 /// <summary>
