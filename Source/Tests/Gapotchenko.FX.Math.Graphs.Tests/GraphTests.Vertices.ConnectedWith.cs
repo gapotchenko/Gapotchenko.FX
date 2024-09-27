@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Math.Graphs.Tests;
 

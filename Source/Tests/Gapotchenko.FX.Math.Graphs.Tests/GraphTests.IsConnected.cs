@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Gapotchenko.FX.Math.Graphs.Tests;
+﻿namespace Gapotchenko.FX.Math.Graphs.Tests;
 
 partial class GraphTests
 {

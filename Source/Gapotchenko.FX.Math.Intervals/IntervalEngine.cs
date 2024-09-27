@@ -155,37 +155,6 @@ static class IntervalEngine
         return c;
     }
 
-    enum BoundaryDirection
-    {
-        From,
-        To
-    }
-
-    enum OrderedBoundaryKind
-    {
-        ToEmpty,
-        NegativeInfinity,
-        ToExclusive,
-        FromInclusive,
-        ToInclusive,
-        FromExclusive,
-        PositiveInfinity,
-        FromEmpty
-    }
-
-    static OrderedBoundaryKind GetOrderedBoundaryKind(BoundaryDirection direction, IntervalBoundaryKind kind) =>
-        (direction, kind) switch
-        {
-            (BoundaryDirection.From, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.FromEmpty,
-            (BoundaryDirection.To, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.ToEmpty,
-            (_, IntervalBoundaryKind.NegativeInfinity) => OrderedBoundaryKind.NegativeInfinity,
-            (BoundaryDirection.From, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.FromInclusive,
-            (BoundaryDirection.To, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.ToInclusive,
-            (BoundaryDirection.From, IntervalBoundaryKind.Exclusive) => OrderedBoundaryKind.FromExclusive,
-            (BoundaryDirection.To, IntervalBoundaryKind.Exclusive) => OrderedBoundaryKind.ToExclusive,
-            (_, IntervalBoundaryKind.PositiveInfinity) => OrderedBoundaryKind.PositiveInfinity
-        };
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TInterval Intersect<TInterval, TOther, TBound>(
         in TInterval interval,
@@ -254,6 +223,37 @@ static class IntervalEngine
             return false;
 
         return cFrom != 0 || cTo != 0;
+    }
+
+    static OrderedBoundaryKind GetOrderedBoundaryKind(BoundaryDirection direction, IntervalBoundaryKind kind) =>
+        (direction, kind) switch
+        {
+            (BoundaryDirection.From, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.FromEmpty,
+            (BoundaryDirection.To, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.ToEmpty,
+            (_, IntervalBoundaryKind.NegativeInfinity) => OrderedBoundaryKind.NegativeInfinity,
+            (BoundaryDirection.From, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.FromInclusive,
+            (BoundaryDirection.To, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.ToInclusive,
+            (BoundaryDirection.From, IntervalBoundaryKind.Exclusive) => OrderedBoundaryKind.FromExclusive,
+            (BoundaryDirection.To, IntervalBoundaryKind.Exclusive) => OrderedBoundaryKind.ToExclusive,
+            (_, IntervalBoundaryKind.PositiveInfinity) => OrderedBoundaryKind.PositiveInfinity
+        };
+
+    enum BoundaryDirection
+    {
+        From,
+        To
+    }
+
+    enum OrderedBoundaryKind
+    {
+        ToEmpty,
+        NegativeInfinity,
+        ToExclusive,
+        FromInclusive,
+        ToInclusive,
+        FromExclusive,
+        PositiveInfinity,
+        FromEmpty
     }
 
     public static string ToString<TInterval, TBound>(in TInterval interval)

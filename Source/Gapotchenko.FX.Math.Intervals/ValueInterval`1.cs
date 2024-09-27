@@ -96,8 +96,6 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <inheritdoc/>
     public bool Contains(T item) => IntervalEngine.Contains(this, item, Comparer<T>.Default);
 
-    static ValueInterval<T> Construct(IntervalBoundary<T> from, IntervalBoundary<T> to) => new(from, to);
-
     /// <summary>
     /// <para>
     /// Gets the interval interior.
@@ -175,6 +173,8 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
             Construct);
 
     IInterval<T> IIntervalOperations<T>.Union(IInterval<T> other) => Union<IIntervalOperations<T>>(other);
+
+    static ValueInterval<T> Construct(IntervalBoundary<T> from, IntervalBoundary<T> to) => new(from, to);
 
     /// <inheritdoc/>
     public bool Overlaps(IInterval<T> other) => Overlaps<IInterval<T>>(other);

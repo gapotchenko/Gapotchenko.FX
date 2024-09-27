@@ -84,9 +84,6 @@ public sealed record Interval<T> : IInterval<T>
     /// </summary>
     public IntervalBoundary<T> To { get; init; }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IComparer<T> m_Comparer;
-
     /// <summary>
     /// The <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
     /// </summary>
@@ -98,6 +95,9 @@ public sealed record Interval<T> : IInterval<T>
         [MemberNotNull(nameof(m_Comparer))]
         init => m_Comparer = value ?? Comparer<T>.Default;
     }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IComparer<T> m_Comparer;
 
     /// <inheritdoc/>
     public bool IsBounded => IntervalEngine.IsBounded<Interval<T>, T>(this);
@@ -125,8 +125,6 @@ public sealed record Interval<T> : IInterval<T>
 
     /// <inheritdoc/>
     public bool Contains(T item) => IntervalEngine.Contains(this, item, m_Comparer);
-
-    Interval<T> Construct(IntervalBoundary<T> from, IntervalBoundary<T> to) => new(from, to, m_Comparer);
 
     /// <summary>
     /// <para>
@@ -205,6 +203,8 @@ public sealed record Interval<T> : IInterval<T>
             Construct);
 
     IInterval<T> IIntervalOperations<T>.Union(IInterval<T> other) => Union<IIntervalOperations<T>>(other);
+
+    Interval<T> Construct(IntervalBoundary<T> from, IntervalBoundary<T> to) => new(from, to, m_Comparer);
 
     bool IsThis<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         !TypeTraits<TOther>.IsValueType &&
