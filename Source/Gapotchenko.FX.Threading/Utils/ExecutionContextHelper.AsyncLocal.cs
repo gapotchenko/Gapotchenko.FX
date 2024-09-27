@@ -33,7 +33,8 @@
 // needs.
 //
 // In contrast, the proposed algorithm is fast and mathematically sound,
-// making primitives like AsyncRecursiveMutex realistically possible in .NET.
+// making such primitives as AsyncRecursiveMutex realistically possible in
+// .NET.
 //
 // The idea behind the algorithm is based on an obvious mathematical property:
 // to go from a source state S to a destination state D we apply the state
