@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Collections.Generic.Kit;
 
 /// <summary>
-/// Provides the implementation base for <see cref="IReadOnlySet{T}"/>.
+/// Provides the base implementation of <see cref="IReadOnlySet{T}"/>.
 /// </summary>
 [DebuggerDisplay("Count = {Count}")]
 [DebuggerTypeProxy(typeof(CollectionDebugView<>))]

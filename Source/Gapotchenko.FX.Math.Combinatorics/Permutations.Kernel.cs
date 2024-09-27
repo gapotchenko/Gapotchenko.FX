@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Collections.Generic;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Linq;
 
 namespace Gapotchenko.FX.Math.Combinatorics;
@@ -27,10 +33,7 @@ partial class Permutations
                 var item = items[i];
 
                 if (!map.TryGetValue(item, out var list))
-                {
-                    list = [];
-                    map.Add(item, list);
-                }
+                    map.Add(item, list = []);
 
                 list.Add(i);
             }
@@ -48,7 +51,7 @@ partial class Permutations
             }
         }
 
-        yield return new Row<T>(items, transform.Select(x => x.Item2).ToArray());
+        yield return new Row<T>(items, transform.Select(x => x.Second).ToArray());
 
         for (; ; )
         {
@@ -80,7 +83,7 @@ partial class Permutations
             // Reverse the decreasing partition.
             Array.Reverse(transform, decreasingPart + 1, length - decreasingPart - 1);
 
-            yield return new Row<T>(items, transform.Select(x => x.Item2).ToArray());
+            yield return new Row<T>(items, transform.Select(x => x.Second).ToArray());
         }
     }
 }

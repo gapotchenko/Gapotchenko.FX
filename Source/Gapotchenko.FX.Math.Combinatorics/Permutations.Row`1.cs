@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Collections;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Combinatorics;
@@ -14,27 +20,15 @@ partial class Permutations
     {
     }
 
-    sealed class Row<T> : IRow<T>, IReadOnlyList<T>
+    sealed class Row<T>(IReadOnlyList<T> source, int[] transform) : IRow<T>, IReadOnlyList<T>
     {
-        public Row(IReadOnlyList<T> source, int[] transform)
-        {
-            m_Source = source;
-            m_Transform = transform;
-        }
+        public T this[int index] => m_Source[transform[index]];
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IReadOnlyList<T> m_Source;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly int[] m_Transform;
-
-        public T this[int index] => m_Source[m_Transform[index]];
-
-        public int Count => m_Transform.Length;
+        public int Count => transform.Length;
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (int i = 0, n = Count; i < n; i++)
+            for (int i = 0, n = Count; i < n; ++i)
                 yield return this[i];
         }
 
@@ -46,16 +40,14 @@ partial class Permutations
             ReferenceEquals(m_Source, otherRow.m_Source) &&
             this.SequenceEqual(otherRow);
 
-        public override bool Equals(object? obj) =>
-            obj switch
-            {
-                IRow<T> other => Equals(other),
-                _ => false
-            };
+        public override bool Equals(object? obj) => obj is IRow<T> other && Equals(other);
 
         public override int GetHashCode() =>
             HashCode.Combine(
                 m_Source.GetHashCode(),
                 HashCodeEx.SequenceCombine(this));
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly IReadOnlyList<T> m_Source = source;
     }
 }

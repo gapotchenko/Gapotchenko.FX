@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Linq;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Threading;
 using System.Collections;
 using System.Diagnostics;
@@ -65,35 +71,9 @@ partial class Permutations
         IResult<T> Distinct(IEqualityComparer<T>? comparer);
     }
 
-    sealed class Result<T> : IResult<T>
+    sealed class Result<T>(ResultMode mode, IEnumerable<T> source, IEqualityComparer<T>? comparer) : IResult<T>
     {
-        public Result(ResultMode mode, IEnumerable<T> source, IEqualityComparer<T>? comparer)
-        {
-            m_Mode = mode;
-            m_Source = source;
-            m_Comparer = comparer;
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly ResultMode m_Mode;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IEnumerable<T> m_Source;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IEqualityComparer<T>? m_Comparer;
-
-        IEnumerable<IRow<T>> Enumerate() => Permute(m_Source, m_Mode == ResultMode.Distinct, m_Comparer);
-
-        public IEnumerator<IRow<T>> GetEnumerator() => Enumerate().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        object? m_SyncLock;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Optional<int> m_CachedCount;
+        int IReadOnlyCollection<IRow<T>>.Count => Count();
 
         public int Count() =>
             LazyInitializerEx.EnsureInitialized(
@@ -104,17 +84,16 @@ partial class Permutations
                     if (m_CachedLongCount.HasValue)
                         return checked((int)LongCount());
 
-                    return m_Mode switch
-                    {
-                        ResultMode.Default or ResultMode.DistinctView => Cardinality(EnumerableEx.Count(m_Source)),
-                        _ => EnumerableEx.Count(Enumerate())
-                    };
+                    return
+                        mode switch
+                        {
+                            ResultMode.Default or ResultMode.DistinctView => Cardinality(EnumerableEx.Count(source)),
+                            _ => EnumerableEx.Count(Enumerate())
+                        };
                 });
 
-        int IReadOnlyCollection<IRow<T>>.Count => Count();
-
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Optional<long> m_CachedLongCount;
+        Optional<int> m_CachedCount;
 
         public long LongCount() =>
             LazyInitializerEx.EnsureInitialized(
@@ -125,28 +104,41 @@ partial class Permutations
                     if (m_CachedCount.HasValue)
                         return Count();
 
-                    return m_Mode switch
-                    {
-                        ResultMode.Default or ResultMode.DistinctView => Cardinality(EnumerableEx.LongCount(m_Source)),
-                        _ => EnumerableEx.LongCount(Enumerate())
-                    };
+                    return
+                        mode switch
+                        {
+                            ResultMode.Default or ResultMode.DistinctView => Cardinality(EnumerableEx.LongCount(source)),
+                            _ => EnumerableEx.LongCount(Enumerate())
+                        };
                 });
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Optional<long> m_CachedLongCount;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        object? m_SyncLock;
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public IEnumerator<IRow<T>> GetEnumerator() => Enumerate().GetEnumerator();
+
+        IEnumerable<IRow<T>> Enumerate() => Permute(source, mode == ResultMode.Distinct, m_Comparer);
 
         public IResult<T> Distinct() => Distinct(null);
 
         public IResult<T> Distinct(IEqualityComparer<T>? comparer)
         {
-            switch (m_Mode)
+            switch (mode)
             {
                 case ResultMode.Default:
-                    if (Utility.IsCompatibleSet(m_Source, comparer))
+                    if (Utility.IsCompatibleSet(source, comparer))
                     {
                         // The permutations are already distinct.
                         return this;
                     }
                     else
                     {
-                        return new Result<T>(ResultMode.Distinct, m_Source, comparer);
+                        return new Result<T>(ResultMode.Distinct, source, comparer);
                     }
 
                 case ResultMode.Distinct:
@@ -160,6 +152,9 @@ partial class Permutations
                     throw new InvalidOperationException();
             }
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly IEqualityComparer<T>? m_Comparer = comparer;
     }
 
     internal static IResult<T> PermuteAccelerated<T>(IEnumerable<T> sequence)
