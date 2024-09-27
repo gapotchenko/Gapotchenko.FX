@@ -58,8 +58,6 @@ public static class TextDataEncodingTestBench
 
         if (dataEncoding == null)
             throw new ArgumentNullException(nameof(dataEncoding));
-        if (raw == null)
-            throw new ArgumentNullException(nameof(raw));
         if (encoded == null)
             throw new ArgumentNullException(nameof(encoded));
 
