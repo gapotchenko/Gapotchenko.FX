@@ -107,7 +107,7 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// </summary>
     /// <returns>
     /// The text representation of the value of the current <see cref="Optional{T}"/> object if the <see cref="HasValue"/> property is <see langword="true"/>,
-    /// or an empty string ("") if the <see cref="HasValue"/> property is <see langword="false"/>.
+    /// or a <see langword="null"/> if the <see cref="HasValue"/> property is <see langword="false"/>.
     /// </returns>
     public override readonly string? ToString() => m_HasValue ? m_Value?.ToString() : null;
 
