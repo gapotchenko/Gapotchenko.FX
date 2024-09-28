@@ -21,6 +21,7 @@ public static class GraphEdgeExtensions
     /// <returns>
     /// <see langword="true"/> if the edge is added to the graph;
     /// <see langword="false"/> if the edge is already present.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="edges"/> is <see langword="null"/>.</exception>
     public static bool Add<TVertex>(this ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
         (edges ?? throw new ArgumentNullException(nameof(edges)))
         .Add(new(from, to));
@@ -35,6 +36,7 @@ public static class GraphEdgeExtensions
     /// <see langword="true"/> if the edge was removed from the graph;
     /// <see langword="false"/> if the edge is not found.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="edges"/> is <see langword="null"/>.</exception>
     public static bool Remove<TVertex>(this ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
         (edges ?? throw new ArgumentNullException(nameof(edges)))
         .Remove(new(from, to));
@@ -57,6 +59,7 @@ public static class GraphEdgeExtensions
     /// <see langword="true"/> when a specified vertex <paramref name="from">A</paramref> is adjacent to vertex <paramref name="to">B</paramref>;
     /// otherwise, <see langword="false"/>.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="edges"/> is <see langword="null"/>.</exception>
     public static bool Contains<TVertex>(this IReadOnlySet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
         (edges ?? throw new ArgumentNullException(nameof(edges)))
         .Contains(new(from, to));
@@ -80,6 +83,7 @@ public static class GraphEdgeExtensions
     /// <see langword="true"/> when a specified vertex <paramref name="from">A</paramref> is adjacent to vertex <paramref name="to">B</paramref>;
     /// otherwise, <see langword="false"/>.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="edges"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public
 #endif
@@ -106,6 +110,7 @@ public static class GraphEdgeExtensions
     /// <see langword="true"/> when a specified vertex <paramref name="from">A</paramref> is adjacent to vertex <paramref name="to">B</paramref>;
     /// otherwise, <see langword="false"/>.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="edges"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool Contains<TVertex>(this ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to, int reserved = default) =>
         Contains(edges, from, to);
@@ -119,6 +124,7 @@ public static class GraphEdgeExtensions
     /// <returns>
     /// <see langword="true"/> if the edge is added to the graph;
     /// <see langword="false"/> if the edge is already present.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
     public static void Add<TVertex>(this ICollection<GraphEdge<TVertex>> collection, TVertex from, TVertex to) =>
         (collection ?? throw new ArgumentNullException(nameof(collection)))
         .Add(new(from, to));
@@ -133,6 +139,7 @@ public static class GraphEdgeExtensions
     /// <see langword="true"/> if the edge was removed from the collection;
     /// <see langword="false"/> if the edge is not found.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
     public static bool Remove<TVertex>(this ICollection<GraphEdge<TVertex>> collection, TVertex from, TVertex to) =>
         (collection ?? throw new ArgumentNullException(nameof(collection)))
         .Remove(new(from, to));

@@ -85,13 +85,13 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     public bool IsHalfOpen => IntervalEngine.IsHalfOpen<ValueInterval<T>, T>(this);
 
     /// <inheritdoc/>
-    public bool IsEmpty => IntervalEngine.IsEmpty<ValueInterval<T>, T>(this, Comparer<T>.Default);
+    public bool IsEmpty => IntervalEngine.IsEmpty(this, Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool IsInfinite => IntervalEngine.IsInfinite<ValueInterval<T>, T>(this);
 
     /// <inheritdoc/>
-    public bool IsDegenerate => IntervalEngine.IsDegenerate<ValueInterval<T>, T>(this, EqualityComparer<T>.Default);
+    public bool IsDegenerate => IntervalEngine.IsDegenerate(this, EqualityComparer<T>.Default);
 
     /// <inheritdoc/>
     public bool Contains(T item) => IntervalEngine.Contains(this, item, Comparer<T>.Default);
@@ -187,7 +187,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <typeparam name="TOther">Type of the interval to check for overlapping.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool Overlaps<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.Overlaps<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
+        IntervalEngine.Overlaps(this, other, Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool IsSubintervalOf(IInterval<T> other) => IsSubintervalOf<IInterval<T>>(other);
@@ -199,7 +199,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <returns><see langword="true"/> if the current interval is a subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.IsSubintervalOf<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
+        IntervalEngine.IsSubintervalOf(this, other, Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool IsSuperintervalOf(IInterval<T> other) => IsSuperintervalOf<IInterval<T>>(other);
@@ -211,7 +211,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <returns><see langword="true"/> if the current interval is a superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.IsSuperintervalOf<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
+        IntervalEngine.IsSuperintervalOf(this, other, Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool IsProperSubintervalOf(IInterval<T> other) => IsProperSubintervalOf<IInterval<T>>(other);
@@ -223,7 +223,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <returns><see langword="true"/> if the current interval is a proper subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsProperSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.IsProperSubintervalOf<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
+        IntervalEngine.IsProperSubintervalOf(this, other, Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool IsProperSuperintervalOf(IInterval<T> other) => IsProperSuperintervalOf<IInterval<T>>(other);
@@ -235,7 +235,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <returns><see langword="true"/> if the current interval is a proper superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsProperSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.IsProperSuperintervalOf<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
+        IntervalEngine.IsProperSuperintervalOf(this, other, Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
@@ -248,7 +248,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IntervalEquals<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.IntervalsEqual<ValueInterval<T>, TOther, T>(this, other, Comparer<T>.Default);
+        IntervalEngine.IntervalsEqual(this, other, Comparer<T>.Default);
 
     /// <summary>
     /// Determines whether the specified intervals are equal.

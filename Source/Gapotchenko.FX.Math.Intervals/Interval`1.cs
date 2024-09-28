@@ -115,13 +115,13 @@ public sealed record Interval<T> : IInterval<T>
     public bool IsHalfOpen => IntervalEngine.IsHalfOpen<Interval<T>, T>(this);
 
     /// <inheritdoc/>
-    public bool IsEmpty => IntervalEngine.IsEmpty<Interval<T>, T>(this, m_Comparer);
+    public bool IsEmpty => IntervalEngine.IsEmpty(this, m_Comparer);
 
     /// <inheritdoc/>
     public bool IsInfinite => IntervalEngine.IsInfinite<Interval<T>, T>(this);
 
     /// <inheritdoc/>
-    public bool IsDegenerate => IntervalEngine.IsDegenerate<Interval<T>, T>(this, m_Comparer);
+    public bool IsDegenerate => IntervalEngine.IsDegenerate(this, m_Comparer);
 
     /// <inheritdoc/>
     public bool Contains(T item) => IntervalEngine.Contains(this, item, m_Comparer);
@@ -222,7 +222,7 @@ public sealed record Interval<T> : IInterval<T>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool Overlaps<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
-        IntervalEngine.Overlaps<Interval<T>, TOther, T>(this, other, m_Comparer);
+        IntervalEngine.Overlaps(this, other, m_Comparer);
 
     /// <inheritdoc/>
     public bool IsSubintervalOf(IInterval<T> other) => IsSubintervalOf<IInterval<T>>(other);
@@ -235,7 +235,7 @@ public sealed record Interval<T> : IInterval<T>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
-        IntervalEngine.IsSubintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
+        IntervalEngine.IsSubintervalOf(this, other, m_Comparer);
 
     /// <inheritdoc/>
     public bool IsSuperintervalOf(IInterval<T> other) => IsSuperintervalOf<IInterval<T>>(other);
@@ -248,7 +248,7 @@ public sealed record Interval<T> : IInterval<T>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
-        IntervalEngine.IsSuperintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
+        IntervalEngine.IsSuperintervalOf(this, other, m_Comparer);
 
     /// <inheritdoc/>
     public bool IsProperSubintervalOf(IInterval<T> other) => IsProperSubintervalOf<IInterval<T>>(other);
@@ -261,7 +261,7 @@ public sealed record Interval<T> : IInterval<T>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsProperSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         !IsThis(other ?? throw new ArgumentNullException(nameof(other))) &&
-        IntervalEngine.IsProperSubintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
+        IntervalEngine.IsProperSubintervalOf(this, other, m_Comparer);
 
     /// <inheritdoc/>
     public bool IsProperSuperintervalOf(IInterval<T> other) => IsProperSuperintervalOf<IInterval<T>>(other);
@@ -274,7 +274,7 @@ public sealed record Interval<T> : IInterval<T>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsProperSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         !IsThis(other ?? throw new ArgumentNullException(nameof(other))) &&
-        IntervalEngine.IsProperSuperintervalOf<Interval<T>, TOther, T>(this, other, m_Comparer);
+        IntervalEngine.IsProperSuperintervalOf(this, other, m_Comparer);
 
     /// <inheritdoc/>
     public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
@@ -288,7 +288,7 @@ public sealed record Interval<T> : IInterval<T>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IntervalEquals<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
-        IntervalEngine.IntervalsEqual<Interval<T>, TOther, T>(this, other, m_Comparer);
+        IntervalEngine.IntervalsEqual(this, other, m_Comparer);
 
     /// <summary>
     /// Determines whether the specified intervals are equal.

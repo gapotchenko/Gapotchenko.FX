@@ -37,6 +37,8 @@ public static class TopologicalSortExtensions
     /// </param>
     /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare elements.</param>
     /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to the specified dependency function.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="dependencyFunction"/> is <see langword="null"/>.</exception>
     public static ITopologicallyOrderedEnumerable<TSource> OrderTopologically<TSource>(
         this IEnumerable<TSource> source,
         Func<TSource, TSource, bool> dependencyFunction,
@@ -66,6 +68,9 @@ public static class TopologicalSortExtensions
     /// </param>
     /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
     /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to a key and specified dependency function.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="dependencyFunction"/> is <see langword="null"/>.</exception>
     public static ITopologicallyOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
@@ -106,6 +111,8 @@ public static class TopologicalSortExtensions
     /// </param>
     /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare elements.</param>
     /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to the specified dependency function.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="dependencyFunction"/> is <see langword="null"/>.</exception>
     public static ITopologicallyOrderedEnumerable<TSource> OrderTopologically<TSource>(
         this IEnumerable<TSource> source,
         Func<TSource, IEnumerable<TSource>?> dependencyFunction,
@@ -131,6 +138,9 @@ public static class TopologicalSortExtensions
     /// </param>
     /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to compare keys.</param>
     /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to a key and specified dependency function.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="dependencyFunction"/> is <see langword="null"/>.</exception>
     public static ITopologicallyOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
@@ -180,6 +190,8 @@ public static class TopologicalSortExtensions
     /// The dependency graph that defines dependencies between the elements of a sequence.
     /// </param>
     /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to the specified dependency graph.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="dependencyGraph"/> is <see langword="null"/>.</exception>
     public static ITopologicallyOrderedEnumerable<TSource> OrderTopologically<TSource>(
         this IEnumerable<TSource> source,
         IReadOnlyGraph<TSource> dependencyGraph) =>
@@ -202,6 +214,9 @@ public static class TopologicalSortExtensions
     /// The dependency graph that defines dependencies between the elements of a sequence.
     /// </param>
     /// <returns>An <see cref="IEnumerable{T}"/> whose elements are sorted in topological order according to a key and specified dependency graph.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="dependencyGraph"/> is <see langword="null"/>.</exception>
     public static ITopologicallyOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
