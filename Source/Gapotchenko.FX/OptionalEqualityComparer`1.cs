@@ -1,34 +1,26 @@
 ﻿namespace Gapotchenko.FX;
 
 [Serializable]
-sealed class OptionalEqualityComparer<T> : IEqualityComparer<Optional<T>>
+sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : IEqualityComparer<Optional<T>>
 {
-    public OptionalEqualityComparer(IEqualityComparer<T>? valueComparer)
-    {
-        m_ValueComparer = valueComparer ?? EqualityComparer<T>.Default;
-    }
-
-    readonly IEqualityComparer<T> m_ValueComparer;
-
     public bool Equals(Optional<T> x, Optional<T> y) => EqualsCore(x, y, m_ValueComparer);
 
     public int GetHashCode(Optional<T> obj) => GetHashCodeCore(obj, m_ValueComparer);
+
+    readonly IEqualityComparer<T> m_ValueComparer = valueComparer ?? EqualityComparer<T>.Default;
 
     internal static bool EqualsCore(Optional<T> x, object? y, IEqualityComparer<T> valueComparer)
     {
         if (!x.HasValue)
         {
-            if (y is Optional<T> otherOption)
-                return !otherOption.HasValue;
+            if (y is Optional<T> otherOptional)
+                return !otherOptional.HasValue;
             else
                 return false;
         }
-        else if (y is Optional<T> otherOption)
+        else if (y is Optional<T> otherOptional)
         {
-            if (otherOption.HasValue)
-                return valueComparer.Equals(x.Value, otherOption.Value);
-            else
-                return false;
+            return EqualsCore(otherOptional, x.Value, valueComparer);
         }
         else if (y is T otherValue)
         {
@@ -37,31 +29,27 @@ sealed class OptionalEqualityComparer<T> : IEqualityComparer<Optional<T>>
         else
         {
             var value = x.Value;
-            if (value == null)
-                return y == null;
-            return value.Equals(y);
+            if (value is null)
+                return y is null;
+            else
+                return value.Equals(y);
         }
-    }
-
-    internal static bool EqualsCore(Optional<T> x, [AllowNull] T y, IEqualityComparer<T> valueComparer)
-    {
-        if (!x.HasValue)
-            return false;
-        return valueComparer.Equals(x.Value, y);
     }
 
     internal static bool EqualsCore(Optional<T> x, Optional<T> y, IEqualityComparer<T> valueComparer)
     {
         if (x.HasValue)
-        {
-            if (y.HasValue)
-                return valueComparer.Equals(x.Value, y.Value);
-            return false;
-        }
+            return EqualsCore(y, x.Value, valueComparer);
         else
-        {
             return !y.HasValue;
-        }
+    }
+
+    internal static bool EqualsCore(Optional<T> x, [AllowNull] T y, IEqualityComparer<T> valueComparer)
+    {
+        if (x.HasValue)
+            return valueComparer.Equals(x.Value, y);
+        else
+            return false;
     }
 
     internal static int GetHashCodeCore(Optional<T> obj, IEqualityComparer<T> valueComparer)
