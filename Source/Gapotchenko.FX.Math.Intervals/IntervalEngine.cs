@@ -266,6 +266,17 @@ static class IntervalEngine
         else
             sb.Append('(');
 
+        AppendBoundary(sb, interval.From);
+        sb.Append(',');
+        AppendBoundary(sb, interval.To);
+
+        if (interval.To.Kind == IntervalBoundaryKind.Inclusive)
+            sb.Append(']');
+        else
+            sb.Append(')');
+
+        return sb.ToString();
+
         static void AppendBoundary(StringBuilder sb, in IntervalBoundary<TBound> boundary)
         {
             switch (boundary.Kind)
@@ -284,18 +295,5 @@ static class IntervalEngine
                     break;
             }
         }
-
-        AppendBoundary(sb, interval.From);
-
-        sb.Append(',');
-
-        AppendBoundary(sb, interval.To);
-
-        if (interval.To.Kind == IntervalBoundaryKind.Inclusive)
-            sb.Append(']');
-        else
-            sb.Append(')');
-
-        return sb.ToString();
     }
 }
