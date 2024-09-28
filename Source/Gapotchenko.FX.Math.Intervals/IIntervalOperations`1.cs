@@ -135,6 +135,7 @@ public interface IIntervalOperations<T>
     /// </summary>
     /// <param name="other">The interval to produce the intersection with.</param>
     /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
     IInterval<T> Intersect(IInterval<T> other);
 
     /// <summary>
@@ -142,6 +143,7 @@ public interface IIntervalOperations<T>
     /// </summary>
     /// <param name="other">The interval to produce the union with.</param>
     /// <returns>A new interval representing a union of the current and specified intervals.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
     IInterval<T> Union(IInterval<T> other);
 
     /// <summary>
@@ -149,6 +151,7 @@ public interface IIntervalOperations<T>
     /// </summary>
     /// <param name="other">The interval to check for overlapping.</param>
     /// <returns><see langword="true"/> if the current and <paramref name="other"/> intervals overlap; otherwise, <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
     bool Overlaps(IInterval<T> other);
 
     /// <summary>
@@ -156,6 +159,7 @@ public interface IIntervalOperations<T>
     /// </summary>
     /// <param name="other">The interval to compare to the current interval.</param>
     /// <returns><see langword="true"/> if the current interval is a subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
     bool IsSubintervalOf(IInterval<T> other);
 
     /// <summary>
@@ -163,6 +167,7 @@ public interface IIntervalOperations<T>
     /// </summary>
     /// <param name="other">The interval to compare to the current interval.</param>
     /// <returns><see langword="true"/> if the current interval is a superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
     bool IsSuperintervalOf(IInterval<T> other);
 
     /// <summary>
@@ -170,6 +175,7 @@ public interface IIntervalOperations<T>
     /// </summary>
     /// <param name="other">The interval to compare to the current interval.</param>
     /// <returns><see langword="true"/> if the current interval is a proper subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
     bool IsProperSubintervalOf(IInterval<T> other);
 
     /// <summary>
@@ -177,6 +183,7 @@ public interface IIntervalOperations<T>
     /// </summary>
     /// <param name="other">The interval to compare to the current interval.</param>
     /// <returns><see langword="true"/> if the current interval is a proper superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
     bool IsProperSuperintervalOf(IInterval<T> other);
 
     /// <summary>
@@ -184,5 +191,6 @@ public interface IIntervalOperations<T>
     /// </summary>
     /// <param name="other">The interval to check for equality.</param>
     /// <returns><see langword="true"/> if this and <paramref name="other"/> intervals are equal; otherwise, <see langword="false"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
     bool IntervalEquals(IInterval<T> other);
 }
