@@ -23,7 +23,7 @@ public static class GraphEdgeExtensions
     /// <see langword="false"/> if the edge is already present.</returns>
     public static bool Add<TVertex>(this ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
         (edges ?? throw new ArgumentNullException(nameof(edges)))
-        .Add(new GraphEdge<TVertex>(from, to));
+        .Add(new(from, to));
 
     /// <summary>
     /// Removes the specified edge from the graph.
@@ -37,7 +37,7 @@ public static class GraphEdgeExtensions
     /// </returns>
     public static bool Remove<TVertex>(this ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
         (edges ?? throw new ArgumentNullException(nameof(edges)))
-        .Remove(new GraphEdge<TVertex>(from, to));
+        .Remove(new(from, to));
 
     /// <summary>
     /// <para>
@@ -59,7 +59,7 @@ public static class GraphEdgeExtensions
     /// </returns>
     public static bool Contains<TVertex>(this IReadOnlySet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
         (edges ?? throw new ArgumentNullException(nameof(edges)))
-        .Contains(new GraphEdge<TVertex>(from, to));
+        .Contains(new(from, to));
 
 #if BINARY_COMPATIBILITY
     /// <summary>
@@ -85,7 +85,7 @@ public static class GraphEdgeExtensions
 #endif
     static bool Contains<TVertex>(ISet<GraphEdge<TVertex>> edges, TVertex from, TVertex to) =>
         (edges ?? throw new ArgumentNullException(nameof(edges)))
-        .Contains(new GraphEdge<TVertex>(from, to));
+        .Contains(new(from, to));
 
     /// <summary>
     /// <para>
@@ -121,7 +121,7 @@ public static class GraphEdgeExtensions
     /// <see langword="false"/> if the edge is already present.</returns>
     public static void Add<TVertex>(this ICollection<GraphEdge<TVertex>> collection, TVertex from, TVertex to) =>
         (collection ?? throw new ArgumentNullException(nameof(collection)))
-        .Add(new GraphEdge<TVertex>(from, to));
+        .Add(new(from, to));
 
     /// <summary>
     /// Removes the specified edge from the collection.
@@ -135,5 +135,5 @@ public static class GraphEdgeExtensions
     /// </returns>
     public static bool Remove<TVertex>(this ICollection<GraphEdge<TVertex>> collection, TVertex from, TVertex to) =>
         (collection ?? throw new ArgumentNullException(nameof(collection)))
-        .Remove(new GraphEdge<TVertex>(from, to));
+        .Remove(new(from, to));
 }

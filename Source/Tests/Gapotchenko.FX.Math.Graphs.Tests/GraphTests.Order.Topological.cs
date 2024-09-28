@@ -287,7 +287,7 @@ partial class GraphTests
         /***************/
 
         foreach (var edges in
-            Permutations.Of(new GraphEdge<char>[] { ('0', '1'), ('1', '2'), ('2', '3') }))
+            Permutations.Of<GraphEdge<char>>([('0', '1'), ('1', '2'), ('2', '3')]))
         {
             g = new();
             g.Edges.UnionWith(edges);
