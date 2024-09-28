@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.Math.Intervals;
 
 /// <summary>
-/// Defines the base operations for <see cref="IInterval{T}"/>.
+/// Defines the interval operations for <see cref="IInterval{T}"/>.
 /// This interface is not intended to be used directly, use <see cref="IInterval{T}"/> instead.
 /// </summary>
 /// <typeparam name="T">The type of interval values.</typeparam>

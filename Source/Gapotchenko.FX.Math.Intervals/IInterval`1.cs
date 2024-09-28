@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.Math.Intervals;
 
 /// <summary>
-/// Provides the interface for continuous interval abstraction.
+/// Provides the abstraction interface for a continuous interval.
 /// </summary>
 /// <typeparam name="T">The type of interval value.</typeparam>
 public interface IInterval<T> : IIntervalOperations<T>
