@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Geometry.StringMetrics" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Metrics.StringMetrics" />
   </ItemGroup>
 
   <ItemGroup>
