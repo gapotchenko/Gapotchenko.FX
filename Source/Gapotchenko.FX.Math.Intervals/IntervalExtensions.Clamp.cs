@@ -16,6 +16,9 @@ partial class IntervalExtensions
     /// <param name="interval">The interval.</param>
     /// <param name="value">The value to clamp.</param>
     /// <returns>A clamped <paramref name="value"/>, or <see cref="Optional{T}.None"/> if the interval is empty.</returns>
+#if TFF_STATIC_INTERFACE
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     public static Optional<int> Clamp(this IInterval<int> interval, int value) =>
         Clamp(interval, value);
 
@@ -31,6 +34,9 @@ partial class IntervalExtensions
     #region Int64
 
     /// <inheritdoc cref="Clamp(IInterval{int}, int)"/>
+#if TFF_STATIC_INTERFACE
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     public static Optional<long> Clamp(this IInterval<long> interval, long value) =>
         Clamp(interval, value);
 
@@ -46,6 +52,9 @@ partial class IntervalExtensions
     #region Single
 
     /// <inheritdoc cref="Clamp(IInterval{int}, int)"/>
+#if TFF_STATIC_INTERFACE
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     public static Optional<float> Clamp(this IInterval<float> interval, float value) =>
         Clamp(interval, value);
 
@@ -61,6 +70,9 @@ partial class IntervalExtensions
     #region Double
 
     /// <inheritdoc cref="Clamp(IInterval{int}, int)"/>
+#if TFF_STATIC_INTERFACE
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     public static Optional<double> Clamp(this IInterval<double> interval, double value) =>
         Clamp(interval, value);
 

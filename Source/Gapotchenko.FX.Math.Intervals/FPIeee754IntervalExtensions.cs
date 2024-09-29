@@ -6,7 +6,7 @@
 
 namespace Gapotchenko.FX.Math.Intervals;
 
-#if NET7_0_OR_GREATER
+#if TFF_STATIC_INTERFACE
 
 /// <summary>
 /// Extension methods for <see cref="IInterval{T}"/> that work on <see cref="IFloatingPointIeee754{TSelf}"/> types.
