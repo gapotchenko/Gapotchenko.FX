@@ -7,7 +7,7 @@
 public static class OptionalExtensions
 {
     /// <summary>
-    /// Returns <see cref="Nullable{T}"/> that corresponds to the given optional value.
+    /// Returns a <see cref="Nullable{T}"/> value that corresponds to the given optional value.
     /// </summary>
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> value.</typeparam>
     /// <param name="optional">The optional value.</param>
