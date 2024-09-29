@@ -20,7 +20,7 @@ partial class IntervalExtensions
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
     public static Optional<int> Clamp(this IInterval<int> interval, int value) =>
-        Clamp(interval, value);
+        Clamp<IInterval<int>>(interval, value);
 
     /// <inheritdoc cref="Clamp(IInterval{int}, int)"/>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
@@ -38,7 +38,7 @@ partial class IntervalExtensions
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
     public static Optional<long> Clamp(this IInterval<long> interval, long value) =>
-        Clamp(interval, value);
+        Clamp<IInterval<long>>(interval, value);
 
     /// <inheritdoc cref="Clamp(IInterval{long}, long)"/>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
@@ -56,7 +56,7 @@ partial class IntervalExtensions
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
     public static Optional<float> Clamp(this IInterval<float> interval, float value) =>
-        Clamp(interval, value);
+        Clamp<IInterval<float>>(interval, value);
 
     /// <inheritdoc cref="Clamp(IInterval{float}, float)"/>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
@@ -74,7 +74,7 @@ partial class IntervalExtensions
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
     public static Optional<double> Clamp(this IInterval<double> interval, double value) =>
-        Clamp(interval, value);
+        Clamp<IInterval<double>>(interval, value);
 
     /// <inheritdoc cref="Clamp(IInterval{double}, double)"/>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>

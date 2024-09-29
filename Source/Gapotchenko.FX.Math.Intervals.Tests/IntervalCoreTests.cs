@@ -10,10 +10,10 @@ public abstract class IntervalCoreTests
 {
     public abstract IInterval<T> NewInterval<T>(T from, T to) where T : IComparable<T>, IEquatable<T>;
 
-    public abstract IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to) where T : IComparable<T>, IEquatable<T>;
-
     public IInterval<T> NewInterval<T>(IInterval<T> interval) where T : IComparable<T>, IEquatable<T> =>
         NewInterval(interval.From, interval.To);
+
+    public abstract IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to) where T : IComparable<T>, IEquatable<T>;
 
     public abstract IInterval<T> InfiniteInterval<T>() where T : IComparable<T>, IEquatable<T>;
 
@@ -1094,6 +1094,126 @@ public abstract class IntervalCoreTests
         set.ExceptWith(interval);
 
         Assert.AreEqual(0, set.Count);
+    }
+
+    #endregion
+
+    #region Clamp
+
+    [TestMethod]
+    public void Interval_Core_Clamp_FloatingPoint_1()
+    {
+        var interval = NewInterval(ValueInterval.Exclusive(10f, 20f));
+        var clamped = interval.Clamp(21f);
+
+        Assert.IsTrue(clamped.HasValue);
+        Assert.IsTrue(clamped.Value is > 19 and < 20);
+        Assert.IsTrue(interval.Contains(clamped.Value));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Clamp_FloatingPoint_2()
+    {
+        var interval = NewInterval(ValueInterval.Exclusive(10f, 20f));
+        var clamped = interval.Clamp(9f);
+
+        Assert.IsTrue(clamped.HasValue);
+        Assert.IsTrue(clamped.Value is > 10 and < 11);
+        Assert.IsTrue(interval.Contains(clamped.Value));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Clamp_FloatingPoint_3()
+    {
+        var interval = NewInterval(ValueInterval.Inclusive(10f, 20f));
+        var clamped = interval.Clamp(21f);
+
+        Assert.IsTrue(clamped.HasValue);
+        Assert.AreEqual(20, clamped.Value);
+        Assert.IsTrue(interval.Contains(clamped.Value));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Clamp_FloatingPoint_4()
+    {
+        var interval = NewInterval(ValueInterval.Inclusive(10f, 20f));
+        var clamped = interval.Clamp(9f);
+
+        Assert.IsTrue(clamped.HasValue);
+        Assert.AreEqual(10, clamped.Value);
+        Assert.IsTrue(interval.Contains(clamped.Value));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Clamp_Integer_1()
+    {
+        var interval = NewInterval(ValueInterval.Exclusive(10, 20));
+        var clamped = interval.Clamp(21);
+
+        Assert.IsTrue(clamped.HasValue);
+        Assert.AreEqual(19, clamped.Value);
+        Assert.IsTrue(interval.Contains(clamped.Value));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Clamp_Integer_2()
+    {
+        var interval = NewInterval(ValueInterval.Exclusive(10, 20));
+        var clamped = interval.Clamp(9);
+
+        Assert.IsTrue(clamped.HasValue);
+        Assert.AreEqual(11, clamped.Value);
+        Assert.IsTrue(interval.Contains(clamped.Value));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Clamp_Integer_3()
+    {
+        var interval = NewInterval(ValueInterval.Inclusive(10, 20));
+        var clamped = interval.Clamp(21);
+
+        Assert.IsTrue(clamped.HasValue);
+        Assert.AreEqual(20, clamped.Value);
+        Assert.IsTrue(interval.Contains(clamped.Value));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Clamp_Integer_4()
+    {
+        var interval = NewInterval(ValueInterval.Inclusive(10, 20));
+        var clamped = interval.Clamp(9);
+
+        Assert.IsTrue(clamped.HasValue);
+        Assert.AreEqual(10, clamped.Value);
+        Assert.IsTrue(interval.Contains(clamped.Value));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Clamp_Integer_5()
+    {
+        var interval = NewInterval(ValueInterval.Exclusive(10, 11));
+        var clamped = interval.Clamp(21);
+
+        Assert.IsFalse(clamped.HasValue);
+    }
+
+    [TestMethod]
+    public void Interval_Core_Clamp_Integer_6()
+    {
+        var interval = NewInterval(ValueInterval.Degenerate(10));
+        var clamped = interval.Clamp(21);
+
+        Assert.IsTrue(clamped.HasValue);
+        Assert.AreEqual(10, clamped.Value);
+    }
+
+    [TestMethod]
+    public void Interval_Core_Clamp_Integer_7()
+    {
+        var interval = NewInterval(ValueInterval.ExclusiveInclusive(int.MaxValue, int.MaxValue));
+        var clamped = interval.Clamp(21);
+
+        Assert.IsFalse(clamped.HasValue);
     }
 
     #endregion
