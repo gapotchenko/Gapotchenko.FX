@@ -66,7 +66,7 @@ public readonly struct IntervalBoundary<T>
     public T GetValueOrDefault(T defaultValue) => HasValue ? m_Value : defaultValue;
 
     /// <summary>
-    /// Projects a value of the current boundary into a new boundary of the same kind.
+    /// Projects a value of the current boundary into a new boundary of the same kind but with different type of the value.
     /// </summary>
     /// <typeparam name="TResult">The type of the value returned by selector.</typeparam>
     /// <param name="selector">
