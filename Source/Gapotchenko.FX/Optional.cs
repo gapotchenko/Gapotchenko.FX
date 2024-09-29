@@ -20,7 +20,15 @@ public static class Optional
     /// <returns>
     /// An <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the value parameter.
     /// </returns>
-    public static Optional<T> Some<T>(T value) => new Optional<T>(value);
+    public static Optional<T> Some<T>(T value) => new(value);
+
+    /// <summary>
+    /// Returns an <see cref="Optional{T}"/> value that corresponds to the specified <see cref="Nullable{T}"/> value.
+    /// </summary>
+    /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
+    /// <param name="value">The <see cref="Nullable{T}"/> value.</param>
+    /// <returns>An <see cref="Optional{T}"/> value.</returns>
+    public static Optional<T> From<T>(T? value) where T : struct => value.HasValue ? new(value.Value) : default;
 
     /// <summary>
     /// Either creates a new <see cref="Optional{T}"/> object initialized to the specified value,
