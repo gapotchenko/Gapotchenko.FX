@@ -14,7 +14,7 @@ partial class CommandLine
     /// </summary>
     /// <param name="value">The command line argument.</param>
     /// <returns>The escaped and optionally quoted command line argument.</returns>
-    [return: NotNullIfNotNull("value")]
+    [return: NotNullIfNotNull(nameof(value))]
     public static string? EscapeArgument(string? value)
     {
         if (value == null)
@@ -38,12 +38,12 @@ partial class CommandLine
     /// </summary>
     /// <param name="value">The command line argument that represents a file name.</param>
     /// <returns>The escaped and optionally quoted command line argument.</returns>
-    [return: NotNullIfNotNull("value")]
+    [return: NotNullIfNotNull(nameof(value))]
     public static string? EscapeFileName(string? value) => EscapeArgument(Escape.EncodeFileName(value));
 
     internal static class Escape
     {
-        [return: NotNullIfNotNull("value")]
+        [return: NotNullIfNotNull(nameof(value))]
         public static string? EncodeFileName(string? value)
         {
             if (value == null)

@@ -10,7 +10,7 @@ sealed class PathEquivalenceComparer : StringComparer
 
     public override int GetHashCode(string obj) => FileSystem.PathComparer.GetHashCode(MapPath(obj));
 
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     static string? MapPath(string? path)
     {
         if (path == null)

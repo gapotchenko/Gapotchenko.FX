@@ -59,8 +59,7 @@ partial class Graph<TVertex>
         /// <summary>
         /// Throws a graph modification exception.
         /// </summary>
-        [DoesNotReturn]
-        [StackTraceHidden]
+        [DoesNotReturn, StackTraceHidden]
         public static void Throw() =>
             throw new InvalidOperationException("Graph was modified; enumeration operation may not execute.");
     }

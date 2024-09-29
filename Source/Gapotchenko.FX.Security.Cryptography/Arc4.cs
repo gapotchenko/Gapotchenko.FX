@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Diagnostics;
+using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Security.Cryptography;
 
@@ -76,7 +77,7 @@ public abstract class Arc4 : SymmetricAlgorithm
         }
     }
 
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     static void ThrowDoesNotSupportIV() => throw new CryptographicException("ARC4 algorithm does not support initialization vector.");
 
     /// <summary>

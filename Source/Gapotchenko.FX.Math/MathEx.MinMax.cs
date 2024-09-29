@@ -11,8 +11,8 @@ partial class MathEx
     /// <returns>
     /// Parameter <paramref name="val1"/> or <paramref name="val2"/>, whichever is smaller.
     /// </returns>
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
     public static T? Min<T>(T? val1, T? val2) where T : IComparable<T>
     {
         if (val1 == null)
@@ -41,8 +41,8 @@ partial class MathEx
     /// <returns>
     /// Parameter <paramref name="val1"/> or <paramref name="val2"/>, whichever is smaller.
     /// </returns>
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
     public static T? Min<T>(T? val1, T? val2, IComparer<T>? comparer = null)
     {
         if (val1 == null)
@@ -69,8 +69,8 @@ partial class MathEx
     /// <returns>
     /// Parameter <paramref name="val1"/> or <paramref name="val2"/>, whichever is larger.
     /// </returns>
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
     public static T? Max<T>(T? val1, T? val2) where T : IComparable<T>
     {
         if (val1 == null)
@@ -99,8 +99,8 @@ partial class MathEx
     /// <returns>
     /// Parameter <paramref name="val1"/> or <paramref name="val2"/>, whichever is larger.
     /// </returns>
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
     public static T? Max<T>(T? val1, T? val2, IComparer<T>? comparer = null)
     {
         if (val1 == null)
@@ -128,9 +128,9 @@ partial class MathEx
     /// <returns>
     /// Parameter <paramref name="val1"/>, <paramref name="val2"/> or <paramref name="val3"/>, whichever is smaller.
     /// </returns>
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
-    [return: NotNullIfNotNull("val3")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
     public static T? Min<T>(T? val1, T? val2, T? val3) where T : IComparable<T> =>
         Min(Min(val1, val2), val3);
 
@@ -148,9 +148,9 @@ partial class MathEx
     /// <returns>
     /// Parameter <paramref name="val1"/>, <paramref name="val2"/> or <paramref name="val3"/>, whichever is smaller.
     /// </returns>
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
-    [return: NotNullIfNotNull("val3")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
     public static T? Min<T>(T? val1, T? val2, T? val3, IComparer<T>? comparer = null) =>
         Min(Min(val1, val2, comparer), val3, comparer);
 
@@ -164,9 +164,9 @@ partial class MathEx
     /// <returns>
     /// Parameter <paramref name="val1"/>, <paramref name="val2"/> or <paramref name="val3"/>, whichever is larger.
     /// </returns>
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
-    [return: NotNullIfNotNull("val3")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
     public static T? Max<T>(T? val1, T? val2, T? val3) where T : IComparable<T> =>
         Max(Max(val1, val2), val3);
 
@@ -184,9 +184,9 @@ partial class MathEx
     /// <returns>
     /// Parameter <paramref name="val1"/>, <paramref name="val2"/> or <paramref name="val3"/>, whichever is larger.
     /// </returns>
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
-    [return: NotNullIfNotNull("val3")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
     public static T? Max<T>(T? val1, T? val2, T? val3, IComparer<T>? comparer = null) =>
         Max(Max(val1, val2, comparer), val3, comparer);
 }

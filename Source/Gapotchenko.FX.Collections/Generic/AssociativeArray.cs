@@ -734,17 +734,13 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        [DoesNotReturn]
+        [DoesNotReturn, StackTraceHidden]
         protected abstract void ThrowMutationNotAllowed();
     }
 
-    sealed class KeyCollection : KeyValueCollection<TKey>
+    sealed class KeyCollection(AssociativeArray<TKey, TValue> parent, ICollection<TKey> collection) :
+        KeyValueCollection<TKey>(parent, collection)
     {
-        public KeyCollection(AssociativeArray<TKey, TValue> parent, ICollection<TKey> collection) :
-            base(parent, collection)
-        {
-        }
-
         protected override Optional<TKey> NullSlot =>
             Parent.m_NullSlot.HasValue ?
                 Optional.Some(default(TKey)!) :
@@ -758,7 +754,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                 return base.Contains(item);
         }
 
-        [DoesNotReturn]
+        [DoesNotReturn, StackTraceHidden]
         protected override void ThrowMutationNotAllowed() =>
             throw new NotSupportedException("Mutating a key collection retrieved from an associative array is not allowed.");
     }
@@ -786,26 +782,21 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             }
         }
 
-        [DoesNotReturn]
+        [DoesNotReturn, StackTraceHidden]
         protected override void ThrowMutationNotAllowed() =>
             throw new NotSupportedException("Mutating a value collection retrieved from an associative array is not allowed.");
     }
 
-    sealed class PrependEnumerator<T> : IEnumerator<T>
+    sealed class PrependEnumerator<T>(
+        IEnumerator<T> sourceEnumerator,
+        Func<Optional<T>> elementGetter) :
+        IEnumerator<T>
     {
-        public PrependEnumerator(
-            IEnumerator<T> sourceEnumerator,
-            Func<Optional<T>> elementGetter)
-        {
-            m_ElementGetter = elementGetter;
-            m_SourceEnumerator = sourceEnumerator;
-        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly IEnumerator<T> m_SourceEnumerator = sourceEnumerator;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IEnumerator<T> m_SourceEnumerator;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly Func<Optional<T>> m_ElementGetter;
+        readonly Func<Optional<T>> m_ElementGetter = elementGetter;
 
         enum State
         {

@@ -9,7 +9,7 @@ partial class Fn
     /// </summary>
     /// <param name="action">The action.</param>
     /// <returns>A lambda expression for the specified <paramref name="action"/>.</returns>
-    [return: NotNullIfNotNull("action")]
+    [return: NotNullIfNotNull(nameof(action))]
     public static Expression<Action>? Expression(Action? action) =>
         action == null ?
             (Expression<Action>?)null :
@@ -21,7 +21,7 @@ partial class Fn
     /// <param name="action">The action.</param>
     /// <typeparam name="T">The type of the parameter of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="action"/>.</returns>
-    [return: NotNullIfNotNull("action")]
+    [return: NotNullIfNotNull(nameof(action))]
     public static Expression<Action<T>>? Expression<T>(Action<T>? action) =>
         action == null ?
             (Expression<Action<T>>?)null :
@@ -34,7 +34,7 @@ partial class Fn
     /// <typeparam name="T1">The type of the first parameter of a lambda expression.</typeparam>
     /// <typeparam name="T2">The type of the second parameter of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="action"/>.</returns>
-    [return: NotNullIfNotNull("action")]
+    [return: NotNullIfNotNull(nameof(action))]
     public static Expression<Action<T1, T2>>? Expression<T1, T2>(Action<T1, T2>? action) =>
         action == null ?
             (Expression<Action<T1, T2>>?)null :
@@ -48,7 +48,7 @@ partial class Fn
     /// <typeparam name="T2">The type of the second parameter of a lambda expression.</typeparam>
     /// <typeparam name="T3">The type of the third parameter of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="action"/>.</returns>
-    [return: NotNullIfNotNull("action")]
+    [return: NotNullIfNotNull(nameof(action))]
     public static Expression<Action<T1, T2, T3>>? Expression<T1, T2, T3>(Action<T1, T2, T3>? action) =>
         action == null ?
             (Expression<Action<T1, T2, T3>>?)null :
@@ -63,7 +63,7 @@ partial class Fn
     /// <typeparam name="T3">The type of the third parameter of a lambda expression.</typeparam>
     /// <typeparam name="T4">The type of the fourth parameter of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="action"/>.</returns>
-    [return: NotNullIfNotNull("action")]
+    [return: NotNullIfNotNull(nameof(action))]
     public static Expression<Action<T1, T2, T3, T4>>? Expression<T1, T2, T3, T4>(Action<T1, T2, T3, T4>? action) =>
         action == null ?
             (Expression<Action<T1, T2, T3, T4>>?)null :
@@ -79,7 +79,7 @@ partial class Fn
     /// <typeparam name="T4">The type of the fourth parameter of a lambda expression.</typeparam>
     /// <typeparam name="T5">The type of the fifth parameter of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="action"/>.</returns>
-    [return: NotNullIfNotNull("action")]
+    [return: NotNullIfNotNull(nameof(action))]
     public static Expression<Action<T1, T2, T3, T4, T5>>? Expression<T1, T2, T3, T4, T5>(Action<T1, T2, T3, T4, T5>? action) =>
         action == null ?
             (Expression<Action<T1, T2, T3, T4, T5>>?)null :
@@ -96,7 +96,7 @@ partial class Fn
     /// <typeparam name="T5">The type of the fifth parameter of a lambda expression.</typeparam>
     /// <typeparam name="T6">The type of the sixth parameter of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="action"/>.</returns>
-    [return: NotNullIfNotNull("action")]
+    [return: NotNullIfNotNull(nameof(action))]
     public static Expression<Action<T1, T2, T3, T4, T5, T6>>? Expression<T1, T2, T3, T4, T5, T6>(Action<T1, T2, T3, T4, T5, T6>? action) =>
         action == null ?
             (Expression<Action<T1, T2, T3, T4, T5, T6>>?)null :
@@ -114,7 +114,7 @@ partial class Fn
     /// <typeparam name="T6">The type of the sixth parameter of a lambda expression.</typeparam>
     /// <typeparam name="T7">The type of the seventh parameter of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="action"/>.</returns>
-    [return: NotNullIfNotNull("action")]
+    [return: NotNullIfNotNull(nameof(action))]
     public static Expression<Action<T1, T2, T3, T4, T5, T6, T7>>? Expression<T1, T2, T3, T4, T5, T6, T7>(Action<T1, T2, T3, T4, T5, T6, T7>? action) =>
         action == null ?
             (Expression<Action<T1, T2, T3, T4, T5, T6, T7>>?)null :
@@ -133,7 +133,7 @@ partial class Fn
     /// <typeparam name="T7">The type of the seventh parameter of a lambda expression.</typeparam>
     /// <typeparam name="T8">The type of the eighth parameter of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="action"/>.</returns>
-    [return: NotNullIfNotNull("action")]
+    [return: NotNullIfNotNull(nameof(action))]
     public static Expression<Action<T1, T2, T3, T4, T5, T6, T7, T8>>? Expression<T1, T2, T3, T4, T5, T6, T7, T8>(Action<T1, T2, T3, T4, T5, T6, T7, T8>? action) =>
         action == null ?
             (Expression<Action<T1, T2, T3, T4, T5, T6, T7, T8>>?)null :
@@ -145,7 +145,7 @@ partial class Fn
     /// <param name="func">The function.</param>
     /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="func">function</paramref>.</returns>
-    [return: NotNullIfNotNull("func")]
+    [return: NotNullIfNotNull(nameof(func))]
     public static Expression<Func<TResult>>? Expression<TResult>(Func<TResult>? func) =>
         func == null ?
             (Expression<Func<TResult>>?)null :
@@ -158,7 +158,7 @@ partial class Fn
     /// <typeparam name="T">The type of the parameter of a lambda expression.</typeparam>
     /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="func">function</paramref>.</returns>
-    [return: NotNullIfNotNull("func")]
+    [return: NotNullIfNotNull(nameof(func))]
     public static Expression<Func<T, TResult>>? Expression<T, TResult>(Func<T, TResult>? func) =>
         func == null ?
             (Expression<Func<T, TResult>>?)null :
@@ -172,7 +172,7 @@ partial class Fn
     /// <typeparam name="T2">The type of the second parameter of a lambda expression.</typeparam>
     /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="func">function</paramref>.</returns>
-    [return: NotNullIfNotNull("func")]
+    [return: NotNullIfNotNull(nameof(func))]
     public static Expression<Func<T1, T2, TResult>>? Expression<T1, T2, TResult>(Func<T1, T2, TResult>? func) =>
         func == null ?
             (Expression<Func<T1, T2, TResult>>?)null :
@@ -187,7 +187,7 @@ partial class Fn
     /// <typeparam name="T3">The type of the third parameter of a lambda expression.</typeparam>
     /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="func">function</paramref>.</returns>
-    [return: NotNullIfNotNull("func")]
+    [return: NotNullIfNotNull(nameof(func))]
     public static Expression<Func<T1, T2, T3, TResult>>? Expression<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult>? func) =>
         func == null ?
             (Expression<Func<T1, T2, T3, TResult>>?)null :
@@ -203,7 +203,7 @@ partial class Fn
     /// <typeparam name="T4">The type of the fourth parameter of a lambda expression.</typeparam>
     /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="func">function</paramref>.</returns>
-    [return: NotNullIfNotNull("func")]
+    [return: NotNullIfNotNull(nameof(func))]
     public static Expression<Func<T1, T2, T3, T4, TResult>>? Expression<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult>? func) =>
         func == null ?
             (Expression<Func<T1, T2, T3, T4, TResult>>?)null :
@@ -220,7 +220,7 @@ partial class Fn
     /// <typeparam name="T5">The type of the fifth parameter of a lambda expression.</typeparam>
     /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="func">function</paramref>.</returns>
-    [return: NotNullIfNotNull("func")]
+    [return: NotNullIfNotNull(nameof(func))]
     public static Expression<Func<T1, T2, T3, T4, T5, TResult>>? Expression<T1, T2, T3, T4, T5, TResult>(Func<T1, T2, T3, T4, T5, TResult>? func) =>
         func == null ?
             (Expression<Func<T1, T2, T3, T4, T5, TResult>>?)null :
@@ -238,7 +238,7 @@ partial class Fn
     /// <typeparam name="T6">The type of the sixth parameter of a lambda expression.</typeparam>
     /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="func">function</paramref>.</returns>
-    [return: NotNullIfNotNull("func")]
+    [return: NotNullIfNotNull(nameof(func))]
     public static Expression<Func<T1, T2, T3, T4, T5, T6, TResult>>? Expression<T1, T2, T3, T4, T5, T6, TResult>(Func<T1, T2, T3, T4, T5, T6, TResult>? func) =>
         func == null ?
             (Expression<Func<T1, T2, T3, T4, T5, T6, TResult>>?)null :
@@ -257,7 +257,7 @@ partial class Fn
     /// <typeparam name="T7">The type of the seventh parameter of a lambda expression.</typeparam>
     /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="func">function</paramref>.</returns>
-    [return: NotNullIfNotNull("func")]
+    [return: NotNullIfNotNull(nameof(func))]
     public static Expression<Func<T1, T2, T3, T4, T5, T6, T7, TResult>>? Expression<T1, T2, T3, T4, T5, T6, T7, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, TResult>? func) =>
         func == null ?
             (Expression<Func<T1, T2, T3, T4, T5, T6, T7, TResult>>?)null :
@@ -277,7 +277,7 @@ partial class Fn
     /// <typeparam name="T8">The type of the eighth parameter of a lambda expression.</typeparam>
     /// <typeparam name="TResult">The type of the result of a lambda expression.</typeparam>
     /// <returns>A lambda expression for the specified <paramref name="func">function</paramref>.</returns>
-    [return: NotNullIfNotNull("func")]
+    [return: NotNullIfNotNull(nameof(func))]
     public static Expression<Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult>>? Expression<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult>? func) =>
         func == null ?
             (Expression<Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult>>?)null :

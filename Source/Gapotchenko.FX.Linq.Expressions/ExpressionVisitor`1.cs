@@ -29,7 +29,7 @@ abstract class ExpressionVisitor<TResult> where TResult : struct
         };
     }
 
-    [return: NotNullIfNotNull("expressions")]
+    [return: NotNullIfNotNull(nameof(expressions))]
     protected virtual IReadOnlyList<TResult>? VisitExpressions(IReadOnlyList<Expression?>? expressions)
     {
         if (expressions == null)

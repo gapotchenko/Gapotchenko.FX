@@ -39,7 +39,7 @@ public static class VirtualTerminal
     /// A text writer wrapped by the virtual terminal emulator,
     /// or <paramref name="textWriter"/> if virtual terminal processing is natively supported by the platform.
     /// </returns>
-    [return: NotNullIfNotNull("textWriter")]
+    [return: NotNullIfNotNull(nameof(textWriter))]
     public static TextWriter? EnableProcessing(TextWriter? textWriter) => EnableProcessing(textWriter, VirtualTerminalProcessingMode.Auto);
 
     /// <summary>
@@ -53,7 +53,7 @@ public static class VirtualTerminal
     /// A text writer wrapped by the virtual terminal emulator,
     /// or <paramref name="textWriter"/> if virtual terminal processing is natively supported by the platform.
     /// </returns>
-    [return: NotNullIfNotNull("textWriter")]
+    [return: NotNullIfNotNull(nameof(textWriter))]
     public static TextWriter? EnableProcessing(TextWriter? textWriter, VirtualTerminalProcessingMode mode)
     {
         EnableProcessing(mode);
@@ -216,7 +216,7 @@ public static class VirtualTerminal
         }
     }
 
-    [return: NotNullIfNotNull("textWriter")]
+    [return: NotNullIfNotNull(nameof(textWriter))]
     static TextWriter? _EmulateVTConsole(TextWriter? textWriter)
     {
         if (m_IsEmulated)

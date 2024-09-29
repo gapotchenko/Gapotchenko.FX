@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Math;
+﻿using System.Diagnostics;
+
+namespace Gapotchenko.FX.Math;
 
 partial class MathEx
 {
@@ -10,13 +12,13 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
-    [return: NotNullIfNotNull("value")]
+    [return: NotNullIfNotNull(nameof(value))]
     public static T? Clamp<T>(T? value, T? min, T? max) where T : IComparable<T>
     {
         if (min == null && max == null)
@@ -48,13 +50,13 @@ partial class MathEx
     /// When this parameter is <see langword="null"/>, a default comparer for type <typeparamref name="T"/> is used.
     /// </param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
-    [return: NotNullIfNotNull("value")]
+    [return: NotNullIfNotNull(nameof(value))]
     public static T? Clamp<T>(T? value, T? min, T? max, IComparer<T>? comparer)
     {
         if (min == null && max == null)
@@ -76,7 +78,7 @@ partial class MathEx
         return value;
     }
 
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     static void ThrowMinCannotBeGreaterThanMaxException<T>(T min, T max) =>
         throw new ArgumentException(string.Format(Properties.Resources.MinCannotBeGreaterThanMax, min, max));
 }

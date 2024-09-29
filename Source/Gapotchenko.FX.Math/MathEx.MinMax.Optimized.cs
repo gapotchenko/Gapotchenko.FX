@@ -86,8 +86,8 @@ partial class MathEx
     /// Parameter <paramref name="val1"/> or <paramref name="val2"/>, whichever is smaller.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
     public static Version? Min(Version? val1, Version? val2)
     {
         if (val1 == null)
@@ -106,8 +106,8 @@ partial class MathEx
     /// Parameter <paramref name="val1"/> or <paramref name="val2"/>, whichever is larger.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
     public static Version? Max(Version? val1, Version? val2)
     {
         if (val1 == null)
@@ -127,9 +127,9 @@ partial class MathEx
     /// Parameter <paramref name="val1"/>, <paramref name="val2"/> or <paramref name="val3"/>, whichever is smaller.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
-    [return: NotNullIfNotNull("val3")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
     public static Version? Min(Version? val1, Version? val2, Version? val3) => Min(Min(val1, val2), val3);
 
     /// <summary>
@@ -142,8 +142,8 @@ partial class MathEx
     /// Parameter <paramref name="val1"/>, <paramref name="val2"/> or <paramref name="val3"/>, whichever is larger.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [return: NotNullIfNotNull("val1")]
-    [return: NotNullIfNotNull("val2")]
-    [return: NotNullIfNotNull("val3")]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
     public static Version? Max(Version? val1, Version? val2, Version? val3) => Max(Max(val1, val2), val3);
 }

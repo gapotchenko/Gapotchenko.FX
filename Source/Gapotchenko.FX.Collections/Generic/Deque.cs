@@ -1,6 +1,5 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
-//
 // Portions © Stephen Cleary
 // Portions © Masashi Mizuno
 //
@@ -1564,20 +1563,6 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     }
 
     #region Compatibility
-
-    /// <summary>
-    /// Do not use this method.
-    /// Instead, use <see cref="PushBackRange(IEnumerable{T})"/> method.
-    /// </summary>
-    /// <inheritdoc cref="PushBackRange(IEnumerable{T})"/>
-    [Obsolete("Use PushBackRange method instead.", true)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public void AddRange(IEnumerable<T> collection) => PushBackRange(collection);
-
-    /// <inheritdoc cref="AddRange(IEnumerable{T})"/>
-    [Obsolete("Use PushBackRange method instead.", true)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public void AddRange(params T[] collection) => PushBackRange(collection);
 
     #region ICollection<T>
 

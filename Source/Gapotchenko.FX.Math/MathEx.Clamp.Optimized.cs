@@ -16,10 +16,10 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -48,10 +48,10 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [CLSCompliant(false)]
@@ -81,10 +81,10 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -113,10 +113,10 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [CLSCompliant(false)]
@@ -146,10 +146,10 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -178,10 +178,10 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [CLSCompliant(false)]
@@ -211,10 +211,10 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -243,10 +243,10 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [CLSCompliant(false)]
@@ -276,10 +276,10 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -308,10 +308,10 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -340,10 +340,10 @@ partial class MathEx
     /// <param name="min">The lower bound of the range.</param>
     /// <param name="max">The upper bound of the range.</param>
     /// <returns>
-    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>
-    /// -or-
-    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>
-    /// -or-
+    /// <paramref name="value"/> if <paramref name="min"/> ≤ <paramref name="value"/> ≤ <paramref name="max"/>.
+    /// <br/>-or-<br/>
+    /// <paramref name="min"/> if <paramref name="value"/> &lt; <paramref name="min"/>.
+    /// <br/>-or-<br/>
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [EditorBrowsable(EditorBrowsableState.Never)]

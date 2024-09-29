@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Memory.Properties;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Memory;
 
@@ -62,31 +63,31 @@ static class StreamHelpers
         return newPosition;
     }
 
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     public static void ThrowNotWritable() =>
         throw new NotSupportedException("Stream does not support writing.");
 
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     public static void ThrowNotPubliclyVisible() =>
         throw new UnauthorizedAccessException("Stream memory buffer cannot be accessed.");
 
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     public static void ThrowNotExpandable() =>
         throw new NotSupportedException("Stream does not support expansion.");
 
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     public static void ThrowSeekBeforeBegin() =>
         throw new IOException("An attempt was made to move the position before the beginning of the stream.");
 
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     public static void ThrowTooLong() =>
         throw new IOException("Stream was too long.");
 
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     public static void ThrowClosedAndDisposed() =>
         throw new ObjectDisposedException(null, "Cannot access a closed stream.");
 
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     public static void ThrowLengthMustBeNonNegativeAndLessThan2GB(string paramName) =>
         throw new ArgumentOutOfRangeException(
             paramName,

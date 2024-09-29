@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX;
 
@@ -23,7 +24,7 @@ partial class Fn
         return f(f(val1, val2), val3);
     }
 
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     static void _ThrowArgumentNullException(string paramName)
     {
         // This is a separate method to allow the inlining of a caller method.

@@ -45,7 +45,7 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     }
 
     // A separate method is due to performance/inlining reasons.
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     static void ThrowMustHaveValueException() => throw new InvalidOperationException("Optional object must have a value.");
 
     /// <summary>

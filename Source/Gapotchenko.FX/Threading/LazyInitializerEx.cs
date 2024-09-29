@@ -1,4 +1,5 @@
-﻿using System.Security.Permissions;
+﻿using System.Diagnostics;
+using System.Security.Permissions;
 
 #if NETFRAMEWORK || NETSTANDARD2_0 || NETSTANDARD2_1 || NETCOREAPP2_0 || NETCOREAPP2_1
 // Older target frameworks have weaker nullability annotations. That leads to false positive warnings.
@@ -148,7 +149,7 @@ public static class LazyInitializerEx
 
     // ------------------------------------------------------------------------------------------------------------
 
-    [DoesNotReturn]
+    [DoesNotReturn, StackTraceHidden]
     static void _ThrowArgumentNullException_SyncLock()
     {
         // This should be a separate method to avoid performance degradation.

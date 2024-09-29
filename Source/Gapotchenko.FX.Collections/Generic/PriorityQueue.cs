@@ -1,6 +1,5 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
-//
 // Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Kirill Rode
