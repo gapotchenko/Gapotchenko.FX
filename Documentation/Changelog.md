@@ -41,6 +41,7 @@ Release date: not released yet
   - Added polyfill for `System.Diagnostics.UnreachableException` type
   - Added polyfill for `System.Collections.Generic.Queue<T>.TryDeque` method
   - Added polyfill for `System.IO.Path.Join` method
+  - Added polyfills for `System.Math.BitIncrement` and `System.Math.BitDecrement` methods
   - Added polyfill for a LINQ-style pipe operator
   - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
 - .NET Framework 4.6 support is retired. The minimal supported version of .NET Framework is 4.6.1
