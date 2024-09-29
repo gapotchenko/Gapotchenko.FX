@@ -32,8 +32,12 @@ class Program
     {
         try
         {
-            //Console.WriteLine(FileSystem.InsertSubpath(@"C:\1\2\3\", 1, "A"));
-            Console.WriteLine(FileSystem.GetSubpath(@"C:\1\2\3\", ..^2));
+            var interval = Interval.Exclusive(10f, 20f);
+            var value = 21f;
+
+            var x = interval.Clamp(value).Value;
+
+            Console.WriteLine(x.ToString());
         }
         catch (Exception e)
         {

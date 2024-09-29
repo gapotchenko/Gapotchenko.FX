@@ -296,4 +296,66 @@ static class IntervalEngine
             }
         }
     }
+
+    public static Optional<TValue> Clamp<TValue, TInterval>(
+        TInterval interval,
+        TValue value,
+        Func<TValue, TValue> nextUp,
+        Func<TValue, TValue> nextDown)
+        where TInterval : IInterval<TValue>
+    {
+        if (interval.IsEmpty)
+            return Optional<TValue>.None;
+
+        var comparer = interval.Comparer;
+        var allowedMinimum = Optional<TValue>.None;
+
+        switch (interval.From.Kind)
+        {
+            case IntervalBoundaryKind.Inclusive:
+                {
+                    var limit = interval.From.Value;
+                    if (comparer.Compare(value, limit) < 0)
+                        value = limit;
+                }
+                break;
+
+            case IntervalBoundaryKind.Exclusive:
+                {
+                    var limit = interval.From.Value;
+                    allowedMinimum = nextUp(limit);
+                    if (comparer.Compare(value, limit) <= 0)
+                        value = allowedMinimum.Value;
+                }
+                break;
+        }
+
+        switch (interval.To.Kind)
+        {
+            case IntervalBoundaryKind.Inclusive:
+                {
+                    var limit = interval.To.Value;
+                    if (comparer.Compare(value, limit) > 0)
+                        value = limit;
+                }
+                break;
+
+            case IntervalBoundaryKind.Exclusive:
+                {
+                    var limit = interval.To.Value;
+                    if (comparer.Compare(value, limit) >= 0)
+                    {
+                        value = nextDown(limit);
+                        if (allowedMinimum.HasValue && comparer.Compare(value, allowedMinimum.Value) < 0)
+                        {
+                            // Convergence is impossible.
+                            return Optional<TValue>.None;
+                        }
+                    }
+                }
+                break;
+        }
+
+        return value;
+    }
 }

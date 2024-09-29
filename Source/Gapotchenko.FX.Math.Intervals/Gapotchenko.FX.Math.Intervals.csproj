@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="System.Numerics"/>
+  </ItemGroup>
+  
+  <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.Interval" />
   </ItemGroup>
 

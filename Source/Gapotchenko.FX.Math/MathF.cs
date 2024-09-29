@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Gapotchenko.FX.Math;
+using System.Runtime.CompilerServices;
 
 #if !TFF_MATHF
 
@@ -432,6 +433,14 @@ public static class MathF
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Truncate(float x) => (float)Math.Truncate(x);
+
+    /// <inheritdoc cref="MathEx.BitIncrement(float)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float BitIncrement(float x) => MathEx.BitIncrement(x);
+
+    /// <inheritdoc cref="MathEx.BitDecrement(float)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float BitDecrement(float x) => MathEx.BitDecrement(x);
 }
 
 #else
