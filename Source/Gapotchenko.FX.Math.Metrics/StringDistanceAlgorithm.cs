@@ -7,11 +7,8 @@
 namespace Gapotchenko.FX.Math.Metrics;
 
 /// <summary>
-/// The base class for <see cref="IStringDistanceAlgorithm{TElement}"/> implementations.
+/// The base class for <see cref="IStringDistanceAlgorithm"/> implementations.
 /// </summary>
-/// <typeparam name="TElement">The type of string elements.</typeparam>
-public abstract class StringDistanceAlgorithm<TElement> :
-    StringMetricsAlgorithm<TElement, int>,
-    IStringDistanceAlgorithm<TElement>
+public abstract class StringDistanceAlgorithm : StringMetricsAlgorithm<int>, IStringDistanceAlgorithm
 {
 }

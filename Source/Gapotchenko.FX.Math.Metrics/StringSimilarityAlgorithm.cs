@@ -7,11 +7,8 @@
 namespace Gapotchenko.FX.Math.Metrics;
 
 /// <summary>
-/// The base class for <see cref="IStringSimilarityAlgorithm{TElement}"/> implementations.
+/// The base class for <see cref="IStringSimilarityAlgorithm"/> implementations.
 /// </summary>
-/// <typeparam name="TElement">The type of string elements.</typeparam>
-public abstract class StringSimilarityAlgorithm<TElement> :
-    StringMetricsAlgorithm<TElement, double>,
-    IStringSimilarityAlgorithm<TElement>
+public abstract class StringSimilarityAlgorithm<T> : StringMetricsAlgorithm<double>, IStringSimilarityAlgorithm
 {
 }

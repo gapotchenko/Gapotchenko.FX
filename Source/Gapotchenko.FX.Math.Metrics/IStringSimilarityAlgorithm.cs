@@ -9,7 +9,6 @@ namespace Gapotchenko.FX.Math.Metrics;
 /// <summary>
 /// Defines the interface of a string similarity algorithm.
 /// </summary>
-/// <typeparam name="TElement">The type of string elements.</typeparam>
-public interface IStringSimilarityAlgorithm<TElement> : IStringMetricsAlgorithm<TElement, double>
+public interface IStringSimilarityAlgorithm : IStringMetricsAlgorithm<double>
 {
 }
