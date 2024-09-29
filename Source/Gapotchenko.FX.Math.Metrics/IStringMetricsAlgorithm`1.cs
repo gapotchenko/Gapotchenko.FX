@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Math.Metrics;
 /// <summary>
 /// Defines the interface of a string metrics algorithm.
 /// </summary>
-/// <typeparam name="TElement">The type of the elements.</typeparam>
+/// <typeparam name="TElement">The type of string elements.</typeparam>
 public interface IStringMetricsAlgorithm<TElement>
 {
     /// <summary>

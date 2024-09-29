@@ -298,14 +298,16 @@ static class IntervalEngine
     }
 
     public static Optional<TValue> Clamp<TValue, TInterval>(
-        TInterval interval,
+        in TInterval interval,
         TValue value,
         Func<TValue, TValue> nextUp,
         Func<TValue, TValue> nextDown)
         where TInterval : IInterval<TValue>
     {
+        if (interval.IsInfinite)
+            return value;
         if (interval.IsEmpty)
-            return Optional<TValue>.None;
+            return default;
 
         var comparer = interval.Comparer;
         var allowedMinimum = Optional<TValue>.None;
@@ -349,7 +351,7 @@ static class IntervalEngine
                         if (allowedMinimum.HasValue && comparer.Compare(value, allowedMinimum.Value) < 0)
                         {
                             // Convergence is impossible.
-                            return Optional<TValue>.None;
+                            return default;
                         }
                     }
                 }
