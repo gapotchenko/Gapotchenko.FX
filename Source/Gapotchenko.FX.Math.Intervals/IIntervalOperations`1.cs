@@ -124,11 +124,13 @@ public interface IIntervalOperations<T>
     bool IsDegenerate { get; }
 
     /// <summary>
-    /// Determines whether the specified element is contained within the interval.
+    /// Determines whether the specified value is contained within the interval.
     /// </summary>
-    /// <param name="item">The element to check for containment.</param>
-    /// <returns><see langword="true"/> if element is contained within the interval; otherwise, <see langword="false"/>.</returns>
-    bool Contains(T item);
+    /// <param name="value">The value to check for containment.</param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="value"/> is contained within the interval;
+    /// otherwise, <see langword="false"/>.</returns>
+    bool Contains(T value);
 
     /// <summary>
     /// Produces the intersection of the current and specified intervals.

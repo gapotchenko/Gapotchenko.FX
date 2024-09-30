@@ -124,7 +124,7 @@ public sealed record Interval<T> : IInterval<T>
     public bool IsDegenerate => IntervalEngine.IsDegenerate(this, m_Comparer);
 
     /// <inheritdoc/>
-    public bool Contains(T item) => IntervalEngine.Contains(this, item, m_Comparer);
+    public bool Contains(T value) => IntervalEngine.Contains(this, value, m_Comparer);
 
     /// <summary>
     /// <para>

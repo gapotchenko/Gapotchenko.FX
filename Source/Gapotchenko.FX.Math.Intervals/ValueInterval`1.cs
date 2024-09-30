@@ -94,7 +94,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     public bool IsDegenerate => IntervalEngine.IsDegenerate(this, EqualityComparer<T>.Default);
 
     /// <inheritdoc/>
-    public bool Contains(T item) => IntervalEngine.Contains(this, item, Comparer<T>.Default);
+    public bool Contains(T value) => IntervalEngine.Contains(this, value, Comparer<T>.Default);
 
     /// <summary>
     /// <para>

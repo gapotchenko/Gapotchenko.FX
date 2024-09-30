@@ -104,17 +104,17 @@ static class IntervalEngine
         comparer.Equals(interval.From.Value, interval.To.Value);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Contains<TInterval, TBound>(in TInterval interval, TBound item, IComparer<TBound> comparer)
+    public static bool Contains<TInterval, TBound>(in TInterval interval, TBound value, IComparer<TBound> comparer)
         where TInterval : IIntervalOperations<TBound> =>
-        CompareBoundaries(interval.From, item, false, comparer) <= 0 &&
-        CompareBoundaries(interval.To, item, true, comparer) <= 0;
+        CompareBoundaries(interval.From, value, false, comparer) <= 0 &&
+        CompareBoundaries(interval.To, value, true, comparer) <= 0;
 
     static int CompareBoundaries<TBound>(in IntervalBoundary<TBound> x, TBound y, bool direction, IComparer<TBound> comparer) =>
         x.Kind switch
         {
             IntervalBoundaryKind.Empty or IntervalBoundaryKind.NegativeInfinity => direction ? 1 : -1,
             IntervalBoundaryKind.Inclusive => direction ? comparer.Compare(y, x.Value) : comparer.Compare(x.Value, y),
-            IntervalBoundaryKind.Exclusive => (direction ? comparer.Compare(y, x.Value) : comparer.Compare(x.Value, y)) > -1 ? 1 : -1,
+            IntervalBoundaryKind.Exclusive => (direction ? comparer.Compare(y, x.Value) : comparer.Compare(x.Value, y)) >= 0 ? 1 : -1,
             IntervalBoundaryKind.PositiveInfinity => direction ? -1 : 1
         };
 
