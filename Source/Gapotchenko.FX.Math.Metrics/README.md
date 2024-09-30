@@ -1,17 +1,17 @@
-﻿# Gapotchenko.FX.Math.Geometry
+﻿# Gapotchenko.FX.Math.Metrics
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
-[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.Geometry.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math.Geometry)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.Metrics.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math.Metrics)
 
-The module provides primitives and operations for geometry math.
+The module provides math metrics algorithms.
 
 ## StringMetrics
 
-`StringMetrics` static class provides a variety of metric functions for measuring the distance between two strings of symbols.
+`StringMetrics` static class provides a variety of metric functions for measuring the distance and similarity between two strings of symbols.
 
 The notion of a string is purely abstract.
 So it is not limited to just characters like `System.String`; it can be a string of anything in form of `IEnumerable<T>`.
-In this way, `Gapotchenko.FX.Math.Geometry` module achieves the right degree of abstraction desirable for a versatile math toolkit.
+In this way, `Gapotchenko.FX.Math.Metrics` module achieves the right degree of abstraction desirable for a versatile math toolkit.
 
 ### Edit Distance
 
@@ -100,7 +100,8 @@ Console.WriteLine("Distance is {0}.", distance);  // distance = 1
 
 `StringMetrics.JaroDistance` method allows to calculate the Jaro distance between two strings of symbols.
 
-Although the Jaro distance is often referred to as an edit distance metric, its value does not represent a number of edit operations and varies between 0 and 1 such that 0 is an exact match and 1 equates to no similarities.
+Although the Jaro distance is often referred to as an edit distance metric, its value does not represent a number of edit operations
+and varies between 0.0 and 1.0 such that 0.0 represents an exact match and 1.0 equates to no similarities.
 
 Consider the example:
 

@@ -1,5 +1,5 @@
 ﻿using Gapotchenko.FX.Linq;
-using Gapotchenko.FX.Math.Geometry;
+using Gapotchenko.FX.Math.Metrics;
 
 namespace Gapotchenko.FX.Math.Graphs.Tests.Engine;
 
@@ -13,13 +13,15 @@ static class MinimalDistanceProof
         var s = source.ReifyList();
         var d = destination.ReifyList();
 
-        int actualDistance = StringMetrics.LevenshteinDistance(s, d);
+        var distanceAlgorithm = StringMetrics.Distance.Levenshtein;
+
+        int actualDistance = distanceAlgorithm.Measure(s, d);
         if (actualDistance == 0)
             return true;
 
         foreach (var candidateOrder in TopologicalOrderProof.AllOrdersOf(s, df))
         {
-            int possibleDistance = StringMetrics.LevenshteinDistance(s, candidateOrder);
+            int possibleDistance = distanceAlgorithm.Measure(s, candidateOrder);
             if (possibleDistance < actualDistance)
                 return false;
         }

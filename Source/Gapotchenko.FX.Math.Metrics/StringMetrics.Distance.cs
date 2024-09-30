@@ -11,10 +11,23 @@ namespace Gapotchenko.FX.Math.Metrics;
 partial class StringMetrics
 {
     /// <summary>
-    /// Provides string distance measuring algorithms.
+    /// Provides string distance algorithms.
     /// </summary>
     public static class Distance
     {
+        /// <summary>
+        /// Gets Damerau–Levenshtein string distance algorithm.
+        /// </summary>
+        public static StringDistanceAlgorithm DamerauLevenshtein => DamerauLevenshteinAlgorithm.Instance;
+
+        /// <summary>
+        /// Gets Hamming string distance algorithm.
+        /// </summary>
+        /// <remarks>
+        /// Hamming distance algorithm can be applied to sequences of the same length only.
+        /// </remarks>
+        public static StringDistanceAlgorithm Hamming => HammingAlgorithm.Instance;
+
         /// <summary>
         /// Gets Longest Common Subsequence (LCS) string distance algorithm.
         /// </summary>

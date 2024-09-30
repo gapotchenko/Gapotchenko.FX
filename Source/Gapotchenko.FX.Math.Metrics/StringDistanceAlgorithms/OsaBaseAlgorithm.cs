@@ -33,7 +33,7 @@ abstract class OsaBaseAlgorithm : StringDistanceAlgorithm
         int CalculateDistance(in ValueInterval<int> range)
         {
             if (range.IsEmpty)
-                return 0;
+                return default;
 
             if (ReferenceEquals(a, b))
                 return 0;

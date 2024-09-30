@@ -59,17 +59,6 @@ public abstract class StringMetricsAlgorithm<TMeasure> : IStringMetricsAlgorithm
             throw new ArgumentNullException(nameof(a));
         if (b == null)
             throw new ArgumentNullException(nameof(b));
-        ValidateRange(range);
-    }
-
-    /// <summary>
-    /// Validates the specified range.
-    /// </summary>
-    /// <param name="range">The range.</param>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="range"/> cannot be empty.</exception>
-    [StackTraceHidden]
-    protected static void ValidateRange(in ValueInterval<TMeasure> range)
-    {
         if (range.IsEmpty)
             throw new ArgumentOutOfRangeException(nameof(range), "The range cannot be empty.");
     }
