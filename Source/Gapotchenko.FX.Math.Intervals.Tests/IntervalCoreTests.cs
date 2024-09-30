@@ -1217,4 +1217,58 @@ public abstract class IntervalCoreTests
     }
 
     #endregion
+
+    #region Sign
+
+    [TestMethod]
+    public void Interval_Core_Sign_1()
+    {
+        var interval = NewInterval(ValueInterval.Inclusive(10, 20));
+
+        Assert.AreEqual(-1, interval.Sign(9));
+        Assert.AreEqual(0, interval.Sign(10));
+
+        Assert.AreEqual(0, interval.Sign(15));
+
+        Assert.AreEqual(0, interval.Sign(20));
+        Assert.AreEqual(1, interval.Sign(21));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Sign_2()
+    {
+        var interval = NewInterval(ValueInterval.Exclusive(10, 20));
+
+        Assert.AreEqual(-1, interval.Sign(9));
+        Assert.AreEqual(-1, interval.Sign(10));
+        Assert.AreEqual(0, interval.Sign(11));
+
+        Assert.AreEqual(0, interval.Sign(15));
+
+        Assert.AreEqual(0, interval.Sign(19));
+        Assert.AreEqual(1, interval.Sign(20));
+        Assert.AreEqual(1, interval.Sign(21));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Sign_3()
+    {
+        var interval = InfiniteInterval<int>();
+
+        Assert.AreEqual(0, interval.Sign(int.MinValue));
+        Assert.AreEqual(0, interval.Sign(0));
+        Assert.AreEqual(0, interval.Sign(int.MaxValue));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Sign_4()
+    {
+        var interval = EmptyInterval<int>();
+
+        Assert.AreEqual(0, interval.Sign(int.MinValue));
+        Assert.AreEqual(0, interval.Sign(0));
+        Assert.AreEqual(0, interval.Sign(int.MaxValue));
+    }
+
+    #endregion
 }

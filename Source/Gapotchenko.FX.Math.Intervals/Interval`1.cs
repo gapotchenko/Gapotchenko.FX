@@ -126,6 +126,9 @@ public sealed record Interval<T> : IInterval<T>
     /// <inheritdoc/>
     public bool Contains(T value) => IntervalEngine.Contains(this, value, m_Comparer);
 
+    /// <inheritdoc/>
+    public int Sign(T value) => IntervalEngine.Sign(this, value, m_Comparer);
+
     /// <summary>
     /// <para>
     /// Gets the interval interior.

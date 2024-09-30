@@ -109,6 +109,20 @@ static class IntervalEngine
         CompareBoundaries(interval.From, value, false, comparer) <= 0 &&
         CompareBoundaries(interval.To, value, true, comparer) <= 0;
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int Sign<TInterval, TBound>(in TInterval interval, TBound value, IComparer<TBound> comparer)
+        where TInterval : IIntervalOperations<TBound>
+    {
+        if (IsEmpty(interval, comparer))
+            return 0;
+        else if (CompareBoundaries(interval.From, value, false, comparer) > 0)
+            return -1;
+        else if (CompareBoundaries(interval.To, value, true, comparer) > 0)
+            return 1;
+        else
+            return 0;
+    }
+
     static int CompareBoundaries<TBound>(in IntervalBoundary<TBound> x, TBound y, bool direction, IComparer<TBound> comparer) =>
         x.Kind switch
         {
