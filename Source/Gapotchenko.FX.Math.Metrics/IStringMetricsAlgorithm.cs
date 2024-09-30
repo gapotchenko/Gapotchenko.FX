@@ -14,7 +14,7 @@ public interface IStringMetricsAlgorithm
     /// <summary>
     /// Calculates a measure between the two specified sequences of elements.
     /// </summary>
-    /// <typeparam name="T">The type of string elements.</typeparam>
+    /// <typeparam name="T">The type of sequence elements.</typeparam>
     /// <param name="a">The first sequence of elements.</param>
     /// <param name="b">The second sequence of elements.</param>
     /// <param name="equalityComparer">The equality comparer for elements.</param>

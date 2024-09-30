@@ -1,9 +1,9 @@
 ﻿namespace Gapotchenko.FX.Math.Metrics;
 
 /// <summary>
-/// Provides standard string metrics algorithms.
+/// Provides string metrics algorithms.
 /// </summary>
-public static class StringMetrics
+public static partial class StringMetrics
 {
-
+    // This class is partial. Please take a look at the neighboring source files.
 }

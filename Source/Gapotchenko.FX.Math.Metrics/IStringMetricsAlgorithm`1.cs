@@ -16,7 +16,7 @@ public interface IStringMetricsAlgorithm<TMeasure> : IStringMetricsAlgorithm
     where TMeasure : notnull, IEquatable<TMeasure>?, IComparable<TMeasure>?
 {
     /// <inheritdoc cref="IStringMetricsAlgorithm.Measure{TElement}(IEnumerable{TElement}, IEnumerable{TElement}, IEqualityComparer{TElement}?, CancellationToken)"/>
-    /// <typeparam name="TElement">The type of string elements.</typeparam>
+    /// <typeparam name="TElement">The type of sequence elements.</typeparam>
     new TMeasure Measure<TElement>(
         IEnumerable<TElement> a,
         IEnumerable<TElement> b,
@@ -28,7 +28,7 @@ public interface IStringMetricsAlgorithm<TMeasure> : IStringMetricsAlgorithm
     /// <param name="b"><inheritdoc/></param>
     /// <param name="range">
     /// Specifies the range in which a calculated measure must reside.
-    /// The algorithm may use the range to optimize calculation for narrower ranges.
+    /// The algorithm may use the range to optimize the calculation for narrower ranges.
     /// </param>
     /// <param name="equalityComparer"><inheritdoc/></param>
     /// <param name="cancellationToken"><inheritdoc/></param>

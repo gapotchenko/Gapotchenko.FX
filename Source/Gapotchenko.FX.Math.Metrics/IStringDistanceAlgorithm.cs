@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.Math.Metrics;
 
 /// <summary>
-/// Defines the interface of a string distance algorithm.
+/// Defines the interface of a string distance measuring algorithm.
 /// </summary>
 public interface IStringDistanceAlgorithm : IStringMetricsAlgorithm<int>
 {

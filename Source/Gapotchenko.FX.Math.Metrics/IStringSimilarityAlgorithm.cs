@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.Math.Metrics;
 
 /// <summary>
-/// Defines the interface of a string similarity algorithm.
+/// Defines the interface of a string similarity measuring algorithm.
 /// </summary>
 public interface IStringSimilarityAlgorithm : IStringMetricsAlgorithm<double>
 {

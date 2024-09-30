@@ -9,11 +9,11 @@ using Gapotchenko.FX.Math.Intervals;
 namespace Gapotchenko.FX.Math.Metrics.StringDistanceAlgorithms;
 
 /// <summary>
-/// Calculates optimal string alignment distance between two sequences of elements.
+/// Calculates Levenshtein distance between two sequences of elements.
 /// </summary>
-sealed class OsaAlgorithm : OsaBaseAlgorithm
+sealed class LevenshteinAlgorithm : OsaBaseAlgorithm
 {
-    public static OsaAlgorithm Instance { get; } = new();
+    public static LevenshteinAlgorithm Instance { get; } = new();
 
     public override int Measure<T>(
         IEnumerable<T> a,
@@ -21,5 +21,5 @@ sealed class OsaAlgorithm : OsaBaseAlgorithm
         ValueInterval<int> range,
         IEqualityComparer<T>? equalityComparer = null,
         CancellationToken cancellationToken = default) =>
-        MeasureCore(a, b, range, true, true, equalityComparer, cancellationToken);
+        MeasureCore(a, b, range, true, false, equalityComparer, cancellationToken);
 }

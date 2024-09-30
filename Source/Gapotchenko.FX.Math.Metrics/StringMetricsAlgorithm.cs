@@ -5,6 +5,7 @@
 // Year of introduction: 2024
 
 using Gapotchenko.FX.Math.Intervals;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Metrics;
 
@@ -39,10 +40,34 @@ public abstract class StringMetricsAlgorithm<TMeasure> : IStringMetricsAlgorithm
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Validates the specified arguments.
+    /// </summary>
+    /// <typeparam name="TElement">The type of sequence elements.</typeparam>
+    /// <param name="a">The first sequence of elements.</param>
+    /// <param name="b">The second sequence of elements.</param>
+    /// <param name="range">The range.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="a"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="b"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="range"/> cannot be empty.</exception>
+    [StackTraceHidden]
+    protected static void ValidateArguments<TElement>(
+        [NotNull] IEnumerable<TElement> a,
+        [NotNull] IEnumerable<TElement> b,
+        in ValueInterval<TMeasure> range)
+    {
+        if (a == null)
+            throw new ArgumentNullException(nameof(a));
+        if (b == null)
+            throw new ArgumentNullException(nameof(b));
+        ValidateRange(range);
+    }
+
+    /// <summary>
     /// Validates the specified range.
     /// </summary>
     /// <param name="range">The range.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="range"/> cannot be empty.</exception>
+    [StackTraceHidden]
     protected static void ValidateRange(in ValueInterval<TMeasure> range)
     {
         if (range.IsEmpty)

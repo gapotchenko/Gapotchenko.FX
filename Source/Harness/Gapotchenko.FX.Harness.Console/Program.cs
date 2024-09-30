@@ -18,6 +18,7 @@ using System.Text;
 using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO;
+using Gapotchenko.FX.Math.Metrics;
 #endregion
 
 #nullable enable
@@ -38,6 +39,8 @@ class Program
             var x = interval.Clamp(value).Value;
 
             Console.WriteLine(x.ToString());
+
+            _ = StringMetrics.Distance.Levenshtein.Measure("abc", "123");
         }
         catch (Exception e)
         {
