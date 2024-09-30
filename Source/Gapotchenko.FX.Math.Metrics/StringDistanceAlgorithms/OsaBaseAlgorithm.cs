@@ -99,11 +99,10 @@ abstract class OsaBaseAlgorithm : StringDistanceAlgorithm
                     bestAtRow = Math.Min(bestAtRow, currentDistance);
                 }
 
-                // TODO
-                //if (bestAtRow >= maxDistance)
-                //    return maxDistance.Value;
-
                 cancellationToken.ThrowIfCancellationRequested();
+
+                if (workingRange.Sign(bestAtRow) > 0)
+                    return bestAtRow;
 
                 // Swap the vectors.
                 (preRow, row) = (row, preRow);
