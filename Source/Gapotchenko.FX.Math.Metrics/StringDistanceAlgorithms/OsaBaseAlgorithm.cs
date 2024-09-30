@@ -24,12 +24,15 @@ abstract class OsaBaseAlgorithm : StringDistanceAlgorithm
     {
         ValidateArguments(a, b, range);
 
-        var workingRange = ValueInterval.Inclusive<int>(0, null).Intersect(range);
-        return range.Clamp(CalculateDistance()).Value;
+        return range.Clamp(
+            CalculateDistance(
+                ValueInterval.Inclusive<int>(0, null)
+                .Intersect(range)))
+            .Value;
 
-        int CalculateDistance()
+        int CalculateDistance(in ValueInterval<int> range)
         {
-            if (workingRange.IsEmpty)
+            if (range.IsEmpty)
                 return 0;
 
             if (ReferenceEquals(a, b))
@@ -101,7 +104,7 @@ abstract class OsaBaseAlgorithm : StringDistanceAlgorithm
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (workingRange.Sign(bestAtRow) > 0)
+                if (range.Sign(bestAtRow) > 0)
                     return bestAtRow;
 
                 // Swap the vectors.
