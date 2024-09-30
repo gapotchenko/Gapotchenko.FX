@@ -139,9 +139,9 @@ public interface IIntervalOperations<T>
     /// <returns>
     /// <c>0</c> if the interval contains the <paramref name="value"/> or is empty.
     /// <br/>-or-<br/>
-    /// <c>1</c> if the <paramref name="value"/> is greater then the right boundary of the interval.
+    /// <c>1</c> if the <paramref name="value"/> is greater than the right boundary of the interval.
     /// <br/>-or-<br/>
-    /// <c>-1</c> if the <paramref name="value"/> is less then the left boundary of the interval.
+    /// <c>-1</c> if the <paramref name="value"/> is less than the left boundary of the interval.
     /// </returns>
     int Sign(T value);
 
