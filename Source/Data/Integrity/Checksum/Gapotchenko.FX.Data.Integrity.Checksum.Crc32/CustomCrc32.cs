@@ -9,25 +9,21 @@ namespace Gapotchenko.FX.Data.Integrity.Checksum;
 /// <summary>
 /// Customizable CRC-32 checksum algorithm.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="CustomCrc32"/> class with specified CRC-32 algorithm parameters.
+/// </remarks>
+/// <inheritdoc/>
 [CLSCompliant(false)]
-public class CustomCrc32 : GenericCrc32
+public class CustomCrc32(
+    uint polynomial,
+    uint initialValue,
+    bool reflectedInput,
+    bool reflectedOutput,
+    uint xorOutput) : GenericCrc32(
+        polynomial,
+        initialValue,
+        reflectedInput,
+        reflectedOutput,
+        xorOutput)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CustomCrc32"/> class with specified CRC-32 algorithm parameters.
-    /// </summary>
-    /// <inheritdoc/>
-    public CustomCrc32(
-        uint polynomial,
-        uint initialValue,
-        bool reflectedInput,
-        bool reflectedOutput,
-        uint xorOutput)
-        : base(
-              polynomial,
-              initialValue,
-              reflectedInput,
-              reflectedOutput,
-              xorOutput)
-    {
-    }
 }

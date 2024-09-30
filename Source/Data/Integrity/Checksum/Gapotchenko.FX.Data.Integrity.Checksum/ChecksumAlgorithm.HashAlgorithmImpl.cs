@@ -10,20 +10,8 @@ namespace Gapotchenko.FX.Data.Integrity.Checksum;
 
 partial class ChecksumAlgorithm<T>
 {
-    sealed class HashAlgorithmImpl : HashAlgorithm
+    sealed class HashAlgorithmImpl(ChecksumAlgorithm<T> algorithm, IBitConverter bitConverter) : HashAlgorithm
     {
-        readonly ChecksumAlgorithm<T> m_Algorithm;
-        readonly IBitConverter m_BitConverter;
-        readonly IChecksumIterator<T> m_Iterator;
-
-        public HashAlgorithmImpl(ChecksumAlgorithm<T> algorithm, IBitConverter bitConverter)
-        {
-            m_Algorithm = algorithm;
-            m_BitConverter = bitConverter;
-
-            m_Iterator = algorithm.CreateIterator();
-        }
-
         public override void Initialize() => m_Iterator.Reset();
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize) =>
@@ -35,8 +23,10 @@ partial class ChecksumAlgorithm<T>
 #endif
 
         protected override byte[] HashFinal() =>
-            m_Algorithm.GetHashBytesCore(
+            algorithm.GetHashBytesCore(
                 m_Iterator.ComputeFinal(),
-                m_BitConverter);
+                bitConverter);
+
+        readonly IChecksumIterator<T> m_Iterator = algorithm.CreateIterator();
     }
 }

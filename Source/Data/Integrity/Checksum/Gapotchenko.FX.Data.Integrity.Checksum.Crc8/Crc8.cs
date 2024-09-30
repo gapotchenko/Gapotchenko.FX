@@ -12,21 +12,13 @@ namespace Gapotchenko.FX.Data.Integrity.Checksum;
 /// <remarks>
 /// Represents the base class from which implementations of CRC-8 checksum algorithm may derive.
 /// </remarks>
-public abstract partial class Crc8 : ChecksumAlgorithm<byte>, ICrc8
+/// <param name="initialValue">The initial value of the register when the algorithm starts.</param>
+public abstract partial class Crc8(byte initialValue) : ChecksumAlgorithm<byte>, ICrc8
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Crc8"/> class.
-    /// </summary>
-    /// <param name="initialValue">The initial value of the register when the algorithm starts.</param>
-    protected Crc8(byte initialValue)
-    {
-        InitialValue = initialValue;
-    }
-
     /// <summary>
     /// The initial value of the register when the algorithm starts.
     /// </summary>
-    protected readonly byte InitialValue;
+    protected readonly byte InitialValue = initialValue;
 
     /// <summary>
     /// The size, in bits, of the computed checksum value.
@@ -59,11 +51,8 @@ public abstract partial class Crc8 : ChecksumAlgorithm<byte>, ICrc8
         internal Iterator(Crc8 algorithm)
         {
             m_Algorithm = algorithm;
-            m_Register = m_Algorithm.InitialValue;
+            Reset();
         }
-
-        readonly Crc8 m_Algorithm;
-        byte m_Register;
 
         /// <inheritdoc/>
         public void ComputeBlock(ReadOnlySpan<byte> data) => m_Register = m_Algorithm.ComputeBlock(m_Register, data);
@@ -80,6 +69,9 @@ public abstract partial class Crc8 : ChecksumAlgorithm<byte>, ICrc8
 
         /// <inheritdoc/>
         public void Reset() => m_Register = m_Algorithm.InitialValue;
+
+        readonly Crc8 m_Algorithm;
+        byte m_Register;
     }
 
     /// <summary>

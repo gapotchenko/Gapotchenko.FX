@@ -14,22 +14,14 @@ namespace Gapotchenko.FX.Data.Integrity.Checksum;
 /// <remarks>
 /// Represents the base class from which implementations of CRC-32 checksum algorithm may derive.
 /// </remarks>
+/// <param name="initialValue">The initial value of the register when the algorithm starts.</param>
 [CLSCompliant(false)]
-public abstract partial class Crc32 : ChecksumAlgorithm<uint>, ICrc32
+public abstract partial class Crc32(uint initialValue) : ChecksumAlgorithm<uint>, ICrc32
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Crc32"/> class.
-    /// </summary>
-    /// <param name="initialValue">The initial value of the register when the algorithm starts.</param>
-    protected Crc32(uint initialValue)
-    {
-        InitialValue = initialValue;
-    }
-
     /// <summary>
     /// The initial value of the register when the algorithm starts.
     /// </summary>
-    protected readonly uint InitialValue;
+    protected readonly uint InitialValue = initialValue;
 
     /// <summary>
     /// The size, in bits, of the computed checksum value.
@@ -66,11 +58,8 @@ public abstract partial class Crc32 : ChecksumAlgorithm<uint>, ICrc32
         internal Iterator(Crc32 algorithm)
         {
             m_Algorithm = algorithm;
-            m_Register = m_Algorithm.InitialValue;
+            Reset();
         }
-
-        readonly Crc32 m_Algorithm;
-        uint m_Register;
 
         /// <inheritdoc/>
         public void ComputeBlock(ReadOnlySpan<byte> data) => m_Register = m_Algorithm.ComputeBlock(m_Register, data);
@@ -87,6 +76,9 @@ public abstract partial class Crc32 : ChecksumAlgorithm<uint>, ICrc32
 
         /// <inheritdoc/>
         public void Reset() => m_Register = m_Algorithm.InitialValue;
+
+        readonly Crc32 m_Algorithm;
+        uint m_Register;
     }
 
     /// <summary>

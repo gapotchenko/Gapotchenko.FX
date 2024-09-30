@@ -27,8 +27,8 @@ public abstract class GenericCrc8 : Crc8
         byte initialValue,
         bool reflectedInput,
         bool reflectedOutput,
-        byte xorOutput)
-        : base(
+        byte xorOutput) :
+        base(
             reflectedOutput ?
                 BitOperationsEx.Reverse(initialValue) :
                 initialValue)
