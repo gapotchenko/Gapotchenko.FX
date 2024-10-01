@@ -81,7 +81,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Numerics.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Reflection.Loader", "Modules\Catalog\Gapotchenko.FX.Reflection.Loader\Gapotchenko.FX.Reflection.Loader.csproj", "{D15DF10F-F35A-4011-A36C-3D12712F1ECC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.CompilerServices.Intrinsics", "Modules\Catalog\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj", "{304875A0-365B-4665-9276-0E2FA64F0C91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.CompilerServices.Intrinsics", "Modules\Catalog\Runtime\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj", "{304875A0-365B-4665-9276-0E2FA64F0C91}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{C2DC67EB-5194-432D-A088-2EA90951DF87}"
 	ProjectSection(SolutionItems) = preProject
@@ -232,7 +232,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Intrinsics", "Intrinsics", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InteropServices", "InteropServices", "{ED4D80A7-33AD-4A3E-A837-75C326715B0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.InteropServices", "Modules\Catalog\Gapotchenko.FX.Runtime.InteropServices\Gapotchenko.FX.Runtime.InteropServices.csproj", "{3697DB1D-0118-473B-9320-678D5DB1B5EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.InteropServices", "Modules\Catalog\Runtime\Gapotchenko.FX.Runtime.InteropServices\Gapotchenko.FX.Runtime.InteropServices.csproj", "{3697DB1D-0118-473B-9320-678D5DB1B5EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Intervals", "Intervals", "{9307A1DA-7774-4574-BA0D-45B6912E9F47}"
 EndProject
