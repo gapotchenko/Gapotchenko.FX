@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Tests", "Mod
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Modules", "01. Modules", "{223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}"
 	ProjectSection(SolutionItems) = preProject
-		Modules\Catalog\README.md = Modules\Catalog\README.md
+		Modules\README.md = Modules\README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Collections", "Modules\Catalog\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj", "{9CD580F3-FFC0-4071-8CE3-F21E204E5763}"
