@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.ValueTuple;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+namespace Gapotchenko.FX.ValueTuple;
 
 sealed class ValueTupleEqualityComparer<T1, T2, T3, T4>(
     IEqualityComparer<T1>? comparer1,
