@@ -73,7 +73,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Threading.Tests", "Tests\Gapotchenko.FX.Threading.Tests\Gapotchenko.FX.Threading.Tests.csproj", "{D4447E26-D520-46C1-8FAE-D6176318F376}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Linq", "Data\Gapotchenko.FX.Data.Linq\Gapotchenko.FX.Data.Linq.csproj", "{5C7C60BA-695A-4219-8645-7B32169F74D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Linq", "Data\Linq\Gapotchenko.FX.Data.Linq\Gapotchenko.FX.Data.Linq.csproj", "{5C7C60BA-695A-4219-8645-7B32169F74D9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Numerics", "Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj", "{CF4B10ED-B17A-406F-8C5A-8945BD73C663}"
 EndProject
@@ -113,8 +113,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory.Tests", "Tests\Gapotchenko.FX.Memory.Tests\Gapotchenko.FX.Memory.Tests.csproj", "{69636576-F657-4629-B6B3-D8D4A568B6D8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Graphs", "Gapotchenko.FX.Math.Graphs\Gapotchenko.FX.Math.Graphs.csproj", "{3DC3319C-595A-4336-AF43-71785AE86D11}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Geometry.Tests", "Tests\Gapotchenko.FX.Math.Geometry.Tests\Gapotchenko.FX.Math.Geometry.Tests.csproj", "{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Graphs.Tests", "Tests\Gapotchenko.FX.Math.Graphs.Tests\Gapotchenko.FX.Math.Graphs.Tests.csproj", "{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}"
 EndProject
@@ -240,13 +238,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Intervals", "Intervals", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Intervals", "Gapotchenko.FX.Math.Intervals\Gapotchenko.FX.Math.Intervals.csproj", "{D74013BA-D2A3-428D-93CF-C617096BE48F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Intervals.Tests", "Gapotchenko.FX.Math.Intervals.Tests\Gapotchenko.FX.Math.Intervals.Tests.csproj", "{902A6207-2743-435E-AF79-BA31AD319877}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Intervals.Tests", "Tests\Gapotchenko.FX.Math.Intervals.Tests\Gapotchenko.FX.Math.Intervals.Tests.csproj", "{902A6207-2743-435E-AF79-BA31AD319877}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy", "Legacy", "{A8B2C662-FF6A-4B82-B144-7A32BBC2BE35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Math.Metrics", "Gapotchenko.FX.Math.Metrics\Gapotchenko.FX.Math.Metrics.csproj", "{8D597BEC-50DB-49E3-8CC0-437AA1D065DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Metrics", "Gapotchenko.FX.Math.Metrics\Gapotchenko.FX.Math.Metrics.csproj", "{8D597BEC-50DB-49E3-8CC0-437AA1D065DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Math.Metrics.Tests", "Tests\Gapotchenko.FX.Math.Metrics.Tests\Gapotchenko.FX.Math.Metrics.Tests.csproj", "{2E16CEC2-DF07-4699-AB23-DEEF3750B82D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Metrics.Tests", "Tests\Gapotchenko.FX.Math.Metrics.Tests\Gapotchenko.FX.Math.Metrics.Tests.csproj", "{2E16CEC2-DF07-4699-AB23-DEEF3750B82D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -386,10 +384,6 @@ Global
 		{3DC3319C-595A-4336-AF43-71785AE86D11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DC3319C-595A-4336-AF43-71785AE86D11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DC3319C-595A-4336-AF43-71785AE86D11}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -547,7 +541,6 @@ Global
 		{53F33EF9-71DF-4F06-8E4E-0E190B6733D1} = {5B9961CC-DF1D-4B04-AFB3-FA5A2B35D091}
 		{69636576-F657-4629-B6B3-D8D4A568B6D8} = {5B9961CC-DF1D-4B04-AFB3-FA5A2B35D091}
 		{3DC3319C-595A-4336-AF43-71785AE86D11} = {D04EE9D1-7B2B-401A-8835-5D4DE9921802}
-		{5AC7F5E8-5233-40C1-90D9-D852DE8CFB40} = {A8B2C662-FF6A-4B82-B144-7A32BBC2BE35}
 		{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F} = {D04EE9D1-7B2B-401A-8835-5D4DE9921802}
 		{3FAE141A-F711-4E62-8BD6-55C98470C2C7} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
 		{C81ADA83-9C02-492E-B752-EC8E967C030C} = {3FAE141A-F711-4E62-8BD6-55C98470C2C7}

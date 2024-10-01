@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Math.Metrics.Tests.StringSimilarityAlgorithms;
 
 [TestClass]
-public class JaroDistanceTests
+public class JaroTests
 {
     [TestMethod]
     [DataRow("loans and accounts", "loan account", 0.17)]

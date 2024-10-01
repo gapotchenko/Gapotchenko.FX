@@ -51,8 +51,8 @@ public abstract class StringMetricsAlgorithm<TMeasure> : IStringMetricsAlgorithm
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="range"/> cannot be empty.</exception>
     [StackTraceHidden]
     protected static void ValidateArguments<TElement>(
-        [NotNull] IEnumerable<TElement> a,
-        [NotNull] IEnumerable<TElement> b,
+        IEnumerable<TElement> a,
+        IEnumerable<TElement> b,
         in ValueInterval<TMeasure> range)
     {
         if (a == null)
