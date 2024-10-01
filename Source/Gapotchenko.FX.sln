@@ -88,7 +88,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{C2DC67EB-5
 		Data\README.md = Data\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.AppModel.Information", "Modules\Catalog\Gapotchenko.FX.AppModel.Information\Gapotchenko.FX.AppModel.Information.csproj", "{006DFB7E-052A-4496-B9A0-7AF038058AB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.AppModel.Information", "Modules\Catalog\AppModel\Gapotchenko.FX.AppModel.Information\Gapotchenko.FX.AppModel.Information.csproj", "{006DFB7E-052A-4496-B9A0-7AF038058AB7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Console", "Modules\Catalog\Gapotchenko.FX.Console\Gapotchenko.FX.Console.csproj", "{FE72C33E-3065-416D-8431-9884422B4947}"
 EndProject
