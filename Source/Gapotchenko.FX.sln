@@ -102,7 +102,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Math", "Math", "{9BF93356-2C42-4B31-AEB1-7E394D27F500}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Geometry", "Gapotchenko.FX.Math.Geometry\Gapotchenko.FX.Math.Geometry.csproj", "{97B91925-D964-4F55-AFA3-56FF2E93CE64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Geometry", "Legacy\Gapotchenko.FX.Math.Geometry\Gapotchenko.FX.Math.Geometry.csproj", "{97B91925-D964-4F55-AFA3-56FF2E93CE64}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Combinatorics", "Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj", "{D33CFE2E-FB3F-4B93-9CD1-8CC86A9EE077}"
 EndProject
