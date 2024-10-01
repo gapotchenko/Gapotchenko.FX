@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+  </ItemGroup>
+
+</Project>

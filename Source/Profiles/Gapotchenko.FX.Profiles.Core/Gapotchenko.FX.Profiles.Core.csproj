@@ -20,19 +20,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+    <ProjectReference Include="..\..\Modules\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
 
 </Project>

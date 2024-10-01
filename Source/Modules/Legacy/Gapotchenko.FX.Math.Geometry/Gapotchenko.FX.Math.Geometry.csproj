@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Geometry.StringMetrics" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageTag Include="string" />
+    <PackageTag Include="similarity" />
+    <PackageTag Include="distance" />
+    <PackageTag Include="levenshtein" />
+    <PackageTag Include="damerau" />
+    <PackageTag Include="jaro" />
+    <PackageTag Include="hamming" />
+    <PackageTag Include="lcs" />
+    <PackageTag Include="osa" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
+  </ItemGroup>
+
+</Project>
