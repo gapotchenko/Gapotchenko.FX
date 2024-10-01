@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Catalog\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
-    <ProjectReference Include="..\..\Catalog\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
+    <ProjectReference Include="..\..\Catalog\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\..\Catalog\Math\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
   </ItemGroup>
 

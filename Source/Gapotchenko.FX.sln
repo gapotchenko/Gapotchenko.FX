@@ -18,9 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Modules", "01. Modules"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Collections", "Modules\Catalog\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj", "{9CD580F3-FFC0-4071-8CE3-F21E204E5763}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq", "Modules\Catalog\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj", "{9094EE1A-5940-40BE-A8AB-965BAEF37A44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq", "Modules\Catalog\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj", "{9094EE1A-5940-40BE-A8AB-965BAEF37A44}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Tests", "Modules\Tests\Gapotchenko.FX.Linq.Tests\Gapotchenko.FX.Linq.Tests.csproj", "{2E3E19B9-7262-4CEA-8329-F41C212CE54D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Tests", "Modules\Tests\Linq\Gapotchenko.FX.Linq.Tests\Gapotchenko.FX.Linq.Tests.csproj", "{2E3E19B9-7262-4CEA-8329-F41C212CE54D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Text", "Modules\Catalog\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj", "{77FC3FD0-89D7-46B3-BB6B-555A77665738}"
 EndProject
@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.CommandLine", "Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj", "{013EF111-CDCE-4AFB-9860-66312F085861}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Expressions", "Modules\Catalog\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj", "{7CF2CFC3-E676-494D-908F-5CBC139543C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Expressions", "Modules\Catalog\Linq\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj", "{7CF2CFC3-E676-494D-908F-5CBC139543C4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Profiles", "02. Profiles", "{7EF72767-6970-43FD-98E6-B669ADD680A4}"
 	ProjectSection(SolutionItems) = preProject

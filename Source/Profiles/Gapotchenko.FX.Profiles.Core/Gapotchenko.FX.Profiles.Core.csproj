@@ -25,8 +25,8 @@
     <ProjectReference Include="..\..\Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
-    <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj" />
-    <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Linq\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
