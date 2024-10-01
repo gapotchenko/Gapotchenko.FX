@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)Modules\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc16\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.csproj" />
+    <ProjectReference Include="$(SolutionDir)Modules\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc16\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Data.Integrity.Checksum.Tests\Gapotchenko.FX.Data.Integrity.Checksum.Tests.csproj" />
   </ItemGroup>
 

@@ -7,7 +7,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj" />
+    <ProjectReference Include="..\..\Catalog\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj" />
   </ItemGroup>
 
 </Project>

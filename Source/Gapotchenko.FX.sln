@@ -3,28 +3,28 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX", "Modules\Gapotchenko.FX\Gapotchenko.FX.csproj", "{3188853F-ECB8-4002-9273-23F4A9B41823}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX", "Modules\Catalog\Gapotchenko.FX\Gapotchenko.FX.csproj", "{3188853F-ECB8-4002-9273-23F4A9B41823}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Threading", "Modules\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj", "{413EB45F-F5C5-4432-85A7-1859C972CAC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Threading", "Modules\Catalog\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj", "{413EB45F-F5C5-4432-85A7-1859C972CAC1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.Process", "Modules\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj", "{C6404A82-9B1F-4A45-BCAD-39D83FCF84B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.Process", "Modules\Catalog\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj", "{C6404A82-9B1F-4A45-BCAD-39D83FCF84B9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Tests", "Modules\Tests\Gapotchenko.FX.Tests\Gapotchenko.FX.Tests.csproj", "{394AB9E5-2AF1-4C7A-936C-43E5DC3351C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Modules", "01. Modules", "{223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}"
 	ProjectSection(SolutionItems) = preProject
-		Modules\README.md = Modules\README.md
+		Modules\Catalog\README.md = Modules\Catalog\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Collections", "Modules\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj", "{9CD580F3-FFC0-4071-8CE3-F21E204E5763}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Collections", "Modules\Catalog\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj", "{9CD580F3-FFC0-4071-8CE3-F21E204E5763}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq", "Modules\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj", "{9094EE1A-5940-40BE-A8AB-965BAEF37A44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq", "Modules\Catalog\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj", "{9094EE1A-5940-40BE-A8AB-965BAEF37A44}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Tests", "Modules\Tests\Gapotchenko.FX.Linq.Tests\Gapotchenko.FX.Linq.Tests.csproj", "{2E3E19B9-7262-4CEA-8329-F41C212CE54D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Text", "Modules\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj", "{77FC3FD0-89D7-46B3-BB6B-555A77665738}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Text", "Modules\Catalog\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj", "{77FC3FD0-89D7-46B3-BB6B-555A77665738}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math", "Modules\Math\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj", "{C4BFF210-5036-460E-85EF-1F3C2B53185C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math", "Modules\Catalog\Math\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj", "{C4BFF210-5036-460E-85EF-1F3C2B53185C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03. Misc", "03. Misc", "{2B63C0D4-A90F-458D-9116-83ABC34274D9}"
 	ProjectSection(SolutionItems) = preProject
@@ -35,13 +35,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Harness", "Harness", "{93EB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Harness.Console", "Harness\Gapotchenko.FX.Harness.Console\Gapotchenko.FX.Harness.Console.csproj", "{448BAA58-B9D8-419B-993D-200F5E620B7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.IO", "Modules\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj", "{75849171-E56A-41B4-A685-7BAB8B875C7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.IO", "Modules\Catalog\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj", "{75849171-E56A-41B4-A685-7BAB8B875C7F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.WebBrowser", "Modules\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj", "{280EB526-4B91-4702-B9D5-45EDEDB51798}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.WebBrowser", "Modules\Catalog\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj", "{280EB526-4B91-4702-B9D5-45EDEDB51798}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.CommandLine", "Modules\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj", "{013EF111-CDCE-4AFB-9860-66312F085861}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.CommandLine", "Modules\Catalog\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj", "{013EF111-CDCE-4AFB-9860-66312F085861}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Expressions", "Modules\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj", "{7CF2CFC3-E676-494D-908F-5CBC139543C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Expressions", "Modules\Catalog\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj", "{7CF2CFC3-E676-494D-908F-5CBC139543C4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Profiles", "02. Profiles", "{7EF72767-6970-43FD-98E6-B669ADD680A4}"
 	ProjectSection(SolutionItems) = preProject
@@ -73,24 +73,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Threading.Tests", "Modules\Tests\Gapotchenko.FX.Threading.Tests\Gapotchenko.FX.Threading.Tests.csproj", "{D4447E26-D520-46C1-8FAE-D6176318F376}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Linq", "Modules\Data\Linq\Gapotchenko.FX.Data.Linq\Gapotchenko.FX.Data.Linq.csproj", "{5C7C60BA-695A-4219-8645-7B32169F74D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Linq", "Modules\Catalog\Data\Linq\Gapotchenko.FX.Data.Linq\Gapotchenko.FX.Data.Linq.csproj", "{5C7C60BA-695A-4219-8645-7B32169F74D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Numerics", "Modules\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj", "{CF4B10ED-B17A-406F-8C5A-8945BD73C663}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Numerics", "Modules\Catalog\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj", "{CF4B10ED-B17A-406F-8C5A-8945BD73C663}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Numerics.Tests", "Modules\Tests\Gapotchenko.FX.Numerics.Tests\Gapotchenko.FX.Numerics.Tests.csproj", "{9A39605A-F280-4C5F-AAFB-7F03CDFBF7E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Reflection.Loader", "Modules\Gapotchenko.FX.Reflection.Loader\Gapotchenko.FX.Reflection.Loader.csproj", "{D15DF10F-F35A-4011-A36C-3D12712F1ECC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Reflection.Loader", "Modules\Catalog\Gapotchenko.FX.Reflection.Loader\Gapotchenko.FX.Reflection.Loader.csproj", "{D15DF10F-F35A-4011-A36C-3D12712F1ECC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.CompilerServices.Intrinsics", "Modules\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj", "{304875A0-365B-4665-9276-0E2FA64F0C91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.CompilerServices.Intrinsics", "Modules\Catalog\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj", "{304875A0-365B-4665-9276-0E2FA64F0C91}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{C2DC67EB-5194-432D-A088-2EA90951DF87}"
 	ProjectSection(SolutionItems) = preProject
 		Data\README.md = Data\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.AppModel.Information", "Modules\Gapotchenko.FX.AppModel.Information\Gapotchenko.FX.AppModel.Information.csproj", "{006DFB7E-052A-4496-B9A0-7AF038058AB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.AppModel.Information", "Modules\Catalog\Gapotchenko.FX.AppModel.Information\Gapotchenko.FX.AppModel.Information.csproj", "{006DFB7E-052A-4496-B9A0-7AF038058AB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Console", "Modules\Gapotchenko.FX.Console\Gapotchenko.FX.Console.csproj", "{FE72C33E-3065-416D-8431-9884422B4947}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Console", "Modules\Catalog\Gapotchenko.FX.Console\Gapotchenko.FX.Console.csproj", "{FE72C33E-3065-416D-8431-9884422B4947}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.Process.Tests", "Modules\Tests\Gapotchenko.FX.Diagnostics.Process.Tests\Gapotchenko.FX.Diagnostics.Process.Tests.csproj", "{5D6BD327-9F56-4FCF-A14D-8B95646805FA}"
 EndProject
@@ -104,15 +104,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Math", "Math", "{9BF93356-2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Geometry", "Modules\Legacy\Gapotchenko.FX.Math.Geometry\Gapotchenko.FX.Math.Geometry.csproj", "{97B91925-D964-4F55-AFA3-56FF2E93CE64}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Combinatorics", "Modules\Math\Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj", "{D33CFE2E-FB3F-4B93-9CD1-8CC86A9EE077}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Combinatorics", "Modules\Catalog\Math\Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj", "{D33CFE2E-FB3F-4B93-9CD1-8CC86A9EE077}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Combinatorics.Tests", "Modules\Tests\Math\Gapotchenko.FX.Math.Combinatorics.Tests\Gapotchenko.FX.Math.Combinatorics.Tests.csproj", "{BA06591F-0688-4D24-A931-431D7E943CCD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory", "Modules\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj", "{53F33EF9-71DF-4F06-8E4E-0E190B6733D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory", "Modules\Catalog\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj", "{53F33EF9-71DF-4F06-8E4E-0E190B6733D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Memory.Tests", "Modules\Tests\Gapotchenko.FX.Memory.Tests\Gapotchenko.FX.Memory.Tests.csproj", "{69636576-F657-4629-B6B3-D8D4A568B6D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Graphs", "Modules\Math\Gapotchenko.FX.Math.Graphs\Gapotchenko.FX.Math.Graphs.csproj", "{3DC3319C-595A-4336-AF43-71785AE86D11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Graphs", "Modules\Catalog\Math\Gapotchenko.FX.Math.Graphs\Gapotchenko.FX.Math.Graphs.csproj", "{3DC3319C-595A-4336-AF43-71785AE86D11}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Graphs.Tests", "Modules\Tests\Math\Gapotchenko.FX.Math.Graphs.Tests\Gapotchenko.FX.Math.Graphs.Tests.csproj", "{5EDF0FA9-CCEA-4F4B-95FF-2C74B7020D4F}"
 EndProject
@@ -120,21 +120,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{3F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cryptography", "Cryptography", "{C81ADA83-9C02-492E-B752-EC8E967C030C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography", "Modules\Gapotchenko.FX.Security.Cryptography\Gapotchenko.FX.Security.Cryptography.csproj", "{A38AD358-B8AE-41F6-A859-FC3EECF6F6AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography", "Modules\Catalog\Gapotchenko.FX.Security.Cryptography\Gapotchenko.FX.Security.Cryptography.csproj", "{A38AD358-B8AE-41F6-A859-FC3EECF6F6AF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography.Tests", "Modules\Tests\Gapotchenko.FX.Security.Cryptography.Tests\Gapotchenko.FX.Security.Cryptography.Tests.csproj", "{CF09BAAB-7778-49F4-A8D5-123444D6CF00}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Checksum", "Checksum", "{87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum", "Modules\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum\Gapotchenko.FX.Data.Integrity.Checksum.csproj", "{CE487C26-F199-471F-B598-6A8D7AAA2FEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum", "Modules\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum\Gapotchenko.FX.Data.Integrity.Checksum.csproj", "{CE487C26-F199-471F-B598-6A8D7AAA2FEC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc16", "Modules\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc16\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.csproj", "{0A4346D7-3EE2-4BC9-9D61-26ED04F56CBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc16", "Modules\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc16\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.csproj", "{0A4346D7-3EE2-4BC9-9D61-26ED04F56CBB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc16.Tests", "Modules\Tests\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.Tests\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.Tests.csproj", "{B4A7E224-3D6D-4C8F-8505-FC37B9AFD3B4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Tests", "Modules\Tests\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Tests\Gapotchenko.FX.Data.Integrity.Checksum.Tests.csproj", "{3B521D95-0944-4F4D-ABA3-75CFBFFDD715}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc32", "Modules\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc32\Gapotchenko.FX.Data.Integrity.Checksum.Crc32.csproj", "{65220923-B35A-435D-BB66-9DCEDB31812A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc32", "Modules\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc32\Gapotchenko.FX.Data.Integrity.Checksum.Crc32.csproj", "{65220923-B35A-435D-BB66-9DCEDB31812A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc32.Tests", "Modules\Tests\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc32.Tests\Gapotchenko.FX.Data.Integrity.Checksum.Crc32.Tests.csproj", "{BAE33BC5-5972-4FC6-A514-265026BBFDAC}"
 EndProject
@@ -144,7 +144,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CRC-32", "CRC-32", "{AFA720
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CRC-8", "CRC-8", "{59203645-37D1-4855-8D12-A174FC2CB77D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc8", "Modules\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc8\Gapotchenko.FX.Data.Integrity.Checksum.Crc8.csproj", "{494209ED-E811-4339-94A4-FF1C79888507}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Integrity.Checksum.Crc8", "Modules\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc8\Gapotchenko.FX.Data.Integrity.Checksum.Crc8.csproj", "{494209ED-E811-4339-94A4-FF1C79888507}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommandLine", "CommandLine", "{51C84C28-4933-44F3-A9E5-6F0CE57DEA45}"
 EndProject
@@ -182,15 +182,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integrity", "Integrity", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Encoding", "Encoding", "{EED4A7AB-76D6-460E-9809-3726734A8291}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding", "Modules\Data\Encoding\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj", "{BAC20EFD-C301-4F78-B9E2-CB37580DE006}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding", "Modules\Catalog\Data\Encoding\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj", "{BAC20EFD-C301-4F78-B9E2-CB37580DE006}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base16", "Modules\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16\Gapotchenko.FX.Data.Encoding.Base16.csproj", "{102DC8A3-AC40-4C84-A689-B53A6B0F6E2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base16", "Modules\Catalog\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16\Gapotchenko.FX.Data.Encoding.Base16.csproj", "{102DC8A3-AC40-4C84-A689-B53A6B0F6E2D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base24", "Modules\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base24\Gapotchenko.FX.Data.Encoding.Base24.csproj", "{DC775DFE-81C4-4638-A2BA-FB582053F048}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base24", "Modules\Catalog\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base24\Gapotchenko.FX.Data.Encoding.Base24.csproj", "{DC775DFE-81C4-4638-A2BA-FB582053F048}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base32", "Modules\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base32\Gapotchenko.FX.Data.Encoding.Base32.csproj", "{F927C219-5B57-47A0-8D6E-6839DB9229CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base32", "Modules\Catalog\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base32\Gapotchenko.FX.Data.Encoding.Base32.csproj", "{F927C219-5B57-47A0-8D6E-6839DB9229CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base64", "Modules\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64\Gapotchenko.FX.Data.Encoding.Base64.csproj", "{4075CB46-AA20-4326-9247-3460A42C416D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding.Base64", "Modules\Catalog\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64\Gapotchenko.FX.Data.Encoding.Base64.csproj", "{4075CB46-AA20-4326-9247-3460A42C416D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base16", "Base16", "{B37F97F2-CA2C-4687-8C55-E7A91AD184A7}"
 EndProject
@@ -222,7 +222,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Information", "Information"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Loader", "Loader", "{6AF65BDE-3B66-4942-A52B-B4336D034080}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.ValueTuple", "Modules\Gapotchenko.FX.ValueTuple\Gapotchenko.FX.ValueTuple.csproj", "{5FC9A1FA-CC8D-44A0-AE7B-CD05063D0DB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.ValueTuple", "Modules\Catalog\Gapotchenko.FX.ValueTuple\Gapotchenko.FX.ValueTuple.csproj", "{5FC9A1FA-CC8D-44A0-AE7B-CD05063D0DB9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ValueTuple", "ValueTuple", "{CA5611C8-4DD4-4440-B2C2-6600CEE69CC1}"
 EndProject
@@ -232,17 +232,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Intrinsics", "Intrinsics", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InteropServices", "InteropServices", "{ED4D80A7-33AD-4A3E-A837-75C326715B0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.InteropServices", "Modules\Gapotchenko.FX.Runtime.InteropServices\Gapotchenko.FX.Runtime.InteropServices.csproj", "{3697DB1D-0118-473B-9320-678D5DB1B5EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.InteropServices", "Modules\Catalog\Gapotchenko.FX.Runtime.InteropServices\Gapotchenko.FX.Runtime.InteropServices.csproj", "{3697DB1D-0118-473B-9320-678D5DB1B5EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Intervals", "Intervals", "{9307A1DA-7774-4574-BA0D-45B6912E9F47}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Intervals", "Modules\Math\Gapotchenko.FX.Math.Intervals\Gapotchenko.FX.Math.Intervals.csproj", "{D74013BA-D2A3-428D-93CF-C617096BE48F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Intervals", "Modules\Catalog\Math\Gapotchenko.FX.Math.Intervals\Gapotchenko.FX.Math.Intervals.csproj", "{D74013BA-D2A3-428D-93CF-C617096BE48F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Intervals.Tests", "Modules\Tests\Math\Gapotchenko.FX.Math.Intervals.Tests\Gapotchenko.FX.Math.Intervals.Tests.csproj", "{902A6207-2743-435E-AF79-BA31AD319877}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy", "Legacy", "{A8B2C662-FF6A-4B82-B144-7A32BBC2BE35}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Metrics", "Modules\Math\Gapotchenko.FX.Math.Metrics\Gapotchenko.FX.Math.Metrics.csproj", "{8D597BEC-50DB-49E3-8CC0-437AA1D065DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Metrics", "Modules\Catalog\Math\Gapotchenko.FX.Math.Metrics\Gapotchenko.FX.Math.Metrics.csproj", "{8D597BEC-50DB-49E3-8CC0-437AA1D065DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Metrics.Tests", "Modules\Tests\Math\Gapotchenko.FX.Math.Metrics.Tests\Gapotchenko.FX.Math.Metrics.Tests.csproj", "{2E16CEC2-DF07-4699-AB23-DEEF3750B82D}"
 EndProject

@@ -16,9 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Security.Cryptography\Gapotchenko.FX.Security.Cryptography.csproj" />
+    <ProjectReference Include="..\..\Catalog\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
+    <ProjectReference Include="..\..\Catalog\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
+    <ProjectReference Include="..\..\Catalog\Gapotchenko.FX.Security.Cryptography\Gapotchenko.FX.Security.Cryptography.csproj" />
   </ItemGroup>
 
 </Project>

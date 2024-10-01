@@ -1,7 +1,7 @@
 ﻿# Modules
 
 The directory contains Gapotchenko.FX modules.
-The full list of modules is presented in the table below.
+The full list of the modules is presented in the table below.
 
 ## Table
 

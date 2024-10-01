@@ -7,7 +7,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
+    <ProjectReference Include="..\..\Catalog\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
   </ItemGroup>
 
 </Project>
