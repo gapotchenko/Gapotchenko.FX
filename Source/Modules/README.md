@@ -1,14 +1,9 @@
-﻿# Source
+﻿# Modules
 
-The folder contains the source code of Gapotchenko.FX.
+The folder contains Gapotchenko.FX modules.
+The full list of modules is presented in the table below.
 
-Let's start by taking a look at its ☞ [main module](Gapotchenko.FX) ☜.
-
-## Available Modules
-
-The full list of Gapotchenko.FX modules is presented in the table below.
-
-### Table
+## Table
 
 - [Gapotchenko.FX](Gapotchenko.FX)
 - [Gapotchenko.FX.AppModel.Information](Gapotchenko.FX.AppModel.Information)
@@ -46,7 +41,7 @@ The full list of Gapotchenko.FX modules is presented in the table below.
 - [Gapotchenko.FX.Threading](Gapotchenko.FX.Threading)
 - [Gapotchenko.FX.ValueTuple](Gapotchenko.FX.ValueTuple)
 
-### Legend
+## Legend
 
 Symbol ✱ denotes an advanced module.  
 Symbol ✱✱ denotes an expert module.
