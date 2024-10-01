@@ -16,7 +16,6 @@ public static partial class FPIeee754IntervalExtensions
 {
     /// <inheritdoc cref="IntervalExtensions.Clamp(IInterval{int}, int)"/>
     /// <typeparam name="T">The type of value to clamp.</typeparam>
-    /// <returns>A clamped <paramref name="value"/>, or <see cref="Optional{T}.None"/> if the interval is empty.</returns>
     public static Optional<T> Clamp<T>(this IInterval<T> interval, T value)
         where T : IFloatingPointIeee754<T> =>
         Clamp<T, IInterval<T>>(interval, value);

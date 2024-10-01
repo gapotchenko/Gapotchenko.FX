@@ -365,6 +365,7 @@ static class IntervalEngine
                         if (allowedMinimum.HasValue && comparer.Compare(value, allowedMinimum.Value) < 0)
                         {
                             // Convergence is impossible.
+                            // The clamped value cannot be represented by TValue type.
                             return default;
                         }
                     }

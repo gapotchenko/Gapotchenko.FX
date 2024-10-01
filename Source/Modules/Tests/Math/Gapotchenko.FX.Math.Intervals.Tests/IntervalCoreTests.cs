@@ -10,6 +10,9 @@ public abstract class IntervalCoreTests
 {
     public abstract IInterval<T> NewInterval<T>(T from, T to) where T : IComparable<T>, IEquatable<T>;
 
+    /// <summary>
+    /// Creates a new interval of the tested type from the specified template.
+    /// </summary>
     public IInterval<T> NewInterval<T>(IInterval<T> interval) where T : IComparable<T>, IEquatable<T> =>
         NewInterval(interval.From, interval.To);
 
@@ -1216,6 +1219,16 @@ public abstract class IntervalCoreTests
         Assert.IsFalse(clamped.HasValue);
     }
 
+    [TestMethod]
+    public void Interval_Core_Clamp_Integer_8()
+    {
+        var interval = NewInterval(ValueInterval.Exclusive(19, 20));
+        var clamped = interval.Clamp(21);
+
+        // The clamped value belonging to (19,20) interval cannot be represented by Int32 type.
+        Assert.IsFalse(clamped.HasValue);
+    }
+
     #endregion
 
     #region Sign
@@ -1268,6 +1281,29 @@ public abstract class IntervalCoreTests
         Assert.AreEqual(0, interval.Sign(int.MinValue));
         Assert.AreEqual(0, interval.Sign(0));
         Assert.AreEqual(0, interval.Sign(int.MaxValue));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Sign_5()
+    {
+        var interval = NewInterval(ValueInterval.Exclusive(19, 20));
+
+        Assert.AreEqual(-1, interval.Sign(18));
+        Assert.AreEqual(-1, interval.Sign(19));
+        Assert.AreEqual(1, interval.Sign(20));
+        Assert.AreEqual(1, interval.Sign(21));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Sign_6()
+    {
+        var interval = NewInterval(ValueInterval.Exclusive(19.0, 20.0));
+
+        Assert.AreEqual(-1, interval.Sign(18));
+        Assert.AreEqual(-1, interval.Sign(19));
+        Assert.AreEqual(0, interval.Sign(19.5));
+        Assert.AreEqual(1, interval.Sign(20));
+        Assert.AreEqual(1, interval.Sign(21));
     }
 
     #endregion

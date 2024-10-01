@@ -15,7 +15,11 @@ partial class IntervalExtensions
     /// </summary>
     /// <param name="interval">The interval.</param>
     /// <param name="value">The value to clamp.</param>
-    /// <returns>A clamped <paramref name="value"/>, or <see cref="Optional{T}.None"/> if the interval is empty.</returns>
+    /// <returns>
+    /// A clamped <paramref name="value"/>,
+    /// or <see cref="Optional{T}.None"/> if the interval is empty
+    /// or the clamped value cannot be represented by the underlying type.
+    /// </returns>
 #if TFF_STATIC_INTERFACE
     [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
