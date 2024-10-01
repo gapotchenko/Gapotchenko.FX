@@ -5,6 +5,7 @@
 /// </summary>
 public static class SetExtensions
 {
+#if BINARY_COMPATIBILITY || SOURCE_COMPATIBILITY
     /// <summary>
     /// Indicates whether the specified set is null or empty.
     /// </summary>
@@ -13,11 +14,12 @@ public static class SetExtensions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool IsNullOrEmpty<T>(
         [NotNullWhen(false)]
-#if !TFF_HASHSET_IREADONLYCOLLECTION
+#if SOURCE_COMPATIBILITY && !TFF_HASHSET_IREADONLYCOLLECTION
         this
 #endif
         ISet<T>? value) =>
         value is null || value.Count == 0;
+#endif
 
     /// <summary>
     /// Adds the elements of the specified collection to the target set.

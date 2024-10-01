@@ -8,7 +8,7 @@ public static class HashCodeEx
     /// <summary>
     /// Combines hash codes of the elements of a specified sequence.
     /// </summary>
-    /// <typeparam name="T">The sequence element type.</typeparam>
+    /// <typeparam name="T">The type of sequence elements.</typeparam>
     /// <param name="source">
     /// The sequence of elements.
     /// The sequence itself can be <see langword="null"/>, and it can contain elements that are <see langword="null"/>.
@@ -24,7 +24,7 @@ public static class HashCodeEx
     /// <summary>
     /// Combines hash codes of the elements of a specified sequence by using a specified <see cref="IEqualityComparer{T}"/>.
     /// </summary>
-    /// <typeparam name="T">The sequence element type.</typeparam>
+    /// <typeparam name="T">The type of sequence elements.</typeparam>
     /// <param name="source">
     /// The sequence of elements. 
     /// The value can be <see langword="null"/>.
@@ -41,7 +41,7 @@ public static class HashCodeEx
     /// <summary>
     /// Adds hash codes of the elements of a specified sequence to this instance.
     /// </summary>
-    /// <typeparam name="T">The sequence element type.</typeparam>
+    /// <typeparam name="T">The type of sequence elements.</typeparam>
     /// <param name="hashCode">The hash code.</param>
     /// <param name="source">
     /// The sequence of elements. 
@@ -58,7 +58,7 @@ public static class HashCodeEx
     /// <summary>
     /// Adds hash codes of the elements of a specified sequence to this instance by using a specified <see cref="IEqualityComparer{T}"/>.
     /// </summary>
-    /// <typeparam name="T">The sequence element type.</typeparam>
+    /// <typeparam name="T">The type of sequence elements.</typeparam>
     /// <param name="hashCode">The hash code.</param>
     /// <param name="source">
     /// The sequence of elements. 

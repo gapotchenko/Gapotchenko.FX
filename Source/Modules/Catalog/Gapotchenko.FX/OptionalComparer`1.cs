@@ -1,16 +1,10 @@
 ﻿namespace Gapotchenko.FX;
 
-[Serializable]
-sealed class OptionalComparer<T> : IComparer<Optional<T>>
+sealed class OptionalComparer<T>(IComparer<T>? valueComparer) : IComparer<Optional<T>>
 {
-    public OptionalComparer(IComparer<T>? valueComparer)
-    {
-        m_ValueComparer = valueComparer ?? Comparer<T>.Default;
-    }
-
-    readonly IComparer<T> m_ValueComparer;
-
     public int Compare(Optional<T> x, Optional<T> y) => CompareCore(x, y, m_ValueComparer);
+
+    readonly IComparer<T> m_ValueComparer = valueComparer ?? Comparer<T>.Default;
 
     internal static int CompareCore(Optional<T> x, Optional<T> y, IComparer<T> valueComparer)
     {
@@ -18,7 +12,8 @@ sealed class OptionalComparer<T> : IComparer<Optional<T>>
         {
             if (y.HasValue)
                 return valueComparer.Compare(x.Value, y.Value);
-            return 1;
+            else
+                return 1;
         }
         else if (y.HasValue)
         {

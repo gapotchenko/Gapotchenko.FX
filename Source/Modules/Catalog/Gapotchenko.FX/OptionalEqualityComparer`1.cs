@@ -1,6 +1,5 @@
 ﻿namespace Gapotchenko.FX;
 
-[Serializable]
 sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : IEqualityComparer<Optional<T>>
 {
     public bool Equals(Optional<T> x, Optional<T> y) => EqualsCore(x, y, m_ValueComparer);
@@ -44,7 +43,7 @@ sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : 
             return !y.HasValue;
     }
 
-    internal static bool EqualsCore(Optional<T> x, [AllowNull] T y, IEqualityComparer<T> valueComparer)
+    internal static bool EqualsCore(Optional<T> x, T? y, IEqualityComparer<T> valueComparer)
     {
         if (x.HasValue)
             return valueComparer.Equals(x.Value, y);

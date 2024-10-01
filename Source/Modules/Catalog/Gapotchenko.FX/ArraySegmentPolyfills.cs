@@ -35,11 +35,8 @@ public static class ArraySegmentPolyfills
 #if TFF_ARRAYSEGMENT_SLICE
         return segment.Slice(index);
 #else
-        var array = segment.Array;
-        if (array == null)
-            throw new InvalidOperationException("The underlying array is null.");
-
-        int segmentCount = segment.Count;
+        var array = segment.Array ?? throw new InvalidOperationException("The underlying array is null.");
+        var segmentCount = segment.Count;
 
         if ((uint)index > (uint)segmentCount)
             throw new ArgumentOutOfRangeException(nameof(index), "Index was out of range. Must be non-negative and less than or equal to the size of the collection.");
@@ -68,16 +65,14 @@ public static class ArraySegmentPolyfills
 #if !TFF_ARRAYSEGMENT_SLICE
         this
 #endif
-        in ArraySegment<T> segment, int index,
+        in ArraySegment<T> segment,
+        int index,
         int count)
     {
 #if TFF_ARRAYSEGMENT_SLICE
         return segment.Slice(index, count);
 #else
-        var array = segment.Array;
-        if (array == null)
-            throw new InvalidOperationException("The underlying array is null.");
-
+        var array = segment.Array ?? throw new InvalidOperationException("The underlying array is null.");
         int segmentCount = segment.Count;
 
         if ((uint)index > (uint)segmentCount || (uint)count > (uint)(segmentCount - index))

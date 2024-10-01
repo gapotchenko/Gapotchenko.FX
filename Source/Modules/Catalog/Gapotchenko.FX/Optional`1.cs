@@ -91,7 +91,7 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// </summary>
     /// <param name="other">A value.</param>
     /// <returns><see langword="true"/> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <see langword="false"/>.</returns>
-    public readonly bool Equals([AllowNull] T other) => OptionalEqualityComparer<T>.EqualsCore(this, other, EqualityComparer<T>.Default);
+    public readonly bool Equals(T? other) => OptionalEqualityComparer<T>.EqualsCore(this, other, EqualityComparer<T>.Default);
 
     /// <summary>
     /// Retrieves the hash code of the object returned by the <see cref="Value"/> property.
