@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
+    <PackageDescription>Provides data structures and primitives for working with intervals.</PackageDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="interval" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.Interval" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.ValueInterval" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <AnalysisMode>All</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>

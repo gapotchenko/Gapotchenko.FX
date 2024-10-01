@@ -6,6 +6,8 @@
 
 namespace Gapotchenko.FX.Threading;
 
+#pragma warning disable CA1062
+
 /// <summary>
 /// Provides extensions methods for <see cref="IAsyncLockable"/>.
 /// </summary>

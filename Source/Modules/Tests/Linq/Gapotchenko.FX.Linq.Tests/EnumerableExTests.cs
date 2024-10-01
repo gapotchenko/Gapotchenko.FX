@@ -113,7 +113,7 @@ public partial class EnumerableExTests
     {
         static void Check(string source, string value)
         {
-            int expected = source.IndexOf(value);
+            int expected = source.IndexOf(value, StringComparison.Ordinal);
             int actual = EnumerableEx.IndexOf(source, value);
             Assert.AreEqual(expected, actual);
         }

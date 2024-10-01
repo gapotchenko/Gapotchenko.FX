@@ -110,7 +110,7 @@ readonly struct AsyncConditionVariableImpl
             }
             finally
             {
-                lockable.Lock();
+                lockable.Lock(CancellationToken.None);
             }
         }
         finally
@@ -157,7 +157,7 @@ readonly struct AsyncConditionVariableImpl
             }
             finally
             {
-                lockable.Lock();
+                lockable.Lock(CancellationToken.None);
             }
         }
         finally
@@ -180,7 +180,7 @@ readonly struct AsyncConditionVariableImpl
             }
             finally
             {
-                await lockable.LockAsync().ConfigureAwait(false);
+                await lockable.LockAsync(CancellationToken.None).ConfigureAwait(false);
             }
         }
 

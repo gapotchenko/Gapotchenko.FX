@@ -8,6 +8,10 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.ValueTuple.ValueTupleEqualityComparer" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <AnalysisMode>All</AnalysisMode>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>

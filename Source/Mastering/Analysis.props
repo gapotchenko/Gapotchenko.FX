@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <!-- Language agnostic -->
-    <NoWarn>$(NoWarn),CA1510,CA1859,IDE0016,SYSLIB1054</NoWarn>
-    <WarningsAsErrors>$(WarningsAsErrors),CA2248</WarningsAsErrors>
+    <NoWarn>$(NoWarn),CA1000,CA1034,CA1028,CA1305,CA1510,CA1513,CA1711,CA1716,CA1720,CA1814,CA1815,CA1822,CA1859,CA1863,CA2214,CA2225,IDE0016,SYSLIB1054</NoWarn>
+    <WarningsAsErrors>$(WarningsAsErrors),CA1309,CA1310,CA2248</WarningsAsErrors>
 
     <!-- C# -->
     <NoWarn>$(NoWarn),CS8524</NoWarn>

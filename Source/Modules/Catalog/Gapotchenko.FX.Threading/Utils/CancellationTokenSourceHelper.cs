@@ -17,7 +17,9 @@ static class CancellationTokenSourceHelper
 #endif
     }
 
+#pragma warning disable CA1068
     public static CancellationTokenSource CreateLinked(CancellationToken cancellationToken, TimeSpan timeout)
+#pragma warning restore CA1068
     {
         if (cancellationToken.CanBeCanceled)
         {

@@ -67,7 +67,9 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
         var capacity = GetMaxCharCountCore(data.Length, options);
 
         var sb = new StringBuilder(capacity);
+#pragma warning disable CA2000
         var sw = new StringWriter(sb);
+#pragma warning restore CA2000
 
         var context = CreateEncoderContext(options);
         context.Encode(data, sw);
@@ -289,7 +291,9 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
 
         readonly int m_BufferSize;
         StringBuilder? m_Buffer;
+#pragma warning disable CA2213
         StringWriter? m_BufferWriter;
+#pragma warning restore CA2213
         int m_BufferCapacityByteCount;
 
         public override bool CanRead => false;

@@ -73,8 +73,8 @@ public readonly struct StringSpan : IEquatable<StringSpan>
     public static implicit operator StringSpan(Capture capture)
     {
         if (capture == null)
-            throw new ArgumentNullException(nameof(capture));
-
-        return new StringSpan(capture.Index, capture.Length);
+            return new(0, 0);
+        else
+            return new(capture.Index, capture.Length);
     }
 }

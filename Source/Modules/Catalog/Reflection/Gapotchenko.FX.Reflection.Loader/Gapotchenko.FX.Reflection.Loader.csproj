@@ -7,12 +7,9 @@
     <TargetFrameworks Condition=" '$(Configuration)' == 'Debug' ">$(TargetFrameworks);net6.0</TargetFrameworks>
 
     <CLSCompliant>true</CLSCompliant>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <PackageDescription>Provides primitives that can be used to automatically lookup and load assembly dependencies in dynamic scenarios.</PackageDescription>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Reflection.AssemblyAutoLoader" />
   </ItemGroup>

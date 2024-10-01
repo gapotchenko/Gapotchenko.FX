@@ -71,12 +71,12 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
     }
 
     /// <inheritdoc/>
-    public bool IsSet => DoWaitAsync().IsCompleted;
+    public bool IsSet => DoWaitAsyncDirect().IsCompleted;
 
     /// <inheritdoc/>
     public void Wait()
     {
-        DoWaitAsync().GetAwaiter().GetResult();
+        DoWaitAsyncDirect().GetAwaiter().GetResult();
     }
 
     /// <inheritdoc/>
@@ -107,7 +107,7 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
     /// <inheritdoc/>
     public Task WaitAsync()
     {
-        return DoWaitAsync();
+        return DoWaitAsyncDirect();
     }
 
     /// <inheritdoc/>
@@ -156,14 +156,14 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
             cancellationToken);
     }
 
-    Task<bool> DoWaitAsync()
+    Task<bool> DoWaitAsyncDirect()
     {
         return TaskCompletionSource.Task;
     }
 
     Task<bool> DoWaitAsync(CancellationToken cancellationToken)
     {
-        return DoWaitAsync().WaitAsync(cancellationToken);
+        return DoWaitAsyncDirect().WaitAsync(cancellationToken);
     }
 
     Task<bool> DoWaitAsync(TimeSpan timeout, CancellationToken cancellationToken)
@@ -175,7 +175,7 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
             if (cancellationToken.IsCancellationRequested)
                 return Task.FromCanceled<bool>(cancellationToken);
 
-            var task = DoWaitAsync();
+            var task = DoWaitAsyncDirect();
             if (task.IsCompleted)
                 return task;
             else

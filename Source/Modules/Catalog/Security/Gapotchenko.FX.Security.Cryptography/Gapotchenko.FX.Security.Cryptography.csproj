@@ -8,6 +8,11 @@
     <PackageTag Include="security;rc4;arc4" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <AnalysisMode>All</AnalysisMode>
+    <NoWarn>$(NoWarn),CA5358</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>

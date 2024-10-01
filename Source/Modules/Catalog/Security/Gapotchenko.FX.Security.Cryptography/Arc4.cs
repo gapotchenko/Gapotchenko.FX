@@ -17,7 +17,7 @@ public abstract class Arc4 : SymmetricAlgorithm
     /// <summary>
     /// Initializes a new instance of the <see cref="Arc4"/> class.
     /// </summary>
-    public Arc4()
+    protected Arc4()
     {
         KeySizeValue = 128;
         BlockSizeValue = BLOCK_SIZE_BITS;

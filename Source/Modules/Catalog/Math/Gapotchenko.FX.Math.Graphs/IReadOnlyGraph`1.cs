@@ -136,7 +136,9 @@ public partial interface IReadOnlyGraph<TVertex>
     /// <see langword="true"/> when the specified source vertex can reach the destination;
     /// otherwise, <see langword="false"/>.
     /// </returns>
+#pragma warning disable CA1716
     bool HasPath(TVertex from, TVertex to);
+#pragma warning restore CA1716
 
     /// <summary>
     /// <para>

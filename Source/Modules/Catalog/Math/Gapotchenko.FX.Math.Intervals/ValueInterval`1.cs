@@ -323,7 +323,10 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// Converts a specified <see cref="Interval{T}"/> instance to <see cref="ValueInterval{T}"/>.
     /// </summary>
     /// <param name="interval">The <see cref="Interval{T}"/> instance to convert.</param>
-    public static implicit operator ValueInterval<T>(Interval<T> interval) => new(interval.From, interval.To);
+    public static implicit operator ValueInterval<T>(Interval<T> interval) =>
+        interval is null ?
+            default :
+            new(interval.From, interval.To);
 
     /// <summary>
     /// Converts a specified <see cref="ValueInterval{T}"/> instance to <see cref="Interval{T}"/>.

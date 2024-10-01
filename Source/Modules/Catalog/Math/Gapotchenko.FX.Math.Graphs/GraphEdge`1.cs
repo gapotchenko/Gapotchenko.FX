@@ -78,7 +78,13 @@ public readonly struct GraphEdge<TVertex>(TVertex from, TVertex to)
     /// Converts a tuple to a <see cref="GraphEdge{TVertex}"/> instance.
     /// </summary>
     /// <param name="value">The value tuple to convert.</param>
-    public static implicit operator GraphEdge<TVertex>(Tuple<TVertex, TVertex> value) => new(value.Item1, value.Item2);
+    public static implicit operator GraphEdge<TVertex>(Tuple<TVertex, TVertex> value)
+    {
+        if (value == null)
+            return default;
+        else
+            return new(value.Item1, value.Item2);
+    }
 
     /// <summary>
     /// Converts a <see cref="GraphEdge{TVertex}"/> value to a tuple instance.

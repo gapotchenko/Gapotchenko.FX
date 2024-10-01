@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Memory;
 /// <summary>
 /// Represents a stream whose backing store is <see cref="Memory{T}"/>.
 /// </summary>
-class MemoryBufferStream : Stream, IHasMemory<byte>, IHasReadOnlyMemory<byte>
+sealed class MemoryBufferStream : Stream, IHasMemory<byte>, IHasReadOnlyMemory<byte>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="MemoryBufferStream"/> class

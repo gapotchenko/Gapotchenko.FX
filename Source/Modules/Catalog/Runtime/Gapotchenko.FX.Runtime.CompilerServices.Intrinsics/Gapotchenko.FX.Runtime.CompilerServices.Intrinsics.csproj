@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.CompilerServices.IntrinsicServices" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.CompilerServices.MachineCodeIntrinsicAttribute" />
   </ItemGroup>
 
   <ItemGroup>
-    <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.CompilerServices.IntrinsicServices" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.CompilerServices.MachineCodeIntrinsicAttribute" />
+    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
 
 </Project>

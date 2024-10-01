@@ -13,6 +13,11 @@
     <PackageTag Include="combinatorics;permutations;combinations;variations;cartesian-product" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <AnalysisMode>All</AnalysisMode>
+    <NoWarn>$(NoWarn),CA1710</NoWarn>
+  </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
     <ProjectReference Include="..\..\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />

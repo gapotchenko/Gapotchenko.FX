@@ -12,8 +12,7 @@
 
   <PropertyGroup>
     <AnalysisMode>All</AnalysisMode>
-    <WarningsAsErrors>$(WarningsAsErrors),CA1307,CA1309,CA1310</WarningsAsErrors>
-    <NoWarn>$(NoWarn),CA1305,CA1510,CA1720,CA2214</NoWarn>
+    <WarningsAsErrors>$(WarningsAsErrors),CA1307</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

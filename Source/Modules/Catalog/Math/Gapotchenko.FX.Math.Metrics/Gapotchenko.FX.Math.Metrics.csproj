@@ -5,20 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageTag Include="string;similarity;distance;levenshtein;damerau;jaro;hamming;lcs;osa" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Metrics.StringMetrics" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageTag Include="string" />
-    <PackageTag Include="similarity" />
-    <PackageTag Include="distance" />
-    <PackageTag Include="levenshtein" />
-    <PackageTag Include="damerau" />
-    <PackageTag Include="jaro" />
-    <PackageTag Include="hamming" />
-    <PackageTag Include="lcs" />
-    <PackageTag Include="osa" />
-  </ItemGroup>
+  <PropertyGroup>
+    <AnalysisMode>All</AnalysisMode>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />

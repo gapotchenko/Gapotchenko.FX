@@ -80,12 +80,26 @@ partial class TaskHelper
             }
             else
             {
+#if NET8_0_OR_GREATER
+                async Task<TResult> ExecuteAsync()
+                {
+                    await cts.CancelAsync().ConfigureAwait(false);
+
+                    if (timeoutResult.HasValue)
+                        return timeoutResult.Value;
+                    else
+                        throw new TimeoutException();
+                }
+
+                return ExecuteAsync();
+#else
                 cts.Cancel();
 
                 if (timeoutResult.HasValue)
                     return Task.FromResult(timeoutResult.Value);
                 else
                     return Task.FromException<TResult>(new TimeoutException());
+#endif
             }
         }
         else

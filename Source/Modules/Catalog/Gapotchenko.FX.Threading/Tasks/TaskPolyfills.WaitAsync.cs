@@ -15,6 +15,8 @@ using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading.Tasks;
 
+#pragma warning disable CA1062
+
 partial class TaskPolyfills
 {
     /// <summary>

@@ -108,7 +108,7 @@ partial class ExecutionContextHelper
             m_FlowState.Value = new FlowState(this, false);
         }
 
-        record FlowState(AsyncLocalModificationOperationBase Operation, bool ChangesApplied);
+        sealed record FlowState(AsyncLocalModificationOperationBase Operation, bool ChangesApplied);
 
         static readonly AsyncLocal<FlowState?> m_FlowState = new(FlowStateChanged);
 

@@ -141,12 +141,15 @@ public sealed class TextDataEncodingAlphabet
         return dictionary;
     }
 
+#pragma warning disable CA2201
     static Exception CreateSymbolClashException(char symbol) =>
+        // TODO: what more specific exception can be used here?
         new Exception(
             string.Format(
                 "Encountered a clash in data encoding alphabet for symbol '{0}' (0x{1:X}).",
                 symbol,
                 (int)symbol));
+#pragma warning restore CA2201
 
     static IEnumerable<char> EnumerateSymbolVariations(
         char symbol,

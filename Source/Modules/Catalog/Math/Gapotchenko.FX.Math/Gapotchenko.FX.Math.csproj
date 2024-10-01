@@ -8,6 +8,10 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.MathEx" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <AnalysisMode>All</AnalysisMode>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
