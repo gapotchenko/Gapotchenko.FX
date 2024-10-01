@@ -11,10 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Math.Graphs\Gapotchenko.FX.Math.Graphs.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Math.Metrics\Gapotchenko.FX.Math.Metrics.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+    <ProjectReference Include="..\..\..\Math\Gapotchenko.FX.Math.Intervals\Gapotchenko.FX.Math.Intervals.csproj" />
   </ItemGroup>
 
 </Project>

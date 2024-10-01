@@ -1,6 +1,6 @@
 ﻿# Modules
 
-The folder contains Gapotchenko.FX modules.
+The directory contains Gapotchenko.FX modules.
 The full list of modules is presented in the table below.
 
 ## Table

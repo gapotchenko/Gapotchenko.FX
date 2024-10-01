@@ -27,7 +27,7 @@
     <ProjectReference Include="..\..\Modules\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
     <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj" />
     <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
-    <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
+    <ProjectReference Include="..\..\Modules\Math\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
     <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj" />
     <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
     <ProjectReference Include="..\..\Modules\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
