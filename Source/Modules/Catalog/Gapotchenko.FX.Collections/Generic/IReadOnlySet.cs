@@ -75,7 +75,6 @@ public interface IReadOnlySet<T> : IReadOnlyCollection<T>
 
 #else
 
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 [assembly: TypeForwardedTo(typeof(IReadOnlySet<>))]

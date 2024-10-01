@@ -2,22 +2,15 @@
 
 namespace Gapotchenko.FX.Collections.Generic;
 
-sealed class DictionaryDebugView<TKey, TValue>
+sealed class DictionaryDebugView<TKey, TValue>(IDictionary<TKey, TValue> dictionary)
 {
-    public DictionaryDebugView(IDictionary<TKey, TValue> dictionary)
-    {
-        m_Dictionary = dictionary;
-    }
-
-    readonly IDictionary<TKey, TValue> m_Dictionary;
-
     [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
     public KeyValuePair<TKey, TValue>[] Items
     {
         get
         {
-            var items = new KeyValuePair<TKey, TValue>[m_Dictionary.Count];
-            m_Dictionary.CopyTo(items, 0);
+            var items = new KeyValuePair<TKey, TValue>[dictionary.Count];
+            dictionary.CopyTo(items, 0);
             return items;
         }
     }
