@@ -79,7 +79,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Numerics", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Numerics.Tests", "Modules\Tests\Gapotchenko.FX.Numerics.Tests\Gapotchenko.FX.Numerics.Tests.csproj", "{9A39605A-F280-4C5F-AAFB-7F03CDFBF7E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Reflection.Loader", "Modules\Catalog\Gapotchenko.FX.Reflection.Loader\Gapotchenko.FX.Reflection.Loader.csproj", "{D15DF10F-F35A-4011-A36C-3D12712F1ECC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Reflection.Loader", "Modules\Catalog\Reflection\Gapotchenko.FX.Reflection.Loader\Gapotchenko.FX.Reflection.Loader.csproj", "{D15DF10F-F35A-4011-A36C-3D12712F1ECC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.CompilerServices.Intrinsics", "Modules\Catalog\Runtime\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj", "{304875A0-365B-4665-9276-0E2FA64F0C91}"
 EndProject
