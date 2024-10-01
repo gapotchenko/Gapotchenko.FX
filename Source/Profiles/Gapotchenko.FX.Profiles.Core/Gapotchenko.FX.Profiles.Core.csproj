@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework></TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <NoWarn>NU5128</NoWarn>
   </PropertyGroup>
@@ -9,12 +8,13 @@
   <PropertyGroup>
     <PackageDescription>Represents the Core profile of Gapotchenko.FX.</PackageDescription>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Linq" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading" />
     <CommonlyUsedPart Include="Gapotchenko.FX.IO" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Math" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.CommandLine" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.WebBrowser" />
   </ItemGroup>
@@ -25,7 +25,6 @@
     <ProjectReference Include="..\..\Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
-    <ProjectReference Include="..\..\Modules\Catalog\Linq\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj" />
