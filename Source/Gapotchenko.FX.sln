@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX", "Modules\C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Threading", "Modules\Catalog\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj", "{413EB45F-F5C5-4432-85A7-1859C972CAC1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.Process", "Modules\Catalog\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj", "{C6404A82-9B1F-4A45-BCAD-39D83FCF84B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.Process", "Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj", "{C6404A82-9B1F-4A45-BCAD-39D83FCF84B9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Tests", "Modules\Tests\Gapotchenko.FX.Tests\Gapotchenko.FX.Tests.csproj", "{394AB9E5-2AF1-4C7A-936C-43E5DC3351C3}"
 EndProject
@@ -37,9 +37,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Harness.Cons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.IO", "Modules\Catalog\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj", "{75849171-E56A-41B4-A685-7BAB8B875C7F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.WebBrowser", "Modules\Catalog\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj", "{280EB526-4B91-4702-B9D5-45EDEDB51798}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.WebBrowser", "Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj", "{280EB526-4B91-4702-B9D5-45EDEDB51798}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.CommandLine", "Modules\Catalog\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj", "{013EF111-CDCE-4AFB-9860-66312F085861}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.CommandLine", "Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj", "{013EF111-CDCE-4AFB-9860-66312F085861}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Linq.Expressions", "Modules\Catalog\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj", "{7CF2CFC3-E676-494D-908F-5CBC139543C4}"
 EndProject
@@ -92,13 +92,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.AppModel.Inf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Console", "Modules\Catalog\Gapotchenko.FX.Console\Gapotchenko.FX.Console.csproj", "{FE72C33E-3065-416D-8431-9884422B4947}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.Process.Tests", "Modules\Tests\Gapotchenko.FX.Diagnostics.Process.Tests\Gapotchenko.FX.Diagnostics.Process.Tests.csproj", "{5D6BD327-9F56-4FCF-A14D-8B95646805FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.Process.Tests", "Modules\Tests\Diagnostics\Gapotchenko.FX.Diagnostics.Process.Tests\Gapotchenko.FX.Diagnostics.Process.Tests.csproj", "{5D6BD327-9F56-4FCF-A14D-8B95646805FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diagnostics", "Diagnostics", "{EE48EFC8-C94C-4210-897A-769BC8783C6D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Linq", "Linq", "{EE6BD3CE-24F8-42DA-B26F-6E4FB38C8EF2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.CommandLine.Tests", "Modules\Tests\Gapotchenko.FX.Diagnostics.CommandLine.Tests\Gapotchenko.FX.Diagnostics.CommandLine.Tests.csproj", "{9ABBEC51-84C6-46E3-A7C4-EA694ED3A8F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.CommandLine.Tests", "Modules\Tests\Diagnostics\Gapotchenko.FX.Diagnostics.CommandLine.Tests\Gapotchenko.FX.Diagnostics.CommandLine.Tests.csproj", "{9ABBEC51-84C6-46E3-A7C4-EA694ED3A8F1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Math", "Math", "{9BF93356-2C42-4B31-AEB1-7E394D27F500}"
 EndProject

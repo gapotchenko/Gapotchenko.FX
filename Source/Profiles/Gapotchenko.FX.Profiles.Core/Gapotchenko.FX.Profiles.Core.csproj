@@ -13,17 +13,17 @@
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Linq" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.IO" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.WebBrowser" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.CommandLine" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.IO" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.CommandLine" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.WebBrowser" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
-    <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
-    <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
-    <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Linq.Expressions\Gapotchenko.FX.Linq.Expressions.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
