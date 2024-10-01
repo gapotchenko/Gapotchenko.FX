@@ -120,9 +120,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{3F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cryptography", "Cryptography", "{C81ADA83-9C02-492E-B752-EC8E967C030C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography", "Modules\Catalog\Gapotchenko.FX.Security.Cryptography\Gapotchenko.FX.Security.Cryptography.csproj", "{A38AD358-B8AE-41F6-A859-FC3EECF6F6AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography", "Modules\Catalog\Security\Gapotchenko.FX.Security.Cryptography\Gapotchenko.FX.Security.Cryptography.csproj", "{A38AD358-B8AE-41F6-A859-FC3EECF6F6AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography.Tests", "Modules\Tests\Gapotchenko.FX.Security.Cryptography.Tests\Gapotchenko.FX.Security.Cryptography.Tests.csproj", "{CF09BAAB-7778-49F4-A8D5-123444D6CF00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Security.Cryptography.Tests", "Modules\Tests\Security\Gapotchenko.FX.Security.Cryptography.Tests\Gapotchenko.FX.Security.Cryptography.Tests.csproj", "{CF09BAAB-7778-49F4-A8D5-123444D6CF00}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Checksum", "Checksum", "{87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}"
 EndProject
@@ -245,6 +245,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Metrics", "Modules\Catalog\Math\Gapotchenko.FX.Math.Metrics\Gapotchenko.FX.Math.Metrics.csproj", "{8D597BEC-50DB-49E3-8CC0-437AA1D065DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Math.Metrics.Tests", "Modules\Tests\Math\Gapotchenko.FX.Math.Metrics.Tests\Gapotchenko.FX.Math.Metrics.Tests.csproj", "{2E16CEC2-DF07-4699-AB23-DEEF3750B82D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{BB8CFF77-C35B-4701-85F5-B947CB7ACF6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -535,7 +537,7 @@ Global
 		{EE6BD3CE-24F8-42DA-B26F-6E4FB38C8EF2} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
 		{9ABBEC51-84C6-46E3-A7C4-EA694ED3A8F1} = {51C84C28-4933-44F3-A9E5-6F0CE57DEA45}
 		{9BF93356-2C42-4B31-AEB1-7E394D27F500} = {223BAE25-5FEC-4D58-A4DB-E51D0ACEF182}
-		{97B91925-D964-4F55-AFA3-56FF2E93CE64} = {A8B2C662-FF6A-4B82-B144-7A32BBC2BE35}
+		{97B91925-D964-4F55-AFA3-56FF2E93CE64} = {BB8CFF77-C35B-4701-85F5-B947CB7ACF6C}
 		{D33CFE2E-FB3F-4B93-9CD1-8CC86A9EE077} = {D44343D4-371A-4A98-8676-E441156D2BFF}
 		{BA06591F-0688-4D24-A931-431D7E943CCD} = {D44343D4-371A-4A98-8676-E441156D2BFF}
 		{53F33EF9-71DF-4F06-8E4E-0E190B6733D1} = {5B9961CC-DF1D-4B04-AFB3-FA5A2B35D091}
@@ -607,6 +609,7 @@ Global
 		{A8B2C662-FF6A-4B82-B144-7A32BBC2BE35} = {2B63C0D4-A90F-458D-9116-83ABC34274D9}
 		{8D597BEC-50DB-49E3-8CC0-437AA1D065DD} = {E97995BC-B043-459B-9E36-1F25C57D743E}
 		{2E16CEC2-DF07-4699-AB23-DEEF3750B82D} = {E97995BC-B043-459B-9E36-1F25C57D743E}
+		{BB8CFF77-C35B-4701-85F5-B947CB7ACF6C} = {A8B2C662-FF6A-4B82-B144-7A32BBC2BE35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}

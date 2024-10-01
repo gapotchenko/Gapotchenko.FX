@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageTag Include="rc4;arc4" />
+    <PackageTag Include="security;rc4;arc4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
 
 </Project>
