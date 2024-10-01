@@ -10,6 +10,15 @@ public static class ListExtensions
 {
     /// <summary>
     /// Sorts the elements in the entire <see cref="List{T}"/>
+    /// using the default comparer
+    /// and a stable sorting algorithm.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the list.</typeparam>
+    /// <param name="list">The list.</param>
+    public static void StableSort<T>(this List<T> list) => StableSort(list, null);
+
+    /// <summary>
+    /// Sorts the elements in the entire <see cref="List{T}"/>
     /// using the specified comparer
     /// and a stable sorting algorithm.
     /// </summary>
@@ -31,15 +40,6 @@ public static class ListExtensions
         list.Clear();
         list.AddRange(sortedList);
     }
-
-    /// <summary>
-    /// Sorts the elements in the entire <see cref="List{T}"/>
-    /// using the default comparer
-    /// and a stable sorting algorithm.
-    /// </summary>
-    /// <typeparam name="T">The type of elements in the list.</typeparam>
-    /// <param name="list">The list.</param>
-    public static void StableSort<T>(this List<T> list) => StableSort(list, null);
 
     /// <summary>
     /// Clones the <see cref="List{T}"/>.

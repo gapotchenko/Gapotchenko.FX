@@ -11,9 +11,6 @@ namespace Gapotchenko.FX.Math.Graphs;
 
 partial class Graph<TVertex>
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    AssociativeArray<TVertex, AdjacencyRow?> m_AdjacencyList;
-
     /// <summary>
     /// Gets the graph adjacency list.
     /// </summary>
@@ -24,7 +21,7 @@ partial class Graph<TVertex>
     protected IDictionary<TVertex, AdjacencyRow?> AdjacencyList => m_AdjacencyList;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    AssociativeArray<TVertex, AdjacencyRow?>? m_ReverseAdjacencyList;
+    AssociativeArray<TVertex, AdjacencyRow?> m_AdjacencyList;
 
     /// <summary>
     /// Gets a value indicating whether a reverse adjacency list for the current graph is created.
@@ -42,12 +39,15 @@ partial class Graph<TVertex>
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     AssociativeArray<TVertex, AdjacencyRow?> ReverseAdjacencyListCore =>
-        m_ReverseAdjacencyList ??= CreateReverseAdjacencyList();
+        m_ReverseAdjacencyList ??= CreateReverseAdjacencyList(m_AdjacencyList);
 
-    AssociativeArray<TVertex, AdjacencyRow?> CreateReverseAdjacencyList()
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    AssociativeArray<TVertex, AdjacencyRow?>? m_ReverseAdjacencyList;
+
+    static AssociativeArray<TVertex, AdjacencyRow?> CreateReverseAdjacencyList(AssociativeArray<TVertex, AdjacencyRow?> adjList)
     {
-        var adjList = m_AdjacencyList;
-        var revAdjList = new AssociativeArray<TVertex, AdjacencyRow?>(adjList.Comparer);
+        var comparer = adjList.Comparer;
+        var revAdjList = new AssociativeArray<TVertex, AdjacencyRow?>(comparer);
 
         foreach (var (from, adjRow) in adjList)
         {
@@ -59,12 +59,12 @@ partial class Graph<TVertex>
                 {
                     if (!revAdjList.TryGetValue(to, out var revAdjRow))
                     {
-                        revAdjRow = NewAdjacencyRow();
+                        revAdjRow = new(comparer);
                         revAdjList.Add(to, revAdjRow);
                     }
                     else if (revAdjRow == null)
                     {
-                        revAdjRow = NewAdjacencyRow();
+                        revAdjRow = new(comparer);
                         revAdjList[to] = revAdjRow;
                     }
 

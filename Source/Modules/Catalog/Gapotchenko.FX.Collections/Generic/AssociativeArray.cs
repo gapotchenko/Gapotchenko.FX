@@ -20,11 +20,12 @@ namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
 /// <para>
-/// Represents a collection of keys and values.
+/// Represents a collection of keys and values covering the full space of <typeparamref name="TKey"/> type.
 /// </para>
 /// <para>
+/// As a practical benefit of the full <typeparamref name="TKey"/> space coverage,
 /// <see cref="AssociativeArray{TKey, TValue}"/> supports keys with <see langword="null"/> values
-/// in contrast to <see cref = "Dictionary{TKey, TValue}" />.
+/// in contrast to <see cref = "Dictionary{TKey, TValue}" /> which does not support such keys.
 /// </para>
 /// </summary>
 /// <typeparam name="TKey">The type of the keys in the associative array.</typeparam>
