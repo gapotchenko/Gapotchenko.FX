@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
-    <PackageDescription>Standards-compliant implementation of data encoding algorithms belonging to the Base64 family: Base64, Base64 URL.</PackageDescription>
+    <PackageDescription>Provides Base64 data encoding algorithms: Base64, Base64 URL.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

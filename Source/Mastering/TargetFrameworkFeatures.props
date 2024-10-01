@@ -5,7 +5,7 @@
   <!-- ================================================================== -->
 
   <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">
-    <MasteringFrameworkFeature Include="TFF_APPDOMAIN;TFF_CER;TFF_HOST_PROTECTION;TFF_REMOTING;TFF_TRANSACTIONS;TFF_THREAD_ABORT" />
+    <MasteringFrameworkFeature Include="TFF_APPDOMAIN;TFF_CER;TFF_HOST_PROTECTION;TFF_REMOTING;TFF_TRANSACTIONS;TFF_THREAD_ABORT;TFF_WIN32_REGISTRY" />
   </ItemGroup>
 
   <!-- .NET Framework 4.5 -->

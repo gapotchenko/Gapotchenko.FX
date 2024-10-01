@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
-    <PackageDescription>Standards-compliant implementation of data encoding algorithms belonging to the Base24 family.</PackageDescription>
+    <PackageDescription>Provides Base24 data encoding algorithms.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

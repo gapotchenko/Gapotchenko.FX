@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
-    <PackageDescription>Standards-compliant implementation of data encoding algorithms belonging to the Base16 family.</PackageDescription>
+    <PackageDescription>Provides Base16 data encoding algorithms.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>
