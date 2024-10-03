@@ -85,7 +85,7 @@ public abstract class IAsyncConditionVariableTests
 
         var cv = CreateAsyncConditionVariable();
         var lockable = GetAsyncLockable(cv);
-        using var lockScope = lockable.LockScope();
+        using var lockScope = lockable.EnterScope();
 
         foreach (var waitFunc in EnumerateWaitFunctions(cv))
         {
@@ -103,7 +103,7 @@ public abstract class IAsyncConditionVariableTests
 
         var cv = CreateAsyncConditionVariable();
         var lockable = GetAsyncLockable(cv);
-        using var lockScope = await lockable.LockScopeAsync();
+        using var lockScope = await lockable.EnterScopeAsync();
 
         foreach (var waitFunc in EnumerateWaitAsyncFunctions(cv))
         {
@@ -122,7 +122,7 @@ public abstract class IAsyncConditionVariableTests
         var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
 
         var cv = CreateAsyncConditionVariable();
-        using var lockScope = GetAsyncLockable(cv).LockScope();
+        using var lockScope = GetAsyncLockable(cv).EnterScope();
 
         foreach (var waitFunc in EnumerateWaitFunctions(cv))
         {
@@ -139,7 +139,7 @@ public abstract class IAsyncConditionVariableTests
         var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
 
         var cv = CreateAsyncConditionVariable();
-        using var lockScope = await GetAsyncLockable(cv).LockScopeAsync();
+        using var lockScope = await GetAsyncLockable(cv).EnterScopeAsync();
 
         foreach (var waitFunc in EnumerateWaitAsyncFunctions(cv))
         {
@@ -154,7 +154,7 @@ public abstract class IAsyncConditionVariableTests
     public void IAsyncConditionVariable_Wait_DoesNotCompleteWithoutNotify()
     {
         var cv = CreateAsyncConditionVariable();
-        using var lockScope = GetAsyncLockable(cv).LockScope();
+        using var lockScope = GetAsyncLockable(cv).EnterScope();
 
         foreach (var waitFunc in EnumerateWaitFunctions(cv))
             Assert.IsFalse(waitFunc(IAsyncConditionVariable_NegativeTimeout));
@@ -164,7 +164,7 @@ public abstract class IAsyncConditionVariableTests
     public async Task IAsyncConditionVariable_WaitAsync_DoesNotCompleteWithoutNotify()
     {
         var cv = CreateAsyncConditionVariable();
-        using var lockScope = await GetAsyncLockable(cv).LockScopeAsync();
+        using var lockScope = await GetAsyncLockable(cv).EnterScopeAsync();
 
         foreach (var waitFunc in EnumerateWaitAsyncFunctions(cv))
             Assert.IsFalse(await waitFunc(IAsyncConditionVariable_NegativeTimeout));
@@ -197,7 +197,7 @@ public abstract class IAsyncConditionVariableTests
         Func<TimeSpan, bool> waitFunc)
     {
         var lockable = GetAsyncLockable(cv);
-        using var lockScope = lockable.LockScope();
+        using var lockScope = lockable.EnterScope();
 
         var timeout = IAsyncConditionVariable_PositiveTimeout;
 
@@ -205,7 +205,7 @@ public abstract class IAsyncConditionVariableTests
 
         async Task NotifyTask()
         {
-            using (await lockable.LockScopeAsync())
+            using (await lockable.EnterScopeAsync())
                 cv.Notify();
         }
 
@@ -222,7 +222,7 @@ public abstract class IAsyncConditionVariableTests
 
         async Task NotifyAllTask()
         {
-            using (await lockable.LockScopeAsync())
+            using (await lockable.EnterScopeAsync())
                 cv.NotifyAll();
         }
 
@@ -240,7 +240,7 @@ public abstract class IAsyncConditionVariableTests
         Func<TimeSpan, Task<bool>> waitFunc)
     {
         var lockable = GetAsyncLockable(cv);
-        using var lockScope = await lockable.LockScopeAsync();
+        using var lockScope = await lockable.EnterScopeAsync();
 
         var timeout = IAsyncConditionVariable_PositiveTimeout;
 
@@ -248,7 +248,7 @@ public abstract class IAsyncConditionVariableTests
 
         async Task NotifyTask()
         {
-            using (await lockable.LockScopeAsync())
+            using (await lockable.EnterScopeAsync())
                 cv.Notify();
         }
 
@@ -265,7 +265,7 @@ public abstract class IAsyncConditionVariableTests
 
         async Task NotifyAllTask()
         {
-            using (await lockable.LockScopeAsync())
+            using (await lockable.EnterScopeAsync())
                 cv.NotifyAll();
         }
 
@@ -310,7 +310,7 @@ public abstract class IAsyncConditionVariableTests
 
         bool WaitTask(TimeSpan timeout, AsyncAutoResetEvent lockAcquiredEvent)
         {
-            using (lockable.LockScope())
+            using (lockable.EnterScope())
             {
                 lockAcquiredEvent.Set();
                 return waitFunc(timeout);
@@ -331,7 +331,7 @@ public abstract class IAsyncConditionVariableTests
 
         async Task NotifyTask()
         {
-            using (await lockable.LockScopeAsync())
+            using (await lockable.EnterScopeAsync())
                 cv.Notify();
         }
 
@@ -357,7 +357,7 @@ public abstract class IAsyncConditionVariableTests
 
         async Task<bool> WaitTask(TimeSpan timeout, AsyncAutoResetEvent lockAcquiredEvent)
         {
-            using (await lockable.LockScopeAsync())
+            using (await lockable.EnterScopeAsync())
             {
                 lockAcquiredEvent.Set();
                 return await waitFunc(timeout);
@@ -378,7 +378,7 @@ public abstract class IAsyncConditionVariableTests
 
         async Task NotifyTask()
         {
-            using (await lockable.LockScopeAsync())
+            using (await lockable.EnterScopeAsync())
                 cv.Notify();
         }
 
@@ -424,7 +424,7 @@ public abstract class IAsyncConditionVariableTests
 
         bool WaitTask(TimeSpan timeout, AsyncAutoResetEvent lockAcquiredEvent)
         {
-            using (lockable.LockScope())
+            using (lockable.EnterScope())
             {
                 lockAcquiredEvent.Set();
                 return waitFunc(timeout);
@@ -444,7 +444,7 @@ public abstract class IAsyncConditionVariableTests
 
         async Task NotifyTask()
         {
-            using (await lockable.LockScopeAsync())
+            using (await lockable.EnterScopeAsync())
                 cv.NotifyAll();
         }
 
@@ -470,7 +470,7 @@ public abstract class IAsyncConditionVariableTests
 
         async Task<bool> WaitTask(TimeSpan timeout, AsyncAutoResetEvent lockAcquiredEvent)
         {
-            using (await lockable.LockScopeAsync())
+            using (await lockable.EnterScopeAsync())
             {
                 lockAcquiredEvent.Set();
                 return await waitFunc(timeout);
@@ -490,7 +490,7 @@ public abstract class IAsyncConditionVariableTests
 
         async Task NotifyTask()
         {
-            using (await lockable.LockScopeAsync())
+            using (await lockable.EnterScopeAsync())
                 cv.NotifyAll();
         }
 

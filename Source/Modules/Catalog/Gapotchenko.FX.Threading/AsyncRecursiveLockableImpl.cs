@@ -27,15 +27,15 @@ readonly struct AsyncRecursiveLockableImpl<TLockable> : IAsyncRecursiveLockable
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly AsyncRecursionTracker m_RecursionTracker = new();
 
-    public void Lock(CancellationToken cancellationToken)
+    public void Enter(CancellationToken cancellationToken)
     {
         if (!m_RecursionTracker.IsEntered)
-            m_Lockable.Lock(cancellationToken);
+            m_Lockable.Enter(cancellationToken);
         m_RecursionTracker.Enter();
     }
 
     /// <inheritdoc/>
-    public Task LockAsync(CancellationToken cancellationToken)
+    public Task EnterAsync(CancellationToken cancellationToken)
     {
         if (!m_RecursionTracker.IsEntered)
         {
@@ -46,7 +46,7 @@ readonly struct AsyncRecursiveLockableImpl<TLockable> : IAsyncRecursiveLockable
             {
                 using (asyncLocalChanges)
                 {
-                    await lockable.LockAsync(cancellationToken).ConfigureAwait(false);
+                    await lockable.EnterAsync(cancellationToken).ConfigureAwait(false);
                     asyncLocalChanges.Commit();
                 }
             }
@@ -61,41 +61,41 @@ readonly struct AsyncRecursiveLockableImpl<TLockable> : IAsyncRecursiveLockable
         }
     }
 
-    public bool TryLock() => TryLock(0, CancellationToken.None);
+    public bool TryEnter() => TryEnter(0, CancellationToken.None);
 
-    public bool TryLock(TimeSpan timeout, CancellationToken cancellationToken)
+    public bool TryEnter(TimeSpan timeout, CancellationToken cancellationToken)
     {
         var lockable = m_Lockable;
-        return TryLockCore(() => lockable.TryLock(timeout, cancellationToken));
+        return TryLockCore(() => lockable.TryEnter(timeout, cancellationToken));
     }
 
-    public bool TryLock(int millisecondsTimeout, CancellationToken cancellationToken)
+    public bool TryEnter(int millisecondsTimeout, CancellationToken cancellationToken)
     {
         var lockable = m_Lockable;
-        return TryLockCore(() => lockable.TryLock(millisecondsTimeout, cancellationToken));
+        return TryLockCore(() => lockable.TryEnter(millisecondsTimeout, cancellationToken));
     }
 
-    public Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken)
+    public Task<bool> TryEnterAsync(TimeSpan timeout, CancellationToken cancellationToken)
     {
         var lockable = m_Lockable;
-        return TryLockAsyncCore(() => lockable.TryLockAsync(timeout, cancellationToken));
+        return TryLockAsyncCore(() => lockable.TryEnterAsync(timeout, cancellationToken));
     }
 
-    public Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken)
+    public Task<bool> TryEnterAsync(int millisecondsTimeout, CancellationToken cancellationToken)
     {
         var lockable = m_Lockable;
-        return TryLockAsyncCore(() => lockable.TryLockAsync(millisecondsTimeout, cancellationToken));
+        return TryLockAsyncCore(() => lockable.TryEnterAsync(millisecondsTimeout, cancellationToken));
     }
 
-    public void Unlock()
+    public void Exit()
     {
         if (m_RecursionTracker.Leave())
-            m_Lockable.Unlock();
+            m_Lockable.Exit();
     }
 
-    public bool IsLocked => m_Lockable.IsLocked;
+    public bool IsEntered => m_Lockable.IsEntered;
 
-    public bool IsHeldByCurrentTask => m_RecursionTracker.IsEntered;
+    public bool LockIsHeldByCurrentTask => m_RecursionTracker.IsEntered;
 
     bool IAsyncLockable.IsRecursive => true;
 

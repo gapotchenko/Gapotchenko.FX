@@ -216,7 +216,7 @@ class Program
         var e = new AsyncManualResetEvent(true);
         Console.WriteLine(await e.WaitAsync(0));
 
-        using var scope = await AsyncMonitor.For(e).LockScopeAsync();
+        using var scope = await AsyncMonitor.For(e).EnterScopeAsync();
 
         return;
 
@@ -226,7 +226,7 @@ class Program
         var sw = Stopwatch.StartNew();
         for (ulong i = 0; ; ++i)
         {
-            using var d = await mutex.LockScopeAsync();
+            using var d = await mutex.EnterScopeAsync();
 
             //Console.WriteLine("Iteration: {0}", i);
 
@@ -255,8 +255,8 @@ class Program
             }
         }
 
-        if (await mutex.TryLockAsync(0))
-            mutex.Unlock();
+        if (await mutex.TryEnterAsync(0))
+            mutex.Exit();
 
         //var t1 = VerifyNesting(1, mutex, 1000000);
         //var t2 = VerifyNesting(2, mutex, 1000000);
@@ -292,7 +292,7 @@ class Program
 
         //await VerifyNesting(mutex, 1);
 
-        using (await mutex.LockScopeAsync())
+        using (await mutex.EnterScopeAsync())
         {
             //using (await mutex.LockScopeAsync())
             //{
@@ -319,19 +319,19 @@ class Program
         //if (!wasCanceled)
         //    throw new InvalidOperationException("F6");
 
-        using (var scope = await lockable.TryLockScopeAsync(0))
+        using (var scope = await lockable.TryEnterScopeAsync(0))
         {
             //await lockable.LockAsync();
 
-            if (!lockable.IsLocked)
+            if (!lockable.IsEntered)
                 throw new InvalidOperationException("F1");
             Console.WriteLine("Entered #{0}", id);
 
             for (int i = 0; i < recursionDepth; ++i)
             {
-                if (!await lockable.TryLockAsync(0))
+                if (!await lockable.TryEnterAsync(0))
                     throw new InvalidOperationException($"F2.{i}");
-                if (!lockable.IsLocked)
+                if (!lockable.IsEntered)
                     throw new InvalidOperationException($"F3.{i}");
             }
 
@@ -339,8 +339,8 @@ class Program
 
             for (int i = 0; i < recursionDepth; ++i)
             {
-                lockable.Unlock();
-                if (!lockable.IsLocked)
+                lockable.Exit();
+                if (!lockable.IsEntered)
                     throw new InvalidOperationException($"F4.{i}");
             }
 

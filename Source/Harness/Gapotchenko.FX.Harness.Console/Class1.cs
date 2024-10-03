@@ -13,11 +13,12 @@ static class Class1
 {
     static async Task<int> RunAsync()
     {
-        var mutex = new AsyncMutex();
-        using (await mutex.LockScopeAsync())
+        var mutex = new AsyncRecursiveMutex();
+        using (var scope = await mutex.TryEnterScopeAsync(10))
         {
             await Console.Out.WriteLineAsync("123");
         }
+
         return 10;
     }
 }

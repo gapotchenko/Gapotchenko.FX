@@ -18,16 +18,16 @@ public readonly struct AsyncLockableScope : IDisposable
     }
 
     /// <summary>
-    /// Gets a value indicating whether this scope holds a lock on the synchronization primitive.
+    /// Gets a value indicating whether the scope holds a lock on the synchronization primitive.
     /// </summary>
     public bool HasLock => m_Lockable != null;
 
     /// <summary>
-    /// Unlocks the synchronization primitive if this scope holds a lock on it.
+    /// Unlocks the synchronization primitive if the scope holds a lock on it.
     /// </summary>
     public void Dispose()
     {
-        m_Lockable?.Unlock();
+        m_Lockable?.Exit();
     }
 
     readonly IAsyncLockable? m_Lockable;

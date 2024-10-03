@@ -15,34 +15,34 @@ readonly struct AsyncMutexImpl : IAsyncMutex
     {
     }
 
-    public void Lock(CancellationToken cancellationToken)
+    public void Enter(CancellationToken cancellationToken)
     {
         m_Semaphore.Wait(cancellationToken);
     }
 
-    public bool TryLock() => TryLock(0, CancellationToken.None);
+    public bool TryEnter() => TryEnter(0, CancellationToken.None);
 
-    public bool TryLock(TimeSpan timeout, CancellationToken cancellationToken)
+    public bool TryEnter(TimeSpan timeout, CancellationToken cancellationToken)
     {
         return m_Semaphore.Wait(timeout, cancellationToken);
     }
 
-    public bool TryLock(int millisecondsTimeout, CancellationToken cancellationToken)
+    public bool TryEnter(int millisecondsTimeout, CancellationToken cancellationToken)
     {
         return m_Semaphore.Wait(millisecondsTimeout, cancellationToken);
     }
 
-    public Task LockAsync(CancellationToken cancellationToken)
+    public Task EnterAsync(CancellationToken cancellationToken)
     {
         return m_Semaphore.WaitAsync(cancellationToken);
     }
 
-    public Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken)
+    public Task<bool> TryEnterAsync(TimeSpan timeout, CancellationToken cancellationToken)
     {
         return m_Semaphore.WaitAsync(timeout, cancellationToken);
     }
 
-    public Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken)
+    public Task<bool> TryEnterAsync(int millisecondsTimeout, CancellationToken cancellationToken)
     {
         return m_Semaphore.WaitAsync(millisecondsTimeout, cancellationToken);
     }
@@ -51,7 +51,7 @@ readonly struct AsyncMutexImpl : IAsyncMutex
     /// Unlocks the mutex.
     /// </summary>
     /// <exception cref="SynchronizationLockException">The mutex is being unlocked without being locked.</exception>
-    public void Unlock()
+    public void Exit()
     {
         try
         {
@@ -63,7 +63,7 @@ readonly struct AsyncMutexImpl : IAsyncMutex
         }
     }
 
-    public readonly bool IsLocked => m_Semaphore.CurrentCount != 1;
+    public readonly bool IsEntered => m_Semaphore.CurrentCount != 1;
 
     bool IAsyncLockable.IsRecursive => false;
 }

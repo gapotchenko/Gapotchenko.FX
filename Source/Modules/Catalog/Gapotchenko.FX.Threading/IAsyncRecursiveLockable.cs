@@ -13,10 +13,10 @@ namespace Gapotchenko.FX.Threading;
 public interface IAsyncRecursiveLockable : IAsyncLockable
 {
     /// <summary>
-    /// Gets a value that indicates whether the lock is held by the current task.
+    /// Gets a value indicating whether the lock is held by the current task.
     /// </summary>
     /// <value>
     /// <see langword="true"/> if the current task holds the lock; otherwise, <see langword="false"/>.
     /// </value>
-    bool IsHeldByCurrentTask { get; }
+    bool LockIsHeldByCurrentTask { get; }
 }

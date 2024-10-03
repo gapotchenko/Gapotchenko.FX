@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Threading;
 #pragma warning disable CA1062
 
 /// <summary>
-/// Provides extensions methods for <see cref="IAsyncLockable"/>.
+/// Provides extension methods for <see cref="IAsyncLockable"/>.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class AsyncLockableExtensions
@@ -22,14 +22,33 @@ public static class AsyncLockableExtensions
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A scope that can be disposed to unlock the synchronization primitive.</returns>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public static AsyncLockableScope LockScope(this IAsyncLockable lockable, CancellationToken cancellationToken = default)
+    public static AsyncLockableScope EnterScope(this IAsyncLockable lockable, CancellationToken cancellationToken = default)
     {
         if (lockable is null)
             throw new ArgumentNullException(nameof(lockable));
 
-        lockable.Lock(cancellationToken);
+        lockable.Enter(cancellationToken);
         return new AsyncLockableScope(lockable);
     }
+
+    /// <summary>
+    /// Asynchronously waits to lock the synchronization primitive,
+    /// and returns a disposable scope that can be disposed to unlock it.
+    /// </summary>
+    /// <param name="lockable">The lockable synchronization primitive.</param>
+    /// <returns>
+    /// A task that will complete when the synchronization primitive has been locked with a result of the scope that can be disposed to unlock the synchronization primitive.
+    /// </returns>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    public static Task<AsyncLockableScope> EnterScopeAsync(this IAsyncLockable lockable, CancellationToken cancellationToken = default) =>
+        (lockable ?? throw new ArgumentNullException(nameof(lockable)))
+        .EnterAsync(cancellationToken)
+        .ContinueWith(
+            _ => new AsyncLockableScope(lockable),
+            cancellationToken,
+            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.Default);
 
     /// <summary>
     /// Tries to lock the synchronization primitive and
@@ -40,7 +59,7 @@ public static class AsyncLockableExtensions
     /// A scope that can be disposed to unlock the synchronization primitive.
     /// <see cref="AsyncLockableScope.HasLock"/> property indicates whether the current thread successfully locked the synchronization primitive.
     /// </returns>
-    public static AsyncLockableScope TryLockScope(this IAsyncLockable lockable) => TryLockScope(lockable, 0);
+    public static AsyncLockableScope TryEnterScope(this IAsyncLockable lockable) => TryEnterScope(lockable, 0);
 
     /// <summary>
     /// Blocks the current thread until it can lock the synchronization primitive,
@@ -65,8 +84,8 @@ public static class AsyncLockableExtensions
     /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public static AsyncLockableScope TryLockScope(this IAsyncLockable lockable, TimeSpan timeout, CancellationToken cancellationToken = default) =>
-        new(lockable.TryLock(timeout, cancellationToken) ? lockable : null);
+    public static AsyncLockableScope TryEnterScope(this IAsyncLockable lockable, TimeSpan timeout, CancellationToken cancellationToken = default) =>
+        new(lockable.TryEnter(timeout, cancellationToken) ? lockable : null);
 
     /// <summary>
     /// Blocks the current thread until it can lock the synchronization primitive,
@@ -91,27 +110,8 @@ public static class AsyncLockableExtensions
     /// <paramref name="millisecondsTimeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public static AsyncLockableScope TryLockScope(this IAsyncLockable lockable, int millisecondsTimeout, CancellationToken cancellationToken = default) =>
-        new(lockable.TryLock(millisecondsTimeout, cancellationToken) ? lockable : null);
-
-    /// <summary>
-    /// Asynchronously waits to lock the synchronization primitive,
-    /// and returns a disposable scope that can be disposed to unlock it.
-    /// </summary>
-    /// <param name="lockable">The lockable synchronization primitive.</param>
-    /// <returns>
-    /// A task that will complete when the synchronization primitive has been locked with a result of the scope that can be disposed to unlock the synchronization primitive.
-    /// </returns>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public static Task<AsyncLockableScope> LockScopeAsync(this IAsyncLockable lockable, CancellationToken cancellationToken = default) =>
-        (lockable ?? throw new ArgumentNullException(nameof(lockable)))
-        .LockAsync(cancellationToken)
-        .ContinueWith(
-            _ => new AsyncLockableScope(lockable),
-            cancellationToken,
-            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
-            TaskScheduler.Default);
+    public static AsyncLockableScope TryEnterScope(this IAsyncLockable lockable, int millisecondsTimeout, CancellationToken cancellationToken = default) =>
+        new(lockable.TryEnter(millisecondsTimeout, cancellationToken) ? lockable : null);
 
     /// <summary>
     /// Asynchronously waits to lock the synchronization primitive,
@@ -136,10 +136,10 @@ public static class AsyncLockableExtensions
     /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public static Task<AsyncLockableScope> TryLockScopeAsync(this IAsyncLockable lockable, TimeSpan timeout, CancellationToken cancellationToken = default) =>
-        TryLockScopeAsyncCore(
+    public static Task<AsyncLockableScope> TryEnterScopeAsync(this IAsyncLockable lockable, TimeSpan timeout, CancellationToken cancellationToken = default) =>
+        TryEnterScopeAsyncCore(
             lockable ?? throw new ArgumentNullException(nameof(lockable)),
-            lockable.TryLockAsync(timeout, cancellationToken),
+            lockable.TryEnterAsync(timeout, cancellationToken),
             cancellationToken);
 
     /// <summary>
@@ -165,13 +165,13 @@ public static class AsyncLockableExtensions
     /// <paramref name="millisecondsTimeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    public static Task<AsyncLockableScope> TryLockScopeAsync(this IAsyncLockable lockable, int millisecondsTimeout, CancellationToken cancellationToken = default) =>
-        TryLockScopeAsyncCore(
+    public static Task<AsyncLockableScope> TryEnterScopeAsync(this IAsyncLockable lockable, int millisecondsTimeout, CancellationToken cancellationToken = default) =>
+        TryEnterScopeAsyncCore(
             lockable ?? throw new ArgumentNullException(nameof(lockable)),
-            lockable.TryLockAsync(millisecondsTimeout, cancellationToken),
+            lockable.TryEnterAsync(millisecondsTimeout, cancellationToken),
             cancellationToken);
 
-    static Task<AsyncLockableScope> TryLockScopeAsyncCore(IAsyncLockable lockable, Task<bool> task, CancellationToken cancellationToken) =>
+    static Task<AsyncLockableScope> TryEnterScopeAsyncCore(IAsyncLockable lockable, Task<bool> task, CancellationToken cancellationToken) =>
         task.ContinueWith(
             task => new AsyncLockableScope(task.Result ? lockable : null),
             cancellationToken,

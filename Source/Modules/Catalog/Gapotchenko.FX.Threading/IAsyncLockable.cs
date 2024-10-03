@@ -13,58 +13,63 @@ namespace Gapotchenko.FX.Threading;
 public interface IAsyncLockable
 {
     /// <summary>
-    /// Blocks the current thread until it can lock the synchronization primitive.
+    /// Enters the lock, waiting if necessary until the lock can be entered.
     /// </summary>
+    /// <remarks>
+    /// When the method returns, the current task is the only task that holds the lock.
+    /// If the lock can't be entered immediately, the method waits until the lock can be entered.
+    /// </remarks>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    void Lock(CancellationToken cancellationToken = default);
+    void Enter(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Asynchronously waits to lock the synchronization primitive.
+    /// Asynchronously enters the lock, waiting if necessary until the lock can be entered.
     /// </summary>
+    /// <remarks><inheritdoc cref="Enter(CancellationToken)"/></remarks>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
-    /// A task that will complete when the synchronization primitive has been locked.
+    /// A task that will complete when the lock is entered.
     /// </returns>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    Task LockAsync(CancellationToken cancellationToken = default);
+    Task EnterAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Tries to lock the synchronization primitive.
+    /// Tries to enter the lock without waiting.
     /// </summary>
+    /// <remarks>
+    /// When the method returns <see langword="true"/>, the current task is the only task that holds the lock.
+    /// If the lock can't be entered immediately, the method returns <see langword="false"/> without waiting for the lock.
+    /// </remarks>
     /// <returns>
-    /// <see langword="true"/> if the current thread successfully locked the synchronization primitive,
-    /// otherwise, <see langword="false"/>.
+    /// <see langword="true"/> if the lock was entered by the current task; otherwise, <see langword="false"/>.
     /// </returns>
-    bool TryLock();
+    bool TryEnter();
 
     /// <summary>
-    /// Blocks the current thread until it can lock the synchronization primitive,
-    /// using a <see cref="TimeSpan"/> that specifies the timeout.
+    /// Tries to enter the lock, waiting if necessary until the lock can be entered or until the specified timeout expires.
     /// </summary>
+    /// <remarks><inheritdoc cref="TryEnter()"/></remarks>
     /// <param name="timeout">
-    /// A <see cref="TimeSpan"/> that represents the number of milliseconds to wait,
-    /// a <see cref="TimeSpan"/> that represents <c>-1</c> milliseconds to wait indefinitely,
-    /// or a <see cref="TimeSpan"/> that represents <c>0</c> milliseconds to try to lock the synchronization primitive and return immediately.
+    /// A <see cref="TimeSpan"/> that represents the number of milliseconds to wait until the lock can be entered.
+    /// Specify a value that represents <see cref="Timeout.Infinite"/> (<c>-1</c>) milliseconds to wait indefinitely,
+    /// or a value that represents <c>0</c> milliseconds to not wait.
     /// </param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
-    /// <see langword="true"/> if the current thread successfully locked the synchronization primitive,
-    /// otherwise, <see langword="false"/>.
+    /// <see langword="true"/> if the lock was entered by the current task; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="timeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
-    /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
+    /// <paramref name="timeout"/>, after its conversion to an integer millisecond value, represents a value that is less
+    /// than <c>-1</c> milliseconds or greater than <see cref="int.MaxValue"/> milliseconds.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    bool TryLock(TimeSpan timeout, CancellationToken cancellationToken = default);
+    bool TryEnter(TimeSpan timeout, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Blocks the current thread until it can lock the synchronization primitive,
-    /// using a 32-bit signed integer that specifies the timeout in milliseconds.
+    /// Tries to enter the lock, waiting if necessary for the specified number of milliseconds until the lock can be entered.
     /// </summary>
+    /// <remarks><inheritdoc cref="TryEnter(TimeSpan, CancellationToken)"/></remarks>
     /// <param name="millisecondsTimeout">
     /// The number of milliseconds to wait,
     /// <see cref="Timeout.Infinite"/> which has the value of <c>-1</c> to wait indefinitely,
@@ -72,74 +77,52 @@ public interface IAsyncLockable
     /// </param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
-    /// <see langword="true"/> if the current thread successfully locked the synchronization primitive,
-    /// otherwise, <see langword="false"/>.
+    /// <see langword="true"/> if the lock was entered by the current task; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="millisecondsTimeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
-    /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="millisecondsTimeout"/> is greater than <see cref="int.MaxValue"/>.
+    /// <paramref name="millisecondsTimeout"/> is less than <c>-1</c>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    bool TryLock(int millisecondsTimeout, CancellationToken cancellationToken = default);
+    bool TryEnter(int millisecondsTimeout, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Asynchronously waits to lock the synchronization primitive,
-    /// using a <see cref="TimeSpan"/> to measure the time interval.
+    /// Asynchronously tries to enter the lock, waiting if necessary until the lock can be entered or until the specified timeout expires.
     /// </summary>
-    /// <param name="timeout">
-    /// A <see cref="TimeSpan"/> that represents the number of milliseconds to wait,
-    /// a <see cref="TimeSpan"/> that represents <c>-1</c> milliseconds to wait indefinitely,
-    /// or a <see cref="TimeSpan"/> that represents <c>0</c> milliseconds to try to lock the synchronization primitive and return immediately.
-    /// </param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <remarks><inheritdoc cref="TryEnter(TimeSpan, CancellationToken)"/></remarks>
     /// <returns>
-    /// A task that will complete with a result of <see langword="true"/> if the current thread successfully locked the synchronization primitive,
-    /// otherwise with a result of <see langword="false"/>.
+    /// A task that will complete with a result of <see langword="true"/> if the lock was entered by the current task;
+    /// otherwise, the returned task will complete with a result of <see langword="false"/>.
     /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="timeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
-    /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
-    /// </exception>
-    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="TryEnter(TimeSpan, CancellationToken)"/>
+    Task<bool> TryEnterAsync(TimeSpan timeout, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Asynchronously waits to lock the synchronization primitive,
-    /// using a 32-bit signed integer to measure the time interval.
+    /// Asynchronously tries to enter the lock, waiting if necessary for the specified number of milliseconds until the lock can be entered.
     /// </summary>
-    /// <param name="millisecondsTimeout">
-    /// The number of milliseconds to wait,
-    /// <see cref="Timeout.Infinite"/> which has the value of <c>-1</c> to wait indefinitely,
-    /// or <c>0</c> to try to lock the synchronization primitive and return immediately.
-    /// </param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <remarks><inheritdoc cref="TryEnter(int, CancellationToken)"/></remarks>
     /// <returns>
-    /// A task that will complete with a result of <see langword="true"/> if the current thread successfully locked the synchronization primitive,
-    /// otherwise with a result of <see langword="false"/>.
+    /// A task that will complete with a result of <see langword="true"/> if the lock was entered by the current task;
+    /// otherwise, the returned task will complete with a result of <see langword="false"/>.
     /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="millisecondsTimeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
-    /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="millisecondsTimeout"/> is greater than <see cref="Int32.MaxValue"/>.
-    /// </exception>
-    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
-    Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="TryEnter(int, CancellationToken)"/>
+    Task<bool> TryEnterAsync(int millisecondsTimeout, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Unlocks the synchronization primitive.
+    /// Exits the lock.
     /// </summary>
-    /// <exception cref="SynchronizationLockException">The thread synchronization primitive is being unlocked without being locked.</exception>
-    void Unlock();
+    /// <remarks>
+    /// If the current task holds the lock multiple times, such as recursively, the lock is exited only once.
+    /// The current task should ensure that each enter is matched with an exit.
+    /// </remarks>
+    /// <exception cref="SynchronizationLockException">
+    /// The current task does not hold the lock.
+    /// </exception>
+    void Exit();
 
     /// <summary>
-    /// Gets a value indicating whether the synchronization primitive is locked by a thread.
+    /// Gets a value indicating whether a task holds a lock on the synchronization primitive.
     /// </summary>
-    bool IsLocked { get; }
+    bool IsEntered { get; }
 
     /// <summary>
     /// Gets a value indicating whether the synchronization primitive supports locking recursion.

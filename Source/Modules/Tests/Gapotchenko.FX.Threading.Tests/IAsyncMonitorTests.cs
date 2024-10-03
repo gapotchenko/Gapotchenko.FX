@@ -89,7 +89,7 @@ public abstract class IAsyncMonitorTests : IAsyncConditionVariableTests
             for (; ; )
             {
                 char c;
-                using (await monitor.LockScopeAsync())
+                using (await monitor.EnterScopeAsync())
                 {
                     while (queue.Count == 0)
                         await monitor.WaitAsync();
@@ -110,7 +110,7 @@ public abstract class IAsyncMonitorTests : IAsyncConditionVariableTests
 
         void Enqueue(char c)
         {
-            using (monitor.LockScope())
+            using (monitor.EnterScope())
             {
                 queue.Enqueue(c);
                 monitor.Notify();

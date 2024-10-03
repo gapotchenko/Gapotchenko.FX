@@ -30,35 +30,35 @@ public abstract class AsyncMonitorImpl<TMutex> : IAsyncMonitor
     #region IAsyncLockable
 
     /// <inheritdoc/>
-    public void Lock(CancellationToken cancellationToken = default) => Mutex.Lock(cancellationToken);
+    public void Enter(CancellationToken cancellationToken = default) => Mutex.Enter(cancellationToken);
 
     /// <inheritdoc/>
-    public Task LockAsync(CancellationToken cancellationToken = default) => Mutex.LockAsync(cancellationToken);
+    public Task EnterAsync(CancellationToken cancellationToken = default) => Mutex.EnterAsync(cancellationToken);
 
     /// <inheritdoc/>
-    public bool TryLock() => Mutex.TryLock();
+    public bool TryEnter() => Mutex.TryEnter();
 
     /// <inheritdoc/>
-    public bool TryLock(TimeSpan timeout, CancellationToken cancellationToken = default) =>
-        Mutex.TryLock(timeout, cancellationToken);
+    public bool TryEnter(TimeSpan timeout, CancellationToken cancellationToken = default) =>
+        Mutex.TryEnter(timeout, cancellationToken);
 
     /// <inheritdoc/>
-    public bool TryLock(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
-        Mutex.TryLock(millisecondsTimeout, cancellationToken);
+    public bool TryEnter(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
+        Mutex.TryEnter(millisecondsTimeout, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<bool> TryLockAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
-        Mutex.TryLockAsync(timeout, cancellationToken);
+    public Task<bool> TryEnterAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
+        Mutex.TryEnterAsync(timeout, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<bool> TryLockAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
-        Mutex.TryLockAsync(millisecondsTimeout, cancellationToken);
+    public Task<bool> TryEnterAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
+        Mutex.TryEnterAsync(millisecondsTimeout, cancellationToken);
 
     /// <inheritdoc/>
-    public void Unlock() => Mutex.Unlock();
+    public void Exit() => Mutex.Exit();
 
     /// <inheritdoc/>
-    public bool IsLocked => Mutex.IsLocked;
+    public bool IsEntered => Mutex.IsEntered;
 
     bool IAsyncLockable.IsRecursive => Mutex.IsRecursive;
 

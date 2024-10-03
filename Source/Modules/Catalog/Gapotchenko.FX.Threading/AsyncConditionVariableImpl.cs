@@ -103,14 +103,14 @@ readonly struct AsyncConditionVariableImpl
         {
             var waitHandle = AllocateWaitHandle(cts.Token);
 
-            lockable.Unlock();
+            lockable.Exit();
             try
             {
                 return TaskBridge.Execute(waitHandle);
             }
             finally
             {
-                lockable.Lock(CancellationToken.None);
+                lockable.Enter(CancellationToken.None);
             }
         }
         finally
@@ -137,7 +137,7 @@ readonly struct AsyncConditionVariableImpl
         {
             var waitHandle = AllocateWaitHandle(cts.Token);
 
-            lockable.Unlock();
+            lockable.Exit();
             try
             {
                 return TaskBridge.Execute(
@@ -157,7 +157,7 @@ readonly struct AsyncConditionVariableImpl
             }
             finally
             {
-                lockable.Lock(CancellationToken.None);
+                lockable.Enter(CancellationToken.None);
             }
         }
         finally
@@ -173,14 +173,14 @@ readonly struct AsyncConditionVariableImpl
 
         async Task<bool> ExecuteAsync()
         {
-            lockable.Unlock();
+            lockable.Exit();
             try
             {
                 return await waitHandle.ConfigureAwait(false);
             }
             finally
             {
-                await lockable.LockAsync(CancellationToken.None).ConfigureAwait(false);
+                await lockable.EnterAsync(CancellationToken.None).ConfigureAwait(false);
             }
         }
 

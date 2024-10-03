@@ -22,9 +22,9 @@ public abstract class IAsyncLockableTests
     {
         var lockable = CreateAsyncLockable();
         Assert.AreEqual(lockable is IAsyncRecursiveLockable, lockable.IsRecursive);
-        Assert.IsFalse(lockable.IsLocked);
+        Assert.IsFalse(lockable.IsEntered);
         if (lockable is IAsyncRecursiveLockable recursiveLockable)
-            Assert.IsFalse(recursiveLockable.IsHeldByCurrentTask);
+            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
     }
 
     [TestMethod]
@@ -34,32 +34,32 @@ public abstract class IAsyncLockableTests
 
         if (lockable is IAsyncRecursiveLockable recursiveLockable)
         {
-            recursiveLockable.Lock();
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            recursiveLockable.Enter();
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
-            Assert.IsTrue(recursiveLockable.TryLock());
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.TryEnter());
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
-            recursiveLockable.Unlock();
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            recursiveLockable.Exit();
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
-            recursiveLockable.Unlock();
-            Assert.IsFalse(recursiveLockable.IsLocked);
-            Assert.IsFalse(recursiveLockable.IsHeldByCurrentTask);
+            recursiveLockable.Exit();
+            Assert.IsFalse(recursiveLockable.IsEntered);
+            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
         }
         else
         {
-            lockable.Lock();
-            Assert.IsTrue(lockable.IsLocked);
+            lockable.Enter();
+            Assert.IsTrue(lockable.IsEntered);
 
-            Assert.IsFalse(lockable.TryLock());
-            Assert.IsTrue(lockable.IsLocked);
+            Assert.IsFalse(lockable.TryEnter());
+            Assert.IsTrue(lockable.IsEntered);
 
-            lockable.Unlock();
-            Assert.IsFalse(lockable.IsLocked);
+            lockable.Exit();
+            Assert.IsFalse(lockable.IsEntered);
         }
     }
 
@@ -71,7 +71,7 @@ public abstract class IAsyncLockableTests
         bool wasCanceled = false;
         try
         {
-            lockable.Lock(new CancellationToken(true));
+            lockable.Enter(new CancellationToken(true));
         }
         catch (OperationCanceledException)
         {
@@ -79,10 +79,10 @@ public abstract class IAsyncLockableTests
         }
         Assert.IsTrue(wasCanceled);
 
-        Assert.IsFalse(lockable.IsLocked);
+        Assert.IsFalse(lockable.IsEntered);
 
-        Assert.IsTrue(lockable.TryLock());
-        Assert.IsTrue(lockable.IsLocked);
+        Assert.IsTrue(lockable.TryEnter());
+        Assert.IsTrue(lockable.IsEntered);
     }
 
     // ----------------------------------------------------------------------
@@ -104,10 +104,10 @@ public abstract class IAsyncLockableTests
         var lockerTask = TaskBridge.ExecuteAsync(
             () =>
             {
-                lockable.Lock();
+                lockable.Enter();
                 lockEvent.Set();
                 unlockEvent.Wait();
-                lockable.Unlock();
+                lockable.Exit();
             });
 
         try
@@ -127,8 +127,8 @@ public abstract class IAsyncLockableTests
             }
             Assert.IsTrue(wasCanceled);
 
-            Assert.IsTrue(lockable.IsLocked);
-            Assert.IsFalse(lockable.TryLock());
+            Assert.IsTrue(lockable.IsEntered);
+            Assert.IsFalse(lockable.TryEnter());
         }
         finally
         {
@@ -136,13 +136,13 @@ public abstract class IAsyncLockableTests
             await lockerTask;
         }
 
-        Assert.IsFalse(lockable.IsLocked);
+        Assert.IsFalse(lockable.IsEntered);
 
-        Assert.IsTrue(lockable.TryLock());
-        Assert.IsTrue(lockable.IsLocked);
+        Assert.IsTrue(lockable.TryEnter());
+        Assert.IsTrue(lockable.IsEntered);
 
-        lockable.Unlock();
-        Assert.IsFalse(lockable.IsLocked);
+        lockable.Exit();
+        Assert.IsFalse(lockable.IsEntered);
     }
 
     static async Task VerifyLockingSemanticsAsync_Concurrency(
@@ -211,22 +211,22 @@ public abstract class IAsyncLockableTests
                     string GetTPText(string id) => $"{id} ♽ {iteration}/{iterationCount}";
 
                     if (recursiveLockable != null)
-                        Assert.IsFalse(recursiveLockable.IsHeldByCurrentTask, GetTPText("TP1"));
+                        Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask, GetTPText("TP1"));
 
                     await lockAsyncFunc(lockable, cancellationToken);
 
-                    Assert.IsTrue(lockable.IsLocked, GetTPText("TP2"));
+                    Assert.IsTrue(lockable.IsEntered, GetTPText("TP2"));
                     if (recursiveLockable != null)
-                        Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask, GetTPText("TP3"));
+                        Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetTPText("TP3"));
 
                     string GetIterativeTPText(string id, int i) => GetTPText($"{id} #{i}");
 
                     for (int i = 0; i < recursionDepth; ++i)
                     {
-                        Assert.IsTrue(await lockable.TryLockAsync(0, cancellationToken), GetIterativeTPText("TP4", i));
-                        Assert.IsTrue(lockable.IsLocked, GetIterativeTPText("TP5", i));
+                        Assert.IsTrue(await lockable.TryEnterAsync(0, cancellationToken), GetIterativeTPText("TP4", i));
+                        Assert.IsTrue(lockable.IsEntered, GetIterativeTPText("TP5", i));
                         if (recursiveLockable != null)
-                            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask, GetIterativeTPText("TP6", i));
+                            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetIterativeTPText("TP6", i));
                     }
 
                     if (random.NextBoolean())
@@ -237,10 +237,10 @@ public abstract class IAsyncLockableTests
 
                     for (int i = 0; i < recursionDepth; ++i)
                     {
-                        lockable.Unlock();
-                        Assert.IsTrue(lockable.IsLocked, GetIterativeTPText("TP7", i));
+                        lockable.Exit();
+                        Assert.IsTrue(lockable.IsEntered, GetIterativeTPText("TP7", i));
                         if (recursiveLockable != null)
-                            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask, GetIterativeTPText("TP8", i));
+                            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetIterativeTPText("TP8", i));
                     }
 
                     if (random.NextBoolean())
@@ -252,9 +252,9 @@ public abstract class IAsyncLockableTests
                     for (int i = 0; i < recursionDepth; ++i)
                     {
                         await lockAsyncFunc(lockable, cancellationToken);
-                        Assert.IsTrue(lockable.IsLocked, GetIterativeTPText("TP9", i));
+                        Assert.IsTrue(lockable.IsEntered, GetIterativeTPText("TP9", i));
                         if (recursiveLockable != null)
-                            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask, GetIterativeTPText("TP10", i));
+                            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetIterativeTPText("TP10", i));
                     }
 
                     if (random.NextBoolean())
@@ -265,10 +265,10 @@ public abstract class IAsyncLockableTests
 
                     for (int i = 0; i < recursionDepth; ++i)
                     {
-                        lockable.Unlock();
-                        Assert.IsTrue(lockable.IsLocked, GetIterativeTPText("TP11", i));
+                        lockable.Exit();
+                        Assert.IsTrue(lockable.IsEntered, GetIterativeTPText("TP11", i));
                         if (recursiveLockable != null)
-                            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask, GetIterativeTPText("TP12", i));
+                            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetIterativeTPText("TP12", i));
                     }
 
                     if (random.NextBoolean())
@@ -277,14 +277,14 @@ public abstract class IAsyncLockableTests
                         await Task.Yield();
                     }
 
-                    Assert.IsTrue(lockable.IsLocked, GetTPText("TP13"));
+                    Assert.IsTrue(lockable.IsEntered, GetTPText("TP13"));
                     if (recursiveLockable != null)
-                        Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask, GetTPText("TP14"));
+                        Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetTPText("TP14"));
 
-                    lockable.Unlock();
+                    lockable.Exit();
 
                     if (recursiveLockable != null)
-                        Assert.IsFalse(recursiveLockable.IsHeldByCurrentTask, GetTPText("TP15"));
+                        Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask, GetTPText("TP15"));
                 }
             }
 
@@ -330,45 +330,45 @@ public abstract class IAsyncLockableTests
 
         if (lockable is IAsyncRecursiveLockable recursiveLockable)
         {
-            await recursiveLockable.LockAsync();
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            await recursiveLockable.EnterAsync();
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
-            Assert.IsTrue(recursiveLockable.TryLock());
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.TryEnter());
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
             // Switch the context to verify that the lock recursion information is flowing.
             await Task.Yield();
 
-            recursiveLockable.Unlock();
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            recursiveLockable.Exit();
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
-            recursiveLockable.Unlock();
-            Assert.IsFalse(recursiveLockable.IsLocked);
-            Assert.IsFalse(recursiveLockable.IsHeldByCurrentTask);
+            recursiveLockable.Exit();
+            Assert.IsFalse(recursiveLockable.IsEntered);
+            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
         }
         else
         {
-            await lockable.LockAsync();
-            Assert.IsTrue(lockable.IsLocked);
+            await lockable.EnterAsync();
+            Assert.IsTrue(lockable.IsEntered);
 
-            Assert.IsFalse(lockable.TryLock());
-            Assert.IsTrue(lockable.IsLocked);
+            Assert.IsFalse(lockable.TryEnter());
+            Assert.IsTrue(lockable.IsEntered);
 
             // Switch the context to verify that the lock recursion information is flowing.
             await Task.Yield();
 
-            lockable.Unlock();
-            Assert.IsFalse(lockable.IsLocked);
+            lockable.Exit();
+            Assert.IsFalse(lockable.IsEntered);
         }
 
         // --------------------------------------------
 
         await VerifyLockingSemanticsAsync(
             lockable,
-            (x, ct) => x.LockAsync(ct));
+            (x, ct) => x.EnterAsync(ct));
     }
 
 
@@ -381,7 +381,7 @@ public abstract class IAsyncLockableTests
         bool wasCanceled = false;
         try
         {
-            await lockable.LockAsync(new CancellationToken(true));
+            await lockable.EnterAsync(new CancellationToken(true));
         }
         catch (OperationCanceledException)
         {
@@ -389,21 +389,21 @@ public abstract class IAsyncLockableTests
         }
         Assert.IsTrue(wasCanceled);
 
-        Assert.IsFalse(lockable.IsLocked);
+        Assert.IsFalse(lockable.IsEntered);
         if (recursiveLockable != null)
-            Assert.IsFalse(recursiveLockable.IsHeldByCurrentTask);
+            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
 
-        Assert.IsTrue(lockable.TryLock());
-        Assert.IsTrue(lockable.IsLocked);
+        Assert.IsTrue(lockable.TryEnter());
+        Assert.IsTrue(lockable.IsEntered);
         if (recursiveLockable != null)
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
     }
 
     // ----------------------------------------------------------------------
 
     [TestMethod]
     public void IAsyncLockable_TryLock_Nesting() =>
-        TryLock_Nesting_Core(CreateAsyncLockable(), x => x.TryLock());
+        TryLock_Nesting_Core(CreateAsyncLockable(), x => x.TryEnter());
 
     [TestMethod]
     public void IAsyncLockable_TryLock_TimeSpan_Nesting()
@@ -411,8 +411,8 @@ public abstract class IAsyncLockableTests
         var lockable = CreateAsyncLockable();
         var timeout = TimeSpan.Zero;
 
-        TryLock_Nesting_Core(lockable, x => x.TryLock(timeout));
-        TryLock_Nesting_Core(lockable, x => x.TryLock(timeout, CancellationToken.None));
+        TryLock_Nesting_Core(lockable, x => x.TryEnter(timeout));
+        TryLock_Nesting_Core(lockable, x => x.TryEnter(timeout, CancellationToken.None));
     }
 
     [TestMethod]
@@ -421,8 +421,8 @@ public abstract class IAsyncLockableTests
         var lockable = CreateAsyncLockable();
         var timeout = 0;
 
-        TryLock_Nesting_Core(lockable, x => x.TryLock(timeout));
-        TryLock_Nesting_Core(lockable, x => x.TryLock(timeout, CancellationToken.None));
+        TryLock_Nesting_Core(lockable, x => x.TryEnter(timeout));
+        TryLock_Nesting_Core(lockable, x => x.TryEnter(timeout, CancellationToken.None));
     }
 
     static void TryLock_Nesting_Core(IAsyncLockable lockable, Func<IAsyncLockable, bool> tryLockFunc)
@@ -430,31 +430,31 @@ public abstract class IAsyncLockableTests
         if (lockable is IAsyncRecursiveLockable recursiveLockable)
         {
             Assert.IsTrue(tryLockFunc(recursiveLockable));
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
             Assert.IsTrue(tryLockFunc(recursiveLockable));
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
-            recursiveLockable.Unlock();
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            recursiveLockable.Exit();
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
-            recursiveLockable.Unlock();
-            Assert.IsFalse(recursiveLockable.IsLocked);
-            Assert.IsFalse(recursiveLockable.IsHeldByCurrentTask);
+            recursiveLockable.Exit();
+            Assert.IsFalse(recursiveLockable.IsEntered);
+            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
         }
         else
         {
             Assert.IsTrue(tryLockFunc(lockable));
-            Assert.IsTrue(lockable.IsLocked);
+            Assert.IsTrue(lockable.IsEntered);
 
             Assert.IsFalse(tryLockFunc(lockable));
-            Assert.IsTrue(lockable.IsLocked);
+            Assert.IsTrue(lockable.IsEntered);
 
-            lockable.Unlock();
-            Assert.IsFalse(lockable.IsLocked);
+            lockable.Exit();
+            Assert.IsFalse(lockable.IsEntered);
         }
     }
 
@@ -464,13 +464,13 @@ public abstract class IAsyncLockableTests
     public void IAsyncLockable_TryLock_TimeSpan_Rollback() =>
         TryLock_Rollback_Core(
             CreateAsyncLockable(),
-            (x, ct) => x.TryLock(Timeout.InfiniteTimeSpan, ct));
+            (x, ct) => x.TryEnter(Timeout.InfiniteTimeSpan, ct));
 
     [TestMethod]
     public void IAsyncLockable_TryLock_Int32_Rollback() =>
         TryLock_Rollback_Core(
             CreateAsyncLockable(),
-            (x, ct) => x.TryLock(Timeout.Infinite, ct));
+            (x, ct) => x.TryEnter(Timeout.Infinite, ct));
 
     static void TryLock_Rollback_Core(IAsyncLockable lockable, Func<IAsyncLockable, CancellationToken, bool> tryLockFunc)
     {
@@ -485,10 +485,10 @@ public abstract class IAsyncLockableTests
         }
         Assert.IsTrue(wasCanceled);
 
-        Assert.IsFalse(lockable.IsLocked);
+        Assert.IsFalse(lockable.IsEntered);
 
-        Assert.IsTrue(lockable.TryLock());
-        Assert.IsTrue(lockable.IsLocked);
+        Assert.IsTrue(lockable.TryEnter());
+        Assert.IsTrue(lockable.IsEntered);
     }
 
     // ----------------------------------------------------------------------
@@ -500,16 +500,16 @@ public abstract class IAsyncLockableTests
         var timeout = TimeSpan.Zero;
 
         static Task LockAsync(IAsyncLockable lockable, CancellationToken cancellationToken) =>
-            lockable.TryLockAsync(Timeout.InfiniteTimeSpan, cancellationToken);
+            lockable.TryEnterAsync(Timeout.InfiniteTimeSpan, cancellationToken);
 
         await TryLockAsync_Nesting_Core(
             lockable,
-            x => x.TryLockAsync(timeout),
+            x => x.TryEnterAsync(timeout),
             LockAsync);
 
         await TryLockAsync_Nesting_Core(
             lockable,
-            x => x.TryLockAsync(timeout, CancellationToken.None),
+            x => x.TryEnterAsync(timeout, CancellationToken.None),
             LockAsync);
     }
 
@@ -520,16 +520,16 @@ public abstract class IAsyncLockableTests
         var timeout = 0;
 
         static Task LockAsync(IAsyncLockable lockable, CancellationToken cancellationToken) =>
-            lockable.TryLockAsync(Timeout.Infinite, cancellationToken);
+            lockable.TryEnterAsync(Timeout.Infinite, cancellationToken);
 
         await TryLockAsync_Nesting_Core(
             lockable,
-            x => x.TryLockAsync(timeout),
+            x => x.TryEnterAsync(timeout),
             LockAsync);
 
         await TryLockAsync_Nesting_Core(
             lockable,
-            x => x.TryLockAsync(timeout, CancellationToken.None),
+            x => x.TryEnterAsync(timeout, CancellationToken.None),
             LockAsync);
     }
 
@@ -541,37 +541,37 @@ public abstract class IAsyncLockableTests
         if (lockable is IAsyncRecursiveLockable recursiveLockable)
         {
             Assert.IsTrue(await tryLockAsyncFunc(recursiveLockable));
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
             Assert.IsTrue(await tryLockAsyncFunc(recursiveLockable));
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
             // Switch the context to verify that the lock recursion information is flowing.
             await Task.Yield();
 
-            recursiveLockable.Unlock();
-            Assert.IsTrue(recursiveLockable.IsLocked);
-            Assert.IsTrue(recursiveLockable.IsHeldByCurrentTask);
+            recursiveLockable.Exit();
+            Assert.IsTrue(recursiveLockable.IsEntered);
+            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
 
-            recursiveLockable.Unlock();
-            Assert.IsFalse(recursiveLockable.IsLocked);
-            Assert.IsFalse(recursiveLockable.IsHeldByCurrentTask);
+            recursiveLockable.Exit();
+            Assert.IsFalse(recursiveLockable.IsEntered);
+            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
         }
         else
         {
             Assert.IsTrue(await tryLockAsyncFunc(lockable));
-            Assert.IsTrue(lockable.IsLocked);
+            Assert.IsTrue(lockable.IsEntered);
 
             Assert.IsFalse(await tryLockAsyncFunc(lockable));
-            Assert.IsTrue(lockable.IsLocked);
+            Assert.IsTrue(lockable.IsEntered);
 
             // Switch the context to verify that the lock recursion information is flowing.
             await Task.Yield();
 
-            lockable.Unlock();
-            Assert.IsFalse(lockable.IsLocked);
+            lockable.Exit();
+            Assert.IsFalse(lockable.IsEntered);
         }
 
         // --------------------------------------------
@@ -585,13 +585,13 @@ public abstract class IAsyncLockableTests
     public Task IAsyncLockable_TryLockAsync_TimeSpan_Rollback() =>
         TryLockAsync_Rollback_Core(
             CreateAsyncLockable(),
-            (x, ct) => x.TryLockAsync(Timeout.InfiniteTimeSpan, ct));
+            (x, ct) => x.TryEnterAsync(Timeout.InfiniteTimeSpan, ct));
 
     [TestMethod]
     public Task IAsyncLockable_TryLockAsync_Int32_Rollback() =>
         TryLockAsync_Rollback_Core(
             CreateAsyncLockable(),
-            (x, ct) => x.TryLockAsync(Timeout.Infinite, ct));
+            (x, ct) => x.TryEnterAsync(Timeout.Infinite, ct));
 
     static async Task TryLockAsync_Rollback_Core(IAsyncLockable lockable, Func<IAsyncLockable, CancellationToken, Task<bool>> tryLockAsyncFunc)
     {
@@ -606,10 +606,10 @@ public abstract class IAsyncLockableTests
         }
         Assert.IsTrue(wasCanceled);
 
-        Assert.IsFalse(lockable.IsLocked);
+        Assert.IsFalse(lockable.IsEntered);
 
-        Assert.IsTrue(lockable.TryLock());
-        Assert.IsTrue(lockable.IsLocked);
+        Assert.IsTrue(lockable.TryEnter());
+        Assert.IsTrue(lockable.IsEntered);
     }
 
     // ----------------------------------------------------------------------
@@ -618,6 +618,6 @@ public abstract class IAsyncLockableTests
     public void IAsyncLockable_Unlock_NonLocked()
     {
         var lockable = CreateAsyncLockable();
-        Assert.ThrowsException<SynchronizationLockException>(lockable.Unlock);
+        Assert.ThrowsException<SynchronizationLockException>(lockable.Exit);
     }
 }
