@@ -17,8 +17,6 @@ public readonly struct AsyncLockableScope : IDisposable
         m_Lockable = lockable;
     }
 
-    readonly IAsyncLockable? m_Lockable;
-
     /// <summary>
     /// Gets a value indicating whether this scope holds a lock on the synchronization primitive.
     /// </summary>
@@ -31,4 +29,6 @@ public readonly struct AsyncLockableScope : IDisposable
     {
         m_Lockable?.Unlock();
     }
+
+    readonly IAsyncLockable? m_Lockable;
 }
