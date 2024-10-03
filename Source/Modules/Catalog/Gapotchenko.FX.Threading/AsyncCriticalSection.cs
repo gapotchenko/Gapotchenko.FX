@@ -15,6 +15,13 @@ namespace Gapotchenko.FX.Threading;
 /// </summary>
 public sealed class AsyncCriticalSection : IAsyncMutex
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncCriticalSection"/> class.
+    /// </summary>
+    public AsyncCriticalSection()
+    {
+    }
+
     /// <inheritdoc/>
     public void Enter(CancellationToken cancellationToken = default) => m_CoreImpl.Enter(cancellationToken);
 

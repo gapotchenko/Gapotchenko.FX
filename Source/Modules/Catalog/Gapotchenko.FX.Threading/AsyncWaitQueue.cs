@@ -1,6 +1,5 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
-//
 // Portions © Stephen Cleary
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -15,8 +14,6 @@ readonly partial struct AsyncWaitQueue<T>
     public AsyncWaitQueue()
     {
     }
-
-    readonly Deque<TaskCompletionSource<T>> m_Queue = new();
 
     public bool IsEmpty => m_Queue.Count == 0;
 
@@ -112,4 +109,6 @@ readonly partial struct AsyncWaitQueue<T>
     /// that can be used for a thread-safe access to the <see cref="AsyncWaitQueue{T}"/>.
     /// </summary>
     public object SyncRoot => m_Queue;
+
+    readonly Deque<TaskCompletionSource<T>> m_Queue = new();
 }

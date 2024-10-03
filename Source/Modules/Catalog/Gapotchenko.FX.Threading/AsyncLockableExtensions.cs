@@ -86,9 +86,7 @@ public static class AsyncLockableExtensions
     public static AsyncLockableScope TryEnterScope(this IAsyncLockable lockable, TimeSpan timeout, CancellationToken cancellationToken = default) =>
         new(
             (lockable ?? throw new ArgumentNullException(nameof(lockable)))
-            .TryEnter(timeout, cancellationToken) ?
-                lockable :
-                null);
+            .TryEnter(timeout, cancellationToken) ? lockable : null);
 
     /// <summary>
     /// Blocks the current thread until it can lock the synchronization primitive,
@@ -116,9 +114,7 @@ public static class AsyncLockableExtensions
     public static AsyncLockableScope TryEnterScope(this IAsyncLockable lockable, int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         new(
             (lockable ?? throw new ArgumentNullException(nameof(lockable)))
-            .TryEnter(millisecondsTimeout, cancellationToken) ?
-                lockable :
-                null);
+            .TryEnter(millisecondsTimeout, cancellationToken) ? lockable : null);
 
     /// <summary>
     /// Asynchronously waits to lock the synchronization primitive,
@@ -178,14 +174,10 @@ public static class AsyncLockableExtensions
             lockable.TryEnterAsync(millisecondsTimeout, cancellationToken),
             cancellationToken);
 
-    static Task<AsyncLockableScope> TryEnterScopeAsyncCore(IAsyncLockable lockable, Task<bool> task, CancellationToken cancellationToken)
-    {
-        ExceptionHelper.ThrowIfArgumentIsNull(lockable);
-
-        return task.ContinueWith(
+    static Task<AsyncLockableScope> TryEnterScopeAsyncCore(IAsyncLockable lockable, Task<bool> task, CancellationToken cancellationToken) =>
+        task.ContinueWith(
             task => new AsyncLockableScope(task.Result ? lockable : null),
             cancellationToken,
             TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
             TaskScheduler.Default);
-    }
 }

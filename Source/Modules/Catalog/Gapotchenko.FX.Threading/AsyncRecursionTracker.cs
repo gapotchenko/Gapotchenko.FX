@@ -17,8 +17,6 @@ readonly struct AsyncRecursionTracker
     {
     }
 
-    readonly AsyncLocal<int> m_RecursionLevel = new();
-
     /// <summary>
     /// Indicates whether the current recursion level is greater than zero.
     /// </summary>
@@ -36,7 +34,17 @@ readonly struct AsyncRecursionTracker
     /// </summary>
     public void Enter()
     {
-        m_RecursionLevel.Value = checked(m_RecursionLevel.Value + 1);
+        // No async local barrier here because the method call is always preceded
+        // by a call of IsEntered property which does the barrier.
+
+        int recursionLevel = m_RecursionLevel.Value + 1;
+        if (recursionLevel == 0)
+        {
+            // Recursion level overflow.
+            throw new LockRecursionException("Maximum recursion level has been reached for asynchronous thread synchronization primitives.");
+        }
+
+        m_RecursionLevel.Value = recursionLevel;
     }
 
     /// <summary>
@@ -46,7 +54,7 @@ readonly struct AsyncRecursionTracker
     /// <see langword="true"/> if the root (zero) recursion level was reached; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="SynchronizationLockException">The thread synchronization primitive is being unlocked without being locked.</exception>
-    public bool Leave()
+    public bool Exit()
     {
         ExecutionContextHelper.AsyncLocalBarrier();
 
@@ -61,4 +69,6 @@ readonly struct AsyncRecursionTracker
 
         return recursionLevel == 0;
     }
+
+    readonly AsyncLocal<int> m_RecursionLevel = new();
 }

@@ -1,6 +1,5 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
-//
 // Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -49,7 +48,7 @@ partial class TaskPolyfills
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(timeout);
 #else
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
         ExceptionHelper.ValidateTimeoutArgument(timeout);
 
         return WaitAsyncCore(task, timeout, CancellationToken.None);
@@ -86,7 +85,7 @@ partial class TaskPolyfills
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(timeout);
 #else
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
         ExceptionHelper.ValidateTimeoutArgument(timeout);
 
         return WaitAsyncCore(task, timeout, CancellationToken.None);
@@ -119,7 +118,7 @@ partial class TaskPolyfills
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(cancellationToken);
 #else
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
 
         return WaitAsyncCore(task, Timeout.InfiniteTimeSpan, cancellationToken);
 #endif
@@ -151,7 +150,7 @@ partial class TaskPolyfills
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(cancellationToken);
 #else
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
 
         return WaitAsyncCore(task, Timeout.InfiniteTimeSpan, cancellationToken);
 #endif
@@ -192,7 +191,7 @@ partial class TaskPolyfills
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(timeout, cancellationToken);
 #else
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
         ExceptionHelper.ValidateTimeoutArgument(timeout);
 
         return WaitAsyncCore(task, timeout, cancellationToken);
@@ -234,7 +233,7 @@ partial class TaskPolyfills
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(timeout, cancellationToken);
 #else
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
         ExceptionHelper.ValidateTimeoutArgument(timeout);
 
         return WaitAsyncCore(task, timeout, cancellationToken);
@@ -334,8 +333,8 @@ partial class TaskPolyfills
             var controlTask =
                 Task.Delay(timeout, ct)
                 // Adapt the control task result to TResult to make a compiler happy.
-                .ContinueWith(
-                    _ => default(TResult)!, // this value will be discarded, it's only needed for the type system integrity
+                .ContinueWith<TResult>(
+                    _ => default!, // this value will be discarded
                     ct,
                     TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.Default);

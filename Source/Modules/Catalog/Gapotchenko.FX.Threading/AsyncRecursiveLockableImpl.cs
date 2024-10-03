@@ -74,7 +74,7 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) : IAsy
 
     public void Exit()
     {
-        if (m_RecursionTracker.Leave())
+        if (m_RecursionTracker.Exit())
             m_Lockable.Exit();
     }
 

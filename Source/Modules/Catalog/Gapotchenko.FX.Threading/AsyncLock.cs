@@ -15,6 +15,13 @@ namespace Gapotchenko.FX.Threading;
 /// </summary>
 public sealed class AsyncLock : IAsyncRecursiveMutex
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncLock"/> class.
+    /// </summary>
+    public AsyncLock()
+    {
+    }
+
     /// <inheritdoc/>
     public void Enter(CancellationToken cancellationToken = default) => m_CoreImpl.Enter(cancellationToken);
 

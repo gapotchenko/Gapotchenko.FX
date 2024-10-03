@@ -22,6 +22,14 @@ static class ExceptionHelper
             throw new ArgumentNullException(parameterName);
     }
 
+    public static void ThrowIfThisArgumentIsNull([NotNull] object? value)
+    {
+#pragma warning disable CA2201 // Do not raise reserved exception types
+        if (value is null)
+            throw new NullReferenceException();
+#pragma warning restore CA2201
+    }
+
     public static void ValidateTimeoutArgument(
         int value,
         [CallerArgumentExpression(nameof(value))] string? parameterName = null)

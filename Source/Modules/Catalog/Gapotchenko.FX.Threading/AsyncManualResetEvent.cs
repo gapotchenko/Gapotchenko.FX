@@ -1,6 +1,5 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
-//
 // Portions © Stephen Cleary
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -30,7 +29,6 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
     /// </summary>
     public AsyncManualResetEvent()
     {
-        m_TaskCompletionSource = CreateTaskCompletionSource();
     }
 
     /// <summary>
@@ -41,21 +39,11 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
     /// <see langword="true"/> to set the initial state to signaled;
     /// <see langword="false"/> to set the initial state to non-signaled.
     /// </param>
-    public AsyncManualResetEvent(bool initialState) :
-        this()
+    public AsyncManualResetEvent(bool initialState)
     {
         if (initialState)
             m_TaskCompletionSource.SetResult(initialState);
     }
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly object m_SyncRoot = new();
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    TaskCompletionSource<bool> m_TaskCompletionSource;
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    TaskCompletionSource<bool> TaskCompletionSource => Volatile.Read(ref m_TaskCompletionSource);
 
     /// <inheritdoc/>
     public void Set()
@@ -147,6 +135,17 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
         }
     }
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly object m_SyncRoot = new();
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    TaskCompletionSource<bool> TaskCompletionSource => Volatile.Read(ref m_TaskCompletionSource);
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    TaskCompletionSource<bool> m_TaskCompletionSource = CreateTaskCompletionSource();
+
+    static TaskCompletionSource<bool> CreateTaskCompletionSource() => new(TaskCreationOptions.RunContinuationsAsynchronously);
+
     bool DoWait(TimeSpan timeout, CancellationToken cancellationToken)
     {
         Debug.Assert(ExceptionHelper.IsValidTimeout(timeout));
@@ -154,16 +153,6 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
         return TaskBridge.Execute(
             ct => DoWaitAsync(timeout, ct),
             cancellationToken);
-    }
-
-    Task<bool> DoWaitAsyncDirect()
-    {
-        return TaskCompletionSource.Task;
-    }
-
-    Task<bool> DoWaitAsync(CancellationToken cancellationToken)
-    {
-        return DoWaitAsyncDirect().WaitAsync(cancellationToken);
     }
 
     Task<bool> DoWaitAsync(TimeSpan timeout, CancellationToken cancellationToken)
@@ -187,5 +176,7 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
         }
     }
 
-    static TaskCompletionSource<bool> CreateTaskCompletionSource() => new(TaskCreationOptions.RunContinuationsAsynchronously);
+    Task<bool> DoWaitAsync(CancellationToken cancellationToken) => DoWaitAsyncDirect().WaitAsync(cancellationToken);
+
+    Task<bool> DoWaitAsyncDirect() => TaskCompletionSource.Task;
 }
