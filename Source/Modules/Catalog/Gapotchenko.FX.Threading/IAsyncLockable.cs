@@ -137,7 +137,7 @@ public interface IAsyncLockable
     void Unlock();
 
     /// <summary>
-    /// Gets a value indicating whether the synchronization primitive is locked by any thread.
+    /// Gets a value indicating whether the synchronization primitive is locked by a thread.
     /// </summary>
     bool IsLocked { get; }
 

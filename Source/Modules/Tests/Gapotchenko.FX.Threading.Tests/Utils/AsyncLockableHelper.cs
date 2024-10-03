@@ -5,7 +5,7 @@ static class AsyncLockableHelper
     public static bool IsLockHeld(IAsyncLockable lockable)
     {
         if (lockable is IAsyncRecursiveLockable recursiveLockable)
-            return recursiveLockable.IsLockHeld;
+            return recursiveLockable.IsHeldByCurrentTask;
         else
             return lockable.IsLocked;
     }

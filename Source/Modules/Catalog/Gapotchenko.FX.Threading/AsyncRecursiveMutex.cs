@@ -50,7 +50,7 @@ public sealed class AsyncRecursiveMutex : IAsyncRecursiveMutex
     public bool IsLocked => m_CoreImpl.IsLocked;
 
     /// <inheritdoc/>
-    public bool IsLockHeld => m_CoreImpl.IsLockHeld;
+    public bool IsHeldByCurrentTask => m_CoreImpl.IsHeldByCurrentTask;
 
     bool IAsyncLockable.IsRecursive => true;
 }

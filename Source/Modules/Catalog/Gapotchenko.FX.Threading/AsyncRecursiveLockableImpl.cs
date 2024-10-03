@@ -95,7 +95,7 @@ readonly struct AsyncRecursiveLockableImpl<TLockable> : IAsyncRecursiveLockable
 
     public bool IsLocked => m_Lockable.IsLocked;
 
-    public bool IsLockHeld => m_RecursionTracker.IsEntered;
+    public bool IsHeldByCurrentTask => m_RecursionTracker.IsEntered;
 
     bool IAsyncLockable.IsRecursive => true;
 

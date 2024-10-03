@@ -31,7 +31,7 @@ public sealed class AsyncRecursiveMonitor : AsyncMonitorImpl<IAsyncRecursiveLock
     }
 
     /// <inheritdoc/>
-    public bool IsLockHeld => Mutex.IsLockHeld;
+    public bool IsHeldByCurrentTask => Mutex.IsHeldByCurrentTask;
 
     /// <summary>
     /// Gets an <see cref="AsyncRecursiveMonitor"/> associated with the specified object.
