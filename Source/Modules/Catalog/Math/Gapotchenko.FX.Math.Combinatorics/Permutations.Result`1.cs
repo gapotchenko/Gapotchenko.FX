@@ -143,7 +143,7 @@ partial class Permutations
 
                 case ResultMode.Distinct:
                 case ResultMode.DistinctView:
-                    if (Empty.Nullify(comparer) == Empty.Nullify(m_Comparer))
+                    if (Utility.IsCompatibleComparer(comparer, m_Comparer))
                         return this;
                     else
                         throw new NotSupportedException("Cannot produce distinct permutations by using different comparers.");

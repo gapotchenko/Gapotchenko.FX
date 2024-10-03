@@ -28,6 +28,9 @@ static class Utility
 
         return
             sequenceComparer != null &&
-            Empty.Nullify(sequenceComparer) == Empty.Nullify(comparer);
+            IsCompatibleComparer(sequenceComparer, comparer);
     }
+
+    public static bool IsCompatibleComparer<T>(IEqualityComparer<T>? a, IEqualityComparer<T>? b) =>
+        Empty.Nullify(a) == Empty.Nullify(b);
 }
