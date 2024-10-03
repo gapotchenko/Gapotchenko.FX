@@ -1,5 +1,7 @@
 ﻿namespace Gapotchenko.FX.Memory;
 
+#pragma warning disable CA2265
+
 /// <summary>
 /// Equality comparer for contiguous regions of memory represented by <see cref="ReadOnlySpan{T}"/> type.
 /// </summary>

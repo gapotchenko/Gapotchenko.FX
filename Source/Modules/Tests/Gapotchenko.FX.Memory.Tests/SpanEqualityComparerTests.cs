@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-#pragma warning disable CA1825 // Avoid zero-length array allocations
 #pragma warning disable IDE0300 // Simplify collection initialization
 #pragma warning disable IDE0301 // Simplify collection initialization
 
