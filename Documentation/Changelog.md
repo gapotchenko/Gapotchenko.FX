@@ -16,6 +16,9 @@ Release date: not released yet
 - `AssemblyAutoLoader` now automatically handles probing paths defined by assembly binding redirects
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
 - Added `ReifyCollection` LINQ extension method for `IEnumerable<T>`
+- Added a functional facility that implements pipe operator concept.
+  The facility is provided in the form of `PipeOperator` extension method that resides in `Gapotchenko.FX.Linq.Operators` namespace.
+  It allows to have a pipe operator functionality in .NET languages that do not natively provide pipe operators
 - The synchronous execution of an asynchronous task in `Gapotchenko.FX.Threading.Tasks.TaskBridge` can take additional cancellation token now
 - Use hardware-accelerated CRC-32C checksum algorithm implementation when available
 - Deprecated `Gapotchenko.FX.Math.Topology` module in favor of a formalized `Gapotchenko.FX.Math.Graphs` module
@@ -42,7 +45,7 @@ Release date: not released yet
   - Added polyfill for `System.Collections.Generic.Queue<T>.TryDeque` method
   - Added polyfill for `System.IO.Path.Join` method
   - Added polyfills for `System.Math.BitIncrement` and `System.Math.BitDecrement` methods
-  - Added polyfill for a LINQ-style pipe operator
+  - Added polyfill for `System.Threading.Lock` type
   - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
 - .NET Framework 4.6 support is retired. The minimal supported version of .NET Framework is 4.6.1
 - Fixed issues:
