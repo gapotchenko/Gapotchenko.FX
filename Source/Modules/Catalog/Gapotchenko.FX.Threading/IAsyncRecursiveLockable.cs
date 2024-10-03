@@ -18,5 +18,5 @@ public interface IAsyncRecursiveLockable : IAsyncLockable
     /// <value>
     /// <see langword="true"/> if the current task holds the lock; otherwise, <see langword="false"/>.
     /// </value>
-    bool LockIsHeldByCurrentTask { get; }
+    bool IsLockedByCurrentTask { get; }
 }

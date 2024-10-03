@@ -13,8 +13,9 @@ static class Class1
 {
     static async Task<int> RunAsync()
     {
-        var mutex = new AsyncRecursiveMutex();
-        using (var scope = await mutex.TryEnterScopeAsync(10))
+        var monitor = new AsyncLock();
+
+        using (var scope = await monitor.TryEnterScopeAsync(10))
         {
             await Console.Out.WriteLineAsync("123");
         }

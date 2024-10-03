@@ -20,7 +20,7 @@ public sealed class AsyncRecursiveMonitor : AsyncMonitorImpl<IAsyncRecursiveLock
     /// Initializes a new instance of the <see cref="AsyncRecursiveMonitor"/> class.
     /// </summary>
     public AsyncRecursiveMonitor() :
-        base(new AsyncRecursiveMutex(), new AsyncConditionVariableImpl())
+        base(new AsyncLock(), new AsyncConditionVariableImpl())
     {
     }
 
@@ -31,7 +31,7 @@ public sealed class AsyncRecursiveMonitor : AsyncMonitorImpl<IAsyncRecursiveLock
     }
 
     /// <inheritdoc/>
-    public bool LockIsHeldByCurrentTask => Mutex.LockIsHeldByCurrentTask;
+    public bool IsLockedByCurrentTask => Mutex.IsLockedByCurrentTask;
 
     /// <summary>
     /// Gets an <see cref="AsyncRecursiveMonitor"/> associated with the specified object.

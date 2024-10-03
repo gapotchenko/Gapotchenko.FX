@@ -220,7 +220,7 @@ class Program
 
         return;
 
-        var mutex = new AsyncRecursiveMutex();
+        var mutex = new AsyncLock();
 
         Console.WriteLine("Running lock/unlock loop...");
         var sw = Stopwatch.StartNew();

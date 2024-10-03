@@ -20,7 +20,7 @@ public sealed class AsyncMonitor : AsyncMonitorImpl<IAsyncLockable>
     /// Initializes a new instance of the <see cref="AsyncMonitor"/> class.
     /// </summary>
     public AsyncMonitor() :
-        base(new AsyncMutex(), new AsyncConditionVariableImpl())
+        base(new AsyncCriticalSection(), new AsyncConditionVariableImpl())
     {
     }
 

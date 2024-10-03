@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Threading;
 /// that ensures that only one thread can access a resource at any given time.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
-public sealed class AsyncMutex : IAsyncMutex
+public sealed class AsyncCriticalSection : IAsyncMutex
 {
     /// <inheritdoc/>
     public void Enter(CancellationToken cancellationToken = default) => m_CoreImpl.Enter(cancellationToken);

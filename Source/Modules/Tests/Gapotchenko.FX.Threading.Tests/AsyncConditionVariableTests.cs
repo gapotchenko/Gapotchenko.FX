@@ -28,12 +28,12 @@ public abstract class AsyncConditionVariableTests : IAsyncConditionVariableTests
 [TestClass]
 public sealed class AsyncConditionVariableTests_NonRecursive : AsyncConditionVariableTests
 {
-    protected override IAsyncLockable CreateAsyncLockable() => new AsyncMutex();
+    protected override IAsyncLockable CreateAsyncLockable() => new AsyncCriticalSection();
 }
 
 [TestClass]
 [TestCategory("recursive")]
 public sealed class AsyncConditionVariableTests_Recursive : AsyncConditionVariableTests
 {
-    protected override IAsyncLockable CreateAsyncLockable() => new AsyncRecursiveMutex();
+    protected override IAsyncLockable CreateAsyncLockable() => new AsyncLock();
 }

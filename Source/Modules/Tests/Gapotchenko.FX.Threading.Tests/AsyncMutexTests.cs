@@ -11,5 +11,5 @@ namespace Gapotchenko.FX.Threading.Tests;
 [TestClass]
 public sealed class AsyncMutexTests : IAsyncMutexTests
 {
-    protected override IAsyncMutex CreateAsyncMutex() => new AsyncMutex();
+    protected override IAsyncMutex CreateAsyncMutex() => new AsyncCriticalSection();
 }

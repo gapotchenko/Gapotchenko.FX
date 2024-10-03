@@ -13,7 +13,7 @@ static class AsyncMonitorObjectTable
 {
     public sealed class Descriptor
     {
-        readonly AsyncMutex m_Mutex = new();
+        readonly AsyncCriticalSection m_Mutex = new();
         readonly AsyncConditionVariableImpl m_ConditionVariable = new();
 
         // ------------------------------------------

@@ -16,7 +16,7 @@ public interface IAsyncLockable
     /// Enters the lock, waiting if necessary until the lock can be entered.
     /// </summary>
     /// <remarks>
-    /// When the method returns, the current task is the only task that holds the lock.
+    /// When the method returns, the current thread is the only thread that holds the lock.
     /// If the lock can't be entered immediately, the method waits until the lock can be entered.
     /// </remarks>
     /// <param name="cancellationToken">The cancellation token.</param>
@@ -26,7 +26,10 @@ public interface IAsyncLockable
     /// <summary>
     /// Asynchronously enters the lock, waiting if necessary until the lock can be entered.
     /// </summary>
-    /// <remarks><inheritdoc cref="Enter(CancellationToken)"/></remarks>
+    /// <remarks>
+    /// When the method returns, the current task is the only task that holds the lock.
+    /// If the lock can't be entered immediately, the method waits until the lock can be entered.
+    /// </remarks>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     /// A task that will complete when the lock is entered.
@@ -38,7 +41,7 @@ public interface IAsyncLockable
     /// Tries to enter the lock without waiting.
     /// </summary>
     /// <remarks>
-    /// When the method returns <see langword="true"/>, the current task is the only task that holds the lock.
+    /// When the method returns <see langword="true"/>, the current thread is the only thread that holds the lock.
     /// If the lock can't be entered immediately, the method returns <see langword="false"/> without waiting for the lock.
     /// </remarks>
     /// <returns>
@@ -49,7 +52,10 @@ public interface IAsyncLockable
     /// <summary>
     /// Tries to enter the lock, waiting if necessary until the lock can be entered or until the specified timeout expires.
     /// </summary>
-    /// <remarks><inheritdoc cref="TryEnter()"/></remarks>
+    /// <remarks>
+    /// When the method returns <see langword="true"/>, the current thread is the only thread that holds the lock.
+    /// If the lock can't be entered immediately, the method returns <see langword="false"/> without waiting for the lock.
+    /// </remarks>
     /// <param name="timeout">
     /// A <see cref="TimeSpan"/> that represents the number of milliseconds to wait until the lock can be entered.
     /// Specify a value that represents <see cref="Timeout.Infinite"/> (<c>-1</c>) milliseconds to wait indefinitely,
@@ -88,7 +94,10 @@ public interface IAsyncLockable
     /// <summary>
     /// Asynchronously tries to enter the lock, waiting if necessary until the lock can be entered or until the specified timeout expires.
     /// </summary>
-    /// <remarks><inheritdoc cref="TryEnter(TimeSpan, CancellationToken)"/></remarks>
+    /// <remarks>
+    /// When the method returns <see langword="true"/>, the current task is the only task that holds the lock.
+    /// If the lock can't be entered immediately, the method returns <see langword="false"/> without waiting for the lock.
+    /// </remarks>
     /// <returns>
     /// A task that will complete with a result of <see langword="true"/> if the lock was entered by the current task;
     /// otherwise, the returned task will complete with a result of <see langword="false"/>.
@@ -99,7 +108,7 @@ public interface IAsyncLockable
     /// <summary>
     /// Asynchronously tries to enter the lock, waiting if necessary for the specified number of milliseconds until the lock can be entered.
     /// </summary>
-    /// <remarks><inheritdoc cref="TryEnter(int, CancellationToken)"/></remarks>
+    /// <remarks><inheritdoc cref="TryEnterAsync(TimeSpan, CancellationToken)"/></remarks>
     /// <returns>
     /// A task that will complete with a result of <see langword="true"/> if the lock was entered by the current task;
     /// otherwise, the returned task will complete with a result of <see langword="false"/>.

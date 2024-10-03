@@ -21,12 +21,6 @@ public abstract class AsyncMonitorImpl<TMutex> : IAsyncMonitor
         m_ConditionVariable = conditionVariable;
     }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private protected readonly TMutex Mutex;
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly AsyncConditionVariableImpl m_ConditionVariable;
-
     #region IAsyncLockable
 
     /// <inheritdoc/>
@@ -111,4 +105,10 @@ public abstract class AsyncMonitorImpl<TMutex> : IAsyncMonitor
     public void NotifyAll() => m_ConditionVariable.NotifyAll(Mutex);
 
     #endregion
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private protected readonly TMutex Mutex;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly AsyncConditionVariableImpl m_ConditionVariable;
 }

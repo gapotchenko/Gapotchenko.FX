@@ -24,7 +24,7 @@ public abstract class IAsyncLockableTests
         Assert.AreEqual(lockable is IAsyncRecursiveLockable, lockable.IsRecursive);
         Assert.IsFalse(lockable.IsEntered);
         if (lockable is IAsyncRecursiveLockable recursiveLockable)
-            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsFalse(recursiveLockable.IsLockedByCurrentTask);
     }
 
     [TestMethod]
@@ -36,19 +36,19 @@ public abstract class IAsyncLockableTests
         {
             recursiveLockable.Enter();
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             Assert.IsTrue(recursiveLockable.TryEnter());
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             recursiveLockable.Exit();
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             recursiveLockable.Exit();
             Assert.IsFalse(recursiveLockable.IsEntered);
-            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsFalse(recursiveLockable.IsLockedByCurrentTask);
         }
         else
         {
@@ -211,13 +211,13 @@ public abstract class IAsyncLockableTests
                     string GetTPText(string id) => $"{id} ♽ {iteration}/{iterationCount}";
 
                     if (recursiveLockable != null)
-                        Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask, GetTPText("TP1"));
+                        Assert.IsFalse(recursiveLockable.IsLockedByCurrentTask, GetTPText("TP1"));
 
                     await lockAsyncFunc(lockable, cancellationToken);
 
                     Assert.IsTrue(lockable.IsEntered, GetTPText("TP2"));
                     if (recursiveLockable != null)
-                        Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetTPText("TP3"));
+                        Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask, GetTPText("TP3"));
 
                     string GetIterativeTPText(string id, int i) => GetTPText($"{id} #{i}");
 
@@ -226,7 +226,7 @@ public abstract class IAsyncLockableTests
                         Assert.IsTrue(await lockable.TryEnterAsync(0, cancellationToken), GetIterativeTPText("TP4", i));
                         Assert.IsTrue(lockable.IsEntered, GetIterativeTPText("TP5", i));
                         if (recursiveLockable != null)
-                            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetIterativeTPText("TP6", i));
+                            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask, GetIterativeTPText("TP6", i));
                     }
 
                     if (random.NextBoolean())
@@ -240,7 +240,7 @@ public abstract class IAsyncLockableTests
                         lockable.Exit();
                         Assert.IsTrue(lockable.IsEntered, GetIterativeTPText("TP7", i));
                         if (recursiveLockable != null)
-                            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetIterativeTPText("TP8", i));
+                            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask, GetIterativeTPText("TP8", i));
                     }
 
                     if (random.NextBoolean())
@@ -254,7 +254,7 @@ public abstract class IAsyncLockableTests
                         await lockAsyncFunc(lockable, cancellationToken);
                         Assert.IsTrue(lockable.IsEntered, GetIterativeTPText("TP9", i));
                         if (recursiveLockable != null)
-                            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetIterativeTPText("TP10", i));
+                            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask, GetIterativeTPText("TP10", i));
                     }
 
                     if (random.NextBoolean())
@@ -268,7 +268,7 @@ public abstract class IAsyncLockableTests
                         lockable.Exit();
                         Assert.IsTrue(lockable.IsEntered, GetIterativeTPText("TP11", i));
                         if (recursiveLockable != null)
-                            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetIterativeTPText("TP12", i));
+                            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask, GetIterativeTPText("TP12", i));
                     }
 
                     if (random.NextBoolean())
@@ -279,12 +279,12 @@ public abstract class IAsyncLockableTests
 
                     Assert.IsTrue(lockable.IsEntered, GetTPText("TP13"));
                     if (recursiveLockable != null)
-                        Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask, GetTPText("TP14"));
+                        Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask, GetTPText("TP14"));
 
                     lockable.Exit();
 
                     if (recursiveLockable != null)
-                        Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask, GetTPText("TP15"));
+                        Assert.IsFalse(recursiveLockable.IsLockedByCurrentTask, GetTPText("TP15"));
                 }
             }
 
@@ -332,22 +332,22 @@ public abstract class IAsyncLockableTests
         {
             await recursiveLockable.EnterAsync();
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             Assert.IsTrue(recursiveLockable.TryEnter());
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             // Switch the context to verify that the lock recursion information is flowing.
             await Task.Yield();
 
             recursiveLockable.Exit();
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             recursiveLockable.Exit();
             Assert.IsFalse(recursiveLockable.IsEntered);
-            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsFalse(recursiveLockable.IsLockedByCurrentTask);
         }
         else
         {
@@ -391,12 +391,12 @@ public abstract class IAsyncLockableTests
 
         Assert.IsFalse(lockable.IsEntered);
         if (recursiveLockable != null)
-            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsFalse(recursiveLockable.IsLockedByCurrentTask);
 
         Assert.IsTrue(lockable.TryEnter());
         Assert.IsTrue(lockable.IsEntered);
         if (recursiveLockable != null)
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
     }
 
     // ----------------------------------------------------------------------
@@ -431,19 +431,19 @@ public abstract class IAsyncLockableTests
         {
             Assert.IsTrue(tryLockFunc(recursiveLockable));
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             Assert.IsTrue(tryLockFunc(recursiveLockable));
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             recursiveLockable.Exit();
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             recursiveLockable.Exit();
             Assert.IsFalse(recursiveLockable.IsEntered);
-            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsFalse(recursiveLockable.IsLockedByCurrentTask);
         }
         else
         {
@@ -542,22 +542,22 @@ public abstract class IAsyncLockableTests
         {
             Assert.IsTrue(await tryLockAsyncFunc(recursiveLockable));
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             Assert.IsTrue(await tryLockAsyncFunc(recursiveLockable));
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             // Switch the context to verify that the lock recursion information is flowing.
             await Task.Yield();
 
             recursiveLockable.Exit();
             Assert.IsTrue(recursiveLockable.IsEntered);
-            Assert.IsTrue(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsTrue(recursiveLockable.IsLockedByCurrentTask);
 
             recursiveLockable.Exit();
             Assert.IsFalse(recursiveLockable.IsEntered);
-            Assert.IsFalse(recursiveLockable.LockIsHeldByCurrentTask);
+            Assert.IsFalse(recursiveLockable.IsLockedByCurrentTask);
         }
         else
         {
