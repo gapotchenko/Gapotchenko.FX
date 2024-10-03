@@ -13,8 +13,19 @@ static class AsyncMonitorObjectTable
 {
     public sealed class Descriptor
     {
-        readonly AsyncCriticalSection m_Mutex = new();
-        readonly AsyncConditionVariableImpl m_ConditionVariable = new();
+#if PREVIEW
+
+        public AsyncMonitorSlim SlimMonitor => m_CachedSlimMonitor ?? GetSlimMonitorRare();
+
+        AsyncMonitorSlim GetSlimMonitorRare()
+        {
+            lock (this)
+                return m_CachedSlimMonitor ??= new(m_Mutex, m_ConditionVariable);
+        }
+
+        AsyncMonitorSlim? m_CachedSlimMonitor;
+
+#endif
 
         // ------------------------------------------
 
@@ -23,22 +34,15 @@ static class AsyncMonitorObjectTable
         AsyncMonitor GetMonitorRare()
         {
             lock (this)
-                return m_CachedMonitor ??= new(m_Mutex, m_ConditionVariable);
+                return m_CachedMonitor ??= new(new AsyncRecursiveLockableImpl<IAsyncLockable>(m_Mutex), m_ConditionVariable);
         }
 
         AsyncMonitor? m_CachedMonitor;
 
         // ------------------------------------------
 
-        public AsyncRecursiveMonitor RecursiveMonitor => m_CachedRecursiveMonitor ?? GetRecursiveMonitorRare();
-
-        AsyncRecursiveMonitor GetRecursiveMonitorRare()
-        {
-            lock (this)
-                return m_CachedRecursiveMonitor ??= new(new AsyncRecursiveLockableImpl<IAsyncLockable>(m_Mutex), m_ConditionVariable);
-        }
-
-        AsyncRecursiveMonitor? m_CachedRecursiveMonitor;
+        readonly AsyncCriticalSection m_Mutex = new();
+        readonly AsyncConditionVariableImpl m_ConditionVariable = new();
     }
 
     static readonly ConditionalWeakTable<object, Descriptor> m_Descriptors = new();

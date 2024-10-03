@@ -13,9 +13,9 @@ static class Class1
 {
     static async Task<int> RunAsync()
     {
-        var monitor = new AsyncLock();
+        var lockObj = new AsyncLock();
 
-        using (var scope = await monitor.TryEnterScopeAsync(10))
+        using (var scope = await lockObj.TryEnterScopeAsync(10))
         {
             await Console.Out.WriteLineAsync("123");
         }

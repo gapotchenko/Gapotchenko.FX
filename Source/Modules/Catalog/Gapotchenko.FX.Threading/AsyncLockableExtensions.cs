@@ -4,9 +4,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-namespace Gapotchenko.FX.Threading;
+using Gapotchenko.FX.Threading.Utils;
 
-#pragma warning disable CA1062
+namespace Gapotchenko.FX.Threading;
 
 /// <summary>
 /// Provides extension methods for <see cref="IAsyncLockable"/>.
@@ -24,8 +24,7 @@ public static class AsyncLockableExtensions
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
     public static AsyncLockableScope EnterScope(this IAsyncLockable lockable, CancellationToken cancellationToken = default)
     {
-        if (lockable is null)
-            throw new ArgumentNullException(nameof(lockable));
+        ExceptionHelper.ThrowIfArgumentIsNull(lockable);
 
         lockable.Enter(cancellationToken);
         return new AsyncLockableScope(lockable);
@@ -85,7 +84,11 @@ public static class AsyncLockableExtensions
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
     public static AsyncLockableScope TryEnterScope(this IAsyncLockable lockable, TimeSpan timeout, CancellationToken cancellationToken = default) =>
-        new(lockable.TryEnter(timeout, cancellationToken) ? lockable : null);
+        new(
+            (lockable ?? throw new ArgumentNullException(nameof(lockable)))
+            .TryEnter(timeout, cancellationToken) ?
+                lockable :
+                null);
 
     /// <summary>
     /// Blocks the current thread until it can lock the synchronization primitive,
@@ -111,7 +114,11 @@ public static class AsyncLockableExtensions
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
     public static AsyncLockableScope TryEnterScope(this IAsyncLockable lockable, int millisecondsTimeout, CancellationToken cancellationToken = default) =>
-        new(lockable.TryEnter(millisecondsTimeout, cancellationToken) ? lockable : null);
+        new(
+            (lockable ?? throw new ArgumentNullException(nameof(lockable)))
+            .TryEnter(millisecondsTimeout, cancellationToken) ?
+                lockable :
+                null);
 
     /// <summary>
     /// Asynchronously waits to lock the synchronization primitive,
@@ -171,10 +178,14 @@ public static class AsyncLockableExtensions
             lockable.TryEnterAsync(millisecondsTimeout, cancellationToken),
             cancellationToken);
 
-    static Task<AsyncLockableScope> TryEnterScopeAsyncCore(IAsyncLockable lockable, Task<bool> task, CancellationToken cancellationToken) =>
-        task.ContinueWith(
+    static Task<AsyncLockableScope> TryEnterScopeAsyncCore(IAsyncLockable lockable, Task<bool> task, CancellationToken cancellationToken)
+    {
+        ExceptionHelper.ThrowIfArgumentIsNull(lockable);
+
+        return task.ContinueWith(
             task => new AsyncLockableScope(task.Result ? lockable : null),
             cancellationToken,
             TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
             TaskScheduler.Default);
+    }
 }

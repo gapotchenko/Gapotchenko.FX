@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Threading;
 
 /// <summary>
 /// Represents a non-reentrant synchronization primitive
-/// that ensures that only one thread can access a resource at any given time.
+/// that ensures that only one thread or task can access a resource at any given time.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
 public sealed class AsyncCriticalSection : IAsyncMutex

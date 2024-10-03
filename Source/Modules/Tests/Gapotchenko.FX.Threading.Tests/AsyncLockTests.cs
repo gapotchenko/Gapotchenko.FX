@@ -9,7 +9,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Gapotchenko.FX.Threading.Tests;
 
 [TestClass]
-public sealed class AsyncMutexTests : IAsyncMutexTests
+[TestCategory("recursive")]
+public sealed class AsyncLockTests : IAsyncMutexTests
 {
-    protected override IAsyncMutex CreateAsyncMutex() => new AsyncCriticalSection();
+    protected override IAsyncMutex CreateAsyncMutex() => new AsyncLock();
 }

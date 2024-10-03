@@ -10,25 +10,28 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Threading;
 
 /// <summary>
-/// Represents a non-reentrant synchronization primitive
+/// Represents a reentrant synchronization primitive
 /// that provides a mechanism that synchronizes access to objects.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
-public sealed class AsyncMonitor : AsyncMonitorImpl<IAsyncLockable>
+public sealed class AsyncMonitor : AsyncMonitorImpl<IAsyncRecursiveLockable>, IAsyncRecursiveMonitor
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AsyncMonitor"/> class.
     /// </summary>
     public AsyncMonitor() :
-        base(new AsyncCriticalSection(), new AsyncConditionVariableImpl())
+        base(new AsyncLock(), new AsyncConditionVariableImpl())
     {
     }
 
-    internal AsyncMonitor(IAsyncLockable mutex, AsyncConditionVariableImpl conditionVariable) :
+    internal AsyncMonitor(IAsyncRecursiveLockable mutex, AsyncConditionVariableImpl conditionVariable) :
         base(mutex, conditionVariable)
     {
-        Debug.Assert(!mutex.IsRecursive);
+        Debug.Assert(mutex.IsRecursive);
     }
+
+    /// <inheritdoc/>
+    public bool IsLockedByCurrentTask => Mutex.IsLockedByCurrentTask;
 
     /// <summary>
     /// Gets an <see cref="AsyncMonitor"/> associated with the specified object.

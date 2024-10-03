@@ -9,24 +9,9 @@ using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading;
 
-readonly struct AsyncRecursiveLockableImpl<TLockable> : IAsyncRecursiveLockable
+readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) : IAsyncRecursiveLockable
     where TLockable : IAsyncLockable
 {
-    // ----------------------------------------------------------------------
-    // Public Facade
-    // ----------------------------------------------------------------------
-
-    public AsyncRecursiveLockableImpl(TLockable lockable)
-    {
-        m_Lockable = lockable;
-    }
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly TLockable m_Lockable;
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly AsyncRecursionTracker m_RecursionTracker = new();
-
     public void Enter(CancellationToken cancellationToken)
     {
         if (!m_RecursionTracker.IsEntered)
@@ -146,4 +131,10 @@ readonly struct AsyncRecursiveLockableImpl<TLockable> : IAsyncRecursiveLockable
             return Task.FromResult(true);
         }
     }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly TLockable m_Lockable = lockable;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly AsyncRecursionTracker m_RecursionTracker = new();
 }
