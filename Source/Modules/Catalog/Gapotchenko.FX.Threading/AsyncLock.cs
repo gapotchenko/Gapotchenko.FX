@@ -54,10 +54,10 @@ public sealed class AsyncLock : IAsyncRecursiveMutex
     public bool IsEntered => m_CoreImpl.IsEntered;
 
     /// <inheritdoc/>
-    public bool IsLockedByCurrentTask => m_CoreImpl.IsLockedByCurrentTask;
+    public bool IsLockedByCurrentThread => m_CoreImpl.IsLockedByCurrentThread;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly AsyncRecursiveLockableImpl<AsyncMutexImpl> m_CoreImpl = new(new());
 
-    bool IAsyncLockable.IsRecursive => true;
+    bool ILockable.IsRecursive => true;
 }

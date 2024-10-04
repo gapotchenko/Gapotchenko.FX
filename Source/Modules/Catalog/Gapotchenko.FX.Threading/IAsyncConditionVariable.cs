@@ -8,21 +8,10 @@ namespace Gapotchenko.FX.Threading;
 
 /// <summary>
 /// Defines the interface of a synchronization primitive that is used in conjunction with an <see cref="IAsyncLockable"/>
-/// to block one or more threads until another thread modifies a shared variable or state (the condition)
-/// and notifies the <see cref="AsyncConditionVariable"/> about the change.
+/// to block one or more tasks until another task modifies a shared variable or state (the condition)
+/// and notifies the <see cref="IAsyncConditionVariable"/> about the change.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
-public interface IAsyncConditionVariable : IAsyncAwaitable
+public interface IAsyncConditionVariable : IConditionVariable, IAsyncAwaitable
 {
-    /// <summary>
-    /// Notifies a thread or a task in the waiting queue of a change in the locked shared state.
-    /// </summary>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
-    void Notify();
-
-    /// <summary>
-    /// Notifies all waiting threads and tasks of a change in the locked shared state.
-    /// </summary>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
-    void NotifyAll();
 }

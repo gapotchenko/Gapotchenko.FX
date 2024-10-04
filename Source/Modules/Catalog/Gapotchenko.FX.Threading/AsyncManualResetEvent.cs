@@ -120,7 +120,7 @@ public sealed class AsyncManualResetEvent : IAsyncResetEvent
         return DoWaitAsync(timeout, cancellationToken);
     }
 
-    bool IAsyncResetEvent.IsAutoReset => false;
+    bool IResetEvent.IsAutoReset => false;
 
     // ----------------------------------------------------------------------
     // Core Implementation

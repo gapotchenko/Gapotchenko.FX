@@ -7,12 +7,12 @@
 namespace Gapotchenko.FX.Threading;
 
 /// <summary>
-/// Defines a disposable scope of an asynchronous lockable access to a resource.
+/// Defines a disposable scope of a lockable access to a resource.
 /// The scope can be disposed to unlock the synchronization primitive.
 /// </summary>
-public readonly struct AsyncLockableScope : IDisposable
+public readonly struct LockableScope : IDisposable
 {
-    internal AsyncLockableScope(IAsyncLockable? lockable)
+    internal LockableScope(ILockable? lockable)
     {
         m_Lockable = lockable;
     }
@@ -30,5 +30,5 @@ public readonly struct AsyncLockableScope : IDisposable
         m_Lockable?.Exit();
     }
 
-    readonly IAsyncLockable? m_Lockable;
+    readonly ILockable? m_Lockable;
 }

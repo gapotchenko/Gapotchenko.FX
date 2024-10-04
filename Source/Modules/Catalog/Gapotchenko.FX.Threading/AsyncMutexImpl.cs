@@ -65,5 +65,5 @@ readonly struct AsyncMutexImpl : IAsyncMutex
 
     public readonly bool IsEntered => m_Semaphore.CurrentCount != 1;
 
-    bool IAsyncLockable.IsRecursive => false;
+    bool ILockable.IsRecursive => false;
 }

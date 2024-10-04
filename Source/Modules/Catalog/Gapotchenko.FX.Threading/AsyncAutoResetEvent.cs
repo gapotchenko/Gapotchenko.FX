@@ -118,7 +118,7 @@ public sealed class AsyncAutoResetEvent : IAsyncResetEvent
         return DoWaitAsync(timeout, cancellationToken);
     }
 
-    bool IAsyncResetEvent.IsAutoReset => true;
+    bool IResetEvent.IsAutoReset => true;
 
     // ----------------------------------------------------------------------
     // Core Implementation

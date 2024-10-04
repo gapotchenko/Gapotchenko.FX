@@ -8,12 +8,8 @@ namespace Gapotchenko.FX.Threading;
 
 /// <summary>
 /// Defines the interface of an event that supports both synchronous and asynchronous operations.
-/// Event is a synchronization primitive that, when signaled, allows one or more threads waiting on it to proceed.
+/// Event is a synchronization primitive that, when signaled, allows one or more tasks waiting on it to proceed.
 /// </summary>
-public interface IAsyncEvent : IAsyncAwaitable
+public interface IAsyncEvent : IEvent, IAsyncAwaitable
 {
-    /// <summary>
-    /// Gets a value indicating whether the event is set.
-    /// </summary>
-    bool IsSet { get; }
 }

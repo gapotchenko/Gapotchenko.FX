@@ -10,13 +10,6 @@ namespace Gapotchenko.FX.Threading;
 /// The interface of a recursive lockable synchronization primitive
 /// that supports both synchronous and asynchronous operations.
 /// </summary>
-public interface IAsyncRecursiveLockable : IAsyncLockable
+public interface IAsyncRecursiveLockable : IRecursiveLockable, IAsyncLockable
 {
-    /// <summary>
-    /// Gets a value indicating whether the lock is held by the current task.
-    /// </summary>
-    /// <value>
-    /// <see langword="true"/> if the current task holds the lock; otherwise, <see langword="false"/>.
-    /// </value>
-    bool IsLockedByCurrentTask { get; }
 }

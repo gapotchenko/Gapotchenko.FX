@@ -2,14 +2,18 @@
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
-// Year of introduction: 2023
+// Year of introduction: 2024
 
 namespace Gapotchenko.FX.Threading;
 
 /// <summary>
-/// Defines the interface of a resettable event that supports both synchronous and asynchronous operations.
+/// Defines the interface of an event that supports synchronous operations.
 /// Event is a synchronization primitive that, when signaled, allows one or more threads waiting on it to proceed.
 /// </summary>
-public interface IAsyncResetEvent : IResetEvent, IAsyncEvent
+public interface IEvent : IAwaitable
 {
+    /// <summary>
+    /// Gets a value indicating whether the event is set.
+    /// </summary>
+    bool IsSet { get; }
 }

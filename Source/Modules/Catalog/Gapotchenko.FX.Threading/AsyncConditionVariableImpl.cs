@@ -238,6 +238,6 @@ readonly struct AsyncConditionVariableImpl
     [StackTraceHidden]
     void ValidateLockable(IAsyncLockable lockable)
     {
-        AsyncLockableHelper.ValidateLockOwnership(lockable);
+        LockableHelper.ValidateLockOwnership(lockable);
     }
 }

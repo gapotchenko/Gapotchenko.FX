@@ -54,7 +54,7 @@ public abstract class AsyncMonitorImpl<TMutex> : IAsyncMonitor
     /// <inheritdoc/>
     public bool IsEntered => Mutex.IsEntered;
 
-    bool IAsyncLockable.IsRecursive => Mutex.IsRecursive;
+    bool ILockable.IsRecursive => Mutex.IsRecursive;
 
     #endregion
 

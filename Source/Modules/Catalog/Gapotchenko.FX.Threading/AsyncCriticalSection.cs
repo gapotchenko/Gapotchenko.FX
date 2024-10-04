@@ -56,5 +56,5 @@ public sealed class AsyncCriticalSection : IAsyncMutex
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly AsyncMutexImpl m_CoreImpl = new();
 
-    bool IAsyncLockable.IsRecursive => false;
+    bool ILockable.IsRecursive => false;
 }
