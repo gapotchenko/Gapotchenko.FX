@@ -269,7 +269,8 @@ public class FragmentedMemoryStream : Stream
 
         int length = checked((int)Length);
         var buffer = new byte[length];
-        Read(buffer, 0, length);
+        int r = Read(buffer, 0, length);
+        Debug.Assert(r == length);
 
         Position = savedPosition;
 
