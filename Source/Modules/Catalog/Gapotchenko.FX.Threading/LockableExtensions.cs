@@ -14,14 +14,10 @@ namespace Gapotchenko.FX.Threading;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class LockableExtensions
 {
-    /// <summary>
-    /// Blocks the current thread until it can lock the synchronization primitive,
-    /// and returns a disposable scope that can be disposed to unlock it.
-    /// </summary>
+    /// <returns>A <see cref="LockableScope"/> that can be disposed to exit the lock.</returns>
+    /// <inheritdoc cref="ILockable.Enter(CancellationToken)"/>
     /// <param name="lockable">The lockable synchronization primitive.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A scope that can be disposed to unlock the synchronization primitive.</returns>
-    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    /// <param name="cancellationToken"><inheritdoc/></param>
     public static LockableScope EnterScope(this ILockable lockable, CancellationToken cancellationToken = default)
     {
         ExceptionHelper.ThrowIfArgumentIsNull(lockable);
@@ -30,70 +26,71 @@ public static class LockableExtensions
         return new LockableScope(lockable);
     }
 
-    /// <summary>
-    /// Tries to lock the synchronization primitive and
-    /// returns a disposable scope that can be disposed to unlock it.
-    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// When the method returns a <see cref="LockableScope"/> with <see cref="LockableScope.HasLock"/> property set to <see langword="true"/>,
+    /// the current thread is the only thread that holds the lock.
+    /// If the lock can't be entered immediately, the method returns without waiting for the lock and
+    /// <see cref="LockableScope.HasLock"/> property of the returned <see cref="LockableScope"/> is set to <see langword="false"/>.
+    /// </para>
+    /// <para>
+    /// This method is intended to be used with a language construct that automatically disposes the <see cref="LockableScope"/>,
+    /// such as the C# <see langword="using"/> keyword.
+    /// </para>
+    /// </remarks>
     /// <param name="lockable">The lockable synchronization primitive.</param>
     /// <returns>
-    /// A scope that can be disposed to unlock the synchronization primitive.
-    /// <see cref="LockableScope.HasLock"/> property indicates whether the current thread successfully locked the synchronization primitive.
+    /// A <see cref="LockableScope"/> that can be disposed to exit the lock.
+    /// <see cref="LockableScope.HasLock"/> property indicates whether the current thread successfully entered the lock.
     /// </returns>
-    public static LockableScope TryEnterScope(this ILockable lockable) => TryEnterScope(lockable, 0);
+    /// <inheritdoc cref="ILockable.TryEnter()"/>
+    public static LockableScope TryEnterScope(this ILockable lockable) =>
+        new(
+            (lockable ?? throw new ArgumentNullException(nameof(lockable)))
+            .TryEnter()
+            ? lockable : null);
 
-    /// <summary>
-    /// Blocks the current thread until it can lock the synchronization primitive,
-    /// using a <see cref="TimeSpan"/> that specifies the timeout,
-    /// and returns a disposable scope that can be disposed to unlock the synchronization primitive.
-    /// </summary>
-    /// <param name="lockable">The lockable synchronization primitive.</param>
-    /// <param name="timeout">
-    /// A <see cref="TimeSpan"/> that represents the number of milliseconds to wait,
-    /// a <see cref="TimeSpan"/> that represents <c>-1</c> milliseconds to wait indefinitely,
-    /// or a <see cref="TimeSpan"/> that represents <c>0</c> milliseconds to try to lock the synchronization primitive and return immediately.
-    /// </param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <remarks>
+    /// When the method returns a <see cref="LockableScope"/> with <see cref="LockableScope.HasLock"/> property set to <see langword="true"/>,
+    /// the current thread is the only thread that holds the lock.
+    /// If the lock can't be entered immediately, the method waits until the lock can be entered or
+    /// until the timeout specified by the <paramref name="timeout"/> parameter expires.
+    /// If the timeout expires before entering the lock, the method returns
+    /// a <see cref="LockableScope"/> with <see cref="LockableScope.HasLock"/> property set to <see langword="false"/>.
+    /// </remarks>
     /// <returns>
-    /// A scope that can be disposed to unlock the synchronization primitive.
-    /// <see cref="LockableScope.HasLock"/> property indicates whether the current thread successfully locked the synchronization primitive.
+    /// A <see cref="LockableScope"/> that can be disposed to exit the lock.
+    /// <see cref="LockableScope.HasLock"/> property indicates whether the current thread successfully entered the lock.
     /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="timeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
-    /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
-    /// </exception>
-    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    /// <inheritdoc cref="ILockable.TryEnter(TimeSpan, CancellationToken)"/>
+    /// <param name="lockable">The lockable synchronization primitive.</param>
+    /// <param name="timeout"><inheritdoc/></param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
     public static LockableScope TryEnterScope(this ILockable lockable, TimeSpan timeout, CancellationToken cancellationToken = default) =>
         new(
             (lockable ?? throw new ArgumentNullException(nameof(lockable)))
-            .TryEnter(timeout, cancellationToken) ? lockable : null);
+            .TryEnter(timeout, cancellationToken)
+            ? lockable : null);
 
-    /// <summary>
-    /// Blocks the current thread until it can lock the synchronization primitive,
-    /// using a <see cref="TimeSpan"/> that specifies the timeout,
-    /// and returns a disposable scope that can be disposed to unlock the synchronization primitive.
-    /// </summary>
-    /// <param name="lockable">The lockable synchronization primitive.</param>
-    /// <param name="millisecondsTimeout">
-    /// The number of milliseconds to wait,
-    /// <see cref="Timeout.Infinite"/> which has the value of <c>-1</c> to wait indefinitely,
-    /// or <c>0</c> to try to lock the synchronization primitive and return immediately.
-    /// </param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <remarks>
+    /// When the method returns a <see cref="LockableScope"/> with <see cref="LockableScope.HasLock"/> property set to <see langword="true"/>,
+    /// the current thread is the only thread that holds the lock.
+    /// If the lock can't be entered immediately, the method waits until the lock can be entered or
+    /// until the timeout specified by the <paramref name="millisecondsTimeout"/> parameter expires.
+    /// If the timeout expires before entering the lock, the method returns
+    /// a <see cref="LockableScope"/> with <see cref="LockableScope.HasLock"/> property set to <see langword="false"/>.
+    /// </remarks>
     /// <returns>
-    /// A scope that can be disposed to unlock the synchronization primitive.
-    /// <see cref="LockableScope.HasLock"/> property indicates whether the current thread successfully locked the synchronization primitive.
+    /// A <see cref="LockableScope"/> that can be disposed to exit the lock.
+    /// <see cref="LockableScope.HasLock"/> property indicates whether the current thread successfully entered the lock.
     /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="millisecondsTimeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
-    /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="millisecondsTimeout"/> is greater than <see cref="Int32.MaxValue"/>.
-    /// </exception>
-    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    /// <inheritdoc cref="ILockable.TryEnter(int, CancellationToken)"/>
+    /// <param name="lockable">The lockable synchronization primitive.</param>
+    /// <param name="millisecondsTimeout"><inheritdoc/></param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
     public static LockableScope TryEnterScope(this ILockable lockable, int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         new(
             (lockable ?? throw new ArgumentNullException(nameof(lockable)))
-            .TryEnter(millisecondsTimeout, cancellationToken) ? lockable : null);
+            .TryEnter(millisecondsTimeout, cancellationToken)
+            ? lockable : null);
 }

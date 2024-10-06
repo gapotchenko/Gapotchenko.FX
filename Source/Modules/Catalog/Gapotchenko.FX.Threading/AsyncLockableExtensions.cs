@@ -12,16 +12,10 @@ namespace Gapotchenko.FX.Threading;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class AsyncLockableExtensions
 {
-    /// <summary>
-    /// Asynchronously waits to lock the synchronization primitive,
-    /// and returns a disposable scope that can be disposed to unlock it.
-    /// </summary>
+    /// <returns>A <see cref="LockableScope"/> that can be disposed to exit the lock.</returns>
+    /// <inheritdoc cref="IAsyncLockable.EnterAsync(CancellationToken)"/>
     /// <param name="lockable">The lockable synchronization primitive.</param>
-    /// <returns>
-    /// A task that will complete when the synchronization primitive has been locked with a result of the scope that can be disposed to unlock the synchronization primitive.
-    /// </returns>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    /// <param name="cancellationToken"><inheritdoc/></param>
     public static Task<LockableScope> EnterScopeAsync(this IAsyncLockable lockable, CancellationToken cancellationToken = default) =>
         (lockable ?? throw new ArgumentNullException(nameof(lockable)))
         .EnterAsync(cancellationToken)
@@ -31,58 +25,44 @@ public static class AsyncLockableExtensions
             TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
             TaskScheduler.Default);
 
-    /// <summary>
-    /// Asynchronously waits to lock the synchronization primitive,
-    /// using a <see cref="TimeSpan"/> to measure the time interval,
-    /// and returns a disposable scope that can be disposed to unlock the synchronization primitive.
-    /// </summary>
-    /// <param name="lockable">The lockable synchronization primitive.</param>
-    /// <param name="timeout">
-    /// A <see cref="TimeSpan"/> that represents the number of milliseconds to wait,
-    /// a <see cref="TimeSpan"/> that represents <c>-1</c> milliseconds to wait indefinitely,
-    /// or a <see cref="TimeSpan"/> that represents <c>0</c> milliseconds to try to lock the synchronization primitive and return immediately.
-    /// </param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <remarks>
+    /// When the method returns a <see cref="LockableScope"/> with <see cref="LockableScope.HasLock"/> property set to <see langword="true"/>,
+    /// the current task is the only task that holds the lock.
+    /// If the lock can't be entered immediately, the method waits until the lock can be entered or
+    /// until the timeout specified by the <paramref name="timeout"/> parameter expires.
+    /// If the timeout expires before entering the lock, the method returns
+    /// a <see cref="LockableScope"/> with <see cref="LockableScope.HasLock"/> property set to <see langword="false"/>.
+    /// </remarks>
     /// <returns>
-    /// A task that will complete with a result of the scope that can be disposed to unlock the synchronization primitive.
-    /// <see cref="LockableScope.HasLock"/> property indicates whether the current thread successfully locked the synchronization primitive.
+    /// A <see cref="LockableScope"/> that can be disposed to exit the lock.
+    /// <see cref="LockableScope.HasLock"/> property indicates whether the current task successfully entered the lock.
     /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="timeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
-    /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
-    /// </exception>
-    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    /// <inheritdoc cref="IAsyncLockable.TryEnterAsync(TimeSpan, CancellationToken)"/>
+    /// <param name="lockable">The lockable synchronization primitive.</param>
+    /// <param name="timeout"><inheritdoc/></param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
     public static Task<LockableScope> TryEnterScopeAsync(this IAsyncLockable lockable, TimeSpan timeout, CancellationToken cancellationToken = default) =>
         TryEnterScopeAsyncCore(
             lockable ?? throw new ArgumentNullException(nameof(lockable)),
             lockable.TryEnterAsync(timeout, cancellationToken),
             cancellationToken);
 
-    /// <summary>
-    /// Asynchronously waits to lock the synchronization primitive,
-    /// using a 32-bit signed integer to measure the time interval,
-    /// and returns a disposable scope that can be disposed to unlock the synchronization primitive.
-    /// </summary>
-    /// <param name="lockable">The lockable synchronization primitive.</param>
-    /// <param name="millisecondsTimeout">
-    /// The number of milliseconds to wait,
-    /// <see cref="Timeout.Infinite"/> which has the value of <c>-1</c> to wait indefinitely,
-    /// or <c>0</c> to try to lock the synchronization primitive and return immediately.
-    /// </param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <remarks>
+    /// When the method returns a <see cref="LockableScope"/> with <see cref="LockableScope.HasLock"/> property set to <see langword="true"/>,
+    /// the current thread is the only thread that holds the lock.
+    /// If the lock can't be entered immediately, the method waits until the lock can be entered or
+    /// until the timeout specified by the <paramref name="millisecondsTimeout"/> parameter expires.
+    /// If the timeout expires before entering the lock, the method returns
+    /// a <see cref="LockableScope"/> with <see cref="LockableScope.HasLock"/> property set to <see langword="false"/>.
+    /// </remarks>
     /// <returns>
-    /// A task that will complete with a result of the scope that can be disposed to unlock the synchronization primitive.
-    /// <see cref="LockableScope.HasLock"/> property indicates whether the current thread successfully locked the synchronization primitive.
+    /// A <see cref="LockableScope"/> that can be disposed to exit the lock.
+    /// <see cref="LockableScope.HasLock"/> property indicates whether the current thread successfully entered the lock.
     /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="millisecondsTimeout"/> is a negative number other than <c>-1</c>, which represents an infinite timeout.
-    /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="millisecondsTimeout"/> is greater than <see cref="Int32.MaxValue"/>.
-    /// </exception>
-    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    /// <inheritdoc cref="IAsyncLockable.TryEnterAsync(int, CancellationToken)"/>
+    /// <param name="lockable">The lockable synchronization primitive.</param>
+    /// <param name="millisecondsTimeout"><inheritdoc/></param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
     public static Task<LockableScope> TryEnterScopeAsync(this IAsyncLockable lockable, int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         TryEnterScopeAsyncCore(
             lockable ?? throw new ArgumentNullException(nameof(lockable)),

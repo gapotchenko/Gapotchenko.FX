@@ -19,11 +19,10 @@ public interface IAsyncLockable : ILockable
     /// When the method returns, the current task is the only task that holds the lock.
     /// If the lock can't be entered immediately, the method waits until the lock can be entered.
     /// </remarks>
-    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     /// A task that will complete when the lock is entered.
     /// </returns>
-    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    /// <inheritdoc cref="ILockable.Enter(CancellationToken)"/>
     Task EnterAsync(CancellationToken cancellationToken = default);
 
     /// <summary>

@@ -1,6 +1,5 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
-//
 // Portions © Stephen Cleary
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -22,8 +21,6 @@ readonly struct AsyncConditionVariableImpl
     public AsyncConditionVariableImpl()
     {
     }
-
-    readonly AsyncWaitQueue<bool> m_Queue = new();
 
     public void Notify(IAsyncLockable lockable)
     {
@@ -234,6 +231,8 @@ readonly struct AsyncConditionVariableImpl
         lock (m_Queue.SyncRoot)
             return m_Queue.Enqueue(cancellationToken);
     }
+
+    readonly AsyncWaitQueue<bool> m_Queue = new();
 
     [StackTraceHidden]
     void ValidateLockable(IAsyncLockable lockable)
