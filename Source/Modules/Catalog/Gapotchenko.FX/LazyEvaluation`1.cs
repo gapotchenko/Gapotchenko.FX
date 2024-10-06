@@ -88,21 +88,15 @@ public struct LazyEvaluation<T>
         Fn.Ignore(Value);
     }
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     [MaybeNull]
     T ValueForDebugDisplay => IsValueCreated ? Value : default;
 
-    internal sealed class DebugView
+    internal sealed class DebugView(LazyEvaluation<T> instance)
     {
-        public DebugView(LazyEvaluation<T> instance)
-        {
-            m_Instance = instance;
-        }
-
-        LazyEvaluation<T> m_Instance;
-
-        public bool IsValueCreated => m_Instance.IsValueCreated;
+        public bool IsValueCreated => instance.IsValueCreated;
 
         [MaybeNull]
-        public T Value => m_Instance.ValueForDebugDisplay;
+        public T Value => instance.ValueForDebugDisplay;
     }
 }

@@ -98,21 +98,15 @@ public struct EvaluateOnce<T>
         _ = Value;
     }
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     [MaybeNull]
     T ValueForDebugDisplay => IsValueCreated ? Value : default;
 
-    internal sealed class DebugView
+    internal sealed class DebugView(EvaluateOnce<T> instance)
     {
-        public DebugView(EvaluateOnce<T> instance)
-        {
-            m_Instance = instance;
-        }
-
-        EvaluateOnce<T> m_Instance;
-
-        public bool IsValueCreated => m_Instance.IsValueCreated;
+        public bool IsValueCreated => instance.IsValueCreated;
 
         [MaybeNull]
-        public T Value => m_Instance.ValueForDebugDisplay;
+        public T Value => instance.ValueForDebugDisplay;
     }
 }
