@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DefineConstants>$(DefineConstants),PREVIEW</DefineConstants>
+    <DefineConstants>$(DefineConstants),PREVIEW</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
