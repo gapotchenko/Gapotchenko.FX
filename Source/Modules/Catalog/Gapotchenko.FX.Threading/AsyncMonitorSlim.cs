@@ -9,15 +9,14 @@ using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading;
 
+#if PREVIEW
+
 /// <summary>
 /// Represents a non-reentrant synchronization primitive
 /// that provides a mechanism that synchronizes access to objects.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
-#if PREVIEW
-public
-#endif
-sealed class AsyncMonitorSlim : AsyncMonitorImpl<IAsyncLockable>
+public sealed class AsyncMonitorSlim : AsyncMonitorImpl<IAsyncLockable>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AsyncMonitorSlim"/> class.
@@ -45,3 +44,5 @@ sealed class AsyncMonitorSlim : AsyncMonitorImpl<IAsyncLockable>
         return AsyncMonitorObjectTable.GetDescriptor(obj).SlimMonitor;
     }
 }
+
+#endif
