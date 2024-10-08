@@ -1,1 +1,1 @@
-`Mastering` folder contains various things that define properties and tasks for the project mastering to a production medium.
+`Mastering` folder contains the data and the rules for the project mastering to a production medium.

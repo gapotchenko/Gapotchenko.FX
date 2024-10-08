@@ -10,4 +10,4 @@ Technically, profile is a NuGet meta-package that contains the references to rel
 
 ## Available Profiles
 
-- [Core](Gapotchenko.FX.Profiles.Core)
+- [Core](Gapotchenko.FX.Profiles.Core#readme)

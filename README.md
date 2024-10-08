@@ -33,11 +33,11 @@ All in all, you can consider Gapotchenko.FX to play a similar role in .NET ecosy
 
 Gapotchenko.FX consists of granular modules that form thematic hierarchies of functionalities.
 
-[Get started with Gapotchenko.FX modules >](Source/Modules#modules)
+[Get started with Gapotchenko.FX modules >](Source/Modules#readme)
 
 ## Profiles
 
 In addition to modules, Gapotchenko.FX also provides profiles.
 A profile is a collection of Gapotchenko.FX modules covering a common usage pattern.
 
-[Get started with Gapotchenko.FX profiles >](Source/Profiles#profiles)
+[Get started with Gapotchenko.FX profiles >](Source/Profiles#readme)
