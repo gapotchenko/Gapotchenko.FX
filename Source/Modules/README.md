@@ -47,7 +47,7 @@ The full list of available modules is presented in the table below.
 - [Gapotchenko.FX.Threading](Catalog/Gapotchenko.FX.Threading#gapotchenkofxthreading)
 - [Gapotchenko.FX.ValueTuple](Catalog/Gapotchenko.FX.ValueTuple#gapotchenkofxvaluetuple)
 
-### Legend
+#### Legend
 
 Symbol ✱ denotes an advanced module.  
 Symbol ✱✱ denotes an expert module.
