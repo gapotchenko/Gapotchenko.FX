@@ -30,4 +30,4 @@ All in all, you can consider Gapotchenko.FX to play a similar role in .NET ecosy
 
 ![.NET Progress ca. 2012 - 2018](Documentation/Assets/dotnet-progress-ca-2012-2018.png?raw=true ".NET Progress ca. 2012 - 2018")
 
-[Continue >](Source/Gapotchenko.FX#gapotchenkofx)
+[Continue >](Source/Modules#modules)
