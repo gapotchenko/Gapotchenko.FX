@@ -25,7 +25,7 @@ This can be useful for purposes like showing an about box in GUI or a copyright 
 
 ## Information About Another Part of the App
 
-Sometimes a program consists of several parts, each of which has its own product information.
+Sometimes a program consists of several parts, each of which has its own associated product information.
 
 To get information about a specific part of the program other than the main app, use `AppInformation.For(Type)` method:
 
@@ -41,7 +41,7 @@ Console.WriteLine("Company: {0}", info.CompanyName);
 Console.WriteLine("Copyright: {0}", info.Copyright);
 ```
 
-Note how the code above gets information associated with the `System.Object` type which belongs to .NET BCL (Base Class Library).
+Note that the example gets information for `System.Object` type which belongs to .NET BCL (Base Class Library).
 The following information is retrieved:
 
 ```
