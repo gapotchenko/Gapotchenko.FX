@@ -31,7 +31,7 @@ All in all, you can consider Gapotchenko.FX to play a similar role in .NET ecosy
 
 ## Modules
 
-Gapotchenko.FX consists of granular modules that form thematic hierarchies of functionalities.
+Gapotchenko.FX consists of granular modules that form topical hierarchies of functionalities.
 
 [Get started with Gapotchenko.FX modules >](Source/Modules#readme)
 

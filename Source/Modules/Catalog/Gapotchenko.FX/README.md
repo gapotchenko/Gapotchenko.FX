@@ -140,8 +140,6 @@ using Gapotchenko.FX;
 
 class Deployment
 {
-	Optional<string> m_CachedHomeDir;
-
 	public string HomeDir
 	{
 		get
@@ -151,6 +149,8 @@ class Deployment
 			return m_CachedHomeDir.Value;
 		}
 	}
+
+	Optional<string> m_CachedHomeDir;
 }
 ```
 
@@ -164,8 +164,6 @@ using Gapotchenko.FX;
 
 class Deployment
 {
-	Optional<string> m_CachedHomeDir;
-
 	public string HomeDir
 	{
 		get
@@ -183,6 +181,8 @@ class Deployment
 			return m_CachedHomeDir.Value;
 		}
 	}
+
+	Optional<string> m_CachedHomeDir;
 }
 ```
 
@@ -195,8 +195,6 @@ using Gapotchenko.FX;
 
 class Deployment
 {
-	Optional<string> m_CachedHomeDir;
-
 	public string HomeDir
 	{
 		get
@@ -206,6 +204,8 @@ class Deployment
 			return m_CachedHomeDir.Value;
 		}
 	}
+
+	Optional<string> m_CachedHomeDir;
 }
 ```
 
@@ -235,7 +235,7 @@ using Gapotchenko.FX;
 
 class Deployment
 {
-	LazyEvaluation<string> m_HomeDir = LazyEvaluation.Create(
+	LazyEvaluation<string> m_HomeDir = new(
 		() => Empty.Nullify(Environment.GetEnvironmentVariable("PRODUCT_HOME")));
 
 	public string HomeDir => m_HomeDir.Value;
