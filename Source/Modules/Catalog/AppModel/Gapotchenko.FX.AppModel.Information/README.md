@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.AppModel.Information
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.AppModel.Information.svg)](https://www.nuget.org/packages/Gapotchenko.FX.AppModel.Information)
 
 The module provides functionality for getting information about the app.
@@ -22,6 +22,43 @@ Console.WriteLine("Copyright: {0}", info.Copyright);
 ```
 
 This can be useful for purposes like showing an about box in GUI or a copyright banner in console.
+
+## Information About Another Part of the App
+
+Sometimes a program consists of several parts, each of which has its own product information.
+
+To get information about a specific part of the program other than the main app, use `AppInformation.For(Type)` method:
+
+```csharp
+using Gapotchenko.FX.AppModel.Information;
+using System;
+
+var info = AppInformation.For(typeof(object));
+
+Console.WriteLine("Product: {0}", info.ProductName);
+Console.WriteLine("Version: {0}", info.ProductVersion);
+Console.WriteLine("Company: {0}", info.CompanyName);
+Console.WriteLine("Copyright: {0}", info.Copyright);
+```
+
+Note how the code above gets information associated with the `System.Object` type which belongs to .NET BCL (Base Class Library).
+The following information is retrieved:
+
+```
+Product: Microsoft® .NET
+Version: 8.0.824.36612
+Company: Microsoft Corporation
+Copyright: © Microsoft Corporation. All rights reserved.
+```
+
+You can use this functionality to retrieve information about any other part of the program.
+It can be a plugin, a library, and so on.
+
+There also exists `AppInformation.For(Assembly)` overload of the `For` method.
+That method overload retrieves information about a specific assembly.
+It is useful for situations when you have no specific `System.Type` at hand to retrieve the information for, but only a `System.Assembly`.
+
+It is prefereable to use `AppInformation.For(Type)` method because it is slightly more precise than `AppInformation.For(Assembly)`.
 
 ## Usage
 

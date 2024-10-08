@@ -29,7 +29,7 @@ using Console = System.Console;
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main2(string[] args)
     {
         try
         {
@@ -48,7 +48,7 @@ class Program
         }
     }
 
-    static void Main2(string[] args)
+    static void Main(string[] args)
     {
         try
         {
@@ -207,11 +207,12 @@ class Program
         //Console.WriteLine(e);
 #endif
 
-        var appInfo = AppInformation.Current;
+        var appInfo = AppInformation.For(typeof(object));
+        Console.WriteLine("Product: {0}", appInfo.ProductName);
+        Console.WriteLine("Version: {0}", appInfo.ProductVersion);
+        Console.WriteLine("Company: {0}", appInfo.CompanyName);
+        Console.WriteLine("Copyright: {0}", appInfo.Copyright);
         Console.WriteLine(appInfo.ExecutablePath);
-        Console.WriteLine(appInfo.Copyright);
-        Console.WriteLine(appInfo.ProductName);
-        Console.WriteLine(appInfo.InformationalVersion);
 
         var e = new AsyncManualResetEvent(true);
         Console.WriteLine(await e.WaitAsync(0));
