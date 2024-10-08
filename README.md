@@ -31,7 +31,7 @@ All in all, you can consider Gapotchenko.FX to play a similar role in .NET ecosy
 
 ## Modules
 
-Gapotchenko.FX consists of granular modules that form topical hierarchies of functionalities.
+Gapotchenko.FX consists of granular modules that form hierarchies of functionalities.
 
 [Get started with Gapotchenko.FX modules >](Source/Modules#readme)
 
@@ -44,7 +44,7 @@ A profile is a collection of Gapotchenko.FX modules covering a common usage patt
 
 ## Supported Platforms
 
-Gapotchenko.FX is largely platform-independent, but some parts require specific integration with a host environment to achieve the best characteristics.
+Gapotchenko.FX is largely platform-independent, but some parts of the implementation require specific integration with a host environment to achieve the best characteristics.
 
 Supported operating systems:
   - Linux
