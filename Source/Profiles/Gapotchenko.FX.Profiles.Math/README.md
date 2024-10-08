@@ -18,7 +18,7 @@ The Math profile contains the following Gapotchenko.FX modules:
 - All the modules of the [Core](../Gapotchenko.FX.Profiles.Core#modules) profile
 
 Those modules represent the canonical and most frequently used parts of Gapotchenko.FX math functionality.
-Instead of referencing each of the modules individually, you can opt-in into just using `Gapotchenko.FX.Profiles.Math` profile.
+Instead of referencing each module individually, you can opt-in into just using `Gapotchenko.FX.Profiles.Math` profile.
 
 ## Usage
 
