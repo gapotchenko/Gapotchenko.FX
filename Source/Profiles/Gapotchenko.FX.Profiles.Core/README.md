@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Profiles.Core
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Profiles.Core.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Profiles.Core)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Profiles.Core.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Profiles.Core)
 

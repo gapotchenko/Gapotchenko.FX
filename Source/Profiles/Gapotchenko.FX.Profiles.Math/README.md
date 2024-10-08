@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Profiles.Math
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Profiles.Math.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Profiles.Math)
 
 ## Overview
@@ -11,14 +11,14 @@
 
 The Math profile contains the following Gapotchenko.FX modules:
 
-- All the modules of the [Core](../Gapotchenko.FX.Profiles.Core#modules) profile
 - [Gapotchenko.FX.Math.Combinatorics](../../Modules/Catalog/Math/Gapotchenko.FX.Math.Combinatorics#readme)
 - [Gapotchenko.FX.Math.Graphs](../../Modules/Catalog/Math/Gapotchenko.FX.Math.Graphs#readme)
 - [Gapotchenko.FX.Math.Intervals](../../Modules/Catalog/Math/Gapotchenko.FX.Math.Intervals#readme)
 - [Gapotchenko.FX.Math.Metrics](../../Modules/Catalog/Math/Gapotchenko.FX.Math.Metrics#readme)
+- All the modules of the [Core](../Gapotchenko.FX.Profiles.Core#modules) profile
 
 Those modules represent the canonical and most frequently used parts of Gapotchenko.FX math functionality.
-Instead of referencing each of them individually, you can opt-in into just using `Gapotchenko.FX.Profiles.Math` profile.
+Instead of referencing each of the modules individually, you can opt-in into just using `Gapotchenko.FX.Profiles.Math` profile.
 
 ## Usage
 
