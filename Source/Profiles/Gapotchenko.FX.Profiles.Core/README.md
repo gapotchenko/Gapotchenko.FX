@@ -8,7 +8,7 @@
 
 `Gapotchenko.FX.Profiles.Core` package represents the Core profile of Gapotchenko.FX.
 
-(Disambiguation: a _Core_ word in the name has no specific relation to .NET Core)
+(Disambiguation: a _Core_ word in the profile name has no specific relation to .NET Core)
 
 ## Modules
 
