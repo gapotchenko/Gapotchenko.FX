@@ -58,7 +58,7 @@ There also exists `AppInformation.For(Assembly)` overload of the `For` method.
 That method overload retrieves information about a specific assembly.
 It is useful for situations when you have no specific `System.Type` at hand to retrieve the information for, but only a `System.Assembly`.
 
-It is preferable to use `AppInformation.For(Type)` method because it is slightly more precise than `AppInformation.For(Assembly)`.
+Note that it is preferable to use `AppInformation.For(Type)` method because it is slightly more precise than `AppInformation.For(Assembly)`.
 
 ## Usage
 
