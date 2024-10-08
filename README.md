@@ -48,3 +48,7 @@ Gapotchenko.FX is largely platform-independent, but some parts of the implementa
 
 - Supported operating systems: Linux, macOS, Windows
 - Supported CPU architectures: x86, x64, ARM, ARM64
+
+When an app built with Gapotchenko.FX runs on an unsupported platform, the platform-dependent functionality of Gapotchenko.FX downgrades to the next best thing — a non-optimized implementation.
+On rare occasions, `PlatformNotSupported` exceptions may be raised by the functionality that must to fully depend on a platform to deliver the correct results.
+
