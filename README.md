@@ -24,7 +24,7 @@ Here is a short list of what Gapotchenko.FX can do:
     Many Gapotchenko.FX primitives are backed up by algorithms leveraging OS and hardware acceleration.
     For example, CRC-32C checksum algorithm provided by `Gapotchenko.FX.Data.Integrity.Checksum.Crc32` module leverages a special CPU instruction that does fast CRC-32C calculation in hardware, whenever possible
     
-All in all, you can consider Gapotchenko.FX to play a similar role in .NET ecosystem as Boost plays for C++ to avoid a situation like that:
+All in all, you can consider Gapotchenko.FX to play a similar role in .NET ecosystem as Boost plays for C++. The project aim is to avoid a situation like that in .NET ecosystem:
 
 ![.NET Progress ca. 2012 - 2018](Documentation/Assets/dotnet-progress-ca-2012-2018.png?raw=true ".NET Progress ca. 2012 - 2018")
 
