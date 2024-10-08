@@ -133,13 +133,13 @@ public class AppInformation : IAppInformation
     }
 
     /// <summary>
-    /// Gets or sets app entry type.
+    /// Gets or configures app entry type.
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     protected Type? EntryType
     {
         get => Empty.Nullify(m_EntryType ??= RetrieveEntryType() ?? Empty.Type);
-        set => m_EntryType = value;
+        init => m_EntryType = value;
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -152,13 +152,13 @@ public class AppInformation : IAppInformation
     protected virtual Type? RetrieveEntryType() => GetType();
 
     /// <summary>
-    /// Gets or sets app entry assembly.
+    /// Gets or configures app entry assembly.
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     protected Assembly? EntryAssembly
     {
         get => m_EntryAssembly ??= RetrieveEntryAssembly();
-        set => m_EntryAssembly = value;
+        init => m_EntryAssembly = value;
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -234,7 +234,7 @@ public class AppInformation : IAppInformation
             {
                 int j = ns.LastIndexOf('.');
                 if (j != -1 && j < ns.Length - 1)
-                    productName = ns.Substring(j + 1);
+                    productName = ns[(j + 1)..];
                 else
                     productName = ns;
             }
@@ -360,7 +360,7 @@ public class AppInformation : IAppInformation
             {
                 int j = ns.IndexOf('.');
                 if (j != -1)
-                    companyName = ns.Substring(0, j);
+                    companyName = ns[..j];
                 else
                     companyName = ns;
                 return companyName;
@@ -491,7 +491,7 @@ public class AppInformation : IAppInformation
 #if NETSTANDARD || NETCOREAPP || NET
         if (localPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
         {
-#if !(NETCOREAPP3_0 || NETCOREAPP3_1 || NET)
+#if !NETCOREAPP3_0_OR_GREATER
             string frameworkDescription = RuntimeInformation.FrameworkDescription;
             if (frameworkDescription.StartsWith(".NET Core ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 3 ||
                 frameworkDescription.StartsWith(".NET ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 5)
