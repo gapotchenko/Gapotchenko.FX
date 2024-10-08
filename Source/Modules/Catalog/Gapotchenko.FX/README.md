@@ -316,7 +316,6 @@ In that case, Gapotchenko.FX provides so called "Ex" classes, where "Ex" is an a
 As you can see, there are many little things that shape the productive environment into one you can immediately employ, and reap the benefit in no-time.
 
 ![Gapotchenko FX Ark](../../../../Documentation/Assets/gapotchenko-fx-ark-2019.png?raw=true ".NET is a technology for everyone.
-Nobody can take it away or undermine its progress.
 Gapotchenko.FX brings RAD back to the people 💪")
 
 <div align="right">
@@ -328,8 +327,8 @@ Gapotchenko.FX brings RAD back to the people 💪")
 ## Supported Platforms
 
 - .NET 5.0+
-- .NET Standard 2.0+
 - .NET Core 2.0+
+- .NET Standard 2.0+
 - .NET Framework 4.6.1+
 
 ## Usage
