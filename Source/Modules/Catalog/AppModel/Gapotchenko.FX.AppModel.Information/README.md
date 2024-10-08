@@ -5,7 +5,7 @@
 
 The module provides functionality for getting information about the app.
 
-## Information About the Current App
+## Getting Information About the Current App
 
 To get information about the current app, use `AppInformation.Current` property:
 
@@ -23,7 +23,7 @@ Console.WriteLine("Copyright: {0}", info.Copyright);
 
 This can be useful for purposes like showing an about box in GUI or a copyright banner in console.
 
-## Information About Another Part of the App
+## Getting Information About Another Part of the App
 
 Sometimes a program consists of several parts, each of which has its own associated product information.
 
