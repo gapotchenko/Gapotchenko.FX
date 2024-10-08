@@ -7,6 +7,8 @@
 
 (Disambiguation: a `Core` word in the name has no specific relation to .NET Core)
 
+## Modules
+
 The Core profile contains the following Gapotchenko.FX modules:
 
 - [Gapotchenko.FX](../../Gapotchenko.FX#readme)
