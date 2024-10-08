@@ -38,6 +38,6 @@ Gapotchenko.FX consists of granular modules that form thematic hierarchies of fu
 ## Profiles
 
 In addition to modules, Gapotchenko.FX also provides profiles.
-A profile is a collection of modules covering a common theme.
+A profile is a collection of Gapotchenko.FX modules covering a common theme.
 
 [Learn more about Gapotchenko.FX profiles >](Source/Profiles#profiles)
