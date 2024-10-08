@@ -1,5 +1,5 @@
 ﻿using Gapotchenko.FX.Linq;
-using Gapotchenko.FX.Math.Topology;
+using Gapotchenko.FX.Math.Graphs;
 using System.Text.RegularExpressions;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
@@ -11,7 +11,7 @@ static class TocService
         source = source.Memoize();
 
         if (!source.Any())
-            return Enumerable.Empty<T>();
+            return [];
 
         int totalWidth = source.Select(value => keySelector(value).Length).Max();
 
@@ -44,12 +44,12 @@ static class TocService
         var graph = new Graph<HierarchyItem>(items.Values, (a, b) => a.Name.StartsWith(b.Name + "."));
         graph.ReduceTransitions();
 
-        var rootProjects = Sort(graph.Vertices.Where(x => !graph.DestinationVerticesAdjacentTo(x).Any())).ToList();
+        var rootProjects = Sort(graph.Vertices.Where(x => !graph.OutgoingVerticesAdjacentTo(x).Any())).ToList();
         graph.Transpose();
 
         void AddSubProjects(ITocHierarchyItemNode node)
         {
-            foreach (var subProject in Sort(graph.DestinationVerticesAdjacentTo(node.HierarchyItem)))
+            foreach (var subProject in Sort(graph.OutgoingVerticesAdjacentTo(node.HierarchyItem)))
             {
                 var subNode = ConvertHierarchyItemToTocNode(subProject);
                 node.Children.Add((TocNode)subNode);
