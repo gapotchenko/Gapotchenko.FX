@@ -41,7 +41,7 @@ Console.WriteLine("Company: {0}", info.CompanyName);
 Console.WriteLine("Copyright: {0}", info.Copyright);
 ```
 
-Note that the example gets information for `System.Object` type which belongs to .NET BCL (Base Class Library).
+Note that the example above gets information for `System.Object` type which belongs to .NET BCL (**B**ase **C**lass **L**ibrary).
 The following information is retrieved:
 
 ```
