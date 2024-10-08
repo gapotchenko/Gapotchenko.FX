@@ -19,7 +19,7 @@ Here is a short list of what Gapotchenko.FX can do:
     While some people think that programming is somehow different from the math, actually it is not that different.
     For example, when a software component has an inherent flaw, it shows up way further down the lane, guaranteed.
     Formal math makes this weak thinking impossible, and all the features provided by Gapotchenko.FX rigorously follow that strategy.
-    For example, `Gapotchenko.FX.Collections.Generic.AssociativeArray<TKey, TValue>` represents a collection of keys and values covering the full space of `TKey` type,
+    For example, `Gapotchenko.FX.Collections.Generic.AssociativeArray<TKey, TValue>` represents a collection of keys and values covering the full value space of `TKey` type,
     while `System.Collections.Generic.Dictionary<TKey, TValue>` handles only an opinionated subset epically failing on `null` `TKey` values
   - **Better utilize the hardware and software capabilities of a host environment.**
     Many Gapotchenko.FX primitives are backed up by algorithms leveraging OS and hardware acceleration.
