@@ -1,14 +1,13 @@
-﻿using Gapotchenko.FX.Threading;
-using Gapotchenko.FX.Utilities.MDDocProcessor.Framework;
+﻿using Gapotchenko.FX.Utilities.MDDocProcessor.Framework;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Model;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor;
 
-static class ProjectSerializer
+static partial class ProjectSerializer
 {
-    public static bool IsProjectFolder(string directoryPath) => Directory.EnumerateFiles(directoryPath, "*.?*proj").Any();
+    public static bool IsProjectDirectory(string directoryPath) => Directory.EnumerateFiles(directoryPath, "*.?*pro").Any();
 
     public static Project ReadProject(string directoryPath)
     {
@@ -21,7 +20,7 @@ static class ProjectSerializer
         if (readMeFilePath != null)
         {
             string content = File.ReadAllText(readMeFilePath);
-            foreach (var text in _EnumerateXmlComments(content))
+            foreach (var text in EnumerateXmlComments(content))
             {
                 if (text.StartsWith("<docmeta>", StringComparison.Ordinal))
                 {
@@ -52,18 +51,19 @@ static class ProjectSerializer
             }
         }
 
-        return new Project(Path.GetFileName(directoryPath), directoryPath)
-        {
-            ReadMeFilePath = readMeFilePath,
-            Complexity = complexity
-        };
+        return
+            new Project(
+                Path.GetFileName(directoryPath),
+                directoryPath)
+            {
+                ReadMeFilePath = readMeFilePath,
+                Complexity = complexity
+            };
     }
 
-    static EvaluateOnce<Regex> _XmlCommentRegex = EvaluateOnce.Create(
-        () => new Regex(
-            @"<!--\s*(?<content>[\s\S\n]*?)\s*-->",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture));
+    static IEnumerable<string> EnumerateXmlComments(string s) =>
+        XmlCommentRegex().EnumerateMatchesLinq(s).Select(m => m.Groups["content"].Value);
 
-    static IEnumerable<string> _EnumerateXmlComments(string s) =>
-        _XmlCommentRegex.Value.EnumerateMatches(s).Select(m => m.Groups["content"].Value);
+    [GeneratedRegex(@"<!--\s*(?<content>[\s\S\n]*?)\s*-->", RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant)]
+    private static partial Regex XmlCommentRegex();
 }

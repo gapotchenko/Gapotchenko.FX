@@ -1,50 +1,21 @@
-﻿using Gapotchenko.FX.Math;
-using Gapotchenko.FX.Text;
+﻿using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Framework;
-using Gapotchenko.FX.Utilities.MDDocProcessor.Model;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GenerateToc;
 
-sealed class ProjectProcessor
+sealed class ProjectProcessor(TocProjectNode tocNode)
 {
-    public ProjectProcessor(TocProjectNode tocNode)
-    {
-        _TocNode = tocNode;
-    }
-
-    readonly TocProjectNode _TocNode;
-
     public void Run()
     {
-        string? filePath = _TocNode.Project.ReadMeFilePath;
+        string? filePath = m_TocNode.Project.ReadMeFilePath;
         if (filePath != null)
-            _UpdateToc(filePath);
+            UpdateToc(filePath);
     }
 
-    bool _IsTocMatch(Group group)
-    {
-        if (!group.Success)
-            return false;
-
-        var toc = _TocNode.Document;
-        if (toc == null)
-            return false;
-
-        return true;
-    }
-
-    static ProjectComplexity _GetProjectCompexity(TocNode node)
-    {
-        if (node is TocProjectNode projectNode)
-            return projectNode.Project.Complexity;
-        else
-            return node.Children.Select(_GetProjectCompexity).Aggregate((a, b) => MathEx.Max(a, b));
-    }
-
-    void _UpdateToc(string mdFilePath)
+    void UpdateToc(string mdFilePath)
     {
         if (!mdFilePath.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
             throw new NotSupportedException("Cannot update TOC in a non-markdown file.");
@@ -55,18 +26,30 @@ sealed class ProjectProcessor
             @"[\r\n]+(?<toc>(\s*-\s+(.+\s+\(namespace\)|(&\#x27B4;\s*)?\[(?<name>.+)]\((?<url>.+)\)(\s+✱+)?)\s*?([\r\n]|$)){2,})",
             RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
-        var tocGroup = tocRegex.EnumerateMatches(text).Select(x => x.Groups["toc"]).Where(_IsTocMatch).SingleOrDefault();
-        if (tocGroup == null)
+        var tocGroup =
+            tocRegex.EnumerateMatchesLinq(text).Select(x => x.Groups["toc"]).Where(IsTocMatch).SingleOrDefault() ??
             throw new InvalidOperationException("Cannot find TOC section.");
 
-        var book = _TocNode.Book;
+        bool IsTocMatch(Group group)
+        {
+            if (!group.Success)
+                return false;
+
+            var toc = m_TocNode.Document;
+            if (toc == null)
+                return false;
+
+            return true;
+        }
+
+        var book = m_TocNode.Book;
         if (book == null)
             throw new InvalidOperationException("TOC book not found.");
 
         var tocSerializer = new TocSerializer();
 
         var tocWriter = new StringWriter();
-        tocSerializer.SerializeToc(tocWriter, book, _TocNode);
+        tocSerializer.SerializeToc(tocWriter, book, m_TocNode);
         string newToc = tocWriter.ToString().TrimEnd('\n', '\r');
         text = StringEditor.Replace(text, tocGroup, newToc);
 
@@ -93,4 +76,6 @@ sealed class ProjectProcessor
 
         Util.WriteAllText(mdFilePath, text);
     }
+
+    readonly TocProjectNode m_TocNode = tocNode;
 }

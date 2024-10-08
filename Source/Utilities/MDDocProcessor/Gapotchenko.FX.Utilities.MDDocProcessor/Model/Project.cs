@@ -1,14 +1,8 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model;
 
-sealed class Project : HierarchyItem
+sealed class Project(string name, string directoryPath) : HierarchyItem(name)
 {
-    public Project(string name, string directoryPath) :
-        base(name)
-    {
-        DirectoryPath = directoryPath;
-    }
-
-    public string DirectoryPath { get; }
+    public string DirectoryPath { get; } = directoryPath;
 
     public string? ReadMeFilePath { get; init; }
 

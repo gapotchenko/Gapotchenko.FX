@@ -1,13 +1,8 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
 
-sealed class TocCatalogNode : TocNode
+sealed class TocCatalogNode(Catalog catalog) : TocNode
 {
-    public TocCatalogNode(Catalog catalog)
-    {
-        Catalog = catalog;
-    }
-
-    public new Catalog Catalog { get; }
+    public new Catalog Catalog { get; } = catalog;
 
     public override string ToString() => Catalog.ToString();
 }

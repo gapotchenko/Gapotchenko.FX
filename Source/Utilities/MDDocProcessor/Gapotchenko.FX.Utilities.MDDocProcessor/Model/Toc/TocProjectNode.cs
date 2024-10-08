@@ -1,13 +1,8 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
 
-class TocProjectNode : TocNode, ITocHierarchyItemNode
+class TocProjectNode(Project project) : TocNode, ITocHierarchyItemNode
 {
-    public TocProjectNode(Project project)
-    {
-        Project = project;
-    }
-
-    public Project Project { get; }
+    public Project Project { get; } = project;
 
     HierarchyItem ITocHierarchyItemNode.HierarchyItem => Project;
 

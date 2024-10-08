@@ -2,44 +2,6 @@
 
 static class RepositoryService
 {
-    const string RespositoryUriSuffix = "gapotchenko/Gapotchenko.FX";
-
-    static string? _CachedRootPath;
-
-    public static string RootPath => _CachedRootPath ??= _GetRootPathCore();
-
-    static string _GetRootPathCore()
-    {
-        string path = typeof(RepositoryService).Assembly.Location;
-
-        for (; ; )
-        {
-            string? newPath = Path.GetDirectoryName(path);
-            if (newPath == null)
-                throw new Exception("Cannot locate repository root path.");
-
-            path = newPath;
-
-            string probingPath = Path.Combine(path, ".gitignore");
-            if (File.Exists(probingPath))
-            {
-                path += Path.DirectorySeparatorChar;
-                break;
-            }
-        }
-
-        return path;
-    }
-
-    static string? _CachedOrigHead;
-
-    static string OrigHead => _CachedOrigHead ??= _GetOrigHeadCore();
-
-    static string _GetOrigHeadCore() =>
-        File.ReadAllText(
-            Path.Combine(RootPath, ".git", "ORIG_HEAD"))
-        .Trim();
-
     public static Uri? TryMapUri(Uri uri, RepositoryUriUsage usage)
     {
         string? localPath = null;
@@ -114,5 +76,43 @@ static class RepositoryService
             var newUri = new Uri(baseUri, new Uri(s, UriKind.Relative));
             return newUri;
         }
+    }
+
+    const string RespositoryUriSuffix = "gapotchenko/Gapotchenko.FX";
+
+    static string OrigHead => m_CachedOrigHead ??= GetOrigHeadCore();
+
+    static string? m_CachedOrigHead;
+
+    static string GetOrigHeadCore() =>
+        File.ReadAllText(
+            Path.Combine(RootPath, ".git", "ORIG_HEAD"))
+        .Trim();
+
+    public static string RootPath => m_CachedRootPath ??= GetRootPathCore();
+
+    static string? m_CachedRootPath;
+
+    static string GetRootPathCore()
+    {
+        string path = typeof(RepositoryService).Assembly.Location;
+
+        for (; ; )
+        {
+            string? newPath = Path.GetDirectoryName(path);
+            if (newPath == null)
+                throw new Exception("Cannot locate repository root path.");
+
+            path = newPath;
+
+            string probingPath = Path.Combine(path, ".gitignore");
+            if (File.Exists(probingPath))
+            {
+                path += Path.DirectorySeparatorChar;
+                break;
+            }
+        }
+
+        return path;
     }
 }

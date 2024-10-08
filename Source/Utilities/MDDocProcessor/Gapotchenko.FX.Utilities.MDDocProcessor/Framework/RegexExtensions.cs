@@ -4,20 +4,20 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor.Framework;
 
 static class RegexExtensions
 {
-    public static IEnumerable<Match> EnumerateMatches(this Regex regex, string input)
+    public static IEnumerable<Match> EnumerateMatchesLinq(this Regex regex, string input)
     {
         if (regex == null)
             throw new ArgumentNullException(nameof(regex));
 
-        return _SelfAndNextMatches(regex.Match(input));
-    }
+        return ThisAndNextMatches(regex.Match(input));
 
-    static IEnumerable<Match> _SelfAndNextMatches(this Match match)
-    {
-        while (match.Success)
+        static IEnumerable<Match> ThisAndNextMatches(Match match)
         {
-            yield return match;
-            match = match.NextMatch();
+            while (match.Success)
+            {
+                yield return match;
+                match = match.NextMatch();
+            }
         }
     }
 }

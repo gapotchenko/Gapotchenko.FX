@@ -6,23 +6,16 @@ using System.Text.RegularExpressions;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GenerateToc;
 
-sealed class CatalogProcessor
+sealed class CatalogProcessor(TocCatalogNode tocNode)
 {
-    public CatalogProcessor(TocCatalogNode tocNode)
-    {
-        _TocNode = tocNode;
-    }
-
-    readonly TocCatalogNode _TocNode;
-
     public void Run()
     {
-        string? readMeFilePath = _TocNode.Catalog.ReadMeFilePath;
+        string? readMeFilePath = m_TocNode.Catalog.ReadMeFilePath;
         if (readMeFilePath != null)
-            _UpdateToc(readMeFilePath);
+            UpdateToc(readMeFilePath);
     }
 
-    void _UpdateToc(string mdFilePath)
+    void UpdateToc(string mdFilePath)
     {
         if (!mdFilePath.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
             throw new NotSupportedException("Cannot update TOC in a non-markdown file.");
@@ -33,14 +26,14 @@ sealed class CatalogProcessor
             @"[\r\n]+(?<toc>(\s*-\s+(.+\s+\(namespace\)|(&\#x27B4;\s*)?\[(?<name>.+)]\((?<url>.+)\)(\s+✱+)?)\s*?([\r\n]|$)){2,})",
             RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
-        var tocGroup = tocRegex.EnumerateMatches(text).Select(x => x.Groups["toc"]).Where(x => x.Success).SingleOrDefault();
-        if (tocGroup == null)
+        var tocGroup =
+            tocRegex.EnumerateMatchesLinq(text).Select(x => x.Groups["toc"]).SingleOrDefault(x => x.Success) ??
             throw new InvalidOperationException("Cannot find TOC section.");
 
         var tocSerializer = new TocSerializer();
 
         var tocWriter = new StringWriter();
-        tocSerializer.SerializeToc(tocWriter, _TocNode, null);
+        tocSerializer.SerializeToc(tocWriter, m_TocNode, null);
         string newToc = tocWriter.ToString().TrimEnd('\n', '\r');
         text = StringEditor.Replace(text, tocGroup, newToc);
 
@@ -67,4 +60,6 @@ sealed class CatalogProcessor
 
         Util.WriteAllText(mdFilePath, text);
     }
+
+    readonly TocCatalogNode m_TocNode = tocNode;
 }

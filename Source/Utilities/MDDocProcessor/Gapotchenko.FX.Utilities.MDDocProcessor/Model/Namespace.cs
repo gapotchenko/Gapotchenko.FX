@@ -1,9 +1,5 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model;
 
-sealed class Namespace : HierarchyItem
+sealed class Namespace(string name) : HierarchyItem(name)
 {
-    public Namespace(string name) :
-        base(name)
-    {
-    }
 }

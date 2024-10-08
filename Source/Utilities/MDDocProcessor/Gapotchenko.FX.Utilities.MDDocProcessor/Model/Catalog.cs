@@ -1,16 +1,10 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model;
 
-sealed class Catalog
+sealed class Catalog(string name, string directoryPath)
 {
-    public Catalog(string name, string directoryPath)
-    {
-        Name = name;
-        DirectoryPath = directoryPath;
-    }
+    public string Name { get; } = name;
 
-    public string Name { get; }
-
-    public string DirectoryPath { get; }
+    public string DirectoryPath { get; } = directoryPath;
 
     public string? ReadMeFilePath { get; init; }
 

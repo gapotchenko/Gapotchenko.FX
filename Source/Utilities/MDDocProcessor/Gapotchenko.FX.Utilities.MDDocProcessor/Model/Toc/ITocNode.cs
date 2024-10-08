@@ -1,5 +1,4 @@
-﻿
-namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
+﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
 
 interface ITocNode
 {

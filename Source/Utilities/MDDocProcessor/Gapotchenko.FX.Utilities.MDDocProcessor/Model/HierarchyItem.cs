@@ -1,13 +1,8 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model;
 
-abstract class HierarchyItem
+abstract class HierarchyItem(string name)
 {
-    protected HierarchyItem(string name)
-    {
-        Name = name;
-    }
-
-    public string Name { get; }
+    public string Name { get; } = name;
 
     public override string ToString() => Name;
 }

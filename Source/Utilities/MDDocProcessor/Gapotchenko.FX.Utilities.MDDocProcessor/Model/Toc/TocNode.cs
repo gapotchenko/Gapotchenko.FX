@@ -10,7 +10,7 @@ abstract class TocNode : ITocNode
         set => Parent = (TocNode?)value;
     }
 
-    public IList<TocNode> Children { get; } = new List<TocNode>();
+    public IList<TocNode> Children { get; } = [];
 
     public TocNode? Book =>
         Parent switch

@@ -1,11 +1,6 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
 
-sealed class TocRootNode : TocNode
+sealed class TocRootNode(TocDocument document) : TocNode
 {
-    public TocRootNode(TocDocument document)
-    {
-        Document = document;
-    }
-
-    public override TocDocument Document { get; }
+    public override TocDocument Document { get; } = document;
 }

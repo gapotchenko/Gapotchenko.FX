@@ -1,5 +1,4 @@
-﻿using Gapotchenko.FX.Math;
-using Gapotchenko.FX.Utilities.MDDocProcessor.Framework;
+﻿using Gapotchenko.FX.Utilities.MDDocProcessor.Framework;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Model;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Visualization;
@@ -12,9 +11,9 @@ sealed class TocSerializer
 {
     public void SerializeToc(TextWriter textWriter, TocNode rootNode, TocProjectNode? projectNode)
     {
-        ProjectCompexitySet?.Clear();
-        RootNode = rootNode;
-        ProjectNode = projectNode;
+        m_ProjectCompexitySet?.Clear();
+        m_RootNode = rootNode;
+        m_ProjectNode = projectNode;
 
         var catalog = rootNode.Catalog?.Catalog;
         var project = projectNode?.Project;
@@ -43,7 +42,7 @@ sealed class TocSerializer
                             continue;
                     }
 
-                    if (_GetProjectCompexity(node) > project?.Complexity)
+                    if (TocUtil.GetProjectCompexity(node) > project?.Complexity)
                         continue;
                 }
 
@@ -105,7 +104,7 @@ sealed class TocSerializer
                         int starCount = ProjectComplexityVisualizer.GetStarCount(projectComplexity);
                         if (starCount != 0)
                         {
-                            (ProjectCompexitySet ??= new()).Add(projectComplexity);
+                            (m_ProjectCompexitySet ??= []).Add(projectComplexity);
 
                             textWriter.Write(' ');
                             for (int i = 0; i < starCount; ++i)
@@ -129,27 +128,15 @@ sealed class TocSerializer
         }
     }
 
-    HashSet<ProjectComplexity>? ProjectCompexitySet;
-    TocNode? RootNode;
-    TocProjectNode? ProjectNode;
-
-    static ProjectComplexity _GetProjectCompexity(TocNode node)
-    {
-        if (node is TocProjectNode projectNode)
-            return projectNode.Project.Complexity;
-        else
-            return node.Children.Select(_GetProjectCompexity).Aggregate((a, b) => MathEx.Min(a, b));
-    }
-
     public void SerializeLegend(TextWriter textWriter)
     {
         bool complexityLegend = false;
 
-        if (ProjectCompexitySet?.Count > 0)
+        if (m_ProjectCompexitySet?.Count > 0)
         {
             bool first = true;
 
-            foreach (var i in ProjectCompexitySet.OrderBy(x => x))
+            foreach (var i in m_ProjectCompexitySet.OrderBy(x => x))
             {
                 if (first)
                     first = false;
@@ -175,8 +162,8 @@ sealed class TocSerializer
 
         //if (!fullToc)
         {
-            var catalog = RootNode?.Catalog?.Catalog;
-            var project = ProjectNode?.Project;
+            var catalog = m_RootNode?.Catalog?.Catalog;
+            var project = m_ProjectNode?.Project;
 
             if (catalog != null && project?.ReadMeFilePath != null)
             {
@@ -193,4 +180,8 @@ sealed class TocSerializer
             }
         }
     }
+
+    HashSet<ProjectComplexity>? m_ProjectCompexitySet;
+    TocNode? m_RootNode;
+    TocProjectNode? m_ProjectNode;
 }

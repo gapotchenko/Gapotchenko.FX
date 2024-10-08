@@ -1,15 +1,10 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
 
-sealed class TocNamespaceNode : TocNode, ITocHierarchyItemNode
+sealed class TocNamespaceNode(Namespace @namespace) : TocNode, ITocHierarchyItemNode
 {
-    public TocNamespaceNode(Namespace @namespace)
-    {
-        Namespace = @namespace;
-    }
-
     public string Name => Namespace.Name;
 
-    public Namespace Namespace { get; }
+    public Namespace Namespace { get; } = @namespace;
 
     HierarchyItem ITocHierarchyItemNode.HierarchyItem => Namespace;
 

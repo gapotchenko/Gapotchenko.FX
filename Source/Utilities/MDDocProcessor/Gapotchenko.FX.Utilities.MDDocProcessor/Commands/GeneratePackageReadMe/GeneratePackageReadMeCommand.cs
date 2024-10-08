@@ -51,28 +51,28 @@ class GeneratePackageReadMeCommand
         string outputDirectoryPath,
         string[]? commonlyUsedParts)
     {
-        _InputFilePath = Path.GetFullPath(inputFilePath);
-        _OutputDirectoryPath = outputDirectoryPath;
-        _CommonlyUsedParts = commonlyUsedParts;
+        m_InputFilePath = Path.GetFullPath(inputFilePath);
+        m_OutputDirectoryPath = outputDirectoryPath;
+        m_CommonlyUsedParts = commonlyUsedParts;
 
-        _ModuleName =
-            Path.GetFileName(Path.GetDirectoryName(_InputFilePath)) ??
+        m_ModuleName =
+            Path.GetFileName(Path.GetDirectoryName(m_InputFilePath)) ??
             throw new Exception("Cannot deduct module name.");
     }
 
-    readonly string _InputFilePath;
-    readonly string _OutputDirectoryPath;
-    readonly string[]? _CommonlyUsedParts;
-    readonly string _ModuleName;
+    readonly string m_InputFilePath;
+    readonly string m_OutputDirectoryPath;
+    readonly string[]? m_CommonlyUsedParts;
+    readonly string m_ModuleName;
 
     void RunCore()
     {
-        var md = Markdown.Parse(File.ReadAllText(_InputFilePath), true);
+        var md = Markdown.Parse(File.ReadAllText(m_InputFilePath), true);
 
-        var mdProcessor = new MarkdownProcessor(md, new Uri(_InputFilePath));
+        var mdProcessor = new MarkdownProcessor(md, new Uri(m_InputFilePath));
         mdProcessor.Run();
 
-        Directory.CreateDirectory(_OutputDirectoryPath);
+        Directory.CreateDirectory(m_OutputDirectoryPath);
 
         var mdWriter = new StringWriter();
         var mdRenderer = new RoundtripRenderer(mdWriter);
@@ -91,9 +91,9 @@ class GeneratePackageReadMeCommand
 
         text = se.ToString();
 
-        if (_CommonlyUsedParts != null)
+        if (m_CommonlyUsedParts != null)
         {
-            var section = RenderCommonlyUsedPartsToMarkdown(_CommonlyUsedParts);
+            var section = RenderCommonlyUsedPartsToMarkdown(m_CommonlyUsedParts);
 
             int insertionPoint = text.IndexOf("# See Also");
             if (insertionPoint == -1)
@@ -105,14 +105,14 @@ class GeneratePackageReadMeCommand
                 text = text.Insert(insertionPoint, section + Environment.NewLine);
         }
 
-        using (var outputFile = File.CreateText(Path.Combine(_OutputDirectoryPath, "README.md")))
+        using (var outputFile = File.CreateText(Path.Combine(m_OutputDirectoryPath, "README.md")))
         {
             outputFile.WriteLine("# Overview");
             outputFile.WriteLine();
             outputFile.WriteLine(text.Trim());
         }
 
-        using (var outputFile = File.CreateText(Path.Combine(_OutputDirectoryPath, "Description.txt")))
+        using (var outputFile = File.CreateText(Path.Combine(m_OutputDirectoryPath, "Description.txt")))
         {
             outputFile.Write(mdProcessor.Description);
         }
@@ -122,7 +122,7 @@ class GeneratePackageReadMeCommand
     {
         var sb = new StringBuilder("# ")
             .AppendLine(
-                _ModuleName.StartsWith("Gapotchenko.FX.Profiles.") ?
+                m_ModuleName.StartsWith("Gapotchenko.FX.Profiles.") ?
                     "Commonly Used Modules" :
                     "Commonly Used Types")
             .AppendLine();

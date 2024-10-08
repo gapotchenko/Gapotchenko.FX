@@ -11,25 +11,25 @@ static class GenerateTocCommand
         if (args.Length != 1)
         {
             Console.WriteLine(
-                "Usage: {0} generate-toc <project root folder>",
+                "Usage: {0} generate-toc <project root directory>",
                 Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location));
 
             throw new ProgramExitException(1);
         }
 
-        string projectRootFolder = args[0];
-        if (!Directory.Exists(projectRootFolder))
-            throw new DirectoryNotFoundException(string.Format("Project root folder \"{0}\" does not exist.", projectRootFolder));
+        string projectRootDirectory = args[0];
+        if (!Directory.Exists(projectRootDirectory))
+            throw new DirectoryNotFoundException(string.Format("Project root directory \"{0}\" does not exist.", projectRootDirectory));
 
-        projectRootFolder = Path.GetFullPath(projectRootFolder);
+        projectRootDirectory = Path.GetFullPath(projectRootDirectory);
 
-        var projects = _EnumerateProjectFolders(projectRootFolder).Select(ProjectSerializer.ReadProject);
+        var projects = EnumerateProjectDirectories(projectRootDirectory).Select(ProjectSerializer.ReadProject);
         var toc = new TocDocument();
 
         var catalog = new TocCatalogNode(
-            new Catalog("Gapotchenko.FX", projectRootFolder)
+            new Catalog("Gapotchenko.FX", projectRootDirectory)
             {
-                ReadMeFilePath = Path.Combine(projectRootFolder, "README.md")
+                ReadMeFilePath = Path.Combine(projectRootDirectory, "Modules/README.md")
             });
         toc.Root.Children.Add(catalog);
         catalog.Parent = toc.Root;
@@ -41,39 +41,38 @@ static class GenerateTocCommand
         TocVisualizer.Visualize(catalog, Console.Out);
 
         Console.WriteLine();
-        _ProcessProjects(toc);
+        ProcessProjects(toc);
 
         Console.WriteLine();
-        _ProcessCatalogs(toc);
+        ProcessCatalogs(toc);
     }
 
-    static IEnumerable<string> _EnumerateProjectFolders(string rootPath)
+    static IEnumerable<string> EnumerateProjectDirectories(string rootPath)
     {
-        var projectHierarchies = new (string Path, bool Recursive)[]
+        var hierarchies = new (string Path, bool Recursive)[]
         {
-            (".", false),
-            ("Data", true),
-            //("Security", true)
+            ("Modules/Catalog", true),
+            ("Profiles", false)
         };
 
-        var projectFolders = Enumerable.Empty<string>();
+        var directories = Enumerable.Empty<string>();
 
-        foreach (var h in projectHierarchies)
+        foreach (var hierarchy in hierarchies)
         {
-            var q =
+            var query =
                 Directory.EnumerateDirectories(
-                    Path.Combine(rootPath, h.Path),
+                    Path.Combine(rootPath, hierarchy.Path),
                     "*",
-                    h.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                    hierarchy.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
                 .Where(x => Path.GetFileName(x).Contains('.'));
 
-            projectFolders = projectFolders.Concat(q);
+            directories = directories.Concat(query);
         }
 
-        return projectFolders.Where(ProjectSerializer.IsProjectFolder);
+        return directories.Where(ProjectSerializer.IsProjectDirectory);
     }
 
-    static void _ProcessProjects(TocDocument toc)
+    static void ProcessProjects(TocDocument toc)
     {
         foreach (var node in toc.Root.Descendants().OfType<TocProjectNode>())
         {
@@ -87,7 +86,7 @@ static class GenerateTocCommand
         }
     }
 
-    static void _ProcessCatalogs(TocDocument toc)
+    static void ProcessCatalogs(TocDocument toc)
     {
         foreach (var node in toc.Root.Descendants().OfType<TocCatalogNode>())
         {
