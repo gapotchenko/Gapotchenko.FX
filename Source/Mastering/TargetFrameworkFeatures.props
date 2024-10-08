@@ -5,7 +5,7 @@
   <!-- ================================================================== -->
 
   <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">
-    <MasteringFrameworkFeature Include="TFF_APPDOMAIN;TFF_CER;TFF_HOST_PROTECTION;TFF_REMOTING;TFF_TRANSACTIONS;TFF_THREAD_ABORT" />
+    <MasteringFrameworkFeature Include="TFF_APPDOMAIN;TFF_CER;TFF_HOST_PROTECTION;TFF_REMOTING;TFF_TRANSACTIONS;TFF_THREAD_ABORT;TFF_WIN32_REGISTRY" />
   </ItemGroup>
 
   <!-- .NET Framework 4.5 -->
@@ -82,7 +82,7 @@
 
   <!-- .NET 7.0 -->
   <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '7.0')) ">
-    <MasteringFrameworkFeature Include="TFF_REQUIREDMEMBERATTRIBUTE" />
+    <MasteringFrameworkFeature Include="TFF_REQUIREDMEMBERATTRIBUTE;TFF_STATIC_INTERFACE" />
   </ItemGroup>
 
   <!-- ================================================================== -->

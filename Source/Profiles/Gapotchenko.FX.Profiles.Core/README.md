@@ -16,7 +16,6 @@ The Core profile contains the following Gapotchenko.FX modules:
 - [Gapotchenko.FX.Diagnostics.WebBrowser](../../Gapotchenko.FX.Diagnostics.WebBrowser)
 - [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO)
 - [Gapotchenko.FX.Linq](../../Gapotchenko.FX.Linq)
-- [Gapotchenko.FX.Linq.Expressions](../../Gapotchenko.FX.Linq.Expressions)
 - [Gapotchenko.FX.Math](../../Gapotchenko.FX.Math)
 - [Gapotchenko.FX.Memory](../../Gapotchenko.FX.Memory)
 - [Gapotchenko.FX.Text](../../Gapotchenko.FX.Text)

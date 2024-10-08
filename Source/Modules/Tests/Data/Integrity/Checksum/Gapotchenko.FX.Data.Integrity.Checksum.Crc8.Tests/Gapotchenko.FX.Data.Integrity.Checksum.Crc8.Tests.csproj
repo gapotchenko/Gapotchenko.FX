@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)Modules\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc8\Gapotchenko.FX.Data.Integrity.Checksum.Crc8.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Integrity.Checksum.Tests\Gapotchenko.FX.Data.Integrity.Checksum.Tests.csproj" />
+  </ItemGroup>
+
+</Project>

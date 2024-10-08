@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Gapotchenko.FX.Runtime.CompilerServices</RootNamespace>
+    <CLSCompliant>true</CLSCompliant>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.CompilerServices.IntrinsicServices" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.CompilerServices.MachineCodeIntrinsicAttribute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageDescription><![CDATA[Provides additional data collections, primitives and polyfills for .NET: ConcurrentHashSet<T>, AssociativeArray<T>, PriorityQueue<T>, Deque<T>.]]></PackageDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="concurrent;hashset;associative array;priority queue;deque" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Concurrent.ConcurrentHashSet&lt;T&gt;" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Collections.Generic.AssociativeArray&lt;T&gt;" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
+
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.props" />
+
+</Project>

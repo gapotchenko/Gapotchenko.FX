@@ -20,6 +20,10 @@
     <GenerateDocumentationFile Condition=" '$(MasteringProjectKind)' == 'module' ">true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>$(DefineConstants),PREVIEW</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
@@ -28,6 +32,7 @@
   <!-- =================================================================== -->
 
   <Import Project="Language.props" />
+  <Import Project="Analysis.props" />
   <Import Project="NuGet.props" />
   <Import Project="Targeting.props" />
   <Import Project="Optimization.props" Condition=" Exists('Optimization.props') " />

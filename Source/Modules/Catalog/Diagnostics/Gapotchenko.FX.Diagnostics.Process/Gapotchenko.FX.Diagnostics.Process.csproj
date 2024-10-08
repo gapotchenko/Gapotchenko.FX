@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
+    <CLSCompliant>true</CLSCompliant>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TargetPlatforms>any;windows</TargetPlatforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="process" />
+    <PackageTag Include="environment" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+  </ItemGroup>
+
+</Project>

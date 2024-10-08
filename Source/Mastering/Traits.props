@@ -3,6 +3,7 @@
   <PropertyGroup Condition=" '$(MasteringProjectKind)' == '' ">
     <MasteringProjectKind>none</MasteringProjectKind>
     <MasteringProjectKind Condition=" $(MSBuildProjectName.Equals('$(MasteringProjectModulePrefix)')) OR $(MSBuildProjectName.StartsWith('$(MasteringProjectModulePrefix).')) ">module</MasteringProjectKind>
+    <MasteringProjectKind Condition=" $(MSBuildProjectName.StartsWith('$(MasteringProjectModulePrefix).Utilities.')) ">utility</MasteringProjectKind>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(MasteringTestKind)' == '' ">

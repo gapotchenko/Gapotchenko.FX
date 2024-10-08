@@ -7,7 +7,7 @@ using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Math;
 using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Math.Intervals;
-using Gapotchenko.FX.Math.Topology;
+using Gapotchenko.FX.Math.Graphs;
 using Gapotchenko.FX.Reflection;
 using Gapotchenko.FX.Threading.Tasks;
 using System.Collections;
@@ -18,6 +18,7 @@ using System.Text;
 using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO;
+using Gapotchenko.FX.Math.Metrics;
 #endregion
 
 #nullable enable
@@ -32,8 +33,14 @@ class Program
     {
         try
         {
-            //Console.WriteLine(FileSystem.InsertSubpath(@"C:\1\2\3\", 1, "A"));
-            Console.WriteLine(FileSystem.GetSubpath(@"C:\1\2\3\", ..^2));
+            var interval = Interval.Exclusive(10f, 20f);
+            var value = 21f;
+
+            var x = interval.Clamp(value).Value;
+
+            Console.WriteLine(x.ToString());
+
+            _ = StringMetrics.Distance.Levenshtein.Measure("abc", "123");
         }
         catch (Exception e)
         {
@@ -209,17 +216,17 @@ class Program
         var e = new AsyncManualResetEvent(true);
         Console.WriteLine(await e.WaitAsync(0));
 
-        using var scope = await AsyncMonitor.For(e).LockScopeAsync();
+        using var scope = await AsyncMonitor.For(e).EnterScopeAsync();
 
         return;
 
-        var mutex = new AsyncRecursiveMutex();
+        var mutex = new AsyncLock();
 
         Console.WriteLine("Running lock/unlock loop...");
         var sw = Stopwatch.StartNew();
         for (ulong i = 0; ; ++i)
         {
-            using var d = await mutex.LockScopeAsync();
+            using var d = await mutex.EnterScopeAsync();
 
             //Console.WriteLine("Iteration: {0}", i);
 
@@ -248,8 +255,8 @@ class Program
             }
         }
 
-        if (await mutex.TryLockAsync(0))
-            mutex.Unlock();
+        if (await mutex.TryEnterAsync(0))
+            mutex.Exit();
 
         //var t1 = VerifyNesting(1, mutex, 1000000);
         //var t2 = VerifyNesting(2, mutex, 1000000);
@@ -285,7 +292,7 @@ class Program
 
         //await VerifyNesting(mutex, 1);
 
-        using (await mutex.LockScopeAsync())
+        using (await mutex.EnterScopeAsync())
         {
             //using (await mutex.LockScopeAsync())
             //{
@@ -312,19 +319,19 @@ class Program
         //if (!wasCanceled)
         //    throw new InvalidOperationException("F6");
 
-        using (var scope = await lockable.TryLockScopeAsync(0))
+        using (var scope = await lockable.TryEnterScopeAsync(0))
         {
             //await lockable.LockAsync();
 
-            if (!lockable.IsLocked)
+            if (!lockable.IsEntered)
                 throw new InvalidOperationException("F1");
             Console.WriteLine("Entered #{0}", id);
 
             for (int i = 0; i < recursionDepth; ++i)
             {
-                if (!await lockable.TryLockAsync(0))
+                if (!await lockable.TryEnterAsync(0))
                     throw new InvalidOperationException($"F2.{i}");
-                if (!lockable.IsLocked)
+                if (!lockable.IsEntered)
                     throw new InvalidOperationException($"F3.{i}");
             }
 
@@ -332,8 +339,8 @@ class Program
 
             for (int i = 0; i < recursionDepth; ++i)
             {
-                lockable.Unlock();
-                if (!lockable.IsLocked)
+                lockable.Exit();
+                if (!lockable.IsEntered)
                     throw new InvalidOperationException($"F4.{i}");
             }
 
