@@ -235,10 +235,10 @@ using Gapotchenko.FX;
 
 class Deployment
 {
+	public string HomeDir => m_HomeDir.Value;
+
 	LazyEvaluation<string> m_HomeDir = new(
 		() => Empty.Nullify(Environment.GetEnvironmentVariable("PRODUCT_HOME")));
-
-	public string HomeDir => m_HomeDir.Value;
 }
 ```
 

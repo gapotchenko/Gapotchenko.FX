@@ -42,7 +42,7 @@ Console.WriteLine("Copyright: {0}", info.Copyright);
 ```
 
 Note that the example above gets information for `System.Object` type which belongs to .NET BCL (Base Class Library), another part of the program.
-The following information about that part is retrieved:
+The retrieved information about that part looks like so:
 
 ```
 Product: Microsoft® .NET
@@ -87,4 +87,4 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
 - [Gapotchenko.FX.ValueTuple](../Gapotchenko.FX.ValueTuple)
 
-Or look at the [full list of modules](..#available-modules).
+Or look at the [full list of modules](../..#available-modules).
