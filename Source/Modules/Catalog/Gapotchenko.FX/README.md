@@ -315,23 +315,14 @@ In that case, Gapotchenko.FX provides so called "Ex" classes, where "Ex" is an a
 
 As you can see, there are many little things that shape the productive environment into one you can immediately employ, and reap the benefit in no-time.
 
-It was the original idea of .NET when it was new.
-However, it got lost somewhere along the road.
-.NET is a pretty bleak set of segregated platforms nowadays (2019), mostly focused on micro-optimizations and breaking the compatibility,
-sowing the wrong seeds at people's hearts.
-
-Gapotchenko.FX was created to change that.
-Its mission is to bring joy of a Rapid Application Development (RAD) back to the people.
-It's a polyfill to the future, after all.
-
-![Gapotchenko FX Ark](../../Documentation/Assets/gapotchenko-fx-ark-2019.png?raw=true ".NET is a technology for everyone.
+![Gapotchenko FX Ark](../../../../../Documentation/Assets/gapotchenko-fx-ark-2019.png?raw=true ".NET is a technology for everyone.
 Nobody can take it away or undermine its progress.
 Gapotchenko.FX brings RAD back to the people 💪")
 
 <div align="right">
-    <a href="../../../../wiki/Manifesto">Project Manifesto</a>
+    <a href="../../../../../../wiki/Manifesto">Project Manifesto</a>
     |
-    <a href="../../../../wiki/RAD" title="Learn more about Rapid Application Development and why it matters">More on RAD</a>
+    <a href="../../../../../../wiki/RAD" title="Learn more about Rapid Application Development and why it matters">More on RAD</a>
 </div>
 
 ## Supported Platforms
