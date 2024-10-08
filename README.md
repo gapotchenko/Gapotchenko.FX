@@ -17,8 +17,7 @@ Here is a short list of what Gapotchenko.FX can do:
     For example, `Gapotchenko.FX.Math.Graphs.Graph<T>` allows you to solve a plethora of seemingly hard tasks in a simple and creative way you may never have known about
   - **Benefit from the power of formal mathematics.**
     While some people think that programming is somehow different from the math, actually it is not that different.
-    For example, when a software component has an inherent flaw, it shows up way further down the lane.
-    Guaranteed.
+    For example, when a software component has an inherent flaw, it shows up way further down the lane, guaranteed.
     Formal math makes this weak thinking impossible, and all the features provided by Gapotchenko.FX rigorously follow that strategy.
     For example, `Gapotchenko.FX.Collections.Generic.AssociativeArray<TKey, TValue>` represents a collection of keys and values covering the full space of `TKey` type,
     while `System.Collections.Generic.Dictionary<TKey, TValue>` handles only an opinionated subset epically failing on `null` `TKey` values
@@ -30,4 +29,15 @@ All in all, you can consider Gapotchenko.FX to play a similar role in .NET ecosy
 
 ![.NET Progress ca. 2012 - 2018](Documentation/Assets/dotnet-progress-ca-2012-2018.png?raw=true ".NET Progress ca. 2012 - 2018")
 
-[Continue >](Source/Modules#modules)
+## Modules
+
+Gapotchenko.FX framework consists of granular modules that form thematic hierarchies of functionality.
+
+[Learn more about Gapotchenko.FX modules >](Source/Modules#modules)
+
+## Profiles
+
+In addition to modules, Gapotchenko.FX framework also provides profiles.
+A profile is a collection of Gapotchenko.FX modules covering a common theme.
+
+[Learn more about Gapotchenko.FX profiles >](Source/Profiles#profiles)
