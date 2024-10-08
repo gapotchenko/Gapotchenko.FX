@@ -41,3 +41,18 @@ In addition to modules, Gapotchenko.FX also provides profiles.
 A profile is a collection of Gapotchenko.FX modules covering a common usage pattern.
 
 [Get started with Gapotchenko.FX profiles >](Source/Profiles#readme)
+
+## Supported Platforms
+
+Gapotchenko.FX is largely platform-independent, but some parts require specific integration with a host environment to achieve the best characteristics.
+
+Supported operating systems:
+  - Linux
+  - macOS
+  - Windows
+
+Supported CPU architectures:
+  - x86
+  - x64
+  - ARM
+  - ARM64
