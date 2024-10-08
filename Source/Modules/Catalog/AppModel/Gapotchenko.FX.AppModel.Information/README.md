@@ -41,8 +41,8 @@ Console.WriteLine("Company: {0}", info.CompanyName);
 Console.WriteLine("Copyright: {0}", info.Copyright);
 ```
 
-Note that the example above gets information for `System.Object` type which belongs to .NET BCL (Base Class Library).
-The following information is retrieved:
+Note that the example above gets information for `System.Object` type which belongs to .NET BCL (Base Class Library), another part of the program.
+The following information about that part is retrieved:
 
 ```
 Product: Microsoft® .NET
@@ -58,7 +58,7 @@ There also exists `AppInformation.For(Assembly)` overload of the `For` method.
 That method overload retrieves information about a specific assembly.
 It is useful for situations when you have no specific `System.Type` at hand to retrieve the information for, but only a `System.Assembly`.
 
-It is prefereable to use `AppInformation.For(Type)` method because it is slightly more precise than `AppInformation.For(Assembly)`.
+It is preferable to use `AppInformation.For(Type)` method because it is slightly more precise than `AppInformation.For(Assembly)`.
 
 ## Usage
 
