@@ -7,7 +7,7 @@ namespace Gapotchenko.FX.Utilities.MDDocProcessor;
 
 static partial class ProjectSerializer
 {
-    public static bool IsProjectDirectory(string directoryPath) => Directory.EnumerateFiles(directoryPath, "*.?*pro").Any();
+    public static bool IsProjectDirectory(string directoryPath) => Directory.EnumerateFiles(directoryPath, "*.?*proj").Any();
 
     public static Project ReadProject(string directoryPath)
     {

@@ -13,13 +13,13 @@ static class TocVisualizer
         }
         else
         {
-            _VisualizeCore(node, tw, 0);
+            VisualizeCore(node, tw, 0);
         }
     }
 
-    static void _VisualizeCore(TocNode node, TextWriter tw, int indent)
+    static void VisualizeCore(TocNode node, TextWriter tw, int indent)
     {
-        if (!(node is TocRootNode))
+        if (node is not TocRootNode)
         {
             for (int i = 0; i < indent; ++i)
                 tw.Write("\t");
@@ -27,7 +27,7 @@ static class TocVisualizer
 
             switch (node)
             {
-                case TocNamespaceNode _:
+                case TocNamespaceNode:
                     tw.Write(" (namespace)");
                     break;
 
@@ -49,6 +49,6 @@ static class TocVisualizer
         }
 
         foreach (var child in node.Children)
-            _VisualizeCore(child, tw, indent);
+            VisualizeCore(child, tw, indent);
     }
 }

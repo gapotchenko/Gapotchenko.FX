@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor.Framework;
 
@@ -24,6 +25,10 @@ static class Util
             // Uri's use forward slashes so convert back to backward slashes
             relativePath = Uri.UnescapeDataString(relativeUri.ToString()).Replace('/', Path.DirectorySeparatorChar);
         }
+
+        var relativePath2 = Path.GetRelativePath(Path.GetDirectoryName(basePath), path);
+
+        Debug.Assert(relativePath2 == relativePath);
 
         return relativePath;
     }

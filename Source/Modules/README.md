@@ -33,7 +33,7 @@ The full list of available modules is presented in the table below.
 - [Gapotchenko.FX.Linq](Catalog/Linq/Gapotchenko.FX.Linq#readme)
   - [Gapotchenko.FX.Linq.Expressions](Catalog/Linq/Gapotchenko.FX.Linq.Expressions#readme) ✱
 - [Gapotchenko.FX.Math](Catalog/Math/Gapotchenko.FX.Math#readme)
-  - [Gapotchenko.FX.Math.Combinatorics](Catalog/Gapotchenko.FX.Math.Combinatorics#readme)
+  - [Gapotchenko.FX.Math.Combinatorics](Catalog/Math/Gapotchenko.FX.Math.Combinatorics#readme)
   - [Gapotchenko.FX.Math.Graphs](Catalog/Math/Gapotchenko.FX.Math.Graphs#readme)
   - [Gapotchenko.FX.Math.Intervals](Catalog/Math/Gapotchenko.FX.Math.Intervals#readme)
   - [Gapotchenko.FX.Math.Metrics](Catalog/Math/Gapotchenko.FX.Math.Metrics#readme)
@@ -41,7 +41,7 @@ The full list of available modules is presented in the table below.
 - [Gapotchenko.FX.Numerics](Catalog/Gapotchenko.FX.Numerics#readme) ✱
 - [Gapotchenko.FX.Reflection.Loader](Catalog/Reflection/Gapotchenko.FX.Reflection.Loader#readme) ✱
 - [Gapotchenko.FX.Runtime.CompilerServices.Intrinsics](Catalog/Runtime/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics#readme) ✱✱
-- [Gapotchenko.FX.Runtime.InteropServices](Catalog/Runtime/Gapotchenko.FX.Runtime.InteropServices#readme)
+- [Gapotchenko.FX.Runtime.InteropServices](Catalog/Runtime/Gapotchenko.FX.Runtime.InteropServices#readme) ✱
 - [Gapotchenko.FX.Security.Cryptography](Catalog/Security/Gapotchenko.FX.Security.Cryptography#readme)
 - [Gapotchenko.FX.Text](Catalog/Gapotchenko.FX.Text#readme)
 - [Gapotchenko.FX.Threading](Catalog/Gapotchenko.FX.Threading#readme)

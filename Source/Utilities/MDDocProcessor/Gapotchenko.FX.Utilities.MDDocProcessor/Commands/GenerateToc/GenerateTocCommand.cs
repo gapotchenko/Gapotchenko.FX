@@ -29,7 +29,7 @@ static class GenerateTocCommand
         var catalog = new TocCatalogNode(
             new Catalog("Gapotchenko.FX", projectRootDirectory)
             {
-                ReadMeFilePath = Path.Combine(projectRootDirectory, "Modules/README.md")
+                ReadMeFilePath = Path.Combine(projectRootDirectory, "Modules", "README.md")
             });
         toc.Root.Children.Add(catalog);
         catalog.Parent = toc.Root;
@@ -40,8 +40,8 @@ static class GenerateTocCommand
         Console.WriteLine();
         TocVisualizer.Visualize(catalog, Console.Out);
 
-        Console.WriteLine();
-        ProcessProjects(toc);
+        //Console.WriteLine();
+        //ProcessProjects(toc);
 
         Console.WriteLine();
         ProcessCatalogs(toc);
@@ -51,8 +51,7 @@ static class GenerateTocCommand
     {
         var hierarchies = new (string Path, bool Recursive)[]
         {
-            ("Modules/Catalog", true),
-            ("Profiles", false)
+            (Path.Combine("Modules", "Catalog"), true)
         };
 
         var directories = Enumerable.Empty<string>();

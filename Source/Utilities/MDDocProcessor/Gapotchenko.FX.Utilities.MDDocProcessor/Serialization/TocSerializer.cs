@@ -90,6 +90,7 @@ sealed class TocSerializer
                             throw new Exception("Cannot determine base path.");
 
                         textWriter.Write(Util.MakeRelativePath(effectiveProject.DirectoryPath, basePath).Replace(Path.DirectorySeparatorChar, '/'));
+                        textWriter.Write("#readme");
                     }
                     else
                     {
@@ -174,9 +175,9 @@ sealed class TocSerializer
                 path = path.Replace(Path.DirectorySeparatorChar, '/');
 
                 if (complexityLegend)
-                    textWriter.WriteLine("Or take a look at the [full list of modules]({0}#available-modules).", path);
+                    textWriter.WriteLine("Or take a look at the [full list of modules]({0}#readme).", path);
                 else
-                    textWriter.WriteLine("Or look at the [full list of modules]({0}#available-modules).", path);
+                    textWriter.WriteLine("Or look at the [full list of modules]({0}#readme).", path);
             }
         }
     }
