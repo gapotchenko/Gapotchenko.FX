@@ -80,12 +80,7 @@ class MyBitSet(int capacity) : SetKit<int>
         m_CachedCount = 0;
     }
 
-    public override int Count => m_CachedCount ??= GetCountCore();
-
-    // The streaming of enumerable elements is used to decouple the Count() LINQ method
-    // from trying to call the Count property of this class directly, thus causing a stack overflow.
-    // The streaming facility is provided by Gapotchenko.FX.Linq module.
-    int GetCountCore() => this.Stream().Count();
+    public override int Count => m_CachedCount ??= this.Stream().Count();
 
     public override IEnumerator<int> GetEnumerator()
     {
@@ -100,7 +95,7 @@ class MyBitSet(int capacity) : SetKit<int>
         set
         {
             m_Bits = value;
-            m_CachedCount = null; // setting bits array directly invalidates the cached count
+            m_CachedCount = null;
         }
     }
 
