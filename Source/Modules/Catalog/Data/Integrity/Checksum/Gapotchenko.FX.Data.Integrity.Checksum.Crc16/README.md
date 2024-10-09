@@ -92,12 +92,12 @@ If you want to formalize a custom algorithm even further, you may opt-in to crea
 /// </summary>
 sealed class FooCrc16 : CustomCrc16
 {
+    public static FooCrc16 Instance { get; } = new FooCrc16();
+
     FooCrc16() :
         base(poly, init, refin, refout, xorout)
     {
     }
-
-    public static FooCrc16 Instance { get; } = new FooCrc16();
 }
 ```
 

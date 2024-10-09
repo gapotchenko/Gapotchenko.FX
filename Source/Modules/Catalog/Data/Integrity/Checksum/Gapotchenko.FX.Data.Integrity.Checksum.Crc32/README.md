@@ -81,12 +81,12 @@ If you want to formalize a custom algorithm even further, you may opt-in to crea
 /// </summary>
 sealed class FooCrc32 : CustomCrc32
 {
+    public static FooCrc32 Instance { get; } = new FooCrc32();
+
     FooCrc32() :
         base(poly, init, refin, refout, xorout)
     {
     }
-
-    public static FooCrc32 Instance { get; } = new FooCrc32();
 }
 ```
 
