@@ -95,7 +95,7 @@ void ProcessMap(IDictionary<string, int> map)
 
 A little detail, but sometimes it matters a lot when you are amid the heat of the code.
 
-### PriorityQueue polyfill
+### PriorityQueue Polyfill
 
 `PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue available in .NET 6.0+.
 The polyfill makes it available to all other supported .NET versions.

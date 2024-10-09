@@ -1,5 +1,9 @@
-﻿// Credits:
-// The implementation is based on a work from Bar Arnon: https://github.com/i3arnon/ConcurrentHashSet
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+// Portions © Bar Arnon
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
 
 using Gapotchenko.FX.Threading;
 using System.Collections;
