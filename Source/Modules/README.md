@@ -2,7 +2,7 @@
 
 The directory contains Gapotchenko.FX modules.
 Each module covers a specific functionality.
-Modules form hierarchies by following the hierarchical naming convention.
+Modules form functional hierarchies by following a special naming convention.
 
 ## Available Modules
 
