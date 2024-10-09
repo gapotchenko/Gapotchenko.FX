@@ -5,7 +5,7 @@
 // Year of introduction: 2021
 
 using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.Collections.Generic.Kit;
+using Gapotchenko.FX.Collections.Generic.Kits;
 using Gapotchenko.FX.Linq;
 using System.Diagnostics;
 

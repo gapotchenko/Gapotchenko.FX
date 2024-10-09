@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Gapotchenko.FX.Collections.Tests.Generic.Kit;
+namespace Gapotchenko.FX.Collections.Tests.Generic.Kits;
 
 public class ReadOnlySetBaseTests
 {

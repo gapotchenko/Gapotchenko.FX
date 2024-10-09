@@ -4,7 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2020
 
-using Gapotchenko.FX.Collections.Generic.Kit;
+using Gapotchenko.FX.Collections.Generic.Kits;
 
 namespace Gapotchenko.FX.Math.Combinatorics;
 

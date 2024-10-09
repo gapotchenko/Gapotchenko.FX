@@ -1,7 +1,7 @@
-﻿using Gapotchenko.FX.Collections.Generic.Kit;
+﻿using Gapotchenko.FX.Collections.Generic.Kits;
 using Xunit;
 
-namespace Gapotchenko.FX.Collections.Tests.Generic.Kit;
+namespace Gapotchenko.FX.Collections.Tests.Generic.Kits;
 
 public class SetBaseTests
 {

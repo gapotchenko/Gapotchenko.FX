@@ -5,7 +5,7 @@
 // Year of introduction: 2021
 
 using Gapotchenko.FX.Collections.Generic;
-using Gapotchenko.FX.Collections.Generic.Kit;
+using Gapotchenko.FX.Collections.Generic.Kits;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Graphs;

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Diagnostics;
 
-namespace Gapotchenko.FX.Collections.Generic.Kit;
+namespace Gapotchenko.FX.Collections.Generic.Kits;
 
 /// <summary>
 /// Provides the base implementation of <see cref="IReadOnlySet{T}"/>.
@@ -52,7 +52,7 @@ public abstract class ReadOnlySetBase<T> : IReadOnlySet<T>
 
         if (count == 0)
         {
-            if (EnumerableEx.TryGetNonEnumeratedCount(other, out var otherCount))
+            if (other.TryGetNonEnumeratedCount(out var otherCount))
                 return otherCount > 0;
             else
                 return other.Any();
@@ -104,7 +104,7 @@ public abstract class ReadOnlySetBase<T> : IReadOnlySet<T>
         if (count == 0)
             return false;
 
-        if (EnumerableEx.TryGetNonEnumeratedCount(other, out var otherCount))
+        if (other.TryGetNonEnumeratedCount(out var otherCount))
             if (otherCount == 0)
                 return true;
 
@@ -187,7 +187,7 @@ public abstract class ReadOnlySetBase<T> : IReadOnlySet<T>
         if (other == this)
             return true;
 
-        if (EnumerableEx.TryGetNonEnumeratedCount(other, out var otherCount))
+        if (other.TryGetNonEnumeratedCount(out var otherCount))
         {
             if (otherCount == 0)
                 return true;
@@ -240,7 +240,7 @@ public abstract class ReadOnlySetBase<T> : IReadOnlySet<T>
 
         int expectedCount = Count;
 
-        if (EnumerableEx.TryGetNonEnumeratedCount(other, out var count))
+        if (other.TryGetNonEnumeratedCount(out var count))
         {
             return count == expectedCount && ContainsAllElements(other);
         }

@@ -1,7 +1,7 @@
 ﻿using Gapotchenko.FX.Linq;
 using System.Diagnostics;
 
-namespace Gapotchenko.FX.Collections.Generic.Kit;
+namespace Gapotchenko.FX.Collections.Generic.Kits;
 
 /// <summary>
 /// Provides the base implementation of <see cref="ISet{T}"/>.
@@ -88,7 +88,7 @@ public abstract class SetBase<T> : ReadOnlySetBase<T>, ISet<T>
             return;
         }
 
-        if (EnumerableEx.TryGetNonEnumeratedCount(other, out var otherCount))
+        if (other.TryGetNonEnumeratedCount(out var otherCount))
         {
             if (otherCount == 0)
             {

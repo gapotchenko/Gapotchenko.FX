@@ -1,6 +1,6 @@
 ﻿using Gapotchenko.FX.Math.Combinatorics;
 
-namespace Gapotchenko.FX.Collections.Tests.Generic.Kit;
+namespace Gapotchenko.FX.Collections.Tests.Generic.Kits;
 
 static class Util
 {
