@@ -7,18 +7,20 @@ The module was started by borrowing an implementation of `ConcurrentHashSet<T>` 
 
 Other than that, the module provides polyfills for missing functionality in .NET.
 
-## ConcurrentHashSet&lt;T&gt;
+## Collections
+
+### ConcurrentHashSet&lt;T&gt;
 
 `ConcurrentHashSet<T>` provided by `Gapotchenko.FX.Collections` is a thread-safe implementation of `HashSet<T>`.
 
-## AssociativeArray&lt;TKey, TValue&gt;
+### AssociativeArray&lt;TKey, TValue&gt;
 
 `AssociativeArray<TKey, TValue>` provided by `Gapotchenko.FX.Collections` is a drop-in replacement for `Dictionary<TKey, TValue>` that can handle `null` keys.
 
 `Dictionary<TKey, TValue>` cannot work with `null` keys and throws an exception whenever a `null` key is encountered.
 `AssociativeArray<TKey, TValue>` resolves that by supporting a full space of keys without opinionated exclusions.
 
-## Deque&lt;T&gt;
+### Deque&lt;T&gt;
 
 `Deque<T>` provided by `Gapotchenko.FX.Collections` is a linear collection that supports element insertion and removal at both ends with O(1) algorithmic complexity.
 
