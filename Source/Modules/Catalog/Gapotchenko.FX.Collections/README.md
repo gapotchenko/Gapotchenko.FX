@@ -43,12 +43,13 @@ This is where the concept of a construction kit starts to shine.
 In our case, instead of implementing `ISet<T>` interface directly, we just derive our implementation from the one provided by the corresponding construction kit:
 
 ```c#
-using Gapotchenko.Collections.Generic.Kits;
+using Gapotchenko.FX.Collections.Generic.Kits;
+using Gapotchenko.FX.Linq;
 using System.Collections;
 
 class MyBitSet(int capacity) : SetKit<int>
 {
-    public override bool Contains(int item) => Bits[item];
+    public override bool Contains(int item) => m_Bits[item];
 
     public override bool Add(int item) => ChangeBit(item, true);
 
@@ -56,14 +57,14 @@ class MyBitSet(int capacity) : SetKit<int>
 
     bool ChangeBit(int item, bool value)
     {
-        if (Bits[item] != value)
+        if (m_Bits[item] != value)
         {
-            Bits[item] = value;
+            m_Bits[item] = value;
 
             if (value)
-                ++m_Count;
+                ++m_CachedCount;
             else
-                --m_Count;
+                --m_CachedCount;
 
             return true;
         }
@@ -75,22 +76,36 @@ class MyBitSet(int capacity) : SetKit<int>
 
     public override void Clear()
     {
-        Bits.SetAll(false);
-        m_Count = 0;
+        m_Bits.SetAll(false);
+        m_CachedCount = 0;
     }
 
-    public override int Count => m_Count;
+    public override int Count => m_CachedCount ??= GetCountCore();
 
-    int m_Count;
+    // The streaming of enumerable elements is used to decouple the Count() LINQ method
+    // from trying to call the Count property of this class directly, thus causing a stack overflow.
+    // The streaming facility is provided by Gapotchenko.FX.Linq module.
+    int GetCountCore() => this.Stream().Count();
 
     public override IEnumerator<int> GetEnumerator()
     {
-        for (int i = 0, count = Bits.Count; i < count; ++i)
-            if (Bits[i])
+        for (int i = 0, count = m_Bits.Count; i < count; ++i)
+            if (m_Bits[i])
                 yield return i;
     }
 
-    internal BitArray Bits = new(capacity);
+    protected BitArray Bits
+    {
+        get => m_Bits;
+        set
+        {
+            m_Bits = value;
+            m_CachedCount = null; // setting bits array directly invalidates the cached count
+        }
+    }
+
+    BitArray m_Bits = new(capacity);
+    int? m_CachedCount = 0;
 }
 ```
 
