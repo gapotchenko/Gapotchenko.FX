@@ -32,9 +32,17 @@ static class Program
                 "Usage: {0} <command>",
                 Path.GetFileNameWithoutExtension(typeof(Program).Assembly.Location));
             Console.WriteLine();
-            Console.WriteLine("where <command> is one of the following:");
-            Console.WriteLine("  - generate-toc | Generate table of contents in all markdown files");
-            Console.WriteLine("  - generate-package-readme | Generate NuGet README.md file from GitHub README.md");
+            Console.WriteLine(
+"""
+Options:
+  <command>  The command to run. Possible values: generate-toc,
+             generate-package-readme.
+
+Commands:
+  generate-toc             Generate table of contents in all README.md files.
+  generate-package-readme  Generate NuGet README.md file from a GitHub
+                           README.md.
+""");
 
             throw new ProgramExitException(1);
         }
