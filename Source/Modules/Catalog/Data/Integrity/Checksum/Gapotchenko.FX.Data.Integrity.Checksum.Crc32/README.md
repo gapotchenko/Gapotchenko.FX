@@ -34,7 +34,7 @@ CRC-32 family of cyclic redundancy checks consists of several attested checksum 
 | Algorithm | Aliases | Gapotchenko.FX Implementation | Parameters: poly | init | refin | refout | xorout | check |
 | --------- | ------- | -------- | ---- | ---- | ----- | ------ | ------ | ----- |
 | CRC-32 (standard, recommended) | CRC-32/ISO-HDLC, CRC-32/ADCCP, CRC-32/V-42, CRC-32/XZ, PKZIP | `Crc32.Standard` | 0x04c11db7 | 0xffffffff | true | true | 0xffffffff | 0xcbf43926 |
-| CRC-32C (used in communication, hardware-accelerated, recommended) | CRC-32/BASE91-C, CRC-32/CASTAGNOLI, CRC-32/INTERLAKEN, CRC-32/ISCSI | `Crc32.Attested.C` | 0x1edc6f41 | 0xffffffff | true | true | 0xffffffff | 0xe3069283 |
+| CRC-32C (hardware-accelerated, recommended) | CRC-32/BASE91-C, CRC-32/CASTAGNOLI, CRC-32/INTERLAKEN, CRC-32/ISCSI | `Crc32.Attested.C` | 0x1edc6f41 | 0xffffffff | true | true | 0xffffffff | 0xe3069283 |
 | CRC-32Q | CRC-32/AIXM | `Crc32.Attested.Q` | 0x814141ab | 0x00000000 | false | false | 0x00000000 | 0x3010bf7f |
 | CRC-32/AUTOSAR | | `Crc32.Attested.Autosar` | 0xf4acfb13 | 0xffffffff | true | true | 0xffffffff | 0x1697d06a |
 | CRC-32/POSIX | CRC-32/CKSUM, CKSUM | `Crc32.Attested.Posix` | 0x04c11db7 | 0x00000000 | false | false | 0xffffffff | 0x765e7680 |
