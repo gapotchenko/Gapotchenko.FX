@@ -44,6 +44,9 @@ partial class Crc32
         /// <para>
         /// Parameters: poly=0x1edc6f41, init=0xffffffff, refin=true, refout=true, xorout=0xffffffff, check=0xe3069283.
         /// </para>
+        /// <para>
+        /// The algorithm is widely used in data storage and communication industries, but more importantly, it benefits from a hardware acceleration provided by CPUs.
+        /// </para>
         /// </remarks>
         public static Crc32 C => Impl.C.Instance;
 

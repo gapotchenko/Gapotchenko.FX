@@ -55,7 +55,7 @@ var checksum = Crc32.Standard.ComputeChecksum(data);
 Console.WriteLine("Checksum: 0x{0:x}", checksum);
 ```
 
-## Recommended CRC-32 Algorithm
+## Recommended CRC-32 Algorithms
 
 Among all other possibilities, it is recommended to use the standard CRC-32 algorithm which comes under CRC-32, CRC-32/ISO-HDLC, CRC-32/ADCCP, CRC-32/V-42, CRC-32/XZ, PKZIP aliases and is available via `Crc32.Standard` property.
 
