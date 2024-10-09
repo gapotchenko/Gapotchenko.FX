@@ -97,7 +97,7 @@ class MyBitSet(int capacity) : SetKit<int>
 We implemented just several abstract methods and got a fully functional and compliant `ISet<T>` collection.
 All the remaining implementation details are covered by the construction kit our class is derived from.
 
-Mind you, a generic implementation does not mean inefficient.
+Mind you, a generic implementation does not mean an inefficient one.
 If we have a more optimized way to do some operations, we just override the corresponding methods:
 
 ```c#
