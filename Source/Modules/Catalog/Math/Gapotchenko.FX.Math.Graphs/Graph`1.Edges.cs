@@ -42,9 +42,6 @@ partial class Graph<TVertex>
             m_Graph = graph;
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly Graph<TVertex> m_Graph;
-
         /// <inheritdoc/>
         public override IEqualityComparer<GraphEdge<TVertex>> Comparer => m_Graph.EdgeComparer;
 
@@ -221,5 +218,8 @@ partial class Graph<TVertex>
                 }
             }
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly Graph<TVertex> m_Graph;
     }
 }

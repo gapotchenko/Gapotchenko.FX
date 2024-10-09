@@ -1,6 +1,5 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
-//
 // Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -35,13 +34,7 @@ static class ExceptionHelper
         ArgumentOutOfRangeException.ThrowIfNegative(value, parameterName);
 #else
         if (value < 0)
-        {
-            throw new ArgumentOutOfRangeException(
-                parameterName,
-                string.Format(
-                    "'{0}' must be a non-negative value.",
-                    parameterName));
-        }
+            throw new ArgumentOutOfRangeException(parameterName, "Non-negative number required.");
 #endif
     }
 
@@ -65,6 +58,10 @@ static class ExceptionHelper
                 "Index was out of range. Must be non-negative and less than the size of the collection.");
         }
     }
+
+    [DoesNotReturn]
+    public static void ThrowArgumentException_ArrayPlusOffTooSmall() =>
+        throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
 
     /// <summary>
     /// Ensures that <paramref name="index"/> is non-negative and not greater than <paramref name="size"/>. 

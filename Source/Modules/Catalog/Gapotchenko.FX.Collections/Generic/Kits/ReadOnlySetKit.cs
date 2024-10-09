@@ -1,4 +1,11 @@
-﻿using Gapotchenko.FX.Linq;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+using Gapotchenko.FX.Collections.Utils;
+using Gapotchenko.FX.Linq;
 using System.Collections;
 using System.Diagnostics;
 
@@ -88,7 +95,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         }
 
         var inclusivity = CalculateInclusivityOf(other);
-        return inclusivity.PresentCount == count && inclusivity.HasAbsent;
+        return inclusivity.Absence && inclusivity.PresenceCount == count;
     }
 
     /// <inheritdoc/>
@@ -130,7 +137,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         }
 
         var inclusivity = CalculateInclusivityOf(other, true);
-        return inclusivity.PresentCount < count && !inclusivity.HasAbsent;
+        return !inclusivity.Absence && inclusivity.PresenceCount < count;
     }
 
     /// <inheritdoc/>
@@ -175,7 +182,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
             }
         }
 
-        return CalculateInclusivityOf(other).PresentCount == count;
+        return CalculateInclusivityOf(other).PresenceCount == count;
     }
 
     /// <inheritdoc/>
@@ -263,30 +270,30 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         }
     }
 
-    (int PresentCount, bool HasAbsent) CalculateInclusivityOf(IEnumerable<T> other, bool stopOnAbsent = false)
+    (int PresenceCount, bool Absence) CalculateInclusivityOf(IEnumerable<T> other, bool stopOnAbsence = false)
     {
         int count = Count;
         if (count == 0)
             return (0, other.Any());
 
-        var present = new HashSet<T>(Comparer);
-        bool hasAbsent = false;
+        var presence = new HashSet<T>(Comparer);
+        bool absence = false;
 
         foreach (var i in other)
         {
             if (Contains(i))
             {
-                present.Add(i);
+                presence.Add(i);
             }
             else
             {
-                hasAbsent = true;
-                if (stopOnAbsent)
+                absence = true;
+                if (stopOnAbsence)
                     break;
             }
         }
 
-        return (present.Count, hasAbsent);
+        return (presence.Count, absence);
     }
 
     bool ContainsAllElements(IEnumerable<T> other)
@@ -328,14 +335,11 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <param name="count">The number of elements to copy to array.</param>
     public virtual void CopyTo(T[] array, int arrayIndex, int count)
     {
-        if (array == null)
-            throw new ArgumentNullException(nameof(array));
-        if (arrayIndex < 0)
-            throw new ArgumentOutOfRangeException(nameof(arrayIndex), "Non-negative number required.");
-        if (count < 0)
-            throw new ArgumentOutOfRangeException(nameof(count), "Non-negative number required.");
+        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ExceptionHelper.ThrowIfArgumentIsNegative(arrayIndex);
+        ExceptionHelper.ThrowIfArgumentIsNegative(count);
         if (count > array.Length - arrayIndex)
-            throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
+            ExceptionHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
 
         if (count == 0)
             return;

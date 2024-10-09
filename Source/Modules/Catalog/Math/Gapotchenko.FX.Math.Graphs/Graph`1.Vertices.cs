@@ -40,9 +40,6 @@ partial class Graph<TVertex>
             m_Graph = graph;
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly Graph<TVertex> m_Graph;
-
         /// <inheritdoc/>
         public override IEqualityComparer<TVertex> Comparer => m_Graph.VertexComparer;
 
@@ -135,5 +132,8 @@ partial class Graph<TVertex>
 
             return modificationGuard.Protect(query).GetEnumerator();
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly Graph<TVertex> m_Graph;
     }
 }

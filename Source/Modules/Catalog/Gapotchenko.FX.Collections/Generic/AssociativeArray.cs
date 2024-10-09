@@ -404,7 +404,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         if ((uint)arrayIndex > (uint)array.Length)
             ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
         if (array.Length - arrayIndex < Count)
-            ThrowHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
+            ExceptionHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
 
         ((ICollection<KeyValuePair<TKey, TValue>>)m_Dictionary).CopyTo(array, arrayIndex + (m_NullSlot.HasValue ? 1 : 0));
 
@@ -547,7 +547,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         if ((uint)arrayIndex > (uint)array.Length)
             ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
         if (array.Length - arrayIndex < Count)
-            ThrowHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
+            ExceptionHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
 
         ((ICollection)m_Dictionary).CopyTo(array, arrayIndex + (m_NullSlot.HasValue ? 1 : 0));
 
@@ -698,7 +698,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             if ((uint)arrayIndex > (uint)array.Length)
                 ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
             if (array.Length - arrayIndex < Count)
-                ThrowHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
+                ExceptionHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
 
             var nullSlot = NullSlot;
 
@@ -714,7 +714,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             if ((uint)arrayIndex > (uint)array.Length)
                 ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
             if (array.Length - arrayIndex < Count)
-                ThrowHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
+                ExceptionHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
 
             var nullSlot = NullSlot;
 
@@ -903,9 +903,5 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         [DoesNotReturn]
         public static void ThrowIndexArgumentOutOfRange_NeedNonNegNumException(string argName) =>
             throw new ArgumentOutOfRangeException(argName, "Non-negative number required.");
-
-        [DoesNotReturn]
-        public static void ThrowArgumentException_ArrayPlusOffTooSmall() =>
-            throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
     }
 }
