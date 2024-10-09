@@ -30,6 +30,9 @@ Other than that, the module provides polyfills for missing functionality in .NET
 
 A concept of a construction kit provided by `Gapotchenko.FX.Collections` module allow you to quickly and reliably build customized collection primitives.
 
+<details>
+  <summary>More information</summary>
+
 ### ISet&lt;T&gt; Construction Kit 
 
 For example, let's imagine that we need to build a custom implementation of `System.Collections.Generic.ISet<T>`.
@@ -45,6 +48,7 @@ using Gapotchenko.Collections.Generic.Kits;
 // TODO
 ```
 
+<details>
 
 ## Polyfills
 
