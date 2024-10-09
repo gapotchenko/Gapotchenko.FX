@@ -6,7 +6,7 @@ namespace Gapotchenko.FX.Collections.Generic.Kits;
 /// <summary>
 /// Provides the base implementation of <see cref="ISet{T}"/>.
 /// </summary>
-public abstract class SetBase<T> : ReadOnlySetBase<T>, ISet<T>
+public abstract class SetKit<T> : ReadOnlySetKit<T>, ISet<T>
 {
     /// <inheritdoc/>
     public abstract bool Add(T item);
@@ -98,7 +98,7 @@ public abstract class SetBase<T> : ReadOnlySetBase<T>, ISet<T>
             }
         }
 
-        if (other is ReadOnlySetBase<T> rosb)
+        if (other is ReadOnlySetKit<T> rosb)
         {
             if (rosb.Comparer.Equals(Comparer))
             {
@@ -174,7 +174,7 @@ public abstract class SetBase<T> : ReadOnlySetBase<T>, ISet<T>
             return;
         }
 
-        if (other is ReadOnlySetBase<T> rosb)
+        if (other is ReadOnlySetKit<T> rosb)
         {
             if (rosb.Comparer.Equals(Comparer))
             {

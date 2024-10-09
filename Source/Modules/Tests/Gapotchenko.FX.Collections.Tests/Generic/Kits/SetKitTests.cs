@@ -3,34 +3,10 @@ using Xunit;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.Kits;
 
-public class SetBaseTests
+public class SetKitTests
 {
-    sealed class SetChimera<T> : SetBase<T>
-    {
-        public SetChimera(HashSet<T> baseSet)
-        {
-            m_BaseSet = baseSet;
-        }
-
-        readonly HashSet<T> m_BaseSet;
-
-        public override IEqualityComparer<T> Comparer => m_BaseSet.Comparer;
-
-        public override int Count => m_BaseSet.Count;
-
-        public override bool Contains(T item) => m_BaseSet.Contains(item);
-
-        public override IEnumerator<T> GetEnumerator() => m_BaseSet.GetEnumerator();
-
-        public override bool Add(T item) => m_BaseSet.Add(item);
-
-        public override bool Remove(T item) => m_BaseSet.Remove(item);
-
-        public override void Clear() => m_BaseSet.Clear();
-    }
-
     [Fact]
-    public void SetBase_ExceptWith()
+    public void SetKit_ExceptWith()
     {
         var s1 = new SetChimera<int>([1, 2, 3, 4, 5]);
         s1.ExceptWith(new[] { 1, 3 });
@@ -41,7 +17,7 @@ public class SetBaseTests
     }
 
     [Fact]
-    public void SetBase_IntersectWith()
+    public void SetKit_IntersectWith()
     {
         var s1 = new SetChimera<int>([]);
         s1.IntersectWith(new[] { 1, 2, 3 });
@@ -67,7 +43,7 @@ public class SetBaseTests
     }
 
     [Fact]
-    public void SetBase_SymmetricExceptWith()
+    public void SetKit_SymmetricExceptWith()
     {
         foreach (var s2 in Util.Sets(new[] { 3, 4, 5 }))
         {
@@ -78,7 +54,7 @@ public class SetBaseTests
     }
 
     [Fact]
-    public void SetBase_UnionWith()
+    public void SetKit_UnionWith()
     {
         var s1 = new SetChimera<int>([1, 2, 3]);
         s1.UnionWith(new[] { 3, 4, 5 });

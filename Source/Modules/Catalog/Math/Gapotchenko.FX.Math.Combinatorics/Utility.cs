@@ -21,7 +21,7 @@ static class Utility
         var sequenceComparer =
             sequence switch
             {
-                ReadOnlySetBase<T> rosb => rosb.Comparer,
+                ReadOnlySetKit<T> rosb => rosb.Comparer,
                 HashSet<T> hs => hs.Comparer,
                 _ => null
             };

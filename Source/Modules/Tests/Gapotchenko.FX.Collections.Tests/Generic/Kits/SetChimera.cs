@@ -2,7 +2,7 @@
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.Kits;
 
-sealed class ReadOnlySetChimera<T>(HashSet<T> baseSet) : ReadOnlySetKit<T>, IEmptiable<ReadOnlySetChimera<T>>
+sealed class SetChimera<T>(HashSet<T> baseSet) : SetKit<T>
 {
     public override IEqualityComparer<T> Comparer => baseSet.Comparer;
 
@@ -12,12 +12,9 @@ sealed class ReadOnlySetChimera<T>(HashSet<T> baseSet) : ReadOnlySetKit<T>, IEmp
 
     public override IEnumerator<T> GetEnumerator() => baseSet.GetEnumerator();
 
-    public bool IsEmpty => Count == 0;
+    public override bool Add(T item) => baseSet.Add(item);
 
-    public static ReadOnlySetChimera<T> Empty => EmptyFactory.Instance;
+    public override bool Remove(T item) => baseSet.Remove(item);
 
-    static class EmptyFactory
-    {
-        public static ReadOnlySetChimera<T> Instance { get; } = new([]);
-    }
+    public override void Clear() => baseSet.Clear();
 }

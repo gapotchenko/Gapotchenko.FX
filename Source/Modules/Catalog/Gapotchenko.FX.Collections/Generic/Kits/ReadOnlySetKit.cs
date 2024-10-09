@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Collections.Generic.Kits;
 /// </summary>
 [DebuggerDisplay("Count = {Count}")]
 [DebuggerTypeProxy(typeof(CollectionDebugView<>))]
-public abstract class ReadOnlySetBase<T> : IReadOnlySet<T>
+public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
 {
     /// <summary>
     /// Gets the <see cref="IEqualityComparer{T}"/> object that is used to determine equality for the values in the set.
@@ -58,7 +58,7 @@ public abstract class ReadOnlySetBase<T> : IReadOnlySet<T>
                 return other.Any();
         }
 
-        if (other is ReadOnlySetBase<T> rosb)
+        if (other is ReadOnlySetKit<T> rosb)
         {
             if (rosb.Comparer.Equals(Comparer))
             {
@@ -108,7 +108,7 @@ public abstract class ReadOnlySetBase<T> : IReadOnlySet<T>
             if (otherCount == 0)
                 return true;
 
-        if (other is ReadOnlySetBase<T> rosb)
+        if (other is ReadOnlySetKit<T> rosb)
         {
             if (rosb.Comparer.Equals(Comparer))
             {
@@ -146,7 +146,7 @@ public abstract class ReadOnlySetBase<T> : IReadOnlySet<T>
         if (count == 0)
             return true;
 
-        if (other is ReadOnlySetBase<T> rosb)
+        if (other is ReadOnlySetKit<T> rosb)
         {
             if (rosb.Comparer.Equals(Comparer))
             {
@@ -193,7 +193,7 @@ public abstract class ReadOnlySetBase<T> : IReadOnlySet<T>
                 return true;
         }
 
-        if (other is ReadOnlySetBase<T> rosb)
+        if (other is ReadOnlySetKit<T> rosb)
         {
             if (rosb.Comparer.Equals(Comparer))
             {

@@ -33,7 +33,7 @@ partial class Graph<TVertex>
     /// <summary>
     /// Represents a set of graph vertices.
     /// </summary>
-    public sealed class VertexSet : SetBase<TVertex>
+    public sealed class VertexSet : SetKit<TVertex>
     {
         internal VertexSet(Graph<TVertex> graph)
         {

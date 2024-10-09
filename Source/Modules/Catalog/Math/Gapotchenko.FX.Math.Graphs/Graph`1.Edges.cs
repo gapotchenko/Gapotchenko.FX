@@ -35,7 +35,7 @@ partial class Graph<TVertex>
     /// <summary>
     /// Represents a set of graph vertices.
     /// </summary>
-    public sealed class EdgeSet : SetBase<GraphEdge<TVertex>>
+    public sealed class EdgeSet : SetKit<GraphEdge<TVertex>>
     {
         internal EdgeSet(Graph<TVertex> graph)
         {

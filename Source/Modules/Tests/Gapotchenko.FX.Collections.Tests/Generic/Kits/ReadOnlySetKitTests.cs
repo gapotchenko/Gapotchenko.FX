@@ -2,10 +2,10 @@
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.Kits;
 
-public class ReadOnlySetBaseTests
+public class ReadOnlySetKitTests
 {
     [Fact]
-    public void ReadOnlySetBase_IsProperSubsetOf()
+    public void ReadOnlySetKit_IsProperSubsetOf()
     {
         var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
@@ -34,7 +34,7 @@ public class ReadOnlySetBaseTests
     }
 
     [Fact]
-    public void ReadOnlySetBase_IsProperSupersetOf()
+    public void ReadOnlySetKit_IsProperSupersetOf()
     {
         var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
@@ -66,7 +66,7 @@ public class ReadOnlySetBaseTests
     }
 
     [Fact]
-    public void ReadOnlySetBase_IsSubsetOf()
+    public void ReadOnlySetKit_IsSubsetOf()
     {
         var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
@@ -95,7 +95,7 @@ public class ReadOnlySetBaseTests
     }
 
     [Fact]
-    public void ReadOnlySetBase_IsSupersetOf()
+    public void ReadOnlySetKit_IsSupersetOf()
     {
         var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
@@ -116,7 +116,7 @@ public class ReadOnlySetBaseTests
     }
 
     [Fact]
-    public void ReadOnlySetBase_Overlaps()
+    public void ReadOnlySetKit_Overlaps()
     {
         var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
@@ -160,7 +160,7 @@ public class ReadOnlySetBaseTests
     }
 
     [Fact]
-    public void ReadOnlySetBase_SetEquals()
+    public void ReadOnlySetKit_SetEquals()
     {
         var s1 = new ReadOnlySetChimera<int>([3, 2, 1]);
 
@@ -178,7 +178,7 @@ public class ReadOnlySetBaseTests
     }
 
     [Fact]
-    public void ReadOnlySetBase_CopyTo()
+    public void ReadOnlySetKit_CopyTo()
     {
         var s1 = new ReadOnlySetChimera<int>([1, 2, 3]);
 
