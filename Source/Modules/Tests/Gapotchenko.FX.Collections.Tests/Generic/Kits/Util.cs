@@ -4,7 +4,7 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Kits;
 
 static class Util
 {
-    public static IEnumerable<IEnumerable<T>> SetsEnumerable<T>(IEnumerable<T> elements)
+    public static IEnumerable<IEnumerable<T>> SetsOf<T>(params IEnumerable<T> elements)
     {
         yield return elements;
 
@@ -33,6 +33,4 @@ static class Util
             foreach (var i in Repack(p))
                 yield return i;
     }
-
-    public static IEnumerable<IEnumerable<T>> Sets<T>(params T[] elements) => SetsEnumerable(elements);
 }
