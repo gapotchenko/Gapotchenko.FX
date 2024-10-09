@@ -94,8 +94,8 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
             }
         }
 
-        var inclusivity = CalculateInclusivityOf(other);
-        return inclusivity.Absence && inclusivity.PresenceCount == count;
+        var (presenceCount, absence) = CalculateInclusivityOf(other);
+        return absence && presenceCount == count;
     }
 
     /// <inheritdoc/>
@@ -136,8 +136,8 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
             }
         }
 
-        var inclusivity = CalculateInclusivityOf(other, true);
-        return !inclusivity.Absence && inclusivity.PresenceCount < count;
+        var (presenceCount, absence) = CalculateInclusivityOf(other, true);
+        return !absence && presenceCount < count;
     }
 
     /// <inheritdoc/>
