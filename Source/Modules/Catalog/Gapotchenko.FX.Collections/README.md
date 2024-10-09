@@ -94,7 +94,7 @@ class MyBitSet(int capacity) : SetKit<int>
 }
 ```
 
-We implemented just several abstract methods.
+We implemented just several abstract methods and got a fully functional `ISet<T>` implementation.
 All the remaining implementation details are covered by the construction kit our class is derived from.
 
 Mind you, a generic implementation does not mean inefficient.
