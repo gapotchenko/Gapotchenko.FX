@@ -140,7 +140,7 @@ class MyHWAcceleratedBitSet(int capacity) : MyBitSet(capacity)
         if (other is MyBitSet bitSet)
             Bits = Bits.Xor(bitSet.Bits);
         else
-            base.UnionWith(other);
+            base.SymmetricExceptWith(other);
     }
 
     public override bool SetEquals(IEnumerable<int> other)
