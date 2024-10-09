@@ -276,14 +276,22 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         if (count == 0)
             return (0, other.Any());
 
-        var presence = new HashSet<T>(Comparer);
+        var presence =
+            other is IReadOnlySet<T> or ISet<T>
+                ? null
+                : new HashSet<T>(Comparer);
+        int presenceCount = 0;
+
         bool absence = false;
 
         foreach (var i in other)
         {
             if (Contains(i))
             {
-                presence.Add(i);
+                if (presence != null)
+                    presence.Add(i);
+                else
+                    ++presenceCount;
             }
             else
             {
@@ -293,7 +301,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
             }
         }
 
-        return (presence.Count, absence);
+        return (presence?.Count ?? presenceCount, absence);
     }
 
     bool ContainsAllElements(IEnumerable<T> other)
