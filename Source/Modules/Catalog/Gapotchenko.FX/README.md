@@ -324,7 +324,7 @@ Gapotchenko.FX brings RAD back to the people 💪")
     <a href="../../../../../../wiki/RAD" title="Learn more about Rapid Application Development and why it matters">More on RAD</a>
 </div>
 
-## Supported Platforms
+## Supported Target Frameworks
 
 - .NET 5.0+
 - .NET Core 2.0+
