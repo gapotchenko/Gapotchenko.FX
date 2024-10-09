@@ -155,7 +155,7 @@ class MyHWAcceleratedBitSet(int capacity) : MyBitSet(capacity)
 
 Given that `BitArray` operations are hardware-accelerated in all modern .NET versions,
 it quickly boils from a generic `ISet<T>` implementation down to a highly-optimized one, leveraging AVX and SSE vector instructions provided by CPU.
-What a ride just within several lines of code.
+What a ride just within a screen of code.
 
 </details>
 
