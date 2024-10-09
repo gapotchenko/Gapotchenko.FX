@@ -40,7 +40,7 @@ collection.AddRange(numbers.Where(x => x % 2 == 0)); // add even numbers
 ```
 
 <details>
-  <summary>More information</summary>
+  <summary>Other polyfills</summary>
 
 ### KeyValuePair Polyfill
 
