@@ -82,12 +82,12 @@ If you want to formalize a custom algorithm even further, you may opt-in to crea
 /// </summary>
 sealed class FooCrc8 : CustomCrc8
 {
-    public static FooCrc8 Instance { get; } = new FooCrc8();
-
     FooCrc8() :
         base(poly, init, refin, refout, xorout)
     {
     }
+
+    public static FooCrc8 Instance { get; } = new FooCrc8();
 }
 ```
 
