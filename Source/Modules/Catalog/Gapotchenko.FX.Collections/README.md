@@ -18,6 +18,12 @@ Other than that, the module provides polyfills for missing functionality in .NET
 `Dictionary<TKey, TValue>` cannot work with `null` keys and throws an exception whenever a `null` key is encountered.
 `AssociativeArray<TKey, TValue>` resolves that by supporting a full space of keys without opinionated exclusions.
 
+## Deque&lt;T&gt;
+
+`Deque<T>` provided by `Gapotchenko.FX.Collections` is a linear collection that supports element insertion and removal at both ends with O(1) algorithmic complexity.
+
+`Deque<T>` can be seen as a `List<T>`, but in contrast to the `List<T>`, both ends of the collection support efficient addition and removal of elements.
+
 ## AddRange&lt;T&gt;(IEnumerable&lt;T&gt;) for Collections
 
 `AddRange` is a highly demanded operation that allows to add a sequence of elements to the end of a collection.
