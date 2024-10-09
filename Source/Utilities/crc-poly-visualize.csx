@@ -1,8 +1,9 @@
 #!/usr/bin/env dotnet-script
 
+// This utility is used for documentation of CRC checksums.
+
 using System.Globalization;
 using System.Numerics;
-using System.Text;
 
 var args = Args;
 
