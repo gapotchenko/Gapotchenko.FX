@@ -26,7 +26,7 @@ Other than that, the module provides polyfills for missing functionality in .NET
 
 `Deque<T>` can be seen as a `List<T>`, but in contrast to the `List<T>`, both ends of the collection support efficient addition and removal of elements.
 
-## Construction Kits
+## Collection Construction Kits
 
 A concept of a construction kit provided by `Gapotchenko.FX.Collections` module allow you to quickly and reliably build customized collection primitives.
 
@@ -35,12 +35,12 @@ A concept of a construction kit provided by `Gapotchenko.FX.Collections` module 
 
 ### ISet&lt;T&gt; Construction Kit 
 
-For example, let's imagine that we need to build a custom implementation of `System.Collections.Generic.ISet<T>`.
-In order to do that, we need to implement a plethora of methods such as `UnionWith`, `IntersectWith`, `ExceptWith` and so on.
-It quickly gets complicated and nuanced, while all we want to achieve is to build a simple custom `ISet<T>`.
+For example, let's imagine that we need to build a custom implementation of `System.Collections.Generic.ISet<T>` collection.
+In order to do that, we need to implement a plethora of methods such as `UnionWith`, `IntersectWith`, `ExceptWith` to begin with.
+It gets complicated and nuanced quickly, while all we want to achieve is to build a custom `ISet<T>`.
 
 This is where the concept of a construction kit comes to shine.
-In our case, instead of implementing `ISet<T>` interface directly, we just derive our implementation from the one provided by the construction kit:
+In our case, instead of implementing `ISet<T>` interface directly, we just derive our implementation from the one provided by the corresponding construction kit:
 
 ```c#
 using Gapotchenko.Collections.Generic.Kits;
