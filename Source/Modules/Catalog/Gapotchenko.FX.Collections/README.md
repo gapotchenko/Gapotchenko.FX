@@ -28,7 +28,7 @@ Other than that, the module provides polyfills for missing functionality in .NET
 
 ## Collection Construction Kits
 
-A concept of a construction kit provided by `Gapotchenko.FX.Collections` module allow you to quickly and reliably build customized collection primitives.
+A concept of a construction kit provided by `Gapotchenko.FX.Collections` module allows you to quickly and reliably build customized collection primitives.
 
 <details>
   <summary>More information</summary>
@@ -37,7 +37,7 @@ A concept of a construction kit provided by `Gapotchenko.FX.Collections` module 
 
 For example, let's imagine that we need to build a custom implementation of `System.Collections.Generic.ISet<T>` collection.
 In order to do that, we need to implement a plethora of methods such as `UnionWith`, `IntersectWith`, `ExceptWith` to begin with.
-It gets complicated and nuanced quickly, while all we want to achieve is to build a custom `ISet<T>`.
+It gets complicated and nuanced quickly, while all we want is to build a custom `ISet<T>` implementation.
 
 This is where the concept of a construction kit comes to shine.
 In our case, instead of implementing `ISet<T>` interface directly, we just derive our implementation from the one provided by the corresponding construction kit:
