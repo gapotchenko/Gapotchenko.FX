@@ -24,7 +24,9 @@ Other than that, the module provides polyfills for missing functionality in .NET
 
 `Deque<T>` can be seen as a `List<T>`, but in contrast to the `List<T>`, both ends of the collection support efficient addition and removal of elements.
 
-## AddRange&lt;T&gt;(IEnumerable&lt;T&gt;) for Collections
+## Polyfills
+
+### AddRange&lt;T&gt;(IEnumerable&lt;T&gt;) for Collections
 
 `AddRange` is a highly demanded operation that allows to add a sequence of elements to the end of a collection.
 Like this:
@@ -36,8 +38,6 @@ var collection = new Collection<int>();
 …
 collection.AddRange(numbers.Where(x => x % 2 == 0)); // add even numbers
 ```
-
-## Polyfills
 
 <details>
   <summary>More information</summary>
