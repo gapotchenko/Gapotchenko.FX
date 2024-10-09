@@ -55,8 +55,8 @@ var data = Encoding.ASCII.GetBytes("123456789");
 // Compute the checksum.
 var checksum = Crc8.Standard.ComputeChecksum(data);
 
-// Print out the result ("Checksum: 0xf4" for standard CRC-8).
-Console.WriteLine("Checksum: 0x{0:x}", checksum);
+// Print out the result ("Checksum=0xf4" for standard CRC-8).
+Console.WriteLine("Checksum=0x{0:x}", checksum);
 ```
 
 ## Recommended CRC-8 Algorithm
