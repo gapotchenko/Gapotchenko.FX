@@ -15,9 +15,7 @@ Other than that, the module provides polyfills for missing functionality in .NET
 
 `AssociativeArray<TKey, TValue>` provided by `Gapotchenko.FX.Collections` is a drop-in replacement for `Dictionary<TKey, TValue>` that can handle `null` keys.
 
-In contrast, stock `Dictionary<TKey, TValue>` cannot work with `null` keys and throws an exception whenever a `null` key is encountered.
-Due to such an artificial narrowing of the key space, it becomes hardly possible to solve some kinds of tasks with `Dictionary<TKey, TValue>`.
-
+`Dictionary<TKey, TValue>` cannot work with `null` keys and throws an exception whenever a `null` key is encountered.
 `AssociativeArray<TKey, TValue>` resolves that by supporting a full space of keys without opinionated exclusions.
 
 ## AddRange&lt;T&gt;(IEnumerable&lt;T&gt;) for Collections
@@ -94,7 +92,7 @@ A little detail, but sometimes it matters a lot when you are amid the heat of th
 ### PriorityQueue polyfill
 
 `PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue available in .NET 6.0+.
-The polyfill makes it available to all supported .NET versions.
+The polyfill makes it available to all other supported .NET versions.
 
 ## Usage
 
