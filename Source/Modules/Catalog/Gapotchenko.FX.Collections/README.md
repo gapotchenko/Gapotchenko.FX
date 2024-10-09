@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Collections
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Collections.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Collections)
 
 The module was started by borrowing an implementation of `ConcurrentHashSet<T>` from [Mr. Bar Arnon](https://github.com/i3arnon).
@@ -32,31 +32,6 @@ var collection = new Collection<int>();
 …
 collection.AddRange(numbers.Where(x => x % 2 == 0)); // add even numbers
 ```
-
-## IsNullOrEmpty() for Containers
-
-`System.String` class provides a convenient `IsNullOrEmpty` primitive.
-
-`Gapotchenko.FX.Collections` extends availability of that primitive by providing `IsNullOrEmpty()` extension method for other container types.
-Here is an example:
-
-``` csharp
-using Gapotchenko.FX.Collections.Generic;
-
-class Method
-{
-    List<Argument> m_Arguments;
-
-    public bool HasArguments => !m_Arguments.IsNullOrEmpty();
-
-    …
-}
-```
-
-The use of an extension method for a null check may look controversial at first,
-but since the method starts with `IsNull…` prefix,
-it immediately communicates its purpose and function.
-Other benefits include automatic type inference and semantic locality. 
 
 ## Polyfills
 
@@ -118,7 +93,7 @@ A little detail, but sometimes it matters a lot when you are amid the heat of th
 
 ### PriorityQueue polyfill
 
-`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue introduced since .NET 6.
+`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue available in .NET 6.0+.
 The polyfill makes it available to all supported .NET versions.
 
 ## Usage
