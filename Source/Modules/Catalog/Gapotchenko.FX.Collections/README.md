@@ -17,7 +17,7 @@ Other than that, the module provides polyfills for missing functionality in .NET
 
 `AssociativeArray<TKey, TValue>` provided by `Gapotchenko.FX.Collections` is a drop-in replacement for `Dictionary<TKey, TValue>` that can handle `null` keys.
 
-`Dictionary<TKey, TValue>` cannot work with `null` keys and throws an exception whenever a `null` key is encountered.
+`Dictionary<TKey, TValue>` cannot work with `null` keys and throws `ArgumentNullException` whenever a `null` key is encountered.
 `AssociativeArray<TKey, TValue>` resolves that by supporting a full space of keys without opinionated exclusions.
 
 ### Deque&lt;T&gt;
@@ -39,7 +39,7 @@ For example, let's imagine that we need to build a custom implementation of `Sys
 In order to do that, we need to implement a plethora of methods such as `UnionWith`, `IntersectWith`, `ExceptWith` just to begin with.
 It gets complicated and nuanced quickly, while all we want is to build a simple custom `ISet<T>` implementation.
 
-This is where the concept of a construction kit becomes handy.
+This is where the concept of a construction kit starts to shine.
 In our case, instead of implementing `ISet<T>` interface directly, we just derive our implementation from the one provided by the corresponding construction kit:
 
 ```c#
@@ -48,13 +48,29 @@ using Gapotchenko.Collections.Generic.Kits;
 // TODO
 ```
 
+We implemented just three abstract methods.
+All the remaining implementation details are covered by the construction kit our class is derived from.
+
+Mind you, a generic implementation does not mean inefficient.
+If we have a more optimized way to do some operation, we just override the corresponding method:
+
+```c#
+using Gapotchenko.Collections.Generic.Kits;
+
+// TODO
+```
+
+Given that `BitVector` operations are hardware-accelerated in all modern .NET versions,
+it quickly boils down from a generic `ISet<T>` implementation down to highly-optimized AVX and SSE instructions provided by the CPU.
+What a ride just within several lines of code.
+
 </details>
 
 ## Polyfills
 
 ### AddRange&lt;T&gt;(IEnumerable&lt;T&gt;) for Collections
 
-`AddRange` is a highly demanded operation that allows to add a sequence of elements to the end of a collection.
+`AddRange` is a frequently used operation that allows you to add a sequence of elements to the end of a collection.
 Like this:
 
 ``` csharp
