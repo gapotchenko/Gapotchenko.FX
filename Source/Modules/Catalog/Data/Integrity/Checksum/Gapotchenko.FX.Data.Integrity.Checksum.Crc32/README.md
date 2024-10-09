@@ -62,7 +62,7 @@ Among all other possibilities, it is recommended to use the standard CRC-32 algo
 Another good option is CRC-32C which is widely used in data storage and communication industries, but more importantly, it benefits from a hardware acceleration provided by modern CPUs.
 CRC-32C algorithm is available via `Crc32.Attested.C` property.
 
-All other predefined algorithms are available via the corresponding properties of `Crc32.Attested` class.
+All other predefined algorithms are available via the corresponding properties of the `Crc32.Attested` class.
 
 ## Custom CRC-32 Algorithms
 
