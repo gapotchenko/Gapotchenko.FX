@@ -930,7 +930,7 @@ public class PriorityQueue<TElement, TPriority>
                 _current = default;
             }
 
-            void ValidateVersion()
+            readonly void ValidateVersion()
             {
                 if (_version != _queue._version)
                     throw ExceptionHelper.CreateEnumeratedCollectionWasModifiedException();

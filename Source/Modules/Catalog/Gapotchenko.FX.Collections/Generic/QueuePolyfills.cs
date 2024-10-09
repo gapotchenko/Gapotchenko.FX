@@ -1,6 +1,5 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
-//
 // Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -24,7 +23,7 @@ public static class QueuePolyfills
     /// Removes the object at the beginning of the <see cref="Queue{T}"/>,
     /// and copies it to the <paramref name="result"/> parameter.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Specifies the type of elements in the queue.</typeparam>
     /// <param name="queue">The <see cref="Deque{T}"/>.</param>
     /// <param name="result">The removed object.</param>
     /// <returns>
