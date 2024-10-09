@@ -44,7 +44,6 @@ In our case, instead of implementing `ISet<T>` interface directly, we just deriv
 
 ```c#
 using Gapotchenko.FX.Collections.Generic.Kits;
-using Gapotchenko.FX.Linq;
 using System.Collections;
 
 class MyBitSet(int capacity) : SetKit<int>
@@ -80,13 +79,22 @@ class MyBitSet(int capacity) : SetKit<int>
         m_CachedCount = 0;
     }
 
-    public override int Count => m_CachedCount ??= this.Stream().Count();
+    public override int Count => m_CachedCount ??= GetCountCore();
 
     int? m_CachedCount = 0;
 
+    int GetCountCore()
+    {
+        int count = 0;
+        for (int i = 0, n = m_Bits.Count; i < n; ++i)
+            if (m_Bits[i])
+                ++count;
+        return count;
+    }
+
     public override IEnumerator<int> GetEnumerator()
     {
-        for (int i = 0, count = m_Bits.Count; i < count; ++i)
+        for (int i = 0, n = m_Bits.Count; i < n; ++i)
             if (m_Bits[i])
                 yield return i;
     }
