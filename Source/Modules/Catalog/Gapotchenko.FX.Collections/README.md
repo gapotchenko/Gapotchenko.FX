@@ -36,10 +36,10 @@ A concept of a construction kit provided by `Gapotchenko.FX.Collections` module 
 ### ISet&lt;T&gt; Construction Kit 
 
 For example, let's imagine that we need to build a custom implementation of `System.Collections.Generic.ISet<T>` collection.
-In order to do that, we need to implement a plethora of methods such as `UnionWith`, `IntersectWith`, `ExceptWith` to begin with.
-It gets complicated and nuanced quickly, while all we want is to build a custom `ISet<T>` implementation.
+In order to do that, we need to implement a plethora of methods such as `UnionWith`, `IntersectWith`, `ExceptWith` just to begin with.
+It gets complicated and nuanced quickly, while all we want is to build a simple custom `ISet<T>` implementation.
 
-This is where the concept of a construction kit comes to shine.
+This is where the concept of a construction kit becomes handy.
 In our case, instead of implementing `ISet<T>` interface directly, we just derive our implementation from the one provided by the corresponding construction kit:
 
 ```c#
