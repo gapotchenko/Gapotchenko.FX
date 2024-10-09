@@ -73,7 +73,7 @@ Base64 family of binary-to-text data encodings consists of several attested algo
 
 ## Recommended Base64 Algorithm
 
-Among all other posibilities, it is recommended to use the standard Base64 algorithm which is provided by `Base64` class.
+Among all other possibilities, it is recommended to use the standard Base64 algorithm which is provided by `Base64` class.
 
 All other predefined algorithms are provided by the corresponding classes of `Gapotchenko.FX.Data.Encoding.Base64` module.
 

@@ -75,7 +75,7 @@ Base32 family of binary-to-text data encodings consists of several attested algo
 
 ## Recommended Base32 Algorithm
 
-Among all other posibilities, it is recommended to use the standard Base32 algorithm which is provided by `Base32` class.
+Among all other possibilities, it is recommended to use the standard Base32 algorithm which is provided by `Base32` class.
 
 All other predefined algorithms are provided by the corresponding classes of `Gapotchenko.FX.Data.Encoding.Base32` module.
 

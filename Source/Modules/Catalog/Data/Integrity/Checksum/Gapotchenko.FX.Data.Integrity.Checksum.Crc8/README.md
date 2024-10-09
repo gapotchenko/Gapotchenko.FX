@@ -55,13 +55,13 @@ var data = Encoding.ASCII.GetBytes("123456789");
 // Compute the checksum.
 var checksum = Crc8.Standard.ComputeChecksum(data);
 
-// Print out the result ("Checksum = 0xf4" for standard CRC-8).
-Console.WriteLine("Checksum = 0x{0:x}", checksum);
+// Print out the result ("Checksum: 0xf4" for standard CRC-8).
+Console.WriteLine("Checksum: 0x{0:x}", checksum);
 ```
 
 ## Recommended CRC-8 Algorithm
 
-Among all other posibilities, it is recommended to use the standard CRC-8 algorithm which comes under CRC-8, CRC-8/SMBUS aliases and is available via `Crc8.Standard` property.
+Among all other possibilities, it is recommended to use the standard CRC-8 algorithm which comes under CRC-8, CRC-8/SMBUS aliases and is available via `Crc8.Standard` property.
 
 All other predefined algorithms are available via the corresponding properties of `Crc8.Attested` class.
 

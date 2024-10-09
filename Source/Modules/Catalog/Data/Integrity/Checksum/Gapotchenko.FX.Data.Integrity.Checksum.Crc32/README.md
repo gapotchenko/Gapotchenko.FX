@@ -51,13 +51,13 @@ var data = Encoding.ASCII.GetBytes("123456789");
 // Compute the checksum.
 var checksum = Crc32.Standard.ComputeChecksum(data);
 
-// Print out the result ("Checksum = 0xcbf43926" for standard CRC-32).
-Console.WriteLine("Checksum = 0x{0:x}", checksum);
+// Print out the result ("Checksum: 0xcbf43926" for standard CRC-32).
+Console.WriteLine("Checksum: 0x{0:x}", checksum);
 ```
 
 ## Recommended CRC-32 Algorithm
 
-Among all other posibilities, it is recommended to use the standard CRC-32 algorithm which comes under CRC-32, CRC-32/ISO-HDLC, CRC-32/ADCCP, CRC-32/V-42, CRC-32/XZ, PKZIP aliases and is available via `Crc32.Standard` property.
+Among all other possibilities, it is recommended to use the standard CRC-32 algorithm which comes under CRC-32, CRC-32/ISO-HDLC, CRC-32/ADCCP, CRC-32/V-42, CRC-32/XZ, PKZIP aliases and is available via `Crc32.Standard` property.
 
 All other predefined algorithms are available via the corresponding properties of `Crc32.Attested` class.
 
