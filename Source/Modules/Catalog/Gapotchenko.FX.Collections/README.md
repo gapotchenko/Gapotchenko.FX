@@ -82,6 +82,8 @@ class MyBitSet(int capacity) : SetKit<int>
 
     public override int Count => m_CachedCount ??= this.Stream().Count();
 
+    int? m_CachedCount = 0;
+
     public override IEnumerator<int> GetEnumerator()
     {
         for (int i = 0, count = m_Bits.Count; i < count; ++i)
@@ -100,7 +102,6 @@ class MyBitSet(int capacity) : SetKit<int>
     }
 
     BitArray m_Bits = new(capacity);
-    int? m_CachedCount = 0;
 }
 ```
 
