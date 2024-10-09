@@ -44,20 +44,113 @@ In our case, instead of implementing `ISet<T>` interface directly, we just deriv
 
 ```c#
 using Gapotchenko.Collections.Generic.Kits;
+using System.Collections;
 
-// TODO
+class MyBitSet(int capacity) : SetKit<int>
+{
+    public override bool Contains(int item) => Bits[item];
+
+    public override bool Add(int item) => ChangeBit(item, true);
+
+    public override bool Remove(int item) => ChangeBit(item, false);
+
+    bool ChangeBit(int item, bool value)
+    {
+        if (Bits[item] != value)
+        {
+            Bits[item] = value;
+
+            if (value)
+                ++m_Count;
+            else
+                --m_Count;
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public override void Clear()
+    {
+        Bits.SetAll(false);
+        m_Count = 0;
+    }
+
+    public override int Count => m_Count;
+
+    int m_Count;
+
+    public override IEnumerator<int> GetEnumerator()
+    {
+        for (int i = 0, count = Bits.Count; i < count; ++i)
+            if (Bits[i])
+                yield return i;
+    }
+
+    internal BitArray Bits = new(capacity);
+}
 ```
 
-We implemented just three abstract methods.
+We implemented just several abstract methods.
 All the remaining implementation details are covered by the construction kit our class is derived from.
 
 Mind you, a generic implementation does not mean inefficient.
 If we have a more optimized way to do some operation, we just override the corresponding method:
 
 ```c#
-using Gapotchenko.Collections.Generic.Kits;
+class MyAcceleratedBitSet(int capacity) : MyBitSet(capacity)
+{
+    public override bool Overlaps(IEnumerable<int> other)
+    {
+        if (other is MyBitSet bitSet)
+            return Bits.And(bitSet.Bits).HasAnySet();
+        else
+            return base.Overlaps(other);
+    }
 
-// TODO
+    public override void IntersectWith(IEnumerable<int> other)
+    {
+        if (other is MyBitSet bitSet)
+            Bits = Bits.And(bitSet.Bits);
+        else
+            base.IntersectWith(other);
+    }
+
+    public override void UnionWith(IEnumerable<int> other)
+    {
+        if (other is MyBitSet bitSet)
+            Bits = Bits.Or(bitSet.Bits);
+        else
+            base.UnionWith(other);
+    }
+
+    public override void ExceptWith(IEnumerable<int> other)
+    {
+        if (other is MyBitSet bitSet)
+            Bits = Bits.And(bitSet.Bits.Not());
+        else
+            base.ExceptWith(other);
+    }
+
+    public override void SymmetricExceptWith(IEnumerable<int> other)
+    {
+        if (other is MyBitSet bitSet)
+            Bits = Bits.Xor(bitSet.Bits);
+        else
+            base.UnionWith(other);
+    }
+
+    public override bool SetEquals(IEnumerable<int> other)
+    {
+        if (other is MyBitSet bitSet)
+            return bitSet.Bits.Xor(bitSet.Bits).HasAnySet();
+        else
+            return base.SetEquals(other);
+    }
+}
 ```
 
 Given that `BitVector` operations are hardware-accelerated in all modern .NET versions,

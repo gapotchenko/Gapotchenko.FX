@@ -21,7 +21,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <summary>
     /// Gets the <see cref="IEqualityComparer{T}"/> object that is used to determine equality for the values in the set.
     /// </summary>
-    public abstract IEqualityComparer<T> Comparer { get; }
+    public virtual IEqualityComparer<T> Comparer => EqualityComparer<T>.Default;
 
     /// <summary>
     /// Gets the number of elements that are contained in a set.
