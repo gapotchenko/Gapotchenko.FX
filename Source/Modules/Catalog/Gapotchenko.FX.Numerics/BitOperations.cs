@@ -34,14 +34,12 @@ public static class BitOperations
     ];
 
     /// <summary>
-    /// <para>
     /// Returns the integer (floor) base 2 logarithm of a specified number.
-    /// By convention, Log2(0) returns 0 since such operation is undefined.
-    /// </para>
-    /// <para>
-    /// The behavior corresponds to <c>BSR</c> instruction from Intel x86 instruction set.
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// Log2(0) returns an undefined value since such operation is undefined.
+    /// The behavior corresponds to <c>BSR</c> instruction from Intel x86 instruction set.
+    /// </remarks>
     /// <param name="value">A number whose integer (floor) base 2 logarithm is to be found.</param>
     [CLSCompliant(false)]
     [MethodImpl(MethodImplOptions.NoInlining)]

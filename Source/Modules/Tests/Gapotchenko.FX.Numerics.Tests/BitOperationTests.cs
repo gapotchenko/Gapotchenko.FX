@@ -9,9 +9,6 @@ public class BitOperationTests
     [TestMethod]
     public void BitOps_Log2()
     {
-        // The convention for undefined log2(0) operation.
-        Assert.AreEqual(0, BitOperations.Log2(0));
-
         // Sanity checks.
         Assert.AreEqual(0, BitOperations.Log2(1));
         Assert.AreEqual(1, BitOperations.Log2(2));
