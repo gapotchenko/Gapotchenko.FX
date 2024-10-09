@@ -98,7 +98,7 @@ We implemented just several abstract methods and got a fully functional and comp
 All the remaining implementation details are covered by the construction kit our class is derived from.
 
 Mind you, a generic implementation does not mean inefficient.
-If we have a more optimized way to do some operation, we just override the corresponding method:
+If we have a more optimized way to do some operations, we just override the corresponding methods:
 
 ```c#
 class MyAcceleratedBitSet(int capacity) : MyBitSet(capacity)
