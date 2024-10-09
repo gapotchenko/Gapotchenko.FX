@@ -48,7 +48,7 @@ using Gapotchenko.Collections.Generic.Kits;
 // TODO
 ```
 
-<details>
+</details>
 
 ## Polyfills
 
