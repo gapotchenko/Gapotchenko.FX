@@ -7,7 +7,7 @@ The module provides primitives for command line manipulation.
 
 ## CommandLineBuilder
 
-`CommandLineBuilder` class provided by `Gapotchenko.FX.Diagnostics.CommandLine` allows you to build a command line dynamically on the fly.
+`CommandLineBuilder` class allows you to dynamically build a command line.
 It provides the built-in support for characters than need escaping.
 
 Semantically `CommandLineBuilder` is similar to the well-known `StringBuilder` class:
