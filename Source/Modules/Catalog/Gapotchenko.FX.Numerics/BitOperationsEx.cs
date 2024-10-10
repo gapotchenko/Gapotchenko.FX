@@ -12,11 +12,11 @@ public static class BitOperationsEx
     /// <returns>The value with reversed bits.</returns>
     public static byte Reverse(byte value)
     {
-        uint u = (uint)value * 0x00020202;
-        uint m = 0x01044010;
-        uint s = u & m;
-        uint t = (u << 2) & (m << 1);
-        return (byte)((0x01001001 * (s + t)) >> 24);
+        var v = value;
+        v = (byte)((v & 0xF0) >> 4 | (v & 0x0F) << 4);
+        v = (byte)((v & 0xCC) >> 2 | (v & 0x33) << 2);
+        v = (byte)((v & 0xAA) >> 1 | (v & 0x55) << 1);
+        return v;
     }
 
     /// <summary>
