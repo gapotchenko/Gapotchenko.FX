@@ -78,9 +78,8 @@ Process.Start(
 Another cool thing: if you want to exclude some argument from a built command line then you can just make it `null`:
 
 ``` C#
-string? mode = binary ? "/b" : null;
-
 // 'mode' will have a non-null value if there is a need to specify it.
+string? mode = binary ? "/b" : null;
 
 string commandLine = CommandLine.Build(mode, @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt");
 Console.WriteLine(commandLine);
