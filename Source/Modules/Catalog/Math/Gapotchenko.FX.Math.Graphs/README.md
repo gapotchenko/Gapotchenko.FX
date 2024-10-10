@@ -1,20 +1,18 @@
 ﻿# Gapotchenko.FX.Math.Graphs
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
-[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.Topology.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math.Topology)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.Graphs.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math.Graphs)
 
-The module provides data structures and primitives for working with abstract graphs.
+The module provides data structures and primitives for working with graphs.
 
-## Directional Graph
+## Graph&lt;T&gt;
 
-### Basics
-
-`Graph<T>` provided by `Gapotchenko.FX.Math.Graphs` represents a strongly-typed directional graph of objects.
+`Graph<T>` class provided by `Gapotchenko.FX.Math.Graphs` represents a strongly-typed graph of objects.
 The objects correspond to mathematical abstractions called graph vertices and each of the related pairs of vertices is called an edge.
 A graph can be viewed as a structure that contains two sets: set of vertices and set of edges.
 Vertices define "what" graph contains and edges define "how" those vertices are connected.
 
-Let's take a look at the simplest graph that contains just two vertices:
+Let's take a look at the simplest directional graph that contains just two vertices:
 
 ``` C#
 using Gapotchenko.FX.Math.Graphs;
@@ -27,7 +25,7 @@ var g = new Graph<int>
 
 If we could visualize that graph then it would look like this:
 
-![Simple graph with two isolated vertices](../../Documentation/Assets/Math/Topology/simple-graph-2-0.svg?raw=true)
+![Simple graph with two isolated vertices](../../../../../Documentation/Assets/Math/Topology/simple-graph-2-0.svg?raw=true)
 
 Now let's add one more vertex `3` plus an edge that goes from vertex `1` to vertex `2`:
 
@@ -234,7 +232,7 @@ Console.WriteLine(string.Join(", ", ordering));  // <- prints "D, B, A, C, E, F"
 Unlike its graph sibling, `OrderTopologicallyBy` method tolerates circular dependencies by ignoring them.
 They are resolved according to the original order of elements in the sequence.
 
-`OrderTopologicallyBy` method allows a subseqent sorting by following the standard `IOrderedEnumerable<T>` LINQ convention:
+`OrderTopologicallyBy` method allows a subsequent sorting by following the standard `IOrderedEnumerable<T>` LINQ convention:
 
 ``` C#
 seq.OrderTopologicallyBy(…).ThenBy(…)
