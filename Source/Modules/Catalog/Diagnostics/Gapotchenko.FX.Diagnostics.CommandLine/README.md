@@ -85,10 +85,11 @@ string commandLine = CommandLine.Build(mode, @"C:\Temp\Test 1.txt", @"C:\Temp\Te
 Console.WriteLine(commandLine);
 ```
 
-The code above produces the following output:
+The code above produces the following outputs depending on the value of `binary` flag:
 
 ```
 "C:\Temp\Test 1.txt" "C:\Temp\Test 2.txt"
+/b "C:\Temp\Test 1.txt" "C:\Temp\Test 2.txt"
 ```
 
 This is a neat departure from a traditional .NET convention where it always throws `ArgumentNullException`.
