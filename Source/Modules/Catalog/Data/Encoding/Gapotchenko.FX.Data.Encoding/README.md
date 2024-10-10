@@ -1,5 +1,5 @@
 ﻿# Gapotchenko.FX.Data.Encoding
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Encoding.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Encoding)
 
 `Gapotchenko.FX.Data.Encoding` module provides a quasi-universal framework for data encodings.

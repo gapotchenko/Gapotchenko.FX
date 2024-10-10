@@ -152,7 +152,7 @@ It produces the following output:
 
 ![Console sample output](../../../../Documentation/Assets/console-more-sample.png)
 
-The keys, colors, and styling are fully customizable by inheriting a class from `MoreTextWriter`.
+The keys, colors, and styling are fully customizable by deriving a class from the `MoreTextWriter`.
 
 ## Usage
 
