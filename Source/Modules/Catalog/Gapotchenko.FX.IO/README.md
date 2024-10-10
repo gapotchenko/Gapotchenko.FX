@@ -1,7 +1,8 @@
 ﻿# Gapotchenko.FX.IO
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.IO.svg)](https://www.nuget.org/packages/Gapotchenko.FX.IO)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.IO.svg)](https://www.nuget.org/packages/Gapotchenko.FX.IO)
 
 The module provides commonly demanded input/output functionality that is missing in conventional .NET platform.
 
@@ -161,6 +162,13 @@ What it does is polls the file until write access is available.
 If the access is not there for 10 seconds, the method falls through.
 
 [More on this topic (Raymond Chen, "The Old New Thing" blog)](https://devblogs.microsoft.com/oldnewthing/?p=6663)
+
+### GetRealPath(path)
+
+`FileSystem.GetRealPath(string)` method gets a canonicalized absolute path of the specified file system entry.
+
+The method expands all symbolic links and resolves references to `.` and `..` special directories.
+It also normalizes consequent directory separators to the canonical form.
 
 ## BitReader/BitWriter
 
