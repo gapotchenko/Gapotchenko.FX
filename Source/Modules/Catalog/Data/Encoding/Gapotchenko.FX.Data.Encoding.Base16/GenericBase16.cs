@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Data.Encoding;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
 /// Provides a generic implementation of Base16 encoding.
@@ -74,16 +80,10 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
             16 * SymbolsPerEncodedBlock :
             32 * SymbolsPerEncodedBlock;
 
-    abstract class CodecContextBase
+    abstract class CodecContextBase(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
     {
-        public CodecContextBase(TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
-        {
-            m_Alphabet = alphabet;
-            m_Options = options;
-        }
-
-        protected readonly TextDataEncodingAlphabet m_Alphabet;
-        protected readonly DataEncodingOptions m_Options;
+        protected readonly TextDataEncodingAlphabet m_Alphabet = alphabet;
+        protected readonly DataEncodingOptions m_Options = options;
 
         #region Parameters
 
@@ -94,43 +94,10 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
         protected bool m_Eof;
     }
 
-    sealed class EncoderContext : CodecContextBase, IEncoderContext
+    sealed class EncoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
+        CodecContextBase(alphabet, options),
+        IEncoderContext
     {
-        public EncoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-            base(alphabet, options)
-        {
-            m_LineWidth = GetLineWidth(options);
-        }
-
-        readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
-
-        readonly int m_LineWidth;
-        int m_LinePosition;
-        bool m_Indent;
-
-        void MoveLinePosition(int delta) => m_LinePosition += delta;
-
-        void EmitBreak(TextWriter output)
-        {
-            if (m_LinePosition >= m_LineWidth)
-            {
-                m_LinePosition = 0;
-                if ((m_Options & DataEncodingOptions.Wrap) != 0)
-                {
-                    output.WriteLine();
-                    m_Indent = false;
-                }
-            }
-
-            if ((m_Options & DataEncodingOptions.Indent) != 0)
-            {
-                if (m_Indent)
-                    output.Write(' ');
-                else
-                    m_Indent = true;
-            }
-        }
-
         public void Encode(ReadOnlySpan<byte> input, TextWriter output)
         {
             if (m_Eof)
@@ -157,18 +124,41 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
         }
 
         char Capitalize(char c) => TextDataEncoding.Capitalize(c, m_Options);
-    }
 
-    sealed class DecoderContext : CodecContextBase, IDecoderContext
-    {
-        public DecoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-            base(alphabet, options)
+        readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
+
+        void MoveLinePosition(int delta) => m_LinePosition += delta;
+
+        void EmitBreak(TextWriter output)
         {
+            if (m_LinePosition >= m_LineWidth)
+            {
+                m_LinePosition = 0;
+                if ((m_Options & DataEncodingOptions.Wrap) != 0)
+                {
+                    output.WriteLine();
+                    m_Indent = false;
+                }
+            }
+
+            if ((m_Options & DataEncodingOptions.Indent) != 0)
+            {
+                if (m_Indent)
+                    output.Write(' ');
+                else
+                    m_Indent = true;
+            }
         }
 
-        byte m_Bits;
-        int m_Modulus;
+        readonly int m_LineWidth = GetLineWidth(options);
+        int m_LinePosition;
+        bool m_Indent;
+    }
 
+    sealed class DecoderContext(TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
+        CodecContextBase(alphabet, options),
+        IDecoderContext
+    {
         public bool Decode(ReadOnlySpan<char> input, Stream output, bool throwOnError)
         {
             if (m_Eof)
@@ -191,8 +181,7 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
                     {
                         bool ok =
                             (m_Options & DataEncodingOptions.Pure) == 0 &&
-                            (c == '-' ||
-                            char.IsWhiteSpace(c));
+                            (c is '-' || char.IsWhiteSpace(c));
 
                         if (!ok)
                         {
@@ -224,13 +213,11 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
                 case 0:
                     // Nothing to do.
                     return true;
-
                 case 1:
                     // 4 bits
                     if (!ValidateIncompleteByte(throwOnError))
                         return false;
                     break;
-
                 default:
                     throw new InvalidOperationException();
             }
@@ -238,6 +225,9 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
             m_Modulus = 0;
             return true;
         }
+
+        byte m_Bits;
+        int m_Modulus;
 
         bool ValidateIncompleteByte(bool throwOnError)
         {

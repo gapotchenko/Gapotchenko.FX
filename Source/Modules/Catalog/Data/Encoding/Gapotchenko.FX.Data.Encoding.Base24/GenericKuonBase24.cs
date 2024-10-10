@@ -1,4 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Data.Encoding;
 
@@ -96,18 +102,11 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
     /// </summary>
     const DataEncodingOptions FormatMask = DataEncodingOptions.Wrap | DataEncodingOptions.Indent;
 
-    abstract class CodecContextBase
+    abstract class CodecContextBase(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options)
     {
-        public CodecContextBase(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options)
-        {
-            m_Alphabet = alphabet;
-            m_PaddingChar = paddingChar;
-            m_Options = options;
-        }
-
-        protected readonly TextDataEncodingAlphabet m_Alphabet;
-        protected readonly char m_PaddingChar;
-        protected readonly DataEncodingOptions m_Options;
+        protected readonly TextDataEncodingAlphabet m_Alphabet = alphabet;
+        protected readonly char m_PaddingChar = paddingChar;
+        protected readonly DataEncodingOptions m_Options = options;
 
         #region Parameters
 
@@ -120,30 +119,10 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
         protected bool m_Eof;
     }
 
-    sealed class EncoderContext : CodecContextBase, IEncoderContext
+    sealed class EncoderContext(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options) :
+        CodecContextBase(alphabet, paddingChar, options),
+        IEncoderContext
     {
-        public EncoderContext(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options) :
-            base(alphabet, paddingChar, options)
-        {
-        }
-
-        readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
-
-        int m_LinePosition;
-
-        void MoveLinePosition(int delta) => m_LinePosition += delta;
-
-        void EmitLineBreak(TextWriter output)
-        {
-            if (m_LinePosition >= LineWidth)
-            {
-                m_LinePosition = 0;
-
-                if ((m_Options & FormatMask) != 0)
-                    output.WriteLine();
-            }
-        }
-
         void WriteBits(TextWriter output, int bitCount)
         {
             var alphabet = m_Alphabet;
@@ -190,29 +169,23 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
             if (input == null)
             {
                 m_Eof = true;
-
                 switch (m_Modulus)
                 {
                     case 0:
                         // Nothing to do.
                         break;
-
                     case 1:
                         WriteBits(output, 1 * 8);
                         break;
-
                     case 2:
                         WriteBits(output, 2 * 8);
                         break;
-
                     case 3:
                         WriteBits(output, 3 * 8);
                         break;
-
                     default:
                         throw new InvalidOperationException();
                 }
-
                 return;
             }
 
@@ -232,7 +205,6 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
                     {
                         var si = (int)(a % Base);
                         a /= Base;
-
                         m_Buffer[i] = Capitalize(alphabet[si]);
                     }
 
@@ -245,17 +217,29 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
         }
 
         char Capitalize(char c) => TextDataEncoding.Capitalize(c, m_Options);
-    }
 
-    sealed class DecoderContext : CodecContextBase, IDecoderContext
-    {
-        public DecoderContext(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options) :
-            base(alphabet, paddingChar, options)
+        readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
+
+        void MoveLinePosition(int delta) => m_LinePosition += delta;
+
+        void EmitLineBreak(TextWriter output)
         {
+            if (m_LinePosition >= LineWidth)
+            {
+                m_LinePosition = 0;
+
+                if ((m_Options & FormatMask) != 0)
+                    output.WriteLine();
+            }
         }
 
-        readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
+        int m_LinePosition;
+    }
 
+    sealed class DecoderContext(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options) :
+        CodecContextBase(alphabet, paddingChar, options),
+        IDecoderContext
+    {
         public bool Decode(ReadOnlySpan<char> input, Stream output, bool throwOnError)
         {
             if (m_Eof)
@@ -329,7 +313,6 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
                     m_Buffer[3] = (byte)m_Bits;
 
                     output.Write(m_Buffer, 0, BytesPerDecodedBlock);
-
                     m_Bits = 0;
                 }
             }
@@ -352,9 +335,10 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
             while (s >= BitsPerSymbol);
 
             Array.Reverse(m_Buffer, 0, i);
-
             output.Write(m_Buffer, 0, i);
         }
+
+        readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
 
         void FlushDecode(Stream output)
         {
@@ -363,19 +347,15 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
                 case 0:
                     // Nothing to do.
                     return;
-
                 case var k when k > 0 && k < SymbolsPerEncodedBlock:
                     ReadBits(output, k * BitsPerSymbol);
                     break;
-
                 default:
                     throw new InvalidOperationException();
             }
 
             m_Modulus = 0;
         }
-
-        int m_Padding;
 
         bool ValidatePaddingChar(bool throwOnError)
         {
@@ -422,7 +402,9 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
             return true;
         }
 
-        static InvalidDataException CreateInvalidPaddingException() => new InvalidDataException($"Invalid {Name} padding.");
+        int m_Padding;
+
+        static InvalidDataException CreateInvalidPaddingException() => new($"Invalid {Name} padding.");
     }
 
     /// <inheritdoc/>

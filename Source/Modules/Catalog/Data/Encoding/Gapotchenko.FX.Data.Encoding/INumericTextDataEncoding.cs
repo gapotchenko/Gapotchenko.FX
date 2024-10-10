@@ -1,4 +1,10 @@
-﻿using System.Numerics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Numerics;
 
 namespace Gapotchenko.FX.Data.Encoding;
 

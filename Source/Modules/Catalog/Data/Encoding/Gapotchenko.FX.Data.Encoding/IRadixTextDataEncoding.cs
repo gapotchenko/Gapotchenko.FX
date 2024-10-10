@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Data.Encoding;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
 /// Defines the interface of a binary-to-text encoding based on a positional numeral system.
