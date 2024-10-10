@@ -62,7 +62,7 @@ var g = new Graph<int>
     Edges = { (1, 2) }
 };
 
-g.Vertices.UnionWith(new[] { 3, 4, 5 });
+g.Vertices.UnionWith([3, 4, 5]);
 ```
 
 The example above produces the following graph:
@@ -181,7 +181,7 @@ The resulting sequence of jobs is:
 ```
 
 `OrderTopologically` method can only work on directed acyclic graphs.
-If the graph contains a cycle then `CircularDependencyException` is raised.
+If the graph contains a cycle then `GraphCircularReferenceException` is raised.
 
 ### Stable Topological Sort of a Graph
 
