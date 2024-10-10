@@ -20,27 +20,27 @@ The main consumers of hardware-accelerated bit operations are path-finding and c
 
 ### Log2 Method
 
-Calculates the integer base 2 logarithm of a specified number.
+`BitOperations.Log2` method calculates the integer base 2 logarithm of a specified number.
 `Log2(0)` returns an undefined value since such operation is undefined.
 
 The behavior corresponds to `BSR` instruction from Intel x86 instruction set.
 
 ### PopCount Method
 
-Calculates the bit population count for a specified value.
+`BitOperations.PopCount` method calculates the bit population count for a specified value.
 The result corresponds to the number of bits set to `1`.
 
 The behavior corresponds to `POPCNT` instruction from Intel x86 instruction set.
 
 ### RotateLeft Method
 
-Rotates the specified value left by the specified number of bits.
+`BitOperations.RotateLeft` method rotates the specified value left by the specified number of bits.
 
 The behavior corresponds to `ROL` instruction from Intel x86 instruction set.
 
 ### RotateRight Method
 
-Rotates the specified value right by the specified number of bits.
+`BitOperations.RotateRight` method rotates the specified value right by the specified number of bits.
 
 The behavior corresponds to `ROR` instruction from Intel x86 instruction set.
 
@@ -50,7 +50,7 @@ The behavior corresponds to `ROR` instruction from Intel x86 instruction set.
 
 ### Reverse
 
-Reverses the order of bits in a specified value and returns a result.
+`BitOperationsEx.Reverse` method reverses the order of bits in a specified value and returns a result.
 The least significant bit gets swapped with the most significant bit, and so on for all remaining bits of the number.
 For example:
 
