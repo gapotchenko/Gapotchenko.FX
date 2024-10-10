@@ -73,7 +73,8 @@ Base16 family of binary-to-text data encodings consists of the following algorit
 ## Custom Base16 Algorithms
 
 Once in a while, you may encounter a custom Base16 algorithm that is neither widely known nor characterized.
-In that case, you can instantiate a custom data encoding algorithm with the desired parameters by hand:
+In that case, you can instantiate a custom data encoding algorithm with the desired parameters by hand.
+For example:
 
 ``` c#
 var encoding = new CustomBase16("ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠ");
