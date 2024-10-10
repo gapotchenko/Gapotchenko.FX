@@ -150,7 +150,7 @@ for (int i = 1; i < 100; ++i)
 
 It produces the following output:
 
-![Console sample output](../../Documentation/Assets/console-more-sample.png)
+![Console sample output](../../../../Documentation/Assets/console-more-sample.png)
 
 The keys, colors, and styling are fully customizable by inheriting a class from `MoreTextWriter`.
 
