@@ -99,7 +99,7 @@ sealed class FooBase64 : CustomBase64
     {
     }
 
-    public static FooBase64 Instance { get; } = new FooBase64();
+    public static FooBase64 Instance { get; } = new();
 }
 ```
 

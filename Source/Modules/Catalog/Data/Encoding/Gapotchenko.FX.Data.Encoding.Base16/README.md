@@ -93,7 +93,7 @@ sealed class FooBase16 : CustomBase16
     {
     }
 
-    public static FooBase16 Instance { get; } = new FooBase16();
+    public static FooBase16 Instance { get; } = new();
 }
 ```
 

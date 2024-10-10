@@ -101,7 +101,7 @@ sealed class FooBase32 : CustomBase32
     {
     }
 
-    public static FooBase32 Instance { get; } = new FooBase32();
+    public static FooBase32 Instance { get; } = new();
 }
 ```
 
