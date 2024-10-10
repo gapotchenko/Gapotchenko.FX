@@ -1,5 +1,5 @@
 ﻿# Gapotchenko.FX.Data.Integrity.Checksum
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Integrity.Checksum.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Integrity.Checksum)
 
 The module provides a quasi-universal framework for cyclic redundancy checks.
