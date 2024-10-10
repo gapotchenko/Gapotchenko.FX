@@ -4,11 +4,9 @@ The directory contains Gapotchenko.FX modules.
 Each module covers a specific functionality.
 Modules form functional hierarchies by following a special naming convention.
 
-## Available Modules
-
 The full list of available modules is presented in the table below.
 
-### Table
+## Table
 
 - [Gapotchenko.FX](Catalog/Gapotchenko.FX#readme)
 - [Gapotchenko.FX.AppModel.Information](Catalog/AppModel/Gapotchenko.FX.AppModel.Information#readme)
