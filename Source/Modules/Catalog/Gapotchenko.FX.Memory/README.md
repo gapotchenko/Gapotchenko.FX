@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Memory
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Memory.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Memory)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Memory.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Memory)
 
