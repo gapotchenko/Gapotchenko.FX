@@ -76,7 +76,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
     protected const int BytesPerDecodedBlock = 4;
 
     /// <summary>
-    /// Base32 encoding efficiency.
+    /// Kuon Base24 encoding efficiency.
     /// The efficiency is the ratio between number of bits in the input and the number of bits in the encoded output.
     /// </summary>
     public new const float Efficiency = (float)BytesPerDecodedBlock / SymbolsPerEncodedBlock;
