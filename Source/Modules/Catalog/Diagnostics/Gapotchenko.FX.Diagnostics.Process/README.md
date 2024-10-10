@@ -27,7 +27,7 @@ The functionality is achieved by reading the process environment block (PEB) at 
 
 For example, this is how a PATH environment variable can be retrieved from all running instances of Microsoft Visual Studio:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Diagnostics;
 using System;
 using System.Diagnostics;
@@ -60,7 +60,7 @@ class Program
 The method retrieves a set of command-line arguments specified at the process start.
 The functionality is achieved by reading the process environment block at the operating system level.
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Diagnostics;
 using System;
 using System.Diagnostics;
@@ -122,7 +122,7 @@ The method returns a `ProcessEndMode` value on completion indicating how the pro
 
 Let's take a look on example that tries to end all running instances of Notepad:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Diagnostics;
 
 foreach (var process in Process.GetProcessesByName("notepad"))
@@ -155,7 +155,7 @@ Graceful shutdown was not possible because the process had an active modal dialo
 
 Let's modify sample a bit:
 
-``` csharp
+``` C#
 foreach (var process in Process.GetProcessesByName("notepad"))
 {
     var result = process.End();
@@ -171,7 +171,7 @@ Now it shows the `Id` of a process that was ended together with a graceful/force
 What if we want to limit the `End()` method to only perform a graceful process termination?
 Let's use the `End(ProcessEndMode)` method overload:
 
-``` csharp
+``` C#
 foreach (var process in Process.GetProcessesByName("notepad"))
 {
     var result = process.End(ProcessEndMode.Graceful);
@@ -186,7 +186,7 @@ Now the result will only be graceful, or have `ProcessEndMode.None` value if a p
 But what if we want to limit the `End()` method to only perform a graceful process termination via Ctrl+C (SIGINT) signal and forceful kill?
 No problem:
 
-``` csharp
+``` C#
 foreach (var process in Process.GetProcessesByName("notepad"))
 {
     var result = process.End(ProcessEndMode.Interrupt | ProcessEndMode.Kill);
@@ -214,7 +214,7 @@ What if we could have the benefits of both solutions at the same time?
 
 We can do this by using asynchronous code, like so:
 
-``` csharp
+``` C#
 static Task<ProcessEndMode[]> EndProcessesAsync(IEnumerable<Process> processesToEnd) =>
     Task.WhenAll(processesToEnd.Select(x => x.EndAsync()));
 ```
@@ -225,7 +225,7 @@ Even if you write a single-threaded app, you still get the benefits of asynchron
 
 Here is a full example that demonstrates that:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.Threading.Tasks;
 

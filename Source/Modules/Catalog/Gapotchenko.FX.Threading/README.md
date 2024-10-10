@@ -16,7 +16,7 @@ Executing an async task from synchronous code poses a few rather big challenges 
 
 Meet `TaskBridge`. It makes interoperability a breeze:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Threading.Tasks;
 using System;
 using System.Threading.Tasks;
@@ -41,7 +41,7 @@ class Program
 
 Let's call a cancelable async method from a synchronous thread that can be aborted by `Thread.Abort()` method:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,7 +66,7 @@ You see this? A simple one-liner for a *complete* interoperability between two e
 
 Now, let's take a look at the opposite scenario where a cancelable async task calls an abortable synchronous code:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
@@ -116,7 +116,7 @@ The selection can also be overridden from code.
 For example, if you want to disallow that debugger friendliness in `Release` configuration,
 you can correspondingly configure the `DebuggableParallel` class at the very start of a program:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Threading.Tasks;
 
 #if !DEBUG

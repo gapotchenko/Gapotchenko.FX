@@ -13,7 +13,7 @@ You already met it quite often albeit in somewhat masked forms.
 `Gapotchenko.FX.Linq` module provides the `Memoize()` extension method for `IEnumerable<T>` types.
 You can use it like this:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Linq;
 
 var files = Directory.EnumerateFiles(".", "*.txt").Select(Path.GetFileName).Memoize();
@@ -37,7 +37,7 @@ It is similar to `SingleOrDefault()` provided by conventional .NET but has one b
 
 ### *Single*OrDefault() Semantics
 
-``` csharp
+``` C#
 using System.Linq;
 
 new string[0].SingleOrDefault(); // returns null
@@ -47,7 +47,7 @@ new[] { "A", "B" }.SingleOrDefault(); // throws an exception 😞
 
 ### *Scalar*OrDefault() Semantics
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Linq;
 
 new string[0].ScalarOrDefault(); // returns null
@@ -65,7 +65,7 @@ The method is similar to `Distinct()` method provided by the stock `System.Linq`
 
 Let's take a look at example:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Linq;
 
 var source = new[]
@@ -96,7 +96,7 @@ Returns a minimum/maximum value in a sequence according to a specified key selec
 
 Let's take a look at example:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Linq;
 
 var source = new[]

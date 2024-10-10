@@ -10,9 +10,9 @@ The module provides primitives for command line manipulation.
 `CommandLineBuilder` class allows you to dynamically build a command line.
 It provides the built-in support for characters than need escaping.
 
-Semantically `CommandLineBuilder` is similar to the well-known `StringBuilder` class:
+Semantically `CommandLineBuilder` is similar to `StringBuilder` class:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Diagnostics;
 
 var clb = new CommandLineBuilder();
@@ -31,10 +31,10 @@ The code above produces the following output:
 
 Note how some command-line parameters were automatically quoted because they contained whitespace characters.
 
-`CommandLineBuilder` supports a fluent interface just like conventional `StringBuilder`,
-so the code can be rewritten as:
+`CommandLineBuilder` supports a fluent interface, just like conventional `StringBuilder`.
+So the code can be rewritten as:
 
-``` csharp
+``` C#
 var clb = new CommandLineBuilder()
     .AppendParameter("/b")
     .AppendParameter(@"C:\Temp\Test 1.txt")
@@ -45,7 +45,7 @@ Console.WriteLine(clb.ToString());
 
 The resulting command line can be used in various places, most notably for starting a new process:
 
-``` csharp
+``` C#
 using System.Diagnostics;
 
 …
@@ -61,13 +61,13 @@ Process.Start("copy", clb.ToString());
 `CommandLine.Build` method allows you to quickly build a command-line string from a specified list of arguments.
 Basically, this is a shortcut to `CommandLineBuilder` class in a handy functional form:
 
-``` csharp
+``` C#
 string s = CommandLine.Build("/b", @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt");
 ```
 
 Such a form is very useful in something like this:
 
-``` csharp
+``` C#
 Process.Start(
     "cmd",
     CommandLine.Build(
@@ -77,7 +77,7 @@ Process.Start(
 
 Another cool thing: if you want to exclude some argument from a built command line then you can just make it `null`:
 
-``` csharp
+``` C#
 string mode = null;
 
 // 'mode' can be assigned to a non-null value if there is a need to specify it.
@@ -101,7 +101,7 @@ It does the best job possible under existing conditions by following common-sens
 `CommandLine.Split` provides the opposite operation to `CommandLine.Build`.
 It allows to split a command-line string into a list of arguments using the rules of a host operating system:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Diagnostics;
 
 string s = "/b \"C:\\Temp\\Test 1.txt\" \"C:\\Temp\\Test 2.txt\"";

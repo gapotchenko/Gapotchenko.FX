@@ -173,7 +173,7 @@ What a ride just within a screen of code.
 `AddRange` is a frequently used operation that allows you to add a sequence of elements to the end of a collection.
 Like this:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Collections.Generic;
 
 var collection = new Collection<int>();
@@ -188,19 +188,19 @@ collection.AddRange(numbers.Where(x => x % 2 == 0)); // add even numbers
 
 .NET provides a versatile `KeyValuePair<TKey, TValue>` struct and suggests a default way for its instantiation:
 
-``` csharp
+``` C#
 new KeyValuePair<TKey, TValue>(key, value)
 ```
 
 Which is, well, not handy as it often comes to this:
 
-``` csharp
+``` C#
 new KeyValuePair<BindingManagerDataErrorEventHandler, ICom2PropertyPageDisplayService>(key, value)
 ```
 
 `Gapotchenko.FX.Collections` provides a better way to instantiate a `KeyValuePair<TKey, TValue>` struct:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Collections.Generic;
 
 KeyValuePair.Create(key, value)
@@ -212,7 +212,7 @@ It leverages the automatic type inference provided by some .NET languages like C
 
 `Gapotchenko.FX.Collections` module comes with a function for `KeyValuePair<TKey, TValue>` deconstruction, so you can write this:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Collections.Generic;
 
 void ProcessMap(IDictionary<string, int> map)
@@ -226,7 +226,7 @@ void ProcessMap(IDictionary<string, int> map)
 
 instead of a more verbose variant:
 
-``` csharp
+``` C#
 void ProcessMap(IDictionary<string, int> map)
 {
     foreach (var i in map)

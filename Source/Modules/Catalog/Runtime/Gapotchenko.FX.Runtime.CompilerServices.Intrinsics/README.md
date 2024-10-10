@@ -16,7 +16,7 @@ They can be used in hardware-accelerated implementations of various performance-
 
 Suppose we are trying to fix the performance bottleneck in the following algorithm:
 
-``` csharp
+``` C#
 class BitOperations
 {
     // Returns the base 2 logarithm of a specified number.
@@ -33,7 +33,7 @@ class BitOperations
 log<sub>2</sub> seems to be a trivial operation but it often becomes a serious bottleneck in path-finding or cryptographic algorithms.
 We can do better here if we switch to a table lookup:
 
-``` csharp
+``` C#
 class BitOperations
 {
     // "Bit Twiddling Hacks" by Sean Eron Anderson:
@@ -81,7 +81,7 @@ This is why `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` class exists.
 It provides the ability to define an intrinsic implementation of a method with `MachineCodeIntrinsicAttribute`.
 Let's see how:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Runtime.CompilerServices;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;

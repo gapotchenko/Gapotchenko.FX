@@ -38,7 +38,7 @@ e.g. if the input sequence contains some duplicates, there will be duplicate per
 
 Let's see an example of non-unique permutations:
 
-``` csharp
+``` C#
 var seq = new[] { 1, 2, 1 };
 
 foreach (var i in Permutations.Of(seq))
@@ -58,7 +58,7 @@ The output contains some duplicates, which is expected:
 
 But if you want to get the *unique permutations*, there exists a straightforward way (note the `Distinct` operation):
 
-``` csharp
+``` C#
 var seq = new[] { 1, 2, 1 };
 
 foreach (var i in Permutations.Of(seq).Distinct())
@@ -80,7 +80,7 @@ The number of resulting permutations is `n!` where `n` is the size of the input 
 So if we take care to perform `Distinct` on the input sequence instead, we are going to achieve considerable savings in the number of operations and amount of used memory.
 Like so:
 
-``` csharp
+``` C#
 foreach (var i in Permutations.Of(seq.Distinct()))
     Console.WriteLine(string.Join(" ", i.Select(x => x.ToString())));
 ```

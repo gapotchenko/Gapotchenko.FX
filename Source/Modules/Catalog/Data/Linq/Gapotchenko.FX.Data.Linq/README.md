@@ -22,7 +22,7 @@ Those async methods can be used instead of synchronous `ExecuteQuery` and `Submi
 
 ## Example
 
-``` csharp
+``` C#
 using Gapotchenko.Data.Linq;
 using System.Linq;
 using System.Threading.Tasks;

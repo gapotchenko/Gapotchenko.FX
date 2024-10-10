@@ -7,7 +7,7 @@ when functionality provided by conventional methods like `Regex.Replace` is not 
 
 Let's take a look on example:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Text;
 using System;
 using System.Text.RegularExpressions;
@@ -66,7 +66,7 @@ This simple sentence should be preserved. This rocking sentence should be exclam
 
 For example, if you just want to remove a regex group from a string `s`, then you can use `StringEditor.Remove` static method without instantiating a `StringEditor` class:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Text;
 
 s = StringEditor.Remove(s, match.Groups["complexity"]);
@@ -74,7 +74,7 @@ s = StringEditor.Remove(s, match.Groups["complexity"]);
 
 There is a similar method for string replacements:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Text;
 
 s = StringEditor.Replace(s, match.Groups["complexity"], "easiness");

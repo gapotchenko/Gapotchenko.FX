@@ -55,7 +55,7 @@ That's why `Gapotchenko.FX.Reflection.Loader` module provides a ready to use `As
 
 Here is the solution for ContosoApp:
 
-``` csharp
+``` C#
 using System;
 using System.IO;
 using Gapotchenko.FX.Reflection;
@@ -130,7 +130,7 @@ So the AutoCAD plugin (a .DLL assembly) had to gain an ability to load the depen
 
 This is what Alberto did. He created `AssemblyLoader` class in AutoCAD plugin assembly with just one method `Activate`:
 
-``` csharp
+``` C#
 namespace ContosoApp.Integration.AutoCAD
 {
     static class AssemblyLoader
@@ -144,7 +144,7 @@ namespace ContosoApp.Integration.AutoCAD
 
 Alberto then ensured that `Activate` method is getting called at the early stages of a plugin lifecycle:
 
-``` csharp
+``` C#
 namespace ContosoApp.Integration.AutoCAD
 {
     public class Plugin : AutodeskPluginBase
@@ -167,7 +167,7 @@ The only missing part was the actual implementation which was going to be enormo
 Thanks to the prior experience with custom assembly loading, Alberto was aware about that fancy `AssemblyAutoLoader` class provided by `Gapotchenko.FX.Reflection.Loader` package.
 So he wrote:
 
-``` csharp
+``` C#
 using System;
 using System.IO;
 using Gapotchenko.FX.Reflection;
@@ -224,13 +224,13 @@ The default .NET loader simply ignores `.config` files of .DLL assemblies!
 
 `Gapotchenko.FX.Reflection.Loader` solves this. Just add the following code to a place which gets executed at the early stage of the assembly lifecycle:
 
-``` csharp
+``` C#
 AssemblyLoader.Activate()
 ```
 
 `AssemblyLoader` implementation then goes as follows:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Reflection;
 
 namespace MyPlugin
@@ -283,7 +283,7 @@ While `ModuleInitializerAttribute` is only available in .NET 5.0 and newer, the 
 That's why [`Gapotchenko.FX`](../Gapotchenko.FX) module provides a ready to use [polyfill for that attribute](../Gapotchenko.FX/Runtime/CompilerServices/ModuleInitializerAttribute.cs).
 The example of such an approach is presented below:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Reflection;
 using System.Runtime.CompilerServices;
 

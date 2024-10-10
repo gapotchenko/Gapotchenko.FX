@@ -15,7 +15,7 @@ and serves as an addendum to a conventional `System.Math` class.
 
 The swap operation is a widely demanded primitive:
 
-``` csharp
+``` C#
 Swap<T>(ref T val1, ref T val2)
 ```
 
@@ -23,7 +23,7 @@ Its implementation is trivial, but was found highly desired during real-life cod
 `Swap` primitive allows to keep a mind of developer more focused on important things,
 instead of writing tedious code like:
 
-``` csharp
+``` C#
 T temp = val1;
 val1 = val2;
 val2 = temp;
@@ -31,7 +31,7 @@ val2 = temp;
 
 For comparison, please take a look at a concise version of the same:
 
-``` csharp
+``` C#
 MathEx.Swap(ref val1, ref val2);
 ```
 
@@ -44,7 +44,7 @@ The conventional `Math` class provides ubiquitous `Min`/`Max` primitives for _tw
 However, such a limitation on number of values was proven counter-productive on more than several occasions.
 `MathEx` fixes that by providing `Min`/`Max` operations for _three_ values:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Math;
 
 Console.WriteLine(MathEx.Max(1, 2, 3));
@@ -56,7 +56,7 @@ Ever found yourself trying to find the maximum `System.DateTime` value? Or `Syst
 
 `MathEx` provides `Min`/`Max` operations for _any_ comparable type:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Math;
 
 var currentProgress = new DateTime(2012, 1, 1);

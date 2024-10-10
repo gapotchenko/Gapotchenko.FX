@@ -7,7 +7,7 @@ Its notion comes from the area of mathematical logic and computer science known 
 
 The `Unit` class can only have a single possible value (`Unit.Value`):
 
-``` csharp
+``` C#
 using Gapotchenko.FX;
 
 Unit val;
@@ -32,7 +32,7 @@ A visual placement of the `Unit` type in .NET type system:
 Although the `Unit` type can only have one value, it is also a reference type in terms of .NET type system.
 It means that it's possible for a `Unit` variable to have a `null` value as well:
 
-``` csharp
+``` C#
 Unit? val = null; // OK
 ```
 
@@ -43,7 +43,7 @@ But it does not circumvent the notion of a unit type, it's just the way referenc
 Some time ago, .NET had no `HashSet<T>` class.
 So whenever a developer needed a set, he used a dictionary which was readily available in order to imitate it:
 
-``` csharp
+``` C#
 var set = new Dictionary<string, object>();
 ```
 
@@ -52,7 +52,7 @@ The values in these dictionaries were always `null`, and only the keys represent
 What most of developers did not realize back then, is that they were essentially using a unit type in disguise.
 So a better way to write this would be:
 
-``` csharp
+``` C#
 var set = new Dictionary<string, Unit>();
 ```
 

@@ -20,14 +20,14 @@ Regex trampolines are special functions that allow to gradually convert the conv
 
 Let's take a look on example:
 
-``` csharp
+``` C#
 if (name.Equals("[mscorlib]System.Object", StringComparison.Ordinal))
     Console.WriteLine("The name represents a system object.");
 ```
 
 The given code is later changed in order to cover the new requirements:
 
-``` csharp
+``` C#
 if (name.Equals("[mscorlib]System.Object", StringComparison.Ordinal) ||
     name.Equals("[netstandard]System.Object", StringComparison.Ordinal) ||
     name.Equals("[System.Runtime]System.Object", StringComparison.Ordinal))
@@ -50,7 +50,7 @@ They also end with `Regex` suffix in their names, so `Equals` becomes `EqualsReg
 
 And this is how a regex trampoline can be used for the given sample in order to meet the new requirements by a single line change:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Text.RegularExpressions;
 
 if (name.EqualsRegex(@"\[(mscorlib|netstandard|System\.Runtime)]System\.Object", StringComparison.Ordinal))

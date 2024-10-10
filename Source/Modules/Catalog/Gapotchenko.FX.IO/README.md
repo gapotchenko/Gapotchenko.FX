@@ -30,7 +30,7 @@ those files are distinct and can coexist at the same folder.
 
 Please take a look at the code below:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.IO;
 
 var files = new HashSet<string>(FileSystem.PathComparer);
@@ -49,7 +49,7 @@ The given set would contain one entry on Windows, and two entries on Linux.
 
 It can be used in string comparison operations:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.IO;
 
 void ProcessFile(string filePath)
@@ -71,7 +71,7 @@ The problem this method solves is caused by the fact that a file path can be spe
 
 Let's take a look at code:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.IO;
 
 Directory.SetCurrentDirectory(@"C:\Temp");
@@ -101,7 +101,7 @@ How do we know that it starts with `Contoso\Reports`?
 
 A straightforward solution would be to use `String.StartsWith` function, like so:
 
-``` csharp
+``` C#
 bool IsContosoReportsFolder(string path) => path.StartsWith(@"Contoso\Reports");
 ```
 
@@ -110,7 +110,7 @@ The problem is that `ReportsBackup` is a very different folder than `Reports`, b
 
 We can cheat here, and try to use an updated function that adds a trailing slash:
 
-``` csharp
+``` C#
 bool IsContosoReportsFolder(string path) => path.StartsWith(@"Contoso\Reports\");
 ```
 
@@ -120,7 +120,7 @@ It is `false` now despite the fact that `Contoso\Reports` is literally the folde
 
 The correct solution is to use `FileSystem.PathStartsWith` method provided by `Gapotchenko.FX.IO` module:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.IO;
 
 bool IsContosoReportsFolder(string path) => FileSystem.PathStartsWith(path, @"Contoso\Reports");
@@ -128,7 +128,7 @@ bool IsContosoReportsFolder(string path) => FileSystem.PathStartsWith(path, @"Co
 
 It will now give the correct results for all inputs, even when they use alternative directory separators:
 
-``` csharp
+``` C#
 IsContosoReportsFolder(@"Contoso\ReportsBackup") => false
 IsContosoReportsFolder(@"Contoso\Reports\2012\Final") => true
 IsContosoReportsFolder(@"Contoso\Reports") => true
@@ -149,7 +149,7 @@ If a user of your app is unlucky or just uses an app frequently enough then he w
 
 To minimize a possibility of such a congestion, you can call `FileSystem.WaitForFileWriteAccess` method before changing a file:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.IO;
 
 string fileName = "Results.txt";
@@ -171,7 +171,7 @@ However, big-endian byte order is equally widespread.
 
 This is how a big-endian binary reader can be created:
 
-``` csharp
+``` C#
 using Gapotchenko.FX;
 using Gapotchenko.FX.IO;
 

@@ -7,7 +7,7 @@ It turns out that launching a web browser is a black voodoo art that should be g
 
 .NET developers used to do this trick back in the day:
 
-``` csharp
+``` C#
 using System.Diagnostics;
 
 Process.Start("https://example.com/");
@@ -28,7 +28,7 @@ Spotted on more than several occasions on different machines at random points of
 
 A pure joy to use that comes without aforementioned drawbacks of the `Process.Start(…)` method:
 
-``` csharp
+``` C#
 using Gapotchenko.FX.Diagnostics;
 
 WebBrowser.Launch("https://example.com/");

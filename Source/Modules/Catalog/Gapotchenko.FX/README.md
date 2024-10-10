@@ -23,7 +23,7 @@ What if it does the job in the fastest possible way by leveraging the properties
 
 `Gapotchenko.FX` provides the exact solution:
 
-``` csharp
+``` C#
 using Gapotchenko.FX;
 using System;
 
@@ -35,7 +35,7 @@ Console.WriteLine(f);
 
 And what about `Dictionary<byte[], string>` scenario? It's easy now:
 
-``` csharp
+``` C#
 var map = new Dictionary<byte[], string>(ArrayEqualityComparer<byte>.Default);
 
 var key1 = new byte[] { 1, 2, 3 };
@@ -59,7 +59,7 @@ However, they allow to reap the _great_ benefits. Let's see how and why that hap
 
 .NET provides a notion of nullable values. For example, a nullable `int` value:
 
-``` csharp
+``` C#
 int? x = null;
 if (!x.HasValue)
 	x = 10;
@@ -68,7 +68,7 @@ Console.WriteLine(x);
 
 But what if we want to do that with a reference type like `string`? Actually, we can:
 
-``` csharp
+``` C#
 string s = null;
 if (s == null)
 	s = "Test";
@@ -77,7 +77,7 @@ Console.WriteLine(s);
 
 Unfortunately, the scheme breaks at the following example:
 
-``` csharp
+``` C#
 class Deployment
 {
 	string m_CachedHomeDir;
@@ -99,7 +99,7 @@ diminishing the value of provided caching.
 
 To make this scenario work as designed, we should use an `Optional<T>` value provided by `Gapotchenko.FX`. Like so:
 
-``` csharp
+``` C#
 using Gapotchenko.FX;
 
 class Deployment
@@ -135,7 +135,7 @@ Let's take a look at the notion of emptiness provided by the `Empty` class from 
 
 The basic thing it does is nullifying. Say, we have the following code:
 
-``` csharp
+``` C#
 using Gapotchenko.FX;
 
 class Deployment
@@ -159,7 +159,7 @@ on a machine of some customer.
 
 Let's improve the code to handle that condition:
 
-``` csharp
+``` C#
 using Gapotchenko.FX;
 
 class Deployment
@@ -190,7 +190,7 @@ It does the job but that's a lot of thought and code.
 
 We can do better with `Empty.Nullify` primitive:
 
-``` csharp
+``` C#
 using Gapotchenko.FX;
 
 class Deployment
@@ -230,7 +230,7 @@ It does not provide thread safety; though a thread-safe variant does exist in a 
 
 The sample below demonstrates a typical usage scenario for `LazyEvaluation<T>`:
 
-``` csharp
+``` C#
 using Gapotchenko.FX;
 
 class Deployment
@@ -244,7 +244,7 @@ class Deployment
 
 Or as a local variable:
 
-``` csharp
+``` C#
 using Gapotchenko.FX;
 
 class Program
@@ -275,13 +275,13 @@ First of all, Gapotchenko.FX closes the gaps in original .NET design by providin
 For example, `Lazy<T>` class has to be constructed with a `new` keyword, like so: `new Lazy<string>(() => ...)`.
 It's a no-brainer for simple types like `string`. But for custom types it quickly gets clunky:
 
-``` csharp
+``` C#
 new Lazy<ICom2PropertyPageDisplayService>(() => ...)
 ```
 
 The good news is Gapotchenko.FX allows you to do a better job here:
 
-``` csharp
+``` C#
 using Gapotchenko.FX;
 
 Lazy.Create(() => ...)
