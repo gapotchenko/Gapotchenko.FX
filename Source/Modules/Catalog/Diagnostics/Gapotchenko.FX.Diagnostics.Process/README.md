@@ -244,7 +244,7 @@ class Program
 }
 ```
 
-(Reminder: the correct way to wait for the completion of an asynchronous task in synchronous code is to use [`TaskBridge`](../../Threading/Gapotchenko.FX.Threading#taskbridge))
+(Reminder: the correct way to wait for the completion of an asynchronous task in synchronous code is to use [`TaskBridge`](../../Gapotchenko.FX.Threading#taskbridge))
 
 ## Usage
 
