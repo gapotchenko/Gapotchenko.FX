@@ -151,7 +151,8 @@ Kill
 The Notepad process was unable to shutdown gracefully and thus was forcefully killed.
 Graceful shutdown was not possible because the process had an active modal dialog.
 
-#### More Examples
+<details>
+  <summary>More Examples</summary>
 
 Let's modify sample a bit:
 
@@ -197,6 +198,8 @@ foreach (var process in Process.GetProcessesByName("notepad"))
 ```
 
 As you can see, despite a simple-looking signature, the `End(…)` method gives enormous possibilities for achieving a specific goal.
+
+</details>
 
 ### EndAsync()
 
