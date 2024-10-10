@@ -228,6 +228,7 @@ Here is a full example that demonstrates that:
 ``` C#
 using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.Threading.Tasks;
+using System.Diagnostics;
 
 class Program
 {
