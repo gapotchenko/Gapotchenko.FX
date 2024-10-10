@@ -97,8 +97,8 @@ It does the best job possible under existing conditions by following common-sens
 
 ### Split
 
-`CommandLine.Split` provides the opposite operation to `CommandLine.Build`.
-It allows to split a command-line string into a list of arguments using the rules of a host operating system:
+`CommandLine.Split` provides the inverse operation to `CommandLine.Build`.
+It allows you to split a command-line string into a list of arguments using the rules of a host operating system:
 
 ``` C#
 using Gapotchenko.FX.Diagnostics;
