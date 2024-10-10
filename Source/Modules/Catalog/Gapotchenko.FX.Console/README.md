@@ -26,7 +26,7 @@ and other properties for controlling the console.
 
 ANSI escape sequences become handy when the complexity of console output reaches a certain level. Just take a look at the example below:
 
-![Advanced console visualization](../../../../Documentation/Assets/console-eazfuscator.net.png)
+![Advanced console visualization](../../../../Documentation/Assets/Console/console-eazfuscator.net.png)
 
 It would be a very *involved* code to render such output with a set of imperative calls.
 
@@ -131,7 +131,7 @@ This allows to provide an additional convenience for the end users.
 
 Let's take a look on example:
 
-![Console output pagination](../../../../Documentation/Assets/console-eazfuscator.net-more.png)
+![Console output pagination](../../../../Documentation/Assets/Console/console-eazfuscator.net-more.png)
 
 By pressing `Page Down` and `Down Arrow` keys it is possible to scroll the console output.
 The standard `Space` and `Enter` are supported as well.
@@ -150,7 +150,7 @@ for (int i = 1; i < 100; ++i)
 
 It produces the following output:
 
-![Console sample output](../../../../Documentation/Assets/console-more-sample.png)
+![Console sample output](../../../../Documentation/Assets/Console/console-more-sample.png)
 
 The keys, colors, and styling are fully customizable by deriving a class from the `MoreTextWriter`.
 
