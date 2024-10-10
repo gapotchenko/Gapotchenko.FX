@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Memory.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Memory)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Memory.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Memory)
 
 The module provides primitives for memory manipulation.
 
@@ -15,7 +16,7 @@ Consider the example:
 ```csharp
 using Gapotchenko.FX.Memory;
 
-byte[] arr = new byte[] { 1, 2, 3, 4, 5, 6 };
+byte[] arr = [1, 2, 3, 4, 5, 6];
 
 var map = new Dictionary<ReadOnlyMemory<byte>, string>(MemoryEqualityComparer<byte>.Default);
 
