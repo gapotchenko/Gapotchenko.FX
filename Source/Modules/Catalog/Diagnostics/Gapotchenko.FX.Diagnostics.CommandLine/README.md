@@ -48,7 +48,6 @@ The resulting command line can be used in various places, most notably for start
 ``` C#
 using System.Diagnostics;
 
-…
 Process.Start("copy", clb.ToString());
 ```
 
@@ -94,7 +93,7 @@ The code above produces the following outputs depending on the value of `binary`
 
 This is a neat departure from a traditional .NET convention where it always throws `ArgumentNullException`.
 Instead, Gapotchenko.FX uses a slightly different philosophy.
-It does the best job possible under existing conditions by following common-sense expectations of a user.
+It does the best job possible under existing conditions by following common-sense expectations.
 
 ### Split
 
