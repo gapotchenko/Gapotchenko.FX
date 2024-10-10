@@ -75,7 +75,7 @@ Process.Start(
         "/b", @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt"));
 ```
 
-Another cool thing: if you want to exclude some argument from a built command line then you can just make it `null`:
+Another cool thing: if you want to exclude some arguments from the command line then you can just make them `null`:
 
 ``` C#
 // 'mode' will have a non-null value if there is a need to specify it.
