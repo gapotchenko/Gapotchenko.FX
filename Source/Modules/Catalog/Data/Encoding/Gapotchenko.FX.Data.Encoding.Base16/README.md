@@ -8,7 +8,7 @@ The module provides the implementation of binary-to-text encoding algorithms bel
 
 Use the following code to get the textual representation of the specified data in Base16 encoding:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Data.Encoding;
 
 var encodedText = Base16.GetString(data);
@@ -16,7 +16,7 @@ var encodedText = Base16.GetString(data);
 
 To get the data back from the textual representation, use the following method:
 
-``` c#
+``` C#
 var decodedData = Base16.GetBytes(encodedText);
 ```
 
@@ -29,7 +29,7 @@ For a more general and full use, however, the classes implement `ITextDataEncodi
 
 If you need to encode the data iteratively then the following approach becomes handy:
 
-``` c#
+``` C#
 var encoding = Base16.Instance;
 
 // Create a streaming encoder that iteratively encodes the data and
