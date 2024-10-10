@@ -231,9 +231,6 @@ using Gapotchenko.FX.Threading.Tasks;
 
 class Program
 {
-    static Task<ProcessEndMode[]> EndProcessesAsync(IEnumerable<Process> processesToEnd) =>
-        Task.WhenAll(processesToEnd.Select(x => x.EndAsync()));
-
     static void Main()
     {
         var processEndModes = TaskBridge.Execute(
@@ -244,6 +241,9 @@ class Program
             "Notepads were ended with the following results: {0}.",
             string.Join(", ", processEndModes.Select(x => x.ToString())));
     }
+
+    static Task<ProcessEndMode[]> EndProcessesAsync(IEnumerable<Process> processesToEnd) =>
+        Task.WhenAll(processesToEnd.Select(x => x.EndAsync()));
 }
 ```
 
