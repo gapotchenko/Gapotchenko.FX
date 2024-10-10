@@ -7,10 +7,10 @@ The module provides primitives for command line manipulation.
 
 ## CommandLineBuilder
 
-`CommandLineBuilder` class from `Gapotchenko.FX.Diagnostics.CommandLine` module allows to dynamically build a command line on the fly.
+`CommandLineBuilder` class provided by `Gapotchenko.FX.Diagnostics.CommandLine` allows you to build a command line dynamically on the fly.
 It provides the built-in support for characters than need escaping.
 
-Semantically `CommandLineBuilder` is similar to `StringBuilder` class:
+Semantically `CommandLineBuilder` is similar to the well-known `StringBuilder` class:
 
 ``` csharp
 using Gapotchenko.FX.Diagnostics;
@@ -29,7 +29,7 @@ The code above produces the following output:
 /b "C:\Temp\Test 1.txt" "C:\Temp\Test 2.txt"
 ```
 
-Note how some command line parameters were automatically quoted because they contained whitespace characters.
+Note how some command-line parameters were automatically quoted because they contained whitespace characters.
 
 `CommandLineBuilder` supports a fluent interface just like conventional `StringBuilder`,
 so the code can be rewritten as:
@@ -58,7 +58,7 @@ Process.Start("copy", clb.ToString());
 
 ### Build
 
-`CommandLine.Build` method allows to quickly build a command line string from a specified list of arguments.
+`CommandLine.Build` method allows you to quickly build a command-line string from a specified list of arguments.
 Basically, this is a shortcut to `CommandLineBuilder` class in a handy functional form:
 
 ``` csharp
@@ -75,7 +75,7 @@ Process.Start(
         "/b", @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt"));
 ```
 
-Another cool thing: if you want to exclude some argument from a command line then you can just make it `null`:
+Another cool thing: if you want to exclude some argument from a built command line then you can just make it `null`:
 
 ``` csharp
 string mode = null;
@@ -96,11 +96,10 @@ This is a neat departure from a traditional .NET convention where it always thro
 Instead, Gapotchenko.FX uses a slightly different philosophy.
 It does the best job possible under existing conditions by following common-sense expectations of a user.
 
-
 ### Split
 
 `CommandLine.Split` provides the opposite operation to `CommandLine.Build`.
-It allows to split a command line string into a list of arguments using the rules of a host operating system:
+It allows to split a command-line string into a list of arguments using the rules of a host operating system:
 
 ``` csharp
 using Gapotchenko.FX.Diagnostics;
