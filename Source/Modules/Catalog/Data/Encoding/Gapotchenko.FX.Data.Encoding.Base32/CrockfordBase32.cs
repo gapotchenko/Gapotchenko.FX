@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Gapotchenko.FX.Data.Encoding;
@@ -531,13 +537,13 @@ public sealed class CrockfordBase32 : GenericCrockfordBase32
 
     #endregion
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static volatile ICrockfordBase32? m_Instance;
-
     /// <summary>
     /// Returns a default instance of <see cref="CrockfordBase32"/> encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     [CLSCompliant(false)]
     public static ICrockfordBase32 Instance => m_Instance ??= new CrockfordBase32();
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static volatile ICrockfordBase32? m_Instance;
 }

@@ -1,4 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Data.Encoding;
 
@@ -77,18 +83,11 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
     /// </summary>
     const DataEncodingOptions FormatMask = DataEncodingOptions.Wrap | DataEncodingOptions.Indent;
 
-    abstract class CodecContextBase
+    abstract class CodecContextBase(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options)
     {
-        public CodecContextBase(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options)
-        {
-            m_Alphabet = alphabet;
-            m_PaddingChar = paddingChar;
-            m_Options = options;
-        }
-
-        protected readonly TextDataEncodingAlphabet m_Alphabet;
-        protected readonly char m_PaddingChar;
-        protected readonly DataEncodingOptions m_Options;
+        protected readonly TextDataEncodingAlphabet m_Alphabet = alphabet;
+        protected readonly char m_PaddingChar = paddingChar;
+        protected readonly DataEncodingOptions m_Options = options;
 
         #region Parameters
 
@@ -104,13 +103,10 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
         protected bool m_Eof;
     }
 
-    sealed class EncoderContext : CodecContextBase, IEncoderContext
+    sealed class EncoderContext(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options) :
+        CodecContextBase(alphabet, paddingChar, options),
+        IEncoderContext
     {
-        public EncoderContext(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options) :
-            base(alphabet, paddingChar, options)
-        {
-        }
-
         readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
 
         int m_LinePosition;
@@ -213,15 +209,10 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
         }
     }
 
-    sealed class DecoderContext : CodecContextBase, IDecoderContext
+    sealed class DecoderContext(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options) :
+        CodecContextBase(alphabet, paddingChar, options),
+        IDecoderContext
     {
-        public DecoderContext(TextDataEncodingAlphabet alphabet, char paddingChar, DataEncodingOptions options) :
-            base(alphabet, paddingChar, options)
-        {
-        }
-
-        readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
-
         public bool Decode(ReadOnlySpan<char> input, Stream output, bool throwOnError)
         {
             if (m_Eof)
@@ -338,17 +329,7 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
             return true;
         }
 
-        bool ValidateIncompleteByte(bool throwOnError)
-        {
-            if ((m_Options & DataEncodingOptions.Relax) == 0)
-            {
-                if (throwOnError)
-                    throw new InvalidDataException($"Cannot decode the last byte due to a missing {Name} symbol.");
-                return false;
-            }
-
-            return true;
-        }
+        readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
 
         bool ValidateLastSymbol(int zeroMask, bool throwOnError)
         {
@@ -362,8 +343,6 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
 
             return true;
         }
-
-        int m_Padding;
 
         bool ValidatePaddingChar(bool throwOnError)
         {
@@ -411,6 +390,20 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
         }
 
         static InvalidDataException CreateInvalidPaddingException() => new($"Invalid {Name} padding.");
+
+        int m_Padding;
+
+        bool ValidateIncompleteByte(bool throwOnError)
+        {
+            if ((m_Options & DataEncodingOptions.Relax) == 0)
+            {
+                if (throwOnError)
+                    throw new InvalidDataException($"Cannot decode the last byte due to a missing {Name} symbol.");
+                return false;
+            }
+
+            return true;
+        }
     }
 
     /// <inheritdoc/>

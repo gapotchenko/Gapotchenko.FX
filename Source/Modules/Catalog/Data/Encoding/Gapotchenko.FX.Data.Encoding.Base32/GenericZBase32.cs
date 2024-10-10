@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Data.Encoding;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+namespace Gapotchenko.FX.Data.Encoding;
 
 /// <summary>
 /// Provides a generic implementation of z-base-32 encoding.
@@ -16,13 +22,9 @@ public abstract class GenericZBase32 : GenericBase32
     {
     }
 
-    sealed class ZBase32EncoderContext : EncoderContext
+    sealed class ZBase32EncoderContext(GenericZBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
+        EncoderContext(encoding, alphabet, options)
     {
-        public ZBase32EncoderContext(GenericZBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-            base(encoding, alphabet, options)
-        {
-        }
-
         protected override void WriteBits(TextWriter output, int bitCount)
         {
             var alphabet = m_Alphabet;
@@ -80,13 +82,9 @@ public abstract class GenericZBase32 : GenericBase32
         char Capitalize(char c) => TextDataEncoding.Capitalize(c, m_Options);
     }
 
-    sealed class ZBase32DecoderContext : DecoderContext
+    sealed class ZBase32DecoderContext(GenericZBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
+        DecoderContext(encoding, alphabet, options)
     {
-        public ZBase32DecoderContext(GenericZBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-            base(encoding, alphabet, options)
-        {
-        }
-
         void ReadBits(Stream output, int bitCount)
         {
             int i = 0; // output byte index

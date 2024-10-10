@@ -22,7 +22,7 @@ public enum DataEncodingOptions
     /// </summary>
     NoPadding = 1 << 0,
 
-#if BINARY_COMPATIBILITY
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
     /// <inheritdoc cref="NoPadding"/>
     [Obsolete($"Use {nameof(NoPadding)} instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]

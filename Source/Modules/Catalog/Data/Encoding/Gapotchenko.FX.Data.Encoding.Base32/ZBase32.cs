@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Encoding;
 
@@ -63,12 +69,12 @@ public sealed class ZBase32 : GenericZBase32
     /// <exception cref="FormatException">Cannot decode the input string.</exception>
     public static byte[] GetBytes(string s, DataEncodingOptions options) => GetBytes((s ?? throw new ArgumentNullException(nameof(s))).AsSpan(), options);
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static volatile IBase32? m_Instance;
-
     /// <summary>
     /// Returns a default instance of <see cref="ZBase32"/> encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static IBase32 Instance => m_Instance ??= new ZBase32();
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static volatile IBase32? m_Instance;
 }

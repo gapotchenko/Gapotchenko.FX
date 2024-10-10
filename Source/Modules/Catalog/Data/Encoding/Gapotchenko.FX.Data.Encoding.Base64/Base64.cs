@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Encoding;
 
@@ -93,12 +99,12 @@ public sealed class Base64 : GenericBase64
     /// <returns>The unpadded read-only character span.</returns>
     public static new ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => Instance.Unpad(s);
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static volatile IBase64? m_Instance;
-
     /// <summary>
     /// Returns a default instance of <see cref="Base64"/> encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static IBase64 Instance => m_Instance ??= new Base64();
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static volatile IBase64? m_Instance;
 }

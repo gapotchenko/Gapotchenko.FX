@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Text;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using Gapotchenko.FX.Text;
 using System.Numerics;
 using System.Text;
 

@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Encoding;
 
@@ -82,12 +88,12 @@ public sealed class Base32Hex : GenericBase32
     /// <returns>The unpadded read-only character span.</returns>
     public static new ReadOnlySpan<char> Unpad(ReadOnlySpan<char> s) => Instance.Unpad(s);
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static volatile IBase32? m_Instance;
-
     /// <summary>
     /// Returns a default instance of <see cref="Base32Hex"/> encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static IBase32 Instance => m_Instance ??= new Base32Hex();
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static volatile IBase32? m_Instance;
 }

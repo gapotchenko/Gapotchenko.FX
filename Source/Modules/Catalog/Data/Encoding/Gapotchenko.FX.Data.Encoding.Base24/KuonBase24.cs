@@ -69,12 +69,12 @@ public sealed class KuonBase24 : GenericKuonBase24
     /// <exception cref="FormatException">Cannot decode the input string.</exception>
     public static byte[] GetBytes(string s, DataEncodingOptions options) => GetBytes((s ?? throw new ArgumentNullException(nameof(s))).AsSpan(), options);
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static volatile IBase24? m_Instance;
-
     /// <summary>
     /// Returns a default instance of <see cref="KuonBase24"/> encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static IBase24 Instance => m_Instance ??= new KuonBase24();
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static volatile IBase24? m_Instance;
 }

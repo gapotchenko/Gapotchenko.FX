@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Encoding;
 
@@ -85,12 +91,12 @@ public sealed class Base64Url : GenericBase64
     /// <exception cref="FormatException">Cannot decode the input string.</exception>
     public static byte[] GetBytes(string s, DataEncodingOptions options) => GetBytes(s.AsSpan(), options);
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static volatile IBase64? m_Instance;
-
     /// <summary>
     /// Returns a default instance of <see cref="Base64Url"/> encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static IBase64 Instance => m_Instance ??= new Base64Url();
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static volatile IBase64? m_Instance;
 }

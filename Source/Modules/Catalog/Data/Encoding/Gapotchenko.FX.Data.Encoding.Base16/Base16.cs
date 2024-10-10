@@ -102,12 +102,12 @@ public sealed partial class Base16 : GenericBase16
             FastDecoder.GetBytes(s, false) :
             Instance.TryGetBytes(s, options);
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static volatile IBase16? m_Instance;
-
     /// <summary>
     /// Returns a default instance of <see cref="Base16"/> encoding.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static IBase16 Instance => m_Instance ??= new Base16();
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static volatile IBase16? m_Instance;
 }

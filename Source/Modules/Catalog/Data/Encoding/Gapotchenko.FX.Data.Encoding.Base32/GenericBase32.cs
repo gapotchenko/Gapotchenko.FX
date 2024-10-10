@@ -1,4 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Data.Encoding;
 
@@ -98,18 +104,11 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private protected static ulong Shift(ulong x, int n) => n >= 0 ? x >> n : x << -n;
 
-    private protected abstract class CodecContextBase
+    private protected abstract class CodecContextBase(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
     {
-        public CodecContextBase(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options)
-        {
-            m_Encoding = encoding;
-            m_Alphabet = alphabet;
-            m_Options = options;
-        }
-
-        protected readonly GenericBase32 m_Encoding;
-        protected readonly TextDataEncodingAlphabet m_Alphabet;
-        protected readonly DataEncodingOptions m_Options;
+        protected readonly GenericBase32 m_Encoding = encoding;
+        protected readonly TextDataEncodingAlphabet m_Alphabet = alphabet;
+        protected readonly DataEncodingOptions m_Options = options;
 
         #region Parameters
 
@@ -125,13 +124,10 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
         protected bool m_Eof;
     }
 
-    private protected class EncoderContext : CodecContextBase, IEncoderContext
+    private protected class EncoderContext(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
+        CodecContextBase(encoding, alphabet, options),
+        IEncoderContext
     {
-        public EncoderContext(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-            base(encoding, alphabet, options)
-        {
-        }
-
         protected readonly char[] m_Buffer = new char[SymbolsPerEncodedBlock];
 
         int m_LinePosition;
@@ -232,13 +228,10 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
         char Capitalize(char c) => TextDataEncoding.Capitalize(c, m_Options);
     }
 
-    private protected class DecoderContext : CodecContextBase, IDecoderContext
+    private protected class DecoderContext(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
+        CodecContextBase(encoding, alphabet, options),
+        IDecoderContext
     {
-        public DecoderContext(GenericBase32 encoding, TextDataEncodingAlphabet alphabet, DataEncodingOptions options) :
-            base(encoding, alphabet, options)
-        {
-        }
-
         protected readonly byte[] m_Buffer = new byte[BytesPerDecodedBlock];
 
         public char? Separator { get; init; }
