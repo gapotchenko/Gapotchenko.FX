@@ -6,7 +6,7 @@ Modules form functional hierarchies by following a special naming convention.
 
 The full list of available modules is presented in the table below.
 
-## Table
+## Table of Available Modules
 
 - [Gapotchenko.FX](Catalog/Gapotchenko.FX#readme)
 - [Gapotchenko.FX.AppModel.Information](Catalog/AppModel/Gapotchenko.FX.AppModel.Information#readme)
