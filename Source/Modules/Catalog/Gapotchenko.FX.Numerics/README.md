@@ -14,16 +14,14 @@ The module provides hardware-accelerated operations for numeric data types.
 ## BitOperations
 
 `BitOperations` class provides bit manipulation operations for unsigned integer values of 32 and 64 bit lengths.
-
 The main consumers of hardware-accelerated bit operations are path-finding and cryptographic algorithms.
 
 `BitOperations` class is a polyfill to the future as it first appeared in .NET Core 3.0.
 
-
 ### Log2
 
 Calculates the integer base 2 logarithm of a specified number.
-By convention, `Log2(0)` returns `0` since such operation is undefined.
+`Log2(0)` returns an undefined value since such operation is undefined.
 
 The behavior corresponds to `BSR` instruction from Intel x86 instruction set.
 
