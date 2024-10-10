@@ -60,6 +60,8 @@ stream.Read(...); // block 1
 stream.Read(...); // block N
 ```
 
+The streaming encoder and decoder can be used to [iteratively transcode the data from one encoding to another](../Gapotchenko.FX.Data.Encoding#transcoding-between-various-binary-to-text-encodings).
+
 ## Available Base24 Algorithms
 
 Base24 family of binary-to-text data encodings consists of the following algorithms with predefined parameters:
