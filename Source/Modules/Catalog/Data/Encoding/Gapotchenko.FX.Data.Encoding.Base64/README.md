@@ -1,5 +1,5 @@
 ﻿# Gapotchenko.FX.Data.Encoding.Base64
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Encoding.Base16.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Encoding.Base64)
 
 The module provides the implementation of binary-to-text encoding algorithms belonging to the Base64 family.
@@ -80,13 +80,13 @@ All other predefined algorithms are provided by the corresponding classes of `Ga
 ## Custom Base64 Algorithms
 
 Once in a while, you may encounter a custom Base64 algorithm that is neither widely known nor characterized.
-In that case, you can instantiate a custom data encoding algorithm with the desired parameters by hand:
+In that case, you can instantiate a custom data encoding algorithm with the desired parameters by hand. For example:
 
 ``` c#
-var encoding = new CustomBase64(...);
+var encoding = new CustomBase64("ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ0123456789αβγδεζηθικλμνξοπρστυφχψωABCDEF");
 ```
 
-If you want to formalize a custom algorithm even further, you may opt-in to creating a separate class for it with a convenient accessor property:
+If you want to formalize a custom algorithm even further, you may opt in to create a separate class for it with a convenient accessor property:
 
 ``` c#
 /// <summary>
@@ -95,7 +95,7 @@ If you want to formalize a custom algorithm even further, you may opt-in to crea
 sealed class FooBase64 : CustomBase64
 {
     FooBase64() :
-        base(...)
+        base("ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ0123456789αβγδεζηθικλμνξοπρστυφχψωABCDEF")
     {
     }
 
