@@ -17,8 +17,8 @@ using Gapotchenko.FX.Diagnostics;
 
 var clb = new CommandLineBuilder();
 clb.AppendParameter("/b");
-clb.AppendParameter(@"C:\Temp\Test 1.txt");
-clb.AppendParameter(@"C:\Temp\Test 2.txt");
+clb.AppendFileName(@"C:\Temp\Test 1.txt");
+clb.AppendFileName(@"C:\Temp\Test 2.txt");
 
 Console.WriteLine(clb.ToString());
 ```
@@ -37,8 +37,8 @@ So the code can be rewritten as:
 ``` C#
 var clb = new CommandLineBuilder()
     .AppendParameter("/b")
-    .AppendParameter(@"C:\Temp\Test 1.txt")
-    .AppendParameter(@"C:\Temp\Test 2.txt");
+    .AppendFileName(@"C:\Temp\Test 1.txt")
+    .AppendFileName(@"C:\Temp\Test 2.txt");
 
 Console.WriteLine(clb.ToString());
 ```
