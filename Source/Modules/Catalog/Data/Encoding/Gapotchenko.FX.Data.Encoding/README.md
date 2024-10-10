@@ -18,7 +18,7 @@ This method encodes all the bytes in the specified span into a string.
 
 For example, `GetString` method of a Base16 encoding would be used like this:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Data.Encoding;
 
 var data = new byte[] { 1, 2, 3, 10 };
@@ -35,7 +35,7 @@ producing the following output:
 The `GetString` method can also take options.
 Here is an example that would produce the indented output:
 
-``` c#
+``` C#
 var data = new byte[] { 1, 2, 3, 10 };
 var s = Base16.GetString(data, DataEncodingOptions.Indent);
 Console.WriteLine(s);
@@ -57,7 +57,7 @@ In this way, `GetBytes` method performs a reverse operation to `GetString`.
 
 For example, `GetBytes` method of a Base16 encoding can be used like this:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Data.Encoding;
 
 byte[] data = Base16.GetBytes("0102030A");
@@ -80,7 +80,7 @@ The method creates a streaming encoder for the specified binary-to-text data enc
 
 Example:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Data.Encoding;
 using System.IO;
 
@@ -124,7 +124,7 @@ The file is pretty large, around 2 gigabytes of data.
 
 A naive approach would be to read all the data from the file beforehand in order to re-encode it later:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Data.Encoding;
 using System.IO;
 
@@ -146,7 +146,7 @@ It will work but obviously will consume at least 2 GB of RAM.
 This is when the concept of streaming becomes handy.
 A better transcoding algorithm can use just a fraction of RAM to perform the very same operation of re-encoding a Base64-encoded file to Base32:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Data.Encoding;
 using System.IO;
 

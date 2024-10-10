@@ -8,7 +8,7 @@ The module provides the implementation of binary-to-text encoding algorithms bel
 
 Use the following code to get the textual representation of the specified data in Base32 encoding:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Data.Encoding;
 
 var encodedText = Base32.GetString(data);
@@ -16,7 +16,7 @@ var encodedText = Base32.GetString(data);
 
 To get the data back from the textual representation, use the following method:
 
-``` c#
+``` C#
 var decodedData = Base32.GetBytes(encodedText);
 ```
 
@@ -29,7 +29,7 @@ For a more general and full use, however, the classes implement `ITextDataEncodi
 
 If you need to encode the data iteratively then the following approach becomes handy:
 
-``` c#
+``` C#
 var encoding = Base32.Instance;
 
 // Create a streaming encoder that iteratively encodes the data and
@@ -47,7 +47,7 @@ stream.Flush();
 
 The same approach is valid for the decoding operation which is the opposite of the encoding:
 
-``` c#
+``` C#
 var encoding = Base32.Instance;
 
 // Create a streaming decoder that iteratively reads the encoded text
@@ -84,13 +84,13 @@ All other predefined algorithms are provided by the corresponding classes of `Ga
 Once in a while, you may encounter a custom Base32 algorithm that is neither widely known nor characterized.
 In that case, you can instantiate a custom data encoding algorithm with the desired parameters by hand. For example:
 
-``` c#
+``` C#
 var encoding = new CustomBase32("ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ01234567");
 ```
 
 If you want to formalize a custom algorithm even further, you may opt in to create a separate class for it with a convenient accessor property:
 
-``` c#
+``` C#
 /// <summary>
 /// Defines a custom Base32 data encoding algorithm.
 /// </summary>
@@ -107,7 +107,7 @@ sealed class FooBase32 : CustomBase32
 
 That will allow you to use the algorithm effortlessly from several places in the codebase later:
 
-``` c#
+``` C#
 var encodedText = FooBase32.Instance.GetString(...);
 ```
 

@@ -56,7 +56,7 @@ Reverses the order of bits in a specified value.
 The least significant bit gets swapped with the most significant bit, and so on for all remaining bits of the number.
 For example:
 
-```c#
+``` C#
 BitOperationsEx.Reverse((byte)0b10100001) = 0b10000101
 ```
 

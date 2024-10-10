@@ -47,7 +47,7 @@ stream.Flush();
 
 The same approach is valid for the decoding operation which is the opposite of the encoding:
 
-``` c#
+``` C#
 var encoding = Base16.Instance;
 
 // Create a streaming decoder that iteratively reads the encoded text
@@ -76,13 +76,13 @@ Once in a while, you may encounter a custom Base16 algorithm that is neither wid
 In that case, you can instantiate a custom data encoding algorithm with the desired parameters by hand.
 For example:
 
-``` c#
+``` C#
 var encoding = new CustomBase16("ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠ");
 ```
 
 If you want to formalize a custom algorithm even further, you may opt in to create a separate class for it with a convenient accessor property:
 
-``` c#
+``` C#
 /// <summary>
 /// Defines a custom Base16 data encoding algorithm.
 /// </summary>
@@ -99,7 +99,7 @@ sealed class FooBase16 : CustomBase16
 
 That will allow you to use the algorithm effortlessly from several places in the codebase later:
 
-``` c#
+``` C#
 var encodedText = FooBase16.Instance.GetString(...);
 ```
 

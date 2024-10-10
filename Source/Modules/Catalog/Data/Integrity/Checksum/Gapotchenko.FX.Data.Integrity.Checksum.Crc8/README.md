@@ -8,7 +8,7 @@ The module provides the implementation of checksum algorithms belonging to the C
 
 Use the following code to calculate a CRC-8 checksum for the specified data, be it `System.Byte[]`, `System.ReadOnlySpan<Byte>` or `System.IO.Stream`:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Data.Integrity.Checksum;
 
 var checksum = Crc8.Standard.ComputeChecksum(data);
@@ -48,7 +48,7 @@ CRC-8 family of cyclic redundancy checks consists of several attested checksum a
 
 The `check` parameter shows what checksum value an algorithm should produce for `"123456789"` input string interpreted as an ASCII data:
 
-``` c#
+``` C#
 // Get the byte representation of the ASCII string.
 var data = Encoding.ASCII.GetBytes("123456789");
 
@@ -70,13 +70,13 @@ All other predefined algorithms are available via the corresponding properties o
 Once in a while, you may encounter a custom CRC-8 algorithm that is neither widely known nor characterized.
 In that case, you can instantiate a custom checksum algorithm with the desired parameters by hand:
 
-``` c#
+``` C#
 var checksumAlgorithm = new CustomCrc8(poly, init, refin, refout, xorout);
 ```
 
 If you want to formalize a custom algorithm even further, you may opt-in to creating a separate class for it with a convenient accessor property:
 
-``` c#
+``` C#
 /// <summary>
 /// Defines a custom CRC-8 algorithm.
 /// </summary>
@@ -93,7 +93,7 @@ sealed class FooCrc8 : CustomCrc8
 
 That will allow you to use the algorithm effortlessly from several places in the codebase later:
 
-``` c#
+``` C#
 var checksum = FooCrc8.Instance.ComputeChecksum(...);
 ```
 

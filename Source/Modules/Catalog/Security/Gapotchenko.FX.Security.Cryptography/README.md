@@ -15,7 +15,7 @@ For example, it may be required for communication with legacy or energy-constrai
 
 Example:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Security.Cryptography;
 
 byte[] messageToEncrypt = ...;

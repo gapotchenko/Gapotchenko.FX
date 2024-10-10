@@ -19,7 +19,7 @@ The method allows to compute a checksum value for the specified byte span.
 This is the most widely used operation.
 Example:
 
-```c#
+``` C#
 var data = new byte[] { ... };
 var checksum = checksumAlgorithm.ComputeChecksum(data);
 Console.WriteLine("The array checksum is {0}.", checksum);
@@ -31,7 +31,7 @@ The method computes the checksum for the specified `System.IO.Stream` object.
 This operation is useful for computing a checksum for a file or any other data stream in one go.
 Example:
 
-```c#
+``` C#
 using var file = File.OpenRead(...);
 var checksum = checksumAlgorithm.ComputeChecksum(file);
 Console.WriteLine("The file checksum is {0}.", checksum);

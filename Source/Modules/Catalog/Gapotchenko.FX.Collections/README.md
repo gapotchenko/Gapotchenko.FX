@@ -42,7 +42,7 @@ It gets complicated and nuanced quickly, while all we want is to build a simple 
 This is where the concept of a construction kit starts to shine.
 In our case, instead of implementing `ISet<T>` interface directly, we just derive our implementation from the one provided by the corresponding construction kit:
 
-```c#
+``` C#
 using Gapotchenko.FX.Collections.Generic.Kits;
 using Gapotchenko.FX.Linq;
 using System.Collections;
@@ -107,7 +107,7 @@ All the remaining implementation details are covered by the construction kit our
 Mind you, a generic implementation does not mean inefficient.
 If we have a more optimized way to do some operations, we just override the corresponding methods:
 
-```c#
+``` C#
 class MyHWAcceleratedBitSet(int capacity) : MyBitSet(capacity)
 {
     public override bool Overlaps(IEnumerable<int> other)

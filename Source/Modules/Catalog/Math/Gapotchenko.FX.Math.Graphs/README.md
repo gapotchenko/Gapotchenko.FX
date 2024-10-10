@@ -16,7 +16,7 @@ Vertices define "what" graph contains and edges define "how" those vertices are 
 
 Let's take a look at the simplest graph that contains just two vertices:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Math.Graphs;
 
 var g = new Graph<int>
@@ -31,7 +31,7 @@ If we could visualize that graph then it would look like this:
 
 Now let's add one more vertex `3` plus an edge that goes from vertex `1` to vertex `2`:
 
-``` c#
+``` C#
 var g = new Graph<int>
 {
     Vertices = { 1, 2, 3 },
@@ -45,7 +45,7 @@ Our new graph looks like this:
 
 The vertices already defined in edges can be omitted for brevity:
 
-``` c#
+``` C#
 var h = new Graph<int>
 {
     Vertices = { 3 },
@@ -57,7 +57,7 @@ Console.WriteLine(g.GraphEquals(h)); // will print "True"
 
 It is worth mentioning that the graph provides its vertices as an `ISet<T>`, so the usual operations on a set apply to the vertices as well:
 
-``` c#
+``` C#
 var g = new Graph<int>
 {
     Vertices = { 3 },
@@ -78,7 +78,7 @@ The same `ISet<T>` model applies to the graph edges: they are treated as a set t
 Now once we have the basics in place, let's take a look at graph operations.
 Consider the graph:
 
-``` c#
+``` C#
 var g = new Graph<int>
 {
     Edges =
@@ -99,7 +99,7 @@ which looks like this:
 
 Let's transpose the graph (i.e. reverse the direction of its edges):
 
-``` c#
+``` C#
 var h = g.GetTransposition();
 ```
 
@@ -112,7 +112,7 @@ Note that graph `h` is a new instance of `Graph<T>`.
 But what if we want to transpose the graph `g` in place?
 Every graph operation has a corresponding in-place variant, so for transposition it will be:
 
-``` c#
+``` C#
 g.Transpose();
 ```
 
@@ -152,7 +152,7 @@ In what order should the jobs be executed?
 
 To answer that question, let's use `OrderTopologically` method:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Math.Graphs;
 
 // Define a graph according to the diagram.
@@ -194,7 +194,7 @@ To overcome that limitation, it may be beneficial to use the topological sorting
 Such approach makes the topological sorting stable.
 It can be achieved by leveraging the standard `IOrderedEnumerable<T>` LINQ semantics of the operation, like so:
 
-``` c#
+``` C#
 g.OrderTopologically().ThenBy(…)
 ```
 
@@ -213,7 +213,7 @@ In other words, sequence should be topologically sorted while preserving the ori
 
 `Gapotchenko.FX.Math.Graphs` provides an extension method for `IEnumerable<T>` that allows to achieve that:
 
-``` c#
+``` C#
 using Gapotchenko.FX.Math.Graphs;
 
 string seq = "ABCDEF";
@@ -236,7 +236,7 @@ They are resolved according to the original order of elements in the sequence.
 
 `OrderTopologicallyBy` method allows a subseqent sorting by following the standard `IOrderedEnumerable<T>` LINQ convention:
 
-``` c#
+``` C#
 seq.OrderTopologicallyBy(…).ThenBy(…)
 ```
 
