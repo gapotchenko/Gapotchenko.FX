@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Console
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Console.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Console)
 
 The module provides virtual terminal functionality, console traits, and other useful primitives for .NET console apps.
@@ -26,7 +26,7 @@ and other properties for controlling the console.
 
 ANSI escape sequences become handy when the complexity of console output reaches a certain level. Just take a look at the example below:
 
-![Advanced console visualization](../../Documentation/Assets/console-eazfuscator.net.png)
+![Advanced console visualization](../../../../Documentation/Assets/console-eazfuscator.net.png)
 
 It would be a very *involved* code to render such output with a set of imperative calls.
 
@@ -51,7 +51,7 @@ Please note that the implementation starts with a call to `VirtualTerminal.Enabl
 It is provided by `Gapotchenko.FX.Console` module and ensures that support of ANSI escape sequences is activated for the console.
 In case when the host OS does not provide a native support for them, the method switches to a virtual terminal emulation.
 
-In this way, ANSI X3.64 control language is guaranteed to work on the widest range of host operating systems.
+In this way, ANSI X3.64 control language is guaranteed to work on the widest range of host operating systems and terminals.
 
 ## Console Traits
 
@@ -131,7 +131,7 @@ This allows to provide an additional convenience for the end users.
 
 Let's take a look on example:
 
-![Console output pagination](../../Documentation/Assets/console-eazfuscator.net-more.png)
+![Console output pagination](../../../../Documentation/Assets/console-eazfuscator.net-more.png)
 
 By pressing `Page Down` and `Down Arrow` keys it is possible to scroll the console output.
 The standard `Space` and `Enter` are supported as well.
