@@ -1,5 +1,5 @@
 ﻿# Gapotchenko.FX.Data.Encoding.Base16
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Encoding.Base16.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Encoding.Base16)
 
 The module provides the implementation of binary-to-text encoding algorithms belonging to the Base16 family.
@@ -76,7 +76,7 @@ Once in a while, you may encounter a custom Base16 algorithm that is neither wid
 In that case, you can instantiate a custom data encoding algorithm with the desired parameters by hand:
 
 ``` c#
-var encoding = new CustomBase16(...);
+var encoding = new CustomBase16("ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠ");
 ```
 
 If you want to formalize a custom algorithm even further, you may opt-in to creating a separate class for it with a convenient accessor property:
@@ -88,7 +88,7 @@ If you want to formalize a custom algorithm even further, you may opt-in to crea
 sealed class FooBase16 : CustomBase16
 {
     FooBase16() :
-        base(...)
+        base("ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠ")
     {
     }
 
