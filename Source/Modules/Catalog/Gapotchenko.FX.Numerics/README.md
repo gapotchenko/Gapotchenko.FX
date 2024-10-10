@@ -11,46 +11,46 @@
 
 The module provides hardware-accelerated operations for numeric data types.
 
-## BitOperations
+## BitOperations Class
 
 `BitOperations` class provides bit manipulation operations for unsigned integer values of 32 and 64 bit lengths.
 The main consumers of hardware-accelerated bit operations are path-finding and cryptographic algorithms.
 
 `BitOperations` class is a polyfill to the future as it first appeared in .NET Core 3.0.
 
-### Log2
+### Log2 Method
 
 Calculates the integer base 2 logarithm of a specified number.
 `Log2(0)` returns an undefined value since such operation is undefined.
 
 The behavior corresponds to `BSR` instruction from Intel x86 instruction set.
 
-### PopCount
+### PopCount Method
 
 Calculates the bit population count for a specified value.
 The result corresponds to the number of bits set to `1`.
 
 The behavior corresponds to `POPCNT` instruction from Intel x86 instruction set.
 
-### RotateLeft
+### RotateLeft Method
 
 Rotates the specified value left by the specified number of bits.
 
 The behavior corresponds to `ROL` instruction from Intel x86 instruction set.
 
-### RotateRight
+### RotateRight Method
 
 Rotates the specified value right by the specified number of bits.
 
 The behavior corresponds to `ROR` instruction from Intel x86 instruction set.
 
-## BitOperationsEx
+## BitOperationsEx Class
 
-`BitOperationsEx` provides an extended set of bit-twidling operations that are not in .NET mainstream yet.
+`BitOperationsEx` class provides an extended set of bit-twidling operations that are not in mainstream .NET yet.
 
 ### Reverse
 
-Reverses the order of bits in a specified value.
+Reverses the order of bits in a specified value and returns a result.
 The least significant bit gets swapped with the most significant bit, and so on for all remaining bits of the number.
 For example:
 
