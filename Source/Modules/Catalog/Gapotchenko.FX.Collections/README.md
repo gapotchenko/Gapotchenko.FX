@@ -94,11 +94,7 @@ class MyBitSet(int capacity) : SetKit<int>
     protected BitArray Bits
     {
         get => m_Bits;
-        set
-        {
-            m_Bits = value;
-            m_CachedCount = null;
-        }
+        set { m_Bits = value; m_CachedCount = null; }
     }
 
     BitArray m_Bits = new(capacity);
