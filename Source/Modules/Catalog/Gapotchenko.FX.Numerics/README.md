@@ -18,27 +18,27 @@ The main consumers of hardware-accelerated bit operations are path-finding and c
 
 `BitOperations` class is a polyfill to the future as it first appeared in .NET Core 3.0.
 
-### Log2 Method
+### Log2
 
 `BitOperations.Log2` method calculates the integer base 2 logarithm of a specified number.
 `Log2(0)` returns an undefined value since such operation is undefined.
 
 The behavior corresponds to `BSR` instruction from Intel x86 instruction set.
 
-### PopCount Method
+### PopCount
 
 `BitOperations.PopCount` method calculates the bit population count for a specified value.
 The result corresponds to the number of bits set to `1`.
 
 The behavior corresponds to `POPCNT` instruction from Intel x86 instruction set.
 
-### RotateLeft Method
+### RotateLeft
 
 `BitOperations.RotateLeft` method rotates the specified value left by the specified number of bits.
 
 The behavior corresponds to `ROL` instruction from Intel x86 instruction set.
 
-### RotateRight Method
+### RotateRight
 
 `BitOperations.RotateRight` method rotates the specified value right by the specified number of bits.
 
