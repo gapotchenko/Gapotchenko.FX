@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Math.Combinatorics
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.Combinatorics.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math.Combinatorics)
 
 The module provides the math operations for combinatorics.
