@@ -10,7 +10,10 @@ public class CustomBase16 : GenericBase16
     /// </summary>
     /// <param name="alphabet">The alphabet.</param>
     public CustomBase16(string alphabet) :
-        this(new TextDataEncodingAlphabet(alphabet ?? throw new ArgumentNullException(nameof(alphabet)), false))
+        this(
+            new TextDataEncodingAlphabet(
+                alphabet ?? throw new ArgumentNullException(nameof(alphabet)),
+                false))
     {
     }
 

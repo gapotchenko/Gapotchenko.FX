@@ -10,7 +10,10 @@ public class CustomBase32 : GenericBase32
     /// </summary>
     /// <param name="alphabet">The alphabet.</param>
     public CustomBase32(string alphabet) :
-        this(new TextDataEncodingAlphabet(alphabet ?? throw new ArgumentNullException(nameof(alphabet)), false))
+        this(
+            new TextDataEncodingAlphabet(
+                alphabet ?? throw new ArgumentNullException(nameof(alphabet)),
+                false))
     {
     }
 

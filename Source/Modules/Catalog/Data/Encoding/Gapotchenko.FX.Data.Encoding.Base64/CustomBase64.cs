@@ -10,7 +10,10 @@ public class CustomBase64 : GenericBase64
     /// </summary>
     /// <param name="alphabet">The alphabet.</param>
     public CustomBase64(string alphabet) :
-        this(new TextDataEncodingAlphabet(alphabet ?? throw new ArgumentNullException(nameof(alphabet)), true))
+        this(
+            new TextDataEncodingAlphabet(
+                alphabet ?? throw new ArgumentNullException(nameof(alphabet)),
+                true))
     {
     }
 

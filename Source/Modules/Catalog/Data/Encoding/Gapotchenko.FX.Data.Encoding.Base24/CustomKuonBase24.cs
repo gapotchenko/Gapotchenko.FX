@@ -10,7 +10,10 @@ public class CustomKuonBase24 : GenericKuonBase24
     /// </summary>
     /// <param name="alphabet">The alphabet.</param>
     public CustomKuonBase24(string alphabet) :
-        this(new TextDataEncodingAlphabet(alphabet ?? throw new ArgumentNullException(nameof(alphabet)), false))
+        this(
+            new TextDataEncodingAlphabet(
+                alphabet ?? throw new ArgumentNullException(nameof(alphabet)),
+                false))
     {
     }
 
