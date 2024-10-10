@@ -152,7 +152,7 @@ The Notepad process was unable to shutdown gracefully and thus was forcefully ki
 Graceful shutdown was not possible because the process had an active modal dialog.
 
 <details>
-  <summary>More Examples</summary>
+  <summary>More examples</summary>
 
 Let's modify sample a bit:
 
