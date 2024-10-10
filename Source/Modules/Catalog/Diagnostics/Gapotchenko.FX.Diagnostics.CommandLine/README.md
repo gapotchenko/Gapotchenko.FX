@@ -62,7 +62,7 @@ Process.Start("copy", clb.ToString());
 Basically, this is a shortcut to `CommandLineBuilder` class in a handy functional form:
 
 ``` C#
-string s = CommandLine.Build("/b", @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt");
+string commandLine = CommandLine.Build("/b", @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt");
 ```
 
 Such a form is very useful in something like this:
@@ -82,8 +82,8 @@ string? mode = binary ? "/b" : null;
 
 // 'mode' will have a non-null value if there is a need to specify it.
 
-string s = CommandLine.Build(mode, @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt");
-Console.WriteLine(s);
+string commandLine = CommandLine.Build(mode, @"C:\Temp\Test 1.txt", @"C:\Temp\Test 2.txt");
+Console.WriteLine(commandLine);
 ```
 
 The code above produces the following output:
@@ -104,9 +104,9 @@ It allows to split a command-line string into a list of arguments using the rule
 ``` C#
 using Gapotchenko.FX.Diagnostics;
 
-string s = "/b \"C:\\Temp\\Test 1.txt\" \"C:\\Temp\\Test 2.txt\"";
+string commandLine = "/b \"C:\\Temp\\Test 1.txt\" \"C:\\Temp\\Test 2.txt\"";
 
-foreach (string arg in CommandLine.Split(s))
+foreach (string arg in CommandLine.Split(commandLine))
     Console.WriteLine(arg);
 ```
 
