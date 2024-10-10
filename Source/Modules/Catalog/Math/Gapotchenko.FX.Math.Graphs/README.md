@@ -39,7 +39,7 @@ var g = new Graph<int>
 
 Our new graph looks like this:
 
-![Simple graph with three vertices and one edge](../../Documentation/Assets/Math/Topology/simple-graph-3-1.svg?raw=true)
+![Simple graph with three vertices and one edge](../../../../../Documentation/Assets/Math/Topology/simple-graph-3-1.svg?raw=true)
 
 The vertices already defined in edges can be omitted for brevity:
 
@@ -67,7 +67,7 @@ g.Vertices.UnionWith(new[] { 3, 4, 5 });
 
 The example above produces the following graph:
 
-![Simple graph with five vertices and one edge](../../Documentation/Assets/Math/Topology/simple-graph-5-1.svg?raw=true)
+![Simple graph with five vertices and one edge](../../../../../Documentation/Assets/Math/Topology/simple-graph-5-1.svg?raw=true)
 
 The same `ISet<T>` model applies to the graph edges: they are treated as a set too.
 
@@ -93,7 +93,7 @@ var g = new Graph<int>
 
 which looks like this:
 
-![Graph with eight vertices and nine edges](../../Documentation/Assets/Math/Topology/graph-8-9.svg?raw=true)
+![Graph with eight vertices and nine edges](../../../../../Documentation/Assets/Math/Topology/graph-8-9.svg?raw=true)
 
 Let's transpose the graph (i.e. reverse the direction of its edges):
 
@@ -103,7 +103,7 @@ var h = g.GetTransposition();
 
 Transposed graph `h` renders as:
 
-![Transposed graph with eight vertices and nine edges](../../Documentation/Assets/Math/Topology/graph-8-9-t.svg?raw=true)
+![Transposed graph with eight vertices and nine edges](../../../../../Documentation/Assets/Math/Topology/graph-8-9-t.svg?raw=true)
 
 Note that graph `h` is a new instance of `Graph<T>`.
 
@@ -141,7 +141,7 @@ Performing topological sort on such a graph would give us an order in which to p
 
 Let's take a look at example graph:
 
-![Graph with eight vertices and nine edges](../../Documentation/Assets/Math/Topology/graph-8-9.svg?raw=true)
+![Graph with eight vertices and nine edges](../../../../../Documentation/Assets/Math/Topology/graph-8-9.svg?raw=true)
 
 Let's assume that vertices represent the jobs, and edges define the dependencies between them.
 In this way, job `0` depends on job `1` and thus cannot be started unless job `1` is finished.
