@@ -47,7 +47,7 @@ The output:
 01 02 03 0A
 ```
 
-Note that the output now contains space separators (indentations) between the encoded semantical values.
+Note that the output now contains space separators (indentations) between the encoded data values.
 Not all encodings support indentation so `Indent` option flag may be ignored by some of them.
 
 ### GetBytes(ReadOnlySpan&lt;char&gt; s)
