@@ -22,6 +22,22 @@ namespace Gapotchenko.FX.Reflection;
 public sealed class AssemblyLoadPal
 {
     /// <summary>
+    /// Gets the instance of <see cref="AssemblyLoadPal"/> for the current app domain.
+    /// </summary>
+    public static AssemblyLoadPal ForCurrentAppDomain { get; } = new AssemblyLoadPal(AppDomain.CurrentDomain);
+
+    /// <summary>
+    /// Gets the default instance of <see cref="AssemblyLoadPal"/>.
+    /// The default instance handles the current app domain and/or the default assembly load context depending on a host environment.
+    /// </summary>
+    public static AssemblyLoadPal Default { get; } =
+#if TFF_ASSEMBLYLOADCONTEXT
+        new AssemblyLoadPal(AppDomain.CurrentDomain, AssemblyLoadContext.Default);
+#else
+        ForCurrentAppDomain;
+#endif
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="AssemblyLoadPal"/> class for the specified app domain.
     /// </summary>
     public AssemblyLoadPal(AppDomain appDomain)
@@ -49,40 +65,6 @@ public sealed class AssemblyLoadPal
         m_AppDomain = appDomain;
         m_AssemblyLoadContext = assemblyLoadContext;
     }
-#endif
-
-    /// <summary>
-    /// Gets the instance of <see cref="AssemblyLoadPal"/> for the current app domain.
-    /// </summary>
-    public static AssemblyLoadPal ForCurrentAppDomain { get; } = new AssemblyLoadPal(AppDomain.CurrentDomain);
-
-    /// <summary>
-    /// Gets the default instance of <see cref="AssemblyLoadPal"/>.
-    /// The default instance handles the current app domain and/or the default assembly load context depending on a host environment.
-    /// </summary>
-    public static AssemblyLoadPal Default { get; } =
-#if TFF_ASSEMBLYLOADCONTEXT
-        new AssemblyLoadPal(AppDomain.CurrentDomain, AssemblyLoadContext.Default);
-#else
-        ForCurrentAppDomain;
-#endif
-
-    /// <summary>
-    /// Gets the associated app domain.
-    /// </summary>
-    public AppDomain? AppDomain => m_AppDomain;
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly AppDomain? m_AppDomain;
-
-#if TFF_ASSEMBLYLOADCONTEXT
-    /// <summary>
-    /// Gets the associated assembly load context.
-    /// </summary>
-    public AssemblyLoadContext? AssemblyLoadContaxt => m_AssemblyLoadContext;
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly AssemblyLoadContext? m_AssemblyLoadContext;
 #endif
 
     /// <summary>
@@ -276,4 +258,22 @@ public sealed class AssemblyLoadPal
         // Never reached because m_AppDomain and m_AssemblyLoadContext fields cannot have null values simultaneously.
         throw new InvalidOperationException();
     }
+
+    /// <summary>
+    /// Gets the associated app domain.
+    /// </summary>
+    public AppDomain? AppDomain => m_AppDomain;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly AppDomain? m_AppDomain;
+
+#if TFF_ASSEMBLYLOADCONTEXT
+    /// <summary>
+    /// Gets the associated assembly load context.
+    /// </summary>
+    public AssemblyLoadContext? AssemblyLoadContaxt => m_AssemblyLoadContext;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly AssemblyLoadContext? m_AssemblyLoadContext;
+#endif
 }
