@@ -85,7 +85,7 @@ class Program
 ```
 
 Note that `Run` method is annotated by `[MethodImpl(MethodImplOptions.NoInlining)]` attribute.
-That attribute instructs .NET runtime to not inline the `Run` method body into its calling methods.
+That attribute instructs .NET runtime to not inline the `Run` method into its calling methods.
 It is necessary to disable inlining because the `Run` method may potentially reference types from not yet loaded assemblies, specifically those from `ContosoEngine.dll`.
 This will lead to inability of .NET runtime to start executing its calling methods at all (i.e. the `Main` method), because those types are resolved before method starts to run.
 And they cannot be resolved until a proper assembly loader is configured.
