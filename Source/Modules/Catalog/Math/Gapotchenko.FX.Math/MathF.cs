@@ -434,6 +434,10 @@ public static class MathF
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float Truncate(float x) => (float)Math.Truncate(x);
 
+#if false
+    // Do not publish these methods because a potential future plan is
+    // to use Microsoft.Bcl.Numerics module for the MathF polyfill.
+
     /// <inheritdoc cref="MathEx.BitIncrement(float)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float BitIncrement(float x) => MathEx.BitIncrement(x);
@@ -441,10 +445,11 @@ public static class MathF
     /// <inheritdoc cref="MathEx.BitDecrement(float)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float BitDecrement(float x) => MathEx.BitDecrement(x);
+#endif
 }
 
 #else
 
-[assembly: TypeForwardedTo(typeof(MathF))]
+    [assembly: TypeForwardedTo(typeof(MathF))]
 
 #endif

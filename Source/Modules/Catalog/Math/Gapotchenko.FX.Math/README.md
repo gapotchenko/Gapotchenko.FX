@@ -38,6 +38,26 @@ MathEx.Swap(ref val1, ref val2);
 
 An immediate improvement in readability.
 
+Note that some .NET languages have a built-in support for swap.
+For example, a modern C# code swaps `val1` and `val2` by using tuples:
+
+``` C#
+(val1, val2) = (val2, val1);
+```
+
+However, if the code works with arrays, a more efficient and concise approach is to still use `MathEx.Swap`:
+
+
+``` C#
+// Swapping with tuples is less efficient for arrays:
+(arr[val1], arr[val2]) = (arr[val2], arr[val1]);
+
+// Swapping with MathEx.Swap is more efficient for arrays:
+MathEx.Swap(ref arr[val1], ref arr[val2]);
+```
+
+
+
 ### Min/Max for Three Values
 
 The conventional `Math` class provides ubiquitous `Min`/`Max` primitives for _two_ values.
