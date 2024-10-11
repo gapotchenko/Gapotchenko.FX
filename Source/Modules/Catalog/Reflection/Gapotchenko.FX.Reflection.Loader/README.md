@@ -57,34 +57,37 @@ That's why `Gapotchenko.FX.Reflection.Loader` module provides a ready to use `As
 Here is the solution for ContosoApp:
 
 ``` C#
-using System;
-using System.IO;
 using Gapotchenko.FX.Reflection;
 
-namespace ContosoApp
-{
-    class Program
-    {
-        static void Main()
-        {
-            // The statement below instructs Gapotchenko.FX assembly loader to use
-            // 'C:\Program Files\Common Files\Contoso\Engine' folder as a probing path for
-            // dependent assemblies.
-            AssemblyAutoLoader.Default.AddProbingPath(
-                Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles),
-                    @"Contoso\Engine"));
-            
-            Run();
-        }
+namespace ContosoApp;
 
-        static void Run()
-        {
-            // ...
-        }
+class Program
+{
+    static void Main()
+    {
+        // The statement below instructs Gapotchenko.FX assembly loader to use
+        // 'C:\Program Files\Common Files\Contoso\Engine' folder as a probing path for
+        // dependent assemblies.
+        AssemblyAutoLoader.Default.AddProbingPath(
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles),
+                @"Contoso\Engine"));
+            
+        Run();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static void Run()
+    {
+        // ...
     }
 }
 ```
+
+Note that `Run` method is annotated with `[MethodImpl(MethodImplOptions.NoInlining)]` attribute.
+That attribute instructs .NET runtime to not inline method into calling methods.
+It is necessary to disable inlining because otherwise the `Run` method can use the types from not yet loaded assemblies, specifically from `ContosoEngine.dll`.
+This will lead to inability of .NET runtime to start executing the `Main` method at all, because those types are resolved before method is run.
 
 ## Scenario #2. Load dependent assemblies from an inner folder of an app
 
@@ -109,8 +112,36 @@ Thankfully, the default .NET assembly loader allows to achieve that by specifyin
 </configuration>
 ```
 
-The task is solved for `ContosoApp` (and every other .NET app as well).
-The default .NET assembly loader can be instructed to load dependent assemblies from inner folders of an app by specifying a set of private probing paths.
+The task is solved for `ContosoApp` (and every other .NET Framework app as well).
+The default .NET Framework assembly loader can be instructed to load dependent assemblies from inner folders of an app by specifying a set of private probing paths.
+
+There is another story for .NET Core and .NET which do not directly support additional probing paths.
+For those target frameworks, using `AssemblyAutoLoader` becomes worthy:
+
+``` C#
+using Gapotchenko.FX.Reflection;
+
+namespace ContosoApp;
+
+class Program
+{
+    static void Main()
+    {
+        AssemblyAutoLoader.Default.AddProbingPath(
+            Path.Combine(
+                Path.GetDirectoryName(typeof(Program).Assembly.Location),
+                "Components"));
+            
+        Run();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static void Run()
+    {
+        // ...
+    }
+}
+```
 
 ## Scenario #3. Specifying probing paths for a .DLL assembly
 
@@ -132,13 +163,12 @@ So the AutoCAD plugin (a .DLL assembly) had to gain an ability to load the depen
 This is what Alberto did. He created `AssemblyLoader` class in AutoCAD plugin assembly with just one method `Activate`:
 
 ``` C#
-namespace ContosoApp.Integration.AutoCAD
+namespace ContosoApp.Integration.AutoCAD;
+
+static class AssemblyLoader
 {
-    static class AssemblyLoader
+    public static void Activate()
     {
-        public static void Activate()
-        {
-        }
     }
 }
 ```
@@ -146,18 +176,17 @@ namespace ContosoApp.Integration.AutoCAD
 Alberto then ensured that `Activate` method is getting called at the early stages of a plugin lifecycle:
 
 ``` C#
-namespace ContosoApp.Integration.AutoCAD
+namespace ContosoApp.Integration.AutoCAD;
+
+public class Plugin : AutodeskPluginBase
 {
-    public class Plugin : AutodeskPluginBase
+    public override void Initialize()
     {
-        public override void Initialize()
-        {
-            AssemblyLoader.Activate();
+        AssemblyLoader.Activate();
 
-            base.Initialize();
+        base.Initialize();
 
-            // ...
-        }
+        // ...
     }
 }
 ```
@@ -169,29 +198,26 @@ Thanks to the prior experience with custom assembly loading, Alberto was aware a
 So he wrote:
 
 ``` C#
-using System;
-using System.IO;
 using Gapotchenko.FX.Reflection;
 
-namespace ContosoApp.Integration.AutoCAD
-{
-    static class AssemblyLoader
-    {
-        static AssemblyLoader()
-        {
-            // The statement below instructs Gapotchenko.FX assembly loader to use
-            // 'C:\Program Files\Common Files\Contoso\Engine' folder as a probing path for
-            // resolution of 'ContosoApp.Integration.AutoCAD.dll' assembly dependencies.
-            AssemblyAutoLoader.Default.AddAssembly(
-                typeof(AssemblyLoader).Assembly,
-                Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles),
-                    @"Contoso\Engine"));
-        }
+namespace ContosoApp.Integration.AutoCAD;
 
-        public static void Activate()
-        {
-        }
+static class AssemblyLoader
+{
+    static AssemblyLoader()
+    {
+        // The statement below instructs Gapotchenko.FX assembly loader to use
+        // 'C:\Program Files\Common Files\Contoso\Engine' folder as a probing path for
+        // resolution of 'ContosoApp.Integration.AutoCAD.dll' assembly dependencies.
+        AssemblyAutoLoader.Default.AddAssembly(
+            typeof(AssemblyLoader).Assembly,
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles),
+                @"Contoso\Engine"));
+    }
+
+    public static void Activate()
+    {
     }
 }
 ```
@@ -234,23 +260,22 @@ AssemblyLoader.Activate()
 ``` C#
 using Gapotchenko.FX.Reflection;
 
-namespace MyPlugin
-{
-    static class AssemblyLoader
-    {
-        static AssemblyLoader()
-        {
-            // The statement below instructs Gapotchenko.FX assembly loader to add a specified
-            // assembly to the list of sources to consider during assembly resolution process.
-            // The loader automatically handles binding redirects according to a corresponding assembly
-            // configuration (.config) file. If configuration file is missing then binding redirects are
-            // automatically deducted according to the assembly compatibility heuristics.
-            AssemblyAutoLoader.Default.AddAssembly(typeof(AssemblyLoader).Assembly);
-        }
+namespace MyPlugin;
 
-        public static void Activate()
-        {
-        }
+static class AssemblyLoader
+{
+    static AssemblyLoader()
+    {
+        // The statement below instructs Gapotchenko.FX assembly loader to add a specified
+        // assembly to the list of sources to consider during assembly resolution process.
+        // The loader automatically handles binding redirects according to a corresponding assembly
+        // configuration (.config) file. If configuration file is missing then binding redirects are
+        // automatically deducted according to the assembly compatibility heuristics.
+        AssemblyAutoLoader.Default.AddAssembly(typeof(AssemblyLoader).Assembly);
+    }
+
+    public static void Activate()
+    {
     }
 }
 ```
@@ -288,19 +313,18 @@ The example of such an approach is presented below:
 using Gapotchenko.FX.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace MyLibrary
-{
-    static class AssemblyLoader
-    {
-        static AssemblyLoader()
-        {
-            AssemblyAutoLoader.Default.AddAssembly(typeof(AssemblyLoader).Assembly);
-        }
+namespace MyLibrary;
 
-        [ModuleInitializer]
-        public static void Activate()
-        {
-        }
+static class AssemblyLoader
+{
+    static AssemblyLoader()
+    {
+        AssemblyAutoLoader.Default.AddAssembly(typeof(AssemblyLoader).Assembly);
+    }
+
+    [ModuleInitializer]
+    public static void Activate()
+    {
     }
 }
 ```
