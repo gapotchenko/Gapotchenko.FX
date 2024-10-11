@@ -6,7 +6,6 @@
 
 using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.InteropServices;
 #if TFF_ASSEMBLYLOADCONTEXT
 using System.Runtime.Loader;
 #endif
@@ -66,60 +65,6 @@ public sealed class AssemblyLoadPal
         m_AssemblyLoadContext = assemblyLoadContext;
     }
 #endif
-
-    /// <summary>
-    /// Provides data for assembly loader resolution event.
-    /// </summary>
-    public sealed class ResolvingEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResolvingEventArgs"/> class.
-        /// </summary>
-        /// <param name="requestingAssembly">The assembly whose dependency is being resolved.</param>
-        /// <param name="fullName">The full name of the assembly to resolve.</param>
-        public ResolvingEventArgs(Assembly? requestingAssembly, string fullName)
-        {
-            RequestingAssembly = requestingAssembly;
-            m_FullName = fullName;
-        }
-
-#if TFF_ASSEMBLYLOADCONTEXT
-        internal ResolvingEventArgs(AssemblyName name)
-        {
-            m_Name = name;
-        }
-#endif
-
-        /// <summary>
-        /// Gets the assembly whose dependency is being resolved.
-        /// </summary>
-        public Assembly? RequestingAssembly { get; }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#if TFF_ASSEMBLYLOADCONTEXT
-        string? m_FullName;
-#else
-        string m_FullName;
-#endif
-
-        /// <summary>
-        /// Gets the full name of the assembly to resolve.
-        /// </summary>
-        public string FullName =>
-#if TFF_ASSEMBLYLOADCONTEXT
-            m_FullName ??= (m_Name ?? throw new InvalidOperationException()).FullName;
-#else
-            m_FullName;
-#endif
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        AssemblyName? m_Name;
-
-        /// <summary>
-        /// Gets the strongly-typed name of the assembly to resolve.
-        /// </summary>
-        public AssemblyName Name => m_Name ??= new AssemblyName(m_FullName ?? throw new InvalidOperationException());
-    }
 
     /// <summary>
     /// Occurs when the resolution of an assembly fails.
@@ -202,6 +147,60 @@ public sealed class AssemblyLoadPal
     /// <param name="args">The arguments.</param>
     /// <returns>The resolved assembly or null if the assembly cannot be resolved.</returns>
     public delegate Assembly? ResolvingEventHandler(AssemblyLoadPal sender, ResolvingEventArgs args);
+
+    /// <summary>
+    /// Provides data for assembly loader resolution event.
+    /// </summary>
+    public sealed class ResolvingEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResolvingEventArgs"/> class.
+        /// </summary>
+        /// <param name="requestingAssembly">The assembly whose dependency is being resolved.</param>
+        /// <param name="fullName">The full name of the assembly to resolve.</param>
+        public ResolvingEventArgs(Assembly? requestingAssembly, string fullName)
+        {
+            RequestingAssembly = requestingAssembly;
+            m_FullName = fullName;
+        }
+
+#if TFF_ASSEMBLYLOADCONTEXT
+        internal ResolvingEventArgs(AssemblyName name)
+        {
+            m_Name = name;
+        }
+#endif
+
+        /// <summary>
+        /// Gets the assembly whose dependency is being resolved.
+        /// </summary>
+        public Assembly? RequestingAssembly { get; }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+#if TFF_ASSEMBLYLOADCONTEXT
+        string? m_FullName;
+#else
+        string m_FullName;
+#endif
+
+        /// <summary>
+        /// Gets the full name of the assembly to resolve.
+        /// </summary>
+        public string FullName =>
+#if TFF_ASSEMBLYLOADCONTEXT
+            m_FullName ??= (m_Name ?? throw new InvalidOperationException()).FullName;
+#else
+            m_FullName;
+#endif
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        AssemblyName? m_Name;
+
+        /// <summary>
+        /// Gets the strongly-typed name of the assembly to resolve.
+        /// </summary>
+        public AssemblyName Name => m_Name ??= new AssemblyName(m_FullName ?? throw new InvalidOperationException());
+    }
 
     /// <summary>
     /// Loads an assembly given its file path.
