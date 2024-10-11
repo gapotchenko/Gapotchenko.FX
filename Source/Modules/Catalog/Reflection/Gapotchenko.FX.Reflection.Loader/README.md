@@ -12,7 +12,7 @@
 
 The module provides versatile primitives that can be used to automatically lookup and load assembly dependencies in various dynamic scenarios.
 
-## Overview
+## Gentle Introduction
 
 Assembly loading plays a crucial role in .NET apps.
 Once the app is started, .NET runtime ensures that all required assemblies are gradually loaded.
