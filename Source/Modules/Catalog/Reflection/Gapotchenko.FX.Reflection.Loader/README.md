@@ -13,7 +13,7 @@ The module provides versatile primitives that can be used to automatically looku
 
 -----------------------------------------------------------------------------
 
-## The Assembly Loader
+## Gentle Introduction
 
 Assembly loading plays a crucial role in .NET apps.
 Once the app is started, .NET runtime ensures that all required assemblies are gradually loaded.
