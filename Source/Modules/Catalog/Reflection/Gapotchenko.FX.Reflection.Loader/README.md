@@ -27,14 +27,14 @@ This is where `Gapotchenko.FX.Reflection.Loader` module becomes extremely handy.
 
 -----------------------------------------------------------------------------
 
-## Scenario #1. Load dependent assemblies from an app's outside folder
+## Scenario #1. Load dependent assemblies from an app's outside directory
 
 Let's take a look on example scenario.
-Suppose we have `ContosoApp` installed at `C:\Program Files\ContosoApp` folder.
-The folder contains a single `ContosoApp.exe` assembly which represents the main executable file of the app.
+Suppose we have `ContosoApp` installed at `C:\Program Files\ContosoApp` directory.
+The directory contains a single `ContosoApp.exe` assembly which represents the main executable file of the app.
 
 `ContosoApp.exe` has a dependency on `ContosoEngine.dll` assembly which is located at
-`C:\Program Files\Common Files\Contoso\Engine` folder.
+`C:\Program Files\Common Files\Contoso\Engine` directory.
 It so happens ContosoApp uses a common engine developed by the company.
 
 Now when `ContosoApp.exe` is run, it bails out with the following exception:
@@ -43,7 +43,7 @@ Now when `ContosoApp.exe` is run, it bails out with the following exception:
 System.IO.FileNotFoundException: Could not load file or assembly 'ContosoEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null' or one of its dependencies. The system cannot find the file specified.
 ```
 
-It occurs because `ContoseEngine.dll` assembly is located at the outside folder,
+It occurs because `ContoseEngine.dll` assembly is located at the outside directory,
 and the default .NET assembly loader does not provide an easy way to cover scenarios like this.
 
 In order to cover that scenario, a developer would subscribe to `AppDomain.CurrentDomain.AssemblyResolve` event.
@@ -66,7 +66,7 @@ class Program
     static void Main()
     {
         // The statement below instructs Gapotchenko.FX assembly loader to use
-        // 'C:\Program Files\Common Files\Contoso\Engine' folder as a probing path for
+        // 'C:\Program Files\Common Files\Contoso\Engine' directory as a probing path for
         // dependent assemblies.
         AssemblyAutoLoader.Default.AddProbingPath(
             Path.Combine(
@@ -93,7 +93,7 @@ class Program
 > and it will not be configured due to the presence of unresolvable type references that were inlined from `Run` method.
 > To break that chicken and egg lock, the `Run` method inlining should be disabled.
 
-## Scenario #2. Load dependent assemblies from an inner folder of an app
+## Scenario #2. Load dependent assemblies from an inner directory of an app
 
 ContosoApp continues to evolve and now it has a dependency on `Newtonsoft.Json.dll` assembly.
 A straightforward approach would be to put `Newtonsoft.Json.dll` assembly just besides `ContosoApp.exe`.
@@ -101,9 +101,9 @@ A straightforward approach would be to put `Newtonsoft.Json.dll` assembly just b
 
 But Mr. Alberto Olivetti from Contoso's Deployment Division decided that an additional file laying near `ContosoApp.exe` would be an unwanted distraction for command line users of the app.
 Mr. Olivetti tends to pay a lot of respect to his customers and wants to save their time while they are hanging around `ContosoApp.exe`.
-Thus Alberto came up with a respectful solution to put all third-party assemblies to `Components` subfolder of the app.
+Thus Alberto came up with a respectful solution to put all third-party assemblies to `Components` subdirectory of the app.
 
-Now how can `ContosoApp.exe` module load the required assemblies from `Components` folder?
+Now how can `ContosoApp.exe` module load the required assemblies from `Components` directory?
 Thankfully, the default .NET assembly loader allows to achieve that by specifying a set of private probing paths in application configuration file:
 
 ```xml
@@ -117,10 +117,10 @@ Thankfully, the default .NET assembly loader allows to achieve that by specifyin
 ```
 
 The task is solved for `ContosoApp` (and every other .NET Framework app as well).
-The default .NET Framework assembly loader can be instructed to load dependent assemblies from inner folders of an app by specifying a set of private probing paths.
+The default .NET Framework assembly loader can be instructed to load dependent assemblies from inner directories of an app by specifying a set of private probing paths.
 
 There is another story for .NET Core and .NET which do not directly support additional probing paths.
-For those target frameworks, using `AssemblyAutoLoader` becomes worthy:
+For those target frameworks, using `AssemblyAutoLoader` becomes worthy even for inner directories: 
 
 ``` C#
 using Gapotchenko.FX.Reflection;
@@ -160,9 +160,9 @@ Bummer.
 
 The substantial contributor to the size was ContosoEngine which was about 3 GB unzipped.
 Mr. Alberto Olivetti, Contoso's deployment specialist, quickly recognized an opportunity to use a shared setup of ContosoEngine,
-which was already present at `C:\Program Files\Common Files\Contoso\Engine` folder.
+which was already present at `C:\Program Files\Common Files\Contoso\Engine` directory.
 
-So the AutoCAD plugin (a .DLL assembly) had to gain an ability to load the dependencies from that folder.
+So the AutoCAD plugin (a .DLL assembly) had to gain an ability to load the dependencies from that directory.
 
 This is what Alberto did. He created `AssemblyLoader` class in AutoCAD plugin assembly with just one method `Activate`:
 
@@ -211,7 +211,7 @@ static class AssemblyLoader
     static AssemblyLoader()
     {
         // The statement below instructs Gapotchenko.FX assembly loader to use
-        // 'C:\Program Files\Common Files\Contoso\Engine' folder as a probing path for
+        // 'C:\Program Files\Common Files\Contoso\Engine' directory as a probing path for
         // resolution of 'ContosoApp.Integration.AutoCAD.dll' assembly dependencies.
         AssemblyAutoLoader.Default.AddAssembly(
             typeof(AssemblyLoader).Assembly,
