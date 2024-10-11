@@ -39,7 +39,7 @@ MathEx.Swap(ref val1, ref val2);
 An immediate improvement in readability.
 
 Note that some .NET languages have a built-in support for swap.
-For example, a modern C# code can swap `val1` and `val2` by using tuples, which is highly recommended:
+For example, a modern C# code can swap `val1` and `val2` by using tuples, which is a highly recommended approach:
 
 ``` C#
 (val1, val2) = (val2, val1);
