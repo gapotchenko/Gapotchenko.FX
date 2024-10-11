@@ -67,22 +67,22 @@ public sealed class AssemblyLoadPal
         ForCurrentAppDomain;
 #endif
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly AppDomain? m_AppDomain;
-
     /// <summary>
     /// Gets the associated app domain.
     /// </summary>
     public AppDomain? AppDomain => m_AppDomain;
 
-#if TFF_ASSEMBLYLOADCONTEXT
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly AssemblyLoadContext? m_AssemblyLoadContext;
+    readonly AppDomain? m_AppDomain;
 
+#if TFF_ASSEMBLYLOADCONTEXT
     /// <summary>
     /// Gets the associated assembly load context.
     /// </summary>
     public AssemblyLoadContext? AssemblyLoadContaxt => m_AssemblyLoadContext;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly AssemblyLoadContext? m_AssemblyLoadContext;
 #endif
 
     /// <summary>
@@ -138,16 +138,6 @@ public sealed class AssemblyLoadPal
         /// </summary>
         public AssemblyName Name => m_Name ??= new AssemblyName(m_FullName ?? throw new InvalidOperationException());
     }
-
-    /// <summary>
-    /// Represents a method that handles the <see cref="Resolving"/> event of an <see cref="AssemblyLoadPal"/>.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="args">The arguments.</param>
-    /// <returns>The resolved assembly or null if the assembly cannot be resolved.</returns>
-    public delegate Assembly? ResolvingEventHandler(AssemblyLoadPal sender, ResolvingEventArgs args);
-
-    ResolvingEventHandler? m_Resolving;
 
     /// <summary>
     /// Occurs when the resolution of an assembly fails.
@@ -220,6 +210,16 @@ public sealed class AssemblyLoadPal
         }
         return null;
     }
+
+    ResolvingEventHandler? m_Resolving;
+
+    /// <summary>
+    /// Represents a method that handles the <see cref="Resolving"/> event of an <see cref="AssemblyLoadPal"/>.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="args">The arguments.</param>
+    /// <returns>The resolved assembly or null if the assembly cannot be resolved.</returns>
+    public delegate Assembly? ResolvingEventHandler(AssemblyLoadPal sender, ResolvingEventArgs args);
 
     /// <summary>
     /// Loads an assembly given its file path.
