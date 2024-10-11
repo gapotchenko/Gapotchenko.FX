@@ -176,13 +176,6 @@ public sealed class AssemblyLoadPal
         /// </summary>
         public Assembly? RequestingAssembly { get; }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#if TFF_ASSEMBLYLOADCONTEXT
-        string? m_FullName;
-#else
-        string m_FullName;
-#endif
-
         /// <summary>
         /// Gets the full name of the assembly to resolve.
         /// </summary>
@@ -194,12 +187,19 @@ public sealed class AssemblyLoadPal
 #endif
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        AssemblyName? m_Name;
+#if TFF_ASSEMBLYLOADCONTEXT
+        string? m_FullName;
+#else
+        string m_FullName;
+#endif
 
         /// <summary>
         /// Gets the strongly-typed name of the assembly to resolve.
         /// </summary>
         public AssemblyName Name => m_Name ??= new AssemblyName(m_FullName ?? throw new InvalidOperationException());
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        AssemblyName? m_Name;
     }
 
     /// <summary>
