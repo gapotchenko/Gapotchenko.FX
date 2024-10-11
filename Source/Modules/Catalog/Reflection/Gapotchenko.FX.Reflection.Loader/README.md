@@ -15,7 +15,7 @@ The module provides versatile primitives that can be used to automatically looku
 ## Gentle Introduction
 
 Assembly loading plays a crucial role in .NET apps.
-Once the app is started, .NET runtime ensures that all required assemblies are gradually loaded.
+Once the app is started, .NET Runtime ensures that all required assemblies are gradually loaded.
 
 Whenever the code hits the point where a type from another assembly is used, it raises `AppDomain.AssemblyResolve` event.
 The good thing is .NET comes pre-equipped with a default assembly loader, which does a sensible job for most applications.
@@ -82,9 +82,9 @@ class Program
 
 > [!NOTE] 
 > `Run` method is annotated by `[MethodImpl(MethodImplOptions.NoInlining)]` attribute.
-> That attribute instructs .NET runtime to not inline the `Run` method into its calling methods.
+> That attribute instructs .NET Runtime to not inline the `Run` method into its calling methods.
 > It is necessary to disable inlining because the `Run` method may potentially reference types from not yet loaded assemblies, specifically those from `ContosoEngine.dll`.
-> This will lead to inability of .NET runtime to start executing its calling methods at all (i.e. the `Main` method), because those types are resolved before method starts to run.
+> This will lead to inability of .NET Runtime to start executing its calling methods at all (i.e. the `Main` method), because those types are resolved before method starts to run.
 > And they cannot be resolved until a proper assembly loader is configured,
 > and it will not be configured due to the presence of unresolvable type references that were inlined from `Run` method.
 > To break that chicken and egg lock, the `Run` method inlining should be disabled.
