@@ -104,7 +104,7 @@ Mr. Olivetti tends to pay a lot of respect to his customers and wants to save th
 Thus Alberto came up with a respectful solution to put all third-party assemblies to `Components` subdirectory of the app.
 
 Now how can `ContosoApp.exe` module load the required assemblies from `Components` directory?
-Thankfully, the default .NET assembly loader allows to achieve that by specifying a set of private probing paths in application configuration file:
+Thankfully, the default .NET Framework assembly loader allows to achieve that by specifying a set of private probing paths in application configuration file:
 
 ```xml
 <configuration>
@@ -119,7 +119,8 @@ Thankfully, the default .NET assembly loader allows to achieve that by specifyin
 The task is solved for `ContosoApp` (and every other .NET Framework app as well).
 The default .NET Framework assembly loader can be instructed to load dependent assemblies from inner directories of an app by specifying a set of private probing paths.
 
-There is another story for .NET Core and .NET which do not directly support additional probing paths.
+There is another story for .NET Core and .NET target frameworks.
+They do not directly support additional probing paths.
 For those target frameworks, using `AssemblyAutoLoader` becomes worthy even for inner directories: 
 
 ``` C#
