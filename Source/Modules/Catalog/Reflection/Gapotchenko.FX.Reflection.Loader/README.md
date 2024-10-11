@@ -84,10 +84,11 @@ class Program
 }
 ```
 
-Note that `Run` method is annotated with `[MethodImpl(MethodImplOptions.NoInlining)]` attribute.
-That attribute instructs .NET runtime to not inline method into calling methods.
-It is necessary to disable inlining because otherwise the `Run` method can use the types from not yet loaded assemblies, specifically from `ContosoEngine.dll`.
-This will lead to inability of .NET runtime to start executing the `Main` method at all, because those types are resolved before method is run.
+Note that `Run` method is annotated by `[MethodImpl(MethodImplOptions.NoInlining)]` attribute.
+That attribute instructs .NET runtime to not inline the body of `Run` method into its calling methods.
+It is necessary to disable inlining because the `Run` method may potentially reference types from not yet loaded assemblies, specifically those from `ContosoEngine.dll`.
+This will lead to inability of .NET runtime to start executing its calling methods at all (i.e. the `Main` method), because those types are usually resolved before method starts to run.
+And they cannot be resolved until a proper assembly loader is configured.
 
 ## Scenario #2. Load dependent assemblies from an inner folder of an app
 
