@@ -56,7 +56,7 @@ new[] { "A" }.ScalarOrDefault(); // returns "A"
 new[] { "A", "B" }.ScalarOrDefault(); // returns null 👍
 ```
 
-In practice, `ScalarOrDefault()` semantics is a big win as it allows to _safely_ determine whether a given query converges to a scalar result.
+In practice, `ScalarOrDefault()` semantics is a big win as it allows you to _safely_ determine whether a given query converges to a scalar result.
 
 ## DistinctBy
 

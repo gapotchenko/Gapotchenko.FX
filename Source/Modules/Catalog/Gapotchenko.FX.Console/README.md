@@ -55,7 +55,7 @@ In this way, ANSI X3.64 control language is guaranteed to work on the widest ran
 
 ## Console Traits
 
-`Gapotchenko.FX.Console` module provides `ConsoleTraits` class that allows to programmatically retrieve the current console capabilities.
+`Gapotchenko.FX.Console` module provides `ConsoleTraits` class that allows you to programmatically retrieve the current console capabilities.
 
 ### IsColorAvailable
 
@@ -127,7 +127,7 @@ if (ConsoleTraits.WillDisappearOnExit)
 `MoreTextWriter` class from `Gapotchenko.FX.Console` module automatically manages pagination when written text exceeds the height of a console area visible to the user.
 
 The functionality is similar to `more` command-line utility but can be used right within a program.
-This allows to provide an additional convenience for the end users.
+This allows you to provide an additional convenience for end users.
 
 Let's take a look on example:
 

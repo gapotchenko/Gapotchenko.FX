@@ -8,7 +8,7 @@ The module provides primitives for string and text manipulation.
 
 ## StringEditor
 
-`StringEditor` class provided by `Gapotchenko.FX.Text` module allows to perform an iterative random-access editing of a string.
+`StringEditor` class provided by `Gapotchenko.FX.Text` module allows you to perform an iterative random-access editing of a string.
 
 It is primarily designed to work in conjunction with `Regex` class from `System.Text.RegularExpressions` namespace to efficiently handle an advanced set of tasks
 when functionality provided by conventional methods like `Regex.Replace` is just not enough.
