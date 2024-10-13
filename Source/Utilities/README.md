@@ -1,0 +1,1 @@
+This directory contains internal utilities used for Gapotchenko.FX development.

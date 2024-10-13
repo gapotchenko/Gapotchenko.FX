@@ -6,7 +6,7 @@
 </docmeta>
 -->
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Reflection.Loader.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Reflection.Loader)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Reflection.Loader.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Reflection.Loader)
 
@@ -116,7 +116,7 @@ The task is solved for `ContosoApp` (and every other .NET Framework app as well)
 The default .NET Framework assembly loader can be instructed to load dependent assemblies from inner directories of an app by specifying a set of private probing paths.
 
 There is another story for .NET Core and .NET target frameworks.
-They do not directly support additional probing paths.
+They do not easily support additional probing paths.
 For those target frameworks, using `AssemblyAutoLoader` becomes worthy even for inner directories: 
 
 ``` C#

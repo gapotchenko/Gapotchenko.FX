@@ -1,16 +1,20 @@
 #!/usr/bin/env dotnet-script
 
-// This utility is used as a sample alphabet generator for text encodings.
+// This utility is used as a sample alphabet generator for documentation of
+// text encodings.
 
 var args = Args;
 
 if (args.Count != 2)
 {
-    Console.WriteLine("Usage: alphabet-gen <alphabet> <size>");
-    Console.WriteLine();
-    Console.WriteLine("Options:");
-    Console.WriteLine("  <alphabet>  The base alphabet to use. Possible values: english, greek.");
-    Console.WriteLine("  <size>      The number of symbols in generated alphabet.");
+    Console.WriteLine(
+        """
+        Usage: alphabet-gen <alphabet> <size>
+
+        Options:
+          <alphabet>  The base alphabet to use. Possible values: english, greek.
+          <size>      The number of symbols in generated alphabet.
+        """);
     return 1;
 }
 
