@@ -1,7 +1,8 @@
 ﻿# Gapotchenko.FX.Text
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Text.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Text)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Text.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Text)
 
 The module provides primitives for string and text manipulation.
 
@@ -66,7 +67,8 @@ An immediate improvement in expressiveness without duplication.
 `StringBuilder.AppendJoin` is a method that appeared in later versions of .NET platform.
 Gapochenko.FX provides a corresponding polyfill that can be used in code targeting older .NET versions.
 
-The benefit of this method is that it combines `string.Join` and `StringBuilder.Append` operations into one method using the underlying efficiency of `StringBuilder`.
+The benefit of this method is that it combines `string.Join` and `StringBuilder.Append` operations in one method,
+while using the underlying efficiency of the `StringBuilder`.
 
 ## Usage
 
