@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Security.Cryptography
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Security.Cryptography.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Security.Cryptography)
 
 The module provides an extended set of cryptography primitives and algorithms for .NET.
@@ -11,7 +11,7 @@ ARC4 (Alleged Rivest Cipher 4 also known as ARCFOUR or RC4) is a stream cipher.
 While it is remarkable for its simplicity and performance, nowadays its usage is limited due to discovered limitations and vulnerabilities.
 
 Still, ARC4 may be a good enough fit for less sensitive tasks.
-For example, it may be required for communication with legacy or energy-constrained systems.
+For example, it can be used for communication with legacy or energy-constrained systems.
 
 Example:
 
