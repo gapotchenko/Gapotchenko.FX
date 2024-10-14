@@ -100,7 +100,7 @@ So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now
 
 <details>
 
-<summary>`DebuggableParallel`, an automatic selector between `Parallel` and `Sequential`</summary>
+<summary>Automatic selection between parallel and sequential execution modes</summary>
 
 `System.Threading.Tasks.Parallel` class allows you to execute tasks in parallel,
 while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to do the same,
