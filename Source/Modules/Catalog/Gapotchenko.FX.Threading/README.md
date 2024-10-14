@@ -98,15 +98,16 @@ That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, a drop
 It allows you to make the switch by just changing the class name from `Parallel` to `Sequential` in a corresponding function call.
 So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now executed sequentially allowing you to isolate that pesky multithreading bug you were hunting for.
 
-<details>
-
-<summary>Automatic selection between parallel and sequential execution modes</summary>
+## Automatic Selection Between Parallel and Sequential Execution Modes
 
 `System.Threading.Tasks.Parallel` class allows you to execute tasks in parallel,
 while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to do the same,
 but sequentially.
 But what if you want to get the best of two worlds?
 Meet `DebuggableParallel` class provided by `Gapotchenko.FX.Threading` that does an automatic contextful choice for you.
+
+<details>
+<summary>More details</summary>
 
 When a project has an attached debugger, `DebuggableParallel` primitive executes the specified tasks sequentially.
 When there is no debugger attached, `DebuggableParallel` will execute the tasks in parallel.
