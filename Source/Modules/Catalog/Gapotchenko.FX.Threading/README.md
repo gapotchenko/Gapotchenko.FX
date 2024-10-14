@@ -98,7 +98,7 @@ That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, a drop
 It allows you to make the switch by just changing the class name from `Parallel` to `Sequential` in a corresponding function call.
 So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now executed sequentially allowing you to isolate that pesky multithreading bug you were hunting for.
 
-## Automatic Selection Between Parallel and Sequential Execution Modes
+### Automatic Selection Between Parallel and Sequential Execution Modes
 
 `System.Threading.Tasks.Parallel` class allows you to execute tasks in parallel,
 while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to do the same,
@@ -131,6 +131,14 @@ This makes the behavior of `DebuggableParallel` class to be essentially indistin
 without changing any other code.
 
 </details>
+
+## Asynchronous Synchronization Primitives
+
+`Gapotchenko.FX.Threading` module provides plenty of synchronization primitives supporting not only synchronous, but also asynchronous execution models.
+
+This closes the gap in the mainstream .NET BCL that missed those important primitives for decades.
+One of the main barriers for their implementation was the impossibility to achieve reentrancy.
+That impossibility is caused by certain limitations of `System.AsyncLocal<T>` class that only supports downward control flow propagation.
 
 ## Usage
 
