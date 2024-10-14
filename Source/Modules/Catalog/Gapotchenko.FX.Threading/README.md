@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Threading
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Threading.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Threading)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Threading.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Threading)
 
@@ -98,7 +98,9 @@ That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, a drop
 It allows you to make the switch by just changing the class name from `Parallel` to `Sequential` in a corresponding function call.
 So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now executed sequentially allowing you to isolate that pesky multithreading bug you were hunting for.
 
-## `DebuggableParallel`, an automatic selector between `Parallel` and `Sequential`
+<details>
+
+<summary>`DebuggableParallel`, an automatic selector between `Parallel` and `Sequential`</summary>
 
 `System.Threading.Tasks.Parallel` class allows you to execute tasks in parallel,
 while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to do the same,
@@ -126,6 +128,8 @@ DebuggableParallel.Mode = DebuggableParallelMode.AlwaysParallel;
 
 This makes the behavior of `DebuggableParallel` class to be essentially indistinguishable from `System.Threading.Tasks.Parallel`
 without changing any other code.
+
+</details>
 
 ## Usage
 
