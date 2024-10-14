@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Threading.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Threading)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Threading.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Threading)
 
-The module provides extended primitives for multithreaded and asynchronous programming.
+The module provides complementary primitives for multithreaded and asynchronous programming.
 
 ## TaskBridge
 
@@ -36,7 +36,7 @@ class Program
 ```
 
 <details>
-<summary>More details</summary>
+<summary>More details on TaskBridge</summary>
 
 ### Cancellation Models
 
