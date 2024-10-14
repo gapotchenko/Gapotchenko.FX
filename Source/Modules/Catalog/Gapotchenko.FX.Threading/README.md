@@ -135,10 +135,19 @@ without changing any other code.
 ## Asynchronous Synchronization
 
 `Gapotchenko.FX.Threading` module provides plenty of synchronization primitives supporting not only synchronous, but also asynchronous execution models.
+This closes the gap in the mainstream .NET BCL which has a decade-old lack of them.
 
-This closes the gap in the mainstream .NET BCL which has a decade-old lack of asynchronous synchronization primitives.
-One of the main barriers for their implementation was the impossibility to achieve reentrancy.
+<details>
+<summary>Historical context</summary>
+
+One of the main barriers for implementing asynchronous synchronization in .NET was the impossibility to achieve reentrancy.
 That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supported downward control flow propagation.
+
+However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` achieved the world's first "clean" implementation of reentrant synchronization primitives for .NET in 2023.
+(The word "clean" means that it does not use such unreliable techniques as `System.Diagnostics.StackTrace`.
+Previously, "clean" implementations were considered impossible to achieve due to aforementioned limitations of the `System.AsyncLocal<T>` class.)
+
+</details>
 
 ## Usage
 
