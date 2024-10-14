@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Threading.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Threading)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Threading.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Threading)
 
-The module provides complementary primitives for multithreaded and asynchronous programming.
+The module provides complementary primitives for multithreaded and asynchronous programming in .NET.
 
 ## TaskBridge
 
@@ -103,7 +103,7 @@ That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, a drop
 It allows you to make the switch by just changing the class name from `Parallel` to `Sequential` in a corresponding function call.
 So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now executed sequentially allowing you to isolate that pesky multithreading bug you were hunting for.
 
-### Automatic Selection Between Parallel and Sequential Execution Modes
+### Automatic Selection Between Parallel and Sequential
 
 `System.Threading.Tasks.Parallel` class allows you to execute tasks in parallel,
 while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to do the same,
