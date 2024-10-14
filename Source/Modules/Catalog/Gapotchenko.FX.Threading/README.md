@@ -132,13 +132,13 @@ without changing any other code.
 
 </details>
 
-## Asynchronous Synchronization Primitives
+## Asynchronous Synchronization
 
 `Gapotchenko.FX.Threading` module provides plenty of synchronization primitives supporting not only synchronous, but also asynchronous execution models.
 
-This closes the gap in the mainstream .NET BCL that missed those important primitives for decades.
+This closes the gap in the mainstream .NET BCL which has a decade-old lack of asynchronous synchronization primitives.
 One of the main barriers for their implementation was the impossibility to achieve reentrancy.
-That impossibility is caused by certain limitations of `System.AsyncLocal<T>` class that only supports downward control flow propagation.
+That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supported downward control flow propagation.
 
 ## Usage
 
