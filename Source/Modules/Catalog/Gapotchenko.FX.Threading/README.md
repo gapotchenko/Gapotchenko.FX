@@ -35,6 +35,9 @@ class Program
 }
 ```
 
+<details>
+<summary>More details</summary>
+
 ### Cancellation Models
 
 `TaskBridge` provides automatic interoperability between different cancellation models.
@@ -86,6 +89,8 @@ void SyncMethod()
 
 As you can see, `TaskBridge` has a lot of chances to become your tool #1,
 as it elegantly solves a world-class problem of bridging sync and async models together.
+
+</details>
 
 ## `Sequential`, an Antogonist to `Parallel`
 
@@ -145,7 +150,7 @@ That impossibility was caused by certain limitations of `System.AsyncLocal<T>` c
 
 However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` became the world's first "clean" implementation of reentrant synchronization primitives for .NET.
 The word "clean" means that it does not use such unreliable techniques as `System.Diagnostics.StackTrace`.
-Previously, "clean" implementations were considered impossible to achieve due to aforementioned limitations of the `System.AsyncLocal<T>` class.
+Previously, "clean" implementations were considered impossible due to aforementioned limitations of the `System.AsyncLocal<T>` class.
 
 </details>
 
