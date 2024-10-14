@@ -105,9 +105,9 @@ So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now
 `System.Threading.Tasks.Parallel` class allows you to execute tasks in parallel,
 while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to do the same,
 but sequentially.
-
 But what if you want to get the best of two worlds?
 Meet `Gapotchenko.FX.Threading.Tasks.DebuggableParallel` class that does an automatic contextful choice for you.
+
 When a project has an attached debugger, `DebuggableParallel` primitive executes the specified tasks sequentially.
 When there is no debugger attached, `DebuggableParallel` will execute the tasks in parallel.
 And of course, it's a drop-in replacement for the ubiquitous `System.Threading.Tasks.Parallel` class.
