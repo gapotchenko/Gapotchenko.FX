@@ -284,7 +284,7 @@ Result: 42
 <details>
 <summary>More details on AsyncMonitor</summary>
 
-`Gapotchenko.FX.Threading.AsyncMonitor` class can be used as a drop-in replacement for `System.Monitor`.
+`Gapotchenko.FX.Threading.AsyncMonitor` class can be used as an almost drop-in replacement for `System.Monitor`.
 
 Let's take a look at example. The synchronous code below:
 
