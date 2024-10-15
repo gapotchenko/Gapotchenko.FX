@@ -29,11 +29,12 @@
 // asynchronous recursion that never really worked - they were either too slow
 // (by using StackTrace) or unreliable (by using Task.CurrentId which is prone
 // to collisions). That translated to all sorts of problems and pains when
-// people were trying to write asynchronous .NET code to solve their business
-// needs.
+// people were trying to write reentrant asynchronous .NET code to solve their
+// business needs.
 //
 // In contrast, the proposed algorithm is fast and mathematically sound,
-// making such primitives as recursive mutex realistically possible in .NET.
+// making such primitives as recursive mutex realistically possible in
+// asynchronous .NET code.
 //
 // The idea behind the algorithm is based on an obvious mathematical property:
 // to go from a source state S to a destination state D we apply the state
