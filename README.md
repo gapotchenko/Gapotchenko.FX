@@ -13,8 +13,8 @@ Here is a short list of what Gapotchenko.FX can do:
 
   - **Use the latest .NET features, even with older target frameworks.**
     Gapotchenko.FX achieves this by providing a set of built-in polyfills
-  - **Use formalized primitives to solve a task at hand, without reinventing the boilerplate.**
-    For example, `Gapotchenko.FX.Math.Graphs.Graph<T>` allows you to solve a plethora of seemingly hard tasks in a simple and creative way you may never have known about
+  - **Use formalized primitives to solve a task at hand, without reinventing the wheel.**
+    For example, `Gapotchenko.FX.Math.Graphs.Graph<T>` allows you to solve a plethora of seemingly hard tasks in simple and creative ways you may never have known about
   - **Benefit from the power of formal mathematics.**
     While some people think that programming is somehow different from the math, actually it is not that different.
     For example, when a software component has an inherent flaw, it shows up way further down the lane, guaranteed.
