@@ -307,7 +307,7 @@ class OldCode
 }
 ```
 
-becomes:
+may become asynchronous using the `AsyncMonitor`:
 
 ``` C#
 class NewCode
