@@ -277,7 +277,7 @@ async Task Produce()
 <details>
 <summary>More details on AsyncMonitor</summary>
 
-`Gapotchenko.FX.Threading.AsyncMonitor` class can be used as a drop-in replacement for `System.Monitor`, for example, when migrating existing synchronous code to asynchronous model.
+`Gapotchenko.FX.Threading.AsyncMonitor` class can be used as a drop-in replacement for `System.Monitor`.
 
 Let's take a look at example. The synchronous code below:
 
