@@ -261,7 +261,7 @@ async Task Consume()
     {
         while (result == null)
             await monitor.WaitAsync();
-        Console.WriteLine("Result: {0}", result);
+        await Console.Out.WriteLineAsync($"Result: {result}");
     }
 }
 
