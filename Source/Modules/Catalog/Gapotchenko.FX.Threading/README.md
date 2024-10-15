@@ -372,6 +372,29 @@ class NewCode
 }
 ```
 
+Please note the usage of `AsyncMonitor.For` method in the code above.
+That method is provided for semantical compatibility with `System.Monitor` class.
+As a more efficient approach, it is better to use an `AsyncMonitor` explicitly without "attaching" it to a particular object:
+
+``` C#
+class NewCode
+{
+    Queue<int> m_WorkItems = new();
+    AsyncMonitor m_Monitor = new();
+
+    public async Task AddWorkItemAsync(int item)
+    {
+        using (await m_Monitor.EnterScopeAsync())
+        {
+            m_WorkItems.Enqueue(item);
+            m_Monitor.Notify();
+        }
+    }
+
+    // ...
+}
+```
+
 </details>
 
 ## Usage
