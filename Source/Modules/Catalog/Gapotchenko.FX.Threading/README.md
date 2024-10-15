@@ -109,7 +109,7 @@ So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now
 while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to do the same,
 but sequentially.
 But what if you want to get the best of two worlds?
-Meet `DebuggableParallel` class provided by `Gapotchenko.FX.Threading` that does an automatic contextful choice for you.
+Meet `DebuggableParallel` class provided by `Gapotchenko.FX.Threading` module that does an automatic contextful choice for you.
 
 <details>
 <summary>More details</summary>
@@ -238,6 +238,42 @@ So if you know that your algorithm does not need nested locking, using `AsyncCri
 
 `Gapotchenko.FX.Threading.AsyncAutoResetEvent` represents a synchronization primitive that, when signaled, allows one or more tasks or threads waiting on it to proceed.
 `AsyncAutoResetEvent` resets automatically after releasing a single waiting task or thread.
+
+### AsyncMonitor
+
+`Gapotchenko.FX.Threading.AsyncMonitor` represents a reentrant concurrency primitive that provides a mechanism that synchronizes access to objects:
+
+``` C#
+using Gapotchenko.FX.Threading;
+
+// Only one task can access this variable at any given time.
+int result = 0;
+
+var monitor = new AsyncMonitor();
+
+await Task.WhenAll(Consume(), Produce());
+
+async Task Consume()
+{
+    using (await monitor.EnterScopeAsync())
+    {
+        await monitor.WaitAsync();
+        Console.WriteLine("Woken up by another task.")
+        Console.WriteLine("Result: {0}", result);
+    }
+}
+
+async Task Produce()
+{
+    using (await monitor.EnterScopeAsync())
+    {
+        await Task.Delay(1000); // pretend that it takes time to come up with an answer
+        result = 42;
+        monitor.NotifyAll();
+    }
+}
+```
+
 
 ## Usage
 

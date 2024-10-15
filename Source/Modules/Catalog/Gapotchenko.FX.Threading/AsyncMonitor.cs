@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Threading;
 
 /// <summary>
-/// Represents a reentrant synchronization primitive
+/// Represents a reentrant concurrency primitive
 /// that provides a mechanism that synchronizes access to objects.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
