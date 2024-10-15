@@ -260,7 +260,6 @@ async Task Consume()
     {
         while (result == null)
             await monitor.WaitAsync();
-        Console.WriteLine("Woken up by another task.")
         Console.WriteLine("Result: {0}", result);
     }
 }
@@ -279,7 +278,6 @@ async Task Produce()
 The example code produces the following output after one second of waiting:
 
 ```
-Woken up by another task.
 Result: 42
 ```
 
