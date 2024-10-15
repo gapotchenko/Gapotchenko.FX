@@ -146,7 +146,7 @@ This closes the gap in the mainstream .NET BCL which had a decade-old lack of th
 <summary>Historical context</summary>
 
 One of the main barriers for implementing asynchronous synchronization in .NET was the impossibility to achieve reentrancy.
-That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supported downward propagation of control flow context information.
+That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supported downward propagation of information associated with a control flow.
 
 However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` module became the world's first "clean" implementation of reentrant synchronization primitives for .NET's asynchronous execution model.
 The word "clean" means that it does not use such unreliable techniques as `System.Diagnostics.StackTrace`.
@@ -228,7 +228,7 @@ using (await cs.EnterScopeAsync())
 ```
 
 The benefit of using `AsyncCriticalSection` in comparison to `AsyncLock` is that the former uses less computational resources because it does not track reentrancy.
-So if you know that your algorithm does not need nested locking, using `AsyncCriticalSection` is more preferable.
+So if you know that your algorithm does not need recursive locking, using `AsyncCriticalSection` is more preferable.
 
 ### AsyncManualResetEvent
 
@@ -314,7 +314,7 @@ class OldCode
 }
 ```
 
-may become asynchronous using the `AsyncMonitor`:
+may be translated to asynchronous using the `AsyncMonitor`:
 
 ``` C#
 class NewCode
