@@ -345,6 +345,7 @@ class NewCode
     // Note that it's possible to mix asynchronous and synchronous execution models
     // when using synchronization primitives provided by Gapotchenko.FX.Threading module.
     // Both models happily coexist in terms of concurrency.
+    //
     // For example, that useful property may be used for a gradual codebase migration
     // from synchronous execution model to asynchronous.
 
