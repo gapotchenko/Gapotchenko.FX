@@ -253,15 +253,18 @@ int? result = null;
 var monitor = new AsyncMonitor();
 
 // Start consuming and producing tasks in parallel.
-await Task.WhenAll(Consume(), Produce());
+await Task.WhenAll(
+    Consume("Consumer #1"),
+    Consume("Consumer #2"),
+    Produce());
 
-async Task Consume()
+async Task Consume(string taskName)
 {
     using (await monitor.EnterScopeAsync())
     {
         while (result == null)
             await monitor.WaitAsync();
-        await Console.Out.WriteLineAsync($"Result: {result}");
+        await Console.Out.WriteLineAsync($"Result for {taskName}: {result}");
     }
 }
 
@@ -279,7 +282,8 @@ async Task Produce()
 The example code produces the following output after one second of waiting:
 
 ```
-Result: 42
+Result for Consumer #1: 42
+Result for Consumer #2: 42
 ```
 
 <details>
