@@ -258,7 +258,8 @@ async Task Consume()
 {
     using (await monitor.EnterScopeAsync())
     {
-        await monitor.WaitAsync();
+        while (result == 0)
+            await monitor.WaitAsync();
         Console.WriteLine("Woken up by another task.")
         Console.WriteLine("Result: {0}", result);
     }
