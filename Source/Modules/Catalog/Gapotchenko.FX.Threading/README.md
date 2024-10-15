@@ -286,7 +286,7 @@ Result: 42
 
 `Gapotchenko.FX.Threading.AsyncMonitor` class can be used as an almost drop-in replacement for `System.Monitor`.
 
-Let's take a look at example. The synchronous code below:
+Let's take a look at example. The synchronous code below that uses `System.Monitor`:
 
 ``` C#
 class OldCode
@@ -314,7 +314,7 @@ class OldCode
 }
 ```
 
-may be translated to asynchronous using the `AsyncMonitor`:
+can be translated to asynchronous code using `Gapotchenko.FX.Threading.AsyncMonitor`:
 
 ``` C#
 class NewCode
