@@ -9,7 +9,7 @@
 ## Overview
 
 Gapotchenko.FX closes the gaps in original .NET design by providing the missing functionality that should have been mainstream since long ago.
-Here is a short list of what Gapotchenko.FX allows you to achieve:
+Here is a short list of what Gapotchenko.FX gives you:
 
   - **Use the latest .NET features, even with older target frameworks.**
     Gapotchenko.FX achieves this by providing a set of built-in polyfills.
