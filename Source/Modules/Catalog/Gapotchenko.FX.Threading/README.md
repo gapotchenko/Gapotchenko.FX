@@ -299,7 +299,7 @@ class OldCode
     {
         lock (m_WorkItems)
         {
-            while (m_WorkItems.Count == 0) // wait for items to appear in queue
+            while (m_WorkItems.Count == 0) // wait for items to appear in the queue
                 Monitor.Wait(m_WorkItems);
             return m_WorkItems.Dequeue();
         }    
