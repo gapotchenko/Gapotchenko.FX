@@ -339,7 +339,8 @@ class NewCode
 
     // Note that it's possible to mix asynchronous and synchronous execution models;
     // they happily coexist in terms of concurrency.
-    // For example, that useful property may be used for a gradual code migration.
+    // For example, that useful property may be used for a gradual code migration
+    // from synchronous execution model to asynchronous.
 
     public void AddWorkItem(int item)
     {
