@@ -274,6 +274,90 @@ async Task Produce()
 }
 ```
 
+`Gapotchenko.FX.Threading.AsyncMonitor` class can be used as a drop-in replacement for `System.Monitor`, for example, when migrating existing synchronous code to asynchronous model.
+The synchronous code below:
+
+``` C#
+class OldCode
+{
+    Queue<int> m_WorkItems = new();
+
+    public void AddWorkItem(int item)
+    {
+        lock (m_WorkItems)
+        {
+            m_WorkItems.Enqueue(item);
+            Monitor.Pulse(m_WorkItems);
+        }
+    }
+
+    public int GetWorkItem()
+    {
+        lock (m_WorkItems)
+        {
+            while (m_WorkItems.Count == 0) // wait for items to appear in queue
+                Monitor.Wait(m_WorkItems);
+            return m_WorkItems.Dequeue();
+        }    
+    }
+}
+```
+
+becomes:
+
+``` C#
+class NewCode
+{
+    Queue<int> m_WorkItems = new();
+
+    public async Task AddWorkItemAsync(int item)
+    {
+        var monitor = AsyncMonitor.For(m_WorkItems);
+        using (await monitor.EnterScopeAsync())
+        {
+            m_WorkItems.Enqueue(item);
+            monitor.Notify();
+        }
+    }
+
+    public async Task<int> GetWorkItemAsync()
+    {
+        var monitor = AsyncMonitor.For(m_WorkItems);
+        using (await monitor.EnterScopeAsync())
+        {
+            while (m_WorkItems.Count == 0) // wait for items to appear in queue
+                await monitor.WaitAsync();
+            return m_WorkItems.Dequeue();
+        }    
+    }
+
+    // Note that it is possible to mix asynchronous and synchronous execution models,
+    // they happily coexist in terms of concurrency.
+    // As for example, this is a useful property for a gradual code migration.
+
+    public void AddWorkItem(int item)
+    {
+        var monitor = AsyncMonitor.For(m_WorkItems);
+        using (monitor.EnterScope())
+        {
+            m_WorkItems.Enqueue(item);
+            Monitor.Pulse(m_WorkItems);
+        }
+    }
+
+    public int GetWorkItem()
+    {
+        var monitor = AsyncMonitor.For(m_WorkItems);
+        using (monitor.EnterScope())
+        {
+            while (m_WorkItems.Count == 0) // wait for items to appear in queue
+                monitor.Wait();
+            return m_WorkItems.Dequeue();
+        }    
+    }
+}
+```
+
 
 ## Usage
 
