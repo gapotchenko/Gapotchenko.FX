@@ -212,7 +212,7 @@ using (await lockObj.EnterScopeAsync())
 
 `Gapotchenko.FX.Threading.AsyncCriticalSection` represents a **non-reentrant** synchronization primitive
 that ensures that only one task or thread can access a resource at any given time.
-This is a non-reentrant variant of `AsyncLock`:
+`AsyncCriticalSection` is a non-reentrant variant of the `AsyncLock` class:
 
 ``` C#
 using Gapotchenko.FX.Threading;
