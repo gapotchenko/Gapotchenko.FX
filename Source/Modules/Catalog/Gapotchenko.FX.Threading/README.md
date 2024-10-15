@@ -346,7 +346,7 @@ class NewCode
     // when using synchronization primitives provided by Gapotchenko.FX.Threading module.
     // Both models happily coexist in terms of concurrency.
     //
-    // For example, that useful property may be used for a gradual codebase migration
+    // For example, that useful possibility may be used for a gradual codebase migration
     // from synchronous execution model to asynchronous.
 
     public void AddWorkItem(int item)
