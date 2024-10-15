@@ -219,7 +219,7 @@ partial class ExecutionContextHelper
             Discarded
         }
 
-        // Using volatile access modifier to ensure that the operation state is always visible.
+        // Using volatile access modifier ensures that the operation state is always visible.
         volatile OperationState m_State;
 
         protected void ValidateCommit()
@@ -235,7 +235,7 @@ partial class ExecutionContextHelper
 
         /// <summary>
         /// Applies the changes to the current asynchronous control flow state
-        /// by invoking a state-modifying function supplied by the user.
+        /// by invoking a state-modifying function supplied by a user.
         /// </summary>
         /// <remarks>
         /// This approach allows the changes to be "replayed" numerous times.
