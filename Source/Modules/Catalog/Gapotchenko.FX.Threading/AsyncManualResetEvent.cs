@@ -12,7 +12,7 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Threading;
 
 /// <summary>
-/// Represents a synchronization primitive that, when signaled, allows one or more threads waiting on it to proceed.
+/// Represents a synchronization primitive that, when signaled, allows one or more tasks or threads waiting on it to proceed.
 /// <see cref="AsyncManualResetEvent"/> must be reset manually.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>

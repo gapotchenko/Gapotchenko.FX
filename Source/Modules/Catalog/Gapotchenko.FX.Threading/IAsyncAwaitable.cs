@@ -29,19 +29,19 @@ public interface IAsyncAwaitable : IAwaitable
     /// using a 32-bit signed integer that specifies the timeout in milliseconds.
     /// </summary>
     /// <returns>
-    /// A task that will complete with a result of <see langword="true"/> if the synchronization primitive receives a signal,
-    /// otherwise with a result of <see langword="false"/>.
+    /// A task that will complete with a result of <see langword="true"/> if the synchronization primitive receives a signal;
+    /// otherwise, the task will complete with a result of <see langword="false"/>.
     /// </returns>
     /// <inheritdoc cref="IAwaitable.Wait(int, CancellationToken)"/>
     Task<bool> WaitAsync(int millisecondsTimeout, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously waits until the synchronization primitive receives a signal,
-    /// using a 32-bit signed integer that specifies the timeout in milliseconds.
+    /// using a <see cref="TimeSpan"/> to measure the time interval.
     /// </summary>
     /// <returns>
-    /// A task that will complete with a result of <see langword="true"/> if the synchronization primitive receives a signal,
-    /// otherwise with a result of <see langword="false"/>.
+    /// A task that will complete with a result of <see langword="true"/> if the synchronization primitive receives a signal;
+    /// otherwise, the task will complete with a result of <see langword="false"/>.
     /// </returns>
     /// <inheritdoc cref="IAwaitable.Wait(TimeSpan, CancellationToken)"/>
     Task<bool> WaitAsync(TimeSpan timeout, CancellationToken cancellationToken = default);

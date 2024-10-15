@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Threading;
 
 /// <summary>
 /// Represents a synchronization primitive that, when signaled, allows one or more threads waiting on it to proceed.
-/// <see cref="AsyncAutoResetEvent"/> resets automatically after releasing a single waiting thread.
+/// <see cref="AsyncAutoResetEvent"/> resets automatically after releasing a single waiting task or thread.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
 [DebuggerDisplay("IsSet = {IsSet}")]
