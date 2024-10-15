@@ -110,12 +110,8 @@ partial class ExecutionContextHelper
                 m_FlowState.Value is null,
                 $"{nameof(ModifyAsyncLocal)} does not support recursion. Before creating a new modification operation, the previously created operation must be committed, discarded, or disposed. Additionally, a call to {nameof(AsyncLocalBarrier)} may be required.");
 
-            m_FlowState.Value = new FlowState(this, false);
+            m_FlowState.Value = new(this, false);
         }
-
-        sealed record FlowState(AsyncLocalModificationOperationBase Operation, bool ChangesApplied);
-
-        static readonly AsyncLocal<FlowState?> m_FlowState = new(FlowStateChanged);
 
         static void FlowStateChanged(AsyncLocalValueChangedArgs<FlowState?> args)
         {
@@ -132,62 +128,6 @@ partial class ExecutionContextHelper
             {
                 // The flow state is managed by a finite state machine (FSM).
                 UpdateFsm(flowState);
-            }
-        }
-
-        /// <summary>
-        /// Updates a finite state machine (FSM) associated with the specified flow state,
-        /// and sets the current flow state to a new value calculated by the FSM.
-        /// </summary>
-        /// <param name="currentFlowState">The current flow state.</param>
-        static void UpdateFsm(FlowState currentFlowState)
-        {
-            var newFlowState = GetNextFlowState(currentFlowState);
-            if (newFlowState != currentFlowState)
-                m_FlowState.Value = newFlowState;
-        }
-
-        static FlowState? GetNextFlowState(FlowState state)
-        {
-            return state.Operation.m_State switch
-            {
-                OperationState.Initialized => state, // operation is not completed yet
-                OperationState.Committed => HandleCommittedState(state), // propagate the changes to the current control flow branch
-                OperationState.Discarded => null, // discard all existing flow states associated with the operation
-                _ => throw new InvalidOperationException(),
-            };
-
-            static FlowState? HandleCommittedState(FlowState state)
-            {
-                // A full FSM (Finite State Machine) coding style is used here,
-                // despite the fact that FlowState.ChangesApplied = true property is never stored in
-                // the state object (such a state is considered as completed and thus the object gets
-                // erased with a null value for better memory reclamation).
-
-                // A low-hanging optimization is not to have ChangesApplied property at all,
-                // but that would make the code more entangled and harder to understand or maintain.
-
-                bool changesApplied = state.ChangesApplied;
-
-                if (!changesApplied)
-                {
-                    // Apply the changes to the current control flow branch if they weren't applied yet.
-                    state.Operation.ApplyChanges();
-                    changesApplied = true;
-                }
-
-                FlowState? newState;
-                if (changesApplied)
-                {
-                    // All actions are taken - no need to hold the flow state object anymore.
-                    newState = null;
-                }
-                else
-                {
-                    newState = state;
-                }
-
-                return newState;
             }
         }
 
@@ -212,15 +152,66 @@ partial class ExecutionContextHelper
                 UpdateFsm(flowState);
         }
 
-        enum OperationState
+        /// <summary>
+        /// Updates a finite state machine (FSM) associated with the specified flow state,
+        /// and sets the current flow state to a new value calculated by the FSM.
+        /// </summary>
+        /// <param name="currentFlowState">The current flow state.</param>
+        static void UpdateFsm(FlowState currentFlowState)
         {
-            Initialized,
-            Committed,
-            Discarded
+            var newFlowState = GetNextFlowState(currentFlowState);
+            if (newFlowState != currentFlowState)
+                m_FlowState.Value = newFlowState;
+
+            static FlowState? GetNextFlowState(FlowState state)
+            {
+                return
+                    state.Operation.m_State switch
+                    {
+                        OperationState.Initialized => state, // operation is not completed yet
+                        OperationState.Committed => HandleCommittedState(state), // propagate the changes to the current control flow branch
+                        OperationState.Discarded => null, // discard all existing flow states associated with the operation
+                        _ => throw new InvalidOperationException(),
+                    };
+
+                static FlowState? HandleCommittedState(FlowState state)
+                {
+                    // A full FSM (Finite State Machine) coding style is used here,
+                    // despite the fact that FlowState.ChangesApplied = true property is never stored in
+                    // the state object (such a state is considered as completed and thus the object gets
+                    // erased with a null value for better memory reclamation).
+
+                    // A low-hanging optimization is not to have ChangesApplied property at all,
+                    // but that would make the code more entangled and harder to understand or maintain.
+
+                    bool changesApplied = state.ChangesApplied;
+
+                    if (!changesApplied)
+                    {
+                        // Apply the changes to the current control flow branch if they weren't applied yet.
+                        state.Operation.ApplyChanges();
+                        changesApplied = true;
+                    }
+
+                    FlowState? newState;
+                    if (changesApplied)
+                    {
+                        // All actions are taken - no need to hold the flow state object anymore.
+                        newState = null;
+                    }
+                    else
+                    {
+                        newState = state;
+                    }
+
+                    return newState;
+                }
+            }
         }
 
-        // Using volatile access modifier ensures that the operation state is always visible.
-        volatile OperationState m_State;
+        static readonly AsyncLocal<FlowState?> m_FlowState = new(FlowStateChanged);
+
+        sealed record FlowState(AsyncLocalModificationOperationBase Operation, bool ChangesApplied);
 
         protected void ValidateCommit()
         {
@@ -291,6 +282,16 @@ partial class ExecutionContextHelper
             if (m_State == OperationState.Initialized)
                 DoDiscard();
         }
+
+        // Using volatile access modifier ensures that the operation state is always visible.
+        volatile OperationState m_State;
+
+        enum OperationState
+        {
+            Initialized,
+            Committed,
+            Discarded
+        }
     }
 
     /// <inheritdoc/>
@@ -301,8 +302,6 @@ partial class ExecutionContextHelper
             Debug.Assert(action != null);
             m_Action = action;
         }
-
-        Action? m_Action;
 
         /// <summary>
         /// Commits the changes.
@@ -323,6 +322,8 @@ partial class ExecutionContextHelper
         {
             m_Action = null;
         }
+
+        Action? m_Action;
     }
 
     /// <inheritdoc/>
@@ -333,11 +334,6 @@ partial class ExecutionContextHelper
             Debug.Assert(action != null);
             m_Action = action;
         }
-
-        Action<T>? m_Action;
-
-        // Using volatile access modifier to ensure that a committed value is always visible in the committed state.
-        Volatile<T?> m_CommittedValue;
 
         /// <summary>
         /// Commits the changes.
@@ -367,5 +363,10 @@ partial class ExecutionContextHelper
                 m_CommittedValue = default;
             }
         }
+
+        Action<T>? m_Action;
+
+        // Using volatile access modifier to ensure that a committed value is always visible in the committed state.
+        Volatile<T?> m_CommittedValue;
     }
 }
