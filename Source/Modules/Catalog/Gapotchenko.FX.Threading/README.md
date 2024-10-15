@@ -146,11 +146,12 @@ This closes the gap in the mainstream .NET BCL which had a decade-old lack of th
 <summary>Historical context</summary>
 
 One of the main barriers for implementing asynchronous synchronization in .NET was the impossibility to achieve reentrancy.
-That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supported downward propagation of control flow information.
+That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supported downward propagation of control flow context information.
 
 However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` module became the world's first "clean" implementation of reentrant synchronization primitives for .NET's asynchronous execution model.
 The word "clean" means that it does not use such unreliable techniques as `System.Diagnostics.StackTrace`.
 Previously, "clean" implementations were considered impossible due to aforementioned limitations of the `System.AsyncLocal<T>` class.
+If you interested in gory details, you can jump right into the corresponding [source file](Utils/ExecutionContextHelper.AsyncLocal.cs).
 
 </details>
 
@@ -310,8 +311,6 @@ class OldCode
 may become asynchronous using the `AsyncMonitor`:
 
 ``` C#
-using Gapotchenko.FX.Threading;
-
 class NewCode
 {
     Queue<int> m_WorkItems = new();

@@ -33,8 +33,7 @@
 // needs.
 //
 // In contrast, the proposed algorithm is fast and mathematically sound,
-// making such primitives as AsyncRecursiveMutex realistically possible in
-// .NET.
+// making such primitives as recursive mutex realistically possible in .NET.
 //
 // The idea behind the algorithm is based on an obvious mathematical property:
 // to go from a source state S to a destination state D we apply the state
@@ -47,6 +46,11 @@
 // of outward state propagation imposed by AsyncLocal<T> ceases to exist. This
 // makes it possible to implement algorithms that use not only inward, but
 // also outward propagation of the AsyncLocal<T> data.
+//
+// (Well yes, this is one of those ideas akin to Münchhausen pulling himself
+// out of a mire by his own hair. Or the ideas of time travels proposed by
+// various theoretical physicists based on reversing and replaying the changes
+// of the universe's state.)
 //
 // Copyright © 2023 Oleksiy Gapotchenko
 // Published under the terms and conditions of MIT License.
