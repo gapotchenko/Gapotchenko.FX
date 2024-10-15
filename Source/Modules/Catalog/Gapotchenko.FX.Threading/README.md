@@ -310,6 +310,8 @@ class OldCode
 may become asynchronous using the `AsyncMonitor`:
 
 ``` C#
+using Gapotchenko.FX.Threading;
+
 class NewCode
 {
     Queue<int> m_WorkItems = new();
