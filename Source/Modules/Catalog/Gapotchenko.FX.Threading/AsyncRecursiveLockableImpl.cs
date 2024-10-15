@@ -88,11 +88,11 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) : IAsy
     // Core Implementation
     // ----------------------------------------------------------------------
 
-    bool TryLockCore(Func<bool> func)
+    bool TryLockCore(Func<bool> tryEnterFunc)
     {
         if (!m_RecursionTracker.IsEntered)
         {
-            bool locked = func();
+            bool locked = tryEnterFunc();
             if (locked)
                 m_RecursionTracker.Enter();
             return locked;
@@ -105,7 +105,7 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) : IAsy
         }
     }
 
-    Task<bool> TryLockAsyncCore(Func<Task<bool>> func)
+    Task<bool> TryLockAsyncCore(Func<Task<bool>> tryEnterFunc)
     {
         if (!m_RecursionTracker.IsEntered)
         {
@@ -115,7 +115,7 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) : IAsy
             {
                 using (asyncLocalChanges)
                 {
-                    bool locked = await func().ConfigureAwait(false);
+                    bool locked = await tryEnterFunc().ConfigureAwait(false);
                     if (locked)
                         asyncLocalChanges.Commit();
                     return locked;
