@@ -279,7 +279,7 @@ async Task Produce()
 }
 ```
 
-The example code produces the following output after one second of waiting:
+The example code above produces the following output after one second of waiting:
 
 ```
 Result for Consumer #1: 42
