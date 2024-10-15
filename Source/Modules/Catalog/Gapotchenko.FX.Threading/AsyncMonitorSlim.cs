@@ -33,11 +33,11 @@ public sealed class AsyncMonitorSlim : AsyncMonitorImpl<IAsyncLockable>
     }
 
     /// <summary>
-    /// Gets an <see cref="AsyncMonitorSlim"/> associated with the specified object.
+    /// Gets an <see cref="IAsyncMonitor"/> associated with the specified object.
     /// </summary>
     /// <param name="obj">The object.</param>
-    /// <returns>An <see cref="AsyncMonitorSlim"/> associated with the <paramref name="obj"/>.</returns>
-    public static AsyncMonitorSlim For(object obj)
+    /// <returns>An <see cref="IAsyncMonitor"/> associated with the <paramref name="obj"/>.</returns>
+    public static IAsyncMonitor For(object obj)
     {
         ExceptionHelper.ThrowIfArgumentIsNull(obj);
 

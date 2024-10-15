@@ -34,11 +34,11 @@ public sealed class AsyncMonitor : AsyncMonitorImpl<IAsyncRecursiveLockable>, IA
     public bool IsLockedByCurrentThread => Mutex.IsLockedByCurrentThread;
 
     /// <summary>
-    /// Gets an <see cref="AsyncMonitor"/> associated with the specified object.
+    /// Gets an <see cref="IAsyncRecursiveMonitor"/> associated with the specified object.
     /// </summary>
     /// <param name="obj">The object.</param>
-    /// <returns>An <see cref="AsyncMonitor"/> associated with the <paramref name="obj"/>.</returns>
-    public static AsyncMonitor For(object obj)
+    /// <returns>An <see cref="IAsyncRecursiveMonitor"/> associated with the <paramref name="obj"/>.</returns>
+    public static IAsyncRecursiveMonitor For(object obj)
     {
         ExceptionHelper.ThrowIfArgumentIsNull(obj);
 
