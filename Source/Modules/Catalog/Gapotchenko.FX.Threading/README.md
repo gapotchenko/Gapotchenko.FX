@@ -329,7 +329,7 @@ class NewCode
         var monitor = AsyncMonitor.For(m_WorkItems);
         using (await monitor.EnterScopeAsync())
         {
-            while (m_WorkItems.Count == 0) // wait for items to appear in queue
+            while (m_WorkItems.Count == 0) // wait for items to appear in the queue
                 await monitor.WaitAsync();
             return m_WorkItems.Dequeue();
         }    
@@ -354,7 +354,7 @@ class NewCode
         var monitor = AsyncMonitor.For(m_WorkItems);
         using (monitor.EnterScope())
         {
-            while (m_WorkItems.Count == 0) // wait for items to appear in queue
+            while (m_WorkItems.Count == 0) // wait for items to appear in the queue
                 monitor.Wait();
             return m_WorkItems.Dequeue();
         }    
