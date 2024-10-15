@@ -252,6 +252,7 @@ int? result = null;
 
 var monitor = new AsyncMonitor();
 
+// Start consuming and producing tasks in parallel.
 await Task.WhenAll(Consume(), Produce());
 
 async Task Consume()
