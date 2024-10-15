@@ -191,7 +191,7 @@ using (await lockObj.EnterScopeAsync())
 }
 ```
 
-The `AsyncLock` can be acquired multiple times by the same task because the primitive supports reentrancy:
+The `AsyncLock` can be acquired multiple times by the same task because the primitive supports reentrancy (which is also called recursion):
 
 ``` C#
 using Gapotchenko.FX.Threading;
