@@ -267,9 +267,9 @@ async Task Consume()
 
 async Task Produce()
 {
+    await Task.Delay(1000); // pretend that it takes time to come up with a result
     using (await monitor.EnterScopeAsync())
     {
-        await Task.Delay(1000); // pretend that it takes time to come up with a result
         result = 42;
         monitor.NotifyAll();
     }
