@@ -314,7 +314,7 @@ class OldCode
 }
 ```
 
-can be translated to asynchronous code using `Gapotchenko.FX.Threading.AsyncMonitor`, almost word for word:
+can be translated to asynchronous code using `Gapotchenko.FX.Threading.AsyncMonitor` class, almost word for word:
 
 ``` C#
 class NewCode
