@@ -276,6 +276,13 @@ async Task Produce()
 }
 ```
 
+The code produces the following output after 1 second of waiting:
+
+```
+Woken up by another task.
+Result: 42
+```
+
 <details>
 <summary>More details on AsyncMonitor</summary>
 
