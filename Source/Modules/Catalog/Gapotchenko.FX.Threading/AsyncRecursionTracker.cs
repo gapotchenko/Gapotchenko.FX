@@ -29,14 +29,22 @@ readonly struct AsyncRecursionTracker
         }
     }
 
+#if UNUSED
     /// <summary>
     /// Increases the recursion level.
     /// </summary>
     public void Enter()
     {
-        // No async local barrier here because the method call is always preceded
-        // by a call of IsEntered property which does the barrier.
+        ExecutionContextHelper.AsyncLocalBarrier();
+        EnterNoBarrier();
+    }
+#endif
 
+    /// <summary>
+    /// Increases the recursion level without issuing <see cref="ExecutionContextHelper.AsyncLocalBarrier"/>.
+    /// </summary>
+    public void EnterNoBarrier()
+    {
         int recursionLevel = m_RecursionLevel.Value + 1;
         if (recursionLevel == 0)
         {

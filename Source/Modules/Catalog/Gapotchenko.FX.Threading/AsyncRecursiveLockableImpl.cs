@@ -9,14 +9,15 @@ using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading;
 
-readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) : IAsyncRecursiveLockable
+readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) :
+    IAsyncRecursiveLockable
     where TLockable : IAsyncLockable
 {
     public void Enter(CancellationToken cancellationToken)
     {
         if (!m_RecursionTracker.IsEntered)
             m_Lockable.Enter(cancellationToken);
-        m_RecursionTracker.Enter();
+        m_RecursionTracker.EnterNoBarrier();
     }
 
     /// <inheritdoc/>
@@ -24,7 +25,7 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) : IAsy
     {
         if (!m_RecursionTracker.IsEntered)
         {
-            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
+            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.EnterNoBarrier);
             var lockable = m_Lockable;
 
             async Task ExecuteAsync()
@@ -40,8 +41,8 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) : IAsy
         }
         else
         {
-            // Already locked by the current thread.
-            m_RecursionTracker.Enter();
+            // Already locked by the current task.
+            m_RecursionTracker.EnterNoBarrier();
             return Task.CompletedTask;
         }
     }
@@ -94,13 +95,13 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) : IAsy
         {
             bool locked = tryEnterFunc();
             if (locked)
-                m_RecursionTracker.Enter();
+                m_RecursionTracker.EnterNoBarrier();
             return locked;
         }
         else
         {
             // Already locked by the current thread.
-            m_RecursionTracker.Enter();
+            m_RecursionTracker.EnterNoBarrier();
             return true;
         }
     }
@@ -109,7 +110,7 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) : IAsy
     {
         if (!m_RecursionTracker.IsEntered)
         {
-            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.Enter);
+            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.EnterNoBarrier);
 
             async Task<bool> ExecuteAsync()
             {
@@ -126,8 +127,8 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) : IAsy
         }
         else
         {
-            // Already locked by the current thread.
-            m_RecursionTracker.Enter();
+            // Already locked by the current task.
+            m_RecursionTracker.EnterNoBarrier();
             return Task.FromResult(true);
         }
     }
