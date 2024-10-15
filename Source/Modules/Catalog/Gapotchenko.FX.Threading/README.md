@@ -335,7 +335,7 @@ class NewCode
         }    
     }
 
-    // Note that it is possible to mix asynchronous and synchronous execution models;
+    // Note that it's possible to mix asynchronous and synchronous execution models;
     // they happily coexist in terms of concurrency.
     // In this example, that useful property is used for a gradual code migration.
 
