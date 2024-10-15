@@ -373,8 +373,8 @@ class NewCode
 ```
 
 Please note the usage of `AsyncMonitor.For` method in the code above.
-That method is provided for semantical and ideological compatibility with `System.Monitor` class.
-As a more efficient approach, however, it is better to use an `AsyncMonitor` explicitly without "attaching" it to a particular object:
+That method is provided for semantical and ideological compatibility with `System.Monitor`.
+As a more efficient approach, however, it is better to use an instance of `AsyncMonitor` explicitly without "attaching" it to a particular object:
 
 ``` C#
 class NewCode
