@@ -345,7 +345,7 @@ class NewCode
         using (monitor.EnterScope())
         {
             m_WorkItems.Enqueue(item);
-            Monitor.Pulse(m_WorkItems);
+            monitor.Notify();
         }
     }
 
