@@ -37,6 +37,7 @@ public sealed class AsyncMonitorSlim : AsyncMonitorImpl<IAsyncLockable>
     /// </summary>
     /// <param name="obj">The object.</param>
     /// <returns>An <see cref="IAsyncMonitor"/> associated with the <paramref name="obj"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="obj"/> is <see langword="null"/>.</exception>
     public static IAsyncMonitor For(object obj)
     {
         ExceptionHelper.ThrowIfArgumentIsNull(obj);

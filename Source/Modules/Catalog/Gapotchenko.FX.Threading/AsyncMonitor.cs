@@ -38,6 +38,7 @@ public sealed class AsyncMonitor : AsyncMonitorImpl<IAsyncRecursiveLockable>, IA
     /// </summary>
     /// <param name="obj">The object.</param>
     /// <returns>An <see cref="IAsyncRecursiveMonitor"/> associated with the <paramref name="obj"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="obj"/> is <see langword="null"/>.</exception>
     public static IAsyncRecursiveMonitor For(object obj)
     {
         ExceptionHelper.ThrowIfArgumentIsNull(obj);
