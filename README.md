@@ -9,11 +9,10 @@
 ## Overview
 
 Gapotchenko.FX closes the gaps in original .NET design by providing the missing functionality that should have been mainstream since long ago.
-Here is a short list of what Gapotchenko.FX allows you to do:
+Here is a short list of what Gapotchenko.FX allows you to achieve:
 
   - **Use the latest .NET features, even with older target frameworks.**
     Gapotchenko.FX achieves this by providing a set of built-in polyfills.
-    This allows your apps to target the installed user base more conservatively
   - **Use formalized primitives to solve a task at hand, without boiling the ocean.**
     For example, `Gapotchenko.FX.Math.Graphs.Graph<T>` allows you to solve a plethora of seemingly hard tasks in simple and creative ways you may never have known about
   - **Benefit from the power of formal mathematics.**
