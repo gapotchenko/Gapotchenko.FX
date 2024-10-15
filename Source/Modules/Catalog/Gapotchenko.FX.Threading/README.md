@@ -190,6 +190,24 @@ using (await lockObj.EnterScopeAsync())
 }
 ```
 
+The `AsyncLock` can be acquired multiple times by the same task because the primitive supports reentrancy:
+
+``` C#
+using Gapotchenko.FX.Threading;
+
+var lockObj = new AsyncLock();
+
+using (await lockObj.EnterScopeAsync())
+{
+    using (await lockObj.EnterScopeAsync())
+    {
+        // Only one task can execute this section of code at any given time.
+        // ...
+    }
+}
+```
+
+
 ### AsyncCriticalSection
 
 `Gapotchenko.FX.Threading.AsyncCriticalSection` represents a **non-reentrant** synchronization primitive
@@ -208,7 +226,7 @@ using (await cs.EnterScopeAsync())
 }
 ```
 
-The benefit of `AsyncCriticalSection` in comparison to `AsyncLock` is that the former uses way less computational resources because it does not need to track reentrancy.
+The benefit of using `AsyncCriticalSection` in comparison to `AsyncLock` is that the former uses way less computational resources because it does not need to track reentrancy.
 So if you know that your algorithm does not need nested locking, using `AsyncCriticalSection` is more preferable.
 
 ## Usage
