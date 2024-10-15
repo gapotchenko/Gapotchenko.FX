@@ -51,12 +51,10 @@ Gapotchenko.FX is largely platform-independent, but some parts of the implementa
   - .NET Core 2.0+
   - .NET Standard 2.0+
   - .NET Framework 4.6.1+
-
 - Supported operating systems: 
   - Linux
   - macOS
   - Windows
-
 - Supported CPU architectures: x86, x64, ARM, ARM64
 
 When Gapotchenko.FX runs on an unsupported platform, the platform-dependent functionality is automatically downgraded to the next best thing — a less optimized generic implementation.
