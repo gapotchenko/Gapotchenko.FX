@@ -140,15 +140,15 @@ without changing any other code.
 ## Asynchronous Concurrency
 
 `Gapotchenko.FX.Threading` module provides plenty of synchronization primitives supporting not only synchronous, but also asynchronous execution models.
-This closes the gap in the mainstream .NET BCL which has a decade-old lack of them.
+This closes the gap in the mainstream .NET BCL which had a decade-old lack of them.
 
 <details>
 <summary>Historical context</summary>
 
 One of the main barriers for implementing asynchronous synchronization in .NET was the impossibility to achieve reentrancy.
-That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supported downward control flow propagation.
+That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supported downward propagation of control flow information.
 
-However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` became the world's first "clean" implementation of reentrant synchronization primitives for .NET's asynchronous execution model.
+However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` module became the world's first "clean" implementation of reentrant synchronization primitives for .NET's asynchronous execution model.
 The word "clean" means that it does not use such unreliable techniques as `System.Diagnostics.StackTrace`.
 Previously, "clean" implementations were considered impossible due to aforementioned limitations of the `System.AsyncLocal<T>` class.
 
@@ -156,7 +156,7 @@ Previously, "clean" implementations were considered impossible due to aforementi
 
 ### AsyncLock
 
-`Gapotchenko.FX.Threading.AsyncLock` represents a reentrant synchronization primitive
+`Gapotchenko.FX.Threading.AsyncLock` represents a **reentrant** synchronization primitive
 that ensures that only one task or thread can access a resource at any given time:
 
 ``` C#
@@ -176,7 +176,7 @@ finally
 }
 ```
 
-`AsyncLock` implements `Gapotchenko.FX.Threading.IAsyncLockable` interface that gives access to a handy shortcut for entering and exiting the lock scope asynchronously without manual `try`-`finally` constructs:
+`AsyncLock` implements `Gapotchenko.FX.Threading.IAsyncLockable` interface that gives access to handy shortcuts for entering and exiting the lock scope asynchronously without manual `try`-`finally` constructs:
 
 ``` C#
 using Gapotchenko.FX.Threading;
@@ -192,7 +192,7 @@ using (await lockObj.EnterScopeAsync())
 
 ### AsyncCriticalSection
 
-`Gapotchenko.FX.Threading.AsyncCriticalSection` represents a non-reentrant synchronization primitive
+`Gapotchenko.FX.Threading.AsyncCriticalSection` represents a **non-reentrant** synchronization primitive
 that ensures that only one task or thread can access a resource at any given time.
 This is a non-reentrant variant of `AsyncLock`:
 
