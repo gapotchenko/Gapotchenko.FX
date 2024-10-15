@@ -276,7 +276,7 @@ async Task Produce()
 }
 ```
 
-The example produces the following output after 1 second of waiting:
+The example code produces the following output after one second of waiting:
 
 ```
 Woken up by another task.
