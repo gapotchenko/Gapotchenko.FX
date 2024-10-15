@@ -248,7 +248,7 @@ So if you know that your algorithm does not need nested locking, using `AsyncCri
 using Gapotchenko.FX.Threading;
 
 // Only one task can access this variable at any given time.
-int result = 0;
+int? result = null;
 
 var monitor = new AsyncMonitor();
 
@@ -258,7 +258,7 @@ async Task Consume()
 {
     using (await monitor.EnterScopeAsync())
     {
-        while (result == 0)
+        while (result == null)
             await monitor.WaitAsync();
         Console.WriteLine("Woken up by another task.")
         Console.WriteLine("Result: {0}", result);
