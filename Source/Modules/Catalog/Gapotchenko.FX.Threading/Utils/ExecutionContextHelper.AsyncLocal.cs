@@ -66,15 +66,15 @@ namespace Gapotchenko.FX.Threading.Utils;
 partial class ExecutionContextHelper
 {
     /// <summary>
-    /// Modifies <see cref="AsyncLocal{T}"/> ambient data that is local to a given asynchronous control flow
-    /// by automatically replaying the specified action in all control flow branches
-    /// to make equivalent <see cref="AsyncLocal{T}"/> data changes in all of them.
+    /// Modifies <see cref="AsyncLocal{T}"/> ambient data that is local to a given asynchronous control flow.
     /// </summary>
     /// <remarks>
+    /// The specified action is automatically replayed in all control flow branches
+    /// to make equivalent <see cref="AsyncLocal{T}"/> data changes in all of them.
     /// This approach allows to overcome the limitations imposed by <see cref="AsyncLocal{T}"/> class
-    /// which only supports the inward flow of the ambient data.
-    /// By using this method, the outward flow of data is also possible.
-    /// The upper limit of the outward flow is determined by the location of the call to this method.
+    /// which only supports the inward flow of ambient data.
+    /// By using this method, the outward flow of the data is also possible.
+    /// An upper limit of the outward flow is determined by the location of the call to this method.
     /// </remarks>
     /// <param name="action">The <see cref="Action{T}"/> that directly or indirectly modifies an <see cref="AsyncLocal{T}.Value"/> property.</param>
     /// <returns>
