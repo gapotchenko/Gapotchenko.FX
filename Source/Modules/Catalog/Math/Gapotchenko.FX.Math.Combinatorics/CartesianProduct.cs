@@ -33,12 +33,13 @@ public static partial class CartesianProduct
     /// <param name="second">The second factor.</param>
     /// <param name="rest">The rest of factors.</param>
     /// <returns>The Cartesian product of the specified factors.</returns>
-    public static IResult<T> Of<T>(IEnumerable<T>? first, IEnumerable<T>? second, params IEnumerable<T>?[] rest)
+    public static IResult<T> Of<T>(IEnumerable<T>? first, IEnumerable<T>? second, params IEnumerable<T>?[]? rest)
     {
-        if (rest == null)
-            throw new ArgumentNullException(nameof(rest));
+        IEnumerable<IEnumerable<T>?> sequences = [first, second];
+        if (rest != null)
+            sequences = sequences.Concat(rest);
 
-        return Of(new[] { first, second }.Concat(rest));
+        return Of(sequences);
     }
 
     /// <summary>
