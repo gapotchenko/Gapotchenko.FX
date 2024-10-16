@@ -14,7 +14,7 @@ public class CartesianProductTests
         var factors = new[]
         {
             new int[l1] { 1, 2 },
-            []
+            new int[l2] { }
         };
 
         int cardinality = CartesianProduct.Cardinality(factors.Select(x => x.Length));
@@ -33,7 +33,7 @@ public class CartesianProductTests
         var factors = new[]
         {
             new int[l1] { 1, 2 },
-            [5, 6, 7]
+            new int[l2] { 5, 6, 7 }
         };
 
         int cardinality = CartesianProduct.Cardinality(factors.Select(x => x.Length));
@@ -62,8 +62,8 @@ public class CartesianProductTests
 
         var p =
             CartesianProduct.Of(
-                new int[l1] { 1, 2 },
-                new string[l2] { "A", "B", "C" },
+                [1, 2],
+                ["A", "B", "C"],
                 ValueTuple.Create)
             .ReifyList();
 

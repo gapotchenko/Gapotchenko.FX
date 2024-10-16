@@ -5,7 +5,7 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests;
 [TestClass]
 public class PermutationTests
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(new[] { 1, 2 })]
     [DataRow(new[] { 2, 1 })]
     public void Permutations_Of2UniqueElements(int[] source)
@@ -26,7 +26,7 @@ public class PermutationTests
         Assert.IsTrue(s.Contains([2, 1]));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(new[] { 1, 2 })]
     [DataRow(new[] { 2, 1 })]
     public void Permutations_Of2UniqueElements_Distinct(int[] source)
@@ -47,7 +47,7 @@ public class PermutationTests
         Assert.IsTrue(s.Contains([2, 1]));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(new[] { 1, 2 })]
     [DataRow(new[] { 2, 1 })]
     public void Permutations_Of2UniqueElements_Count(int[] source)
@@ -115,7 +115,7 @@ public class PermutationTests
         Assert.AreEqual(cardinality, count);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(new[] { 1, 2, 3 })]
     [DataRow(new[] { 1, 3, 2 })]
     [DataRow(new[] { 2, 1, 3 })]
@@ -144,7 +144,7 @@ public class PermutationTests
         Assert.IsTrue(s.Contains([3, 2, 1]));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(new[] { 1, 2, 3 })]
     [DataRow(new[] { 1, 3, 2 })]
     [DataRow(new[] { 2, 1, 3 })]
@@ -173,7 +173,7 @@ public class PermutationTests
         Assert.IsTrue(s.Contains([3, 2, 1]));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(new[] { 1, 2, 3 })]
     [DataRow(new[] { 1, 3, 2 })]
     [DataRow(new[] { 2, 1, 3 })]
@@ -189,7 +189,7 @@ public class PermutationTests
         Assert.AreEqual(cardinality, count);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(new[] { 1, 2, 2 })]
     [DataRow(new[] { 2, 1, 2 })]
     [DataRow(new[] { 2, 2, 1 })]
@@ -215,7 +215,7 @@ public class PermutationTests
         { Assert.IsTrue(s.TryGetValue([2, 2, 1], out var count) && count == 2); }
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(new[] { 1, 2, 2 })]
     [DataRow(new[] { 2, 1, 2 })]
     [DataRow(new[] { 2, 2, 1 })]
@@ -240,7 +240,7 @@ public class PermutationTests
         Assert.IsTrue(s.Contains([2, 2, 1]));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(new[] { 1, 2, 2 })]
     [DataRow(new[] { 2, 1, 2 })]
     [DataRow(new[] { 2, 2, 1 })]
@@ -255,7 +255,7 @@ public class PermutationTests
         Assert.AreEqual(cardinality, count);
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(new[] { 1, 2, 2 })]
     [DataRow(new[] { 2, 1, 2 })]
     [DataRow(new[] { 2, 2, 1 })]

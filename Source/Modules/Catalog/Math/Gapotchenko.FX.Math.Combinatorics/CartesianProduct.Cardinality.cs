@@ -8,73 +8,69 @@ namespace Gapotchenko.FX.Math.Combinatorics;
 
 partial class CartesianProduct
 {
+    /// <inheritdoc cref="Cardinality(IEnumerable{int})"/>
+    public static int Cardinality(params int[] lengths) => Cardinality((IEnumerable<int>)lengths);
+
     /// <summary>
-    /// Returns a Cartesian product cardinality for the specified sequence lengths.
+    /// Returns a Cartesian product cardinality for the specified lengths of multiplied factors.
     /// </summary>
-    /// <param name="lengths">The sequence lengths.</param>
-    /// <returns>The Cartesian product cardinality.</returns>
+    /// <param name="lengths">The lengths of multiplied factors.</param>
+    /// <returns>A Cartesian product cardinality.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="lengths"/> is <see langword="null"/>.</exception>
+    /// <exception cref="OverflowException">The result is too big to fit into <see cref="int"/>.</exception>
     public static int Cardinality(IEnumerable<int> lengths)
     {
         if (lengths == null)
             throw new ArgumentNullException(nameof(lengths));
 
-        bool hasFactor = false;
         int cardinality = 1;
+        bool hasFactor = false;
 
         foreach (var length in lengths)
         {
             if (length == 0)
                 return 0;
 
-            cardinality *= length;
+            cardinality = checked(cardinality * length);
             hasFactor = true;
         }
 
-        if (!hasFactor)
+        if (hasFactor)
+            return cardinality;
+        else
             return 0;
-
-        return cardinality;
     }
 
-    /// <summary>
-    /// Returns a Cartesian product cardinality for the specified sequence lengths.
-    /// </summary>
-    /// <param name="lengths">The sequence lengths.</param>
-    /// <returns>The Cartesian product cardinality.</returns>
-    public static int Cardinality(params int[] lengths) => Cardinality((IEnumerable<int>)lengths);
+    /// <inheritdoc cref="Cardinality(IEnumerable{long})"/>
+    public static long Cardinality(params long[] lengths) => Cardinality((IEnumerable<long>)lengths);
 
     /// <summary>
-    /// Returns a Cartesian product cardinality for the specified sequence lengths.
+    /// <inheritdoc cref="Cardinality(IEnumerable{int})"/>
     /// </summary>
-    /// <param name="lengths">The sequence lengths.</param>
-    /// <returns>The Cartesian product cardinality.</returns>
+    /// <param name="lengths"><inheritdoc cref="Cardinality(IEnumerable{int})"/></param>
+    /// <returns><inheritdoc cref="Cardinality(IEnumerable{int})"/></returns>
+    /// <exception cref="ArgumentNullException"><paramref name="lengths"/> is <see langword="null"/>.</exception>
+    /// <exception cref="OverflowException">The result is too big to fit into <see cref="long"/>.</exception>
     public static long Cardinality(IEnumerable<long> lengths)
     {
         if (lengths == null)
             throw new ArgumentNullException(nameof(lengths));
 
-        bool hasFactor = false;
         long cardinality = 1;
+        bool hasFactor = false;
 
         foreach (var length in lengths)
         {
             if (length == 0)
                 return 0;
 
-            cardinality *= length;
+            cardinality = checked(cardinality * length);
             hasFactor = true;
         }
 
-        if (!hasFactor)
+        if (hasFactor)
+            return cardinality;
+        else
             return 0;
-
-        return cardinality;
     }
-
-    /// <summary>
-    /// Returns a Cartesian product cardinality for the specified sequence lengths.
-    /// </summary>
-    /// <param name="lengths">The sequence lengths.</param>
-    /// <returns>The Cartesian product cardinality.</returns>
-    public static long Cardinality(params long[] lengths) => Cardinality((IEnumerable<long>)lengths);
 }

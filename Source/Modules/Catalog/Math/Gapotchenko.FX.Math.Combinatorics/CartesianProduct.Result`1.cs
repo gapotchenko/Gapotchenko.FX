@@ -65,9 +65,7 @@ partial class CartesianProduct
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly IEqualityComparer<T>? m_Comparer;
 
-        IEnumerable<IRow<T>> Enumerate() => Multiply(m_Factors);
-
-        public IEnumerator<IRow<T>> GetEnumerator() => Enumerate().GetEnumerator();
+        public IEnumerator<IRow<T>> GetEnumerator() => Multiply(m_Factors).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

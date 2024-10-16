@@ -24,7 +24,7 @@ public static class CartesianProductExtensions
             throw new ArgumentNullException(nameof(factors));
 
         return CartesianProduct.MultiplyAccelerated(
-            factors.Select(x => (x ?? throw new ArgumentNullException(nameof(factors), "A Cartesian product factor cannot be null."))));
+            factors.Select(x => x ?? throw new ArgumentException("A Cartesian product factor cannot be null.", nameof(factors))));
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ public static class CartesianProductExtensions
 
     /// <summary>
     /// Returns a Cartesian product of two sequences by enumerating all possible combinations of sequence elements,
-    /// and applying a user-defined projection to each combination.
+    /// and applying a user-defined projection to each combination to produce a sequence of results.
     /// </summary>
     /// <typeparam name="TFirst">The type of the elements of the first input sequence.</typeparam>
     /// <typeparam name="TSecond">The type of the elements of the second input sequence.</typeparam>
@@ -138,24 +138,21 @@ public static class CartesianProductExtensions
     /// <param name="second">The second input sequence of elements.</param>
     /// <param name="resultSelector">The projection function that maps a combination of input sequence elements to an element of a resulting sequence.</param>
     /// <returns>The Cartesian product of two input sequences with user-defined projection applied.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="first"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="second"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="resultSelector"/> is <see langword="null"/>.</exception>
     public static IEnumerable<TResult> CrossJoin<TFirst, TSecond, TResult>(
         this IEnumerable<TFirst> first,
         IEnumerable<TSecond> second,
-        Func<TFirst, TSecond, TResult> resultSelector)
-    {
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
-        if (resultSelector == null)
-            throw new ArgumentNullException(nameof(resultSelector));
-
-        return CartesianProduct.Multiply(first, second, resultSelector);
-    }
+        Func<TFirst, TSecond, TResult> resultSelector) =>
+        CartesianProduct.Multiply(
+            first ?? throw new ArgumentNullException(nameof(first)),
+            second ?? throw new ArgumentNullException(nameof(second)),
+            resultSelector ?? throw new ArgumentNullException(nameof(resultSelector)));
 
     /// <summary>
     /// Returns a Cartesian product of three sequences by enumerating all possible combinations of sequence elements,
-    /// and applying a user-defined projection to each combination.
+    /// and applying a user-defined projection to each combination to produce a sequence of results.
     /// </summary>
     /// <typeparam name="TFirst">The type of the elements of the first input sequence.</typeparam>
     /// <typeparam name="TSecond">The type of the elements of the second input sequence.</typeparam>
@@ -166,27 +163,24 @@ public static class CartesianProductExtensions
     /// <param name="third">The third input sequence of elements.</param>
     /// <param name="resultSelector">The projection function that maps a combination of input sequence elements to an element of a resulting sequence.</param>
     /// <returns>The Cartesian product of two input sequences with user-defined projection applied.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="first"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="second"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="third"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="resultSelector"/> is <see langword="null"/>.</exception>
     public static IEnumerable<TResult> CrossJoin<TFirst, TSecond, TThird, TResult>(
         this IEnumerable<TFirst> first,
         IEnumerable<TSecond> second,
         IEnumerable<TThird> third,
-        Func<TFirst, TSecond, TThird, TResult> resultSelector)
-    {
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
-        if (third == null)
-            throw new ArgumentNullException(nameof(third));
-        if (resultSelector == null)
-            throw new ArgumentNullException(nameof(resultSelector));
-
-        return CartesianProduct.Multiply(first, second, third, resultSelector);
-    }
+        Func<TFirst, TSecond, TThird, TResult> resultSelector) =>
+        CartesianProduct.Multiply(
+            first ?? throw new ArgumentNullException(nameof(first)),
+            second ?? throw new ArgumentNullException(nameof(second)),
+            third ?? throw new ArgumentNullException(nameof(third)),
+            resultSelector ?? throw new ArgumentNullException(nameof(resultSelector)));
 
     /// <summary>
     /// Returns a Cartesian product of four sequences by enumerating all possible combinations of sequence elements,
-    /// and applying a user-defined projection to each combination.
+    /// and applying a user-defined projection to each combination to produce a sequence of results.
     /// </summary>
     /// <typeparam name="TFirst">The type of the elements of the first input sequence.</typeparam>
     /// <typeparam name="TSecond">The type of the elements of the second input sequence.</typeparam>
@@ -199,24 +193,21 @@ public static class CartesianProductExtensions
     /// <param name="fourth">The fourth input sequence of elements.</param>
     /// <param name="resultSelector">The projection function that maps a combination of input sequence elements to an element of a resulting sequence.</param>
     /// <returns>The Cartesian product of two input sequences with user-defined projection applied.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="first"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="second"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="third"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="fourth"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="resultSelector"/> is <see langword="null"/>.</exception>
     public static IEnumerable<TResult> CrossJoin<TFirst, TSecond, TThird, TFourth, TResult>(
         this IEnumerable<TFirst> first,
         IEnumerable<TSecond> second,
         IEnumerable<TThird> third,
         IEnumerable<TFourth> fourth,
-        Func<TFirst, TSecond, TThird, TFourth, TResult> resultSelector)
-    {
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
-        if (third == null)
-            throw new ArgumentNullException(nameof(third));
-        if (fourth == null)
-            throw new ArgumentNullException(nameof(fourth));
-        if (resultSelector == null)
-            throw new ArgumentNullException(nameof(resultSelector));
-
-        return CartesianProduct.Multiply(first, second, third, fourth, resultSelector);
-    }
+        Func<TFirst, TSecond, TThird, TFourth, TResult> resultSelector) =>
+        CartesianProduct.Multiply(
+            first ?? throw new ArgumentNullException(nameof(first)),
+            second ?? throw new ArgumentNullException(nameof(second)),
+            third ?? throw new ArgumentNullException(nameof(third)),
+            fourth ?? throw new ArgumentNullException(nameof(fourth)),
+            resultSelector ?? throw new ArgumentNullException(nameof(resultSelector)));
 }

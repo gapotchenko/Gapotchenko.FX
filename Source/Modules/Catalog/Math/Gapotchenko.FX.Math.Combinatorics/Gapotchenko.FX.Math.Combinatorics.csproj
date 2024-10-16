@@ -15,7 +15,6 @@
 
   <PropertyGroup>
     <AnalysisMode>All</AnalysisMode>
-    <NoWarn>$(NoWarn),CA1710</NoWarn>
   </PropertyGroup>
   
   <ItemGroup>

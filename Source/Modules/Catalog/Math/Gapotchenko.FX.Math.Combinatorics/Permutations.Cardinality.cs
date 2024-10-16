@@ -9,16 +9,18 @@ namespace Gapotchenko.FX.Math.Combinatorics;
 partial class Permutations
 {
     /// <summary>
-    /// Returns the number of permutations for a multiset of a specified length.
+    /// Returns a total number of permutations for a multiset of the specified length.
     /// </summary>
     /// <param name="length">The length of a multiset.</param>
-    /// <returns>The number of permutations.</returns>
+    /// <returns>A total number of permutations.</returns>
+    /// <exception cref="OverflowException">The result is too big to fit into <see cref="int"/>.</exception>
     public static int Cardinality(int length) => MathEx.Factorial(length);
 
     /// <summary>
-    /// Returns a <see cref="long"/> that represents the total number of permutations for a multiset of a specified length.
+    /// <inheritdoc cref="Cardinality(int)"/>
     /// </summary>
-    /// <param name="length">The length of a multiset.</param>
-    /// <returns>The number of permutations.</returns>
+    /// <param name="length"><inheritdoc cref="Cardinality(int)"/></param>
+    /// <returns><inheritdoc cref="Cardinality(int)"/></returns>
+    /// <exception cref="OverflowException">The result is too big to fit into <see cref="long"/>.</exception>
     public static long Cardinality(long length) => MathEx.Factorial(length);
 }
