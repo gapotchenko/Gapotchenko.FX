@@ -2,6 +2,42 @@
 
 static class LockableHelper
 {
+    public static int GetLockDepth(ILockable lockable)
+    {
+        int depth = UnwindLock(lockable);
+
+        // Reenter the lock.
+        for (int i = 0; i < depth; ++i)
+            lockable.Enter();
+
+        return depth;
+    }
+
+    public static async Task<int> GetLockDepthAsync(IAsyncLockable lockable)
+    {
+        int depth = UnwindLock(lockable);
+
+        // Reenter the lock.
+        for (int i = 0; i < depth; ++i)
+            await lockable.EnterAsync().ConfigureAwait(false);
+
+        return depth;
+    }
+
+    static int UnwindLock(ILockable lockable)
+    {
+        int depth = 0;
+
+        // Exit the lock until it unlocks.
+        while (IsLockHeld(lockable))
+        {
+            lockable.Exit();
+            ++depth;
+        }
+
+        return depth;
+    }
+
     public static bool IsLockHeld(ILockable lockable)
     {
         if (lockable is IRecursiveLockable recursiveLockable)
@@ -19,31 +55,38 @@ static class LockableHelper
             ArgumentOutOfRangeException.ThrowIfNegative(recursionLevel);
 #endif
 
-            return new(
-                Enumerable.Range(1, recursionLevel)
-                .Select(_ => enterFunc())
-                .ToArray());
+            var scopes = new LockableScope[recursionLevel];
+            for (int i = recursionLevel - 1; i >= 0; --i)
+                scopes[i] = enterFunc();
+            return new(scopes);
         }
 
-        public static async Task<RecursiveScope> CreateAsync(Func<Task<LockableScope>> enterFunc, int recursionLevel)
+        public static Task<RecursiveScope> CreateAsync(Func<Task<LockableScope>> enterFunc, int recursionLevel)
         {
 #if NET8_0_OR_GREATER
             ArgumentNullException.ThrowIfNull(enterFunc);
             ArgumentOutOfRangeException.ThrowIfNegative(recursionLevel);
 #endif
 
-            var scopes = new LockableScope[recursionLevel];
-            for (int i = 0; i < recursionLevel; ++i)
-                scopes[i] = await enterFunc().ConfigureAwait(false);
-            return new(scopes);
+            var tasks = new Task<LockableScope>[recursionLevel];
+            for (int i = recursionLevel - 1; i >= 0; --i)
+                tasks[i] = enterFunc();
+
+            return
+                Task.WhenAll(tasks)
+                .ContinueWith(
+                    x => new RecursiveScope(x.Result),
+                    CancellationToken.None,
+                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
+                    TaskScheduler.Default);
         }
 
-        RecursiveScope(LockableScope[] scopes)
+        RecursiveScope(LockableScope[]? scopes)
         {
-            m_Scopes = scopes;
+            m_Scopes = Empty.Nullify(scopes);
         }
 
-        public bool HasLock => m_Scopes?[0].HasLock ?? false;
+        public bool HasLock => m_Scopes?[^1].HasLock ?? false;
 
         public void Dispose()
         {

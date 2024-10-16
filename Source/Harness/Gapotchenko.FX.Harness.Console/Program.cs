@@ -29,18 +29,25 @@ using Console = System.Console;
 
 class Program
 {
-    static void Main2(string[] args)
+    static void Main()
     {
         try
         {
-            var interval = Interval.Exclusive(10f, 20f);
-            var value = 21f;
+            var mutex = new AsyncLock();
+            var cv = new AsyncConditionVariable(mutex);
 
-            var x = interval.Clamp(value).Value;
+            ThreadPool.QueueUserWorkItem(
+                (_) =>
+                {
+                    using var scope = mutex.EnterScope();
+                    using var scope2 = mutex.EnterScope();
+                    cv.Notify();
+                });
 
-            Console.WriteLine(x.ToString());
-
-            _ = StringMetrics.Distance.Levenshtein.Measure("abc", "123");
+            using var scope1 = mutex.EnterScope();
+            using var scope2 = mutex.EnterScope();
+            using var scope3 = mutex.EnterScope();
+            Console.WriteLine(cv.Wait(1000));
         }
         catch (Exception e)
         {
@@ -48,7 +55,7 @@ class Program
         }
     }
 
-    static void Main(string[] args)
+    static void Main2(string[] args)
     {
         try
         {

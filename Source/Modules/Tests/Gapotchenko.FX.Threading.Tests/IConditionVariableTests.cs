@@ -75,13 +75,13 @@ public abstract class IConditionVariableTests
     [DataRow(10)]
     public void IConditionVariable_Wait_LocksOnExit(int millisecondsTimeout)
     {
+        var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
+
         foreach (var recursionLevel in EnumerateRecursionLevels())
             Run(recursionLevel);
 
         void Run(int recursionLevel)
         {
-            var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
-
             var cv = CreateConditionVariable();
             var lockable = GetLockable(cv);
             using var lockScope = lockable.EnterScopeRecursively(recursionLevel);
@@ -89,7 +89,7 @@ public abstract class IConditionVariableTests
             foreach (var waitFunc in EnumerateWaitFunctions(cv))
             {
                 Assert.IsFalse(waitFunc(timeout));
-                Assert.IsTrue(LockableHelper.IsLockHeld(lockable));
+                Assert.AreEqual(recursionLevel, LockableHelper.GetLockDepth(lockable));
             }
         }
     }
@@ -140,6 +140,7 @@ public abstract class IConditionVariableTests
     public void IAsyncConditionVariable_Wait_CompletesAfterNotify()
     {
         var cv = CreateConditionVariable();
+        var lockable = GetLockable(cv);
 
         foreach (var i in CartesianProduct.Of(
             EnumerateWaitFunctions(cv),
@@ -151,8 +152,7 @@ public abstract class IConditionVariableTests
 
         void Run(Func<TimeSpan, bool> waitFunc, int recursionLevel)
         {
-            var lockable = GetLockable(cv);
-            using var lockScope = lockable.EnterScope();
+            using var lockScope = lockable.EnterScopeRecursively(recursionLevel);
 
             var timeout = IConditionVariable_PositiveTimeout;
 
@@ -198,6 +198,7 @@ public abstract class IConditionVariableTests
     public void IConditionVariable_Wait_OneCompletesAfterNotify()
     {
         var cv = CreateConditionVariable();
+        var lockable = GetLockable(cv);
 
         foreach (var i in CartesianProduct.Of(
             EnumerateWaitFunctions(cv),
@@ -209,7 +210,6 @@ public abstract class IConditionVariableTests
 
         void Run(Func<TimeSpan, bool> waitFunc, int recursionLevel)
         {
-            var lockable = GetLockable(cv);
             using var lockAcquiredEvent1 = new AutoResetEvent(false);
             using var lockAcquiredEvent2 = new AutoResetEvent(false);
 
@@ -259,6 +259,7 @@ public abstract class IConditionVariableTests
     public void IConditionVariable_Wait_AllCompleteAfterNotifyAll()
     {
         var cv = CreateConditionVariable();
+        var lockable = GetLockable(cv);
 
         foreach (var i in CartesianProduct.Of(
             EnumerateWaitFunctions(cv),
@@ -270,13 +271,12 @@ public abstract class IConditionVariableTests
 
         void Run(Func<TimeSpan, bool> waitFunc, int recursionLevel)
         {
-            var lockable = GetLockable(cv);
             using var lockAcquiredEvent1 = new AutoResetEvent(false);
             using var lockAcquiredEvent2 = new AutoResetEvent(false);
 
             bool WaitTask(TimeSpan timeout, AutoResetEvent lockAcquiredEvent)
             {
-                using (lockable.EnterScope())
+                using (lockable.EnterScopeRecursively(recursionLevel))
                 {
                     lockAcquiredEvent.Set();
                     return waitFunc(timeout);
@@ -317,7 +317,7 @@ public abstract class IConditionVariableTests
 
     #region Helpers
 
-    IEnumerable<int> EnumerateRecursionLevels() => EnumerateRecursionLevels(IsRecursive);
+    protected IEnumerable<int> EnumerateRecursionLevels() => EnumerateRecursionLevels(IsRecursive);
 
     static IEnumerable<int> EnumerateRecursionLevels(bool isRecursive)
     {

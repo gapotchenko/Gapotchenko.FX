@@ -93,22 +93,15 @@ readonly struct AsyncConditionVariableImpl
     // Core Implementation
     // ----------------------------------------------------------------------
 
-    bool DoWait(IAsyncLockable lockable, CancellationToken cancellationToken)
+    bool DoWait(ILockable lockable, CancellationToken cancellationToken)
     {
         var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken);
         try
         {
             var waitHandle = AllocateWaitHandle(cts.Token);
 
-            lockable.Exit();
-            try
-            {
+            using (new LockableHelper.ExitScope(lockable))
                 return TaskBridge.Execute(waitHandle);
-            }
-            finally
-            {
-                lockable.Enter(CancellationToken.None);
-            }
         }
         finally
         {
@@ -117,7 +110,7 @@ readonly struct AsyncConditionVariableImpl
         }
     }
 
-    bool DoWait(IAsyncLockable lockable, TimeSpan timeout, CancellationToken cancellationToken)
+    bool DoWait(ILockable lockable, TimeSpan timeout, CancellationToken cancellationToken)
     {
         Debug.Assert(ExceptionHelper.IsValidTimeout(timeout));
 
@@ -134,8 +127,7 @@ readonly struct AsyncConditionVariableImpl
         {
             var waitHandle = AllocateWaitHandle(cts.Token);
 
-            lockable.Exit();
-            try
+            using (new LockableHelper.ExitScope(lockable))
             {
                 return TaskBridge.Execute(
                     ct =>
@@ -152,10 +144,6 @@ readonly struct AsyncConditionVariableImpl
                     },
                     cancellationToken);
             }
-            finally
-            {
-                lockable.Enter(CancellationToken.None);
-            }
         }
         finally
         {
@@ -170,14 +158,14 @@ readonly struct AsyncConditionVariableImpl
 
         async Task<bool> ExecuteAsync()
         {
-            lockable.Exit();
+            var exitScope = new LockableHelper.AsyncExitScope(lockable);
             try
             {
                 return await waitHandle.ConfigureAwait(false);
             }
             finally
             {
-                await lockable.EnterAsync(CancellationToken.None).ConfigureAwait(false);
+                await exitScope.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -235,7 +223,7 @@ readonly struct AsyncConditionVariableImpl
     readonly AsyncWaitQueue<bool> m_Queue = new();
 
     [StackTraceHidden]
-    void ValidateLockable(IAsyncLockable lockable)
+    void ValidateLockable(ILockable lockable)
     {
         LockableHelper.ValidateLockOwnership(lockable);
     }

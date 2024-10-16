@@ -23,4 +23,48 @@ static class LockableHelper
         else
             return lockable.IsEntered;
     }
+
+    public readonly struct ExitScope(ILockable lockable) : IDisposable
+    {
+        public void Dispose()
+        {
+            // Undo the exit.
+            for (int i = 0; i < m_RecursionLevel; ++i)
+                lockable.Enter();
+        }
+
+        readonly int m_RecursionLevel = ExitAll(lockable);
+    }
+
+    public readonly struct AsyncExitScope(IAsyncLockable lockable)
+    {
+        public async Task DisposeAsync()
+        {
+            // Undo the exit.
+            for (int i = 0; i < m_RecursionLevel; ++i)
+                await lockable.EnterAsync().ConfigureAwait(false);
+        }
+
+        readonly int m_RecursionLevel = ExitAll(lockable);
+    }
+
+    static int ExitAll(ILockable lockable)
+    {
+        if (lockable is IRecursiveLockable recursiveLockable)
+        {
+            int recursionLevel = 0;
+            do
+            {
+                recursiveLockable.Exit();
+                ++recursionLevel;
+            }
+            while (recursiveLockable.IsLockedByCurrentThread);
+            return recursionLevel;
+        }
+        else
+        {
+            lockable.Exit();
+            return 1;
+        }
+    }
 }
