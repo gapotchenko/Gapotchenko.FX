@@ -215,7 +215,7 @@ public abstract class IConditionVariableTests
 
             bool WaitTask(TimeSpan timeout, AutoResetEvent lockAcquiredEvent)
             {
-                using (lockable.EnterScope())
+                using (lockable.EnterScopeRecursively(recursionLevel))
                 {
                     lockAcquiredEvent.Set();
                     return waitFunc(timeout);
