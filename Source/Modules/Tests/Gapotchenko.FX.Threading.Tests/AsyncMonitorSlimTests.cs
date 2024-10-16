@@ -16,11 +16,13 @@ public sealed class AsyncMonitorSlimTests : IAsyncMonitorTests
     protected override IAsyncMonitor CreateAsyncMonitor() => new AsyncMonitorSlim();
 
     protected override IAsyncMonitor GetAsyncMonitorFor(object obj) => AsyncMonitorSlim.For(obj);
+
+    protected override bool IsRecursive => false;
 }
 
 [TestClass]
 [TestCategory("monitor")]
-public sealed class AsyncMonitorTests_IAsyncLockable : IAsyncLockableTests
+public sealed class AsyncMonitorSlimTests_IAsyncLockable : IAsyncLockableTests
 {
     protected override IAsyncLockable CreateAsyncLockable() => new AsyncMonitorSlim();
 }

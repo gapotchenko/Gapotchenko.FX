@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Catalog\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\..\Catalog\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+    <ProjectReference Include="..\..\Catalog\Math\Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2024
 
+using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Threading.Tasks;
 using Gapotchenko.FX.Threading.Tests.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,6 +24,19 @@ public abstract class IConditionVariableTests
     protected abstract IConditionVariable CreateConditionVariable();
 
     protected abstract ILockable GetLockable(IConditionVariable conditionVariable);
+
+    protected abstract bool IsRecursive { get; }
+
+    // ----------------------------------------------------------------------
+
+    [TestMethod]
+    public void IConditionVariable_RecursionDeclaration()
+    {
+        var cv = CreateConditionVariable();
+        var lockable = GetLockable(cv);
+
+        Assert.AreEqual(IsRecursive, lockable.IsRecursive);
+    }
 
     // ----------------------------------------------------------------------
 
@@ -61,16 +75,22 @@ public abstract class IConditionVariableTests
     [DataRow(10)]
     public void IConditionVariable_Wait_LocksOnExit(int millisecondsTimeout)
     {
-        var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
+        foreach (var recursionLevel in EnumerateRecursionLevels())
+            Run(recursionLevel);
 
-        var cv = CreateConditionVariable();
-        var lockable = GetLockable(cv);
-        using var lockScope = lockable.EnterScope();
-
-        foreach (var waitFunc in EnumerateWaitFunctions(cv))
+        void Run(int recursionLevel)
         {
-            Assert.IsFalse(waitFunc(timeout));
-            Assert.IsTrue(LockableHelper.IsLockHeld(lockable));
+            var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
+
+            var cv = CreateConditionVariable();
+            var lockable = GetLockable(cv);
+            using var lockScope = lockable.EnterScopeRecursively(recursionLevel);
+
+            foreach (var waitFunc in EnumerateWaitFunctions(cv))
+            {
+                Assert.IsFalse(waitFunc(timeout));
+                Assert.IsTrue(LockableHelper.IsLockHeld(lockable));
+            }
         }
     }
 
@@ -79,26 +99,38 @@ public abstract class IConditionVariableTests
     [DataRow(10)]
     public void IConditionVariable_Wait_NoDeferredNotification(int millisecondsTimeout)
     {
-        var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
+        foreach (var recursionLevel in EnumerateRecursionLevels())
+            Run(recursionLevel);
 
-        var cv = CreateConditionVariable();
-        using var lockScope = GetLockable(cv).EnterScope();
-
-        foreach (var waitFunc in EnumerateWaitFunctions(cv))
+        void Run(int recursionLevel)
         {
-            cv.NotifyAll();
-            Assert.IsFalse(waitFunc(timeout));
+            var timeout = TimeSpan.FromMilliseconds(millisecondsTimeout);
+
+            var cv = CreateConditionVariable();
+            using var lockScope = GetLockable(cv).EnterScopeRecursively(recursionLevel);
+
+            foreach (var waitFunc in EnumerateWaitFunctions(cv))
+            {
+                cv.NotifyAll();
+                Assert.IsFalse(waitFunc(timeout));
+            }
         }
     }
 
     [TestMethod]
     public void IConditionVariable_Wait_DoesNotCompleteWithoutNotify()
     {
-        var cv = CreateConditionVariable();
-        using var lockScope = GetLockable(cv).EnterScope();
+        foreach (var recursionLevel in EnumerateRecursionLevels())
+            Run(recursionLevel);
 
-        foreach (var waitFunc in EnumerateWaitFunctions(cv))
-            Assert.IsFalse(waitFunc(IConditionVariable_NegativeTimeout));
+        void Run(int recursionLevel)
+        {
+            var cv = CreateConditionVariable();
+            using var lockScope = GetLockable(cv).EnterScopeRecursively(recursionLevel);
+
+            foreach (var waitFunc in EnumerateWaitFunctions(cv))
+                Assert.IsFalse(waitFunc(IConditionVariable_NegativeTimeout));
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -109,51 +141,54 @@ public abstract class IConditionVariableTests
     {
         var cv = CreateConditionVariable();
 
-        foreach (var waitFunc in EnumerateWaitFunctions(cv))
-            IConditionVariable_Wait_CompletesAfterNotify_Core(cv, waitFunc);
-    }
-
-    void IConditionVariable_Wait_CompletesAfterNotify_Core(
-        IConditionVariable cv,
-        Func<TimeSpan, bool> waitFunc)
-    {
-        var lockable = GetLockable(cv);
-        using var lockScope = lockable.EnterScope();
-
-        var timeout = IConditionVariable_PositiveTimeout;
-
-        #region Notify
-
-        void NotifyTask()
+        foreach (var i in CartesianProduct.Of(
+            EnumerateWaitFunctions(cv),
+            EnumerateRecursionLevels(),
+            ValueTuple.Create))
         {
-            using (lockable.EnterScope())
-                cv.Notify();
+            Run(i.Item1, i.Item2);
         }
 
-        Task notificationTask;
-        using (ExecutionContext.SuppressFlow())
-            notificationTask = TaskBridge.ExecuteAsync(NotifyTask);
-
-        Assert.IsTrue(waitFunc(timeout));
-        TaskBridge.Execute(notificationTask);
-
-        #endregion
-
-        #region NotifyAll
-
-        void NotifyAllTask()
+        void Run(Func<TimeSpan, bool> waitFunc, int recursionLevel)
         {
-            using (lockable.EnterScope())
-                cv.NotifyAll();
+            var lockable = GetLockable(cv);
+            using var lockScope = lockable.EnterScope();
+
+            var timeout = IConditionVariable_PositiveTimeout;
+
+            #region Notify
+
+            void NotifyTask()
+            {
+                using (lockable.EnterScope())
+                    cv.Notify();
+            }
+
+            Task notificationTask;
+            using (ExecutionContext.SuppressFlow())
+                notificationTask = TaskBridge.ExecuteAsync(NotifyTask);
+
+            Assert.IsTrue(waitFunc(timeout));
+            TaskBridge.Execute(notificationTask);
+
+            #endregion
+
+            #region NotifyAll
+
+            void NotifyAllTask()
+            {
+                using (lockable.EnterScope())
+                    cv.NotifyAll();
+            }
+
+            using (ExecutionContext.SuppressFlow())
+                notificationTask = TaskBridge.ExecuteAsync(NotifyAllTask);
+
+            Assert.IsTrue(waitFunc(timeout));
+            TaskBridge.Execute(notificationTask);
+
+            #endregion
         }
-
-        using (ExecutionContext.SuppressFlow())
-            notificationTask = TaskBridge.ExecuteAsync(NotifyAllTask);
-
-        Assert.IsTrue(waitFunc(timeout));
-        TaskBridge.Execute(notificationTask);
-
-        #endregion
     }
 
     // ----------------------------------------------------------------------
@@ -165,54 +200,52 @@ public abstract class IConditionVariableTests
         var cv = CreateConditionVariable();
 
         foreach (var waitFunc in EnumerateWaitFunctions(cv))
-            IConditionVariable_Wait_OneCompletesAfterNotify_Core(cv, waitFunc);
-    }
+            RunCore(waitFunc);
 
-    void IConditionVariable_Wait_OneCompletesAfterNotify_Core(
-        IConditionVariable cv,
-        Func<TimeSpan, bool> waitFunc)
-    {
-        var lockable = GetLockable(cv);
-        using var lockAcquiredEvent1 = new AutoResetEvent(false);
-        using var lockAcquiredEvent2 = new AutoResetEvent(false);
-
-        bool WaitTask(TimeSpan timeout, AutoResetEvent lockAcquiredEvent)
+        void RunCore(Func<TimeSpan, bool> waitFunc)
         {
-            using (lockable.EnterScope())
+            var lockable = GetLockable(cv);
+            using var lockAcquiredEvent1 = new AutoResetEvent(false);
+            using var lockAcquiredEvent2 = new AutoResetEvent(false);
+
+            bool WaitTask(TimeSpan timeout, AutoResetEvent lockAcquiredEvent)
             {
-                lockAcquiredEvent.Set();
-                return waitFunc(timeout);
+                using (lockable.EnterScope())
+                {
+                    lockAcquiredEvent.Set();
+                    return waitFunc(timeout);
+                }
             }
+
+            Task<bool> waitTask1;
+            using (ExecutionContext.SuppressFlow())
+                waitTask1 = TaskBridge.ExecuteAsync(() => WaitTask(IConditionVariable_PositiveTimeout, lockAcquiredEvent1));
+
+            Assert.IsTrue(lockAcquiredEvent1.WaitOne(IConditionVariable_PositiveTimeout));
+
+            Task<bool> waitTask2;
+            using (ExecutionContext.SuppressFlow())
+                waitTask2 = TaskBridge.ExecuteAsync(() => WaitTask(IConditionVariable_NegativeTimeout, lockAcquiredEvent2));
+
+            Assert.IsTrue(lockAcquiredEvent2.WaitOne(IConditionVariable_PositiveTimeout));
+
+            void NotifyTask()
+            {
+                using (lockable.EnterScope())
+                    cv.Notify();
+            }
+
+            Task notificationTask;
+            using (ExecutionContext.SuppressFlow())
+                notificationTask = TaskBridge.ExecuteAsync(NotifyTask);
+
+            var waitResults = TaskBridge.Execute(Task.WhenAll(waitTask1, waitTask2));
+
+            Assert.IsTrue(waitResults[0]);
+            Assert.IsFalse(waitResults[1]);
+
+            TaskBridge.Execute(notificationTask);
         }
-
-        Task<bool> waitTask1;
-        using (ExecutionContext.SuppressFlow())
-            waitTask1 = TaskBridge.ExecuteAsync(() => WaitTask(IConditionVariable_PositiveTimeout, lockAcquiredEvent1));
-
-        Assert.IsTrue(lockAcquiredEvent1.WaitOne(IConditionVariable_PositiveTimeout));
-
-        Task<bool> waitTask2;
-        using (ExecutionContext.SuppressFlow())
-            waitTask2 = TaskBridge.ExecuteAsync(() => WaitTask(IConditionVariable_NegativeTimeout, lockAcquiredEvent2));
-
-        Assert.IsTrue(lockAcquiredEvent2.WaitOne(IConditionVariable_PositiveTimeout));
-
-        void NotifyTask()
-        {
-            using (lockable.EnterScope())
-                cv.Notify();
-        }
-
-        Task notificationTask;
-        using (ExecutionContext.SuppressFlow())
-            notificationTask = TaskBridge.ExecuteAsync(NotifyTask);
-
-        var waitResults = TaskBridge.Execute(Task.WhenAll(waitTask1, waitTask2));
-
-        Assert.IsTrue(waitResults[0]);
-        Assert.IsFalse(waitResults[1]);
-
-        TaskBridge.Execute(notificationTask);
     }
 
     // ----------------------------------------------------------------------
@@ -223,58 +256,66 @@ public abstract class IConditionVariableTests
         var cv = CreateConditionVariable();
 
         foreach (var waitFunc in EnumerateWaitFunctions(cv))
-            IConditionVariable_Wait_AllCompleteAfterNotifyAll_Core(cv, waitFunc);
-    }
+            RunCore(waitFunc);
 
-    void IConditionVariable_Wait_AllCompleteAfterNotifyAll_Core(
-        IConditionVariable cv,
-        Func<TimeSpan, bool> waitFunc)
-    {
-        var lockable = GetLockable(cv);
-        using var lockAcquiredEvent1 = new AutoResetEvent(false);
-        using var lockAcquiredEvent2 = new AutoResetEvent(false);
-
-        bool WaitTask(TimeSpan timeout, AutoResetEvent lockAcquiredEvent)
+        void RunCore(Func<TimeSpan, bool> waitFunc)
         {
-            using (lockable.EnterScope())
+            var lockable = GetLockable(cv);
+            using var lockAcquiredEvent1 = new AutoResetEvent(false);
+            using var lockAcquiredEvent2 = new AutoResetEvent(false);
+
+            bool WaitTask(TimeSpan timeout, AutoResetEvent lockAcquiredEvent)
             {
-                lockAcquiredEvent.Set();
-                return waitFunc(timeout);
+                using (lockable.EnterScope())
+                {
+                    lockAcquiredEvent.Set();
+                    return waitFunc(timeout);
+                }
             }
+
+            Task<bool> waitTask1;
+            using (ExecutionContext.SuppressFlow())
+                waitTask1 = TaskBridge.ExecuteAsync(() => WaitTask(IConditionVariable_PositiveTimeout, lockAcquiredEvent1));
+
+            Task<bool> waitTask2;
+            using (ExecutionContext.SuppressFlow())
+                waitTask2 = TaskBridge.ExecuteAsync(() => WaitTask(IConditionVariable_PositiveTimeout, lockAcquiredEvent2));
+
+            Assert.IsTrue(lockAcquiredEvent1.WaitOne(IConditionVariable_PositiveTimeout));
+            Assert.IsTrue(lockAcquiredEvent2.WaitOne(IConditionVariable_PositiveTimeout));
+
+            void NotifyTask()
+            {
+                using (lockable.EnterScope())
+                    cv.NotifyAll();
+            }
+
+            Task notificationTask;
+            using (ExecutionContext.SuppressFlow())
+                notificationTask = TaskBridge.ExecuteAsync(NotifyTask);
+
+            var waitResults = TaskBridge.Execute(Task.WhenAll(waitTask1, waitTask2));
+
+            Assert.IsTrue(waitResults[0]);
+            Assert.IsTrue(waitResults[1]);
+
+            TaskBridge.Execute(notificationTask);
         }
-
-        Task<bool> waitTask1;
-        using (ExecutionContext.SuppressFlow())
-            waitTask1 = TaskBridge.ExecuteAsync(() => WaitTask(IConditionVariable_PositiveTimeout, lockAcquiredEvent1));
-
-        Task<bool> waitTask2;
-        using (ExecutionContext.SuppressFlow())
-            waitTask2 = TaskBridge.ExecuteAsync(() => WaitTask(IConditionVariable_PositiveTimeout, lockAcquiredEvent2));
-
-        Assert.IsTrue(lockAcquiredEvent1.WaitOne(IConditionVariable_PositiveTimeout));
-        Assert.IsTrue(lockAcquiredEvent2.WaitOne(IConditionVariable_PositiveTimeout));
-
-        void NotifyTask()
-        {
-            using (lockable.EnterScope())
-                cv.NotifyAll();
-        }
-
-        Task notificationTask;
-        using (ExecutionContext.SuppressFlow())
-            notificationTask = TaskBridge.ExecuteAsync(NotifyTask);
-
-        var waitResults = TaskBridge.Execute(Task.WhenAll(waitTask1, waitTask2));
-
-        Assert.IsTrue(waitResults[0]);
-        Assert.IsTrue(waitResults[1]);
-
-        TaskBridge.Execute(notificationTask);
     }
 
     // ----------------------------------------------------------------------
 
     #region Helpers
+
+    IEnumerable<int> EnumerateRecursionLevels() => EnumerateRecursionLevels(IsRecursive);
+
+    static IEnumerable<int> EnumerateRecursionLevels(bool isRecursive)
+    {
+        if (isRecursive)
+            return [1, 2, 3];
+        else
+            return [1];
+    }
 
     static IEnumerable<Func<TimeSpan, bool>> EnumerateWaitFunctions(IConditionVariable cv)
     {

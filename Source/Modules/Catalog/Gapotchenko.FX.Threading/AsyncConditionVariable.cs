@@ -37,7 +37,7 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     readonly AsyncConditionVariableImpl m_CoreImpl = new();
 
     /// <summary>
-    /// Gets the <see cref="IAsyncLockable"/> instance this <see cref="AsyncConditionVariable"/> is associated with.
+    /// Gets the associated <see cref="IAsyncLockable"/> instance.
     /// </summary>
     public IAsyncLockable Lockable => m_Lockable;
 

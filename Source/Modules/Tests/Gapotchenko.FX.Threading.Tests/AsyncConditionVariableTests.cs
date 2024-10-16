@@ -28,6 +28,8 @@ public abstract class AsyncConditionVariableTests : IAsyncConditionVariableTests
 [TestClass]
 public sealed class AsyncConditionVariableTests_NonRecursive : AsyncConditionVariableTests
 {
+    protected override bool IsRecursive => false;
+
     protected override IAsyncLockable CreateAsyncLockable() => new AsyncCriticalSection();
 }
 
@@ -35,5 +37,7 @@ public sealed class AsyncConditionVariableTests_NonRecursive : AsyncConditionVar
 [TestCategory("recursive")]
 public sealed class AsyncConditionVariableTests_Recursive : AsyncConditionVariableTests
 {
+    protected override bool IsRecursive => true;
+
     protected override IAsyncLockable CreateAsyncLockable() => new AsyncLock();
 }
