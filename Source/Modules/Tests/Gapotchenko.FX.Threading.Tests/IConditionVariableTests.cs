@@ -160,7 +160,7 @@ public abstract class IConditionVariableTests
 
             void NotifyTask()
             {
-                using (lockable.EnterScope())
+                using (lockable.EnterScopeRecursively(recursionLevel))
                     cv.Notify();
             }
 
@@ -177,7 +177,7 @@ public abstract class IConditionVariableTests
 
             void NotifyAllTask()
             {
-                using (lockable.EnterScope())
+                using (lockable.EnterScopeRecursively(recursionLevel))
                     cv.NotifyAll();
             }
 
@@ -199,10 +199,15 @@ public abstract class IConditionVariableTests
     {
         var cv = CreateConditionVariable();
 
-        foreach (var waitFunc in EnumerateWaitFunctions(cv))
-            RunCore(waitFunc);
+        foreach (var i in CartesianProduct.Of(
+            EnumerateWaitFunctions(cv),
+            EnumerateRecursionLevels(),
+            ValueTuple.Create))
+        {
+            Run(i.Item1, i.Item2);
+        }
 
-        void RunCore(Func<TimeSpan, bool> waitFunc)
+        void Run(Func<TimeSpan, bool> waitFunc, int recursionLevel)
         {
             var lockable = GetLockable(cv);
             using var lockAcquiredEvent1 = new AutoResetEvent(false);
@@ -231,7 +236,7 @@ public abstract class IConditionVariableTests
 
             void NotifyTask()
             {
-                using (lockable.EnterScope())
+                using (lockable.EnterScopeRecursively(recursionLevel))
                     cv.Notify();
             }
 
@@ -255,10 +260,15 @@ public abstract class IConditionVariableTests
     {
         var cv = CreateConditionVariable();
 
-        foreach (var waitFunc in EnumerateWaitFunctions(cv))
-            RunCore(waitFunc);
+        foreach (var i in CartesianProduct.Of(
+            EnumerateWaitFunctions(cv),
+            EnumerateRecursionLevels(),
+            ValueTuple.Create))
+        {
+            Run(i.Item1, i.Item2);
+        }
 
-        void RunCore(Func<TimeSpan, bool> waitFunc)
+        void Run(Func<TimeSpan, bool> waitFunc, int recursionLevel)
         {
             var lockable = GetLockable(cv);
             using var lockAcquiredEvent1 = new AutoResetEvent(false);
@@ -286,7 +296,7 @@ public abstract class IConditionVariableTests
 
             void NotifyTask()
             {
-                using (lockable.EnterScope())
+                using (lockable.EnterScopeRecursively(recursionLevel))
                     cv.NotifyAll();
             }
 
