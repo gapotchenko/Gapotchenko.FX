@@ -7,7 +7,7 @@ It can be used separately or in conjunction with [`System.UriBuilder`](https://d
 
 The standalone usage of `UriQueryBuilder` class is similar to a widely used [`System.StringBuilder`](https://docs.microsoft.com/en-us/dotnet/api/system.text.stringbuilder) pattern:
 
-```csharp
+``` C#
 using Gapotchenko.FX;
 using System;
 
@@ -33,7 +33,7 @@ a=1&b=2
 In this way, the code can dynamically build standards-compliant URI queries according to the program logic.
 `UriQueryBuilder` takes care to properly handle all the isolation and escaping rules:
 
-```csharp
+``` C#
 using Gapotchenko.FX;
 using System;
 
@@ -55,7 +55,7 @@ p=a%20b%20c
 
 Once the query is built, it can be combined with a URI:
 
-```csharp
+``` C#
 using Gapotchenko.FX;
 using System;
 
@@ -80,7 +80,7 @@ https://example.com/?a=1&rad=productivity
 
 `UriQueryBuilder` can be used in conjunction with [`System.UriBuilder`](https://docs.microsoft.com/en-us/dotnet/api/system.uribuilder) to build the query part of a URI:
 
-```csharp
+``` C#
 using Gapotchenko.FX;
 using System;
 

@@ -11,7 +11,7 @@ Permutation is a widely used operation that returns all possible permutations of
 
 Let's take a look at the sample code:
 
-```csharp
+``` C#
 using Gapotchenko.FX.Math.Combinatorics;
 
 var seq = new[] { "A", "B", "C" };
@@ -96,7 +96,7 @@ the algorithm complexity stays at bay thanks to the built-in optimizer that choo
 
 `Permutations.Of(...)` is an explicit form of producing the permutations, but the LINQ shorthand `Permute()` is also available as a part of `Gapotchenko.FX.Math.Combinatorics` fluent API:
 
-```csharp
+``` C#
 using Gapotchenko.FX.Math.Combinatorics;
 
 foreach (var i in new[] { "A", "B", "C" }.Permute())
@@ -107,7 +107,7 @@ foreach (var i in new[] { "A", "B", "C" }.Permute())
 
 Another widespread combinatorial primitive is a Cartesian product:
 
-```csharp
+``` C#
 using Gapotchenko.FX.Math.Combinatorics;
 
 var seq1 = new[] { "1", "2" };
@@ -132,7 +132,7 @@ The output:
 
 `CartesianProduct.Of(...)` is an explicit form of producing the Cartesian product, but the LINQ shorthand `CrossJoin(...)` is also available as a part of `Gapotchenko.FX.Math.Combinatorics` fluent API:
 
-```csharp
+``` C#
 using Gapotchenko.FX.Math.Combinatorics;
 
 foreach (var i in new[] { "1", "2" }.CrossJoin(new[] { "A", "B", "C" }))

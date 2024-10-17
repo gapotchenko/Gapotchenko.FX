@@ -44,7 +44,7 @@ That's why every checksum algorithm provides `CreateIterator()` method.
 
 Once the iterator is created, it can be used for iterative checksum computation without data concatenation overhead:
 
-```csharp
+``` C#
 var iterator = checksumAlgorithm.CreateIterator();
 
 iterator.ComputeBlock(...); // block 1

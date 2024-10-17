@@ -7,7 +7,7 @@ The module provides math metrics algorithms.
 
 ## StringMetrics
 
-`StringMetrics` static class provides a variety of metric functions for measuring the distance and similarity between two strings of symbols.
+`StringMetrics` static class provides a variety of metric algorithms for measuring the distance and similarity between two strings of symbols.
 
 The notion of a string is purely abstract.
 So it is not limited to just characters like `System.String`; it can be a string of anything in form of `IEnumerable<T>`.
@@ -31,40 +31,40 @@ The table below compares edit distance measurement functions provided by `String
 
 ### Levenshtein Distance
 
-`StringMetrics.LevenshteinDistance` method allows to calculate the Levenshtein distance between two strings of symbols.
+`StringMetrics.Distance.Levenshtein` algorithm allows you to calculate the Levenshtein distance between two strings of symbols.
 
 Consider the example:
 
-```csharp
-using Gapotchenko.FX.Math.Geometry;
+``` C#
+using Gapotchenko.FX.Math.Metrics;
 
-int distance = StringMetrics.LevenshteinDistance("ABC", "BAC");
+int distance = StringMetrics.Distance.Levenshtein.Measure("ABC", "BAC");
 Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 ```
 
 ### Longest Common Subsequence (LCS) Distance
 
-`StringMetrics.LcsDistance` method allows to calculate the longest common subsequence (LCS) distance between two strings of symbols.
+`StringMetrics.Distance.Lcs` algorithm allows you to calculate the longest common subsequence (LCS) distance between two strings of symbols.
 
 Consider the example:
 
-```csharp
-using Gapotchenko.FX.Math.Geometry;
+``` C#
+using Gapotchenko.FX.Math.Metrics;
 
-int distance = StringMetrics.LcsDistance("ABC", "BAC");
+int distance = StringMetrics.Distance.Lcs.Measure("ABC", "BAC");
 Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 ```
 
 ### Hamming Distance
 
-`StringMetrics.HammingDistance` method allows to calculate the Hamming distance between two strings of symbols.
+`StringMetrics.Distance.Hamming` algorithm allows you to calculate the Hamming distance between two strings of symbols.
 
 Consider the example:
 
-```csharp
-using Gapotchenko.FX.Math.Geometry;
+``` C#
+using Gapotchenko.FX.Math.Metrics;
 
-int distance = StringMetrics.HammingDistance("ABC", "BAC");
+int distance = StringMetrics.Distance.Hamming.Measure("ABC", "BAC");
 Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 ```
 
@@ -72,52 +72,52 @@ Please note that the Hamming distance can only be calculated between two string 
 
 ### Damerau-Levenshtein Distance
 
-`StringMetrics.DamerauLevenshteinDistance` method allows to calculate the Damerau–Levenshtein distance between two strings of symbols.
+`StringMetrics.Distance.DamerauLevenshtein` algorithm allows you to calculate the Damerau–Levenshtein distance between two strings of symbols.
 
 Consider the example:
 
-```csharp
-using Gapotchenko.FX.Math.Geometry;
+``` C#
+using Gapotchenko.FX.Math.Metrics;
 
-int distance = StringMetrics.DamerauLevenshteinDistance("ABC", "BAC");
+int distance = StringMetrics.Distance.DamerauLevenshtein.Measure("ABC", "BAC");
 Console.WriteLine("Distance is {0}.", distance);  // distance = 1
 ```
 
 ### Optimal String Alignment (OSA) Distance
 
-`StringMetrics.OsaDistance` method allows to calculate the optimal string alignment (OSA) distance between two strings of symbols.
+`StringMetrics.Distance.Osa` algorithm allows you to calculate the optimal string alignment (OSA) distance between two strings of symbols.
 
 Consider the example:
 
-```csharp
-using Gapotchenko.FX.Math.Geometry;
+``` C#
+using Gapotchenko.FX.Math.Metrics;
 
-int distance = StringMetrics.OsaDistance("ABC", "BAC");
+int distance = StringMetrics.Distance.Osa.Measure("ABC", "BAC");
 Console.WriteLine("Distance is {0}.", distance);  // distance = 1
 ```
 
-### Jaro Distance
+### Jaro Similarity
 
-`StringMetrics.JaroDistance` method allows to calculate the Jaro distance between two strings of symbols.
+`StringMetrics.Similarity.Jaro` algorithm allows you to calculate the Jaro distance between two strings of symbols.
 
-Although the Jaro distance is often referred to as an edit distance metric, its value does not represent a number of edit operations
-and varies between 0.0 and 1.0 such that 0.0 represents an exact match and 1.0 equates to no similarities.
+Although the Jaro similarity is often referred to as an edit distance metric, its value does not represent a number of edit operations
+and varies between 0.0 and 1.0 such that 1.0 represents an exact match and 0.0 equates to no similarities.
 
 Consider the example:
 
-```csharp
-using Gapotchenko.FX.Math.Geometry;
+``` C#
+using Gapotchenko.FX.Math.Metrics;
 
-double distance = StringMetrics.JaroDistance("ABC", "BAC");
-Console.WriteLine("Distance is {0.00}.", distance);  // distance = 0.44
+double similarity = StringMetrics.Similarity.Jaro.Measure("ABC", "BAC");
+Console.WriteLine("Similarity is {0.00}.", similarity);  // similarity = 0.36
 ```
 
 ## Usage
 
-`Gapotchenko.FX.Math.Geometry` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Geometry):
+`Gapotchenko.FX.Math.Metrics` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Metrics):
 
 ```
-PM> Install-Package Gapotchenko.FX.Math.Geometry
+PM> Install-Package Gapotchenko.FX.Math.Metrics
 ```
 
 ## Other Modules

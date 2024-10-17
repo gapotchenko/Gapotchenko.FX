@@ -13,7 +13,7 @@ The regions are represented by the standard `System.ReadOnlyMemory<T>` struct.
 
 Consider the example:
 
-```csharp
+``` C#
 using Gapotchenko.FX.Memory;
 
 byte[] arr = [1, 2, 3, 4, 5, 6];

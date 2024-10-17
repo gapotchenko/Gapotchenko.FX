@@ -32,7 +32,7 @@ It would be a very *involved* code to render such output with a set of imperativ
 
 But we can do better with [ANSI escape sequences](https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences):
 
-```csharp
+``` C#
 using Gapotchenko.FX.Console;
 using System;
 
@@ -77,7 +77,7 @@ The console color is enabled when it is available and not inhibited.
 The value of the property can be used by a program to automatically tune the output according to the usage context and user preference.
 Like so:
 
-```csharp
+``` C#
 if (ConsoleTraits.IsColorEnabled)
 {
     Console.WriteLine(
@@ -113,7 +113,7 @@ In Windows, you can achieve that by creating a desktop shortcut to a console app
 A program can use the value of `WillDisappearOnExit` property to hold the console window in a visible state so that the user could read the output.
 Like so:
 
-```csharp
+``` C#
 if (ConsoleTraits.WillDisappearOnExit)
 {
     Console.WriteLine();
@@ -138,7 +138,7 @@ The standard `Space` and `Enter` are supported as well.
 
 Below is a simple program that demonstrates the use of `MoreTextWriter`:
 
-```csharp
+``` C#
 using Gapotchenko.FX.Console;
 using System;
 

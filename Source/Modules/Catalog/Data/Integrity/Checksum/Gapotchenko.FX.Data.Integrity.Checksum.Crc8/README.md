@@ -16,7 +16,7 @@ var checksum = Crc8.Standard.ComputeChecksum(data);
 
 If you need to calculate a CRC-8 checksum iteratively then the following approach becomes handy:
 
-```csharp
+``` C#
 var iterator = Crc8.Standard.CreateIterator();
 
 iterator.ComputeBlock(...); // block 1

@@ -9,7 +9,7 @@ The module provides functionality for getting information about the app.
 
 To get information about the current app, use `AppInformation.Current` property:
 
-```csharp
+``` C#
 using Gapotchenko.FX.AppModel.Information;
 using System;
 
@@ -29,7 +29,7 @@ Sometimes a program consists of several parts, each of which has its own associa
 
 To get information about a specific part of the program other than the main app, use `AppInformation.For(Type)` method:
 
-```csharp
+``` C#
 using Gapotchenko.FX.AppModel.Information;
 using System;
 

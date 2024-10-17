@@ -16,7 +16,7 @@ var checksum = Crc16.Standard.ComputeChecksum(data);
 
 If you need to calculate a CRC-16 checksum iteratively then the following approach becomes handy:
 
-```csharp
+``` C#
 var iterator = Crc16.Standard.CreateIterator();
 
 iterator.ComputeBlock(...); // block 1
