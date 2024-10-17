@@ -194,13 +194,13 @@ public class KuonBase24Tests
     [TestMethod]
     public void KuonBase24_RT8() => RoundTrip(Base16.GetBytes("82 4A 13 E8 38"));
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.Padding)]
     public void KuonBase24_RT_Random(DataEncodingOptions options) =>
         TextDataEncodingTestBench.RandomRoundTrip(KuonBase24.Instance, 16, 100000);
 
-    [DataTestMethod]
+    [TestMethod]
     //
     [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.None)]
     [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Padding)]

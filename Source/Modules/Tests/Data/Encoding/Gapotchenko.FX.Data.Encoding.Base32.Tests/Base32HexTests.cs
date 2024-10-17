@@ -54,12 +54,12 @@ public class Base32HexTests
     [TestMethod]
     public void Base32Hex_Rfc4648_TV7() => TestVector("foobar", "CPNMUOJ1E8======");
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.NoPadding)]
     public void Base32Hex_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base32Hex.Instance, 16, 100000, options);
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(TextDataEncodingTemplates.S1)]
     [DataRow(TextDataEncodingTemplates.S2)]
     [DataRow(TextDataEncodingTemplates.S3)]

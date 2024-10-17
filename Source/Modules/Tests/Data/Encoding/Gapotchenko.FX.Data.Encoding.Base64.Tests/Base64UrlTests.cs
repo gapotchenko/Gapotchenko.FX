@@ -85,12 +85,12 @@ public class Base64UrlTests
         Assert.AreEqual("MTEx", Base64Url.GetString(data, DataEncodingOptions.Padding));
     }
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.Padding)]
     public void Base64Url_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base64Url.Instance, 16, 100000, options);
 
-    [DataTestMethod]
+    [TestMethod]
     // S1
     [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.None)]
     [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Padding)]

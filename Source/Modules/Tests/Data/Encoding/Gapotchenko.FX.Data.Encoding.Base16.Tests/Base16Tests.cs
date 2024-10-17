@@ -52,7 +52,7 @@ public class Base16Tests
     [TestMethod]
     public void Base16_RT_Random() => TextDataEncodingTestBench.RandomRoundTrip(Base16.Instance, 16, 100000);
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(TextDataEncodingTemplates.S1)]
     [DataRow(TextDataEncodingTemplates.S2)]
     [DataRow(TextDataEncodingTemplates.S3)]

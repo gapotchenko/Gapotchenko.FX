@@ -31,7 +31,7 @@ public class CrockfordBase32Tests
     [TestMethod]
     public void CrockfordBase32_Data_Empty() => TestVector("", "");
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("0Oo", "000")]
     [DataRow("1Ll", "111")]
     [DataRow("1Ii", "111")]
@@ -65,12 +65,12 @@ public class CrockfordBase32Tests
             "foobar",
             Encoding.UTF8.GetString(CrockfordBase32.GetBytes("CsQP-YRkL-E8")));
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.Padding)]
     public void CrockfordBase32_Data_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(CrockfordBase32.Instance, 16, 100000, options);
 
-    [DataTestMethod]
+    [TestMethod]
     // S1
     [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.None)]
     [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Padding)]
@@ -122,7 +122,7 @@ public class CrockfordBase32Tests
     [TestMethod]
     public void CrockfordBase32_Int32_TV8() => TestVector(0, "00", DataEncodingOptions.Checksum);
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.Checksum)]
     public void CrockfordBase32_Int32_RT_Random(DataEncodingOptions options) =>
@@ -132,7 +132,7 @@ public class CrockfordBase32Tests
 
     #region UInt32
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.Checksum)]
     public void CrockfordBase32_UInt32_RT_Random(DataEncodingOptions options) =>
@@ -175,7 +175,7 @@ public class CrockfordBase32Tests
     [TestMethod]
     public void CrockfordBase32_Int64_TV7() => TestVector(0L, "00", DataEncodingOptions.Checksum);
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.Checksum)]
     public void CrockfordBase32_Int64_RT_Random(DataEncodingOptions options) =>
@@ -185,7 +185,7 @@ public class CrockfordBase32Tests
 
     #region UInt64
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.Checksum)]
     public void CrockfordBase32_UInt64_RT_Random(DataEncodingOptions options) =>
@@ -231,7 +231,7 @@ public class CrockfordBase32Tests
             BigInteger.Parse("44473186245345"),
             DataEncodingOptions.Checksum);
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.Checksum)]
     public void CrockfordBase32_BigInteger_RT_Random(DataEncodingOptions options) =>

@@ -136,14 +136,14 @@ public class ZBase32Tests
     [TestMethod]
     public void ZBase32_RT4() => TextDataEncodingTestBench.RoundTrip(ZBase32.Instance, Base16.GetBytes("01 67 00"), DataEncodingOptions.Compress);
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.Compress)]
     [DataRow(DataEncodingOptions.Padding)]
     [DataRow(DataEncodingOptions.Padding | DataEncodingOptions.Compress)]
     public void ZBase32_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(ZBase32.Instance, 16, 100000, options);
 
-    [DataTestMethod]
+    [TestMethod]
     // S1
     [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.None)]
     [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.Compress)]

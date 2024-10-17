@@ -79,12 +79,12 @@ public class Base64Tests
             Base64.GetBytes("SQ=Я=QU0=VEpN", DataEncodingOptions.Padding | DataEncodingOptions.Relax)
             .SequenceEqual(Encoding.ASCII.GetBytes("IAMTJM")));
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.NoPadding)]
     public void Base64_RT_Random(DataEncodingOptions options) => TextDataEncodingTestBench.RandomRoundTrip(Base64.Instance, 16, 100000, options);
 
-    [DataTestMethod]
+    [TestMethod]
     // S1
     [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.None)]
     [DataRow(TextDataEncodingTemplates.S1, DataEncodingOptions.NoPadding)]
