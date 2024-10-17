@@ -256,7 +256,7 @@ public static partial class EnumerableEx
     /// <param name="predicate1">The first function to test each element for a condition.</param>
     /// <param name="predicate2">The second function to test each element for a condition.</param>
     /// <returns>A value tuple whose items signify whether any elements in the source sequence pass the test in the corresponding predicate.</returns>
-    public static ValueTuple<bool, bool> Any<TSource>(
+    public static (bool, bool) Any<TSource>(
         this IEnumerable<TSource> source,
         Func<TSource, bool> predicate1,
         Func<TSource, bool> predicate2)
@@ -300,7 +300,7 @@ public static partial class EnumerableEx
     /// <param name="predicate2">The second function to test each element for a condition.</param>
     /// <param name="predicate3">The third function to test each element for a condition.</param>
     /// <returns>A value tuple whose items signify whether any elements in the source sequence pass the test in the corresponding predicate.</returns>
-    public static ValueTuple<bool, bool, bool> Any<TSource>(
+    public static (bool, bool, bool) Any<TSource>(
         this IEnumerable<TSource> source,
         Func<TSource, bool> predicate1,
         Func<TSource, bool> predicate2,

@@ -1,3 +1,0 @@
-# Gapotchenko.FX.ValueTuple
-
-TODO

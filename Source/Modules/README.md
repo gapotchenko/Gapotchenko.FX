@@ -43,7 +43,7 @@ The full list of available modules is presented in the table below.
 - [Gapotchenko.FX.Security.Cryptography](Catalog/Security/Gapotchenko.FX.Security.Cryptography#readme)
 - [Gapotchenko.FX.Text](Catalog/Gapotchenko.FX.Text#readme)
 - [Gapotchenko.FX.Threading](Catalog/Gapotchenko.FX.Threading#readme)
-- [Gapotchenko.FX.ValueTuple](Catalog/Gapotchenko.FX.ValueTuple#readme)
+- [Gapotchenko.FX.Tuples](Catalog/Gapotchenko.FX.Tuples#readme)
 
 ### Legend
 
