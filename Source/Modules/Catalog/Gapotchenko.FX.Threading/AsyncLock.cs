@@ -5,6 +5,7 @@
 // Year of introduction: 2023
 
 using System.Diagnostics;
+using System.Threading;
 
 namespace Gapotchenko.FX.Threading;
 
@@ -25,8 +26,12 @@ public sealed class AsyncLock : IAsyncRecursiveMutex, IAsyncReentrableLockable
     /// <inheritdoc/>
     public void Enter(CancellationToken cancellationToken = default) => m_CoreImpl.Enter(cancellationToken);
 
+    void IReentrableLockable.Enter(int recursionLevel, CancellationToken cancellationToken) => m_CoreImpl.Enter(recursionLevel, cancellationToken);
+
     /// <inheritdoc/>
     public Task EnterAsync(CancellationToken cancellationToken = default) => m_CoreImpl.EnterAsync(cancellationToken);
+
+    Task IAsyncReentrableLockable.EnterAsync(int recursionLevel, CancellationToken cancellationToken) => m_CoreImpl.EnterAsync(recursionLevel, cancellationToken);
 
     /// <inheritdoc/>
     public bool TryEnter() => m_CoreImpl.TryEnter();
@@ -46,10 +51,6 @@ public sealed class AsyncLock : IAsyncRecursiveMutex, IAsyncReentrableLockable
     /// <inheritdoc/>
     public Task<bool> TryEnterAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         m_CoreImpl.TryEnterAsync(millisecondsTimeout, cancellationToken);
-
-    void IReentrableLockable.Reenter(int level) => m_CoreImpl.Reenter(level);
-
-    Task IAsyncReentrableLockable.ReenterAsync(int level) => m_CoreImpl.ReenterAsync(level);
 
     /// <inheritdoc/>
     public void Exit() => m_CoreImpl.Exit();

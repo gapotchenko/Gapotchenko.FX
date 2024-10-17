@@ -14,15 +14,29 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) :
     IAsyncReentrableLockable
     where TLockable : IAsyncLockable
 {
-    public void Enter(CancellationToken cancellationToken)
+    public void Enter(CancellationToken cancellationToken) => EnterCore(1, cancellationToken);
+
+    public void Enter(int recursionLevel, CancellationToken cancellationToken)
     {
-        if (!m_RecursionTracker.IsEntered)
-            m_Lockable.Enter(cancellationToken);
-        m_RecursionTracker.EnterNoBarrier();
+        if (recursionLevel < 0)
+            throw new ArgumentOutOfRangeException(nameof(recursionLevel), "The value cannot be negative.");
+
+        if (recursionLevel != 0)
+            EnterCore(recursionLevel, cancellationToken);
     }
 
-    /// <inheritdoc/>
     public Task EnterAsync(CancellationToken cancellationToken) => EnterAsyncCore(1, cancellationToken);
+
+    public Task EnterAsync(int recursionLevel, CancellationToken cancellationToken)
+    {
+        if (recursionLevel < 0)
+            throw new ArgumentOutOfRangeException(nameof(recursionLevel), "The value cannot be negative.");
+
+        if (recursionLevel == 0)
+            return Task.CompletedTask;
+        else
+            return EnterAsyncCore(recursionLevel, cancellationToken);
+    }
 
     public bool TryEnter() => TryEnter(0, CancellationToken.None);
 
@@ -50,30 +64,6 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) :
         return TryEnterAsyncCore(() => lockable.TryEnterAsync(millisecondsTimeout, cancellationToken));
     }
 
-    public void Reenter(int level)
-    {
-        if (level < 0)
-            throw new ArgumentOutOfRangeException(nameof(level), "The value cannot be negative.");
-
-        if (level == 0)
-            return;
-
-        if (!m_RecursionTracker.IsEntered)
-            m_Lockable.Enter();
-        m_RecursionTracker.EnterNoBarrier(level);
-    }
-
-    public Task ReenterAsync(int level)
-    {
-        if (level < 0)
-            throw new ArgumentOutOfRangeException(nameof(level), "The value cannot be negative.");
-
-        if (level == 0)
-            return Task.CompletedTask;
-        else
-            return EnterAsyncCore(level);
-    }
-
     public void Exit()
     {
         if (m_RecursionTracker.Exit())
@@ -98,14 +88,23 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) :
     // Core Implementation
     // ----------------------------------------------------------------------
 
-    Task EnterAsyncCore(int level, CancellationToken cancellationToken = default)
+    void EnterCore(int recursionLevel, CancellationToken cancellationToken)
     {
-        Debug.Assert(level >= 0);
+        Debug.Assert(recursionLevel >= 0);
+
+        if (!m_RecursionTracker.IsEntered)
+            m_Lockable.Enter(cancellationToken);
+        m_RecursionTracker.EnterNoBarrier(recursionLevel);
+    }
+
+    Task EnterAsyncCore(int recursionLevel, CancellationToken cancellationToken)
+    {
+        Debug.Assert(recursionLevel >= 0);
 
         if (!m_RecursionTracker.IsEntered)
         {
             var @this = this;
-            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(() => @this.m_RecursionTracker.EnterNoBarrier(level));
+            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(() => @this.m_RecursionTracker.EnterNoBarrier(recursionLevel));
 
             async Task ExecuteAsync()
             {
@@ -121,7 +120,7 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) :
         else
         {
             // Already locked by the current task.
-            m_RecursionTracker.EnterNoBarrier(level);
+            m_RecursionTracker.EnterNoBarrier(recursionLevel);
             return Task.CompletedTask;
         }
     }

@@ -46,13 +46,13 @@ readonly struct AsyncRecursionTracker()
     /// Increases the recursion level by the specified value
     /// without issuing <see cref="ExecutionContextHelper.AsyncLocalBarrier"/>.
     /// </summary>
-    /// <param name="level">The value by which to increase the recursion level.</param>
-    public void EnterNoBarrier(int level)
+    /// <param name="recursionLevel">The value by which to increase the recursion level.</param>
+    public void EnterNoBarrier(int recursionLevel)
     {
-        Debug.Assert(level >= 0);
+        Debug.Assert(recursionLevel >= 0);
 
         int existingRecursionLevel = m_RecursionLevel.Value;
-        int newRecursionLevel = existingRecursionLevel + level;
+        int newRecursionLevel = unchecked(existingRecursionLevel + recursionLevel);
         if (newRecursionLevel < existingRecursionLevel)
         {
             // Recursion level overflow.
@@ -66,7 +66,7 @@ readonly struct AsyncRecursionTracker()
     /// Decreases the recursion level.
     /// </summary>
     /// <returns>
-    /// <see langword="true"/> if the root (zero) recursion level was reached; otherwise, <see langword="false"/>.
+    /// <see langword="true"/> if the root (zero) recursion level has been reached; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="SynchronizationLockException">The thread synchronization primitive is being unlocked without being locked.</exception>
     public bool Exit()
@@ -97,6 +97,7 @@ readonly struct AsyncRecursionTracker()
 
         int recursionLevel = m_RecursionLevel.Value;
         m_RecursionLevel.Value = 0;
+
         return recursionLevel;
     }
 

@@ -68,17 +68,19 @@ static class LockableHelper
             ArgumentOutOfRangeException.ThrowIfNegative(recursionLevel);
 #endif
 
-            var tasks = new Task<LockableScope>[recursionLevel];
-            for (int i = recursionLevel - 1; i >= 0; --i)
-                tasks[i] = enterFunc();
-
-            return
-                Task.WhenAll(tasks)
-                .ContinueWith(
-                    x => new RecursiveScope(x.Result),
-                    CancellationToken.None,
-                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.Default);
+            if (recursionLevel == 0)
+            {
+                return Task.FromResult(new RecursiveScope(null));
+            }
+            else if (recursionLevel == 1)
+            {
+                return enterFunc().Then(x => new RecursiveScope([x]));
+            }
+            else
+            {
+                // Is there a way to correctly implement this?
+                throw new NotImplementedException($"Use {nameof(RecursiveReentrableScope)} instead.");
+            }
         }
 
         RecursiveScope(LockableScope[]? scopes)
@@ -99,5 +101,52 @@ static class LockableHelper
         }
 
         readonly LockableScope[]? m_Scopes;
+    }
+
+    public readonly struct RecursiveReentrableScope : IDisposable
+    {
+        public static RecursiveReentrableScope Create(
+            IReentrableLockable lockable,
+            int recursionLevel,
+            CancellationToken cancellationToken = default)
+        {
+#if NET8_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(lockable);
+            ArgumentOutOfRangeException.ThrowIfNegative(recursionLevel);
+#endif
+
+            lockable.Enter(recursionLevel, cancellationToken);
+            return new(lockable, recursionLevel);
+        }
+
+        public static Task<RecursiveReentrableScope> CreateAsync(
+            IAsyncReentrableLockable lockable,
+            int recursionLevel,
+            CancellationToken cancellationToken = default)
+        {
+#if NET8_0_OR_GREATER
+            ArgumentNullException.ThrowIfNull(lockable);
+            ArgumentOutOfRangeException.ThrowIfNegative(recursionLevel);
+#endif
+
+            return
+                lockable.EnterAsync(recursionLevel, cancellationToken)
+                .Then(() => new RecursiveReentrableScope(lockable, recursionLevel));
+        }
+
+        RecursiveReentrableScope(IReentrableLockable lockable, int recursionLevel)
+        {
+            m_Lockable = lockable;
+            m_RecursionLevel = recursionLevel;
+        }
+
+        public void Dispose()
+        {
+            for (int i = 0; i < m_RecursionLevel; ++i)
+                m_Lockable.Exit();
+        }
+
+        readonly IReentrableLockable m_Lockable;
+        readonly int m_RecursionLevel;
     }
 }

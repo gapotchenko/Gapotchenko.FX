@@ -115,9 +115,7 @@ public abstract class IAsyncConditionVariableTests : IConditionVariableTests
             EnumerateRecursionLevels(),
             ValueTuple.Create))
         {
-            // TO FIX
-            //await Run(i.Item1, i.Item2);
-            await Run(i.Item1, 1);
+            await Run(i.Item1, i.Item2);
         }
 
         async Task Run(Func<TimeSpan, Task<bool>> waitFunc, int recursionLevel)
@@ -175,9 +173,7 @@ public abstract class IAsyncConditionVariableTests : IConditionVariableTests
             EnumerateRecursionLevels(),
             ValueTuple.Create))
         {
-            // TO FIX
-            //await Run(i.Item1, i.Item2);
-            await Run(i.Item1, 1);
+            await Run(i.Item1, i.Item2);
         }
 
         async Task Run(Func<TimeSpan, Task<bool>> waitFunc, int recursionLevel)
@@ -238,9 +234,7 @@ public abstract class IAsyncConditionVariableTests : IConditionVariableTests
             EnumerateRecursionLevels(),
             ValueTuple.Create))
         {
-            // TO FIX
-            //await Run(i.Item1, i.Item2);
-            await Run(i.Item1, 1);
+            await Run(i.Item1, i.Item2);
         }
 
         async Task Run(Func<TimeSpan, Task<bool>> waitFunc, int recursionLevel)

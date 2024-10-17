@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
+using Gapotchenko.FX.Threading.Utils;
+
 namespace Gapotchenko.FX.Threading;
 
 /// <summary>
@@ -19,11 +21,7 @@ public static class AsyncLockableExtensions
     public static Task<LockableScope> EnterScopeAsync(this IAsyncLockable lockable, CancellationToken cancellationToken = default) =>
         (lockable ?? throw new ArgumentNullException(nameof(lockable)))
         .EnterAsync(cancellationToken)
-        .ContinueWith(
-            _ => new LockableScope(lockable),
-            cancellationToken,
-            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
-            TaskScheduler.Default);
+        .Then(() => new LockableScope(lockable));
 
     /// <remarks>
     /// When the method returns a <see cref="LockableScope"/> with <see cref="LockableScope.HasLock"/> property set to <see langword="true"/>,
@@ -44,8 +42,7 @@ public static class AsyncLockableExtensions
     public static Task<LockableScope> TryEnterScopeAsync(this IAsyncLockable lockable, TimeSpan timeout, CancellationToken cancellationToken = default) =>
         TryEnterScopeAsyncCore(
             lockable ?? throw new ArgumentNullException(nameof(lockable)),
-            lockable.TryEnterAsync(timeout, cancellationToken),
-            cancellationToken);
+            lockable.TryEnterAsync(timeout, cancellationToken));
 
     /// <remarks>
     /// When the method returns a <see cref="LockableScope"/> with <see cref="LockableScope.HasLock"/> property set to <see langword="true"/>,
@@ -66,13 +63,8 @@ public static class AsyncLockableExtensions
     public static Task<LockableScope> TryEnterScopeAsync(this IAsyncLockable lockable, int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         TryEnterScopeAsyncCore(
             lockable ?? throw new ArgumentNullException(nameof(lockable)),
-            lockable.TryEnterAsync(millisecondsTimeout, cancellationToken),
-            cancellationToken);
+            lockable.TryEnterAsync(millisecondsTimeout, cancellationToken));
 
-    static Task<LockableScope> TryEnterScopeAsyncCore(IAsyncLockable lockable, Task<bool> task, CancellationToken cancellationToken) =>
-        task.ContinueWith(
-            task => new LockableScope(task.Result ? lockable : null),
-            cancellationToken,
-            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
-            TaskScheduler.Default);
+    static Task<LockableScope> TryEnterScopeAsyncCore(IAsyncLockable lockable, Task<bool> tryEnterFunc) =>
+        tryEnterFunc.Then(result => new LockableScope(result ? lockable : null));
 }

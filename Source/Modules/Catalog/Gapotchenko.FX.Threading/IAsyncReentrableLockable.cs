@@ -6,8 +6,18 @@
 
 namespace Gapotchenko.FX.Threading;
 
+/// <summary>
+/// The interface of a recursive lockable synchronization primitive
+/// that can be completely exited and then reentered.
+/// The primitive supports both synchronous and asynchronous operations.
+/// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public interface IAsyncReentrableLockable : IAsyncRecursiveLockable, IReentrableLockable
 {
-    Task ReenterAsync(int level);
+    /// <summary>
+    /// Asynchronously enters the lock the specified number of times, that is, recursively,
+    /// waiting if necessary until the lock can be entered.
+    /// </summary>
+    /// <inheritdoc cref="IReentrableLockable.Enter(int, CancellationToken)"/>
+    Task EnterAsync(int recursionLevel, CancellationToken cancellationToken = default);
 }

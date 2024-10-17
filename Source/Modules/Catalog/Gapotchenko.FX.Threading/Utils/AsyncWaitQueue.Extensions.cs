@@ -46,7 +46,8 @@ partial struct AsyncWaitQueue<T>
                     queue.TryComplete(task, tcs => tcs.TrySetCanceled(cancellationToken));
             }
 
-            TaskHelper.DisposeOnCompletion(task, cancellationToken.Register(Cancel));
+            var ctr = cancellationToken.Register(Cancel);
+            _ = task.Finally(ctr.Dispose);
         }
 
         return task;

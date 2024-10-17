@@ -29,7 +29,7 @@ static class LockableHelper
         public void Dispose()
         {
             // Undo the exit.
-            Reenter(lockable, m_RecursionLevel);
+            Enter(lockable, m_RecursionLevel);
         }
 
         readonly int m_RecursionLevel = ExitAll(lockable);
@@ -40,44 +40,44 @@ static class LockableHelper
         public Task DisposeAsync()
         {
             // Undo the exit.
-            return ReenterAsync(lockable, m_RecursionLevel);
+            return EnterAsync(lockable, m_RecursionLevel);
         }
 
         readonly int m_RecursionLevel = ExitAll(lockable);
     }
 
-    static void Reenter(ILockable lockable, int level)
+    static void Enter(ILockable lockable, int level, CancellationToken cancellationToken = default)
     {
         Debug.Assert(level >= 0);
 
         switch (lockable)
         {
             case IReentrableLockable reentrableLockable:
-                reentrableLockable.Reenter(level);
+                reentrableLockable.Enter(level, cancellationToken);
                 break;
 
             default:
                 for (int i = 0; i < level; ++i)
-                    lockable.Enter();
+                    lockable.Enter(cancellationToken);
                 break;
         }
     }
 
-    static Task ReenterAsync(IAsyncLockable lockable, int level)
+    static Task EnterAsync(IAsyncLockable lockable, int level, CancellationToken cancellationToken = default)
     {
         Debug.Assert(level >= 0);
 
         return
             lockable switch
             {
-                //IAsyncReentrableLockable reentrableLockable => reentrableLockable.ReenterAsync(level),
+                IAsyncReentrableLockable reentrableLockable => reentrableLockable.EnterAsync(level, cancellationToken),
                 _ => BasicImpl()
             };
 
         async Task BasicImpl()
         {
             for (int i = 0; i < level; ++i)
-                await lockable.EnterAsync().ConfigureAwait(false);
+                await lockable.EnterAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 

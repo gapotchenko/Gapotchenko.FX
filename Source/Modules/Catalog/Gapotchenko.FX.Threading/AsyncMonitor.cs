@@ -6,6 +6,7 @@
 
 using Gapotchenko.FX.Threading.Utils;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Gapotchenko.FX.Threading;
 
@@ -33,9 +34,11 @@ public sealed class AsyncMonitor :
         Debug.Assert(mutex.IsRecursive);
     }
 
-    void IReentrableLockable.Reenter(int level) => Mutex.Reenter(level);
+    void IReentrableLockable.Enter(int recursionLevel, CancellationToken cancellationToken) =>
+        Mutex.Enter(recursionLevel, cancellationToken);
 
-    Task IAsyncReentrableLockable.ReenterAsync(int level) => Mutex.ReenterAsync(level);
+    Task IAsyncReentrableLockable.EnterAsync(int recursionLevel, CancellationToken cancellationToken) =>
+        Mutex.EnterAsync(recursionLevel, cancellationToken);
 
     int IReentrableLockable.ExitAll() => Mutex.ExitAll();
 
