@@ -4,7 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-namespace Gapotchenko.FX.ValueTuple;
+namespace Gapotchenko.FX.Tuples;
 
 /// <summary>
 /// Provides equality comparison functionality for value tuples.
@@ -21,9 +21,9 @@ public static class ValueTupleEqualityComparer
     /// </param>
     /// <returns>A new instance of value tuple equality comparer.</returns>
     public static IEqualityComparer<ValueTuple<T1>> Create<T1>(IEqualityComparer<T1>? comparer1) =>
-        comparer1 == null ?
-            EqualityComparer<ValueTuple<T1>>.Default :
-            new ValueTupleEqualityComparer<T1>(comparer1);
+        comparer1 is null
+            ? EqualityComparer<ValueTuple<T1>>.Default
+            : new ValueTupleEqualityComparer<T1>(comparer1);
 
     /// <summary>
     /// Creates a value tuple equality comparer for <see cref="ValueTuple{T1, T2}"/> with specified element equality comparers.
@@ -40,9 +40,9 @@ public static class ValueTupleEqualityComparer
     /// </param>
     /// <returns>A new instance of value tuple equality comparer.</returns>
     public static IEqualityComparer<ValueTuple<T1, T2>> Create<T1, T2>(IEqualityComparer<T1>? comparer1, IEqualityComparer<T2>? comparer2) =>
-        comparer1 == null && comparer2 == null ?
-            EqualityComparer<ValueTuple<T1, T2>>.Default :
-            new ValueTupleEqualityComparer<T1, T2>(comparer1, comparer2);
+        comparer1 is null && comparer2 is null
+            ? EqualityComparer<ValueTuple<T1, T2>>.Default
+            : new ValueTupleEqualityComparer<T1, T2>(comparer1, comparer2);
 
     /// <summary>
     /// Creates a value tuple equality comparer for <see cref="ValueTuple{T1, T2, T3}"/> with specified element equality comparers.
@@ -67,9 +67,9 @@ public static class ValueTupleEqualityComparer
         IEqualityComparer<T1>? comparer1,
         IEqualityComparer<T2>? comparer2,
         IEqualityComparer<T3>? comparer3) =>
-        comparer1 == null && comparer2 == null && comparer3 == null ?
-            EqualityComparer<ValueTuple<T1, T2, T3>>.Default :
-            new ValueTupleEqualityComparer<T1, T2, T3>(comparer1, comparer2, comparer3);
+        comparer1 is null && comparer2 is null && comparer3 is null
+            ? EqualityComparer<ValueTuple<T1, T2, T3>>.Default
+            : new ValueTupleEqualityComparer<T1, T2, T3>(comparer1, comparer2, comparer3);
 
     /// <summary>
     /// Creates a value tuple equality comparer for <see cref="ValueTuple{T1, T2, T3, T4}"/> with specified element equality comparers.
@@ -100,7 +100,7 @@ public static class ValueTupleEqualityComparer
         IEqualityComparer<T2>? comparer2,
         IEqualityComparer<T3>? comparer3,
         IEqualityComparer<T4>? comparer4) =>
-        comparer1 == null && comparer2 == null && comparer3 == null && comparer4 == null ?
-            EqualityComparer<ValueTuple<T1, T2, T3, T4>>.Default :
-            new ValueTupleEqualityComparer<T1, T2, T3, T4>(comparer1, comparer2, comparer3, comparer4);
+        comparer1 is null && comparer2 is null && comparer3 is null && comparer4 is null
+            ? EqualityComparer<ValueTuple<T1, T2, T3, T4>>.Default
+            : new ValueTupleEqualityComparer<T1, T2, T3, T4>(comparer1, comparer2, comparer3, comparer4);
 }

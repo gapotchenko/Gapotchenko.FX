@@ -4,7 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-namespace Gapotchenko.FX.ValueTuple;
+namespace Gapotchenko.FX.Tuples;
 
 static class Util
 {
