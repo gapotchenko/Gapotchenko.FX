@@ -5,7 +5,6 @@
 // Year of introduction: 2023
 
 using System.Diagnostics;
-using System.Threading;
 
 namespace Gapotchenko.FX.Threading;
 

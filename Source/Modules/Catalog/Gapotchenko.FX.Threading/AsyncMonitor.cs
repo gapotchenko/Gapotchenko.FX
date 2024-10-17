@@ -6,7 +6,6 @@
 
 using Gapotchenko.FX.Threading.Utils;
 using System.Diagnostics;
-using System.Threading;
 
 namespace Gapotchenko.FX.Threading;
 

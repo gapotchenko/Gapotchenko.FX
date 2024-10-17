@@ -333,11 +333,8 @@ partial class TaskPolyfills
             var controlTask =
                 Task.Delay(timeout, ct)
                 // Adapt the control task result to TResult to make a compiler happy.
-                .ContinueWith<TResult>(
-                    _ => default!, // this value will be discarded
-                    ct,
-                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.DenyChildAttach | TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.Default);
+                // The value will be discarded.
+                .Then(() => default(TResult)!);
 
             Task<TResult>? completedTask = null;
             try
