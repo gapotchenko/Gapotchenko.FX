@@ -7,7 +7,7 @@ The module provides math metrics algorithms.
 
 ## StringMetrics
 
-`StringMetrics` static class provides a variety of metric algorithms for measuring the distance and similarity between two strings of symbols.
+`Gapotchenko.FX.Math.Metrics.StringMetrics` static class provides a variety of metric algorithms for measuring the distance and similarity between two strings of symbols.
 
 The notion of a string is purely abstract.
 So it is not limited to just characters like `System.String`; it can be a string of anything in form of `IEnumerable<T>`.
