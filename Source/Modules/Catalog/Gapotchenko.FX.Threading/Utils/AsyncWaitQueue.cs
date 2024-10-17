@@ -7,16 +7,10 @@
 
 using Gapotchenko.FX.Collections.Generic;
 
-namespace Gapotchenko.FX.Threading;
+namespace Gapotchenko.FX.Threading.Utils;
 
-readonly partial struct AsyncWaitQueue<T>
+readonly partial struct AsyncWaitQueue<T>()
 {
-    public AsyncWaitQueue()
-    {
-    }
-
-    public bool IsEmpty => m_Queue.Count == 0;
-
     /// <summary>
     /// Enqueues a task that will be completed when it is dequeued from the <see cref="AsyncWaitQueue{T}"/>.
     /// </summary>
@@ -53,6 +47,8 @@ readonly partial struct AsyncWaitQueue<T>
     /// <param name="result">The result value to complete dequeued tasks with.</param>
     /// <returns>The number of dequeued and completed tasks.</returns>
     public int DequeAll(T result) => CompleteAll(tcs => tcs.TrySetResult(result));
+
+    public bool IsEmpty => m_Queue.Count == 0;
 
     /// <summary>
     /// Tries to remove and complete the specified task using the specified completion function.

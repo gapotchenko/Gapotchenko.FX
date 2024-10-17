@@ -6,9 +6,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-using Gapotchenko.FX.Threading.Utils;
-
-namespace Gapotchenko.FX.Threading;
+namespace Gapotchenko.FX.Threading.Utils;
 
 partial struct AsyncWaitQueue<T>
 {

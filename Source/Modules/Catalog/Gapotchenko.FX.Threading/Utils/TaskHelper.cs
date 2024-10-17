@@ -11,13 +11,6 @@ static partial class TaskHelper
     // This is a partial class that has most of its code in the neighboring files.
 
     /// <summary>
-    /// Represents a void task result.
-    /// </summary>
-    public struct Void
-    {
-    }
-
-    /// <summary>
     /// Synchronously disposes the specified disposable object when the task completes.
     /// </summary>
     /// <param name="task">The task.</param>

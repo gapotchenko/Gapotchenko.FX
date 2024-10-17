@@ -29,8 +29,7 @@ static class LockableHelper
         public void Dispose()
         {
             // Undo the exit.
-            for (int i = 0; i < m_RecursionLevel; ++i)
-                lockable.Enter();
+            Reenter(lockable, m_RecursionLevel);
         }
 
         readonly int m_RecursionLevel = ExitAll(lockable);
@@ -38,33 +37,71 @@ static class LockableHelper
 
     public readonly struct AsyncExitScope(IAsyncLockable lockable)
     {
-        public async Task DisposeAsync()
+        public Task DisposeAsync()
         {
             // Undo the exit.
-            for (int i = 0; i < m_RecursionLevel; ++i)
-                await lockable.EnterAsync().ConfigureAwait(false);
+            return ReenterAsync(lockable, m_RecursionLevel);
         }
 
         readonly int m_RecursionLevel = ExitAll(lockable);
     }
 
+    static void Reenter(ILockable lockable, int level)
+    {
+        Debug.Assert(level >= 0);
+
+        switch (lockable)
+        {
+            case IReentrableLockable reentrableLockable:
+                reentrableLockable.Reenter(level);
+                break;
+
+            default:
+                for (int i = 0; i < level; ++i)
+                    lockable.Enter();
+                break;
+        }
+    }
+
+    static Task ReenterAsync(IAsyncLockable lockable, int level)
+    {
+        Debug.Assert(level >= 0);
+
+        return
+            lockable switch
+            {
+                //IAsyncReentrableLockable reentrableLockable => reentrableLockable.ReenterAsync(level),
+                _ => BasicImpl()
+            };
+
+        async Task BasicImpl()
+        {
+            for (int i = 0; i < level; ++i)
+                await lockable.EnterAsync().ConfigureAwait(false);
+        }
+    }
+
     static int ExitAll(ILockable lockable)
     {
-        if (lockable is IRecursiveLockable recursiveLockable)
+        switch (lockable)
         {
-            int recursionLevel = 0;
-            do
-            {
-                recursiveLockable.Exit();
-                ++recursionLevel;
-            }
-            while (recursiveLockable.IsLockedByCurrentThread);
-            return recursionLevel;
-        }
-        else
-        {
-            lockable.Exit();
-            return 1;
+            case IReentrableLockable reentrableLockable:
+                return reentrableLockable.ExitAll();
+
+            case IRecursiveLockable recursiveLockable:
+                {
+                    int recursionLevel = 0;
+                    while (recursiveLockable.IsLockedByCurrentThread)
+                    {
+                        recursiveLockable.Exit();
+                        ++recursionLevel;
+                    }
+                    return recursionLevel;
+                }
+
+            default:
+                lockable.Exit();
+                return 1;
         }
     }
 }

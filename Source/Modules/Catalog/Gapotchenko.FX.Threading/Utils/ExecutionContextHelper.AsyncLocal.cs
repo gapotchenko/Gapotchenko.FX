@@ -107,10 +107,10 @@ partial class ExecutionContextHelper
         protected AsyncLocalModificationOperationBase()
         {
             Debug.Assert(
-                m_FlowState.Value is null,
+                m_CurrentFlowState.Value is null,
                 $"{nameof(ModifyAsyncLocal)} does not support recursion. Before creating a new modification operation, the previously created operation must be committed, discarded, or disposed. Additionally, a call to {nameof(AsyncLocalBarrier)} may be required.");
 
-            m_FlowState.Value = new(this, false);
+            m_CurrentFlowState.Value = new(this, false);
         }
 
         static void FlowStateChanged(AsyncLocalValueChangedArgs<FlowState?> args)
@@ -136,7 +136,7 @@ partial class ExecutionContextHelper
         /// </summary>
         void UpdateOperationFsm()
         {
-            if (m_FlowState.Value is not null and var flowState &&
+            if (m_CurrentFlowState.Value is not null and var flowState &&
                 flowState.Operation == this)
             {
                 UpdateFsm(flowState);
@@ -148,7 +148,7 @@ partial class ExecutionContextHelper
             // Updating the current FSM to complete any pending activities
             // creates an ordered relation between AsyncLocal<T> operations
             // that were issued before and after the barrier.
-            if (m_FlowState.Value is not null and var flowState)
+            if (m_CurrentFlowState.Value is not null and var flowState)
                 UpdateFsm(flowState);
         }
 
@@ -161,7 +161,7 @@ partial class ExecutionContextHelper
         {
             var newFlowState = GetNextFlowState(currentFlowState);
             if (newFlowState != currentFlowState)
-                m_FlowState.Value = newFlowState;
+                m_CurrentFlowState.Value = newFlowState;
 
             static FlowState? GetNextFlowState(FlowState state)
             {
@@ -209,7 +209,7 @@ partial class ExecutionContextHelper
             }
         }
 
-        static readonly AsyncLocal<FlowState?> m_FlowState = new(FlowStateChanged);
+        static readonly AsyncLocal<FlowState?> m_CurrentFlowState = new(FlowStateChanged);
 
         sealed record FlowState(AsyncLocalModificationOperationBase Operation, bool ChangesApplied);
 
