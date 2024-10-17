@@ -150,8 +150,8 @@ That impossibility was caused by certain limitations of `System.AsyncLocal<T>` c
 
 However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` module became the world's first "clean" implementation of reentrant synchronization primitives for .NET's asynchronous execution model.
 The word "clean" means that it does not use such unreliable techniques as `System.Diagnostics.StackTrace`.
-Previously, "clean" implementations were considered impossible due to aforementioned limitations of the `System.AsyncLocal<T>` class.
-If you interested in gory implementation details, take a look at the corresponding [source file](Utils/ExecutionContextHelper.AsyncLocal.cs).
+Previously, clean implementations were considered impossible due to aforementioned limitations of the `System.AsyncLocal<T>` class.
+If you are interested in gory implementation details, take a look at the corresponding [source file](Utils/ExecutionContextHelper.AsyncLocal.cs).
 
 </details>
 
@@ -177,7 +177,7 @@ finally
 }
 ```
 
-`AsyncLock` implements `Gapotchenko.FX.Threading.IAsyncLockable` interface that gives access to handy shortcuts for entering and exiting the lock scope asynchronously without manual `try`-`finally` constructs:
+`AsyncLock` implements `Gapotchenko.FX.Threading.IAsyncLockable` interface that gives you access to handy shortcuts for entering and exiting the lock scope asynchronously without manual `try`-`finally` constructs:
 
 ``` C#
 using Gapotchenko.FX.Threading;

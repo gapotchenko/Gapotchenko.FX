@@ -7,10 +7,8 @@
   <ItemGroup>
     <PackageTag Include="async;recursive;reentrant;threading;bridge;mutex;lock;monitor;event;condition variable" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.TaskBridge" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncMutex" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncRecursiveMutex" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncLock" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncMonitor" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncRecursiveMonitor" />
   </ItemGroup>
 
   <PropertyGroup>
