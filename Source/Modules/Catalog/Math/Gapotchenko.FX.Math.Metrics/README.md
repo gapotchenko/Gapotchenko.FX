@@ -27,7 +27,7 @@ The table below compares edit distance measurement functions provided by `String
 | Hamming distance                          |           |          | &check;      |               |
 | Damerau–Levenshtein distance              | &check;   | &check;  | &check;      | &check;       |
 | Optimal string alignment (OSA) distance   | &check;   | &check;  | &check;      | &check;       |
-| Jaro distance                             |           |          |              | &check;       |
+| Jaro similarity                           |           |          |              | &check;       |
 
 ### Levenshtein Distance
 
