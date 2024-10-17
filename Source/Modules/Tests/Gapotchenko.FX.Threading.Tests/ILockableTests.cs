@@ -7,6 +7,8 @@ public abstract class ILockableTests
 {
     protected abstract ILockable CreateLockable();
 
+    // ----------------------------------------------------------------------
+
     [TestMethod]
     public void ILockable_Construction()
     {
@@ -18,7 +20,7 @@ public abstract class ILockableTests
     }
 
     [TestMethod]
-    public void ILockable_Lock_Nesting()
+    public void ILockable_Enter_Nesting()
     {
         var lockable = CreateLockable();
 
@@ -54,7 +56,7 @@ public abstract class ILockableTests
     }
 
     [TestMethod]
-    public void ILockable_Lock_Rollback()
+    public void ILockable_Enter_Rollback()
     {
         var lockable = CreateLockable();
 
@@ -78,30 +80,30 @@ public abstract class ILockableTests
     // ----------------------------------------------------------------------
 
     [TestMethod]
-    public void ILockable_TryLock_Nesting() =>
-        TryLock_Nesting_Core(CreateLockable(), x => x.TryEnter());
+    public void ILockable_TryEnter_Nesting() =>
+        TryEnter_Nesting_Core(CreateLockable(), x => x.TryEnter());
 
     [TestMethod]
-    public void ILockable_TryLock_TimeSpan_Nesting()
+    public void ILockable_TryEnter_TimeSpan_Nesting()
     {
         var lockable = CreateLockable();
         var timeout = TimeSpan.Zero;
 
-        TryLock_Nesting_Core(lockable, x => x.TryEnter(timeout));
-        TryLock_Nesting_Core(lockable, x => x.TryEnter(timeout, CancellationToken.None));
+        TryEnter_Nesting_Core(lockable, x => x.TryEnter(timeout));
+        TryEnter_Nesting_Core(lockable, x => x.TryEnter(timeout, CancellationToken.None));
     }
 
     [TestMethod]
-    public void ILockable_TryLock_Int32_Nesting()
+    public void ILockable_TryEnter_Int32_Nesting()
     {
         var lockable = CreateLockable();
         var timeout = 0;
 
-        TryLock_Nesting_Core(lockable, x => x.TryEnter(timeout));
-        TryLock_Nesting_Core(lockable, x => x.TryEnter(timeout, CancellationToken.None));
+        TryEnter_Nesting_Core(lockable, x => x.TryEnter(timeout));
+        TryEnter_Nesting_Core(lockable, x => x.TryEnter(timeout, CancellationToken.None));
     }
 
-    static void TryLock_Nesting_Core(ILockable lockable, Func<ILockable, bool> tryLockFunc)
+    static void TryEnter_Nesting_Core(ILockable lockable, Func<ILockable, bool> tryLockFunc)
     {
         if (lockable is IRecursiveLockable recursiveLockable)
         {
@@ -137,18 +139,18 @@ public abstract class ILockableTests
     // ----------------------------------------------------------------------
 
     [TestMethod]
-    public void ILockable_TryLock_TimeSpan_Rollback() =>
-        TryLock_Rollback_Core(
+    public void ILockable_TryEnter_TimeSpan_Rollback() =>
+        TryEnter_Rollback_Core(
             CreateLockable(),
             (x, ct) => x.TryEnter(Timeout.InfiniteTimeSpan, ct));
 
     [TestMethod]
-    public void ILockable_TryLock_Int32_Rollback() =>
-        TryLock_Rollback_Core(
+    public void ILockable_TryEnter_Int32_Rollback() =>
+        TryEnter_Rollback_Core(
             CreateLockable(),
             (x, ct) => x.TryEnter(Timeout.Infinite, ct));
 
-    static void TryLock_Rollback_Core(ILockable lockable, Func<ILockable, CancellationToken, bool> tryLockFunc)
+    static void TryEnter_Rollback_Core(ILockable lockable, Func<ILockable, CancellationToken, bool> tryLockFunc)
     {
         bool wasCanceled = false;
         try
@@ -170,7 +172,7 @@ public abstract class ILockableTests
     // ----------------------------------------------------------------------
 
     [TestMethod]
-    public void ILockable_Unlock_NonLocked()
+    public void ILockable_Exit_NonLocked()
     {
         var lockable = CreateLockable();
         Assert.ThrowsException<SynchronizationLockException>(lockable.Exit);
