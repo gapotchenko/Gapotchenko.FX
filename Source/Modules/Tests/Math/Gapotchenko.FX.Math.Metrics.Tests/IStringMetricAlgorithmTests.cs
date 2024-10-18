@@ -4,7 +4,7 @@
 public abstract class IStringMetricAlgorithmTests
 {
     [TestMethod]
-    public void StringMetric_CapabilitiesAreImplemented()
+    public void StringMetric_ReturnsCapabilities()
     {
         _ = MetricAlgorithm.Capabilities;
     }

@@ -1,44 +1,24 @@
-﻿using Gapotchenko.FX.Math.Intervals;
-
-namespace Gapotchenko.FX.Math.Metrics.Tests.StringDistanceAlgorithms;
+﻿namespace Gapotchenko.FX.Math.Metrics.Tests.StringDistanceAlgorithms;
 
 [TestClass]
 public sealed class LcsTests : IStringDistanceAlgorithmTests
 {
     [TestMethod]
-    public void StringDistance_Lcs_Basics()
-    {
-        Assert.AreEqual(4, EditDistance("abra", ""));
-        Assert.AreEqual(4, EditDistance("", "abra"));
-        Assert.AreEqual(0, EditDistance("abra", "abra"));
-        Assert.AreEqual(0, EditDistance("", ""));
-        Assert.AreEqual(2, EditDistance("a", "b"));
-
-        Assert.AreEqual(1, EditDistance("abr", "abra"));
-        Assert.AreEqual(1, EditDistance("abra", "abr"));
-        Assert.AreEqual(2, EditDistance("abra", "abrr"));
-        Assert.AreEqual(3, EditDistance("abra", "a"));
-        Assert.AreEqual(4, EditDistance("abra", "abcd"));
-        Assert.AreEqual(8, EditDistance("abra", "1234"));
-        Assert.AreEqual(6, EditDistance("abra", "a123"));
-        Assert.AreEqual(4, EditDistance("abra", "1br2"));
-    }
-
-    [TestMethod]
-    public void StringDistance_Lcs_Range()
-    {
-        for (var maxDistance = 0; maxDistance <= 16; ++maxDistance)
-        {
-            Assert.AreEqual(
-                maxDistance,
-                EditDistance("abcdefghijklmnop", "ponmlkjihgfedcba", maxDistance));
-        }
-    }
-
-    int EditDistance(string a, string b, int? maxDistance = default) =>
-        DistanceAlgorithm.Calculate(
-            a, b,
-            ValueInterval.Inclusive(null, maxDistance));
+    [DataRow("abra", "", 4)]
+    [DataRow("", "abra", 4)]
+    [DataRow("abra", "abra", 0)]
+    [DataRow("", "", 0)]
+    [DataRow("a", "b", 2)]
+    [DataRow("abr", "abra", 1)]
+    [DataRow("abra", "abr", 1)]
+    [DataRow("abra", "abrr", 2)]
+    [DataRow("abra", "a", 3)]
+    [DataRow("abra", "abcd", 4)]
+    [DataRow("abra", "1234", 8)]
+    [DataRow("abra", "a123", 6)]
+    [DataRow("abra", "1br2", 4)]
+    public void StringDistance_Lcs_TestVectors(string a, string b, int expectedDistance) =>
+        TestVector(a, b, expectedDistance);
 
     // ----------------------------------------------------------------------
 

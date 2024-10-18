@@ -1,6 +1,4 @@
-﻿using Gapotchenko.FX.Math.Intervals;
-
-namespace Gapotchenko.FX.Math.Metrics.Tests.StringDistanceAlgorithms;
+﻿namespace Gapotchenko.FX.Math.Metrics.Tests.StringDistanceAlgorithms;
 
 [TestClass]
 public sealed class DamerauLevenshteinTests : IStringDistanceAlgorithmTests
@@ -26,24 +24,8 @@ public sealed class DamerauLevenshteinTests : IStringDistanceAlgorithmTests
     [DataRow("gifts", "profit", 5)]
     [DataRow("tt", "t", 1)]
     [DataRow("t", "tt", 1)]
-    public void StringDistance_DamerauLevenshtein_Basics(string a, string b, int distance)
-    {
-        Assert.AreEqual(distance, DistanceAlgorithm.Calculate(a, b));
-    }
-
-    [TestMethod]
-    public void StringDistance_DamerauLevenshtein_Range()
-    {
-        for (var maxDistance = 0; maxDistance <= 16; ++maxDistance)
-        {
-            Assert.AreEqual(
-                maxDistance,
-                DistanceAlgorithm.Calculate(
-                    "abcdefghijklmnop",
-                    "rtsuvwxyz0123456",
-                    ValueInterval.Inclusive((int?)null, maxDistance)));
-        }
-    }
+    public void StringDistance_DamerauLevenshtein_TestVectors(string a, string b, int expectedDistance) =>
+        TestVector(a, b, expectedDistance);
 
     // ----------------------------------------------------------------------
 

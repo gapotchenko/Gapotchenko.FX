@@ -17,14 +17,8 @@ public sealed class JaroTests : IStringSimilarityAlgorithmTests
     [DataRow("washington", "washingtonx", 0.97)]
     [DataRow("daniel", "danielle", 0.92)]
     [DataRow("sat", "urn", 0)]
-    public void StringSimilarity_Jaro_Basics(string a, string b, double expectedSimilarity)
-    {
-        var actualSimilarity = SimilarityAlgorithm.Calculate(a, b);
-
-        Assert.IsTrue(actualSimilarity >= 0);
-        Assert.IsTrue(actualSimilarity <= 1);
-        Assert.AreEqual(expectedSimilarity, actualSimilarity, 0.01);
-    }
+    public void StringSimilarity_Jaro_TestVectors(string a, string b, double expectedSimilarity) =>
+        TestVector(a, b, expectedSimilarity, 0.01);
 
     // ----------------------------------------------------------------------
 

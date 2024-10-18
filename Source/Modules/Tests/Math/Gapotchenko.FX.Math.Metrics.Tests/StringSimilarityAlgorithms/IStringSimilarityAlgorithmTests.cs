@@ -21,6 +21,17 @@ public abstract class IStringSimilarityAlgorithmTests : IStringMetricAlgorithmTe
 
     // ----------------------------------------------------------------------
 
+    protected void TestVector(string a, string b, double expectedSimilarity, double delta)
+    {
+        var actualSimilarity = SimilarityAlgorithm.Calculate(a, b);
+
+        Assert.IsTrue(actualSimilarity >= 0);
+        Assert.IsTrue(actualSimilarity <= 1);
+        Assert.AreEqual(expectedSimilarity, actualSimilarity, delta);
+    }
+
+    // ----------------------------------------------------------------------
+
     protected abstract IStringSimilarityAlgorithm SimilarityAlgorithm { get; }
 
     protected sealed override IStringMetricAlgorithm MetricAlgorithm => SimilarityAlgorithm;
