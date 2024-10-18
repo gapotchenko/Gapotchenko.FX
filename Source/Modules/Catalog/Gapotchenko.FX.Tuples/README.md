@@ -32,7 +32,7 @@ Console.WriteLine("The query result: {0}.", database.Contains(("john", 14)));
 ```
 
 One way to fix that is to create a custom `IEqualityComparer<(T1, T2)>` implementation and pass it to the constructor of the `HashSet` class.
-Another more simple way to solve the problem is to use `Gapotchenko.FX.Tuples.ValueTupleEqualityComparer` class to quickly create a specialized equality comparer that fits our requirements:
+Another more simple way to solve the problem is to use `Gapotchenko.FX.Tuples.ValueTupleEqualityComparer` class to quickly create a specialized equality comparer that fits our needs:
 
 ``` C#
 var equalityComparer = ValueTupleEqualityComparer.Create<string, int>(StringComparer.CurrentCultureIgnoreCase, null);
