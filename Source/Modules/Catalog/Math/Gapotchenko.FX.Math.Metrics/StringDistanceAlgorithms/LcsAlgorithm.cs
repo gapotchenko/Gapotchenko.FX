@@ -15,9 +15,9 @@ sealed class LcsAlgorithm : OsaBaseAlgorithm
 {
     public static LcsAlgorithm Instance { get; } = new();
 
-    public override StringMetricAlgorithmCapabilities Capabilities =>
-        StringMetricAlgorithmCapabilities.Insertion |
-        StringMetricAlgorithmCapabilities.Deletion;
+    public override StringMetricTraits MetricTraits =>
+        StringMetricTraits.Insertion |
+        StringMetricTraits.Deletion;
 
     public override int Calculate<T>(
         IEnumerable<T> a,

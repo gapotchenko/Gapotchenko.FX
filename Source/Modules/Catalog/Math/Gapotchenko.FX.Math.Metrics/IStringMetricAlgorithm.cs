@@ -12,9 +12,9 @@ namespace Gapotchenko.FX.Math.Metrics;
 public interface IStringMetricAlgorithm
 {
     /// <summary>
-    /// Gets the algorithm capabilities.
+    /// Gets the metric traits.
     /// </summary>
-    StringMetricAlgorithmCapabilities Capabilities { get; }
+    StringMetricTraits MetricTraits { get; }
 
     /// <summary>
     /// Calculates a measure between the two specified sequences of elements.

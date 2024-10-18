@@ -21,7 +21,7 @@ public abstract class StringMetricAlgorithm<TMeasure> :
         IComparable<TMeasure>?
 {
     /// <inheritdoc/>
-    public abstract StringMetricAlgorithmCapabilities Capabilities { get; }
+    public abstract StringMetricTraits MetricTraits { get; }
 
     /// <inheritdoc/>
     public TMeasure Calculate<TElement>(

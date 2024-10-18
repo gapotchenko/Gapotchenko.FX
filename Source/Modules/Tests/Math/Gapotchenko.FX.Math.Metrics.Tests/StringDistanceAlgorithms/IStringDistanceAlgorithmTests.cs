@@ -10,8 +10,8 @@ public abstract class IStringDistanceAlgorithmTests : IStringMetricAlgorithmTest
     [DataRow("abc")]
     public void StringDistance_ZeroForEqual(string value)
     {
-        Assert.AreEqual(0, DistanceAlgorithm.Calculate(value, value));
-        Assert.AreEqual(0, DistanceAlgorithm.Calculate(value, new string(value.ToCharArray())));
+        TestVector(value, value, 0);
+        TestVector(value, new string(value.ToCharArray()), 0);
     }
 
     [TestMethod]
@@ -32,8 +32,17 @@ public abstract class IStringDistanceAlgorithmTests : IStringMetricAlgorithmTest
 
     protected void TestVector(string a, string b, int expectedDistance)
     {
-        var actualDistance = DistanceAlgorithm.Calculate(a, b);
-        Assert.AreEqual(expectedDistance, actualDistance);
+        foreach (var i in EnumerateStringVariations(a, b))
+            Run(i.Item1, i.Item2);
+
+        void Run(string a, string b)
+        {
+            var actualDistance = DistanceAlgorithm.Calculate(a, b);
+            Assert.AreEqual(expectedDistance, actualDistance);
+
+            var actualDistance2 = (int)MetricAlgorithm.Calculate(a, b);
+            Assert.AreEqual(actualDistance, actualDistance2);
+        }
     }
 
     // ----------------------------------------------------------------------

@@ -6,28 +6,34 @@ public abstract class IStringSimilarityAlgorithmTests : IStringMetricAlgorithmTe
     [TestMethod]
     [DataRow("")]
     [DataRow("abc")]
-    public void String_Similarity_OneForEqual(string value)
+    public void StringSimilarity_OneForEqual(string value)
     {
-        Assert.AreEqual(1, SimilarityAlgorithm.Calculate(value, value));
-        Assert.AreEqual(1, SimilarityAlgorithm.Calculate(value, new string(value.ToCharArray())));
+        TestVector(value, value, 1);
+        TestVector(value, new string(value.ToCharArray()), 1);
     }
 
     [TestMethod]
     [DataRow("abc", "xyz")]
-    public void String_Similarity_ZeroForDifferent(string a, string b)
-    {
-        Assert.AreEqual(0, SimilarityAlgorithm.Calculate(a, b));
-    }
+    public void StringSimilarity_ZeroForDifferent(string a, string b) => TestVector(a, b, 0);
 
     // ----------------------------------------------------------------------
 
-    protected void TestVector(string a, string b, double expectedSimilarity, double delta)
+    protected void TestVector(string a, string b, double expectedSimilarity, double delta = 0)
     {
-        var actualSimilarity = SimilarityAlgorithm.Calculate(a, b);
+        foreach (var i in EnumerateStringVariations(a, b))
+            Run(i.Item1, i.Item2);
 
-        Assert.IsTrue(actualSimilarity >= 0);
-        Assert.IsTrue(actualSimilarity <= 1);
-        Assert.AreEqual(expectedSimilarity, actualSimilarity, delta);
+        void Run(string a, string b)
+        {
+            var actualSimilarity = SimilarityAlgorithm.Calculate(a, b);
+
+            Assert.IsTrue(actualSimilarity >= 0);
+            Assert.IsTrue(actualSimilarity <= 1);
+            Assert.AreEqual(expectedSimilarity, actualSimilarity, delta);
+
+            var actualSimilarity2 = (double)MetricAlgorithm.Calculate(a, b);
+            Assert.AreEqual(actualSimilarity, actualSimilarity2);
+        }
     }
 
     // ----------------------------------------------------------------------

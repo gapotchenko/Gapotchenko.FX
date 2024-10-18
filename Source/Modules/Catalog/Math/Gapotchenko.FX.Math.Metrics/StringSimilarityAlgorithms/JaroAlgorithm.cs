@@ -16,8 +16,8 @@ sealed class JaroAlgorithm : StringSimilarityAlgorithm
 {
     public static JaroAlgorithm Instance { get; } = new();
 
-    public override StringMetricAlgorithmCapabilities Capabilities =>
-        StringMetricAlgorithmCapabilities.Transposition;
+    public override StringMetricTraits MetricTraits =>
+        StringMetricTraits.Transposition;
 
     public override double Calculate<T>(
         IEnumerable<T> a,

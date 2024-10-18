@@ -15,11 +15,11 @@ sealed class OsaAlgorithm : OsaBaseAlgorithm
 {
     public static OsaAlgorithm Instance { get; } = new();
 
-    public override StringMetricAlgorithmCapabilities Capabilities =>
-        StringMetricAlgorithmCapabilities.Insertion |
-        StringMetricAlgorithmCapabilities.Deletion |
-        StringMetricAlgorithmCapabilities.Substitution |
-        StringMetricAlgorithmCapabilities.Transposition;
+    public override StringMetricTraits MetricTraits =>
+        StringMetricTraits.Insertion |
+        StringMetricTraits.Deletion |
+        StringMetricTraits.Substitution |
+        StringMetricTraits.Transposition;
 
     public override int Calculate<T>(
         IEnumerable<T> a,
