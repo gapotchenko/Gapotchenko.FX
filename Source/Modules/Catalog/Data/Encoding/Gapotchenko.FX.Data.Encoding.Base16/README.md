@@ -82,7 +82,7 @@ For example:
 var encoding = new CustomBase16("ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠ");
 ```
 
-If you want to formalize a custom algorithm even further, you may opt in to create a separate class for it with a convenient accessor property:
+If you want to formalize the custom algorithm even further, you may opt in to create a separate class for it with a convenient accessor property:
 
 ``` C#
 /// <summary>

@@ -90,7 +90,7 @@ In that case, you can instantiate a custom data encoding algorithm with the desi
 var encoding = new CustomBase32("ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ01234567");
 ```
 
-If you want to formalize a custom algorithm even further, you may opt in to create a separate class for it with a convenient accessor property:
+If you want to formalize the custom algorithm even further, you may opt in to create a separate class for it with a convenient accessor property:
 
 ``` C#
 /// <summary>
