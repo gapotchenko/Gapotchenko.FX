@@ -3,14 +3,14 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Tuples.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Tuples)
 
-The module provides extended functionality for tuples represented by `System.Tuple` and `System.ValueTuple` types.
+The module provides extended functionality for .NET tuples represented by `System.Tuple` and `System.ValueTuple` types.
 
 ## Equality Comparer for Value Tuples
 
 In .NET, value tuples are represented by `System.ValueTuple` type.
 They allow to quickly pack several values together without creating dedicated types for that.
 
-Sometimes you may need custom equality comparers for value tuples.
+Value tuples come with sane defaults, but sometimes you may need custom equality comparers for them.
 Let's take a look at example:
 
 ``` C#
