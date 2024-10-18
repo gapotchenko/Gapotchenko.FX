@@ -3,10 +3,10 @@
 namespace Gapotchenko.FX.Math.Metrics.Tests.StringDistanceAlgorithms;
 
 [TestClass]
-public class LevenshteinTests
+public sealed class LevenshteinTests : IStringDistanceAlgorithmTests
 {
     [TestMethod]
-    public void Metrics_String_Distance_Levenshtein_Basics()
+    public void StringDistance_Levenshtein_Basics()
     {
         Assert.AreEqual(4, EditDistance("abra", ""));
         Assert.AreEqual(4, EditDistance("", "abra"));
@@ -25,7 +25,7 @@ public class LevenshteinTests
     }
 
     [TestMethod]
-    public void Metrics_String_Distance_Levenshtein_Range()
+    public void StringDistance_Levenshtein_Range()
     {
         for (var maxDistance = 0; maxDistance <= 16; ++maxDistance)
         {
@@ -35,8 +35,12 @@ public class LevenshteinTests
         }
     }
 
-    static int EditDistance(string a, string b, int? maxDistance = default) =>
-        StringMetrics.Distance.Levenshtein.Calculate(
+    int EditDistance(string a, string b, int? maxDistance = default) =>
+        DistanceAlgorithm.Calculate(
             a, b,
             ValueInterval.Inclusive(null, maxDistance));
+
+    // ----------------------------------------------------------------------
+
+    protected override IStringDistanceAlgorithm DistanceAlgorithm => StringMetrics.Distance.Levenshtein;
 }

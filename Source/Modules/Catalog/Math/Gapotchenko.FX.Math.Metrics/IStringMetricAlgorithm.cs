@@ -7,10 +7,15 @@
 namespace Gapotchenko.FX.Math.Metrics;
 
 /// <summary>
-/// Defines the interface of a string metrics algorithm.
+/// Defines the interface of a string metric algorithm.
 /// </summary>
-public interface IStringMetricsAlgorithm
+public interface IStringMetricAlgorithm
 {
+    /// <summary>
+    /// Gets the algorithm capabilities.
+    /// </summary>
+    StringMetricAlgorithmCapabilities Capabilities { get; }
+
     /// <summary>
     /// Calculates a measure between the two specified sequences of elements.
     /// </summary>

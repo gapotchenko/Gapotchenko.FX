@@ -9,6 +9,6 @@ namespace Gapotchenko.FX.Math.Metrics;
 /// <summary>
 /// The base class for <see cref="IStringSimilarityAlgorithm"/> implementations.
 /// </summary>
-public abstract class StringSimilarityAlgorithm : StringMetricsAlgorithm<double>, IStringSimilarityAlgorithm
+public abstract class StringSimilarityAlgorithm : StringMetricAlgorithm<double>, IStringSimilarityAlgorithm
 {
 }

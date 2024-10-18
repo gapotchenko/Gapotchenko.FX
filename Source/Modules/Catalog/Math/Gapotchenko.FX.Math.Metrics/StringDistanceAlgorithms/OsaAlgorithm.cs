@@ -9,11 +9,17 @@ using Gapotchenko.FX.Math.Intervals;
 namespace Gapotchenko.FX.Math.Metrics.StringDistanceAlgorithms;
 
 /// <summary>
-/// Calculates optimal string alignment distance between two sequences of elements.
+/// Calculates optimal string alignment (OSA) distance between two sequences of elements.
 /// </summary>
 sealed class OsaAlgorithm : OsaBaseAlgorithm
 {
     public static OsaAlgorithm Instance { get; } = new();
+
+    public override StringMetricAlgorithmCapabilities Capabilities =>
+        StringMetricAlgorithmCapabilities.Insertion |
+        StringMetricAlgorithmCapabilities.Deletion |
+        StringMetricAlgorithmCapabilities.Substitution |
+        StringMetricAlgorithmCapabilities.Transposition;
 
     public override int Calculate<T>(
         IEnumerable<T> a,

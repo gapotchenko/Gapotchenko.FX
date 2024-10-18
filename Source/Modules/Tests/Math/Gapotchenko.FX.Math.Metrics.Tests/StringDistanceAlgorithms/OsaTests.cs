@@ -3,10 +3,10 @@
 namespace Gapotchenko.FX.Math.Metrics.Tests.StringDistanceAlgorithms;
 
 [TestClass]
-public class OsaTests
+public sealed class OsaTests : IStringDistanceAlgorithmTests
 {
     [TestMethod]
-    public void Metrics_String_Distance_Osa_Basics()
+    public void StringDistance_Osa_Basics()
     {
         Assert.AreEqual(5, EditDistance("", "abcde"));
         Assert.AreEqual(5, EditDistance("abcde", ""));
@@ -31,7 +31,7 @@ public class OsaTests
     }
 
     [TestMethod]
-    public void Metrics_String_Distance_Osa_Range()
+    public void StringDistance_Osa_Range()
     {
         for (var maxDistance = 0; maxDistance <= 16; ++maxDistance)
         {
@@ -41,8 +41,12 @@ public class OsaTests
         }
     }
 
-    static int EditDistance(string a, string b, int? maxDistance = default) =>
-        StringMetrics.Distance.Osa.Calculate(
+    int EditDistance(string a, string b, int? maxDistance = default) =>
+        DistanceAlgorithm.Calculate(
             a, b,
             ValueInterval.Inclusive(null, maxDistance));
+
+    // ----------------------------------------------------------------------
+
+    protected override IStringDistanceAlgorithm DistanceAlgorithm => StringMetrics.Distance.Osa;
 }

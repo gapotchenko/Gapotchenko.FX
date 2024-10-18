@@ -15,6 +15,11 @@ sealed class LevenshteinAlgorithm : OsaBaseAlgorithm
 {
     public static LevenshteinAlgorithm Instance { get; } = new();
 
+    public override StringMetricAlgorithmCapabilities Capabilities =>
+        StringMetricAlgorithmCapabilities.Insertion |
+        StringMetricAlgorithmCapabilities.Deletion |
+        StringMetricAlgorithmCapabilities.Substitution;
+
     public override int Calculate<T>(
         IEnumerable<T> a,
         IEnumerable<T> b,

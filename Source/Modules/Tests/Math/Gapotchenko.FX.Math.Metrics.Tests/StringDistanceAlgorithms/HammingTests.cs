@@ -3,10 +3,10 @@
 namespace Gapotchenko.FX.Math.Metrics.Tests.StringDistanceAlgorithms;
 
 [TestClass]
-public class HammingTests
+public sealed class HammingTests : IStringDistanceAlgorithmTests
 {
     [TestMethod]
-    public void Metrics_String_Distance_Hamming_Basics()
+    public void StringDistance_Hamming_Basics()
     {
         Assert.ThrowsException<ArgumentException>(() => EditDistance("abra", "abr"));
 
@@ -22,7 +22,7 @@ public class HammingTests
     }
 
     [TestMethod]
-    public void Metrics_String_Distance_Hamming_Range()
+    public void StringDistance_Hamming_Range()
     {
         for (var maxDistance = 0; maxDistance <= 16; ++maxDistance)
         {
@@ -32,8 +32,12 @@ public class HammingTests
         }
     }
 
-    static int EditDistance(string a, string b, int? maxDistance = default) =>
-        StringMetrics.Distance.Hamming.Calculate(
+    int EditDistance(string a, string b, int? maxDistance = default) =>
+        DistanceAlgorithm.Calculate(
             a, b,
             ValueInterval.Inclusive(null, maxDistance));
+
+    // ----------------------------------------------------------------------
+
+    protected override IStringDistanceAlgorithm DistanceAlgorithm => StringMetrics.Distance.Hamming;
 }

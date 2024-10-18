@@ -3,10 +3,10 @@
 namespace Gapotchenko.FX.Math.Metrics.Tests.StringDistanceAlgorithms;
 
 [TestClass]
-public class LcsTests
+public sealed class LcsTests : IStringDistanceAlgorithmTests
 {
     [TestMethod]
-    public void Metrics_String_Distance_Lcs_Basics()
+    public void StringDistance_Lcs_Basics()
     {
         Assert.AreEqual(4, EditDistance("abra", ""));
         Assert.AreEqual(4, EditDistance("", "abra"));
@@ -25,7 +25,7 @@ public class LcsTests
     }
 
     [TestMethod]
-    public void Metrics_String_Distance_Lcs_Range()
+    public void StringDistance_Lcs_Range()
     {
         for (var maxDistance = 0; maxDistance <= 16; ++maxDistance)
         {
@@ -35,8 +35,12 @@ public class LcsTests
         }
     }
 
-    static int EditDistance(string a, string b, int? maxDistance = default) =>
-        StringMetrics.Distance.Lcs.Calculate(
+    int EditDistance(string a, string b, int? maxDistance = default) =>
+        DistanceAlgorithm.Calculate(
             a, b,
             ValueInterval.Inclusive(null, maxDistance));
+
+    // ----------------------------------------------------------------------
+
+    protected override IStringDistanceAlgorithm DistanceAlgorithm => StringMetrics.Distance.Lcs;
 }

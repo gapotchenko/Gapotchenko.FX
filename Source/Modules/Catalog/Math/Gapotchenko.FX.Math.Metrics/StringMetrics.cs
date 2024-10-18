@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.Math.Metrics;
 
 /// <summary>
-/// Provides string metrics algorithms.
+/// Provides string metric algorithms.
 /// </summary>
 public static partial class StringMetrics
 {

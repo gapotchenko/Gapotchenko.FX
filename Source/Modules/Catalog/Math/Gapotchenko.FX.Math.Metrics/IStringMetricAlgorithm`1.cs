@@ -9,17 +9,17 @@ using Gapotchenko.FX.Math.Intervals;
 namespace Gapotchenko.FX.Math.Metrics;
 
 /// <summary>
-/// Defines the interface of a strongly-typed string metrics algorithm.
+/// Defines the interface of a strongly-typed string metric algorithm.
 /// </summary>
 /// <typeparam name="TMeasure">The type of the measure.</typeparam>
-public interface IStringMetricsAlgorithm<TMeasure> :
-    IStringMetricsAlgorithm
+public interface IStringMetricAlgorithm<TMeasure> :
+    IStringMetricAlgorithm
     where TMeasure :
         notnull,
         IEquatable<TMeasure>?,
         IComparable<TMeasure>?
 {
-    /// <inheritdoc cref="IStringMetricsAlgorithm.Calculate{TElement}(IEnumerable{TElement}, IEnumerable{TElement}, IEqualityComparer{TElement}?, CancellationToken)"/>
+    /// <inheritdoc cref="IStringMetricAlgorithm.Calculate{TElement}(IEnumerable{TElement}, IEnumerable{TElement}, IEqualityComparer{TElement}?, CancellationToken)"/>
     /// <typeparam name="TElement">The type of sequence elements.</typeparam>
     new TMeasure Calculate<TElement>(
         IEnumerable<TElement> a,

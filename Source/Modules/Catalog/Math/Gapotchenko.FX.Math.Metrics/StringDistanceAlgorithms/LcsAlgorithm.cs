@@ -9,11 +9,15 @@ using Gapotchenko.FX.Math.Intervals;
 namespace Gapotchenko.FX.Math.Metrics.StringDistanceAlgorithms;
 
 /// <summary>
-/// Calculates longest common subsequence distance between two sequences of elements.
+/// Calculates longest common subsequence (LCS) distance between two sequences of elements.
 /// </summary>
 sealed class LcsAlgorithm : OsaBaseAlgorithm
 {
     public static LcsAlgorithm Instance { get; } = new();
+
+    public override StringMetricAlgorithmCapabilities Capabilities =>
+        StringMetricAlgorithmCapabilities.Insertion |
+        StringMetricAlgorithmCapabilities.Deletion;
 
     public override int Calculate<T>(
         IEnumerable<T> a,

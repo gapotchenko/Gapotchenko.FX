@@ -10,16 +10,19 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Math.Metrics;
 
 /// <summary>
-/// The base class for <see cref="IStringMetricsAlgorithm{TMeasure}"/> implementations.
+/// The base class for <see cref="IStringMetricAlgorithm{TMeasure}"/> implementations.
 /// </summary>
-/// <typeparam name="TMeasure">The type of the measure.</typeparam>
-public abstract class StringMetricsAlgorithm<TMeasure> :
-    IStringMetricsAlgorithm<TMeasure>
+/// <typeparam name="TMeasure"><inheritdoc cref="IStringMetricAlgorithm{TMeasure}"/></typeparam>
+public abstract class StringMetricAlgorithm<TMeasure> :
+    IStringMetricAlgorithm<TMeasure>
     where TMeasure :
         notnull,
         IEquatable<TMeasure>?,
         IComparable<TMeasure>?
 {
+    /// <inheritdoc/>
+    public abstract StringMetricAlgorithmCapabilities Capabilities { get; }
+
     /// <inheritdoc/>
     public TMeasure Calculate<TElement>(
         IEnumerable<TElement> a,
@@ -28,7 +31,7 @@ public abstract class StringMetricsAlgorithm<TMeasure> :
         CancellationToken cancellationToken = default) =>
         Calculate(a, b, ValueInterval<TMeasure>.Infinite, equalityComparer, cancellationToken);
 
-    object IStringMetricsAlgorithm.Calculate<TElement>(
+    object IStringMetricAlgorithm.Calculate<TElement>(
         IEnumerable<TElement> a,
         IEnumerable<TElement> b,
         IEqualityComparer<TElement>? equalityComparer,

@@ -9,6 +9,6 @@ namespace Gapotchenko.FX.Math.Metrics;
 /// <summary>
 /// The base class for <see cref="IStringDistanceAlgorithm"/> implementations.
 /// </summary>
-public abstract class StringDistanceAlgorithm : StringMetricsAlgorithm<int>, IStringDistanceAlgorithm
+public abstract class StringDistanceAlgorithm : StringMetricAlgorithm<int>, IStringDistanceAlgorithm
 {
 }

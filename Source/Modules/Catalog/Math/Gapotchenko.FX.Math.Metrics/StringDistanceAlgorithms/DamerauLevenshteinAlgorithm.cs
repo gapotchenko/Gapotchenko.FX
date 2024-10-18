@@ -19,6 +19,12 @@ sealed class DamerauLevenshteinAlgorithm : StringDistanceAlgorithm
 {
     public static DamerauLevenshteinAlgorithm Instance { get; } = new();
 
+    public override StringMetricAlgorithmCapabilities Capabilities =>
+        StringMetricAlgorithmCapabilities.Insertion |
+        StringMetricAlgorithmCapabilities.Deletion |
+        StringMetricAlgorithmCapabilities.Substitution |
+        StringMetricAlgorithmCapabilities.Transposition;
+
     public override int Calculate<T>(
         IEnumerable<T> a,
         IEnumerable<T> b,
