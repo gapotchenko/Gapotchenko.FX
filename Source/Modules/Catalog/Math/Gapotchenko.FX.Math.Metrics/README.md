@@ -5,7 +5,7 @@
 
 The module provides math metrics algorithms.
 
-## StringMetrics
+## String Metrics
 
 `Gapotchenko.FX.Math.Metrics.StringMetrics` static class provides a variety of metric algorithms for measuring the distance and similarity between two strings of symbols.
 
