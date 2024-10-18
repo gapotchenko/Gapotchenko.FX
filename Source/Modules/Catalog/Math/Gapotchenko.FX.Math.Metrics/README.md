@@ -20,14 +20,14 @@ There are several ways to measure the edit distance.
 
 The table below compares edit distance measurement functions provided by `StringMetrics` class:
 
-| Metric Function                           | Insertion | Deletion | Substitution | Transposition |
-|:------------------------------------------|:---------:|:--------:|:------------:|:-------------:|
-| Levenshtein distance                      | &check;   | &check;  | &check;      |               |
-| Longest common subsequence (LCS) distance | &check;   | &check;  |              |               |
-| Hamming distance                          |           |          | &check;      |               |
-| Damerau–Levenshtein distance              | &check;   | &check;  | &check;      | &check;       |
-| Optimal string alignment (OSA) distance   | &check;   | &check;  | &check;      | &check;       |
-| Jaro similarity                           |           |          |              | &check;       |
+| Metric Function                           | Insertion | Deletion | Substitution | Transposition | Gapotchenko.FX Implementation                 |
+|:------------------------------------------|:---------:|:--------:|:------------:|:-------------:|:---------------------------------------------:|
+| Levenshtein distance                      | &check;   | &check;  | &check;      |               | `StringMetrics.Distance.Levenshtein`          |
+| Longest common subsequence (LCS) distance | &check;   | &check;  |              |               | `StringMetrics.Distance.Lcs`                  |
+| Hamming distance                          |           |          | &check;      |               | `StringMetrics.Distance.Hamming`              |
+| Damerau–Levenshtein distance              | &check;   | &check;  | &check;      | &check;       | `StringMetrics.Distance.DamerauLevenshtein`   |
+| Optimal string alignment (OSA) distance   | &check;   | &check;  | &check;      | &check;       | `StringMetrics.Distance.Osa`                  |
+| Jaro similarity                           |           |          |              | &check;       | `StringMetrics.Similarity.Jaro`               |
 
 ### Levenshtein Distance
 
