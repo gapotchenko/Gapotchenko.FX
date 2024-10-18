@@ -10,7 +10,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Reflection.Loader.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Reflection.Loader)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Reflection.Loader.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Reflection.Loader)
 
-The module provides versatile primitives that can be used to automatically lookup and load assembly dependencies in various dynamic scenarios.
+The module provides versatile primitives that can be used to automatically lookup and load .NET assembly dependencies in various dynamic scenarios.
 
 ## Gentle Introduction
 
@@ -195,7 +195,7 @@ public class Plugin : AutodeskPluginBase
 Now Alberto had a skeleton for a proper assembly loader initialization.
 The only missing part was the actual implementation which was going to be enormous.
 
-Thanks to the prior experience with custom assembly loading, Alberto was aware about that fancy `AssemblyAutoLoader` class provided by `Gapotchenko.FX.Reflection.Loader` package.
+Thanks to the prior experience with custom assembly loading, Alberto was aware about that fancy `AssemblyAutoLoader` class provided by `Gapotchenko.FX.Reflection.Loader` module.
 So he wrote:
 
 ``` C#
@@ -289,7 +289,7 @@ Basically everything that gets dynamically loaded and depends on one or more NuG
 `Gapotchenko.FX.Reflection.Loader` module is distributed as a NuGet package with a single assembly file without dependencies.
 
 This is done to avoid chicken & egg dilemma.
-In this way, the default .NET assembly loader can always load the assembly despite the possible variety of different NuGet packages that can be used in the given project.
+In this way, the default .NET assembly loader can always load `Gapotchenko.FX.Reflection.Loader` assembly despite the possible variety of different NuGet packages that can be used in the given project.
 
 Another point to consider is **how to select a point of assembly loader installation** that is early enough in the assembly lifecycle.
 This tends to be trivial for an app: the first few lines of the main entry point are good to go.
