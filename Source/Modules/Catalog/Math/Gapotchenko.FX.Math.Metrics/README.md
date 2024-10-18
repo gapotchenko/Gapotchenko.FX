@@ -18,7 +18,7 @@ In this way, `Gapotchenko.FX.Math.Metrics` module achieves the right degree of a
 Edit distance is a string metric reflecting the minimum number of operations required to transform one string into the other.
 There are several ways to measure the edit distance.
 
-The table below compares edit distance measurement functions provided by `StringMetrics` class:
+The table below compares metric functions provided by `StringMetrics` class:
 
 | Metric Function                           | Insertion | Deletion | Substitution | Transposition | Algorithm                                     |
 |:------------------------------------------|:---------:|:--------:|:------------:|:-------------:|:---------------------------------------------:|
