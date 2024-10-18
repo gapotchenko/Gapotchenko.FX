@@ -55,7 +55,7 @@ Now the code works as expected.
 
 Tuples are represented by `System.Tuple` types.
 The main difference of tuples from value tuples is that `System.Tuple` types are classes while `System.ValueTuple` types are structures.
-The remaining parts of the concept are almost the same.
+The remaining part of the concept is almost the same.
 
 `Gapotchenko.FX.Tuples` module allows you to create custom equality comparers for tuples by using `TupleEqualityComparer` class and its `Create` methods.
 
