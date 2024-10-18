@@ -49,7 +49,7 @@ Console.WriteLine("The query result: {0}.", database.Contains(("john", 14)));
 // The query result: True.
 ```
 
-`ValueTupleEqualityComparer` class provided by `Gapotchenko.FX.Tuples` module allows you to achieve that in one line instead of thirty.
+Now the code works as expected.
 
 ## Equality Comparer for Tuples
 
