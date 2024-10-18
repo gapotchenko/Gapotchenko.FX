@@ -14,9 +14,10 @@ Value tuples come with sane defaults, but sometimes you may need custom equality
 Let's take a look at example:
 
 ``` C#
-HashSet<(string Name, int Age)> database =
+HashSet<(string, int)> database =
     new()
     {
+        // name, age
         ("Alice", 32),
         ("Bob", 40),
         ("John", 14)
@@ -37,7 +38,7 @@ Another more simple way to solve the problem is to use `Gapotchenko.FX.Tuples.Va
 ``` C#
 var equalityComparer = ValueTupleEqualityComparer.Create<string, int>(StringComparer.CurrentCultureIgnoreCase, null);
 
-HashSet<(string Name, int Age)> database =
+HashSet<(string, int)> database =
     new(equalityComparer)
     {
         ("Alice", 32),
