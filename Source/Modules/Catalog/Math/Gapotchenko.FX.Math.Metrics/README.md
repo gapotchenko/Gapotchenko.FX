@@ -33,7 +33,7 @@ The table below compares metric functions provided by `StringMetrics` class:
 
 `StringMetrics.Distance.Levenshtein` algorithm allows you to calculate the Levenshtein distance between two strings of symbols.
 
-Consider the example:
+Consider an example:
 
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
@@ -46,7 +46,7 @@ Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 
 `StringMetrics.Distance.Lcs` algorithm allows you to calculate the longest common subsequence (LCS) distance between two strings of symbols.
 
-Consider the example:
+Consider an example:
 
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
@@ -59,7 +59,7 @@ Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 
 `StringMetrics.Distance.Hamming` algorithm allows you to calculate the Hamming distance between two strings of symbols.
 
-Consider the example:
+Consider an example:
 
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
@@ -74,7 +74,7 @@ Please note that the Hamming distance can only be calculated between two string 
 
 `StringMetrics.Distance.DamerauLevenshtein` algorithm allows you to calculate the Damerau–Levenshtein distance between two strings of symbols.
 
-Consider the example:
+Consider an example:
 
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
@@ -87,7 +87,7 @@ Console.WriteLine("Distance is {0}.", distance);  // distance = 1
 
 `StringMetrics.Distance.Osa` algorithm allows you to calculate the optimal string alignment (OSA) distance between two strings of symbols.
 
-Consider the example:
+Consider an example:
 
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
@@ -103,7 +103,7 @@ Console.WriteLine("Distance is {0}.", distance);  // distance = 1
 Although the Jaro similarity is often referred to as an edit distance metric, its value does not represent a number of edit operations
 and varies between 0.0 and 1.0 such that 1.0 represents an exact match and 0.0 equates to no similarities.
 
-Consider the example:
+Consider an example:
 
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
