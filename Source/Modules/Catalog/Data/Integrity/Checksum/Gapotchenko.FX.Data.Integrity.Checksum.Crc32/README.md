@@ -59,8 +59,8 @@ Console.WriteLine("Checksum=0x{0:x}", checksum);
 
 Among all other possibilities, it is recommended to use the standard CRC-32 algorithm which comes under CRC-32, CRC-32/ISO-HDLC, CRC-32/ADCCP, CRC-32/V-42, CRC-32/XZ, PKZIP aliases and is available via `Crc32.Standard` property.
 
-Another good option is CRC-32C which is widely used in data storage and communication industries, but more importantly, it benefits from a hardware acceleration provided by modern CPUs.
-CRC-32C algorithm is available via `Crc32.Attested.C` property.
+Another good option is CRC-32C algorithm which is widely used in data storage and communication industries, but more importantly, it benefits from a hardware acceleration provided by modern CPUs.
+The algorithm is available via `Crc32.Attested.C` property.
 
 All other predefined algorithms are available via the corresponding properties of the `Crc32.Attested` class.
 
