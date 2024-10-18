@@ -23,16 +23,16 @@ HashSet<(string Name, int Age)> database =
     };
 ```
 
-Let's suppose that we need to search for records in that database by name and age, but ignoring the case of letters in the name.
-The default equality comparer is case-sensitive for strings, so the following database query will be unsuccessful:
+Let's suppose that we need to search for records in that database by name and age but ignoring the case of letters in the name.
+The default value tuple equality comparer is case-sensitive for strings, so the following database query will be unsuccessful:
 
 ``` C#
 Console.WriteLine("The query result: {0}.", database.Contains(("john", 14)));
 // The query result: False.
 ```
 
-One way to fix that is to create a custom `IEqualityComparer<(T1, T2)>` implementation and pass it to the constructor of the `HashSet`.
-Another, a way more simple way to solve the problem, is to use `Gapotchenko.FX.Tuples.ValueTupleEqualityComparer` class to create a customized equality comparer for our value tuples:
+One way to fix that is to create a custom `IEqualityComparer<(T1, T2)>` implementation and pass it to the constructor of the `HashSet` class.
+Another way more way to solve the problem is to use `Gapotchenko.FX.Tuples.ValueTupleEqualityComparer` class to create a customized equality comparer for value tuples:
 
 ``` C#
 var equalityComparer = ValueTupleEqualityComparer.Create<string, int>(StringComparer.CurrentCultureIgnoreCase, null);
@@ -48,6 +48,8 @@ HashSet<(string Name, int Age)> database =
 Console.WriteLine("The query result: {0}.", database.Contains(("john", 14)));
 // The query result: True.
 ```
+
+`ValueTupleEqualityComparer` class provided by `Gapotchenko.FX.Tuples` module allows you to achieve that in one line instead of thirty.
 
 ## Equality Comparer for Tuples
 
