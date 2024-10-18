@@ -22,7 +22,7 @@ public interface IStringMetricsAlgorithm
     /// <returns>The calculated measure between the specified sequences of elements.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="a"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="b"/> is <see langword="null"/>.</exception>
-    object Measure<T>(
+    object Calculate<T>(
         IEnumerable<T> a,
         IEnumerable<T> b,
         IEqualityComparer<T>? equalityComparer = null,

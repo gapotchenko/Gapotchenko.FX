@@ -16,7 +16,7 @@ sealed class JaroAlgorithm : StringSimilarityAlgorithm
 {
     public static JaroAlgorithm Instance { get; } = new();
 
-    public override double Measure<T>(
+    public override double Calculate<T>(
         IEnumerable<T> a,
         IEnumerable<T> b,
         ValueInterval<double> range,

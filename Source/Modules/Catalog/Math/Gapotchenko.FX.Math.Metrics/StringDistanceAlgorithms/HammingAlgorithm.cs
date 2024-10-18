@@ -15,7 +15,7 @@ sealed class HammingAlgorithm : StringDistanceAlgorithm
 {
     public static HammingAlgorithm Instance { get; } = new();
 
-    public override int Measure<T>(
+    public override int Calculate<T>(
         IEnumerable<T> a,
         IEnumerable<T> b,
         ValueInterval<int> range,

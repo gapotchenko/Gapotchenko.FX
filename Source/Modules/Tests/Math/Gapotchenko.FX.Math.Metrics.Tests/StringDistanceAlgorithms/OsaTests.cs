@@ -42,7 +42,7 @@ public class OsaTests
     }
 
     static int EditDistance(string a, string b, int? maxDistance = default) =>
-        StringMetrics.Distance.Osa.Measure(
+        StringMetrics.Distance.Osa.Calculate(
             a, b,
             ValueInterval.Inclusive(null, maxDistance));
 }

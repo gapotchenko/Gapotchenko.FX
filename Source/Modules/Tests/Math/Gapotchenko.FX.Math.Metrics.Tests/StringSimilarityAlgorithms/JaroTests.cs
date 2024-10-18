@@ -20,7 +20,7 @@ public class JaroTests
     public void Metrics_String_Similarity_Jaro_Basics(string a, string b, double expectedDistance)
     {
         var expectedSimilarity = 1.0 - expectedDistance;
-        var actualSimilarity = StringMetrics.Similarity.Jaro.Measure(a, b);
+        var actualSimilarity = StringMetrics.Similarity.Jaro.Calculate(a, b);
 
         Assert.IsTrue(actualSimilarity >= 0);
         Assert.IsTrue(actualSimilarity <= 1);

@@ -36,7 +36,7 @@ public class LcsTests
     }
 
     static int EditDistance(string a, string b, int? maxDistance = default) =>
-        StringMetrics.Distance.Lcs.Measure(
+        StringMetrics.Distance.Lcs.Calculate(
             a, b,
             ValueInterval.Inclusive(null, maxDistance));
 }

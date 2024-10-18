@@ -19,7 +19,7 @@ sealed class DamerauLevenshteinAlgorithm : StringDistanceAlgorithm
 {
     public static DamerauLevenshteinAlgorithm Instance { get; } = new();
 
-    public override int Measure<T>(
+    public override int Calculate<T>(
         IEnumerable<T> a,
         IEnumerable<T> b,
         ValueInterval<int> range,

@@ -36,7 +36,7 @@ public class LevenshteinTests
     }
 
     static int EditDistance(string a, string b, int? maxDistance = default) =>
-        StringMetrics.Distance.Levenshtein.Measure(
+        StringMetrics.Distance.Levenshtein.Calculate(
             a, b,
             ValueInterval.Inclusive(null, maxDistance));
 }

@@ -15,13 +15,13 @@ static class MinimalDistanceProof
 
         var distanceAlgorithm = StringMetrics.Distance.Levenshtein;
 
-        int actualDistance = distanceAlgorithm.Measure(s, d);
+        int actualDistance = distanceAlgorithm.Calculate(s, d);
         if (actualDistance == 0)
             return true;
 
         foreach (var candidateOrder in TopologicalOrderProof.AllOrdersOf(s, df))
         {
-            int possibleDistance = distanceAlgorithm.Measure(s, candidateOrder);
+            int possibleDistance = distanceAlgorithm.Calculate(s, candidateOrder);
             if (possibleDistance < actualDistance)
                 return false;
         }

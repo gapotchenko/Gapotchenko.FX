@@ -42,7 +42,7 @@ public class DamerauLevenshteinTests
     }
 
     static int EditDistance(string a, string b, int? maxDistance = default) =>
-        StringMetrics.Distance.DamerauLevenshtein.Measure(
+        StringMetrics.Distance.DamerauLevenshtein.Calculate(
             a, b,
             ValueInterval.Inclusive(null, maxDistance));
 }

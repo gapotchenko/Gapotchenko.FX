@@ -38,7 +38,7 @@ Consider the example:
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
 
-int distance = StringMetrics.Distance.Levenshtein.Measure("ABC", "BAC");
+int distance = StringMetrics.Distance.Levenshtein.Calculate("ABC", "BAC");
 Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 ```
 
@@ -51,7 +51,7 @@ Consider the example:
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
 
-int distance = StringMetrics.Distance.Lcs.Measure("ABC", "BAC");
+int distance = StringMetrics.Distance.Lcs.Calculate("ABC", "BAC");
 Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 ```
 
@@ -64,7 +64,7 @@ Consider the example:
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
 
-int distance = StringMetrics.Distance.Hamming.Measure("ABC", "BAC");
+int distance = StringMetrics.Distance.Hamming.Calculate("ABC", "BAC");
 Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 ```
 
@@ -79,7 +79,7 @@ Consider the example:
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
 
-int distance = StringMetrics.Distance.DamerauLevenshtein.Measure("ABC", "BAC");
+int distance = StringMetrics.Distance.DamerauLevenshtein.Calculate("ABC", "BAC");
 Console.WriteLine("Distance is {0}.", distance);  // distance = 1
 ```
 
@@ -92,7 +92,7 @@ Consider the example:
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
 
-int distance = StringMetrics.Distance.Osa.Measure("ABC", "BAC");
+int distance = StringMetrics.Distance.Osa.Calculate("ABC", "BAC");
 Console.WriteLine("Distance is {0}.", distance);  // distance = 1
 ```
 
@@ -108,7 +108,7 @@ Consider the example:
 ``` C#
 using Gapotchenko.FX.Math.Metrics;
 
-double similarity = StringMetrics.Similarity.Jaro.Measure("ABC", "BAC");
+double similarity = StringMetrics.Similarity.Jaro.Calculate("ABC", "BAC");
 Console.WriteLine("Similarity is {0.00}.", similarity);  // similarity = 0.36
 ```
 

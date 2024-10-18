@@ -33,7 +33,7 @@ public class HammingTests
     }
 
     static int EditDistance(string a, string b, int? maxDistance = default) =>
-        StringMetrics.Distance.Hamming.Measure(
+        StringMetrics.Distance.Hamming.Calculate(
             a, b,
             ValueInterval.Inclusive(null, maxDistance));
 }

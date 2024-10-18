@@ -13,7 +13,7 @@ using Math = System.Math;
 
 abstract class OsaBaseAlgorithm : StringDistanceAlgorithm
 {
-    protected static int MeasureCore<T>(
+    protected static int CalculateCore<T>(
         IEnumerable<T> a,
         IEnumerable<T> b,
         in ValueInterval<int> range,

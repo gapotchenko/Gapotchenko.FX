@@ -13,26 +13,30 @@ namespace Gapotchenko.FX.Math.Metrics;
 /// The base class for <see cref="IStringMetricsAlgorithm{TMeasure}"/> implementations.
 /// </summary>
 /// <typeparam name="TMeasure">The type of the measure.</typeparam>
-public abstract class StringMetricsAlgorithm<TMeasure> : IStringMetricsAlgorithm<TMeasure>
-    where TMeasure : notnull, IEquatable<TMeasure>?, IComparable<TMeasure>?
+public abstract class StringMetricsAlgorithm<TMeasure> :
+    IStringMetricsAlgorithm<TMeasure>
+    where TMeasure :
+        notnull,
+        IEquatable<TMeasure>?,
+        IComparable<TMeasure>?
 {
     /// <inheritdoc/>
-    public TMeasure Measure<TElement>(
+    public TMeasure Calculate<TElement>(
         IEnumerable<TElement> a,
         IEnumerable<TElement> b,
         IEqualityComparer<TElement>? equalityComparer = null,
         CancellationToken cancellationToken = default) =>
-        Measure(a, b, ValueInterval<TMeasure>.Infinite, equalityComparer, cancellationToken);
+        Calculate(a, b, ValueInterval<TMeasure>.Infinite, equalityComparer, cancellationToken);
 
-    object IStringMetricsAlgorithm.Measure<TElement>(
+    object IStringMetricsAlgorithm.Calculate<TElement>(
         IEnumerable<TElement> a,
         IEnumerable<TElement> b,
         IEqualityComparer<TElement>? equalityComparer,
         CancellationToken cancellationToken) =>
-        Measure(a, b, equalityComparer, cancellationToken);
+        Calculate(a, b, equalityComparer, cancellationToken);
 
     /// <inheritdoc/>
-    public abstract TMeasure Measure<TElement>(
+    public abstract TMeasure Calculate<TElement>(
         IEnumerable<TElement> a,
         IEnumerable<TElement> b,
         ValueInterval<TMeasure> range,
@@ -45,7 +49,7 @@ public abstract class StringMetricsAlgorithm<TMeasure> : IStringMetricsAlgorithm
     /// <typeparam name="TElement">The type of sequence elements.</typeparam>
     /// <param name="a">The first sequence of elements.</param>
     /// <param name="b">The second sequence of elements.</param>
-    /// <param name="range">The range.</param>
+    /// <param name="range">The range of measures.</param>
     /// <exception cref="ArgumentNullException"><paramref name="a"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="b"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="range"/> cannot be empty.</exception>
@@ -60,6 +64,6 @@ public abstract class StringMetricsAlgorithm<TMeasure> : IStringMetricsAlgorithm
         if (b == null)
             throw new ArgumentNullException(nameof(b));
         if (range.IsEmpty)
-            throw new ArgumentOutOfRangeException(nameof(range), "The range cannot be empty.");
+            throw new ArgumentOutOfRangeException(nameof(range), "The range of measures cannot be empty.");
     }
 }

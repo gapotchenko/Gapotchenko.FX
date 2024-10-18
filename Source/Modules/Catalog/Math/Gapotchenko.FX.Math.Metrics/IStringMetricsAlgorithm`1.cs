@@ -12,28 +12,32 @@ namespace Gapotchenko.FX.Math.Metrics;
 /// Defines the interface of a strongly-typed string metrics algorithm.
 /// </summary>
 /// <typeparam name="TMeasure">The type of the measure.</typeparam>
-public interface IStringMetricsAlgorithm<TMeasure> : IStringMetricsAlgorithm
-    where TMeasure : notnull, IEquatable<TMeasure>?, IComparable<TMeasure>?
+public interface IStringMetricsAlgorithm<TMeasure> :
+    IStringMetricsAlgorithm
+    where TMeasure :
+        notnull,
+        IEquatable<TMeasure>?,
+        IComparable<TMeasure>?
 {
-    /// <inheritdoc cref="IStringMetricsAlgorithm.Measure{TElement}(IEnumerable{TElement}, IEnumerable{TElement}, IEqualityComparer{TElement}?, CancellationToken)"/>
+    /// <inheritdoc cref="IStringMetricsAlgorithm.Calculate{TElement}(IEnumerable{TElement}, IEnumerable{TElement}, IEqualityComparer{TElement}?, CancellationToken)"/>
     /// <typeparam name="TElement">The type of sequence elements.</typeparam>
-    new TMeasure Measure<TElement>(
+    new TMeasure Calculate<TElement>(
         IEnumerable<TElement> a,
         IEnumerable<TElement> b,
         IEqualityComparer<TElement>? equalityComparer = null,
         CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="Measure{TElement}(IEnumerable{TElement}, IEnumerable{TElement}, IEqualityComparer{TElement}?, CancellationToken)"/>
+    /// <inheritdoc cref="Calculate{TElement}(IEnumerable{TElement}, IEnumerable{TElement}, IEqualityComparer{TElement}?, CancellationToken)"/>
     /// <param name="a"><inheritdoc/></param>
     /// <param name="b"><inheritdoc/></param>
     /// <param name="range">
     /// Specifies the range in which a calculated measure must reside.
-    /// The algorithm may use the range to optimize the calculation for narrower ranges.
+    /// The algorithm may use the range of measures to optimize the calculation.
     /// </param>
     /// <param name="equalityComparer"><inheritdoc/></param>
     /// <param name="cancellationToken"><inheritdoc/></param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="range"/> cannot be empty.</exception>
-    TMeasure Measure<TElement>(
+    TMeasure Calculate<TElement>(
         IEnumerable<TElement> a,
         IEnumerable<TElement> b,
         ValueInterval<TMeasure> range,
