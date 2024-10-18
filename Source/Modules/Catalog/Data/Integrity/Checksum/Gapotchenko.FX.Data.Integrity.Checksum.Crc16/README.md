@@ -97,7 +97,7 @@ sealed class FooCrc16 : CustomCrc16
     {
     }
 
-    public static FooCrc16 Instance { get; } = new FooCrc16();
+    public static FooCrc16 Instance { get; } = new();
 }
 ```
 

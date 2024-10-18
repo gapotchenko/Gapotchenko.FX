@@ -87,7 +87,7 @@ sealed class FooCrc8 : CustomCrc8
     {
     }
 
-    public static FooCrc8 Instance { get; } = new FooCrc8();
+    public static FooCrc8 Instance { get; } = new();
 }
 ```
 

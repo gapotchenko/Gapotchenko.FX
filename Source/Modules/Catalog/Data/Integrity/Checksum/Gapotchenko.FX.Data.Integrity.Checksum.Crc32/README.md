@@ -86,7 +86,7 @@ sealed class FooCrc32 : CustomCrc32
     {
     }
 
-    public static FooCrc32 Instance { get; } = new FooCrc32();
+    public static FooCrc32 Instance { get; } = new();
 }
 ```
 
