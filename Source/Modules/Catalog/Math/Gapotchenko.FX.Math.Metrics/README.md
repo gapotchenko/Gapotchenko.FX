@@ -20,7 +20,7 @@ There are several ways to measure the edit distance.
 
 The table below compares edit distance measurement functions provided by `StringMetrics` class:
 
-| Metric Function                           | Insertion | Deletion | Substitution | Transposition | Gapotchenko.FX Implementation                 |
+| Metric Function                           | Insertion | Deletion | Substitution | Transposition | Algorithm                                     |
 |:------------------------------------------|:---------:|:--------:|:------------:|:-------------:|:---------------------------------------------:|
 | Levenshtein distance                      | &check;   | &check;  | &check;      |               | `StringMetrics.Distance.Levenshtein`          |
 | Longest common subsequence (LCS) distance | &check;   | &check;  |              |               | `StringMetrics.Distance.Lcs`                  |
