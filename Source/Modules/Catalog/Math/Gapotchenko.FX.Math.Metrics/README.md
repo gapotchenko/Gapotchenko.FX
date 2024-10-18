@@ -10,7 +10,7 @@ The module provides math metrics algorithms.
 `Gapotchenko.FX.Math.Metrics.StringMetrics` class provides a variety of algorithms for measuring the distance and similarity between two strings of symbols.
 
 The notion of a string is purely abstract.
-So it is not limited to just `System.String` of characters; it can be a string of anything in form of `IEnumerable<T>`.
+So it is not limited to just `System.String` of characters; it can be a string of anything in the form of `IEnumerable<T>` sequence of elements.
 In this way, `Gapotchenko.FX.Math.Metrics` module achieves the right degree of abstraction desirable for a versatile math toolkit.
 
 ### Edit Distance
