@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Tuples.ValueTupleEqualityComparer" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Tuples.TupleEqualityComparer" />
   </ItemGroup>
 
   <PropertyGroup>
