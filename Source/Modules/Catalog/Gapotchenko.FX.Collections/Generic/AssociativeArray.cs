@@ -566,12 +566,12 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                     pairs[arrayIndex] = new(default!, m_NullSlot.Value);
                     break;
 
-                case DictionaryEntry[] dictEntryArray:
-                    dictEntryArray[arrayIndex] = new(default!, m_NullSlot.Value);
+                case DictionaryEntry[] dictionaryEntries:
+                    dictionaryEntries[arrayIndex] = new(default!, m_NullSlot.Value);
                     break;
 
-                case object[] objArray:
-                    objArray[arrayIndex] = new KeyValuePair<TKey, TValue>(default!, m_NullSlot.Value);
+                case object[] objects:
+                    objects[arrayIndex] = KeyValuePair.Create(default(TKey)!, m_NullSlot.Value);
                     break;
 
                 default:
@@ -593,7 +593,9 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() =>
         new PrependEnumerator<KeyValuePair<TKey, TValue>>(
             m_Dictionary.GetEnumerator(),
-            () => m_NullSlot.HasValue ? new Optional<KeyValuePair<TKey, TValue>>(new(default!, m_NullSlot.Value)) : default);
+            () => m_NullSlot.HasValue ?
+                Optional.Some(KeyValuePair.Create(default(TKey)!, m_NullSlot.Value)) :
+                default);
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -767,13 +769,9 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             throw new NotSupportedException("Mutating a key collection retrieved from an associative array is not allowed.");
     }
 
-    sealed class ValueCollection : KeyValueCollection<TValue>
+    sealed class ValueCollection(AssociativeArray<TKey, TValue> parent, ICollection<TValue> collection) :
+        KeyValueCollection<TValue>(parent, collection)
     {
-        public ValueCollection(AssociativeArray<TKey, TValue> parent, ICollection<TValue> collection) :
-            base(parent, collection)
-        {
-        }
-
         protected override Optional<TValue> NullSlot => Parent.m_NullSlot;
 
         public override bool Contains(TValue item)

@@ -15,22 +15,28 @@ using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Collections.Tests.Bench;
 using Gapotchenko.FX.Collections.Tests.Utils;
 using System.Collections;
+using Xunit;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 
+[Trait("Category", "Deque")]
 public abstract class Deque_IList_NonGeneric_Tests<T> : IList_NonGeneric_Tests
 {
+    #region Characteristics
+
+    protected override bool Enumerator_Current_UndefinedOperation_Throws => true;
+    protected override Type ICollection_NonGeneric_CopyTo_NonZeroLowerBound_ThrowType => typeof(ArgumentOutOfRangeException);
+    protected override bool IList_CurrentAfterAdd_Throws => false;
+
+    #endregion
+
+    #region Factories
+
     protected override IList NonGenericIListFactory() => new Deque<T>();
 
     protected abstract override object CreateT(int seed);
 
-    #region Test bench settings
-
-    protected override bool Enumerator_Current_UndefinedOperation_Throws => true;
-
-    protected override bool IList_CurrentAfterAdd_Throws => false;
-
-    protected override Type ICollection_NonGeneric_CopyTo_NonZeroLowerBound_ThrowType => typeof(ArgumentOutOfRangeException);
+    #endregion
 
     public override void ICollection_NonGeneric_CopyTo_ArrayOfEnumType(int count)
     {
@@ -39,8 +45,6 @@ public abstract class Deque_IList_NonGeneric_Tests<T> : IList_NonGeneric_Tests
     public override void ICollection_NonGeneric_CopyTo_ArrayOfIncorrectValueType(int count)
     {
     }
-
-    #endregion
 }
 
 public sealed class Deque_IList_NonGeneric_Tests_String : Deque_IList_NonGeneric_Tests<string>

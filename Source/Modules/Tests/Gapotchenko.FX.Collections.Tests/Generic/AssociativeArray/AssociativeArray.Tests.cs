@@ -18,42 +18,45 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray;
 /// <summary>
 /// Contains tests that ensure the correctness of the AssociativeArray class.
 /// </summary>
+[Trait("Category", "AssociativeArray")]
 public abstract class AssociativeArray_Tests<TKey, TValue> : IDictionary_Generic_Tests<TKey, TValue>
 {
+    #region Characteristics
+
+    protected override bool DefaultValueAllowed => true;
+
+    // This parameter is dictated by System.Collections.Generic.Dictionary<TKey, TValue> type
+    // which is a part of .NET BCL and thus can change depending on .NET version.
+    protected override bool Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException =>
+#if NET8_0_OR_GREATER
+        false;
+#else
+        true;
+#endif
+
+    protected override ModifyOperation ModifyEnumeratorAllowed =>
+#if NET5_0_OR_GREATER
+        ModifyOperation.Overwrite | ModifyOperation.Remove | ModifyOperation.Clear;
+#elif NETCOREAPP3_0_OR_GREATER
+        ModifyOperation.Remove | ModifyOperation.Clear;
+#else
+        ModifyOperation.None;
+#endif
+
     protected override ModifyOperation ModifyEnumeratorThrows =>
         // REM: version tracking required.
         //ModifyOperation.Add | ModifyOperation.Insert;
         ModifyOperation.None;
 
-    protected override bool Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException
-    {
-        get
-        {
-            // This parameter is dictated by System.Collections.Generic.Dictionary<TKey, TValue> type
-            // which is a part of .NET BCL and thus can change depending on .NET version.
-#if NET8_0_OR_GREATER
-            return false;
-#else
-            return true;
-#endif
-        }
-    }
+    protected override Type ICollection_Generic_CopyTo_IndexLargerThanArrayCount_ThrowType => typeof(ArgumentOutOfRangeException);
 
-#if NET5_0_OR_GREATER
-    protected override ModifyOperation ModifyEnumeratorAllowed => ModifyOperation.Overwrite | ModifyOperation.Remove | ModifyOperation.Clear;
-#elif NETCOREAPP3_0_OR_GREATER
-    protected override ModifyOperation ModifyEnumeratorAllowed => ModifyOperation.Remove | ModifyOperation.Clear;
-#else
-    protected override ModifyOperation ModifyEnumeratorAllowed => ModifyOperation.None;
-#endif
+    #endregion
 
-    #region IDictionary<TKey, TValue Helper Methods
+    #region Factories
 
     protected override IDictionary<TKey, TValue> GenericIDictionaryFactory() => new AssociativeArray<TKey, TValue>();
 
     protected override IDictionary<TKey, TValue>? GenericIDictionaryFactory(IEqualityComparer<TKey> comparer) => new AssociativeArray<TKey, TValue>(comparer);
-
-    protected override Type ICollection_Generic_CopyTo_IndexLargerThanArrayCount_ThrowType => typeof(ArgumentOutOfRangeException);
 
     #endregion
 
