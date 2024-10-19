@@ -10,16 +10,14 @@ namespace Gapotchenko.FX.Threading;
 /// Defines a disposable scope of a lockable access to a resource.
 /// The scope can be disposed to unlock the synchronization primitive.
 /// </summary>
-public readonly struct LockableScope : IDisposable
+public readonly struct LockableScope : ILockableScope
 {
     internal LockableScope(ILockable? lockable)
     {
         m_Lockable = lockable;
     }
 
-    /// <summary>
-    /// Gets a value indicating whether the scope holds a lock on the synchronization primitive.
-    /// </summary>
+    /// <inheritdoc/>
     public bool HasLock => m_Lockable != null;
 
     /// <summary>
