@@ -485,6 +485,62 @@ public class PriorityQueue<TElement, TPriority>
     }
 
     /// <summary>
+    /// Removes the first occurrence that equals the specified parameter.
+    /// </summary>
+    /// <remarks>
+    /// The method performs a linear-time scan of every element in the heap, removing the first value found to match the <paramref name="element"/> parameter.
+    /// In case of duplicate entries, what entry does get removed is non-deterministic and does not take priority into account.
+    /// </remarks>
+    /// <param name="element">The element to try to remove.</param>
+    /// <param name="removedElement">The actual element that got removed from the queue.</param>
+    /// <param name="priority">The priority value associated with the removed element.</param>
+    /// <param name="equalityComparer">
+    /// The equality comparer governing element equality.
+    /// If the specified value is <see langword="null"/> then the default <see cref="IEqualityComparer{T}"/> for <typeparamref name="TElement"/> type is used.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if matching entry was found and removed; otherwise, <see langword="false"/>.
+    /// </returns>
+    public bool Remove(
+        TElement element,
+        [MaybeNullWhen(false)] out TElement removedElement,
+        [MaybeNullWhen(false)] out TPriority priority,
+        IEqualityComparer<TElement>? equalityComparer = null)
+    {
+        int index = FindIndex(element, equalityComparer);
+        if (index < 0)
+        {
+            removedElement = default;
+            priority = default;
+            return false;
+        }
+
+        var nodes = _nodes;
+        (removedElement, priority) = nodes[index];
+        int newSize = --_size;
+
+        if (index < newSize)
+        {
+            // We're removing an element from the middle of the heap.
+            // Pop the last element in the collection and sift downward from the removed index.
+            (TElement Element, TPriority Priority) lastNode = nodes[newSize];
+
+            if (_comparer == null)
+            {
+                MoveDownDefaultComparer(lastNode, index);
+            }
+            else
+            {
+                MoveDownCustomComparer(lastNode, index);
+            }
+        }
+
+        nodes[newSize] = default;
+        _version++;
+        return true;
+    }
+
+    /// <summary>
     ///  Removes all items from the <see cref="PriorityQueue{TElement, TPriority}"/>.
     /// </summary>
     public void Clear()
@@ -785,6 +841,41 @@ public class PriorityQueue<TElement, TPriority>
         }
 
         nodes[nodeIndex] = node;
+    }
+
+    /// <summary>
+    /// Scans the heap for the first index containing an element equal to the specified parameter.
+    /// </summary>
+    int FindIndex(TElement element, IEqualityComparer<TElement>? equalityComparer)
+    {
+        equalityComparer ??= EqualityComparer<TElement>.Default;
+        var nodes = _nodes.AsSpan(0, _size);
+
+        // Currently the JIT doesn't optimize direct EqualityComparer<T>.Default.Equals
+        // calls for reference types, so we want to cache the comparer instance instead.
+        // TODO https://github.com/dotnet/runtime/issues/10050: Update if this changes in the future.
+        if (typeof(TElement).IsValueType && equalityComparer == EqualityComparer<TElement>.Default)
+        {
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                if (EqualityComparer<TElement>.Default.Equals(element, nodes[i].Element))
+                {
+                    return i;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                if (equalityComparer.Equals(element, nodes[i].Element))
+                {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
     }
 
     /// <summary>
