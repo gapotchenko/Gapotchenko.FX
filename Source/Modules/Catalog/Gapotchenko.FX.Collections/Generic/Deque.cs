@@ -18,6 +18,13 @@ using System.Collections;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
+#if NET8_0_OR_GREATER
+using static System.ArgumentNullException;
+using static System.ArgumentOutOfRangeException;
+#else
+using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+#endif
+
 namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
@@ -51,7 +58,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
     public Deque(int capacity)
     {
-        ExceptionHelper.ThrowIfArgumentIsNegative(capacity);
+        ThrowIfNegative(capacity);
 
         m_Array = capacity == 0 ? [] : new T[capacity];
     }
@@ -64,7 +71,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <param name="collection">The collection to copy elements from.</param>
     public Deque(IEnumerable<T> collection)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(collection);
+        ThrowIfNull(collection);
 
         var array = EnumerableHelper.ToArray(collection);
         m_Array = array;
@@ -184,7 +191,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void CopyTo(T[] array)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ThrowIfNull(array);
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(
             0, m_Size, array.Length,
             indexParameterName: null, countParameterName: null);
@@ -209,7 +216,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void CopyTo(T[] array, int arrayIndex)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ThrowIfNull(array);
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(
             arrayIndex, m_Size, array.Length,
             countParameterName: null);
@@ -235,7 +242,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void CopyTo(T[] array, int arrayIndex, int count)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ThrowIfNull(array);
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(arrayIndex, count, array.Length);
 
         CopyToCore(0, array, arrayIndex, count);
@@ -266,7 +273,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     public void CopyTo(int index, T[] array, int arrayIndex, int count)
     {
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
-        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ThrowIfNull(array);
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(arrayIndex, count, array.Length);
 
         CopyToCore(index, array, arrayIndex, count);
@@ -334,7 +341,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
     public void PushFrontRange(IEnumerable<T> collection)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(collection);
+        ThrowIfNull(collection);
 
         InsertRangeCore(0, collection);
     }
@@ -346,7 +353,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
     public void PushBackRange(IEnumerable<T> collection)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(collection);
+        ThrowIfNull(collection);
 
         InsertRangeCore(m_Size, collection);
     }
@@ -548,7 +555,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     public void InsertRange(int index, IEnumerable<T> collection)
     {
         ExceptionHelper.ValidateIndexArgumentBounds(index, m_Size);
-        ExceptionHelper.ThrowIfArgumentIsNull(collection);
+        ThrowIfNull(collection);
 
         InsertRangeCore(index, collection);
     }
@@ -639,7 +646,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="match"/> is <see langword="null"/>.</exception>
     public int RemoveWhere(Predicate<T> match)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(match);
+        ThrowIfNull(match);
 
         var size = m_Size;
 
@@ -742,7 +749,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="comparison"/> is <see langword="null"/>.</exception>
     public void Sort(Comparison<T> comparison)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(comparison);
+        ThrowIfNull(comparison);
 
         SortCore(0, m_Size, comparison);
     }
@@ -764,7 +771,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     public void Sort(int index, int count, Comparison<T> comparison)
     {
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
-        ExceptionHelper.ThrowIfArgumentIsNull(comparison);
+        ThrowIfNull(comparison);
 
         SortCore(index, count, comparison);
     }
@@ -778,7 +785,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
     public int EnsureCapacity(int capacity)
     {
-        ExceptionHelper.ThrowIfArgumentIsNegative(capacity);
+        ThrowIfNegative(capacity);
 
         // Always update the version to catch concurrent enumeration errors better.
         UpdateVersion();
@@ -1617,7 +1624,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     void ICollection.CopyTo(Array array, int index)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ThrowIfNull(array);
         ExceptionHelper.ThrowIfArrayArgumentIsMultiDimensional(array);
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(
             index, m_Size, array.Length,

@@ -5,9 +5,17 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2019
 
+using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Threading;
 using System.Collections;
 using System.Diagnostics;
+
+#if NET8_0_OR_GREATER
+using static System.ArgumentNullException;
+using static System.ArgumentOutOfRangeException;
+#else
+using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+#endif
 
 namespace Gapotchenko.FX.Collections.Concurrent;
 
@@ -19,6 +27,7 @@ namespace Gapotchenko.FX.Collections.Concurrent;
 /// All public members of <see cref="ConcurrentHashSet{T}"/> are thread-safe and may be used concurrently from multiple threads.
 /// </remarks>
 [DebuggerDisplay("Count = {Count}")]
+[DebuggerTypeProxy(typeof(CollectionDebugView<>))]
 public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T>
 {
     const int DefaultCapacity = 31;
@@ -174,8 +183,7 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
     public ConcurrentHashSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
         : this(comparer)
     {
-        if (collection == null)
-            throw new ArgumentNullException(nameof(collection));
+        ThrowIfNull(collection);
 
         InitializeFromCollection(collection);
     }
@@ -203,8 +211,7 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
     public ConcurrentHashSet(int concurrencyLevel, IEnumerable<T> collection, IEqualityComparer<T>? comparer) :
         this(concurrencyLevel, DefaultCapacity, false, comparer)
     {
-        if (collection == null)
-            throw new ArgumentNullException(nameof(collection));
+        ThrowIfNull(collection);
 
         InitializeFromCollection(collection);
     }
@@ -234,10 +241,8 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
 
     ConcurrentHashSet(int concurrencyLevel, int capacity, bool growLockArray, IEqualityComparer<T>? comparer)
     {
-        if (concurrencyLevel < 1)
-            throw new ArgumentOutOfRangeException(nameof(concurrencyLevel));
-        if (capacity < 0)
-            throw new ArgumentOutOfRangeException(nameof(capacity));
+        ThrowIfLessThan(concurrencyLevel, 1);
+        ThrowIfNegative(capacity);
 
         // The capacity should be at least as large as the concurrency level. Otherwise, we would have locks that don't guard
         // any buckets.
@@ -404,8 +409,8 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
 
     void ICollection<T>.CopyTo(T[] array, int arrayIndex)
     {
-        if (array == null) throw new ArgumentNullException(nameof(array));
-        if (arrayIndex < 0) throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+        ThrowIfNull(array);
+        ThrowIfNegative(arrayIndex);
 
         var locksAcquired = 0;
         try
@@ -722,33 +727,19 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
         }
     }
 
-    sealed class Tables
+    sealed class Tables(Node[] buckets, object[] locks, int[] countPerLock)
     {
-        public readonly Node[] Buckets;
-        public readonly object[] Locks;
+        public readonly Node[] Buckets = buckets;
+        public readonly object[] Locks = locks;
 
-        public volatile int[] CountPerLock;
-
-        public Tables(Node[] buckets, object[] locks, int[] countPerLock)
-        {
-            Buckets = buckets;
-            Locks = locks;
-            CountPerLock = countPerLock;
-        }
+        public volatile int[] CountPerLock = countPerLock;
     }
 
-    sealed class Node
+    sealed class Node(T item, int hashcode, Node next)
     {
-        public readonly T Item;
-        public readonly int Hashcode;
+        public readonly T Item = item;
+        public readonly int Hashcode = hashcode;
 
-        public volatile Node Next;
-
-        public Node(T item, int hashcode, Node next)
-        {
-            Item = item;
-            Hashcode = hashcode;
-            Next = next;
-        }
+        public volatile Node Next = next;
     }
 }

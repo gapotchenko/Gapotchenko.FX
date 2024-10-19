@@ -8,34 +8,21 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
+#if NET8_0_OR_GREATER
+using static System.ArgumentOutOfRangeException;
+#else
+using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+#endif
+
 namespace Gapotchenko.FX.Collections.Utils;
 
 [StackTraceHidden]
 static class ExceptionHelper
 {
-    public static void ThrowIfArgumentIsNull([NotNull] object? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
-    {
-        if (value is null)
-            throw new ArgumentNullException(parameterName);
-    }
-
     public static void ThrowIfThisIsNull([NotNull] object? @this)
     {
         if (@this is null)
             throw new NullReferenceException();
-    }
-
-#if NET8_0_OR_GREATER
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
-    public static void ThrowIfArgumentIsNegative(int value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
-    {
-#if NET8_0_OR_GREATER
-        ArgumentOutOfRangeException.ThrowIfNegative(value, parameterName);
-#else
-        if (value < 0)
-            throw new ArgumentOutOfRangeException(parameterName, "Non-negative number required.");
-#endif
     }
 
     public static void ThrowIfArrayArgumentIsMultiDimensional(Array array, [CallerArgumentExpression(nameof(array))] string? parameterName = null)
@@ -83,8 +70,8 @@ static class ExceptionHelper
         [CallerArgumentExpression(nameof(index))] string? indexParameterName = null,
         [CallerArgumentExpression(nameof(count))] string? countParameterName = null)
     {
-        ThrowIfArgumentIsNegative(index, indexParameterName);
-        ThrowIfArgumentIsNegative(count, countParameterName);
+        ThrowIfNegative(index, indexParameterName);
+        ThrowIfNegative(count, countParameterName);
 
         if (count > size - index) // overflow-safe equivalent of "index + count > size"
             throw new ArgumentException("Count is greater than the number of elements from index to the end of the collection.");

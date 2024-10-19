@@ -1,5 +1,10 @@
 ﻿using Gapotchenko.FX.Collections.Utils;
 
+#if NET8_0_OR_GREATER
+using static System.ArgumentNullException;
+#else
+using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+#endif
 namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
@@ -30,7 +35,7 @@ public static class ListExtensions
     /// </param>
     public static void StableSort<T>(this List<T> list, IComparer<T>? comparer)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(list);
+        ThrowIfNull(list);
 
         if (list.Count < 2)
             return;

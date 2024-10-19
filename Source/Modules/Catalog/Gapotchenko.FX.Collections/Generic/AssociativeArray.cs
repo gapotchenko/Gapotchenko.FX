@@ -9,12 +9,19 @@
 //   - Kirill Rode (development)
 //
 // AssociativeArray<TKey, TValue> is a collection of key/value pairs that
-// supports nullable keys.
+// supports null keys.
 
 using Gapotchenko.FX.Collections.Utils;
 using Gapotchenko.FX.Linq;
 using System.Collections;
 using System.Diagnostics;
+
+#if NET8_0_OR_GREATER
+using static System.ArgumentNullException;
+using static System.ArgumentOutOfRangeException;
+#else
+using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+#endif
 
 namespace Gapotchenko.FX.Collections.Generic;
 
@@ -121,7 +128,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// <exception cref="ArgumentException"><paramref name="dictionary"/> contains one or more duplicated keys.</exception>
     public AssociativeArray(IReadOnlyDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(dictionary);
+        ThrowIfNull(dictionary);
 
         AddRange(dictionary, comparer);
     }
@@ -157,7 +164,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// <exception cref="ArgumentException"><paramref name="collection"/> contains one or more duplicated keys.</exception>
     public AssociativeArray(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(collection);
+        ThrowIfNull(collection);
 
         AddRange(collection, comparer);
     }
@@ -400,7 +407,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ThrowIfNull(array);
         if ((uint)arrayIndex > (uint)array.Length)
             ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
         if (array.Length - arrayIndex < Count)
@@ -543,7 +550,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     void ICollection.CopyTo(Array array, int arrayIndex)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(array);
+        ThrowIfNull(array);
         if ((uint)arrayIndex > (uint)array.Length)
             ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
         if (array.Length - arrayIndex < Count)
@@ -694,7 +701,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            ExceptionHelper.ThrowIfArgumentIsNull(array);
+            ThrowIfNull(array);
             if ((uint)arrayIndex > (uint)array.Length)
                 ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
             if (array.Length - arrayIndex < Count)
@@ -710,7 +717,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         public void CopyTo(Array array, int arrayIndex)
         {
-            ExceptionHelper.ThrowIfArgumentIsNull(array);
+            ThrowIfNull(array);
             if ((uint)arrayIndex > (uint)array.Length)
                 ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
             if (array.Length - arrayIndex < Count)

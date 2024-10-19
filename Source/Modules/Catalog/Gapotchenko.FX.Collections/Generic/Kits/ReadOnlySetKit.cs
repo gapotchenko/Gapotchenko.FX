@@ -9,6 +9,13 @@ using Gapotchenko.FX.Linq;
 using System.Collections;
 using System.Diagnostics;
 
+#if NET8_0_OR_GREATER
+using static System.ArgumentNullException;
+using static System.ArgumentOutOfRangeException;
+#else
+using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+#endif
+
 namespace Gapotchenko.FX.Collections.Generic.Kits;
 
 /// <summary>
@@ -49,8 +56,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <inheritdoc/>
     public virtual bool IsProperSubsetOf(IEnumerable<T> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ThrowIfNull(other);
 
         if (other == this)
             return false;
@@ -101,8 +107,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <inheritdoc/>
     public virtual bool IsProperSupersetOf(IEnumerable<T> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ThrowIfNull(other);
 
         if (other == this)
             return false;
@@ -143,8 +148,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <inheritdoc/>
     public virtual bool IsSubsetOf(IEnumerable<T> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ThrowIfNull(other);
 
         if (other == this)
             return true;
@@ -188,8 +192,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <inheritdoc/>
     public virtual bool IsSupersetOf(IEnumerable<T> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ThrowIfNull(other);
 
         if (other == this)
             return true;
@@ -223,8 +226,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <inheritdoc/>
     public virtual bool Overlaps(IEnumerable<T> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ThrowIfNull(other);
 
         if (Count == 0)
             return false;
@@ -239,8 +241,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <inheritdoc/>
     public virtual bool SetEquals(IEnumerable<T> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ThrowIfNull(other);
 
         if (other == this)
             return true;
@@ -335,9 +336,9 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <param name="count">The number of elements to copy to array.</param>
     public virtual void CopyTo(T[] array, int arrayIndex, int count)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(array);
-        ExceptionHelper.ThrowIfArgumentIsNegative(arrayIndex);
-        ExceptionHelper.ThrowIfArgumentIsNegative(count);
+        ThrowIfNull(array);
+        ThrowIfNegative(arrayIndex);
+        ThrowIfNegative(count);
         if (count > array.Length - arrayIndex)
             ExceptionHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
 
