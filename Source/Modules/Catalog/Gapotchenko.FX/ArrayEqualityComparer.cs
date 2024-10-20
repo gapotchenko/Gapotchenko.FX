@@ -27,12 +27,10 @@ public static partial class ArrayEqualityComparer
             0 :
             ArrayEqualityComparer<T>.Default.GetHashCode(array);
 
-    static bool _TypedEquals<T>(T[] x, object y) => Equals(x, y as T[]);
-
     /// <summary>
     /// Determines whether the specified arrays are equal.
     /// </summary>
-    /// <remarks>This method overshadows <see cref="Object.Equals(object, object)"/> to avoid a comparison by reference pitfall.</remarks>
+    /// <remarks>This method overshadows <see cref="object.Equals(object, object)"/> to avoid a comparison by reference pitfall.</remarks>
     /// <param name="x">The first array to compare.</param>
     /// <param name="y">The second array to compare.</param>
     /// <returns><see langword="true"/> if the specified arrays are equal; otherwise, <see langword="false"/>.</returns>
@@ -79,28 +77,28 @@ public static partial class ArrayEqualityComparer
 
         switch (arrayX)
         {
-            case Boolean[] tx:
-                return _TypedEquals(tx, arrayY);
-            case Char[] tx:
-                return _TypedEquals(tx, arrayY);
-            case Byte[] tx:
-                return _TypedEquals(tx, arrayY);
-            case UInt16[] tx:
-                return _TypedEquals(tx, arrayY);
-            case UInt32[] tx:
-                return _TypedEquals(tx, arrayY);
-            case UInt64[] tx:
-                return _TypedEquals(tx, arrayY);
-            case Single[] tx:
-                return _TypedEquals(tx, arrayY);
-            case Double[] tx:
-                return _TypedEquals(tx, arrayY);
-            case Decimal[] tx:
-                return _TypedEquals(tx, arrayY);
+            case bool[] tx:
+                return TypedEquals(tx, arrayY);
+            case char[] tx:
+                return TypedEquals(tx, arrayY);
+            case byte[] tx:
+                return TypedEquals(tx, arrayY);
+            case ushort[] tx:
+                return TypedEquals(tx, arrayY);
+            case uint[] tx:
+                return TypedEquals(tx, arrayY);
+            case ulong[] tx:
+                return TypedEquals(tx, arrayY);
+            case float[] tx:
+                return TypedEquals(tx, arrayY);
+            case double[] tx:
+                return TypedEquals(tx, arrayY);
+            case decimal[] tx:
+                return TypedEquals(tx, arrayY);
             case DateTime[] tx:
-                return _TypedEquals(tx, arrayY);
-            case String[] tx:
-                return _TypedEquals(tx, arrayY);
+                return TypedEquals(tx, arrayY);
+            case string[] tx:
+                return TypedEquals(tx, arrayY);
         }
 
         var elementEqualityComparer = EqualityComparer<object>.Default;
@@ -109,6 +107,8 @@ public static partial class ArrayEqualityComparer
                 return false;
 
         return true;
+
+        static bool TypedEquals<T>(T[] x, object y) => Equals(x, y as T[]);
     }
 
     /// <summary>

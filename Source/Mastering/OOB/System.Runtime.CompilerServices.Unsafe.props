@@ -1,0 +1,12 @@
+<Project>
+
+  <PropertyGroup>
+    <TFF_UNSAFE_OOB Condition=" !('$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '3.0'))) ">true</TFF_UNSAFE_OOB>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TFF_UNSAFE_OOB)' == 'true' ">
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+    <MasteringFrameworkFeature Include="TFF_UNSAFE;TFF_UNSAFE_OOB" />
+  </ItemGroup>
+
+</Project>

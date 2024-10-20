@@ -17,12 +17,12 @@ public static class CodeSafetyStrategy
     /// </summary>
     public static bool UnsafeCodeAllowed { get; }
 
-    static EvaluateOnce<bool> m_UnsafeCodeRecommended = EvaluateOnce.Create(IsUnsafeCodeRecommendedCore);
-
     /// <summary>
     /// Indicates whether unsafe code is recommended in the current execution context.
     /// </summary>
     public static bool UnsafeCodeRecommended => m_UnsafeCodeRecommended.Value;
+
+    static EvaluateOnce<bool> m_UnsafeCodeRecommended = new(IsUnsafeCodeRecommendedCore);
 
     static bool IsUnsafeCodeRecommendedCore()
     {

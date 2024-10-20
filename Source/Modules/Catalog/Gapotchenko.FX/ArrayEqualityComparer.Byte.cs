@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Runtime.InteropServices;
+using System.Drawing;
 
 namespace Gapotchenko.FX;
 
@@ -21,34 +22,13 @@ partial class ArrayEqualityComparer
             if (x.Length != y.Length)
                 return false;
 
-            if (CodeSafetyStrategy.UnsafeCodeRecommended)
-                return EqualsUnsafeCore(x, y);
-            else
-                return EqualsSafeCore(x, y);
-        }
-
-        static bool EqualsSafeCore(byte[] x, byte[] y)
-        {
-            for (int i = 0; i < x.Length; i++)
-                if (x[i] != y[i])
-                    return false;
-            return true;
-        }
-
-        static unsafe bool EqualsUnsafeCore(byte[] x, byte[] y)
-        {
-            var n = x.Length;
-            if (n == 0)
-                return true;
-
-            fixed (byte* px = x, py = y)
-                return MemoryOperations.BlockEquals(px, py, n);
+            return x.AsSpan().SequenceEqual(y);
         }
 
         public override int GetHashCode(byte[] obj)
         {
             if (obj is null)
-                return 0;
+                throw new ArgumentNullException(nameof(obj));
 
             // FNV-1a
             // The fastest hash function for byte arrays with lowest collision rate so far (10/2014).

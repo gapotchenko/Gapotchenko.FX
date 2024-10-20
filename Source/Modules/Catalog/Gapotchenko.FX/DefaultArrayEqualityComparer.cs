@@ -1,14 +1,7 @@
 ﻿namespace Gapotchenko.FX;
 
-class DefaultArrayEqualityComparer<T> : ArrayEqualityComparer<T>
+sealed class DefaultArrayEqualityComparer<T>(IEqualityComparer<T>? elementComparer) : ArrayEqualityComparer<T>
 {
-    internal DefaultArrayEqualityComparer(IEqualityComparer<T>? elementComparer)
-    {
-        _ElementComparer = elementComparer ?? EqualityComparer<T>.Default;
-    }
-
-    readonly IEqualityComparer<T> _ElementComparer;
-
     /// <summary>
     /// Determines whether the specified arrays are equal.
     /// </summary>
@@ -19,15 +12,13 @@ class DefaultArrayEqualityComparer<T> : ArrayEqualityComparer<T>
     {
         if (x == y)
             return true;
-
         if (x is null || y is null)
             return false;
-
         if (x.Length != y.Length)
             return false;
 
         for (int i = 0; i < x.Length; i++)
-            if (!_ElementComparer.Equals(x[i], y[i]))
+            if (!m_ElementComparer.Equals(x[i], y[i]))
                 return false;
 
         return true;
@@ -41,23 +32,20 @@ class DefaultArrayEqualityComparer<T> : ArrayEqualityComparer<T>
     public override int GetHashCode(T[] obj)
     {
         if (obj is null)
-            return 0;
+            throw new ArgumentNullException(nameof(obj));
 
-        var elementComparer = _ElementComparer;
+        var elementComparer = m_ElementComparer;
 
         // FNV-1a
         uint hash = 2166136261;
         foreach (var i in obj)
-            hash = (hash ^ (uint)InternalGetHashCode(i, elementComparer)) * 16777619;
+            hash = (hash ^ (uint)GetNullSafeHashCode(i, elementComparer)) * 16777619;
         return (int)hash;
     }
 
-    static int InternalGetHashCode(T value, IEqualityComparer<T> comparer)
-    {
-        if (value is null)
-            return 0;
-        return comparer.GetHashCode(value);
-    }
+    readonly IEqualityComparer<T> m_ElementComparer = elementComparer ?? EqualityComparer<T>.Default;
+
+    static int GetNullSafeHashCode(T value, IEqualityComparer<T> comparer) => value is null ? 0 : comparer.GetHashCode(value);
 
     /// <summary>
     /// Determines whether the specified <see cref="Object"/> is equal to the current <see cref="ArrayEqualityComparer{T}"/>.
