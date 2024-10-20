@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Runtime.InteropServices;
-using System.Drawing;
 
 namespace Gapotchenko.FX;
 
