@@ -37,8 +37,13 @@ using Resources = Gapotchenko.FX.Collections.Properties.Resources;
 /// <typeparam name="TKey">The type of the keys in the dictionary.</typeparam>
 /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
 /// <remarks>
+/// <para>
 /// Operations on the collection have algorithmic complexities that are similar to that of the <see cref="List{T}"/>
 /// class, except with lookups by key similar in complexity to that of <see cref="Dictionary{TKey, TValue}"/>.
+/// </para>
+/// <para>
+/// This is a polyfill provided by Gapotchenko.FX.
+/// </para>
 /// </remarks>
 [DebuggerDisplay("Count = {Count}")]
 [DebuggerTypeProxy(typeof(DictionaryDebugView<,>))]

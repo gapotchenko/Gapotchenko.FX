@@ -17,14 +17,14 @@ namespace System.Collections.Generic;
 /// </summary>
 public sealed class ReferenceEqualityComparer : IEqualityComparer<object?>, IEqualityComparer
 {
-    ReferenceEqualityComparer()
-    {
-    }
-
     /// <summary>
     /// Gets the singleton <see cref="ReferenceEqualityComparer" /> instance.
     /// </summary>
-    public static ReferenceEqualityComparer Instance { get; } = new ReferenceEqualityComparer();
+    public static ReferenceEqualityComparer Instance { get; } = new();
+
+    ReferenceEqualityComparer()
+    {
+    }
 
     /// <summary>
     /// Determines whether two object references refer to the same object instance.
