@@ -60,9 +60,7 @@ sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : 
     internal static int GetHashCodeCore(Optional<T> obj, IEqualityComparer<T> valueComparer)
     {
         if (!obj.HasValue)
-        {
             return 0;
-        }
         else if (obj.Value is not null and var value)
             return valueComparer.GetHashCode(value);
         else

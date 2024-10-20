@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2019
 
+using Gapotchenko.FX.Properties;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX;
@@ -52,7 +53,7 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
 
     // A separate method is due to performance/inlining reasons.
     [DoesNotReturn, StackTraceHidden]
-    static void ThrowMustHaveValueException() => throw new InvalidOperationException("Optional object must have a value.");
+    static void ThrowMustHaveValueException() => throw new InvalidOperationException(Resources.OptionalMustHaveValue);
 
     /// <summary>
     /// Gets a value indicating whether the current <see cref="Optional{T}"/> has a valid value of its underlying type.
@@ -143,27 +144,27 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     public static Optional<T> None => default;
 
     /// <summary>
-    /// Compares the current <see cref="Optional{T}"/> object to a specified object
+    /// Compares the current <see cref="Optional{T}"/> object to a specified object.
     /// </summary>
-    /// <param name="other">An object.</param>
+    /// <param name="other">An object to compare to.</param>
     /// <returns>The comparison result.</returns>
     readonly int IComparable<Optional<T>>.CompareTo(Optional<T> other) => Optional.Compare(this, other, null);
 
     /// <summary>
     /// Determines whether two specified <see cref="Optional{T}"/> objects are equal.
     /// </summary>
-    /// <param name="optional1">The first <see cref="Optional{T}"/> object.</param>
-    /// <param name="optional2">The second <see cref="Optional{T}"/> object.</param>
-    /// <returns><see langword="true"/> if <paramref name="optional1"/> equals <paramref name="optional2"/>; otherwise, <see langword="false"/>.</returns>
-    public static bool operator ==(Optional<T> optional1, Optional<T> optional2) => EqualsOperatorCore(optional1, optional2);
+    /// <param name="left">The left <see cref="Optional{T}"/> object.</param>
+    /// <param name="right">The right <see cref="Optional{T}"/> object.</param>
+    /// <returns><see langword="true"/> if <paramref name="left"/> equals <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+    public static bool operator ==(Optional<T> left, Optional<T> right) => EqualsOperatorCore(left, right);
 
     /// <summary>
     /// Determines whether two specified <see cref="Optional{T}"/> objects are not equal.
     /// </summary>
-    /// <param name="optional1">The first <see cref="Optional{T}"/> object.</param>
-    /// <param name="optional2">The second <see cref="Optional{T}"/> object.</param>
-    /// <returns><see langword="true"/> if <paramref name="optional1"/> does not equal <paramref name="optional2"/>; otherwise, <see langword="false"/>.</returns>
-    public static bool operator !=(Optional<T> optional1, Optional<T> optional2) => !EqualsOperatorCore(optional1, optional2);
+    /// <param name="left">The left <see cref="Optional{T}"/> object.</param>
+    /// <param name="right">The right <see cref="Optional{T}"/> object.</param>
+    /// <returns><see langword="true"/> if <paramref name="left"/> does not equal <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+    public static bool operator !=(Optional<T> left, Optional<T> right) => !EqualsOperatorCore(left, right);
 
     static bool EqualsOperatorCore(in Optional<T> value1, in Optional<T> value2)
     {

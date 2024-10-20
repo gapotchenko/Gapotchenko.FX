@@ -144,4 +144,7 @@
   <data name="ValueNotCreated" xml:space="preserve">
     <value>Value is not created.</value>
   </data>
+  <data name="OptionalMustHaveValue" xml:space="preserve">
+    <value>Optional object must have a value.</value>
+  </data>
 </root>

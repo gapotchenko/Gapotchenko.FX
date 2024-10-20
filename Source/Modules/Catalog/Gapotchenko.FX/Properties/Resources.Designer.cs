@@ -106,6 +106,15 @@ namespace Gapotchenko.FX.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Optional object must have a value..
+        /// </summary>
+        internal static string OptionalMustHaveValue {
+            get {
+                return ResourceManager.GetString("OptionalMustHaveValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The program exit has been requested with code {0}..
         /// </summary>
         internal static string ProgramExit_Message {
