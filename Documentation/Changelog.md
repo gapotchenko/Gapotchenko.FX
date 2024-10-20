@@ -45,6 +45,7 @@ Release date: not released yet
   - Added polyfill for `System.Diagnostics.StackTraceHiddenAttribute` type
   - Added polyfill for `System.Diagnostics.UnreachableException` type
   - Added polyfill for `System.Collections.Generic.Queue<T>.TryDeque` method
+  - Added polyfill for `System.Collections.Generic.OrderedDictionary<TKey, TValue>` type
   - Added polyfill for `System.IO.Path.Join` method
   - Added polyfills for `System.Math.BitIncrement` and `System.Math.BitDecrement` methods
   - Added polyfill for `System.Threading.Lock` type
