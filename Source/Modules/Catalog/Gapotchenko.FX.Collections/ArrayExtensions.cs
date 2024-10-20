@@ -1,5 +1,7 @@
 ﻿namespace Gapotchenko.FX.Collections;
 
+#if BINARY_COMPATIBILITY || SOURCE_COMPATIBILITY
+
 /// <summary>
 /// Array extensions.
 /// </summary>
@@ -11,5 +13,13 @@ public static class ArrayExtensions
     /// <param name="value">The array to test.</param>
     /// <returns><see langword="true"/> if the <paramref name="value"/> parameter is null or an empty array; otherwise, <see langword="false"/>.</returns>        
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static bool IsNullOrEmpty([NotNullWhen(false)] this Array? value) => value is null || value.Length == 0;
+    //[Obsolete("Use 'array?.Length is not > 0' expression instead.")]
+    public static bool IsNullOrEmpty(
+        [NotNullWhen(false)]
+#if SOURCE_COMPATIBILITY
+        this
+#endif
+        Array? value) => value is null || value.Length == 0;
 }
+
+#endif
