@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+namespace Gapotchenko.FX;
 
 sealed class OptionalComparer<T>(IComparer<T>? valueComparer) : IComparer<Optional<T>>
 {

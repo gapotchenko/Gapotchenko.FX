@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using System.Diagnostics;
 
 namespace Gapotchenko.FX;
 
@@ -143,21 +149,6 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// <returns>The comparison result.</returns>
     readonly int IComparable<Optional<T>>.CompareTo(Optional<T> other) => Optional.Compare(this, other, null);
 
-    static bool EqualsOperatorCore(in Optional<T> value1, in Optional<T> value2)
-    {
-        var a = EmptifyNull(value1);
-        var b = EmptifyNull(value2);
-        return a.Equals(b);
-
-        static Optional<T> EmptifyNull(in Optional<T> optional)
-        {
-            if (optional.HasValue && optional.Value is null)
-                return None;
-            else
-                return optional;
-        }
-    }
-
     /// <summary>
     /// Determines whether two specified <see cref="Optional{T}"/> objects are equal.
     /// </summary>
@@ -173,4 +164,19 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     /// <param name="optional2">The second <see cref="Optional{T}"/> object.</param>
     /// <returns><see langword="true"/> if <paramref name="optional1"/> does not equal <paramref name="optional2"/>; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(Optional<T> optional1, Optional<T> optional2) => !EqualsOperatorCore(optional1, optional2);
+
+    static bool EqualsOperatorCore(in Optional<T> value1, in Optional<T> value2)
+    {
+        var a = EmptifyNull(value1);
+        var b = EmptifyNull(value2);
+        return a.Equals(b);
+
+        static Optional<T> EmptifyNull(in Optional<T> optional)
+        {
+            if (optional.HasValue && optional.Value is null)
+                return None;
+            else
+                return optional;
+        }
+    }
 }

@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+namespace Gapotchenko.FX;
 
 sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : IEqualityComparer<Optional<T>>
 {
@@ -57,13 +63,9 @@ sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : 
         {
             return 0;
         }
+        else if (obj.Value is not null and var value)
+            return valueComparer.GetHashCode(value);
         else
-        {
-            var value = obj.Value;
-            if (value is null)
-                return 0;
-            else
-                return valueComparer.GetHashCode(value);
-        }
+            return 0;
     }
 }

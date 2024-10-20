@@ -1,4 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX;
 
