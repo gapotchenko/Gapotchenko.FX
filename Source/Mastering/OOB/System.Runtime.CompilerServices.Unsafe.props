@@ -1,7 +1,9 @@
 <Project>
 
   <PropertyGroup>
-    <TFF_UNSAFE_OOB Condition=" !('$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '3.0'))) ">true</TFF_UNSAFE_OOB>
+    <TFF_UNSAFE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">true</TFF_UNSAFE_OOB>
+    <TFF_UNSAFE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETStandard' ">true</TFF_UNSAFE_OOB>
+    <TFF_UNSAFE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '3.0')) ">true</TFF_UNSAFE_OOB>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_UNSAFE_OOB)' == 'true' ">
