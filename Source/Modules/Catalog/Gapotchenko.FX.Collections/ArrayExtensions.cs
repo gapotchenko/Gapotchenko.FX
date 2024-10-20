@@ -12,8 +12,10 @@ public static class ArrayExtensions
     /// </summary>
     /// <param name="value">The array to test.</param>
     /// <returns><see langword="true"/> if the <paramref name="value"/> parameter is null or an empty array; otherwise, <see langword="false"/>.</returns>        
+#if DEBUG
+    [Obsolete("Use 'array?.Length is not > 0' expression instead.")]
+#endif
     [EditorBrowsable(EditorBrowsableState.Never)]
-    //[Obsolete("Use 'array?.Length is not > 0' expression instead.")]
     public static bool IsNullOrEmpty(
         [NotNullWhen(false)]
 #if SOURCE_COMPATIBILITY
