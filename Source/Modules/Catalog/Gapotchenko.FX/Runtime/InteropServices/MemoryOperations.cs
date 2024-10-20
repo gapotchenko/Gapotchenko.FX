@@ -17,6 +17,7 @@ public static class MemoryOperations
     public static unsafe void BlockCopy(void* source, void* destination, int size)
     {
 #if TFF_UNSAFE
+        // This code uses hardware acceleration when possible.
         Unsafe.CopyBlockUnaligned(destination, source, (uint)size);
 #else
         var s = (byte*)source;
@@ -37,18 +38,18 @@ public static class MemoryOperations
                 // 32-bit architecture.
                 uint n4 = n >> 2;
                 for (uint i = 0; i < n4; i++, d += 4, s += 4)
-                    *((uint*)d) = *((uint*)s);
+                    *(uint*)d = *(uint*)s;
             }
             else
             {
                 // 64-bit architecture.
                 uint n8 = n >> 3;
                 for (uint i = 0; i < n8; i++, d += 8, s += 8)
-                    *((ulong*)d) = *((ulong*)s);
+                    *(ulong*)d = *(ulong*)s;
 
                 if ((n & 4) != 0)
                 {
-                    *((uint*)d) = *((uint*)s);
+                    *(uint*)d = *(uint*)s;
                     d += 4;
                     s += 4;
                 }
@@ -56,7 +57,7 @@ public static class MemoryOperations
 
             if ((n & 2) != 0)
             {
-                *((ushort*)d) = *((ushort*)s);
+                *(ushort*)d = *(ushort*)s;
                 d += 2;
                 s += 2;
             }
@@ -77,6 +78,13 @@ public static class MemoryOperations
     [CLSCompliant(false)]
     public static unsafe bool BlockEquals(void* ptr1, void* ptr2, int size)
     {
+#if true
+        // This code uses hardware acceleration when possible.
+        return
+            new ReadOnlySpan<byte>(ptr1, size)
+            .SequenceEqual(
+                new ReadOnlySpan<byte>(ptr2, size));
+#else
         var a = (byte*)ptr1;
         var b = (byte*)ptr2;
         var n = (uint)size;
@@ -99,7 +107,7 @@ public static class MemoryOperations
                 uint n4 = n >> 2;
                 for (uint i = 0; i < n4; i++, a += 4, b += 4)
                 {
-                    if (*((uint*)a) != *((uint*)b))
+                    if (*(uint*)a != *(uint*)b)
                         return false;
                 }
             }
@@ -109,13 +117,13 @@ public static class MemoryOperations
                 uint n8 = n >> 3;
                 for (uint i = 0; i < n8; i++, a += 8, b += 8)
                 {
-                    if (*((ulong*)a) != *((ulong*)b))
+                    if (*(ulong*)a != *(ulong*)b)
                         return false;
                 }
 
                 if ((n & 4) != 0)
                 {
-                    if (*((uint*)a) != *((uint*)b))
+                    if (*(uint*)a != *(uint*)b)
                         return false;
                     a += 4;
                     b += 4;
@@ -124,7 +132,7 @@ public static class MemoryOperations
 
             if ((n & 2) != 0)
             {
-                if (*((ushort*)a) != *((ushort*)b))
+                if (*(ushort*)a != *(ushort*)b)
                     return false;
                 a += 2;
                 b += 2;
@@ -138,6 +146,6 @@ public static class MemoryOperations
         }
 
         return true;
+#endif
     }
-
 }
