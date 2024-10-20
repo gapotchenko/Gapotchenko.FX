@@ -34,6 +34,17 @@ public static class Optional
     public static Optional<T> From<T>(T? value) where T : struct => value.HasValue ? Some(value.Value) : default;
 
     /// <summary>
+    /// Retrieves a readonly reference to the location in the <see cref="Optional{T}"/> instance where the value is stored.
+    /// </summary>
+    /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
+    /// <param name="optional">The readonly reference to the input <see cref="Optional{T}"/> value.</param>
+    /// <returns>
+    /// A readonly reference to the location where the value of the <see cref="Optional{T}"/> instance is stored.
+    /// If <see cref="Optional{T}.HasValue"/> property is <see langword="false"/>, the current value at that location may be the default value of type <typeparamref name="T"/>.
+    /// </returns>
+    public static ref readonly T GetValueRefOrDefaultRef<T>(ref readonly Optional<T> optional) => ref optional.m_Value;
+
+    /// <summary>
     /// Either creates a new <see cref="Optional{T}"/> object initialized to the specified value,
     /// or returns <see cref="Optional{T}.None"/> when the specified value equals to the default value of type <typeparamref name="T"/>.
     /// </summary>
