@@ -300,7 +300,7 @@ public class OrderedDictionary<TKey, TValue> :
 
             if (value is not KeyValuePair<TKey, TValue> tpair)
             {
-                throw new ArgumentException(string.Format("SR.Arg_WrongType", value, typeof(KeyValuePair<TKey, TValue>)), nameof(value));
+                throw new ArgumentException(string.Format(Resources.Arg_WrongType, value, typeof(KeyValuePair<TKey, TValue>)), nameof(value));
             }
 
             SetAt(index, tpair.Key, tpair.Value);
@@ -331,7 +331,7 @@ public class OrderedDictionary<TKey, TValue> :
 
             if (key is not TKey tkey)
             {
-                throw new ArgumentException(string.Format("SR.Arg_WrongType", key, typeof(TKey)), nameof(key));
+                throw new ArgumentException(string.Format(Resources.Arg_WrongType, key, typeof(TKey)), nameof(key));
             }
 
             TValue tvalue = default!;
@@ -339,7 +339,7 @@ public class OrderedDictionary<TKey, TValue> :
             {
                 if (value is not TValue temp)
                 {
-                    throw new ArgumentException(string.Format("SR.Arg_WrongType", value, typeof(TValue)), nameof(value));
+                    throw new ArgumentException(string.Format(Resources.Arg_WrongType, value, typeof(TValue)), nameof(value));
                 }
 
                 tvalue = temp;
