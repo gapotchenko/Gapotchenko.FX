@@ -1,11 +1,4 @@
-﻿#if NET9_0_OR_GREATER
-
-using Gapotchenko.FX.Collections.Tests.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Gapotchenko.FX.Collections.Tests.Utils;
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.OrderedDictionary;
 
@@ -52,5 +45,3 @@ public sealed class OrderedDictionary_Tests_SimpleInt_int_With_Comparer_WrapStru
 
     protected override int CreateTValue(int seed) => TestData.CreateInt32(new Random(seed));
 }
-
-#endif

@@ -1,4 +1,12 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2024
+
+using Gapotchenko.FX.Collections.Properties;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Collections.Utils;
@@ -6,71 +14,40 @@ namespace Gapotchenko.FX.Collections.Utils;
 [StackTraceHidden]
 static class ThrowHelper
 {
+    /// <summary>Throws an exception for a key not being found in the dictionary.</summary>
+    [DoesNotReturn]
+    public static void ThrowKeyNotFound(object? key) => throw (ExceptionHelper.CreateKeyNotFound(key));
 
-#if !NET8_0_OR_GREATER
+    /// <summary>Throws an exception for trying to insert a duplicate key into the dictionary.</summary>
+    [DoesNotReturn]
+    public static void ThrowDuplicateKey(object? key, [CallerArgumentExpression(nameof(key))] string? parameterName = null) =>
+    throw new ArgumentException(string.Format(Resources.Argument_AddingDuplicate, key), parameterName);
 
-    public static void ThrowIfNull([NotNull] object? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
-    {
-        if (argument is null)
-            ThrowNull(paramName);
-    }
+    /// <summary>Throws an exception when erroneous concurrent use of a collection is detected.</summary>
+    [DoesNotReturn]
+    public static void ThrowConcurrentOperation() => throw new InvalidOperationException(Resources.InvalidOperation_ConcurrentOperationsNotSupported);
 
-    public static void ThrowIfNegative(int value, [CallerArgumentExpression(nameof(value))] string? paramName = null)
-    {
-        if (value < 0)
-            ThrowNegative(value, paramName);
-    }
+    /// <summary>Throws an exception for an index being out of range.</summary>
+    [DoesNotReturn]
+    public static void ThrowIndexArgumentOutOfRange(string? parameterName = "index") => throw new ArgumentOutOfRangeException(parameterName);
 
-    public static void ThrowIfGreaterThan<T>(T value, T other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
-        where T : IComparable<T>
-    {
-        if (value.CompareTo(other) > 0)
-            ThrowGreater(value, other, paramName);
-    }
-
-    public static void ThrowIfLessThan<T>(T value, T other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
-        where T : IComparable<T>
-    {
-        if (value.CompareTo(other) < 0)
-            ThrowLess(value, other, paramName);
-    }
+    /// <summary>Throws an exception for a version check failing during enumeration.</summary>
+    [DoesNotReturn]
+    internal static void ThrowVersionCheckFailed() =>
+        throw new InvalidOperationException(Resources.InvalidOperation_EnumFailedVersion);
 
     [DoesNotReturn]
-    static void ThrowNull(string? paramName) =>
-           throw new ArgumentNullException(paramName);
+    public static void ThrowArrayPlusOffTooSmall() => throw new ArgumentException(Resources.Arg_ArrayPlusOffTooSmall);
 
-    [DoesNotReturn]
-    static void ThrowNegative(object value, string? paramName) =>
-        throw new ArgumentOutOfRangeException(
-            paramName,
-            value,
-            string.Format(
-                "{0} ('{1}') must be a non-negative value.",
-                paramName,
-                value));
+    public static void ThrowIfArrayIsMultiDimensional(Array array, [CallerArgumentExpression(nameof(array))] string? parameterName = null)
+    {
+        if (array.Rank != 1)
+            throw new ArgumentException(Resources.Arg_RankMultiDimNotSupported, parameterName);
+    }
 
-    [DoesNotReturn]
-    static void ThrowGreater(object value, object other, string? paramName) =>
-        throw new ArgumentOutOfRangeException(
-            paramName,
-            value,
-            string.Format(
-                "{0} ('{1}') must be less than or equal to '{2}'.",
-                paramName,
-                value,
-                other));
-
-    [DoesNotReturn]
-    static void ThrowLess(object value, object other, string? paramName) =>
-        throw new ArgumentOutOfRangeException(
-            paramName,
-            value,
-            string.Format(
-                "{0} ('{1}') must be greater than or equal to '{2}'.",
-                paramName,
-                value,
-                other));
-
-#endif
-
+    public static void ThrowIfArrayLowerBoundIsNotZero(Array array, [CallerArgumentExpression(nameof(array))] string? parameterName = null)
+    {
+        if (array.GetLowerBound(0) != 0)
+            throw new ArgumentException(Resources.Arg_NonZeroLowerBound, parameterName);
+    }
 }

@@ -22,7 +22,7 @@ using System.Runtime.CompilerServices;
 using static System.ArgumentNullException;
 using static System.ArgumentOutOfRangeException;
 #else
-using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
 #endif
 
 namespace Gapotchenko.FX.Collections.Generic;
@@ -1547,7 +1547,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         readonly void ValidateVersion()
         {
             if (m_Version != m_Deque.m_Version)
-                throw ExceptionHelper.CreateEnumeratedCollectionWasModifiedException();
+                ThrowHelper.ThrowVersionCheckFailed();
         }
 
         #region Compatibility
@@ -1625,7 +1625,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     void ICollection.CopyTo(Array array, int index)
     {
         ThrowIfNull(array);
-        ExceptionHelper.ThrowIfArrayArgumentIsMultiDimensional(array);
+        ThrowHelper.ThrowIfArrayIsMultiDimensional(array);
+
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(
             index, m_Size, array.Length,
             countParameterName: null);

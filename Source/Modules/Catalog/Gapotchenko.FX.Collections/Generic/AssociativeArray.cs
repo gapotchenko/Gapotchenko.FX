@@ -11,6 +11,7 @@
 // AssociativeArray<TKey, TValue> is a collection of key/value pairs that
 // supports null keys.
 
+using Gapotchenko.FX.Collections.Properties;
 using Gapotchenko.FX.Collections.Utils;
 using Gapotchenko.FX.Linq;
 using System.Collections;
@@ -20,7 +21,7 @@ using System.Diagnostics;
 using static System.ArgumentNullException;
 using static System.ArgumentOutOfRangeException;
 #else
-using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
 #endif
 
 namespace Gapotchenko.FX.Collections.Generic;
@@ -212,7 +213,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
                 if (m_NullSlot.HasValue)
                     return m_NullSlot.Value;
                 else
-                    throw ExceptionHelper.CreateKeyNotFoundException(key);
+                    throw ExceptionHelper.CreateKeyNotFound(key);
             }
             else
             {
@@ -303,7 +304,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
             if (!m_NullSlot.HasValue)
                 m_NullSlot = value;
             else
-                throw ExceptionHelper.CreateDuplicateKeyArgumentException(key);
+                ThrowHelper.ThrowDuplicateKey(key);
         }
         else
         {
@@ -320,12 +321,12 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         if (key is null)
         {
             if (value is not null && value is not TValue)
-                throw ExceptionHelper.CreateInvalidArgumentTypeException(value, typeof(TValue), nameof(value));
+                throw ExceptionHelper.CreateWrongType(value, typeof(TValue), nameof(value));
 
             if (!m_NullSlot.HasValue)
                 m_NullSlot = (TValue)value!;
             else
-                throw ExceptionHelper.CreateDuplicateKeyArgumentException(key);
+                ThrowHelper.ThrowDuplicateKey(key);
         }
         else
         {
@@ -409,7 +410,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     {
         ThrowIfNull(array);
         if ((uint)arrayIndex > (uint)array.Length)
-            ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
+            LocalThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
         if (array.Length - arrayIndex < Count)
             ExceptionHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
 
@@ -552,7 +553,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     {
         ThrowIfNull(array);
         if ((uint)arrayIndex > (uint)array.Length)
-            ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
+            LocalThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
         if (array.Length - arrayIndex < Count)
             ExceptionHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
 
@@ -705,7 +706,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         {
             ThrowIfNull(array);
             if ((uint)arrayIndex > (uint)array.Length)
-                ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
+                LocalThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
             if (array.Length - arrayIndex < Count)
                 ExceptionHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
 
@@ -721,7 +722,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         {
             ThrowIfNull(array);
             if ((uint)arrayIndex > (uint)array.Length)
-                ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
+                LocalThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
             if (array.Length - arrayIndex < Count)
                 ExceptionHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
 
@@ -903,10 +904,10 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     }
 
     [StackTraceHidden]
-    static class ThrowHelper
+    static class LocalThrowHelper
     {
         [DoesNotReturn]
         public static void ThrowIndexArgumentOutOfRange_NeedNonNegNumException(string argName) =>
-            throw new ArgumentOutOfRangeException(argName, "Non-negative number required.");
+            throw new ArgumentOutOfRangeException(argName, Resources.ArgumentOutOfRange_NeedNonNegNum);
     }
 }

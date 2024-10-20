@@ -1,6 +1,4 @@
-﻿#if NET9_0_OR_GREATER
-
-using Gapotchenko.FX.Collections.Tests.Bench;
+﻿using Gapotchenko.FX.Collections.Tests.Bench;
 using Gapotchenko.FX.Collections.Tests.Utils;
 using System.Collections;
 using Xunit;
@@ -69,5 +67,3 @@ public sealed class OrderedDictionary_ICollection_NonGeneric_Tests_Int32_Int32 :
         return new(TestData.CreateInt32(random), TestData.CreateInt32(random));
     }
 }
-
-#endif

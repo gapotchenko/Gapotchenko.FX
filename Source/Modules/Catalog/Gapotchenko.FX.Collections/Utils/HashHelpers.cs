@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 #if NET8_0_OR_GREATER
 using static System.ArgumentOutOfRangeException;
 #else
-using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
 #endif
 
 namespace Gapotchenko.FX.Collections.Utils;

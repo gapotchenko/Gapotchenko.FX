@@ -17,7 +17,7 @@ static class CollectionHelper
         }
         catch (InvalidCastException)
         {
-            throw ExceptionHelper.CreateInvalidArgumentTypeException(value, typeof(T), parameterName);
+            throw ExceptionHelper.CreateWrongType(value, typeof(T), parameterName);
         }
     }
 

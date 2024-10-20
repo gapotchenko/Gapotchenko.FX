@@ -1024,7 +1024,7 @@ public class PriorityQueue<TElement, TPriority>
             readonly void ValidateVersion()
             {
                 if (_version != _queue._version)
-                    throw ExceptionHelper.CreateEnumeratedCollectionWasModifiedException();
+                    ThrowHelper.ThrowVersionCheckFailed();
             }
         }
 

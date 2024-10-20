@@ -13,7 +13,7 @@ using System.Diagnostics;
 using static System.ArgumentNullException;
 using static System.ArgumentOutOfRangeException;
 #else
-using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
 #endif
 
 namespace Gapotchenko.FX.Collections.Generic.Kits;

@@ -1,16 +1,19 @@
-﻿#if NET9_0_OR_GREATER
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2024
+
+#if NET9_0_OR_GREATER
 #define TFF_ORDEREDDICTIONARY
 #endif
 
-#if false && !TFF_ORDEREDDICTIONARY
+#if !TFF_ORDEREDDICTIONARY
 
-using Gapotchenko.FX;
-using Gapotchenko.FX.Collections;
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Collections.Utils;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -18,13 +21,15 @@ using System.Runtime.InteropServices;
 using static System.ArgumentNullException;
 using static System.ArgumentOutOfRangeException;
 #else
-using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
 #endif
 
 #pragma warning disable IDE1006 // Naming Styles
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 
 namespace System.Collections.Generic;
+
+using Resources = Gapotchenko.FX.Collections.Properties.Resources;
 
 /// <summary>
 /// Represents a collection of key/value pairs that are accessible by the key or index.
@@ -295,7 +300,7 @@ public class OrderedDictionary<TKey, TValue> :
 
             if (value is not KeyValuePair<TKey, TValue> tpair)
             {
-                throw new ArgumentException(SR.Format(SR.Arg_WrongType, value, typeof(KeyValuePair<TKey, TValue>)), nameof(value));
+                throw new ArgumentException(string.Format("SR.Arg_WrongType", value, typeof(KeyValuePair<TKey, TValue>)), nameof(value));
             }
 
             SetAt(index, tpair.Key, tpair.Value);
@@ -326,7 +331,7 @@ public class OrderedDictionary<TKey, TValue> :
 
             if (key is not TKey tkey)
             {
-                throw new ArgumentException(SR.Format(SR.Arg_WrongType, key, typeof(TKey)), nameof(key));
+                throw new ArgumentException(string.Format("SR.Arg_WrongType", key, typeof(TKey)), nameof(key));
             }
 
             TValue tvalue = default!;
@@ -334,7 +339,7 @@ public class OrderedDictionary<TKey, TValue> :
             {
                 if (value is not TValue temp)
                 {
-                    throw new ArgumentException(SR.Format(SR.Arg_WrongType, value, typeof(TValue)), nameof(value));
+                    throw new ArgumentException(string.Format("SR.Arg_WrongType", value, typeof(TValue)), nameof(value));
                 }
 
                 tvalue = temp;
@@ -578,7 +583,7 @@ public class OrderedDictionary<TKey, TValue> :
     {
         if ((uint)index >= (uint)_count)
         {
-            ThrowHelper.ThrowIndexArgumentOutOfRange();
+            ThrowHelper.ThrowIndexArgumentOutOfRange(nameof(index));
         }
 
         Debug.Assert(_entries is not null, "count must be positive, which means we must have entries");
@@ -615,7 +620,6 @@ public class OrderedDictionary<TKey, TValue> :
         }
 
         int i = -1;
-        ref Entry entry = ref Unsafe.NullRef<Entry>();
 
         Entry[]? entries = _entries;
         Debug.Assert(entries is not null, "expected entries to be is not null");
@@ -635,7 +639,7 @@ public class OrderedDictionary<TKey, TValue> :
                     goto ReturnNotFound;
                 }
 
-                entry = ref entries[i];
+                ref var entry = ref entries[i];
                 if (entry.HashCode == hashCode && EqualityComparer<TKey>.Default.Equals(entry.Key, key))
                 {
                     goto Return;
@@ -664,7 +668,7 @@ public class OrderedDictionary<TKey, TValue> :
                     goto ReturnNotFound;
                 }
 
-                entry = ref entries[i];
+                ref var entry = ref entries[i];
                 if (entry.HashCode == hashCode && comparer.Equals(entry.Key, key))
                 {
                     goto Return;
@@ -707,7 +711,7 @@ public class OrderedDictionary<TKey, TValue> :
     {
         if ((uint)index > (uint)_count)
         {
-            ThrowHelper.ThrowIndexArgumentOutOfRange();
+            ThrowHelper.ThrowIndexArgumentOutOfRange(nameof(index));
         }
 
         ThrowIfNull(key);
@@ -752,7 +756,7 @@ public class OrderedDictionary<TKey, TValue> :
         int count = _count;
         if ((uint)index >= (uint)count)
         {
-            ThrowHelper.ThrowIndexArgumentOutOfRange();
+            ThrowHelper.ThrowIndexArgumentOutOfRange(nameof(index));
         }
 
         // Remove from the associated bucket chain the entry that lives at the specified index.
@@ -778,7 +782,7 @@ public class OrderedDictionary<TKey, TValue> :
     {
         if ((uint)index >= (uint)_count)
         {
-            ThrowHelper.ThrowIndexArgumentOutOfRange();
+            ThrowHelper.ThrowIndexArgumentOutOfRange(nameof(index));
         }
 
         Debug.Assert(_entries is not null);
@@ -795,7 +799,7 @@ public class OrderedDictionary<TKey, TValue> :
     {
         if ((uint)index >= (uint)_count)
         {
-            ThrowHelper.ThrowIndexArgumentOutOfRange();
+            ThrowHelper.ThrowIndexArgumentOutOfRange(nameof(index));
         }
 
         ThrowIfNull(key);
@@ -1127,7 +1131,7 @@ public class OrderedDictionary<TKey, TValue> :
 
     /// <inheritdoc/>
     IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator() =>
-        Count == 0 ? EnumerableHelpers.GetEmptyEnumerator<KeyValuePair<TKey, TValue>>() :
+        Count == 0 ? EnumerableHelper.GetEmptyEnumerator<KeyValuePair<TKey, TValue>>() :
         GetEnumerator();
 
     /// <inheritdoc/>
@@ -1177,7 +1181,7 @@ public class OrderedDictionary<TKey, TValue> :
         ThrowIfNegative(arrayIndex);
         if (array.Length - arrayIndex < _count)
         {
-            throw new ArgumentException(SR.Arg_ArrayPlusOffTooSmall);
+            ThrowHelper.ThrowArrayPlusOffTooSmall();
         }
 
         for (int i = 0; i < _count; i++)
@@ -1204,7 +1208,7 @@ public class OrderedDictionary<TKey, TValue> :
 
         if (key is not TKey tkey)
         {
-            throw new ArgumentException(SR.Format(SR.Arg_WrongType, key, typeof(TKey)), nameof(key));
+            throw ExceptionHelper.CreateWrongType(key, typeof(TKey));
         }
 
         if (default(TValue) is not null)
@@ -1217,7 +1221,7 @@ public class OrderedDictionary<TKey, TValue> :
         {
             if (value is not TValue temp)
             {
-                throw new ArgumentException(SR.Format(SR.Arg_WrongType, value, typeof(TValue)), nameof(value));
+                throw ExceptionHelper.CreateWrongType(value, typeof(TValue));
             }
 
             tvalue = temp;
@@ -1249,22 +1253,14 @@ public class OrderedDictionary<TKey, TValue> :
     void ICollection.CopyTo(Array array, int index)
     {
         ThrowIfNull(array);
-
-        if (array.Rank != 1)
-        {
-            throw new ArgumentException(SR.Arg_RankMultiDimNotSupported, nameof(array));
-        }
-
-        if (array.GetLowerBound(0) != 0)
-        {
-            throw new ArgumentException(SR.Arg_NonZeroLowerBound, nameof(array));
-        }
+        ThrowHelper.ThrowIfArrayIsMultiDimensional(array);
+        ThrowHelper.ThrowIfArrayLowerBoundIsNotZero(array);
 
         ThrowIfNegative(index);
 
         if (array.Length - index < _count)
         {
-            throw new ArgumentException(SR.Arg_ArrayPlusOffTooSmall);
+            ThrowHelper.ThrowArrayPlusOffTooSmall();
         }
 
         if (array is KeyValuePair<TKey, TValue>[] tarray)
@@ -1277,7 +1273,7 @@ public class OrderedDictionary<TKey, TValue> :
             {
                 if (array is not object[] objects)
                 {
-                    throw new ArgumentException(SR.Argument_IncompatibleArrayType, nameof(array));
+                    throw new ArgumentException(Resources.Argument_IncompatibleArrayType, nameof(array));
                 }
 
                 foreach (KeyValuePair<TKey, TValue> pair in this)
@@ -1287,7 +1283,7 @@ public class OrderedDictionary<TKey, TValue> :
             }
             catch (ArrayTypeMismatchException)
             {
-                throw new ArgumentException(SR.Argument_IncompatibleArrayType, nameof(array));
+                throw new ArgumentException(Resources.Argument_IncompatibleArrayType, nameof(array));
             }
         }
     }
@@ -1297,7 +1293,7 @@ public class OrderedDictionary<TKey, TValue> :
     {
         if (value is not KeyValuePair<TKey, TValue> pair)
         {
-            throw new ArgumentException(SR.Format(SR.Arg_WrongType, value, typeof(KeyValuePair<TKey, TValue>)), nameof(value));
+            throw new ArgumentException(string.Format(Resources.Arg_WrongType, value, typeof(KeyValuePair<TKey, TValue>)), nameof(value));
         }
 
         Add(pair.Key, pair.Value);
@@ -1326,7 +1322,7 @@ public class OrderedDictionary<TKey, TValue> :
     {
         if (value is not KeyValuePair<TKey, TValue> pair)
         {
-            throw new ArgumentException(SR.Format(SR.Arg_WrongType, value, typeof(KeyValuePair<TKey, TValue>)), nameof(value));
+            throw new ArgumentException(string.Format(Resources.Arg_WrongType, value, typeof(KeyValuePair<TKey, TValue>)), nameof(value));
         }
 
         Insert(index, pair.Key, pair.Value);
@@ -1432,7 +1428,7 @@ public class OrderedDictionary<TKey, TValue> :
     }
 
     /// <summary>Represents the collection of keys in a <see cref="OrderedDictionary{TKey, TValue}"/>.</summary>
-    [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
+    [DebuggerTypeProxy(typeof(CollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
     public sealed class KeyCollection : IList<TKey>, IReadOnlyList<TKey>, IList
     {
@@ -1477,7 +1473,7 @@ public class OrderedDictionary<TKey, TValue> :
 
             if (array.Length - arrayIndex < count)
             {
-                throw new ArgumentException(SR.Arg_ArrayPlusOffTooSmall, nameof(array));
+                throw new ArgumentException(Resources.Arg_ArrayPlusOffTooSmall, nameof(array));
             }
 
             Entry[]? entries = dictionary._entries;
@@ -1493,21 +1489,14 @@ public class OrderedDictionary<TKey, TValue> :
         {
             ThrowIfNull(array);
 
-            if (array.Rank != 1)
-            {
-                throw new ArgumentException(SR.Arg_RankMultiDimNotSupported, nameof(array));
-            }
-
-            if (array.GetLowerBound(0) != 0)
-            {
-                throw new ArgumentException(SR.Arg_NonZeroLowerBound, nameof(array));
-            }
+            ThrowHelper.ThrowIfArrayIsMultiDimensional(array);
+            ThrowHelper.ThrowIfArrayLowerBoundIsNotZero(array);
 
             ThrowIfNegative(index);
 
             if (array.Length - index < _dictionary.Count)
             {
-                throw new ArgumentException(SR.Arg_ArrayPlusOffTooSmall);
+                throw new ArgumentException(Resources.Arg_ArrayPlusOffTooSmall);
             }
 
             if (array is TKey[] keys)
@@ -1520,7 +1509,7 @@ public class OrderedDictionary<TKey, TValue> :
                 {
                     if (array is not object?[] objects)
                     {
-                        throw new ArgumentException(SR.Argument_IncompatibleArrayType, nameof(array));
+                        throw new ArgumentException(Resources.Argument_IncompatibleArrayType, nameof(array));
                     }
 
                     foreach (TKey key in this)
@@ -1530,7 +1519,7 @@ public class OrderedDictionary<TKey, TValue> :
                 }
                 catch (ArrayTypeMismatchException)
                 {
-                    throw new ArgumentException(SR.Argument_IncompatibleArrayType, nameof(array));
+                    throw new ArgumentException(Resources.Argument_IncompatibleArrayType, nameof(array));
                 }
             }
         }
@@ -1558,7 +1547,7 @@ public class OrderedDictionary<TKey, TValue> :
 
         /// <inheritdoc/>
         IEnumerator<TKey> IEnumerable<TKey>.GetEnumerator() =>
-            Count == 0 ? EnumerableHelpers.GetEmptyEnumerator<TKey>() :
+            Count == 0 ? EnumerableHelper.GetEmptyEnumerator<TKey>() :
             GetEnumerator();
 
         /// <inheritdoc/>
@@ -1619,7 +1608,7 @@ public class OrderedDictionary<TKey, TValue> :
             public bool MoveNext() => _enumerator.MoveNext();
 
             /// <inheritdoc/>
-            void IEnumerator.Reset() => EnumerableHelpers.Reset(ref _enumerator);
+            void IEnumerator.Reset() => EnumerableHelper.Reset(ref _enumerator);
 
             /// <inheritdoc/>
             readonly void IDisposable.Dispose() { }
@@ -1627,7 +1616,7 @@ public class OrderedDictionary<TKey, TValue> :
     }
 
     /// <summary>Represents the collection of values in a <see cref="OrderedDictionary{TKey, TValue}"/>.</summary>
-    [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
+    [DebuggerTypeProxy(typeof(CollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
     public sealed class ValueCollection : IList<TValue>, IReadOnlyList<TValue>, IList
     {
@@ -1666,7 +1655,7 @@ public class OrderedDictionary<TKey, TValue> :
 
             if (array.Length - arrayIndex < count)
             {
-                throw new ArgumentException(SR.Arg_ArrayPlusOffTooSmall, nameof(array));
+                throw new ArgumentException(Resources.Arg_ArrayPlusOffTooSmall, nameof(array));
             }
 
             Entry[]? entries = dictionary._entries;
@@ -1703,7 +1692,7 @@ public class OrderedDictionary<TKey, TValue> :
 
         /// <inheritdoc/>
         IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() =>
-            Count == 0 ? EnumerableHelpers.GetEmptyEnumerator<TValue>() :
+            Count == 0 ? EnumerableHelper.GetEmptyEnumerator<TValue>() :
             GetEnumerator();
 
         /// <inheritdoc/>
@@ -1802,21 +1791,14 @@ public class OrderedDictionary<TKey, TValue> :
         {
             ThrowIfNull(array);
 
-            if (array.Rank != 1)
-            {
-                throw new ArgumentException(SR.Arg_RankMultiDimNotSupported, nameof(array));
-            }
-
-            if (array.GetLowerBound(0) != 0)
-            {
-                throw new ArgumentException(SR.Arg_NonZeroLowerBound, nameof(array));
-            }
+            ThrowHelper.ThrowIfArrayIsMultiDimensional(array);
+            ThrowHelper.ThrowIfArrayLowerBoundIsNotZero(array);
 
             ThrowIfNegative(index);
 
             if (array.Length - index < _dictionary.Count)
             {
-                throw new ArgumentException(SR.Arg_ArrayPlusOffTooSmall);
+                throw new ArgumentException(Resources.Arg_ArrayPlusOffTooSmall);
             }
 
             if (array is TValue[] values)
@@ -1829,7 +1811,7 @@ public class OrderedDictionary<TKey, TValue> :
                 {
                     if (array is not object?[] objects)
                     {
-                        throw new ArgumentException(SR.Argument_IncompatibleArrayType, nameof(array));
+                        throw new ArgumentException(Resources.Argument_IncompatibleArrayType, nameof(array));
                     }
 
                     foreach (TValue value in this)
@@ -1839,7 +1821,7 @@ public class OrderedDictionary<TKey, TValue> :
                 }
                 catch (ArrayTypeMismatchException)
                 {
-                    throw new ArgumentException(SR.Argument_IncompatibleArrayType, nameof(array));
+                    throw new ArgumentException(Resources.Argument_IncompatibleArrayType, nameof(array));
                 }
             }
         }
@@ -1863,7 +1845,7 @@ public class OrderedDictionary<TKey, TValue> :
             public bool MoveNext() => _enumerator.MoveNext();
 
             /// <inheritdoc/>
-            void IEnumerator.Reset() => EnumerableHelpers.Reset(ref _enumerator);
+            void IEnumerator.Reset() => EnumerableHelper.Reset(ref _enumerator);
 
             /// <inheritdoc/>
             readonly void IDisposable.Dispose() { }
@@ -1889,6 +1871,6 @@ enum InsertionBehavior
 
 using System.Runtime.CompilerServices;
 
-//[assembly: TypeForwardedTo(typeof(OrderedDictionary<,>))]
+[assembly: TypeForwardedTo(typeof(OrderedDictionary<,>))]
 
 #endif

@@ -5,13 +5,14 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
+using Gapotchenko.FX.Collections.Properties;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 #if NET8_0_OR_GREATER
 using static System.ArgumentOutOfRangeException;
 #else
-using static Gapotchenko.FX.Collections.Utils.ThrowHelper;
+using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
 #endif
 
 namespace Gapotchenko.FX.Collections.Utils;
@@ -23,12 +24,6 @@ static class ExceptionHelper
     {
         if (@this is null)
             throw new NullReferenceException();
-    }
-
-    public static void ThrowIfArrayArgumentIsMultiDimensional(Array array, [CallerArgumentExpression(nameof(array))] string? parameterName = null)
-    {
-        if (array.Rank != 1)
-            throw new ArgumentException("Only single dimensional arrays are supported for the requested action.", parameterName);
     }
 
     /// <summary>
@@ -47,26 +42,30 @@ static class ExceptionHelper
     }
 
     [DoesNotReturn]
-    public static void ThrowArgumentException_ArrayPlusOffTooSmall() =>
-        throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
+    public static void ThrowArgumentException_ArrayPlusOffTooSmall() => ThrowHelper.ThrowArrayPlusOffTooSmall();
 
     /// <summary>
     /// Ensures that <paramref name="index"/> is non-negative and not greater than <paramref name="size"/>. 
     /// </summary>
-    public static void ValidateIndexArgumentBounds(int index, int size, [CallerArgumentExpression(nameof(index))] string? parameterName = null)
+    public static void ValidateIndexArgumentBounds(
+        int index,
+        int size,
+        [CallerArgumentExpression(nameof(index))] string? indexParameterName = null)
     {
         Debug.Assert(size >= 0);
 
         if ((uint)index > (uint)size)
         {
             throw new ArgumentOutOfRangeException(
-                parameterName,
+                indexParameterName,
                 "Index must be within the bounds of the collection.");
         }
     }
 
     public static void ValidateIndexAndCountArgumentsRange(
-        int index, int count, int size,
+        int index,
+        int count,
+        int size,
         [CallerArgumentExpression(nameof(index))] string? indexParameterName = null,
         [CallerArgumentExpression(nameof(count))] string? countParameterName = null)
     {
@@ -89,37 +88,25 @@ static class ExceptionHelper
             throw new ArgumentNullException(parameterName);
     }
 
-    public static ArgumentException CreateInvalidArgumentTypeException<T>(
-        T? actualValue,
-        Type expectedType,
-        [CallerArgumentExpression(nameof(actualValue))] string? parameterName = null) =>
-        new(
-            string.Format(
-                "The value '{0}' is not of type '{1}' and cannot be used in this generic collection.",
-                actualValue,
-                expectedType),
+    public static Exception CreateIncompatibleArrayTypeArgumentException(string? parameterName = null) =>
+        new ArgumentException(
+            Resources.Argument_IncompatibleArrayType,
             parameterName);
-
-    public static ArgumentException CreateIncompatibleArrayTypeArgumentException(string? parameterName = null) =>
-        new(
-            "Target array type is not compatible with the type of items in the collection.",
-            parameterName);
-
-    public static InvalidOperationException CreateEnumeratedCollectionWasModifiedException() =>
-        new("Collection was modified; enumeration operation may not execute.");
 
     public static InvalidOperationException CreateEmptyCollectionException() =>
         new("The collection is empty.");
 
-    public static KeyNotFoundException CreateKeyNotFoundException<TKey>(TKey? key) =>
-        new(
-            string.Format(
-                "The given key '{0}' was not present in the dictionary.",
-                key));
+    public static Exception CreateKeyNotFound(object? key) =>
+        new KeyNotFoundException(string.Format(Resources.Arg_KeyNotFoundWithKey, key));
 
     public static InvalidOperationException CreateEnumerationEitherNotStarterOrFinishedException() =>
         new("Enumeration has either not started or has already finished.");
 
-    public static ArgumentException CreateDuplicateKeyArgumentException<T>(T? key) =>
-        new($"An item with the same key has already been added. Key: '{key}'.");
+    public static Exception CreateWrongType(
+        object? actualValue,
+        Type expectedType,
+        [CallerArgumentExpression(nameof(actualValue))] string? actualValueParameterName = null) =>
+        new ArgumentException(
+            string.Format(Resources.Arg_WrongType, actualValue, expectedType),
+            actualValueParameterName);
 }
