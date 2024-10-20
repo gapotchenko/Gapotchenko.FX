@@ -6,24 +6,28 @@ partial class ArrayEqualityComparer
 {
     internal sealed class ByteRank1Comparer : ArrayEqualityComparer<byte>
     {
+        public static ByteRank1Comparer Instance = new();
+
+        ByteRank1Comparer()
+        {
+        }
+
         public override bool Equals(byte[]? x, byte[]? y)
         {
             if (x == y)
                 return true;
-
-            if (x == null || y == null)
+            if (x is null || y is null)
                 return false;
-
             if (x.Length != y.Length)
                 return false;
 
             if (CodeSafetyStrategy.UnsafeCodeRecommended)
-                return _EqualsUnsafeCore(x, y);
+                return EqualsUnsafeCore(x, y);
             else
-                return _EqualsSafeCore(x, y);
+                return EqualsSafeCore(x, y);
         }
 
-        static bool _EqualsSafeCore(byte[] x, byte[] y)
+        static bool EqualsSafeCore(byte[] x, byte[] y)
         {
             for (int i = 0; i < x.Length; i++)
                 if (x[i] != y[i])
@@ -31,7 +35,7 @@ partial class ArrayEqualityComparer
             return true;
         }
 
-        static unsafe bool _EqualsUnsafeCore(byte[] x, byte[] y)
+        static unsafe bool EqualsUnsafeCore(byte[] x, byte[] y)
         {
             var n = x.Length;
             if (n == 0)
@@ -43,20 +47,20 @@ partial class ArrayEqualityComparer
 
         public override int GetHashCode(byte[] obj)
         {
-            if (obj == null)
+            if (obj is null)
                 return 0;
 
             // FNV-1a
             // The fastest hash function for byte arrays with lowest collision rate so far (10/2014).
-            // http://isthe.com/chongo/tech/comp/fnv/
+            // https://en.wikipedia.org/wiki/Fowler-Noll-Vo_hash_function
 
             if (CodeSafetyStrategy.UnsafeCodeRecommended)
-                return _GetHashCodeUnsafeCore(obj);
+                return GetHashCodeUnsafeCore(obj);
             else
-                return _GetHashCodeSafeCore(obj);
+                return GetHashCodeSafeCore(obj);
         }
 
-        static int _GetHashCodeSafeCore(byte[] obj)
+        static int GetHashCodeSafeCore(byte[] obj)
         {
             uint hash = 2166136261;
             foreach (var i in obj)
@@ -64,7 +68,7 @@ partial class ArrayEqualityComparer
             return (int)hash;
         }
 
-        static unsafe int _GetHashCodeUnsafeCore(byte[] obj)
+        static unsafe int GetHashCodeUnsafeCore(byte[] obj)
         {
             uint hash = 2166136261;
             fixed (byte* buffer = obj)

@@ -112,15 +112,15 @@ public static partial class ArrayEqualityComparer
     }
 
     /// <summary>
-    /// Creates a new equality comparer for one-dimensional array with a specified comparer for elements.
+    /// Retrieves an equality comparer for one-dimensional array with a specified comparer for elements.
     /// </summary>
     /// <typeparam name="T">The type of array elements.</typeparam>
     /// <param name="elementComparer">The equality comparer for array elements.</param>
-    /// <returns>A new equality comparer for one-dimensional array with elements of type <typeparamref name="T"/>.</returns>
+    /// <returns>The equality comparer for one-dimensional array with elements of type <typeparamref name="T"/>.</returns>
     public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer) =>
         Type.GetTypeCode(typeof(T)) switch
         {
-            TypeCode.Byte when IsDefaultComparer(elementComparer) => (ArrayEqualityComparer<T>)(object)new ByteRank1Comparer(),
+            TypeCode.Byte when IsDefaultComparer(elementComparer) => (ArrayEqualityComparer<T>)(object)ByteRank1Comparer.Instance,
             _ => new DefaultArrayEqualityComparer<T>(elementComparer),
         };
 
