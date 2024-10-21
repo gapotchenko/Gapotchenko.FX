@@ -227,7 +227,7 @@ using (await cs.EnterScopeAsync())
 }
 ```
 
-The benefit of using `AsyncCriticalSection` in comparison to `AsyncLock` is that the former uses fewer computational resources because it does not need to track reentrancy.
+The benefit of using `AsyncCriticalSection` in comparison to `AsyncLock` is that the former uses fewer computational resources because it has no need to track reentrancy.
 So if you know that your algorithm does not need recursive locking, using `AsyncCriticalSection` is more preferable.
 
 ### AsyncManualResetEvent
