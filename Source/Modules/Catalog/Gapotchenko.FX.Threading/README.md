@@ -290,12 +290,13 @@ Result for Consumer #1: 42
 Result for Consumer #2: 42
 ```
 
+`Gapotchenko.FX.Threading.AsyncMonitor` is an asynchronous equivalent of [`System.Threading.Monitor`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.monitor) class.
+
+
 <details>
 <summary>More details on AsyncMonitor</summary>
 
-`Gapotchenko.FX.Threading.AsyncMonitor` class can be used as a drop-in replacement for `System.Monitor`.
-
-Let's take a look at example. The synchronous code below which uses `System.Monitor`:
+Let's take a look at example. The synchronous code below which uses `System.Threading.Monitor`:
 
 ``` C#
 class OldCode
@@ -382,7 +383,7 @@ class NewCode
 ```
 
 Please note the usage of `AsyncMonitor.For` method in the code above.
-That method is provided for semantical and ideological compatibility with `System.Monitor` to ease the translation of existing codebases.
+That method is provided for semantical and ideological compatibility with `System.Threading.Monitor` to ease the translation of existing codebases.
 As a more efficient approach, however, it is recommended to use an instance of `AsyncMonitor` explicitly without "attaching" it to a particular object:
 
 ``` C#
