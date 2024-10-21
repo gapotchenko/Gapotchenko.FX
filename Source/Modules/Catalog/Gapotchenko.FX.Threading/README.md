@@ -208,6 +208,7 @@ using (await lockObj.EnterScopeAsync())
 }
 ```
 
+`Gapotchenko.FX.Threading.AsyncLock` is an asynchronous equivalent of [`System.Threading.Lock`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.lock) class.
 
 ### AsyncCriticalSection
 
@@ -291,7 +292,6 @@ Result for Consumer #2: 42
 ```
 
 `Gapotchenko.FX.Threading.AsyncMonitor` is an asynchronous equivalent of [`System.Threading.Monitor`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.monitor) class.
-
 
 <details>
 <summary>More details on AsyncMonitor</summary>
