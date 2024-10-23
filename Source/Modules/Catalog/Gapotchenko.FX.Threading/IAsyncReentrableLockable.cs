@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Threading;
 
 /// <summary>
 /// The interface of a recursive lockable synchronization primitive
-/// that can be completely exited and then reentered.
+/// that can be entirely exited and then reentered.
 /// The primitive supports both synchronous and asynchronous operations.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]

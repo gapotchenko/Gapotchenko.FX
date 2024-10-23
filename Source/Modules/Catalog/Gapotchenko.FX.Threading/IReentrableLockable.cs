@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Threading;
 
 /// <summary>
 /// The interface of a recursive lockable synchronization primitive
-/// that can be completely exited and then reentered.
+/// that can be entirely exited and then reentered.
 /// The primitive supports synchronous operations.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
@@ -25,7 +25,7 @@ public interface IReentrableLockable : IRecursiveLockable
     void Enter(int recursionLevel, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Exits the lock until it is not held anymore.
+    /// Exits the lock entirely.
     /// </summary>
     /// <remarks>
     /// If the current task holds the lock multiple times, such as recursively, the lock is exited until it is no longer held.
