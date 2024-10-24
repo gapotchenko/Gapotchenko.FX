@@ -1,6 +1,7 @@
 ---
 Module Complexity: Advanced
-yaml-frontmatter-display: false 
+Test: 123
+yaml-frontmatter-display: vertical
 ---
 
 # Gapotchenko.FX.Runtime.InteropServices
