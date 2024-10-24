@@ -1,3 +1,7 @@
+---
+test: 1
+---
+
 # Gapotchenko.FX.Runtime.InteropServices
 
 <!--
