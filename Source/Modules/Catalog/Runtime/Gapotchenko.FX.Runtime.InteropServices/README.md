@@ -6,7 +6,7 @@
 </docmeta>
 -->
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Runtime.InteropServices.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Runtime.InteropServices)
 
 `Gapotchenko.FX.Runtime.InteropServices` is a complementary module to `System.Runtime.InteropServices` which is provided as a part of .NET.
