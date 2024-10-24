@@ -1,4 +1,4 @@
 # Keys
 
-Put `Assembly.snk` file to this folder to sign produced .NET assemblies with your key.
-When this file is not present, the assemblies are not signed.
+Put `Assembly.snk` file to this folder to sign produced .NET assemblies with an assembly key.
+When the assembly key file is not present, the assemblies are not signed.
