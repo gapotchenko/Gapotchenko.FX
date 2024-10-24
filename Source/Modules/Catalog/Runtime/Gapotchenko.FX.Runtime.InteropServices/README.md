@@ -14,7 +14,7 @@ The module provides polyfills for functionality defined in `System.Runtime.Inter
 
 ## `SafeBuffer` Polyfills
 
-For example, `SafeBuffer` class provided by `System.Runtime.InteropServices` module got a new `ReadSpan(ulong byteOffset, Span<byte> buffer)` method in .NET 6.0+.
+For example, `SafeBuffer` class provided by `System.Runtime.InteropServices` module got a new `ReadSpan(ulong byteOffset, Span<byte> buffer)` method since .NET 6.0.
 `Gapotchenko.FX.Runtime.InteropServices` makes this method available for all other supported target frameworks acting as a polyfill package for `System.Runtime.InteropServices`.
 
 ## Usage
