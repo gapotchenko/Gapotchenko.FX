@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <Deterministic>true</Deterministic>
     <NeutralLanguage>en-US</NeutralLanguage>
     <GenerateDocumentationFile Condition=" '$(MasteringProjectKind)' == 'module' ">true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -25,8 +26,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>none</DebugType>
-    <DebugSymbols>false</DebugSymbols>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 
   <!-- =================================================================== -->
