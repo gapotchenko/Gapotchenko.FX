@@ -113,7 +113,7 @@ The default mode of operation is `ProcessEndMode.Complete` that follows a sequen
 
  1. Graceful techniques are tried first:  
    1.1. `End()` method tries to close a main window of the process  
-   1.2. If that fails, it tries to send Ctrl+C (SIGTERM) signal
+   1.2. If that fails, it tries to send Ctrl+C (SIGTERM) signal to the process
  2. Forceful techniques:  
    2.1. If graceful techniques fail, `End()` method tries to exit the process (suitable for the current process only)  
    2.2. If that fails, it kills the process (SIGKILL)
@@ -140,8 +140,8 @@ Close
 
 signifying that a Notepad process was gracefully ended by closing its main window.
 
-Now let's repeat the experiment by launching a Notepad app again and opening its File Save dialog via menu (File -> Save As...).
-Let's keep the File Save dialog open, and launch the example code once again.
+Now let's repeat the experiment by launching a Notepad app again and opening its "File Save" dialog via menu (File -> Save As...).
+This time, let's keep the "File Save" dialog open, and launch the example code once again.
 
 This time the result will be different:
 ```
