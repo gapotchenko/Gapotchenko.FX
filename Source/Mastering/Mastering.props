@@ -25,12 +25,9 @@
     <DefineConstants>$(DefineConstants),PREVIEW</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
-
   <!-- =================================================================== -->
 
+  <Import Project="Debug.props" />
   <Import Project="Language.props" />
   <Import Project="Analysis.props" />
   <Import Project="NuGet.props" />
