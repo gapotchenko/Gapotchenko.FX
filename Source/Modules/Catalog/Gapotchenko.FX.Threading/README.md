@@ -233,15 +233,15 @@ So if you know that your algorithm does not require recursive locking, using `As
 
 ### AsyncManualResetEvent
 
-`Gapotchenko.FX.Threading.AsyncManualResetEvent` represents a synchronization primitive that, when signaled, allows one or more tasks or threads waiting on it to proceed.
+`Gapotchenko.FX.Threading.AsyncManualResetEvent` represents a synchronization primitive that, when signaled, allows one or more tasks waiting on it to proceed.
 `AsyncManualResetEvent` must be reset manually.
 
 This is an asynchronous equivalent of [`System.Threading.ManualResetEvent`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.manualresetevent) class.
 
 ### AsyncAutoResetEvent
 
-`Gapotchenko.FX.Threading.AsyncAutoResetEvent` represents a synchronization primitive that, when signaled, allows one or more tasks or threads waiting on it to proceed.
-`AsyncAutoResetEvent` resets automatically after releasing a single waiting task or thread.
+`Gapotchenko.FX.Threading.AsyncAutoResetEvent` represents a synchronization primitive that, when signaled, allows one or more tasks waiting on it to proceed.
+`AsyncAutoResetEvent` resets automatically after releasing a single waiting task.
 
 This is an asynchronous equivalent of [`System.Threading.AutoResetEvent`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.autoresetevent) class.
 
