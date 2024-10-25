@@ -14,6 +14,7 @@ The Math profile contains the following Gapotchenko.FX modules:
 - [Gapotchenko.FX.Math.Combinatorics](../../Modules/Catalog/Math/Gapotchenko.FX.Math.Combinatorics#readme)
 - [Gapotchenko.FX.Math.Graphs](../../Modules/Catalog/Math/Gapotchenko.FX.Math.Graphs#readme)
 - [Gapotchenko.FX.Math.Intervals](../../Modules/Catalog/Math/Gapotchenko.FX.Math.Intervals#readme)
+- [Gapotchenko.FX.Math.Metrics](../../Modules/Catalog/Math/Gapotchenko.FX.Math.Metrics#readme)
 - All the modules of the [Core](../Gapotchenko.FX.Profiles.Core#modules) profile
 
 Those modules represent the canonical and most frequently used parts of Gapotchenko.FX math functionality.
