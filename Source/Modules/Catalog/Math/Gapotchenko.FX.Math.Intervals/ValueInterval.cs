@@ -12,7 +12,8 @@ namespace Gapotchenko.FX.Math.Intervals;
 public static class ValueInterval
 {
     /// <summary>
-    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified inclusive left and exclusive right bounds.
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified inclusive left and exclusive right bounds:
+    /// <code>[from,to)</code>
     /// </summary>
     /// <param name="from">
     /// The left bound of the interval.
@@ -44,7 +45,8 @@ public static class ValueInterval
         new(from, to);
 
     /// <summary>
-    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified inclusive boundaries.
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified inclusive boundaries:
+    /// <code>[from,to]</code>
     /// </summary>
     /// <param name="from">
     /// The value of the left boundary.
@@ -63,7 +65,8 @@ public static class ValueInterval
             to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Inclusive(to));
 
     /// <summary>
-    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified inclusive boundaries.
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified inclusive boundaries:
+    /// <code>[from,to]</code>
     /// </summary>
     /// <param name="from">
     /// The value of the left boundary.
@@ -83,7 +86,8 @@ public static class ValueInterval
             to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Inclusive(to.Value));
 
     /// <summary>
-    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified exclusive boundaries.
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified exclusive boundaries:
+    /// <code>(from,to)</code>
     /// </summary>
     /// <param name="from">
     /// The value of the left boundary.
@@ -102,7 +106,8 @@ public static class ValueInterval
             to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Exclusive(to));
 
     /// <summary>
-    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified exclusive boundaries.
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified exclusive boundaries:
+    /// <code>(from,to)</code>
     /// </summary>
     /// <param name="from">
     /// The value of the left boundary.
@@ -122,7 +127,8 @@ public static class ValueInterval
             to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Exclusive(to.Value));
 
     /// <summary>
-    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified left inclusive and right exclusive boundaries.
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified left inclusive and right exclusive boundaries:
+    /// <code>[from,to)</code>
     /// </summary>
     /// <param name="from">
     /// The value of the left boundary.
@@ -141,7 +147,8 @@ public static class ValueInterval
             to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Exclusive(to));
 
     /// <summary>
-    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified left inclusive and right exclusive boundaries.
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified left inclusive and right exclusive boundaries:
+    /// <code>[from,to)</code>
     /// </summary>
     /// <param name="from">
     /// The value of the left boundary.
@@ -161,7 +168,8 @@ public static class ValueInterval
             to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Exclusive(to.Value));
 
     /// <summary>
-    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified left exclusive and right inclusive boundaries.
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified left exclusive and right inclusive boundaries:
+    /// <code>(from,to]</code>
     /// </summary>
     /// <param name="from">
     /// The value of the left boundary.
@@ -180,7 +188,8 @@ public static class ValueInterval
             to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Inclusive(to));
 
     /// <summary>
-    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified left exclusive and right inclusive boundaries.
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified left exclusive and right inclusive boundaries:
+    /// <code>(from,to]</code>
     /// </summary>
     /// <param name="from">
     /// The value of the left boundary.
@@ -201,16 +210,76 @@ public static class ValueInterval
 
     /// <summary>
     /// <para>
-    /// Creates a new degenerate <see cref="ValueInterval{T}"/> instance with the specified value of its inclusive boundaries.
+    /// Creates a new degenerate <see cref="ValueInterval{T}"/> instance with the specified value of its inclusive bounds.
     /// </para>
     /// <para>
     /// A degenerate interval <c>[x,x]</c> represents a set of exactly one element <c>{x}</c>.
     /// </para>
     /// </summary>
-    /// <param name="value">The value of the inclusive boundaries.</param>
+    /// <param name="value">The value of the inclusive bounds.</param>
     /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
     public static ValueInterval<T> Degenerate<T>(T value) where T : IEquatable<T>, IComparable<T> =>
         new(
             IntervalBoundary.Inclusive(value),
             IntervalBoundary.Inclusive(value));
+
+    /// <summary>
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified left inclusive bound and positive infinity as the right boundary:
+    /// <code>[value,∞)</code>
+    /// </summary>
+    /// <param name="value">
+    /// The left bound of the interval.
+    /// Represents a value the interval starts with.
+    /// The corresponding limit point is included in the interval.
+    /// </param>
+    /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
+    public static ValueInterval<T> FromInclusive<T>(T value) where T : IEquatable<T>, IComparable<T> =>
+        new(
+            IntervalBoundary.Inclusive(value),
+            IntervalBoundary<T>.PositiveInfinity);
+
+    /// <summary>
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified left exclusive bound and positive infinity as the right boundary:
+    /// <code>(value,∞)</code>
+    /// </summary>
+    /// <param name="value">
+    /// The left bound of the interval.
+    /// Represents a value the interval starts with.
+    /// The corresponding limit point is not included in the interval.
+    /// </param>
+    /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
+    public static ValueInterval<T> FromExclusive<T>(T value) where T : IEquatable<T>, IComparable<T> =>
+        new(
+            IntervalBoundary.Exclusive(value),
+            IntervalBoundary<T>.PositiveInfinity);
+
+    /// <summary>
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with negative infinity as the left boundary and the specified right inclusive bound:
+    /// <code>(-∞,value]</code>
+    /// </summary>
+    /// <param name="value">
+    /// The right bound of the interval.
+    /// Represents a value the interval ends with.
+    /// The corresponding limit point is included in the interval.
+    /// </param>
+    /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
+    public static ValueInterval<T> ToInclusive<T>(T value) where T : IEquatable<T>, IComparable<T> =>
+        new(
+            IntervalBoundary<T>.NegativeInfinity,
+            IntervalBoundary.Inclusive(value));
+
+    /// <summary>
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with negative infinity as the left boundary and the specified right inclusive bound:
+    /// <code>(-∞,value)</code>
+    /// </summary>
+    /// <param name="value">
+    /// The right bound of the interval.
+    /// Represents a value the interval ends with.
+    /// The corresponding limit point is not included in the interval.
+    /// </param>
+    /// <returns>The new <see cref="ValueInterval{T}"/> instance.</returns>
+    public static ValueInterval<T> ToExclusive<T>(T value) where T : IEquatable<T>, IComparable<T> =>
+        new(
+            IntervalBoundary<T>.NegativeInfinity,
+            IntervalBoundary.Exclusive(value));
 }

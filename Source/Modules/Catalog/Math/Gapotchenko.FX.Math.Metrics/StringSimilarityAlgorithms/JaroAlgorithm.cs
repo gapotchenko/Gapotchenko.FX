@@ -28,10 +28,8 @@ sealed class JaroAlgorithm : StringSimilarityAlgorithm
     {
         ValidateArguments(a, b, range);
 
-        return range.Clamp(
-            CalculateSimilarity(
-                ValueInterval.Inclusive(0.0, 1.0)
-                .Intersect(range)))
+        return range
+            .Clamp(CalculateSimilarity(range.Intersect(ValueInterval.Inclusive(0.0, 1.0))))
             .Value;
 
         double CalculateSimilarity(in ValueInterval<double> range)

@@ -11,7 +11,8 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     where T : IEquatable<T>?, IComparable<T>?
 {
     /// <summary>
-    /// Initializes a new <see cref="ValueInterval{T}"/> instance with the specified inclusive left and exclusive right bounds.
+    /// Initializes a new <see cref="ValueInterval{T}"/> instance with the specified inclusive left and exclusive right bounds:
+    /// <code>[from,to)</code>
     /// </summary>
     /// <param name="from">
     /// The left bound of the interval.
@@ -46,12 +47,14 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     }
 
     /// <summary>
-    /// Returns an empty <see cref="ValueInterval{T}"/>.
+    /// Returns an empty <see cref="ValueInterval{T}"/>:
+    /// <code>∅</code>
     /// </summary>
     public static ValueInterval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
 
     /// <summary>
-    /// Returns an infinite <see cref="ValueInterval{T}"/>.
+    /// Returns an infinite <see cref="ValueInterval{T}"/>:
+    /// <code>(-∞,∞)</code>
     /// </summary>
     public static ValueInterval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
 

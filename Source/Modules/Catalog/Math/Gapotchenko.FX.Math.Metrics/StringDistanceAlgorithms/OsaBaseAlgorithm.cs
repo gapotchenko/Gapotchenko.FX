@@ -24,10 +24,8 @@ abstract class OsaBaseAlgorithm : StringDistanceAlgorithm
     {
         ValidateArguments(a, b, range);
 
-        return range.Clamp(
-            CalculateDistance(
-                ValueInterval.Inclusive<int>(0, null)
-                .Intersect(range)))
+        return range
+            .Clamp(CalculateDistance(range.Intersect(ValueInterval.FromInclusive(0))))
             .Value;
 
         int CalculateDistance(in ValueInterval<int> range)

@@ -18,7 +18,8 @@ namespace Gapotchenko.FX.Math.Intervals;
 public sealed record Interval<T> : IInterval<T>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified inclusive left and exclusive right bounds.
+    /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified inclusive left and exclusive right bounds:
+    /// <code>[from,to)</code>
     /// </summary>
     /// <param name="from">
     /// The left bound of the interval.
@@ -63,12 +64,14 @@ public sealed record Interval<T> : IInterval<T>
     }
 
     /// <summary>
-    /// Returns an empty <see cref="Interval{T}"/>.
+    /// Returns an empty <see cref="Interval{T}"/>:
+    /// <code>∅</code>
     /// </summary>
     public static Interval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
 
     /// <summary>
-    /// Returns an infinite <see cref="Interval{T}"/>.
+    /// Returns an infinite <see cref="Interval{T}"/>:
+    /// <code>(-∞,∞)</code>
     /// </summary>
     public static Interval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
 
