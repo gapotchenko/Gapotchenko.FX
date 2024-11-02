@@ -12,15 +12,6 @@ namespace Gapotchenko.FX.Math.Intervals;
 public static class ValueInterval
 {
     /// <summary>
-    /// Returns an empty <see cref="ValueInterval{T}"/>:
-    /// <c>∅</c>.
-    /// </summary>
-    public static ValueInterval<T> Empty<T>() where T : IEquatable<T>, IComparable<T> =>
-#pragma warning disable CS0618 // Type or member is obsolete
-        ValueInterval<T>.Empty;
-#pragma warning restore CS0618 // Type or member is obsolete
-
-    /// <summary>
     /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified inclusive left and exclusive right bounds:
     /// <c>[from,to)</c>.
     /// </summary>
@@ -291,6 +282,15 @@ public static class ValueInterval
         new(
             IntervalBoundary<T>.NegativeInfinity,
             IntervalBoundary.Exclusive(value));
+
+    /// <summary>
+    /// Returns an empty <see cref="ValueInterval{T}"/>:
+    /// <c>∅</c>.
+    /// </summary>
+    public static ValueInterval<T> Empty<T>() where T : IEquatable<T>, IComparable<T> =>
+#pragma warning disable CS0618 // Type or member is obsolete
+        ValueInterval<T>.Empty;
+#pragma warning restore CS0618 // Type or member is obsolete
 
     /// <summary>
     /// Returns an infinite <see cref="ValueInterval{T}"/>:

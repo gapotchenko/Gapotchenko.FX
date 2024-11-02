@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// <summary>
 /// Represents an interval boundary.
 /// </summary>
-/// <typeparam name="T">The type of bound limit point value.</typeparam>
+/// <typeparam name="T">The type of a value of the bound limit point.</typeparam>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly struct IntervalBoundary<T>
 {
@@ -20,16 +20,6 @@ public readonly struct IntervalBoundary<T>
         Kind = kind;
         m_Value = value;
     }
-
-    /// <summary>
-    /// Gets interval boundary kind.
-    /// </summary>
-    public IntervalBoundaryKind Kind { get; }
-
-    /// <summary>
-    /// Gets a value indicating whether the boundary represents either negative or positive infinity.
-    /// </summary>
-    public bool IsInfinity => Kind is IntervalBoundaryKind.NegativeInfinity or IntervalBoundaryKind.PositiveInfinity;
 
     /// <summary>
     /// Gets the value of a bound limit point.
@@ -45,14 +35,6 @@ public readonly struct IntervalBoundary<T>
     }
 
     /// <summary>
-    /// Gets a value indicating whether the current interval boundary has a bound limit point, e.g. is bounded.
-    /// </summary>
-    public bool HasValue => !(IsInfinity || Kind is IntervalBoundaryKind.Empty);
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly T m_Value;
-
-    /// <summary>
     /// Gets the value of a bound limit point, or the default value of the underlying type <typeparamref name="T"/> when the boundary is unbounded.
     /// </summary>
     /// <returns>The value of a bound limit point, or the default value of the underlying type <typeparamref name="T"/> when the boundary is unbounded.</returns>
@@ -65,23 +47,23 @@ public readonly struct IntervalBoundary<T>
     /// <returns>The value of a bound limit point, or the specified default value when the boundary is unbounded.</returns>
     public T GetValueOrDefault(T defaultValue) => HasValue ? m_Value : defaultValue;
 
-    /// <summary>
-    /// Projects a value of the current boundary into a new boundary of the same kind but with different type of the value.
-    /// </summary>
-    /// <typeparam name="TResult">The type of the value returned by selector.</typeparam>
-    /// <param name="selector">
-    /// A transform function to apply to the boundary value.
-    /// The function is invoked only when the boundary has a bound limit point, i.e. has a value.
-    /// </param>
-    /// <returns>A <see cref="IntervalBoundary"/> whose value is the result of invoking the transform function on the current boundary value.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="selector"/> is null.</exception>
-    public IntervalBoundary<TResult> SelectValue<TResult>(Func<T, TResult> selector)
-    {
-        if (selector == null)
-            throw new ArgumentNullException(nameof(selector));
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly T m_Value;
 
-        return new IntervalBoundary<TResult>(Kind, HasValue ? selector(m_Value) : default!);
-    }
+    /// <summary>
+    /// Gets a value indicating whether the current interval boundary has a bound limit point, e.g. is bounded.
+    /// </summary>
+    public bool HasValue => !(IsInfinity || Kind is IntervalBoundaryKind.Empty);
+
+    /// <summary>
+    /// Gets a value indicating whether the boundary represents either a negative or a positive infinity.
+    /// </summary>
+    public bool IsInfinity => Kind is IntervalBoundaryKind.NegativeInfinity or IntervalBoundaryKind.PositiveInfinity;
+
+    /// <summary>
+    /// Gets interval boundary kind.
+    /// </summary>
+    public IntervalBoundaryKind Kind { get; }
 
     internal static IntervalBoundary<T> Empty { get; } = new(IntervalBoundaryKind.Empty, default!);
 
@@ -98,4 +80,22 @@ public readonly struct IntervalBoundary<T>
             IntervalBoundaryKind.Exclusive => $"{{Exclusive, {Value}}}",
             IntervalBoundaryKind.Inclusive => $"{{Inclusive, {Value}}}"
         };
+
+    /// <summary>
+    /// Projects a value of type <typeparamref name="T"/> of the current boundary into a new boundary of the same kind but with a new value of type <typeparamref name="TResult"/>.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the value returned by selector.</typeparam>
+    /// <param name="selector">
+    /// A transform function to apply to the boundary value.
+    /// The function is invoked only when the boundary has a bound limit point, i.e. has a value.
+    /// </param>
+    /// <returns>An <see cref="IntervalBoundary{T}"/> whose value is the result of invoking the transform function on the current boundary value.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="selector"/> is null.</exception>
+    public IntervalBoundary<TResult> SelectValue<TResult>(Func<T, TResult> selector)
+    {
+        if (selector == null)
+            throw new ArgumentNullException(nameof(selector));
+
+        return new(Kind, HasValue ? selector(m_Value) : default!);
+    }
 }
