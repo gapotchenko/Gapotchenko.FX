@@ -3,6 +3,7 @@
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
     <PackageDescription>Provides data structures and primitives for working with intervals.</PackageDescription>
+    <NoWarn>$(NoWarn),GPFX0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

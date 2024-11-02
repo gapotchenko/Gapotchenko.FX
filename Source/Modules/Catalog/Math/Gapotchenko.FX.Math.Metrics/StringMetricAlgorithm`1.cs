@@ -29,7 +29,7 @@ public abstract class StringMetricAlgorithm<TMeasure> :
         IEnumerable<TElement> b,
         IEqualityComparer<TElement>? equalityComparer = null,
         CancellationToken cancellationToken = default) =>
-        Calculate(a, b, ValueInterval<TMeasure>.Infinite, equalityComparer, cancellationToken);
+        Calculate(a, b, ValueInterval.Infinite<TMeasure>(), equalityComparer, cancellationToken);
 
     object IStringMetricAlgorithm.Calculate<TElement>(
         IEnumerable<TElement> a,

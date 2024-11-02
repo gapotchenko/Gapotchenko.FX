@@ -12,6 +12,11 @@ namespace Gapotchenko.FX.Math.Intervals;
 public static class IntervalBoundary
 {
     /// <summary>
+    /// Gets an empty interval boundary <c>∅</c>.
+    /// </summary>
+    public static IntervalBoundary<T> Empty<T>() => IntervalBoundary<T>.Empty;
+
+    /// <summary>
     /// <para>
     /// Creates an inclusive interval boundary with the specified value.
     /// </para>
@@ -36,4 +41,14 @@ public static class IntervalBoundary
     /// <param name="value">The value.</param>
     /// <returns>The inclusive interval boundary.</returns>
     public static IntervalBoundary<T> Exclusive<T>(T value) => new(IntervalBoundaryKind.Exclusive, value);
+
+    /// <summary>
+    /// Gets a negative infinity interval boundary <c>-∞</c>.
+    /// </summary>
+    public static IntervalBoundary<T> NegativeInfinity<T>() => IntervalBoundary<T>.NegativeInfinity;
+
+    /// <summary>
+    /// Gets a positive infinity interval boundary <c>+∞</c>.
+    /// </summary>
+    public static IntervalBoundary<T> PositiveInfinity<T>() => IntervalBoundary<T>.PositiveInfinity;
 }

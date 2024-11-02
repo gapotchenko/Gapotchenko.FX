@@ -83,20 +83,11 @@ public readonly struct IntervalBoundary<T>
         return new IntervalBoundary<TResult>(Kind, HasValue ? selector(m_Value) : default!);
     }
 
-    /// <summary>
-    /// Gets an empty interval boundary ∅.
-    /// </summary>
-    public static IntervalBoundary<T> Empty { get; } = new(IntervalBoundaryKind.Empty, default!);
+    internal static IntervalBoundary<T> Empty { get; } = new(IntervalBoundaryKind.Empty, default!);
 
-    /// <summary>
-    /// Gets a negative infinity interval boundary -∞.
-    /// </summary>
-    public static IntervalBoundary<T> NegativeInfinity { get; } = new(IntervalBoundaryKind.NegativeInfinity, default!);
+    internal static IntervalBoundary<T> NegativeInfinity { get; } = new(IntervalBoundaryKind.NegativeInfinity, default!);
 
-    /// <summary>
-    /// Gets a positive infinity interval boundary +∞.
-    /// </summary>
-    public static IntervalBoundary<T> PositiveInfinity { get; } = new(IntervalBoundaryKind.PositiveInfinity, default!);
+    internal static IntervalBoundary<T> PositiveInfinity { get; } = new(IntervalBoundaryKind.PositiveInfinity, default!);
 
     string DebuggerDisplay =>
         Kind switch

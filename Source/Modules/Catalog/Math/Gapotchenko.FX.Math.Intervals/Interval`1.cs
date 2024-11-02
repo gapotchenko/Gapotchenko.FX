@@ -15,11 +15,11 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of interval value.</typeparam>
 [DebuggerDisplay("{ToString(),nq}")]
-public sealed record Interval<T> : IInterval<T>
+public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified inclusive left and exclusive right bounds:
-    /// <code>[from,to)</code>
+    /// <c>[from,to)</c>.
     /// </summary>
     /// <param name="from">
     /// The left bound of the interval.
@@ -63,17 +63,19 @@ public sealed record Interval<T> : IInterval<T>
         Comparer = comparer;
     }
 
-    /// <summary>
-    /// Returns an empty <see cref="Interval{T}"/>:
-    /// <code>∅</code>
-    /// </summary>
+#pragma warning disable CA1000 // Do not declare static members on generic types
+    /// <inheritdoc cref="Interval.Empty{T}"/>
+    [Obsolete(
+        "Use Interval.Empty<T>() method instead because this method is a part of Gapotchenko.FX infrastructure and should not be used directly."
+#if NET5_0_OR_GREATER
+        , DiagnosticId = "GPFX0001"
+#endif
+        )]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Interval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
+#pragma warning restore CA1000 // Do not declare static members on generic types
 
-    /// <summary>
-    /// Returns an infinite <see cref="Interval{T}"/>:
-    /// <code>(-∞,∞)</code>
-    /// </summary>
-    public static Interval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
+    internal static Interval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
 
     /// <summary>
     /// The left boundary of the interval.

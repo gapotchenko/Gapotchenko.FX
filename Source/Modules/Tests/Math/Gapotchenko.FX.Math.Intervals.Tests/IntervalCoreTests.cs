@@ -27,7 +27,7 @@ public abstract class IntervalCoreTests
     [TestMethod]
     public void Interval_Core_Characteristics_LeftUnbounded()
     {
-        var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary.Inclusive(10));
+        var interval = NewInterval(IntervalBoundary.NegativeInfinity<int>(), IntervalBoundary.Inclusive(10));
         Assert.IsFalse(interval.IsBounded);
         Assert.IsTrue(interval.IsHalfBounded);
         Assert.IsTrue(interval.IsClosed);
@@ -36,7 +36,7 @@ public abstract class IntervalCoreTests
     [TestMethod]
     public void Interval_Core_Characteristics_RightUnbounded()
     {
-        var interval = NewInterval(IntervalBoundary.Inclusive(10), IntervalBoundary<int>.PositiveInfinity);
+        var interval = NewInterval(IntervalBoundary.Inclusive(10), IntervalBoundary.PositiveInfinity<int>());
         Assert.IsFalse(interval.IsBounded);
         Assert.IsTrue(interval.IsHalfBounded);
         Assert.IsTrue(interval.IsClosed);
@@ -45,7 +45,7 @@ public abstract class IntervalCoreTests
     [TestMethod]
     public void Interval_Core_Characteristics_Unbounded()
     {
-        var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary<int>.PositiveInfinity);
+        var interval = NewInterval(IntervalBoundary.NegativeInfinity<int>(), IntervalBoundary.PositiveInfinity<int>());
         Assert.IsFalse(interval.IsBounded);
         Assert.IsFalse(interval.IsHalfBounded);
         Assert.IsTrue(interval.IsClosed);
@@ -139,14 +139,14 @@ public abstract class IntervalCoreTests
     [TestMethod]
     public void Interval_Core_Infinite_2()
     {
-        var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary<int>.PositiveInfinity);
+        var interval = NewInterval(IntervalBoundary.NegativeInfinity<int>(), IntervalBoundary.PositiveInfinity<int>());
         Assert.IsTrue(interval.IsInfinite);
     }
 
     [TestMethod]
     public void Interval_Core_Infinite_3()
     {
-        var a = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary<int>.PositiveInfinity);
+        var a = NewInterval(IntervalBoundary.NegativeInfinity<int>(), IntervalBoundary.PositiveInfinity<int>());
         var b = InfiniteInterval<int>();
 
         Assert.IsTrue(a.IntervalEquals(b));
@@ -229,7 +229,7 @@ public abstract class IntervalCoreTests
     [TestMethod]
     public void Interval_Core_Contains_Unbounded()
     {
-        var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary<int>.PositiveInfinity);
+        var interval = NewInterval(IntervalBoundary.NegativeInfinity<int>(), IntervalBoundary.PositiveInfinity<int>());
 
         Assert.IsTrue(interval.Contains(int.MinValue));
 
@@ -243,7 +243,7 @@ public abstract class IntervalCoreTests
     [TestMethod]
     public void Interval_Core_Contains_RightBoundedOpen()
     {
-        var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary.Exclusive(10));
+        var interval = NewInterval(IntervalBoundary.NegativeInfinity<int>(), IntervalBoundary.Exclusive(10));
 
         Assert.IsTrue(interval.Contains(int.MinValue));
 
@@ -255,7 +255,7 @@ public abstract class IntervalCoreTests
     [TestMethod]
     public void Interval_Core_Contains_RightBoundedClosed()
     {
-        var interval = NewInterval(IntervalBoundary<int>.NegativeInfinity, IntervalBoundary.Inclusive(10));
+        var interval = NewInterval(IntervalBoundary.NegativeInfinity<int>(), IntervalBoundary.Inclusive(10));
 
         Assert.IsTrue(interval.Contains(int.MinValue));
 
@@ -267,7 +267,7 @@ public abstract class IntervalCoreTests
     [TestMethod]
     public void Interval_Core_Contains_LeftBoundedOpen()
     {
-        var interval = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary<int>.PositiveInfinity);
+        var interval = NewInterval(IntervalBoundary.Exclusive(0), IntervalBoundary.PositiveInfinity<int>());
 
         Assert.IsFalse(interval.Contains(-1));
         Assert.IsFalse(interval.Contains(0));
@@ -279,7 +279,7 @@ public abstract class IntervalCoreTests
     [TestMethod]
     public void Interval_Core_Contains_LeftBoundedClosed()
     {
-        var interval = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary<int>.PositiveInfinity);
+        var interval = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.PositiveInfinity<int>());
 
         Assert.IsFalse(interval.Contains(-1));
         Assert.IsTrue(interval.Contains(0));
@@ -975,7 +975,7 @@ public abstract class IntervalCoreTests
     public void Interval_Core_Sequence_Intersect_2()
     {
         var sequence = Enumerable.Range(1, 5);
-        var interval = NewInterval(ValueInterval<int>.Empty);
+        var interval = NewInterval(ValueInterval.Empty<int>());
 
         var result = sequence.Intersect(interval);
         Assert.AreEqual(0, result.Count());
@@ -985,7 +985,7 @@ public abstract class IntervalCoreTests
     public void Interval_Core_Sequence_Intersect_3()
     {
         var sequence = Enumerable.Range(1, 5);
-        var interval = NewInterval(ValueInterval<int>.Infinite);
+        var interval = NewInterval(ValueInterval.Infinite<int>());
 
         var result = sequence.Intersect(interval);
         Assert.IsTrue(result.SequenceEqual([1, 2, 3, 4, 5]));
@@ -1009,7 +1009,7 @@ public abstract class IntervalCoreTests
     public void Interval_Core_Sequence_Except_2()
     {
         var sequence = Enumerable.Range(1, 5);
-        var interval = NewInterval(ValueInterval<int>.Empty);
+        var interval = NewInterval(ValueInterval.Empty<int>());
 
         var result = sequence.Except(interval);
         Assert.IsTrue(result.SequenceEqual([1, 2, 3, 4, 5]));
@@ -1019,7 +1019,7 @@ public abstract class IntervalCoreTests
     public void Interval_Core_Sequence_Except_3()
     {
         var sequence = Enumerable.Range(1, 5);
-        var interval = NewInterval(ValueInterval<int>.Infinite);
+        var interval = NewInterval(ValueInterval.Infinite<int>());
 
         var result = sequence.Except(interval);
         Assert.AreEqual(0, result.Count());

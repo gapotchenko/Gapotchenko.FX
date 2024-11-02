@@ -7,12 +7,12 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of interval value.</typeparam>
 [DebuggerDisplay("{ToString(),nq}")]
-public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval<T>>
+public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval<T>>, IEmptiable<ValueInterval<T>>
     where T : IEquatable<T>?, IComparable<T>?
 {
     /// <summary>
     /// Initializes a new <see cref="ValueInterval{T}"/> instance with the specified inclusive left and exclusive right bounds:
-    /// <code>[from,to)</code>
+    /// <c>[from,to)</c>.
     /// </summary>
     /// <param name="from">
     /// The left bound of the interval.
@@ -46,17 +46,19 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
         To = to;
     }
 
-    /// <summary>
-    /// Returns an empty <see cref="ValueInterval{T}"/>:
-    /// <code>∅</code>
-    /// </summary>
+#pragma warning disable CA1000 // Do not declare static members on generic types
+    /// <inheritdoc cref="ValueInterval.Empty{T}"/>
+    [Obsolete(
+        "Use ValueInterval.Empty<T>() method instead because this method is a part of Gapotchenko.FX infrastructure and should not be used directly."
+#if NET5_0_OR_GREATER
+        , DiagnosticId = "GPFX0001"
+#endif
+        )]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static ValueInterval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
+#pragma warning restore CA1000 // Do not declare static members on generic types
 
-    /// <summary>
-    /// Returns an infinite <see cref="ValueInterval{T}"/>:
-    /// <code>(-∞,∞)</code>
-    /// </summary>
-    public static ValueInterval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
+    internal static ValueInterval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
 
     /// <summary>
     /// The left boundary of the interval.
