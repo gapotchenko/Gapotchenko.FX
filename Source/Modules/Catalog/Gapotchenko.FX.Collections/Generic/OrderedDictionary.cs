@@ -903,7 +903,11 @@ public class OrderedDictionary<TKey, TValue> :
     /// otherwise, the default value for the type of the value parameter.
     /// </param>
     /// <returns>true if the <see cref="OrderedDictionary{TKey, TValue}"/> contains an element with the specified key; otherwise, false.</returns>
+#if !NETCOREAPP3_0_OR_GREATER
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter of doesn't match implicitly implemented member (possibly because of nullability attributes)
+#endif
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
+#pragma warning restore CS8767 // Nullability of reference types in type of parameter of doesn't match implicitly implemented member (possibly because of nullability attributes)
     {
         ThrowIfNull(key);
 
