@@ -60,7 +60,7 @@ sealed class DamerauLevenshteinAlgorithm : StringDistanceAlgorithm
             equalityComparer ??= EqualityComparer<T>.Default;
 
             // The max possible distance.
-            int maxDist = bList.Count + aList.Count;
+            int maxDist = aLength + bLength;
 
             // Sequence elements map.
             var da = new AssociativeArray<T, int>(equalityComparer);
@@ -91,12 +91,10 @@ sealed class DamerauLevenshteinAlgorithm : StringDistanceAlgorithm
 
                 for (int bIdx = 1; bIdx <= bLength; bIdx++)
                 {
-                    int k, l;
-
                     var bElement = bList[bIdx - 1];
-                    if (!da.TryGetValue(bElement, out k))
+                    if (!da.TryGetValue(bElement, out var k))
                         k = 0;
-                    l = db;
+                    var l = db;
 
                     int substitutionCost = 1;
                     if (equalityComparer.Equals(aElement, bElement))
