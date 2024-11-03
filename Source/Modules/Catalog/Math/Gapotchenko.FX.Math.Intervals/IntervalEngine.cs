@@ -110,7 +110,7 @@ static class IntervalEngine
         CompareBoundaries(interval.To, value, true, comparer) <= 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int Sign<TInterval, TBound>(in TInterval interval, TBound value, IComparer<TBound> comparer)
+    public static int Zone<TInterval, TBound>(in TInterval interval, TBound value, IComparer<TBound> comparer)
         where TInterval : IIntervalOperations<TBound>
     {
         if (IsEmpty(interval, comparer))

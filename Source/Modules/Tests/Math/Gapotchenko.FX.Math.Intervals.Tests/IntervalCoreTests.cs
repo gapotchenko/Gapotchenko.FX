@@ -1238,13 +1238,13 @@ public abstract class IntervalCoreTests
     {
         var interval = NewInterval(ValueInterval.Inclusive(10, 20));
 
-        Assert.AreEqual(-1, interval.Sign(9));
-        Assert.AreEqual(0, interval.Sign(10));
+        Assert.AreEqual(-1, interval.Zone(9));
+        Assert.AreEqual(0, interval.Zone(10));
 
-        Assert.AreEqual(0, interval.Sign(15));
+        Assert.AreEqual(0, interval.Zone(15));
 
-        Assert.AreEqual(0, interval.Sign(20));
-        Assert.AreEqual(1, interval.Sign(21));
+        Assert.AreEqual(0, interval.Zone(20));
+        Assert.AreEqual(1, interval.Zone(21));
     }
 
     [TestMethod]
@@ -1252,15 +1252,15 @@ public abstract class IntervalCoreTests
     {
         var interval = NewInterval(ValueInterval.Exclusive(10, 20));
 
-        Assert.AreEqual(-1, interval.Sign(9));
-        Assert.AreEqual(-1, interval.Sign(10));
-        Assert.AreEqual(0, interval.Sign(11));
+        Assert.AreEqual(-1, interval.Zone(9));
+        Assert.AreEqual(-1, interval.Zone(10));
+        Assert.AreEqual(0, interval.Zone(11));
 
-        Assert.AreEqual(0, interval.Sign(15));
+        Assert.AreEqual(0, interval.Zone(15));
 
-        Assert.AreEqual(0, interval.Sign(19));
-        Assert.AreEqual(1, interval.Sign(20));
-        Assert.AreEqual(1, interval.Sign(21));
+        Assert.AreEqual(0, interval.Zone(19));
+        Assert.AreEqual(1, interval.Zone(20));
+        Assert.AreEqual(1, interval.Zone(21));
     }
 
     [TestMethod]
@@ -1268,9 +1268,9 @@ public abstract class IntervalCoreTests
     {
         var interval = InfiniteInterval<int>();
 
-        Assert.AreEqual(0, interval.Sign(int.MinValue));
-        Assert.AreEqual(0, interval.Sign(0));
-        Assert.AreEqual(0, interval.Sign(int.MaxValue));
+        Assert.AreEqual(0, interval.Zone(int.MinValue));
+        Assert.AreEqual(0, interval.Zone(0));
+        Assert.AreEqual(0, interval.Zone(int.MaxValue));
     }
 
     [TestMethod]
@@ -1278,9 +1278,9 @@ public abstract class IntervalCoreTests
     {
         var interval = EmptyInterval<int>();
 
-        Assert.AreEqual(0, interval.Sign(int.MinValue));
-        Assert.AreEqual(0, interval.Sign(0));
-        Assert.AreEqual(0, interval.Sign(int.MaxValue));
+        Assert.AreEqual(0, interval.Zone(int.MinValue));
+        Assert.AreEqual(0, interval.Zone(0));
+        Assert.AreEqual(0, interval.Zone(int.MaxValue));
     }
 
     [TestMethod]
@@ -1288,10 +1288,10 @@ public abstract class IntervalCoreTests
     {
         var interval = NewInterval(ValueInterval.Exclusive(19, 20));
 
-        Assert.AreEqual(-1, interval.Sign(18));
-        Assert.AreEqual(-1, interval.Sign(19));
-        Assert.AreEqual(1, interval.Sign(20));
-        Assert.AreEqual(1, interval.Sign(21));
+        Assert.AreEqual(-1, interval.Zone(18));
+        Assert.AreEqual(-1, interval.Zone(19));
+        Assert.AreEqual(1, interval.Zone(20));
+        Assert.AreEqual(1, interval.Zone(21));
     }
 
     [TestMethod]
@@ -1299,11 +1299,11 @@ public abstract class IntervalCoreTests
     {
         var interval = NewInterval(ValueInterval.Exclusive(19.0, 20.0));
 
-        Assert.AreEqual(-1, interval.Sign(18));
-        Assert.AreEqual(-1, interval.Sign(19));
-        Assert.AreEqual(0, interval.Sign(19.5));
-        Assert.AreEqual(1, interval.Sign(20));
-        Assert.AreEqual(1, interval.Sign(21));
+        Assert.AreEqual(-1, interval.Zone(18));
+        Assert.AreEqual(-1, interval.Zone(19));
+        Assert.AreEqual(0, interval.Zone(19.5));
+        Assert.AreEqual(1, interval.Zone(20));
+        Assert.AreEqual(1, interval.Zone(21));
     }
 
     #endregion

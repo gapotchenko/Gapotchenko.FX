@@ -57,7 +57,7 @@ sealed class HammingAlgorithm : StringDistanceAlgorithm
                         ++distance;
 
                         cancellationToken.ThrowIfCancellationRequested();
-                        if (range.Sign(distance) > 0)
+                        if (range.Zone(distance) > 0)
                             return distance;
                     }
                 }

@@ -102,7 +102,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     public bool Contains(T value) => IntervalEngine.Contains(this, value, Comparer<T>.Default);
 
     /// <inheritdoc/>
-    public int Sign(T value) => IntervalEngine.Sign(this, value, Comparer<T>.Default);
+    public int Zone(T value) => IntervalEngine.Zone(this, value, Comparer<T>.Default);
 
     /// <summary>
     /// <para>

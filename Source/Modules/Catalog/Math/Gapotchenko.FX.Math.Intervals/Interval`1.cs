@@ -132,7 +132,7 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     public bool Contains(T value) => IntervalEngine.Contains(this, value, m_Comparer);
 
     /// <inheritdoc/>
-    public int Sign(T value) => IntervalEngine.Sign(this, value, m_Comparer);
+    public int Zone(T value) => IntervalEngine.Zone(this, value, m_Comparer);
 
     /// <summary>
     /// <para>

@@ -133,9 +133,9 @@ public interface IIntervalOperations<T>
     bool Contains(T value);
 
     /// <summary>
-    /// Gets a sign of the specified value in relation to the interval which is treated as a zero range.
+    /// Gets a zone of the specified value in relation to the interval range.
     /// </summary>
-    /// <param name="value">The value to get a sign for.</param>
+    /// <param name="value">The value to get a zone for.</param>
     /// <returns>
     /// <c>0</c> if the interval contains the <paramref name="value"/> or is empty.
     /// <br/>-or-<br/>
@@ -143,7 +143,7 @@ public interface IIntervalOperations<T>
     /// <br/>-or-<br/>
     /// <c>-1</c> if the <paramref name="value"/> is less than the left boundary of the interval.
     /// </returns>
-    int Sign(T value);
+    int Zone(T value);
 
     /// <summary>
     /// Produces the intersection of the current and specified intervals.
