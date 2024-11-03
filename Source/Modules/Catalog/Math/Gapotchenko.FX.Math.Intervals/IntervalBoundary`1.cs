@@ -30,8 +30,12 @@ public readonly struct IntervalBoundary<T> : IEquatable<IntervalBoundary<T>>
         get
         {
             if (!HasValue)
-                throw new InvalidOperationException("Interval boundary has no bound limit point.");
+                ThrowNoValue();
             return m_Value;
+
+            [DoesNotReturn, StackTraceHidden]
+            static void ThrowNoValue() =>
+                throw new InvalidOperationException("Interval boundary has no bound limit point.");
         }
     }
 

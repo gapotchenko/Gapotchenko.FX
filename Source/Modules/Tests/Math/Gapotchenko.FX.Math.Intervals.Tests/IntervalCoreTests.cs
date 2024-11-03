@@ -1231,10 +1231,10 @@ public abstract class IntervalCoreTests
 
     #endregion
 
-    #region Sign
+    #region Zone
 
     [TestMethod]
-    public void Interval_Core_Sign_1()
+    public void Interval_Core_Zone_1()
     {
         var interval = NewInterval(ValueInterval.Inclusive(10, 20));
 
@@ -1248,7 +1248,7 @@ public abstract class IntervalCoreTests
     }
 
     [TestMethod]
-    public void Interval_Core_Sign_2()
+    public void Interval_Core_Zone_2()
     {
         var interval = NewInterval(ValueInterval.Exclusive(10, 20));
 
@@ -1264,7 +1264,7 @@ public abstract class IntervalCoreTests
     }
 
     [TestMethod]
-    public void Interval_Core_Sign_3()
+    public void Interval_Core_Zone_3()
     {
         var interval = InfiniteInterval<int>();
 
@@ -1274,7 +1274,7 @@ public abstract class IntervalCoreTests
     }
 
     [TestMethod]
-    public void Interval_Core_Sign_4()
+    public void Interval_Core_Zone_4()
     {
         var interval = EmptyInterval<int>();
 
@@ -1284,7 +1284,7 @@ public abstract class IntervalCoreTests
     }
 
     [TestMethod]
-    public void Interval_Core_Sign_5()
+    public void Interval_Core_Zone_5()
     {
         var interval = NewInterval(ValueInterval.Exclusive(19, 20));
 
@@ -1295,7 +1295,7 @@ public abstract class IntervalCoreTests
     }
 
     [TestMethod]
-    public void Interval_Core_Sign_6()
+    public void Interval_Core_Zone_6()
     {
         var interval = NewInterval(ValueInterval.Exclusive(19.0, 20.0));
 

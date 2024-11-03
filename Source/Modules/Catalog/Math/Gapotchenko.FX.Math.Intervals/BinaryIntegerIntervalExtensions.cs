@@ -14,6 +14,8 @@ namespace Gapotchenko.FX.Math.Intervals;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static partial class BinaryIntegerIntervalExtensions
 {
+    // This is a separate class to allow automatic overload selection.
+
     /// <inheritdoc cref="IntervalExtensions.Clamp(IInterval{int}, int)"/>
     /// <typeparam name="T">The type of value to clamp.</typeparam>
     public static Optional<T> Clamp<T>(this IInterval<T> interval, T value)
@@ -23,7 +25,7 @@ public static partial class BinaryIntegerIntervalExtensions
     /// <inheritdoc cref="Clamp{T}(IInterval{T}, T)"/>
     /// <typeparam name="TValue">The type of value to clamp.</typeparam>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method, so hide it to not drain cognitive energy of a user
+    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method which is hidden to not drain cognitive energy of a user
     public static Optional<TValue> Clamp<TValue, TInterval>(this TInterval interval, TValue value)
         where TInterval : IInterval<TValue>
         where TValue : IBinaryInteger<TValue> =>

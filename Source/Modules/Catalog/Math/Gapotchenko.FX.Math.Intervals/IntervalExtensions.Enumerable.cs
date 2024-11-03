@@ -23,7 +23,7 @@ partial class IntervalExtensions
     /// <inheritdoc cref="Intersect{TSource}(IEnumerable{TSource}, IInterval{TSource})"/>
     /// <typeparam name="TSource"><inheritdoc/></typeparam>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method, so hide it to not drain cognitive energy of a user
+    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method which is hidden to not drain cognitive energy of a user
     public static IEnumerable<TSource> Intersect<TSource, TInterval>(this IEnumerable<TSource> source, TInterval interval)
         where TInterval : IInterval<TSource> =>
         IntersectBy(source, interval, Fn.Identity);
@@ -50,7 +50,7 @@ partial class IntervalExtensions
     /// <typeparam name="TSource"><inheritdoc/></typeparam>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
     /// <typeparam name="TKey"><inheritdoc/></typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method, so hide it to not drain cognitive energy of a user
+    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method which is hidden to not drain cognitive energy of a user
     public static IEnumerable<TSource> IntersectBy<TSource, TInterval, TKey>(
         this IEnumerable<TSource> source,
         TInterval interval,
@@ -87,7 +87,7 @@ partial class IntervalExtensions
     /// <inheritdoc cref="Except{TSource}(IEnumerable{TSource}, IInterval{TSource})"/>
     /// <typeparam name="TSource"><inheritdoc/></typeparam>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method, so hide it to not drain cognitive energy of a user
+    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method which is hidden to not drain cognitive energy of a user
     public static IEnumerable<TSource> Except<TSource, TInterval>(this IEnumerable<TSource> source, TInterval interval)
         where TInterval : IInterval<TSource> =>
         ExceptBy(source, interval, Fn.Identity);
@@ -114,7 +114,7 @@ partial class IntervalExtensions
     /// <typeparam name="TSource"><inheritdoc/></typeparam>
     /// <typeparam name="TInterval">The type of the interval.</typeparam>
     /// <typeparam name="TKey"><inheritdoc/></typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method, so hide it to not drain cognitive energy of a user
+    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method which is hidden to not drain cognitive energy of a user
     public static IEnumerable<TSource> ExceptBy<TSource, TInterval, TKey>(
         this IEnumerable<TSource> source,
         TInterval interval,

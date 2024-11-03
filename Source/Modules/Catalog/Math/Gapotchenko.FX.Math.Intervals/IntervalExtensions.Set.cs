@@ -22,7 +22,7 @@ partial class IntervalExtensions
     /// <inheritdoc cref="IntersectWith{T}(ISet{T}, IInterval{T})"/>
     /// <typeparam name="TElement">The type of elements in the set.</typeparam>
     /// <typeparam name="TInterval">The type of interval.</typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method, so hide it to not drain cognitive energy of a user
+    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method which is hidden to not drain cognitive energy of a user
     public static void IntersectWith<TElement, TInterval>(this ISet<TElement> set, TInterval interval)
         where TInterval : IInterval<TElement>
     {
@@ -53,7 +53,7 @@ partial class IntervalExtensions
     /// <inheritdoc cref="ExceptWith{T}(ISet{T}, IInterval{T})"/>
     /// <typeparam name="TElement">The type of elements in the set.</typeparam>
     /// <typeparam name="TInterval">The type of interval.</typeparam>
-    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method, so hide it to not drain cognitive energy of a user
+    [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method which is hidden to not drain cognitive energy of a user
     public static void ExceptWith<TElement, TInterval>(this ISet<TElement> set, TInterval interval)
         where TInterval : IInterval<TElement>
     {

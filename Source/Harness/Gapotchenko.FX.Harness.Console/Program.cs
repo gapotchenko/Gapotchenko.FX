@@ -29,7 +29,7 @@ using Console = System.Console;
 
 class Program
 {
-    static void Main()
+    static void Main2()
     {
         try
         {
@@ -55,14 +55,14 @@ class Program
         }
     }
 
-    static void Main2(string[] args)
+    static void Main(string[] args)
     {
         try
         {
             if (!Console.IsOutputRedirected)
                 Console.OutputEncoding = Encoding.UTF8;
 
-            TaskBridge.Execute(_RunAsync);
+            //TaskBridge.Execute(_RunAsync);
             _Run();
 
             Console.WriteLine();
@@ -137,7 +137,8 @@ class Program
 
         _RunTopologicalSort();
 
-        var interval = new Interval<int>(10, 20);
+        var interval = Interval.Empty<int>();
+        Console.WriteLine(interval.IsEmpty);
     }
 
     static void _RunTopologicalSort()
