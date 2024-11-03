@@ -81,7 +81,7 @@ partial class EnumerablePolyfills
         if (keySelector == null)
             throw new ArgumentNullException(nameof(keySelector));
 
-        return source.Distinct(new SelectedEqualityComparer<TSource, TKey>(keySelector, comparer));
+        return source.Distinct(new KeyedEqualityComparer<TSource, TKey>(keySelector, comparer));
     }
 #endif
 
