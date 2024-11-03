@@ -298,28 +298,15 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
         x.IntervalEquals(y);
 
     /// <inheritdoc/>
-    public bool Equals(ValueInterval<T> other) => IntervalEngine.IntervalsEqual(this, other, Comparer<T>.Default);
-
-    /// <inheritdoc/>
     public override bool Equals([NotNullWhen(true)] object? obj) =>
         obj is ValueInterval<T> other &&
         Equals(other);
 
     /// <inheritdoc/>
-    public override int GetHashCode()
-    {
-        var hc = new HashCode();
+    public bool Equals(ValueInterval<T> other) => IntervalEngine.IntervalsEqual(this, other, Comparer<T>.Default);
 
-        hc.Add(From.Kind.GetHashCode());
-        if (From.HasValue)
-            hc.Add(From.Value);
-
-        hc.Add(To.Kind.GetHashCode());
-        if (To.HasValue)
-            hc.Add(To.Value);
-
-        return hc.ToHashCode();
-    }
+    /// <inheritdoc/>
+    public override int GetHashCode() => HashCode.Combine(From.GetHashCode(), To.GetHashCode());
 
     /// <inheritdoc/>
     public override string ToString() => IntervalEngine.ToString<ValueInterval<T>, T>(this);

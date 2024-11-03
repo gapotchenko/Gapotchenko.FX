@@ -139,15 +139,11 @@ static class IntervalEngine
         CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.To, other.To, comparer) <= 0 &&
         CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.From, other.From, comparer) >= 0;
 
-    static bool BoundariesEqual<TBound>(in IntervalBoundary<TBound> x, in IntervalBoundary<TBound> y, IComparer<TBound> comparer) =>
-        x.Kind == y.Kind &&
-        comparer.Compare(x.GetValueOrDefault(), y.GetValueOrDefault()) == 0;
-
     public static bool IntervalsEqual<TInterval, TOther, TBound>(in TInterval x, in TOther y, IComparer<TBound> comparer)
         where TInterval : IIntervalOperations<TBound>
         where TOther : IIntervalOperations<TBound> =>
         IsEmpty(x, comparer) && IsEmpty(y, comparer) ||
-        BoundariesEqual(x.From, y.From, comparer) && BoundariesEqual(x.To, y.To, comparer);
+        x.From.Equals(y.From, comparer) && x.To.Equals(y.To, comparer);
 
     static int CompareBoundaries<TBound>(
         BoundaryDirection directionX, in IntervalBoundary<TBound> boundaryX,

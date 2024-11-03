@@ -320,9 +320,9 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
         y is not null &&
         x.IntervalEquals(y);
 
-    // Minify unused record method.
-    bool PrintMembers(StringBuilder _) => false;
-
     /// <inheritdoc/>
     public override string ToString() => IntervalEngine.ToString<Interval<T>, T>(this);
+
+    // Minify unused record method.
+    bool PrintMembers(StringBuilder _) => false;
 }

@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
+using Gapotchenko.FX.Math.Intervals.Utils;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Intervals;
@@ -13,7 +14,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of a value of the bound limit point.</typeparam>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly struct IntervalBoundary<T>
+public readonly struct IntervalBoundary<T> : IEquatable<IntervalBoundary<T>>
 {
     internal IntervalBoundary(IntervalBoundaryKind kind, T value)
     {
@@ -97,5 +98,87 @@ public readonly struct IntervalBoundary<T>
             throw new ArgumentNullException(nameof(selector));
 
         return new(Kind, HasValue ? selector(m_Value) : default!);
+    }
+
+    /// <summary>
+    /// Determines whether the specified interval boundaries are equal.
+    /// </summary>
+    /// <param name="x">The first interval boundary.</param>
+    /// <param name="y">The second interval boundary.</param>
+    /// <returns>
+    /// <see langword="true"/> if the specified interval boundaries are equal;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator ==(IntervalBoundary<T> x, IntervalBoundary<T> y) => x.EqualsCore(y);
+
+    /// <summary>
+    /// Determines whether the specified interval boundaries are not equal.
+    /// </summary>
+    /// <param name="x">The first interval boundary.</param>
+    /// <param name="y">The second interval boundary.</param>
+    /// <returns>
+    /// <see langword="true"/> if the specified interval boundaries are not equal;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator !=(IntervalBoundary<T> x, IntervalBoundary<T> y) => !x.EqualsCore(y);
+
+    /// <inheritdoc/>
+    public override bool Equals([NotNullWhen(true)] object? obj) =>
+        obj is IntervalBoundary<T> other &&
+        Equals(other);
+
+    /// <inheritdoc/>
+    public bool Equals(IntervalBoundary<T> other) => EqualsCore(other);
+
+    bool EqualsCore(in IntervalBoundary<T> other) => Equals(other, (IEqualityComparer<T>?)null);
+
+    /// <summary>
+    /// Determines whether the current interval boundary is equal to another.
+    /// </summary>
+    /// <param name="other">The interval boundary to compare with.</param>
+    /// <param name="comparer">The comparer to use for comparing values of type <typeparamref name="T"/>.</param>
+    /// <returns>
+    /// <see langword="true"/> if the current interval boundary is equal to the <paramref name="other"/>;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public bool Equals(in IntervalBoundary<T> other, IEqualityComparer<T>? comparer) =>
+        EqualsCore(other, new LazyEqualityComparer<T>(comparer));
+
+    /// <inheritdoc cref="Equals(in IntervalBoundary{T}, IEqualityComparer{T}?)"/>
+    public bool Equals(in IntervalBoundary<T> other, IComparer<T>? comparer) =>
+        EqualsCore(other, new EqualityComparerFromComparer<T>(comparer));
+
+    bool EqualsCore<TEqualityComparer>(in IntervalBoundary<T> other, TEqualityComparer comparer)
+        where TEqualityComparer : IEqualityComparer<T>
+    {
+        if (Kind != other.Kind)
+        {
+            return false;
+        }
+        else if (HasValue)
+        {
+            if (other.HasValue)
+                return comparer.Equals(m_Value, other.m_Value);
+            else
+                return false;
+        }
+        else
+        {
+            return !other.HasValue;
+        }
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => GetHashCode(null);
+
+    /// <inheritdoc cref="GetHashCode()"/>
+    /// <param name="comparer">The comparer to use for hashing values of type <typeparamref name="T"/>.</param>
+    public int GetHashCode(IEqualityComparer<T>? comparer)
+    {
+        var hc = new HashCode();
+        hc.Add(Kind.GetHashCode());
+        if (HasValue && m_Value is not null and var value)
+            hc.Add(comparer != null ? comparer.GetHashCode(value) : value.GetHashCode());
+        return hc.ToHashCode();
     }
 }
