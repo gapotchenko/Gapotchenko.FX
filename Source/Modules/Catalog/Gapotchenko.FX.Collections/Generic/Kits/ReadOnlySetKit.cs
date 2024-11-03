@@ -19,7 +19,7 @@ using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
 namespace Gapotchenko.FX.Collections.Generic.Kits;
 
 /// <summary>
-/// Provides the base implementation of <see cref="IReadOnlySet{T}"/>.
+/// Provides a base implementation of <see cref="IReadOnlySet{T}"/>.
 /// </summary>
 [DebuggerDisplay("Count = {Count}")]
 [DebuggerTypeProxy(typeof(CollectionDebugView<>))]
@@ -71,37 +71,32 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
                 return other.Any();
         }
 
-        if (other is ReadOnlySetKit<T> rosb)
+        switch (other)
         {
-            if (rosb.Comparer.Equals(Comparer))
-            {
-                if (count >= rosb.Count)
+            case ReadOnlySetKit<T> readOnlySetKit when readOnlySetKit.Comparer.Equals(Comparer):
+                if (count >= readOnlySetKit.Count)
                     return false;
                 foreach (var i in this)
                 {
-                    if (!rosb.Contains(i))
+                    if (!readOnlySetKit.Contains(i))
                         return false;
                 }
                 return true;
-            }
-        }
-        else if (other is HashSet<T> hs)
-        {
-            if (hs.Comparer.Equals(Comparer))
-            {
-                if (count >= hs.Count)
-                    return false;
-                foreach (var i in this)
-                {
-                    if (!hs.Contains(i))
-                        return false;
-                }
-                return true;
-            }
-        }
 
-        var (presenceCount, absence) = CalculateInclusivityOf(other);
-        return absence && presenceCount == count;
+            case HashSet<T> hashSet when hashSet.Comparer.Equals(Comparer):
+                if (count >= hashSet.Count)
+                    return false;
+                foreach (var i in this)
+                {
+                    if (!hashSet.Contains(i))
+                        return false;
+                }
+                return true;
+
+            default:
+                var (presenceCount, absence) = CalculateInclusivityOf(other);
+                return absence && presenceCount == count;
+        }
     }
 
     /// <inheritdoc/>
@@ -116,33 +111,25 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         if (count == 0)
             return false;
 
-        if (other.TryGetNonEnumeratedCount(out var otherCount))
-            if (otherCount == 0)
-                return true;
+        if (other.TryGetNonEnumeratedCount(out var otherCount) && otherCount == 0)
+            return true;
 
-        if (other is ReadOnlySetKit<T> rosb)
+        switch (other)
         {
-            if (rosb.Comparer.Equals(Comparer))
-            {
-                if (rosb.Count >= count)
+            case ReadOnlySetKit<T> readOnlySetKit when readOnlySetKit.Comparer.Equals(Comparer):
+                if (readOnlySetKit.Count >= count)
                     return false;
+                return ContainsAllElements(readOnlySetKit);
 
-                return ContainsAllElements(rosb);
-            }
-        }
-        else if (other is HashSet<T> hs)
-        {
-            if (hs.Comparer.Equals(Comparer))
-            {
-                if (hs.Count >= count)
+            case HashSet<T> hashSet when hashSet.Comparer.Equals(Comparer):
+                if (hashSet.Count >= count)
                     return false;
+                return ContainsAllElements(hashSet);
 
-                return ContainsAllElements(hs);
-            }
+            default:
+                var (presenceCount, absence) = CalculateInclusivityOf(other, true);
+                return !absence && presenceCount < count;
         }
-
-        var (presenceCount, absence) = CalculateInclusivityOf(other, true);
-        return !absence && presenceCount < count;
     }
 
     /// <inheritdoc/>
@@ -157,36 +144,31 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         if (count == 0)
             return true;
 
-        if (other is ReadOnlySetKit<T> rosb)
+        switch (other)
         {
-            if (rosb.Comparer.Equals(Comparer))
-            {
-                if (count > rosb.Count)
+            case ReadOnlySetKit<T> readOnlySetKit when readOnlySetKit.Comparer.Equals(Comparer):
+                if (count > readOnlySetKit.Count)
                     return false;
                 foreach (var i in this)
                 {
-                    if (!rosb.Contains(i))
+                    if (!readOnlySetKit.Contains(i))
                         return false;
                 }
                 return true;
-            }
-        }
-        else if (other is HashSet<T> hs)
-        {
-            if (hs.Comparer.Equals(Comparer))
-            {
-                if (count > hs.Count)
-                    return false;
-                foreach (var i in this)
-                {
-                    if (!hs.Contains(i))
-                        return false;
-                }
-                return true;
-            }
-        }
 
-        return CalculateInclusivityOf(other).PresenceCount == count;
+            case HashSet<T> hashSet when hashSet.Comparer.Equals(Comparer):
+                if (count > hashSet.Count)
+                    return false;
+                foreach (var i in this)
+                {
+                    if (!hashSet.Contains(i))
+                        return false;
+                }
+                return true;
+
+            default:
+                return CalculateInclusivityOf(other).PresenceCount == count;
+        }
     }
 
     /// <inheritdoc/>
@@ -197,27 +179,20 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         if (other == this)
             return true;
 
-        if (other.TryGetNonEnumeratedCount(out var otherCount))
-        {
-            if (otherCount == 0)
-                return true;
-        }
+        if (other.TryGetNonEnumeratedCount(out var otherCount) && otherCount == 0)
+            return true;
 
-        if (other is ReadOnlySetKit<T> rosb)
+        switch (other)
         {
-            if (rosb.Comparer.Equals(Comparer))
-            {
-                if (rosb.Count > Count)
+            case ReadOnlySetKit<T> readOnlySetKit when readOnlySetKit.Comparer.Equals(Comparer):
+                if (readOnlySetKit.Count > Count)
                     return false;
-            }
-        }
-        else if (other is HashSet<T> hs)
-        {
-            if (hs.Comparer.Equals(Comparer))
-            {
-                if (hs.Count > Count)
+                break;
+
+            case HashSet<T> hashSet when hashSet.Comparer.Equals(Comparer):
+                if (hashSet.Count > Count)
                     return false;
-            }
+                break;
         }
 
         return ContainsAllElements(other);
@@ -230,10 +205,14 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
 
         if (Count == 0)
             return false;
+        if (other.TryGetNonEnumeratedCount(out var otherCount) && otherCount == 0)
+            return false;
 
         foreach (var i in other)
+        {
             if (Contains(i))
                 return true;
+        }
 
         return false;
     }
@@ -300,9 +279,10 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     bool ContainsAllElements(IEnumerable<T> other)
     {
         foreach (var i in other)
+        {
             if (!Contains(i))
                 return false;
-
+        }
         return true;
     }
 

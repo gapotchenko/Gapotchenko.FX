@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.Math.Graphs;
 
 /// <summary>
-/// Provides static methods for creating <see cref="GraphEdge{TVertex}"/> objects.
+/// Provides static methods for creating <see cref="GraphEdge{TVertex}"/> objects and working with them.
 /// </summary>
 public static class GraphEdge
 {
@@ -20,23 +20,28 @@ public static class GraphEdge
     public static GraphEdge<TVertex> Create<TVertex>(TVertex from, TVertex to) => new(from, to);
 
     /// <summary>
-    /// Creates a graph edge equality comparer with specified vertex comparer and direction awareness.
+    /// Provides <see cref="IEqualityComparer{T}"/> services for <see cref="GraphEdge{TVertex}"/>.
     /// </summary>
-    /// <param name="vertexComparer">
-    /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the edge,
-    /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
-    /// </param>
-    /// <param name="directed">
-    /// The direction awareness.
-    /// Indicates whether the equality comparer is for directed edges.
-    /// </param>
-    /// <returns>A new instance of graph edge equality comparer.</returns>
-    public static IEqualityComparer<GraphEdge<TVertex>> CreateComparer<TVertex>(IEqualityComparer<TVertex>? vertexComparer, bool directed)
+    public static class EqualityComparer
     {
-        vertexComparer ??= EqualityComparer<TVertex>.Default;
-
-        return directed ?
-            new GraphEdgeEqualityComparer<TVertex>.Directed(vertexComparer) :
-            new GraphEdgeEqualityComparer<TVertex>.Undirected(vertexComparer);
+        /// <summary>
+        /// Creates an equality comparer for <see cref="GraphEdge{TVertex}"/> with the specified vertex comparer and direction awareness.
+        /// </summary>
+        /// <param name="vertexComparer">
+        /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing vertices in the edge,
+        /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> implementation.
+        /// </param>
+        /// <param name="directed">
+        /// The direction awareness.
+        /// Indicates whether the equality comparer is for directed edges.
+        /// </param>
+        /// <returns>A new <see cref="IEqualityComparer{T}"/> instance for <see cref="GraphEdge{TVertex}"/>.</returns>
+        public static IEqualityComparer<GraphEdge<TVertex>> Create<TVertex>(IEqualityComparer<TVertex>? vertexComparer, bool directed)
+        {
+            vertexComparer ??= EqualityComparer<TVertex>.Default;
+            return directed ?
+                new GraphEdgeEqualityComparer.Directed<TVertex>(vertexComparer) :
+                new GraphEdgeEqualityComparer.Undirected<TVertex>(vertexComparer);
+        }
     }
 }

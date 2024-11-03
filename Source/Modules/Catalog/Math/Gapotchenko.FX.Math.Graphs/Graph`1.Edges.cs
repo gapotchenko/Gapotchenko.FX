@@ -27,10 +27,12 @@ partial class Graph<TVertex>
     IReadOnlySet<GraphEdge<TVertex>> IReadOnlyGraph<TVertex>.Edges => Edges;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IEqualityComparer<GraphEdge<TVertex>>? m_EdgeComparer;
+    IEqualityComparer<GraphEdge<TVertex>> EdgeComparer =>
+        m_EdgeComparer ??=
+        GraphEdge.EqualityComparer.Create(VertexComparer, IsDirected);
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IEqualityComparer<GraphEdge<TVertex>> EdgeComparer => m_EdgeComparer ??= GraphEdge.CreateComparer(VertexComparer, IsDirected);
+    IEqualityComparer<GraphEdge<TVertex>>? m_EdgeComparer;
 
     /// <summary>
     /// Represents a set of graph vertices.
@@ -58,22 +60,6 @@ partial class Graph<TVertex>
             if (!graph.IsDirected && Contains(edge))
                 return false;
 
-            static bool AddToAdjacencyList(Graph<TVertex> graph, AssociativeArray<TVertex, AdjacencyRow?> adjacencyList, TVertex from, TVertex to)
-            {
-                if (!adjacencyList.TryGetValue(from, out var adjacencyRow))
-                {
-                    adjacencyRow = graph.NewAdjacencyRow();
-                    adjacencyList.Add(from, adjacencyRow);
-                }
-                else if (adjacencyRow == null)
-                {
-                    adjacencyRow = graph.NewAdjacencyRow();
-                    adjacencyList[from] = adjacencyRow;
-                }
-
-                return adjacencyRow.Add(to);
-            }
-
             if (!AddToAdjacencyList(graph, graph.m_AdjacencyList, edge.From, edge.To))
                 return false;
 
@@ -90,6 +76,26 @@ partial class Graph<TVertex>
             graph.IncrementVersion();
 
             return true;
+
+            static bool AddToAdjacencyList(
+                Graph<TVertex> graph,
+                AssociativeArray<TVertex, AdjacencyRow?> adjacencyList,
+                TVertex from,
+                TVertex to)
+            {
+                if (!adjacencyList.TryGetValue(from, out var adjacencyRow))
+                {
+                    adjacencyRow = graph.NewAdjacencyRow();
+                    adjacencyList.Add(from, adjacencyRow);
+                }
+                else if (adjacencyRow == null)
+                {
+                    adjacencyRow = graph.NewAdjacencyRow();
+                    adjacencyList[from] = adjacencyRow;
+                }
+
+                return adjacencyRow.Add(to);
+            }
         }
 
         /// <inheritdoc/>
@@ -125,7 +131,10 @@ partial class Graph<TVertex>
 
             return true;
 
-            static bool RemoveFromAdjacencyList(AssociativeArray<TVertex, AdjacencyRow?> adjacencyList, TVertex from, TVertex to)
+            static bool RemoveFromAdjacencyList(
+                AssociativeArray<TVertex, AdjacencyRow?> adjacencyList,
+                TVertex from,
+                TVertex to)
             {
                 if (!adjacencyList.TryGetValue(from, out var adjacencyRow))
                     return false;
@@ -188,15 +197,15 @@ partial class Graph<TVertex>
         /// <inheritdoc/>
         public override bool Contains(GraphEdge<TVertex> edge)
         {
-            bool ContainsCore(in GraphEdge<TVertex> edge) =>
-                m_Graph.m_AdjacencyList.TryGetValue(edge.From, out var adjRow) &&
-                adjRow != null &&
-                adjRow.Contains(edge.To);
-
             if (m_Graph.IsDirected)
                 return ContainsCore(edge);
             else
                 return ContainsCore(edge) || ContainsCore(edge.Reverse());
+
+            bool ContainsCore(in GraphEdge<TVertex> edge) =>
+                m_Graph.m_AdjacencyList.TryGetValue(edge.From, out var adjRow) &&
+                adjRow != null &&
+                adjRow.Contains(edge.To);
         }
 
         /// <inheritdoc/>

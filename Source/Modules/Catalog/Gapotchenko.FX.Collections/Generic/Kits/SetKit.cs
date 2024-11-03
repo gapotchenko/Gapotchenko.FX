@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Collections.Generic.Kits;
 
 /// <summary>
-/// Provides the base implementation of <see cref="ISet{T}"/>.
+/// Provides a base implementation of <see cref="ISet{T}"/>.
 /// </summary>
 public abstract class SetKit<T> : ReadOnlySetKit<T>, ISet<T>
 {

@@ -11,12 +11,8 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public void Transpose()
     {
-        if (!IsDirected)
-            return;
-
-        var t = m_AdjacencyList;
-        m_AdjacencyList = ReverseAdjacencyListCore;
-        m_ReverseAdjacencyList = t;
+        if (IsDirected)
+            (m_AdjacencyList, m_ReverseAdjacencyList) = (ReverseAdjacencyListCore, m_AdjacencyList);
     }
 
     /// <inheritdoc cref="IGraph{TVertex}.GetTransposition"/>

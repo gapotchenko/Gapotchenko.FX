@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Math.Graphs;
 /// <param name="from">The source vertex of the edge.</param>
 /// <param name="to">The destination vertex of the edge.</param>
 /// <returns>
-/// <see langword="true"/> if there is an edge between <paramref name="from"/> and <paramref name="to"/> vertices;
+/// <see langword="true"/> if there is an edge between the <paramref name="from"/> and the <paramref name="to"/> vertices;
 /// otherwise, <see langword="false"/>.
 /// </returns>
 public delegate bool GraphIncidenceFunction<in TVertex>(TVertex from, TVertex to);

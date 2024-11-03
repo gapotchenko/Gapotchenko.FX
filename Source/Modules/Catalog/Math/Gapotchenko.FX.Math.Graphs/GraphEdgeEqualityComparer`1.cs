@@ -8,79 +8,56 @@ using System.Diagnostics;
 
 namespace Gapotchenko.FX.Math.Graphs;
 
-static class GraphEdgeEqualityComparer<TVertex>
+static class GraphEdgeEqualityComparer
 {
-    public sealed class Directed : IEqualityComparer<GraphEdge<TVertex>>
+    public sealed class Directed<TVertex>(IEqualityComparer<TVertex> vertexComparer) :
+        IEqualityComparer<GraphEdge<TVertex>>
     {
-        public Directed(IEqualityComparer<TVertex> vertexComparer)
-        {
-            if (vertexComparer == null)
-                throw new ArgumentNullException(nameof(vertexComparer));
-
-            m_VertexComparer = vertexComparer;
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IEqualityComparer<TVertex> m_VertexComparer;
-
-        // Needed for a debug view.
-        public IEqualityComparer<TVertex> VertexComparer => m_VertexComparer;
-
         public bool Equals(GraphEdge<TVertex> x, GraphEdge<TVertex> y) =>
             m_VertexComparer.Equals(x.From, y.From) &&
             m_VertexComparer.Equals(x.To, y.To);
 
-        public int GetHashCode([DisallowNull] GraphEdge<TVertex> obj)
-        {
-            var from = obj.From;
-            var to = obj.To;
-
-            return HashCode.Combine(
-                from != null ? m_VertexComparer.GetHashCode(from) : 0,
-                to != null ? m_VertexComparer.GetHashCode(to) : 0);
-        }
+        public int GetHashCode([DisallowNull] GraphEdge<TVertex> obj) =>
+            HashCode.Combine(
+                obj.From is not null and var from ? m_VertexComparer.GetHashCode(from) : 0,
+                obj.To is not null and var to ? m_VertexComparer.GetHashCode(to) : 0);
 
         public override bool Equals(object? obj) =>
-            obj is GraphEdgeEqualityComparer<TVertex>.Directed other &&
+            obj is Directed<TVertex> other &&
             m_VertexComparer.Equals(other.m_VertexComparer);
 
         public override int GetHashCode() => m_VertexComparer.GetHashCode() ^ 17;
-    }
-
-    public sealed class Undirected : IEqualityComparer<GraphEdge<TVertex>>
-    {
-        public Undirected(IEqualityComparer<TVertex> vertexComparer)
-        {
-            if (vertexComparer == null)
-                throw new ArgumentNullException(nameof(vertexComparer));
-
-            m_VertexComparer = vertexComparer;
-        }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IEqualityComparer<TVertex> m_VertexComparer;
 
         // Needed for a debug view.
         public IEqualityComparer<TVertex> VertexComparer => m_VertexComparer;
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly IEqualityComparer<TVertex> m_VertexComparer = vertexComparer;
+    }
+
+    public sealed class Undirected<TVertex>(IEqualityComparer<TVertex> vertexComparer) :
+        IEqualityComparer<GraphEdge<TVertex>>
+    {
         public bool Equals(GraphEdge<TVertex> x, GraphEdge<TVertex> y) =>
             m_VertexComparer.Equals(x.From, y.From) && m_VertexComparer.Equals(x.To, y.To) ||   // direct (from, to) == (from, to)
             m_VertexComparer.Equals(x.To, y.From) && m_VertexComparer.Equals(x.From, y.To);     // reverse (from, to) == (to, from)
 
-        public int GetHashCode([DisallowNull] GraphEdge<TVertex> obj)
-        {
-            var from = obj.From;
-            var to = obj.To;
-
-            return
-                (from != null ? m_VertexComparer.GetHashCode(from) : 0) ^
-                (to != null ? m_VertexComparer.GetHashCode(to) : 0);
-        }
+        public int GetHashCode([DisallowNull] GraphEdge<TVertex> obj) =>
+            // An associative combining operation should be used here
+            // because From and To values can be reversed.
+            (obj.From is not null and var from ? m_VertexComparer.GetHashCode(from) : 0) ^
+            (obj.To is not null and var to ? m_VertexComparer.GetHashCode(to) : 0);
 
         public override bool Equals(object? obj) =>
-            obj is GraphEdgeEqualityComparer<TVertex>.Undirected other &&
+            obj is Undirected<TVertex> other &&
             m_VertexComparer.Equals(other.m_VertexComparer);
 
         public override int GetHashCode() => m_VertexComparer.GetHashCode() ^ 37;
+
+        // Needed for a debug view.
+        public IEqualityComparer<TVertex> VertexComparer => m_VertexComparer;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly IEqualityComparer<TVertex> m_VertexComparer = vertexComparer;
     }
 }
