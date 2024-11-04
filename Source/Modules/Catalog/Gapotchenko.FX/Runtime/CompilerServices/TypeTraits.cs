@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Runtime.CompilerServices;
 
 /// <summary>
-/// Provides a quick strongly-typed access to reflection traits of type <typeparamref name="T"/>.
+/// Provides strongly typed access to reflection traits of <typeparamref name="T"/> type.
 /// </summary>
 /// <typeparam name="T">Type to provide the traits for.</typeparam>
 public static class TypeTraits<T>
