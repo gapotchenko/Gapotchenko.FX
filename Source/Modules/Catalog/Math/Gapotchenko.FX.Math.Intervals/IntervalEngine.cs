@@ -96,13 +96,6 @@ static class IntervalEngine
         comparer.Compare(interval.From.Value, interval.To.Value) == 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsDegenerate<TInterval, TBound>(in TInterval interval, IEqualityComparer<TBound> comparer)
-        where TInterval : IIntervalOperations<TBound> =>
-        interval.From.Kind == IntervalBoundaryKind.Inclusive &&
-        interval.To.Kind == IntervalBoundaryKind.Inclusive &&
-        comparer.Equals(interval.From.Value, interval.To.Value);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Contains<TInterval, TBound>(in TInterval interval, TBound value, IComparer<TBound> comparer)
         where TInterval : IIntervalOperations<TBound> =>
         CompareBoundaries(BoundaryDirection.From, interval.From, value, comparer) <= 0 &&
@@ -364,7 +357,7 @@ static class IntervalEngine
                         if (allowedMinimum.HasValue && comparer.Compare(value, allowedMinimum.Value) < 0)
                         {
                             // Convergence is impossible.
-                            // The clamped value cannot be represented by TValue type.
+                            // The clamped value cannot be represented by the TValue type.
                             return default;
                         }
                     }

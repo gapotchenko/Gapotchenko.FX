@@ -3,26 +3,21 @@
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
     <PackageDescription>Provides data structures and primitives for working with intervals.</PackageDescription>
-    <NoWarn>$(NoWarn),GPFX0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageTag Include="interval" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.Interval" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.ValueInterval" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.Interval&lt;T&gt;" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.ValueInterval&lt;T&gt;" />
   </ItemGroup>
 
   <PropertyGroup>
     <AnalysisMode>All</AnalysisMode>
+    <NoWarn>$(NoWarn),GPFX0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <Using Include="System.Numerics" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.Interval&lt;T&gt;" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.ValueInterval&lt;T&gt;" />
   </ItemGroup>
 
   <ItemGroup>

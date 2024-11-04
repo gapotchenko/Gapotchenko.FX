@@ -8,6 +8,9 @@ namespace Gapotchenko.FX.Math.Intervals;
 
 partial class IntervalExtensions
 {
+    // We provide several overloads for widely used types to compensate for the lack of
+    // System.Numerics.IBinaryInteger<T> interface in earlier .NET versions.
+
     #region Int32
 
     /// <summary>

@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static partial class BinaryIntegerIntervalExtensions
 {
-    // This is a separate class to allow automatic overload selection.
+    // This is a separate class to allow an automatic method overload resolution.
 
     /// <inheritdoc cref="IntervalExtensions.Clamp(IInterval{int}, int)"/>
     /// <typeparam name="T">The type of value to clamp.</typeparam>

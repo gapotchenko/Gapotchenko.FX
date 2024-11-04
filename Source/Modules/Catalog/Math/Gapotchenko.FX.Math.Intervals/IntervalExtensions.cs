@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.Math.Intervals;
 
 /// <summary>
-/// Extension methods for <see cref="IInterval{T}"/>.
+/// Provides extension methods for types implementing <see cref="IInterval{T}"/> interface.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static partial class IntervalExtensions

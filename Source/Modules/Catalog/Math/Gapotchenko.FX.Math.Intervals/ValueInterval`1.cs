@@ -102,7 +102,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     public bool IsInfinite => IntervalEngine.IsInfinite<ValueInterval<T>, T>(this);
 
     /// <inheritdoc/>
-    public bool IsDegenerate => IntervalEngine.IsDegenerate(this, EqualityComparer<T>.Default);
+    public bool IsDegenerate => IntervalEngine.IsDegenerate(this, Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool Contains(T value) => IntervalEngine.Contains(this, value, Comparer<T>.Default);
