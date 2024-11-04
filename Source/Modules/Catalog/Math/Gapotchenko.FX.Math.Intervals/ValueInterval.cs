@@ -284,8 +284,7 @@ public static class ValueInterval
             IntervalBoundary.Exclusive(value));
 
     /// <summary>
-    /// Returns an empty <see cref="ValueInterval{T}"/>:
-    /// <c>∅</c>.
+    /// Returns an empty <see cref="ValueInterval{T}"/>, <c>∅</c>.
     /// </summary>
     public static ValueInterval<T> Empty<T>() where T : IEquatable<T>, IComparable<T> =>
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -293,8 +292,7 @@ public static class ValueInterval
 #pragma warning restore CS0618 // Type or member is obsolete
 
     /// <summary>
-    /// Returns an infinite <see cref="ValueInterval{T}"/>:
-    /// <c>(-∞,∞)</c>.
+    /// Returns an infinite <see cref="ValueInterval{T}"/>, <c>(-∞,∞)</c>.
     /// </summary>
     public static ValueInterval<T> Infinite<T>() where T : IEquatable<T>, IComparable<T> =>
         ValueInterval<T>.Infinite;
