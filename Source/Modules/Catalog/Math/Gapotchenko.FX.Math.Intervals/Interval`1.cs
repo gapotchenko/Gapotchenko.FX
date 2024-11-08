@@ -55,8 +55,11 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
     /// or <see langword="null"/> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
     /// </param>
+    /// <exception cref="ArgumentException">If one interval boundary is empty, another should be empty too.</exception>
     public Interval(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer = null)
     {
+        IntervalEngine.ValidateBoundaries(from, to);
+
         From = from;
         To = to;
 
@@ -64,7 +67,7 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     }
 
 #pragma warning disable CA1000 // Do not declare static members on generic types
-    /// <inheritdoc cref="Interval.Empty{T}"/>
+    /// <inheritdoc cref="Interval.Empty{T}()"/>
     [Obsolete(
         "Use Interval.Empty<T>() method instead because this method is a part of Gapotchenko.FX infrastructure and should not be used directly."
 #if NET5_0_OR_GREATER
@@ -212,7 +215,7 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
 
     IInterval<T> IIntervalOperations<T>.Union(IInterval<T> other) => Union<IIntervalOperations<T>>(other);
 
-    Interval<T> Construct(IntervalBoundary<T> from, IntervalBoundary<T> to) => new(from, to, m_Comparer);
+    Interval<T> Construct(in IntervalBoundary<T> from, in IntervalBoundary<T> to) => new(from, to, m_Comparer);
 
     bool IsThis<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         !TypeTraits<TOther>.IsValueType &&

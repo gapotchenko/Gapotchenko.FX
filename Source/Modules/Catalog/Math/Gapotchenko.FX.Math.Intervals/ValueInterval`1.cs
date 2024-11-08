@@ -46,8 +46,11 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// The right boundary of the interval.
     /// Represents a boundary the interval ends with.
     /// </param>
+    /// <exception cref="ArgumentException">If one interval boundary is empty, another should be empty too.</exception>
     public ValueInterval(IntervalBoundary<T> from, IntervalBoundary<T> to)
     {
+        IntervalEngine.ValidateBoundaries(from, to);
+
         From = from;
         To = to;
     }
@@ -188,7 +191,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
 
     IInterval<T> IIntervalOperations<T>.Union(IInterval<T> other) => Union<IIntervalOperations<T>>(other);
 
-    static ValueInterval<T> Construct(IntervalBoundary<T> from, IntervalBoundary<T> to) => new(from, to);
+    static ValueInterval<T> Construct(in IntervalBoundary<T> from, in IntervalBoundary<T> to) => new(from, to);
 
     /// <inheritdoc/>
     public bool Overlaps(IInterval<T> other) => Overlaps<IInterval<T>>(other);

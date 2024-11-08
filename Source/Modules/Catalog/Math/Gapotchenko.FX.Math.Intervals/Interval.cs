@@ -358,14 +358,48 @@ public static class Interval
     /// Returns an empty <see cref="Interval{T}"/>:
     /// <c>∅</c>.
     /// </summary>
+    /// <returns>The instance of the empty <see cref="Interval{T}"/>.</returns>
     public static Interval<T> Empty<T>() =>
 #pragma warning disable CS0618 // Type or member is obsolete
         Interval<T>.Empty;
 #pragma warning restore CS0618 // Type or member is obsolete
 
     /// <summary>
+    /// Returns an empty <see cref="Interval{T}"/> <c>∅</c>
+    /// using the specified comparer.
+    /// </summary>
+    /// <param name="comparer">
+    /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
+    /// or <see langword="null"/> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
+    /// </param>
+    /// <returns>An instance of the empty <see cref="Interval{T}"/>.</returns>
+    public static Interval<T> Empty<T>(IComparer<T>? comparer) =>
+        IsDefaultComparer<T>(comparer) ?
+            Empty<T>() :
+            new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty, comparer);
+
+    /// <summary>
     /// Returns an infinite <see cref="Interval{T}"/>:
     /// <c>(-∞,∞)</c>.
     /// </summary>
+    /// <returns>The instance of the infinite <see cref="Interval{T}"/>.</returns>
     public static Interval<T> Infinite<T>() => Interval<T>.Infinite;
+
+    /// <summary>
+    /// Returns an infinite <see cref="Interval{T}"/> <c>(-∞,∞)</c>
+    /// using the specified comparer.
+    /// </summary>
+    /// <param name="comparer">
+    /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
+    /// or <see langword="null"/> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
+    /// </param>
+    /// <returns>An instance of the infinite <see cref="Interval{T}"/>.</returns>
+    public static Interval<T> Infinite<T>(IComparer<T>? comparer) =>
+        IsDefaultComparer<T>(comparer) ?
+            Infinite<T>() :
+            new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity, comparer);
+
+    static bool IsDefaultComparer<T>([NotNullWhen(false)] IComparer<T>? comparer) =>
+        comparer is null ||
+        comparer.Equals(Comparer<T>.Default);
 }
