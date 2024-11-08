@@ -148,26 +148,26 @@ PM> Install-Package Gapotchenko.FX.Runtime.CompilerServices.Intrinsics
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
-- [Gapotchenko.FX](../Gapotchenko.FX)
-- [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
-- [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
-- [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
-- [Gapotchenko.FX.Data](../Data/Encoding/Gapotchenko.FX.Data.Encoding)
-- [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
-- [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
-- [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
-- [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
-- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
-- [Gapotchenko.FX.Numerics](../Gapotchenko.FX.Numerics) ✱
-- [Gapotchenko.FX.Reflection.Loader](../Gapotchenko.FX.Reflection.Loader) ✱
-- &#x27B4; [Gapotchenko.FX.Runtime.CompilerServices.Intrinsics](../Gapotchenko.FX.Runtime.CompilerServices.Intrinsics) ✱✱
-- [Gapotchenko.FX.Runtime.InteropServices](../Gapotchenko.FX.Runtime.InteropServices) ✱✱
-- [Gapotchenko.FX.Security.Cryptography](../Gapotchenko.FX.Security.Cryptography)
-- [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
-- [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
-- [Gapotchenko.FX.ValueTuple](../Gapotchenko.FX.ValueTuple)
+- [Gapotchenko.FX](../../Gapotchenko.FX#readme)
+- [Gapotchenko.FX.AppModel.Information](../../AppModel/Gapotchenko.FX.AppModel.Information#readme)
+- [Gapotchenko.FX.Collections](../../Gapotchenko.FX.Collections#readme)
+- [Gapotchenko.FX.Console](../../Gapotchenko.FX.Console#readme)
+- [Gapotchenko.FX.Data](../../Data/Encoding/Gapotchenko.FX.Data.Encoding#readme)
+- [Gapotchenko.FX.Diagnostics](../../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
+- [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO#readme)
+- [Gapotchenko.FX.Linq](../../Linq/Gapotchenko.FX.Linq#readme)
+- [Gapotchenko.FX.Math](../../Math/Gapotchenko.FX.Math#readme)
+- [Gapotchenko.FX.Memory](../../Gapotchenko.FX.Memory#readme)
+- [Gapotchenko.FX.Numerics](../../Gapotchenko.FX.Numerics#readme) ✱
+- [Gapotchenko.FX.Reflection.Loader](../../Reflection/Gapotchenko.FX.Reflection.Loader#readme) ✱
+- &#x27B4; [Gapotchenko.FX.Runtime.CompilerServices.Intrinsics](../Gapotchenko.FX.Runtime.CompilerServices.Intrinsics#readme) ✱✱
+- [Gapotchenko.FX.Runtime.InteropServices](../Gapotchenko.FX.Runtime.InteropServices#readme) ✱
+- [Gapotchenko.FX.Security.Cryptography](../../Security/Gapotchenko.FX.Security.Cryptography#readme)
+- [Gapotchenko.FX.Text](../../Gapotchenko.FX.Text#readme)
+- [Gapotchenko.FX.Threading](../../Gapotchenko.FX.Threading#readme)
+- [Gapotchenko.FX.Tuples](../../Gapotchenko.FX.Tuples#readme)
 
 Symbol ✱ denotes an advanced module.  
 Symbol ✱✱ denotes an expert module.
 
-Or take a look at the [full list of modules](..#available-modules).
+Or take a look at the [full list of modules](../../../..#readme).
