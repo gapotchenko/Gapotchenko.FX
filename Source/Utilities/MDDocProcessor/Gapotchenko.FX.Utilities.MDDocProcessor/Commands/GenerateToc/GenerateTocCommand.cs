@@ -40,8 +40,8 @@ static class GenerateTocCommand
         Console.WriteLine();
         TocVisualizer.Visualize(catalog, Console.Out);
 
-        //Console.WriteLine();
-        //ProcessProjects(toc);
+        Console.WriteLine();
+        ProcessProjects(toc);
 
         Console.WriteLine();
         ProcessCatalogs(toc);
