@@ -19,6 +19,7 @@ using Gapotchenko.FX.Math.Intervals;
 // The formal interval representation is [13,19],
 // where '[' denotes the start of the interval (inclusive),
 // and ']' denotes the end of the interval (inclusive).
+
 var teenagers = Interval.Inclusive(13, 19);
 ```
 
@@ -31,6 +32,7 @@ var age = int.Parse(Console.ReadLine());
 // Everyone of an age between 13 and 19 years (inclusive) is a teenager.
 // Using the interval notation, this can be stated as: age ∈ [13,19],
 // where '∈' symbol denotes the "is an element of" operation,
+
 if (teenagers.Contains(age))
     Console.WriteLine("Congrats, you are a teenager.");
 else
@@ -78,7 +80,7 @@ For example, `ValueInterval<T>` cannot use a custom `System.IComparer<T>`, and t
 This is not an obstacle for most specializing types, but still this is a formal restriction that may affect your choice in favor of `Interval<T>`.
 
 Another scenario where you may prefer `Interval<T>` type better is when you need to pass it as a reference to many places in code.
-This may save some CPU time and memory in cases where `T` type is sufficiently large because passing by reference avoids copying.
+This may save some CPU time and memory in cases where `T` type is sufficiently large because passing the interval by reference avoids copying.
 
 ## Usage
 
