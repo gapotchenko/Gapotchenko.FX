@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -11,6 +12,14 @@ namespace Gapotchenko.FX.Math.Intervals;
 
 static class IntervalEngine
 {
+    /// <exception cref="ArgumentException">If one interval boundary is empty, another should be empty too.</exception>
+    [StackTraceHidden]
+    public static void ValidateBoundaries<TBound>(in IntervalBoundary<TBound> from, in IntervalBoundary<TBound> to)
+    {
+        if (from.Kind is IntervalBoundaryKind.Empty != to.Kind is IntervalBoundaryKind.Empty)
+            throw new ArgumentException("If one interval boundary is empty, another should be empty too.");
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsBounded<TInterval, TBound>(in TInterval interval) where TInterval : IIntervalOperations<TBound> =>
         !interval.From.IsInfinity &&
@@ -37,8 +46,8 @@ static class IntervalEngine
         interval.To.Kind == IntervalBoundaryKind.Exclusive;
 
     public delegate TInterval Constructor<out TInterval, TBound>(
-        IntervalBoundary<TBound> from,
-        IntervalBoundary<TBound> to)
+        in IntervalBoundary<TBound> from,
+        in IntervalBoundary<TBound> to)
         where TInterval : IIntervalOperations<TBound>;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -263,6 +272,10 @@ static class IntervalEngine
     }
 
     public static string ToString<TInterval, TBound>(in TInterval interval)
+        where TInterval : IIntervalOperations<TBound> =>
+        ToStringCore<TInterval, TBound>(interval, "{}", "inf");
+
+    static string ToStringCore<TInterval, TBound>(in TInterval interval, string emptySymbol, string infinitySymbol)
         where TInterval : IIntervalOperations<TBound>
     {
         var sb = new StringBuilder();
@@ -272,9 +285,9 @@ static class IntervalEngine
         else
             sb.Append('(');
 
-        AppendBoundary(sb, interval.From);
+        AppendBoundary(sb, interval.From, emptySymbol, infinitySymbol);
         sb.Append(',');
-        AppendBoundary(sb, interval.To);
+        AppendBoundary(sb, interval.To, emptySymbol, infinitySymbol);
 
         if (interval.To.Kind == IntervalBoundaryKind.Inclusive)
             sb.Append(']');
@@ -283,18 +296,22 @@ static class IntervalEngine
 
         return sb.ToString();
 
-        static void AppendBoundary(StringBuilder sb, in IntervalBoundary<TBound> boundary)
+        static void AppendBoundary(
+            StringBuilder sb,
+            in IntervalBoundary<TBound> boundary,
+            string emptySymbol,
+            string infinitySymbol)
         {
             switch (boundary.Kind)
             {
                 case IntervalBoundaryKind.Empty:
-                    sb.Append("{}"); // ∅
+                    sb.Append(emptySymbol); // ∅
                     break;
                 case IntervalBoundaryKind.NegativeInfinity:
-                    sb.Append("-inf"); // -∞
+                    sb.Append('-').Append(infinitySymbol); // -∞
                     break;
                 case IntervalBoundaryKind.PositiveInfinity:
-                    sb.Append("+inf"); // +∞
+                    sb.Append(infinitySymbol); // ∞
                     break;
                 default:
                     sb.Append(boundary.Value);
