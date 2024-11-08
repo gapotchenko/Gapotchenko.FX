@@ -9,7 +9,7 @@ Interval is a mathematical structure that defines a range of values in a unified
 ## Interval&lt;T&gt;
 
 `Interval<T>` type represents a continuous range of values.
-For example, a human age interval can be defined as:
+For example, a human age interval for teenagers can be defined as:
 
 ``` C#
 using Gapotchenko.FX.Math.Intervals;
@@ -30,7 +30,7 @@ var age = int.Parse(Console.ReadLine());
 
 // Everyone of an age between 13 and 19 years (inclusive) is a teenager.
 // Using the interval notation, this can be stated as: age ∈ [13,19],
-// where '∈' symbol denotes the "is an element of" operation,
+// where '∈' symbol denotes the "is an element of" operation.
 if (teenagers.Contains(age))
     Console.WriteLine("Congrats, you are a teenager.");
 else
@@ -169,20 +169,23 @@ There are a few special intervals readily available for use:
 
 ``` C#
 // An empty interval ∅
-interval = Intrval.Empty<int>();
+interval = Interval.Empty<int>();
 
 // An infinite interval (-∞,∞)
-interval = Intrval.Infinite<int>();
+interval = Interval.Infinite<int>();
+
+// A degenerate interval [10;10]
+interval = Interval.Degenerate(10);
 ```
 
 ## ValueInterval&lt;T&gt;
 
 `ValueInterval<T>` type provides a similar functionality to `Interval<T>` but it is a structure in terms of .NET type system, while `Interval<T>` is a class.
-The difference is that `ValueInterval<T>` can be allocated on stack without involving expensive GC memory allocations, also it has tinier memory footprint.
+The difference is that `ValueInterval<T>` can be allocated on stack without involving expensive GC memory operations, also it has tinier memory footprint.
 
 All in all, `ValueInterval<T>` is the preferred interval type to use.
 Being totally transparent and interchangeable with `Interval<T>`, it comes with certain restrictions.
-For example, `ValueInterval<T>` cannot use a custom `System.IComparer<T>`, and thus it requires `T` type to implement `System.IComparable<T>` interface.
+For example, `ValueInterval<T>` cannot use a custom `System.IComparer<T>`, and thus it requires `T` type to always implement `System.IComparable<T>` interface.
 This is not an obstacle for most specializing types, but this is a formal restriction that may affect your choice in favor of `Interval<T>`.
 
 Another scenario where you may prefer `Interval<T>` type better is when you need to pass it as a reference to many places in code.
