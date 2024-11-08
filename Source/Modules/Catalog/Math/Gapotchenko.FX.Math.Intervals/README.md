@@ -106,7 +106,7 @@ The snippet produces the following output:
 Adults and teenagers have an age of [13,inf).
 ```
 
-Note the `[13,inf)` interval string in the output.
+Note the `[13,inf)` interval string in the output above.
 This is the ASCII variant of a formal `[13,∞)` notation.
 The ASCII notation is produced by `Interval<T>.ToString()` method by default.
 If you want the formal Unicode notation, you can pass `U` format specifier as in `Interval<T>.ToString("U")` method call:
@@ -177,7 +177,7 @@ interval = Intrval.Infinite<int>();
 
 ## ValueInterval&lt;T&gt;
 
-`ValueInterval<T>` type provides a similar functionality as `Interval<T>` but it is a structure in terms of .NET type system, while `Interval<T>` is a class.
+`ValueInterval<T>` type provides a similar functionality to `Interval<T>` but it is a structure in terms of .NET type system, while `Interval<T>` is a class.
 The difference is that `ValueInterval<T>` can be allocated on stack without involving expensive GC memory allocations, also it has tinier memory footprint.
 
 All in all, `ValueInterval<T>` is the preferred interval type to use.
