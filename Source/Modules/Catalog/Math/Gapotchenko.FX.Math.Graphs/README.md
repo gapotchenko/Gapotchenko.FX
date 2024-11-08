@@ -208,7 +208,7 @@ Objective: sort the sequence so that its elements are ordered according to their
 The resulting sequence should have a minimal edit distance to the original one.
 In other words, sequence should be topologically sorted while preserving the original order of elements whenever it is possible.
 
-`Gapotchenko.FX.Math.Graphs` provides an extension method for `IEnumerable<T>` that allows to achieve that:
+`Gapotchenko.FX.Math.Graphs` module provides an extension method for `IEnumerable<T>` that allows to achieve that:
 
 ``` C#
 using Gapotchenko.FX.Math.Graphs;
