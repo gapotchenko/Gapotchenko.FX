@@ -11,6 +11,7 @@ The module provides extended math primitives.
 `MathEx` is a class provided by `Gapotchenko.FX.Math`.
 It offers extended mathematical functions,
 and serves as an addendum to a conventional `System.Math` class.
+Some functions provided by `MathEx` class are described below.
 
 ### Swap
 
@@ -20,7 +21,7 @@ The swap operation is a widely demanded primitive:
 Swap<T>(ref T val1, ref T val2)
 ```
 
-Its implementation is trivial, but was found highly desired during real-life coding sessions.
+Despite a trivial implementation, swap operation was found highly desirable during real-life coding sessions.
 `Swap` primitive allows to keep a mind of developer more focused on important things,
 instead of writing tedious code like:
 
@@ -36,23 +37,13 @@ For comparison, please take a look at a concise version of the same:
 MathEx.Swap(ref val1, ref val2);
 ```
 
-An immediate improvement in readability.
+The expression above gives an immediate improvement in readability.
 
-Note that some .NET languages have a built-in support for swap.
-For example, a modern C# code can swap `val1` and `val2` by using tuples, which is a highly recommended approach:
+Note that some .NET languages have a built-in support for swap operation.
+For example, a modern C# code can swap `val1` and `val2` values using tuples, which is a highly recommended approach:
 
 ``` C#
 (val1, val2) = (val2, val1);
-```
-
-However, if the code works with array indexers, a more efficient and concise approach is to still use `MathEx.Swap`:
-
-``` C#
-// Swapping with tuples is less efficient for arrays:
-(arr[val1], arr[val2]) = (arr[val2], arr[val1]);
-
-// Swapping with MathEx.Swap is more efficient for arrays:
-MathEx.Swap(ref arr[val1], ref arr[val2]);
 ```
 
 ### Min/Max for Three Values
@@ -78,7 +69,7 @@ Ever found yourself trying to find the maximum `System.DateTime` value? Or `Syst
 using Gapotchenko.FX.Math;
 
 var currentProgress = new DateTime(2012, 1, 1);
-var desiredProgress = new DateTime(2019, 1, 1);
+var desiredProgress = new DateTime(2025, 1, 1);
 
 var fxProgress = MathEx.Max(currentProgress, desiredProgress);
 Console.WriteLine(fxProgress);
