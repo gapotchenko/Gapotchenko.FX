@@ -4,11 +4,11 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.Intervals.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math.Intervals)
 
 The module provides data structures and primitives for working with [intervals](https://en.wikipedia.org/wiki/Interval_(mathematics)).
+Interval is a mathematical structure that defines a range of values in a unified and formalized way.
 
 ## Interval&lt;T&gt;
 
-Interval is a mathematical structure that defines a range of values in a unified and formalized way.
-`Interval<T>` type represents a continuous interval of values.
+`Interval<T>` type represents a continuous range of values.
 For example, a human age interval can be defined as:
 
 ``` C#
@@ -183,7 +183,7 @@ The difference is that `ValueInterval<T>` can be allocated on stack without invo
 All in all, `ValueInterval<T>` is the preferred interval type to use.
 Being totally transparent and interchangeable with `Interval<T>`, it comes with certain restrictions.
 For example, `ValueInterval<T>` cannot use a custom `System.IComparer<T>`, and thus it requires `T` type to implement `System.IComparable<T>` interface.
-This is not an obstacle for most specializing types, but still this is a formal restriction that may affect your choice in favor of `Interval<T>`.
+This is not an obstacle for most specializing types, but this is a formal restriction that may affect your choice in favor of `Interval<T>`.
 
 Another scenario where you may prefer `Interval<T>` type better is when you need to pass it as a reference to many places in code.
 This may save some CPU time and memory in cases where `T` type is sufficiently large because passing the interval by reference avoids copying.
