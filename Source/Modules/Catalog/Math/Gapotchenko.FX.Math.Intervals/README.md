@@ -109,6 +109,19 @@ Adults and teenagers have an age of [13,inf).
 Note the `[13,inf)` interval string in the output.
 This is the ASCII variant of a formal `[13,∞)` notation.
 The ASCII notation is produced by `Interval<T>.ToString()` method by default.
+If you want the formal Unicode notation, you can pass `U` format specifier as in `Interval<T>.ToString("U")` method call:
+
+``` C#
+Console.WriteLine(
+    "Adults and teenagers have an age of {0:U}",
+    teenagers.Union(adults));
+```
+
+which produces the output using Unicode mathematical symbols:
+
+```
+Adults and teenagers have an age of [13,∞).
+```
 
 ## Interval Construction
 
