@@ -9,7 +9,7 @@ The module provides data structures and primitives for working with [intervals](
 
 Interval is a mathematical structure that defines a range of values in a unified and formalized way.
 `Interval<T>` type represents a continuous interval of values.
-For example, a teenager interval can be defined as:
+For example, a human age interval can be defined as:
 
 ``` C#
 using Gapotchenko.FX.Math.Intervals;
@@ -42,7 +42,7 @@ For example, it can be a `System.Version`, a `System.DateTime`, etc.
 
 ## Interval Operations
 
-The real power of intervals comes when you need to perform certain operations on intervals:
+The real power of intervals comes when you need to perform certain operations on them:
 
 ``` C#
 // Adults are people of 18 years or older
