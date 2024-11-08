@@ -169,13 +169,13 @@ There are a few special intervals readily available for use:
 
 ``` C#
 // An empty interval ∅
-interval = Interval.Empty<int>();
+interval = Interval.Empty<T>();
 
 // An infinite interval (-∞,∞)
-interval = Interval.Infinite<int>();
+interval = Interval.Infinite<T>();
 
-// A degenerate interval [10;10]
-interval = Interval.Degenerate(10);
+// A degenerate interval [x;x]
+interval = Interval.Degenerate(x);
 ```
 
 ## ValueInterval&lt;T&gt;
