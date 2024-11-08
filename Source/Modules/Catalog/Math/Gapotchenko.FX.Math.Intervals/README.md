@@ -1,5 +1,8 @@
 ﻿# Gapotchenko.FX.Math.Intervals
 
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.Intervals.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math.Intervals)
+
 The module provides data structures and primitives for working with [intervals](https://en.wikipedia.org/wiki/Interval_(mathematics)).
 
 ## Interval&lt;T&gt;
@@ -76,3 +79,35 @@ This is not an obstacle for most specializing types, but still this is a formal 
 
 Another scenario where you may prefer `Interval<T>` type better is when you need to pass it as a reference to many places in code.
 This may save some CPU time and memory in cases where `T` type is sufficiently large because passing by reference avoids copying.
+
+## Usage
+
+`Gapotchenko.FX.Math.Intervals` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Intervals):
+
+```
+PM> Install-Package Gapotchenko.FX.Math.Intervals
+```
+
+## Other Modules
+
+Let's continue with a look at some other modules provided by Gapotchenko.FX:
+
+- [Gapotchenko.FX](../Gapotchenko.FX)
+- [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information)
+- [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections)
+- [Gapotchenko.FX.Console](../Gapotchenko.FX.Console)
+- [Gapotchenko.FX.Data](../Data/Encoding/Gapotchenko.FX.Data.Encoding)
+- [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine)
+- [Gapotchenko.FX.IO](../Gapotchenko.FX.IO)
+- [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq)
+- [Gapotchenko.FX.Math](../Gapotchenko.FX.Math)
+  - [Gapotchenko.FX.Math.Combinatorics](../Gapotchenko.FX.Math.Combinatorics)
+  - [Gapotchenko.FX.Math.Geometry](../Gapotchenko.FX.Math.Geometry)
+  - &#x27B4; [Gapotchenko.FX.Math.Topology](../Gapotchenko.FX.Math.Topology)
+- [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory)
+- [Gapotchenko.FX.Security.Cryptography](../Gapotchenko.FX.Security.Cryptography)
+- [Gapotchenko.FX.Text](../Gapotchenko.FX.Text)
+- [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading)
+- [Gapotchenko.FX.ValueTuple](../Gapotchenko.FX.ValueTuple)
+
+Or look at the [full list of modules](..#available-modules).
