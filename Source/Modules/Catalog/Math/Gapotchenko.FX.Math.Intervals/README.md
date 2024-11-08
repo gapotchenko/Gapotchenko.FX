@@ -42,9 +42,15 @@ For example, it can be a `System.Version`, a `System.DateTime`, etc.
 
 ## Interval Operations
 
-The real power of intervals comes when you need to perform certain operations on them:
+The real power of intervals comes when you need to perform certain operations on them.
+
+### Overlap Detection
+
+`Interval<T>.Overlaps` function returns a Boolean value indicating whether a specified interval overlaps with another:
 
 ``` C#
+var teenagers = Interval.Inclusive(13, 19);
+
 // Adults are people of 18 years or older
 // (the exact age of adulthood depends on a jurisdiction but we use 18 for simplicity).
 // Using the interval notation, this is [18,∞),
@@ -54,17 +60,106 @@ var adults = Interval.FromInclusive(18);
 Console.Write(
     "Can teenagers be adults? The answer is {0}."
     teenagers.Overlaps(adults) ? "yes" : "no");
+```
+
+The snippet produces the following output:
+
+```
+Can teenagers be adults? The answer is yes.
+```
+
+### Intersection
+
+The intersection of two intervals returns an interval which has a range shared by both of them:
+
+``` C#
+var teenagers = Interval.Inclusive(13, 19);
+var adults = Interval.FromInclusive(18);
 
 Console.WriteLine(
     "Adult teenagers have an age of {0}",
     teenagers.Intersect(adults));
 ```
 
-The program produces the following output:
+The snippet produces the following output:
 
 ```
-Can teenagers be adults? The answer is yes.
 Adult teenagers have an age of [18,19].
+```
+
+### Union
+
+The union of two continuous intervals has the range that covers both of them:
+
+``` C#
+var teenagers = Interval.Inclusive(13, 19);
+var adults = Interval.FromInclusive(18);
+
+Console.WriteLine(
+    "Adults and teenagers have an age of {0}",
+    teenagers.Union(adults));
+```
+
+The snippet produces the following output:
+
+```
+Adults and teenagers have an age of [13,inf).
+```
+
+Note the `[13,inf)` interval string in the output.
+This is the ASCII variant of a formal `[13,∞)` notation.
+The ASCII notation is produced by `Interval<T>.ToString()` method by default.
+
+## Interval Construction
+
+To define an interval, you can use a set of predefined methods provided by the static `Interval` type:
+
+``` C#
+// [10,20]
+interval = Interval.Inclusive(10, 20);
+
+// (10,20)
+interval = Interval.Exclusive(10, 20);
+
+// [10,20)
+interval = Interval.InclusiveExclusive(10, 20);
+
+// (10,20]
+interval = Interval.ExclusiveInclusive(10, 20);
+
+// [10,∞)
+interval = Interval.FromInclusive(10);
+
+// (10,∞)
+interval = Interval.FromExclusive(10);
+
+// (-∞,10]
+interval = Interval.ToInclusive(10);
+
+// (-∞,10)
+interval = Interval.ToExclusive(10);
+```
+
+Or you can explicitly construct an interval by using an `Interval<T>` constructor and the notion of boundaries:
+
+``` C#
+// [10,20)
+interval = new Interval<int>(IntervalBoundary.Inclusive(10), IntervalBoundary.Exclusive(20));
+
+// (10,∞)
+interval = new Interval<int>(IntervalBoundary.Exclusive(10), IntervalBoundary.PositiveInfinity<int>());
+```
+
+## Special Intervals
+
+There are a few special intervals readily available for use:
+
+``` C#
+// An empty interval ∅
+interval = Intrval.Empty<int>();
+
+// An infinite interval (-∞,∞)
+interval = Intrval.Infinite<int>();
 ```
 
 ## ValueInterval&lt;T&gt;
