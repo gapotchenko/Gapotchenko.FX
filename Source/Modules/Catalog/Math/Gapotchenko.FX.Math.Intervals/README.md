@@ -19,20 +19,18 @@ using Gapotchenko.FX.Math.Intervals;
 // The formal interval representation is [13,19],
 // where '[' denotes the start of the interval (inclusive),
 // and ']' denotes the end of the interval (inclusive).
-
 var teenagers = Interval.Inclusive(13, 19);
 ```
 
 Given that range, it is now possible to do various operations:
 
-```
+``` C#
 Console.Write("Enter your age: ");
 var age = int.Parse(Console.ReadLine());
 
 // Everyone of an age between 13 and 19 years (inclusive) is a teenager.
 // Using the interval notation, this can be stated as: age ∈ [13,19],
 // where '∈' symbol denotes the "is an element of" operation,
-
 if (teenagers.Contains(age))
     Console.WriteLine("Congrats, you are a teenager.");
 else
