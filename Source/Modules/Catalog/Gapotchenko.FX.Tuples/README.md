@@ -36,12 +36,13 @@ One way to fix that is to manually create a custom `IEqualityComparer<(T1, T2)>`
 Another more simple way to solve the problem is to use `Gapotchenko.FX.Tuples.ValueTupleEqualityComparer` class to quickly create a specialized equality comparer that fits our needs:
 
 ``` C#
-var equalityComparer = ValueTupleEqualityComparer.Create<string, int>(
-    StringComparer.CurrentCultureIgnoreCase,
-    null);
+// Create a custom equality comparer for (string, int) value tuple.
+var comparer = ValueTupleEqualityComparer.Create<string, int>(
+    StringComparer.CurrentCultureIgnoreCase, // ignore case for strings
+    null); // use a default comparer for integers
 
 HashSet<(string, int)> database =
-    new(equalityComparer)
+    new(comparer)
     {
         ("Alice", 32),
         ("Bob", 40),
@@ -49,10 +50,13 @@ HashSet<(string, int)> database =
     };
 
 Console.WriteLine("The query result: {0}.", database.Contains(("john", 14)));
-// The query result: True.
 ```
 
-Now the code works as expected.
+Now the code works as expected:
+
+```
+The query result: True.
+```
 
 ## Equality Comparer for Tuples
 
