@@ -26,10 +26,12 @@ static class GenerateTocCommand
         var projects = EnumerateProjectDirectories(projectRootDirectory).Select(ProjectSerializer.ReadProject);
         var toc = new TocDocument();
 
+        var catalogDirectoryPath = Path.Combine(projectRootDirectory, "Modules");
+
         var catalog = new TocCatalogNode(
-            new Catalog("Gapotchenko.FX", projectRootDirectory)
+            new Catalog("Gapotchenko.FX", catalogDirectoryPath)
             {
-                ReadMeFilePath = Path.Combine(projectRootDirectory, "Modules", "README.md")
+                ReadMeFilePath = Path.Combine(catalogDirectoryPath, "README.md")
             });
         toc.Root.Children.Add(catalog);
         catalog.Parent = toc.Root;

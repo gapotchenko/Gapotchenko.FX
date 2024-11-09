@@ -89,4 +89,4 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading#readme)
 - &#x27B4; [Gapotchenko.FX.Tuples](.#readme)
 
-Or look at the [full list of modules](../../..#readme).
+Or look at the [full list of modules](../..#readme).

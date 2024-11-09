@@ -73,4 +73,4 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 Symbol ✱ denotes an advanced module.
 
-Or take a look at the [full list of modules](../../../../..#readme).
+Or take a look at the [full list of modules](../../../..#readme).
