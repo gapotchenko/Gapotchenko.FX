@@ -82,15 +82,15 @@ partial class ExecutionContextHelper
     /// that can be used to either commit or discard <see cref="AsyncLocal{T}"/> modifications
     /// performed by the specified <paramref name="action"/>.
     /// </returns>
-    public static AsyncLocalModificationOperation ModifyAsyncLocal(Action action) => new(action);
+    public static AsyncLocalModificationOperation ModifyAsyncLocalBy(Action action) => new(action);
 
     /// <returns>
     /// An <see cref="AsyncLocalModificationOperation{T}"/> instance
     /// that can be used to either commit or discard <see cref="AsyncLocal{T}"/> modifications
     /// performed by the specified <paramref name="action"/>.
     /// </returns>
-    /// <inheritdoc cref="ModifyAsyncLocal(Action)"/>
-    public static AsyncLocalModificationOperation<T> ModifyAsyncLocal<T>(Action<T> action) => new(action);
+    /// <inheritdoc cref="ModifyAsyncLocalBy(Action)"/>
+    public static AsyncLocalModificationOperation<T> ModifyAsyncLocalBy<T>(Action<T> action) => new(action);
 
     /// <summary>
     /// Synchronizes <see cref="AsyncLocal{T}"/> data access as follows:
@@ -108,7 +108,7 @@ partial class ExecutionContextHelper
         {
             Debug.Assert(
                 m_CurrentFlowState.Value is null,
-                $"{nameof(ModifyAsyncLocal)} does not support recursion. Before creating a new modification operation, the previously created operation must be committed, discarded, or disposed. Additionally, a call to {nameof(AsyncLocalBarrier)} may be required.");
+                $"{nameof(ModifyAsyncLocalBy)} does not support recursion. Before creating a new modification operation, the previously created operation must be committed, discarded, or disposed. Additionally, a call to {nameof(AsyncLocalBarrier)} may be required.");
 
             m_CurrentFlowState.Value = new(this, false);
         }
@@ -306,7 +306,7 @@ partial class ExecutionContextHelper
         /// <summary>
         /// Commits the changes.
         /// </summary>
-        public void Commit()
+        public void Apply()
         {
             ValidateCommit();
             DoCommit();
@@ -339,7 +339,7 @@ partial class ExecutionContextHelper
         /// Commits the changes.
         /// </summary>
         /// <param name="value">The value that will be passed to a state-modifying action.</param>
-        public void Commit(T value)
+        public void Apply(T value)
         {
             ValidateCommit();
             m_CommittedValue.Value = value;

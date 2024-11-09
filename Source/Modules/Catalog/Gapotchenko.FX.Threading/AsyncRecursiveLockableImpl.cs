@@ -104,14 +104,14 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) :
         if (!m_RecursionTracker.IsEntered)
         {
             var @this = this;
-            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(() => @this.m_RecursionTracker.EnterNoBarrier(recursionLevel));
+            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocalBy(() => @this.m_RecursionTracker.EnterNoBarrier(recursionLevel));
 
             async Task ExecuteAsync()
             {
                 using (asyncLocalChanges)
                 {
                     await @this.m_Lockable.EnterAsync(cancellationToken).ConfigureAwait(false);
-                    asyncLocalChanges.Commit();
+                    asyncLocalChanges.Apply();
                 }
             }
 
@@ -146,7 +146,7 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) :
     {
         if (!m_RecursionTracker.IsEntered)
         {
-            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocal(m_RecursionTracker.EnterNoBarrier);
+            var asyncLocalChanges = ExecutionContextHelper.ModifyAsyncLocalBy(m_RecursionTracker.EnterNoBarrier);
 
             async Task<bool> ExecuteAsync()
             {
@@ -154,7 +154,7 @@ readonly struct AsyncRecursiveLockableImpl<TLockable>(TLockable lockable) :
                 {
                     bool locked = await tryEnterFunc().ConfigureAwait(false);
                     if (locked)
-                        asyncLocalChanges.Commit();
+                        asyncLocalChanges.Apply();
                     return locked;
                 }
             }
