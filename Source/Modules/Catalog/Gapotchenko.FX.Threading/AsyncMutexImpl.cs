@@ -8,9 +8,6 @@ namespace Gapotchenko.FX.Threading;
 
 readonly struct AsyncMutexImpl : IAsyncMutex
 {
-    // The implementation is based on a semaphore.
-    readonly AsyncSemaphoreImpl m_Semaphore = new(1, 1);
-
     public AsyncMutexImpl()
     {
     }
@@ -64,6 +61,9 @@ readonly struct AsyncMutexImpl : IAsyncMutex
     }
 
     public readonly bool IsEntered => m_Semaphore.CurrentCount != 1;
+
+    // The implementation is based on a semaphore.
+    readonly AsyncSemaphoreImpl m_Semaphore = new(1, 1);
 
     bool ILockable.IsRecursive => false;
 }
