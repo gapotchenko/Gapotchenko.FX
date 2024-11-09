@@ -1,5 +1,4 @@
-﻿using Gapotchenko.FX.Utilities.MDDocProcessor.Framework;
-using Gapotchenko.FX.Utilities.MDDocProcessor.Model;
+﻿using Gapotchenko.FX.Utilities.MDDocProcessor.Model;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Visualization;
 
@@ -85,11 +84,15 @@ sealed class TocSerializer
                     if (effectiveProject != null)
                     {
                         string basePath =
-                            project?.ReadMeFilePath ??
-                            catalog?.ReadMeFilePath ??
+                            Path.GetDirectoryName(project?.ReadMeFilePath) ??
+                            Path.GetDirectoryName(catalog?.ReadMeFilePath) ??
                             throw new Exception("Cannot determine base path.");
 
-                        textWriter.Write(Util.MakeRelativePath(effectiveProject.DirectoryPath, basePath).Replace(Path.DirectorySeparatorChar, '/'));
+                        string path =
+                            Path.GetRelativePath(basePath, effectiveProject.DirectoryPath)
+                            .Replace(Path.DirectorySeparatorChar, '/');
+
+                        textWriter.Write(path);
                         textWriter.Write("#readme");
                     }
                     else
@@ -166,13 +169,12 @@ sealed class TocSerializer
             var catalog = m_RootNode?.Catalog?.Catalog;
             var project = m_ProjectNode?.Project;
 
-            if (catalog != null && project?.ReadMeFilePath != null)
+            if (catalog != null &&
+                Path.GetDirectoryName(project?.ReadMeFilePath) is not null and var basePath)
             {
-                string path = Path.TrimEndingDirectorySeparator(
-                    Util.MakeRelativePath(
-                        catalog.DirectoryPath + Path.DirectorySeparatorChar,
-                        project.ReadMeFilePath));
-                path = path.Replace(Path.DirectorySeparatorChar, '/');
+                string path =
+                    Path.GetRelativePath(basePath, catalog.DirectoryPath)
+                    .Replace(Path.DirectorySeparatorChar, '/');
 
                 if (complexityLegend)
                     textWriter.WriteLine("Or take a look at the [full list of modules]({0}#readme).", path);

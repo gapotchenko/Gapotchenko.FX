@@ -9,17 +9,8 @@ using System.Text.RegularExpressions;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe;
 
-sealed class MarkdownProcessor
+sealed class MarkdownProcessor(MarkdownDocument document, Uri baseUri)
 {
-    public MarkdownProcessor(MarkdownDocument document, Uri baseUri)
-    {
-        _Document = document;
-        _BaseUri = baseUri;
-    }
-
-    readonly MarkdownDocument _Document;
-    readonly Uri _BaseUri;
-
     public void Run()
     {
         _RemoveMainHeader();
@@ -32,31 +23,31 @@ sealed class MarkdownProcessor
 
         _PatchUris();
 
-        _ExtractDescription();
+        ExtractDescription();
     }
 
     void _ReLevelHeaders(int delta)
     {
-        foreach (var i in _Document.OfType<HeadingBlock>())
+        foreach (var i in document.OfType<HeadingBlock>())
             i.Level += delta;
     }
 
     void _RemoveMainHeader()
     {
-        var header = _Document.Where(x => x is HeadingBlock hb && hb.Level == 1).ScalarOrDefault();
-        if (header == null)
+        var header =
+            document.Where(x => x is HeadingBlock hb && hb.Level == 1).ScalarOrDefault() ??
             throw new Exception("Main header not found.");
-        _Document.Remove(header);
+
+        document.Remove(header);
     }
 
     void _RemoveShields()
     {
-        var links = _Document.Descendants().OfType<LinkInline>().Where(x => x.Url?.Contains("//img.shields.io/") == true).ToList();
+        var links = document.Descendants().OfType<LinkInline>().Where(x => x.Url?.Contains("//img.shields.io/") == true).ToList();
         foreach (var i in links)
         {
             var p = i.Parent;
-            if (p != null)
-                p.Remove();
+            p?.Remove();
         }
     }
 
@@ -66,8 +57,7 @@ sealed class MarkdownProcessor
         if (inline == null)
             return null;
 
-        var literal = inline.First() as LiteralInline;
-        if (literal == null)
+        if (inline.First() is not LiteralInline literal)
             return null;
 
         if (literal.NextSibling != null)
@@ -78,27 +68,27 @@ sealed class MarkdownProcessor
 
     bool _RemoveSection(string title, int level)
     {
-        var header = _Document
+        var header = document
             .OfType<HeadingBlock>()
             .Where(x => x.Level == level && _GetText(x) == title)
             .FirstOrDefault();
         if (header == null)
             return false;
 
-        var sectionBody = _Document
+        var sectionBody = document
             .SkipWhile(x => x != header)
             .TakeWhile(x => x == header || x is not HeadingBlock)
             .ToList();
 
         foreach (var i in sectionBody)
-            _Document.Remove(i);
+            document.Remove(i);
 
         return true;
     }
 
     void _PatchUris()
     {
-        foreach (var i in _Document.Descendants().OfType<LinkInline>())
+        foreach (var i in document.Descendants().OfType<LinkInline>())
         {
             if (i.Url == null)
                 continue;
@@ -117,7 +107,7 @@ sealed class MarkdownProcessor
 
     public Uri? TryMapUri(Uri uri, RepositoryUriUsage usage)
     {
-        var absoluteUri = new Uri(_BaseUri, uri);
+        var absoluteUri = new Uri(baseUri, uri);
         var newUri = RepositoryService.TryMapUri(absoluteUri, usage);
         if (newUri != null)
             return newUri;
@@ -125,15 +115,17 @@ sealed class MarkdownProcessor
         return null;
     }
 
-    string? _Description;
+    public string Description =>
+        m_Description ??
+        throw new InvalidOperationException("Description has not been extracted yet.");
 
-    public string Description => _Description ?? throw new InvalidOperationException("Description has not been extracted yet.");
+    string? m_Description;
 
-    void _ExtractDescription()
+    void ExtractDescription()
     {
         var tw = new StringWriter();
 
-        var elements = _Document.TakeWhile(x => x is not HeadingBlock).ToArray();
+        var elements = document.TakeWhile(x => x is not HeadingBlock).ToArray();
 
         var mdRenderer = new RoundtripRenderer(tw);
         foreach (var i in elements)
@@ -172,6 +164,6 @@ sealed class MarkdownProcessor
 
         text = se.ToString().Trim();
 
-        _Description = text;
+        m_Description = text;
     }
 }
