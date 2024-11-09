@@ -116,7 +116,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Data](../../../Encoding/Gapotchenko.FX.Data.Encoding#readme)
   - [Gapotchenko.FX.Data.Encoding](../../../Encoding/Gapotchenko.FX.Data.Encoding#readme)
   - [Gapotchenko.FX.Data.Integrity.Checksum](../Gapotchenko.FX.Data.Integrity.Checksum#readme)
-    - &#x27B4; [Gapotchenko.FX.Data.Integrity.Checksum.Crc8](../Gapotchenko.FX.Data.Integrity.Checksum.Crc8#readme)
+    - &#x27B4; [Gapotchenko.FX.Data.Integrity.Checksum.Crc8](.#readme)
     - [Gapotchenko.FX.Data.Integrity.Checksum.Crc16](../Gapotchenko.FX.Data.Integrity.Checksum.Crc16#readme)
     - [Gapotchenko.FX.Data.Integrity.Checksum.Crc32](../Gapotchenko.FX.Data.Integrity.Checksum.Crc32#readme)
 - [Gapotchenko.FX.Diagnostics](../../../../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)

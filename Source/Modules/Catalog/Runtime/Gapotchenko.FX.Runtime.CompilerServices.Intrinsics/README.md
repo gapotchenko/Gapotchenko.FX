@@ -160,7 +160,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Memory](../../Gapotchenko.FX.Memory#readme)
 - [Gapotchenko.FX.Numerics](../../Gapotchenko.FX.Numerics#readme) ✱
 - [Gapotchenko.FX.Reflection.Loader](../../Reflection/Gapotchenko.FX.Reflection.Loader#readme) ✱
-- &#x27B4; [Gapotchenko.FX.Runtime.CompilerServices.Intrinsics](../Gapotchenko.FX.Runtime.CompilerServices.Intrinsics#readme) ✱✱
+- &#x27B4; [Gapotchenko.FX.Runtime.CompilerServices.Intrinsics](.#readme) ✱✱
 - [Gapotchenko.FX.Runtime.InteropServices](../Gapotchenko.FX.Runtime.InteropServices#readme) ✱
 - [Gapotchenko.FX.Security.Cryptography](../../Security/Gapotchenko.FX.Security.Cryptography#readme)
 - [Gapotchenko.FX.Text](../../Gapotchenko.FX.Text#readme)

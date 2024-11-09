@@ -1,36 +1,20 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor.Framework;
 
 static class Util
 {
-    public static string MakeRelativePath(string path, string basePath)
+    [return: NotNullIfNotNull(nameof(path))]
+    public static string? MakeRelativePath(string? path, string? baseFilePath)
     {
         if (string.IsNullOrEmpty(path))
             return path;
 
-        var baseUri = new Uri(basePath);
-        var fullUri = new Uri(path);
+        var baseDirectoryPath = Path.GetDirectoryName(baseFilePath);
+        if (string.IsNullOrEmpty(baseDirectoryPath))
+            return path;
 
-        var relativeUri = baseUri.MakeRelativeUri(fullUri);
-
-        string relativePath;
-        if (relativeUri.IsAbsoluteUri)
-        {
-            relativePath = relativeUri.LocalPath;
-        }
-        else
-        {
-            // Uri's use forward slashes so convert back to backward slashes
-            relativePath = Uri.UnescapeDataString(relativeUri.ToString()).Replace('/', Path.DirectorySeparatorChar);
-        }
-
-        var relativePath2 = Path.GetRelativePath(Path.GetDirectoryName(basePath), path);
-
-        Debug.Assert(relativePath2 == relativePath);
-
-        return relativePath;
+        return Path.GetRelativePath(baseDirectoryPath, path);
     }
 
     public static void WriteAllText(string filePath, string text)

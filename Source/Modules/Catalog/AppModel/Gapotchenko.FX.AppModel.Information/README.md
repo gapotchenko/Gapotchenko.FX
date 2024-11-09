@@ -73,7 +73,7 @@ PM> Install-Package Gapotchenko.FX.AppModel.Information
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
 - [Gapotchenko.FX](../../Gapotchenko.FX#readme)
-- &#x27B4; [Gapotchenko.FX.AppModel.Information](../Gapotchenko.FX.AppModel.Information#readme)
+- &#x27B4; [Gapotchenko.FX.AppModel.Information](.#readme)
 - [Gapotchenko.FX.Collections](../../Gapotchenko.FX.Collections#readme)
 - [Gapotchenko.FX.Console](../../Gapotchenko.FX.Console#readme)
 - [Gapotchenko.FX.Data](../../Data/Encoding/Gapotchenko.FX.Data.Encoding#readme)

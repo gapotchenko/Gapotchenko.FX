@@ -57,7 +57,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Data](../../Encoding/Gapotchenko.FX.Data.Encoding#readme)
   - [Gapotchenko.FX.Data.Encoding](../../Encoding/Gapotchenko.FX.Data.Encoding#readme)
   - [Gapotchenko.FX.Data.Integrity.Checksum](../../Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum#readme)
-  - &#x27B4; [Gapotchenko.FX.Data.Linq](../Gapotchenko.FX.Data.Linq#readme) ✱
+  - &#x27B4; [Gapotchenko.FX.Data.Linq](.#readme) ✱
 - [Gapotchenko.FX.Diagnostics](../../../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
 - [Gapotchenko.FX.IO](../../../Gapotchenko.FX.IO#readme)
 - [Gapotchenko.FX.Linq](../../../Linq/Gapotchenko.FX.Linq#readme)

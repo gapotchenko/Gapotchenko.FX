@@ -87,6 +87,6 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Security.Cryptography](../Security/Gapotchenko.FX.Security.Cryptography#readme)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text#readme)
 - [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading#readme)
-- &#x27B4; [Gapotchenko.FX.Tuples](../Gapotchenko.FX.Tuples#readme)
+- &#x27B4; [Gapotchenko.FX.Tuples](.#readme)
 
 Or look at the [full list of modules](../../..#readme).

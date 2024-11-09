@@ -343,7 +343,7 @@ PM> Install-Package Gapotchenko.FX
 
 Let's continue with a look at some other modules provided by Gapotchenko.FX:
 
-- &#x27B4; [Gapotchenko.FX](../Gapotchenko.FX#readme)
+- &#x27B4; [Gapotchenko.FX](.#readme)
 - [Gapotchenko.FX.AppModel.Information](../AppModel/Gapotchenko.FX.AppModel.Information#readme)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections#readme)
 - [Gapotchenko.FX.Console](../Gapotchenko.FX.Console#readme)

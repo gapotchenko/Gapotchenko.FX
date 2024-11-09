@@ -136,7 +136,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Console](../../Gapotchenko.FX.Console#readme)
 - [Gapotchenko.FX.Data](../../Data/Encoding/Gapotchenko.FX.Data.Encoding#readme)
 - [Gapotchenko.FX.Diagnostics](#)
-  - &#x27B4; [Gapotchenko.FX.Diagnostics.CommandLine](../Gapotchenko.FX.Diagnostics.CommandLine#readme)
+  - &#x27B4; [Gapotchenko.FX.Diagnostics.CommandLine](.#readme)
   - [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process#readme)
   - [Gapotchenko.FX.Diagnostics.WebBrowser](../Gapotchenko.FX.Diagnostics.WebBrowser#readme)
 - [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO#readme)

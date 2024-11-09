@@ -123,7 +123,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Console](../../../Gapotchenko.FX.Console#readme)
 - [Gapotchenko.FX.Data](../Gapotchenko.FX.Data.Encoding#readme)
   - [Gapotchenko.FX.Data.Encoding](../Gapotchenko.FX.Data.Encoding#readme)
-    - &#x27B4; [Gapotchenko.FX.Data.Encoding.Base16](../Gapotchenko.FX.Data.Encoding.Base16#readme)
+    - &#x27B4; [Gapotchenko.FX.Data.Encoding.Base16](.#readme)
     - [Gapotchenko.FX.Data.Encoding.Base24](../Gapotchenko.FX.Data.Encoding.Base24#readme)
     - [Gapotchenko.FX.Data.Encoding.Base32](../Gapotchenko.FX.Data.Encoding.Base32#readme)
     - [Gapotchenko.FX.Data.Encoding.Base64](../Gapotchenko.FX.Data.Encoding.Base64#readme)

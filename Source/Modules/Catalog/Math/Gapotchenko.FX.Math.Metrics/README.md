@@ -136,7 +136,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
   - [Gapotchenko.FX.Math.Combinatorics](../Gapotchenko.FX.Math.Combinatorics#readme)
   - [Gapotchenko.FX.Math.Graphs](../Gapotchenko.FX.Math.Graphs#readme)
   - [Gapotchenko.FX.Math.Intervals](../Gapotchenko.FX.Math.Intervals#readme)
-  - &#x27B4; [Gapotchenko.FX.Math.Metrics](../Gapotchenko.FX.Math.Metrics#readme)
+  - &#x27B4; [Gapotchenko.FX.Math.Metrics](.#readme)
 - [Gapotchenko.FX.Memory](../../Gapotchenko.FX.Memory#readme)
 - [Gapotchenko.FX.Security.Cryptography](../../Security/Gapotchenko.FX.Security.Cryptography#readme)
 - [Gapotchenko.FX.Text](../../Gapotchenko.FX.Text#readme)

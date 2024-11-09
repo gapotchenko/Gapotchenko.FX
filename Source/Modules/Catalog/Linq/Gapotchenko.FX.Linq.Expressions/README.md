@@ -37,7 +37,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Diagnostics](../../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
 - [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO#readme)
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq#readme)
-  - &#x27B4; [Gapotchenko.FX.Linq.Expressions](../Gapotchenko.FX.Linq.Expressions#readme) ✱
+  - &#x27B4; [Gapotchenko.FX.Linq.Expressions](.#readme) ✱
 - [Gapotchenko.FX.Math](../../Math/Gapotchenko.FX.Math#readme)
 - [Gapotchenko.FX.Memory](../../Gapotchenko.FX.Memory#readme)
 - [Gapotchenko.FX.Numerics](../../Gapotchenko.FX.Numerics#readme) ✱

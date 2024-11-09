@@ -435,7 +435,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory#readme)
 - [Gapotchenko.FX.Security.Cryptography](../Security/Gapotchenko.FX.Security.Cryptography#readme)
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text#readme)
-- &#x27B4; [Gapotchenko.FX.Threading](../Gapotchenko.FX.Threading#readme)
+- &#x27B4; [Gapotchenko.FX.Threading](.#readme)
 - [Gapotchenko.FX.Tuples](../Gapotchenko.FX.Tuples#readme)
 
 Or look at the [full list of modules](../../..#readme).

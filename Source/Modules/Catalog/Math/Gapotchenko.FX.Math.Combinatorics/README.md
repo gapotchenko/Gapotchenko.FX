@@ -164,7 +164,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO#readme)
 - [Gapotchenko.FX.Linq](../../Linq/Gapotchenko.FX.Linq#readme)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math#readme)
-  - &#x27B4; [Gapotchenko.FX.Math.Combinatorics](../Gapotchenko.FX.Math.Combinatorics#readme)
+  - &#x27B4; [Gapotchenko.FX.Math.Combinatorics](.#readme)
   - [Gapotchenko.FX.Math.Graphs](../Gapotchenko.FX.Math.Graphs#readme)
   - [Gapotchenko.FX.Math.Intervals](../Gapotchenko.FX.Math.Intervals#readme)
   - [Gapotchenko.FX.Math.Metrics](../Gapotchenko.FX.Math.Metrics#readme)

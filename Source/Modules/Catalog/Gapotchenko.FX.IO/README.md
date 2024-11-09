@@ -207,7 +207,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Console](../Gapotchenko.FX.Console#readme)
 - [Gapotchenko.FX.Data](../Data/Encoding/Gapotchenko.FX.Data.Encoding#readme)
 - [Gapotchenko.FX.Diagnostics](../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
-- &#x27B4; [Gapotchenko.FX.IO](../Gapotchenko.FX.IO#readme)
+- &#x27B4; [Gapotchenko.FX.IO](.#readme)
 - [Gapotchenko.FX.Linq](../Linq/Gapotchenko.FX.Linq#readme)
 - [Gapotchenko.FX.Math](../Math/Gapotchenko.FX.Math#readme)
 - [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory#readme)
