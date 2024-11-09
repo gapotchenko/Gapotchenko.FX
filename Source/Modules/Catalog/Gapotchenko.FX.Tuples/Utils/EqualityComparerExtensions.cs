@@ -8,6 +8,6 @@ namespace Gapotchenko.FX.Tuples.Utils;
 
 static class EqualityComparerExtensions
 {
-    public static int GetNullSafeHashCode<T>(this IEqualityComparer<T> comparer, T value) =>
+    public static int GetNullableHashCode<T>(this IEqualityComparer<T> comparer, T value) =>
         value is null ? 0 : comparer.GetHashCode(value);
 }

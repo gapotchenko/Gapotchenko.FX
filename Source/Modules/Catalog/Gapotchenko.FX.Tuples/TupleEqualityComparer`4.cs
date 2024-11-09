@@ -30,10 +30,10 @@ sealed class TupleEqualityComparer<T1, T2, T3, T4>(
             throw new ArgumentNullException(nameof(obj));
 
         return HashCode.Combine(
-            m_Comparer1.GetNullSafeHashCode(obj.Item1),
-            m_Comparer2.GetNullSafeHashCode(obj.Item2),
-            m_Comparer3.GetNullSafeHashCode(obj.Item3),
-            m_Comparer4.GetNullSafeHashCode(obj.Item4));
+            m_Comparer1.GetNullableHashCode(obj.Item1),
+            m_Comparer2.GetNullableHashCode(obj.Item2),
+            m_Comparer3.GetNullableHashCode(obj.Item3),
+            m_Comparer4.GetNullableHashCode(obj.Item4));
     }
 
     readonly IEqualityComparer<T1> m_Comparer1 = comparer1 ?? EqualityComparer<T1>.Default;

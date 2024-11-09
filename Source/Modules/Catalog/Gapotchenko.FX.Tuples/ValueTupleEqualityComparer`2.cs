@@ -16,8 +16,8 @@ sealed class ValueTupleEqualityComparer<T1, T2>(IEqualityComparer<T1>? comparer1
 
     public int GetHashCode((T1, T2) obj) =>
         HashCode.Combine(
-            m_Comparer1.GetNullSafeHashCode(obj.Item1),
-            m_Comparer2.GetNullSafeHashCode(obj.Item2));
+            m_Comparer1.GetNullableHashCode(obj.Item1),
+            m_Comparer2.GetNullableHashCode(obj.Item2));
 
     readonly IEqualityComparer<T1> m_Comparer1 = comparer1 ?? EqualityComparer<T1>.Default;
     readonly IEqualityComparer<T2> m_Comparer2 = comparer2 ?? EqualityComparer<T2>.Default;

@@ -31,14 +31,14 @@ sealed class ValueTupleEqualityComparer<T1, T2, T3, T4, T5, T6, T7, T8>(
 
     public int GetHashCode((T1, T2, T3, T4, T5, T6, T7, T8) obj) =>
         HashCode.Combine(
-            m_Comparer1.GetNullSafeHashCode(obj.Item1),
-            m_Comparer2.GetNullSafeHashCode(obj.Item2),
-            m_Comparer3.GetNullSafeHashCode(obj.Item3),
-            m_Comparer4.GetNullSafeHashCode(obj.Item4),
-            m_Comparer5.GetNullSafeHashCode(obj.Item5),
-            m_Comparer6.GetNullSafeHashCode(obj.Item6),
-            m_Comparer7.GetNullSafeHashCode(obj.Item7),
-            m_Comparer8.GetNullSafeHashCode(obj.Item8));
+            m_Comparer1.GetNullableHashCode(obj.Item1),
+            m_Comparer2.GetNullableHashCode(obj.Item2),
+            m_Comparer3.GetNullableHashCode(obj.Item3),
+            m_Comparer4.GetNullableHashCode(obj.Item4),
+            m_Comparer5.GetNullableHashCode(obj.Item5),
+            m_Comparer6.GetNullableHashCode(obj.Item6),
+            m_Comparer7.GetNullableHashCode(obj.Item7),
+            m_Comparer8.GetNullableHashCode(obj.Item8));
 
     readonly IEqualityComparer<T1> m_Comparer1 = comparer1 ?? EqualityComparer<T1>.Default;
     readonly IEqualityComparer<T2> m_Comparer2 = comparer2 ?? EqualityComparer<T2>.Default;

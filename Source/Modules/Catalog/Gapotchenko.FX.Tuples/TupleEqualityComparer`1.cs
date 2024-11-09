@@ -21,7 +21,7 @@ sealed class TupleEqualityComparer<T1>(IEqualityComparer<T1>? comparer1) : IEqua
         if (obj is null)
             throw new ArgumentNullException(nameof(obj));
 
-        return m_Comparer1.GetNullSafeHashCode(obj.Item1);
+        return m_Comparer1.GetNullableHashCode(obj.Item1);
     }
 
     readonly IEqualityComparer<T1> m_Comparer1 = comparer1 ?? EqualityComparer<T1>.Default;
