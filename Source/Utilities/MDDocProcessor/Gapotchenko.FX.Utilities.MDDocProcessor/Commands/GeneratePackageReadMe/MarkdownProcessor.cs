@@ -13,26 +13,26 @@ sealed class MarkdownProcessor(MarkdownDocument document, Uri baseUri)
 {
     public void Run()
     {
-        _RemoveMainHeader();
-        _RemoveShields();
-        _ReLevelHeaders(-1);
+        RemoveMainHeader();
+        RemoveShields();
+        ReLevelHeaders(-1);
 
-        _RemoveSection("Supported Platforms", 1);
-        _RemoveSection("Usage", 1);
-        //_RemoveSection("Other Modules", 1);
+        RemoveSection("Supported Platforms", 1);
+        RemoveSection("Usage", 1);
+        //RemoveSection("Other Modules", 1);
 
-        _PatchUris();
+        PatchUris();
 
-        ExtractDescription();
+        m_Description = ExtractDescription();
     }
 
-    void _ReLevelHeaders(int delta)
+    void ReLevelHeaders(int delta)
     {
         foreach (var i in document.OfType<HeadingBlock>())
             i.Level += delta;
     }
 
-    void _RemoveMainHeader()
+    void RemoveMainHeader()
     {
         var header =
             document.Where(x => x is HeadingBlock hb && hb.Level == 1).ScalarOrDefault() ??
@@ -41,7 +41,7 @@ sealed class MarkdownProcessor(MarkdownDocument document, Uri baseUri)
         document.Remove(header);
     }
 
-    void _RemoveShields()
+    void RemoveShields()
     {
         var links = document.Descendants().OfType<LinkInline>().Where(x => x.Url?.Contains("//img.shields.io/") == true).ToList();
         foreach (var i in links)
@@ -51,26 +51,11 @@ sealed class MarkdownProcessor(MarkdownDocument document, Uri baseUri)
         }
     }
 
-    static string? _GetText(LeafBlock leafBlock)
-    {
-        var inline = leafBlock.Inline;
-        if (inline == null)
-            return null;
-
-        if (inline.First() is not LiteralInline literal)
-            return null;
-
-        if (literal.NextSibling != null)
-            return null;
-
-        return literal.ToString();
-    }
-
-    bool _RemoveSection(string title, int level)
+    bool RemoveSection(string title, int level)
     {
         var header = document
             .OfType<HeadingBlock>()
-            .Where(x => x.Level == level && _GetText(x) == title)
+            .Where(x => x.Level == level && GetText(x) == title)
             .FirstOrDefault();
         if (header == null)
             return false;
@@ -86,7 +71,22 @@ sealed class MarkdownProcessor(MarkdownDocument document, Uri baseUri)
         return true;
     }
 
-    void _PatchUris()
+    static string? GetText(LeafBlock leafBlock)
+    {
+        var inline = leafBlock.Inline;
+        if (inline == null)
+            return null;
+
+        if (inline.First() is not LiteralInline literal)
+            return null;
+
+        if (literal.NextSibling != null)
+            return null;
+
+        return literal.ToString();
+    }
+
+    void PatchUris()
     {
         foreach (var i in document.Descendants().OfType<LinkInline>())
         {
@@ -121,7 +121,7 @@ sealed class MarkdownProcessor(MarkdownDocument document, Uri baseUri)
 
     string? m_Description;
 
-    void ExtractDescription()
+    string ExtractDescription()
     {
         var tw = new StringWriter();
 
@@ -164,6 +164,6 @@ sealed class MarkdownProcessor(MarkdownDocument document, Uri baseUri)
 
         text = se.ToString().Trim();
 
-        m_Description = text;
+        return text;
     }
 }
