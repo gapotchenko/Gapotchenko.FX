@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.CommandLine" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.CommandLineBuilder" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageTag Include="command-line" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
+
+</Project>

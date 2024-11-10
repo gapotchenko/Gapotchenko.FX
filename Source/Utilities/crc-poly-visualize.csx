@@ -1,32 +1,29 @@
 #!/usr/bin/env dotnet-script
 
-using System.Globalization;
-using System.Text;
+// This utility is used for documentation of CRC checksums.
 
-if (Args.Count != 2)
+using System.Globalization;
+using System.Numerics;
+
+var args = Args;
+
+if (args.Count != 2)
 {
     Console.WriteLine("Usage: crc-poly-visualize <width> <poly>");
     return 1;
 }
 
-static int ParseInt32(ReadOnlySpan<char> s)
+static T ParseNumber<T>(ReadOnlySpan<char> s) where T : INumberBase<T>
 {
+    var provider = NumberFormatInfo.InvariantInfo;
     if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
-        return int.Parse(s[2..], NumberStyles.HexNumber);
+        return T.Parse(s[2..], NumberStyles.HexNumber, provider);
     else
-        return int.Parse(s);
+        return T.Parse(s, provider);
 }
 
-static ulong ParseUInt64(ReadOnlySpan<char> s)
-{
-    if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
-        return ulong.Parse(s[2..], NumberStyles.HexNumber);
-    else
-        return ulong.Parse(s);
-}
-
-var width = ParseInt32(Args[0]);
-var poly = ParseUInt64(Args[1]);
+var width = ParseNumber<int>(args[0]);
+var poly = ParseNumber<ulong>(args[1]);
 
 var sb = new StringBuilder();
 sb.Append($"x^{width}");

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="async;recursive;reentrant;threading;bridge;mutex;lock;monitor;event;condition variable" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Threading.TaskBridge" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncLock" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncMonitor" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <AnalysisMode>All</AnalysisMode>
+    <NoWarn>$(NoWarn),CA1001,CA1031,CA1033,CA2000,CA2002,CA5394</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
+
+</Project>

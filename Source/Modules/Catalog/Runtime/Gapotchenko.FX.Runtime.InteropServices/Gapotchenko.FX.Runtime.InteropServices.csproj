@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AnalysisMode>All</AnalysisMode>
+    <WarningsAsErrors>$(WarningsAsErrors),CA1307,CA1309,CA1310</WarningsAsErrors>
+    <NoWarn>$(NoWarn),CA1510,CA1720</NoWarn>
+  </PropertyGroup>
+
+  <Import Project="$(MasteringDir)\OOB\System.Buffers.props" />
+  <Import Project="$(MasteringDir)\OOB\System.Memory.props" />
+
+</Project>

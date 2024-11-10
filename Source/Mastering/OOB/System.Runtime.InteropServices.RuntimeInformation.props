@@ -1,0 +1,12 @@
+<Project>
+
+  <PropertyGroup>
+    <TFF_RUNTIME_INFORMATION_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '4.7.1')) ">true</TFF_RUNTIME_INFORMATION_OOB>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TFF_RUNTIME_INFORMATION_OOB)' == 'true' ">
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+    <MasteringFrameworkFeature Include="TFF_RUNTIME_INFORMATION;TFF_RUNTIME_INFORMATION_OOB" />
+  </ItemGroup>
+
+</Project>

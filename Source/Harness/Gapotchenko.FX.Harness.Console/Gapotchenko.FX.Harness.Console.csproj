@@ -2,9 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <Prefer32Bit>true</Prefer32Bit>
+    <TargetFrameworks>net472;net6.0;net7.0;net8.0;netcoreapp2.1</TargetFrameworks>
+    <!--<Prefer32Bit>true</Prefer32Bit>-->
     <Nullable>enable</Nullable>
+    <LangVersion>12.0</LangVersion>
+    <NoWarn>CS0162</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,15 +14,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc16\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.csproj" />
-    <ProjectReference Include="..\..\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc32\Gapotchenko.FX.Data.Integrity.Checksum.Crc32.csproj" />
-    <ProjectReference Include="..\..\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc8\Gapotchenko.FX.Data.Integrity.Checksum.Crc8.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.AppModel.Information\Gapotchenko.FX.AppModel.Information.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Console\Gapotchenko.FX.Console.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Math.Geometry\Gapotchenko.FX.Math.Geometry.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Math.Topology\Gapotchenko.FX.Math.Topology.csproj" />
-    <ProjectReference Include="..\..\Gapotchenko.FX.Reflection.Loader\Gapotchenko.FX.Reflection.Loader.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16\Gapotchenko.FX.Data.Encoding.Base16.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base32\Gapotchenko.FX.Data.Encoding.Base32.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base64\Gapotchenko.FX.Data.Encoding.Base64.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc16\Gapotchenko.FX.Data.Integrity.Checksum.Crc16.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc32\Gapotchenko.FX.Data.Integrity.Checksum.Crc32.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc8\Gapotchenko.FX.Data.Integrity.Checksum.Crc8.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\AppModel\Gapotchenko.FX.AppModel.Information\Gapotchenko.FX.AppModel.Information.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Console\Gapotchenko.FX.Console.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Intervals\Gapotchenko.FX.Math.Intervals.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Graphs\Gapotchenko.FX.Math.Graphs.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Metrics\Gapotchenko.FX.Math.Metrics.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Reflection\Gapotchenko.FX.Reflection.Loader\Gapotchenko.FX.Reflection.Loader.csproj" />
     <ProjectReference Include="..\..\Profiles\Gapotchenko.FX.Profiles.Core\Gapotchenko.FX.Profiles.Core.csproj" />
   </ItemGroup>
 

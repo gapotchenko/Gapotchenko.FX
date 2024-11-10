@@ -7,166 +7,163 @@ using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using System.Text.RegularExpressions;
 
-namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe
+namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe;
+
+sealed class MarkdownProcessor(MarkdownDocument document, Uri baseUri)
 {
-    sealed class MarkdownProcessor
+    public void Run()
     {
-        public MarkdownProcessor(MarkdownDocument document, Uri baseUri)
+        RemoveMainHeader();
+        RemoveShields();
+        ReLevelHeaders(-1);
+
+        RemoveSection("Supported Platforms", 1);
+        RemoveSection("Usage", 1);
+        //RemoveSection("Other Modules", 1);
+
+        PatchUris();
+
+        m_Description = ExtractDescription();
+    }
+
+    void ReLevelHeaders(int delta)
+    {
+        foreach (var i in document.OfType<HeadingBlock>())
+            i.Level += delta;
+    }
+
+    void RemoveMainHeader()
+    {
+        var header =
+            document.Where(x => x is HeadingBlock hb && hb.Level == 1).ScalarOrDefault() ??
+            throw new Exception("Main header not found.");
+
+        document.Remove(header);
+    }
+
+    void RemoveShields()
+    {
+        var links = document.Descendants().OfType<LinkInline>().Where(x => x.Url?.Contains("//img.shields.io/") == true).ToList();
+        foreach (var i in links)
         {
-            _Document = document;
-            _BaseUri = baseUri;
+            var p = i.Parent;
+            p?.Remove();
         }
+    }
 
-        readonly MarkdownDocument _Document;
-        readonly Uri _BaseUri;
+    bool RemoveSection(string title, int level)
+    {
+        var header = document
+            .OfType<HeadingBlock>()
+            .Where(x => x.Level == level && GetText(x) == title)
+            .FirstOrDefault();
+        if (header == null)
+            return false;
 
-        public void Run()
-        {
-            _RemoveMainHeader();
-            _RemoveShields();
-            _ReLevelHeaders(-1);
+        var sectionBody = document
+            .SkipWhile(x => x != header)
+            .TakeWhile(x => x == header || x is not HeadingBlock)
+            .ToList();
 
-            _RemoveSection("Supported Platforms", 1);
-            _RemoveSection("Usage", 1);
-            //_RemoveSection("Other Modules", 1);
+        foreach (var i in sectionBody)
+            document.Remove(i);
 
-            _PatchUris();
+        return true;
+    }
 
-            _ExtractDescription();
-        }
-
-        void _ReLevelHeaders(int delta)
-        {
-            foreach (var i in _Document.OfType<HeadingBlock>())
-                i.Level += delta;
-        }
-
-        void _RemoveMainHeader()
-        {
-            var header = _Document.Where(x => x is HeadingBlock hb && hb.Level == 1).ScalarOrDefault();
-            if (header == null)
-                throw new Exception("Main header not found.");
-            _Document.Remove(header);
-        }
-
-        void _RemoveShields()
-        {
-            var links = _Document.Descendants().OfType<LinkInline>().Where(x => x.Url?.Contains("//img.shields.io/") == true).ToList();
-            foreach (var i in links)
-            {
-                var p = i.Parent;
-                if (p != null)
-                    p.Remove();
-            }
-        }
-
-        static string? _GetText(LeafBlock leafBlock)
-        {
-            var inline = leafBlock.Inline;
-            if (inline == null)
-                return null;
-
-            var literal = inline.First() as LiteralInline;
-            if (literal == null)
-                return null;
-
-            if (literal.NextSibling != null)
-                return null;
-
-            return literal.ToString();
-        }
-
-        bool _RemoveSection(string title, int level)
-        {
-            var header = _Document
-                .OfType<HeadingBlock>()
-                .Where(x => x.Level == level && _GetText(x) == title)
-                .FirstOrDefault();
-            if (header == null)
-                return false;
-
-            var sectionBody = _Document
-                .SkipWhile(x => x != header)
-                .TakeWhile(x => x == header || x is not HeadingBlock)
-                .ToList();
-
-            foreach (var i in sectionBody)
-                _Document.Remove(i);
-
-            return true;
-        }
-
-        void _PatchUris()
-        {
-            foreach (var i in _Document.Descendants().OfType<LinkInline>())
-            {
-                if (i.Url == null)
-                    continue;
-
-                var uriUsage = i.IsImage ? RepositoryUriUsage.Resource : RepositoryUriUsage.Link;
-
-                var uri = new Uri(i.Url, UriKind.RelativeOrAbsolute);
-                uri = TryMapUri(uri, uriUsage);
-                if (uri != null)
-                {
-                    i.Url = uri.ToString();
-                    i.UnescapedUrl = new StringSlice(i.Url);
-                }
-            }
-        }
-
-        public Uri? TryMapUri(Uri uri, RepositoryUriUsage usage)
-        {
-            var absoluteUri = new Uri(_BaseUri, uri);
-            var newUri = RepositoryService.TryMapUri(absoluteUri, usage);
-            if (newUri != null)
-                return newUri;
-
+    static string? GetText(LeafBlock leafBlock)
+    {
+        var inline = leafBlock.Inline;
+        if (inline == null)
             return null;
-        }
 
-        string? _Description;
+        if (inline.First() is not LiteralInline literal)
+            return null;
 
-        public string Description => _Description ?? throw new InvalidOperationException("Description has not been extracted yet.");
+        if (literal.NextSibling != null)
+            return null;
 
-        void _ExtractDescription()
+        return literal.ToString();
+    }
+
+    void PatchUris()
+    {
+        foreach (var i in document.Descendants().OfType<LinkInline>())
         {
-            var tw = new StringWriter();
+            if (i.Url == null)
+                continue;
 
-            var elements = _Document.TakeWhile(x => x is not HeadingBlock).ToArray();
+            var uriUsage = i.IsImage ? RepositoryUriUsage.Resource : RepositoryUriUsage.Link;
 
-            var mdRenderer = new RoundtripRenderer(tw);
-            foreach (var i in elements)
-                mdRenderer.Write(i);
-
-            string text = tw.ToString().Trim();
-            var se = new StringEditor(text);
-
-            // Remove inline code decorations.
-            var regex = new Regex(
-                @"(?<start_tag>`).+?(?<end_tag>`)",
-                RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
-            foreach (Match m in regex.Matches(text))
+            var uri = new Uri(i.Url, UriKind.RelativeOrAbsolute);
+            uri = TryMapUri(uri, uriUsage);
+            if (uri != null)
             {
-                var g1 = m.Groups["start_tag"];
-                var g2 = m.Groups["end_tag"];
-                if (g1.Success && g2.Success)
-                {
-                    se.Remove(g1);
-                    se.Remove(g2);
-                }
+                i.Url = uri.ToString();
+                i.UnescapedUrl = new StringSlice(i.Url);
             }
-
-            // Remove YAML metadata.
-            regex = new Regex(
-                @"<!--.*?-->",
-                RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
-            foreach (Match m in regex.Matches(text))
-                se.Remove(m);
-
-            text = se.ToString().Trim();
-
-            _Description = text;
         }
+    }
+
+    public Uri? TryMapUri(Uri uri, RepositoryUriUsage usage)
+    {
+        var absoluteUri = new Uri(baseUri, uri);
+        var newUri = RepositoryService.TryMapUri(absoluteUri, usage);
+        if (newUri != null)
+            return newUri;
+
+        return null;
+    }
+
+    public string Description =>
+        m_Description ??
+        throw new InvalidOperationException("Description has not been extracted yet.");
+
+    string? m_Description;
+
+    string ExtractDescription()
+    {
+        var tw = new StringWriter();
+
+        var elements = document.TakeWhile(x => x is not HeadingBlock).ToArray();
+
+        var mdRenderer = new RoundtripRenderer(tw);
+        foreach (var i in elements)
+            mdRenderer.Write(i);
+
+        string text = tw.ToString().Trim();
+        var se = new StringEditor(text);
+
+        // Remove inline code decorations.
+        var regex = new Regex(
+            @"(?<start_tag>`).+?(?<end_tag>`)",
+            RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
+        foreach (Match m in regex.Matches(text))
+        {
+            var g1 = m.Groups["start_tag"];
+            var g2 = m.Groups["end_tag"];
+            if (g1.Success && g2.Success)
+            {
+                se.Remove(g1);
+                se.Remove(g2);
+            }
+        }
+
+        // Remove YAML metadata.
+        regex = new Regex(
+            @"<!--.*?-->",
+            RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+        foreach (Match m in regex.Matches(text))
+            se.Remove(m);
+
+        regex = new Regex(
+            @"^The\s+module\s+provides\s+",
+            RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Singleline);
+        foreach (Match m in regex.Matches(text))
+            se.Replace(m, "Provides ");
+
+        text = se.ToString().Trim();
+
+        return text;
     }
 }

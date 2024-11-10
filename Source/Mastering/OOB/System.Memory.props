@@ -1,0 +1,14 @@
+<Project>
+
+  <PropertyGroup>
+    <TFF_MEMORY_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">true</TFF_MEMORY_OOB>
+    <TFF_MEMORY_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '2.1')) ">true</TFF_MEMORY_OOB>
+    <TFF_MEMORY_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '2.1')) ">true</TFF_MEMORY_OOB>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TFF_MEMORY_OOB)' == 'true' ">
+    <PackageReference Include="System.Memory" Version="4.5.3" />
+    <MasteringFrameworkFeature Include="TFF_MEMORY;TFF_MEMORY_OOB" />
+  </ItemGroup>
+
+</Project>

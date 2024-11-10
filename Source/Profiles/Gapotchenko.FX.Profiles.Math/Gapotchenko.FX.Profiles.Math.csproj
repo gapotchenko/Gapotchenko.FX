@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoWarn>NU5128</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageDescription>Represents the Math profile of Gapotchenko.FX.</PackageDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Graphs\Gapotchenko.FX.Math.Graphs.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Intervals\Gapotchenko.FX.Math.Intervals.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Metrics\Gapotchenko.FX.Math.Metrics.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Profiles.Core\Gapotchenko.FX.Profiles.Core.csproj" />
+  </ItemGroup>
+
+</Project>

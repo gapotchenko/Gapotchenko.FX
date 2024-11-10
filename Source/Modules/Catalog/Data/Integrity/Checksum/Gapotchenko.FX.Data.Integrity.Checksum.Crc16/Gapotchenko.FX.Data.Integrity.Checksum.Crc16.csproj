@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageDescription>Provides CRC-16 checksum algorithms.</PackageDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="crc" />
+    <PackageTag Include="crc-16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Data.Integrity.Checksum.Crc16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Integrity.Checksum\Gapotchenko.FX.Data.Integrity.Checksum.csproj" />
+  </ItemGroup>
+
+  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.props" />
+
+</Project>

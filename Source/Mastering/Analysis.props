@@ -1,0 +1,19 @@
+<Project>
+
+  <!-- Language agnostic -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn),CA1034,CA1028,CA1305,CA1510,CA1513,CA1711,CA1716,CA1720,CA1814,CA1815,CA1822,CA1859,CA1863,CA2214,CA2225,CA2265,IDE0016,SYSLIB1054</NoWarn>
+    <WarningsAsErrors>$(WarningsAsErrors),CA2241</WarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(MasteringProjectKind)' != 'utility' ">
+    <WarningsAsErrors>$(WarningsAsErrors),CA1309,CA1310,CA2248</WarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- C# -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn),CS8524</NoWarn>
+    <WarningsAsErrors>$(WarningsAsErrors),CS8509</WarningsAsErrors>
+  </PropertyGroup>
+
+</Project>

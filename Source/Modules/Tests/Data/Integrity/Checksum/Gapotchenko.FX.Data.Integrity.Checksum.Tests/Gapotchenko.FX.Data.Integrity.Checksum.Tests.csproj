@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum\Gapotchenko.FX.Data.Integrity.Checksum.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Catalog\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+  </ItemGroup>
+  
+</Project>

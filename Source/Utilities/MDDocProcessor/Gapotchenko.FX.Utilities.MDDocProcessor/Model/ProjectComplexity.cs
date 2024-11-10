@@ -1,9 +1,8 @@
-﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model
+﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model;
+
+enum ProjectComplexity
 {
-    enum ProjectComplexity
-    {
-        Normal,
-        Advanced,
-        Expert
-    }
+    Normal,
+    Advanced,
+    Expert
 }

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+    <PackageDescription>Provides Base64 data encoding algorithms: Base64, Base64 URL.</PackageDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="base64;base64-url;rfc4648" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Data.Encoding.Base64" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Data.Encoding.Base64Url" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <AnalysisMode>All</AnalysisMode>
+    <WarningsAsErrors>$(WarningsAsErrors),CA1307</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj" />
+  </ItemGroup>
+
+</Project>

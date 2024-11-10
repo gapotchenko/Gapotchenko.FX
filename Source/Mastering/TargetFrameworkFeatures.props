@@ -1,0 +1,97 @@
+<Project>
+
+  <!-- ================================================================== -->
+  <!-- .NET Framework -->
+  <!-- ================================================================== -->
+
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">
+    <MasteringFrameworkFeature Include="TFF_APPDOMAIN;TFF_CER;TFF_HOST_PROTECTION;TFF_REMOTING;TFF_TRANSACTIONS;TFF_THREAD_ABORT;TFF_WIN32_REGISTRY" />
+  </ItemGroup>
+
+  <!-- .NET Framework 4.5 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '4.5')) ">
+    <MasteringFrameworkFeature Include="TFF_AGGRESSIVE_INLINING;TFF_ASYNC_STREAM;TFF_CUSTOM_ATTRIBUTE_EXTENSIONS;TFF_READONLY_COLLECTION;TFF_READONLY_LIST;TFF_TASK_FROMRESULT;TFF_WEAKREFERENCE_1" />
+  </ItemGroup>
+
+  <!-- .NET Framework 4.6 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '4.6')) ">
+    <MasteringFrameworkFeature Include="TFF_ARRAY_EMPTY;TFF_COMPLETED_TASK;TFF_HASHSET_IREADONLYCOLLECTION" />
+  </ItemGroup>
+
+  <!-- .NET Framework 4.7.1 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '4.7.1')) ">
+    <MasteringFrameworkFeature Include="TFF_RUNTIME_INFORMATION;TFF_ENUMERABLE_APPEND;TFF_ENUMERABLE_PREPEND" />
+  </ItemGroup>
+
+  <!-- .NET Framework 4.7.2 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '4.7.2')) ">
+    <MasteringFrameworkFeature Include="TFF_ENUMERABLE_TOHASHSET" />
+  </ItemGroup>
+
+  <!-- ================================================================== -->
+  <!-- .NET Standard -->
+  <!-- ================================================================== -->
+
+  <!-- .NET Standard 2.0 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '2.0')) ">
+    <MasteringFrameworkFeature Include="TFF_AGGRESSIVE_INLINING;TFF_ARRAY_EMPTY;TFF_ASYNC_STREAM;TFF_CER;TFF_COMPLETED_TASK;TFF_CUSTOM_ATTRIBUTE_EXTENSIONS;TFF_HASHSET_IREADONLYCOLLECTION;TFF_READONLY_COLLECTION;TFF_READONLY_LIST;TFF_RUNTIME_INFORMATION;TFF_TASK_FROMRESULT;TFF_TRANSACTIONS;TFF_WEAKREFERENCE_1;TFF_ENUMERABLE_APPEND;TFF_ENUMERABLE_PREPEND;TFF_THREAD_ABORT" />
+  </ItemGroup>
+
+  <!-- .NET Standard 2.1 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '2.1')) ">
+    <MasteringFrameworkFeature Remove="TFF_CER;TFF_THREAD_ABORT" />
+    <MasteringFrameworkFeature Include="TFF_ASYNC_DISPOSABLE;TFF_BITCONVERTER_SINGLETOINT32BITS;TFF_DEFAULT_INTERFACE;TFF_ENUMERABLE_SKIPLAST;TFF_ENUMERABLE_TAKELAST;TFF_ENUMERABLE_TOHASHSET;TFF_HASHCODE;TFF_KEYVALUEPAIR;TFF_MATH_CLAMP;TFF_MATHF;TFF_MEMORY;TFF_NULLABLE_ATTRIBUTES;TFF_RANGE;TFF_SINGLE_APPDOMAIN;TFF_STRING_BUILDER_APPEND_JOIN;TFF_STRING_OPWITH_CHAR;TFF_STRING_CONTAINS_CHAR;TFF_SWITCHEXPRESSIONEXCEPTION;TFF_TEXT_IO_CANCELLATION;TFF_VALUETASK;TFF_DICTIONARY_TRYADD;TFF_DICTIONARY_REMOVEANDGETVALUE;TFF_DICTIONARY_GETVALUEORDEFAULT;TFF_RUNTIMEHELPERS_ISREFERENCEORCONTAINSREFERENCES" />
+  </ItemGroup>
+
+  <!-- ================================================================== -->
+  <!-- .NET Core -->
+  <!-- ================================================================== -->
+
+  <!-- .NET Core 2.0 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '2.0')) ">
+    <MasteringFrameworkFeature Include="TFF_AGGRESSIVE_INLINING;TFF_ARRAY_EMPTY;TFF_ASYNC_STREAM;TFF_ASSEMBLYLOADCONTEXT;TFF_BITCONVERTER_SINGLETOINT32BITS;TFF_COMPLETED_TASK;TFF_CUSTOM_ATTRIBUTE_EXTENSIONS;TFF_HASHSET_IREADONLYCOLLECTION;TFF_KEYVALUEPAIR;TFF_MATH_CLAMP;TFF_MATHF;TFF_READONLY_COLLECTION;TFF_READONLY_LIST;TFF_RUNTIME_INFORMATION;TFF_SINGLE_APPDOMAIN;TFF_STRING_BUILDER_APPEND_JOIN;TFF_STRING_OPWITH_CHAR;TFF_TASK_FROMRESULT;TFF_TRANSACTIONS;TFF_WEAKREFERENCE_1;TFF_ENUMERABLE_APPEND;TFF_ENUMERABLE_PREPEND;TFF_ENUMERABLE_SKIPLAST;TFF_ENUMERABLE_TAKELAST;TFF_ENUMERABLE_TOHASHSET;TFF_VALUETASK;TFF_DICTIONARY_TRYADD;TFF_DICTIONARY_REMOVEANDGETVALUE;TFF_DICTIONARY_GETVALUEORDEFAULT" />
+  </ItemGroup>
+
+  <!-- .NET Core 2.1 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '2.1')) ">
+    <MasteringFrameworkFeature Include="TFF_HASHCODE;TFF_MEMORY;TFF_RUNTIMEHELPERS_ISREFERENCEORCONTAINSREFERENCES;TFF_STRING_CONTAINS_CHAR;TFF_TEXT_IO_CANCELLATION" />
+  </ItemGroup>
+
+  <!-- .NET Core 3.0 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '3.0')) ">
+    <MasteringFrameworkFeature Include="TFF_ASYNC_DISPOSABLE;TFF_BITOPERATIONS;TFF_DEFAULT_INTERFACE;TFF_DICTIONARY_ENUMERATION_REMOVE_ALLOWED;TFF_NULLABLE_ATTRIBUTES;TFF_RANGE;TFF_UNSAFE;TFF_SWITCHEXPRESSIONEXCEPTION;TFF_TEXT_IO_STRINGBUILDER" />
+  </ItemGroup>
+
+  <!-- .NET Core 3.1 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '3.1')) ">
+  </ItemGroup>
+
+  <!-- ================================================================== -->
+  <!-- .NET -->
+  <!-- ================================================================== -->
+
+  <!-- .NET 5.0 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '5.0')) ">
+    <MasteringFrameworkFeature Include="TFF_DICTIONARY_NULL_KEY;TFF_HASHSET_ENUMERATION_REMOVE_ALLOWED;TFF_IREADONLYSET;TFF_ISEXTERNALINIT;TFF_REFERENCEEQUALITYCOMPARER;TFF_MEMBERNOTNULLATTRIBUTE;TFF_MODULEINITIALIZERATTRIBUTE" />
+  </ItemGroup>
+
+  <!-- .NET 6.0 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '6.0')) ">
+    <MasteringFrameworkFeature Include="TFF_ENUMERABLE_DISTINCTBY;TFF_ENUMERABLE_EXCEPTBY;TFF_ENUMERABLE_INTERSECTBY;TFF_ENUMERABLE_UNIONBY;TFF_ENUMERABLE_FIRSTORDEFAULT_VALUE;TFF_ENUMERABLE_MINBY;TFF_ENUMERABLE_MAXBY;TFF_ENUMERABLE_MIN_COMPARER;TFF_ENUMERABLE_MAX_COMPARER;TFF_ENUMERABLE_LASTORDEFAULT_VALUE;TFF_ENUMERABLE_SINGLEORDEFAULT_VALUE;TFF_ENUMERABLE_TRYGETNONENUMERATEDCOUNT" />
+  </ItemGroup>
+
+  <!-- .NET 7.0 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '7.0')) ">
+    <MasteringFrameworkFeature Include="TFF_REQUIREDMEMBERATTRIBUTE;TFF_STATIC_INTERFACE" />
+  </ItemGroup>
+
+  <!-- ================================================================== -->
+
+  <Target Name="DefineMasteringFrameworkFeatureConstants"
+          BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <DefineConstants Condition=" @(MasteringFrameworkFeature->Count()) != 0 ">$(DefineConstants),@(MasteringFrameworkFeature, ',')</DefineConstants>
+    </PropertyGroup>
+  </Target>
+
+</Project>

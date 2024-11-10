@@ -1,5 +1,65 @@
 # What's New in Gapotchenko.FX
 
+## 2024
+
+### Gapotchenko FX 2024.1
+
+Release date: not released yet
+
+- Added preliminary support for .NET 9.0 target framework
+- Added support for .NET 8.0 target framework
+- Introduced primitives for interval arithmetics represented by `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
+- Introduced `Gapotchenko.FX.Collection.Generic.Deque<T>` primitive representing a linear collection that supports element insertion and removal at both ends with O(1) algorithmic complexity
+- Added ability to choose between lowercase or uppercase text output of a case-insensitive data encoding by using `DataEncodingOptions.Lowercase` and `DataEncodingOptions.Uppercase` flags
+- Added ability to create streams over contiguous memory regions represented by `System.Memory` and `System.ReadOnlyMemory` objects by using `ToStream` extension method provided by `Gapotchenko.FX.Memory` module
+- Added `Gapotchenko.FX.Memory.SpanEqualityComparer` class that allows to compare read-only spans and calculate their hash codes
+- `AssemblyAutoLoader` now automatically handles probing paths defined by assembly binding redirects
+- Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
+- Added `ReifyCollection` LINQ extension method for `IEnumerable<T>`
+- Added ability to retrieve connected components of a graph by using `Graph<T>.ConnectedComponents` property
+- Added ability to supply an additional cancellation token to `Gapotchenko.FX.Threading.Tasks.TaskBridge.Execute` method
+- Added a functional facility that implements the Pipe Operator concept.
+  The facility is provided in the form of `PipeOperator` extension method that resides in `Gapotchenko.FX.Linq.Operators` namespace.
+  It allows to have a pipe operator functionality in .NET languages that do not natively provide pipe operators
+- The synchronous execution of an asynchronous task in `Gapotchenko.FX.Threading.Tasks.TaskBridge` can take additional cancellation token now
+- Use hardware-accelerated CRC-32C checksum algorithm implementation when available
+- Deprecated `Gapotchenko.FX.Math.Topology` module in favor of a formalized `Gapotchenko.FX.Math.Graphs` module
+- Polyfills:
+  - Added polyfill for required properties introduced in C# 11.0
+  - Added polyfills for `System.Range` and `System.Index` types. They are used by the C# compiler to support the range syntax
+  - Added `ExceptBy`, `IntersectBy` and `UnionBy` LINQ polyfills for `IEnumerable<T>`
+  - Added `Order` and `OrderDescending` LINQ polyfills for `IEnumerable<T>`
+  - Added `Chunk` LINQ polyfill for `IEnumerable<T>`
+  - Added `EndsWith` LINQ polyfill for `IEnumerable<T>`
+  - Added polyfill for `System.ArraySegment<T>.Slice` method
+  - Added polyfill for `System.IO.Path.GetRelativePath` method
+  - Added polyfill for `System.IO.Path.TrimEndingDirectorySeparator` method
+  - Added polyfills for `ReadExactly` and `ReadAtLeast` methods of `System.IO.Stream` type
+  - Added polyfill for `System.Char.Equals(System.Char, System.StringComparison)` method
+  - Added polyfill for `System.String.Contains(System.Char, System.StringComparison)` method
+  - Added polyfill for `System.String.GetHashCode(System.StringComparison)` method
+  - Added polyfills for `Split` and `SplitAny` methods of `System.ReadOnlySpan<char>` type
+  - Added polyfill for `ReadSpan` method of `System.Runtime.InteropServices.SafeBuffer` type
+  - Added polyfill for `System.Runtime.CompilerServices.CallerArgumentExpressionAttribute` type
+  - Added polyfills for `System.Threading.Tasks.Task.WaitAsync` and `System.Threading.Tasks.Task<TResult>.WaitAsync` methods
+  - Added polyfill for `System.Diagnostics.StackTraceHiddenAttribute` type
+  - Added polyfill for `System.Diagnostics.UnreachableException` type
+  - Added polyfill for `System.Collections.Generic.Queue<T>.TryDeque` method
+  - Added polyfill for `System.Collections.Generic.OrderedDictionary<TKey, TValue>` type
+  - Added polyfill for `System.IO.Path.Join` method
+  - Added polyfills for `System.Math.BitIncrement` and `System.Math.BitDecrement` methods
+  - Added polyfill for `System.Threading.Lock` type
+  - Removed `System.HashCode` polyfill implementation in favor of `Microsoft.Bcl.HashCode` package
+- .NET Framework 4.6 support is retired. The minimal supported version of .NET Framework is 4.6.1
+- Fixed issues:
+  - Fixed case-sensitivity of a text data encoding padding character. This is important for data encodings that use custom padding characters
+  - Fixed issue in `Gapotchenko.FX.Collections.Generic.AssociativeArray<TKey, TValue>` type with accessing `IEnumerable<T>.Current` property without checking the result of a prior call to `MoveNext` method
+  - Fixed assembly name comparison bug in `Gapotchenko.FX.Reflection.Loader` module
+  - Fixed a bug with the `null` key in `IDictionary.Remove` method of `AssociativeArray<TKey, TValue>` type
+  - Fixed a bug with the `null` key in `IDictionary.Contains` method of `AssociativeArray<TKey, TValue>` type
+  - Fixed a bug with the `null` key in `IDictionary.this[TKey]` getter method of `AssociativeArray<TKey, TValue>` type
+  - Fixed a bug with a non-existing key handling in `IDictionary.this[TKey]` getter method of `AssociativeArray<TKey, TValue>` type
+
 ## 2022
 
 ### Gapotchenko FX 2022.2
@@ -24,8 +84,9 @@ Release date: April 7, 2022
   They are grouped by the family and provided by the corresponding modules:
   `Gapotchenko.FX.Data.Integrity.Checksum.Crc32`, `Gapotchenko.FX.Data.Integrity.Checksum.Crc16`, `Gapotchenko.FX.Data.Integrity.Checksum.Crc8`
 - Improved documentation
+- .NET Framework 4.5 target is retired. The minimal supported .NET Framework version is 4.6
 - `Process.GetImageFileName()` extension method provided by `Gapotchenko.FX.Diagnostics.Process` module now returns `null` when a process is not associated with an image file
-- Fixed issue that could lead to `System.IO.EndOfStreamException` exception in `Process.ReadEnvironmentVariables()` method provided by `Gapotchenko.FX.Diagnostics.Process` module (GH-2)
+- Fixed issue that could lead to `System.IO.EndOfStreamException` exception in `Process.ReadEnvironmentVariables()` method provided by `Gapotchenko.FX.Diagnostics.Process` module (issue GH-2)
 
 ## 2021
 
@@ -57,7 +118,7 @@ Release date: July 6, 2021
 - Added `MathEx.Lerp` function that performs linear interpolation between two values by the specified coefficient
 - Added `AppInformation.For(assembly)` static function that retrieves app information for a specified assembly
 - Added LINQ function that simultaneously determines whether any elements of a sequence satisfy the specified conditions (`(bool, bool) IEnumerable<T>.Any(Func<T, bool> predicate1, Func<T, bool> predicate2)` with higher dimensional overloads)
-- Added `ConsoleEx.ReadPassword` function for reading a password from the console
+- Added `ConsoleEx.ReadPassword` function for securely reading a password from the console
 - Added `System.Runtime.CompilerServices.ModuleInitializerAttribute` polyfill
 - Added `SkipLast` and `TakeLast` LINQ polyfills
 - Added `System.Collections.Generic.ReferenceEqualityComparer` polyfill

@@ -1,7 +1,6 @@
-﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc
+﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
+
+interface ITocHierarchyItemNode : ITocNode
 {
-    interface ITocHierarchyItemNode : ITocNode
-    {
-        HierarchyItem HierarchyItem { get; }
-    }
+    HierarchyItem HierarchyItem { get; }
 }

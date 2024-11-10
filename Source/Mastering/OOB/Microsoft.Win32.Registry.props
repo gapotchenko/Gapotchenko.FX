@@ -1,0 +1,12 @@
+<Project>
+
+  <PropertyGroup>
+    <TFF_WIN32_REGISTRY_OOB Condition=" '$(MasteringFrameworkIdentifier)' != '.NETFramework' ">true</TFF_WIN32_REGISTRY_OOB>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TFF_WIN32_REGISTRY_OOB)' == 'true' ">
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.5.0" />
+    <MasteringFrameworkFeature Include="TFF_WIN32_REGISTRY;TFF_WIN32_REGISTRY_OOB" />
+  </ItemGroup>
+
+</Project>
