@@ -4,7 +4,7 @@
 
 ### Gapotchenko FX 2024.1
 
-Release date: not released yet
+Release date: November 10, 2024
 
 - Added preliminary support for .NET 9.0 target framework
 - Added support for .NET 8.0 target framework
