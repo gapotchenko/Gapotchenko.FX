@@ -14,14 +14,13 @@ Release date: November 10, 2024
 - Added `Gapotchenko.FX.Memory.SpanEqualityComparer` class that allows to compare read-only spans and calculate their hash codes
 - `AssemblyAutoLoader` now automatically handles probing paths defined by assembly binding redirects
 - Added new `InsertSubpath` and `EntryExists` methods to `FileSystem` class provided by `Gapotchenko.FX.IO` module
-- Added `ReifyCollection` LINQ extension method for `IEnumerable<T>`
+- Added `ReifyCollection` LINQ extension method for `IEnumerable<T>` which allows you to get a read-only view on a sequence of elements
 - Added ability to retrieve connected components of a graph by using `Graph<T>.ConnectedComponents` property
 - Added ability to supply an additional cancellation token to `Gapotchenko.FX.Threading.Tasks.TaskBridge.Execute` method
-- Added a functional facility that implements the Pipe Operator concept.
-  The facility is provided in the form of `PipeOperator` extension method that resides in `Gapotchenko.FX.Linq.Operators` namespace.
-  It allows to have a pipe operator functionality in .NET languages that do not natively provide pipe operators
-- The synchronous execution of an asynchronous task in `Gapotchenko.FX.Threading.Tasks.TaskBridge` can take additional cancellation token now
-- Use hardware-accelerated CRC-32C checksum algorithm implementation when available
+- Added a functional facility that implements a [pipe operator](https://github.com/dotnet/csharplang/discussions/96) concept.
+  The facility is provided in the form of `PipeOperator` extension method that resides in `Gapotchenko.FX.Linq.Operators` namespace provided by `Gapotchenko.FX.Linq` module.
+  It allows you to have a pipe operator functionality in .NET languages that do not natively provide pipe operators
+- Use hardware-accelerated CRC-32C checksum algorithm implementation when it is available
 - Deprecated `Gapotchenko.FX.Math.Topology` module in favor of a formalized `Gapotchenko.FX.Math.Graphs` module
 - Polyfills:
   - Added polyfill for required properties introduced in C# 11.0
