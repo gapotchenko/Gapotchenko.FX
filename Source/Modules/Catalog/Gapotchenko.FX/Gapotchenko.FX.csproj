@@ -26,8 +26,8 @@
 
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.ArrayEqualityComparer" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Optional" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.LazyEvaluation" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Optional&lt;T&gt;" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.EvaluateOnce&lt;T&gt;" />
     <CommonlyUsedPart Include="Gapotchenko.FX.UriQueryBuilder" />
   </ItemGroup>
 
