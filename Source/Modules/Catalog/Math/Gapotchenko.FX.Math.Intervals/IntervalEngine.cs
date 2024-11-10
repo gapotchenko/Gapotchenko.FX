@@ -271,13 +271,25 @@ static class IntervalEngine
         FromEmpty
     }
 
+    public static string ToString<TInterval, TBound>(in TInterval interval, string? format, IFormatProvider? formatProvider)
+        where TInterval : IIntervalOperations<TBound> =>
+        format switch
+        {
+            "G" or "" or null => ToString<TInterval, TBound>(interval),
+            "U" => ToStringCore<TInterval, TBound>(interval, "∅", "∞", formatProvider),
+            _ => throw new FormatException()
+        };
+
     public static string ToString<TInterval, TBound>(in TInterval interval)
         where TInterval : IIntervalOperations<TBound> =>
-        ToStringCore<TInterval, TBound>(interval, "{}", "inf");
+        ToStringCore<TInterval, TBound>(interval, "{}", "inf", null);
 
-    static string ToStringCore<TInterval, TBound>(in TInterval interval, string emptySymbol, string infinitySymbol)
+    static string ToStringCore<TInterval, TBound>(in TInterval interval, string emptySymbol, string infinitySymbol, IFormatProvider? formatProvider)
         where TInterval : IIntervalOperations<TBound>
     {
+        if (interval.IsEmpty)
+            return emptySymbol;
+
         var sb = new StringBuilder();
 
         if (interval.From.Kind == IntervalBoundaryKind.Inclusive)
@@ -285,9 +297,9 @@ static class IntervalEngine
         else
             sb.Append('(');
 
-        AppendBoundary(sb, interval.From, emptySymbol, infinitySymbol);
+        AppendBoundary(sb, interval.From, emptySymbol, infinitySymbol, formatProvider);
         sb.Append(',');
-        AppendBoundary(sb, interval.To, emptySymbol, infinitySymbol);
+        AppendBoundary(sb, interval.To, emptySymbol, infinitySymbol, formatProvider);
 
         if (interval.To.Kind == IntervalBoundaryKind.Inclusive)
             sb.Append(']');
@@ -300,7 +312,8 @@ static class IntervalEngine
             StringBuilder sb,
             in IntervalBoundary<TBound> boundary,
             string emptySymbol,
-            string infinitySymbol)
+            string infinitySymbol,
+            IFormatProvider? formatProvider)
         {
             switch (boundary.Kind)
             {
@@ -314,7 +327,11 @@ static class IntervalEngine
                     sb.Append(infinitySymbol); // ∞
                     break;
                 default:
-                    sb.Append(boundary.Value);
+                    var value = boundary.Value;
+                    if (formatProvider is not null && value is IFormattable formattableValue)
+                        sb.Append(formattableValue.ToString(null, formatProvider));
+                    else
+                        sb.Append(value?.ToString());
                     break;
             }
         }

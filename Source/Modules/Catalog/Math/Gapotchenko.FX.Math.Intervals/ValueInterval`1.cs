@@ -320,6 +320,13 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <inheritdoc/>
     public override string ToString() => IntervalEngine.ToString<ValueInterval<T>, T>(this);
 
+    /// <inheritdoc cref="ToString(string?, IFormatProvider?)"/>
+    public string ToString(string? format) => ToString(format, null);
+
+    /// <inheritdoc/>
+    public string ToString(string? format, IFormatProvider? formatProvider) =>
+        IntervalEngine.ToString<ValueInterval<T>, T>(this, format, formatProvider);
+
     /// <summary>
     /// Converts a specified <see cref="Interval{T}"/> instance to <see cref="ValueInterval{T}"/>.
     /// </summary>

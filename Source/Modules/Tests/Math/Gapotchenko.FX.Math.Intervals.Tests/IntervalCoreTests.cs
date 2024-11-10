@@ -529,6 +529,17 @@ public abstract class IntervalCoreTests
     [TestMethod]
     public void Interval_Core_Union_7()
     {
+        var a = NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Inclusive(2));
+        var b = NewInterval(IntervalBoundary.Inclusive(3), IntervalBoundary.Inclusive(10));
+
+        var c = a.Union(b);
+
+        Assert.IsTrue(c.IntervalEquals(NewInterval(IntervalBoundary.Inclusive(0), IntervalBoundary.Inclusive(10))));
+    }
+
+    [TestMethod]
+    public void Interval_Core_Union_8()
+    {
         var a = InfiniteInterval<int>();
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
 
@@ -538,7 +549,7 @@ public abstract class IntervalCoreTests
     }
 
     [TestMethod]
-    public void Interval_Core_Union_8()
+    public void Interval_Core_Union_9()
     {
         var a = EmptyInterval<int>();
         var b = NewInterval(IntervalBoundary.Inclusive(2), IntervalBoundary.Exclusive(10));
@@ -1304,6 +1315,28 @@ public abstract class IntervalCoreTests
         Assert.AreEqual(0, interval.Zone(19.5));
         Assert.AreEqual(1, interval.Zone(20));
         Assert.AreEqual(1, interval.Zone(21));
+    }
+
+    #endregion
+
+    #region ToString
+
+    [TestMethod]
+    public void Interval_Core_ToString_Inifinite()
+    {
+        var interval = NewInterval(ValueInterval.Infinite<int>());
+
+        Assert.AreEqual("(-inf,inf)", interval.ToString());
+        Assert.AreEqual("(-∞,∞)", interval.ToString("U", null));
+    }
+
+    [TestMethod]
+    public void Interval_Core_ToString_Empty()
+    {
+        var interval = NewInterval(ValueInterval.Empty<int>());
+
+        Assert.AreEqual("{}", interval.ToString());
+        Assert.AreEqual("∅", interval.ToString("U", null));
     }
 
     #endregion

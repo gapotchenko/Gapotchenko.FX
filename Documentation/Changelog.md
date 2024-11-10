@@ -2,6 +2,12 @@
 
 ## 2024
 
+### Gapotchenko FX 2024.2
+
+Release date: not released yet
+
+- Added support of `System.IFormattable` interface to `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
+
 ### Gapotchenko FX 2024.1
 
 Release date: November 10, 2024

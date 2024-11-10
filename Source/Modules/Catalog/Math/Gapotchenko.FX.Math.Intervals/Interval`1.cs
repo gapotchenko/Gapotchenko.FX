@@ -326,6 +326,13 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     /// <inheritdoc/>
     public override string ToString() => IntervalEngine.ToString<Interval<T>, T>(this);
 
+    /// <inheritdoc cref="ToString(string?, IFormatProvider?)"/>
+    public string ToString(string? format) => ToString(format, null);
+
+    /// <inheritdoc/>
+    public string ToString(string? format, IFormatProvider? formatProvider) =>
+        IntervalEngine.ToString<Interval<T>, T>(this, format, formatProvider);
+
     // Minify unused record method.
     bool PrintMembers(StringBuilder _) => false;
 }
