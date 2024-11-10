@@ -3,8 +3,6 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Profiles.Math.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Profiles.Math)
 
-## Overview
-
 `Gapotchenko.FX.Profiles.Math` package represents the Math profile of Gapotchenko.FX.
 
 ## Modules

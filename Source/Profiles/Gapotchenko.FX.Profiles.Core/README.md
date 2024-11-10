@@ -4,8 +4,6 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Profiles.Core.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Profiles.Core)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Profiles.Core.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Profiles.Core)
 
-## Overview
-
 `Gapotchenko.FX.Profiles.Core` package represents the Core profile of Gapotchenko.FX.
 
 (Disambiguation: a _Core_ word in the profile name has no specific relation to .NET Core)
