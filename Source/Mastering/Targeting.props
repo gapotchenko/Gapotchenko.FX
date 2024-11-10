@@ -10,12 +10,6 @@
     <TargetFrameworks Condition=" '$(MasteringProjectKind)' == 'test' ">$(TargetFrameworks);net9.0</TargetFrameworks>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <!-- Disables NETSDK1138 warning -->
-    <CheckEolTargetFramework>false</CheckEolTargetFramework>
-    <DefineConstants>$(DefineConstants),SOURCE_COMPATIBILITY,BINARY_COMPATIBILITY</DefineConstants>
-  </PropertyGroup>
-
   <!-- ================================================================== -->
 
   <PropertyGroup>
