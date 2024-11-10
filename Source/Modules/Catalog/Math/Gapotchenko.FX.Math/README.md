@@ -8,7 +8,7 @@ The module provides extended math primitives.
 
 ## MathEx
 
-`MathEx` is a class provided by `Gapotchenko.FX.Math`.
+`MathEx` is a class provided by `Gapotchenko.FX.Math` module.
 It offers extended mathematical functions,
 and serves as an addendum to a conventional `System.Math` class.
 Some functions provided by `MathEx` class are described below.

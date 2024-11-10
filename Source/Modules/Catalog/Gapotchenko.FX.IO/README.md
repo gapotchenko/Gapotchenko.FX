@@ -8,7 +8,7 @@ The module provides commonly demanded input/output functionality that is missing
 
 ## FileSystem
 
-`FileSystem` is a class provided by `Gapotchenko.FX.IO`.
+`FileSystem` is a class provided by `Gapotchenko.FX.IO` module.
 If offers extended I/O functions for file system,
 and serves as an important addendum to a conventional `System.IO` namespace.
 

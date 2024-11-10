@@ -181,6 +181,11 @@ var collection = new Collection<int>();
 collection.AddRange(numbers.Where(x => x % 2 == 0)); // add even numbers
 ```
 
+### PriorityQueue Polyfill
+
+`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue available since .NET 6.0.
+The polyfill makes it available to all other supported .NET versions.
+
 <details>
   <summary>Other polyfills</summary>
 
@@ -239,11 +244,6 @@ void ProcessMap(IDictionary<string, int> map)
 ```
 
 A little detail, but sometimes it matters a lot when you are amid the heat of the code.
-
-### PriorityQueue Polyfill
-
-`PriorityQueue<TElement, TPriority>` provided by `Gapotchenko.FX.Collections` module is an implementation of the prioritized queue available in .NET 6.0+.
-The polyfill makes it available to all other supported .NET versions.
 
 </details>
 

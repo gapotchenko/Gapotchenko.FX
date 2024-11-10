@@ -1,4 +1,5 @@
-﻿using Gapotchenko.FX.Utilities.MDDocProcessor.Model;
+﻿using Gapotchenko.FX.Linq.Operators;
+using Gapotchenko.FX.Utilities.MDDocProcessor.Model;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Model.Toc;
 using Gapotchenko.FX.Utilities.MDDocProcessor.Visualization;
 
@@ -174,6 +175,7 @@ sealed class TocSerializer
             {
                 string path =
                     Path.GetRelativePath(basePath, catalog.DirectoryPath)
+                    .PipeOperator(Path.TrimEndingDirectorySeparator)
                     .Replace(Path.DirectorySeparatorChar, '/');
 
                 if (complexityLegend)
