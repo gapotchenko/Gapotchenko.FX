@@ -1,12 +1,12 @@
 <Project>
 
   <PropertyGroup>
-    <TargetFrameworks Condition=" '$(MasteringProjectKind)' == 'module' ">net461;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.0;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(MasteringProjectKind)' == 'module' OR '$(MasteringProjectKind)' == 'profile' ">net461;net471;net472;netstandard2.0;netstandard2.1;netcoreapp2.1;netcoreapp3.0;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(MasteringProjectKind)' == 'test' ">net472;netcoreapp3.1;net6.0;net7.0;net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <TargetFrameworks Condition=" '$(MasteringProjectKind)' == 'module' ">$(TargetFrameworks);net9.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(MasteringProjectKind)' == 'module' OR '$(MasteringProjectKind)' == 'profile' ">$(TargetFrameworks);net9.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(MasteringProjectKind)' == 'test' ">$(TargetFrameworks);net9.0</TargetFrameworks>
   </PropertyGroup>
 

@@ -18,7 +18,7 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
-    <IsPackable Condition=" '$(MasteringProjectKind)' == 'module' ">true</IsPackable>
+    <IsPackable Condition=" '$(MasteringProjectKind)' == 'module' OR '$(MasteringProjectKind)' == 'profile' ">true</IsPackable>
     <PackageOutputPath>bin\$(Configuration)\nuget</PackageOutputPath>
     <GenerateNuspecDependsOn>PrepareNuspec;$(PackDependsOn)</GenerateNuspecDependsOn>
     <NuGetAudit>false</NuGetAudit>
