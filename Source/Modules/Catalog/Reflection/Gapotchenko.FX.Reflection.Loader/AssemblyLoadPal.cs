@@ -190,7 +190,7 @@ public sealed class AssemblyLoadPal
 #if TFF_ASSEMBLYLOADCONTEXT
         string? m_FullName;
 #else
-        string m_FullName;
+        readonly string m_FullName;
 #endif
 
         /// <summary>
