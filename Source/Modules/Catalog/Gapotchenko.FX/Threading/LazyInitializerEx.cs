@@ -220,7 +220,7 @@ public static class LazyInitializerEx
     /// If <paramref name="syncLock"/> is null, a new object will be instantiated.</param>
     /// <param name="action">
     /// A reference to an action that is called to initialize the target entity.
-    /// Once entity is initialized, the action is filled with a null value indicating that the target has already been initialized.
+    /// Once entity is initialized, the action is filled with a <see langword="null"/> value indicating that the target has already been initialized.
     /// </param>
     public static void EnsureInitialized([NotNull] ref object? syncLock, ref Action? action)
     {
