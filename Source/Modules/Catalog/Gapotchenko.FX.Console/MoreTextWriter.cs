@@ -8,12 +8,12 @@ namespace Gapotchenko.FX.Console;
 using Console = System.Console;
 
 /// <summary>
-/// Automatically manages console behavior when written data exceeds the height of a console area visible to the user.
-/// The behavior is very similar to 'more' command line utility.
+/// Automatically manages console behavior when written data exceeds the height of the console area visible to a user.
+/// The behavior is very similar to <c>more</c> command line utility.
 /// </summary>
 /// <remarks>
 /// <see cref="MoreTextWriter"/> handles redirected console streams automatically.
-/// For those no continue prompts are generated.
+/// No continuation prompts are generated for those streams.
 /// </remarks>
 public class MoreTextWriter : TextWriter
 {
@@ -36,7 +36,7 @@ public class MoreTextWriter : TextWriter
 
     /// <summary>
     /// Gets or sets a value indicating whether automatic management of console behavior is enabled
-    /// when written data exceeds the size of a console area visible to the user.
+    /// when written data exceeds the size of the console area visible to a user.
     /// </summary>
     public bool Enabled { get; set; } = true;
 
@@ -84,7 +84,6 @@ public class MoreTextWriter : TextWriter
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
-
             if (m_BaseTextWriter == this)
                 throw new ArgumentException("Cannot set the base text writer to itself.", nameof(value));
 
@@ -260,8 +259,7 @@ public class MoreTextWriter : TextWriter
     {
         base.Flush();
 
-        if (m_BaseTextWriter != null)
-            m_BaseTextWriter.Flush();
+        m_BaseTextWriter?.Flush();
     }
 
     /// <inheritdoc/>
@@ -276,6 +274,7 @@ public class MoreTextWriter : TextWriter
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     int m_WrittenLineCount;
 
+    // TODO: make it reference countable and disposable when the last MoreTextWriter gets disposed.
     static class CursorRecovery
     {
         static CursorRecovery()
@@ -340,11 +339,9 @@ public class MoreTextWriter : TextWriter
                     case InteractiveAction.ScrollToNextPage:
                         m_WrittenLineCount = 0;
                         break;
-
                     case InteractiveAction.ScrollToNextLine:
                         --m_WrittenLineCount;
                         break;
-
                     default:
                         continue;
                 }
@@ -367,10 +364,10 @@ public class MoreTextWriter : TextWriter
     /// <summary>
     /// Shows a prompt.
     /// </summary>
-    /// <param name="textWriter">The text writer.</param>
-    protected virtual void ShowPrompt(TextWriter textWriter)
+    /// <param name="output">The text writer which is used for output.</param>
+    protected virtual void ShowPrompt(TextWriter output)
     {
-        textWriter.Write("(Press <Page Down> to scroll page, <Down Arrow> to scroll line)");
+        output.Write("(Press <Page Down> to scroll page, <Down Arrow> to scroll line)");
     }
 
     /// <summary>
@@ -417,10 +414,7 @@ public class MoreTextWriter : TextWriter
     protected override void Dispose(bool disposing)
     {
         if (disposing)
-        {
-            if (m_BaseTextWriter != null)
-                m_BaseTextWriter.Dispose();
-        }
+            m_BaseTextWriter?.Dispose();
 
         base.Dispose(disposing);
     }
