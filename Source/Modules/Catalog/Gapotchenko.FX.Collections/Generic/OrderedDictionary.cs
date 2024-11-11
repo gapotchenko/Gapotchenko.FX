@@ -98,7 +98,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// </summary>
     /// <param name="comparer">
     /// The <see cref="IEqualityComparer{TKey}"/> implementation to use when comparing keys,
-    /// or null to use the default <see cref="EqualityComparer{TKey}"/> for the type of the key.
+    /// or <see langword="null"/> to use the default <see cref="EqualityComparer{TKey}"/> for the type of the key.
     /// </param>
     public OrderedDictionary(IEqualityComparer<TKey>? comparer) : this(0, comparer)
     {
@@ -111,7 +111,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <param name="capacity">The initial number of elements that the <see cref="OrderedDictionary{TKey, TValue}"/> can contain.</param>
     /// <param name="comparer">
     /// The <see cref="IEqualityComparer{TKey}"/> implementation to use when comparing keys,
-    /// or null to use the default <see cref="EqualityComparer{TKey}"/> for the type of the key.
+    /// or <see langword="null"/> to use the default <see cref="EqualityComparer{TKey}"/> for the type of the key.
     /// </param>
     /// <exception cref="ArgumentOutOfRangeException">capacity is less than 0.</exception>
     public OrderedDictionary(int capacity, IEqualityComparer<TKey>? comparer)
@@ -168,7 +168,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// </param>
     /// <param name="comparer">
     /// The <see cref="IEqualityComparer{TKey}"/> implementation to use when comparing keys,
-    /// or null to use the default <see cref="EqualityComparer{TKey}"/> for the type of the key.
+    /// or <see langword="null"/> to use the default <see cref="EqualityComparer{TKey}"/> for the type of the key.
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
     public OrderedDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer) :
@@ -202,7 +202,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// </param>
     /// <param name="comparer">
     /// The <see cref="IEqualityComparer{TKey}"/> implementation to use when comparing keys,
-    /// or null to use the default <see cref="EqualityComparer{TKey}"/> for the type of the key.
+    /// or <see langword="null"/> to use the default <see cref="EqualityComparer{TKey}"/> for the type of the key.
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
     public OrderedDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer) :

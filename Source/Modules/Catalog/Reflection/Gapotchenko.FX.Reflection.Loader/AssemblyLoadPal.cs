@@ -145,7 +145,7 @@ public sealed class AssemblyLoadPal
     /// </summary>
     /// <param name="sender">The sender.</param>
     /// <param name="args">The arguments.</param>
-    /// <returns>The resolved assembly or null if the assembly cannot be resolved.</returns>
+    /// <returns>The resolved assembly or <see langword="null"/> if the assembly cannot be resolved.</returns>
     public delegate Assembly? ResolvingEventHandler(AssemblyLoadPal sender, ResolvingEventArgs args);
 
     /// <summary>

@@ -12,7 +12,7 @@ public static class Empty
     /// </summary>
     /// <typeparam name="TSource">The type of the input collection.</typeparam>
     /// <param name="source">The source collection.</param>
-    /// <returns>The source or a null collection if the source is empty or null.</returns>
+    /// <returns>The source or a null collection if the source is empty or <see langword="null"/>.</returns>
     public static TSource? Nullify<TSource>(TSource? source) where TSource : class, ICollection
     {
         if (source == null || source.Count == 0)
@@ -47,7 +47,7 @@ public static class Empty
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of the input sequence.</typeparam>
     /// <param name="source">The source sequence.</param>
-    /// <returns>The source or a null sequence if the source is empty or null.</returns>
+    /// <returns>The source or a null sequence if the source is empty or <see langword="null"/>.</returns>
     public static IEnumerable<TSource>? Nullify<TSource>(IEnumerable<TSource>? source)
     {
         if (source == null || !source.Any())
@@ -61,7 +61,7 @@ public static class Empty
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of the input array.</typeparam>
     /// <param name="source">The source array.</param>
-    /// <returns>The source or a null array if the source is empty or null.</returns>
+    /// <returns>The source or a null array if the source is empty or <see langword="null"/>.</returns>
     public static TSource[]? Nullify<TSource>(TSource[]? source)
     {
         if (source == null || source.Length == 0)
@@ -74,7 +74,7 @@ public static class Empty
     /// Nullifies an empty string.
     /// </summary>
     /// <param name="value">The value.</param>
-    /// <returns>The string value or a null if the string is empty or null.</returns>
+    /// <returns>The string value or a null if the string is empty or <see langword="null"/>.</returns>
     public static string? Nullify(string? value)
     {
         if (string.IsNullOrEmpty(value))
@@ -88,7 +88,7 @@ public static class Empty
     /// </summary>
     /// <param name="value">The value to nullify.</param>
     /// <param name="empty">The value to treat as empty.</param>
-    /// <returns>The string value or a null if the string is empty or null.</returns>
+    /// <returns>The string value or a null if the string is empty or <see langword="null"/>.</returns>
     public static string? Nullify(string? value, string? empty)
     {
         if (value == null || value == empty)
@@ -103,7 +103,7 @@ public static class Empty
     /// <param name="value">The value to nullify.</param>
     /// <param name="empty">The value to treat as empty.</param>
     /// <param name="comparison">The comparison.</param>
-    /// <returns>The string value or a null if the string is empty or null.</returns>
+    /// <returns>The string value or a null if the string is empty or <see langword="null"/>.</returns>
     public static string? Nullify(string? value, string? empty, StringComparison comparison)
     {
         if (value == null || value.Equals(empty, comparison))
@@ -130,7 +130,7 @@ public static class Empty
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>
-    /// The type value or a null if the type is empty or null.
+    /// The type value or a null if the type is empty or <see langword="null"/>.
     /// The type is considered empty when it equals to the value returned by <see cref="Type"/> property of <see cref="Empty"/> class.
     /// </returns>
     public static Type? Nullify(Type? value)

@@ -52,8 +52,8 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// Initializes a new instance of the <see cref="AssociativeArray{TKey, TValue}"/> class that is empty, 
     /// has the default initial capacity, and uses the default equality comparer for the key type.
     /// </summary>
-    public AssociativeArray()
-        : this(0, null)
+    public AssociativeArray() :
+        this(0, null)
     {
     }
 
@@ -63,8 +63,8 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// </summary>
     /// <param name="capacity">The initial number of elements that the <see cref="AssociativeArray{TKey, TValue}"/> can contain.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
-    public AssociativeArray(int capacity)
-        : this(capacity, null)
+    public AssociativeArray(int capacity) :
+        this(capacity, null)
     {
     }
 
@@ -73,11 +73,11 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// has the default initial capacity, and uses the specified <see cref="IEqualityComparer{T}"/>.
     /// </summary>
     /// <param name="comparer">
-    /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or null to use the default 
+    /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or <see langword="null"/> to use the default 
     /// <see cref="IEqualityComparer{T}"/> for the type of the key.
     /// </param>
-    public AssociativeArray(IEqualityComparer<TKey>? comparer)
-        : this(0, comparer)
+    public AssociativeArray(IEqualityComparer<TKey>? comparer) :
+        this(0, comparer)
     {
     }
 
@@ -87,7 +87,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// </summary>
     /// <param name="capacity">The initial number of elements that the <see cref="AssociativeArray{TKey, TValue}"/> can contain.</param>
     /// <param name="comparer">
-    /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or null to use the default 
+    /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or <see langword="null"/> to use the default 
     /// <see cref="IEqualityComparer{T}"/> for the type of the key.
     /// </param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
@@ -122,7 +122,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// <see cref="AssociativeArray{TKey, TValue}"/>.
     /// </param>
     /// <param name="comparer">
-    /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or null to use the default 
+    /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or <see langword="null"/> to use the default 
     /// <see cref="IEqualityComparer{T}"/> for the type of the key.
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is <see langword="null"/>.</exception>
@@ -158,7 +158,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// The <see cref="IEnumerable{T}"/> whose elements are copied to the new <see cref="AssociativeArray{TKey, TValue}"/>.
     /// </param>
     /// <param name="comparer">
-    /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or null to use the default 
+    /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing keys, or <see langword="null"/> to use the default 
     /// <see cref="IEqualityComparer{T}"/> for the type of the key.
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
