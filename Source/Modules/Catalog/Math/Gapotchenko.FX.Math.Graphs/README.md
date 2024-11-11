@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Math.Graphs.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Math.Graphs)
 
-The module provides data structures and primitives for working with graphs.
+The module provides data structures and primitives for working with abstract graphs of objects.
 
 ## Graph&lt;T&gt;
 
@@ -105,9 +105,9 @@ Transposed graph `h` renders as:
 
 ![Transposed graph with eight vertices and nine edges](../../../../../Documentation/Assets/Math/Graphs/graph-8-9-t.svg?raw=true)
 
-Note that graph `h` is a new instance of `Graph<T>`.
+Note that graph `h` is a new instance of `Graph<T>` that was created from graph `g` by reversing its edges.
 But what if we want to transpose the graph `g` in place?
-Every graph operation has a corresponding in-place variant, so for transposition it will be:
+Every graph operation has a corresponding in-place variant, so for the transposition it will be:
 
 ``` C#
 g.Transpose();
@@ -116,7 +116,7 @@ g.Transpose();
 In this way, a developer can freely choose between immutable, mutable, or combined data models when working on a particular task at hand.
 
 Graph transposition is just one example but there are plenty of other operations available.
-They all work in the same manner and follow the same model:
+They all work in the same manner and follow the same mutable/immutable model:
 
 | Operation | Description | Immutable Function | In-Place Method |
 | --- | --- | --- | --- |
@@ -197,9 +197,9 @@ g.OrderTopologically().ThenBy(…)
 
 ### Stable Topological Sort of a Sequence
 
-Sorting a sequence of elements in topological order is another play on topological sorting idea.
+Sorting a sequence of elements in topological order is another play on the topological sorting idea.
 
-Say we have a sequence of elements `{A, B, C, D, E, F}`. Some elements depend on others:
+Say we have a sequence of elements `[A, B, C, D, E, F]`. Some elements depend on others:
 
 - A depends on B
 - B depends on D
@@ -228,7 +228,7 @@ var ordering = seq.OrderTopologicallyBy(x => x, df);
 Console.WriteLine(string.Join(", ", ordering));  // <- prints "D, B, A, C, E, F"
 ```
 
-Unlike its graph sibling, `OrderTopologicallyBy` method tolerates circular dependencies by ignoring them.
+Unlike its graph sibling, `IEnumerable<T>.OrderTopologicallyBy` extension method tolerates circular dependencies by ignoring them.
 They are resolved according to the original order of elements in the sequence.
 
 `OrderTopologicallyBy` method allows a subsequent sorting by following the standard `IOrderedEnumerable<T>` LINQ convention:

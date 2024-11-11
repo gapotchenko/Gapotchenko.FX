@@ -13,7 +13,7 @@ The module provides extended functionality for process manipulation.
 `GetParent()` is an extension method provided by `Gapotchenko.FX.Diagnostics.Process` module
 for `System.Diagnostics.Process` class.
 
-What it does is returns the parent process. Or `null` when parent process is absent or no longer running.
+`GetParent()` method returns a parent process of the specified process, or `null` when the parent process is absent or is no longer running.
 
 ### EnumerateParents()
 

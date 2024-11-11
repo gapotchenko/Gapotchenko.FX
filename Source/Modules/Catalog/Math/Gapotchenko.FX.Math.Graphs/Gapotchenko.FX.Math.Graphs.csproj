@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
-    <PackageDescription>Provides data structures and primitives for working with abstract graphs.</PackageDescription>
+    <PackageDescription>Provides data structures and primitives for working with abstract graphs of objects.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageTag Include="topology;algorithms;graph;directed;graph-theory;vertex;edge" />
-    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Graphs.Graph" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Math.Graphs.Graph&lt;T&gt;" />
   </ItemGroup>
 
   <PropertyGroup>

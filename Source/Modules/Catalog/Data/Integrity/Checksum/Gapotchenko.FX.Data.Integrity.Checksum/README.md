@@ -63,8 +63,8 @@ Console.WriteLine("The checksum is {0}.", checksum);
 `Gapotchenko.FX.Data.Integrity.Checksum` module provides only the framework for checksum algorithms.
 If you want to use a ready-to-use checksum algorithm, Gapotchenko.FX provides quite a few out of the box:
 
-| Algorithm Family    | Module                                                                                                 | Algorithms |
-| ------------------- | ------------------------------------------------------------------------------------------------------ | ---------- |
+| Algorithm Family    | Module                                                                                                 | Provided Algorithms |
+| ------------------- | ------------------------------------------------------------------------------------------------------ | ------------------- |
 | CRC-8               | [Gapotchenko.FX.Data.Integrity.Checksum.Crc8](../Gapotchenko.FX.Data.Integrity.Checksum.Crc8#readme)   | CRC-8/SMBUS, CRC-8/TECH-3250, CRC-8/SAE-J1850, CRC-8/OPENSAFETY, CRC-8/NRSC-5, CRC-8/MIFARE-MAD, CRC-8/MAXIM, CRC-8/I-CODE, CRC-8/HITAG, CRC-8/DARC, CRC-8/BLUETOOTH, CRC-8/AUTOSAR 
 | CRC-16              | [Gapotchenko.FX.Data.Integrity.Checksum.Crc16](../Gapotchenko.FX.Data.Integrity.Checksum.Crc16#readme) | CRC-16/CCITT, CRC-16/ISO-IEC-14443-3-A, CRC-16/ISO-IEC-14443-3-B, CRC-16/NRSC-5, CRC-16/MAXIM, CRC-16/SPI-FUJITSU, CRC-16/UMTS, CRC-16/USB, CRC-16/XMODEM, CRC-16/PROFIBUS, CRC-16/MODBUS, CRC-16/GENIBUS, CRC-16/GSM, CRC-16/OPENSAFETY-A, CRC-16/OPENSAFETY-B, CRC-16/TMS37157, CRC-16/MCRF4XX, CRC-16/DECT-R, CRC-16/DECT-X, CRC-16/DDS-110, CRC-16/CCITT-FALSE
 | CRC-32              | [Gapotchenko.FX.Data.Integrity.Checksum.Crc32](../Gapotchenko.FX.Data.Integrity.Checksum.Crc32#readme) | CRC-32/ISO-HDLC, CRC-32C, CRC-32Q, CRC-32/AUTOSAR, CRC-32/POSIX, CRC-32/BZIP2, CRC-32/MEF, CRC-32/MPEG-2
