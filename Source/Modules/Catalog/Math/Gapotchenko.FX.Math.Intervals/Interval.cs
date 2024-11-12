@@ -356,7 +356,7 @@ public static class Interval
 
     /// <summary>
     /// Returns an empty <see cref="Interval{T}"/>:
-    /// <c>∅</c>.
+    /// <code>∅</code>
     /// </summary>
     /// <returns>The instance of the empty <see cref="Interval{T}"/>.</returns>
     public static Interval<T> Empty<T>() =>
@@ -365,8 +365,9 @@ public static class Interval
 #pragma warning restore CS0618 // Type or member is obsolete
 
     /// <summary>
-    /// Returns an empty <see cref="Interval{T}"/> <c>∅</c>
-    /// using the specified comparer.
+    /// Returns an empty <see cref="Interval{T}"/>
+    /// using the specified comparer:
+    /// <code>∅</code>
     /// </summary>
     /// <param name="comparer">
     /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
@@ -380,14 +381,15 @@ public static class Interval
 
     /// <summary>
     /// Returns an infinite <see cref="Interval{T}"/>:
-    /// <c>(-∞,∞)</c>.
+    /// <code>(-∞,∞)</code>
     /// </summary>
     /// <returns>The instance of the infinite <see cref="Interval{T}"/>.</returns>
     public static Interval<T> Infinite<T>() => Interval<T>.Infinite;
 
     /// <summary>
-    /// Returns an infinite <see cref="Interval{T}"/> <c>(-∞,∞)</c>
-    /// using the specified comparer.
+    /// Returns an infinite <see cref="Interval{T}"/>
+    /// using the specified comparer:
+    /// <code>(-∞,∞)</code>
     /// </summary>
     /// <param name="comparer">
     /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
