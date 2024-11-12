@@ -69,16 +69,10 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
 
     internal static ValueInterval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
 
-    /// <summary>
-    /// The left boundary of the interval.
-    /// Represents a boundary the interval starts with.
-    /// </summary>
+    /// <inheritdoc/>
     public IntervalBoundary<T> From { get; init; }
 
-    /// <summary>
-    /// The right boundary of the interval.
-    /// Represents a boundary the interval ends with.
-    /// </summary>
+    /// <inheritdoc/>
     public IntervalBoundary<T> To { get; init; }
 
     IComparer<T> IIntervalOperations<T>.Comparer => Comparer<T>.Default;
@@ -113,15 +107,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <inheritdoc/>
     public int Zone(T value) => IntervalEngine.Zone(this, value, Comparer<T>.Default);
 
-    /// <summary>
-    /// <para>
-    /// Gets the interval interior.
-    /// </para>
-    /// <para>
-    /// The interior of an interval <c>I</c> is the largest open interval that is contained in <c>I</c>;
-    /// it is also the set of points in <c>I</c> which are not the endpoints of <c>I</c>.
-    /// </para>
-    /// </summary>
+    /// <inheritdoc cref="IIntervalOperations{T}.Interior"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public ValueInterval<T> Interior => IntervalEngine.Interior<ValueInterval<T>, T>(this, Construct);
 
@@ -129,15 +115,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IInterval<T> IIntervalOperations<T>.Interior => Interior;
 
-    /// <summary>
-    /// <para>
-    /// Gets the interval enclosure.
-    /// </para>
-    /// <para>
-    /// The enclosure of an interval <c>I</c> is the smallest closed interval that contains <c>I</c>;
-    /// which is also the set <c>I</c> augmented with its finite endpoints.
-    /// </para>
-    /// </summary>
+    /// <inheritdoc cref="IIntervalOperations{T}.Enclosure"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public ValueInterval<T> Enclosure => IntervalEngine.Enclosure<ValueInterval<T>, T>(this, Construct);
 
@@ -145,18 +123,10 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IInterval<T> IIntervalOperations<T>.Enclosure => Enclosure;
 
-    /// <summary>
-    /// Produces the intersection of the current and specified intervals.
-    /// </summary>
-    /// <param name="other">The interval to produce the intersection with.</param>
-    /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
+    /// <inheritdoc cref="IIntervalOperations{T}.Intersect(IInterval{T})"/>
     public ValueInterval<T> Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
 
-    /// <summary>
-    /// Produces the intersection of the current and specified intervals.
-    /// </summary>
-    /// <param name="other">The interval to produce the intersection with.</param>
-    /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
+    /// <inheritdoc cref="Intersect(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the other interval to produce the intersection with.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public ValueInterval<T> Intersect<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
@@ -168,18 +138,10 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
 
     IInterval<T> IIntervalOperations<T>.Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
 
-    /// <summary>
-    /// Produces the union of the current and specified intervals.
-    /// </summary>
-    /// <param name="other">The interval to produce the union with.</param>
-    /// <returns>A new interval representing a union of the current and specified intervals.</returns>
+    /// <inheritdoc cref="IIntervalOperations{T}.Union(IInterval{T})"/>
     public ValueInterval<T> Union(IInterval<T> other) => Union<IIntervalOperations<T>>(other);
 
-    /// <summary>
-    /// Produces the union of the current and specified intervals.
-    /// </summary>
-    /// <param name="other">The interval to produce the union with.</param>
-    /// <returns>A new interval representing a union of the current and specified intervals.</returns>
+    /// <inheritdoc cref="Union(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the other interval to produce the union with.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public ValueInterval<T> Union<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
@@ -196,11 +158,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <inheritdoc/>
     public bool Overlaps(IInterval<T> other) => Overlaps<IInterval<T>>(other);
 
-    /// <summary>
-    /// Determines whether this and the specified intervals overlap.
-    /// </summary>
-    /// <param name="other">The interval to check for overlapping.</param>
-    /// <returns><see langword="true"/> if this interval and <paramref name="other"/> overlap; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="Overlaps(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the interval to check for overlapping.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool Overlaps<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
@@ -209,11 +167,8 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <inheritdoc/>
     public bool IsSubintervalOf(IInterval<T> other) => IsSubintervalOf<IInterval<T>>(other);
 
-    /// <summary>
-    /// Determines whether the current interval is a subinterval of the specified interval.
-    /// </summary>
-    /// <param name="other">The interval to compare to the current interval.</param>
-    /// <returns><see langword="true"/> if the current interval is a subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="IsSubintervalOf(IInterval{T})"/>
+    /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         IntervalEngine.IsSubintervalOf(this, other, Comparer<T>.Default);
@@ -221,11 +176,8 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <inheritdoc/>
     public bool IsSuperintervalOf(IInterval<T> other) => IsSuperintervalOf<IInterval<T>>(other);
 
-    /// <summary>
-    /// Determines whether the current interval is a superinterval of the specified interval.
-    /// </summary>
-    /// <param name="other">The interval to compare to the current interval.</param>
-    /// <returns><see langword="true"/> if the current interval is a superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="IsSuperintervalOf(IInterval{T})"/>
+    /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         IntervalEngine.IsSuperintervalOf(this, other, Comparer<T>.Default);
@@ -233,11 +185,8 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <inheritdoc/>
     public bool IsProperSubintervalOf(IInterval<T> other) => IsProperSubintervalOf<IInterval<T>>(other);
 
-    /// <summary>
-    /// Determines whether the current interval is a proper subinterval of the specified interval.
-    /// </summary>
-    /// <param name="other">The interval to compare to the current interval.</param>
-    /// <returns><see langword="true"/> if the current interval is a proper subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="IsProperSubintervalOf(IInterval{T})"/>
+    /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsProperSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         IntervalEngine.IsProperSubintervalOf(this, other, Comparer<T>.Default);
@@ -245,11 +194,8 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <inheritdoc/>
     public bool IsProperSuperintervalOf(IInterval<T> other) => IsProperSuperintervalOf<IInterval<T>>(other);
 
-    /// <summary>
-    /// Determines whether the current interval is a proper superinterval of the specified interval.
-    /// </summary>
-    /// <param name="other">The interval to compare to the current interval.</param>
-    /// <returns><see langword="true"/> if the current interval is a proper superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="IsProperSuperintervalOf(IInterval{T})"/>
+    /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsProperSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         IntervalEngine.IsProperSuperintervalOf(this, other, Comparer<T>.Default);
@@ -257,11 +203,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <inheritdoc/>
     public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
 
-    /// <summary>
-    /// Determines whether this and the specified intervals are equal.
-    /// </summary>
-    /// <param name="other">The interval to compare to the current interval.</param>
-    /// <returns><see langword="true"/> if this interval and <paramref name="other"/> are equal; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="IntervalEquals(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IntervalEquals<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
@@ -283,21 +225,11 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <returns><see langword="true"/> if the specified intervals are not equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(in ValueInterval<T> x, IInterval<T>? y) => !EqualityOperator(x, y);
 
-    /// <summary>
-    /// Determines whether the specified intervals are equal.
-    /// </summary>
-    /// <param name="x">The first interval.</param>
-    /// <param name="y">The second interval.</param>
-    /// <returns><see langword="true"/> if the specified intervals are equal; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="operator ==(in ValueInterval{T}, IInterval{T}?)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool operator ==(in ValueInterval<T> x, Interval<T>? y) => EqualityOperator(x, y);
 
-    /// <summary>
-    /// Determines whether the specified intervals are not equal.
-    /// </summary>
-    /// <param name="x">The first interval.</param>
-    /// <param name="y">The second interval.</param>
-    /// <returns><see langword="true"/> if the specified intervals are not equal; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="operator !=(in ValueInterval{T}, IInterval{T}?)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool operator !=(in ValueInterval<T> x, Interval<T>? y) => !EqualityOperator(x, y);
 

@@ -80,20 +80,14 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
 
     internal static Interval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
 
-    /// <summary>
-    /// The left boundary of the interval.
-    /// Represents a boundary the interval starts with.
-    /// </summary>
+    /// <inheritdoc/>
     public IntervalBoundary<T> From { get; init; }
 
-    /// <summary>
-    /// The right boundary of the interval.
-    /// Represents a boundary the interval ends with.
-    /// </summary>
+    /// <inheritdoc/>
     public IntervalBoundary<T> To { get; init; }
 
     /// <summary>
-    /// The <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
+    /// Gets or initializes the <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
     /// </summary>
     [AllowNull]
     public IComparer<T> Comparer
@@ -137,15 +131,7 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     /// <inheritdoc/>
     public int Zone(T value) => IntervalEngine.Zone(this, value, m_Comparer);
 
-    /// <summary>
-    /// <para>
-    /// Gets the interval interior.
-    /// </para>
-    /// <para>
-    /// The interior of an interval <c>I</c> is the largest open interval that is contained in <c>I</c>;
-    /// it is also the set of points in <c>I</c> which are not the endpoints of <c>I</c>.
-    /// </para>
-    /// </summary>
+    /// <inheritdoc cref="IIntervalOperations{T}.Interior"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public Interval<T> Interior => IntervalEngine.Interior<Interval<T>, T>(this, Construct);
 
@@ -153,15 +139,7 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IInterval<T> IIntervalOperations<T>.Interior => Interior;
 
-    /// <summary>
-    /// <para>
-    /// Gets the interval enclosure.
-    /// </para>
-    /// <para>
-    /// The enclosure of an interval <c>I</c> is the smallest closed interval that contains <c>I</c>;
-    /// which is also the set <c>I</c> augmented with its finite endpoints.
-    /// </para>
-    /// </summary>
+    /// <inheritdoc cref="IIntervalOperations{T}.Enclosure"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public Interval<T> Enclosure => IntervalEngine.Enclosure<Interval<T>, T>(this, Construct);
 
@@ -169,18 +147,10 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IInterval<T> IIntervalOperations<T>.Enclosure => Enclosure;
 
-    /// <summary>
-    /// Produces the intersection of the current and specified intervals.
-    /// </summary>
-    /// <param name="other">The interval to produce the intersection with.</param>
-    /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
+    /// <inheritdoc cref="IIntervalOperations{T}.Intersect(IInterval{T})"/>
     public Interval<T> Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
 
-    /// <summary>
-    /// Produces the intersection of the current and specified intervals.
-    /// </summary>
-    /// <param name="other">The interval to produce the intersection with.</param>
-    /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
+    /// <inheritdoc cref="Intersect(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the other interval to produce the intersection with.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public Interval<T> Intersect<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
@@ -192,18 +162,10 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
 
     IInterval<T> IIntervalOperations<T>.Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
 
-    /// <summary>
-    /// Produces the union of the current and specified intervals.
-    /// </summary>
-    /// <param name="other">The interval to produce the union with.</param>
-    /// <returns>A new interval representing a union of the current and specified intervals.</returns>
+    /// <inheritdoc cref="IIntervalOperations{T}.Union(IInterval{T})"/>
     public Interval<T> Union(IInterval<T> other) => Union<IIntervalOperations<T>>(other);
 
-    /// <summary>
-    /// Produces the union of the current and specified intervals.
-    /// </summary>
-    /// <param name="other">The interval to produce the union with.</param>
-    /// <returns>A new interval representing a union of the current and specified intervals.</returns>
+    /// <inheritdoc cref="Union(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the other interval to produce the union with.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public Interval<T> Union<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
@@ -224,11 +186,7 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     /// <inheritdoc/>
     public bool Overlaps(IInterval<T> other) => Overlaps<IInterval<T>>(other);
 
-    /// <summary>
-    /// Determines whether this and the specified intervals overlap.
-    /// </summary>
-    /// <param name="other">The interval to check for overlapping.</param>
-    /// <returns><see langword="true"/> if this interval and <paramref name="other"/> overlap; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="Overlaps(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the interval to check for overlapping.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool Overlaps<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
@@ -238,11 +196,8 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     /// <inheritdoc/>
     public bool IsSubintervalOf(IInterval<T> other) => IsSubintervalOf<IInterval<T>>(other);
 
-    /// <summary>
-    /// Determines whether the current interval is a subinterval of the specified interval.
-    /// </summary>
-    /// <param name="other">The interval to compare to the current interval.</param>
-    /// <returns><see langword="true"/> if the current interval is a subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="IsSubintervalOf(IInterval{T})"/>
+    /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
@@ -251,11 +206,8 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     /// <inheritdoc/>
     public bool IsSuperintervalOf(IInterval<T> other) => IsSuperintervalOf<IInterval<T>>(other);
 
-    /// <summary>
-    /// Determines whether the current interval is a superinterval of the specified interval.
-    /// </summary>
-    /// <param name="other">The interval to compare to the current interval.</param>
-    /// <returns><see langword="true"/> if the current interval is a superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="IsSuperintervalOf(IInterval{T})"/>
+    /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
@@ -264,11 +216,8 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     /// <inheritdoc/>
     public bool IsProperSubintervalOf(IInterval<T> other) => IsProperSubintervalOf<IInterval<T>>(other);
 
-    /// <summary>
-    /// Determines whether the current interval is a proper subinterval of the specified interval.
-    /// </summary>
-    /// <param name="other">The interval to compare to the current interval.</param>
-    /// <returns><see langword="true"/> if the current interval is a proper subinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="IsProperSubintervalOf(IInterval{T})"/>
+    /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsProperSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         !IsThis(other ?? throw new ArgumentNullException(nameof(other))) &&
@@ -277,11 +226,8 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     /// <inheritdoc/>
     public bool IsProperSuperintervalOf(IInterval<T> other) => IsProperSuperintervalOf<IInterval<T>>(other);
 
-    /// <summary>
-    /// Determines whether the current interval is a proper superinterval of the specified interval.
-    /// </summary>
-    /// <param name="other">The interval to compare to the current interval.</param>
-    /// <returns><see langword="true"/> if the current interval is a proper superinterval of <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="IsProperSuperintervalOf(IInterval{T})"/>
+    /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsProperSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
         !IsThis(other ?? throw new ArgumentNullException(nameof(other))) &&
@@ -290,11 +236,7 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     /// <inheritdoc/>
     public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
 
-    /// <summary>
-    /// Determines whether this and the specified intervals are equal.
-    /// </summary>
-    /// <param name="other">The interval to compare to the current interval.</param>
-    /// <returns><see langword="true"/> if this interval and <paramref name="other"/> are equal; otherwise, <see langword="false"/>.</returns>
+    /// <inheritdoc cref="IntervalEquals(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IntervalEquals<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
