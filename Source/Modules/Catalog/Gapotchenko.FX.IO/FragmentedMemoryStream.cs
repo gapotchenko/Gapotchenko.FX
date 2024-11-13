@@ -6,11 +6,11 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.IO;
 
 /// <summary>
-/// Creates a stream that can store large amount of data in random access memory under memory fragmentation conditions.
+/// Creates a stream that can store large amount of data in memory under fragmentation conditions.
 /// </summary>
 /// <remarks>
-/// <see cref="FragmentedMemoryStream"/> is similar to <see cref="MemoryStream"/> but uses a dynamic list of byte arrays as a backing store.
-/// This allows it to use the memory address space more efficiently, as there is no need to allocate a contiguous memory block for the whole stream.
+/// <see cref="FragmentedMemoryStream"/> is similar to <see cref="MemoryStream"/> but it uses a dynamic list of relatively small memory blocks as its backing store.
+/// This enables a more efficient usage of the memory address space, as there is no need to allocate a potentially gigantic contiguous memory block for the whole stream.
 /// </remarks>
 public class FragmentedMemoryStream : Stream
 {
@@ -34,32 +34,22 @@ public class FragmentedMemoryStream : Stream
         Position = 0;
     }
 
-    /// <summary>
-    /// Gets a value indicating whether the current stream supports reading.
-    /// </summary>
+    /// <inheritdoc/>
     public override bool CanRead => true;
 
-    /// <summary>
-    /// Gets a value indicating whether the current stream supports seeking.
-    /// </summary>
+    /// <inheritdoc/>
     public override bool CanSeek => true;
 
-    /// <summary>
-    /// Gets a value indicating whether the current stream supports writing.
-    /// </summary>
+    /// <inheritdoc/>
     public override bool CanWrite => true;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     long m_Length;
 
-    /// <summary>
-    /// Gets the length in bytes of the stream.
-    /// </summary>
+    /// <inheritdoc/>
     public override long Length => m_Length;
 
-    /// <summary>
-    /// Gets or sets the position within the current stream.
-    /// </summary>
+    /// <inheritdoc/>
     public override long Position { get; set; }
 
     const long BlockSize = 65536;
@@ -89,28 +79,12 @@ public class FragmentedMemoryStream : Stream
     /// </summary>
     long CurrentBlockOffset => Position % BlockSize;
 
-    /// <summary>
-    /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
-    /// </summary>
+    /// <inheritdoc/>
     public override void Flush()
     {
     }
 
-    /// <summary>
-    /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
-    /// </summary>
-    /// <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte array with the values between <paramref name="offset" /> and (<paramref name="offset" /> + <paramref name="count" /> - 1) replaced by the bytes read from the current source.</param>
-    /// <param name="offset">The zero-based byte offset in <paramref name="buffer" /> at which to begin storing the data read from the current stream.</param>
-    /// <param name="count">The maximum number of bytes to be read from the current stream.</param>
-    /// <returns>
-    /// The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">buffer</exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// offset - Buffer offset cannot be negative.
-    /// or
-    /// count - Count cannot be negative.
-    /// </exception>
+    /// <inheritdoc/>
     public override int Read(byte[] buffer, int offset, int count)
     {
         if (buffer == null)
@@ -143,14 +117,7 @@ public class FragmentedMemoryStream : Stream
 
     }
 
-    /// <summary>
-    /// Sets the position within the current stream.
-    /// </summary>
-    /// <param name="offset">A byte offset relative to the <paramref name="origin" /> parameter.</param>
-    /// <param name="origin">A value of type <see cref="SeekOrigin" /> indicating the reference point used to obtain the new position.</param>
-    /// <returns>
-    /// The new position within the current stream.
-    /// </returns>
+    /// <inheritdoc/>
     public override long Seek(long offset, SeekOrigin origin)
     {
         switch (origin)
@@ -168,27 +135,13 @@ public class FragmentedMemoryStream : Stream
         return Position;
     }
 
-    /// <summary>
-    /// Sets the length of the current stream.
-    /// </summary>
-    /// <param name="value">The desired length of the current stream in bytes.</param>
+    /// <inheritdoc/>
     public override void SetLength(long value)
     {
         m_Length = value;
     }
 
-    /// <summary>
-    /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
-    /// </summary>
-    /// <param name="buffer">An array of bytes. This method copies <paramref name="count" /> bytes from <paramref name="buffer" /> to the current stream.</param>
-    /// <param name="offset">The zero-based byte offset in <paramref name="buffer" /> at which to begin copying bytes to the current stream.</param>
-    /// <param name="count">The number of bytes to be written to the current stream.</param>
-    /// <exception cref="ArgumentNullException">buffer</exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// offset - Buffer offset cannot be negative.
-    /// or
-    /// count - Count cannot be negative.
-    /// </exception>
+    /// <inheritdoc/>
     public override void Write(byte[] buffer, int offset, int count)
     {
         if (buffer == null)
@@ -222,12 +175,7 @@ public class FragmentedMemoryStream : Stream
         }
     }
 
-    /// <summary>
-    /// Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at the end of the stream.
-    /// </summary>
-    /// <returns>
-    /// The unsigned byte cast to an <see cref="Int32"/>, or <c>-1</c> if at the end of the stream.
-    /// </returns>
+    /// <inheritdoc/>
     public override int ReadByte()
     {
         if (Position >= m_Length)
@@ -239,10 +187,7 @@ public class FragmentedMemoryStream : Stream
         return b;
     }
 
-    /// <summary>
-    /// Writes a byte to the current position in the stream and advances the position within the stream by one byte.
-    /// </summary>
-    /// <param name="value">The byte to write to the stream.</param>
+    /// <inheritdoc/>
     public override void WriteByte(byte value)
     {
         EnsureCapacity(Position + 1);
@@ -258,9 +203,11 @@ public class FragmentedMemoryStream : Stream
 
     /// <summary>
     /// Returns the entire contents of the stream as a byte array.
-    /// This operation is not optimal due to the fact that a contiguous array allocation may fail when the stream is large enough.
-    /// Instead, use methods that operate directly on stream whenever possible.
     /// </summary>
+    /// <remarks>
+    /// This operation is not optimal due to the fact that a contiguous array allocation may fail when the stream is large enough and memory address space is too fragmented.
+    /// Instead, use methods that operate directly on the stream whenever possible.
+    /// </remarks>
     /// <returns>A byte array containing the current data of the stream.</returns>
     public virtual byte[] ToArray()
     {
@@ -277,14 +224,10 @@ public class FragmentedMemoryStream : Stream
         return buffer;
     }
 
-    /// <summary>
-    /// Writes an entire content of the stream to a specified destination.
-    /// </summary>
-    /// <param name="destination">The destination stream to write the content to.</param>
+    /// <inheritdoc cref="MemoryStream.WriteTo(Stream)"/>
     public virtual void WriteTo(Stream destination)
     {
-        // This method has no sense from the functional composability point of view
-        // but is needed to exist in order to be a drop-in replacement for MemoryStream.
+        // This method is needed to be a drop-in replacement for MemoryStream.
 
         if (destination == null)
             throw new ArgumentNullException(nameof(destination));
