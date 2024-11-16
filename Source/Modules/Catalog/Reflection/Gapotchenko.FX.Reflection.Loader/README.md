@@ -12,7 +12,7 @@
 
 The module provides versatile primitives that can be used to automatically lookup and load .NET assembly dependencies in various dynamic scenarios.
 
-## Gentle Introduction
+## Introduction
 
 Assembly loading plays a crucial role in .NET apps.
 Once the app is started, .NET Runtime ensures that all required assemblies are gradually loaded.
@@ -94,10 +94,11 @@ class Program
 ContosoApp continues to evolve and now it has a dependency on `Newtonsoft.Json.dll` assembly.
 A straightforward approach would be to put `Newtonsoft.Json.dll` assembly just besides `ContosoApp.exe`.
 
-
 But Mr. Alberto Olivetti from Contoso's Deployment Division decided that an additional file laying near `ContosoApp.exe` would be an unwanted distraction for command line users of the app.
 Mr. Olivetti tends to pay a lot of respect to his customers and wants to save their time while they are hanging around `ContosoApp.exe`.
 Thus Alberto came up with a respectful solution to put all third-party assemblies to `Components` subdirectory of the app.
+
+### .NET Framework
 
 Now how can `ContosoApp.exe` module load the required assemblies from `Components` directory?
 Thankfully, the default .NET Framework assembly loader allows to achieve that by specifying a set of private probing paths in application configuration file:
@@ -114,6 +115,8 @@ Thankfully, the default .NET Framework assembly loader allows to achieve that by
 
 The task is solved for `ContosoApp` (and every other .NET Framework app as well).
 The default .NET Framework assembly loader can be instructed to load dependent assemblies from inner directories of an app by specifying a set of private probing paths.
+
+### .NET Core / .NET
 
 There is another story for .NET Core and .NET target frameworks.
 They do not easily support additional probing paths.
@@ -239,12 +242,12 @@ Sometimes this is a beneficial behavior, like in case with the root `ContosoApp.
 In contrast, `AddAssembly` method provides a finer control.
 It only serves the dependencies of a _specified assembly_.
 It turns out to be a much saner choice for plugins where .NET app domain is shared among a lot of things.
-In this way, assembly loaders from different plugins would not clash with each other, even when they look at a conflicting assembly dependency (it's easy to imagine that a lot of plugins would use the "same" but subtly different variant of `Newtonsoft.Json` module).
+In this way, assembly loaders from different plugins would not clash with each other, even when they look at a conflicting assembly dependency (it's easy to imagine that a lot of plugins would use the "same" but subtly different variant of the omnipresent `Newtonsoft.Json` module).
 
 ## Scenario #4. Automatic handling of binding redirects for a .DLL assembly
 
 Assembly binding redirects allow to "remap" specific ranges of assembly versions.
-The redirects are automatically created by build tools, and then being put to corresponding `.config` files of resulting assemblies.
+The redirects are automatically created by build tools, and then being put to corresponding `.config` files of the resulting assemblies.
 [(Learn more)](https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/how-to-enable-and-disable-automatic-binding-redirection)
 
 Assembly binding redirects work well for apps, but get completely broken if you want to employ them for dynamically loaded assemblies like plugins.
@@ -284,7 +287,7 @@ static class AssemblyLoader
 There are a lot of projects that may need automatic handling of DLL binding redirects: T4 templates, MSBuild tasks, plugins, extensions etc.
 Basically everything that gets dynamically loaded and depends on one or more NuGet packages with mishmash of versions.
 
-## A Chicken & Egg Dilemma
+## A Chicken & Egg Dilemma of Distribution
 
 `Gapotchenko.FX.Reflection.Loader` module is distributed as a NuGet package with a single assembly file without dependencies.
 
