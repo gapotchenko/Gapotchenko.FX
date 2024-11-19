@@ -103,19 +103,14 @@ public static class FileSystem
     /// <param name="path">The path.</param>
     /// <param name="value">The value.</param>
     /// <returns><see langword="true"/> when the beginning of the path matches the specified value in terms of file system equivalence; otherwise, <see langword="false"/>.</returns>
-    public static bool PathStartsWith(
-        [NotNullWhen(true)] string? path,
-        string value)
+    public static bool PathStartsWith(string? path, string? value)
     {
-        if (value is null)
-            throw new ArgumentNullException(nameof(value));
-
-        if (path is null)
-            return false;
-
         var pathComparison = PathComparison;
-        if (path.Equals(value, pathComparison))
+
+        if (string.Equals(path, value, pathComparison))
             return true;
+        if (path == null || value == null)
+            return false;
 
         path = PathUtil.Normalize(path, true);
         value = PathUtil.Normalize(value, true);
