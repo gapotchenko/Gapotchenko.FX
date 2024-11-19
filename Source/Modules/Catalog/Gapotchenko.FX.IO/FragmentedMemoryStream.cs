@@ -6,11 +6,11 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.IO;
 
 /// <summary>
-/// Creates a stream that can store large amount of data in memory under fragmentation conditions.
+/// Creates a stream that can store a large amount of data in memory under fragmentation conditions.
 /// </summary>
 /// <remarks>
 /// <see cref="FragmentedMemoryStream"/> is similar to <see cref="MemoryStream"/> but it uses a dynamic list of relatively small memory blocks as its backing store.
-/// This enables a more efficient usage of the memory address space, as there is no need to allocate a potentially gigantic contiguous memory block for the whole stream.
+/// This enables a more efficient usage of the memory address space, as there is no need to allocate a potentially large contiguous memory block for the whole stream.
 /// </remarks>
 public class FragmentedMemoryStream : Stream
 {
@@ -52,7 +52,7 @@ public class FragmentedMemoryStream : Stream
     /// <inheritdoc/>
     public override long Position { get; set; }
 
-    const long BlockSize = 65536;
+    const int BlockSize = 65536;
 
     readonly List<byte[]> m_Blocks = [];
 
@@ -77,7 +77,7 @@ public class FragmentedMemoryStream : Stream
     /// <summary>
     /// The block offset of a byte currently addressed by <see cref="Position"/>.
     /// </summary>
-    long CurrentBlockOffset => Position % BlockSize;
+    int CurrentBlockOffset => (int)(Position % BlockSize);
 
     /// <inheritdoc/>
     public override void Flush()
@@ -94,27 +94,38 @@ public class FragmentedMemoryStream : Stream
         if (count < 0)
             throw new ArgumentOutOfRangeException(nameof(count), count, "Count cannot be negative.");
 
-        var lcount = (long)count;
+        return ReadCore(buffer.AsSpan(offset, count));
+    }
 
-        long remaining = m_Length - Position;
-        if (lcount > remaining)
-            lcount = remaining;
+#if NET5_0_OR_GREATER
+    /// <inheritdoc/>
+    public override int Read(Span<byte> buffer) => ReadCore(buffer);
+#endif
+
+    int ReadCore(Span<byte> buffer)
+    {
+        int offset = 0;
+        int count = (int)Math.Min(buffer.Length, m_Length - Position);
 
         int read = 0;
         do
         {
-            var copySize = Math.Min(lcount, BlockSize - CurrentBlockOffset);
-            Buffer.BlockCopy(CurrentBlock, (int)CurrentBlockOffset, buffer, offset, (int)copySize);
-            lcount -= copySize;
-            offset += (int)copySize;
+            var currentBlockOffset = CurrentBlockOffset;
+            var copySize = Math.Min(count, BlockSize - currentBlockOffset);
 
-            read += (int)copySize;
+            CurrentBlock
+                .AsSpan(currentBlockOffset, copySize)
+                .CopyTo(buffer[offset..]);
+
+            count -= copySize;
+            offset += copySize;
+
+            read += copySize;
             Position += copySize;
-
-        } while (lcount > 0);
+        }
+        while (count > 0);
 
         return read;
-
     }
 
     /// <inheritdoc/>
@@ -151,16 +162,33 @@ public class FragmentedMemoryStream : Stream
         if (count < 0)
             throw new ArgumentOutOfRangeException(nameof(count), count, "Count cannot be negative.");
 
+        WriteCore(buffer.AsSpan(offset, count));
+    }
+
+#if NET5_0_OR_GREATER
+    /// <inheritdoc/>
+    public override void Write(ReadOnlySpan<byte> buffer) => WriteCore(buffer);
+#endif
+
+    void WriteCore(ReadOnlySpan<byte> buffer)
+    {
+        int count = buffer.Length;
+        int offset = 0;
+
         var savedPosition = Position;
         try
         {
             do
             {
-                int copySize = Math.Min(count, (int)(BlockSize - CurrentBlockOffset));
+                var currentBlockOffset = CurrentBlockOffset;
+                int copySize = Math.Min(count, BlockSize - currentBlockOffset);
 
                 EnsureCapacity(Position + copySize);
 
-                Buffer.BlockCopy(buffer, offset, CurrentBlock, (int)CurrentBlockOffset, copySize);
+                buffer
+                    .Slice(offset, copySize)
+                    .CopyTo(CurrentBlock.AsSpan(currentBlockOffset));
+
                 count -= copySize;
                 offset += copySize;
 
@@ -214,6 +242,8 @@ public class FragmentedMemoryStream : Stream
         var savedPosition = Position;
         Position = 0;
 
+        // TODO: support streams larger than 2 GB.
+
         int length = checked((int)Length);
         var buffer = new byte[length];
         int r = Read(buffer, 0, length);
@@ -227,7 +257,7 @@ public class FragmentedMemoryStream : Stream
     /// <inheritdoc cref="MemoryStream.WriteTo(Stream)"/>
     public virtual void WriteTo(Stream destination)
     {
-        // This method is needed to be a drop-in replacement for MemoryStream.
+        // This method is needed for a drop-in replacement of MemoryStream.
 
         if (destination == null)
             throw new ArgumentNullException(nameof(destination));

@@ -7,6 +7,7 @@
 Release date: not released yet
 
 - Added support of `System.IFormattable` interface to `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
+- Added memory span operations to `Gapotchenko.FX.IO.FragmentedMemoryStream`
 
 ### Gapotchenko FX 2024.1
 
