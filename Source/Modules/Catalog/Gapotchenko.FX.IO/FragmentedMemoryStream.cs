@@ -97,7 +97,7 @@ public class FragmentedMemoryStream : Stream
         return ReadCore(buffer.AsSpan(offset, count));
     }
 
-#if NET5_0_OR_GREATER
+#if NET5_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <inheritdoc/>
     public override int Read(Span<byte> buffer) => ReadCore(buffer);
 #endif
@@ -165,7 +165,7 @@ public class FragmentedMemoryStream : Stream
         WriteCore(buffer.AsSpan(offset, count));
     }
 
-#if NET5_0_OR_GREATER
+#if NET5_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <inheritdoc/>
     public override void Write(ReadOnlySpan<byte> buffer) => WriteCore(buffer);
 #endif
