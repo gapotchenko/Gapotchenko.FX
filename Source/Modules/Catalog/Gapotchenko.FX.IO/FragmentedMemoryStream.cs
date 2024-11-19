@@ -108,7 +108,7 @@ public class FragmentedMemoryStream : Stream
         int count = (int)Math.Min(buffer.Length, m_Length - Position);
 
         int read = 0;
-        do
+        while (count > 0)
         {
             var currentBlockOffset = CurrentBlockOffset;
             var copySize = Math.Min(count, BlockSize - currentBlockOffset);
@@ -123,7 +123,6 @@ public class FragmentedMemoryStream : Stream
             read += copySize;
             Position += copySize;
         }
-        while (count > 0);
 
         return read;
     }
@@ -178,7 +177,7 @@ public class FragmentedMemoryStream : Stream
         var savedPosition = Position;
         try
         {
-            do
+            while (count > 0)
             {
                 var currentBlockOffset = CurrentBlockOffset;
                 int copySize = Math.Min(count, BlockSize - currentBlockOffset);
@@ -194,7 +193,6 @@ public class FragmentedMemoryStream : Stream
 
                 Position += copySize;
             }
-            while (count > 0);
         }
         catch
         {
@@ -242,22 +240,53 @@ public class FragmentedMemoryStream : Stream
         var savedPosition = Position;
         Position = 0;
 
-        // TODO: support streams larger than 2 GB.
-
-        int length = checked((int)Length);
+        var length = Length;
         var buffer = new byte[length];
-        int r = Read(buffer, 0, length);
-        Debug.Assert(r == length);
+        if (length <= int.MaxValue)
+        {
+            int r = ReadCore(buffer);
+            Debug.Assert(r == length);
+        }
+        else
+        {
+            // Stream is larger than 2 GB.
+            long r = ReadLargeCore(buffer);
+            Debug.Assert(r == length);
+        }
 
         Position = savedPosition;
 
         return buffer;
     }
 
+    long ReadLargeCore(byte[] buffer)
+    {
+        long offset = 0;
+        long count = Math.Min(buffer.LongLength, m_Length - Position);
+
+        long read = 0;
+        while (count > 0)
+        {
+            var currentBlockOffset = CurrentBlockOffset;
+            var copySize = Math.Min(count, BlockSize - currentBlockOffset);
+
+            Array.Copy(CurrentBlock, currentBlockOffset, buffer, offset, copySize);
+
+            count -= copySize;
+            offset += copySize;
+
+            read += copySize;
+            Position += copySize;
+        }
+
+        return read;
+    }
+
     /// <inheritdoc cref="MemoryStream.WriteTo(Stream)"/>
     public virtual void WriteTo(Stream destination)
     {
-        // This method is needed for a drop-in replacement of MemoryStream.
+        // This method is needed to mimic the interface of MemoryStream
+        // (to be a drop-in replacement).
 
         if (destination == null)
             throw new ArgumentNullException(nameof(destination));
