@@ -33,7 +33,7 @@ public struct ExecuteOnce
     /// <param name="action">The action.</param>
     /// <param name="syncLock">
     /// An object used as the mutually exclusive lock for action execution.
-    /// When the given value is null, an unique synchronization lock object is used.
+    /// When the given value is <see langword="null"/>, an unique synchronization lock object is used.
     /// </param>
     public ExecuteOnce(Action action, object? syncLock)
     {
@@ -43,12 +43,6 @@ public struct ExecuteOnce
         m_Action = action;
         m_SyncLock = syncLock;
     }
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    object? m_SyncLock;
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    Action? m_Action;
 
     /// <summary>
     /// Ensures that the action was executed.
@@ -61,4 +55,10 @@ public struct ExecuteOnce
     public bool IsExecuted =>
         Volatile.Read(ref m_Action) is null &&
         m_SyncLock is not null; // a check for m_SyncLock is needed to cover the uninitialized struct scenario
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    object? m_SyncLock;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    Action? m_Action;
 }

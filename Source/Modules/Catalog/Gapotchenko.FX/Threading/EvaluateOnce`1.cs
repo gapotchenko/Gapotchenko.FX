@@ -55,23 +55,15 @@ public struct EvaluateOnce<T>
         m_Value = default;
     }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    [AllowNull]
-    T m_Value;
-
-    [NonSerialized]
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    object? m_SyncLock;
-
-    [NonSerialized]
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    Func<T>? m_ValueFactory;
-
     /// <summary>
     /// Gets the lazily evaluated value of the current <see cref="EvaluateOnce{T}"/> instance.
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public T Value => LazyInitializerEx.EnsureInitialized(ref m_Value, ref m_SyncLock, ref m_ValueFactory);
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    [AllowNull]
+    T m_Value;
 
     /// <summary>
     /// Gets a value that indicates whether a value has been created for this <see cref="EvaluateOnce{T}"/> instance.
@@ -86,6 +78,14 @@ public struct EvaluateOnce<T>
                 m_SyncLock is not null; // a check for m_SyncLock is needed to cover the uninitialized struct scenario
         }
     }
+
+    [NonSerialized]
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    object? m_SyncLock;
+
+    [NonSerialized]
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    Func<T>? m_ValueFactory;
 
     /// <summary>
     /// Creates and returns a string representation of the <see cref="Value"/> property for this instance.
