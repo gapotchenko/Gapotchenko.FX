@@ -5,7 +5,9 @@
 // Year of introduction: 2019
 
 using Gapotchenko.FX.Properties;
+using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
@@ -56,10 +58,28 @@ public struct EvaluateOnce<T>
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// </summary>
+    /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
+    /// <param name="syncLock">
+    /// A <see cref="Lock"/> object used as the mutually exclusive lock for value evaluation.
+    /// When the given value is <see langword="null"/>, an unique synchronization lock object is used.
+    /// </param>
+    public EvaluateOnce(Func<T> valueFactory, Lock? syncLock) :
+#pragma warning disable CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
+        this(valueFactory, (object?)syncLock)
+#pragma warning restore CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
+    {
+    }
+
+    /// <summary>
     /// Gets the lazily evaluated value of the current <see cref="EvaluateOnce{T}"/> instance.
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    public T Value => LazyInitializerEx.EnsureInitialized(ref m_Value, ref m_SyncLock, ref m_ValueFactory);
+    public T Value =>
+        m_SyncLock is Lock ?
+            LazyInitializerEx.EnsureInitialized(ref m_Value, ref Unsafe.As<object?, Lock?>(ref m_SyncLock), ref m_ValueFactory) :
+            LazyInitializerEx.EnsureInitialized(ref m_Value, ref m_SyncLock, ref m_ValueFactory);
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     [AllowNull]

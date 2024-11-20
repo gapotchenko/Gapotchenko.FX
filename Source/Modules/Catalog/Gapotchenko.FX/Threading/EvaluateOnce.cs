@@ -34,8 +34,20 @@ public static class EvaluateOnce
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     /// <param name="syncLock">
     /// An object used as the mutually exclusive lock for value evaluation.
-    /// When the given value is null, an unique synchronization lock object is used.
+    /// When the given value is <see langword="null"/>, an unique synchronization lock object is used.
     /// </param>
     /// <returns>New <see cref="EvaluateOnce{T}"/> instance.</returns>
-    public static EvaluateOnce<T> Create<T>(Func<T> valueFactory, object syncLock) => new(valueFactory, syncLock);
+    public static EvaluateOnce<T> Create<T>(Func<T> valueFactory, object? syncLock) => new(valueFactory, syncLock);
+
+    /// <summary>
+    /// Creates a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// </summary>
+    /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
+    /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
+    /// <param name="syncLock">
+    /// A <see cref="Lock"/> object used as the mutually exclusive lock for value evaluation.
+    /// When the given value is <see langword="null"/>, an unique synchronization lock object is used.
+    /// </param>
+    /// <returns>New <see cref="EvaluateOnce{T}"/> instance.</returns>
+    public static EvaluateOnce<T> Create<T>(Func<T> valueFactory, Lock? syncLock) => new(valueFactory, syncLock);
 }
