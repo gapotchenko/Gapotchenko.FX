@@ -114,30 +114,20 @@ public static class LazyInitializerEx
     /// </summary>
     /// <param name="target">A reference of <see cref="Object"/> type to initialize if it has not already been initialized.</param>
     /// <returns>The initialized reference of <see cref="Object"/> type.</returns>
-    public static object EnsureInitialized([NotNull] ref object? target)
-    {
-        var result = target;
-        if (result is not null)
-            return result;
-
-        result = new object();
-        return Interlocked.CompareExchange(ref target, result, null) ?? result;
-    }
+    public static object EnsureInitialized([NotNull] ref object? target) =>
+        target ??
+        Interlocked.CompareExchange(ref target, new object(), null) ??
+        target;
 
     /// <summary>
     /// Initializes a target <see cref="Lock"/> type with the type's default constructor if it hasn't already been initialized.
     /// </summary>
     /// <param name="target">A reference of <see cref="Lock"/> type to initialize if it has not already been initialized.</param>
     /// <returns>The initialized reference of <see cref="Lock"/> type.</returns>
-    public static Lock EnsureInitialized([NotNull] ref Lock? target)
-    {
-        var result = target;
-        if (result is not null)
-            return result;
-
-        result = new Lock();
-        return Interlocked.CompareExchange(ref target, result, null) ?? result;
-    }
+    public static Lock EnsureInitialized([NotNull] ref Lock? target) =>
+        target ??
+        Interlocked.CompareExchange(ref target, new Lock(), null) ??
+        target;
 
     // ------------------------------------------------------------------------------------------------------------
 
