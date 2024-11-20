@@ -59,6 +59,11 @@ class Program
     {
         try
         {
+            ExecuteOnce a = new(() => Console.WriteLine("Once!"));
+            a.EnsureExecuted();
+            a.EnsureExecuted();
+
+
             if (!Console.IsOutputRedirected)
                 Console.OutputEncoding = Encoding.UTF8;
 

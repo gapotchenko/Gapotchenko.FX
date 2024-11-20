@@ -8,6 +8,8 @@ Release date: not released yet
 
 - Added support of `System.IFormattable` interface to `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
 - Added memory span operations to `Gapotchenko.FX.IO.FragmentedMemoryStream`
+- Implemented `System.Threading.Lock` support in `Gapotchenko.FX.Threading.LazyInitializerEx` primitive
+- Implemented `System.Threading.Lock` support in `Gapotchenko.FX.Threading.ExecuteOnce` primitive
 
 ### Gapotchenko FX 2024.1
 
