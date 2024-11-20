@@ -52,6 +52,21 @@ public static class LazyInitializerEx
         return Interlocked.CompareExchange(ref target, result, null) ?? result;
     }
 
+    /// <summary>
+    /// Initializes a target <see cref="Object"/> type with the type's default constructor if it hasn't already been initialized.
+    /// </summary>
+    /// <param name="target">A reference of <see cref="Object"/> type to initialize if it has not already been initialized.</param>
+    /// <returns>The initialized reference of <see cref="Object"/> type.</returns>
+    public static Lock EnsureInitialized([NotNull] ref Lock? target)
+    {
+        var result = target;
+        if (result != null)
+            return result;
+
+        result = new Lock();
+        return Interlocked.CompareExchange(ref target, result, null) ?? result;
+    }
+
     // ------------------------------------------------------------------------------------------------------------
 
     /// <summary>
