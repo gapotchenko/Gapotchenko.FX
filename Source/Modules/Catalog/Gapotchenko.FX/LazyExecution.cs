@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using System.Diagnostics;
 
 namespace Gapotchenko.FX;
 
@@ -24,9 +30,6 @@ public struct LazyExecution
         m_Action = Empty.Nullify(action);
     }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    Action? m_Action;
-
     /// <summary>
     /// Ensures that the action was executed.
     /// </summary>
@@ -43,5 +46,8 @@ public struct LazyExecution
     /// <summary>
     /// Gets a value indicating whether the action was executed.
     /// </summary>
-    public bool IsExecuted => m_Action == Fn.Empty;
+    public readonly bool IsExecuted => m_Action == Fn.Empty;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    Action? m_Action;
 }

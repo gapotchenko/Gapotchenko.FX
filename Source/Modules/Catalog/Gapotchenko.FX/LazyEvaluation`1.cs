@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Properties;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using Gapotchenko.FX.Properties;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
@@ -35,14 +41,6 @@ public struct LazyEvaluation<T>
         m_Value = default;
     }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    [AllowNull]
-    T m_Value;
-
-    [NonSerialized]
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    Func<T>? m_ValueFactory;
-
     /// <summary>
     /// Gets the lazily evaluated value of the current <see cref="LazyEvaluation{T}"/> instance.
     /// </summary>
@@ -63,10 +61,18 @@ public struct LazyEvaluation<T>
         }
     }
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    [AllowNull]
+    T m_Value;
+
     /// <summary>
     /// Gets a value that indicates whether a value has been created for this <see cref="LazyEvaluation{T}"/> instance.
     /// </summary>
-    public bool IsValueCreated => m_ValueFactory == Fn<T>.Default;
+    public readonly bool IsValueCreated => m_ValueFactory == Fn<T>.Default;
+
+    [NonSerialized]
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    Func<T>? m_ValueFactory;
 
     /// <summary>
     /// Creates and returns a string representation of the <see cref="Value"/> property for this instance.
@@ -85,7 +91,7 @@ public struct LazyEvaluation<T>
     void OnSerializing(StreamingContext context)
     {
         // Force evaluation before the value is serialized.
-        Fn.Ignore(Value);
+        _ = Value;
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
