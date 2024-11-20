@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Threading;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+namespace Gapotchenko.FX.Threading;
 
 /// <summary>
 /// Provides static methods for creating <see cref="EvaluateOnce{T}"/> objects.
@@ -11,8 +17,7 @@ public static class EvaluateOnce
     /// </summary>
     /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
     /// <returns>New <see cref="EvaluateOnce{T}"/> instance.</returns>
-    public static EvaluateOnce<T> Create<T>() where T : new() =>
-        new EvaluateOnce<T>(() => new T());
+    public static EvaluateOnce<T> Create<T>() where T : new() => new(() => new T());
 
     /// <summary>
     /// Creates a new instance of the <see cref="EvaluateOnce{T}"/> struct.
@@ -20,7 +25,7 @@ public static class EvaluateOnce
     /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     /// <returns>New <see cref="EvaluateOnce{T}"/> instance.</returns>
-    public static EvaluateOnce<T> Create<T>(Func<T> valueFactory) => new EvaluateOnce<T>(valueFactory);
+    public static EvaluateOnce<T> Create<T>(Func<T> valueFactory) => new(valueFactory);
 
     /// <summary>
     /// Creates a new instance of the <see cref="EvaluateOnce{T}"/> struct.
@@ -32,5 +37,5 @@ public static class EvaluateOnce
     /// When the given value is null, an unique synchronization lock object is used.
     /// </param>
     /// <returns>New <see cref="EvaluateOnce{T}"/> instance.</returns>
-    public static EvaluateOnce<T> Create<T>(Func<T> valueFactory, object syncLock) => new EvaluateOnce<T>(valueFactory, syncLock);
+    public static EvaluateOnce<T> Create<T>(Func<T> valueFactory, object syncLock) => new(valueFactory, syncLock);
 }

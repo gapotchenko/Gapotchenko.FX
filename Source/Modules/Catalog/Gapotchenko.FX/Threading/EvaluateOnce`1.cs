@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.Properties;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using Gapotchenko.FX.Properties;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -76,8 +82,8 @@ public struct EvaluateOnce<T>
         {
             Thread.MemoryBarrier();
             return
-                m_ValueFactory == null &&
-                m_SyncLock != null; // a check for m_SyncLock is needed to cover the uninitialized struct scenario
+                m_ValueFactory is null &&
+                m_SyncLock is not null; // a check for m_SyncLock is needed to cover the uninitialized struct scenario
         }
     }
 

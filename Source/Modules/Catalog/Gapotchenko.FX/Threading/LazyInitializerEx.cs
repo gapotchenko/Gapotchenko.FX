@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using System.Diagnostics;
 using System.Security.Permissions;
 
 #if NETFRAMEWORK || NETSTANDARD2_0 || NETSTANDARD2_1 || NETCOREAPP2_0 || NETCOREAPP2_1
@@ -29,8 +35,8 @@ public static class LazyInitializerEx
     /// <returns>The initialized value of type <typeparamref name="TTarget"/>.</returns>
     public static TTarget EnsureInitialized<TTarget>([AllowNull] ref TTarget target, ref bool initialized, object syncLock, Func<TTarget> valueFactory)
     {
-        if (syncLock == null)
-            _ThrowArgumentNullException_SyncLock();
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
 
         return LazyInitializer.EnsureInitialized(ref target, ref initialized, ref syncLock, valueFactory);
     }
@@ -45,7 +51,7 @@ public static class LazyInitializerEx
     public static object EnsureInitialized([NotNull] ref object? target)
     {
         var result = target;
-        if (result != null)
+        if (result is not null)
             return result;
 
         result = new object();
@@ -60,7 +66,7 @@ public static class LazyInitializerEx
     public static Lock EnsureInitialized([NotNull] ref Lock? target)
     {
         var result = target;
-        if (result != null)
+        if (result is not null)
             return result;
 
         result = new Lock();
@@ -80,19 +86,7 @@ public static class LazyInitializerEx
         if (Volatile.Read(ref initialized))
             return;
 
-        _EnsureInitializedCore(ref initialized, EnsureInitialized(ref syncLock), action);
-    }
-
-    static void _EnsureInitializedCore(ref bool initialized, object syncLock, Action action)
-    {
-        lock (syncLock)
-        {
-            if (!Volatile.Read(ref initialized))
-            {
-                action();
-                Volatile.Write(ref initialized, true);
-            }
-        }
+        EnsureInitializedCore(ref initialized, EnsureInitialized(ref syncLock), action);
     }
 
     /// <summary>
@@ -107,10 +101,22 @@ public static class LazyInitializerEx
         if (Volatile.Read(ref initialized))
             return;
 
-        if (syncLock == null)
-            _ThrowArgumentNullException_SyncLock();
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
 
-        _EnsureInitializedCore(ref initialized, syncLock, action);
+        EnsureInitializedCore(ref initialized, syncLock, action);
+    }
+
+    static void EnsureInitializedCore(ref bool initialized, object syncLock, Action action)
+    {
+        lock (syncLock)
+        {
+            if (!Volatile.Read(ref initialized))
+            {
+                action();
+                Volatile.Write(ref initialized, true);
+            }
+        }
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -128,19 +134,7 @@ public static class LazyInitializerEx
         if (Volatile.Read(ref initialized))
             return;
 
-        _EnsureInitializedCore(ref initialized, EnsureInitialized(ref syncLock), action, state);
-    }
-
-    static void _EnsureInitializedCore<TState>(ref bool initialized, object syncLock, Action<TState> action, TState state)
-    {
-        lock (syncLock)
-        {
-            if (!Volatile.Read(ref initialized))
-            {
-                action(state);
-                Volatile.Write(ref initialized, true);
-            }
-        }
+        EnsureInitializedCore(ref initialized, EnsureInitialized(ref syncLock), action, state);
     }
 
     /// <summary>
@@ -156,16 +150,28 @@ public static class LazyInitializerEx
         if (Volatile.Read(ref initialized))
             return;
 
-        if (syncLock == null)
-            _ThrowArgumentNullException_SyncLock();
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
 
-        _EnsureInitializedCore(ref initialized, syncLock, action, state);
+        EnsureInitializedCore(ref initialized, syncLock, action, state);
+    }
+
+    static void EnsureInitializedCore<TState>(ref bool initialized, object syncLock, Action<TState> action, TState state)
+    {
+        lock (syncLock)
+        {
+            if (!Volatile.Read(ref initialized))
+            {
+                action(state);
+                Volatile.Write(ref initialized, true);
+            }
+        }
     }
 
     // ------------------------------------------------------------------------------------------------------------
 
     [DoesNotReturn, StackTraceHidden]
-    static void _ThrowArgumentNullException_SyncLock()
+    static void ThrowArgumentNullException_SyncLock()
     {
         // This should be a separate method to avoid performance degradation.
         throw new ArgumentNullException("syncLock");
@@ -188,20 +194,7 @@ public static class LazyInitializerEx
         if (Volatile.Read(ref initialized))
             return target!;
 
-        return _EnsureInitializedCore(ref target, ref initialized, EnsureInitialized(ref syncLock), valueFactory, state);
-    }
-
-    static TTarget _EnsureInitializedCore<TTarget, TState>([AllowNull] ref TTarget target, ref bool initialized, object syncLock, Func<TState, TTarget> valueFactory, TState state)
-    {
-        lock (syncLock)
-        {
-            if (!Volatile.Read(ref initialized))
-            {
-                target = valueFactory(state);
-                Volatile.Write(ref initialized, true);
-            }
-        }
-        return target!;
+        return EnsureInitializedCore(ref target, ref initialized, EnsureInitialized(ref syncLock), valueFactory, state);
     }
 
     /// <summary>
@@ -219,10 +212,23 @@ public static class LazyInitializerEx
         if (Volatile.Read(ref initialized))
             return target!;
 
-        if (syncLock == null)
-            _ThrowArgumentNullException_SyncLock();
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
 
-        return _EnsureInitializedCore(ref target, ref initialized, syncLock, valueFactory, state);
+        return EnsureInitializedCore(ref target, ref initialized, syncLock, valueFactory, state);
+    }
+
+    static TTarget EnsureInitializedCore<TTarget, TState>([AllowNull] ref TTarget target, ref bool initialized, object syncLock, Func<TState, TTarget> valueFactory, TState state)
+    {
+        lock (syncLock)
+        {
+            if (!Volatile.Read(ref initialized))
+            {
+                target = valueFactory(state);
+                Volatile.Write(ref initialized, true);
+            }
+        }
+        return target!;
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -239,18 +245,18 @@ public static class LazyInitializerEx
     /// </param>
     public static void EnsureInitialized([NotNull] ref object? syncLock, ref Action? action)
     {
-        if (Volatile.Read(ref action) == null)
+        if (Volatile.Read(ref action) is null)
             return;
 
-        _EnsureInitializedCore(ref syncLock, ref action);
+        EnsureInitializedCore(ref syncLock, ref action);
     }
 
-    static void _EnsureInitializedCore([NotNull] ref object? syncLock, ref Action? action)
+    static void EnsureInitializedCore([NotNull] ref object? syncLock, ref Action? action)
     {
         lock (EnsureInitialized(ref syncLock))
         {
             var actionValue = Volatile.Read(ref action);
-            if (actionValue != null)
+            if (actionValue is not null)
             {
                 actionValue();
                 Volatile.Write(ref action, null);
@@ -272,18 +278,18 @@ public static class LazyInitializerEx
     /// </param>
     public static TTarget EnsureInitialized<TTarget>([AllowNull] ref TTarget target, [NotNull] ref object? syncLock, ref Func<TTarget>? valueFactory)
     {
-        if (Volatile.Read(ref valueFactory) == null)
+        if (Volatile.Read(ref valueFactory) is null)
             return target!;
 
-        return _EnsureInitializedCore(ref target, ref syncLock, ref valueFactory);
+        return EnsureInitializedCore(ref target, ref syncLock, ref valueFactory);
     }
 
-    static TTarget _EnsureInitializedCore<TTarget>([AllowNull] ref TTarget target, [NotNull] ref object? syncLock, ref Func<TTarget>? valueFactory)
+    static TTarget EnsureInitializedCore<TTarget>([AllowNull] ref TTarget target, [NotNull] ref object? syncLock, ref Func<TTarget>? valueFactory)
     {
         lock (EnsureInitialized(ref syncLock))
         {
             var valueFactoryValue = Volatile.Read(ref valueFactory);
-            if (valueFactoryValue != null)
+            if (valueFactoryValue is not null)
             {
                 target = valueFactoryValue();
                 Volatile.Write(ref valueFactory, null);
@@ -307,13 +313,13 @@ public static class LazyInitializerEx
     public static TTarget EnsureInitialized<TTarget, TState>([NotNull] ref TTarget? target, object syncLock, Func<TState, TTarget> valueFactory, TState state) where TTarget : class
     {
         var result = Volatile.Read(ref target);
-        if (result != null)
+        if (result is not null)
             return result;
 
-        if (syncLock == null)
-            _ThrowArgumentNullException_SyncLock();
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
 
-        return _EnsureInitializedCore(ref target, syncLock, valueFactory, state);
+        return EnsureInitializedCore(ref target, syncLock, valueFactory, state);
     }
 
     /// <summary>
@@ -329,19 +335,19 @@ public static class LazyInitializerEx
     public static TTarget EnsureInitialized<TTarget, TState>([NotNull] ref TTarget? target, [NotNull] ref object? syncLock, Func<TState, TTarget> valueFactory, TState state) where TTarget : class
     {
         var result = Volatile.Read(ref target);
-        if (result != null)
+        if (result is not null)
             return result;
 
-        return _EnsureInitializedCore(ref target, EnsureInitialized(ref syncLock), valueFactory, state);
+        return EnsureInitializedCore(ref target, EnsureInitialized(ref syncLock), valueFactory, state);
     }
 
-    static TTarget _EnsureInitializedCore<TTarget, TState>([NotNull] ref TTarget? target, object syncLock, Func<TState, TTarget> valueFactory, TState state) where TTarget : class
+    static TTarget EnsureInitializedCore<TTarget, TState>([NotNull] ref TTarget? target, object syncLock, Func<TState, TTarget> valueFactory, TState state) where TTarget : class
     {
         TTarget? result;
         lock (syncLock)
         {
             result = Volatile.Read(ref target);
-            if (result == null)
+            if (result is null)
             {
                 result = valueFactory(state);
                 Volatile.Write(ref target, result);
@@ -363,13 +369,13 @@ public static class LazyInitializerEx
     public static TTarget EnsureInitialized<TTarget>([NotNull] ref TTarget? target, object syncLock, Func<TTarget> valueFactory) where TTarget : class
     {
         var result = Volatile.Read(ref target);
-        if (result != null)
+        if (result is not null)
             return result;
 
-        if (syncLock == null)
-            _ThrowArgumentNullException_SyncLock();
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
 
-        return _EnsureInitializedCore(ref target, syncLock, valueFactory);
+        return EnsureInitializedCore(ref target, syncLock, valueFactory);
     }
 
     /// <summary>
@@ -383,19 +389,19 @@ public static class LazyInitializerEx
     public static TTarget EnsureInitialized<TTarget>([NotNull] ref TTarget? target, [NotNull] ref object? syncLock, Func<TTarget> valueFactory) where TTarget : class
     {
         var result = Volatile.Read(ref target);
-        if (result != null)
+        if (result is not null)
             return result;
 
-        return _EnsureInitializedCore(ref target, EnsureInitialized(ref syncLock), valueFactory);
+        return EnsureInitializedCore(ref target, EnsureInitialized(ref syncLock), valueFactory);
     }
 
-    static TTarget _EnsureInitializedCore<TTarget>([NotNull] ref TTarget? target, object syncLock, Func<TTarget> valueFactory) where TTarget : class
+    static TTarget EnsureInitializedCore<TTarget>([NotNull] ref TTarget? target, object syncLock, Func<TTarget> valueFactory) where TTarget : class
     {
         TTarget? result;
         lock (syncLock)
         {
             result = Volatile.Read(ref target);
-            if (result == null)
+            if (result is null)
             {
                 result = valueFactory();
                 Volatile.Write(ref target, result);
@@ -411,25 +417,25 @@ public static class LazyInitializerEx
     /// </summary>
     /// <typeparam name="TTarget">The type of the target to be initialized.</typeparam>
     /// <param name="target">A reference of type <see cref="Optional{TTarget}"/> to initialize if it hasn't already been initialized.</param>
-    /// <param name="syncLock">An object used as the mutually exclusive lock for initializing target.</param>
+    /// <param name="syncLock">A reference to an object used as the mutually exclusive lock for initializing target. If syncLock is null, a new object will be instantiated.</param>
     /// <param name="valueFactory">The function that is called to initialize the reference or value.</param>
     /// <returns>The initialized value of type <typeparamref name="TTarget"/>.</returns>
-    public static TTarget EnsureInitialized<TTarget>(ref Optional<TTarget> target, object syncLock, Func<TTarget> valueFactory)
-    {
-        if (syncLock == null)
-            _ThrowArgumentNullException_SyncLock();
-
-        return LazyInitializer.EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory);
-    }
+    public static TTarget EnsureInitialized<TTarget>(ref Optional<TTarget> target, [NotNull] ref object? syncLock, Func<TTarget> valueFactory) =>
+        LazyInitializer.EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory);
 
     /// <summary>
     /// Initializes an optional target reference by using a specified function if it hasn't already been initialized.
     /// </summary>
     /// <typeparam name="TTarget">The type of the target to be initialized.</typeparam>
     /// <param name="target">A reference of type <see cref="Optional{TTarget}"/> to initialize if it hasn't already been initialized.</param>
-    /// <param name="syncLock">A reference to an object used as the mutually exclusive lock for initializing target. If syncLock is null, a new object will be instantiated.</param>
+    /// <param name="syncLock">An object used as the mutually exclusive lock for initializing target.</param>
     /// <param name="valueFactory">The function that is called to initialize the reference or value.</param>
     /// <returns>The initialized value of type <typeparamref name="TTarget"/>.</returns>
-    public static TTarget EnsureInitialized<TTarget>(ref Optional<TTarget> target, [NotNull] ref object? syncLock, Func<TTarget> valueFactory) =>
-        LazyInitializer.EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory);
+    public static TTarget EnsureInitialized<TTarget>(ref Optional<TTarget> target, object syncLock, Func<TTarget> valueFactory)
+    {
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
+
+        return LazyInitializer.EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory);
+    }
 }

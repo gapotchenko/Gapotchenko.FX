@@ -1,4 +1,10 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using System.Diagnostics;
 using System.Security.Permissions;
 
 namespace Gapotchenko.FX.Threading;
@@ -31,7 +37,7 @@ public struct ExecuteOnce
     /// </param>
     public ExecuteOnce(Action action, object? syncLock)
     {
-        if (action == null)
+        if (action is null)
             throw new ArgumentNullException(nameof(action));
 
         m_Action = action;
@@ -52,5 +58,7 @@ public struct ExecuteOnce
     /// <summary>
     /// Gets a value indicating whether the action was executed.
     /// </summary>
-    public bool IsExecuted => Volatile.Read(ref m_Action) == null && m_SyncLock != null; // a check for m_SyncLock is needed to cover the uninitialized struct scenario
+    public bool IsExecuted =>
+        Volatile.Read(ref m_Action) is null &&
+        m_SyncLock is not null; // a check for m_SyncLock is needed to cover the uninitialized struct scenario
 }
