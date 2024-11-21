@@ -150,34 +150,22 @@ public class AssemblyAutoLoader :
     /// <summary>
     /// Adds the location of a specified assembly to the list of sources to consider during assembly resolution.
     /// Once added, the assembly loader automatically handles binding redirects according to the assembly configuration (<c>.config</c>) file.
-    /// If configuration file does not exist then binding redirects are automatically deducted according to the assembly compatibility heuristics.
+    /// If the configuration file does not exist then binding redirects are automatically deducted according to the assembly compatibility heuristics.
     /// </summary>
     /// <param name="assembly">The assembly.</param>
     /// <returns><see langword="true"/> if the assembly is added; <see langword="false"/> if the assembly is already added.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <see langword="null"/>.</exception>
     public new bool AddAssembly(Assembly assembly) => AddAssembly(assembly, (IEnumerable<string?>?)null);
 
-    /// <summary>
-    /// Adds the location of a specified assembly to the list of sources to consider during assembly resolution.
-    /// Once added, the assembly loader automatically handles binding redirects according to the assembly configuration (<c>.config</c>) file.
-    /// If configuration file does not exist then binding redirects are automatically deducted according to the assembly compatibility heuristics.
-    /// </summary>
+    /// <inheritdoc cref="AddAssembly(Assembly)"/>
     /// <param name="assembly">The assembly.</param>
     /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
-    /// <returns><see langword="true"/> if the assembly with the specified set of additional probing paths is added; <see langword="false"/> if the assembly with the specified set of additional probing paths is already added.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <see langword="null"/>.</exception>
     public new bool AddAssembly(Assembly assembly, params string?[]? additionalProbingPaths) =>
         AddAssembly(assembly, (IEnumerable<string?>?)additionalProbingPaths);
 
-    /// <summary>
-    /// Adds the location of a specified assembly to the list of sources to consider during assembly resolution.
-    /// Once added, the assembly loader automatically handles binding redirects according to the assembly configuration (<c>.config</c>) file.
-    /// If configuration file does not exist then binding redirects are automatically deducted according to the assembly compatibility heuristics.
-    /// </summary>
+    /// <inheritdoc cref="AddAssembly(Assembly)"/>
     /// <param name="assembly">The assembly.</param>
     /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
-    /// <returns><see langword="true"/> if the assembly with the specified set of additional probing paths is added; <see langword="false"/> if the assembly with the specified set of additional probing paths is already added.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <see langword="null"/>.</exception>
     public bool AddAssembly(Assembly assembly, IEnumerable<string?>? additionalProbingPaths)
     {
         if (assembly == null)
