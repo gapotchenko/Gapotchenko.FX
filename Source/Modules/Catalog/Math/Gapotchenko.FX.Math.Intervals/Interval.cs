@@ -198,8 +198,8 @@ public static class Interval
     /// <returns>The new <see cref="Interval{T}"/> instance.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Interval<T> InclusiveExclusive<T>(T? from, T? to, IComparer<T>? comparer = null)
-        where T : struct
-        => new(
+        where T : struct =>
+        new(
             from is null ? IntervalBoundary<T>.NegativeInfinity : IntervalBoundary.Inclusive(from.Value),
             to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Exclusive(to.Value),
             comparer);
@@ -248,7 +248,8 @@ public static class Interval
     /// </param>
     /// <returns>The new <see cref="Interval{T}"/> instance.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static Interval<T> ExclusiveInclusive<T>(T? from, T? to, IComparer<T>? comparer = null) where T : struct =>
+    public static Interval<T> ExclusiveInclusive<T>(T? from, T? to, IComparer<T>? comparer = null)
+        where T : struct =>
         new(
             from is null ? IntervalBoundary<T>.NegativeInfinity : IntervalBoundary.Exclusive(from.Value),
             to is null ? IntervalBoundary<T>.PositiveInfinity : IntervalBoundary.Inclusive(to.Value),
