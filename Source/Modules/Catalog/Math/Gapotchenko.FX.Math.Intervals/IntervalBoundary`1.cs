@@ -25,6 +25,7 @@ public readonly struct IntervalBoundary<T> : IEquatable<IntervalBoundary<T>>
     /// <summary>
     /// Gets the value of a bound limit point.
     /// </summary>
+    /// <exception cref="InvalidOperationException">Interval boundary has no bound limit point.</exception>
     public T Value
     {
         get
