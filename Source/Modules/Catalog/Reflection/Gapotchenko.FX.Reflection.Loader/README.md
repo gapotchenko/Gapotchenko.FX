@@ -94,8 +94,8 @@ class Program
 ContosoApp continues to evolve and now it has a dependency on `Newtonsoft.Json.dll` assembly.
 A straightforward approach would be to put `Newtonsoft.Json.dll` assembly just besides `ContosoApp.exe`.
 
-But Mr. Alberto Olivetti from Contoso's Deployment Division decided that an additional file laying near `ContosoApp.exe` would be an unwanted distraction for command line users of the app.
-Mr. Olivetti tends to pay a lot of respect to his customers and wants to save their time while they are hanging around `ContosoApp.exe`.
+But Mr. Alberto Olivetti from Contoso's Deployment Division decided that an additional file laying near `ContosoApp.exe` would be an unwanted distraction for users of the app's command-line interface.
+Mr. Olivetti tends to pay a lot of respect to his customers and wants to save their time while they are hanging around `ContosoApp.exe` file in a file system browser.
 Thus Alberto came up with a respectful solution to put all third-party assemblies to `Components` subdirectory of the app.
 
 ### .NET Framework
@@ -116,11 +116,11 @@ Thankfully, the default .NET Framework assembly loader allows to achieve that by
 The task is solved for `ContosoApp` (and every other .NET Framework app as well).
 The default .NET Framework assembly loader can be instructed to load dependent assemblies from inner directories of an app by specifying a set of private probing paths.
 
-### .NET Core / .NET
+### .NET Core / .NET 5.0+
 
-There is another story for .NET Core and .NET target frameworks.
+There is another story for .NET Core and .NET 5.0+ target frameworks.
 They do not easily support additional probing paths.
-For those target frameworks, using `AssemblyAutoLoader` becomes worthy even for inner directories: 
+For those target frameworks, using `AssemblyAutoLoader` becomes worthy even for inner directories of an app: 
 
 ``` C#
 using Gapotchenko.FX.Reflection;
