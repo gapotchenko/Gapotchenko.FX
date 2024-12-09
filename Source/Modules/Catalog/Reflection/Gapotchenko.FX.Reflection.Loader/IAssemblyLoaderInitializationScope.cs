@@ -6,6 +6,9 @@
 
 namespace Gapotchenko.FX.Reflection.Loader;
 
+/// <summary>
+/// Represents a logical scope of assembly loader initialization.
+/// </summary>
 interface IAssemblyLoaderInitializationScope : IDisposable
 {
     bool IsLazy { get; }

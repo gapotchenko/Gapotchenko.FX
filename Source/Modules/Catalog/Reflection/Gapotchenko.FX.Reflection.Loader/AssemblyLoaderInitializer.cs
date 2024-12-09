@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2024
 
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Gapotchenko.FX.Reflection.Loader;
@@ -72,7 +73,7 @@ sealed class AssemblyLoaderInitializer : IDisposable
         public void Dispose() => initializer.Discard(this);
     }
 
-    void Enqueue(Action action, IAssemblyLoaderInitializationScope? scope)
+    void Enqueue(Action action, IAssemblyLoaderInitializationScope scope)
     {
         if (m_InitializationIsDone && m_Actions != null)
         {
@@ -109,10 +110,13 @@ sealed class AssemblyLoaderInitializer : IDisposable
     void Flush(IAssemblyLoaderInitializationScope? scope)
     {
         List<ActionDescriptor>? actions;
-        bool complete;
+        bool complete, ordered;
+        HashSet<IAssemblyLoaderInitializationScope> scopes;
 
         lock (this)
         {
+            WaitForFlushCompletionCore(scope);
+
             actions = m_Actions;
             if (actions == null)
             {
@@ -139,24 +143,111 @@ sealed class AssemblyLoaderInitializer : IDisposable
                     complete = false;
                 }
                 actions = newActions;
+                ordered = false;
             }
             else
             {
                 m_Actions = null;
                 complete = true;
+                ordered = true;
             }
 
             // Set the value here while in lock to give it more chances to
             // get propagated quicker to other CPU cores.
             m_InitializationIsDone = true;
+
+            // Note the scopes that are currently in progress.
+            scopes = [.. actions.Select(x => x.Scope)];
+            m_ScopesWithFlushInProgress.UnionWith(scopes);
         }
 
-        if (complete)
-            Unsubscribe();
+        List<Exception>? exceptions = null;
 
-        // Execute pending actions.
-        foreach (var action in actions)
-            action.Delegate();
+        try
+        {
+            if (complete)
+                Unsubscribe();
+
+            void ExecuteActions(IEnumerable<ActionDescriptor> actions)
+            {
+                foreach (var action in actions)
+                {
+                    try
+                    {
+                        action.Delegate();
+                    }
+                    catch (Exception e)
+                    {
+                        (exceptions ??= []).Add(e);
+                        break;
+                    }
+                }
+            }
+
+            if (ordered)
+            {
+                // Execute pending actions in order.
+                ExecuteActions(actions);
+            }
+            else
+            {
+                // Execute pending actions grouped by scopes.
+                foreach (var group in actions.GroupBy(x => x.Scope))
+                {
+                    try
+                    {
+                        ExecuteActions(group);
+                    }
+                    finally
+                    {
+                        var currentScope = group.Key;
+                        bool delisted;
+
+                        lock (this)
+                        {
+                            delisted = m_ScopesWithFlushInProgress.Remove(currentScope);
+                            Debug.Assert(delisted);
+
+                            if (delisted)
+                            {
+                                // Notify about the changes.
+                                Monitor.PulseAll(this);
+                            }
+                        }
+
+                        if (delisted)
+                        {
+                            // Make a safety watchdog happy.
+                            scopes.Remove(currentScope);
+                        }
+                    }
+                }
+            }
+        }
+        finally
+        {
+            if (scopes.Count != 0)
+            {
+                if (!ordered)
+                    Debug.Fail("Safety watchdog is triggered.");
+
+                lock (this)
+                {
+                    // Delist the non-delisted scopes.
+                    m_ScopesWithFlushInProgress.ExceptWith(scopes);
+                    // Notify about the changes.
+                    Monitor.PulseAll(this);
+                }
+            }
+        }
+
+        if (exceptions != null)
+        {
+            if (exceptions.Count == 1)
+                throw exceptions[0];
+            else
+                throw new AggregateException(exceptions);
+        }
     }
 
     /// <summary>
@@ -169,29 +260,53 @@ sealed class AssemblyLoaderInitializer : IDisposable
     /// </remarks>
     static bool m_InitializationIsDone;
 
-    void Discard(IAssemblyLoaderInitializationScope? scope)
+    void Discard(IAssemblyLoaderInitializationScope scope)
     {
         lock (this)
+        {
             DiscardCore(scope);
+            WaitForFlushCompletionCore(scope);
+        }
     }
 
-    void DiscardCore(IAssemblyLoaderInitializationScope? scope)
+    void DiscardCore(IAssemblyLoaderInitializationScope scope)
     {
         m_Actions?.RemoveAll(x => x.Scope == scope);
     }
 
     public void Dispose()
     {
-        m_Actions = null;
         Unsubscribe();
+
+        lock (this)
+        {
+            m_Actions = null;
+            WaitForFlushCompletionCore(null);
+        }
     }
+
+    void WaitForFlushCompletionCore(IAssemblyLoaderInitializationScope? scope)
+    {
+        if (scope == null)
+        {
+            while (m_ScopesWithFlushInProgress.Count != 0)
+                Monitor.Wait(this);
+        }
+        else
+        {
+            while (m_ScopesWithFlushInProgress.Contains(scope))
+                Monitor.Wait(this);
+        }
+    }
+
+    readonly HashSet<IAssemblyLoaderInitializationScope> m_ScopesWithFlushInProgress = [];
 
     List<ActionDescriptor>? m_Actions;
 
     readonly struct ActionDescriptor
     {
         public required Action Delegate { get; init; }
-        public IAssemblyLoaderInitializationScope? Scope { get; init; }
+        public required IAssemblyLoaderInitializationScope Scope { get; init; }
     }
 
     void Unsubscribe()

@@ -87,8 +87,8 @@ sealed class AssemblyDescriptor : IDisposable
     IAssemblyLoaderBackend? m_AssemblyLoaderBackend;
     bool m_HasBindingRedirects;
 
-    readonly HashSet<string> m_ProbingPaths = new(FileSystem.PathComparer);
-    readonly List<HeuristicAssemblyLoaderBackend> m_ProbingPathAssemblyLoaderBackends = [];
+    HashSet<string>? m_ProbingPaths;
+    List<HeuristicAssemblyLoaderBackend>? m_ProbingPathAssemblyLoaderBackends;
 
     public IEnumerable<IAssemblyLoaderBackend> AssemblyLoaderBackends
     {
@@ -99,12 +99,9 @@ sealed class AssemblyDescriptor : IDisposable
             if (m_AssemblyLoaderBackend != null)
                 yield return m_AssemblyLoaderBackend;
 
-            var probingPathBackends = m_ProbingPathAssemblyLoaderBackends;
-            lock (probingPathBackends)
-                probingPathBackends = probingPathBackends.ToList();
-
-            foreach (var i in probingPathBackends)
-                yield return i;
+            if (m_ProbingPathAssemblyLoaderBackends != null)
+                foreach (var i in m_ProbingPathAssemblyLoaderBackends)
+                    yield return i;
         }
     }
 
@@ -117,11 +114,7 @@ sealed class AssemblyDescriptor : IDisposable
 
             string probingPath = Path.GetFullPath(i);
 
-            bool added;
-            lock (m_ProbingPaths)
-                added = m_ProbingPaths.Add(probingPath);
-
-            if (added)
+            if ((m_ProbingPaths ??= new(FileSystem.PathComparer)).Add(probingPath))
                 accumulator.Add(probingPath);
         }
     }
@@ -131,30 +124,24 @@ sealed class AssemblyDescriptor : IDisposable
         if (probingPaths == null)
             return false;
 
+        m_InitializationScope.Flush();
+
         var newProbingPaths = new List<string>();
         AccumulateNewProbingPaths(newProbingPaths, probingPaths);
 
         if (newProbingPaths.Count == 0)
             return false;
 
-        m_InitializationScope.Enqueue(Do);
-
-        void Do()
-        {
-            var backend =
-                new HeuristicAssemblyLoaderBackend(
-                    m_IsAttached,
-                    m_AssemblyLoadPal,
-                    m_AssemblyDependencyTracker,
-                    newProbingPaths.ToArray())
-                {
-                    StrictVersionMatch = m_HasBindingRedirects
-                };
-
-            var backends = m_ProbingPathAssemblyLoaderBackends;
-            lock (backends)
-                backends.Add(backend);
-        }
+        (m_ProbingPathAssemblyLoaderBackends ??= [])
+        .Add(
+            new HeuristicAssemblyLoaderBackend(
+                m_IsAttached,
+                m_AssemblyLoadPal,
+                m_AssemblyDependencyTracker,
+                newProbingPaths.ToArray())
+            {
+                StrictVersionMatch = m_HasBindingRedirects
+            });
 
         return true;
     }
@@ -165,11 +152,8 @@ sealed class AssemblyDescriptor : IDisposable
 
         m_AssemblyLoaderBackend?.Dispose();
 
-        var probingPathBackends = m_ProbingPathAssemblyLoaderBackends;
-        lock (probingPathBackends)
-            probingPathBackends = probingPathBackends.ToList();
-
-        foreach (var backend in probingPathBackends)
-            backend.Dispose();
+        if (m_ProbingPathAssemblyLoaderBackends != null)
+            foreach (var backend in m_ProbingPathAssemblyLoaderBackends)
+                backend.Dispose();
     }
 }
