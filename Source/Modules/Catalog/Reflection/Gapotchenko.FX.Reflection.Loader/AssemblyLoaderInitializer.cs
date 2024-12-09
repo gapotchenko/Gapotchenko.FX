@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2024
 
+using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -115,6 +116,13 @@ sealed class AssemblyLoaderInitializer : IDisposable
 
         lock (this)
         {
+            if (IsFlushCompletionHeldByCurrentThread(scope))
+            {
+                // No need to flush when we are already flushing.
+                // Allow lock recursion.
+                return;
+            }
+
             WaitForFlushCompletionCore(scope);
 
             actions = m_Actions;
@@ -156,9 +164,15 @@ sealed class AssemblyLoaderInitializer : IDisposable
             // get propagated quicker to other CPU cores.
             m_InitializationIsDone = true;
 
-            // Note the scopes that are currently in progress.
-            scopes = [.. actions.Select(x => x.Scope)];
-            m_ScopesWithFlushInProgress.UnionWith(scopes);
+            // Acquire locks for the scopes that are currently in progress.
+            scopes = [];
+            var lockDescriptor = new LockDescriptor();
+            foreach (var action in actions)
+            {
+                var i = action.Scope;
+                if (scopes.Add(i))
+                    m_ScopeProgressLocks.Add(i, lockDescriptor);
+            }
         }
 
         List<Exception>? exceptions = null;
@@ -202,10 +216,11 @@ sealed class AssemblyLoaderInitializer : IDisposable
                     {
                         var currentScope = group.Key;
                         bool delisted;
+                        LockDescriptor? lockDescriptor;
 
                         lock (this)
                         {
-                            delisted = m_ScopesWithFlushInProgress.Remove(currentScope);
+                            delisted = m_ScopeProgressLocks.Remove(currentScope, out lockDescriptor);
                             Debug.Assert(delisted);
 
                             if (delisted)
@@ -217,6 +232,8 @@ sealed class AssemblyLoaderInitializer : IDisposable
 
                         if (delisted)
                         {
+                            lockDescriptor!.Dispose();
+
                             // Make a safety watchdog happy.
                             scopes.Remove(currentScope);
                         }
@@ -231,13 +248,23 @@ sealed class AssemblyLoaderInitializer : IDisposable
                 if (!ordered)
                     Debug.Fail("Safety watchdog is triggered.");
 
+                var disposables = new List<IDisposable>();
+
                 lock (this)
                 {
                     // Delist the non-delisted scopes.
-                    m_ScopesWithFlushInProgress.ExceptWith(scopes);
+                    foreach (var i in scopes)
+                    {
+                        if (m_ScopeProgressLocks.Remove(i, out var lockDescriptor))
+                            disposables.Add(lockDescriptor);
+                    }
+
                     // Notify about the changes.
                     Monitor.PulseAll(this);
                 }
+
+                foreach (var i in disposables)
+                    i.Dispose();
             }
         }
 
@@ -285,28 +312,62 @@ sealed class AssemblyLoaderInitializer : IDisposable
         }
     }
 
-    void WaitForFlushCompletionCore(IAssemblyLoaderInitializationScope? scope)
-    {
-        if (scope == null)
-        {
-            while (m_ScopesWithFlushInProgress.Count != 0)
-                Monitor.Wait(this);
-        }
-        else
-        {
-            while (m_ScopesWithFlushInProgress.Contains(scope))
-                Monitor.Wait(this);
-        }
-    }
-
-    readonly HashSet<IAssemblyLoaderInitializationScope> m_ScopesWithFlushInProgress = [];
-
     List<ActionDescriptor>? m_Actions;
 
     readonly struct ActionDescriptor
     {
         public required Action Delegate { get; init; }
         public required IAssemblyLoaderInitializationScope Scope { get; init; }
+    }
+
+    bool IsFlushCompletionHeldByCurrentThread(IAssemblyLoaderInitializationScope? scope)
+    {
+        if (scope == null)
+        {
+            return
+                m_ScopeProgressLocks.Count != 0 &&
+                m_ScopeProgressLocks.All(x => x.Value.IsHeldByCurrentThread);
+        }
+        else
+        {
+            if (m_ScopeProgressLocks.TryGetValue(scope, out var lockDescriptor))
+                return lockDescriptor.IsHeldByCurrentThread;
+            else
+                return false;
+        }
+    }
+
+    void WaitForFlushCompletionCore(IAssemblyLoaderInitializationScope? scope)
+    {
+        if (scope == null)
+        {
+            while (m_ScopeProgressLocks.Count != 0)
+                Monitor.Wait(this);
+        }
+        else
+        {
+            while (m_ScopeProgressLocks.ContainsKey(scope))
+                Monitor.Wait(this);
+        }
+    }
+
+    readonly Dictionary<IAssemblyLoaderInitializationScope, LockDescriptor> m_ScopeProgressLocks = [];
+
+    sealed class LockDescriptor : IDisposable
+    {
+        public LockDescriptor()
+        {
+            m_IsHeldByCurrentThread.Value = true;
+        }
+
+        public void Dispose()
+        {
+            m_IsHeldByCurrentThread.Dispose();
+        }
+
+        public bool IsHeldByCurrentThread => m_IsHeldByCurrentThread.Value;
+
+        readonly ThreadLocal<bool> m_IsHeldByCurrentThread = new();
     }
 
     void Unsubscribe()
