@@ -68,18 +68,18 @@ sealed class AssemblyLoaderInitializer : IDisposable
     {
         public bool IsLazy => !m_InitializationIsDone;
         public void Enqueue(Action action) => initializer.Enqueue(action, this);
-        public void Flush() => initializer.Flush();
+        public void Flush() => initializer.Flush(this);
         public void Dispose() => initializer.Discard(this);
     }
 
-    void Enqueue(Action action, IAssemblyLoaderInitializationScope scope)
+    void Enqueue(Action action, IAssemblyLoaderInitializationScope? scope)
     {
         if (m_InitializationIsDone && m_Actions != null)
         {
             // Another AssemblyLoaderInitializer caused an initialization.
             // Flush the current instance, as there is no need to be in a
             // deferred execution mode anymore.
-            Flush();
+            Flush(scope);
             // Execute the action immediately.
             action();
             return;
@@ -100,15 +100,16 @@ sealed class AssemblyLoaderInitializer : IDisposable
         action();
     }
 
-    void Discard(IAssemblyLoaderInitializationScope? scope)
-    {
-        lock (this)
-            m_Actions?.RemoveAll(x => x.Scope == scope);
-    }
+    /// <summary>
+    /// Performs a complete flush of all initialization scopes while preserving
+    /// the relative order of pending actions.
+    /// </summary>
+    public void Flush() => Flush(null);
 
-    void Flush()
+    void Flush(IAssemblyLoaderInitializationScope? scope)
     {
         List<ActionDescriptor>? actions;
+        bool complete;
 
         lock (this)
         {
@@ -118,14 +119,40 @@ sealed class AssemblyLoaderInitializer : IDisposable
                 // Already flushed or disposed.
                 return;
             }
-            m_Actions = null;
+
+            if (scope != null)
+            {
+                var newActions = actions.Where(x => x.Scope == scope).ToList();
+                int n = newActions.Count;
+                if (n == actions.Count)
+                {
+                    m_Actions = null;
+                    complete = true;
+                }
+                else if (n != 0)
+                {
+                    DiscardCore(scope);
+                    complete = false;
+                }
+                else
+                {
+                    complete = false;
+                }
+                actions = newActions;
+            }
+            else
+            {
+                m_Actions = null;
+                complete = true;
+            }
 
             // Set the value here while in lock to give it more chances to
             // get propagated quicker to other CPU cores.
             m_InitializationIsDone = true;
         }
 
-        Unsubscribe();
+        if (complete)
+            Unsubscribe();
 
         // Execute pending actions.
         foreach (var action in actions)
@@ -141,6 +168,17 @@ sealed class AssemblyLoaderInitializer : IDisposable
     /// tries to workaround have a scope of a .NET app domain.
     /// </remarks>
     static bool m_InitializationIsDone;
+
+    void Discard(IAssemblyLoaderInitializationScope? scope)
+    {
+        lock (this)
+            DiscardCore(scope);
+    }
+
+    void DiscardCore(IAssemblyLoaderInitializationScope? scope)
+    {
+        m_Actions?.RemoveAll(x => x.Scope == scope);
+    }
 
     public void Dispose()
     {

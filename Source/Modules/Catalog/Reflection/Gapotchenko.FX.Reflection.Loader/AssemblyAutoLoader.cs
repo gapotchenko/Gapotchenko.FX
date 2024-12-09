@@ -275,6 +275,15 @@ public class AssemblyAutoLoader :
     {
         get
         {
+            if (m_Initializer.IsValueCreated)
+            {
+                // We call flush here to preserve the relative order
+                // among different initialization scopes.
+                // It does not matter when assembly descriptors are truly
+                // independent, but there may be hidden interconnections.
+                m_Initializer.Value.Flush();
+            }
+
             lock (m_AssemblyDescriptors)
                 foreach (var i in m_AssemblyDescriptors)
                     foreach (var j in i.Value.AssemblyLoaderBackends)

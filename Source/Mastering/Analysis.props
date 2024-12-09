@@ -12,7 +12,7 @@
 
   <!-- C# -->
   <PropertyGroup>
-    <NoWarn>$(NoWarn),CS8524</NoWarn>
+    <NoWarn>$(NoWarn),CS0728,CS8524</NoWarn>
     <WarningsAsErrors>$(WarningsAsErrors),CS8509</WarningsAsErrors>
   </PropertyGroup>
 
