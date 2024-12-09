@@ -21,8 +21,9 @@ static class ArrayEqualityComparer
 
     public static int GetHashCode(byte[] obj)
     {
+        // FNV-1a hash algorithm.
         uint hash = 2166136261;
-        foreach (var i in obj)
+        foreach (byte i in obj)
             hash = (hash ^ i) * 16777619;
         return (int)hash;
     }

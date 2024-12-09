@@ -26,6 +26,7 @@ sealed class AssemblyDescriptor : IDisposable
 #if NET5_0_OR_GREATER
             assembly.Location;
 #else
+            Empty.Nullify(assembly.Location) ??
             new Uri(assembly.EscapedCodeBase).LocalPath;
 #endif
 

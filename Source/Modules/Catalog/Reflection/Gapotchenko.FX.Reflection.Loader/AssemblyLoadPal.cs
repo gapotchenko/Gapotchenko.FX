@@ -257,7 +257,7 @@ public sealed class AssemblyLoadPal
             return Assembly.Load(assemblyName);
         }
 
-        // Never reached because m_AppDomain and m_AssemblyLoadContext fields cannot have null values simultaneously.
+        // Never reached because m_AppDomain and m_AssemblyLoadContext cannot be null simultaneously.
         throw new InvalidOperationException();
     }
 
