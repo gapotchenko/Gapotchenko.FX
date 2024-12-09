@@ -22,8 +22,6 @@ sealed class AssemblyDependencyTracker
         //    m_TrackedAssemblyNames.Add(i);
     }
 
-    readonly HashSet<AssemblyName> m_TrackedAssemblyNames = new(AssemblyNameEqualityComparer.Instance);
-
     public bool IsAssemblyResolutionInhibited(Assembly? requestingAssembly)
     {
         if (requestingAssembly == null)
@@ -49,4 +47,6 @@ sealed class AssemblyDependencyTracker
         lock (m_TrackedAssemblyNames)
             m_TrackedAssemblyNames.Remove(assemblyName);
     }
+
+    readonly HashSet<AssemblyName> m_TrackedAssemblyNames = new(AssemblyNameEqualityComparer.Instance);
 }

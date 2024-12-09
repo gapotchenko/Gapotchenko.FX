@@ -106,7 +106,7 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
                 string? privatePath = xProbing.Attribute("privatePath")?.Value;
                 if (!string.IsNullOrEmpty(privatePath))
                 {
-                    var paths = privatePath.Split([';'], StringSplitOptions.RemoveEmptyEntries);
+                    string[] paths = privatePath.Split([';'], StringSplitOptions.RemoveEmptyEntries);
                     if (paths.Length != 0)
                         (probingPathList ??= []).AddRange(paths);
                 }

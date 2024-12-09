@@ -20,8 +20,14 @@ sealed class AssemblyDescriptor : IDisposable
     {
         m_IsAttached = assemblyAutoLoader.IsAttached;
         m_AssemblyLoadPal = assemblyLoadPal;
-        m_AssemblyDependencyTracker = new AssemblyDependencyTracker(assembly);
+        m_AssemblyDependencyTracker = new(assembly);
         m_InitializationScope = assemblyAutoLoader.Initializer.CreateScope();
+
+        if (m_InitializationScope.IsLazy)
+        {
+            // Capture enumerable values now to avoid race conditions.
+            additionalProbingPaths = additionalProbingPaths?.ToList();
+        }
 
         m_InitializationScope.Enqueue(Initialize);
 
@@ -101,7 +107,7 @@ sealed class AssemblyDescriptor : IDisposable
 
     void AccumulateNewProbingPaths(List<string> accumulator, IEnumerable<string?> probingPaths)
     {
-        foreach (var i in probingPaths)
+        foreach (string? i in probingPaths)
         {
             if (i == null)
                 continue;

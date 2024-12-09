@@ -104,7 +104,7 @@ class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
         if (IsAssemblyResolutionInhibited(args.RequestingAssembly))
             return null;
 
-        var name = args.FullName;
+        string name = args.FullName;
 
         if (m_ResolvedAssembliesCache.TryGetValue(name, out var assembly))
             return assembly;

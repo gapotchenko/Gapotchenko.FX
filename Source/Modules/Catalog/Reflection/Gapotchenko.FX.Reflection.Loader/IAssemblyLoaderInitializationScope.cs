@@ -8,6 +8,7 @@ namespace Gapotchenko.FX.Reflection.Loader;
 
 interface IAssemblyLoaderInitializationScope : IDisposable
 {
+    bool IsLazy { get; }
     void Enqueue(Action action);
     void Flush();
 }

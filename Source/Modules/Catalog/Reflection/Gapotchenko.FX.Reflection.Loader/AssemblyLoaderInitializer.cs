@@ -35,29 +35,38 @@ sealed class AssemblyLoaderInitializer : IDisposable
 {
     public AssemblyLoaderInitializer(AssemblyLoadPal assemblyLoadPal)
     {
-        if (!m_Flushed)
+        if (!m_InitializationIsDone)
         {
             m_AssemblyLoadPal = assemblyLoadPal;
             m_Actions = [];
 
+            // Become active on a first assembly resolution request.
             assemblyLoadPal.Resolving += AssemblyLoadPal_Resolving;
         }
     }
 
     public IAssemblyLoaderInitializationScope CreateScope() =>
-        m_Flushed ? DirectScope.Instance : new Scope(this);
+        m_InitializationIsDone ? EagerScope.Instance : new LazyScope(this);
 
-    sealed class DirectScope : IAssemblyLoaderInitializationScope
+    /// <summary>
+    /// Provides immediate execution.
+    /// </summary>
+    sealed class EagerScope : IAssemblyLoaderInitializationScope
     {
-        public static DirectScope Instance { get; } = new();
+        public static EagerScope Instance { get; } = new();
 
+        public bool IsLazy => false;
         public void Enqueue(Action action) => action();
         public void Flush() { }
         public void Dispose() { }
     }
 
-    sealed class Scope(AssemblyLoaderInitializer initializer) : IAssemblyLoaderInitializationScope
+    /// <summary>
+    /// Provides deferred execution.
+    /// </summary>
+    sealed class LazyScope(AssemblyLoaderInitializer initializer) : IAssemblyLoaderInitializationScope
     {
+        public bool IsLazy => !m_InitializationIsDone;
         public void Enqueue(Action action) => initializer.Enqueue(action, this);
         public void Flush() => initializer.Flush();
         public void Dispose() => initializer.Discard(this);
@@ -65,16 +74,29 @@ sealed class AssemblyLoaderInitializer : IDisposable
 
     void Enqueue(Action action, IAssemblyLoaderInitializationScope scope)
     {
+        if (m_InitializationIsDone && m_Actions != null)
+        {
+            // Another AssemblyLoaderInitializer caused an initialization.
+            // Flush the current instance, as there is no need to be in a
+            // deferred execution mode anymore.
+            Flush();
+            // Execute the action immediately.
+            action();
+            return;
+        }
+
         lock (this)
         {
             var actions = m_Actions;
             if (actions != null)
             {
+                // Defer the action.
                 actions.Add(new() { Delegate = action, Scope = scope });
                 return;
             }
         }
 
+        // Otherwise, execute the action immediately.
         action();
     }
 
@@ -97,11 +119,15 @@ sealed class AssemblyLoaderInitializer : IDisposable
                 return;
             }
             m_Actions = null;
+
+            // Set the value here while in lock to give it more chances to
+            // get propagated quicker to other CPU cores.
+            m_InitializationIsDone = true;
         }
 
-        m_Flushed = true;
         Unsubscribe();
 
+        // Execute pending actions.
         foreach (var action in actions)
             action.Delegate();
     }
@@ -112,9 +138,9 @@ sealed class AssemblyLoaderInitializer : IDisposable
     /// </summary>
     /// <remarks>
     /// Represented by a static field because the issues lazy initialization
-    /// tries to workaround have a scope of an OS process.
+    /// tries to workaround have a scope of a .NET app domain.
     /// </remarks>
-    static bool m_Flushed;
+    static bool m_InitializationIsDone;
 
     public void Dispose()
     {
@@ -135,8 +161,8 @@ sealed class AssemblyLoaderInitializer : IDisposable
         var assemblyLoadPal = m_AssemblyLoadPal;
         if (assemblyLoadPal != null)
         {
-            assemblyLoadPal.Resolving -= AssemblyLoadPal_Resolving;
             m_AssemblyLoadPal = null;
+            assemblyLoadPal.Resolving -= AssemblyLoadPal_Resolving;
         }
     }
 
