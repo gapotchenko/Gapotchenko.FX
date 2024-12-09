@@ -64,7 +64,9 @@ sealed class DefaultAssemblyAutoLoader : AssemblyAutoLoader
 
 #endif
 
+#pragma warning disable CA2215 // Dispose methods should call base class dispose
     protected override void Dispose(bool disposing)
+#pragma warning restore CA2215 // Dispose methods should call base class dispose
     {
         // Default instance is not disposable by design.
     }

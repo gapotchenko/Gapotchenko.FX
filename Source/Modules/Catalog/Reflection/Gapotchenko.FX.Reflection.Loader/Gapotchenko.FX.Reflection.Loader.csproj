@@ -8,6 +8,10 @@
 
     <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <AnalysisMode>recommended</AnalysisMode>
+  </PropertyGroup>
   
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Reflection.AssemblyAutoLoader" />

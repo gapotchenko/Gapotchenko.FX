@@ -10,6 +10,7 @@ using System.Reflection;
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 #pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable CA1707 // Identifiers should not contain underscores
 
 namespace Gapotchenko.FX.Reflection;
 
