@@ -73,7 +73,7 @@ public sealed class AssemblyLoadPal
     {
         add
         {
-            lock (this)
+            lock (m_Lock)
             {
                 bool was = m_Resolving != null;
                 m_Resolving += value;
@@ -83,7 +83,7 @@ public sealed class AssemblyLoadPal
         }
         remove
         {
-            lock (this)
+            lock (m_Lock)
             {
                 bool was = m_Resolving != null;
                 m_Resolving -= value;
@@ -92,6 +92,9 @@ public sealed class AssemblyLoadPal
             }
         }
     }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly object m_Lock = new();
 
     void SetupResolving()
     {
