@@ -131,11 +131,51 @@ public sealed class AssemblyLoadPal
         var eh = m_Resolving;
         if (eh != null)
         {
-            foreach (ResolvingEventHandler handler in eh.GetInvocationList())
+            var invocationList = eh.GetInvocationList();
+            foreach (ResolvingEventHandler handler in invocationList)
             {
                 var assembly = handler(this, args);
                 if (assembly != null)
                     return assembly;
+
+                var newEh = m_Resolving;
+                if (newEh != null && newEh != eh)
+                {
+                    // The list of event handlers changed on the fly. Apply
+                    // the changes by running the handlers continuously while
+                    // the event subscription keeps on changing. This approach
+                    // allows the handlers to dynamically unfold themselves on
+                    // rare occasions when they prefer to do so.
+                    return InvokeResolvingRare(
+                        newEh,
+                        args,
+                        // Avoid duplicate handler invocations.
+                        [.. invocationList.TakeWhile(x => !ReferenceEquals(x, handler)), handler]);
+                }
+            }
+        }
+        return null;
+    }
+
+    Assembly? InvokeResolvingRare(ResolvingEventHandler eh, ResolvingEventArgs args, HashSet<Delegate> invokedHandlers)
+    {
+    RunAgain:
+        foreach (ResolvingEventHandler handler in eh.GetInvocationList())
+        {
+            if (!invokedHandlers.Add(handler))
+                continue;
+
+            var assembly = handler(this, args);
+            if (assembly != null)
+                return assembly;
+
+            var newEh = m_Resolving;
+            if (newEh != null && newEh != eh)
+            {
+                // The list of handlers changed on the fly.
+                // Apply the changes.
+                eh = newEh;
+                goto RunAgain;
             }
         }
         return null;
