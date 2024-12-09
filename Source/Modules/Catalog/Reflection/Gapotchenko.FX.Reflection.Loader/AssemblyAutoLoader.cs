@@ -7,6 +7,7 @@
 using Gapotchenko.FX.Reflection.Loader;
 using Gapotchenko.FX.Reflection.Loader.Backends;
 using Gapotchenko.FX.Reflection.Loader.Polyfills;
+using System.Diagnostics;
 using System.Reflection;
 #if TFF_ASSEMBLYLOADCONTEXT
 using System.Runtime.Loader;
@@ -45,6 +46,8 @@ public class AssemblyAutoLoader :
     public AssemblyAutoLoader()
     {
         m_AssemblyLoadPal = AssemblyLoadPal.Default;
+
+        Initialize();
     }
 #endif
 
@@ -61,6 +64,8 @@ public class AssemblyAutoLoader :
             m_AssemblyLoadPal = AssemblyLoadPal.Default;
         else
             m_AssemblyLoadPal = new AssemblyLoadPal(appDomain);
+
+        Initialize();
     }
 
 #if TFF_ASSEMBLYLOADCONTEXT
@@ -77,8 +82,16 @@ public class AssemblyAutoLoader :
             m_AssemblyLoadPal = AssemblyLoadPal.Default;
         else
             m_AssemblyLoadPal = new AssemblyLoadPal(assemblyLoadContext);
+
+        Initialize();
     }
 #endif
+
+    [MemberNotNull(nameof(m_Initializer))]
+    void Initialize()
+    {
+        m_Initializer = new(() => new(m_AssemblyLoadPal));
+    }
 
 #if TFF_ASSEMBLYLOADCONTEXT
     /// <summary>
@@ -181,7 +194,7 @@ public class AssemblyAutoLoader :
             }
             else
             {
-                m_AssemblyDescriptors.Add(assembly, new AssemblyDescriptor(assembly, additionalProbingPaths, m_AssemblyLoadPal, this));
+                m_AssemblyDescriptors.Add(assembly, new(assembly, additionalProbingPaths, m_AssemblyLoadPal, this));
                 return true;
             }
         }
@@ -357,7 +370,16 @@ public class AssemblyAutoLoader :
 
         foreach (var i in disposables)
             i.Dispose();
+
+        if (m_Initializer.IsValueCreated)
+            m_Initializer.Value.Dispose();
     }
 
     bool m_Disposed;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    internal AssemblyLoaderInitializer Initializer => m_Initializer.Value;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    Lazy<AssemblyLoaderInitializer> m_Initializer;
 }

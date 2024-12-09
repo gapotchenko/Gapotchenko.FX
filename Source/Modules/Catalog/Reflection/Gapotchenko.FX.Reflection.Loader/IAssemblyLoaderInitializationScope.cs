@@ -1,0 +1,13 @@
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2024
+
+namespace Gapotchenko.FX.Reflection.Loader;
+
+interface IAssemblyLoaderInitializationScope : IDisposable
+{
+    void Enqueue(Action action);
+    void Flush();
+}

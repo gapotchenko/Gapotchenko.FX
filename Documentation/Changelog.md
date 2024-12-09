@@ -11,6 +11,7 @@ Release date: not released yet
 - Added `System.Threading.Lock` support to `Gapotchenko.FX.Threading.LazyInitializerEx` primitive
 - Added `System.Threading.Lock` support to `Gapotchenko.FX.Threading.EvaluateOnce<T>` primitive
 - Added `System.Threading.Lock` support to `Gapotchenko.FX.Threading.ExecuteOnce` primitive
+- `Gapotchenko.FX.Reflection.Loader` module made as lazy as possible to avoid chicken and egg pitfalls
 
 ### Gapotchenko FX 2024.1
 

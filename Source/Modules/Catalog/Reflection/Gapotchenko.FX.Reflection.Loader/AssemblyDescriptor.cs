@@ -21,59 +21,65 @@ sealed class AssemblyDescriptor : IDisposable
         m_IsAttached = assemblyAutoLoader.IsAttached;
         m_AssemblyLoadPal = assemblyLoadPal;
         m_AssemblyDependencyTracker = new AssemblyDependencyTracker(assembly);
+        m_InitializationScope = assemblyAutoLoader.Initializer.CreateScope();
 
-        string assemblyFilePath =
+        m_InitializationScope.Enqueue(Initialize);
+
+        void Initialize()
+        {
+            string assemblyFilePath =
 #if NET5_0_OR_GREATER
-            assembly.Location;
+                assembly.Location;
 #else
-            Empty.Nullify(assembly.Location) ??
-            new Uri(assembly.EscapedCodeBase).LocalPath;
+                new Uri(assembly.EscapedCodeBase).LocalPath;
 #endif
 
-        string? assemblyDirectoryPath = Path.GetDirectoryName(assemblyFilePath);
+            string? assemblyDirectoryPath = Path.GetDirectoryName(assemblyFilePath);
 
-        if (BindingRedirectAssemblyLoaderBackend.TryCreate(
-            assemblyFilePath,
-            assemblyAutoLoader,
-            m_AssemblyLoadPal,
-            m_AssemblyDependencyTracker,
-            out m_AssemblyLoaderBackend,
-            out var bindingProbingPaths))
-        {
-            m_HasBindingRedirects = m_AssemblyLoaderBackend != null;
-
-            var probingPaths = new List<string>();
-            if (bindingProbingPaths != null)
-                probingPaths.AddRange(bindingProbingPaths);
-            if (!string.IsNullOrEmpty(assemblyDirectoryPath))
-                probingPaths.Add(assemblyDirectoryPath);
-            AddProbingPaths(probingPaths);
-
-            AddProbingPaths(additionalProbingPaths);
-        }
-        else
-        {
-            var probingPaths = new List<string>();
-
-            if (!string.IsNullOrEmpty(assemblyDirectoryPath))
-                probingPaths.Add(assemblyDirectoryPath);
-
-            if (additionalProbingPaths != null)
-                AccumulateNewProbingPaths(probingPaths, additionalProbingPaths);
-
-            m_AssemblyLoaderBackend = new HeuristicAssemblyLoaderBackend(
-                m_IsAttached,
+            if (BindingRedirectAssemblyLoaderBackend.TryCreate(
+                assemblyFilePath,
+                assemblyAutoLoader,
                 m_AssemblyLoadPal,
                 m_AssemblyDependencyTracker,
-                probingPaths.ToArray());
+                out m_AssemblyLoaderBackend,
+                out var bindingProbingPaths))
+            {
+                m_HasBindingRedirects = m_AssemblyLoaderBackend != null;
+
+                var probingPaths = new List<string>();
+                if (bindingProbingPaths != null)
+                    probingPaths.AddRange(bindingProbingPaths);
+                if (!string.IsNullOrEmpty(assemblyDirectoryPath))
+                    probingPaths.Add(assemblyDirectoryPath);
+                AddProbingPaths(probingPaths);
+
+                AddProbingPaths(additionalProbingPaths);
+            }
+            else
+            {
+                var probingPaths = new List<string>();
+
+                if (!string.IsNullOrEmpty(assemblyDirectoryPath))
+                    probingPaths.Add(assemblyDirectoryPath);
+
+                if (additionalProbingPaths != null)
+                    AccumulateNewProbingPaths(probingPaths, additionalProbingPaths);
+
+                m_AssemblyLoaderBackend = new HeuristicAssemblyLoaderBackend(
+                    m_IsAttached,
+                    m_AssemblyLoadPal,
+                    m_AssemblyDependencyTracker,
+                    probingPaths.ToArray());
+            }
         }
     }
 
     readonly bool m_IsAttached;
     readonly AssemblyLoadPal m_AssemblyLoadPal;
     readonly AssemblyDependencyTracker m_AssemblyDependencyTracker;
-    readonly IAssemblyLoaderBackend? m_AssemblyLoaderBackend;
-    readonly bool m_HasBindingRedirects;
+    readonly IAssemblyLoaderInitializationScope m_InitializationScope;
+    IAssemblyLoaderBackend? m_AssemblyLoaderBackend;
+    bool m_HasBindingRedirects;
 
     HashSet<string>? m_ProbingPaths;
     List<HeuristicAssemblyLoaderBackend>? m_ProbingPathAssemblyLoaderBackends;
@@ -82,6 +88,8 @@ sealed class AssemblyDescriptor : IDisposable
     {
         get
         {
+            m_InitializationScope.Flush();
+
             if (m_AssemblyLoaderBackend != null)
                 yield return m_AssemblyLoaderBackend;
 
@@ -116,22 +124,29 @@ sealed class AssemblyDescriptor : IDisposable
         if (newProbingPaths.Count == 0)
             return false;
 
-        (m_ProbingPathAssemblyLoaderBackends ??= [])
-        .Add(
-            new HeuristicAssemblyLoaderBackend(
-                m_IsAttached,
-                m_AssemblyLoadPal,
-                m_AssemblyDependencyTracker,
-                newProbingPaths.ToArray())
-            {
-                StrictVersionMatch = m_HasBindingRedirects
-            });
+        m_InitializationScope.Enqueue(Do);
+
+        void Do()
+        {
+            (m_ProbingPathAssemblyLoaderBackends ??= [])
+            .Add(
+                new HeuristicAssemblyLoaderBackend(
+                    m_IsAttached,
+                    m_AssemblyLoadPal,
+                    m_AssemblyDependencyTracker,
+                    newProbingPaths.ToArray())
+                {
+                    StrictVersionMatch = m_HasBindingRedirects
+                });
+        }
 
         return true;
     }
 
     public void Dispose()
     {
+        m_InitializationScope.Dispose();
+
         m_AssemblyLoaderBackend?.Dispose();
 
         if (m_ProbingPathAssemblyLoaderBackends != null)
