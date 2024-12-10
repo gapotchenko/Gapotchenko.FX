@@ -240,6 +240,11 @@ public class AssemblyAutoLoader :
 
         path = Path.GetFullPath(path);
 
+#if ASSEMBLY_LOADER_INITIALIZER
+        // Preserve the addition order of resolvers.
+        FlushInitializer();
+#endif
+
         lock (m_ProbingPathResolvers)
         {
             EnsureNotDisposed();
@@ -280,14 +285,11 @@ public class AssemblyAutoLoader :
         get
         {
 #if ASSEMBLY_LOADER_INITIALIZER
-            if (m_Initializer.IsValueCreated)
-            {
-                // We call flush here to preserve the relative order
-                // among different initialization scopes.
-                // It does not matter when assembly descriptors are truly
-                // independent, but there may be hidden interconnections.
-                m_Initializer.Value.Flush();
-            }
+            // We call flush here to preserve the relative order
+            // among different initialization scopes.
+            // It does not matter when assembly descriptors are truly
+            // independent, but there may be subtle interconnections.
+            FlushInitializer();
 #endif
 
             lock (m_AssemblyDescriptors)
@@ -395,6 +397,12 @@ public class AssemblyAutoLoader :
     bool m_Disposed;
 
 #if ASSEMBLY_LOADER_INITIALIZER
+
+    void FlushInitializer()
+    {
+        if (m_Initializer.IsValueCreated)
+            m_Initializer.Value.Flush();
+    }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     internal AssemblyLoaderInitializer Initializer => m_Initializer.Value;
