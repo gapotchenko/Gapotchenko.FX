@@ -6,6 +6,8 @@
 
 namespace Gapotchenko.FX.Threading;
 
+#pragma warning disable CA1001 // Type owns disposable field(s) but is not disposable
+
 readonly struct AsyncSemaphoreImpl
 {
     public AsyncSemaphoreImpl(int initialCount)

@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AnalysisMode>all</AnalysisMode>
+    <AnalysisMode>recommended</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>

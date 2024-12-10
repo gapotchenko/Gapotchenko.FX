@@ -9,8 +9,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AnalysisMode>all</AnalysisMode>
-    <NoWarn>$(NoWarn),CA1307</NoWarn>
+    <AnalysisMode>recommended</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>

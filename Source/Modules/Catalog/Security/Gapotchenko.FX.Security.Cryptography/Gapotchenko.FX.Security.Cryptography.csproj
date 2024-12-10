@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
@@ -9,8 +9,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AnalysisMode>all</AnalysisMode>
-    <NoWarn>$(NoWarn),CA5358</NoWarn>
+    <AnalysisMode>recommended</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>

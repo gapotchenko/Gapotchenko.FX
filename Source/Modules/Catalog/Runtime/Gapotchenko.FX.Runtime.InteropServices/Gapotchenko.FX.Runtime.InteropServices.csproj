@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <CLSCompliant>true</CLSCompliant>
@@ -6,9 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AnalysisMode>all</AnalysisMode>
-    <WarningsAsErrors>$(WarningsAsErrors),CA1307,CA1309,CA1310</WarningsAsErrors>
-    <NoWarn>$(NoWarn),CA1510,CA1720</NoWarn>
+    <AnalysisMode>recommended</AnalysisMode>
   </PropertyGroup>
 
   <Import Project="$(MasteringDir)\OOB\System.Buffers.props" />

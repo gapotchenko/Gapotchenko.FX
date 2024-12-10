@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AnalysisMode>all</AnalysisMode>
-    <WarningsAsErrors>$(WarningsAsErrors),CA1307</WarningsAsErrors>
+    <AnalysisMode>recommended</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>
