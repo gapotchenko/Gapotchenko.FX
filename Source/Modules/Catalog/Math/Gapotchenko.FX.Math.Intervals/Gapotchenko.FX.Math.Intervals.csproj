@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AnalysisMode>All</AnalysisMode>
+    <AnalysisMode>all</AnalysisMode>
     <NoWarn>$(NoWarn),GPFX0001</NoWarn>
   </PropertyGroup>
 

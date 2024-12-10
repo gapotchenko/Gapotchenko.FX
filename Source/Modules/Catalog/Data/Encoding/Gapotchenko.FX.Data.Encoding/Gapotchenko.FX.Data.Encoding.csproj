@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AnalysisMode>All</AnalysisMode>
+    <AnalysisMode>all</AnalysisMode>
     <NoWarn>$(NoWarn),CA1307</NoWarn>
   </PropertyGroup>
 

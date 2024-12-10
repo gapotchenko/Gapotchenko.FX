@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
  
   <PropertyGroup>
-    <AnalysisMode>All</AnalysisMode>
+    <AnalysisMode>all</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>

@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AnalysisMode>All</AnalysisMode>
+    <AnalysisMode>all</AnalysisMode>
     <NoWarn>$(NoWarn),CA5358</NoWarn>
   </PropertyGroup>
 

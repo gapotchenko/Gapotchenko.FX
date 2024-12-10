@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AnalysisMode>All</AnalysisMode>
+    <AnalysisMode>all</AnalysisMode>
     <WarningsAsErrors>$(WarningsAsErrors),CA1307</WarningsAsErrors>
   </PropertyGroup>
 

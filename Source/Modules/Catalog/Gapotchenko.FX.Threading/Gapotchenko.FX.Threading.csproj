@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AnalysisMode>All</AnalysisMode>
+    <AnalysisMode>all</AnalysisMode>
     <NoWarn>$(NoWarn),CA1001,CA1031,CA1033,CA2000,CA2002,CA5394</NoWarn>
   </PropertyGroup>
 
