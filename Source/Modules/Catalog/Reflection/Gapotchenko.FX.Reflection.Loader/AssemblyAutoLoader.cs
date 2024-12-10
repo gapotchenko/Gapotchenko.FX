@@ -174,9 +174,7 @@ public class AssemblyAutoLoader :
     /// <exception cref="ArgumentNullException"><paramref name="assembly"/> parameter is <see langword="null"/>.</exception>
     public new bool AddAssembly(Assembly assembly) => AddAssembly(assembly, (IEnumerable<string?>?)null);
 
-    /// <inheritdoc cref="AddAssembly(Assembly)"/>
-    /// <param name="assembly">The assembly.</param>
-    /// <param name="additionalProbingPaths">The additional probing paths for dependencies of a specified assembly.</param>
+    /// <inheritdoc cref="AddAssembly(Assembly, IEnumerable{string?}?)"/>
     public new bool AddAssembly(Assembly assembly, params string?[]? additionalProbingPaths) =>
         AddAssembly(assembly, (IEnumerable<string?>?)additionalProbingPaths);
 

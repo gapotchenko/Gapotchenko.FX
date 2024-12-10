@@ -51,7 +51,7 @@ readonly struct LibraryNameVariation
 
     static IEnumerable<LibraryNameVariation> Enumerate_Windows(string libName, bool isRelativePath, bool forOSLoader)
     {
-        // This is a copy of logic from DetermineLibNameVariations function defined at dllimport.cpp file of CoreCLR.
+        // This is a copy of the logic from 'DetermineLibNameVariations' function defined at dllimport.cpp file of CoreCLR.
 
         const string LibraryNameSuffix = ".dll";
 
@@ -70,7 +70,7 @@ readonly struct LibraryNameVariation
 #if NETCOREAPP
     static IEnumerable<LibraryNameVariation> Enumerate_Unix(string libName, bool isRelativePath, bool forOSLoader, string libraryNameSuffix = ".so")
     {
-        // This is a copy of logic from DetermineLibNameVariations function defined at dllimport.cpp file of CoreCLR.
+        // This is a copy of the logic from 'DetermineLibNameVariations' function defined at dllimport.cpp file of CoreCLR.
 
         const string LibraryNamePrefix = "lib";
 
