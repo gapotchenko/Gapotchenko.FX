@@ -166,20 +166,28 @@ sealed class AssemblyLoaderInitializer : IDisposable
             // get propagated quicker to other CPU cores.
             m_InitializationIsDone = true;
 
-            // Acquire locks for the scopes that are currently in progress.
-            lockedScopes = new(
+#if TFF_CER
+            try
+            {
+            }
+            finally
+#endif
+            {
+                // Acquire locks for the scopes that are going to be in progress.
+                lockedScopes = new(
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                     actions.Count
 #endif
-                );
-            foreach (var action in actions)
-            {
-                var i = action.Scope;
-                if (lockedScopes.Add(i))
+                    );
+                foreach (var action in actions)
                 {
-                    object lockObj = i.FlushProgressLock;
-                    Monitor.Enter(lockObj);
-                    m_FlushProgressScopeLocks.Add(i, lockObj);
+                    var i = action.Scope;
+                    if (lockedScopes.Add(i))
+                    {
+                        object lockObj = i.FlushProgressLock;
+                        Monitor.Enter(lockObj);
+                        m_FlushProgressScopeLocks.Add(i, lockObj);
+                    }
                 }
             }
         }
