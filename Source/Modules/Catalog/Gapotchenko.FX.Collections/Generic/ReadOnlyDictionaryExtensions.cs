@@ -15,7 +15,7 @@ public static class ReadOnlyDictionaryExtensions
     /// <returns>
     /// A <typeparamref name="TValue"/> instance.
     /// When the method is successful, the returned object is the value associated with the specified key.
-    /// When the method fails, it returns the default value for <typeparamref name="TValue"/>.
+    /// When the method fails, it returns the <see langword="default"/> value for <typeparamref name="TValue"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="dictionary"/> is null.</exception>
 #if TFF_DICTIONARY_GETVALUEORDEFAULT

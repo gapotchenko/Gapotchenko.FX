@@ -900,7 +900,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <param name="key">The key of the value to get.</param>
     /// <param name="value">
     /// When this method returns, contains the value associated with the specified key, if the key is found;
-    /// otherwise, the default value for the type of the value parameter.
+    /// otherwise, the <see langword="default"/> value for the type of the value parameter.
     /// </param>
     /// <returns>true if the <see cref="OrderedDictionary{TKey, TValue}"/> contains an element with the specified key; otherwise, false.</returns>
 #if !NETCOREAPP3_0_OR_GREATER

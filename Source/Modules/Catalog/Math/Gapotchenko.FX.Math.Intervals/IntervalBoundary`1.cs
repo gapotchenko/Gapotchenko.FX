@@ -41,9 +41,9 @@ public readonly struct IntervalBoundary<T> : IEquatable<IntervalBoundary<T>>
     }
 
     /// <summary>
-    /// Gets the value of a bound limit point, or the default value of the underlying type <typeparamref name="T"/> when the boundary is unbounded.
+    /// Gets the value of a bound limit point, or the <see langword="default"/> value of the underlying type <typeparamref name="T"/> when the boundary is unbounded.
     /// </summary>
-    /// <returns>The value of a bound limit point, or the default value of the underlying type <typeparamref name="T"/> when the boundary is unbounded.</returns>
+    /// <returns>The value of a bound limit point, or the <see langword="default"/> value of the underlying type <typeparamref name="T"/> when the boundary is unbounded.</returns>
     public T GetValueOrDefault() => GetValueOrDefault(default!);
 
     /// <summary>

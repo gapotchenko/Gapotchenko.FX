@@ -46,18 +46,18 @@ public static class Optional
     /// <param name="optional">The readonly reference to the input <see cref="Optional{T}"/> value.</param>
     /// <returns>
     /// A readonly reference to the location where the value of the <see cref="Optional{T}"/> instance is stored.
-    /// If <see cref="Optional{T}.HasValue"/> property is <see langword="false"/>, the current value at that location may be the default value of type <typeparamref name="T"/>.
+    /// If <see cref="Optional{T}.HasValue"/> property is <see langword="false"/>, the current value at that location may be the <see langword="default"/> value of type <typeparamref name="T"/>.
     /// </returns>
     public static ref readonly T GetValueRefOrDefaultRef<T>(ref readonly Optional<T> optional) => ref optional.m_Value;
 
     /// <summary>
     /// Either creates a new <see cref="Optional{T}"/> object initialized to the specified value,
-    /// or returns <see cref="Optional{T}.None"/> when the specified value equals to the default value of type <typeparamref name="T"/>.
+    /// or returns <see cref="Optional{T}.None"/> when the specified value equals to the <see langword="default"/> value of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
     /// <param name="value">The value to discriminate.</param>
     /// <returns>
-    /// An <see cref="Optional{T}"/> object without a value when the specified parameter equals to the default value of type <typeparamref name="T"/>;
+    /// An <see cref="Optional{T}"/> object without a value when the specified parameter equals to the <see langword="default"/> value of type <typeparamref name="T"/>;
     /// otherwise, an <see cref="Optional{T}"/> object whose <see cref="Optional{T}.Value"/> property is initialized with the <paramref name="value"/> parameter.
     /// </returns>
     public static Optional<T> Discriminate<T>(T value) => Discriminate(value, default(T));

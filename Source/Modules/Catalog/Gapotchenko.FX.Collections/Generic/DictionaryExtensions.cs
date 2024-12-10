@@ -55,7 +55,7 @@ public static class DictionaryExtensions
     /// <param name="key">The key of the value to remove.</param>
     /// <param name="value">
     /// When this method returns <see langword="true"/>, the removed value;
-    /// when this method returns <see langword="false"/>, the default value for <typeparamref name="TValue"/>.
+    /// when this method returns <see langword="false"/>, the <see langword="default"/> value for <typeparamref name="TValue"/>.
     /// </param>
     /// <returns>
     /// <see langword="true"/> when a value is found in the dictionary with the specified key;

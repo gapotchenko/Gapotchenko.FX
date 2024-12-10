@@ -7,7 +7,7 @@
 public static class Fn<T>
 {
     /// <summary>
-    /// Gets a delegate to a pure function that returns a default value of type <typeparamref name="T"/>, e.g. f() = default(T).
+    /// Gets a delegate to a pure function that returns a <see langword="default"/> value of type <typeparamref name="T"/>, e.g. f() = default(T).
     /// </summary>
     public static Func<T?> Default { get; } = Fn.Default<T>;
 

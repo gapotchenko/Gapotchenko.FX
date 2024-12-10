@@ -390,7 +390,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     /// <param name="result">
     /// If present, the object at the beginning of the <see cref="Deque{T}"/>;
-    /// otherwise, the default value of <typeparamref name="T"/>.
+    /// otherwise, the <see langword="default"/> value of <typeparamref name="T"/>.
     /// </param>
     /// <returns>
     /// <see langword="true"/> if there is an object at the beginning of <see cref="Deque{T}"/>;
@@ -421,7 +421,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     /// <param name="result">
     /// If present, the object at the end of the <see cref="Deque{T}"/>;
-    /// otherwise, the default value of <typeparamref name="T"/>.
+    /// otherwise, the <see langword="default"/> value of <typeparamref name="T"/>.
     /// </param>
     /// <returns>
     /// <see langword="true"/> if there is an object at the end of <see cref="Deque{T}"/>;
@@ -480,7 +480,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     /// <param name="result">
     /// If present, the object at the beginning of the <see cref="Deque{T}"/>;
-    /// otherwise, the default value of <typeparamref name="T"/>.
+    /// otherwise, the <see langword="default"/> value of <typeparamref name="T"/>.
     /// </param>
     /// <returns>
     /// <see langword="true"/> if there is an object at the beginning of <see cref="Deque{T}"/>;
@@ -507,7 +507,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </summary>
     /// <param name="result">
     /// If present, the object at the end of the <see cref="Deque{T}"/>;
-    /// otherwise, the default value of <typeparamref name="T"/>.
+    /// otherwise, the <see langword="default"/> value of <typeparamref name="T"/>.
     /// </param>
     /// <returns>
     /// <see langword="true"/> if there is an object at the end of <see cref="Deque{T}"/>;

@@ -3,12 +3,12 @@
 partial class EnumerableEx
 {
     /// <summary>
-    /// Returns the only element of a sequence, or a default value if the sequence is empty or contains several elements.
+    /// Returns the only element of a sequence, or a <see langword="default"/> value if the sequence is empty or contains several elements.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
     /// <returns>
-    /// The only element of the input sequence, or default value if the sequence is empty or contains several elements.
+    /// The only element of the input sequence, or <see langword="default"/> value if the sequence is empty or contains several elements.
     /// </returns>
     public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source) => ScalarOrDefault(source, default(TSource));
 
@@ -47,14 +47,14 @@ partial class EnumerableEx
 
     /// <summary>
     /// Returns the only element of a sequence that satisfies a specified condition,
-    /// or default value when no such element exists or more than one element satisfies the condition.
+    /// or <see langword="default"/> value when no such element exists or more than one element satisfies the condition.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <param name="source">An <see cref="IEnumerable{T}"/> to return the scalar element of.</param>
     /// <param name="predicate">A function to test an element for a condition.</param>
     /// <returns>
     /// The only element of the input sequence that satisfies a specified condition,
-    /// or default value when no such element exists or more than one element satisfies the condition.
+    /// or <see langword="default"/> value when no such element exists or more than one element satisfies the condition.
     /// </returns>
     public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) => ScalarOrDefault(source, predicate, default!);
 

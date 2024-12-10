@@ -61,16 +61,16 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     public readonly bool HasValue => m_HasValue;
 
     /// <summary>
-    /// Retrieves the value of the current <see cref="Optional{T}"/> object, or the object's default value.
+    /// Retrieves the value of the current <see cref="Optional{T}"/> object, or the object's <see langword="default"/> value.
     /// </summary>
     /// <returns>
     /// The value of the <see cref="Value"/> property if the <see cref="HasValue"/> property is <see langword="true"/>;
-    /// otherwise, the default value of <typeparamref name="T"/> type.
+    /// otherwise, the <see langword="default"/> value of <typeparamref name="T"/> type.
     /// </returns>
     public readonly T GetValueOrDefault() => m_Value;
 
     /// <summary>
-    ///  Retrieves the value of the current <see cref="Optional{T}"/> object, or the specified default value.
+    /// Retrieves the value of the current <see cref="Optional{T}"/> object, or the specified default value.
     /// </summary>
     /// <param name="defaultValue">A value to return if the <see cref="HasValue"/> property is <see langword="false"/>.</param>
     /// <returns>
