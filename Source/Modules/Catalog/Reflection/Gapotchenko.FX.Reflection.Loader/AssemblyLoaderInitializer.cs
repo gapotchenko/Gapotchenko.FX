@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2024
 
+#if ASSEMBLY_LOADER_INITIALIZER
+
 using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System.Diagnostics;
 using System.Reflection;
@@ -375,3 +377,5 @@ sealed class AssemblyLoaderInitializer : IDisposable
         return null;
     }
 }
+
+#endif

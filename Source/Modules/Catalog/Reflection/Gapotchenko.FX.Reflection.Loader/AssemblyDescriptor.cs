@@ -21,8 +21,11 @@ sealed class AssemblyDescriptor : IDisposable
         m_IsAttached = assemblyAutoLoader.IsAttached;
         m_AssemblyLoadPal = assemblyLoadPal;
         m_AssemblyDependencyTracker = new(assembly);
+#if ASSEMBLY_LOADER_INITIALIZER
         m_InitializationScope = assemblyAutoLoader.Initializer.CreateScope();
+#endif
 
+#if ASSEMBLY_LOADER_INITIALIZER
         if (m_InitializationScope.IsLazy)
         {
             // Capture enumerable values now to avoid race conditions.
@@ -30,6 +33,9 @@ sealed class AssemblyDescriptor : IDisposable
         }
 
         m_InitializationScope.Enqueue(Initialize);
+#else
+        Initialize();
+#endif
 
         void Initialize()
         {
@@ -83,7 +89,9 @@ sealed class AssemblyDescriptor : IDisposable
     readonly bool m_IsAttached;
     readonly AssemblyLoadPal m_AssemblyLoadPal;
     readonly AssemblyDependencyTracker m_AssemblyDependencyTracker;
+#if ASSEMBLY_LOADER_INITIALIZER
     readonly IAssemblyLoaderInitializationScope m_InitializationScope;
+#endif
     IAssemblyLoaderBackend? m_AssemblyLoaderBackend;
     bool m_HasBindingRedirects;
 
@@ -94,7 +102,9 @@ sealed class AssemblyDescriptor : IDisposable
     {
         get
         {
+#if ASSEMBLY_LOADER_INITIALIZER
             m_InitializationScope.Flush();
+#endif
 
             if (m_AssemblyLoaderBackend != null)
                 yield return m_AssemblyLoaderBackend;
@@ -124,7 +134,9 @@ sealed class AssemblyDescriptor : IDisposable
         if (probingPaths == null)
             return false;
 
+#if ASSEMBLY_LOADER_INITIALIZER
         m_InitializationScope.Flush();
+#endif
 
         var newProbingPaths = new List<string>();
         AccumulateNewProbingPaths(newProbingPaths, probingPaths);
@@ -148,7 +160,9 @@ sealed class AssemblyDescriptor : IDisposable
 
     public void Dispose()
     {
+#if ASSEMBLY_LOADER_INITIALIZER
         m_InitializationScope.Dispose();
+#endif
 
         m_AssemblyLoaderBackend?.Dispose();
 

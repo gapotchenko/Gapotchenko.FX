@@ -87,10 +87,14 @@ public class AssemblyAutoLoader :
     }
 #endif
 
+#if ASSEMBLY_LOADER_INITIALIZER
     [MemberNotNull(nameof(m_Initializer))]
+#endif
     void Initialize()
     {
+#if ASSEMBLY_LOADER_INITIALIZER
         m_Initializer = new(() => new(m_AssemblyLoadPal));
+#endif
     }
 
 #if TFF_ASSEMBLYLOADCONTEXT
@@ -275,6 +279,7 @@ public class AssemblyAutoLoader :
     {
         get
         {
+#if ASSEMBLY_LOADER_INITIALIZER
             if (m_Initializer.IsValueCreated)
             {
                 // We call flush here to preserve the relative order
@@ -283,6 +288,7 @@ public class AssemblyAutoLoader :
                 // independent, but there may be hidden interconnections.
                 m_Initializer.Value.Flush();
             }
+#endif
 
             lock (m_AssemblyDescriptors)
                 foreach (var i in m_AssemblyDescriptors)
@@ -380,15 +386,21 @@ public class AssemblyAutoLoader :
         foreach (var i in disposables)
             i.Dispose();
 
+#if ASSEMBLY_LOADER_INITIALIZER
         if (m_Initializer.IsValueCreated)
             m_Initializer.Value.Dispose();
+#endif
     }
 
     bool m_Disposed;
+
+#if ASSEMBLY_LOADER_INITIALIZER
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     internal AssemblyLoaderInitializer Initializer => m_Initializer.Value;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     Lazy<AssemblyLoaderInitializer> m_Initializer;
+
+#endif
 }
