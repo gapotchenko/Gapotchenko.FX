@@ -7,7 +7,8 @@
 namespace Gapotchenko.FX;
 
 /// <summary>
-/// The untyped interface of the <see cref="Optional{T}"/> type.
+/// Allows general-purpose access to <see cref="Optional{T}"/> instance members
+/// without knowing the underlying <see cref="Optional{T}"/> type.
 /// </summary>
 public interface IOptional
 {
