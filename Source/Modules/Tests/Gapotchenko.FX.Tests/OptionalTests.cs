@@ -17,7 +17,7 @@ public class OptionalTests
     public void Optional_AV2()
     {
         var optional = Optional<int>.None;
-        var value = optional.Value;
+        _ = optional.Value;
     }
 
     [TestMethod]
@@ -40,7 +40,7 @@ public class OptionalTests
     public void Optional_AV5()
     {
         var optional = new Optional<int>();
-        var value = optional.Value;
+        _ = optional.Value;
     }
 
     [TestMethod]
@@ -86,7 +86,7 @@ public class OptionalTests
     public void Optional_AR5()
     {
         var optional = new Optional<string>();
-        var value = optional.Value;
+        _ = optional.Value;
     }
 
     [TestMethod]
