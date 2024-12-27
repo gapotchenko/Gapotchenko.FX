@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 #if TFF_RANGE
 
-[assembly: TypeForwardedTo(typeof(System.Index))]
+[assembly: TypeForwardedTo(typeof(Index))]
 
 #else
 
