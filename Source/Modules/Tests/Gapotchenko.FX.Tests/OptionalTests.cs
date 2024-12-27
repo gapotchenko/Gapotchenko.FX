@@ -268,4 +268,13 @@ public class OptionalTests
         Assert.AreEqual(Optional<string>.None, Optional.Discriminate("", string.IsNullOrEmpty));
         Assert.AreEqual("A", Optional.Discriminate("A", string.IsNullOrEmpty));
     }
+
+    [TestMethod]
+    public void Optional_E1()
+    {
+        Optional<string> a = "test";
+        Optional<object> b = a;
+
+        Assert.IsInstanceOfType<string>(b.Value);
+    }
 }

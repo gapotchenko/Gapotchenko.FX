@@ -13,6 +13,7 @@ Release date: not released yet
 - Added `System.Threading.Lock` support to `Gapotchenko.FX.Threading.ExecuteOnce` primitive
 - `Gapotchenko.FX.Reflection.Loader` module made as lazy as possible to avoid chicken and egg pitfalls
 - Added `Gapotchenko.FX.IOptional` interface  for the `Gapotchenko.FX.Optional<T>` type to allow an untyped value introspection
+- Fixed issue with nested `Gapotchenko.FX.Optional<T>` values that could occur during implicit value conversion
 
 ### Gapotchenko FX 2024.1
 

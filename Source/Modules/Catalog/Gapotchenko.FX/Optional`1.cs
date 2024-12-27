@@ -37,6 +37,7 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     internal bool m_HasValue;
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly object? IOptional.Value => Value;
 
     /// <summary>
@@ -124,7 +125,12 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     /// Creates a new <see cref="Optional{T}"/> object initialized to a specified value.
     /// </summary>
     /// <param name="value">A value.</param>
-    public static implicit operator Optional<T>(T value) => new(value);
+    public static implicit operator Optional<T>(T value) =>
+        value switch
+        {
+            IOptional optional => optional.HasValue ? new((T)optional.Value!) : default,
+            _ => new(value)
+        };
 
     /// <summary>
     /// Returns the value of a specified <see cref="Optional{T}"/> value.
