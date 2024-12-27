@@ -14,30 +14,33 @@ sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : 
 
     readonly IEqualityComparer<T> m_ValueComparer = valueComparer ?? EqualityComparer<T>.Default;
 
-    internal static bool EqualsCore(Optional<T> x, object? y, IEqualityComparer<T> valueComparer)
+    internal static bool EqualsCore(Optional<T> x, object? y, IEqualityComparer<T> valueComparer) =>
+        x.HasValue
+            ? y switch
+            {
+                Optional<T> other => EqualsCore(other, x.Value, valueComparer),
+                IOptional other => EqualsCore(other, x.Value, valueComparer),
+                _ => ValueEqualsCore(x.Value, y, valueComparer)
+            }
+            : y switch
+            {
+                Optional<T> other => !other.HasValue,
+                IOptional other => !other.HasValue && HasCompatibleType(other),
+                _ => false
+            };
+
+    static bool HasCompatibleType(IOptional optional)
     {
-        if (!x.HasValue)
+        var thisType = typeof(T);
+        var objectType = typeof(object);
+        if (thisType == objectType)
         {
-            if (y is Optional<T> otherOptional)
-                return !otherOptional.HasValue;
-            else
-                return false;
-        }
-        else if (y is Optional<T> otherOptional)
-        {
-            return EqualsCore(otherOptional, x.Value, valueComparer);
-        }
-        else if (y is T otherValue)
-        {
-            return valueComparer.Equals(x.Value, otherValue);
+            return true;
         }
         else
         {
-            var value = x.Value;
-            if (value is null)
-                return y is null;
-            else
-                return value.Equals(y);
+            var otherType = Optional.GetUnderlyingType(optional.GetType());
+            return otherType == thisType || otherType == objectType;
         }
     }
 
@@ -55,6 +58,24 @@ sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : 
             return valueComparer.Equals(x.Value, y);
         else
             return false;
+    }
+
+    static bool EqualsCore(IOptional x, T y, IEqualityComparer<T> valueComparer)
+    {
+        if (x.HasValue)
+            return ValueEqualsCore(y, x.Value, valueComparer);
+        else
+            return false;
+    }
+
+    static bool ValueEqualsCore(T x, object? y, IEqualityComparer<T> valueComparer)
+    {
+        if (y is T otherValue)
+            return valueComparer.Equals(x, otherValue);
+        else if (x is null)
+            return y is null;
+        else
+            return x.Equals(y);
     }
 
     internal static int GetHashCodeCore(Optional<T> obj, IEqualityComparer<T> valueComparer)

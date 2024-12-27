@@ -274,7 +274,24 @@ public class OptionalTests
     {
         Optional<string> a = "test";
         Optional<object> b = a;
-
         Assert.IsInstanceOfType<string>(b.Value);
+        Assert.IsTrue(a.Equals(b));
+
+        Optional<int> c = 10;
+        b = c;
+        Assert.IsInstanceOfType<int>(b.Value);
+        Assert.IsTrue(c.Equals(b));
+    }
+
+    [TestMethod]
+    public void Optional_E2()
+    {
+        Optional<string> a = default;
+        Optional<object> b = a;
+        Assert.IsTrue(a.Equals(b));
+
+        Optional<int> c = default;
+        b = c;
+        Assert.IsTrue(c.Equals(b));
     }
 }

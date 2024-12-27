@@ -96,6 +96,30 @@ public static class Optional
     }
 
     /// <summary>
+    /// Gets an underlying <see cref="Type"/> of the specified optional type.
+    /// </summary>
+    /// <param name="optionalType">The type that represents a closed generic optional type.</param>
+    /// <returns>
+    /// The underlying type of the optional type represented by the <paramref name="optionalType"/> parameter,
+    /// or <see langword="null"/> if <paramref name="optionalType"/> is not a closed generic optional type.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="optionalType"/> is <see langword="null"/>.</exception>
+    public static Type? GetUnderlyingType(Type optionalType)
+    {
+        if (optionalType == null)
+            throw new ArgumentNullException(nameof(optionalType));
+
+        if (optionalType.IsConstructedGenericType)
+        {
+            var genericType = optionalType.GetGenericTypeDefinition();
+            if (genericType == typeof(Optional<>))
+                return optionalType.GetGenericArguments()[0];
+        }
+
+        return null;
+    }
+
+    /// <summary>
     /// Determines whether the specified optional values are equal.
     /// </summary>
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
