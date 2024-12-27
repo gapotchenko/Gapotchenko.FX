@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 #else
 
 #pragma warning disable IDE0130 // Namespace does not match folder structure
+#pragma warning disable IDE1006 // Naming Styles
 
 namespace System;
 
@@ -142,8 +143,8 @@ public readonly struct Index : IEquatable<Index>
     {
         if (IsFromEnd)
             return "^" + ((uint)Value).ToString();
-
-        return ((uint)Value).ToString();
+        else
+            return ((uint)Value).ToString();
     }
 }
 
