@@ -6,7 +6,7 @@ sealed class ExpressionHashCodeWorker : ExpressionVisitor<int>
 {
     public int CalculateHashCode(Expression expression) => Visit(expression);
 
-    readonly ParameterExpressionRegistry _Parameters = new ParameterExpressionRegistry();
+    readonly ParameterExpressionRegistry _Parameters = new();
 
     protected override int Visit(Expression? e)
     {

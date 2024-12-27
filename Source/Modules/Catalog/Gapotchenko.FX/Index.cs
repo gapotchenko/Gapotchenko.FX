@@ -59,10 +59,10 @@ public readonly struct Index : IEquatable<Index>
     }
 
     /// <summary>Create an Index pointing at first element.</summary>
-    public static Index Start => new Index(0);
+    public static Index Start => new(0);
 
     /// <summary>Create an Index pointing at beyond last element.</summary>
-    public static Index End => new Index(~0);
+    public static Index End => new(~0);
 
     /// <summary>Create an Index from the start at the position indicated by the value.</summary>
     /// <param name="value">The index value from the start.</param>

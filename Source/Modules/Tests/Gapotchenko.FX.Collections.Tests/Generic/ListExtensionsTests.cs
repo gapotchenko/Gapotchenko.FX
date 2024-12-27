@@ -23,9 +23,9 @@ public class ListExtensionsTests
     {
         var list = new List<SortItem>
         {
-            new SortItem{ SortOrder = 1, Name = "Name1"},
-            new SortItem{ SortOrder = 2, Name = "Name2"},
-            new SortItem{ SortOrder = 2, Name = "Name3"},
+            new() { SortOrder = 1, Name = "Name1"},
+            new() { SortOrder = 2, Name = "Name2"},
+            new() { SortOrder = 2, Name = "Name3"},
         };
 
         list.StableSort();
@@ -47,9 +47,9 @@ public class ListExtensionsTests
     {
         var list = new List<SortItem>
         {
-            new SortItem{ SortOrder = 2, Name = "Name2"},
-            new SortItem{ SortOrder = 1, Name = "Name1"},
-            new SortItem{ SortOrder = 2, Name = "Name3"},
+            new() { SortOrder = 2, Name = "Name2"},
+            new() { SortOrder = 1, Name = "Name1"},
+            new() { SortOrder = 2, Name = "Name3"},
         };
 
         list.StableSort();

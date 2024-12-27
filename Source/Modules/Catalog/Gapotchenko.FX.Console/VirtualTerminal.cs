@@ -164,7 +164,7 @@ public static class VirtualTerminal
         }
     }
 
-    static readonly object m_SyncRoot = new object();
+    static readonly object m_SyncRoot = new();
     static bool m_IsEmulated;
     static bool m_NativeVTProcessingPrevState;
     static TextWriter? m_PrevConsoleOut;

@@ -11,7 +11,7 @@ public static class Lazy
     /// </summary>
     /// <typeparam name="T">Specifies the type of object that is being lazily initialized.</typeparam>
     /// <returns>New <see cref="Lazy{T}"/> instance.</returns>
-    public static Lazy<T> Create<T>() where T : new() => new Lazy<T>();
+    public static Lazy<T> Create<T>() where T : new() => new();
 
     /// <summary>
     /// Creates a new instance of the <see cref="Lazy{T}"/> class.
@@ -23,7 +23,7 @@ public static class Lazy
     /// <see langword="false"/> to make the instance usable by only one thread at a time.
     /// </param>
     /// <returns>New <see cref="Lazy{T}"/> instance.</returns>
-    public static Lazy<T> Create<T>(bool isThreadSafe) where T : new() => new Lazy<T>(isThreadSafe);
+    public static Lazy<T> Create<T>(bool isThreadSafe) where T : new() => new(isThreadSafe);
 
     /// <summary>
     /// Creates a new instance of the <see cref="Lazy{T}"/> class.
@@ -32,7 +32,7 @@ public static class Lazy
     /// <typeparam name="T">Specifies the type of object that is being lazily initialized.</typeparam>
     /// <param name="mode">One of the enumeration values that specifies the thread safety mode.</param>
     /// <returns>New <see cref="Lazy{T}"/> instance.</returns>
-    public static Lazy<T> Create<T>(LazyThreadSafetyMode mode) where T : new() => new Lazy<T>(mode);
+    public static Lazy<T> Create<T>(LazyThreadSafetyMode mode) where T : new() => new(mode);
 
     /// <summary>
     /// Creates a new instance of the <see cref="Lazy{T}"/> class.
@@ -41,7 +41,7 @@ public static class Lazy
     /// <typeparam name="T">Specifies the type of object that is being lazily initialized.</typeparam>
     /// <param name="valueFactory">The delegate that is invoked to produce the lazily initialized value when it is needed.</param>
     /// <returns>New <see cref="Lazy{T}"/> instance.</returns>
-    public static Lazy<T> Create<T>(Func<T> valueFactory) => new Lazy<T>(valueFactory);
+    public static Lazy<T> Create<T>(Func<T> valueFactory) => new(valueFactory);
 
     /// <summary>
     /// Creates a new instance of the <see cref="Lazy{T}"/> class.
@@ -54,7 +54,7 @@ public static class Lazy
     /// <see langword="false"/> to make the instance usable by only one thread at a time.
     /// </param>
     /// <returns>New <see cref="Lazy{T}"/> instance.</returns>
-    public static Lazy<T> Create<T>(Func<T> valueFactory, bool isThreadSafe) => new Lazy<T>(valueFactory, isThreadSafe);
+    public static Lazy<T> Create<T>(Func<T> valueFactory, bool isThreadSafe) => new(valueFactory, isThreadSafe);
 
     /// <summary>
     /// Creates a new instance of the <see cref="Lazy{T}"/> class.
@@ -64,5 +64,5 @@ public static class Lazy
     /// <param name="valueFactory">The delegate that is invoked to produce the lazily initialized value when it is needed.</param>
     /// <param name="mode">One of the enumeration values that specifies the thread safety mode.</param>
     /// <returns>New <see cref="Lazy{T}"/> instance.</returns>
-    public static Lazy<T> Create<T>(Func<T> valueFactory, LazyThreadSafetyMode mode) => new Lazy<T>(valueFactory, mode);
+    public static Lazy<T> Create<T>(Func<T> valueFactory, LazyThreadSafetyMode mode) => new(valueFactory, mode);
 }

@@ -7,8 +7,8 @@ sealed class ExpressionEqualityWorker
 {
     public bool AreEqual(Expression x, Expression y) => _Visit(x, y);
 
-    readonly ParameterExpressionRegistry m_XParameters = new ParameterExpressionRegistry();
-    readonly ParameterExpressionRegistry m_YParameters = new ParameterExpressionRegistry();
+    readonly ParameterExpressionRegistry m_XParameters = new();
+    readonly ParameterExpressionRegistry m_YParameters = new();
 
     bool _Visit(Expression? x, Expression? y)
     {

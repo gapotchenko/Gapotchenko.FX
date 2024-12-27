@@ -7,7 +7,7 @@ namespace Gapotchenko.FX.Console;
 #endif
 static class NativeMethods
 {
-    public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+    public static readonly IntPtr INVALID_HANDLE_VALUE = new(-1);
 
     public const int STD_OUTPUT_HANDLE = -11;
 

@@ -38,7 +38,7 @@ partial class EnumerablePolyfills
         Enumerable.ToHashSet(source, comparer);
 #else
     public static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource>? comparer) =>
-        new HashSet<TSource>(
+        new(
             source ?? throw new ArgumentNullException(nameof(source)),
             comparer);
 #endif
