@@ -19,7 +19,7 @@ namespace Gapotchenko.FX;
 /// </summary>
 /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>
 [Serializable]
-public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
+public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Optional<T>>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Optional{T}"/> structure to the specified value.
@@ -37,10 +37,12 @@ public struct Optional<T> : IEquatable<Optional<T>>, IComparable<Optional<T>>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     internal bool m_HasValue;
 
+    readonly object? IOptional.Value => Value;
+
     /// <summary>
     /// Gets the value of the current <see cref="Optional{T}"/> if it has been assigned a valid underlying value.
     /// </summary>
-    /// <exception cref="InvalidOperationException">The <see cref="Optional{T}.HasValue"/> property is <see langword="false"/>.</exception>
+    /// <exception cref="InvalidOperationException">The <see cref="HasValue"/> property is <see langword="false"/>.</exception>
     public readonly T Value
     {
         get
