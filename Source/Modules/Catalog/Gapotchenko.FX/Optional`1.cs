@@ -83,11 +83,11 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     public readonly T GetValueOrDefault(T defaultValue) => m_HasValue ? m_Value : defaultValue;
 
     /// <summary>
-    /// Returns a new <see cref="Optional{T}"/> instance whose underlying value is casted to the specified <typeparamref name="TResult"/> type.
+    /// Returns a new <see cref="Optional{T}"/> instance whose underlying <typeparamref name="T"/> value is casted to the specified <typeparamref name="TResult"/> type.
     /// </summary>
     /// <typeparam name="TResult">The type to cast the underlying value to.</typeparam>
     /// <returns>
-    /// The new <see cref="Optional{T}"/> instance whose underlying value is casted to <typeparamref name="TResult"/> type.
+    /// The new <see cref="Optional{T}"/> instance whose underlying <typeparamref name="T"/> value is casted to <typeparamref name="TResult"/> type.
     /// </returns>
     /// <exception cref="InvalidCastException"><typeparamref name="T"/> value cannot be casted to <typeparamref name="TResult"/>.</exception>
     public readonly Optional<TResult> Cast<TResult>() =>
@@ -106,6 +106,11 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     /// <param name="other">An optional value.</param>
     /// <returns><see langword="true"/> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <see langword="false"/>.</returns>
     public readonly bool Equals(Optional<T> other) => Optional.Equals(this, other, null);
+
+    /// <inheritdoc cref="Equals(object?)"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public readonly bool Equals<TOther>(TOther? obj) where TOther : struct, IOptional =>
+        OptionalEqualityComparer<T>.EqualsCore(this, obj, EqualityComparer<T>.Default);
 
     /// <summary>
     /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified value.
@@ -175,20 +180,10 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     /// <param name="left">The left <see cref="Optional{T}"/> object.</param>
     /// <param name="right">The right <see cref="Optional{T}"/> object.</param>
     /// <returns><see langword="true"/> if <paramref name="left"/> equals <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
-    public static bool operator ==(Optional<T> left, Optional<T> right) => EqualsOperatorCore(left, right);
-
-    /// <summary>
-    /// Determines whether two specified <see cref="Optional{T}"/> objects are not equal.
-    /// </summary>
-    /// <param name="left">The left <see cref="Optional{T}"/> object.</param>
-    /// <param name="right">The right <see cref="Optional{T}"/> object.</param>
-    /// <returns><see langword="true"/> if <paramref name="left"/> does not equal <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
-    public static bool operator !=(Optional<T> left, Optional<T> right) => !EqualsOperatorCore(left, right);
-
-    static bool EqualsOperatorCore(in Optional<T> value1, in Optional<T> value2)
+    public static bool operator ==(Optional<T> left, Optional<T> right)
     {
-        var a = EmptifyNull(value1);
-        var b = EmptifyNull(value2);
+        var a = EmptifyNull(left);
+        var b = EmptifyNull(right);
         return a.Equals(b);
 
         static Optional<T> EmptifyNull(in Optional<T> optional)
@@ -199,4 +194,47 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
                 return optional;
         }
     }
+
+    /// <summary>
+    /// Determines whether two specified <see cref="Optional{T}"/> objects are not equal.
+    /// </summary>
+    /// <param name="left">The left <see cref="Optional{T}"/> object.</param>
+    /// <param name="right">The right <see cref="Optional{T}"/> object.</param>
+    /// <returns><see langword="true"/> if <paramref name="left"/> does not equal <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+    public static bool operator !=(Optional<T> left, Optional<T> right) => !(left == right);
+
+    /// <summary>
+    /// Determines whether two specified objects are equal.
+    /// </summary>
+    /// <param name="left">The left <see cref="Optional{T}"/> object.</param>
+    /// <param name="right">The right <typeparamref name="T"/> object.</param>
+    /// <returns><see langword="true"/> if <paramref name="left"/> equals <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+    public static bool operator ==(Optional<T> left, T? right) =>
+        !left.HasValue && right is null ||
+        left.Equals(right);
+
+    /// <summary>
+    /// Determines whether two specified objects are not equal.
+    /// </summary>
+    /// <param name="left">The left <see cref="Optional{T}"/> object.</param>
+    /// <param name="right">The right <typeparamref name="T"/> object.</param>
+    /// <returns><see langword="true"/> if <paramref name="left"/> does not equal <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+    public static bool operator !=(Optional<T> left, T? right) => !(left == right);
+
+    /// <summary>
+    /// Determines whether two specified optional objects are equal.
+    /// </summary>
+    /// <param name="left">The left <see cref="Optional{T}"/> object.</param>
+    /// <param name="right">The right <see cref="IOptional"/> object.</param>
+    /// <returns><see langword="true"/> if <paramref name="left"/> equals <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+    public static bool operator ==(Optional<T> left, IOptional? right) =>
+        OptionalEqualityComparer<T>.EqualsCore(left, right, EqualityComparer<T>.Default);
+
+    /// <summary>
+    /// Determines whether two specified optional objects are not equal.
+    /// </summary>
+    /// <param name="left">The left <see cref="Optional{T}"/> object.</param>
+    /// <param name="right">The right <see cref="IOptional"/> object.</param>
+    /// <returns><see langword="true"/> if <paramref name="left"/> does not equal <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
+    public static bool operator !=(Optional<T> left, IOptional? right) => !(left == right);
 }

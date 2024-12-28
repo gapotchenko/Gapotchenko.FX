@@ -25,24 +25,9 @@ sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : 
             : y switch
             {
                 Optional<T> other => !other.HasValue,
-                IOptional other => !other.HasValue && HasCompatibleType(other),
+                IOptional other => IsNoneAndHasCompatibleType(other),
                 _ => false
             };
-
-    static bool HasCompatibleType(IOptional optional)
-    {
-        var thisType = typeof(T);
-        var objectType = typeof(object);
-        if (thisType == objectType)
-        {
-            return true;
-        }
-        else
-        {
-            var otherType = Optional.GetUnderlyingType(optional.GetType());
-            return otherType == thisType || otherType == objectType;
-        }
-    }
 
     internal static bool EqualsCore(Optional<T> x, Optional<T> y, IEqualityComparer<T> valueComparer)
     {
@@ -50,6 +35,32 @@ sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : 
             return EqualsCore(y, x.Value, valueComparer);
         else
             return !y.HasValue;
+    }
+
+    internal static bool EqualsCore<TOther>(Optional<T> x, TOther? y, IEqualityComparer<T> valueComparer)
+        where TOther : IOptional
+    {
+        if (y is null)
+            return false;
+        else if (x.HasValue)
+            return EqualsCore(y, x.Value, valueComparer);
+        else
+            return IsNoneAndHasCompatibleType(y);
+    }
+
+    static bool IsNoneAndHasCompatibleType<TOptional>(TOptional optional)
+        where TOptional : IOptional =>
+        !optional.HasValue && HasCompatibleType(optional.GetType());
+
+    static bool HasCompatibleType(Type optionalType)
+    {
+        var otherType = Optional.GetUnderlyingType(optionalType);
+        if (otherType is null)
+            return false;
+        var thisType = typeof(T);
+        return
+            thisType.IsAssignableFrom(otherType) ||
+            otherType.IsAssignableFrom(thisType);
     }
 
     internal static bool EqualsCore(Optional<T> x, T? y, IEqualityComparer<T> valueComparer)
@@ -60,7 +71,8 @@ sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : 
             return false;
     }
 
-    static bool EqualsCore(IOptional x, T y, IEqualityComparer<T> valueComparer)
+    static bool EqualsCore<TOther>(TOther x, T y, IEqualityComparer<T> valueComparer)
+        where TOther : IOptional
     {
         if (x.HasValue)
             return ValueEqualsCore(y, x.Value, valueComparer);

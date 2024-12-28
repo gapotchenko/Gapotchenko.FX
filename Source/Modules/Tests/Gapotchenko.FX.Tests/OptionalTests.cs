@@ -270,28 +270,62 @@ public class OptionalTests
     }
 
     [TestMethod]
-    public void Optional_E1()
+    public void Optional_E1_S()
     {
         Optional<string> a = "test";
         Optional<object> b = a;
         Assert.IsInstanceOfType<string>(b.Value);
         Assert.IsTrue(a.Equals(b));
+        Assert.IsTrue(b == a);
 
         Optional<int> c = 10;
         b = c;
         Assert.IsInstanceOfType<int>(b.Value);
         Assert.IsTrue(c.Equals(b));
+        Assert.IsTrue(b == c);
     }
 
     [TestMethod]
-    public void Optional_E2()
+    public void Optional_E1_N()
     {
         Optional<string> a = default;
         Optional<object> b = a;
         Assert.IsTrue(a.Equals(b));
+        Assert.IsTrue(b == a);
 
         Optional<int> c = default;
         b = c;
         Assert.IsTrue(c.Equals(b));
+        Assert.IsTrue(b == c);
+    }
+
+    [TestMethod]
+    public void Optional_E2_S()
+    {
+        var a = Optional.Some(new StringWriter());
+        var b = a.Cast<IDisposable>();
+        Assert.IsInstanceOfType<StringWriter>(b.Value);
+        Assert.IsTrue(a.Equals(b));
+        Assert.IsTrue(a == b);
+
+        Optional<int> c = 10;
+        var d = c.Cast<IComparable>();
+        Assert.IsInstanceOfType<int>(d.Value);
+        Assert.IsTrue(c.Equals(d));
+        Assert.IsTrue(c == d);
+    }
+
+    [TestMethod]
+    public void Optional_E2_N()
+    {
+        var a = Optional<StringWriter>.None;
+        var b = a.Cast<IDisposable>();
+        Assert.IsTrue(a.Equals(b));
+        Assert.IsTrue(a == b);
+
+        Optional<int> c = default;
+        var d = c.Cast<IComparable>();
+        Assert.IsTrue(c.Equals(d));
+        Assert.IsTrue(c == d);
     }
 }
