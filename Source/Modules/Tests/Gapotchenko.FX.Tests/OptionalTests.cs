@@ -219,7 +219,7 @@ public class OptionalTests
     public void Optional_CV2()
     {
         var optional = Optional.Some(10);
-        Assert.AreEqual(10.GetHashCode(), optional.GetHashCode());
+        Assert.AreEqual(optional.Value.GetHashCode(), optional.GetHashCode());
     }
 
     [TestMethod]
@@ -233,7 +233,7 @@ public class OptionalTests
     public void Optional_CR2()
     {
         var optional = Optional.Some("10");
-        Assert.AreEqual("10".GetHashCode(), optional.GetHashCode());
+        Assert.AreEqual(optional.Value.GetHashCode(), optional.GetHashCode());
     }
 
     [TestMethod]
