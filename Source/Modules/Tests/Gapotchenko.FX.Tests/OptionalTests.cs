@@ -328,4 +328,17 @@ public class OptionalTests
         Assert.IsTrue(c.Equals(d));
         Assert.IsTrue(c == d);
     }
+
+    [TestMethod]
+    public void Optional_E3()
+    {
+        const string s = "abc";
+
+        var optional = F(s);
+        Assert.IsInstanceOfType<string>(optional.Value);
+        Assert.AreEqual(s, optional.Value);
+
+        static Optional<object> F(Optional<string> optional) =>
+            optional.HasValue ? Optional.Some(optional.Value) : Optional<object>.None;
+    }
 }

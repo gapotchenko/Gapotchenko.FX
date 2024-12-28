@@ -21,17 +21,6 @@ public static class ConsoleTraits
     /// </summary>
     public static bool IsColorAvailable => !(Console.IsOutputRedirected || Console.IsErrorRedirected);
 
-    /// <summary>
-    /// A tristate atomic data type for thread-safe representation of a nullable boolean value in accordance with .NET memory model.
-    /// </summary>
-    enum AtomicNullableBool : byte
-    {
-        Null,
-        False,
-        True
-    }
-
-    static AtomicNullableBool m_CachedIsColorInhibited;
 
     /// <summary>
     /// <para>
@@ -57,6 +46,8 @@ public static class ConsoleTraits
         }
     }
 
+    static AtomicNullableBool m_CachedIsColorInhibited;
+
     static bool IsColorInhibitedCore() =>
         Environment.GetEnvironmentVariable("NO_COLOR") != null;  // https://no-color.org/
 
@@ -69,9 +60,6 @@ public static class ConsoleTraits
     /// </para>
     /// </summary>
     public static bool IsColorEnabled => IsColorAvailable && !IsColorInhibited;
-
-    // This cached value should not be discarded as it represents an immutable trait.
-    static AtomicNullableBool m_CachedWillDisappearOnExit;
 
     /// <summary>
     /// Gets a value indicating whether a console window will immediately disappear on program exit.
@@ -91,10 +79,16 @@ public static class ConsoleTraits
         }
     }
 
+    // This cached value should not be discarded as it represents an immutable trait.
+    static AtomicNullableBool m_CachedWillDisappearOnExit;
+
     static bool WillDisappearOnExitCore() =>
         RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
         WindowsExplorerDetector.IsStartedByExplorer();
 
+#if NET
+    [SupportedOSPlatform("windows")]
+#endif
     static class WindowsExplorerDetector
     {
         public static bool IsStartedByExplorer()
