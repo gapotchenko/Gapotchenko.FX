@@ -83,6 +83,17 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     public readonly T GetValueOrDefault(T defaultValue) => m_HasValue ? m_Value : defaultValue;
 
     /// <summary>
+    /// Returns a new <see cref="Optional{T}"/> instance whose underlying value is casted to the specified <typeparamref name="TResult"/> type.
+    /// </summary>
+    /// <typeparam name="TResult">The type to cast the underlying value to.</typeparam>
+    /// <returns>
+    /// The new <see cref="Optional{T}"/> instance whose underlying value is casted to <typeparamref name="TResult"/> type.
+    /// </returns>
+    /// <exception cref="InvalidCastException"><typeparamref name="T"/> value cannot be casted to <typeparamref name="TResult"/>.</exception>
+    public readonly Optional<TResult> Cast<TResult>() =>
+        m_HasValue ? new((TResult)(object)m_Value!) : default;
+
+    /// <summary>
     /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified object.
     /// </summary>
     /// <param name="obj">An object.</param>
