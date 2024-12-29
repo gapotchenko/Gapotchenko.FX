@@ -341,4 +341,14 @@ public class OptionalTests
         static Optional<object> F(Optional<string> optional) =>
             optional.HasValue ? Optional.Some(optional.Value) : Optional<object>.None;
     }
+
+    [TestMethod]
+    public void Optional_E4()
+    {
+        const string s = "abc";
+
+        Optional<Optional<string>> optional;
+        optional = new(s);
+        Assert.AreEqual(s, optional.Value.Value);
+    }
 }

@@ -144,7 +144,7 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     public static implicit operator Optional<T>(T value) =>
         value switch
         {
-            IOptional optional => optional.HasValue ? new((T)optional.Value!) : default,
+            IOptional optional when typeof(T) == typeof(object) => optional.HasValue ? new((T)optional.Value!) : default,
             _ => new(value)
         };
 
