@@ -27,8 +27,8 @@ public static class ConsoleTraits
     /// Gets a value indicating whether console color output is inhibited.
     /// </para>
     /// <para>
-    /// Console color may be inhibited by the host system or a user preference.
-    /// For example, a NO_COLOR environment variable can be used to inhibit console colors as described by corresponding <a href="https://no-color.org/">specification</a>.
+    /// Console color may be inhibited by a host system or a user preference.
+    /// For example, <c>NO_COLOR</c> environment variable can be used to inhibit console colors as described by the corresponding <a href="https://no-color.org/">specification</a>.
     /// </para>
     /// </summary>
     public static bool IsColorInhibited

@@ -135,7 +135,7 @@ public static partial class ProcessExtensions
     /// </summary>
     /// <remarks>
     /// Usually, the value returned by this method equals to the value returned by <see cref="ProcessModule.FileName"/> property of the main process module.
-    /// The difference becomes apparent when the current process cannot access the module information due to security restrictions imposed by the host environment.
+    /// The difference becomes apparent when the current process cannot access the module information due to security restrictions imposed by a host environment.
     /// While <see cref="ProcessModule.FileName"/> may not work in that situation, this method always works.
     /// </remarks>
     /// <param name="process">The process to get image file name for.</param>
