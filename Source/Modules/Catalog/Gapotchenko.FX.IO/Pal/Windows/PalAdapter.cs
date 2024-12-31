@@ -25,6 +25,9 @@ sealed class PalAdapter : IPalAdapter
 
     public string GetShortPath(string path)
     {
+        // Note that this method works even when 8.3 file names are globally disabled in Windows:
+        // https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/stop-error-code-0x00000019#method-1
+
         int bufferSize = path.Length;
 
         var sb = new StringBuilder(bufferSize);
