@@ -4,21 +4,21 @@
 
 ### Gapotchenko FX 2024.2
 
-Release date: not released yet
+Release date: December 31, 2024
 
 - Added support of `System.IFormattable` interface to `Interval<T>` and `ValueInterval<T>` types provided by `Gapotchenko.FX.Math.Intervals` module
 - Added `System.Threading.Lock` support to `Gapotchenko.FX.Threading.LazyInitializerEx` primitive
 - Added `System.Threading.Lock` support to `Gapotchenko.FX.Threading.EvaluateOnce<T>` primitive
 - Added `System.Threading.Lock` support to `Gapotchenko.FX.Threading.ExecuteOnce` primitive
 - `Gapotchenko.FX.Reflection.Loader` module made as lazy as possible to avoid chicken and egg pitfalls
-- Added `Gapotchenko.FX.IOptional` interface for `Gapotchenko.FX.Optional<T>` type to allow an untyped value introspection
-- Implemented memory span-based operations for `Gapotchenko.FX.IO.FragmentedMemoryStream`
+- Added `Gapotchenko.FX.IOptional` interface for `Gapotchenko.FX.Optional<T>` type to allow an untyped optional value introspection
+- Implemented memory span-based operations in `Gapotchenko.FX.IO.FragmentedMemoryStream` type
 - Polyfills:
     - Added polyfill for `System.Runtime.CompilerServices.OverloadResolutionPriorityAttribute` type
     - Added `Zip(first, second)` and `Zip(first, second, third)` polyfill methods for `IEnumerable<T>` type
 - Fixed issues:
-    - Fixed issue with nested `Gapotchenko.FX.Optional<T>` values that could occur during implicit value conversion
-    - Fixed issue in `Gapotchenko.FX.Reflection.Loader` module that was caused by not taking into account an assembly base directory for probing paths in an `App.config` file
+    - Fixed issue with nested `Gapotchenko.FX.Optional<T>` values that could occur during implicit value conversion to `Gapotchenko.FX.Optional<object>`
+    - Fixed issue in `Gapotchenko.FX.Reflection.Loader` module that was caused by not taking into account a base directory of the assembly that had probing paths specified in its `App.config` file
 
 ### Gapotchenko FX 2024.1
 
