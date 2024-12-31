@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows;
 
-#if NET && !WINDOWS
+#if NET
 [SupportedOSPlatform("windows")]
 #endif
 static class ProcessMemory

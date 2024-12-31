@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows;
 
-#if NET && !WINDOWS
+#if NET
 [SupportedOSPlatform("windows")]
 #endif
 static partial class ProcessEnvironment

@@ -2,18 +2,11 @@
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows;
 
-#if NET && !WINDOWS
+#if NET
 [SupportedOSPlatform("windows")]
 #endif
-sealed class ProcessMemoryAccessorWow64 : IProcessMemoryAccessor
+sealed class ProcessMemoryAccessorWow64(IntPtr hProcess) : IProcessMemoryAccessor
 {
-    public ProcessMemoryAccessorWow64(IntPtr hProcess)
-    {
-        m_hProcess = hProcess;
-    }
-
-    readonly IntPtr m_hProcess;
-
     public int PageSize => SystemInfo.Native.PageSize;
 
     public unsafe int ReadMemory(UniPtr address, byte[] buffer, int offset, int count, bool throwOnError)
@@ -29,7 +22,7 @@ sealed class ProcessMemoryAccessorWow64 : IProcessMemoryAccessor
         fixed (byte* p = buffer)
         {
             status = NativeMethods.NtWow64ReadVirtualMemory64(
-                m_hProcess,
+                hProcess,
                 address.ToInt64(),
                 p + offset,
                 count,

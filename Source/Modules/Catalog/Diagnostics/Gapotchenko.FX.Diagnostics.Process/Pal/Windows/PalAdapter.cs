@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Windows;
 
-#if NET && !WINDOWS
+#if NET
 [SupportedOSPlatform("windows")]
 #endif
 sealed class PalAdapter : IPalAdapter

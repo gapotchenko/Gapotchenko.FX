@@ -14,7 +14,7 @@ using System.Text;
 
 namespace Gapotchenko.FX.IO.Pal.Windows;
 
-#if NET && !WINDOWS
+#if NET
 [SupportedOSPlatform("windows")]
 #endif
 sealed class PalAdapter : IPalAdapter

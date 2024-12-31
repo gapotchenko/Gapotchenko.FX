@@ -13,7 +13,7 @@ using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.IO.Pal.Windows;
 
-#if NET && !WINDOWS
+#if NET
 [SupportedOSPlatform("windows")]
 #endif
 static class PalHelpers
