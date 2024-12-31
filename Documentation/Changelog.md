@@ -14,9 +14,10 @@ Release date: not released yet
 - Added `Gapotchenko.FX.IOptional` interface for `Gapotchenko.FX.Optional<T>` type to allow an untyped value introspection
 - Implemented memory span-based operations for `Gapotchenko.FX.IO.FragmentedMemoryStream`
 - Polyfills:
-  - Added `Zip(first, second)` and `Zip(first, second, third)` polyfill methods for `IEnumerable<T>` type
+    - Added `Zip(first, second)` and `Zip(first, second, third)` polyfill methods for `IEnumerable<T>` type
 - Fixed issues:
-  - Fixed issue with nested `Gapotchenko.FX.Optional<T>` values that could occur during implicit value conversion
+    - Fixed issue with nested `Gapotchenko.FX.Optional<T>` values that could occur during implicit value conversion
+    - Fixed issue in `Gapotchenko.FX.Reflection.Loader` module that was caused by not taking into account an assembly base directory for probing paths in an `App.config` file
 
 ### Gapotchenko FX 2024.1
 

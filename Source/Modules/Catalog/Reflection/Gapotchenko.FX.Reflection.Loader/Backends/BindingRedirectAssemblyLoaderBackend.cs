@@ -68,7 +68,7 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
             return false;
         }
 
-        var bindingRedirects = LoadBindingRedirects(configFilePath, out probingPaths);
+        var bindingRedirects = LoadBindingRedirects(assemblyFilePath, configFilePath, out probingPaths);
         if (bindingRedirects != null)
         {
             backend = new BindingRedirectAssemblyLoaderBackend(
@@ -83,6 +83,7 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
     }
 
     static Dictionary<string, BindingRedirect>? LoadBindingRedirects(
+        string assemblyFilePath,
         string configFilePath,
         out IEnumerable<string>? probingPaths)
     {
@@ -107,8 +108,12 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
                 if (!string.IsNullOrEmpty(privatePath))
                 {
                     string[] paths = privatePath.Split([';'], StringSplitOptions.RemoveEmptyEntries);
-                    if (paths.Length != 0)
-                        (probingPathList ??= []).AddRange(paths);
+                    foreach (string path in paths)
+                    {
+                        if (Path.IsPathRooted(path))
+                            continue;
+                        (probingPathList ??= []).Add(path);
+                    }
                 }
             }
 
@@ -158,8 +163,38 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
             }
         }
 
-        probingPaths = probingPathList;
+        if (probingPathList != null)
+        {
+            string baseDirectory = GetBaseDirectory(assemblyFilePath);
+            probingPaths = probingPathList
+                .Select(x => Path.GetFullPath(Path.Combine(baseDirectory, x)))
+                .ToList();
+        }
+        else
+        {
+            probingPaths = null;
+        }
+
         return bindingRedirects;
+    }
+
+    static string GetBaseDirectory(string assemblyFilePath)
+    {
+        return
+            TryGetBaseDirectoryForLibrary(assemblyFilePath) ??
+            AppContext.BaseDirectory;
+
+        static string? TryGetBaseDirectoryForLibrary(string assemblyFilePath)
+        {
+            var assemblyName = AssemblyName.GetAssemblyName(assemblyFilePath);
+            if (Assembly.GetExecutingAssembly().GetName() == assemblyName)
+            {
+                // Not a library. The assembly represents the main executable assembly.
+                return null;
+            }
+
+            return Path.GetDirectoryName(assemblyFilePath) ?? ".";
+        }
     }
 
     AssemblyName? TryRedirectAssembly(AssemblyName assemblyName)
