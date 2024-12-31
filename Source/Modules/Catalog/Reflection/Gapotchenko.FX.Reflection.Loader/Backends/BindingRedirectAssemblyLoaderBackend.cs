@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2019
 
+using Gapotchenko.FX.Reflection.Loader.Util;
 using System.Reflection;
 using System.Xml.Linq;
 
@@ -187,7 +188,9 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
         static string? TryGetBaseDirectoryForLibrary(string assemblyFilePath)
         {
             var assemblyName = AssemblyName.GetAssemblyName(assemblyFilePath);
-            if (Assembly.GetExecutingAssembly().GetName() == assemblyName)
+            if (AssemblyNameEqualityComparer.Instance.Equals(
+                Assembly.GetExecutingAssembly().GetName(),
+                assemblyName))
             {
                 // Not a library. The assembly represents the main executable assembly.
                 return null;
