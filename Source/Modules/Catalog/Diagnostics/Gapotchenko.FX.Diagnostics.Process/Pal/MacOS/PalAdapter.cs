@@ -1,5 +1,6 @@
 ﻿#if !HAS_TARGET_PLATFORM || MACOS
 
+using System;
 using System.Diagnostics;
 using System.Text;
 
@@ -25,7 +26,7 @@ sealed class PalAdapter : IPalAdapter
         byte* info = stackalloc byte[infoSize]; // kinfo_proc
         nint infoLength = infoSize;
 
-        int[] mib = new int[] { NativeMethods.CTL_KERN, NativeMethods.KERN_PROC, NativeMethods.KERN_PROC_PID, process.Id };
+        int[] mib = [NativeMethods.CTL_KERN, NativeMethods.KERN_PROC, NativeMethods.KERN_PROC_PID, process.Id];
         if (NativeMethods.sysctl(mib, mib.Length, info, &infoLength, null, 0) < 0)
             throw new Exception("sysctl for KERN_PROC failed.");
         if (infoLength == IntPtr.Zero)
@@ -40,21 +41,15 @@ sealed class PalAdapter : IPalAdapter
     {
         commandLine = null;
 
-        byte[] procArgs = GetProcArgs2(process.Id);
-        var br = new ProcessBinaryReader(
-            new MemoryStream(procArgs, false),
-            Encoding.UTF8);
-
+        var br = GetProcArgs2BinaryReader(process.Id);
         arguments = ReadArguments(br);
     }
 
     public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process)
     {
-        byte[] procArgs = GetProcArgs2(process.Id);
-        var br = new ProcessBinaryReader(
-            new MemoryStream(procArgs, false),
-            Encoding.UTF8);
+        var br = GetProcArgs2BinaryReader(process.Id);
 
+        // Skip process arguments.
         foreach (string i in ReadArguments(br))
             _ = i;
 
@@ -63,7 +58,7 @@ sealed class PalAdapter : IPalAdapter
         if (br.PeekChar() == -1)
             return env; // EOF
 
-        // Read environment variables.
+        // Read process environment variables.
         for (; ; )
         {
             string s = br.ReadCString();
@@ -77,13 +72,21 @@ sealed class PalAdapter : IPalAdapter
             if (j <= 0)
                 continue;
 
-            string name = s.Substring(0, j);
-            string value = s.Substring(j + 1);
+            string name = s[..j];
+            string value = s[(j + 1)..];
 
             env[name] = value;
         }
 
         return env;
+    }
+
+    static ProcessBinaryReader GetProcArgs2BinaryReader(int pid)
+    {
+        byte[] procArgs = GetProcArgs2(pid);
+        return new ProcessBinaryReader(
+            new MemoryStream(procArgs, false),
+            Encoding.UTF8);
     }
 
     static unsafe byte[] GetProcArgs2(int pid)
@@ -118,7 +121,7 @@ sealed class PalAdapter : IPalAdapter
     {
         int argc = br.ReadInt32();
 
-        br.ReadCString(); // exec_path
+        _ = br.ReadCString(); // exec_path
 
         // Skip zeros.
         SkipZeroChars(br);
