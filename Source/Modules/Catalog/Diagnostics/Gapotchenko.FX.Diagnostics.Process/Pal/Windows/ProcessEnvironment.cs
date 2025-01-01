@@ -23,7 +23,7 @@ static partial class ProcessEnvironment
             if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x20, out var pProcessParameters))
                 throw new Exception("Unable to read PEB.");
 
-            if (!ProcessMemory.TryReadUInt16(hProcess, pProcessParameters + 0x70, out var commandLineLength))
+            if (!ProcessMemory.TryReadUInt16(hProcess, pProcessParameters + 0x70, out ushort commandLineLength))
                 throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
             if (!ProcessMemory.TryReadIntPtr(hProcess, pProcessParameters + 0x78, out var pCommandLineBuffer))
@@ -48,7 +48,7 @@ static partial class ProcessEnvironment
             if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x10, out var pProcessParameters))
                 throw new Exception("Unable to read PEB.");
 
-            if (!ProcessMemory.TryReadUInt16(hProcess, pProcessParameters + 0x40, out var commandLineLength))
+            if (!ProcessMemory.TryReadUInt16(hProcess, pProcessParameters + 0x40, out ushort commandLineLength))
                 throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
             if (!ProcessMemory.TryReadIntPtr(hProcess, pProcessParameters + 0x44, out var pCommandLineBuffer))
@@ -136,7 +136,7 @@ static partial class ProcessEnvironment
 
         for (; ; )
         {
-            var s = br.ReadCString();
+            string s = br.ReadCString();
             if (s.Length == 0)
             {
                 // End of environment block.

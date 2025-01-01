@@ -36,7 +36,7 @@ sealed class PalAdapter : IPalAdapter
         for (; ; )
         {
             uint dwSize = (uint)sb.Capacity;
-            var result = NativeMethods.QueryFullProcessImageName(process.Handle, 0, sb, ref dwSize);
+            bool result = NativeMethods.QueryFullProcessImageName(process.Handle, 0, sb, ref dwSize);
 
             if (!result)
             {

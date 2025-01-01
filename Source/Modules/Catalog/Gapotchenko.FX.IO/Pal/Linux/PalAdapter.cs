@@ -8,7 +8,7 @@
 
 namespace Gapotchenko.FX.IO.Pal.Linux;
 
-#if NET && !LINUX
+#if NET
 [SupportedOSPlatform("linux")]
 #endif
 sealed class PalAdapter : Unix.PalAdapter

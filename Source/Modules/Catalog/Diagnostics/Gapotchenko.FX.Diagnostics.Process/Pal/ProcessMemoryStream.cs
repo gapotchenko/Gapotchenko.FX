@@ -68,7 +68,7 @@ sealed class ProcessMemoryStream : Stream
 
     UniPtr GetPageLowerBound(UniPtr address)
     {
-        var pageSize = m_PageSize;
+        uint pageSize = m_PageSize;
         return new UniPtr(address.ToUInt64() / pageSize * pageSize);
     }
 
@@ -87,11 +87,11 @@ sealed class ProcessMemoryStream : Stream
 
             int currentCount = count;
 
-            var remainingPageSize = pageEnd.ToUInt64() - addr.ToUInt64();
+            ulong remainingPageSize = pageEnd.ToUInt64() - addr.ToUInt64();
             if ((ulong)currentCount > remainingPageSize)
                 currentCount = (int)remainingPageSize;
 
-            var regionLength = m_RegionLength;
+            long regionLength = m_RegionLength;
             if (regionLength != -1)
             {
                 long remainingRegionLength = regionLength - m_Position;

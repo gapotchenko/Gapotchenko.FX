@@ -43,7 +43,7 @@ public static partial class ProcessExtensions
         if (process == null)
             throw new ArgumentNullException(nameof(process));
 
-        PalServices.Adapter.ReadProcessCommandLineArguments(process, out var commandLine, out var arguments);
+        PalServices.Adapter.ReadProcessCommandLineArguments(process, out string? commandLine, out var arguments);
 
         if (commandLine != null)
             return commandLine;
@@ -63,7 +63,7 @@ public static partial class ProcessExtensions
         if (process == null)
             throw new ArgumentNullException(nameof(process));
 
-        PalServices.Adapter.ReadProcessCommandLineArguments(process, out var commandLine, out var arguments);
+        PalServices.Adapter.ReadProcessCommandLineArguments(process, out string? commandLine, out var arguments);
 
         if (arguments != null)
             return arguments;

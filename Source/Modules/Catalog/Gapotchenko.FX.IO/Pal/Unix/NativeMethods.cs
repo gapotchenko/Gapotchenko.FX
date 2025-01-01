@@ -10,13 +10,9 @@ using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.IO.Pal.Unix;
 
-#if NET && !MACOS
+#if NET
 [SupportedOSPlatform("macos")]
-#endif
-#if NET && !LINUX
 [SupportedOSPlatform("linux")]
-#endif
-#if NET && !FREEBSD
 [SupportedOSPlatform("freebsd")]
 #endif
 static class NativeMethods

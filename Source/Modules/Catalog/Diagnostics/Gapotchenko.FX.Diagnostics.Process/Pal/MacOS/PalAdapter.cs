@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.MacOS;
 
-#if NET && !MACOS
+#if NET
 [SupportedOSPlatform("macos")]
 #endif
 sealed class PalAdapter : IPalAdapter
@@ -22,10 +22,10 @@ sealed class PalAdapter : IPalAdapter
             throw new PlatformNotSupportedException();
 
         const int infoSize = 648; // sizeof(kinfo_proc)
-        var info = stackalloc byte[infoSize]; // kinfo_proc
+        byte* info = stackalloc byte[infoSize]; // kinfo_proc
         nint infoLength = infoSize;
 
-        var mib = new int[] { NativeMethods.CTL_KERN, NativeMethods.KERN_PROC, NativeMethods.KERN_PROC_PID, process.Id };
+        int[] mib = new int[] { NativeMethods.CTL_KERN, NativeMethods.KERN_PROC, NativeMethods.KERN_PROC_PID, process.Id };
         if (NativeMethods.sysctl(mib, mib.Length, info, &infoLength, null, 0) < 0)
             throw new Exception("sysctl for KERN_PROC failed.");
         if (infoLength == IntPtr.Zero)
@@ -40,7 +40,7 @@ sealed class PalAdapter : IPalAdapter
     {
         commandLine = null;
 
-        var procArgs = GetProcArgs2(process.Id);
+        byte[] procArgs = GetProcArgs2(process.Id);
         var br = new ProcessBinaryReader(
             new MemoryStream(procArgs, false),
             Encoding.UTF8);
@@ -50,12 +50,12 @@ sealed class PalAdapter : IPalAdapter
 
     public IReadOnlyDictionary<string, string> ReadProcessEnvironmentVariables(Process process)
     {
-        var procArgs = GetProcArgs2(process.Id);
+        byte[] procArgs = GetProcArgs2(process.Id);
         var br = new ProcessBinaryReader(
             new MemoryStream(procArgs, false),
             Encoding.UTF8);
 
-        foreach (var i in ReadArguments(br))
+        foreach (string i in ReadArguments(br))
             _ = i;
 
         var env = new Dictionary<string, string>(StringComparer.InvariantCulture);
@@ -66,7 +66,7 @@ sealed class PalAdapter : IPalAdapter
         // Read environment variables.
         for (; ; )
         {
-            var s = br.ReadCString();
+            string s = br.ReadCString();
             if (s.Length == 0)
             {
                 // End of environment variables block.
@@ -88,7 +88,7 @@ sealed class PalAdapter : IPalAdapter
 
     static unsafe byte[] GetProcArgs2(int pid)
     {
-        var mib = new int[3];
+        int[] mib = new int[3];
         mib[0] = NativeMethods.CTL_KERN;
         mib[1] = NativeMethods.KERN_ARGMAX;
 
@@ -98,7 +98,7 @@ sealed class PalAdapter : IPalAdapter
         if (NativeMethods.sysctl(mib, 2, &argMax, &length, null, 0) == -1)
             throw new Exception("sysctl for KERN_ARGMAX failed.");
 
-        var procArgs = new byte[argMax];
+        byte[] procArgs = new byte[argMax];
 
         mib[1] = NativeMethods.KERN_PROCARGS2;
         mib[2] = pid;
@@ -116,7 +116,7 @@ sealed class PalAdapter : IPalAdapter
 
     static IEnumerable<string> ReadArguments(ProcessBinaryReader br)
     {
-        var argc = br.ReadInt32();
+        int argc = br.ReadInt32();
 
         br.ReadCString(); // exec_path
 

@@ -8,7 +8,7 @@
 
 namespace Gapotchenko.FX.IO.Pal.MacOS;
 
-#if NET && !MACOS
+#if NET
 [SupportedOSPlatform("macos")]
 #endif
 sealed class PalAdapter : Unix.PalAdapter
@@ -19,7 +19,7 @@ sealed class PalAdapter : Unix.PalAdapter
 
     public static PalAdapter Instance { get; } = new();
 
-    public override bool IsCaseSensitive => false; // HFS+ (the macOS file-system) is usually configured to be case insensitive
+    public override bool IsCaseSensitive => false; // HFS+ (the macOS file system) is usually configured to be case insensitive
 }
 
 #endif
