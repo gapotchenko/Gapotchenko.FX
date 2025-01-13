@@ -229,7 +229,7 @@ public class AppInformation : IAppInformation
         var entryType = EntryType;
         if (entryType != null)
         {
-            var ns = entryType.Namespace;
+            string ns = entryType.Namespace;
             if (!string.IsNullOrEmpty(ns))
             {
                 int j = ns.LastIndexOf('.');
@@ -355,7 +355,7 @@ public class AppInformation : IAppInformation
         var entryType = EntryType;
         if (entryType != null)
         {
-            var ns = entryType.Namespace;
+            string ns = entryType.Namespace;
             if (!string.IsNullOrEmpty(ns))
             {
                 int j = ns.IndexOf('.');
@@ -404,7 +404,7 @@ public class AppInformation : IAppInformation
         if (!string.IsNullOrWhiteSpace(copyright))
             return copyright.Trim();
 
-        var companyName = CompanyName;
+        string? companyName = CompanyName;
         if (companyName != null)
             return "Copyright © " + companyName;
 
@@ -471,7 +471,7 @@ public class AppInformation : IAppInformation
 #if NET5_0_OR_GREATER
             return GetLocalExecutablePath(entryAssembly.Location);
 #else
-            var codeBase = entryAssembly.CodeBase;
+            string codeBase = entryAssembly.CodeBase;
             if (codeBase != null)
             {
                 var uri = new Uri(codeBase);
