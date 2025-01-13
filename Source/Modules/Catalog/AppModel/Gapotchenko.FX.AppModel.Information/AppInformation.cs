@@ -229,7 +229,7 @@ public class AppInformation : IAppInformation
         var entryType = EntryType;
         if (entryType != null)
         {
-            string ns = entryType.Namespace;
+            var ns = entryType.Namespace;
             if (!string.IsNullOrEmpty(ns))
             {
                 int j = ns.LastIndexOf('.');
@@ -355,7 +355,7 @@ public class AppInformation : IAppInformation
         var entryType = EntryType;
         if (entryType != null)
         {
-            string ns = entryType.Namespace;
+            string? ns = entryType.Namespace;
             if (!string.IsNullOrEmpty(ns))
             {
                 int j = ns.IndexOf('.');
@@ -471,7 +471,7 @@ public class AppInformation : IAppInformation
 #if NET5_0_OR_GREATER
             return GetLocalExecutablePath(entryAssembly.Location);
 #else
-            string codeBase = entryAssembly.CodeBase;
+            string? codeBase = entryAssembly.CodeBase;
             if (codeBase != null)
             {
                 var uri = new Uri(codeBase);
