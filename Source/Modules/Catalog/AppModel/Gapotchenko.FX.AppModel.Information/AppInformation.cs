@@ -334,40 +334,28 @@ public class AppInformation : IAppInformation
     /// <returns>The company name.</returns>
     protected virtual string? RetrieveCompanyName()
     {
-        string? companyName;
+        return
+            Empty.Nullify(EntryAssembly
+                ?.GetCustomAttribute<AssemblyCompanyAttribute>()
+                ?.Company) ??
+            Empty.NullifyWhiteSpace(EntryFileVersionInfo.CompanyName)?.Trim() ??
+            TryGetCompanyName(EntryType);
 
-        var entryAssembly = EntryAssembly;
-        if (entryAssembly != null)
+        static string? TryGetCompanyName(Type? type)
         {
-            var attribute = entryAssembly.GetCustomAttribute<AssemblyCompanyAttribute>();
-            if (attribute != null)
-            {
-                companyName = attribute.Company;
-                if (!string.IsNullOrEmpty(companyName))
-                    return companyName;
-            }
+            if (type == null)
+                return null;
+
+            string? ns = type.Namespace;
+            if (string.IsNullOrEmpty(ns))
+                return null;
+
+            int j = ns.IndexOf('.');
+            if (j != -1)
+                return ns[..j];
+            else
+                return ns;
         }
-
-        companyName = EntryFileVersionInfo.CompanyName;
-        if (!string.IsNullOrWhiteSpace(companyName))
-            return companyName.Trim();
-
-        var entryType = EntryType;
-        if (entryType != null)
-        {
-            string? ns = entryType.Namespace;
-            if (!string.IsNullOrEmpty(ns))
-            {
-                int j = ns.IndexOf('.');
-                if (j != -1)
-                    companyName = ns[..j];
-                else
-                    companyName = ns;
-                return companyName;
-            }
-        }
-
-        return ProductName;
     }
 
     /// <inheritdoc/>
