@@ -19,13 +19,10 @@ static class NativeMethods
 {
     public const int MAX_PATH = 260;
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern int GetShortPathName(
-       [MarshalAs(UnmanagedType.LPTStr)] string lpszLongPath,
-       [MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpszShortPath,
-       int cchBuffer);
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    public static extern int GetShortPathName(string lpszLongPath, [Out] StringBuilder lpszShortPath, int cchBuffer);
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     public static extern SafeFileHandle CreateFile(
         string lpFileName,
         int dwDesiredAccess,
@@ -44,10 +41,10 @@ static class NativeMethods
 
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     public static extern int GetFinalPathNameByHandle(
-        [In] SafeFileHandle hFile,
+        SafeFileHandle hFile,
         [Out] StringBuilder lpszFilePath,
-        [In] int cchFilePath,
-        [In] int dwFlags);
+        int cchFilePath,
+        int dwFlags);
 
     public const int FILE_NAME_NORMALIZED = 0x0;
 
