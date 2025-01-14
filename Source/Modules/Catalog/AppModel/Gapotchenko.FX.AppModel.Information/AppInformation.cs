@@ -460,7 +460,20 @@ public class AppInformation : IAppInformation
     /// <returns>The app executable path.</returns>
     protected virtual string RetrieveExecutablePath()
     {
-        var entryAssembly = Assembly.GetEntryAssembly();
+        var entryAssembly = EntryAssembly;
+        if (entryAssembly != null)
+        {
+            if (entryAssembly.EntryPoint == null)
+                entryAssembly = null;
+        }
+
+        bool useProcess = false;
+        if (entryAssembly == null)
+        {
+            entryAssembly = Assembly.GetEntryAssembly();
+            useProcess = true;
+        }
+
         if (entryAssembly != null)
         {
 #if NET5_0_OR_GREATER
@@ -480,8 +493,11 @@ public class AppInformation : IAppInformation
 #endif
         }
 
-        if (GetProcessPath() is not null and var processPath)
-            return processPath;
+        if (useProcess || entryAssembly == Assembly.GetEntryAssembly())
+        {
+            if (GetProcessPath() is not null and var processPath)
+                return processPath;
+        }
 
         throw new Exception("Unable to determine app executable file path.");
     }

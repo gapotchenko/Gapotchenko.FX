@@ -8,6 +8,7 @@ Release date: not released yet
 
 - Fixed potential vulnerabilities that might be caused by WorstFit attack; applies only to Windows OS
 - Fixed issue that led to an empty string returned by the `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
+- Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with an entry point
 
 ## 2024
 
