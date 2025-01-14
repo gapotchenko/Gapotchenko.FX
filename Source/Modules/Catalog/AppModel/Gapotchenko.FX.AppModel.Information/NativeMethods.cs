@@ -8,11 +8,6 @@ namespace Gapotchenko.FX.AppModel;
 #endif
 static class NativeMethods
 {
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    public static extern int GetModuleFileName(HandleRef hModule, StringBuilder buffer, int length);
-
-    const int MAX_PATH = 260;
-
     public static string GetModuleFileName(HandleRef hModule)
     {
         var buffer = new StringBuilder(MAX_PATH);
@@ -30,4 +25,9 @@ static class NativeMethods
 
         return buffer.ToString();
     }
+
+    const int MAX_PATH = 260;
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    public static extern int GetModuleFileName(HandleRef hModule, StringBuilder buffer, int length);
 }

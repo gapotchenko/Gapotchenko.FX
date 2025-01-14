@@ -461,15 +461,12 @@ public class AppInformation : IAppInformation
     protected virtual string RetrieveExecutablePath()
     {
         var entryAssembly = Assembly.GetEntryAssembly();
-        if (entryAssembly == null)
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return Path.GetFullPath(NativeMethods.GetModuleFileName(default));
-        }
-        else
+        if (entryAssembly != null)
         {
 #if NET5_0_OR_GREATER
-            return GetLocalExecutablePath(entryAssembly.Location);
+            string location = entryAssembly.Location;
+            if (location.Length != 0)
+                return GetLocalExecutablePath(location);
 #else
             string? codeBase = entryAssembly.CodeBase;
             if (codeBase != null)
@@ -482,6 +479,9 @@ public class AppInformation : IAppInformation
             }
 #endif
         }
+
+        if (GetProcessPath() is not null and var processPath)
+            return processPath;
 
         throw new Exception("Unable to determine app executable file path.");
     }
@@ -511,5 +511,17 @@ public class AppInformation : IAppInformation
 #endif
 
         return localPath;
+    }
+
+    static string? GetProcessPath()
+    {
+#if NET6_0_OR_GREATER
+        return Environment.ProcessPath;
+#else
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return Path.GetFullPath(NativeMethods.GetModuleFileName(default));
+        else
+            return Process.GetCurrentProcess().MainModule?.FileName;
+#endif
     }
 }
