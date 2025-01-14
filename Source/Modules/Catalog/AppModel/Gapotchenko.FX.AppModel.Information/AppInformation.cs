@@ -425,28 +425,11 @@ public class AppInformation : IAppInformation
     /// Retrieves app trademark information.
     /// </summary>
     /// <returns>App trademark information.</returns>
-    protected virtual string? RetrieveTrademark()
-    {
-        string? trademark;
-
-        var entryAssembly = EntryAssembly;
-        if (entryAssembly != null)
-        {
-            var attribute = entryAssembly.GetCustomAttribute<AssemblyTrademarkAttribute>();
-            if (attribute != null)
-            {
-                trademark = attribute.Trademark;
-                if (!string.IsNullOrEmpty(trademark))
-                    return trademark;
-            }
-        }
-
-        trademark = EntryFileVersionInfo.LegalTrademarks;
-        if (!string.IsNullOrWhiteSpace(trademark))
-            return trademark.Trim();
-
-        return null;
-    }
+    protected virtual string? RetrieveTrademark() =>
+        Empty.Nullify(EntryAssembly
+            ?.GetCustomAttribute<AssemblyTrademarkAttribute>()
+            ?.Trademark) ??
+        Empty.NullifyWhiteSpace(EntryFileVersionInfo.LegalTrademarks)?.Trim();
 
     /// <inheritdoc/>
     public string ExecutablePath
