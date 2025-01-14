@@ -1,5 +1,13 @@
 # What's New in Gapotchenko.FX
 
+## 2025
+
+### Gapotchenko FX 2025.1
+
+Release date: not released yet
+
+- Fixed potential vulnerabilities that might be caused by WorstFit attack; applies only to Windows OS
+
 ## 2024
 
 ### Gapotchenko FX 2024.2
