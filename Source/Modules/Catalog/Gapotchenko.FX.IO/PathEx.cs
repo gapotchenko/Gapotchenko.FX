@@ -178,7 +178,7 @@ public static class PathEx
         path = Path.GetFullPath(path);
         relativeTo = Path.GetFullPath(relativeTo);
 
-        var separators = new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
+        char[] separators = [Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar];
         IReadOnlyList<string> p1 = path.Split(separators);
         IReadOnlyList<string> p2 = relativeTo.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
@@ -199,7 +199,7 @@ public static class PathEx
         p1 = p1.Skip(i).Take(p1.Count - i).ToList();
 
         if (p1.Count == 1 && p1[0].Length == 0)
-            p1 = Array.Empty<string>();
+            p1 = [];
 
         string relativePath = string.Join(
             new string(Path.DirectorySeparatorChar, 1),
@@ -258,7 +258,7 @@ public static class PathEx
 
         var builder = new StringBuilder();
 
-        foreach (var path in paths)
+        foreach (string? path in paths)
         {
             if (string.IsNullOrEmpty(path))
                 continue;

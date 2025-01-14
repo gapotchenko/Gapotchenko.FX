@@ -229,7 +229,7 @@ public class AppInformation : IAppInformation
         var entryType = EntryType;
         if (entryType != null)
         {
-            var ns = entryType.Namespace;
+            string? ns = entryType.Namespace;
             if (!string.IsNullOrEmpty(ns))
             {
                 int j = ns.LastIndexOf('.');
