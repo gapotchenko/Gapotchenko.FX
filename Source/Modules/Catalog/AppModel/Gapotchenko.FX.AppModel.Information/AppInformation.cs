@@ -412,7 +412,11 @@ public class AppInformation : IAppInformation
     }
 
     /// <inheritdoc/>
-    public string? Trademark => m_Trademark ??= RetrieveTrademark() ?? string.Empty;
+    public string? Trademark
+    {
+        get => Empty.Nullify(m_Trademark ??= RetrieveTrademark() ?? string.Empty);
+        protected set => m_Trademark = value;
+    }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     volatile string? m_Trademark;
