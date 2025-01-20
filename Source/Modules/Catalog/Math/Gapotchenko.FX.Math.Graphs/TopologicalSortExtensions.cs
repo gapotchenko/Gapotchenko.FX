@@ -296,8 +296,8 @@ public static class TopologicalSortExtensions
         // Algorithm: Oleksiy Gapotchenko, 2014. Property of public domain.
         // https://blog.gapotchenko.com/stable-topological-sort
 
-        // Selection sort algorithm compensates the lack of partial order support in comparer by
-        // doing a full scan through the whole range of candidate elements.
+        // The usage of selection sort algorithm compensates for the lack of a partial order support in the comparer.
+        // The algorithm performs a full scan through the whole range of candidate elements.
         for (int i = 0; i < n - 1; ++i)
         {
             int jMin = i;
@@ -320,14 +320,12 @@ public static class TopologicalSortExtensions
         return list;
 
         // Note that this comparer does not support partial orders
-        // and thus cannot be used with most other sorting algorithms,
-        // unless they do a full scan as selection sort does.
-        static bool Compare(IReadOnlyGraph<TKey> g, TKey x, TKey y)
-        {
-            // If x depends on y and there is no circular dependency then topological order should prevail.
+        // and thus cannot be used with sorting algorithms
+        // that do not do a full scan through the whole range of candidate elements.
+        static bool Compare(IReadOnlyGraph<TKey> g, TKey x, TKey y) =>
+            // If 'x' depends on 'y' and there is no circular dependency then topological order prevails.
             // Otherwise, the positional order provided by the underlying sorting algorithm prevails.
-            return g.HasPath(x, y) && !g.HasPath(y, x);
-        }
+            g.HasPath(x, y) && !g.HasPath(y, x);
     }
 
     delegate IReadOnlyGraph<TKey> GraphFactory<TSource, TKey>(in GraphFactoryContext<TSource, TKey> context);
