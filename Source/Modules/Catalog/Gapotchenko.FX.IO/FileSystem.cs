@@ -314,13 +314,10 @@ public static class FileSystem
     /// <param name="access">The file access.</param>
     public static void WaitForFileAccess(string path, FileAccess access)
     {
-        FileShare fileShare;
-        if ((access & FileAccess.Write) != 0)
-            fileShare = FileShare.None;
-        else
-            fileShare = FileShare.Read;
-
-        WaitForFileAccess(path, access, fileShare);
+        WaitForFileAccess(
+            path,
+            access,
+            (access & FileAccess.Write) != 0 ? FileShare.None : FileShare.Read);
     }
 
     /// <summary>
