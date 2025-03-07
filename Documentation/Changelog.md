@@ -6,10 +6,11 @@
 
 Release date: not released yet
 
-- Fixed potential vulnerabilities that might be caused by WorstFit attack; applies only to Windows OS
+- New `IFileSystemView` interface provided by `Gapotchenko.FX.IO` module allows to work with files in a standard fashion independently of an actual file system implementation and storage
 - Fixed issue that led to an empty string value returned by the `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
-- Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with an entry point
+- Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with its own entry point
 - Fixed issue that led to an empty string value returned by the `AppInformation.Trademark` property instead of a `null` value
+- Fixed potential vulnerabilities that might be caused by the WorstFit Attack; applies only to Windows OS
 
 ## 2024
 
