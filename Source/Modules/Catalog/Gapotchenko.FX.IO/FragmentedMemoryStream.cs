@@ -110,8 +110,8 @@ public class FragmentedMemoryStream : Stream
         int read = 0;
         while (count > 0)
         {
-            var currentBlockOffset = CurrentBlockOffset;
-            var copySize = Math.Min(count, BlockSize - currentBlockOffset);
+            int currentBlockOffset = CurrentBlockOffset;
+            int copySize = Math.Min(count, BlockSize - currentBlockOffset);
 
             CurrentBlock
                 .AsSpan(currentBlockOffset, copySize)
@@ -174,12 +174,12 @@ public class FragmentedMemoryStream : Stream
         int count = buffer.Length;
         int offset = 0;
 
-        var savedPosition = Position;
+        long savedPosition = Position;
         try
         {
             while (count > 0)
             {
-                var currentBlockOffset = CurrentBlockOffset;
+                int currentBlockOffset = CurrentBlockOffset;
                 int copySize = Math.Min(count, BlockSize - currentBlockOffset);
 
                 EnsureCapacity(Position + copySize);
@@ -237,11 +237,11 @@ public class FragmentedMemoryStream : Stream
     /// <returns>A byte array containing the current data of the stream.</returns>
     public virtual byte[] ToArray()
     {
-        var savedPosition = Position;
+        long savedPosition = Position;
         Position = 0;
 
-        var length = Length;
-        var buffer = new byte[length];
+        long length = Length;
+        byte[] buffer = new byte[length];
         if (length <= int.MaxValue)
         {
             int r = ReadCore(buffer);
@@ -267,8 +267,8 @@ public class FragmentedMemoryStream : Stream
         long read = 0;
         while (count > 0)
         {
-            var currentBlockOffset = CurrentBlockOffset;
-            var copySize = Math.Min(count, BlockSize - currentBlockOffset);
+            int currentBlockOffset = CurrentBlockOffset;
+            long copySize = Math.Min(count, BlockSize - currentBlockOffset);
 
             Array.Copy(CurrentBlock, currentBlockOffset, buffer, offset, copySize);
 
@@ -291,7 +291,7 @@ public class FragmentedMemoryStream : Stream
         if (destination == null)
             throw new ArgumentNullException(nameof(destination));
 
-        var savedPosition = Position;
+        long savedPosition = Position;
         Position = 0;
         try
         {

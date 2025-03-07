@@ -42,7 +42,7 @@ static class PalServices
         }
     }
 
-    public static IPalAdapter? AdapterOrDefault => AdapterFactory.Instance;
+    public static IPalAdapter? Adapter => AdapterFactory.Instance;
 
-    public static IPalAdapter Adapter => AdapterOrDefault ?? throw new PlatformNotSupportedException();
+    public static IPalAdapter RequiredAdapter => Adapter ?? throw new PlatformNotSupportedException();
 }

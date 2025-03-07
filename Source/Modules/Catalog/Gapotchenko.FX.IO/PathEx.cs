@@ -103,7 +103,7 @@ public static class PathEx
 
     static int GetRootPathLength(ReadOnlySpan<char> path)
     {
-        if (PalServices.AdapterOrDefault is not null and var pal)
+        if (PalServices.Adapter is not null and var pal)
         {
             return pal.GetRootPathLength(path);
         }

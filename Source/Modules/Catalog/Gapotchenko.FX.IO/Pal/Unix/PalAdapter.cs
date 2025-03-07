@@ -26,10 +26,10 @@ abstract class PalAdapter : IPalAdapter
     {
         var ptr = NativeMethods.realpath(path, IntPtr.Zero);
 
-        var result = Marshal.PtrToStringAuto(ptr);
+        string? result = Marshal.PtrToStringAuto(ptr);
         if (result is null)
         {
-            var error = Marshal.GetLastWin32Error();
+            int error = Marshal.GetLastWin32Error();
             throw
                 error switch
                 {

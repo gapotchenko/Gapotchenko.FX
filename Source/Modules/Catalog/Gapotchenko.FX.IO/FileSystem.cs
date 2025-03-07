@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.IO.Pal;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using Gapotchenko.FX.IO.Pal;
 using Gapotchenko.FX.IO.Properties;
 using Gapotchenko.FX.Text;
 using System.Diagnostics;
@@ -53,7 +59,7 @@ public static class FileSystem
 
     static bool IsCaseSensitiveCore()
     {
-        if (PalServices.AdapterOrDefault is not null and var pal)
+        if (PalServices.Adapter is not null and var pal)
         {
             return pal.IsCaseSensitive;
         }
@@ -148,7 +154,7 @@ public static class FileSystem
     {
         if (string.IsNullOrEmpty(path))
             return path;
-        else if (PalServices.AdapterOrDefault is not null and var pal)
+        else if (PalServices.Adapter is not null and var pal)
             return pal.GetShortPath(path);
         else
             return path;
@@ -170,7 +176,7 @@ public static class FileSystem
     /// <returns>The sequence of subpaths of the specified path.</returns>
     public static IEnumerable<string> EnumerateSubpaths(string? path)
     {
-        for (var i = path; !string.IsNullOrEmpty(i); i = Path.GetDirectoryName(i))
+        for (string? i = path; !string.IsNullOrEmpty(i); i = Path.GetDirectoryName(i))
             yield return i
 #if !NET
                 !
@@ -202,7 +208,7 @@ public static class FileSystem
 
                 if (part.Length == 0)
                 {
-                    var directoryName = Path.GetDirectoryName(subpath);
+                    string? directoryName = Path.GetDirectoryName(subpath);
                     if (directoryName is null)
                         part = subpath;
                     else
@@ -360,7 +366,7 @@ public static class FileSystem
 
             if (sw == null)
             {
-                if (AppContext.TryGetSwitch("Switch.Gapotchenko.FX.IO.UseGCForFileAccess", out var gcEnabled) &&
+                if (AppContext.TryGetSwitch("Switch.Gapotchenko.FX.IO.UseGCForFileAccess", out bool gcEnabled) &&
                     gcEnabled)
                 {
                     // Try to close open file streams that weren't properly disposed.
@@ -443,7 +449,7 @@ public static class FileSystem
     public static IEnumerable<byte> EnumerateFileBytes(string path)
     {
         using var stream = File.OpenRead(path);
-        foreach (var i in stream.AsEnumerable())
+        foreach (byte i in stream.AsEnumerable())
             yield return i;
     }
 
@@ -484,7 +490,7 @@ public static class FileSystem
         {
             throw new ArgumentException(Resources.PathIsEmpty, nameof(path));
         }
-        else if (PalServices.AdapterOrDefault is not null and var pal)
+        else if (PalServices.Adapter is not null and var pal)
         {
             return pal.GetRealPath(path);
         }
