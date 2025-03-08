@@ -27,7 +27,8 @@ public interface IReadOnlyFileSystemView
     #region Path
 
     /// <inheritdoc cref="Path.GetFullPath(string)"/>
-    string GetFullPath(string path);
+    [return: NotNullIfNotNull(nameof(path))]
+    string? GetFullPath(string? path);
 
     #endregion
 

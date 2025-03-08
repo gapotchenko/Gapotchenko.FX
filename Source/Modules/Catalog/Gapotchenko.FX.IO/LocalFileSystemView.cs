@@ -28,7 +28,8 @@ sealed class LocalFileSystemView : IFileSystemView
 
     #region Path
 
-    public string GetFullPath(string path) => Path.GetFullPath(path);
+    [return: NotNullIfNotNull(nameof(path))]
+    public string? GetFullPath(string? path) => path is null ? null : Path.GetFullPath(path);
 
     #endregion
 
