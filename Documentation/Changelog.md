@@ -6,7 +6,8 @@
 
 Release date: not released yet
 
-- New `IFileSystemView` interface provided by `Gapotchenko.FX.IO` module allows to work with files in a standard fashion independently of an actual file system implementation and storage
+- Introduced `Gapotchenko.FX.IO.Vfs` module that provides the concept of a virtual file system which allows to work with files in a common fashion independently of an actual storage and implementation
+- `Gapotchenko.FX.Collections.Generic.Deque<T>` made compatible with collection initializers
 - Fixed issue that led to an empty string value returned by the `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
 - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with its own entry point
 - Fixed issue that led to an empty string value returned by the `AppInformation.Trademark` property instead of a `null` value

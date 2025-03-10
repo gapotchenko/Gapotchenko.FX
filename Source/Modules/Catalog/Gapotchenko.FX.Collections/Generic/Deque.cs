@@ -1570,7 +1570,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     #region ICollection<T>
 
-    void ICollection<T>.Add(T item) => PushBack(item);
+    /// <inheritdoc/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public void Add(T item) => PushBack(item);
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool ICollection<T>.IsReadOnly => false;
