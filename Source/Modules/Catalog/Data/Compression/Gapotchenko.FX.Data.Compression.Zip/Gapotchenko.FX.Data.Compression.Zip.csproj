@@ -11,6 +11,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\..\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
+    <ProjectReference Include="..\..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
     <ProjectReference Include="..\..\..\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Data.Compression\Gapotchenko.FX.Data.Compression.csproj" />
   </ItemGroup>

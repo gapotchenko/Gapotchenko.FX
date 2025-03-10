@@ -22,6 +22,11 @@ sealed class LocalFileSystemView : IFileSystemView
 
     public IEnumerable<string> EnumerateFiles(string path) => Directory.EnumerateFiles(path);
 
+    public IEnumerable<string> EnumerateFiles(string path, string searchPattern) => Directory.EnumerateFiles(path, searchPattern);
+
+    public IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
+        Directory.EnumerateFiles(path, searchPattern, searchOption);
+
     public Stream OpenFileForReading(string path) => File.OpenRead(path);
 
     #endregion
@@ -39,6 +44,11 @@ sealed class LocalFileSystemView : IFileSystemView
 
     public IEnumerable<string> EnumerateDirectories(string path) => Directory.EnumerateDirectories(path);
 
+    public IEnumerable<string> EnumerateDirectories(string path, string searchPattern) => Directory.EnumerateDirectories(path, searchPattern);
+
+    public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
+        Directory.EnumerateDirectories(path, searchPattern, searchOption);
+
     #endregion
 
     #region Entry
@@ -46,6 +56,11 @@ sealed class LocalFileSystemView : IFileSystemView
     public bool EntryExists([NotNullWhen(true)] string? path) => FileSystem.EntryExists(path);
 
     public IEnumerable<string> EnumerateEntries(string path) => Directory.EnumerateFileSystemEntries(path);
+
+    public IEnumerable<string> EnumerateEntries(string path, string searchPattern) => Directory.EnumerateFileSystemEntries(path, searchPattern);
+
+    public IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
+        Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
 
     #endregion
 }

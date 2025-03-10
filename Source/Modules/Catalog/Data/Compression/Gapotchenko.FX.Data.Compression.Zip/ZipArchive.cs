@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Gapotchenko.FX.Text;
+using System.Diagnostics;
 using System.IO.Compression;
 
 namespace Gapotchenko.FX.Data.Compression.Zip;
@@ -9,7 +10,7 @@ namespace Gapotchenko.FX.Data.Compression.Zip;
 public class ZipArchive : IDataArchive, IDisposable
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ZipArchive"/> class
+    /// Initializes a new read-only instance of the <see cref="ZipArchive"/> class
     /// from the specified stream.
     /// </summary>
     /// <param name="stream">The stream that contains archive to read.</param>
@@ -70,31 +71,19 @@ public class ZipArchive : IDataArchive, IDisposable
     #region File
 
     /// <inheritdoc/>
-    public bool FileExists([NotNullWhen(true)] string? path)
-    {
-        var pathModel = new PathModel(path);
-        if (pathModel.IsNil)
-            return false;
-        return m_UnderlyingArchive.Entries.Any(x => pathModel.Equals(new PathModel(x.FullName)));
-    }
+    public bool FileExists([NotNullWhen(true)] string? path) => EntryExistsCore(path, true, false);
 
     /// <inheritdoc/>
-    public IEnumerable<string> EnumerateFiles(string path)
-    {
-        var pathModel = new PathModel(path);
-        if (pathModel.IsNil)
-            throw new DirectoryNotFoundException();
+    public IEnumerable<string> EnumerateFiles(string path) =>
+        EnumerateEntriesCore(path, null, SearchOption.TopDirectoryOnly, true, false);
 
-        return m_UnderlyingArchive.Entries.Select(x => x.FullName).Where(IsMatch);
+    /// <inheritdoc/>
+    public IEnumerable<string> EnumerateFiles(string path, string searchPattern) =>
+        EnumerateEntriesCore(path, searchPattern, SearchOption.TopDirectoryOnly, true, false);
 
-        bool IsMatch(string entryPath)
-        {
-            var entryPathModel = new PathModel(entryPath);
-            if (entryPathModel.TryPop() is null)
-                return false;
-            return entryPathModel.StartsWith(pathModel);
-        }
-    }
+    /// <inheritdoc/>
+    public IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
+        EnumerateEntriesCore(path, searchPattern, searchOption, true, false);
 
     /// <inheritdoc/>
     public Stream OpenFileForReading(string path) => throw new NotImplementedException();
@@ -105,80 +94,162 @@ public class ZipArchive : IDataArchive, IDisposable
 
     /// <inheritdoc/>
     [return: NotNullIfNotNull(nameof(path))]
-    public string? GetFullPath(string? path) => path;
+    public string? GetFullPath(string? path)
+    {
+        var model = new PathModel(path);
+        if (model.IsNil)
+            return path;
+
+        return "/" + model.ToString();
+    }
 
     #endregion
 
     #region Directory
 
     /// <inheritdoc/>
-    public bool DirectoryExists([NotNullWhen(true)] string? path)
-    {
-        var pathModel = new PathModel(path);
-        if (pathModel.IsNil)
-            return false;
-        if (pathModel.IsRoot)
-            return true;
-
-        return m_UnderlyingArchive.Entries.Any(x => GetDirectory(x.FullName).HasValue);
-
-        PathModel? GetDirectory(string entryPath)
-        {
-            var entryPathModel = new PathModel(entryPath);
-            if (entryPathModel.TryPop() is null)
-                return null;
-            if (entryPathModel.StartsWith(pathModel))
-                return entryPathModel;
-            else
-                return null;
-        }
-    }
+    public bool DirectoryExists([NotNullWhen(true)] string? path) => EntryExistsCore(path, false, true);
 
     /// <inheritdoc/>
-    public IEnumerable<string> EnumerateDirectories(string path)
-    {
-        var pathModel = new PathModel(path);
-        if (pathModel.IsNil)
-            throw new DirectoryNotFoundException();
+    public IEnumerable<string> EnumerateDirectories(string path) =>
+        EnumerateEntriesCore(path, null, SearchOption.TopDirectoryOnly, false, true);
 
-        return m_UnderlyingArchive.Entries
-            .Select(x => GetDirectory(x.FullName))
-            .Where(x => x.HasValue && !x.Value.IsNil)
-            .Select(x => x!.Value)
-            .Distinct()
-            .Select(x => x.ToString()!);
+    /// <inheritdoc/>
+    public IEnumerable<string> EnumerateDirectories(string path, string searchPattern) =>
+        EnumerateEntriesCore(path, searchPattern, SearchOption.TopDirectoryOnly, false, true);
 
-        PathModel? GetDirectory(string entryPath)
-        {
-            var entryPathModel = new PathModel(entryPath);
-            if (entryPathModel.TryPop() is null)
-                return null;
-            if (entryPathModel.StartsWith(pathModel))
-                return entryPathModel;
-            else
-                return null;
-        }
-    }
+    /// <inheritdoc/>
+    public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
+        EnumerateEntriesCore(path, searchPattern, searchOption, false, true);
 
     #endregion
 
     #region Entry
 
     /// <inheritdoc/>
-    public bool EntryExists([NotNullWhen(true)] string? path) => throw new NotImplementedException();
+    public bool EntryExists([NotNullWhen(true)] string? path) => EntryExistsCore(path, true, true);
 
     /// <inheritdoc/>
     public IEnumerable<string> EnumerateEntries(string path) =>
-        EnumerateDirectories(path)
-        .Concat(EnumerateFiles(path));
+        EnumerateEntriesCore(path, null, SearchOption.TopDirectoryOnly, true, true);
+
+    /// <inheritdoc/>
+    public IEnumerable<string> EnumerateEntries(string path, string searchPattern) =>
+        EnumerateEntriesCore(path, searchPattern, SearchOption.TopDirectoryOnly, true, true);
+
+    /// <inheritdoc/>
+    public IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
+        EnumerateEntriesCore(path, searchPattern, searchOption, true, true);
+
+    bool EntryExistsCore(
+        [NotNullWhen(true)] string? path,
+        bool considerFiles,
+        bool considerDirectories)
+    {
+        var pathModel = new PathModel(path);
+        if (pathModel.IsNil)
+            return false;
+
+        if (considerDirectories && pathModel.IsRoot)
+            return true;
+
+        foreach (var entry in m_UnderlyingArchive.Entries)
+        {
+            string entryPath = entry.FullName;
+            var entryPathModel = new PathModel(entryPath);
+
+            if (entryPath.EndsWith('/'))
+            {
+                // Directory
+                if (considerDirectories && entryPathModel.StartsWith(pathModel))
+                    return true;
+            }
+            else if (considerFiles)
+            {
+                // File
+                string? fileName = entryPathModel.TryDequeue();
+                if (fileName == null)
+                    continue;
+
+                if (entryPathModel.StartsWith(pathModel))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    IEnumerable<string> EnumerateEntriesCore(
+        string path,
+        string? searchPattern,
+        SearchOption searchOption,
+        bool enumerateFiles,
+        bool enumerateDirectories)
+    {
+        var pathModel = new PathModel(path);
+        if (pathModel.IsNil)
+            throw new DirectoryNotFoundException();
+
+        bool recursive = searchOption == SearchOption.AllDirectories;
+        bool directoryExists = pathModel.IsRoot;
+
+        foreach (var entry in m_UnderlyingArchive.Entries)
+        {
+            string entryPath = entry.FullName;
+            var entryPathModel = new PathModel(entryPath);
+
+            bool feasibleHierarchyLevel =
+                recursive
+                    ? entryPathModel.HierarchyLevel > pathModel.HierarchyLevel
+                    : entryPathModel.HierarchyLevel == pathModel.HierarchyLevel + 1;
+            if (directoryExists && !feasibleHierarchyLevel)
+                continue;
+
+            if (entryPath.EndsWith('/'))
+            {
+                // Directory
+                if (enumerateDirectories || !directoryExists)
+                {
+                    if (entryPathModel.StartsWith(pathModel))
+                    {
+                        if (enumerateDirectories && feasibleHierarchyLevel)
+                        {
+                            string directoryPath = entryPath[..^1];
+                            yield return '/' + directoryPath;
+                        }
+                        directoryExists = true;
+                    }
+                }
+            }
+            else
+            {
+                // File
+                if (enumerateFiles || !directoryExists)
+                {
+                    string? fileName = entryPathModel.TryDequeue();
+                    if (fileName is null)
+                        continue;
+
+                    if (entryPathModel.StartsWith(pathModel))
+                    {
+                        if (enumerateFiles && feasibleHierarchyLevel)
+                            yield return '/' + entryPath;
+                        directoryExists = true;
+                    }
+                }
+            }
+        }
+
+        if (!directoryExists)
+            throw new DirectoryNotFoundException();
+    }
 
     #endregion
 
     /// <inheritdoc/>
-    public void Dispose()
+    public virtual void Dispose()
     {
         m_UnderlyingArchive.Dispose();
-        GC.SuppressFinalize(this);
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

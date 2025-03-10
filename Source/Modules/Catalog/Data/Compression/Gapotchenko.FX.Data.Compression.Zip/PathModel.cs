@@ -11,12 +11,12 @@ readonly struct PathModel : IEquatable<PathModel>
             m_Parts = Normalize(FileSystem.SplitPath(path));
     }
 
-    static Stack<string>? Normalize(IEnumerable<string> parts)
+    static Queue<string>? Normalize(IEnumerable<string> parts)
     {
-        var stack = new Stack<string>();
+        var stack = new Queue<string>();
         foreach (string part in parts)
         {
-            switch (part)
+            switch (part.AsSpan())
             {
                 case "" or ".":
                     continue;
@@ -27,11 +27,14 @@ readonly struct PathModel : IEquatable<PathModel>
                         // The path points to a directory outside of the archive file system hierarchy.
                         return null;
                     }
-                    stack.Pop();
+                    stack.Dequeue();
+                    break;
+
+                case var x when x.TrimStart("/\\".AsSpan()).Length is 0:
                     break;
 
                 default:
-                    stack.Push(part);
+                    stack.Enqueue(part);
                     break;
             }
         }
@@ -43,7 +46,9 @@ readonly struct PathModel : IEquatable<PathModel>
 
     public readonly bool IsRoot => m_Parts?.Count == 0;
 
-    public string? TryPop()
+    public readonly int HierarchyLevel => m_Parts?.Count ?? 0;
+
+    public string? TryPeek()
     {
         var parts = m_Parts;
         if (parts is null)
@@ -51,7 +56,18 @@ readonly struct PathModel : IEquatable<PathModel>
         else if (parts.Count == 0)
             return null;
         else
-            return parts.Pop();
+            return parts.Peek();
+    }
+
+    public string? TryDequeue()
+    {
+        var parts = m_Parts;
+        if (parts is null)
+            return null;
+        else if (parts.Count == 0)
+            return null;
+        else
+            return parts.Dequeue();
     }
 
     public bool StartsWith(PathModel other)
@@ -88,5 +104,5 @@ readonly struct PathModel : IEquatable<PathModel>
             ? string.Join("/", parts)
             : null;
 
-    readonly Stack<string>? m_Parts;
+    readonly Queue<string>? m_Parts;
 }
