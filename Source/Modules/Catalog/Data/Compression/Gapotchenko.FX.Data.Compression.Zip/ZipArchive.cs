@@ -1,4 +1,6 @@
-﻿using Gapotchenko.FX.Text;
+﻿using Gapotchenko.FX.Data.Compression.Zip.Properties;
+using Gapotchenko.FX.IO.Vfs;
+using Gapotchenko.FX.Text;
 using System.Diagnostics;
 using System.IO.Compression;
 
@@ -86,7 +88,68 @@ public class ZipArchive : IDataArchive, IDisposable
         EnumerateEntriesCore(path, searchPattern, searchOption, true, false);
 
     /// <inheritdoc/>
-    public Stream OpenFileForReading(string path) => throw new NotImplementedException();
+    public Stream OpenFileForReading(string path)
+    {
+        return StreamView.WithCapabilities(GetFileArchiveEntry(path).Open(), true, false, true);
+    }
+
+    ZipArchiveEntry GetFileArchiveEntry(string path)
+    {
+        bool directoryExists;
+
+        var pathModel = new PathModel(path);
+        if (pathModel.IsNil || pathModel.IsRoot)
+        {
+            directoryExists = true;
+        }
+        else
+        {
+            directoryExists = pathModel.HierarchyLevel == 1;
+
+            PathModel directoryModel;
+            if (directoryExists)
+            {
+                directoryModel = new();
+            }
+            else
+            {
+                directoryModel = pathModel.Clone();
+                directoryModel.TryUp();
+            }
+
+            foreach (var entry in m_UnderlyingArchive.Entries)
+            {
+                string entryPath = entry.FullName;
+                if (IsDirectoryArchiveEntry(entryPath))
+                {
+                    // Directory
+                    if (!directoryExists)
+                    {
+                        var entryPathModel = new PathModel(entryPath);
+                        directoryExists = entryPathModel.StartsWith(directoryModel);
+                    }
+                }
+                else
+                {
+                    // File
+                    var entryPathModel = new PathModel(entryPath);
+                    if (entryPathModel.Equals(pathModel))
+                        return entry;
+
+                    if (!directoryExists)
+                    {
+                        if (entryPathModel.TryUp() is not null)
+                            directoryExists = entryPathModel.StartsWith(directoryModel);
+                    }
+                }
+            }
+        }
+
+        if (!directoryExists)
+            throw new DirectoryNotFoundException(string.Format(Resources.CouldNotFindPartOfPathX, path));
+        else
+            throw new FileNotFoundException(string.Format(Resources.CouldNotFindFileX, path), path);
+    }
 
     #endregion
 
@@ -121,6 +184,8 @@ public class ZipArchive : IDataArchive, IDisposable
     /// <inheritdoc/>
     public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
         EnumerateEntriesCore(path, searchPattern, searchOption, false, true);
+
+    static bool IsDirectoryArchiveEntry(string fullName) => fullName.EndsWith('/');
 
     #endregion
 
@@ -158,7 +223,7 @@ public class ZipArchive : IDataArchive, IDisposable
             string entryPath = entry.FullName;
             var entryPathModel = new PathModel(entryPath);
 
-            if (entryPath.EndsWith('/'))
+            if (IsDirectoryArchiveEntry(entryPath))
             {
                 // Directory
                 if (considerDirectories && entryPathModel.StartsWith(pathModel))
@@ -167,7 +232,7 @@ public class ZipArchive : IDataArchive, IDisposable
             else if (considerFiles)
             {
                 // File
-                string? fileName = entryPathModel.TryDequeue();
+                string? fileName = entryPathModel.TryUp();
                 if (fileName == null)
                     continue;
 
@@ -187,61 +252,62 @@ public class ZipArchive : IDataArchive, IDisposable
         bool enumerateDirectories)
     {
         var pathModel = new PathModel(path);
-        if (pathModel.IsNil)
-            throw new DirectoryNotFoundException();
-
-        bool recursive = searchOption == SearchOption.AllDirectories;
         bool directoryExists = pathModel.IsRoot;
 
-        foreach (var entry in m_UnderlyingArchive.Entries)
+        if (!pathModel.IsNil)
         {
-            string entryPath = entry.FullName;
-            var entryPathModel = new PathModel(entryPath);
+            bool recursive = searchOption == SearchOption.AllDirectories;
 
-            bool feasibleHierarchyLevel =
-                recursive
-                    ? entryPathModel.HierarchyLevel > pathModel.HierarchyLevel
-                    : entryPathModel.HierarchyLevel == pathModel.HierarchyLevel + 1;
-            if (directoryExists && !feasibleHierarchyLevel)
-                continue;
-
-            if (entryPath.EndsWith('/'))
+            foreach (var entry in m_UnderlyingArchive.Entries)
             {
-                // Directory
-                if (enumerateDirectories || !directoryExists)
+                string entryPath = entry.FullName;
+                var entryPathModel = new PathModel(entryPath);
+
+                bool feasibleHierarchyLevel =
+                    recursive
+                        ? entryPathModel.HierarchyLevel > pathModel.HierarchyLevel
+                        : entryPathModel.HierarchyLevel == pathModel.HierarchyLevel + 1;
+                if (directoryExists && !feasibleHierarchyLevel)
+                    continue;
+
+                if (IsDirectoryArchiveEntry(entryPath))
                 {
-                    if (entryPathModel.StartsWith(pathModel))
+                    // Directory
+                    if (enumerateDirectories || !directoryExists)
                     {
-                        if (enumerateDirectories && feasibleHierarchyLevel)
+                        if (entryPathModel.StartsWith(pathModel))
                         {
-                            string directoryPath = entryPath[..^1];
-                            yield return '/' + directoryPath;
+                            if (enumerateDirectories && feasibleHierarchyLevel)
+                            {
+                                string directoryPath = entryPath[..^1];
+                                yield return '/' + directoryPath;
+                            }
+                            directoryExists = true;
                         }
-                        directoryExists = true;
                     }
                 }
-            }
-            else
-            {
-                // File
-                if (enumerateFiles || !directoryExists)
+                else
                 {
-                    string? fileName = entryPathModel.TryDequeue();
-                    if (fileName is null)
-                        continue;
-
-                    if (entryPathModel.StartsWith(pathModel))
+                    // File
+                    if (enumerateFiles || !directoryExists)
                     {
-                        if (enumerateFiles && feasibleHierarchyLevel)
-                            yield return '/' + entryPath;
-                        directoryExists = true;
+                        string? fileName = entryPathModel.TryUp();
+                        if (fileName is null)
+                            continue;
+
+                        if (entryPathModel.StartsWith(pathModel))
+                        {
+                            if (enumerateFiles && feasibleHierarchyLevel)
+                                yield return '/' + entryPath;
+                            directoryExists = true;
+                        }
                     }
                 }
             }
         }
 
         if (!directoryExists)
-            throw new DirectoryNotFoundException();
+            throw new DirectoryNotFoundException(string.Format(Resources.CouldNotFindPartOfPathX, path));
     }
 
     #endregion

@@ -1,4 +1,7 @@
-﻿namespace Gapotchenko.FX.Data.Compression.Zip.Tests;
+﻿using Gapotchenko.FX.IO.Vfs;
+using Gapotchenko.FX.Linq;
+
+namespace Gapotchenko.FX.Data.Compression.Zip.Tests;
 
 [TestClass]
 public class ZipArchiveTests
@@ -21,6 +24,9 @@ public class ZipArchiveTests
         Assert.IsFalse(archive.FileExists("/"));
         Assert.IsFalse(archive.FileExists("\\"));
         Assert.IsFalse(archive.FileExists("."));
+
+        Assert.ThrowsException<FileNotFoundException>(() => archive.OpenTextFile("File.txt"));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.OpenTextFile("Directory/File.txt"));
     }
 
     [TestMethod]
@@ -42,9 +48,9 @@ public class ZipArchiveTests
     }
 
     [TestMethod]
-    public void Zip_NestedEmptyDirectory()
+    public void Zip_EmptyNestedDirectory()
     {
-        using var archive = new ZipArchive(Assets.OpenStream("NestedEmptyDirectory.zip"));
+        using var archive = new ZipArchive(Assets.OpenStream("EmptyNestedDirectory.zip"));
 
         Assert.IsTrue(archive.EnumerateDirectories("/").SequenceEqual(["/Container"]));
         Assert.IsFalse(archive.EnumerateFiles("/").Any());
@@ -57,5 +63,29 @@ public class ZipArchiveTests
         Assert.IsTrue(archive.DirectoryExists("/Container/Empty"));
         Assert.IsFalse(archive.FileExists("/Container/Empty"));
         Assert.IsTrue(archive.EntryExists("/Container/Empty"));
+    }
+
+    [TestMethod]
+    public void Zip_OneFile()
+    {
+        using var archive = new ZipArchive(Assets.OpenStream("OneFile.zip"));
+
+        Assert.IsFalse(archive.EnumerateDirectories("/").Any());
+        Assert.IsTrue(archive.EnumerateFiles("/").SequenceEqual(["/1.txt"]));
+        Assert.IsTrue(archive.EnumerateEntries("/").SequenceEqual(["/1.txt"]));
+
+        Assert.AreEqual("The first file.", archive.ReadAllTextFromFile("1.txt"));
+    }
+
+    [TestMethod]
+    public void Zip_TwoFiles()
+    {
+        using var archive = new ZipArchive(Assets.OpenStream("TwoFiles.zip"));
+
+        Assert.IsTrue(archive.EnumerateFiles("/").Order().SequenceEqual(["/1.txt", "/2.txt"]));
+
+        Assert.AreEqual("The first file.", archive.ReadAllTextFromFile("1.txt"));
+        Assert.AreEqual("The second file.", archive.ReadAllTextFromFile("2.txt"));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllTextFromFile("3.txt"));
     }
 }

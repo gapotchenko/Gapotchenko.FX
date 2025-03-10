@@ -11,6 +11,12 @@ readonly struct PathModel : IEquatable<PathModel>
             m_Parts = Normalize(FileSystem.SplitPath(path));
     }
 
+    PathModel(IEnumerable<string>? parts)
+    {
+        if (parts != null)
+            m_Parts = new(parts);
+    }
+
     static Queue<string>? Normalize(IEnumerable<string> parts)
     {
         var stack = new Queue<string>();
@@ -59,7 +65,7 @@ readonly struct PathModel : IEquatable<PathModel>
             return parts.Peek();
     }
 
-    public string? TryDequeue()
+    public string? TryUp()
     {
         var parts = m_Parts;
         if (parts is null)
@@ -81,6 +87,7 @@ readonly struct PathModel : IEquatable<PathModel>
             a.StartsWith(b, PartComparer);
     }
 
+    public PathModel Clone() => new(m_Parts);
 
     public override bool Equals(object? obj) => obj is PathModel model && Equals(model);
 
