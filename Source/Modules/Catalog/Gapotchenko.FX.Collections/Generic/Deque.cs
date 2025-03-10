@@ -31,7 +31,7 @@ namespace Gapotchenko.FX.Collections.Generic;
 /// Represents a linear collection that supports element insertion and removal at both ends with O(1) algorithmic complexity.
 /// </summary>
 /// <remarks>
-/// The name "deque" is acronym for "<u>d</u>ouble <u>e</u>nded <u>que</u>ue" and is usually pronounced "deck".
+/// The name "deque" is acronym for "<b>d</b>ouble <b>e</b>nded <b>que</b>ue" and is usually pronounced "deck".
 /// </remarks>
 [DebuggerDisplay("Count = {Count}")]
 [DebuggerTypeProxy(typeof(CollectionDebugView<>))]

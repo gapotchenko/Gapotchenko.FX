@@ -88,4 +88,26 @@ public class ZipArchiveTests
         Assert.AreEqual("The second file.", archive.ReadAllTextFromFile("2.txt"));
         Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllTextFromFile("3.txt"));
     }
+
+    [TestMethod]
+    public void Zip_TwoNestedFiles()
+    {
+        using var archive = new ZipArchive(Assets.OpenStream("TwoNestedFiles.zip"));
+
+        Assert.IsFalse(archive.EnumerateFiles("/").Any());
+        Assert.IsTrue(archive.EnumerateFiles("/", "*", SearchOption.AllDirectories).Order().SequenceEqual(["/Container/1.txt", "/Container/2.txt"]));
+        Assert.IsTrue(archive.EnumerateFiles("/Container").Order().SequenceEqual(["/Container/1.txt", "/Container/2.txt"]));
+
+        Assert.AreEqual("The first file.", archive.ReadAllTextFromFile("Container/1.txt"));
+        Assert.AreEqual("The second file.", archive.ReadAllTextFromFile("Container/2.txt"));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllTextFromFile("Container/3.txt"));
+
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllTextFromFile("1.txt"));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllTextFromFile("2.txt"));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllTextFromFile("3.txt"));
+
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllTextFromFile("Other/1.txt"));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllTextFromFile("Other/2.txt"));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllTextFromFile("Other/3.txt"));
+    }
 }

@@ -13,4 +13,13 @@ static class Assets
 
         return File.OpenRead(path);
     }
+
+    public static Stream OpenStreamCopy(string fileName)
+    {
+        using var stream = OpenStream(fileName);
+        var memoryStream = new MemoryStream();
+        stream.CopyTo(memoryStream);
+        memoryStream.Position = 0;
+        return memoryStream;
+    }
 }

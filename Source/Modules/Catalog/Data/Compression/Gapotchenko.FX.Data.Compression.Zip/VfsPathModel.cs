@@ -1,25 +1,33 @@
-﻿using Gapotchenko.FX.IO;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2025
+
+using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq;
 
 namespace Gapotchenko.FX.Data.Compression.Zip;
 
-readonly struct PathModel : IEquatable<PathModel>
+readonly struct VfsPathModel : IEquatable<VfsPathModel>
 {
-    public PathModel(string? path)
+    public VfsPathModel(string? path)
     {
         if (!string.IsNullOrEmpty(path))
             m_Parts = Normalize(FileSystem.SplitPath(path));
     }
 
-    PathModel(IEnumerable<string>? parts)
+    VfsPathModel(VfsPathModel model)
     {
-        if (parts != null)
+        if (model.m_Parts is not null and var parts)
             m_Parts = new(parts);
     }
 
-    static Queue<string>? Normalize(IEnumerable<string> parts)
+    static Deque<string>? Normalize(IEnumerable<string> parts)
     {
-        var stack = new Queue<string>();
+        var deque = new Deque<string>();
+
         foreach (string part in parts)
         {
             switch (part.AsSpan())
@@ -28,55 +36,59 @@ readonly struct PathModel : IEquatable<PathModel>
                     continue;
 
                 case "..":
-                    if (stack.Count == 0)
+                    if (!deque.TryPopBack(out _))
                     {
-                        // The path points to a directory outside of the archive file system hierarchy.
+                        // The path points to a directory outside of the virtual file system hierarchy.
                         return null;
                     }
-                    stack.Dequeue();
                     break;
 
                 case var x when x.TrimStart("/\\".AsSpan()).Length is 0:
                     break;
 
                 default:
-                    stack.Enqueue(part);
+                    deque.PushBack(part);
                     break;
             }
         }
 
-        return stack;
+        return deque;
     }
 
+    [MemberNotNullWhen(false, nameof(Path))]
     public readonly bool IsNil => m_Parts is null;
 
+    [MemberNotNullWhen(true, nameof(Path))]
     public readonly bool IsRoot => m_Parts?.Count == 0;
 
     public readonly int HierarchyLevel => m_Parts?.Count ?? 0;
 
-    public string? TryPeek()
+    public string? TryPeekBack()
     {
         var parts = m_Parts;
         if (parts is null)
             return null;
-        else if (parts.Count == 0)
-            return null;
+        else if (parts.TryPeekBack(out string? part))
+            return part;
         else
-            return parts.Peek();
+            return null;
     }
 
-    public string? TryUp()
+    public string? PopBack() =>
+        (m_Parts ?? throw new InvalidOperationException()).PopBack();
+
+    public string? TryPopBack()
     {
         var parts = m_Parts;
         if (parts is null)
             return null;
-        else if (parts.Count == 0)
-            return null;
+        else if (parts.TryPopBack(out string? part))
+            return part;
         else
-            return parts.Dequeue();
+            return null;
     }
 
-    public bool StartsWith(PathModel other)
+    public bool StartsWith(VfsPathModel other)
     {
         var a = m_Parts;
         var b = other.m_Parts;
@@ -87,11 +99,11 @@ readonly struct PathModel : IEquatable<PathModel>
             a.StartsWith(b, PartComparer);
     }
 
-    public PathModel Clone() => new(m_Parts);
+    public VfsPathModel Clone() => new(this);
 
-    public override bool Equals(object? obj) => obj is PathModel model && Equals(model);
+    public override bool Equals(object? obj) => obj is VfsPathModel model && Equals(model);
 
-    public bool Equals(PathModel other)
+    public bool Equals(VfsPathModel other)
     {
         var a = m_Parts;
         var b = other.m_Parts;
@@ -106,10 +118,12 @@ readonly struct PathModel : IEquatable<PathModel>
 
     static StringComparer PartComparer => StringComparer.InvariantCulture;
 
-    public override string? ToString() =>
+    public override string? ToString() => Path;
+
+    public string? Path =>
         m_Parts is not null and var parts
             ? string.Join("/", parts)
             : null;
 
-    readonly Queue<string>? m_Parts;
+    readonly Deque<string>? m_Parts;
 }
