@@ -10,7 +10,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
+    <ProjectReference Include="..\..\..\IO\Gapotchenko.FX.IO.Vfs\Gapotchenko.FX.IO.Vfs.csproj" />
     <ProjectReference Include="..\..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
     <ProjectReference Include="..\..\..\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Data.Compression\Gapotchenko.FX.Data.Compression.csproj" />

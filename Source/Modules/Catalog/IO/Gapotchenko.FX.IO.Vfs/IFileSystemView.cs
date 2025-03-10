@@ -4,7 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-namespace Gapotchenko.FX.IO;
+namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
 /// Represents a virtual file system view.

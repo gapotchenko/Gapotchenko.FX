@@ -8,6 +8,8 @@ using Gapotchenko.FX.IO.Pal;
 using Gapotchenko.FX.IO.Properties;
 using Gapotchenko.FX.Text;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+
 #if TFF_TRANSACTIONS
 using System.Transactions;
 #endif
@@ -502,5 +504,27 @@ public static class FileSystem
             else
                 return Path.GetFullPath(PathEx.TrimEndingDirectorySeparator(path));
         }
+    }
+
+    /// <summary>
+    /// Determines whether an IO exception signifies a file access violation error.
+    /// </summary>
+    /// <remarks>
+    /// A file access violation error usually occurs when the file is locked or opened with incompatible <see cref="FileShare"/> flags.
+    /// </remarks>
+    /// <param name="exception">The exception.</param>
+    /// <returns><see langword="true"/> if exception represents a file access violation error; otherwise, <see langword="false"/>.</returns>
+    public static bool IsFileAccessViolationError(IOException exception)
+    {
+        if (exception == null)
+            throw new ArgumentNullException(nameof(exception));
+
+        int errorCode = Marshal.GetHRForException(exception) & ((1 << 16) - 1);
+
+        // For compatibility, the same error codes are used on platforms other than Windows.
+        return errorCode is
+            Pal.Windows.Errors.ERROR_USER_MAPPED_FILE or
+            Pal.Windows.Errors.ERROR_SHARING_VIOLATION or
+            Pal.Windows.Errors.ERROR_LOCK_VIOLATION;
     }
 }

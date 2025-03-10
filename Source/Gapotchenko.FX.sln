@@ -35,7 +35,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Harness", "Harness", "{93EB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Harness.Console", "Harness\Gapotchenko.FX.Harness.Console\Gapotchenko.FX.Harness.Console.csproj", "{448BAA58-B9D8-419B-993D-200F5E620B7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.IO", "Modules\Catalog\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj", "{75849171-E56A-41B4-A685-7BAB8B875C7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.IO", "Modules\Catalog\IO\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj", "{75849171-E56A-41B4-A685-7BAB8B875C7F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Diagnostics.WebBrowser", "Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj", "{280EB526-4B91-4702-B9D5-45EDEDB51798}"
 EndProject
@@ -86,7 +86,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Runtime.Comp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{C2DC67EB-5194-432D-A088-2EA90951DF87}"
 	ProjectSection(SolutionItems) = preProject
-		Data\README.md = Data\README.md
+		Modules\Catalog\Data\README.md = Modules\Catalog\Data\README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.AppModel.Information", "Modules\Catalog\AppModel\Gapotchenko.FX.AppModel.Information\Gapotchenko.FX.AppModel.Information.csproj", "{006DFB7E-052A-4496-B9A0-7AF038058AB7}"
@@ -180,6 +180,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integrity", "Integrity", "{FEF21BBC-99EC-4658-ACC9-7A0E992F9F8D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Encoding", "Encoding", "{EED4A7AB-76D6-460E-9809-3726734A8291}"
+	ProjectSection(SolutionItems) = preProject
+		Modules\Catalog\Data\Encoding\README.md = Modules\Catalog\Data\Encoding\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Data.Encoding", "Modules\Catalog\Data\Encoding\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj", "{BAC20EFD-C301-4F78-B9E2-CB37580DE006}"
 EndProject
@@ -260,6 +263,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Compression.Zip", "Modules\Catalog\Data\Compression\Gapotchenko.FX.Data.Compression.Zip\Gapotchenko.FX.Data.Compression.Zip.csproj", "{5D9DD0B3-DA33-49D5-8D14-63CE39115CDC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Compression.Zip.Tests", "Tests\Data\Compression\Gapotchenko.FX.Data.Compression.Zip.Tests\Gapotchenko.FX.Data.Compression.Zip.Tests.csproj", "{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vfs", "Vfs", "{DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.IO.Vfs", "Modules\Catalog\IO\Gapotchenko.FX.IO.Vfs\Gapotchenko.FX.IO.Vfs.csproj", "{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -523,6 +530,10 @@ Global
 		{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -641,6 +652,8 @@ Global
 		{660CAD55-E314-4FCC-8E1B-D3123B1271C7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{5D9DD0B3-DA33-49D5-8D14-63CE39115CDC} = {660CAD55-E314-4FCC-8E1B-D3123B1271C7}
 		{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF} = {660CAD55-E314-4FCC-8E1B-D3123B1271C7}
+		{DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD} = {6DE1F6C6-054E-4C83-B060-3D5604BA46A7}
+		{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5} = {DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}

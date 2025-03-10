@@ -63,7 +63,7 @@ sealed class PalAdapter : IPalAdapter
                     {
                         // GetFinalPathNameByHandle may fail for files on a RAM disk (IMDISK)
                         // with ERROR_INVALID_FUNCTION error.
-                        NativeMethods.ERROR_INVALID_FUNCTION => path,
+                        Errors.ERROR_INVALID_FUNCTION => path,
                         var errorCode => throw TranslateWin32ErrorToException(errorCode, path)
                     };
             }
@@ -94,13 +94,13 @@ sealed class PalAdapter : IPalAdapter
     static Exception TranslateWin32ErrorToException(int error, string path) =>
         error switch
         {
-            NativeMethods.ERROR_ACCESS_DENIED =>
+            Errors.ERROR_ACCESS_DENIED =>
                 new UnauthorizedAccessException(
                     string.Format(Resources.AccessToPathXDenied, path),
                     new Win32Exception(error)),
 
-            NativeMethods.ERROR_FILE_NOT_FOUND or
-            NativeMethods.ERROR_PATH_NOT_FOUND =>
+            Errors.ERROR_FILE_NOT_FOUND or
+            Errors.ERROR_PATH_NOT_FOUND =>
                 new IOException(
                     string.Format(Resources.FileSystemEntryXDoesNotExsit, path),
                     new Win32Exception(error)),

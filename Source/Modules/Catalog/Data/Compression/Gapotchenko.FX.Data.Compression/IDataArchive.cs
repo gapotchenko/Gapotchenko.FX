@@ -1,4 +1,4 @@
-﻿using Gapotchenko.FX.IO;
+﻿using Gapotchenko.FX.IO.Vfs;
 
 namespace Gapotchenko.FX.Data.Compression;
 

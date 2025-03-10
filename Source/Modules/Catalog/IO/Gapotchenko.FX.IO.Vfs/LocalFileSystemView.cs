@@ -6,7 +6,7 @@
 
 using System.Diagnostics;
 
-namespace Gapotchenko.FX.IO;
+namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
 /// Represents a virtual file system view of the local file system.

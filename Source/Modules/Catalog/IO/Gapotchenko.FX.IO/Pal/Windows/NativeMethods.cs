@@ -47,12 +47,6 @@ static class NativeMethods
         int dwFlags);
 
     public const int FILE_NAME_NORMALIZED = 0x0;
-
-    public const int ERROR_SUCCESS = 0x0;
-    public const int ERROR_INVALID_FUNCTION = 0x1;
-    public const int ERROR_FILE_NOT_FOUND = 0x2;
-    public const int ERROR_PATH_NOT_FOUND = 0x3;
-    public const int ERROR_ACCESS_DENIED = 0x5;
 }
 
 #endif
