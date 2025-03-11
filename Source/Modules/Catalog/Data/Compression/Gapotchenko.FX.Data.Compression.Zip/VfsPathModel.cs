@@ -61,7 +61,7 @@ readonly struct VfsPathModel : IEquatable<VfsPathModel>
     [MemberNotNullWhen(true, nameof(Path))]
     public readonly bool IsRoot => m_Parts?.Count == 0;
 
-    public readonly int HierarchyLevel => m_Parts?.Count ?? 0;
+    public readonly int Depth => m_Parts?.Count ?? 0;
 
     public string? TryPeekBack()
     {

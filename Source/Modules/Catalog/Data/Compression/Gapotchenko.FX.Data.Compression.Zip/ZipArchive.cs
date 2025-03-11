@@ -4,8 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-using Gapotchenko.FX.Data.Compression.Zip.Properties;
 using Gapotchenko.FX.IO.Vfs;
+using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.Text;
 using System.Diagnostics;
 using System.IO.Compression;
@@ -57,6 +57,8 @@ public class ZipArchive : IDataArchive, IDisposable
     /// </param>
     public ZipArchive(Stream stream, bool writable, bool leaveOpen)
     {
+        CanWrite = writable;
+
         ZipArchiveMode mode;
         if (writable)
         {
@@ -99,35 +101,46 @@ public class ZipArchive : IDataArchive, IDisposable
         return StreamView.WithCapabilities(GetFileArchiveEntry(path).Open(), true, false, true);
     }
 
+    /// <inheritdoc/>
+    public void DeleteFile(string path)
+    {
+        ValidateWrite();
+        GetFileArchiveEntry(path).Delete();
+    }
+
     ZipArchiveEntry GetFileArchiveEntry(string path)
     {
         bool directoryExists;
 
-        var pathModel = new VfsPathModel(path);
-        if (pathModel.IsNil || pathModel.IsRoot)
+        var filePathModel = new VfsPathModel(path);
+        if (filePathModel.IsNil)
+        {
+            directoryExists = false;
+        }
+        else if (filePathModel.IsRoot)
         {
             directoryExists = true;
         }
         else
         {
-            var entry = m_UnderlyingArchive.GetEntry(pathModel.Path);
+            var entry = m_UnderlyingArchive.GetEntry(filePathModel.Path);
             if (entry != null)
                 return entry;
 
-            directoryExists = pathModel.HierarchyLevel == 1;
+            directoryExists = filePathModel.Depth == 1;
             if (!directoryExists)
             {
-                var directoryModel = pathModel.Clone();
-                directoryModel.PopBack();
+                var directoryPathModel = filePathModel.Clone();
+                directoryPathModel.PopBack();
 
-                directoryExists = m_UnderlyingArchive.GetEntry(directoryModel.Path + '/') != null;
+                directoryExists = m_UnderlyingArchive.GetEntry(directoryPathModel.Path + '/') != null;
             }
         }
 
         if (!directoryExists)
-            throw new DirectoryNotFoundException(string.Format(Resources.CouldNotFindPartOfPathX, path));
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
         else
-            throw new FileNotFoundException(string.Format(Resources.CouldNotFindFileX, path), path);
+            throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(path), path);
     }
 
     #endregion
@@ -164,9 +177,50 @@ public class ZipArchive : IDataArchive, IDisposable
     public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
         EnumerateEntriesCore(path, searchPattern, searchOption, false, true);
 
+    /// <inheritdoc/>
+    public void DeleteDirectory(string path) => DeleteDirectory(path, false);
+
+    /// <inheritdoc/>
+    public void DeleteDirectory(string path, bool recursive)
+    {
+        var pathModel = new VfsPathModel(path);
+        if (pathModel.IsRoot)
+            throw new IOException(VfsResourceKit.AccessToPathIsDenied(path));
+
+        if (!recursive)
+        {
+            if (EnumerateEntries(path).Any())
+                throw new IOException(VfsResourceKit.DirectoryIsNotEmpty(path));
+            GetDirectoryArchiveEntry(pathModel).Delete();
+        }
+        else
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+    }
+
+    ZipArchiveEntry GetDirectoryArchiveEntry(VfsPathModel pathModel)
+    {
+        if (!pathModel.IsNil)
+        {
+            var entry = m_UnderlyingArchive.GetEntry(pathModel.Path + '/');
+            if (entry != null)
+                return entry;
+        }
+
+        throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(pathModel.ToString()));
+    }
+
     static bool IsDirectoryArchiveEntry(string fullName) => fullName.EndsWith('/');
 
     #endregion
+
+    void ValidateWrite()
+    {
+        if (!CanWrite)
+            throw new NotSupportedException("Archive does not support writing.");
+    }
 
     #region Entry
 
@@ -194,30 +248,18 @@ public class ZipArchive : IDataArchive, IDisposable
         if (pathModel.IsNil)
             return false;
 
-        if (considerDirectories && pathModel.IsRoot)
-            return true;
-
-        foreach (var entry in m_UnderlyingArchive.Entries)
+        if (considerDirectories)
         {
-            string entryPath = entry.FullName;
-            var entryPathModel = new VfsPathModel(entryPath);
+            if (pathModel.IsRoot)
+                return true;
+            if (m_UnderlyingArchive.GetEntry(pathModel.Path + "/") != null)
+                return true;
+        }
 
-            if (IsDirectoryArchiveEntry(entryPath))
-            {
-                // Directory
-                if (considerDirectories && entryPathModel.StartsWith(pathModel))
-                    return true;
-            }
-            else if (considerFiles)
-            {
-                // File
-                string? fileName = entryPathModel.TryPopBack();
-                if (fileName == null)
-                    continue;
-
-                if (entryPathModel.StartsWith(pathModel))
-                    return true;
-            }
+        if (considerFiles)
+        {
+            if (!pathModel.IsRoot && m_UnderlyingArchive.GetEntry(pathModel.Path) != null)
+                return true;
         }
 
         return false;
@@ -242,11 +284,11 @@ public class ZipArchive : IDataArchive, IDisposable
                 string entryPath = entry.FullName;
                 var entryPathModel = new VfsPathModel(entryPath);
 
-                bool feasibleHierarchyLevel =
+                bool feasibleHierarchyDepth =
                     recursive
-                        ? entryPathModel.HierarchyLevel > pathModel.HierarchyLevel
-                        : entryPathModel.HierarchyLevel == pathModel.HierarchyLevel + 1;
-                if (directoryExists && !feasibleHierarchyLevel)
+                        ? entryPathModel.Depth > pathModel.Depth
+                        : entryPathModel.Depth == pathModel.Depth + 1;
+                if (directoryExists && !feasibleHierarchyDepth)
                     continue;
 
                 if (IsDirectoryArchiveEntry(entryPath))
@@ -256,7 +298,7 @@ public class ZipArchive : IDataArchive, IDisposable
                     {
                         if (entryPathModel.StartsWith(pathModel))
                         {
-                            if (enumerateDirectories && feasibleHierarchyLevel)
+                            if (enumerateDirectories && feasibleHierarchyDepth)
                             {
                                 string directoryPath = entryPath[..^1];
                                 yield return '/' + directoryPath;
@@ -276,7 +318,7 @@ public class ZipArchive : IDataArchive, IDisposable
 
                         if (entryPathModel.StartsWith(pathModel))
                         {
-                            if (enumerateFiles && feasibleHierarchyLevel)
+                            if (enumerateFiles && feasibleHierarchyDepth)
                                 yield return '/' + entryPath;
                             directoryExists = true;
                         }
@@ -286,7 +328,7 @@ public class ZipArchive : IDataArchive, IDisposable
         }
 
         if (!directoryExists)
-            throw new DirectoryNotFoundException(string.Format(Resources.CouldNotFindPartOfPathX, path));
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
     }
 
     #endregion

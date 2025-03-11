@@ -11,4 +11,12 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// </summary>
 public interface IFileSystemView : IReadOnlyFileSystemView
 {
+    /// <inheritdoc cref="File.Delete(string)"/>
+    void DeleteFile(string path);
+
+    /// <inheritdoc cref="Directory.Delete(string)"/>
+    void DeleteDirectory(string path);
+
+    /// <inheritdoc cref="Directory.Delete(string, bool)"/>
+    void DeleteDirectory(string path, bool recursive);
 }

@@ -44,9 +44,6 @@ public class StreamProxyKit<T> : Stream
 
     #endregion
 
-    /// <inheritdoc/>
-    public override long Length => BaseStream.Length;
-
     #region Read
 
     /// <inheritdoc/>
@@ -121,12 +118,15 @@ public class StreamProxyKit<T> : Stream
 
 #endif
 
-    /// <inheritdoc/>
-    public override void SetLength(long value) => BaseStream.SetLength(value);
-
     #endregion
 
     #region Seek
+
+    /// <inheritdoc/>
+    public override long Length => BaseStream.Length;
+
+    /// <inheritdoc/>
+    public override void SetLength(long value) => BaseStream.SetLength(value);
 
     /// <inheritdoc/>
     public override long Position

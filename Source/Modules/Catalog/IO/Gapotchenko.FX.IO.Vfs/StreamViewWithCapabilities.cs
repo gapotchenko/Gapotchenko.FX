@@ -107,12 +107,6 @@ sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool ca
 
 #endif
 
-    public override void SetLength(long value)
-    {
-        ValidateWrite();
-        base.SetLength(value);
-    }
-
     void ValidateWrite()
     {
         if (!canWrite)
@@ -122,6 +116,22 @@ sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool ca
     #endregion
 
     #region Seek
+
+    public override long Length
+    {
+        get
+        {
+            ValidateSeek();
+            return base.Length;
+        }
+    }
+
+    public override void SetLength(long value)
+    {
+        ValidateSeek();
+        ValidateWrite();
+        base.SetLength(value);
+    }
 
     public override long Position
     {

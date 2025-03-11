@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Gapotchenko.FX.Data.Compression.Zip.Properties {
+namespace Gapotchenko.FX.IO.Vfs.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Gapotchenko.FX.Data.Compression.Zip.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Gapotchenko.FX.Data.Compression.Zip.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Gapotchenko.FX.IO.Vfs.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,6 +61,15 @@ namespace Gapotchenko.FX.Data.Compression.Zip.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access to the path &apos;{0}&apos; is denied..
+        /// </summary>
+        internal static string AccessToPathXIsDenied {
+            get {
+                return ResourceManager.GetString("AccessToPathXIsDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find file &apos;{0}&apos;..
         /// </summary>
         internal static string CouldNotFindFileX {
@@ -75,6 +84,15 @@ namespace Gapotchenko.FX.Data.Compression.Zip.Properties {
         internal static string CouldNotFindPartOfPathX {
             get {
                 return ResourceManager.GetString("CouldNotFindPartOfPathX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The directory &apos;{0}&apos; is not empty..
+        /// </summary>
+        internal static string DirectoryXIsNotEmpty {
+            get {
+                return ResourceManager.GetString("DirectoryXIsNotEmpty", resourceCulture);
             }
         }
     }

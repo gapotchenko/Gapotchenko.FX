@@ -110,4 +110,59 @@ public class ZipArchiveTests
         Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllTextFromFile("Other/2.txt"));
         Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllTextFromFile("Other/3.txt"));
     }
+
+    [TestMethod]
+    public void Zip_DeleteOneFile()
+    {
+        using var archive = new ZipArchive(Assets.OpenStream("OneFile.zip", true), true);
+
+        string path = "1.txt";
+
+        Assert.IsTrue(archive.FileExists(path));
+        archive.DeleteFile(path);
+        Assert.IsFalse(archive.FileExists(path));
+
+        Assert.ThrowsException<FileNotFoundException>(() => archive.DeleteFile(path));
+    }
+
+    [TestMethod]
+    public void Zip_DeleteOneNestedFile()
+    {
+        using var archive = new ZipArchive(Assets.OpenStream("OneNestedFile.zip", true), true);
+
+        string path = "Container/1.txt";
+
+        Assert.IsTrue(archive.FileExists(path));
+        archive.DeleteFile(path);
+        Assert.IsFalse(archive.FileExists(path));
+        Assert.IsTrue(archive.DirectoryExists(Path.GetDirectoryName(path)));
+
+        Assert.ThrowsException<FileNotFoundException>(() => archive.DeleteFile(path));
+    }
+
+    [TestMethod]
+    public void Zip_DeleteEmptyDirectory()
+    {
+        using var archive = new ZipArchive(Assets.OpenStream("EmptyDirectory.zip", true), true);
+
+        string path = "Empty";
+
+        Assert.IsTrue(archive.DirectoryExists(path));
+        archive.DeleteDirectory(path);
+        Assert.IsFalse(archive.DirectoryExists(path));
+
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(path));
+    }
+
+    [TestMethod]
+    public void Zip_DeleteDirectory()
+    {
+        using var archive = new ZipArchive(Assets.OpenStream("OneNestedFile.zip", true), true);
+
+        string path = "Container";
+
+        Assert.IsTrue(archive.DirectoryExists(path));
+        Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(path));
+        Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(path, false));
+    }
 }

@@ -29,6 +29,8 @@ sealed class LocalFileSystemView : IFileSystemView
 
     public Stream OpenFileForReading(string path) => File.OpenRead(path);
 
+    public void DeleteFile(string path) => File.Delete(path);
+
     #endregion
 
     #region Path
@@ -48,6 +50,10 @@ sealed class LocalFileSystemView : IFileSystemView
 
     public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateDirectories(path, searchPattern, searchOption);
+
+    public void DeleteDirectory(string path) => Directory.Delete(path);
+
+    public void DeleteDirectory(string path, bool recursive) => Directory.Delete(path, recursive);
 
     #endregion
 
