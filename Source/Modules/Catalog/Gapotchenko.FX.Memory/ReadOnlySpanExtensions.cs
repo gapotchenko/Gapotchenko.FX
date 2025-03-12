@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Memory;
 
 /// <summary>
-/// Extensions for <see cref="ReadOnlySpan{T}"/>.
+/// Provides extensions methods for <see cref="ReadOnlySpan{T}"/>.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ReadOnlySpanExtensions
