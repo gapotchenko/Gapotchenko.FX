@@ -14,52 +14,52 @@ namespace Gapotchenko.FX.IO.Vfs;
 public static class FileSystemViewExtensions
 {
     /// <inheritdoc cref="File.OpenText(string)"/>
-    /// <param name="fileSystem">The file system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
-    public static StreamReader OpenTextFile(this IFileSystemView fileSystem, string path)
+    public static StreamReader OpenTextFile(this IReadOnlyFileSystemView view, string path)
     {
-        if (fileSystem is null)
-            throw new ArgumentNullException(nameof(fileSystem));
-        else if (fileSystem is LocalFileSystemView)
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
+        else if (view is LocalFileSystemView)
             return File.OpenText(path);
         else
-            return new StreamReader(fileSystem.OpenFileForReading(path), Encoding.UTF8);
+            return new StreamReader(view.OpenFileForReading(path), Encoding.UTF8);
     }
 
     /// <inheritdoc cref="File.ReadAllText(string)"/>
-    /// <param name="fileSystem">The file system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
-    public static string ReadAllTextFromFile(this IFileSystemView fileSystem, string path)
+    public static string ReadAllTextFromFile(this IReadOnlyFileSystemView view, string path)
     {
-        if (fileSystem is null)
-            throw new ArgumentNullException(nameof(fileSystem));
-        else if (fileSystem is LocalFileSystemView)
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
+        else if (view is LocalFileSystemView)
             return File.ReadAllText(path);
         else
-            return ReadAllTextFromFileCore(fileSystem, path, Encoding.UTF8);
+            return ReadAllTextFromFileCore(view, path, Encoding.UTF8);
     }
 
     /// <inheritdoc cref="File.ReadAllText(string, Encoding)"/>
-    /// <param name="fileSystem">The file system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
-    public static string ReadAllTextFromFile(this IFileSystemView fileSystem, string path, Encoding encoding)
+    public static string ReadAllTextFromFile(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        if (fileSystem is null)
-            throw new ArgumentNullException(nameof(fileSystem));
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
         else
-            return ReadAllTextFromFileCore(fileSystem, path, encoding);
+            return ReadAllTextFromFileCore(view, path, encoding);
     }
 
-    static string ReadAllTextFromFileCore(IFileSystemView fileSystem, string path, Encoding encoding)
+    static string ReadAllTextFromFileCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        if (fileSystem is LocalFileSystemView)
+        if (view is LocalFileSystemView)
         {
             return File.ReadAllText(path, encoding);
         }
         else
         {
-            using var sr = new StreamReader(fileSystem.OpenFileForReading(path), encoding);
+            using var sr = new StreamReader(view.OpenFileForReading(path), encoding);
             return sr.ReadToEnd();
         }
     }

@@ -97,6 +97,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.EnumerateDirectories(path, searchPattern, searchOption);
     }
 
+    public override void CreateDirectory(string path)
+    {
+        ValidateWrite();
+        base.CreateDirectory(path);
+    }
+
     public override void DeleteDirectory(string path)
     {
         ValidateWrite();

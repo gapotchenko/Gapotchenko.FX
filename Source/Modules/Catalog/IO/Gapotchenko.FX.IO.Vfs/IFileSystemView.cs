@@ -25,6 +25,10 @@ public interface IFileSystemView : IReadOnlyFileSystemView
 
     #region Directories
 
+    /// <returns/>
+    /// <inheritdoc cref="Directory.CreateDirectory(string)"/>
+    void CreateDirectory(string path);
+
     /// <inheritdoc cref="Directory.Delete(string)"/>
     void DeleteDirectory(string path);
 

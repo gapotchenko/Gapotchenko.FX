@@ -55,6 +55,8 @@ sealed class LocalFileSystemView : IFileSystemView
     public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateDirectories(path, searchPattern, searchOption);
 
+    public void CreateDirectory(string path) => Directory.CreateDirectory(path);
+
     public void DeleteDirectory(string path) => Directory.Delete(path);
 
     public void DeleteDirectory(string path, bool recursive) => Directory.Delete(path, recursive);

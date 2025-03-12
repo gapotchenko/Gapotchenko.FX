@@ -77,6 +77,9 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
         EnumerateDirectories(path, searchPattern, searchOption);
 
     /// <inheritdoc/>
+    public virtual void CreateDirectory(string path) => BaseView.CreateDirectory(path);
+
+    /// <inheritdoc/>
     public virtual void DeleteDirectory(string path) => BaseView.DeleteDirectory(path);
 
     /// <inheritdoc/>

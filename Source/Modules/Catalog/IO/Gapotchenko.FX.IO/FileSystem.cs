@@ -166,7 +166,7 @@ public static class FileSystem
     /// Enumerates subpaths of the specified path.
     /// </summary>
     /// <remarks>
-    /// For example, the subpaths of <c>C:\Users\Tester\Documents</c> path are:
+    /// For example, the subpaths of the <c>"C:\Users\Tester\Documents"</c> path are:
     /// <list type="bullet">
     /// <item><c>C:\Users\Tester\Documents</c></item>
     /// <item><c>C:\Users\Tester</c></item>
@@ -190,7 +190,7 @@ public static class FileSystem
     /// Splits a specified path into a sequence of file system entry names.
     /// </summary>
     /// <remarks>
-    /// For example, the entry names of <c>C:\Users\Tester\Documents</c> path are:
+    /// For example, the entry names of the <c>"C:\Users\Tester\Documents"</c> path are:
     /// <list type="bullet">
     /// <item><c>C:\</c></item>
     /// <item><c>Users</c></item>
