@@ -54,7 +54,7 @@ partial class EnumerableEx
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(source))]
     public static IReadOnlyList<TSource>? AsReadOnly<TSource>(
-#if SOURCE_COMPATIBILITY
+#if SOURCE_COMPATIBILITY && !NET7_0_OR_GREATER
         this
 #endif
         IEnumerable<TSource>? source) => source?.ReifyList();

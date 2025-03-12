@@ -179,7 +179,10 @@ public static partial class EnumerableEx
     /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>
     /// <param name="source">The source sequence.</param>
     /// <param name="value">An <see cref="IEnumerable{T}"/> value to match.</param>
-    /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to use to compare elements.</param>
+    /// <param name="comparer">
+    /// An <see cref="IEqualityComparer{T}"/> to use to compare elements,
+    /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> for the type of an element.
+    /// </param>
     /// <returns>
     /// <see langword="true"/> if <paramref name="value"/> sequence matches the beginning of the <paramref name="source"/> sequence; otherwise, <see langword="false"/>.
     /// </returns>
