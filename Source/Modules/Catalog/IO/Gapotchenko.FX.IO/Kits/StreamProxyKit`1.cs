@@ -18,11 +18,11 @@ public class StreamProxyKit<T> : Stream
     /// <summary>
     /// Initializes a new instance of the <see cref="StreamProxyKit{T}"/> class with the specified base stream.
     /// </summary>
-    /// <param name="baseStream">The base steam.</param>
+    /// <param name="baseStream">The base steam to create the proxy for.</param>
     /// <exception cref="ArgumentNullException"><paramref name="baseStream"/> is <see langword="null"/>.</exception>
     protected StreamProxyKit(T baseStream)
     {
-        if (baseStream == null)
+        if (baseStream is null)
             throw new ArgumentNullException(nameof(baseStream));
 
         BaseStream = baseStream;

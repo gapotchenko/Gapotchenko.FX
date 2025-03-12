@@ -11,7 +11,12 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// </summary>
 public interface IReadOnlyFileSystemView
 {
-    #region File
+    /// <summary>
+    /// Gets a value indicating whether the current file system supports reading.
+    /// </summary>
+    bool CanRead { get; }
+
+    #region Files
 
     /// <inheritdoc cref="File.Exists(string?)"/>
     bool FileExists([NotNullWhen(true)] string? path);
@@ -30,15 +35,7 @@ public interface IReadOnlyFileSystemView
 
     #endregion
 
-    #region Path
-
-    /// <inheritdoc cref="Path.GetFullPath(string)"/>
-    [return: NotNullIfNotNull(nameof(path))]
-    string? GetFullPath(string? path);
-
-    #endregion
-
-    #region Directory
+    #region Directories
 
     /// <summary>
     /// Determines whether the given path refers to an existing file system directory.
@@ -63,7 +60,7 @@ public interface IReadOnlyFileSystemView
 
     #endregion
 
-    #region Entry
+    #region Entries
 
     /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string)"/>
     IEnumerable<string> EnumerateEntries(string path);
@@ -73,6 +70,14 @@ public interface IReadOnlyFileSystemView
 
     /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string, string, SearchOption)"/>
     IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption);
+
+    #endregion
+
+    #region Paths
+
+    /// <inheritdoc cref="Path.GetFullPath(string)"/>
+    [return: NotNullIfNotNull(nameof(path))]
+    string? GetFullPath(string? path);
 
     #endregion
 }

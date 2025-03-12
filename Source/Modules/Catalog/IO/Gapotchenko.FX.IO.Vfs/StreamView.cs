@@ -14,13 +14,14 @@ public static class StreamView
     /// <summary>
     /// Gets a view on the specified stream with capabilities enforced according to the specified values.
     /// </summary>
-    /// <param name="stream">The base to enforce the capabilities for.</param>
+    /// <param name="stream">The base stream to enforce the capabilities for.</param>
     /// <param name="canRead">Indicates whether the stream should support reading.</param>
     /// <param name="canWrite">Indicates whether the stream should support writing.</param>
     /// <param name="canSeek">Indicates whether the stream should support seeking.</param>
     /// <returns>
-    /// The view on the <paramref name="stream"/> that enforces the specified capabilities,
-    /// or the <paramref name="stream"/> itself if it already matches them or is <see langword="null"/>.
+    /// The view on the <paramref name="stream"/> that enforces the specified capabilities;
+    /// otherwise, the <paramref name="stream"/> itself if it already matches the requested capabilities
+    /// or is <see langword="null"/>.
     /// </returns>
     [return: NotNullIfNotNull(nameof(stream))]
     public static Stream? WithCapabilities(Stream? stream, bool canRead, bool canWrite, bool canSeek)

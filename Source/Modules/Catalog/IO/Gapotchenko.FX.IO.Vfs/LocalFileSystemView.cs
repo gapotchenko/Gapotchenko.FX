@@ -16,6 +16,10 @@ sealed class LocalFileSystemView : IFileSystemView
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public static LocalFileSystemView Instance { get; } = new();
 
+    public bool CanRead => true;
+
+    public bool CanWrite => true;
+
     #region File
 
     public bool FileExists([NotNullWhen(true)] string? path) => File.Exists(path);
