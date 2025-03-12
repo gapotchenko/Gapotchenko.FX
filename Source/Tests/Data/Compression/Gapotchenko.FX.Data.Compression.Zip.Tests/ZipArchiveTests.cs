@@ -155,7 +155,7 @@ public class ZipArchiveTests
     }
 
     [TestMethod]
-    public void Zip_DeleteDirectory()
+    public void Zip_DeleteOneFileDirectory()
     {
         using var archive = new ZipArchive(Assets.OpenStream("OneNestedFile.zip", true), true);
 
@@ -164,5 +164,11 @@ public class ZipArchiveTests
         Assert.IsTrue(archive.DirectoryExists(path));
         Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(path));
         Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(path, false));
+
+        archive.DeleteDirectory(path, true);
+
+        Assert.IsFalse(archive.DirectoryExists(path));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(path));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(path, true));
     }
 }

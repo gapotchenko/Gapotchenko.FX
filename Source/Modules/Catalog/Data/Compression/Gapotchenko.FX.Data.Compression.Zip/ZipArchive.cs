@@ -75,10 +75,23 @@ public class ZipArchive : IDataArchive, IDisposable
         m_UnderlyingArchive = new(stream, mode, leaveOpen);
     }
 
+    #region Capabilities
+
+    /// <inheritdoc/>
+    public bool CanRead => true;
+
     /// <inheritdoc/>
     public bool CanWrite { get; }
 
-    #region File
+    void ValidateWrite()
+    {
+        if (!CanWrite)
+            throw new NotSupportedException("Archive does not support writing.");
+    }
+
+    #endregion
+
+    #region Files
 
     /// <inheritdoc/>
     public bool FileExists([NotNullWhen(true)] string? path) => EntryExistsCore(path, true, false);
@@ -145,22 +158,7 @@ public class ZipArchive : IDataArchive, IDisposable
 
     #endregion
 
-    #region Path
-
-    /// <inheritdoc/>
-    [return: NotNullIfNotNull(nameof(path))]
-    public string? GetFullPath(string? path)
-    {
-        var model = new VfsPathModel(path);
-        if (model.IsNil)
-            return path;
-
-        return "/" + model.ToString();
-    }
-
-    #endregion
-
-    #region Directory
+    #region Directories
 
     /// <inheritdoc/>
     public bool DirectoryExists([NotNullWhen(true)] string? path) => EntryExistsCore(path, false, true);
@@ -191,13 +189,20 @@ public class ZipArchive : IDataArchive, IDisposable
         {
             if (EnumerateEntries(path).Any())
                 throw new IOException(VfsResourceKit.DirectoryIsNotEmpty(path));
-            GetDirectoryArchiveEntry(pathModel).Delete();
         }
         else
         {
-            // TODO
-            throw new NotImplementedException();
+            var entryPaths = EnumerateEntries(path).ToList();
+            foreach (string entryPath in entryPaths)
+            {
+                if (FileExists(entryPath))
+                    DeleteFile(entryPath);
+                else
+                    DeleteDirectory(entryPath, true);
+            }
         }
+
+        GetDirectoryArchiveEntry(pathModel).Delete();
     }
 
     ZipArchiveEntry GetDirectoryArchiveEntry(VfsPathModel pathModel)
@@ -216,13 +221,7 @@ public class ZipArchive : IDataArchive, IDisposable
 
     #endregion
 
-    void ValidateWrite()
-    {
-        if (!CanWrite)
-            throw new NotSupportedException("Archive does not support writing.");
-    }
-
-    #region Entry
+    #region Entries
 
     /// <inheritdoc/>
     public bool EntryExists([NotNullWhen(true)] string? path) => EntryExistsCore(path, true, true);
@@ -329,6 +328,21 @@ public class ZipArchive : IDataArchive, IDisposable
 
         if (!directoryExists)
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+    }
+
+    #endregion
+
+    #region Paths
+
+    /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(path))]
+    public string? GetFullPath(string? path)
+    {
+        var model = new VfsPathModel(path);
+        if (model.IsNil)
+            return path;
+
+        return "/" + model.ToString();
     }
 
     #endregion
