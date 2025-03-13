@@ -5,11 +5,12 @@
 // Year of introduction: 2025
 
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs.Kits;
 
 /// <summary>
-/// Provides path manipulation primitives for a virtual file system.
+/// Provides path manipulation primitives for virtual file system hierarchies.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public static class VfsPathKit
@@ -18,11 +19,11 @@ public static class VfsPathKit
     /// Splits the specified path into parts.
     /// </summary>
     /// <remarks>
-    /// The split path is normalized to eliminate references to <c>"."</c> (current) and <c>".."</c> (previous) directories.
+    /// The path parts are normalized to eliminate references to <c>"."</c> (current) and <c>".."</c> (previous) directories.
     /// </remarks>
     /// <param name="path">The path to split.</param>
     /// <returns>
-    /// The array of parts of the path, or <see langword="null"/> if the <paramref name="path"/> is <see langword="null"/>, empty or points outside of the root hierarchy.
+    /// The array of parts of the path, or <see langword="null"/> if the <paramref name="path"/> is <see langword="null"/>, empty or points outside the root hierarchy.
     /// The array is empty when the <paramref name="path"/> represents the root path <c>"/"</c>.
     /// </returns>
     public static string[]? Split(string? path)
@@ -39,28 +40,31 @@ public static class VfsPathKit
 
         foreach (string part in parts)
         {
-            switch (part.AsSpan())
+            // Get the effective name of the part by trimming directory separators.
+            var name = part.AsSpan().Trim(['/', '\\']);
+
+            switch (name)
             {
                 case "" or ".":
+                    // Stay at the current directory.
                     continue;
 
                 case "..":
                     if (list.Count is > 0 and var count)
                     {
+                        // Return to a previous directory by exiting the current.
                         list.RemoveAt(count - 1);
                     }
                     else
                     {
-                        // The path points to a directory outside of the root hierarchy.
+                        // The path points to a directory outside the root hierarchy.
                         return null;
                     }
                     break;
 
-                case var x when x.TrimStart("/\\".AsSpan()).Length is 0:
-                    break;
-
                 default:
-                    list.Add(part);
+                    // Enter a subdirectory.
+                    list.Add(part.Length == name.Length ? part : name.ToString());
                     break;
             }
         }
@@ -74,10 +78,12 @@ public static class VfsPathKit
     /// <param name="parts">The parts of the path.</param>
     /// <returns>The combined path.</returns>
     [return: NotNullIfNotNull(nameof(parts))]
-    public static string? Combine(IEnumerable<string>? parts) =>
+    public static string? Combine(IEnumerable<string?>? parts) =>
         parts is null
             ? null
-            : string.Join("/", parts);
+            : string.Join(
+                "/",
+                parts.Where(x => !string.IsNullOrEmpty(x)));
 
     /// <summary>
     /// Combines a span of strings into a path.
@@ -86,13 +92,22 @@ public static class VfsPathKit
     /// <returns>The combined path.</returns>
     [OverloadResolutionPriority(1)]
     [return: NotNullIfNotNull(nameof(parts))]
-    public static string? Combine(ReadOnlySpan<string> parts) =>
-        parts == null
-            ? null!
-            :
-#if NET9_0_OR_GREATER
-        string.Join('/', parts!);
-#else
-        string.Join("/", [.. parts]);
-#endif
+    public static string? Combine(ReadOnlySpan<string> parts)
+    {
+        if (parts == null)
+            return null!;
+
+        const char separator = '/';
+
+        var sb = new StringBuilder();
+        foreach (string? part in parts)
+        {
+            if (string.IsNullOrEmpty(part))
+                continue;
+            if (sb.Length != 0)
+                sb.Append(separator);
+            sb.Append(part);
+        }
+        return sb.ToString();
+    }
 }

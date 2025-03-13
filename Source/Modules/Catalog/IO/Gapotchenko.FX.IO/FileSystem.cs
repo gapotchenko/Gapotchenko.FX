@@ -206,18 +206,10 @@ public static class FileSystem
         .Select(
             subpath =>
             {
-                string part = Path.GetFileName(subpath);
-
-                if (part.Length == 0)
-                {
-                    string? directoryName = Path.GetDirectoryName(subpath);
-                    if (directoryName is null)
-                        part = subpath;
-                    else
-                        part = subpath[^1..^0];
-                }
-
-                return part;
+                if (Path.GetFileName(subpath) is var part && part.Length != 0)
+                    return part;
+                else
+                    return Path.GetDirectoryName(subpath) is null ? subpath : subpath[^1..^0];
             });
 
     /// <summary>

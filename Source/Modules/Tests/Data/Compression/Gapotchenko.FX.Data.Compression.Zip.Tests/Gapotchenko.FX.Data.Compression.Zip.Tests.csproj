@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Modules\Catalog\Data\Compression\Gapotchenko.FX.Data.Compression.Zip\Gapotchenko.FX.Data.Compression.Zip.csproj" />
+    <ProjectReference Include="..\..\..\..\Catalog\Data\Compression\Gapotchenko.FX.Data.Compression.Zip\Gapotchenko.FX.Data.Compression.Zip.csproj" />
   </ItemGroup>
 
   <ItemGroup>

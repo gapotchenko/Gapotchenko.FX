@@ -262,7 +262,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Zip", "Zip", "{660CAD55-E31
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Compression.Zip", "Modules\Catalog\Data\Compression\Gapotchenko.FX.Data.Compression.Zip\Gapotchenko.FX.Data.Compression.Zip.csproj", "{5D9DD0B3-DA33-49D5-8D14-63CE39115CDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Compression.Zip.Tests", "Tests\Data\Compression\Gapotchenko.FX.Data.Compression.Zip.Tests\Gapotchenko.FX.Data.Compression.Zip.Tests.csproj", "{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Compression.Zip.Tests", "Modules\Tests\Data\Compression\Gapotchenko.FX.Data.Compression.Zip.Tests\Gapotchenko.FX.Data.Compression.Zip.Tests.csproj", "{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vfs", "Vfs", "{DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD}"
 EndProject
