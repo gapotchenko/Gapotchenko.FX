@@ -1,6 +1,6 @@
 # Gapotchenko.FX Contributors
 
-The list of direct and indirect contributors whose work made Gapotchenko.FX possible:
+The list of contributors and influencers whose work made Gapotchenko.FX possible:
 
 - Bar Arnon (https://github.com/i3arnon)
 - Michael Sydney Balloni
