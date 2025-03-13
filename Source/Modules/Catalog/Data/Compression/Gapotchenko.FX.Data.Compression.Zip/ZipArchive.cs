@@ -4,7 +4,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-using Gapotchenko.FX.IO;
 using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.Linq;
@@ -97,43 +96,77 @@ public class ZipArchive : IDataArchive, IDisposable
     #region Files
 
     /// <inheritdoc/>
-    public bool FileExists([NotNullWhen(true)] string? path) => EntryExistsCore(path, true, false);
+    public bool FileExists([NotNullWhen(true)] string? path) => FileExistsCore(path);
+
+    bool FileExistsCore(in StructuredPath path) => EntryExistsCore(path, true, false);
 
     /// <inheritdoc/>
-    public IEnumerable<string> EnumerateFiles(string path) =>
-        EnumerateEntriesCore(path, null, SearchOption.TopDirectoryOnly, true, false);
+    public IEnumerable<string> EnumerateFiles(string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        return
+            EnumerateEntriesCore(path, null, SearchOption.TopDirectoryOnly, true, false)
+            .Select(x => GetFullPathCore(x));
+    }
 
     /// <inheritdoc/>
-    public IEnumerable<string> EnumerateFiles(string path, string searchPattern) =>
-        EnumerateEntriesCore(path, searchPattern, SearchOption.TopDirectoryOnly, true, false);
+    public IEnumerable<string> EnumerateFiles(string path, string searchPattern)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+
+        return
+            EnumerateEntriesCore(path, searchPattern, SearchOption.TopDirectoryOnly, true, false)
+            .Select(x => GetFullPathCore(x));
+    }
 
     /// <inheritdoc/>
-    public IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
-        EnumerateEntriesCore(path, searchPattern, searchOption, true, false);
+    public IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+        VfsValidationKit.Arguments.ValidateSearchOption(searchOption);
+
+        return
+            EnumerateEntriesCore(path, searchPattern, searchOption, true, false)
+            .Select(x => GetFullPathCore(x));
+    }
 
     /// <inheritdoc/>
     public Stream OpenFileForReading(string path)
     {
-        return StreamView.WithCapabilities(GetFileArchiveEntry(path).Open(), true, false, true);
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        return StreamView.WithCapabilities(
+            GetFileArchiveEntry(path).Open(),
+            true, false, true);
     }
 
     /// <inheritdoc/>
     public void DeleteFile(string path)
     {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
         ValidateWrite();
+        DeleteFileCore(path);
+    }
+
+    void DeleteFileCore(in StructuredPath path)
+    {
         GetFileArchiveEntry(path).Delete();
     }
 
-    ZipArchiveEntry GetFileArchiveEntry(string path)
+    ZipArchiveEntry GetFileArchiveEntry(in StructuredPath path)
     {
         bool directoryExists;
 
-        string[]? filePathParts = VfsPathKit.Split(path);
-        if (filePathParts is null)
+        var filePathParts = path.Parts.Span;
+        if (filePathParts == null)
         {
             directoryExists = false;
         }
-        else if (filePathParts is [])
+        else if (filePathParts.Length == 0)
         {
             directoryExists = true;
         }
@@ -145,13 +178,14 @@ public class ZipArchive : IDataArchive, IDisposable
 
             directoryExists = filePathParts.Length == 1;
             if (!directoryExists)
-                directoryExists = m_UnderlyingArchive.GetEntry(VfsPathKit.Combine(filePathParts.AsSpan()[..^1]) + DirectorySeparatorChar) != null;
+                directoryExists = m_UnderlyingArchive.GetEntry(VfsPathKit.Combine(filePathParts[..^1]) + DirectorySeparatorChar) != null;
         }
 
+        string? displayPath = path.ToString();
         if (!directoryExists)
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
         else
-            throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(path), path);
+            throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
     }
 
     #endregion
@@ -159,37 +193,69 @@ public class ZipArchive : IDataArchive, IDisposable
     #region Directories
 
     /// <inheritdoc/>
-    public bool DirectoryExists([NotNullWhen(true)] string? path) => EntryExistsCore(path, false, true);
+    public bool DirectoryExists([NotNullWhen(true)] string? path) => DirectoryExistsCore(path);
+
+    bool DirectoryExistsCore(in StructuredPath path) => EntryExistsCore(path, false, true);
 
     /// <inheritdoc/>
-    public IEnumerable<string> EnumerateDirectories(string path) =>
-        EnumerateEntriesCore(path, null, SearchOption.TopDirectoryOnly, false, true);
+    public IEnumerable<string> EnumerateDirectories(string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        return
+            EnumerateEntriesCore(path, null, SearchOption.TopDirectoryOnly, false, true)
+            .Select(x => GetFullPathCore(x));
+    }
 
     /// <inheritdoc/>
-    public IEnumerable<string> EnumerateDirectories(string path, string searchPattern) =>
-        EnumerateEntriesCore(path, searchPattern, SearchOption.TopDirectoryOnly, false, true);
+    public IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+
+        return
+            EnumerateEntriesCore(path, searchPattern, SearchOption.TopDirectoryOnly, false, true)
+            .Select(x => GetFullPathCore(x));
+    }
 
     /// <inheritdoc/>
-    public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
-        EnumerateEntriesCore(path, searchPattern, searchOption, false, true);
+    public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+        VfsValidationKit.Arguments.ValidateSearchOption(searchOption);
+
+        return
+            EnumerateEntriesCore(path, searchPattern, searchOption, false, true)
+            .Select(x => GetFullPathCore(x));
+    }
 
     /// <inheritdoc/>
     public void CreateDirectory(string path)
     {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
         ValidateWrite();
 
-        if (DirectoryExists(path))
+        string[] pathParts =
+            VfsPathKit.Split(path) ??
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+
+        if (DirectoryExistsCore(pathParts))
             return;
 
-        bool created = false;
+        int n = pathParts.Length;
+        bool parentExists = n == 1;
 
-        foreach (string subPath in FileSystem.EnumerateSubpaths(path).Reverse())
+        for (int i = 1; i <= n; ++i)
         {
-            if (!created && DirectoryExists(subPath))
+            var subPath = pathParts.AsMemory()[..i];
+
+            if (!parentExists && DirectoryExistsCore(subPath))
                 continue;
 
-            m_UnderlyingArchive.CreateEntry(VfsPathKit.Combine(VfsPathKit.Split(subPath)) + DirectorySeparatorChar);
-            created = true;
+            m_UnderlyingArchive.CreateEntry(VfsPathKit.Combine(subPath.Span) + DirectorySeparatorChar);
+            parentExists = true;
         }
     }
 
@@ -199,43 +265,50 @@ public class ZipArchive : IDataArchive, IDisposable
     /// <inheritdoc/>
     public void DeleteDirectory(string path, bool recursive)
     {
-        ValidateWrite();
+        VfsValidationKit.Arguments.ValidatePath(path);
 
-        string[]? pathParts = VfsPathKit.Split(path);
-        if (pathParts is [])
-            throw new IOException(VfsResourceKit.AccessToPathIsDenied(path));
+        ValidateWrite();
+        DeleteDirectoryCore(path, recursive);
+    }
+
+    void DeleteDirectoryCore(in StructuredPath path, bool recursive)
+    {
+        var pathParts = path.Parts.Span;
+        if (pathParts != null && pathParts.Length == 0)
+            throw new IOException(VfsResourceKit.AccessToPathIsDenied(path.ToString()));
 
         if (!recursive)
         {
-            if (EnumerateEntries(path).Any())
-                throw new IOException(VfsResourceKit.DirectoryIsNotEmpty(path));
+            if (EnumerateEntriesCore(path).Any())
+                throw new IOException(VfsResourceKit.DirectoryIsNotEmpty(path.ToString()));
         }
         else
         {
-            var entryPaths = EnumerateEntries(path).ToList();
-            foreach (string entryPath in entryPaths)
+            var entryPaths = EnumerateEntriesCore(path).ToList();
+            foreach (string[] entryPathParts in entryPaths)
             {
-                if (FileExists(entryPath))
-                    DeleteFile(entryPath);
+                if (FileExistsCore(entryPathParts))
+                    DeleteFileCore(entryPathParts);
                 else
-                    DeleteDirectory(entryPath, true);
+                    DeleteDirectoryCore(entryPathParts, true);
             }
         }
 
-        GetDirectoryArchiveEntry(pathParts).Delete();
+        GetDirectoryArchiveEntry(path).Delete();
     }
 
-    ZipArchiveEntry GetDirectoryArchiveEntry(string[]? pathParts)
+    ZipArchiveEntry GetDirectoryArchiveEntry(in StructuredPath path)
     {
-        string? path = VfsPathKit.Combine(pathParts);
-        if (path != null)
+        string? entryPath = VfsPathKit.Combine(path.Parts.Span);
+        if (entryPath != null)
         {
-            var entry = m_UnderlyingArchive.GetEntry(path + DirectorySeparatorChar);
+            var entry = m_UnderlyingArchive.GetEntry(entryPath + DirectorySeparatorChar);
             if (entry != null)
                 return entry;
         }
 
-        throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+        string? displayPath = path.OriginalPath ?? entryPath;
+        throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
     }
 
     static bool IsDirectoryArchiveEntry(string fullName) => fullName.EndsWith(DirectorySeparatorChar);
@@ -247,63 +320,87 @@ public class ZipArchive : IDataArchive, IDisposable
     /// <inheritdoc/>
     public bool EntryExists([NotNullWhen(true)] string? path) => EntryExistsCore(path, true, true);
 
-    /// <inheritdoc/>
-    public IEnumerable<string> EnumerateEntries(string path) =>
-        EnumerateEntriesCore(path, null, SearchOption.TopDirectoryOnly, true, true);
-
-    /// <inheritdoc/>
-    public IEnumerable<string> EnumerateEntries(string path, string searchPattern) =>
-        EnumerateEntriesCore(path, searchPattern, SearchOption.TopDirectoryOnly, true, true);
-
-    /// <inheritdoc/>
-    public IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
-        EnumerateEntriesCore(path, searchPattern, searchOption, true, true);
-
     bool EntryExistsCore(
-        [NotNullWhen(true)] string? path,
+        in StructuredPath path,
         bool considerFiles,
         bool considerDirectories)
     {
-        string[]? pathParts = VfsPathKit.Split(path);
-        if (pathParts is null)
+        var pathParts = path.Parts.Span;
+        if (pathParts == null)
             return false;
 
-        if (pathParts is [])
+        if (pathParts.Length == 0)
         {
             // The root directory always exists.
             // The root file never exists.
             return considerDirectories;
         }
 
-        path = VfsPathKit.Combine(pathParts);
+        string entryPath = VfsPathKit.Combine(pathParts);
 
         if (considerDirectories)
         {
-            if (m_UnderlyingArchive.GetEntry(path + DirectorySeparatorChar) != null)
+            if (m_UnderlyingArchive.GetEntry(entryPath + DirectorySeparatorChar) != null)
                 return true;
         }
 
         if (considerFiles)
         {
-            if (m_UnderlyingArchive.GetEntry(path) != null)
+            if (m_UnderlyingArchive.GetEntry(entryPath) != null)
                 return true;
         }
 
         return false;
     }
 
-    IEnumerable<string> EnumerateEntriesCore(
-        string path,
+    /// <inheritdoc/>
+    public IEnumerable<string> EnumerateEntries(string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        return EnumerateEntriesCore(path).Select(x => GetFullPathCore(x));
+    }
+
+    IEnumerable<string[]> EnumerateEntriesCore(in StructuredPath path) =>
+        EnumerateEntriesCore(path, null, SearchOption.TopDirectoryOnly, true, true);
+
+    /// <inheritdoc/>
+    public IEnumerable<string> EnumerateEntries(string path, string searchPattern)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+
+        return
+            EnumerateEntriesCore(path, searchPattern, SearchOption.TopDirectoryOnly, true, true)
+            .Select(x => GetFullPathCore(x));
+    }
+
+    /// <inheritdoc/>
+    public IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+        VfsValidationKit.Arguments.ValidateSearchOption(searchOption);
+
+        return
+            EnumerateEntriesCore(path, searchPattern, searchOption, true, true)
+            .Select(x => GetFullPathCore(x));
+    }
+
+    IEnumerable<string[]> EnumerateEntriesCore(
+        StructuredPath path,
         string? searchPattern,
         SearchOption searchOption,
         bool enumerateFiles,
         bool enumerateDirectories)
     {
-        string[]? pathParts = VfsPathKit.Split(path);
-        bool directoryExists = pathParts is [];
+        var pathParts = path.Parts;
+        bool directoryExists = false;
 
-        if (pathParts is not null)
+        if (pathParts.Span != null)
         {
+            directoryExists = pathParts.Length == 0;
+
             bool recursive = searchOption == SearchOption.AllDirectories;
 
             foreach (var entry in m_UnderlyingArchive.Entries)
@@ -325,13 +422,10 @@ public class ZipArchive : IDataArchive, IDisposable
                     // Directory
                     if (enumerateDirectories || !directoryExists)
                     {
-                        if (entryPathParts.StartsWith(pathParts, PathComparer))
+                        if (entryPathParts.AsSpan().StartsWith(pathParts.Span, PathComparer))
                         {
                             if (enumerateDirectories && feasibleHierarchyLevel)
-                            {
-                                string directoryPath = entryPath[..^1];
-                                yield return DirectorySeparatorChar + directoryPath;
-                            }
+                                yield return entryPathParts;
                             directoryExists = true;
                         }
                     }
@@ -341,10 +435,10 @@ public class ZipArchive : IDataArchive, IDisposable
                     // File
                     if (enumerateFiles || !directoryExists)
                     {
-                        if (entryPathParts.AsSpan()[..^1].StartsWith(pathParts, PathComparer))
+                        if (entryPathParts.AsSpan()[..^1].StartsWith(pathParts.Span, PathComparer))
                         {
                             if (enumerateFiles && feasibleHierarchyLevel)
-                                yield return DirectorySeparatorChar + entryPath;
+                                yield return entryPathParts;
                             directoryExists = true;
                         }
                     }
@@ -353,7 +447,7 @@ public class ZipArchive : IDataArchive, IDisposable
         }
 
         if (!directoryExists)
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
     }
 
     #endregion
@@ -364,12 +458,27 @@ public class ZipArchive : IDataArchive, IDisposable
     [return: NotNullIfNotNull(nameof(path))]
     public string? GetFullPath(string? path)
     {
-        string[]? parts = VfsPathKit.Split(path);
-        if (parts is null)
-            return path;
-
-        return DirectorySeparatorChar + VfsPathKit.Combine(parts);
+        if (path is null)
+        {
+            return null;
+        }
+        else if (path.Length == 0)
+        {
+            throw new ArgumentException(VfsResourceKit.PathIsEmpty, nameof(path));
+        }
+        else
+        {
+            return
+                GetFullPathCore(VfsPathKit.Split(path)) ??
+                throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+        }
     }
+
+    [return: NotNullIfNotNull(nameof(pathParts))]
+    static string? GetFullPathCore(ReadOnlySpan<string> pathParts) =>
+        pathParts == null
+            ? null!
+            : (DirectorySeparatorChar + VfsPathKit.Combine(pathParts));
 
     static StringComparer PathComparer => StringComparer.InvariantCulture;
 

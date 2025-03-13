@@ -9,7 +9,7 @@ using Gapotchenko.FX.IO.Vfs.Properties;
 namespace Gapotchenko.FX.IO.Vfs.Kits;
 
 /// <summary>
-/// Provides commonly used resources for a virtual file system implementation.
+/// Provides commonly used resources for a virtual file system.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public static class VfsResourceKit
@@ -53,4 +53,12 @@ public static class VfsResourceKit
     /// <param name="path">The path.</param>
     /// <returns>The formatted string.</returns>
     public static string DirectoryIsNotEmpty(string? path) => string.Format(Resources.DirectoryXIsNotEmpty, path);
+
+    /// <summary>
+    /// Looks up a localized string similar to:
+    /// <code>
+    /// The path is empty.
+    /// </code>
+    /// </summary>
+    public static string PathIsEmpty => Resources.PathIsEmpty;
 }

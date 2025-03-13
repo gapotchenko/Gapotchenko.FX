@@ -95,5 +95,23 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
                 return ResourceManager.GetString("DirectoryXIsNotEmpty", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enumeration value is out of legal range..
+        /// </summary>
+        internal static string EnumValueIsOutOfLegalRange {
+            get {
+                return ResourceManager.GetString("EnumValueIsOutOfLegalRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The path is empty..
+        /// </summary>
+        internal static string PathIsEmpty {
+            get {
+                return ResourceManager.GetString("PathIsEmpty", resourceCulture);
+            }
+        }
     }
 }

@@ -9,8 +9,9 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX.IO.Vfs.Kits;
 
 /// <summary>
-/// Provides file-system entry path manipulation primitives for a virtual file system implementation.
+/// Provides path manipulation primitives for a virtual file system.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Advanced)]
 public static class VfsPathKit
 {
     /// <summary>
@@ -44,14 +45,14 @@ public static class VfsPathKit
                     continue;
 
                 case "..":
+                    if (list.Count is > 0 and var count)
                     {
-                        int n = list.Count;
-                        if (n == 0)
-                        {
-                            // The path points to a directory outside of the root hierarchy.
-                            return null;
-                        }
-                        list.RemoveAt(n - 1);
+                        list.RemoveAt(count - 1);
+                    }
+                    else
+                    {
+                        // The path points to a directory outside of the root hierarchy.
+                        return null;
                     }
                     break;
 
@@ -84,7 +85,11 @@ public static class VfsPathKit
     /// <param name="parts">The parts of the path.</param>
     /// <returns>The combined path.</returns>
     [OverloadResolutionPriority(1)]
-    public static string Combine(ReadOnlySpan<string> parts) =>
+    [return: NotNullIfNotNull(nameof(parts))]
+    public static string? Combine(ReadOnlySpan<string> parts) =>
+        parts == null
+            ? null!
+            :
 #if NET9_0_OR_GREATER
         string.Join('/', parts!);
 #else

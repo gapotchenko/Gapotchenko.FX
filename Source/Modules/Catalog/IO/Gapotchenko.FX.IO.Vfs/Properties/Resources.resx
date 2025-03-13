@@ -129,4 +129,10 @@
   <data name="DirectoryXIsNotEmpty" xml:space="preserve">
     <value>The directory '{0}' is not empty.</value>
   </data>
+  <data name="EnumValueIsOutOfLegalRange" xml:space="preserve">
+    <value>Enumeration value is out of legal range.</value>
+  </data>
+  <data name="PathIsEmpty" xml:space="preserve">
+    <value>The path is empty.</value>
+  </data>
 </root>
