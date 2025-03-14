@@ -75,9 +75,30 @@ public interface IReadOnlyFileSystemView
 
     #region Paths
 
+    /// <summary>
+    /// Gets a character used to separate directory levels in a path string
+    /// that reflects a hierarchical file system organization.
+    /// </summary>
+    char DirectorySeparatorChar { get; }
+
+    /// <inheritdoc cref="FileSystem.PathComparer"/>
+    StringComparer PathComparer { get; }
+
     /// <inheritdoc cref="Path.GetFullPath(string)"/>
     [return: NotNullIfNotNull(nameof(path))]
     string? GetFullPath(string? path);
+
+    // TODO
+
+#if false
+    /// <summary>
+    /// Combines a sequence of strings into a path.
+    /// </summary>
+    /// <param name="paths">A sequence of parts of the path.</param>
+    /// <returns>The combined paths.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
+    string CombinePaths(params IEnumerable<string?> paths);
+#endif
 
     #endregion
 }

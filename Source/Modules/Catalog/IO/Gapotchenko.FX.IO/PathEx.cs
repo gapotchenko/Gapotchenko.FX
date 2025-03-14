@@ -263,17 +263,16 @@ public static class PathEx
             if (string.IsNullOrEmpty(path))
                 continue;
 
-            if (builder.Length == 0)
+            if (builder.Length != 0)
             {
-                builder.Append(path);
-            }
-            else
-            {
-                if (!IsDirectorySeparator(builder[^1]) && !IsDirectorySeparator(path[0]))
+                if (!IsDirectorySeparator(builder[^1]) &&
+                    !IsDirectorySeparator(path[0]))
+                {
                     builder.Append(Path.DirectorySeparatorChar);
-
-                builder.Append(path);
+                }
             }
+
+            builder.Append(path);
         }
 
         return builder.ToString();

@@ -108,6 +108,12 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     #region Paths
 
     /// <inheritdoc/>
+    public virtual char DirectorySeparatorChar => BaseView.DirectorySeparatorChar;
+
+    /// <inheritdoc/>
+    public virtual StringComparer PathComparer => BaseView.PathComparer;
+
+    /// <inheritdoc/>
     [return: NotNullIfNotNull(nameof(path))]
     public virtual string? GetFullPath(string? path) => BaseView.GetFullPath(path);
 

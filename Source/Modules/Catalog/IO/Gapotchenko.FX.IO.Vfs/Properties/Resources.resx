@@ -132,6 +132,12 @@
   <data name="EnumValueIsOutOfLegalRange" xml:space="preserve">
     <value>Enumeration value is out of legal range.</value>
   </data>
+  <data name="FSDoesNotSupportReading" xml:space="preserve">
+    <value>File system does not support reading.</value>
+  </data>
+  <data name="FSDoesNotSupportWriting" xml:space="preserve">
+    <value>File system does not support writing.</value>
+  </data>
   <data name="PathIsEmpty" xml:space="preserve">
     <value>The path is empty.</value>
   </data>

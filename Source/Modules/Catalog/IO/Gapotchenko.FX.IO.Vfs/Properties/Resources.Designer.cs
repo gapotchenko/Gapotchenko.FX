@@ -106,6 +106,24 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File system does not support reading..
+        /// </summary>
+        internal static string FSDoesNotSupportReading {
+            get {
+                return ResourceManager.GetString("FSDoesNotSupportReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File system does not support writing..
+        /// </summary>
+        internal static string FSDoesNotSupportWriting {
+            get {
+                return ResourceManager.GetString("FSDoesNotSupportWriting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The path is empty..
         /// </summary>
         internal static string PathIsEmpty {

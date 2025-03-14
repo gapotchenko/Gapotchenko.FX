@@ -14,9 +14,9 @@ readonly struct StructuredPath
 
     public static implicit operator StructuredPath(string[]? parts) => new(parts);
 
-    public static implicit operator StructuredPath(ReadOnlyMemory<string> parts) => new(parts);
+    public static implicit operator StructuredPath(in Memory<string> parts) => new(parts);
 
-    public static implicit operator StructuredPath(Memory<string> parts) => new(parts);
+    public static implicit operator StructuredPath(in ReadOnlyMemory<string> parts) => new(parts);
 
     public StructuredPath(string? path)
     {
@@ -24,7 +24,7 @@ readonly struct StructuredPath
         Parts = VfsPathKit.Split(path);
     }
 
-    public StructuredPath(ReadOnlyMemory<string> parts)
+    public StructuredPath(in ReadOnlyMemory<string> parts)
     {
         Parts = parts;
     }
@@ -35,5 +35,5 @@ readonly struct StructuredPath
 
     public override string? ToString() =>
         OriginalPath ??
-        VfsPathKit.Combine(Parts.Span);
+        VfsPathKit.Join(Parts.Span, ZipArchive.C_DirectorySeparatorChar);
 }

@@ -5,6 +5,7 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.IO.Vfs.Kits;
+using Gapotchenko.FX.IO.Vfs.Properties;
 
 namespace Gapotchenko.FX.IO.Vfs;
 
@@ -17,16 +18,16 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
 
     public override bool CanWrite => canWrite && base.CanWrite;
 
-    void ValidateRead()
+    void EnsureCanRead()
     {
         if (!canRead)
-            throw new NotSupportedException("File system view does not support reading.");
+            throw new NotSupportedException(Resources.FSDoesNotSupportReading);
     }
 
-    void ValidateWrite()
+    void EnsureCanWrite()
     {
         if (!canWrite)
-            throw new NotSupportedException("File system view does not support writing.");
+            throw new NotSupportedException(Resources.FSDoesNotSupportWriting);
     }
 
     #endregion
@@ -35,37 +36,37 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
 
     public override bool FileExists([NotNullWhen(true)] string? path)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.FileExists(path);
     }
 
     public override IEnumerable<string> EnumerateFiles(string path)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.EnumerateFiles(path);
     }
 
     public override IEnumerable<string> EnumerateFiles(string path, string searchPattern)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.EnumerateFiles(path, searchPattern);
     }
 
     public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.EnumerateFiles(path, searchPattern, searchOption);
     }
 
     public override Stream OpenFileForReading(string path)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.OpenFileForReading(path);
     }
 
     public override void DeleteFile(string path)
     {
-        ValidateWrite();
+        EnsureCanWrite();
         base.DeleteFile(path);
     }
 
@@ -75,43 +76,43 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
 
     public override bool DirectoryExists([NotNullWhen(true)] string? path)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.DirectoryExists(path);
     }
 
     public override IEnumerable<string> EnumerateDirectories(string path)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.EnumerateDirectories(path);
     }
 
     public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.EnumerateDirectories(path, searchPattern);
     }
 
     public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.EnumerateDirectories(path, searchPattern, searchOption);
     }
 
     public override void CreateDirectory(string path)
     {
-        ValidateWrite();
+        EnsureCanWrite();
         base.CreateDirectory(path);
     }
 
     public override void DeleteDirectory(string path)
     {
-        ValidateWrite();
+        EnsureCanWrite();
         base.DeleteDirectory(path);
     }
 
     public override void DeleteDirectory(string path, bool recursive)
     {
-        ValidateWrite();
+        EnsureCanWrite();
         base.DeleteDirectory(path, recursive);
     }
 
@@ -121,25 +122,25 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
 
     public override bool EntryExists([NotNullWhen(true)] string? path)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.EntryExists(path);
     }
 
     public override IEnumerable<string> EnumerateEntries(string path)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.EnumerateEntries(path);
     }
 
     public override IEnumerable<string> EnumerateEntries(string path, string searchPattern)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.EnumerateEntries(path, searchPattern);
     }
 
     public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption)
     {
-        ValidateRead();
+        EnsureCanRead();
         return base.EnumerateEntries(path, searchPattern, searchOption);
     }
 

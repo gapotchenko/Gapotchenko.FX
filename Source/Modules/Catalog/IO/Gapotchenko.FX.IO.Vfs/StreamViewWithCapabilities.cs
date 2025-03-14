@@ -19,25 +19,25 @@ sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool ca
 
     public override int Read(byte[] buffer, int offset, int count)
     {
-        ValidateRead();
+        ValidateCanRead();
         return base.Read(buffer, offset, count);
     }
 
     public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback? callback, object? state)
     {
-        ValidateRead();
+        ValidateCanRead();
         return base.BeginRead(buffer, offset, count, callback, state);
     }
 
     public override int ReadByte()
     {
-        ValidateRead();
+        ValidateCanRead();
         return base.ReadByte();
     }
 
     public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
     {
-        ValidateRead();
+        ValidateCanRead();
         return await base.ReadAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
     }
 
@@ -45,19 +45,19 @@ sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool ca
 
     public override int Read(Span<byte> buffer)
     {
-        ValidateRead();
+        ValidateCanRead();
         return base.Read(buffer);
     }
 
     public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken)
     {
-        ValidateRead();
+        ValidateCanRead();
         return await base.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
     }
 
 #endif
 
-    void ValidateRead()
+    void ValidateCanRead()
     {
         if (!canRead)
             throw new NotSupportedException("Stream does not support reading.");
@@ -69,25 +69,25 @@ sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool ca
 
     public override void Write(byte[] buffer, int offset, int count)
     {
-        ValidateWrite();
+        EnsureCanWrite();
         base.Write(buffer, offset, count);
     }
 
     public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback? callback, object? state)
     {
-        ValidateWrite();
+        EnsureCanWrite();
         return base.BeginWrite(buffer, offset, count, callback, state);
     }
 
     public override void WriteByte(byte value)
     {
-        ValidateWrite();
+        EnsureCanWrite();
         base.WriteByte(value);
     }
 
     public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
     {
-        ValidateWrite();
+        EnsureCanWrite();
         await base.WriteAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
     }
 
@@ -95,19 +95,19 @@ sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool ca
 
     public override void Write(ReadOnlySpan<byte> buffer)
     {
-        ValidateWrite();
+        EnsureCanWrite();
         base.Write(buffer);
     }
 
     public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
     {
-        ValidateWrite();
+        EnsureCanWrite();
         await base.WriteAsync(buffer, cancellationToken).ConfigureAwait(false);
     }
 
 #endif
 
-    void ValidateWrite()
+    void EnsureCanWrite()
     {
         if (!canWrite)
             throw new NotSupportedException("Stream does not support writing.");
@@ -121,15 +121,16 @@ sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool ca
     {
         get
         {
-            ValidateSeek();
+            EnsureCanSeek();
             return base.Length;
         }
     }
 
     public override void SetLength(long value)
     {
-        ValidateSeek();
-        ValidateWrite();
+        EnsureCanSeek();
+        EnsureCanWrite();
+
         base.SetLength(value);
     }
 
@@ -137,23 +138,23 @@ sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool ca
     {
         get
         {
-            ValidateSeek();
+            EnsureCanSeek();
             return base.Position;
         }
         set
         {
-            ValidateSeek();
+            EnsureCanSeek();
             base.Position = value;
         }
     }
 
     public override long Seek(long offset, SeekOrigin origin)
     {
-        ValidateSeek();
+        EnsureCanSeek();
         return base.Seek(offset, origin);
     }
 
-    void ValidateSeek()
+    void EnsureCanSeek()
     {
         if (!canSeek)
             throw new NotSupportedException("Stream does not support seeking.");

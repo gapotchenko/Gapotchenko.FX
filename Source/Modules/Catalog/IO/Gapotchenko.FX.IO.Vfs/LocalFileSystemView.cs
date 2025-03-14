@@ -39,6 +39,10 @@ sealed class LocalFileSystemView : IFileSystemView
 
     #region Path
 
+    public char DirectorySeparatorChar => Path.DirectorySeparatorChar;
+
+    public StringComparer PathComparer => FileSystem.PathComparer;
+
     [return: NotNullIfNotNull(nameof(path))]
     public string? GetFullPath(string? path) => path is null ? null : Path.GetFullPath(path);
 

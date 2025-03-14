@@ -40,7 +40,8 @@ public static class VfsPathKit
 
         foreach (string part in parts)
         {
-            // Get the effective name of the part by trimming directory separators.
+            // Get the effective name of the part
+            // by trimming off the directory separators.
             var name = part.AsSpan().Trim(['/', '\\']);
 
             switch (name)
@@ -73,31 +74,35 @@ public static class VfsPathKit
     }
 
     /// <summary>
-    /// Combines a sequence of strings into a path.
+    /// Concatenates a sequence of parts into a single path.
+    /// using the specified directory separator character.
     /// </summary>
     /// <param name="parts">The parts of the path.</param>
-    /// <returns>The combined path.</returns>
+    /// <param name="directorySeparatorChar">The directory separator character.</param>
+    /// <returns>The concatenated path, or <see langword="null"/> if the <paramref name="parts"/> value is <see langword="null"/>.</returns>
     [return: NotNullIfNotNull(nameof(parts))]
-    public static string? Combine(IEnumerable<string?>? parts) =>
+    public static string? Join(IEnumerable<string?>? parts, char directorySeparatorChar = '/') =>
         parts is null
             ? null
             : string.Join(
-                "/",
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                directorySeparatorChar,
+#else
+                $"{directorySeparatorChar}",
+#endif
                 parts.Where(x => !string.IsNullOrEmpty(x)));
 
     /// <summary>
-    /// Combines a span of strings into a path.
+    /// Concatenates a span of parts into a single path.
+    /// using the specified directory separator character.
     /// </summary>
-    /// <param name="parts">The parts of the path.</param>
-    /// <returns>The combined path.</returns>
+    /// <inheritdoc cref="Join(IEnumerable{string?}?, char)"/>
     [OverloadResolutionPriority(1)]
     [return: NotNullIfNotNull(nameof(parts))]
-    public static string? Combine(ReadOnlySpan<string> parts)
+    public static string? Join(ReadOnlySpan<string> parts, char directorySeparatorChar = '/')
     {
         if (parts == null)
             return null!;
-
-        const char separator = '/';
 
         var sb = new StringBuilder();
         foreach (string? part in parts)
@@ -105,7 +110,7 @@ public static class VfsPathKit
             if (string.IsNullOrEmpty(part))
                 continue;
             if (sb.Length != 0)
-                sb.Append(separator);
+                sb.Append(directorySeparatorChar);
             sb.Append(part);
         }
         return sb.ToString();
