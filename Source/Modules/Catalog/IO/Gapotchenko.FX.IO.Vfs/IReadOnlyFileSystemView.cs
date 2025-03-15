@@ -88,9 +88,13 @@ public interface IReadOnlyFileSystemView
     [return: NotNullIfNotNull(nameof(path))]
     string? GetFullPath(string? path);
 
-    // TODO
+    /// <summary>
+    /// Returns a value indicating whether the specified path string contains a root.
+    /// </summary>
+    /// <param name="path">The path to test.</param>
+    /// <returns><see langword="true"/> if <paramref name="path"/> contains a root; otherwise, <see langword="false"/>.</returns>
+    bool IsPathRooted(ReadOnlySpan<char> path);
 
-#if false
     /// <summary>
     /// Combines a sequence of strings into a path.
     /// </summary>
@@ -98,7 +102,6 @@ public interface IReadOnlyFileSystemView
     /// <returns>The combined paths.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
     string CombinePaths(params IEnumerable<string?> paths);
-#endif
 
     #endregion
 }

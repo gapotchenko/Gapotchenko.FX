@@ -5,6 +5,7 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.IO.Vfs.Properties;
+using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs.Kits;
 
@@ -147,6 +148,48 @@ public abstract class FileSystemViewKit : IFileSystemView
         char directorySeparatorChar = DirectorySeparatorChar;
         return directorySeparatorChar + VfsPathKit.Join(parts, directorySeparatorChar);
     }
+
+    /// <inheritdoc/>
+    public virtual bool IsPathRooted(ReadOnlySpan<char> path) =>
+        !path.IsEmpty &&
+        path[0] == DirectorySeparatorChar;
+
+    /// <inheritdoc/>
+    public virtual string CombinePaths(params IEnumerable<string?> paths)
+    {
+        if (paths is null)
+            throw new ArgumentNullException(nameof(paths));
+
+        char directorySeparatorChar = DirectorySeparatorChar;
+        var builder = new StringBuilder();
+
+        foreach (string? path in paths)
+        {
+            if (string.IsNullOrEmpty(path))
+                continue;
+
+            if (IsPathRooted(path.AsSpan()))
+            {
+                builder.Clear();
+            }
+            else if (builder.Length != 0)
+            {
+                if (!IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
+                    !IsDirectorySeparator(path[0], directorySeparatorChar))
+                {
+                    builder.Append(directorySeparatorChar);
+                }
+            }
+
+            builder.Append(path);
+        }
+
+        return builder.ToString();
+    }
+
+    static bool IsDirectorySeparator(char c, char directorySeparatorChar) =>
+        c == directorySeparatorChar ||
+        c is '/' or '\\';
 
     #endregion
 }

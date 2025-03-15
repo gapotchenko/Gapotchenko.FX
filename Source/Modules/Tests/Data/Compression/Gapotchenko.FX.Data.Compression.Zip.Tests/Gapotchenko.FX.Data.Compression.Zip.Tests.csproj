@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Catalog\Data\Compression\Gapotchenko.FX.Data.Compression.Zip\Gapotchenko.FX.Data.Compression.Zip.csproj" />
+    <ProjectReference Include="..\..\..\IO\Gapotchenko.FX.IO.Vfs.Tests\Gapotchenko.FX.IO.Vfs.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

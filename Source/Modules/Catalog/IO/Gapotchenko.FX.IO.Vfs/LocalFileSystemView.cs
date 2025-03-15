@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.Linq;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.IO.Vfs;
@@ -16,11 +17,15 @@ sealed class LocalFileSystemView : IFileSystemView
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public static LocalFileSystemView Instance { get; } = new();
 
+    #region Capabilities
+
     public bool CanRead => true;
 
     public bool CanWrite => true;
 
-    #region File
+    #endregion
+
+    #region Files
 
     public bool FileExists([NotNullWhen(true)] string? path) => File.Exists(path);
 
@@ -37,18 +42,7 @@ sealed class LocalFileSystemView : IFileSystemView
 
     #endregion
 
-    #region Path
-
-    public char DirectorySeparatorChar => Path.DirectorySeparatorChar;
-
-    public StringComparer PathComparer => FileSystem.PathComparer;
-
-    [return: NotNullIfNotNull(nameof(path))]
-    public string? GetFullPath(string? path) => path is null ? null : Path.GetFullPath(path);
-
-    #endregion
-
-    #region Directory
+    #region Directories
 
     public bool DirectoryExists([NotNullWhen(true)] string? path) => Directory.Exists(path);
 
@@ -67,7 +61,7 @@ sealed class LocalFileSystemView : IFileSystemView
 
     #endregion
 
-    #region Entry
+    #region Entries
 
     public bool EntryExists([NotNullWhen(true)] string? path) => FileSystem.EntryExists(path);
 
@@ -77,6 +71,37 @@ sealed class LocalFileSystemView : IFileSystemView
 
     public IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
+
+    #endregion
+
+    #region Paths
+
+    public char DirectorySeparatorChar => Path.DirectorySeparatorChar;
+
+    public StringComparer PathComparer => FileSystem.PathComparer;
+
+    [return: NotNullIfNotNull(nameof(path))]
+    public string? GetFullPath(string? path) => path is null ? null : Path.GetFullPath(path);
+
+    public bool IsPathRooted(ReadOnlySpan<char> path) =>
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        Path.IsPathRooted(path);
+#else
+        Path.IsPathRooted(path.ToString());
+#endif
+
+    public string CombinePaths(params IEnumerable<string?> paths)
+    {
+        if (paths is null)
+            throw new ArgumentNullException(nameof(paths));
+
+        string?[] arr = EnumerableEx.AsArray(paths);
+
+        if (Array.IndexOf(arr, null) != -1)
+            arr = arr.Where(x => x != null).ToArray();
+
+        return Path.Combine(arr!);
+    }
 
     #endregion
 }

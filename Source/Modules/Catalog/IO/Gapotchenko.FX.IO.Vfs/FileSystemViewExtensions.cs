@@ -94,7 +94,6 @@ public static class FileSystemViewExtensions
             throw new ArgumentNullException(nameof(paths));
 
         char directorySeparatorChar = view.DirectorySeparatorChar;
-
         var builder = new StringBuilder();
 
         foreach (string? path in paths)

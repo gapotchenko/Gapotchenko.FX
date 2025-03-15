@@ -99,7 +99,7 @@ public static class VfsPathKit
     /// <inheritdoc cref="Join(IEnumerable{string?}?, char)"/>
     [OverloadResolutionPriority(1)]
     [return: NotNullIfNotNull(nameof(parts))]
-    public static string? Join(ReadOnlySpan<string> parts, char directorySeparatorChar = '/')
+    public static string? Join(scoped ReadOnlySpan<string> parts, char directorySeparatorChar = '/')
     {
         if (parts == null)
             return null!;

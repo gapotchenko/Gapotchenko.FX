@@ -64,7 +64,7 @@ public class ZipArchive : FileSystemViewKit, IDataArchive, IDisposable
         ZipArchiveMode mode;
         if (writable)
         {
-            if (!stream.CanSeek || stream.Length == 0)
+            if (!stream.CanSeek)
                 mode = ZipArchiveMode.Create;
             else
                 mode = ZipArchiveMode.Update;
@@ -340,13 +340,13 @@ public class ZipArchive : FileSystemViewKit, IDataArchive, IDisposable
         bool enumerateFiles,
         bool enumerateDirectories)
     {
-        searchPattern = Empty.Nullify(searchPattern, "*", StringComparison.Ordinal);
-
         var pathParts = path.Parts;
         bool directoryExists = false;
 
         if (pathParts.Span != null)
         {
+            searchPattern = Empty.Nullify(searchPattern, "*", StringComparison.Ordinal);
+
             directoryExists = pathParts.Length == 0;
 
             bool recursive = searchOption == SearchOption.AllDirectories;
@@ -408,6 +408,7 @@ public class ZipArchive : FileSystemViewKit, IDataArchive, IDisposable
     /// <inheritdoc/>
     public sealed override StringComparer PathComparer => m_PathComparer;
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     static StringComparer m_PathComparer => StringComparer.InvariantCulture;
 
     /// <inheritdoc/>
@@ -421,6 +422,7 @@ public class ZipArchive : FileSystemViewKit, IDataArchive, IDisposable
             ? null!
             : (C_DirectorySeparatorChar + VfsPathKit.Join(parts, C_DirectorySeparatorChar));
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     internal const char C_DirectorySeparatorChar = '/';
 
     #endregion

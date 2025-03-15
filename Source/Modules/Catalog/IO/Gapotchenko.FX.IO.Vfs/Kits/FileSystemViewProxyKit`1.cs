@@ -117,6 +117,12 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     [return: NotNullIfNotNull(nameof(path))]
     public virtual string? GetFullPath(string? path) => BaseView.GetFullPath(path);
 
+    /// <inheritdoc/>
+    public virtual bool IsPathRooted(ReadOnlySpan<char> path) => BaseView.IsPathRooted(path);
+
+    /// <inheritdoc/>
+    public virtual string CombinePaths(params IEnumerable<string?> paths) => BaseView.CombinePaths(paths);
+
     #endregion
 
     /// <summary>

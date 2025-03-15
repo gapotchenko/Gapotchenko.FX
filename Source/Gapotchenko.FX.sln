@@ -268,6 +268,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vfs", "Vfs", "{DF4210D8-B9B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.IO.Vfs", "Modules\Catalog\IO\Gapotchenko.FX.IO.Vfs\Gapotchenko.FX.IO.Vfs.csproj", "{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.IO.Vfs.Tests", "Modules\Tests\IO\Gapotchenko.FX.IO.Vfs.Tests\Gapotchenko.FX.IO.Vfs.Tests.csproj", "{AC391802-2571-408A-BC0B-3423D14FD8A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -534,6 +536,10 @@ Global
 		{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC391802-2571-408A-BC0B-3423D14FD8A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC391802-2571-408A-BC0B-3423D14FD8A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC391802-2571-408A-BC0B-3423D14FD8A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC391802-2571-408A-BC0B-3423D14FD8A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -654,6 +660,7 @@ Global
 		{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF} = {660CAD55-E314-4FCC-8E1B-D3123B1271C7}
 		{DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD} = {6DE1F6C6-054E-4C83-B060-3D5604BA46A7}
 		{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5} = {DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD}
+		{AC391802-2571-408A-BC0B-3423D14FD8A9} = {DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}
