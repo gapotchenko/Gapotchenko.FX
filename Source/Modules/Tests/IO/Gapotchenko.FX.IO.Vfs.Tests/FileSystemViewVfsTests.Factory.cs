@@ -24,11 +24,39 @@ partial class FileSystemViewVfsTests
         return false;
     }
 
-    /// <summary>
-    /// Disposes the specified virtual file system.
-    /// </summary>
-    /// <param name="vfs">The virtual file system.</param>
-    protected virtual void DisposeVfs(IFileSystemView? vfs)
+    void RunVfsTest(VfsReadOnlyTest readOnlyTest)
     {
+        var vfs = CreateVfs(out string rootPath);
+        try
+        {
+            readOnlyTest(vfs, rootPath);
+        }
+        finally
+        {
+            DisposeVfs(vfs);
+        }
     }
+
+    void RunVfsTest(VfsMutatingTest mutatingTest, VfsReadOnlyTest readOnlyTest)
+    {
+        var vfs = CreateVfs(out string rootPath);
+        try
+        {
+            mutatingTest(vfs, rootPath);
+
+            readOnlyTest(vfs, rootPath);
+            if (TryRoundTripVfs(ref vfs))
+                readOnlyTest(vfs, rootPath);
+        }
+        finally
+        {
+            DisposeVfs(vfs);
+        }
+    }
+
+    delegate void VfsReadOnlyTest(IReadOnlyFileSystemView vfs, string rootPath);
+
+    delegate void VfsMutatingTest(IFileSystemView vfs, string rootPath);
+
+    static void DisposeVfs(IFileSystemView? vfs) => (vfs as IDisposable)?.Dispose();
 }

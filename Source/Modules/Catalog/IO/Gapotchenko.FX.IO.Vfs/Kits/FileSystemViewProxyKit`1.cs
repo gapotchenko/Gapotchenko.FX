@@ -66,15 +66,15 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual bool DirectoryExists([NotNullWhen(true)] string? path) => BaseView.DirectoryExists(path);
 
     /// <inheritdoc/>
-    public virtual IEnumerable<string> EnumerateDirectories(string path) => EnumerateDirectories(path);
+    public virtual IEnumerable<string> EnumerateDirectories(string path) => BaseView.EnumerateDirectories(path);
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateDirectories(string path, string searchPattern) =>
-        EnumerateDirectories(path, searchPattern);
+        BaseView.EnumerateDirectories(path, searchPattern);
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
-        EnumerateDirectories(path, searchPattern, searchOption);
+        BaseView.EnumerateDirectories(path, searchPattern, searchOption);
 
     /// <inheritdoc/>
     public virtual void CreateDirectory(string path) => BaseView.CreateDirectory(path);

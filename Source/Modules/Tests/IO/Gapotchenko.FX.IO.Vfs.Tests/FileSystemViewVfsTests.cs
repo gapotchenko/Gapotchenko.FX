@@ -5,33 +5,74 @@ namespace Gapotchenko.FX.IO.Vfs.Tests;
 public abstract partial class FileSystemViewVfsTests
 {
     [TestMethod]
-    public void Vfs_FileSystemView_Empty()
+    public void FileSystemView_Vfs_Empty()
     {
-        RunVfsTest(Test);
+        RunVfsTest(Verify);
 
-        static void Test(IFileSystemView vfs, string rootPath)
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
+            Assert.IsTrue(vfs.IsPathRooted(rootPath.AsSpan()));
+            Assert.IsTrue(vfs.DirectoryExists(rootPath));
             Assert.IsFalse(vfs.EnumerateEntries(rootPath).Any());
-            Assert.IsFalse(vfs.DirectoryExists(vfs.CombinePaths(rootPath, "Empty")));
         }
     }
 
     [TestMethod]
-    public void Vfs_FileSystemView_CreateDirectory()
+    public void FileSystemView_Vfs_CreateEmptyDirectory()
     {
-        string directoryPath = "Empty";
+        RunVfsTest(Mutate, Verify);
 
-        RunVfsTest(Test, PostTest);
+        const string directoryPath = "Empty";
 
-        void Test(IFileSystemView vfs, string rootPath)
+        static void Mutate(IFileSystemView vfs, string rootPath)
         {
-            directoryPath = vfs.CombinePaths(rootPath, directoryPath);
-            vfs.CreateDirectory(directoryPath);
+            vfs.CreateDirectory(vfs.CombinePaths(rootPath, directoryPath));
         }
 
-        void PostTest(IFileSystemView vfs, string rootPath)
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
-            Assert.IsTrue(vfs.DirectoryExists(directoryPath));
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, directoryPath)));
+        }
+    }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_CreateNestedDirectory()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string directoryPath = "Nested/Empty";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            vfs.CreateDirectory(vfs.CombinePaths(rootPath, directoryPath));
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, directoryPath)));
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, Path.GetDirectoryName(directoryPath))));
+        }
+    }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_CreatePartialNestedDirectory()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string directoryPath = "Container/Nested/Empty";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            vfs.CreateDirectory(vfs.CombinePaths(rootPath, directoryPath, "..", ".."));
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, Path.GetDirectoryName(Path.GetDirectoryName(directoryPath)))));
+            vfs.CreateDirectory(vfs.CombinePaths(rootPath, directoryPath));
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, directoryPath)));
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, Path.GetDirectoryName(directoryPath))));
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, Path.GetDirectoryName(Path.GetDirectoryName(directoryPath)))));
         }
     }
 }

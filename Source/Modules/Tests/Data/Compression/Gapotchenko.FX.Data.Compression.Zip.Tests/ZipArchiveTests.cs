@@ -4,7 +4,7 @@ using Gapotchenko.FX.Linq;
 namespace Gapotchenko.FX.Data.Compression.Zip.Tests;
 
 [TestClass]
-public sealed partial class ZipArchiveTests
+public sealed class ZipArchiveTests
 {
     [TestMethod]
     public void Zip_Empty()

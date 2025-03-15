@@ -3,7 +3,8 @@ using Gapotchenko.FX.IO.Vfs.Tests;
 
 namespace Gapotchenko.FX.Data.Compression.Zip.Tests;
 
-partial class ZipArchiveTests : FileSystemViewVfsTests
+[TestClass]
+public sealed class ZipArchiveVfsTests : FileSystemViewVfsTests
 {
     protected override IFileSystemView CreateVfs(out string rootPath)
     {
@@ -15,7 +16,7 @@ partial class ZipArchiveTests : FileSystemViewVfsTests
     {
         var archiveVfs = (ArchiveVfs)vfs;
 
-        DisposeVfs(archiveVfs);
+        archiveVfs.Dispose();
 
         var oldStream = archiveVfs.Stream;
         oldStream.Position = 0;
@@ -27,8 +28,6 @@ partial class ZipArchiveTests : FileSystemViewVfsTests
         vfs = new ArchiveVfs(newStream);
         return true;
     }
-
-    protected override void DisposeVfs(IFileSystemView? vfs) => ((IDisposable?)vfs)?.Dispose();
 
     sealed class ArchiveVfs(Stream stream) : ZipArchive(stream, true, true)
     {
