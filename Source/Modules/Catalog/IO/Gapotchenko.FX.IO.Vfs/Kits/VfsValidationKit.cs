@@ -60,10 +60,52 @@ public static class VfsValidationKit
         /// <param name="argumentName">The argument name.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="searchOption"/> value is out of legal range.</exception>
         public static void ValidateSearchOption(
-            [NotNull] SearchOption searchOption,
+            SearchOption searchOption,
             [CallerArgumentExpression(nameof(searchOption))] string? argumentName = null)
         {
             if (searchOption is not (SearchOption.TopDirectoryOnly or SearchOption.AllDirectories))
+                throw new ArgumentOutOfRangeException(argumentName, Resources.EnumValueIsOutOfLegalRange);
+        }
+
+        /// <summary>
+        /// Validates the specified <see cref="FileMode"/> argument value.
+        /// </summary>
+        /// <param name="fileMode">The <see cref="FileMode"/> value.</param>
+        /// <param name="argumentName">The argument name.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="fileMode"/> value is out of legal range.</exception>
+        public static void ValidateFileMode(
+            FileMode fileMode,
+            [CallerArgumentExpression(nameof(fileMode))] string? argumentName = null)
+        {
+            if (fileMode is not (FileMode.Append or FileMode.Create or FileMode.CreateNew or FileMode.Open or FileMode.OpenOrCreate or FileMode.Truncate))
+                throw new ArgumentOutOfRangeException(argumentName, Resources.EnumValueIsOutOfLegalRange);
+        }
+
+        /// <summary>
+        /// Validates the specified <see cref="FileAccess"/> argument value.
+        /// </summary>
+        /// <param name="fileAccess">The <see cref="FileAccess"/> value.</param>
+        /// <param name="argumentName">The argument name.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="fileAccess"/> value is out of legal range.</exception>
+        public static void ValidateFileAccess(
+            FileAccess fileAccess,
+            [CallerArgumentExpression(nameof(fileAccess))] string? argumentName = null)
+        {
+            if ((fileAccess & ~FileAccess.ReadWrite) != 0)
+                throw new ArgumentOutOfRangeException(argumentName, Resources.EnumValueIsOutOfLegalRange);
+        }
+
+        /// <summary>
+        /// Validates the specified <see cref="FileShare"/> argument value.
+        /// </summary>
+        /// <param name="fileShare">The <see cref="FileShare"/> value.</param>
+        /// <param name="argumentName">The argument name.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="fileShare"/> value is out of legal range.</exception>
+        public static void ValidateFileShare(
+            FileShare fileShare,
+            [CallerArgumentExpression(nameof(fileShare))] string? argumentName = null)
+        {
+            if ((fileShare & ~(FileShare.ReadWrite | FileShare.Delete)) != 0)
                 throw new ArgumentOutOfRangeException(argumentName, Resources.EnumValueIsOutOfLegalRange);
         }
     }

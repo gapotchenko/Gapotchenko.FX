@@ -106,6 +106,15 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file is too long. This operation is limited to supporting files less than 2 gigabytes in size..
+        /// </summary>
+        internal static string FileTooLong2GB {
+            get {
+                return ResourceManager.GetString("FileTooLong2GB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File system does not support reading..
         /// </summary>
         internal static string FSDoesNotSupportReading {

@@ -38,6 +38,8 @@ sealed class LocalFileSystemView : IFileSystemView
 
     public Stream OpenFileForReading(string path) => File.OpenRead(path);
 
+    public Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) => File.Open(path, mode, access, share);
+
     public void DeleteFile(string path) => File.Delete(path);
 
     #endregion

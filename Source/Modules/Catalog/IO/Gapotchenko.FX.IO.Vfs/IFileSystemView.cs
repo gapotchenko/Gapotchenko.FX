@@ -18,6 +18,9 @@ public interface IFileSystemView : IReadOnlyFileSystemView
 
     #region Files
 
+    /// <inheritdoc cref="File.Open(string, FileMode, FileAccess, FileShare)"/>
+    Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share);
+
     /// <inheritdoc cref="File.Delete(string)"/>
     void DeleteFile(string path);
 

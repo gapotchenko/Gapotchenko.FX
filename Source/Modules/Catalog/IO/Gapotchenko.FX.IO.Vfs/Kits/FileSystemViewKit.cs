@@ -5,6 +5,7 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.IO.Vfs.Properties;
+using Gapotchenko.FX.IO.Vfs.Utils;
 using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs.Kits;
@@ -34,7 +35,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     protected void EnsureCanRead()
     {
         if (!CanRead)
-            throw new NotSupportedException(Resources.FSDoesNotSupportReading);
+            Throw.FSDoesNotSupportReading();
     }
 
     /// <summary>
@@ -44,8 +45,16 @@ public abstract class FileSystemViewKit : IFileSystemView
     protected void EnsureCanWrite()
     {
         if (!CanWrite)
-            throw new NotSupportedException(Resources.FSDoesNotSupportWriting);
+            Throw.FSDoesNotSupportWriting();
     }
+
+    /// <summary>
+    /// Ensures that the file system can open a file with the specified mode and access.
+    /// </summary>
+    /// <exception cref="NotSupportedException">File system does not support reading.</exception>
+    /// <exception cref="NotSupportedException">File system does not support writing.</exception>
+    protected void EnsureCanOpenFile(FileMode mode, FileAccess access) =>
+        FileSystemViewCapabilities.EnsureCanOpenFile(mode, access, CanRead, CanWrite);
 
     #endregion
 
@@ -65,7 +74,11 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 
     /// <inheritdoc/>
-    public abstract Stream OpenFileForReading(string path);
+    public virtual Stream OpenFileForReading(string path) =>
+        OpenFile(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+    /// <inheritdoc/>
+    public abstract Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share);
 
     /// <inheritdoc/>
     public abstract void DeleteFile(string path);

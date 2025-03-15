@@ -132,6 +132,9 @@
   <data name="EnumValueIsOutOfLegalRange" xml:space="preserve">
     <value>Enumeration value is out of legal range.</value>
   </data>
+  <data name="FileTooLong2GB" xml:space="preserve">
+    <value>The file is too long. This operation is limited to supporting files less than 2 gigabytes in size.</value>
+  </data>
   <data name="FSDoesNotSupportReading" xml:space="preserve">
     <value>File system does not support reading.</value>
   </data>

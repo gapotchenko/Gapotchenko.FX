@@ -5,7 +5,7 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.IO.Vfs.Kits;
-using Gapotchenko.FX.IO.Vfs.Properties;
+using Gapotchenko.FX.IO.Vfs.Utils;
 
 namespace Gapotchenko.FX.IO.Vfs;
 
@@ -21,14 +21,17 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     void EnsureCanRead()
     {
         if (!canRead)
-            throw new NotSupportedException(Resources.FSDoesNotSupportReading);
+            Throw.FSDoesNotSupportReading();
     }
 
     void EnsureCanWrite()
     {
         if (!canWrite)
-            throw new NotSupportedException(Resources.FSDoesNotSupportWriting);
+            Throw.FSDoesNotSupportWriting();
     }
+
+    void EnsureCanOpenFile(FileMode mode, FileAccess access) =>
+        FileSystemViewCapabilities.EnsureCanOpenFile(mode, access, canRead, canWrite);
 
     #endregion
 
@@ -62,6 +65,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     {
         EnsureCanRead();
         return base.OpenFileForReading(path);
+    }
+
+    public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share)
+    {
+        EnsureCanOpenFile(mode, access);
+        return base.OpenFile(path, mode, access, share);
     }
 
     public override void DeleteFile(string path)

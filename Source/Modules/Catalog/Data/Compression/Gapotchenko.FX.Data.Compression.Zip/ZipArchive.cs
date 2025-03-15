@@ -80,7 +80,7 @@ public class ZipArchive : FileSystemViewKit, IDataArchive, IDisposable
     #region Capabilities
 
     /// <inheritdoc/>
-    public override bool CanRead => true;
+    public override bool CanRead => m_UnderlyingArchive.Mode != ZipArchiveMode.Create;
 
     /// <inheritdoc/>
     public override bool CanWrite { get; }
@@ -120,6 +120,23 @@ public class ZipArchive : FileSystemViewKit, IDataArchive, IDisposable
         return StreamView.WithCapabilities(
             GetFileArchiveEntry(path).Open(),
             true, false, true);
+    }
+
+    /// <inheritdoc/>
+    public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateFileMode(mode);
+        VfsValidationKit.Arguments.ValidateFileAccess(access);
+        VfsValidationKit.Arguments.ValidateFileShare(share);
+
+        EnsureCanOpenFile(mode, access);
+
+        // TODO
+
+        return StreamView.WithCapabilities(
+            GetFileArchiveEntry(path).Open(),
+            CanRead, CanWrite, true);
     }
 
     /// <inheritdoc/>

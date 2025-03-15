@@ -56,6 +56,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual Stream OpenFileForReading(string path) => BaseView.OpenFileForReading(path);
 
     /// <inheritdoc/>
+    public virtual Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) =>
+        BaseView.OpenFile(path, mode, access, share);
+
+    /// <inheritdoc/>
     public virtual void DeleteFile(string path) => BaseView.DeleteFile(path);
 
     #endregion
