@@ -113,7 +113,7 @@ public class ZipArchive : FileSystemViewKit, IZipArchive
     }
 
     /// <inheritdoc/>
-    public override Stream OpenFileForReading(string path)
+    public override Stream OpenFileRead(string path)
     {
         VfsValidationKit.Arguments.ValidatePath(path);
 

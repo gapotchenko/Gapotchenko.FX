@@ -58,7 +58,7 @@ public static class FileSystemViewExtensions
         if (view is LocalFileSystemView)
             return File.OpenText(path);
         else
-            return new StreamReader(view.OpenFileForReading(path), Encoding.UTF8);
+            return new StreamReader(view.OpenFileRead(path), Encoding.UTF8);
     }
 
     #endregion
@@ -85,16 +85,24 @@ public static class FileSystemViewExtensions
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
-        else if (view is LocalFileSystemView)
+
+        if (view is LocalFileSystemView)
             return File.CreateText(path);
         else
             return new StreamWriter(CreateFileForWritingCore(view, path));
     }
 
-    static StreamWriter CreateTextFileCore(IFileSystemView view, string path, Encoding encoding) =>
-        new(
+    static StreamWriter CreateTextFile(this IFileSystemView view, string path, Encoding encoding)
+    {
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
+        if (encoding is null)
+            throw new ArgumentNullException(nameof(encoding));
+
+        return new StreamWriter(
             CreateFileForWritingCore(view, path),
             encoding);
+    }
 
     static Stream CreateFileForWritingCore(IFileSystemView view, string path) =>
         view.OpenFile(path, FileMode.Create, FileAccess.Write, FileShare.Read);
@@ -106,7 +114,7 @@ public static class FileSystemViewExtensions
     /// <inheritdoc cref="File.ReadAllBytes(string)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
-    public static byte[] ReadAllBytesFromFile(this IReadOnlyFileSystemView view, string path)
+    public static byte[] ReadAllFileBytes(this IReadOnlyFileSystemView view, string path)
     {
         if (view is null)
         {
@@ -118,7 +126,7 @@ public static class FileSystemViewExtensions
         }
         else
         {
-            using var stream = view.OpenFileForReading(path);
+            using var stream = view.OpenFileRead(path);
             return ReadAllBytesCore(stream);
         }
     }
@@ -221,7 +229,7 @@ public static class FileSystemViewExtensions
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="bytes"><inheritdoc/></param>
-    public static void WriteAllBytesToFile(this IFileSystemView view, string path, byte[] bytes)
+    public static void WriteAllFileBytes(this IFileSystemView view, string path, byte[] bytes)
     {
         if (view is null)
         {
@@ -248,7 +256,7 @@ public static class FileSystemViewExtensions
     /// <inheritdoc cref="File.ReadAllText(string)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
-    public static string ReadAllTextFromFile(this IReadOnlyFileSystemView view, string path)
+    public static string ReadAllFileText(this IReadOnlyFileSystemView view, string path)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
@@ -256,14 +264,14 @@ public static class FileSystemViewExtensions
         if (view is LocalFileSystemView)
             return File.ReadAllText(path);
         else
-            return ReadAllTextFromFileCore(view, path, Encoding.UTF8);
+            return ReadAllFileTextCore(view, path, Encoding.UTF8);
     }
 
     /// <inheritdoc cref="File.ReadAllText(string, Encoding)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
-    public static string ReadAllTextFromFile(this IReadOnlyFileSystemView view, string path, Encoding encoding)
+    public static string ReadAllFileText(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
@@ -271,12 +279,12 @@ public static class FileSystemViewExtensions
         if (view is LocalFileSystemView)
             return File.ReadAllText(path, encoding);
         else
-            return ReadAllTextFromFileCore(view, path, encoding);
+            return ReadAllFileTextCore(view, path, encoding);
     }
 
-    static string ReadAllTextFromFileCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
+    static string ReadAllFileTextCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        using var reader = new StreamReader(view.OpenFileForReading(path), encoding);
+        using var reader = new StreamReader(view.OpenFileRead(path), encoding);
         return reader.ReadToEnd();
     }
 
@@ -284,7 +292,7 @@ public static class FileSystemViewExtensions
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
-    public static void WriteAllTextToFile(this IFileSystemView view, string path, string? contents)
+    public static void WriteAllFileText(this IFileSystemView view, string path, string? contents)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
@@ -305,7 +313,7 @@ public static class FileSystemViewExtensions
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
-    public static void WriteAllTextToFile(this IFileSystemView view, string path, string? contents, Encoding encoding)
+    public static void WriteAllFileText(this IFileSystemView view, string path, string? contents, Encoding encoding)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
@@ -316,7 +324,7 @@ public static class FileSystemViewExtensions
         }
         else
         {
-            using var writer = CreateTextFileCore(view, path, encoding);
+            using var writer = view.CreateTextFile(path, encoding);
             writer.Write(contents);
         }
     }
@@ -328,7 +336,7 @@ public static class FileSystemViewExtensions
     /// <inheritdoc cref="File.ReadLines(string)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
-    public static IEnumerable<string> ReadLinesFromFile(this IReadOnlyFileSystemView view, string path)
+    public static IEnumerable<string> ReadFileLines(this IReadOnlyFileSystemView view, string path)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
@@ -336,14 +344,14 @@ public static class FileSystemViewExtensions
         if (view is LocalFileSystemView)
             return File.ReadLines(path);
         else
-            return ReadLinesFromFileCore(view, path, Encoding.UTF8);
+            return ReadFileLinesCore(view, path, Encoding.UTF8);
     }
 
     /// <inheritdoc cref="File.ReadLines(string, Encoding)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
-    public static IEnumerable<string> ReadLinesFromFile(this IReadOnlyFileSystemView view, string path, Encoding encoding)
+    public static IEnumerable<string> ReadFileLines(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
@@ -351,12 +359,12 @@ public static class FileSystemViewExtensions
         if (view is LocalFileSystemView)
             return File.ReadAllLines(path, encoding);
         else
-            return ReadLinesFromFileCore(view, path, encoding ?? throw new ArgumentNullException(nameof(encoding)));
+            return ReadFileLinesCore(view, path, encoding ?? throw new ArgumentNullException(nameof(encoding)));
     }
 
-    static IEnumerable<string> ReadLinesFromFileCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
+    static IEnumerable<string> ReadFileLinesCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        using var reader = new StreamReader(view.OpenFileForReading(path), encoding);
+        using var reader = new StreamReader(view.OpenFileRead(path), encoding);
 
         while (reader.ReadLine() is not null and var line)
             yield return line;
@@ -365,7 +373,7 @@ public static class FileSystemViewExtensions
     /// <inheritdoc cref="File.ReadAllLines(string)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
-    public static string[] ReadAllLinesFromFile(this IReadOnlyFileSystemView view, string path)
+    public static string[] ReadAllFileLines(this IReadOnlyFileSystemView view, string path)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
@@ -373,14 +381,14 @@ public static class FileSystemViewExtensions
         if (view is LocalFileSystemView)
             return File.ReadAllLines(path);
         else
-            return ReadAllLinesFromFileCore(view, path, Encoding.UTF8);
+            return ReadAllFileLinesCore(view, path, Encoding.UTF8);
     }
 
     /// <inheritdoc cref="File.ReadAllLines(string, Encoding)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
-    public static string[] ReadAllLinesFromFile(this IReadOnlyFileSystemView view, string path, Encoding encoding)
+    public static string[] ReadAllFileLines(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
@@ -388,18 +396,71 @@ public static class FileSystemViewExtensions
         if (view is LocalFileSystemView)
             return File.ReadAllLines(path, encoding);
         else
-            return ReadAllLinesFromFileCore(view, path, encoding ?? throw new ArgumentNullException(nameof(encoding)));
+            return ReadAllFileLinesCore(view, path, encoding ?? throw new ArgumentNullException(nameof(encoding)));
     }
 
-    static string[] ReadAllLinesFromFileCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
+    static string[] ReadAllFileLinesCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        using var reader = new StreamReader(view.OpenFileForReading(path), encoding);
+        using var reader = new StreamReader(view.OpenFileRead(path), encoding);
 
         var lines = new List<string>();
         while (reader.ReadLine() is not null and var line)
             lines.Add(line);
 
         return lines.ToArray();
+    }
+
+    /// <inheritdoc cref="File.WriteAllLines(string, IEnumerable{string})"/>
+    /// <param name="view">The file system view.</param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    public static void WriteAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents)
+    {
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
+
+        if (view is LocalFileSystemView)
+        {
+            File.WriteAllLines(path, contents!);
+        }
+        else
+        {
+            if (contents is null)
+                throw new ArgumentNullException(nameof(contents));
+
+            using var writer = view.CreateTextFile(path);
+            WriteAllLinesCore(writer, contents);
+        }
+    }
+
+    /// <inheritdoc cref="File.WriteAllLines(string, IEnumerable{string}, Encoding)"/>
+    /// <param name="view">The file system view.</param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="encoding"><inheritdoc/></param>
+    public static void WriteAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents, Encoding encoding)
+    {
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
+
+        if (view is LocalFileSystemView)
+        {
+            File.WriteAllLines(path, contents!, encoding);
+        }
+        else
+        {
+            if (contents is null)
+                throw new ArgumentNullException(nameof(contents));
+
+            using var writer = view.CreateTextFile(path, encoding);
+            WriteAllLinesCore(writer, contents);
+        }
+    }
+
+    static void WriteAllLinesCore(StreamWriter writer, IEnumerable<string?> contents)
+    {
+        foreach (string? line in contents)
+            writer.WriteLine(line);
     }
 
     #endregion

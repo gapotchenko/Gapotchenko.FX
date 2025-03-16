@@ -36,7 +36,7 @@ sealed class LocalFileSystemView : IFileSystemView
     public IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateFiles(path, searchPattern, searchOption);
 
-    public Stream OpenFileForReading(string path) => File.OpenRead(path);
+    public Stream OpenFileRead(string path) => File.OpenRead(path);
 
     public Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) => File.Open(path, mode, access, share);
 

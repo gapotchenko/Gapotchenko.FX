@@ -61,10 +61,10 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.EnumerateFiles(path, searchPattern, searchOption);
     }
 
-    public override Stream OpenFileForReading(string path)
+    public override Stream OpenFileRead(string path)
     {
         EnsureCanRead();
-        return base.OpenFileForReading(path);
+        return base.OpenFileRead(path);
     }
 
     public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share)

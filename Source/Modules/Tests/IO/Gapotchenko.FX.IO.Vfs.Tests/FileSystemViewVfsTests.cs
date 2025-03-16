@@ -84,7 +84,7 @@ public abstract partial class FileSystemViewVfsTests
 
         static void Mutate(IFileSystemView vfs, string rootPath)
         {
-            vfs.WriteAllTextToFile(
+            vfs.WriteAllFileText(
                 vfs.CombinePaths(rootPath, fileName),
                 text);
         }
@@ -93,7 +93,7 @@ public abstract partial class FileSystemViewVfsTests
         {
             Assert.AreEqual(
                 text,
-                vfs.ReadAllTextFromFile(vfs.CombinePaths(rootPath, fileName)));
+                vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileName)));
         }
     }
 

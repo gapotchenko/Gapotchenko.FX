@@ -74,7 +74,7 @@ public sealed class ZipArchiveTests
         Assert.IsTrue(archive.EnumerateFiles("/").SequenceEqual(["/1.txt"]));
         Assert.IsTrue(archive.EnumerateEntries("/").SequenceEqual(["/1.txt"]));
 
-        Assert.AreEqual("The first file.", archive.ReadAllTextFromFile("1.txt"));
+        Assert.AreEqual("The first file.", archive.ReadAllFileText("1.txt"));
     }
 
     [TestMethod]
@@ -84,9 +84,9 @@ public sealed class ZipArchiveTests
 
         Assert.IsTrue(archive.EnumerateFiles("/").Order().SequenceEqual(["/1.txt", "/2.txt"]));
 
-        Assert.AreEqual("The first file.", archive.ReadAllTextFromFile("1.txt"));
-        Assert.AreEqual("The second file.", archive.ReadAllTextFromFile("2.txt"));
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllTextFromFile("3.txt"));
+        Assert.AreEqual("The first file.", archive.ReadAllFileText("1.txt"));
+        Assert.AreEqual("The second file.", archive.ReadAllFileText("2.txt"));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText("3.txt"));
     }
 
     [TestMethod]
@@ -98,17 +98,17 @@ public sealed class ZipArchiveTests
         Assert.IsTrue(archive.EnumerateFiles("/", "*", SearchOption.AllDirectories).Order().SequenceEqual(["/Container/1.txt", "/Container/2.txt"]));
         Assert.IsTrue(archive.EnumerateFiles("/Container").Order().SequenceEqual(["/Container/1.txt", "/Container/2.txt"]));
 
-        Assert.AreEqual("The first file.", archive.ReadAllTextFromFile("Container/1.txt"));
-        Assert.AreEqual("The second file.", archive.ReadAllTextFromFile("Container/2.txt"));
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllTextFromFile("Container/3.txt"));
+        Assert.AreEqual("The first file.", archive.ReadAllFileText("Container/1.txt"));
+        Assert.AreEqual("The second file.", archive.ReadAllFileText("Container/2.txt"));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText("Container/3.txt"));
 
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllTextFromFile("1.txt"));
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllTextFromFile("2.txt"));
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllTextFromFile("3.txt"));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText("1.txt"));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText("2.txt"));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText("3.txt"));
 
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllTextFromFile("Other/1.txt"));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllTextFromFile("Other/2.txt"));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllTextFromFile("Other/3.txt"));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText("Other/1.txt"));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText("Other/2.txt"));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText("Other/3.txt"));
     }
 
     [TestMethod]
