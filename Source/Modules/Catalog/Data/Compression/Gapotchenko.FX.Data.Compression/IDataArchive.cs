@@ -5,6 +5,6 @@ namespace Gapotchenko.FX.Data.Compression;
 /// <summary>
 /// Defines the interface of a compressible data archive.
 /// </summary>
-public interface IDataArchive : IFileSystemView
+public interface IDataArchive : IFileSystemView, IDisposable
 {
 }

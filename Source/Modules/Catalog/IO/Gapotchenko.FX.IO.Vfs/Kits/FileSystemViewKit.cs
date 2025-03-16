@@ -35,7 +35,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     protected void EnsureCanRead()
     {
         if (!CanRead)
-            Throw.FSDoesNotSupportReading();
+            ThrowHelper.FSDoesNotSupportReading();
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     protected void EnsureCanWrite()
     {
         if (!CanWrite)
-            Throw.FSDoesNotSupportWriting();
+            ThrowHelper.FSDoesNotSupportWriting();
     }
 
     /// <summary>
@@ -102,9 +102,6 @@ public abstract class FileSystemViewKit : IFileSystemView
 
     /// <inheritdoc/>
     public abstract void CreateDirectory(string path);
-
-    /// <inheritdoc/>
-    public virtual void DeleteDirectory(string path) => DeleteDirectory(path, false);
 
     /// <inheritdoc/>
     public abstract void DeleteDirectory(string path, bool recursive);

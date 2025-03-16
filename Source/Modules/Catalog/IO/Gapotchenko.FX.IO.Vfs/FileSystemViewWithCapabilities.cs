@@ -21,13 +21,13 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     void EnsureCanRead()
     {
         if (!canRead)
-            Throw.FSDoesNotSupportReading();
+            ThrowHelper.FSDoesNotSupportReading();
     }
 
     void EnsureCanWrite()
     {
         if (!canWrite)
-            Throw.FSDoesNotSupportWriting();
+            ThrowHelper.FSDoesNotSupportWriting();
     }
 
     void EnsureCanOpenFile(FileMode mode, FileAccess access) =>

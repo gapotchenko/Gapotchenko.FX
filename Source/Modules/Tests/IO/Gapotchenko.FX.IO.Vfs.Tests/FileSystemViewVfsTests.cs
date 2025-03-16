@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Gapotchenko.FX.IO.Vfs.Tests;
+﻿namespace Gapotchenko.FX.IO.Vfs.Tests;
 
 public abstract partial class FileSystemViewVfsTests
 {
@@ -75,4 +73,28 @@ public abstract partial class FileSystemViewVfsTests
             Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, Path.GetDirectoryName(Path.GetDirectoryName(directoryPath)))));
         }
     }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_ReadWriteAllFileText()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string fileName = "A.txt";
+        const string text = "This is a sample text.";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            vfs.WriteAllTextToFile(
+                vfs.CombinePaths(rootPath, fileName),
+                text);
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            Assert.AreEqual(
+                text,
+                vfs.ReadAllTextFromFile(vfs.CombinePaths(rootPath, fileName)));
+        }
+    }
+
 }

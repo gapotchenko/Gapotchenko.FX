@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Gapotchenko.FX.IO.Vfs.Tests;
+﻿namespace Gapotchenko.FX.IO.Vfs.Tests;
 
 [TestClass]
 public sealed class LocalFileSystemViewVfsTests : FileSystemViewVfsTests

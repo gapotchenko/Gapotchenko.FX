@@ -32,9 +32,6 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <inheritdoc cref="Directory.CreateDirectory(string)"/>
     void CreateDirectory(string path);
 
-    /// <inheritdoc cref="Directory.Delete(string)"/>
-    void DeleteDirectory(string path);
-
     /// <inheritdoc cref="Directory.Delete(string, bool)"/>
     void DeleteDirectory(string path, bool recursive);
 

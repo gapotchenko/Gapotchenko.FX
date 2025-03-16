@@ -11,13 +11,14 @@ using Gapotchenko.FX.Memory;
 using Gapotchenko.FX.Text;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Data.Compression.Zip;
 
 /// <summary>
 /// Represents a package of compressed files in the ZIP archive format.
 /// </summary>
-public class ZipArchive : FileSystemViewKit, IDataArchive, IDisposable
+public class ZipArchive : FileSystemViewKit, IZipArchive
 {
     /// <summary>
     /// Initializes a new read-only instance of the <see cref="ZipArchive"/> class
@@ -135,7 +136,7 @@ public class ZipArchive : FileSystemViewKit, IDataArchive, IDisposable
         // TODO
 
         return StreamView.WithCapabilities(
-            GetFileArchiveEntry(path).Open(),
+            GetFileArchiveEntry(path, mode).Open(),
             CanRead, CanWrite, true);
     }
 
@@ -153,9 +154,10 @@ public class ZipArchive : FileSystemViewKit, IDataArchive, IDisposable
         GetFileArchiveEntry(path).Delete();
     }
 
-    ZipArchiveEntry GetFileArchiveEntry(in StructuredPath path)
+    ZipArchiveEntry GetFileArchiveEntry(in StructuredPath path, FileMode mode = FileMode.Open)
     {
         bool directoryExists;
+        string? entryName = null;
 
         var filePathParts = path.Parts.Span;
         if (filePathParts == null)
@@ -168,20 +170,68 @@ public class ZipArchive : FileSystemViewKit, IDataArchive, IDisposable
         }
         else
         {
-            var entry = m_UnderlyingArchive.GetEntry(VfsPathKit.Join(filePathParts, C_DirectorySeparatorChar));
+            entryName = VfsPathKit.Join(filePathParts, C_DirectorySeparatorChar);
+            var entry = m_UnderlyingArchive.GetEntry(entryName);
             if (entry != null)
+            {
+                // File exists.
+
+                switch (mode)
+                {
+                    case FileMode.CreateNew:
+                        // File already exists but it was requested to be new.
+                        throw new IOException();
+
+                    case FileMode.Create or FileMode.Truncate:
+                        {
+                            using var stream = entry.Open();
+                            stream.SetLength(0);
+                        }
+                        break;
+
+                    case FileMode.Open or FileMode.OpenOrCreate:
+                        // Just open the file.
+                        break;
+
+                    case FileMode.Append:
+                        // Handled down the line.
+                        break;
+
+                    default:
+                        throw new SwitchExpressionException(mode);
+                }
+
                 return entry;
+            }
 
             directoryExists = filePathParts.Length == 1;
             if (!directoryExists)
                 directoryExists = m_UnderlyingArchive.GetEntry(VfsPathKit.Join(filePathParts[..^1], C_DirectorySeparatorChar) + C_DirectorySeparatorChar) != null;
         }
 
-        string? displayPath = path.ToString();
         if (!directoryExists)
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
-        else
-            throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
+
+        // File does not exist.
+
+        switch (mode)
+        {
+            case FileMode.Open or FileMode.Truncate:
+                // Could not find a file.
+                break;
+
+            case FileMode.Create or FileMode.OpenOrCreate or FileMode.CreateNew or FileMode.Append:
+                if (entryName is null)
+                    break;
+                // Create a new file.
+                return m_UnderlyingArchive.CreateEntry(entryName);
+
+            default:
+                throw new SwitchExpressionException(mode);
+        }
+
+        string? displayPath = path.ToString();
+        throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
     }
 
     #endregion

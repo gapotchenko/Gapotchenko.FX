@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.IO.Vfs.Utils;
 
 [StackTraceHidden]
-static class Throw
+static class ThrowHelper
 {
     [DoesNotReturn]
     public static void FSDoesNotSupportReading() =>
