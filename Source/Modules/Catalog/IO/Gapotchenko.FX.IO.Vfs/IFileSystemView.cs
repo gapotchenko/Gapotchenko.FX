@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Represents a virtual file system view.
+/// Represents a virtual file-system view.
 /// </summary>
 public interface IFileSystemView : IReadOnlyFileSystemView
 {
@@ -23,6 +23,21 @@ public interface IFileSystemView : IReadOnlyFileSystemView
 
     /// <inheritdoc cref="File.Delete(string)"/>
     void DeleteFile(string path);
+
+    /// <summary>
+    /// Copies an existing file to a new file.
+    /// Overwriting a file of the same name is controlled by the <paramref name="overwrite"/> parameter.
+    /// </summary>
+    /// <param name="sourcePath">The path of the file to copy.</param>
+    /// <param name="destinationPath">
+    /// The path of the destination file.
+    /// This cannot be a directory.
+    /// </param>
+    /// <param name="overwrite">
+    /// <see langword="true"/> if the destination file should be replaced if it already exists;
+    /// otherwise, <see langword="false"/>.
+    /// </param>
+    void CopyFile(string sourcePath, string destinationPath, bool overwrite);
 
     #endregion
 

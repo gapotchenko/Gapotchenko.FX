@@ -9,14 +9,14 @@ namespace Gapotchenko.FX.IO.Vfs.Kits;
 /// <summary>
 /// Provides a base implementation of a proxy for <see cref="IFileSystemView"/>.
 /// </summary>
-/// <typeparam name="T">The type of the base file system view.</typeparam>
+/// <typeparam name="T">The type of the base file-system view.</typeparam>
 public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     where T : IFileSystemView
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FileSystemViewProxyKit{T}"/> class with the specified base stream.
     /// </summary>
-    /// <param name="baseView">The base file system view to create the proxy for.</param>
+    /// <param name="baseView">The base file-system view to create the proxy for.</param>
     /// <exception cref="ArgumentNullException"><paramref name="baseView"/> is <see langword="null"/>.</exception>
     protected FileSystemViewProxyKit(T baseView)
     {
@@ -61,6 +61,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
 
     /// <inheritdoc/>
     public virtual void DeleteFile(string path) => BaseView.DeleteFile(path);
+
+    /// <inheritdoc/>
+    public virtual void CopyFile(string sourcePath, string destinationPath, bool overwrite) =>
+        BaseView.CopyFile(sourcePath, destinationPath, overwrite);
 
     #endregion
 
@@ -130,7 +134,7 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     #endregion
 
     /// <summary>
-    /// Gets the base file system view.
+    /// Gets the base file-system view.
     /// </summary>
     protected T BaseView { get; }
 }

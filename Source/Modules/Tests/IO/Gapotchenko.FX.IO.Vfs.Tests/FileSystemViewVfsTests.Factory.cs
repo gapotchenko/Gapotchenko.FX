@@ -24,12 +24,12 @@ partial class FileSystemViewVfsTests
         return false;
     }
 
-    void RunVfsTest(VfsReadOnlyTest readOnlyTest)
+    void RunVfsTest(VfsMutatingTest test)
     {
         var vfs = CreateVfs(out string rootPath);
         try
         {
-            readOnlyTest(vfs, rootPath);
+            test(vfs, rootPath);
         }
         finally
         {

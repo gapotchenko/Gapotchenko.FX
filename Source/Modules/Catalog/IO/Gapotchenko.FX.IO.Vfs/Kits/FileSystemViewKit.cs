@@ -4,7 +4,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-using Gapotchenko.FX.IO.Vfs.Properties;
 using Gapotchenko.FX.IO.Vfs.Utils;
 using System.Text;
 
@@ -82,6 +81,33 @@ public abstract class FileSystemViewKit : IFileSystemView
 
     /// <inheritdoc/>
     public abstract void DeleteFile(string path);
+
+    /// <inheritdoc/>
+    public void CopyFile(string sourcePath, string destinationPath, bool overwrite)
+    {
+        VfsValidationKit.Arguments.ValidatePath(sourcePath);
+        VfsValidationKit.Arguments.ValidatePath(destinationPath);
+
+        CopyFileCore(sourcePath, destinationPath, overwrite);
+    }
+
+    /// <inheritdoc cref="CopyFile(string, string, bool)"/>
+    protected virtual void CopyFileCore(string sourcePath, string destinationPath, bool overwrite)
+    {
+        CopyFileToCore(sourcePath, this, destinationPath, overwrite);
+    }
+
+    void CopyFileToCore(string sourcePath, IFileSystemView destinationView, string destinationPath, bool overwrite)
+    {
+        using var sourceStream = OpenFileRead(sourcePath);
+        using var destinationStream = destinationView.OpenFile(
+            destinationPath,
+            overwrite ? FileMode.Create : FileMode.CreateNew,
+            FileAccess.Write,
+            FileShare.None);
+
+        sourceStream.CopyTo(destinationStream);
+    }
 
     #endregion
 

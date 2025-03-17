@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Represents a virtual file system view of the local file system.
+/// Represents a virtual file-system view of the local file system.
 /// </summary>
 sealed class LocalFileSystemView : IFileSystemView
 {
@@ -41,6 +41,9 @@ sealed class LocalFileSystemView : IFileSystemView
     public Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) => File.Open(path, mode, access, share);
 
     public void DeleteFile(string path) => File.Delete(path);
+
+    public void CopyFile(string sourcePath, string destinationPath, bool overwrite) =>
+        File.Copy(sourcePath, destinationPath, overwrite);
 
     #endregion
 

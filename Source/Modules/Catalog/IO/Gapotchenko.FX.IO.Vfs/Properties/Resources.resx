@@ -135,11 +135,17 @@
   <data name="FileTooLong2GB" xml:space="preserve">
     <value>The file is too long. This operation is limited to supporting files less than 2 gigabytes in size.</value>
   </data>
+  <data name="FileXAlreadyExists" xml:space="preserve">
+    <value>The file '{0}' already exists.</value>
+  </data>
   <data name="FSDoesNotSupportReading" xml:space="preserve">
     <value>File system does not support reading.</value>
   </data>
   <data name="FSDoesNotSupportWriting" xml:space="preserve">
     <value>File system does not support writing.</value>
+  </data>
+  <data name="ObjectDoesNotImplXInterface" xml:space="preserve">
+    <value>The object does not implement {0} interface.</value>
   </data>
   <data name="PathIsEmpty" xml:space="preserve">
     <value>The path is empty.</value>

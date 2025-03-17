@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.IO.Vfs.Tests;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2025
+
+namespace Gapotchenko.FX.IO.Vfs.Tests;
 
 public abstract partial class FileSystemViewVfsTests
 {
@@ -84,17 +90,72 @@ public abstract partial class FileSystemViewVfsTests
 
         static void Mutate(IFileSystemView vfs, string rootPath)
         {
-            vfs.WriteAllFileText(
-                vfs.CombinePaths(rootPath, fileName),
-                text);
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            vfs.WriteAllFileText(filePath, text);
         }
 
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
-            Assert.AreEqual(
-                text,
-                vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileName)));
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            Assert.AreEqual(text, vfs.ReadAllFileText(filePath));
         }
     }
 
+    [TestMethod]
+    public void FileSystemView_Vfs_ReadWriteAppendAllFileText()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string fileName = "A.txt";
+        const string text = "This is a sample text.";
+        const string appendedText = " This is an appended text.";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            vfs.WriteAllFileText(filePath, text);
+            vfs.AppendAllFileText(filePath, appendedText);
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            Assert.AreEqual(
+                text + appendedText,
+                vfs.ReadAllFileText(filePath));
+        }
+    }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_CopyFile()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string fileNameA = "A.txt";
+        const string fileNameB = "B.txt";
+        const string fileNameC = "C.txt";
+        const string text = "This is a sample text.";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            string filePathA = vfs.CombinePaths(rootPath, fileNameA);
+            vfs.WriteAllFileText(filePathA, text);
+
+            string filePathB = vfs.CombinePaths(rootPath, fileNameB);
+            vfs.CopyFile(filePathA, filePathB);
+            Assert.ThrowsException<IOException>(() => vfs.CopyFile(filePathB, filePathA, false));
+            Assert.ThrowsException<IOException>(() => vfs.CopyFile(filePathB, filePathA));
+            vfs.CopyFile(filePathB, filePathA, true);
+
+            string filePathC = vfs.CombinePaths(rootPath, fileNameC);
+            Assert.ThrowsException<FileNotFoundException>(() => vfs.CopyFile(filePathC, filePathA));
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            Assert.AreEqual(text, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameA)));
+            Assert.AreEqual(text, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameB)));
+            Assert.IsFalse(vfs.FileExists(vfs.CombinePaths(rootPath, fileNameC)));
+        }
+    }
 }

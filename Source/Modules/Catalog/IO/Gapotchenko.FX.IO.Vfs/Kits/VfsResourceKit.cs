@@ -61,4 +61,14 @@ public static class VfsResourceKit
     /// </code>
     /// </summary>
     public static string PathIsEmpty => Resources.PathIsEmpty;
+
+    /// <summary>
+    /// Looks up a localized string similar to:
+    /// <code>
+    /// The file '{path}' already exists.
+    /// </code>
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The formatted string.</returns>
+    public static string FileAlreadyExists(string? path) => string.Format(Resources.FileXAlreadyExists, path);
 }

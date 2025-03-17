@@ -115,6 +115,15 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file &apos;{0}&apos; already exists..
+        /// </summary>
+        internal static string FileXAlreadyExists {
+            get {
+                return ResourceManager.GetString("FileXAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File system does not support reading..
         /// </summary>
         internal static string FSDoesNotSupportReading {
@@ -129,6 +138,15 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
         internal static string FSDoesNotSupportWriting {
             get {
                 return ResourceManager.GetString("FSDoesNotSupportWriting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The object does not implement {0} interface..
+        /// </summary>
+        internal static string ObjectDoesNotImplXInterface {
+            get {
+                return ResourceManager.GetString("ObjectDoesNotImplXInterface", resourceCulture);
             }
         }
         

@@ -133,11 +133,27 @@ public class ZipArchive : FileSystemViewKit, IZipArchive
 
         EnsureCanOpenFile(mode, access);
 
-        // TODO
+        var (entry, isNew) = GetFileArchiveEntry(path, mode);
+        var stream = entry.Open();
+        try
+        {
+            if (!isNew)
+            {
+                if (mode is FileMode.Create or FileMode.Truncate)
+                    stream.SetLength(0);
+                else if (mode is FileMode.Append)
+                    stream.Seek(0, SeekOrigin.End);
+            }
 
-        return StreamView.WithCapabilities(
-            GetFileArchiveEntry(path, mode).Open(),
-            CanRead, CanWrite, true);
+            return StreamView.WithCapabilities(
+                stream,
+                CanRead, CanWrite, true);
+        }
+        catch
+        {
+            stream.Dispose();
+            throw;
+        }
     }
 
     /// <inheritdoc/>
@@ -154,7 +170,10 @@ public class ZipArchive : FileSystemViewKit, IZipArchive
         GetFileArchiveEntry(path).Delete();
     }
 
-    ZipArchiveEntry GetFileArchiveEntry(in StructuredPath path, FileMode mode = FileMode.Open)
+    ZipArchiveEntry GetFileArchiveEntry(in StructuredPath path) =>
+        GetFileArchiveEntry(path, FileMode.Open).Value;
+
+    (ZipArchiveEntry Value, bool IsNew) GetFileArchiveEntry(in StructuredPath path, FileMode mode)
     {
         bool directoryExists;
         string? entryName = null;
@@ -180,20 +199,13 @@ public class ZipArchive : FileSystemViewKit, IZipArchive
                 {
                     case FileMode.CreateNew:
                         // File already exists but it was requested to be new.
-                        throw new IOException();
-
-                    case FileMode.Create or FileMode.Truncate:
-                        {
-                            using var stream = entry.Open();
-                            stream.SetLength(0);
-                        }
-                        break;
+                        throw new IOException(VfsResourceKit.FileAlreadyExists(path.ToString()));
 
                     case FileMode.Open or FileMode.OpenOrCreate:
                         // Just open the file.
                         break;
 
-                    case FileMode.Append:
+                    case FileMode.Create or FileMode.Truncate or FileMode.Append:
                         // Handled down the line.
                         break;
 
@@ -201,7 +213,7 @@ public class ZipArchive : FileSystemViewKit, IZipArchive
                         throw new SwitchExpressionException(mode);
                 }
 
-                return entry;
+                return (entry, false);
             }
 
             directoryExists = filePathParts.Length == 1;
@@ -222,9 +234,9 @@ public class ZipArchive : FileSystemViewKit, IZipArchive
 
             case FileMode.Create or FileMode.OpenOrCreate or FileMode.CreateNew or FileMode.Append:
                 if (entryName is null)
-                    break;
+                    break; // invalid file name
                 // Create a new file.
-                return m_UnderlyingArchive.CreateEntry(entryName);
+                return (m_UnderlyingArchive.CreateEntry(entryName), true);
 
             default:
                 throw new SwitchExpressionException(mode);
