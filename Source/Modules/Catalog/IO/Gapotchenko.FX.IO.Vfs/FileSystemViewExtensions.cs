@@ -10,6 +10,7 @@
 #define TFF_STREAM_SPAN
 #endif
 
+using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.IO.Vfs.Properties;
 using Gapotchenko.FX.IO.Vfs.Utils;
 using System.Buffers;
@@ -619,11 +620,11 @@ public static class FileSystemViewExtensions
     /// Copies an existing file to a new file in the specified <see cref="IFileSystemView"/> destination.
     /// Overwriting a file of the same name is controlled by the <paramref name="overwrite"/> parameter.
     /// </summary>
-    /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> to copy the file from.</param>
-    /// <param name="sourcePath">The path of the file to copy from the source <see cref="IReadOnlyFileSystemView"/>.</param>
+    /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> of the file to copy.</param>
+    /// <param name="sourcePath">The path of the file to copy.</param>
     /// <param name="destinationView">The destination <see cref="IFileSystemView"/> to copy the file to.</param>
     /// <param name="destinationPath">
-    /// The path of the destination file in the current <see cref="IFileSystemView"/>.
+    /// The path of the destination file in the specified <see cref="IFileSystemView"/>.
     /// This cannot be a directory.
     /// </param>
     /// <param name="overwrite">
@@ -696,8 +697,8 @@ public static class FileSystemViewExtensions
 
             if (builder.Length != 0)
             {
-                if (!IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
-                    !IsDirectorySeparator(path[0], directorySeparatorChar))
+                if (!VfsPathKit.IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
+                    !VfsPathKit.IsDirectorySeparator(path[0], directorySeparatorChar))
                 {
                     builder.Append(directorySeparatorChar);
                 }
@@ -708,10 +709,6 @@ public static class FileSystemViewExtensions
 
         return builder.ToString();
     }
-
-    static bool IsDirectorySeparator(char c, char directorySeparatorChar) =>
-        c == directorySeparatorChar ||
-        c is '/' or '\\';
 
     #endregion
 }

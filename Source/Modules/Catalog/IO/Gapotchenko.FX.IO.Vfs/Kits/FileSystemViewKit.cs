@@ -10,7 +10,7 @@ using System.Text;
 namespace Gapotchenko.FX.IO.Vfs.Kits;
 
 /// <summary>
-/// Provides a base implementation of <see cref="IFileSystemView"/>.
+/// Provides a base implementation of <see cref="IFileSystemView"/> interface.
 /// </summary>
 /// <remarks>
 /// This class provides a foundation for a virtual file system (VFS) implementation.
@@ -88,6 +88,9 @@ public abstract class FileSystemViewKit : IFileSystemView
         VfsValidationKit.Arguments.ValidatePath(sourcePath);
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
 
+        // Avoid opening a file for read if writing is not supported.
+        EnsureCanWrite();
+
         IOHelper.CopyFileNaive(this, sourcePath, this, destinationPath, overwrite);
     }
 
@@ -149,11 +152,29 @@ public abstract class FileSystemViewKit : IFileSystemView
     public string? GetFullPath(string? path)
     {
         if (path is null)
+        {
             return null;
+        }
         else if (path.Length == 0)
+        {
             throw new ArgumentException(VfsResourceKit.PathIsEmpty, nameof(path));
+        }
         else
-            return GetFullPathCore(path);
+        {
+            string fullPath = GetFullPathCore(path);
+
+            if (fullPath.Length != 0)
+            {
+                char directorySeparatorChar = DirectorySeparatorChar;
+                if (fullPath[^1] != directorySeparatorChar &&
+                    VfsPathKit.IsDirectorySeparator(path[^1], directorySeparatorChar))
+                {
+                    fullPath += directorySeparatorChar;
+                }
+            }
+
+            return fullPath;
+        }
     }
 
     /// <inheritdoc cref="GetFullPath(string?)"/>
@@ -170,7 +191,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <inheritdoc/>
     public virtual bool IsPathRooted(ReadOnlySpan<char> path) =>
         !path.IsEmpty &&
-        path[0] == DirectorySeparatorChar;
+        VfsPathKit.IsDirectorySeparator(path[0], DirectorySeparatorChar);
 
     /// <inheritdoc/>
     public virtual string CombinePaths(params IEnumerable<string?> paths)
@@ -192,8 +213,8 @@ public abstract class FileSystemViewKit : IFileSystemView
             }
             else if (builder.Length != 0)
             {
-                if (!IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
-                    !IsDirectorySeparator(path[0], directorySeparatorChar))
+                if (!VfsPathKit.IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
+                    !VfsPathKit.IsDirectorySeparator(path[0], directorySeparatorChar))
                 {
                     builder.Append(directorySeparatorChar);
                 }
@@ -204,10 +225,6 @@ public abstract class FileSystemViewKit : IFileSystemView
 
         return builder.ToString();
     }
-
-    static bool IsDirectorySeparator(char c, char directorySeparatorChar) =>
-        c == directorySeparatorChar ||
-        c is '/' or '\\';
 
     #endregion
 }

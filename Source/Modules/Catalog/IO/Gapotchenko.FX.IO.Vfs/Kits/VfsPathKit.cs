@@ -10,7 +10,7 @@ using System.Text;
 namespace Gapotchenko.FX.IO.Vfs.Kits;
 
 /// <summary>
-/// Provides path manipulation primitives for virtual file system hierarchies.
+/// Provides path manipulation primitives for virtual file-system hierarchies.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public static class VfsPathKit
@@ -115,4 +115,20 @@ public static class VfsPathKit
         }
         return sb.ToString();
     }
+
+    /// <summary>
+    /// Get a value indicating whether the specified character is a directory separator character.
+    /// </summary>
+    /// <param name="c">The character to check.</param>
+    /// <param name="directorySeparatorChar">The canonical directory separator character.</param>
+    /// <returns>
+    /// <see langword="true"/> if the specified character is a directory separator character;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool IsDirectorySeparator(char c, char directorySeparatorChar) =>
+        c == directorySeparatorChar ||
+        IsDirectorySeparator(c);
+
+    /// <inheritdoc cref="IsDirectorySeparator(char, char)"/>
+    public static bool IsDirectorySeparator(char c) => c is '/' or '\\';
 }
