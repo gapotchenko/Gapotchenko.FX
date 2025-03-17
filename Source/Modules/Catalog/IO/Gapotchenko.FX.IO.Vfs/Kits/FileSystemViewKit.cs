@@ -94,13 +94,29 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <inheritdoc cref="CopyFile(string, string, bool)"/>
     protected virtual void CopyFileCore(string sourcePath, string destinationPath, bool overwrite)
     {
-        CopyFileToCore(sourcePath, this, destinationPath, overwrite);
+        CopyFileCore(this, sourcePath, destinationPath, overwrite);
     }
 
-    void CopyFileToCore(string sourcePath, IFileSystemView destinationView, string destinationPath, bool overwrite)
+    /// <inheritdoc/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public void CopyFile(IReadOnlyFileSystemView sourceView, string sourcePath, string destinationPath, bool overwrite)
     {
-        using var sourceStream = OpenFileRead(sourcePath);
-        using var destinationStream = destinationView.OpenFile(
+        if (sourceView is null)
+            throw new ArgumentNullException(nameof(sourceView));
+        VfsValidationKit.Arguments.ValidatePath(sourcePath);
+        VfsValidationKit.Arguments.ValidatePath(destinationPath);
+
+        if (sourceView == this)
+            CopyFileCore(sourcePath, destinationPath, overwrite);
+        else
+            CopyFileCore(sourceView, sourcePath, destinationPath, overwrite);
+    }
+
+    /// <inheritdoc cref="CopyFile(IReadOnlyFileSystemView, string, string, bool)"/>
+    protected virtual void CopyFileCore(IReadOnlyFileSystemView sourceView, string sourcePath, string destinationPath, bool overwrite)
+    {
+        using var sourceStream = sourceView.OpenFileRead(sourcePath);
+        using var destinationStream = OpenFile(
             destinationPath,
             overwrite ? FileMode.Create : FileMode.CreateNew,
             FileAccess.Write,

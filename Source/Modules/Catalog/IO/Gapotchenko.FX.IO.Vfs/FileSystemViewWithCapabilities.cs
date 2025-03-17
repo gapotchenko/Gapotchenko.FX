@@ -79,6 +79,23 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.DeleteFile(path);
     }
 
+    public override void CopyFile(string sourcePath, string destinationPath, bool overwrite)
+    {
+        EnsureCanRead();
+        EnsureCanWrite();
+
+        base.CopyFile(sourcePath, destinationPath, overwrite);
+    }
+
+    public override void CopyFile(IReadOnlyFileSystemView sourceView, string sourcePath, string destinationPath, bool overwrite)
+    {
+        if (sourceView == this)
+            EnsureCanRead();
+        EnsureCanWrite();
+
+        base.CopyFile(sourceView, sourcePath, destinationPath, overwrite);
+    }
+
     #endregion
 
     #region Directories

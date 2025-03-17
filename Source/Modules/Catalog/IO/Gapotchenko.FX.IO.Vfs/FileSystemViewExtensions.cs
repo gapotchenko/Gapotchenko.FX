@@ -591,18 +591,53 @@ public static class FileSystemViewExtensions
     /// Copies an existing file to a new file.
     /// Overwriting a file of the same name is not allowed.
     /// </summary>
+    /// <inheritdoc cref="IFileSystemView.CopyFile(string, string, bool)"/>
     /// <param name="view">The file-system view.</param>
-    /// <param name="sourcePath">The path of the file to copy.</param>
-    /// <param name="destinationPath">
-    /// The path of the destination file.
-    /// This cannot be a directory.
-    /// </param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
     public static void CopyFile(
         this IFileSystemView view,
         string sourcePath,
         string destinationPath) =>
         (view ?? throw new ArgumentNullException(nameof(view)))
         .CopyFile(sourcePath, destinationPath, false);
+
+    /// <summary>
+    /// Copies an existing file from the specified source <see cref="IReadOnlyFileSystemView"/> to a new file in the current <see cref="IFileSystemView"/>.
+    /// Overwriting a file of the same name is not allowed.
+    /// </summary>
+    /// <inheritdoc cref="IFileSystemView.CopyFile(IReadOnlyFileSystemView, string, string, bool)"/>
+    /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> to copy the file from.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationView">The destination <see cref="IFileSystemView"/> to copy the file to.</param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    public static void CopyFile(
+        this IReadOnlyFileSystemView sourceView,
+        string sourcePath,
+        IFileSystemView destinationView,
+        string destinationPath) =>
+        CopyFile(sourceView, sourcePath, destinationView, destinationPath, false);
+
+    /// <inheritdoc cref="IFileSystemView.CopyFile(IReadOnlyFileSystemView, string, string, bool)"/>
+    /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> to copy the file from.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationView">The destination <see cref="IFileSystemView"/> to copy the file to.</param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    public static void CopyFile(
+        this IReadOnlyFileSystemView sourceView,
+        string sourcePath,
+        IFileSystemView destinationView,
+        string destinationPath,
+        bool overwrite)
+    {
+        if (sourceView is null)
+            throw new ArgumentNullException(nameof(sourceView));
+        if (destinationView is null)
+            throw new ArgumentNullException(nameof(destinationView));
+
+        destinationView.CopyFile(sourceView, sourcePath, destinationPath, overwrite);
+    }
 
     #endregion // Files
 

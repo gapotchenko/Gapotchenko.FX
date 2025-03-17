@@ -173,4 +173,35 @@ public abstract partial class FileSystemViewVfsTests
             Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameD)));
         }
     }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_CopyFileTo()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string sourceFileName = "Source.txt";
+        const string destinationFileName = "Destination.txt";
+        const string fileContents = "This is a sample text.";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            using var sourceVfs = new TempLocalVfs();
+            string sourceFilePath = sourceVfs.CombinePaths(sourceVfs.RootPath, sourceFileName);
+            sourceVfs.WriteAllFileText(sourceFilePath, fileContents);
+
+            var destinationVfs = vfs;
+            string destinationFilePath = destinationVfs.CombinePaths(rootPath, destinationFileName);
+            sourceVfs.CopyFile(sourceFilePath, destinationVfs, destinationFilePath);
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            Assert.That.VfsEntriesAre(
+                vfs,
+                rootPath,
+                [destinationFileName]);
+
+            Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, destinationFileName)));
+        }
+    }
 }

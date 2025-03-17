@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.Linq;
 using System.Diagnostics;
 
@@ -12,90 +13,87 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// <summary>
 /// Represents a virtual file-system view of the local file system.
 /// </summary>
-sealed class LocalFileSystemView : IFileSystemView
+sealed class LocalFileSystemView : FileSystemViewKit
 {
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public static LocalFileSystemView Instance { get; } = new();
 
     #region Capabilities
 
-    public bool CanRead => true;
+    public override bool CanRead => true;
 
-    public bool CanWrite => true;
+    public override bool CanWrite => true;
 
     #endregion
 
     #region Files
 
-    public bool FileExists([NotNullWhen(true)] string? path) => File.Exists(path);
+    public override bool FileExists([NotNullWhen(true)] string? path) => File.Exists(path);
 
-    public IEnumerable<string> EnumerateFiles(string path) => Directory.EnumerateFiles(path);
+    public override IEnumerable<string> EnumerateFiles(string path) => Directory.EnumerateFiles(path);
 
-    public IEnumerable<string> EnumerateFiles(string path, string searchPattern) => Directory.EnumerateFiles(path, searchPattern);
+    public override IEnumerable<string> EnumerateFiles(string path, string searchPattern) => Directory.EnumerateFiles(path, searchPattern);
 
-    public IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
+    public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateFiles(path, searchPattern, searchOption);
 
-    public Stream OpenFileRead(string path) => File.OpenRead(path);
+    public override Stream OpenFileRead(string path) => File.OpenRead(path);
 
-    public Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) => File.Open(path, mode, access, share);
+    public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) => File.Open(path, mode, access, share);
 
-    public void DeleteFile(string path) => File.Delete(path);
+    public override void DeleteFile(string path) => File.Delete(path);
 
-    public void CopyFile(string sourcePath, string destinationPath, bool overwrite) =>
+    protected override void CopyFileCore(string sourcePath, string destinationPath, bool overwrite) =>
         File.Copy(sourcePath, destinationPath, overwrite);
 
     #endregion
 
     #region Directories
 
-    public bool DirectoryExists([NotNullWhen(true)] string? path) => Directory.Exists(path);
+    public override bool DirectoryExists([NotNullWhen(true)] string? path) => Directory.Exists(path);
 
-    public IEnumerable<string> EnumerateDirectories(string path) => Directory.EnumerateDirectories(path);
+    public override IEnumerable<string> EnumerateDirectories(string path) => Directory.EnumerateDirectories(path);
 
-    public IEnumerable<string> EnumerateDirectories(string path, string searchPattern) => Directory.EnumerateDirectories(path, searchPattern);
+    public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern) => Directory.EnumerateDirectories(path, searchPattern);
 
-    public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
+    public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateDirectories(path, searchPattern, searchOption);
 
-    public void CreateDirectory(string path) => Directory.CreateDirectory(path);
+    public override void CreateDirectory(string path) => Directory.CreateDirectory(path);
 
-    public void DeleteDirectory(string path) => Directory.Delete(path);
-
-    public void DeleteDirectory(string path, bool recursive) => Directory.Delete(path, recursive);
+    public override void DeleteDirectory(string path, bool recursive) => Directory.Delete(path, recursive);
 
     #endregion
 
     #region Entries
 
-    public bool EntryExists([NotNullWhen(true)] string? path) => FileSystem.EntryExists(path);
+    public override bool EntryExists([NotNullWhen(true)] string? path) => FileSystem.EntryExists(path);
 
-    public IEnumerable<string> EnumerateEntries(string path) => Directory.EnumerateFileSystemEntries(path);
+    public override IEnumerable<string> EnumerateEntries(string path) => Directory.EnumerateFileSystemEntries(path);
 
-    public IEnumerable<string> EnumerateEntries(string path, string searchPattern) => Directory.EnumerateFileSystemEntries(path, searchPattern);
+    public override IEnumerable<string> EnumerateEntries(string path, string searchPattern) => Directory.EnumerateFileSystemEntries(path, searchPattern);
 
-    public IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
+    public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
 
     #endregion
 
     #region Paths
 
-    public char DirectorySeparatorChar => Path.DirectorySeparatorChar;
+    public override char DirectorySeparatorChar => Path.DirectorySeparatorChar;
 
-    public StringComparer PathComparer => FileSystem.PathComparer;
+    public override StringComparer PathComparer => FileSystem.PathComparer;
 
-    [return: NotNullIfNotNull(nameof(path))]
-    public string? GetFullPath(string? path) => path is null ? null : Path.GetFullPath(path);
+    protected override string GetFullPathCore(string path) => Path.GetFullPath(path);
 
-    public bool IsPathRooted(ReadOnlySpan<char> path) =>
+    public override bool IsPathRooted(ReadOnlySpan<char> path) =>
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         Path.IsPathRooted(path);
 #else
         Path.IsPathRooted(path.ToString());
 #endif
 
-    public string CombinePaths(params IEnumerable<string?> paths)
+    public override string CombinePaths(params IEnumerable<string?> paths)
     {
         if (paths is null)
             throw new ArgumentNullException(nameof(paths));
