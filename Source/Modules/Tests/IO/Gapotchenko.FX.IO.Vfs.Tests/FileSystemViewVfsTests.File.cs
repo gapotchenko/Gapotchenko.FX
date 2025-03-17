@@ -8,6 +8,8 @@ namespace Gapotchenko.FX.IO.Vfs.Tests;
 
 partial class FileSystemViewVfsTests
 {
+    #region Read/write/append text
+
     [TestMethod]
     public void FileSystemView_Vfs_File_WriteReadAllText()
     {
@@ -53,6 +55,10 @@ partial class FileSystemViewVfsTests
                 vfs.ReadAllFileText(filePath));
         }
     }
+
+    #endregion
+
+    #region Copy
 
     [TestMethod]
     public void FileSystemView_Vfs_File_Copy()
@@ -130,4 +136,6 @@ partial class FileSystemViewVfsTests
             Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, destinationFileName)));
         }
     }
+
+    #endregion
 }
