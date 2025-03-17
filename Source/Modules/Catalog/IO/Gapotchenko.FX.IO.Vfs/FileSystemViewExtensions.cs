@@ -12,7 +12,7 @@ using System.Text;
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Provides extension methods for <see cref="IFileSystemView"/>.
+/// Provides extension methods for <see cref="IFileSystemView"/> interface.
 /// </summary>
 public static partial class FileSystemViewExtensions
 {

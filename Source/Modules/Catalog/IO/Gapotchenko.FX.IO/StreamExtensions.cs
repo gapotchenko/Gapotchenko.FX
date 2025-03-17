@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.IO;
+﻿using System.Buffers;
+
+namespace Gapotchenko.FX.IO;
 
 /// <summary>
 /// Provides extension methods for <see cref="Stream"/>.
@@ -27,20 +29,29 @@ public static class StreamExtensions
         if (count == 0)
             return;
 
-        byte[] buffer = new byte[bufferSize];
-        while (count != 0)
+        var arrayPool = ArrayPool<byte>.Shared;
+
+        byte[] buffer = arrayPool.Rent(bufferSize);
+        try
         {
-            int bytesToRead = (int)Math.Min(bufferSize, count);
-
-            int readBytes = source.Read(buffer, 0, bytesToRead);
-            if (readBytes == 0)
+            while (count != 0)
             {
-                // EOF
-                break;
-            }
+                int bytesToRead = (int)Math.Min(bufferSize, count);
 
-            destination.Write(buffer, 0, readBytes);
-            count -= readBytes;
+                int readBytes = source.Read(buffer, 0, bytesToRead);
+                if (readBytes == 0)
+                {
+                    // EOF
+                    break;
+                }
+
+                destination.Write(buffer, 0, readBytes);
+                count -= readBytes;
+            }
+        }
+        finally
+        {
+            arrayPool.Return(buffer);
         }
 
         if (count != 0)
@@ -78,24 +89,34 @@ public static class StreamExtensions
         if (count == 0)
             return;
 
-        byte[] buffer = new byte[bufferSize];
-        while (count != 0)
+        var arrayPool = ArrayPool<byte>.Shared;
+
+        byte[] buffer = arrayPool.Rent(bufferSize);
+        try
         {
-            int bytesToRead = (int)(Math.Min(bufferSize, count));
-
-            int readBytes = await source.ReadAsync(buffer, 0, bytesToRead).ConfigureAwait(false);
-            if (readBytes == 0)
+            while (count != 0)
             {
-                // EOF
-                break;
-            }
+                int bytesToRead = (int)(Math.Min(bufferSize, count));
 
-            await destination.WriteAsync(buffer, 0, readBytes).ConfigureAwait(false);
-            count -= readBytes;
+                int readBytes = await source.ReadAsync(buffer, 0, bytesToRead).ConfigureAwait(false);
+                if (readBytes == 0)
+                {
+                    // EOF
+                    break;
+                }
+
+                await destination.WriteAsync(buffer, 0, readBytes).ConfigureAwait(false);
+                count -= readBytes;
+            }
+        }
+        finally
+        {
+            arrayPool.Return(buffer);
         }
 
         if (count != 0)
             throw new EndOfStreamException();
+
     }
 
     /// <summary>
