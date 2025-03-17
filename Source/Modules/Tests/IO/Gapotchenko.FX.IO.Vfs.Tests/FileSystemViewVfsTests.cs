@@ -143,8 +143,10 @@ public abstract partial class FileSystemViewVfsTests
 
             string filePathB = vfs.CombinePaths(rootPath, fileNameB);
             vfs.CopyFile(filePathA, filePathB);
-            Assert.ThrowsException<IOException>(() => vfs.CopyFile(filePathB, filePathA, false));
+            Assert.IsTrue(vfs.FileExists(filePathA));
+
             Assert.ThrowsException<IOException>(() => vfs.CopyFile(filePathB, filePathA));
+            Assert.ThrowsException<IOException>(() => vfs.CopyFile(filePathB, filePathA, false));
             vfs.CopyFile(filePathB, filePathA, true);
 
             string filePathC = vfs.CombinePaths(rootPath, fileNameC);
