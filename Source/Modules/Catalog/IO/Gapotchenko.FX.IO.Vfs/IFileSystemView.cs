@@ -39,23 +39,6 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// </param>
     void CopyFile(string sourcePath, string destinationPath, bool overwrite);
 
-    /// <summary>
-    /// Copies an existing file from the specified source <see cref="IReadOnlyFileSystemView"/> to a new file in the current <see cref="IFileSystemView"/>.
-    /// Overwriting a file of the same name is controlled by the <paramref name="overwrite"/> parameter.
-    /// </summary>
-    /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> to copy the file from.</param>
-    /// <param name="sourcePath">The path of the file to copy from the source <see cref="IReadOnlyFileSystemView"/>.</param>
-    /// <param name="destinationPath">
-    /// The path of the destination file in the current <see cref="IFileSystemView"/>.
-    /// This cannot be a directory.
-    /// </param>
-    /// <param name="overwrite">
-    /// <see langword="true"/> if the destination file should be replaced if it already exists;
-    /// otherwise, <see langword="false"/>.
-    /// </param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    void CopyFile(IReadOnlyFileSystemView sourceView, string sourcePath, string destinationPath, bool overwrite);
-
     #endregion
 
     #region Directories

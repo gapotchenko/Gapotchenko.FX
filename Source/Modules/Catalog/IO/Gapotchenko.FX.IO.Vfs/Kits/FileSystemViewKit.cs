@@ -34,7 +34,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     protected void EnsureCanRead()
     {
         if (!CanRead)
-            ThrowHelper.FSDoesNotSupportReading();
+            ThrowHelper.CannotReadFS();
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     protected void EnsureCanWrite()
     {
         if (!CanWrite)
-            ThrowHelper.FSDoesNotSupportWriting();
+            ThrowHelper.CannotWriteFS();
     }
 
     /// <summary>
@@ -83,46 +83,12 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract void DeleteFile(string path);
 
     /// <inheritdoc/>
-    public void CopyFile(string sourcePath, string destinationPath, bool overwrite)
+    public virtual void CopyFile(string sourcePath, string destinationPath, bool overwrite)
     {
         VfsValidationKit.Arguments.ValidatePath(sourcePath);
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
 
-        CopyFileCore(sourcePath, destinationPath, overwrite);
-    }
-
-    /// <inheritdoc cref="CopyFile(string, string, bool)"/>
-    protected virtual void CopyFileCore(string sourcePath, string destinationPath, bool overwrite)
-    {
-        CopyFileCore(this, sourcePath, destinationPath, overwrite);
-    }
-
-    /// <inheritdoc/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public void CopyFile(IReadOnlyFileSystemView sourceView, string sourcePath, string destinationPath, bool overwrite)
-    {
-        if (sourceView is null)
-            throw new ArgumentNullException(nameof(sourceView));
-        VfsValidationKit.Arguments.ValidatePath(sourcePath);
-        VfsValidationKit.Arguments.ValidatePath(destinationPath);
-
-        if (sourceView == this)
-            CopyFileCore(sourcePath, destinationPath, overwrite);
-        else
-            CopyFileCore(sourceView, sourcePath, destinationPath, overwrite);
-    }
-
-    /// <inheritdoc cref="CopyFile(IReadOnlyFileSystemView, string, string, bool)"/>
-    protected virtual void CopyFileCore(IReadOnlyFileSystemView sourceView, string sourcePath, string destinationPath, bool overwrite)
-    {
-        using var sourceStream = sourceView.OpenFileRead(sourcePath);
-        using var destinationStream = OpenFile(
-            destinationPath,
-            overwrite ? FileMode.Create : FileMode.CreateNew,
-            FileAccess.Write,
-            FileShare.None);
-
-        sourceStream.CopyTo(destinationStream);
+        IOHelper.CopyFileNaive(this, sourcePath, this, destinationPath, overwrite);
     }
 
     #endregion

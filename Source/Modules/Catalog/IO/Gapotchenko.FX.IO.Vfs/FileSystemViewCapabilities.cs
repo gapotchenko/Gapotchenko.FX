@@ -25,14 +25,14 @@ static class FileSystemViewCapabilities
             ((access & FileAccess.Read) != 0 ||
             mode is FileMode.Open or FileMode.OpenOrCreate))
         {
-            ThrowHelper.FSDoesNotSupportReading();
+            ThrowHelper.CannotReadFS();
         }
 
         if (!canWrite &&
             ((access & FileAccess.Write) != 0 ||
             mode is FileMode.Create or FileMode.CreateNew or FileMode.OpenOrCreate or FileMode.Truncate or FileMode.Append))
         {
-            ThrowHelper.FSDoesNotSupportWriting();
+            ThrowHelper.CannotWriteFS();
         }
     }
 }

@@ -21,13 +21,13 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     void EnsureCanRead()
     {
         if (!canRead)
-            ThrowHelper.FSDoesNotSupportReading();
+            ThrowHelper.CannotReadFS();
     }
 
     void EnsureCanWrite()
     {
         if (!canWrite)
-            ThrowHelper.FSDoesNotSupportWriting();
+            ThrowHelper.CannotWriteFS();
     }
 
     void EnsureCanOpenFile(FileMode mode, FileAccess access) =>
@@ -83,17 +83,7 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     {
         EnsureCanRead();
         EnsureCanWrite();
-
         base.CopyFile(sourcePath, destinationPath, overwrite);
-    }
-
-    public override void CopyFile(IReadOnlyFileSystemView sourceView, string sourcePath, string destinationPath, bool overwrite)
-    {
-        if (sourceView == this)
-            EnsureCanRead();
-        EnsureCanWrite();
-
-        base.CopyFile(sourceView, sourcePath, destinationPath, overwrite);
     }
 
     #endregion

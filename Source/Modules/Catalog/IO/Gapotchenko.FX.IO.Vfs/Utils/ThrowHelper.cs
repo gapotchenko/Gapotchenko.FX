@@ -13,10 +13,8 @@ namespace Gapotchenko.FX.IO.Vfs.Utils;
 static class ThrowHelper
 {
     [DoesNotReturn]
-    public static void FSDoesNotSupportReading() =>
-        throw new NotSupportedException(Resources.FSDoesNotSupportReading);
+    public static void CannotReadFS() => throw new NotSupportedException(Resources.CannotReadFS);
 
     [DoesNotReturn]
-    public static void FSDoesNotSupportWriting() =>
-        throw new NotSupportedException(Resources.FSDoesNotSupportWriting);
+    public static void CannotWriteFS() => throw new NotSupportedException(Resources.CannotWriteFS);
 }

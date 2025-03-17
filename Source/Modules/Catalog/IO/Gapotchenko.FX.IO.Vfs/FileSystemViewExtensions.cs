@@ -14,7 +14,6 @@ using Gapotchenko.FX.IO.Vfs.Properties;
 using Gapotchenko.FX.IO.Vfs.Utils;
 using System.Buffers;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs;
@@ -587,6 +586,8 @@ public static class FileSystemViewExtensions
 
     #endregion
 
+    #region Copy
+
     /// <summary>
     /// Copies an existing file to a new file.
     /// Overwriting a file of the same name is not allowed.
@@ -603,14 +604,10 @@ public static class FileSystemViewExtensions
         .CopyFile(sourcePath, destinationPath, false);
 
     /// <summary>
-    /// Copies an existing file from the specified source <see cref="IReadOnlyFileSystemView"/> to a new file in the current <see cref="IFileSystemView"/>.
+    /// Copies an existing file to a new file in the specified <see cref="IFileSystemView"/> destination.
     /// Overwriting a file of the same name is not allowed.
     /// </summary>
-    /// <inheritdoc cref="IFileSystemView.CopyFile(IReadOnlyFileSystemView, string, string, bool)"/>
-    /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> to copy the file from.</param>
-    /// <param name="sourcePath"><inheritdoc/></param>
-    /// <param name="destinationView">The destination <see cref="IFileSystemView"/> to copy the file to.</param>
-    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <inheritdoc cref="CopyFile(IReadOnlyFileSystemView, string, IFileSystemView, string, bool)"/>
     public static void CopyFile(
         this IReadOnlyFileSystemView sourceView,
         string sourcePath,
@@ -618,17 +615,24 @@ public static class FileSystemViewExtensions
         string destinationPath) =>
         CopyFile(sourceView, sourcePath, destinationView, destinationPath, false);
 
-    /// <inheritdoc cref="IFileSystemView.CopyFile(IReadOnlyFileSystemView, string, string, bool)"/>
+    /// <summary>
+    /// Copies an existing file to a new file in the specified <see cref="IFileSystemView"/> destination.
+    /// Overwriting a file of the same name is controlled by the <paramref name="overwrite"/> parameter.
+    /// </summary>
     /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> to copy the file from.</param>
-    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="sourcePath">The path of the file to copy from the source <see cref="IReadOnlyFileSystemView"/>.</param>
     /// <param name="destinationView">The destination <see cref="IFileSystemView"/> to copy the file to.</param>
-    /// <param name="destinationPath"><inheritdoc/></param>
-    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="destinationPath">
+    /// The path of the destination file in the current <see cref="IFileSystemView"/>.
+    /// This cannot be a directory.
+    /// </param>
+    /// <param name="overwrite">
+    /// <see langword="true"/> if the destination file should be replaced if it already exists;
+    /// otherwise, <see langword="false"/>.
+    /// </param>
     public static void CopyFile(
-        this IReadOnlyFileSystemView sourceView,
-        string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath,
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        IFileSystemView destinationView, string destinationPath,
         bool overwrite)
     {
         if (sourceView is null)
@@ -636,8 +640,13 @@ public static class FileSystemViewExtensions
         if (destinationView is null)
             throw new ArgumentNullException(nameof(destinationView));
 
-        destinationView.CopyFile(sourceView, sourcePath, destinationPath, overwrite);
+        IOHelper.CopyFileOptimized(
+            sourceView, sourcePath,
+            destinationView, destinationPath,
+            overwrite);
     }
+
+    #endregion
 
     #endregion // Files
 

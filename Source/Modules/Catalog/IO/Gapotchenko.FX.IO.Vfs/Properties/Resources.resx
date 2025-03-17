@@ -138,10 +138,10 @@
   <data name="FileXAlreadyExists" xml:space="preserve">
     <value>The file '{0}' already exists.</value>
   </data>
-  <data name="FSDoesNotSupportReading" xml:space="preserve">
+  <data name="CannotReadFS" xml:space="preserve">
     <value>File system does not support reading.</value>
   </data>
-  <data name="FSDoesNotSupportWriting" xml:space="preserve">
+  <data name="CannotWriteFS" xml:space="preserve">
     <value>File system does not support writing.</value>
   </data>
   <data name="ObjectDoesNotImplXInterface" xml:space="preserve">

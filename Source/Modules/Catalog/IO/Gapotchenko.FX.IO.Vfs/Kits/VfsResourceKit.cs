@@ -14,6 +14,8 @@ namespace Gapotchenko.FX.IO.Vfs.Kits;
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public static class VfsResourceKit
 {
+    #region Files
+
     /// <summary>
     /// Looks up a localized string similar to:
     /// <code>
@@ -23,6 +25,42 @@ public static class VfsResourceKit
     /// <param name="path">The path.</param>
     /// <returns>The formatted string.</returns>
     public static string CouldNotFindFile(string? path) => string.Format(Resources.CouldNotFindFileX, path);
+
+    /// <summary>
+    /// Looks up a localized string similar to:
+    /// <code>
+    /// The file '{path}' already exists.
+    /// </code>
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The formatted string.</returns>
+    public static string FileAlreadyExists(string? path) => string.Format(Resources.FileXAlreadyExists, path);
+
+    #endregion
+
+    #region Directories
+
+    /// <summary>
+    /// Looks up a localized string similar to:
+    /// <code>
+    /// The directory '{path}' is not empty.
+    /// </code>
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The formatted string.</returns>
+    public static string DirectoryIsNotEmpty(string? path) => string.Format(Resources.DirectoryXIsNotEmpty, path);
+
+    #endregion
+
+    #region Paths
+
+    /// <summary>
+    /// Looks up a localized string similar to:
+    /// <code>
+    /// The path is empty.
+    /// </code>
+    /// </summary>
+    public static string PathIsEmpty => Resources.PathIsEmpty;
 
     /// <summary>
     /// Looks up a localized string similar to:
@@ -44,31 +82,25 @@ public static class VfsResourceKit
     /// <returns>The formatted string.</returns>
     public static string AccessToPathIsDenied(string? path) => string.Format(Resources.AccessToPathXIsDenied, path);
 
-    /// <summary>
-    /// Looks up a localized string similar to:
-    /// <code>
-    /// The directory '{path}' is not empty.
-    /// </code>
-    /// </summary>
-    /// <param name="path">The path.</param>
-    /// <returns>The formatted string.</returns>
-    public static string DirectoryIsNotEmpty(string? path) => string.Format(Resources.DirectoryXIsNotEmpty, path);
+    #endregion
+
+    #region File system
 
     /// <summary>
     /// Looks up a localized string similar to:
     /// <code>
-    /// The path is empty.
+    /// File system does not support reading.
     /// </code>
     /// </summary>
-    public static string PathIsEmpty => Resources.PathIsEmpty;
+    public static string CannotReadFS => Resources.CannotReadFS;
 
     /// <summary>
     /// Looks up a localized string similar to:
     /// <code>
-    /// The file '{path}' already exists.
+    /// File system does not support writing.
     /// </code>
     /// </summary>
-    /// <param name="path">The path.</param>
-    /// <returns>The formatted string.</returns>
-    public static string FileAlreadyExists(string? path) => string.Format(Resources.FileXAlreadyExists, path);
+    public static string CannotWriteFS => Resources.CannotWriteFS;
+
+    #endregion
 }

@@ -43,7 +43,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override void DeleteFile(string path) => File.Delete(path);
 
-    protected override void CopyFileCore(string sourcePath, string destinationPath, bool overwrite) =>
+    public override void CopyFile(string sourcePath, string destinationPath, bool overwrite) =>
         File.Copy(sourcePath, destinationPath, overwrite);
 
     #endregion

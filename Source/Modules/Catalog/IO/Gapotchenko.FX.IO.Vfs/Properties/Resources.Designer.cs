@@ -70,6 +70,24 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File system does not support reading..
+        /// </summary>
+        internal static string CannotReadFS {
+            get {
+                return ResourceManager.GetString("CannotReadFS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File system does not support writing..
+        /// </summary>
+        internal static string CannotWriteFS {
+            get {
+                return ResourceManager.GetString("CannotWriteFS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find file &apos;{0}&apos;..
         /// </summary>
         internal static string CouldNotFindFileX {
@@ -120,24 +138,6 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
         internal static string FileXAlreadyExists {
             get {
                 return ResourceManager.GetString("FileXAlreadyExists", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File system does not support reading..
-        /// </summary>
-        internal static string FSDoesNotSupportReading {
-            get {
-                return ResourceManager.GetString("FSDoesNotSupportReading", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File system does not support writing..
-        /// </summary>
-        internal static string FSDoesNotSupportWriting {
-            get {
-                return ResourceManager.GetString("FSDoesNotSupportWriting", resourceCulture);
             }
         }
         
