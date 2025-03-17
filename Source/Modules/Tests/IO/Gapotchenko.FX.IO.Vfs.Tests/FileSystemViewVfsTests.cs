@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.Linq;
+
 namespace Gapotchenko.FX.IO.Vfs.Tests;
 
 public abstract partial class FileSystemViewVfsTests
@@ -81,47 +83,47 @@ public abstract partial class FileSystemViewVfsTests
     }
 
     [TestMethod]
-    public void FileSystemView_Vfs_ReadWriteAllFileText()
+    public void FileSystemView_Vfs_WriteReadAllFileText()
     {
         RunVfsTest(Mutate, Verify);
 
         const string fileName = "A.txt";
-        const string text = "This is a sample text.";
+        const string contents = "This is a sample text.";
 
         static void Mutate(IFileSystemView vfs, string rootPath)
         {
             string filePath = vfs.CombinePaths(rootPath, fileName);
-            vfs.WriteAllFileText(filePath, text);
+            vfs.WriteAllFileText(filePath, contents);
         }
 
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
             string filePath = vfs.CombinePaths(rootPath, fileName);
-            Assert.AreEqual(text, vfs.ReadAllFileText(filePath));
+            Assert.AreEqual(contents, vfs.ReadAllFileText(filePath));
         }
     }
 
     [TestMethod]
-    public void FileSystemView_Vfs_ReadWriteAppendAllFileText()
+    public void FileSystemView_Vfs_WriteAppendReadAllFileText()
     {
         RunVfsTest(Mutate, Verify);
 
         const string fileName = "A.txt";
-        const string text = "This is a sample text.";
-        const string appendedText = " This is an appended text.";
+        const string contents = "This is a sample text.";
+        const string appendedContents = " This is an appended text.";
 
         static void Mutate(IFileSystemView vfs, string rootPath)
         {
             string filePath = vfs.CombinePaths(rootPath, fileName);
-            vfs.WriteAllFileText(filePath, text);
-            vfs.AppendAllFileText(filePath, appendedText);
+            vfs.WriteAllFileText(filePath, contents);
+            vfs.AppendAllFileText(filePath, appendedContents);
         }
 
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
             string filePath = vfs.CombinePaths(rootPath, fileName);
             Assert.AreEqual(
-                text + appendedText,
+                contents + appendedContents,
                 vfs.ReadAllFileText(filePath));
         }
     }
@@ -134,12 +136,13 @@ public abstract partial class FileSystemViewVfsTests
         const string fileNameA = "A.txt";
         const string fileNameB = "B.txt";
         const string fileNameC = "C.txt";
-        const string text = "This is a sample text.";
+        const string fileNameD = "Container/D.txt";
+        const string fileContents = "This is a sample text.";
 
         static void Mutate(IFileSystemView vfs, string rootPath)
         {
             string filePathA = vfs.CombinePaths(rootPath, fileNameA);
-            vfs.WriteAllFileText(filePathA, text);
+            vfs.WriteAllFileText(filePathA, fileContents);
 
             string filePathB = vfs.CombinePaths(rootPath, fileNameB);
             vfs.CopyFile(filePathA, filePathB);
@@ -151,13 +154,23 @@ public abstract partial class FileSystemViewVfsTests
 
             string filePathC = vfs.CombinePaths(rootPath, fileNameC);
             Assert.ThrowsException<FileNotFoundException>(() => vfs.CopyFile(filePathC, filePathA));
+
+            string filePathD = vfs.CombinePaths(rootPath, fileNameD);
+            Assert.ThrowsException<DirectoryNotFoundException>(() => vfs.CopyFile(filePathB, filePathD));
+            vfs.CreateDirectory(vfs.CombinePaths(filePathD, ".."));
+            vfs.CopyFile(filePathB, filePathD);
         }
 
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
-            Assert.AreEqual(text, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameA)));
-            Assert.AreEqual(text, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameB)));
-            Assert.IsFalse(vfs.FileExists(vfs.CombinePaths(rootPath, fileNameC)));
+            Assert.That.VfsEntriesAre(
+                vfs,
+                rootPath,
+                [fileNameA, fileNameB, vfs.CombinePaths(fileNameD, ".."), fileNameD]);
+
+            Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameA)));
+            Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameB)));
+            Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameD)));
         }
     }
 }
