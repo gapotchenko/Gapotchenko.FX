@@ -53,24 +53,31 @@ public static class StreamExtensions
     static void CopyBlockToCore(Stream source, Stream destination, long count, int bufferSize)
     {
         if (count == 0)
+        {
+            // There is nothing to do.
             return;
+        }
 
         var arrayPool = ArrayPool<byte>.Shared;
-
         byte[] buffer = arrayPool.Rent(bufferSize);
         try
         {
-            while (count != 0)
+            bufferSize = buffer.Length;
+            do
             {
-                int bytesToRead = (int)Math.Min(buffer.Length, count);
+                int bytesToRead = (int)Math.Min(bufferSize, count);
                 int bytesRead = source.Read(buffer, 0, bytesToRead);
 
                 if (bytesRead == 0)
+                {
+                    // The source stream has reached the end prematurely.
                     throw new EndOfStreamException();
+                }
 
                 destination.Write(buffer, 0, bytesRead);
                 count -= bytesRead;
             }
+            while (count != 0);
         }
         finally
         {
@@ -152,18 +159,21 @@ public static class StreamExtensions
         CancellationToken cancellationToken)
     {
         if (count == 0)
+        {
+            // There is nothing to do.
             return;
+        }
 
         var arrayPool = ArrayPool<byte>.Shared;
-
         byte[] buffer = arrayPool.Rent(bufferSize);
         try
         {
-            while (count != 0)
+            bufferSize = buffer.Length;
+            do
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                int bytesToRead = (int)(Math.Min(buffer.Length, count));
+                int bytesToRead = (int)(Math.Min(bufferSize, count));
                 int bytesRead = await
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
                     source.ReadAsync(buffer.AsMemory(0, bytesToRead), cancellationToken)
@@ -173,7 +183,10 @@ public static class StreamExtensions
                     .ConfigureAwait(false);
 
                 if (bytesRead == 0)
+                {
+                    // The source stream has reached the end prematurely.
                     throw new EndOfStreamException();
+                }
 
                 await
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -184,6 +197,7 @@ public static class StreamExtensions
                     .ConfigureAwait(false);
                 count -= bytesRead;
             }
+            while (count != 0);
         }
         finally
         {
