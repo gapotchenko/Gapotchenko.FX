@@ -35,5 +35,5 @@ readonly struct StructuredPath
 
     public override string? ToString() =>
         OriginalPath ??
-        VfsPathKit.Join(Parts.Span, ZipArchive.C_DirectorySeparatorChar);
+        VfsPathKit.Join(Parts.Span, ZipArchiveBase.C_DirectorySeparatorChar);
 }

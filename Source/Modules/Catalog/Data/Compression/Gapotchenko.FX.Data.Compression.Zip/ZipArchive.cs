@@ -6,20 +6,21 @@
 
 using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
-using Gapotchenko.FX.Linq;
-using Gapotchenko.FX.Memory;
-using Gapotchenko.FX.Text;
-using System.Diagnostics;
 using System.IO.Compression;
-using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Data.Compression.Zip;
 
 /// <summary>
 /// Represents a package of compressed files in the ZIP archive format.
 /// </summary>
-public class ZipArchive : FileSystemViewKit, IZipArchive
+public sealed partial class ZipArchive :
+    FileSystemViewProxyKit<IZipArchiveView<System.IO.Compression.ZipArchive>>,
+    IZipArchive
 {
+    // For now, the implementation is just a wrapper around System.IO.Compression.ZipArchive.
+    // Which is not ideal because System.IO.Compression.ZipArchive is somewhat lacking
+    // in terms of supported compression methods and features.
+
     /// <summary>
     /// Initializes a new read-only instance of the <see cref="ZipArchive"/> class
     /// from the specified stream.
@@ -32,11 +33,11 @@ public class ZipArchive : FileSystemViewKit, IZipArchive
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ZipArchive"/> class
-    /// from the specified stream and with the <see cref="CanWrite"/> property set as specified.
+    /// from the specified stream and with the <see cref="IFileSystemView.CanWrite"/> property set as specified.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <param name="writable">
-    /// The setting of the <see cref="CanWrite"/> property, 
+    /// The setting of the <see cref="IFileSystemView.CanWrite"/> property, 
     /// which determines whether the archive supports writing.
     /// </param>
     public ZipArchive(Stream stream, bool writable) :
@@ -46,22 +47,32 @@ public class ZipArchive : FileSystemViewKit, IZipArchive
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ZipArchive"/> class
-    /// from the specified stream and with the <see cref="CanWrite"/> property set as specified,
+    /// from the specified stream and with the <see cref="IFileSystemView.CanWrite"/> property set as specified,
     /// and optionally leaves the stream open.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <param name="writable">
-    /// The setting of the <see cref="CanWrite"/> property, 
+    /// The setting of the <see cref="IFileSystemView.CanWrite"/> property, 
     /// which determines whether the archive supports writing.
     /// </param>
     /// <param name="leaveOpen">
     /// <see langword="true"/> to leave the stream open after the <see cref="ZipArchive"/> object is disposed;
     /// otherwise, <see langword="false"/>.
     /// </param>
-    public ZipArchive(Stream stream, bool writable, bool leaveOpen)
+    public ZipArchive(Stream stream, bool writable, bool leaveOpen) :
+        base(
+            CreateViewOnBclImplementation(
+                stream ?? throw new ArgumentNullException(nameof(stream)),
+                writable,
+                leaveOpen))
     {
-        CanWrite = writable;
+    }
 
+    static IZipArchiveView<System.IO.Compression.ZipArchive> CreateViewOnBclImplementation(
+        Stream stream,
+        bool writable,
+        bool leaveOpen)
+    {
         ZipArchiveMode mode;
         if (writable)
         {
@@ -75,443 +86,11 @@ public class ZipArchive : FileSystemViewKit, IZipArchive
             mode = ZipArchiveMode.Read;
         }
 
-        m_UnderlyingArchive = new(stream, mode, leaveOpen);
-    }
-
-    #region Capabilities
-
-    /// <inheritdoc/>
-    public override bool CanRead => m_UnderlyingArchive.Mode != ZipArchiveMode.Create;
-
-    /// <inheritdoc/>
-    public override bool CanWrite { get; }
-
-    #endregion
-
-    #region Files
-
-    /// <inheritdoc/>
-    public override bool FileExists([NotNullWhen(true)] string? path)
-    {
-        EnsureCanRead();
-        return FileExistsCore(path);
-    }
-
-    bool FileExistsCore(in StructuredPath path) => EntryExistsCore(path, true, false);
-
-    /// <inheritdoc/>
-    public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
-    {
-        VfsValidationKit.Arguments.ValidatePath(path);
-        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
-        VfsValidationKit.Arguments.ValidateSearchOption(searchOption);
-
-        EnsureCanRead();
-        return
-            EnumerateEntriesCore(path, searchPattern, searchOption, true, false)
-            .Select(x => GetFullPathCore(x));
+        return CreateView(
+            new System.IO.Compression.ZipArchive(stream, mode, leaveOpen),
+            leaveOpen);
     }
 
     /// <inheritdoc/>
-    public override Stream OpenFileRead(string path)
-    {
-        VfsValidationKit.Arguments.ValidatePath(path);
-
-        EnsureCanRead();
-        return StreamView.WithCapabilities(
-            GetFileArchiveEntry(path).Open(),
-            true, false, true);
-    }
-
-    /// <inheritdoc/>
-    public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share)
-    {
-        VfsValidationKit.Arguments.ValidatePath(path);
-        VfsValidationKit.Arguments.ValidateFileMode(mode);
-        VfsValidationKit.Arguments.ValidateFileAccess(access);
-        VfsValidationKit.Arguments.ValidateFileShare(share);
-
-        EnsureCanOpenFile(mode, access);
-
-        var (entry, isNew) = GetFileArchiveEntry(path, mode);
-        var stream = entry.Open();
-        try
-        {
-            if (!isNew)
-            {
-                if (mode is FileMode.Create or FileMode.Truncate)
-                    stream.SetLength(0);
-                else if (mode is FileMode.Append)
-                    stream.Seek(0, SeekOrigin.End);
-            }
-
-            return StreamView.WithCapabilities(
-                stream,
-                CanRead, CanWrite, true);
-        }
-        catch
-        {
-            stream.Dispose();
-            throw;
-        }
-    }
-
-    /// <inheritdoc/>
-    public override void DeleteFile(string path)
-    {
-        VfsValidationKit.Arguments.ValidatePath(path);
-
-        EnsureCanWrite();
-        DeleteFileCore(path);
-    }
-
-    void DeleteFileCore(in StructuredPath path)
-    {
-        GetFileArchiveEntry(path).Delete();
-    }
-
-    ZipArchiveEntry GetFileArchiveEntry(in StructuredPath path) =>
-        GetFileArchiveEntry(path, FileMode.Open).Value;
-
-    (ZipArchiveEntry Value, bool IsNew) GetFileArchiveEntry(in StructuredPath path, FileMode mode)
-    {
-        bool directoryExists;
-        string? entryName = null;
-
-        var filePathParts = path.Parts.Span;
-        if (filePathParts == null)
-        {
-            directoryExists = false;
-        }
-        else if (filePathParts.Length == 0)
-        {
-            directoryExists = true;
-        }
-        else
-        {
-            entryName = VfsPathKit.Join(filePathParts, C_DirectorySeparatorChar);
-            var entry = m_UnderlyingArchive.GetEntry(entryName);
-            if (entry != null)
-            {
-                // File exists.
-
-                switch (mode)
-                {
-                    case FileMode.CreateNew:
-                        // File already exists but it was requested to be new.
-                        throw new IOException(VfsResourceKit.FileAlreadyExists(path.ToString()));
-
-                    case FileMode.Open or FileMode.OpenOrCreate:
-                        // Just open the file.
-                        break;
-
-                    case FileMode.Create or FileMode.Truncate or FileMode.Append:
-                        // Handled down the line.
-                        break;
-
-                    default:
-                        throw new SwitchExpressionException(mode);
-                }
-
-                return (entry, false);
-            }
-
-            directoryExists = filePathParts.Length == 1;
-            if (!directoryExists)
-                directoryExists = m_UnderlyingArchive.GetEntry(VfsPathKit.Join(filePathParts[..^1], C_DirectorySeparatorChar) + C_DirectorySeparatorChar) != null;
-        }
-
-        if (!directoryExists)
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
-
-        // File does not exist.
-
-        switch (mode)
-        {
-            case FileMode.Open or FileMode.Truncate:
-                // Could not find a file.
-                break;
-
-            case FileMode.Create or FileMode.OpenOrCreate or FileMode.CreateNew or FileMode.Append:
-                if (entryName is null)
-                    break; // invalid file name
-                // Create a new file.
-                return (m_UnderlyingArchive.CreateEntry(entryName), true);
-
-            default:
-                throw new SwitchExpressionException(mode);
-        }
-
-        string? displayPath = path.ToString();
-        throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
-    }
-
-    #endregion
-
-    #region Directories
-
-    /// <inheritdoc/>
-    public override bool DirectoryExists([NotNullWhen(true)] string? path)
-    {
-        EnsureCanRead();
-        return DirectoryExistsCore(path);
-    }
-
-    bool DirectoryExistsCore(in StructuredPath path) => EntryExistsCore(path, false, true);
-
-    /// <inheritdoc/>
-    public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
-    {
-        VfsValidationKit.Arguments.ValidatePath(path);
-        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
-        VfsValidationKit.Arguments.ValidateSearchOption(searchOption);
-
-        EnsureCanRead();
-        return
-            EnumerateEntriesCore(path, searchPattern, searchOption, false, true)
-            .Select(x => GetFullPathCore(x));
-    }
-
-    /// <inheritdoc/>
-    public override void CreateDirectory(string path)
-    {
-        VfsValidationKit.Arguments.ValidatePath(path);
-
-        EnsureCanWrite();
-
-        string[] pathParts =
-            VfsPathKit.Split(path) ??
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
-
-        if (DirectoryExistsCore(pathParts))
-            return;
-
-        int n = pathParts.Length;
-        bool parentExists = n == 1;
-
-        for (int i = 1; i <= n; ++i)
-        {
-            var subPath = pathParts.AsMemory()[..i];
-
-            if (!parentExists && DirectoryExistsCore(subPath))
-                continue;
-
-            m_UnderlyingArchive.CreateEntry(VfsPathKit.Join(subPath.Span, C_DirectorySeparatorChar) + C_DirectorySeparatorChar);
-            parentExists = true;
-        }
-    }
-
-    /// <inheritdoc/>
-    public override void DeleteDirectory(string path, bool recursive)
-    {
-        VfsValidationKit.Arguments.ValidatePath(path);
-
-        EnsureCanWrite();
-        DeleteDirectoryCore(path, recursive);
-    }
-
-    void DeleteDirectoryCore(in StructuredPath path, bool recursive)
-    {
-        var pathParts = path.Parts.Span;
-        if (pathParts != null && pathParts.Length == 0)
-            throw new IOException(VfsResourceKit.AccessToPathIsDenied(path.ToString()));
-
-        if (!recursive)
-        {
-            if (EnumerateEntriesCore(path).Any())
-                throw new IOException(VfsResourceKit.DirectoryIsNotEmpty(path.ToString()));
-        }
-        else
-        {
-            var entryPaths = EnumerateEntriesCore(path).ToList();
-            foreach (string[] entryPathParts in entryPaths)
-            {
-                if (FileExistsCore(entryPathParts))
-                    DeleteFileCore(entryPathParts);
-                else
-                    DeleteDirectoryCore(entryPathParts, true);
-            }
-        }
-
-        GetDirectoryArchiveEntry(path).Delete();
-    }
-
-    ZipArchiveEntry GetDirectoryArchiveEntry(in StructuredPath path)
-    {
-        string? entryPath = VfsPathKit.Join(path.Parts.Span, C_DirectorySeparatorChar);
-        if (entryPath != null)
-        {
-            var entry = m_UnderlyingArchive.GetEntry(entryPath + C_DirectorySeparatorChar);
-            if (entry != null)
-                return entry;
-        }
-
-        string? displayPath = path.OriginalPath ?? entryPath;
-        throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
-    }
-
-    static bool IsDirectoryArchiveEntry(string fullName) => fullName.EndsWith(C_DirectorySeparatorChar);
-
-    #endregion
-
-    #region Entries
-
-    /// <inheritdoc/>
-    public override bool EntryExists([NotNullWhen(true)] string? path)
-    {
-        EnsureCanRead();
-        return EntryExistsCore(path, true, true);
-    }
-
-    bool EntryExistsCore(
-        in StructuredPath path,
-        bool considerFiles,
-        bool considerDirectories)
-    {
-        var pathParts = path.Parts.Span;
-        if (pathParts == null)
-            return false;
-
-        if (pathParts.Length == 0)
-        {
-            // The root directory always exists.
-            // The root file never exists.
-            return considerDirectories;
-        }
-
-        string entryPath = VfsPathKit.Join(pathParts, C_DirectorySeparatorChar);
-
-        if (considerDirectories)
-        {
-            if (m_UnderlyingArchive.GetEntry(entryPath + C_DirectorySeparatorChar) != null)
-                return true;
-        }
-
-        if (considerFiles)
-        {
-            if (m_UnderlyingArchive.GetEntry(entryPath) != null)
-                return true;
-        }
-
-        return false;
-    }
-
-    IEnumerable<string[]> EnumerateEntriesCore(in StructuredPath path) =>
-        EnumerateEntriesCore(path, null, SearchOption.TopDirectoryOnly, true, true);
-
-    /// <inheritdoc/>
-    public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption)
-    {
-        VfsValidationKit.Arguments.ValidatePath(path);
-        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
-        VfsValidationKit.Arguments.ValidateSearchOption(searchOption);
-
-        EnsureCanRead();
-        return
-            EnumerateEntriesCore(path, searchPattern, searchOption, true, true)
-            .Select(x => GetFullPathCore(x));
-    }
-
-    IEnumerable<string[]> EnumerateEntriesCore(
-        StructuredPath path,
-        string? searchPattern,
-        SearchOption searchOption,
-        bool enumerateFiles,
-        bool enumerateDirectories)
-    {
-        var pathParts = path.Parts;
-        bool directoryExists = false;
-
-        if (pathParts.Span != null)
-        {
-            searchPattern = Empty.Nullify(searchPattern, "*", StringComparison.Ordinal);
-
-            directoryExists = pathParts.Length == 0;
-
-            bool recursive = searchOption == SearchOption.AllDirectories;
-
-            foreach (var entry in m_UnderlyingArchive.Entries)
-            {
-                string entryPath = entry.FullName;
-                string[]? entryPathParts = VfsPathKit.Split(entryPath);
-                if (entryPathParts is null)
-                    continue;
-
-                bool feasibleHierarchyLevel =
-                    recursive
-                        ? entryPathParts.Length > pathParts.Length
-                        : entryPathParts.Length == pathParts.Length + 1;
-                if (directoryExists && !feasibleHierarchyLevel)
-                    continue;
-
-                if (IsDirectoryArchiveEntry(entryPath))
-                {
-                    // Directory
-                    if (enumerateDirectories || !directoryExists)
-                    {
-                        if (entryPathParts.AsSpan().StartsWith(pathParts.Span, m_PathComparer))
-                        {
-                            if (enumerateDirectories && feasibleHierarchyLevel)
-                                yield return entryPathParts;
-                            directoryExists = true;
-                        }
-                    }
-                }
-                else
-                {
-                    // File
-                    if (enumerateFiles || !directoryExists)
-                    {
-                        if (entryPathParts.AsSpan()[..^1].StartsWith(pathParts.Span, m_PathComparer))
-                        {
-                            if (enumerateFiles && feasibleHierarchyLevel)
-                                yield return entryPathParts;
-                            directoryExists = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!directoryExists)
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
-    }
-
-    #endregion
-
-    #region Paths
-
-    /// <inheritdoc/>
-    public sealed override char DirectorySeparatorChar => C_DirectorySeparatorChar;
-
-    /// <inheritdoc/>
-    public sealed override StringComparer PathComparer => m_PathComparer;
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static StringComparer m_PathComparer => StringComparer.InvariantCulture;
-
-    /// <inheritdoc/>
-    protected sealed override string GetFullPathCore(string path) =>
-        GetFullPathCore(VfsPathKit.Split(path)) ??
-        throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
-
-    [return: NotNullIfNotNull(nameof(parts))]
-    static string? GetFullPathCore(ReadOnlySpan<string> parts) =>
-        parts == null
-            ? null!
-            : (C_DirectorySeparatorChar + VfsPathKit.Join(parts, C_DirectorySeparatorChar));
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    internal const char C_DirectorySeparatorChar = '/';
-
-    #endregion
-
-    /// <inheritdoc/>
-    public virtual void Dispose()
-    {
-        m_UnderlyingArchive.Dispose();
-    }
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly System.IO.Compression.ZipArchive m_UnderlyingArchive;
+    public void Dispose() => BaseView.Dispose();
 }

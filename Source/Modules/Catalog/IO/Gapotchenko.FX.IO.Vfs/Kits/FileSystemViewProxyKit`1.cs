@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.IO.Vfs.Kits;
 
 /// <summary>
-/// Provides a base implementation of a proxy for <see cref="IFileSystemView"/>.
+/// Provides a base implementation of <see cref="IFileSystemView"/> proxy.
 /// </summary>
 /// <typeparam name="T">The type of the base file-system view.</typeparam>
 public abstract class FileSystemViewProxyKit<T> : IFileSystemView
@@ -20,7 +20,7 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     /// <exception cref="ArgumentNullException"><paramref name="baseView"/> is <see langword="null"/>.</exception>
     protected FileSystemViewProxyKit(T baseView)
     {
-        if (baseView is null)
+        if (baseView == null)
             throw new ArgumentNullException(nameof(baseView));
 
         BaseView = baseView;

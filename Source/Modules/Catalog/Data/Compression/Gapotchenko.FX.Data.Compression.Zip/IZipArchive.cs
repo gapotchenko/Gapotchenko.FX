@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.Data.Compression.Zip;
 
 /// <summary>
-/// Defines the interface of ZIP data archive.
+/// Defines the interface of a ZIP data archive.
 /// </summary>
 public interface IZipArchive : IDataArchive
 {
