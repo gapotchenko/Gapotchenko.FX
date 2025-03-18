@@ -62,14 +62,11 @@ public static class StreamExtensions
         {
             while (count != 0)
             {
-                int bytesToRead = (int)Math.Min(bufferSize, count);
+                int bytesToRead = (int)Math.Min(buffer.Length, count);
                 int bytesRead = source.Read(buffer, 0, bytesToRead);
 
                 if (bytesRead == 0)
-                {
-                    // EOF
-                    break;
-                }
+                    throw new EndOfStreamException();
 
                 destination.Write(buffer, 0, bytesRead);
                 count -= bytesRead;
@@ -79,14 +76,12 @@ public static class StreamExtensions
         {
             arrayPool.Return(buffer);
         }
-
-        if (count != 0)
-            throw new EndOfStreamException();
     }
 
 #if TFF_ASYNC_STREAM
 
 #if BINARY_COMPATIBILITY
+
     /// <inheritdoc cref="CopyBlockToAsync(Stream, Stream, long, CancellationToken)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task CopyBlockToAsync(Stream source, Stream destination, long count) =>
@@ -96,6 +91,7 @@ public static class StreamExtensions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task CopyBlockToAsync(Stream source, Stream destination, long count, int bufferSize) =>
         source.CopyBlockToAsync(destination, count, bufferSize, CancellationToken.None);
+
 #endif
 
     /// <inheritdoc cref="CopyBlockToAsync(Stream, Stream, long, int, CancellationToken)"/>
@@ -167,7 +163,7 @@ public static class StreamExtensions
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                int bytesToRead = (int)(Math.Min(bufferSize, count));
+                int bytesToRead = (int)(Math.Min(buffer.Length, count));
                 int bytesRead = await
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
                     source.ReadAsync(buffer.AsMemory(0, bytesToRead), cancellationToken)
@@ -177,10 +173,7 @@ public static class StreamExtensions
                     .ConfigureAwait(false);
 
                 if (bytesRead == 0)
-                {
-                    // EOF
-                    break;
-                }
+                    throw new EndOfStreamException();
 
                 await
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -196,11 +189,8 @@ public static class StreamExtensions
         {
             arrayPool.Return(buffer);
         }
-
-        if (count != 0)
-            throw new EndOfStreamException();
-
     }
+
 #endif
 
     static int GetCopyBufferSize(Stream source)
