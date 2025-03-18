@@ -6,7 +6,9 @@
 
 Release date: not released yet
 
-- Introduced `Gapotchenko.FX.IO.Vfs` module that provides the concept of a virtual file system which allows to work with files in a common fashion independently of an actual storage and implementation
+- Introduced `Gapotchenko.FX.IO.Vfs` module that provides the concept of a virtual file-system view which allows to work with file systems in a unified way independently of their actual nature.
+  Be it a local ZIP archive, an ISO image, a custom FAT12 implementation or a remote cloud storage
+- Gapotchenko.FX.IO: improved selection of a default buffer size for block copy operations working on streams
 - `Gapotchenko.FX.Collections.Generic.Deque<T>` made compatible with collection initializers
 - Polyfills:
     - Added polyfills for `SequenceEqual`, `StartsWith` and `EndsWith` methods of `ReadOnlySpan<T>` and `Span<T>` types
