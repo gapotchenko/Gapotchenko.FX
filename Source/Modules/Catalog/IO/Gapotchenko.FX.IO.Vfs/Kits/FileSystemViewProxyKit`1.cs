@@ -66,6 +66,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual void CopyFile(string sourcePath, string destinationPath, bool overwrite) =>
         BaseView.CopyFile(sourcePath, destinationPath, overwrite);
 
+    /// <inheritdoc/>
+    public virtual void MoveFile(string sourcePath, string destinationPath, bool overwrite) =>
+        BaseView.MoveFile(sourcePath, destinationPath, overwrite);
+
     #endregion
 
     #region Directories

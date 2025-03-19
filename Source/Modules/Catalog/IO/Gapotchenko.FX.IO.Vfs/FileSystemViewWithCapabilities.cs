@@ -86,6 +86,13 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.CopyFile(sourcePath, destinationPath, overwrite);
     }
 
+    public override void MoveFile(string sourcePath, string destinationPath, bool overwrite)
+    {
+        EnsureCanRead();
+        EnsureCanWrite();
+        base.MoveFile(sourcePath, destinationPath, overwrite);
+    }
+
     #endregion
 
     #region Directories

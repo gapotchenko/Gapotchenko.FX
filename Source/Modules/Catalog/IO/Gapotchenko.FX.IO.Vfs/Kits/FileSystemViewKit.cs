@@ -94,6 +94,18 @@ public abstract class FileSystemViewKit : IFileSystemView
         IOHelper.CopyFileNaive(this, sourcePath, this, destinationPath, overwrite);
     }
 
+    /// <inheritdoc/>
+    public virtual void MoveFile(string sourcePath, string destinationPath, bool overwrite)
+    {
+        VfsValidationKit.Arguments.ValidatePath(sourcePath);
+        VfsValidationKit.Arguments.ValidatePath(destinationPath);
+
+        // Avoid opening a file for read if writing is not supported.
+        EnsureCanWrite();
+
+        IOHelper.MoveFileNaive(this, sourcePath, this, destinationPath, overwrite);
+    }
+
     #endregion
 
     #region Directories

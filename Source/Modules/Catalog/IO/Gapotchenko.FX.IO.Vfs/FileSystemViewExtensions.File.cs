@@ -642,4 +642,23 @@ partial class FileSystemViewExtensions
     }
 
     #endregion
+
+    #region Move
+
+    /// <summary>
+    /// Moves a specified file to a new location,
+    /// providing the option to specify a new file name.
+    /// </summary>
+    /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool)"/>
+    /// <param name="view">The file-system view.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    public static void MoveFile(
+        this IFileSystemView view,
+        string sourcePath,
+        string destinationPath) =>
+        (view ?? throw new ArgumentNullException(nameof(view)))
+        .MoveFile(sourcePath, destinationPath, false);
+
+    #endregion
 }

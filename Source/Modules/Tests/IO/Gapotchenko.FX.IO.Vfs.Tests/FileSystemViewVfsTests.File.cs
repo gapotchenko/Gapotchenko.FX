@@ -138,4 +138,57 @@ partial class FileSystemViewVfsTests
     }
 
     #endregion
+
+    #region Move
+
+    [TestMethod]
+    public void FileSystemView_Vfs_File_Move()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string fileNameA = "A.txt";
+        const string fileNameB = "B.txt";
+        const string fileNameC = "C.txt";
+        const string fileNameD = "Container/D.txt";
+        const string fileContents = "This is a sample text.";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            string filePathA = vfs.CombinePaths(rootPath, fileNameA);
+            vfs.WriteAllFileText(filePathA, fileContents);
+
+            string filePathB = vfs.CombinePaths(rootPath, fileNameB);
+            vfs.MoveFile(filePathA, filePathB);
+            Assert.IsFalse(vfs.FileExists(filePathA));
+
+            vfs.CopyFile(filePathB, filePathA);
+            Assert.ThrowsException<IOException>(() => vfs.MoveFile(filePathB, filePathA));
+            Assert.ThrowsException<IOException>(() => vfs.MoveFile(filePathB, filePathA, false));
+            vfs.MoveFile(filePathB, filePathA, true);
+
+            vfs.MoveFile(filePathA, filePathB);
+            vfs.CopyFile(filePathB, filePathA);
+
+            string filePathC = vfs.CombinePaths(rootPath, fileNameC);
+            Assert.ThrowsException<FileNotFoundException>(() => vfs.MoveFile(filePathC, filePathA));
+
+            string filePathD = vfs.CombinePaths(rootPath, fileNameD);
+            Assert.ThrowsException<DirectoryNotFoundException>(() => vfs.MoveFile(filePathA, filePathD));
+            vfs.CreateDirectory(vfs.CombinePaths(filePathD, ".."));
+            vfs.MoveFile(filePathA, filePathD);
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            Assert.That.VfsEntriesAre(
+                vfs,
+                rootPath,
+                [fileNameB, vfs.CombinePaths(fileNameD, ".."), fileNameD]);
+
+            Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameB)));
+            Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameD)));
+        }
+    }
+
+    #endregion
 }

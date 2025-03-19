@@ -39,6 +39,19 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// </param>
     void CopyFile(string sourcePath, string destinationPath, bool overwrite);
 
+    /// <summary>
+    /// Moves a specified file to a new location,
+    /// providing the options to specify a new file name and
+    /// to overwrite the destination file if it already exists.
+    /// </summary>
+    /// <param name="sourcePath">The path of the file to move.</param>
+    /// <param name="destinationPath">The new path and name for the file.</param>
+    /// <param name="overwrite">
+    /// <see langword="true"/> to overwrite the destination file if it already exists;
+    /// <see langword="false"/> otherwise.
+    /// </param>
+    void MoveFile(string sourcePath, string destinationPath, bool overwrite);
+
     #endregion
 
     #region Directories

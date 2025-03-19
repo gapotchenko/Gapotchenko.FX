@@ -46,6 +46,17 @@ sealed class LocalFileSystemView : FileSystemViewKit
     public override void CopyFile(string sourcePath, string destinationPath, bool overwrite) =>
         File.Copy(sourcePath, destinationPath, overwrite);
 
+    public override void MoveFile(string sourcePath, string destinationPath, bool overwrite)
+    {
+#if NETCOREAPP3_0_OR_GREATER
+        File.Move(sourcePath, destinationPath, overwrite);
+#else
+        if (overwrite && File.Exists(destinationPath))
+            File.Delete(destinationPath);
+        File.Move(sourcePath, destinationPath);
+#endif
+    }
+
     #endregion
 
     #region Directories

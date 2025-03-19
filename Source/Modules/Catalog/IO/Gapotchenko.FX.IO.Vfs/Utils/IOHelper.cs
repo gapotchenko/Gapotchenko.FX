@@ -8,6 +8,26 @@ namespace Gapotchenko.FX.IO.Vfs.Utils;
 
 static class IOHelper
 {
+    public static void MoveFileNaive(
+        IFileSystemView sourceView,
+        string sourcePath,
+        IFileSystemView destinationView,
+        string destinationPath,
+        bool overwrite)
+    {
+        CopyFileNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite);
+        try
+        {
+            sourceView.DeleteFile(sourcePath);
+        }
+        catch
+        {
+            // Rollback the copy if the move is not possible to complete.
+            destinationView.DeleteFile(destinationPath);
+            throw;
+        }
+    }
+
     public static void CopyFileOptimized(
         IReadOnlyFileSystemView sourceView,
         string sourcePath,

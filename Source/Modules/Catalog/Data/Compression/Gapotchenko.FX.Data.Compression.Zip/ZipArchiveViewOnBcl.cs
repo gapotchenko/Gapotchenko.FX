@@ -164,7 +164,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         switch (mode)
         {
             case FileMode.Open or FileMode.Truncate:
-                // Could not find a file.
+                // Could not find the file.
                 break;
 
             case FileMode.Create or FileMode.OpenOrCreate or FileMode.CreateNew or FileMode.Append:
