@@ -622,8 +622,7 @@ partial class FileSystemViewExtensions
     /// This cannot be a directory.
     /// </param>
     /// <param name="overwrite">
-    /// <see langword="true"/> if the destination file should be replaced if it already exists;
-    /// otherwise, <see langword="false"/>.
+    /// <inheritdoc cref="IFileSystemView.CopyFile(string, string, bool)" path="//param[@name='overwrite']"/>
     /// </param>
     public static void CopyFile(
         this IReadOnlyFileSystemView sourceView, string sourcePath,
@@ -659,6 +658,43 @@ partial class FileSystemViewExtensions
         string destinationPath) =>
         (view ?? throw new ArgumentNullException(nameof(view)))
         .MoveFile(sourcePath, destinationPath, false);
+
+    /// <summary>
+    /// Moves a specified file to a new location,
+    /// providing the option to specify a new file name.
+    /// </summary>
+    /// <inheritdoc cref="MoveFile(IFileSystemView, string, IFileSystemView, string, bool)"/>
+    public static void MoveFile(
+        this IFileSystemView sourceView,
+        string sourcePath,
+        IFileSystemView destinationView,
+        string destinationPath) =>
+        MoveFile(sourceView, sourcePath, destinationView, destinationPath, false);
+
+    /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> of the file to move.</param>
+    /// <param name="sourcePath">The path of the file to move.</param>
+    /// <param name="destinationView">The destination <see cref="IFileSystemView"/> to move the file to.</param>
+    /// <param name="destinationPath">
+    /// The path of the destination file in the specified <see cref="IFileSystemView"/>.
+    /// This cannot be a directory.
+    /// </param>
+    /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool)"/>
+    /// <param name="overwrite"><inheritdoc/></param>
+    public static void MoveFile(
+        this IFileSystemView sourceView, string sourcePath,
+        IFileSystemView destinationView, string destinationPath,
+        bool overwrite)
+    {
+        if (sourceView is null)
+            throw new ArgumentNullException(nameof(sourceView));
+        if (destinationView is null)
+            throw new ArgumentNullException(nameof(destinationView));
+
+        IOHelper.MoveFileOptimized(
+            sourceView, sourcePath,
+            destinationView, destinationPath,
+            overwrite);
+    }
 
     #endregion
 }

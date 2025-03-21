@@ -8,6 +8,19 @@ namespace Gapotchenko.FX.IO.Vfs.Utils;
 
 static class IOHelper
 {
+    public static void MoveFileOptimized(
+        IFileSystemView sourceView,
+        string sourcePath,
+        IFileSystemView destinationView,
+        string destinationPath,
+        bool overwrite)
+    {
+        if (sourceView == destinationView)
+            destinationView.MoveFile(sourcePath, destinationPath, overwrite);
+        else
+            MoveFileNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite);
+    }
+
     public static void MoveFileNaive(
         IFileSystemView sourceView,
         string sourcePath,

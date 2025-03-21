@@ -8,6 +8,8 @@ namespace Gapotchenko.FX.IO.Vfs.Tests;
 
 partial class FileSystemViewVfsTests
 {
+    #region Create
+
     [TestMethod]
     public void FileSystemView_Vfs_Directory_CreateEmpty()
     {
@@ -66,4 +68,6 @@ partial class FileSystemViewVfsTests
             Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, Path.GetDirectoryName(Path.GetDirectoryName(directoryPath)))));
         }
     }
+
+    #endregion
 }

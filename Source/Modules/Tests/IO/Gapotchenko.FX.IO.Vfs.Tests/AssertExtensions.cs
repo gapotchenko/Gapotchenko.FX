@@ -6,21 +6,22 @@
 
 namespace Gapotchenko.FX.IO.Vfs.Tests;
 
-static class AssertExtensions
+[EditorBrowsable(EditorBrowsableState.Never)]
+public static class AssertExtensions
 {
-    public static void VfsEntriesAre(
+    public static void VfsHierarchyIs(
         this Assert _,
         IReadOnlyFileSystemView vfs,
-        string rootPath,
-        IEnumerable<string?> entryPaths)
+        string directoryPath,
+        IEnumerable<string?> entriesPaths)
     {
         var actual = vfs
-            .EnumerateEntries(rootPath, "*", SearchOption.AllDirectories)
+            .EnumerateEntries(directoryPath, "*", SearchOption.AllDirectories)
             .ToHashSet(vfs.PathComparer);
 
-        var expected = entryPaths
+        var expected = entriesPaths
             .Where(x => x is not null)
-            .Select(x => vfs.GetFullPath(vfs.CombinePaths(rootPath, x)));
+            .Select(x => vfs.GetFullPath(vfs.CombinePaths(directoryPath, x)));
 
         Assert.IsTrue(actual.SetEquals(expected));
     }
