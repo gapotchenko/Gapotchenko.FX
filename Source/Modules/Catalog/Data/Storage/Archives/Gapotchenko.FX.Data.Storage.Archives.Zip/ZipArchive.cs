@@ -33,7 +33,8 @@ public sealed partial class ZipArchive :
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ZipArchive"/> class
-    /// from the specified stream and with the <see cref="IFileSystemView.CanWrite"/> property set as specified.
+    /// from the specified stream
+    /// and with the <see cref="IFileSystemView.CanWrite"/> property set as specified.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <param name="writable">
