@@ -6,7 +6,7 @@
 
 using Gapotchenko.FX.IO.Vfs.Kits;
 
-namespace Gapotchenko.FX.Data.Compression.Zip;
+namespace Gapotchenko.FX.Data.Archives.Zip;
 
 readonly struct StructuredPath
 {

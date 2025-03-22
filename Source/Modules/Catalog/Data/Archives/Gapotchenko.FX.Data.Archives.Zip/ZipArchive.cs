@@ -8,7 +8,7 @@ using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
 using System.IO.Compression;
 
-namespace Gapotchenko.FX.Data.Compression.Zip;
+namespace Gapotchenko.FX.Data.Archives.Zip;
 
 /// <summary>
 /// Represents a package of compressed files in the ZIP archive format.

@@ -254,15 +254,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CRC", "CRC", "{F0E3D5B7-567
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Profiles.Math", "Profiles\Gapotchenko.FX.Profiles.Math\Gapotchenko.FX.Profiles.Math.csproj", "{33269DE2-FDC0-4D12-8001-EFB8B9CF0965}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compression", "Compression", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Archives", "Archives", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Compression", "Modules\Catalog\Data\Compression\Gapotchenko.FX.Data.Compression\Gapotchenko.FX.Data.Compression.csproj", "{B3A5D82B-D376-4C45-BDDA-C9C459FA0930}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Archives", "Modules\Catalog\Data\Archives\Gapotchenko.FX.Data.Archives\Gapotchenko.FX.Data.Archives.csproj", "{B3A5D82B-D376-4C45-BDDA-C9C459FA0930}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Zip", "Zip", "{660CAD55-E314-4FCC-8E1B-D3123B1271C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Compression.Zip", "Modules\Catalog\Data\Compression\Gapotchenko.FX.Data.Compression.Zip\Gapotchenko.FX.Data.Compression.Zip.csproj", "{5D9DD0B3-DA33-49D5-8D14-63CE39115CDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Archives.Zip", "Modules\Catalog\Data\Archives\Gapotchenko.FX.Data.Archives.Zip\Gapotchenko.FX.Data.Archives.Zip.csproj", "{5D9DD0B3-DA33-49D5-8D14-63CE39115CDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Compression.Zip.Tests", "Modules\Tests\Data\Compression\Gapotchenko.FX.Data.Compression.Zip.Tests\Gapotchenko.FX.Data.Compression.Zip.Tests.csproj", "{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Archives.Zip.Tests", "Modules\Tests\Data\Archives\Gapotchenko.FX.Data.Archives.Zip.Tests\Gapotchenko.FX.Data.Archives.Zip.Tests.csproj", "{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vfs", "Vfs", "{DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD}"
 EndProject

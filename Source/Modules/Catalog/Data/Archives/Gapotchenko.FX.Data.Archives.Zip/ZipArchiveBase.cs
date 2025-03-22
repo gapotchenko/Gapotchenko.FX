@@ -4,10 +4,11 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.Data.Archives.Zip;
 using Gapotchenko.FX.IO.Vfs.Kits;
 using System.Diagnostics;
 
-namespace Gapotchenko.FX.Data.Compression.Zip;
+namespace Gapotchenko.FX.Data.Archives.Zip;
 
 /// <summary>
 /// This is an infrastructure type that should never be used by user code.

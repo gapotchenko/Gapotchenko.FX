@@ -1,7 +1,7 @@
 ﻿using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.Linq;
 
-namespace Gapotchenko.FX.Data.Compression.Zip.Tests;
+namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
 
 [TestClass]
 public sealed class ZipArchiveTests

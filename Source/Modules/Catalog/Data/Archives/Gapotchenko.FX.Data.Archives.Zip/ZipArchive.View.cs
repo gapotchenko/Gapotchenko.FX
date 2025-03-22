@@ -1,4 +1,4 @@
-﻿namespace Gapotchenko.FX.Data.Compression.Zip;
+﻿namespace Gapotchenko.FX.Data.Archives.Zip;
 
 partial class ZipArchive
 {
