@@ -6,6 +6,7 @@
 
 namespace Gapotchenko.FX.IO.Vfs.Tests;
 
+[TestCategory("vfs")]
 public abstract partial class FileSystemViewVfsTests
 {
     // This class is partial. Please take a look at the neighboring source files.

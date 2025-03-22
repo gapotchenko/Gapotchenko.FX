@@ -1,13 +1,11 @@
 ﻿using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.IO.Vfs.Tests;
-using System.IO.Compression;
 
 namespace Gapotchenko.FX.Data.Storage.Archives.Zip.Tests;
 
 [TestClass]
-[TestCategory("bcl")]
-public sealed class ZipArchiveViewOnBclVfsTests : FileSystemViewVfsTests
+public sealed class ZipArchiveVfsTests : FileSystemViewVfsTests
 {
     protected override IFileSystemView CreateVfs(out string rootPath)
     {
@@ -33,9 +31,7 @@ public sealed class ZipArchiveViewOnBclVfsTests : FileSystemViewVfsTests
     }
 
     sealed class ArchiveVfs(Stream stream) :
-        FileSystemViewProxyKit<IZipArchiveView<System.IO.Compression.ZipArchive>>(
-            ZipArchive.CreateView(
-                new System.IO.Compression.ZipArchive(stream, ZipArchiveMode.Update, true))),
+        FileSystemViewProxyKit<ZipArchive>(new ZipArchive(stream, true, stream.CanWrite)),
         IDisposable
     {
         public Stream Stream => stream;

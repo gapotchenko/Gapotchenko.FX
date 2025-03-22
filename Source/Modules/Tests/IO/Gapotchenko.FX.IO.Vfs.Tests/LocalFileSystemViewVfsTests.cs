@@ -7,6 +7,7 @@
 namespace Gapotchenko.FX.IO.Vfs.Tests;
 
 [TestClass]
+[TestCategory("local")]
 public sealed class LocalFileSystemViewVfsTests : FileSystemViewVfsTests
 {
     protected override IFileSystemView CreateVfs(out string rootPath)

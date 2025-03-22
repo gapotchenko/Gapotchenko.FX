@@ -61,14 +61,14 @@ public sealed partial class ZipArchive :
     /// </param>
     public ZipArchive(Stream stream, bool writable, bool leaveOpen) :
         base(
-            CreateViewOnBclImplementation(
+            CreateViewOnBclImpl(
                 stream ?? throw new ArgumentNullException(nameof(stream)),
                 writable,
                 leaveOpen))
     {
     }
 
-    static IZipArchiveView<System.IO.Compression.ZipArchive> CreateViewOnBclImplementation(
+    static IZipArchiveView<System.IO.Compression.ZipArchive> CreateViewOnBclImpl(
         Stream stream,
         bool writable,
         bool leaveOpen)
@@ -86,9 +86,7 @@ public sealed partial class ZipArchive :
             mode = ZipArchiveMode.Read;
         }
 
-        return CreateView(
-            new System.IO.Compression.ZipArchive(stream, mode, leaveOpen),
-            leaveOpen);
+        return CreateView(new System.IO.Compression.ZipArchive(stream, mode, leaveOpen));
     }
 
     /// <inheritdoc/>
