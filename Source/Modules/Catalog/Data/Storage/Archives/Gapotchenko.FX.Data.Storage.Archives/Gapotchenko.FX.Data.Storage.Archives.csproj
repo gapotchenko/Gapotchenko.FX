@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\IO\Gapotchenko.FX.IO.Vfs\Gapotchenko.FX.IO.Vfs.csproj" />
+    <ProjectReference Include="..\..\..\..\IO\Gapotchenko.FX.IO.Vfs\Gapotchenko.FX.IO.Vfs.csproj" />
   </ItemGroup>
 
 </Project>

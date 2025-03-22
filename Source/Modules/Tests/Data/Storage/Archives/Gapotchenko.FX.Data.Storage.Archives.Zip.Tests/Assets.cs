@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions;
 
-namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
+namespace Gapotchenko.FX.Data.Storage.Archives.Zip.Tests;
 
 static class Assets
 {

@@ -1,6 +1,6 @@
 ﻿using Gapotchenko.FX.IO.Vfs;
 
-namespace Gapotchenko.FX.Data.Archives;
+namespace Gapotchenko.FX.Data.Storage.Archives;
 
 /// <summary>
 /// Defines the interface of a compressible data archive.
