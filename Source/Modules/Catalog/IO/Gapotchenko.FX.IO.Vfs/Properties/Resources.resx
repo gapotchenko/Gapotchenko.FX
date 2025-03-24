@@ -150,4 +150,7 @@
   <data name="PathIsEmpty" xml:space="preserve">
     <value>The path is empty.</value>
   </data>
+  <data name="FileStorageCannotBeOpenedInXMode" xml:space="preserve">
+    <value>File storage cannot be opened in {0} mode.</value>
+  </data>
 </root>

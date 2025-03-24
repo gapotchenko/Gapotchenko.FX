@@ -22,6 +22,34 @@ partial class FileSystemViewExtensions
 {
     #region Open
 
+    /// <inheritdoc cref="File.OpenWrite(string)"/>
+    /// <param name="view">The file-system view.</param>
+    /// <param name="path"><inheritdoc/></param>
+    public static Stream OpenFileWrite(this IFileSystemView view, string path)
+    {
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
+
+        if (view is LocalFileSystemView)
+            return File.OpenWrite(path);
+        else
+            return view.OpenFile(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+    }
+
+    /// <inheritdoc cref="File.OpenText(string)"/>
+    /// <param name="view">The file-system view.</param>
+    /// <param name="path"><inheritdoc/></param>
+    public static StreamReader OpenTextFile(this IReadOnlyFileSystemView view, string path)
+    {
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
+
+        if (view is LocalFileSystemView)
+            return File.OpenText(path);
+        else
+            return new StreamReader(view.OpenFileRead(path), Encoding.UTF8);
+    }
+
     /// <inheritdoc cref="File.Open(string, FileMode)"/>
     /// <param name="view">The file-system view.</param>
     /// <param name="path"><inheritdoc/></param>
@@ -40,20 +68,6 @@ partial class FileSystemViewExtensions
             throw new ArgumentNullException(nameof(view));
 
         return view.OpenFile(path, mode, access, FileShare.None);
-    }
-
-    /// <inheritdoc cref="File.OpenText(string)"/>
-    /// <param name="view">The file-system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    public static StreamReader OpenTextFile(this IReadOnlyFileSystemView view, string path)
-    {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
-
-        if (view is LocalFileSystemView)
-            return File.OpenText(path);
-        else
-            return new StreamReader(view.OpenFileRead(path), Encoding.UTF8);
     }
 
     #endregion

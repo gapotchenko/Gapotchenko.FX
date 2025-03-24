@@ -124,6 +124,15 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File storage cannot be opened in {0} mode..
+        /// </summary>
+        internal static string FileStorageCannotBeOpenedInXMode {
+            get {
+                return ResourceManager.GetString("FileStorageCannotBeOpenedInXMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The file is too long. This operation is limited to supporting files less than 2 gigabytes in size..
         /// </summary>
         internal static string FileTooLong2GB {

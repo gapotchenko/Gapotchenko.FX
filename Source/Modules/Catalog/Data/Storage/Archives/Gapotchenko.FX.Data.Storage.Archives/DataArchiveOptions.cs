@@ -9,8 +9,9 @@ using Gapotchenko.FX.IO.Vfs;
 namespace Gapotchenko.FX.Data.Storage.Archives;
 
 /// <summary>
-/// Defines the interface of a data archive.
+/// Defines the options for a data archive.
 /// </summary>
-public interface IDataArchive : IVirtualFileSystem
+[ImmutableObject(true)]
+public abstract record DataArchiveOptions : VfsOptions
 {
 }

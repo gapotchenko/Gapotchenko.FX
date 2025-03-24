@@ -12,4 +12,7 @@ static class ResourceHelper
 {
     public static string ObjectDoesNotImplInterface(string? name) =>
         string.Format(Resources.ObjectDoesNotImplXInterface, name);
+
+    public static string FileStorageCannotBeOpenedInMode(FileMode mode) =>
+        string.Format(Resources.FileStorageCannotBeOpenedInXMode, mode.ToString());
 }
