@@ -16,7 +16,7 @@ public interface IVfsFormat
     /// The existing data in the stream, if any, will be overwritten.
     /// </summary>
     /// <remarks>
-    /// This method is equivalent to <c>format</c> operation of a conventional file system.
+    /// This method is equivalent to the <c>format</c> operation of a conventional file system.
     /// </remarks>
     /// <param name="stream">The stream.</param>
     /// <param name="leaveOpen">
@@ -39,7 +39,7 @@ public interface IVfsFormat
     /// the returned <see cref="IVirtualFileSystem"/> instance should be disposed.
     /// </para>
     /// <para>
-    /// This method is equivalent to <c>mount</c> operation of a conventional file system.
+    /// This method is equivalent to the <c>mount</c> operation of a conventional file system.
     /// </para>
     /// </remarks>
     /// <param name="stream">The stream.</param>
@@ -60,12 +60,14 @@ public interface IVfsFormat
     /// Determines whether the specified stream can be mounted using the current storage format.
     /// </summary>
     /// <param name="stream">The stream.</param>
+    /// <param name="options">The file system options.</param>
     /// <returns>
     /// <see langword="true"/> if the <paramref name="stream"/> can be mounted using the current storage format;
     /// otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
-    bool IsMountable(Stream stream);
+    /// <exception cref="NotSupportedException"><paramref name="stream"/> does not support seeking.</exception>
+    bool IsMountable(Stream stream, VfsOptions? options = null);
 }
 
 /// <summary>
@@ -101,7 +103,7 @@ public interface IVfsFormat<out TVfs, TOptions> : IVfsFormat
     /// the returned instance should be disposed.
     /// </para>
     /// <para>
-    /// This method is equivalent to <c>mount</c> operation of a conventional file system.
+    /// This method is equivalent to the <c>mount</c> operation of a conventional file system.
     /// </para>
     /// </remarks>
     /// <param name="stream"><inheritdoc/></param>
@@ -114,4 +116,7 @@ public interface IVfsFormat<out TVfs, TOptions> : IVfsFormat
     /// <returns>The <typeparamref name="TVfs"/> instance representing the mounted storage.</returns>
     /// <inheritdoc cref="IVfsFormat.Mount(Stream, bool, bool, VfsOptions?)"/>
     TVfs Mount(Stream stream, bool writable = false, bool leaveOpen = false, TOptions? options = null);
+
+    /// <inheritdoc cref="IVfsFormat.IsMountable(Stream, VfsOptions?)"/>
+    bool IsMountable(Stream stream, TOptions? options = null);
 }

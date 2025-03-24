@@ -9,7 +9,7 @@ using Gapotchenko.FX.IO.Vfs;
 namespace Gapotchenko.FX.Data.Archives;
 
 /// <summary>
-/// Defines the options for a data archive.
+/// Defines the options of a data archive.
 /// </summary>
 [ImmutableObject(true)]
 public abstract record DataArchiveOptions : VfsOptions

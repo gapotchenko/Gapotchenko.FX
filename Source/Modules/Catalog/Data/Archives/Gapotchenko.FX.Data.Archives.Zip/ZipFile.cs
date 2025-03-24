@@ -12,7 +12,7 @@ sealed class ZipFile : IDataArchiveFile<IZipArchive, ZipArchiveOptions>
 {
     public static ZipFile Instance { get; } = new();
 
-    public IDataArchiveFileFormat<IZipArchive, ZipArchiveOptions> Format => throw new NotImplementedException();
-
     IVfsFileFormat<IZipArchive, ZipArchiveOptions> IVfsFile<IZipArchive, ZipArchiveOptions>.Format => Format;
+
+    public IDataArchiveFileFormat<IZipArchive, ZipArchiveOptions> Format => ZipFormat.Instance;
 }

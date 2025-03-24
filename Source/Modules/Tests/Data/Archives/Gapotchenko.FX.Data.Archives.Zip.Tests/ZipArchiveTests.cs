@@ -1,4 +1,10 @@
-﻿using Gapotchenko.FX.IO.Vfs;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2025
+
+using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.Linq;
 
 namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
@@ -10,7 +16,7 @@ public abstract class ZipArchiveTests
 
     [TestMethod]
     public void Zip_Capabilities()
-    {       
+    {
         using (var archive = Mount(Assets.OpenStream("Empty.zip")))
         {
             Assert.IsTrue(archive.CanRead);
