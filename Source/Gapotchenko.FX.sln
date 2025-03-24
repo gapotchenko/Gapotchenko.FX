@@ -256,21 +256,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Profiles.Mat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Archives", "Archives", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Archives", "Modules\Catalog\Data\Storage\Archives\Gapotchenko.FX.Data.Storage.Archives\Gapotchenko.FX.Data.Archives.csproj", "{B3A5D82B-D376-4C45-BDDA-C9C459FA0930}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Archives", "Modules\Catalog\Data\Archives\Gapotchenko.FX.Data.Archives\Gapotchenko.FX.Data.Archives.csproj", "{B3A5D82B-D376-4C45-BDDA-C9C459FA0930}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Zip", "Zip", "{660CAD55-E314-4FCC-8E1B-D3123B1271C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Archives.Zip", "Modules\Catalog\Data\Storage\Archives\Gapotchenko.FX.Data.Storage.Archives.Zip\Gapotchenko.FX.Data.Archives.Zip.csproj", "{5D9DD0B3-DA33-49D5-8D14-63CE39115CDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Archives.Zip", "Modules\Catalog\Data\Archives\Gapotchenko.FX.Data.Archives.Zip\Gapotchenko.FX.Data.Archives.Zip.csproj", "{5D9DD0B3-DA33-49D5-8D14-63CE39115CDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Archives.Zip.Tests", "Modules\Tests\Data\Storage\Archives\Gapotchenko.FX.Data.Storage.Archives.Zip.Tests\Gapotchenko.FX.Data.Archives.Zip.Tests.csproj", "{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Data.Archives.Zip.Tests", "Modules\Tests\Data\Archives\Gapotchenko.FX.Data.Archives.Zip.Tests\Gapotchenko.FX.Data.Archives.Zip.Tests.csproj", "{B72FC6D7-E45E-49E1-AF01-0B2576B29BBF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vfs", "Vfs", "{DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.IO.Vfs", "Modules\Catalog\IO\Gapotchenko.FX.IO.Vfs\Gapotchenko.FX.IO.Vfs.csproj", "{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.IO.Vfs.Tests", "Modules\Tests\IO\Gapotchenko.FX.IO.Vfs.Tests\Gapotchenko.FX.IO.Vfs.Tests.csproj", "{AC391802-2571-408A-BC0B-3423D14FD8A9}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storage", "Storage", "{773BED66-A16B-4BD8-9653-1287CA0411BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -655,7 +653,7 @@ Global
 		{BB8CFF77-C35B-4701-85F5-B947CB7ACF6C} = {A8B2C662-FF6A-4B82-B144-7A32BBC2BE35}
 		{F0E3D5B7-5672-4A23-B164-1FB815A891BC} = {87BD7EF4-CF96-4B5C-9E44-FDF674BC0BEF}
 		{33269DE2-FDC0-4D12-8001-EFB8B9CF0965} = {7EF72767-6970-43FD-98E6-B669ADD680A4}
-		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {773BED66-A16B-4BD8-9653-1287CA0411BD}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {C2DC67EB-5194-432D-A088-2EA90951DF87}
 		{B3A5D82B-D376-4C45-BDDA-C9C459FA0930} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{660CAD55-E314-4FCC-8E1B-D3123B1271C7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{5D9DD0B3-DA33-49D5-8D14-63CE39115CDC} = {660CAD55-E314-4FCC-8E1B-D3123B1271C7}
@@ -663,7 +661,6 @@ Global
 		{DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD} = {6DE1F6C6-054E-4C83-B060-3D5604BA46A7}
 		{5C698D16-D2CD-4B51-9D43-B6F5AAAF3CD5} = {DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD}
 		{AC391802-2571-408A-BC0B-3423D14FD8A9} = {DF4210D8-B9BD-48F8-9F5D-93CFBBD2B7AD}
-		{773BED66-A16B-4BD8-9653-1287CA0411BD} = {C2DC67EB-5194-432D-A088-2EA90951DF87}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}

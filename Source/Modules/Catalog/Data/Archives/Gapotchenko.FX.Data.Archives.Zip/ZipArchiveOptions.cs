@@ -12,8 +12,8 @@ namespace Gapotchenko.FX.Data.Archives.Zip;
 [ImmutableObject(true)]
 public sealed record ZipArchiveOptions : DataArchiveOptions
 {
-    /// <summary>
-    /// Gets the default ZIP archive options.
-    /// </summary>
-    public static ZipArchiveOptions Default { get; } = new();
+    // Prohibit instantiation of the type.
+    ZipArchiveOptions()
+    {
+    }
 }

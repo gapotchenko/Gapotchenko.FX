@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Provides description and operations for the virtual file system format when it is stored in files.
+/// Provides description and operations for the file-mountable virtual file system format.
 /// </summary>
 public interface IVfsFileFormat : IVfsFormat
 {
@@ -18,7 +18,7 @@ public interface IVfsFileFormat : IVfsFormat
 }
 
 /// <summary>
-/// Provides strongly typed description and operations for the virtual file system format when it is stored in files.
+/// Provides strongly typed description and operations for the file-mountable virtual file system format.
 /// </summary>
 /// <typeparam name="TVfs">The type of the virtual file system.</typeparam>
 /// <typeparam name="TOptions">The type of the virtual file system options.</typeparam>
