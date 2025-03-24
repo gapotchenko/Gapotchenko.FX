@@ -12,6 +12,7 @@ Release date: not released yet
 - `Gapotchenko.FX.Collections.Generic.Deque<T>` made compatible with collection initializers
 - Polyfills:
     - Added polyfills for `SequenceEqual`, `StartsWith` and `EndsWith` methods of `ReadOnlySpan<T>` and `Span<T>` types
+    - `Stream.ReadExactly` and `Stream.ReadAtLeast` polyfill methods provided by the `Gapotchenko.FX.IO` module are now available for all supported target frameworks
 - Fixed issues:
     - Fixed issue that led to an empty string value returned by the `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
     - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with its own entry point

@@ -5,6 +5,7 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.Data.Archives.Kits;
+using Gapotchenko.FX.IO;
 
 namespace Gapotchenko.FX.Data.Archives.Zip;
 
@@ -27,6 +28,13 @@ sealed class ZipFormat : DataArchiveFileFormatKit<IZipArchive, ZipArchiveOptions
 
     protected override bool IsMountableCore(Stream stream, ZipArchiveOptions? options)
     {
+        const int n = 4;
+
+        Span<byte> buffer = stackalloc byte[n];
+        int bytesRead = stream.ReadAtLeast(buffer, n, false);
+        if (bytesRead != n)
+            return false;
+
         throw new NotImplementedException();
     }
 }
