@@ -2,7 +2,7 @@
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.IO.Vfs.Tests;
 
-namespace Gapotchenko.FX.Data.Storage.Archives.Zip.Tests;
+namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
 
 [TestClass]
 public sealed class ZipArchiveVfsTests : FileSystemViewVfsTests

@@ -99,6 +99,22 @@ public static class VfsFileExtensions
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
     /// <param name="file">The <see cref="IVfsFile{TVfs, TOptions}"/> instance.</param>
+    /// <param name="path">The file to be opened for writing.</param>
+    /// <param name="options">The storage options.</param>
+    public static TVfs Create<TVfs, TOptions>(
+        this IVfsFile<TVfs, TOptions> file,
+        string path,
+        TOptions? options = null)
+        where TVfs : IVirtualFileSystem
+        where TOptions : VfsOptions =>
+        Create(file, FileSystemView.Local, path, options);
+
+    /// <summary>
+    /// Creates or overwrites a file representing a <typeparamref name="TVfs"/> storage in the specified path.
+    /// </summary>
+    /// <typeparam name="TVfs">The type of the file storage.</typeparam>
+    /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
+    /// <param name="file">The <see cref="IVfsFile{TVfs, TOptions}"/> instance.</param>
     /// <param name="view">The file-system view.</param>
     /// <param name="path">The file to be opened for writing.</param>
     /// <param name="options">The storage options.</param>

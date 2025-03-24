@@ -6,7 +6,7 @@
 
 using Gapotchenko.FX.IO.Vfs;
 
-namespace Gapotchenko.FX.Data.Storage.Archives;
+namespace Gapotchenko.FX.Data.Archives;
 
 /// <summary>
 /// Provides operations for working with <typeparamref name="TArchive"/> files.

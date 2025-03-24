@@ -6,7 +6,7 @@
 
 using Gapotchenko.FX.IO.Vfs;
 
-namespace Gapotchenko.FX.Data.Storage.Archives;
+namespace Gapotchenko.FX.Data.Archives;
 
 /// <summary>
 /// Provides description and operations for the data archive format.

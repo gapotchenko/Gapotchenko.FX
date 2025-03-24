@@ -6,7 +6,7 @@
 
 using Gapotchenko.FX.IO.Vfs;
 
-namespace Gapotchenko.FX.Data.Storage.Archives;
+namespace Gapotchenko.FX.Data.Archives;
 
 /// <inheritdoc/>
 /// <typeparam name="TArchive">The type of the data archive.</typeparam>

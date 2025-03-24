@@ -8,7 +8,7 @@ using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
 using System.IO.Compression;
 
-namespace Gapotchenko.FX.Data.Storage.Archives.Zip;
+namespace Gapotchenko.FX.Data.Archives.Zip;
 
 /// <summary>
 /// Represents a package of compressed files in the ZIP archive format.
@@ -25,7 +25,7 @@ public sealed partial class ZipArchive :
     /// <summary>
     /// Gets the object for ZIP files manipulation.
     /// </summary>
-    public static IDataArchiveFile<IZipArchive, ZipArchiveOptions> File => throw new NotImplementedException();
+    public static IDataArchiveFile<IZipArchive, ZipArchiveOptions> File => ZipFile.Instance;
 
 #if TFF_STATIC_INTERFACE
     static IVfsFile<IZipArchive, ZipArchiveOptions> IFileVfs<IZipArchive, ZipArchiveOptions>.File => File;

@@ -15,7 +15,7 @@
     <ProjectReference Include="..\..\..\..\IO\Gapotchenko.FX.IO.Vfs\Gapotchenko.FX.IO.Vfs.csproj" />
     <ProjectReference Include="..\..\..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
     <ProjectReference Include="..\..\..\..\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
-    <ProjectReference Include="..\Gapotchenko.FX.Data.Storage.Archives\Gapotchenko.FX.Data.Storage.Archives.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.Data.Storage.Archives\Gapotchenko.FX.Data.Archives.csproj" />
   </ItemGroup>
 
 </Project>

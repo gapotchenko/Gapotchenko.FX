@@ -4,7 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-namespace Gapotchenko.FX.Data.Storage.Archives.Zip;
+namespace Gapotchenko.FX.Data.Archives.Zip;
 
 /// <summary>
 /// Defines the options for a ZIP archive.

@@ -7,7 +7,7 @@
 using Gapotchenko.FX.IO.Vfs.Kits;
 using System.Diagnostics;
 
-namespace Gapotchenko.FX.Data.Storage.Archives.Zip;
+namespace Gapotchenko.FX.Data.Archives.Zip;
 
 /// <summary>
 /// This is an infrastructure type that should never be used by user code.

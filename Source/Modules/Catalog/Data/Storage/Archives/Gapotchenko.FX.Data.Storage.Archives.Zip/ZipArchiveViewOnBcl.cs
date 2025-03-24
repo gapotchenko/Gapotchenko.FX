@@ -12,7 +12,7 @@ using Gapotchenko.FX.Text;
 using System.IO.Compression;
 using System.Runtime.CompilerServices;
 
-namespace Gapotchenko.FX.Data.Storage.Archives.Zip;
+namespace Gapotchenko.FX.Data.Archives.Zip;
 
 sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool leaveOpen) :
     ZipArchiveBase,
