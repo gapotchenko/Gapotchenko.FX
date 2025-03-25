@@ -9,7 +9,7 @@ using Gapotchenko.FX.IO.Vfs;
 namespace Gapotchenko.FX.Data.Archives;
 
 /// <summary>
-/// Provides operations for working with <typeparamref name="TArchive"/> files.
+/// Provides operations for working with files representing <typeparamref name="TArchive"/> data archives.
 /// </summary>
 /// <typeparam name="TArchive">The type of the data archive.</typeparam>
 /// <typeparam name="TOptions">The type of the data archive options.</typeparam>

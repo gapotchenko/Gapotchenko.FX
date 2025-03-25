@@ -16,6 +16,6 @@ partial class ZipArchive
     public static IDataArchiveFile<IZipArchive, ZipArchiveOptions> File => ZipArchiveFile.Instance;
 
 #if TFF_STATIC_INTERFACE
-    static IVfsFile<IZipArchive, ZipArchiveOptions> IFileVfs<IZipArchive, ZipArchiveOptions>.File => File;
+    static IVfsFile<IZipArchive, ZipArchiveOptions> IFileMountableVfs<IZipArchive, ZipArchiveOptions>.File => File;
 #endif
 }

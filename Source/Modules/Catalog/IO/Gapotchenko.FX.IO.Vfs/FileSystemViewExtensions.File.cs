@@ -613,7 +613,7 @@ partial class FileSystemViewExtensions
         .CopyFile(sourcePath, destinationPath, false);
 
     /// <summary>
-    /// Copies an existing file to a new file in the specified <see cref="IFileSystemView"/> destination.
+    /// Copies an existing file to a new file in the specified destination <see cref="IFileSystemView"/>.
     /// Overwriting a file of the same name is not allowed.
     /// </summary>
     /// <inheritdoc cref="CopyFile(IReadOnlyFileSystemView, string, IFileSystemView, string, bool)"/>
@@ -625,7 +625,7 @@ partial class FileSystemViewExtensions
         CopyFile(sourceView, sourcePath, destinationView, destinationPath, false);
 
     /// <summary>
-    /// Copies an existing file to a new file in the specified <see cref="IFileSystemView"/> destination.
+    /// Copies an existing file to a new file in the specified destination <see cref="IFileSystemView"/>.
     /// Overwriting a file of the same name is controlled by the <paramref name="overwrite"/> parameter.
     /// </summary>
     /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> of the file to copy.</param>
@@ -663,7 +663,7 @@ partial class FileSystemViewExtensions
     /// providing the option to specify a new file name.
     /// </summary>
     /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file-system view to move the file at.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
     public static void MoveFile(

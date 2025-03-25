@@ -16,7 +16,7 @@ namespace Gapotchenko.FX.Data.Archives.Zip;
 public sealed partial class ZipArchive :
     FileSystemViewProxyKit<IZipArchiveView<System.IO.Compression.ZipArchive>>,
     IZipArchive,
-    IFileDataArchive<IZipArchive, ZipArchiveOptions>
+    IFileMountableDataArchive<IZipArchive, ZipArchiveOptions>
 {
     // For now, the implementation is just a wrapper around System.IO.Compression.ZipArchive,
     // which is not ideal because System.IO.Compression.ZipArchive is somewhat lacking

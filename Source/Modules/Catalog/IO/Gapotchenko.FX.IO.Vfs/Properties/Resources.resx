@@ -153,4 +153,7 @@
   <data name="FileStorageCannotBeOpenedInXMode" xml:space="preserve">
     <value>File storage cannot be opened in {0} mode.</value>
   </data>
+  <data name="DirectoryXAlreadyExists" xml:space="preserve">
+    <value>The directory '{0}' already exists.</value>
+  </data>
 </root>

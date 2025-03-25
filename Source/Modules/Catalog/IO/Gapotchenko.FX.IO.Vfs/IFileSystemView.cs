@@ -63,5 +63,30 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <inheritdoc cref="Directory.Delete(string, bool)"/>
     void DeleteDirectory(string path, bool recursive);
 
+    /// <summary>
+    /// Copies an existing directory to a new directory.
+    /// Overwriting a directory of the same name is controlled by the <paramref name="overwrite"/> parameter.
+    /// </summary>
+    /// <param name="sourcePath">The path of the directory to copy.</param>
+    /// <param name="destinationPath">The path of the destination directory.</param>
+    /// <param name="overwrite">
+    /// <see langword="true"/> if the destination directory should be overwritten if it already exists;
+    /// otherwise, <see langword="false"/>.
+    /// </param>
+    void CopyDirectory(string sourcePath, string destinationPath, bool overwrite);
+
+    /// <summary>
+    /// Moves a specified directory to a new location,
+    /// providing the options to specify a new directory name and
+    /// to overwrite the destination directory if it already exists.
+    /// </summary>
+    /// <param name="sourcePath">The path of the directory to move.</param>
+    /// <param name="destinationPath">The new path and name for the directory.</param>
+    /// <param name="overwrite">
+    /// <see langword="true"/> to overwrite the destination directory if it already exists;
+    /// <see langword="false"/> otherwise.
+    /// </param>
+    void MoveDirectory(string sourcePath, string destinationPath, bool overwrite);
+
     #endregion
 }

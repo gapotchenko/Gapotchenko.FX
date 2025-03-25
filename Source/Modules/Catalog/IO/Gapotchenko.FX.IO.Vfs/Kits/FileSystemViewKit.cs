@@ -88,7 +88,7 @@ public abstract class FileSystemViewKit : IFileSystemView
         VfsValidationKit.Arguments.ValidatePath(sourcePath);
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
 
-        // Avoid opening a file for read if writing is not supported.
+        // Avoid reading a file if writing is not supported.
         EnsureCanWrite();
 
         IOHelper.CopyFileNaive(this, sourcePath, this, destinationPath, overwrite);
@@ -100,7 +100,7 @@ public abstract class FileSystemViewKit : IFileSystemView
         VfsValidationKit.Arguments.ValidatePath(sourcePath);
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
 
-        // Avoid opening a file for read if writing is not supported.
+        // Avoid reading a file if writing is not supported.
         EnsureCanWrite();
 
         IOHelper.MoveFileNaive(this, sourcePath, this, destinationPath, overwrite);
@@ -128,6 +128,30 @@ public abstract class FileSystemViewKit : IFileSystemView
 
     /// <inheritdoc/>
     public abstract void DeleteDirectory(string path, bool recursive);
+
+    /// <inheritdoc/>
+    public void CopyDirectory(string sourcePath, string destinationPath, bool overwrite)
+    {
+        VfsValidationKit.Arguments.ValidatePath(sourcePath);
+        VfsValidationKit.Arguments.ValidatePath(destinationPath);
+
+        // Avoid reading entries if writing is not supported.
+        EnsureCanWrite();
+
+        IOHelper.CopyDirectoryNaive(this, sourcePath, this, destinationPath, overwrite);
+    }
+
+    /// <inheritdoc/>
+    public void MoveDirectory(string sourcePath, string destinationPath, bool overwrite)
+    {
+        VfsValidationKit.Arguments.ValidatePath(sourcePath);
+        VfsValidationKit.Arguments.ValidatePath(destinationPath);
+
+        // Avoid reading entries if writing is not supported.
+        EnsureCanWrite();
+
+        IOHelper.MoveDirectoryNaive(this, sourcePath, this, destinationPath, overwrite);
+    }
 
     #endregion
 

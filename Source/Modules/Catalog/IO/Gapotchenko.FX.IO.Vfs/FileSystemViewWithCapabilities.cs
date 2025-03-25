@@ -30,6 +30,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
             ThrowHelper.CannotWriteFS();
     }
 
+    void EnsureCanReadAndWrite()
+    {
+        EnsureCanRead();
+        EnsureCanWrite();
+    }
+
     void EnsureCanOpenFile(FileMode mode, FileAccess access) =>
         FileSystemViewCapabilities.EnsureCanOpenFile(mode, access, canRead, canWrite);
 
@@ -81,15 +87,13 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
 
     public override void CopyFile(string sourcePath, string destinationPath, bool overwrite)
     {
-        EnsureCanRead();
-        EnsureCanWrite();
+        EnsureCanReadAndWrite();
         base.CopyFile(sourcePath, destinationPath, overwrite);
     }
 
     public override void MoveFile(string sourcePath, string destinationPath, bool overwrite)
     {
-        EnsureCanRead();
-        EnsureCanWrite();
+        EnsureCanReadAndWrite();
         base.MoveFile(sourcePath, destinationPath, overwrite);
     }
 
@@ -127,16 +131,22 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.CreateDirectory(path);
     }
 
-    public override void DeleteDirectory(string path)
-    {
-        EnsureCanWrite();
-        base.DeleteDirectory(path);
-    }
-
     public override void DeleteDirectory(string path, bool recursive)
     {
         EnsureCanWrite();
         base.DeleteDirectory(path, recursive);
+    }
+
+    public override void CopyDirectory(string sourcePath, string destinationPath, bool overwrite)
+    {
+        EnsureCanReadAndWrite();
+        base.CopyDirectory(sourcePath, destinationPath, overwrite);
+    }
+
+    public override void MoveDirectory(string sourcePath, string destinationPath, bool overwrite)
+    {
+        EnsureCanReadAndWrite();
+        base.MoveDirectory(sourcePath, destinationPath, overwrite);
     }
 
     #endregion

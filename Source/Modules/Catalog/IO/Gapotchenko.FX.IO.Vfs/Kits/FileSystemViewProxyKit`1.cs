@@ -92,10 +92,15 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual void CreateDirectory(string path) => BaseView.CreateDirectory(path);
 
     /// <inheritdoc/>
-    public virtual void DeleteDirectory(string path) => BaseView.DeleteDirectory(path);
+    public virtual void DeleteDirectory(string path, bool recursive) => BaseView.DeleteDirectory(path, recursive);
 
     /// <inheritdoc/>
-    public virtual void DeleteDirectory(string path, bool recursive) => BaseView.DeleteDirectory(path, recursive);
+    public virtual void CopyDirectory(string sourcePath, string destinationPath, bool overwrite) =>
+        BaseView.CopyDirectory(sourcePath, destinationPath, overwrite);
+
+    /// <inheritdoc/>
+    public virtual void MoveDirectory(string sourcePath, string destinationPath, bool overwrite) =>
+        BaseView.MoveDirectory(sourcePath, destinationPath, overwrite);
 
     #endregion
 

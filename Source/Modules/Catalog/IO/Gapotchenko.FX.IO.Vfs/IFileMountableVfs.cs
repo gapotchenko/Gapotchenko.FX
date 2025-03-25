@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// </summary>
 /// <typeparam name="TVfs">The type of the virtual file system.</typeparam>
 /// <typeparam name="TOptions">The type of the virtual file system options.</typeparam>
-public interface IFileVfs<out TVfs, TOptions> : IVirtualFileSystem
+public interface IFileMountableVfs<out TVfs, TOptions> : IVirtualFileSystem
     where TVfs : IVirtualFileSystem
     where TOptions : VfsOptions
 {

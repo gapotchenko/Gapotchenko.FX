@@ -40,7 +40,12 @@ public interface IReadOnlyFileSystemViewProvider : ICanProvideReadOnlyFileSystem
 /// Declares the intent of providing an <see cref="IFileSystemView"/> instance.
 /// </summary>
 /// <remarks>
+/// <para>
+/// A type implementing this interface should also implement <see cref="IFileSystemViewProvider"/> interface.
+/// </para>
+/// <para>
 /// This interface is useful in conjunction with <see cref="FileSystemView.For(ICanProvideFileSystemView)"/> method.
+/// </para>
 /// </remarks>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public interface ICanProvideFileSystemView : ICanProvideReadOnlyFileSystemView
@@ -51,7 +56,12 @@ public interface ICanProvideFileSystemView : ICanProvideReadOnlyFileSystemView
 /// Declares the intent of providing an <see cref="IReadOnlyFileSystemView"/> instance.
 /// </summary>
 /// <remarks>
+/// <para>
+/// A type implementing this interface should also implement <see cref="IReadOnlyFileSystemViewProvider"/> interface.
+/// </para>
+/// <para>
 /// This interface is useful in conjunction with <see cref="FileSystemView.For(ICanProvideReadOnlyFileSystemView)"/> method.
+/// </para>
 /// </remarks>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public interface ICanProvideReadOnlyFileSystemView

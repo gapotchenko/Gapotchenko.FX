@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Provides operations for working with <typeparamref name="TVfs"/> virtual file system storages.
+/// Provides operations for working with files representing <typeparamref name="TVfs"/> virtual file systems.
 /// </summary>
 /// <typeparam name="TVfs">The type of the virtual file system.</typeparam>
 /// <typeparam name="TOptions">The type of the virtual file system options.</typeparam>

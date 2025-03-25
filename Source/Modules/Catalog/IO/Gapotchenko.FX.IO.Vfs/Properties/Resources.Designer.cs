@@ -106,6 +106,15 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The directory &apos;{0}&apos; already exists..
+        /// </summary>
+        internal static string DirectoryXAlreadyExists {
+            get {
+                return ResourceManager.GetString("DirectoryXAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The directory &apos;{0}&apos; is not empty..
         /// </summary>
         internal static string DirectoryXIsNotEmpty {

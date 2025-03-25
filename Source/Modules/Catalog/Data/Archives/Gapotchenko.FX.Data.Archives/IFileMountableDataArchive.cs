@@ -13,7 +13,9 @@ namespace Gapotchenko.FX.Data.Archives;
 /// </summary>
 /// <typeparam name="TArchive">The type of the data archive.</typeparam>
 /// <typeparam name="TOptions">The type of the data archive options.</typeparam>
-public interface IFileDataArchive<out TArchive, TOptions> : IDataArchive, IFileVfs<TArchive, TOptions>
+public interface IFileMountableDataArchive<out TArchive, TOptions> :
+    IDataArchive,
+    IFileMountableVfs<TArchive, TOptions>
     where TArchive : IDataArchive
     where TOptions : DataArchiveOptions
 {
