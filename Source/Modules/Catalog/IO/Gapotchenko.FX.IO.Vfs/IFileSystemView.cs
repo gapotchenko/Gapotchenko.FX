@@ -83,7 +83,7 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <param name="sourcePath">The path of the directory to move.</param>
     /// <param name="destinationPath">The new path and name for the directory.</param>
     /// <param name="overwrite">
-    /// <see langword="true"/> to overwrite the destination directory if it already exists;
+    /// <see langword="true"/> to replace the destination directory if it already exists;
     /// <see langword="false"/> otherwise.
     /// </param>
     void MoveDirectory(string sourcePath, string destinationPath, bool overwrite);

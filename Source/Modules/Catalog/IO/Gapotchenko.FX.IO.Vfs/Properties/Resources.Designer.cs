@@ -88,6 +88,15 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find directory &apos;{0}&apos;..
+        /// </summary>
+        internal static string CouldNotFindDirectoryX {
+            get {
+                return ResourceManager.GetString("CouldNotFindDirectoryX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find file &apos;{0}&apos;..
         /// </summary>
         internal static string CouldNotFindFileX {

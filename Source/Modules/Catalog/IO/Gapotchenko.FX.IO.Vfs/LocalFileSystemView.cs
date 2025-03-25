@@ -7,6 +7,7 @@
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.Linq;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.IO.Vfs;
 
@@ -73,6 +74,40 @@ sealed class LocalFileSystemView : FileSystemViewKit
     public override void CreateDirectory(string path) => Directory.CreateDirectory(path);
 
     public override void DeleteDirectory(string path, bool recursive) => Directory.Delete(path, recursive);
+
+    public override void MoveDirectory(string sourcePath, string destinationPath, bool overwrite)
+    {
+        if (!overwrite && Directory.Exists(sourcePath))
+        {
+            const int COR_E_IO = unchecked((int)0x80131620);
+
+            // Trying to use an OS accelerated operation.
+            try
+            {
+                // The call below can also handle files but this would violate
+                // the semantic of the method being implemented.
+                Directory.Move(sourcePath, destinationPath);
+            }
+            catch (IOException e) when
+                (e.HResult == COR_E_IO &&
+                RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
+                !PathComparer.Equals(GetPathRoot(sourcePath), GetPathRoot(destinationPath)))
+            {
+                // Source and destination path must have identical roots.
+                // Move will not work across volumes.
+
+                // Downgrade to the base implementation.
+                base.MoveDirectory(sourcePath, destinationPath, false);
+            }
+
+            static string? GetPathRoot(string path) => Path.GetPathRoot(Path.GetFullPath(path));
+        }
+        else
+        {
+            // No acceleration is available.
+            base.MoveDirectory(sourcePath, destinationPath, overwrite);
+        }
+    }
 
     #endregion
 

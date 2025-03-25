@@ -31,12 +31,23 @@ static class IOHelper
         bool overwrite)
     {
         if (!sourceView.DirectoryExists(sourcePath))
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(sourcePath));
+        {
+            // Bailout early when the source directory cannot be read
+            // to avoid making unwarranted modifications in the destination.
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindDirectory(sourcePath));
+        }
 
-        if (!overwrite && destinationView.DirectoryExists(destinationPath))
-            throw new IOException(VfsResourceKit.DirectoryAlreadyExists(destinationPath));
+        if (destinationView.DirectoryExists(destinationPath))
+        {
+            if (overwrite)
+                destinationView.DeleteDirectory(destinationPath, true);
+            else
+                throw new IOException(VfsResourceKit.DirectoryAlreadyExists(destinationPath));
+        }
         else
+        {
             VfsValidationKit.Arguments.ValidatePath(destinationPath);
+        }
 
         MoveDirectoryCore(sourcePath, destinationPath);
 
@@ -82,7 +93,7 @@ static class IOHelper
         bool overwrite)
     {
         if (!sourceView.DirectoryExists(sourcePath))
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(sourcePath));
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindDirectory(sourcePath));
 
         if (!overwrite && destinationView.DirectoryExists(destinationPath))
             throw new IOException(VfsResourceKit.DirectoryAlreadyExists(destinationPath));

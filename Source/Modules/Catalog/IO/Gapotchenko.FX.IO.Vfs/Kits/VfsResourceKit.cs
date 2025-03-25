@@ -43,12 +43,12 @@ public static class VfsResourceKit
     /// <summary>
     /// Looks up a localized string similar to:
     /// <code>
-    /// The directory '{path}' is not empty.
+    /// Could not find directory '{<paramref name="path"/>}.
     /// </code>
     /// </summary>
     /// <param name="path">The path.</param>
     /// <returns>The formatted string.</returns>
-    public static string DirectoryIsNotEmpty(string? path) => string.Format(Resources.DirectoryXIsNotEmpty, path);
+    public static string CouldNotFindDirectory(string? path) => string.Format(Resources.CouldNotFindDirectoryX, path);
 
     /// <summary>
     /// Looks up a localized string similar to:
@@ -59,6 +59,16 @@ public static class VfsResourceKit
     /// <param name="path">The path.</param>
     /// <returns>The formatted string.</returns>
     public static string DirectoryAlreadyExists(string? path) => string.Format(Resources.DirectoryXAlreadyExists, path);
+
+    /// <summary>
+    /// Looks up a localized string similar to:
+    /// <code>
+    /// The directory '{path}' is not empty.
+    /// </code>
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The formatted string.</returns>
+    public static string DirectoryIsNotEmpty(string? path) => string.Format(Resources.DirectoryXIsNotEmpty, path);
 
     #endregion
 
