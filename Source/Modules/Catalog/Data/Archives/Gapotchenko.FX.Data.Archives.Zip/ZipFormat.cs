@@ -18,16 +18,19 @@ sealed class ZipFormat : DataArchiveFileFormatKit<IZipArchive, ZipArchiveOptions
     protected override IZipArchive CreateCore(Stream stream, bool leaveOpen, ZipArchiveOptions? options)
     {
         stream.SetLength(0);
-        return new ZipArchive(stream, true, leaveOpen);
+        return new ZipArchive(stream, true, leaveOpen, options);
     }
 
     protected override IZipArchive MountCore(Stream stream, bool writable, bool leaveOpen, ZipArchiveOptions? options)
     {
-        return new ZipArchive(stream, writable, leaveOpen);
+        return new ZipArchive(stream, writable, leaveOpen, options);
     }
 
     protected override bool IsMountableCore(Stream stream, ZipArchiveOptions? options)
     {
+        // This is a simplistic implementation which does not cover self-extracting archives:
+        // https://stackoverflow.com/a/1887113
+
         const int n = 4;
 
         Span<byte> buffer = stackalloc byte[n];
@@ -35,6 +38,15 @@ sealed class ZipFormat : DataArchiveFileFormatKit<IZipArchive, ZipArchiveOptions
         if (bytesRead != n)
             return false;
 
-        throw new NotImplementedException();
+        // https://www.loc.gov/preservation/digital/formats/fdd/fdd000354.shtml
+
+        if (!buffer[..2].SequenceEqual<byte>([0x50, 0x4b]))
+            return false;
+
+        buffer = buffer[2..];
+
+        return
+            buffer.SequenceEqual<byte>([0x03, 0x04]) ||
+            buffer.SequenceEqual<byte>([0x05, 0x06]); // end of central directory record
     }
 }

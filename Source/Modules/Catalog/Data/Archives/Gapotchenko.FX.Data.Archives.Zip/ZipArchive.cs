@@ -56,6 +56,11 @@ public sealed partial class ZipArchive :
     {
     }
 
+    internal ZipArchive(Stream stream, bool writable, bool leaveOpen, ZipArchiveOptions? options) :
+        this(stream, writable, leaveOpen)
+    {
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ZipArchive"/> class
     /// from the specified stream and with the <see cref="IFileSystemView.CanWrite"/> property set as specified,
@@ -97,7 +102,16 @@ public sealed partial class ZipArchive :
             mode = ZipArchiveMode.Read;
         }
 
-        return CreateView(new System.IO.Compression.ZipArchive(stream, mode, leaveOpen));
+        try
+        {
+            return CreateView(new System.IO.Compression.ZipArchive(stream, mode, leaveOpen));
+        }
+        catch
+        {
+            if (!leaveOpen)
+                stream.Dispose();
+            throw;
+        }
     }
 
     /// <inheritdoc/>

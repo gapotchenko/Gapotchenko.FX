@@ -10,7 +10,7 @@ using Gapotchenko.FX.Linq;
 namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
 
 [TestCategory("zip")]
-public abstract class ZipArchiveTests
+public abstract partial class ZipArchiveTests
 {
     protected abstract IZipArchive Mount(Stream stream);
 

@@ -19,4 +19,13 @@ public sealed record ZipArchiveOptions : DataArchiveOptions
     public ZipArchiveOptions()
     {
     }
+
+#if FUTURE_DEVELOPMENT
+
+    /// <summary>
+    /// Gets or initializes the conformance level.
+    /// </summary>
+    public ZipConformanceLevel ConformanceLevel { get; init; }
+
+#endif
 }
