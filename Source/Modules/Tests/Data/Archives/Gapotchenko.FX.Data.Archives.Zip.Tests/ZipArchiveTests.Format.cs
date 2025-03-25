@@ -58,6 +58,8 @@ partial class ZipArchiveTests
         Assert.AreEqual(0, stream.Position);
 
         format.Mount(stream).Dispose();
+        // TODO: restore the mount position after the unmount.
+        //Assert.AreEqual(0, stream.Position);
     }
 
     [TestMethod]
@@ -68,8 +70,8 @@ partial class ZipArchiveTests
             return;
 
         using var stream = Assets.OpenStream("Invalid/ZeroLength.zip");
-        Assert.IsFalse(format.IsMountable(stream));
 
+        Assert.IsFalse(format.IsMountable(stream));
         Assert.ThrowsException<InvalidDataException>(() => format.Mount(stream));
     }
 
@@ -81,8 +83,8 @@ partial class ZipArchiveTests
             return;
 
         using var stream = Assets.OpenStream("Invalid/Noise.zip");
-        Assert.IsFalse(format.IsMountable(stream));
 
+        Assert.IsFalse(format.IsMountable(stream));
         Assert.ThrowsException<InvalidDataException>(() => format.Mount(stream));
     }
 

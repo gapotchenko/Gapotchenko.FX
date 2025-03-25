@@ -8,11 +8,11 @@ using Gapotchenko.FX.IO.Vfs;
 
 namespace Gapotchenko.FX.Data.Archives.Zip;
 
-sealed class ZipFile : IDataArchiveFile<IZipArchive, ZipArchiveOptions>
+sealed class ZipArchiveFile : IDataArchiveFile<IZipArchive, ZipArchiveOptions>
 {
-    public static ZipFile Instance { get; } = new();
+    public static ZipArchiveFile Instance { get; } = new();
 
     IVfsFileFormat<IZipArchive, ZipArchiveOptions> IVfsFile<IZipArchive, ZipArchiveOptions>.Format => Format;
 
-    public IDataArchiveFileFormat<IZipArchive, ZipArchiveOptions> Format => ZipFormat.Instance;
+    public IDataArchiveFileFormat<IZipArchive, ZipArchiveOptions> Format => ZipArchiveFileFormat.Instance;
 }

@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Data.Archives.Zip;
 /// <summary>
 /// ZIP archive conformance levels.
 /// </summary>
-public enum ZipConformanceLevel
+public enum ZipArchiveConformanceLevel
 {
     /// <summary>
     /// The conformance level is chosen automatically.

@@ -25,7 +25,7 @@ public sealed record ZipArchiveOptions : DataArchiveOptions
     /// <summary>
     /// Gets or initializes the conformance level.
     /// </summary>
-    public ZipConformanceLevel ConformanceLevel { get; init; }
+    public ZipArchiveConformanceLevel ConformanceLevel { get; init; }
 
 #endif
 }

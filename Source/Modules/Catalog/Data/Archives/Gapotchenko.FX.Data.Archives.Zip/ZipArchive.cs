@@ -23,15 +23,6 @@ public sealed partial class ZipArchive :
     // in terms of supported compression methods and features.
 
     /// <summary>
-    /// Gets the object for ZIP files manipulation.
-    /// </summary>
-    public static IDataArchiveFile<IZipArchive, ZipArchiveOptions> File => ZipFile.Instance;
-
-#if TFF_STATIC_INTERFACE
-    static IVfsFile<IZipArchive, ZipArchiveOptions> IFileVfs<IZipArchive, ZipArchiveOptions>.File => File;
-#endif
-
-    /// <summary>
     /// Initializes a new read-only instance of the <see cref="ZipArchive"/> class
     /// from the specified stream.
     /// </summary>
