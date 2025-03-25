@@ -53,7 +53,7 @@ public static class VfsFileExtensions
         if (file is null)
             throw new ArgumentNullException(nameof(file));
 
-        return file.Format.Mount(view.OpenFileRead(path), options: options);
+        return file.Format.Mount(view.OpenReadableFile(path), options: options);
     }
 
     /// <summary>

@@ -31,7 +31,7 @@ public interface IReadOnlyFileSystemView
     IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 
     /// <inheritdoc cref="File.OpenRead(string)"/>
-    Stream OpenFileRead(string path);
+    Stream OpenReadableFile(string path);
 
     #endregion
 

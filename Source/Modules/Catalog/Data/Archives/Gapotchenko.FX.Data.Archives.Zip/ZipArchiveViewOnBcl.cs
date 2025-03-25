@@ -50,7 +50,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             .Select(x => GetFullPathCore(x));
     }
 
-    public override Stream OpenFileRead(string path)
+    public override Stream OpenReadableFile(string path)
     {
         VfsValidationKit.Arguments.ValidatePath(path);
 

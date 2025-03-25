@@ -53,7 +53,7 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
         BaseView.EnumerateFiles(path, searchPattern, searchOption);
 
     /// <inheritdoc/>
-    public virtual Stream OpenFileRead(string path) => BaseView.OpenFileRead(path);
+    public virtual Stream OpenReadableFile(string path) => BaseView.OpenReadableFile(path);
 
     /// <inheritdoc/>
     public virtual Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) =>

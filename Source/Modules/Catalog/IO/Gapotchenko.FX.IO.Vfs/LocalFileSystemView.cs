@@ -38,7 +38,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
     public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateFiles(path, searchPattern, searchOption);
 
-    public override Stream OpenFileRead(string path) => File.OpenRead(path);
+    public override Stream OpenReadableFile(string path) => File.OpenRead(path);
 
     public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) => File.Open(path, mode, access, share);
 

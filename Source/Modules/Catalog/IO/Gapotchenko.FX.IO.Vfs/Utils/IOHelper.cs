@@ -175,7 +175,7 @@ static class IOHelper
         string destinationPath,
         bool overwrite)
     {
-        using (var sourceStream = sourceView.OpenFileRead(sourcePath))
+        using (var sourceStream = sourceView.OpenReadableFile(sourcePath))
         using (var destinationStream = destinationView.OpenFile(
             destinationPath,
             overwrite ? FileMode.Create : FileMode.CreateNew,
