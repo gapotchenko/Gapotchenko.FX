@@ -9,7 +9,7 @@ namespace Gapotchenko.FX.Data.Archives.Zip;
 #if FUTURE_DEVELOPMENT
 
 /// <summary>
-/// ZIP archive conformance levels.
+/// Specifies the level of ZIP archive conformance.
 /// </summary>
 public enum ZipArchiveConformanceLevel
 {

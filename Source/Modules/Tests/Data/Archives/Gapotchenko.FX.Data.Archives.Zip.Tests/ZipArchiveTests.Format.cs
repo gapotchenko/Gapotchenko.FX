@@ -10,6 +10,21 @@ partial class ZipArchiveTests
 {
     protected virtual IDataArchiveFormat<IZipArchive, ZipArchiveOptions>? Format => null;
 
+    #region File Extensions
+
+    [TestMethod]
+    public void Zip_Format_FileExtensions()
+    {
+        var format = Format;
+        if (format == null)
+            return;
+
+        var extensions = format.FileExtensions.ToHashSet();
+        Assert.IsTrue(extensions.Contains(".zip"));
+    }
+
+    #endregion
+
     #region Mount
 
     [TestMethod]
