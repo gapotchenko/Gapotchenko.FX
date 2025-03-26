@@ -61,7 +61,7 @@ static class IOHelper
                     destinationPath,
                     Path.GetFileName(sourceEntryPath));
 
-                if (File.Exists(sourceEntryPath))
+                if (sourceView.FileExists(sourceEntryPath))
                     sourceView.MoveFile(sourceEntryPath, destinationView, destinationEntryPath, overwrite);
                 else
                     MoveDirectoryCore(sourceEntryPath, destinationEntryPath);
@@ -112,7 +112,7 @@ static class IOHelper
                     destinationPath,
                     Path.GetFileName(sourceEntryPath));
 
-                if (File.Exists(sourceEntryPath))
+                if (sourceView.FileExists(sourceEntryPath))
                     sourceView.CopyFile(sourceEntryPath, destinationView, destinationEntryPath, overwrite);
                 else
                     CopyDirectoryCore(sourceEntryPath, destinationEntryPath);
@@ -175,7 +175,7 @@ static class IOHelper
         string destinationPath,
         bool overwrite)
     {
-        using (var sourceStream = sourceView.OpenReadableFile(sourcePath))
+        using (var sourceStream = sourceView.ReadFile(sourcePath))
         using (var destinationStream = destinationView.OpenFile(
             destinationPath,
             overwrite ? FileMode.Create : FileMode.CreateNew,

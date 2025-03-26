@@ -73,7 +73,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 
     /// <inheritdoc/>
-    public virtual Stream OpenReadableFile(string path) =>
+    public virtual Stream ReadFile(string path) =>
         OpenFile(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 
     /// <inheritdoc/>

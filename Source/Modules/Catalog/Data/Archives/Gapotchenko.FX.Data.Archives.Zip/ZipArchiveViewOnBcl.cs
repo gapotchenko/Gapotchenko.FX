@@ -50,7 +50,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             .Select(x => GetFullPathCore(x));
     }
 
-    public override Stream OpenReadableFile(string path)
+    public override Stream ReadFile(string path)
     {
         VfsValidationKit.Arguments.ValidatePath(path);
 
@@ -359,7 +359,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
             bool recursive = searchOption == SearchOption.AllDirectories;
 
-            foreach (var entry in archive.Entries)
+            foreach (var entry in GetArchiveEntriesSnapshot())
             {
                 string entryPath = entry.FullName;
                 string[]? entryPathParts = VfsPathKit.Split(entryPath);
@@ -407,6 +407,15 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
     }
 
     #endregion
+
+    IEnumerable<ZipArchiveEntry> GetArchiveEntriesSnapshot()
+    {
+        var entries = archive.Entries;
+        if (CanWrite)
+            return entries.ToList();
+        else
+            return entries;
+    }
 
     public override void Dispose()
     {

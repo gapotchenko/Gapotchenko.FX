@@ -70,4 +70,53 @@ partial class FileSystemViewVfsTests
     }
 
     #endregion
+
+    #region Copy
+
+    [TestMethod]
+    public void FileSystemView_Vfs_Directory_Copy()
+    {
+        string[] copiedHierarchy = ["A.txt", "B.txt", "Dir1/C.txt", "Dir1/Dir2/D.txt", "Dir1/Dir3/", "Dir4/"];
+        string[] existingHierarchy = ["E/D.txt"];
+
+        RunVfsTest(Mutate, Verify);
+
+        void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            // A
+            VfsHelper.CreateHierarchy(vfs, Root("A"), copiedHierarchy, VfsHelper.GetDefaultFileContents);
+
+            // B
+            vfs.CopyDirectory(Root("A"), Root("B"));
+
+            // C
+            vfs.CreateDirectory(Root("C"));
+            Assert.ThrowsException<IOException>(() => vfs.CopyDirectory(Root("A"), Root("C")));
+
+            // D
+            vfs.CreateDirectory(Root("D"));
+            vfs.CopyDirectory(Root("A"), Root("D"), true);
+
+            // E
+            VfsHelper.CreateHierarchy(vfs, Root("E"), existingHierarchy, VfsHelper.GetDefaultFileContents);
+            Assert.ThrowsException<IOException>(() => vfs.CopyDirectory(Root("A"), Root("E")));
+            Assert.That.VfsHierarchyIs(vfs, Root("E"), existingHierarchy, VfsHelper.GetDefaultFileContents);
+            vfs.CopyDirectory(Root("A"), Root("E"), true);
+
+            string Root(string path) => vfs.CombinePaths(rootPath, path);
+        }
+
+        void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            Assert.That.VfsHierarchyIs(vfs, Root("A"), copiedHierarchy, VfsHelper.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("B"), copiedHierarchy, VfsHelper.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("C"), []);
+            Assert.That.VfsHierarchyIs(vfs, Root("D"), copiedHierarchy, VfsHelper.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("E"), [.. existingHierarchy, .. copiedHierarchy], VfsHelper.GetDefaultFileContents);
+
+            string Root(string path) => vfs.CombinePaths(rootPath, path);
+        }
+    }
+
+    #endregion
 }

@@ -49,8 +49,8 @@ public abstract partial class ZipArchiveTests
         Assert.IsFalse(archive.FileExists("\\"));
         Assert.IsFalse(archive.FileExists("."));
 
-        Assert.ThrowsException<FileNotFoundException>(() => archive.OpenTextFile("File.txt"));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.OpenTextFile("Directory/File.txt"));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadTextFile("File.txt"));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadTextFile("Directory/File.txt"));
     }
 
     [TestMethod]

@@ -25,7 +25,7 @@ partial class FileSystemViewExtensions
     /// <inheritdoc cref="File.OpenWrite(string)"/>
     /// <param name="view">The file-system view.</param>
     /// <param name="path"><inheritdoc/></param>
-    public static Stream OpenWritableFile(this IFileSystemView view, string path)
+    public static Stream WriteFile(this IFileSystemView view, string path)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
@@ -39,7 +39,7 @@ partial class FileSystemViewExtensions
     /// <inheritdoc cref="File.OpenText(string)"/>
     /// <param name="view">The file-system view.</param>
     /// <param name="path"><inheritdoc/></param>
-    public static StreamReader OpenTextFile(this IReadOnlyFileSystemView view, string path)
+    public static StreamReader ReadTextFile(this IReadOnlyFileSystemView view, string path)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
@@ -47,7 +47,7 @@ partial class FileSystemViewExtensions
         if (view is LocalFileSystemView)
             return File.OpenText(path);
         else
-            return new StreamReader(view.OpenReadableFile(path), Encoding.UTF8);
+            return new StreamReader(view.ReadFile(path), Encoding.UTF8);
     }
 
     /// <inheritdoc cref="File.Open(string, FileMode)"/>
@@ -168,7 +168,7 @@ partial class FileSystemViewExtensions
         }
         else
         {
-            using var stream = view.OpenReadableFile(path);
+            using var stream = view.ReadFile(path);
             return ReadAllBytesCore(stream);
         }
     }
@@ -326,7 +326,7 @@ partial class FileSystemViewExtensions
 
     static string ReadAllFileTextCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        using var reader = new StreamReader(view.OpenReadableFile(path), encoding);
+        using var reader = new StreamReader(view.ReadFile(path), encoding);
         return reader.ReadToEnd();
     }
 
@@ -447,7 +447,7 @@ partial class FileSystemViewExtensions
 
     static IEnumerable<string> ReadFileLinesCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        using var reader = new StreamReader(view.OpenReadableFile(path), encoding);
+        using var reader = new StreamReader(view.ReadFile(path), encoding);
 
         while (reader.ReadLine() is not null and var line)
             yield return line;
@@ -484,7 +484,7 @@ partial class FileSystemViewExtensions
 
     static string[] ReadAllFileLinesCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        using var reader = new StreamReader(view.OpenReadableFile(path), encoding);
+        using var reader = new StreamReader(view.ReadFile(path), encoding);
 
         var lines = new List<string>();
         while (reader.ReadLine() is not null and var line)
