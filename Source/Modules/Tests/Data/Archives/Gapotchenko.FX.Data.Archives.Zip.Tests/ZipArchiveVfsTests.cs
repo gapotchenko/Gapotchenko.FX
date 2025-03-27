@@ -7,7 +7,7 @@ namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
 [TestClass]
 public sealed class ZipArchiveVfsTests : FileSystemViewVfsTests
 {
-    protected override IFileSystemView CreateView(out string rootPath)
+    protected override IFileSystemView CreateVfs(out string rootPath)
     {
         rootPath = "/";
         return new ArchiveVfs(new MemoryStream());

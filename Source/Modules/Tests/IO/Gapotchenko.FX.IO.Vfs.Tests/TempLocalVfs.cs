@@ -8,7 +8,7 @@ using Gapotchenko.FX.IO.Vfs.Kits;
 
 namespace Gapotchenko.FX.IO.Vfs.Tests;
 
-sealed class TempLocalVfs : FileSystemViewProxyKit, IDisposable
+sealed class TempLocalVfs : FileSystemViewProxyKit, IVirtualFileSystem
 {
     public TempLocalVfs() :
         base(FileSystemView.Local)
@@ -17,8 +17,8 @@ sealed class TempLocalVfs : FileSystemViewProxyKit, IDisposable
             Path.GetTempPath(),
             "Gapotchenko", "Gapotchenko.FX",
             "Tests",
-            "Gapotchenko.FX.IO.Vfs.Tests", "VFS",
-            Path.GetRandomFileName());
+            "Gapotchenko.FX.IO.Vfs.Tests",
+            "VFS", Path.GetRandomFileName());
 
         Directory.CreateDirectory(rootPath);
         RootPath = rootPath;

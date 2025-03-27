@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.IO.Vfs.Tests;
 [TestCategory("local")]
 public sealed class LocalFileSystemViewVfsTests : FileSystemViewVfsTests
 {
-    protected override IFileSystemView CreateView(out string rootPath)
+    protected override IFileSystemView CreateVfs(out string rootPath)
     {
         var vfs = new TempLocalVfs();
         rootPath = vfs.RootPath;

@@ -11,46 +11,12 @@ public abstract partial class FileSystemViewVfsTests
 {
     // This class is partial. Please take a look at the neighboring source files.
 
-    void RunVfsTest(VfsMutatingTest test)
-    {
-        var vfs = CreateView(out string rootPath);
-        try
-        {
-            test(vfs, rootPath);
-        }
-        finally
-        {
-            DisposeView(vfs);
-        }
-    }
-
-    void RunVfsTest(VfsMutatingTest mutatingTest, VfsReadOnlyTest readOnlyTest)
-    {
-        var vfs = CreateView(out string rootPath);
-        try
-        {
-            mutatingTest(vfs, rootPath);
-
-            readOnlyTest(vfs, rootPath);
-            if (TryRoundTripVfs(ref vfs))
-                readOnlyTest(vfs, rootPath);
-        }
-        finally
-        {
-            DisposeView(vfs);
-        }
-    }
-
-    delegate void VfsReadOnlyTest(IReadOnlyFileSystemView vfs, string rootPath);
-
-    delegate void VfsMutatingTest(IFileSystemView vfs, string rootPath);
-
     /// <summary>
     /// Creates an empty virtual file system view.
     /// </summary>
     /// <param name="rootPath">The root path to use for tests.</param>
     /// <returns>The <see cref="IFileSystemView"/> instance for the created virtual file system.</returns>
-    protected abstract IFileSystemView CreateView(out string rootPath);
+    protected abstract IFileSystemView CreateVfs(out string rootPath);
 
     /// <summary>
     /// Round-trips the specified virtual file system by unmounting, disposing, copying, and remounting it.
@@ -62,10 +28,51 @@ public abstract partial class FileSystemViewVfsTests
     /// <returns><see langword="true"/> when round-tripping is supported; otherwise, <see langword="false"/>.</returns>
     protected virtual bool TryRoundTripVfs([MaybeNullWhen(false)] ref IFileSystemView vfs)
     {
-        DisposeView(vfs);
+        DisposeVfs(vfs);
         vfs = null;
         return false;
     }
 
-    static void DisposeView(IFileSystemView? vfs) => (vfs as IDisposable)?.Dispose();
+    protected static IVirtualFileSystem CreateTemporaryVfs(out string rootPath)
+    {
+        var vfs = new TempLocalVfs();
+        rootPath = vfs.RootPath;
+        return vfs;
+    }
+
+    void RunVfsTest(VfsMutatingTest test)
+    {
+        var vfs = CreateVfs(out string rootPath);
+        try
+        {
+            test(vfs, rootPath);
+        }
+        finally
+        {
+            DisposeVfs(vfs);
+        }
+    }
+
+    void RunVfsTest(VfsMutatingTest mutatingTest, VfsReadOnlyTest readOnlyTest)
+    {
+        var vfs = CreateVfs(out string rootPath);
+        try
+        {
+            mutatingTest(vfs, rootPath);
+
+            readOnlyTest(vfs, rootPath);
+            if (TryRoundTripVfs(ref vfs))
+                readOnlyTest(vfs, rootPath);
+        }
+        finally
+        {
+            DisposeVfs(vfs);
+        }
+    }
+
+    delegate void VfsReadOnlyTest(IReadOnlyFileSystemView vfs, string rootPath);
+
+    delegate void VfsMutatingTest(IFileSystemView vfs, string rootPath);
+
+    static void DisposeVfs(IFileSystemView? vfs) => (vfs as IDisposable)?.Dispose();
 }
