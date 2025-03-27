@@ -3,7 +3,7 @@
 using Gapotchenko.FX.Text;
 using System.Text;
 
-static class VfsHelper
+public static class VfsTestHelper
 {
     public static void CreateHierarchy(
         IFileSystemView vfs,
@@ -38,6 +38,7 @@ static class VfsHelper
 
     public static byte[] GetDefaultFileContents(IReadOnlyFileSystemView vfs, string path)
     {
+        _ = vfs;
         return Encoding.UTF8.GetBytes(
             string.Format(
                 "This is default contents of the '{0}' file.",

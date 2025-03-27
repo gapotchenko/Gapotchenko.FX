@@ -218,34 +218,56 @@ partial class FileSystemViewVfsTests
     }
 
     [TestMethod]
-    public void FileSystemView_Vfs_File_MoveTo()
+    [DataRow(false), DataRow(true)]
+    public void FileSystemView_Vfs_File_MoveTo(bool reverse)
     {
+        using var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
+
         RunVfsTest(Mutate, Verify);
 
         const string sourceFileName = "Source.txt";
         const string destinationFileName = "Destination.txt";
         const string fileContents = "This is a sample text.";
 
-        static void Mutate(IFileSystemView vfs, string rootPath)
+        void Mutate(IFileSystemView destinationVfs, string destinationRootPath)
         {
-            using var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
-            string sourceFilePath = sourceVfs.CombinePaths(sourceRootPath, sourceFileName);
-            sourceVfs.WriteAllFileText(sourceFilePath, fileContents);
+            #region Epilogue
 
-            var destinationVfs = vfs;
-            string destinationFilePath = destinationVfs.CombinePaths(rootPath, destinationFileName);
-            sourceVfs.MoveFile(sourceFilePath, destinationVfs, destinationFilePath);
-            Assert.IsFalse(sourceVfs.FileExists(sourceFilePath));
+            (IFileSystemView sVfs, string sr) = (sourceVfs, sourceRootPath);
+            var (dVfs, dr) = (destinationVfs, destinationRootPath);
+
+            if (reverse)
+                (sVfs, sr, dVfs, dr) = (dVfs, dr, sVfs, sr);
+
+            string SR(string path) => sVfs.CombinePaths(sr, path);
+            string DR(string path) => dVfs.CombinePaths(dr, path);
+
+            #endregion
+
+            sVfs.WriteAllFileText(SR(sourceFileName), fileContents);
+
+            sVfs.MoveFile(SR(sourceFileName), dVfs, DR(destinationFileName));
         }
 
-        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        void Verify(IReadOnlyFileSystemView destinationVfs, string destinationRootPath)
         {
-            Assert.That.VfsHierarchyIs(
-                vfs,
-                rootPath,
-                [destinationFileName]);
+            #region Epilogue
 
-            Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, destinationFileName)));
+            (IReadOnlyFileSystemView sVfs, string sr) = (sourceVfs, sourceRootPath);
+            var (dVfs, dr) = (destinationVfs, destinationRootPath);
+
+            if (reverse)
+                (sVfs, sr, dVfs, dr) = (dVfs, dr, sVfs, sr);
+
+            string SR(string path) => sVfs.CombinePaths(sr, path);
+            string DR(string path) => dVfs.CombinePaths(dr, path);
+
+            #endregion
+
+            Assert.IsFalse(sVfs.FileExists(SR(sourceFileName)));
+
+            Assert.AreEqual(fileContents, dVfs.ReadAllFileText(DR(destinationFileName)));
+            Assert.That.VfsHierarchyIs(dVfs, dr, [destinationFileName]);
         }
     }
 

@@ -27,7 +27,7 @@ public static class AssertExtensions
             .Select(x => vfs.GetFullPath(vfs.CombinePaths(directoryPath, x)))
             .ToHashSet(vfs.PathComparer);
 
-        bool useDirectoryTrail = expected.Any(x => VfsHelper.IsDirectoryName(vfs, x));
+        bool useDirectoryTrail = expected.Any(x => VfsTestHelper.IsDirectoryName(vfs, x));
         if (useDirectoryTrail)
             actual = actual.Select(x => vfs.DirectoryExists(x) ? x + vfs.DirectorySeparatorChar : x);
 
