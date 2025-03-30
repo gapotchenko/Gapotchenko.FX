@@ -4,7 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-namespace Gapotchenko.FX.IO.Vfs;
+namespace Gapotchenko.FX.IO;
 
 /// <summary>
 /// Provides static methods for working with virtual views on a <see cref="Stream"/>.

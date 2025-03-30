@@ -194,6 +194,12 @@ static class IOHelper
         IFileSystemView destinationView,
         string destinationPath)
     {
-        // TODO
+        if (sourceView.SupportsLastWriteTime && destinationView.SupportsLastWriteTime)
+        {
+            var lastWriteTime = sourceView.GetLastWriteTime(sourcePath);
+            if (lastWriteTime == DateTime.MinValue)
+                throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(sourcePath));
+            destinationView.SetLastWriteTime(destinationPath, lastWriteTime);
+        }
     }
 }

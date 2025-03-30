@@ -53,16 +53,16 @@ public abstract partial class FileSystemViewVfsTests
         }
     }
 
-    void RunVfsTest(VfsMutatingTest mutatingTest, VfsReadOnlyTest readOnlyTest)
+    void RunVfsTest(VfsMutatingTest mutate, VfsReadOnlyTest verify)
     {
         var vfs = CreateVfs(out string rootPath);
         try
         {
-            mutatingTest(vfs, rootPath);
+            mutate(vfs, rootPath);
 
-            readOnlyTest(vfs, rootPath);
+            verify(vfs, rootPath);
             if (TryRoundTripVfs(ref vfs))
-                readOnlyTest(vfs, rootPath);
+                verify(vfs, rootPath);
         }
         finally
         {

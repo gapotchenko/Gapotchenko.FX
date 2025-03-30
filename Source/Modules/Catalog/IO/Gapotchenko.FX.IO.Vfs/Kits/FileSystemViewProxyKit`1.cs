@@ -34,6 +34,9 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     /// <inheritdoc/>
     public virtual bool CanWrite => BaseView.CanWrite;
 
+    /// <inheritdoc/>
+    public virtual bool SupportsLastWriteTime => BaseView.SupportsLastWriteTime;
+
     #endregion
 
     #region Files
@@ -119,6 +122,12 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
         BaseView.EnumerateEntries(path, searchPattern, searchOption);
+
+    /// <inheritdoc/>
+    public virtual DateTime GetLastWriteTime(string path) => BaseView.GetLastWriteTime(path);
+
+    /// <inheritdoc/>
+    public virtual void SetLastWriteTime(string path, DateTime lastWriteTime) => BaseView.SetLastWriteTime(path, lastWriteTime);
 
     #endregion
 

@@ -8,7 +8,7 @@ using Gapotchenko.FX.IO.Kits;
 
 #pragma warning disable CA1835 // Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'
 
-namespace Gapotchenko.FX.IO.Vfs;
+namespace Gapotchenko.FX.IO;
 
 sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool canWrite, bool canSeek) :
     StreamProxyKit(baseStream)

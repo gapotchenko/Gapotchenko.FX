@@ -25,6 +25,8 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override bool CanWrite => true;
 
+    public override bool SupportsLastWriteTime => true;
+
     #endregion
 
     #region Files
@@ -121,6 +123,31 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
+
+    public override DateTime GetLastWriteTime(string path)
+    {
+        return
+            Empty.Nullify(
+                Directory.GetLastWriteTimeUtc(path),
+                m_NonExistentEntryTime) ??
+            DateTime.MinValue;
+    }
+
+    public override void SetLastWriteTime(string path, DateTime lastWriteTime)
+    {
+        Directory.SetLastWriteTimeUtc(path, lastWriteTime.ToUniversalTime());
+    }
+
+    /// <summary>
+    /// <para>
+    /// The value returned by the .NET file system APIs to represent a timestamp of a non-existent file-system entry.
+    /// </para>
+    /// <para>
+    /// 12:00 midnight, January 1, 1601 A.D. (C.E.) Coordinated Universal Time (UTC)
+    /// </para>
+    /// </summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static readonly DateTime m_NonExistentEntryTime = DateTime.FromFileTimeUtc(0);
 
     #endregion
 

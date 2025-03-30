@@ -27,6 +27,9 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <inheritdoc/>
     public abstract bool CanWrite { get; }
 
+    /// <inheritdoc/>
+    public virtual bool SupportsLastWriteTime => false;
+
     /// <summary>
     /// Ensures that the file system supports reading.
     /// </summary>
@@ -160,6 +163,12 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
         EnumerateFiles(path, searchPattern, searchOption)
         .Concat(EnumerateDirectories(path, searchPattern, searchOption));
+
+    /// <inheritdoc/>
+    public virtual DateTime GetLastWriteTime(string path) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public virtual void SetLastWriteTime(string path, DateTime lastWriteTime) => throw new NotSupportedException();
 
     #endregion
 

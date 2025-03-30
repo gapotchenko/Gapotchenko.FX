@@ -11,10 +11,14 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// </summary>
 public interface IFileSystemView : IReadOnlyFileSystemView
 {
+    #region Capabilities
+
     /// <summary>
     /// Gets a value indicating whether the current file system supports writing.
     /// </summary>
     bool CanWrite { get; }
+
+    #endregion
 
     #region Files
 
@@ -87,6 +91,21 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <see langword="false"/> otherwise.
     /// </param>
     void MoveDirectory(string sourcePath, string destinationPath, bool overwrite);
+
+    #endregion
+
+    #region Entries
+
+    /// <summary>
+    /// Sets the date and time that the specified file or directory was last written to.
+    /// </summary>
+    /// <inheritdoc cref="Directory.SetLastWriteTimeUtc(string, DateTime)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="lastWriteTime">
+    /// The date and time the file or directory was last written to.
+    /// If not otherwise specified, this value is expressed in UTC time.
+    /// </param>
+    void SetLastWriteTime(string path, DateTime lastWriteTime);
 
     #endregion
 }

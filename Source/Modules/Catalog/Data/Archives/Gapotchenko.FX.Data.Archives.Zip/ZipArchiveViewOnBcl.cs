@@ -4,7 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-using Gapotchenko.FX.IO.Vfs;
+using Gapotchenko.FX.IO;
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Memory;
@@ -20,11 +20,11 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 {
     #region Capabilities
 
-    /// <inheritdoc/>
     public override bool CanRead => archive.Mode != ZipArchiveMode.Create;
 
-    /// <inheritdoc/>
     public override bool CanWrite => archive.Mode != ZipArchiveMode.Read;
+
+    public override bool SupportsLastWriteTime => true;
 
     #endregion
 
@@ -309,21 +309,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             return considerDirectories;
         }
 
-        string entryPath = VfsPathKit.Join(pathParts, C_DirectorySeparatorChar);
-
-        if (considerDirectories)
-        {
-            if (archive.GetEntry(entryPath + C_DirectorySeparatorChar) != null)
-                return true;
-        }
-
-        if (considerFiles)
-        {
-            if (archive.GetEntry(entryPath) != null)
-                return true;
-        }
-
-        return false;
+        return TryGetArchiveEntry(path, considerFiles, considerDirectories) != null;
     }
 
     IEnumerable<string[]> EnumerateEntriesCore(in StructuredPath path) =>
@@ -404,6 +390,52 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         if (!directoryExists)
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
+    }
+
+    public override DateTime GetLastWriteTime(string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        return
+            TryGetArchiveEntry(path, true, true)?.LastWriteTime.UtcDateTime ??
+            DateTime.MinValue;
+    }
+
+    public override void SetLastWriteTime(string path, DateTime lastWriteTime)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        var entry =
+            TryGetArchiveEntry(path, true, true) ??
+            throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(path), path);
+
+        entry.LastWriteTime = lastWriteTime.ToUniversalTime();
+    }
+
+    ZipArchiveEntry? TryGetArchiveEntry(
+        in StructuredPath path,
+        bool considerFiles,
+        bool considerDirectories)
+    {
+        var pathParts = path.Parts.Span;
+        if (pathParts.IsEmpty)
+            return null;
+
+        string entryPath = VfsPathKit.Join(pathParts, C_DirectorySeparatorChar);
+
+        if (considerDirectories)
+        {
+            if (archive.GetEntry(entryPath + C_DirectorySeparatorChar) is not null and var directoryEntry)
+                return directoryEntry;
+        }
+
+        if (considerFiles)
+        {
+            if (archive.GetEntry(entryPath) is not null and var fileEntry)
+                return fileEntry;
+        }
+
+        return null;
     }
 
     #endregion

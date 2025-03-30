@@ -11,10 +11,19 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// </summary>
 public interface IReadOnlyFileSystemView
 {
+    #region Capabilities
+
     /// <summary>
     /// Gets a value indicating whether the current file system supports reading.
     /// </summary>
     bool CanRead { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the current file system supports the last write date and time.
+    /// </summary>
+    bool SupportsLastWriteTime { get; }
+
+    #endregion
 
     #region Files
 
@@ -70,6 +79,13 @@ public interface IReadOnlyFileSystemView
 
     /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string, string, SearchOption)"/>
     IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption);
+
+    /// <remarks>
+    /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
+    /// this method returns <see cref="DateTime.MinValue"/>.
+    /// </remarks>
+    /// <inheritdoc cref="Directory.GetLastWriteTimeUtc(string)"/>
+    DateTime GetLastWriteTime(string path);
 
     #endregion
 
