@@ -75,6 +75,8 @@ partial class FileSystemViewVfsTests
         {
             string filePathA = vfs.CombinePaths(rootPath, fileNameA);
             vfs.WriteAllFileText(filePathA, fileContents);
+            if (vfs.SupportsLastWriteTime)
+                vfs.SetLastWriteTime(filePathA, new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc));
 
             string filePathB = vfs.CombinePaths(rootPath, fileNameB);
             vfs.CopyFile(filePathA, filePathB);
@@ -100,8 +102,17 @@ partial class FileSystemViewVfsTests
                 rootPath,
                 [fileNameA, fileNameB, vfs.CombinePaths(fileNameD, ".."), fileNameD]);
 
+            var expectedAttributes = VfsTestEntryAttributes.Get(vfs, vfs.CombinePaths(rootPath, fileNameA));
             Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameA)));
+
+            Assert.AreEqual(
+                expectedAttributes,
+                VfsTestEntryAttributes.Get(vfs, vfs.CombinePaths(rootPath, fileNameB)));
             Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameB)));
+
+            Assert.AreEqual(
+                expectedAttributes,
+                VfsTestEntryAttributes.Get(vfs, vfs.CombinePaths(rootPath, fileNameD)));
             Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameD)));
         }
     }
@@ -134,6 +145,8 @@ partial class FileSystemViewVfsTests
             #endregion
 
             sVfs.WriteAllFileText(SR(sourceFileName), fileContents);
+            if (sVfs.SupportsLastWriteTime)
+                sVfs.SetLastWriteTime(SR(sourceFileName), new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc));
 
             sVfs.CopyFile(SR(sourceFileName), dVfs, DR(destinationFileName));
         }
@@ -156,7 +169,11 @@ partial class FileSystemViewVfsTests
             Assert.AreEqual(
                 fileContents,
                 sVfs.ReadAllFileText(SR(sourceFileName)));
+            var expectedAttributes = VfsTestEntryAttributes.Get(sVfs, SR(sourceFileName));
 
+            Assert.AreEqual(
+                expectedAttributes,
+                VfsTestEntryAttributes.Get(dVfs, DR(destinationFileName)));
             Assert.AreEqual(
                 fileContents,
                 dVfs.ReadAllFileText(DR(destinationFileName)));

@@ -409,7 +409,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             TryGetArchiveEntry(path, true, true) ??
             throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(path), path);
 
-        entry.LastWriteTime = lastWriteTime.ToUniversalTime();
+        entry.LastWriteTime = lastWriteTime.ToLocalTime();
     }
 
     ZipArchiveEntry? TryGetArchiveEntry(
