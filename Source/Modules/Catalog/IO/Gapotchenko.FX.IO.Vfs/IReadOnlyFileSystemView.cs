@@ -19,9 +19,19 @@ public interface IReadOnlyFileSystemView
     bool CanRead { get; }
 
     /// <summary>
-    /// Gets a value indicating whether the current file system supports the last write date and time.
+    /// Gets a value indicating whether the current file system supports the date and time of a last write to a file or a directory.
     /// </summary>
     bool SupportsLastWriteTime { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the current file system supports the date and time of a creation of a file or a directory.
+    /// </summary>
+    bool SupportsCreationTime { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the current file system supports the date and time of a last access to a file or a directory.
+    /// </summary>
+    bool SupportsLastAccessTime { get; }
 
     #endregion
 
@@ -84,8 +94,22 @@ public interface IReadOnlyFileSystemView
     /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
     /// this method returns <see cref="DateTime.MinValue"/>.
     /// </remarks>
-    /// <inheritdoc cref="Directory.GetLastWriteTimeUtc(string)"/>
+    /// <inheritdoc cref="File.GetLastWriteTimeUtc(string)"/>
     DateTime GetLastWriteTime(string path);
+
+    /// <remarks>
+    /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
+    /// this method returns <see cref="DateTime.MinValue"/>.
+    /// </remarks>
+    /// <inheritdoc cref="File.GetCreationTimeUtc(string)"/>
+    DateTime GetCreationTime(string path);
+
+    /// <remarks>
+    /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
+    /// this method returns <see cref="DateTime.MinValue"/>.
+    /// </remarks>
+    /// <inheritdoc cref="File.GetLastAccessTimeUtc(string)"/>
+    DateTime GetLastAccessTime(string path);
 
     #endregion
 

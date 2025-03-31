@@ -107,5 +107,27 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// </param>
     void SetLastWriteTime(string path, DateTime lastWriteTime);
 
+    /// <summary>
+    /// Sets the date and time that the specified file or directory was created.
+    /// </summary>
+    /// <inheritdoc cref="Directory.SetCreationTimeUtc(string, DateTime)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="creationTime">
+    /// An object that contains the value to set for the creation date and time of <paramref name="path"/>. 
+    /// If not otherwise specified, this value is expressed in UTC time.
+    /// </param>
+    void SetCreationTime(string path, DateTime creationTime);
+
+    /// <summary>
+    /// Sets the date and time that the specified file or directory was last accessed.
+    /// </summary>
+    /// <inheritdoc cref="Directory.SetLastAccessTimeUtc(string, DateTime)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="lastAccessTime">
+    /// An object that contains the value to set for the access date and time of <paramref name="path"/>. 
+    /// If not otherwise specified, this value is expressed in UTC time.
+    /// </param>
+    void SetLastAccessTime(string path, DateTime lastAccessTime);
+
     #endregion
 }

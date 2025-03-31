@@ -6,9 +6,9 @@
 
 using Gapotchenko.FX.IO.Vfs.Utils;
 
-namespace Gapotchenko.FX.IO.Vfs;
+namespace Gapotchenko.FX.IO.Vfs.Kits;
 
-static class FileSystemViewCapabilities
+static class VfsCapabilitiesKit
 {
     /// <summary>
     /// Ensures that the file system can open a file with the specified mode and access.

@@ -35,7 +35,13 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual bool CanWrite => BaseView.CanWrite;
 
     /// <inheritdoc/>
+    public virtual bool SupportsCreationTime => BaseView.SupportsCreationTime;
+
+    /// <inheritdoc/>
     public virtual bool SupportsLastWriteTime => BaseView.SupportsLastWriteTime;
+
+    /// <inheritdoc/>
+    public virtual bool SupportsLastAccessTime => BaseView.SupportsLastAccessTime;
 
     #endregion
 
@@ -124,10 +130,22 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
         BaseView.EnumerateEntries(path, searchPattern, searchOption);
 
     /// <inheritdoc/>
+    public virtual DateTime GetCreationTime(string path) => BaseView.GetCreationTime(path);
+
+    /// <inheritdoc/>
+    public virtual void SetCreationTime(string path, DateTime creationTime) => BaseView.SetCreationTime(path, creationTime);
+
+    /// <inheritdoc/>
     public virtual DateTime GetLastWriteTime(string path) => BaseView.GetLastWriteTime(path);
 
     /// <inheritdoc/>
     public virtual void SetLastWriteTime(string path, DateTime lastWriteTime) => BaseView.SetLastWriteTime(path, lastWriteTime);
+
+    /// <inheritdoc/>
+    public virtual DateTime GetLastAccessTime(string path) => BaseView.GetLastAccessTime(path);
+
+    /// <inheritdoc/>
+    public virtual void SetLastAccessTime(string path, DateTime lastAccessTime) => BaseView.SetLastAccessTime(path, lastAccessTime);
 
     #endregion
 

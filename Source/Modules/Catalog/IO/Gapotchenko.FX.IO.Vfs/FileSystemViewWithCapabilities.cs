@@ -37,7 +37,7 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     }
 
     void EnsureCanOpenFile(FileMode mode, FileAccess access) =>
-        FileSystemViewCapabilities.EnsureCanOpenFile(mode, access, canRead, canWrite);
+        VfsCapabilitiesKit.EnsureCanOpenFile(mode, access, canRead, canWrite);
 
     #endregion
 
@@ -175,6 +175,42 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     {
         EnsureCanRead();
         return base.EnumerateEntries(path, searchPattern, searchOption);
+    }
+
+    public override DateTime GetCreationTime(string path)
+    {
+        EnsureCanRead();
+        return base.GetCreationTime(path);
+    }
+
+    public override void SetCreationTime(string path, DateTime lastWriteTime)
+    {
+        EnsureCanWrite();
+        base.SetCreationTime(path, lastWriteTime);
+    }
+
+    public override DateTime GetLastWriteTime(string path)
+    {
+        EnsureCanRead();
+        return base.GetLastWriteTime(path);
+    }
+
+    public override void SetLastWriteTime(string path, DateTime lastWriteTime)
+    {
+        EnsureCanWrite();
+        base.SetLastWriteTime(path, lastWriteTime);
+    }
+
+    public override DateTime GetLastAccessTime(string path)
+    {
+        EnsureCanRead();
+        return base.GetLastAccessTime(path);
+    }
+
+    public override void SetLastAccessTime(string path, DateTime lastAccessTime)
+    {
+        EnsureCanWrite();
+        base.SetLastAccessTime(path, lastAccessTime);
     }
 
     #endregion

@@ -25,7 +25,11 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override bool CanWrite => true;
 
+    public override bool SupportsCreationTime => true;
+
     public override bool SupportsLastWriteTime => true;
+
+    public override bool SupportsLastAccessTime => true;
 
     #endregion
 
@@ -124,19 +128,40 @@ sealed class LocalFileSystemView : FileSystemViewKit
     public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
 
+    public override DateTime GetCreationTime(string path)
+    {
+        return ConvertUtcTimeToVfs(Directory.GetCreationTimeUtc(path));
+    }
+
+    public override void SetCreationTime(string path, DateTime creationTime)
+    {
+        Directory.SetCreationTime(path, ConvertUtcTimeFromVfs(creationTime));
+    }
+
     public override DateTime GetLastWriteTime(string path)
     {
-        return
-            Empty.Nullify(
-                Directory.GetLastWriteTimeUtc(path),
-                m_NonExistentEntryTime) ??
-            DateTime.MinValue;
+        return ConvertUtcTimeToVfs(Directory.GetLastWriteTimeUtc(path));
     }
 
     public override void SetLastWriteTime(string path, DateTime lastWriteTime)
     {
-        Directory.SetLastWriteTimeUtc(path, lastWriteTime.ToUniversalTime());
+        Directory.SetLastWriteTimeUtc(path, ConvertUtcTimeFromVfs(lastWriteTime));
     }
+
+    public override DateTime GetLastAccessTime(string path)
+    {
+        return ConvertUtcTimeToVfs(Directory.GetLastAccessTimeUtc(path));
+    }
+
+    public override void SetLastAccessTime(string path, DateTime lastAccessTime)
+    {
+        Directory.SetLastAccessTimeUtc(path, ConvertUtcTimeFromVfs(lastAccessTime));
+    }
+
+    static DateTime ConvertUtcTimeToVfs(DateTime time) =>
+        time == m_NonExistentEntryTime ? DateTime.MinValue : time;
+
+    static DateTime ConvertUtcTimeFromVfs(DateTime time) => time.ToUniversalTime();
 
     /// <summary>
     /// <para>

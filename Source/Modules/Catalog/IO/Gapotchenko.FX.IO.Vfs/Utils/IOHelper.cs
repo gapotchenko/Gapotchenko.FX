@@ -142,7 +142,10 @@ static class IOHelper
         string destinationPath,
         bool overwrite)
     {
+        var metadata = EntryMetadata.GetFrom(sourceView, sourcePath);
         sourceView.CopyFile(sourcePath, destinationView, destinationPath, overwrite);
+        metadata.SetTo(destinationView, destinationPath);
+
         try
         {
             sourceView.DeleteFile(sourcePath);
@@ -175,6 +178,21 @@ static class IOHelper
         string destinationPath,
         bool overwrite)
     {
+        var writableSourceView = sourceView as IFileSystemView;
+        if (writableSourceView != null && !writableSourceView.CanWrite)
+            writableSourceView = null;
+
+        // Reading the source file will update its last access time.
+        // This would be a violation of the file copy operation semantic.
+        // That is why we try to memorize and then restore the last access time
+        // after copying is completed.
+        DateTime? lastAccessTime =
+            writableSourceView != null && sourceView.SupportsLastAccessTime
+                ? sourceView.GetLastAccessTime(sourcePath)
+                : null;
+        if (lastAccessTime.HasValue)
+            EnsureEntryExist(sourcePath, lastAccessTime.Value);
+
         using (var sourceStream = sourceView.ReadFile(sourcePath))
         using (var destinationStream = destinationView.OpenFile(
             destinationPath,
@@ -183,6 +201,21 @@ static class IOHelper
             FileShare.None))
         {
             sourceStream.CopyTo(destinationStream);
+        }
+
+        // Restore the last access time to the source file.
+        if (writableSourceView != null && lastAccessTime.HasValue)
+        {
+            try
+            {
+                writableSourceView.SetLastAccessTime(sourcePath, lastAccessTime.Value);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // Impossible to restore the original last access time of the source file.
+                // This is not an error per se, just a violation of the canonical semantic
+                // of the operation.
+            }
         }
 
         CopyEntryAttributes(sourceView, sourcePath, destinationView, destinationPath);
@@ -197,9 +230,51 @@ static class IOHelper
         if (sourceView.SupportsLastWriteTime && destinationView.SupportsLastWriteTime)
         {
             var lastWriteTime = sourceView.GetLastWriteTime(sourcePath);
-            if (lastWriteTime == DateTime.MinValue)
-                throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(sourcePath));
+            EnsureEntryExist(sourcePath, lastWriteTime);
             destinationView.SetLastWriteTime(destinationPath, lastWriteTime);
         }
+    }
+
+    /// <summary>
+    /// Represents file-system entry metadata other than the last write time.
+    /// </summary>
+    readonly struct EntryMetadata
+    {
+        public static EntryMetadata GetFrom(IReadOnlyFileSystemView view, string path) => new(view, path);
+
+        EntryMetadata(IReadOnlyFileSystemView view, string path)
+        {
+            if (view.SupportsCreationTime)
+            {
+                var creationTime = view.GetCreationTime(path);
+                EnsureEntryExist(path, creationTime);
+                CreationTime = creationTime;
+            }
+
+            if (view.SupportsLastAccessTime)
+            {
+                var lastAccessTime = view.GetLastAccessTime(path);
+                EnsureEntryExist(path, lastAccessTime);
+                LastAccessTime = lastAccessTime;
+            }
+        }
+
+        public void SetTo(IFileSystemView view, string path)
+        {
+            if (CreationTime.HasValue && view.SupportsCreationTime)
+                view.SetCreationTime(path, CreationTime.Value);
+
+            if (LastAccessTime.HasValue && view.SupportsLastAccessTime)
+                view.SetLastAccessTime(path, LastAccessTime.Value);
+        }
+
+        public DateTime? CreationTime { get; }
+        public DateTime? LastAccessTime { get; }
+    }
+
+    static void EnsureEntryExist(string path, DateTime time)
+    {
+        if (time == DateTime.MinValue)
+            throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(path), path);
     }
 }

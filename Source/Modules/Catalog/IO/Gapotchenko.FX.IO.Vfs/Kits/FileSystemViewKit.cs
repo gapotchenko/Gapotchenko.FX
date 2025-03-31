@@ -28,7 +28,13 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract bool CanWrite { get; }
 
     /// <inheritdoc/>
+    public virtual bool SupportsCreationTime => false;
+
+    /// <inheritdoc/>
     public virtual bool SupportsLastWriteTime => false;
+
+    /// <inheritdoc/>
+    public virtual bool SupportsLastAccessTime => false;
 
     /// <summary>
     /// Ensures that the file system supports reading.
@@ -56,7 +62,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <exception cref="NotSupportedException">File system does not support reading.</exception>
     /// <exception cref="NotSupportedException">File system does not support writing.</exception>
     protected void EnsureCanOpenFile(FileMode mode, FileAccess access) =>
-        FileSystemViewCapabilities.EnsureCanOpenFile(mode, access, CanRead, CanWrite);
+        VfsCapabilitiesKit.EnsureCanOpenFile(mode, access, CanRead, CanWrite);
 
     #endregion
 
@@ -165,10 +171,22 @@ public abstract class FileSystemViewKit : IFileSystemView
         .Concat(EnumerateDirectories(path, searchPattern, searchOption));
 
     /// <inheritdoc/>
+    public virtual DateTime GetCreationTime(string path) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public virtual void SetCreationTime(string path, DateTime creationTime) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
     public virtual DateTime GetLastWriteTime(string path) => throw new NotSupportedException();
 
     /// <inheritdoc/>
     public virtual void SetLastWriteTime(string path, DateTime lastWriteTime) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public virtual DateTime GetLastAccessTime(string path) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public virtual void SetLastAccessTime(string path, DateTime lastAccessTime) => throw new NotSupportedException();
 
     #endregion
 

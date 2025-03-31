@@ -450,20 +450,6 @@ public static class Empty
     }
 
     /// <summary>
-    /// Nullifies an empty <see cref="DateTimeOffset"/> value.
-    /// </summary>
-    /// <param name="value">The value to nullify.</param>
-    /// <param name="empty">The value to treat as empty.</param>
-    /// <returns>The value or a <see langword="null"/> if the value is empty.</returns>
-    public static DateTimeOffset? Nullify(DateTimeOffset value, DateTimeOffset empty)
-    {
-        if (value == empty)
-            return null;
-        else
-            return value;
-    }
-
-    /// <summary>
     /// Returns an empty <see cref="System.Threading.Tasks.Task"/> that has already completed successfully.
     /// </summary>
 #if TFF_COMPLETED_TASK
