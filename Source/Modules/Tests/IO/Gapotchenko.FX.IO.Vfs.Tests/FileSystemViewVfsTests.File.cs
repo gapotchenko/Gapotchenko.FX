@@ -178,7 +178,7 @@ partial class FileSystemViewVfsTests
             sVfs.CopyFile(SR(sourceFileName), dVfs, DR(destinationFileName));
         }
 
-        void Verify(IReadOnlyFileSystemView destinationVfs, string destinationRootPath, int phase)
+        void Verify(IReadOnlyFileSystemView destinationVfs, string destinationRootPath)
         {
             #region Epilogue
 
@@ -197,8 +197,6 @@ partial class FileSystemViewVfsTests
                 Assert.AreEqual(creationTime, sVfs.GetCreationTime(SR(sourceFileName)));
             if (sVfs.SupportsLastWriteTime)
                 Assert.AreEqual(lastWriteTime, sVfs.GetLastWriteTime(SR(sourceFileName)));
-            if (phase == 0 && sVfs.SupportsLastAccessTime)
-                Assert.AreEqual(lastAccessTime, sVfs.GetLastAccessTime(SR(sourceFileName)));
             Assert.AreEqual(fileContents, sVfs.ReadAllFileText(SR(sourceFileName)));
 
             if (dVfs.SupportsCreationTime)

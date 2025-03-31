@@ -178,21 +178,6 @@ static class IOHelper
         string destinationPath,
         bool overwrite)
     {
-        var writableSourceView = sourceView as IFileSystemView;
-        if (writableSourceView != null && !writableSourceView.CanWrite)
-            writableSourceView = null;
-
-        // Reading the source file will update its last access time.
-        // This would be a violation of the file copy operation semantic.
-        // That is why we try to memorize and then restore the last access time
-        // after copying is completed.
-        DateTime? lastAccessTime =
-            writableSourceView != null && sourceView.SupportsLastAccessTime
-                ? sourceView.GetLastAccessTime(sourcePath)
-                : null;
-        if (lastAccessTime.HasValue)
-            EnsureEntryExist(sourcePath, lastAccessTime.Value);
-
         using (var sourceStream = sourceView.ReadFile(sourcePath))
         using (var destinationStream = destinationView.OpenFile(
             destinationPath,
@@ -201,21 +186,6 @@ static class IOHelper
             FileShare.None))
         {
             sourceStream.CopyTo(destinationStream);
-        }
-
-        // Restore the last access time to the source file.
-        if (writableSourceView != null && lastAccessTime.HasValue)
-        {
-            try
-            {
-                writableSourceView.SetLastAccessTime(sourcePath, lastAccessTime.Value);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                // Impossible to restore the original last access time of the source file.
-                // This is not an error per se, just a violation of the canonical semantic
-                // of the operation.
-            }
         }
 
         CopyEntryAttributes(sourceView, sourcePath, destinationView, destinationPath);
