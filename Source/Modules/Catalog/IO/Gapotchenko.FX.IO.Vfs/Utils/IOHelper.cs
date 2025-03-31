@@ -53,6 +53,8 @@ static class IOHelper
 
         void MoveDirectoryCore(string sourcePath, string destinationPath)
         {
+            var metadata = EntryMetadata.GetFrom(sourceView, sourcePath, destinationView);
+
             destinationView.CreateDirectory(destinationPath);
 
             foreach (string sourceEntryPath in sourceView.EnumerateEntries(sourcePath))
@@ -68,6 +70,8 @@ static class IOHelper
             }
 
             CopyEntryAttributes(sourceView, sourcePath, destinationView, destinationPath);
+            metadata.SetTo(destinationView, destinationPath);
+
             sourceView.DeleteDirectory(sourcePath);
         }
     }
@@ -142,7 +146,7 @@ static class IOHelper
         string destinationPath,
         bool overwrite)
     {
-        var metadata = EntryMetadata.GetFrom(sourceView, sourcePath);
+        var metadata = EntryMetadata.GetFrom(sourceView, sourcePath, destinationView);
         sourceView.CopyFile(sourcePath, destinationView, destinationPath, overwrite);
         metadata.SetTo(destinationView, destinationPath);
 
@@ -210,18 +214,19 @@ static class IOHelper
     /// </summary>
     readonly struct EntryMetadata
     {
-        public static EntryMetadata GetFrom(IReadOnlyFileSystemView view, string path) => new(view, path);
+        public static EntryMetadata GetFrom(IReadOnlyFileSystemView view, string path, IReadOnlyFileSystemView? capabilityView = null) =>
+            new(view, path, capabilityView);
 
-        EntryMetadata(IReadOnlyFileSystemView view, string path)
+        EntryMetadata(IReadOnlyFileSystemView view, string path, IReadOnlyFileSystemView? capabilityView)
         {
-            if (view.SupportsCreationTime)
+            if (view.SupportsCreationTime && (capabilityView?.SupportsCreationTime ?? true))
             {
                 var creationTime = view.GetCreationTime(path);
                 EnsureEntryExist(path, creationTime);
                 CreationTime = creationTime;
             }
 
-            if (view.SupportsLastAccessTime)
+            if (view.SupportsLastAccessTime && (capabilityView?.SupportsLastAccessTime ?? true))
             {
                 var lastAccessTime = view.GetLastAccessTime(path);
                 EnsureEntryExist(path, lastAccessTime);
