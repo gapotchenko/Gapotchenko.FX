@@ -85,10 +85,10 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.DeleteFile(path);
     }
 
-    public override void CopyFile(string sourcePath, string destinationPath, bool overwrite)
+    public override void CopyFile(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
     {
         EnsureCanReadAndWrite();
-        base.CopyFile(sourcePath, destinationPath, overwrite);
+        base.CopyFile(sourcePath, destinationPath, overwrite, options);
     }
 
     public override void MoveFile(string sourcePath, string destinationPath, bool overwrite)

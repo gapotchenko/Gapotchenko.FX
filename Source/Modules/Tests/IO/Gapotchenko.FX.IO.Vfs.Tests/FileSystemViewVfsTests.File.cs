@@ -73,6 +73,7 @@ partial class FileSystemViewVfsTests
         const string fileNameB = "B.txt";
         const string fileNameC = "C.txt";
         const string fileNameD = "Container/D.txt";
+        const string fileNameE = "E.txt";
         const string fileContents = "This is a sample text.";
 
         void Mutate(IFileSystemView vfs, string rootPath)
@@ -101,38 +102,53 @@ partial class FileSystemViewVfsTests
             Assert.ThrowsException<DirectoryNotFoundException>(() => vfs.CopyFile(filePathB, filePathD));
             vfs.CreateDirectory(vfs.CombinePaths(filePathD, ".."));
             vfs.CopyFile(filePathB, filePathD);
+
+            string filePathE = vfs.CombinePaths(rootPath, fileNameE);
+            vfs.CopyFile(filePathA, filePathE, false, VfsCopyOptions.Archive);
         }
 
         void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
+            string filePathA = vfs.CombinePaths(rootPath, fileNameA);
             if (vfs.SupportsCreationTime)
-                Assert.AreEqual(creationTime, vfs.GetCreationTime(vfs.CombinePaths(rootPath, fileNameA)));
+                Assert.AreEqual(creationTime, vfs.GetCreationTime(filePathA));
             if (vfs.SupportsLastWriteTime)
-                Assert.AreEqual(lastWriteTime, vfs.GetLastWriteTime(vfs.CombinePaths(rootPath, fileNameA)));
+                Assert.AreEqual(lastWriteTime, vfs.GetLastWriteTime(filePathA));
             if (vfs.SupportsLastAccessTime)
-                Assert.AreEqual(lastAccessTime, vfs.GetLastAccessTime(vfs.CombinePaths(rootPath, fileNameA)));
-            Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameA)));
+                Assert.AreEqual(lastAccessTime, vfs.GetLastAccessTime(filePathA));
+            Assert.AreEqual(fileContents, vfs.ReadAllFileText(filePathA));
 
+            string filePathB = vfs.CombinePaths(rootPath, fileNameB);
             if (vfs.SupportsCreationTime)
-                Assert.AreNotEqual(creationTime, vfs.GetCreationTime(vfs.CombinePaths(rootPath, fileNameB)));
+                Assert.AreNotEqual(creationTime, vfs.GetCreationTime(filePathB));
             if (vfs.SupportsLastWriteTime)
-                Assert.AreEqual(lastWriteTime, vfs.GetLastWriteTime(vfs.CombinePaths(rootPath, fileNameB)));
+                Assert.AreEqual(lastWriteTime, vfs.GetLastWriteTime(filePathB));
             if (vfs.SupportsLastAccessTime)
-                Assert.AreNotEqual(lastAccessTime, vfs.GetLastAccessTime(vfs.CombinePaths(rootPath, fileNameB)));
-            Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameB)));
+                Assert.AreNotEqual(lastAccessTime, vfs.GetLastAccessTime(filePathB));
+            Assert.AreEqual(fileContents, vfs.ReadAllFileText(filePathB));
 
+            string filePathD = vfs.CombinePaths(rootPath, fileNameD);
             if (vfs.SupportsCreationTime)
-                Assert.AreNotEqual(creationTime, vfs.GetCreationTime(vfs.CombinePaths(rootPath, fileNameD)));
+                Assert.AreNotEqual(creationTime, vfs.GetCreationTime(filePathD));
             if (vfs.SupportsLastWriteTime)
-                Assert.AreEqual(lastWriteTime, vfs.GetLastWriteTime(vfs.CombinePaths(rootPath, fileNameD)));
+                Assert.AreEqual(lastWriteTime, vfs.GetLastWriteTime(filePathD));
             if (vfs.SupportsLastAccessTime)
-                Assert.AreNotEqual(lastAccessTime, vfs.GetLastAccessTime(vfs.CombinePaths(rootPath, fileNameD)));
-            Assert.AreEqual(fileContents, vfs.ReadAllFileText(vfs.CombinePaths(rootPath, fileNameD)));
+                Assert.AreNotEqual(lastAccessTime, vfs.GetLastAccessTime(filePathD));
+            Assert.AreEqual(fileContents, vfs.ReadAllFileText(filePathD));
+
+            string filePathE = vfs.CombinePaths(rootPath, fileNameE);
+            if (vfs.SupportsCreationTime)
+                Assert.AreEqual(creationTime, vfs.GetCreationTime(filePathE));
+            if (vfs.SupportsLastWriteTime)
+                Assert.AreEqual(lastWriteTime, vfs.GetLastWriteTime(filePathE));
+            if (vfs.SupportsLastAccessTime)
+                Assert.AreEqual(lastAccessTime, vfs.GetLastAccessTime(filePathE));
+            Assert.AreEqual(fileContents, vfs.ReadAllFileText(filePathE));
 
             Assert.That.VfsHierarchyIs(
                 vfs,
                 rootPath,
-                [fileNameA, fileNameB, vfs.CombinePaths(fileNameD, ".."), fileNameD]);
+                [fileNameA, fileNameB, vfs.CombinePaths(fileNameD, ".."), fileNameD, fileNameE]);
         }
     }
 

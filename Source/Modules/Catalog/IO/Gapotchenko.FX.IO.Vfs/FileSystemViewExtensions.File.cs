@@ -601,7 +601,7 @@ partial class FileSystemViewExtensions
     /// Copies an existing file to a new file.
     /// Overwriting a file of the same name is not allowed.
     /// </summary>
-    /// <inheritdoc cref="IFileSystemView.CopyFile(string, string, bool)"/>
+    /// <inheritdoc cref="IFileSystemView.CopyFile(string, string, bool, VfsCopyOptions)"/>
     /// <param name="view">The file-system view.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
@@ -609,24 +609,42 @@ partial class FileSystemViewExtensions
         this IFileSystemView view,
         string sourcePath,
         string destinationPath) =>
+        CopyFile(view, sourcePath, destinationPath, false);
+
+    /// <summary>
+    /// Copies an existing file to a new file.
+    /// Overwriting a file of the same name is controlled by the <paramref name="overwrite"/> parameter.
+    /// </summary>
+    /// <inheritdoc cref="IFileSystemView.CopyFile(string, string, bool, VfsCopyOptions)"/>
+    /// <param name="view">The file-system view.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    public static void CopyFile(
+        this IFileSystemView view,
+        string sourcePath,
+        string destinationPath,
+        bool overwrite) =>
         (view ?? throw new ArgumentNullException(nameof(view)))
-        .CopyFile(sourcePath, destinationPath, false);
+        .CopyFile(sourcePath, destinationPath, overwrite, VfsCopyOptions.None);
+
 
     /// <summary>
     /// Copies an existing file to a new file in the specified destination <see cref="IFileSystemView"/>.
     /// Overwriting a file of the same name is not allowed.
     /// </summary>
-    /// <inheritdoc cref="CopyFile(IReadOnlyFileSystemView, string, IFileSystemView, string, bool)"/>
+    /// <inheritdoc cref="CopyFile(IReadOnlyFileSystemView, string, IFileSystemView, string, bool, VfsCopyOptions)"/>
     public static void CopyFile(
         this IReadOnlyFileSystemView sourceView,
         string sourcePath,
         IFileSystemView destinationView,
         string destinationPath) =>
-        CopyFile(sourceView, sourcePath, destinationView, destinationPath, false);
+        CopyFile(sourceView, sourcePath, destinationView, destinationPath, false, VfsCopyOptions.None);
 
     /// <summary>
     /// Copies an existing file to a new file in the specified destination <see cref="IFileSystemView"/>.
     /// Overwriting a file of the same name is controlled by the <paramref name="overwrite"/> parameter.
+    /// Additional operation options are controlled by the <paramref name="options"/> parameter.
     /// </summary>
     /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> of the file to copy.</param>
     /// <param name="sourcePath">The path of the file to copy.</param>
@@ -636,12 +654,16 @@ partial class FileSystemViewExtensions
     /// This cannot be a directory.
     /// </param>
     /// <param name="overwrite">
-    /// <inheritdoc cref="IFileSystemView.CopyFile(string, string, bool)" path="//param[@name='overwrite']"/>
+    /// <inheritdoc cref="IFileSystemView.CopyFile(string, string, bool, VfsCopyOptions)" path="//param[@name='overwrite']"/>
+    /// </param>
+    /// <param name="options">
+    /// <inheritdoc cref="IFileSystemView.CopyFile(string, string, bool, VfsCopyOptions)" path="//param[@name='options']"/>
     /// </param>
     public static void CopyFile(
         this IReadOnlyFileSystemView sourceView, string sourcePath,
         IFileSystemView destinationView, string destinationPath,
-        bool overwrite)
+        bool overwrite = false,
+        VfsCopyOptions options = default)
     {
         if (sourceView is null)
             throw new ArgumentNullException(nameof(sourceView));
@@ -651,7 +673,8 @@ partial class FileSystemViewExtensions
         IOHelper.CopyFileOptimized(
             sourceView, sourcePath,
             destinationView, destinationPath,
-            overwrite);
+            overwrite,
+            options);
     }
 
     #endregion

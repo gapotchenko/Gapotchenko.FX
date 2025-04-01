@@ -72,8 +72,8 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual void DeleteFile(string path) => BaseView.DeleteFile(path);
 
     /// <inheritdoc/>
-    public virtual void CopyFile(string sourcePath, string destinationPath, bool overwrite) =>
-        BaseView.CopyFile(sourcePath, destinationPath, overwrite);
+    public virtual void CopyFile(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options) =>
+        BaseView.CopyFile(sourcePath, destinationPath, overwrite, options);
 
     /// <inheritdoc/>
     public virtual void MoveFile(string sourcePath, string destinationPath, bool overwrite) =>

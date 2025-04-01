@@ -146,10 +146,10 @@ static class IOHelper
         string destinationPath,
         bool overwrite)
     {
-        var metadata = EntryMetadata.GetFrom(sourceView, sourcePath, destinationView);
-        sourceView.CopyFile(sourcePath, destinationView, destinationPath, overwrite);
-        metadata.SetTo(destinationView, destinationPath);
+        // Copy to the destination.
+        sourceView.CopyFile(sourcePath, destinationView, destinationPath, overwrite, VfsCopyOptions.Archive);
 
+        // Delete from the source.
         try
         {
             sourceView.DeleteFile(sourcePath);
@@ -167,12 +167,13 @@ static class IOHelper
         string sourcePath,
         IFileSystemView destinationView,
         string destinationPath,
-        bool overwrite)
+        bool overwrite,
+        VfsCopyOptions options)
     {
         if (sourceView == destinationView)
-            destinationView.CopyFile(sourcePath, destinationPath, overwrite);
+            destinationView.CopyFile(sourcePath, destinationPath, overwrite, options);
         else
-            CopyFileNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite);
+            CopyFileNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite, options);
     }
 
     public static void CopyFileNaive(
@@ -180,19 +181,35 @@ static class IOHelper
         string sourcePath,
         IFileSystemView destinationView,
         string destinationPath,
-        bool overwrite)
+        bool overwrite,
+        VfsCopyOptions options)
     {
-        using (var sourceStream = sourceView.ReadFile(sourcePath))
-        using (var destinationStream = destinationView.OpenFile(
-            destinationPath,
-            overwrite ? FileMode.Create : FileMode.CreateNew,
-            FileAccess.Write,
-            FileShare.None))
+        if ((options & VfsCopyOptions.Archive) != 0)
         {
-            sourceStream.CopyTo(destinationStream);
-        }
+            var metadata = EntryMetadata.GetFrom(sourceView, sourcePath, destinationView);
 
-        CopyEntryAttributes(sourceView, sourcePath, destinationView, destinationPath);
+            CopyFileOptimized(
+                sourceView, sourcePath,
+                destinationView, destinationPath,
+                overwrite,
+                options & ~VfsCopyOptions.Archive);
+
+            metadata.SetTo(destinationView, destinationPath);
+        }
+        else
+        {
+            using (var sourceStream = sourceView.ReadFile(sourcePath))
+            using (var destinationStream = destinationView.OpenFile(
+                destinationPath,
+                overwrite ? FileMode.Create : FileMode.CreateNew,
+                FileAccess.Write,
+                FileShare.None))
+            {
+                sourceStream.CopyTo(destinationStream);
+            }
+
+            CopyEntryAttributes(sourceView, sourcePath, destinationView, destinationPath);
+        }
     }
 
     static void CopyEntryAttributes(
@@ -214,19 +231,19 @@ static class IOHelper
     /// </summary>
     readonly struct EntryMetadata
     {
-        public static EntryMetadata GetFrom(IReadOnlyFileSystemView view, string path, IReadOnlyFileSystemView? capabilityView = null) =>
-            new(view, path, capabilityView);
+        public static EntryMetadata GetFrom(IReadOnlyFileSystemView view, string path, IReadOnlyFileSystemView? capabilitiesHint = null) =>
+            new(view, path, capabilitiesHint);
 
-        EntryMetadata(IReadOnlyFileSystemView view, string path, IReadOnlyFileSystemView? capabilityView)
+        EntryMetadata(IReadOnlyFileSystemView view, string path, IReadOnlyFileSystemView? capabilitiesHint)
         {
-            if (view.SupportsCreationTime && (capabilityView?.SupportsCreationTime ?? true))
+            if (view.SupportsCreationTime && (capabilitiesHint?.SupportsCreationTime ?? true))
             {
                 var creationTime = view.GetCreationTime(path);
                 EnsureEntryExist(path, creationTime);
                 CreationTime = creationTime;
             }
 
-            if (view.SupportsLastAccessTime && (capabilityView?.SupportsLastAccessTime ?? true))
+            if (view.SupportsLastAccessTime && (capabilitiesHint?.SupportsLastAccessTime ?? true))
             {
                 var lastAccessTime = view.GetLastAccessTime(path);
                 EnsureEntryExist(path, lastAccessTime);

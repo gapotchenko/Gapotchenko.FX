@@ -50,8 +50,18 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override void DeleteFile(string path) => File.Delete(path);
 
-    public override void CopyFile(string sourcePath, string destinationPath, bool overwrite) =>
-        File.Copy(sourcePath, destinationPath, overwrite);
+    public override void CopyFile(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
+    {
+        const VfsCopyOptions supportedOptions = VfsCopyOptions.None;
+        if ((options & ~supportedOptions) != 0)
+        {
+            base.CopyFile(sourcePath, destinationPath, overwrite, options);
+        }
+        else
+        {
+            File.Copy(sourcePath, destinationPath, overwrite);
+        }
+    }
 
     public override void MoveFile(string sourcePath, string destinationPath, bool overwrite)
     {

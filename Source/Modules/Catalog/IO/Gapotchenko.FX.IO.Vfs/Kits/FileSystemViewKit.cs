@@ -92,12 +92,12 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract void DeleteFile(string path);
 
     /// <inheritdoc/>
-    public virtual void CopyFile(string sourcePath, string destinationPath, bool overwrite)
+    public virtual void CopyFile(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
     {
         VfsValidationKit.Arguments.ValidatePath(sourcePath);
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
 
-        IOHelper.CopyFileNaive(this, sourcePath, this, destinationPath, overwrite);
+        IOHelper.CopyFileNaive(this, sourcePath, this, destinationPath, overwrite, options);
     }
 
     /// <inheritdoc/>
