@@ -96,17 +96,19 @@ public abstract class FileSystemViewKit : IFileSystemView
     {
         VfsValidationKit.Arguments.ValidatePath(sourcePath);
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
+        VfsValidationKit.Arguments.ValidateCopyOptions(options);
 
         IOHelper.CopyFileNaive(this, sourcePath, this, destinationPath, overwrite, options);
     }
 
     /// <inheritdoc/>
-    public virtual void MoveFile(string sourcePath, string destinationPath, bool overwrite)
+    public virtual void MoveFile(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
         VfsValidationKit.Arguments.ValidatePath(sourcePath);
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
+        VfsValidationKit.Arguments.ValidateMoveOptions(options);
 
-        IOHelper.MoveFileNaive(this, sourcePath, this, destinationPath, overwrite);
+        IOHelper.MoveFileNaive(this, sourcePath, this, destinationPath, overwrite, options);
     }
 
     #endregion
@@ -133,21 +135,23 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract void DeleteDirectory(string path, bool recursive);
 
     /// <inheritdoc/>
-    public virtual void CopyDirectory(string sourcePath, string destinationPath, bool overwrite)
+    public virtual void CopyDirectory(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
     {
         VfsValidationKit.Arguments.ValidatePath(sourcePath);
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
+        VfsValidationKit.Arguments.ValidateCopyOptions(options);
 
-        IOHelper.CopyDirectoryNaive(this, sourcePath, this, destinationPath, overwrite);
+        IOHelper.CopyDirectoryNaive(this, sourcePath, this, destinationPath, overwrite, options);
     }
 
     /// <inheritdoc/>
-    public virtual void MoveDirectory(string sourcePath, string destinationPath, bool overwrite)
+    public virtual void MoveDirectory(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
         VfsValidationKit.Arguments.ValidatePath(sourcePath);
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
+        VfsValidationKit.Arguments.ValidateMoveOptions(options);
 
-        IOHelper.MoveDirectoryNaive(this, sourcePath, this, destinationPath, overwrite);
+        IOHelper.MoveDirectoryNaive(this, sourcePath, this, destinationPath, overwrite, options);
     }
 
     #endregion

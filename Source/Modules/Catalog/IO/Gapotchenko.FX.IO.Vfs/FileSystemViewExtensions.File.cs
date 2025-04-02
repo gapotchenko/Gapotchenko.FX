@@ -10,6 +10,7 @@
 #define TFF_STREAM_SPAN
 #endif
 
+using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.IO.Vfs.Properties;
 using Gapotchenko.FX.IO.Vfs.Utils;
 using System.Buffers;
@@ -628,17 +629,14 @@ partial class FileSystemViewExtensions
         (view ?? throw new ArgumentNullException(nameof(view)))
         .CopyFile(sourcePath, destinationPath, overwrite, VfsCopyOptions.None);
 
-
     /// <summary>
     /// Copies an existing file to a new file in the specified destination <see cref="IFileSystemView"/>.
     /// Overwriting a file of the same name is not allowed.
     /// </summary>
     /// <inheritdoc cref="CopyFile(IReadOnlyFileSystemView, string, IFileSystemView, string, bool, VfsCopyOptions)"/>
     public static void CopyFile(
-        this IReadOnlyFileSystemView sourceView,
-        string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath) =>
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        IFileSystemView destinationView, string destinationPath) =>
         CopyFile(sourceView, sourcePath, destinationView, destinationPath, false, VfsCopyOptions.None);
 
     /// <summary>
@@ -663,12 +661,13 @@ partial class FileSystemViewExtensions
         this IReadOnlyFileSystemView sourceView, string sourcePath,
         IFileSystemView destinationView, string destinationPath,
         bool overwrite = false,
-        VfsCopyOptions options = default)
+        VfsCopyOptions options = VfsCopyOptions.None)
     {
         if (sourceView is null)
             throw new ArgumentNullException(nameof(sourceView));
         if (destinationView is null)
             throw new ArgumentNullException(nameof(destinationView));
+        VfsValidationKit.Arguments.ValidateCopyOptions(options);
 
         IOHelper.CopyFileOptimized(
             sourceView, sourcePath,
@@ -685,7 +684,7 @@ partial class FileSystemViewExtensions
     /// Moves a specified file to a new location,
     /// providing the option to specify a new file name.
     /// </summary>
-    /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool)"/>
+    /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool, VfsMoveOptions)"/>
     /// <param name="view">The file-system view to move the file at.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
@@ -693,21 +692,39 @@ partial class FileSystemViewExtensions
         this IFileSystemView view,
         string sourcePath,
         string destinationPath) =>
+        MoveFile(view, sourcePath, destinationPath, false);
+
+    /// <summary>
+    /// Moves a specified file to a new location,
+    /// providing the options to specify a new file name and
+    /// to overwrite the destination file if it already exists.
+    /// </summary>
+    /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool, VfsMoveOptions)"/>
+    /// <param name="view">The file-system view to move the file at.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    public static void MoveFile(
+        this IFileSystemView view,
+        string sourcePath,
+        string destinationPath,
+        bool overwrite) =>
         (view ?? throw new ArgumentNullException(nameof(view)))
-        .MoveFile(sourcePath, destinationPath, false);
+        .MoveFile(sourcePath, destinationPath, overwrite, VfsMoveOptions.None);
 
     /// <summary>
     /// Moves a specified file to a new location,
     /// providing the option to specify a new file name.
     /// </summary>
-    /// <inheritdoc cref="MoveFile(IFileSystemView, string, IFileSystemView, string, bool)"/>
+    /// <inheritdoc cref="MoveFile(IFileSystemView, string, IFileSystemView, string, bool, VfsMoveOptions)"/>
     public static void MoveFile(
         this IFileSystemView sourceView,
         string sourcePath,
         IFileSystemView destinationView,
         string destinationPath) =>
-        MoveFile(sourceView, sourcePath, destinationView, destinationPath, false);
+        MoveFile(sourceView, sourcePath, destinationView, destinationPath, false, VfsMoveOptions.None);
 
+    /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool, VfsMoveOptions)"/>
     /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> of the file to move.</param>
     /// <param name="sourcePath">The path of the file to move.</param>
     /// <param name="destinationView">The destination <see cref="IFileSystemView"/> to move the file to.</param>
@@ -715,22 +732,25 @@ partial class FileSystemViewExtensions
     /// The path of the destination file in the specified <see cref="IFileSystemView"/>.
     /// This cannot be a directory.
     /// </param>
-    /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool)"/>
     /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
     public static void MoveFile(
         this IFileSystemView sourceView, string sourcePath,
         IFileSystemView destinationView, string destinationPath,
-        bool overwrite)
+        bool overwrite = false,
+        VfsMoveOptions options = VfsMoveOptions.None)
     {
         if (sourceView is null)
             throw new ArgumentNullException(nameof(sourceView));
         if (destinationView is null)
             throw new ArgumentNullException(nameof(destinationView));
+        VfsValidationKit.Arguments.ValidateMoveOptions(options);
 
         IOHelper.MoveFileOptimized(
             sourceView, sourcePath,
             destinationView, destinationPath,
-            overwrite);
+            overwrite,
+            options);
     }
 
     #endregion

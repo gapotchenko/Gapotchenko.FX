@@ -91,10 +91,10 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.CopyFile(sourcePath, destinationPath, overwrite, options);
     }
 
-    public override void MoveFile(string sourcePath, string destinationPath, bool overwrite)
+    public override void MoveFile(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
         EnsureCanReadAndWrite();
-        base.MoveFile(sourcePath, destinationPath, overwrite);
+        base.MoveFile(sourcePath, destinationPath, overwrite, options);
     }
 
     #endregion
@@ -137,16 +137,16 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.DeleteDirectory(path, recursive);
     }
 
-    public override void CopyDirectory(string sourcePath, string destinationPath, bool overwrite)
+    public override void CopyDirectory(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
     {
         EnsureCanReadAndWrite();
-        base.CopyDirectory(sourcePath, destinationPath, overwrite);
+        base.CopyDirectory(sourcePath, destinationPath, overwrite, options);
     }
 
-    public override void MoveDirectory(string sourcePath, string destinationPath, bool overwrite)
+    public override void MoveDirectory(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
         EnsureCanReadAndWrite();
-        base.MoveDirectory(sourcePath, destinationPath, overwrite);
+        base.MoveDirectory(sourcePath, destinationPath, overwrite, options);
     }
 
     #endregion

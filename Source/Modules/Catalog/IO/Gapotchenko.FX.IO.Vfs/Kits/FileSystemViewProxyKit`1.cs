@@ -76,8 +76,8 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
         BaseView.CopyFile(sourcePath, destinationPath, overwrite, options);
 
     /// <inheritdoc/>
-    public virtual void MoveFile(string sourcePath, string destinationPath, bool overwrite) =>
-        BaseView.MoveFile(sourcePath, destinationPath, overwrite);
+    public virtual void MoveFile(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options) =>
+        BaseView.MoveFile(sourcePath, destinationPath, overwrite, options);
 
     #endregion
 
@@ -104,12 +104,12 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual void DeleteDirectory(string path, bool recursive) => BaseView.DeleteDirectory(path, recursive);
 
     /// <inheritdoc/>
-    public virtual void CopyDirectory(string sourcePath, string destinationPath, bool overwrite) =>
-        BaseView.CopyDirectory(sourcePath, destinationPath, overwrite);
+    public virtual void CopyDirectory(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options) =>
+        BaseView.CopyDirectory(sourcePath, destinationPath, overwrite, options);
 
     /// <inheritdoc/>
-    public virtual void MoveDirectory(string sourcePath, string destinationPath, bool overwrite) =>
-        BaseView.MoveDirectory(sourcePath, destinationPath, overwrite);
+    public virtual void MoveDirectory(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options) =>
+        BaseView.MoveDirectory(sourcePath, destinationPath, overwrite, options);
 
     #endregion
 

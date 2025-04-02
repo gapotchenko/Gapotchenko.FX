@@ -49,6 +49,7 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// Moves a specified file to a new location,
     /// providing the options to specify a new file name and
     /// to overwrite the destination file if it already exists.
+    /// Additional operation options are controlled by the <paramref name="options"/> parameter.
     /// </summary>
     /// <param name="sourcePath">The path of the file to move.</param>
     /// <param name="destinationPath">The new path and name for the file.</param>
@@ -56,7 +57,8 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <see langword="true"/> to overwrite the destination file if it already exists;
     /// <see langword="false"/> otherwise.
     /// </param>
-    void MoveFile(string sourcePath, string destinationPath, bool overwrite);
+    /// <param name="options">The operation options.</param>
+    void MoveFile(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options);
 
     #endregion
 
@@ -72,6 +74,7 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <summary>
     /// Copies an existing directory to a new directory.
     /// Overwriting a directory of the same name is controlled by the <paramref name="overwrite"/> parameter.
+    /// Additional operation options are controlled by the <paramref name="options"/> parameter.
     /// </summary>
     /// <param name="sourcePath">The path of the directory to copy.</param>
     /// <param name="destinationPath">The path of the destination directory.</param>
@@ -79,12 +82,14 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <see langword="true"/> if the destination directory should be overwritten if it already exists;
     /// otherwise, <see langword="false"/>.
     /// </param>
-    void CopyDirectory(string sourcePath, string destinationPath, bool overwrite);
+    /// <param name="options">The operation options.</param>
+    void CopyDirectory(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options);
 
     /// <summary>
     /// Moves a specified directory to a new location,
     /// providing the options to specify a new directory name and
     /// to overwrite the destination directory if it already exists.
+    /// Additional operation options are controlled by the <paramref name="options"/> parameter.
     /// </summary>
     /// <param name="sourcePath">The path of the directory to move.</param>
     /// <param name="destinationPath">The new path and name for the directory.</param>
@@ -92,7 +97,8 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <see langword="true"/> to replace the destination directory if it already exists;
     /// <see langword="false"/> otherwise.
     /// </param>
-    void MoveDirectory(string sourcePath, string destinationPath, bool overwrite);
+    /// <param name="options">The operation options.</param>
+    void MoveDirectory(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options);
 
     #endregion
 

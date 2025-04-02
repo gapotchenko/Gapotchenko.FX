@@ -165,7 +165,8 @@ partial class FileSystemViewVfsTests
         RunVfsTest(Mutate, Verify);
 
         const string sourceFileName = "Source.txt";
-        const string destinationFileName = "Destination.txt";
+        const string destinationFileNameA = "Destination A.txt";
+        const string destinationFileNameB = "Destination B.txt";
         const string fileContents = "This is a sample text.";
 
         void Mutate(IFileSystemView destinationVfs, string destinationRootPath)
@@ -183,15 +184,20 @@ partial class FileSystemViewVfsTests
 
             #endregion
 
-            sVfs.WriteAllFileText(SR(sourceFileName), fileContents);
+            string sourceFilePath = SR(sourceFileName);
+            sVfs.WriteAllFileText(sourceFilePath, fileContents);
             if (sVfs.SupportsCreationTime)
-                sVfs.SetCreationTime(SR(sourceFileName), creationTime);
+                sVfs.SetCreationTime(sourceFilePath, creationTime);
             if (sVfs.SupportsLastWriteTime)
-                sVfs.SetLastWriteTime(SR(sourceFileName), lastWriteTime);
-            if (sVfs.SupportsLastAccessTime)
-                sVfs.SetLastAccessTime(SR(sourceFileName), lastAccessTime);
+                sVfs.SetLastWriteTime(sourceFilePath, lastWriteTime);
 
-            sVfs.CopyFile(SR(sourceFileName), dVfs, DR(destinationFileName));
+            if (sVfs.SupportsLastAccessTime)
+                sVfs.SetLastAccessTime(sourceFilePath, lastAccessTime);
+            sVfs.CopyFile(sourceFilePath, dVfs, DR(destinationFileNameA));
+
+            if (sVfs.SupportsLastAccessTime)
+                sVfs.SetLastAccessTime(sourceFilePath, lastAccessTime);
+            sVfs.CopyFile(sourceFilePath, dVfs, DR(destinationFileNameB), options: VfsCopyOptions.Archive);
         }
 
         void Verify(IReadOnlyFileSystemView destinationVfs, string destinationRootPath)
@@ -209,21 +215,32 @@ partial class FileSystemViewVfsTests
 
             #endregion
 
+            string sourceFilePath = SR(sourceFileName);
             if (sVfs.SupportsCreationTime)
-                Assert.AreEqual(creationTime, sVfs.GetCreationTime(SR(sourceFileName)));
+                Assert.AreEqual(creationTime, sVfs.GetCreationTime(sourceFilePath));
             if (sVfs.SupportsLastWriteTime)
-                Assert.AreEqual(lastWriteTime, sVfs.GetLastWriteTime(SR(sourceFileName)));
-            Assert.AreEqual(fileContents, sVfs.ReadAllFileText(SR(sourceFileName)));
+                Assert.AreEqual(lastWriteTime, sVfs.GetLastWriteTime(sourceFilePath));
+            Assert.AreEqual(fileContents, sVfs.ReadAllFileText(sourceFilePath));
 
-            if (dVfs.SupportsCreationTime)
-                Assert.AreNotEqual(creationTime, dVfs.GetCreationTime(DR(destinationFileName)));
-            if (dVfs.SupportsLastWriteTime)
-                Assert.AreEqual(lastWriteTime, dVfs.GetLastWriteTime(DR(destinationFileName)));
-            if (dVfs.SupportsLastAccessTime)
-                Assert.AreNotEqual(lastWriteTime, dVfs.GetLastAccessTime(DR(destinationFileName)));
-            Assert.AreEqual(fileContents, dVfs.ReadAllFileText(DR(destinationFileName)));
+            string destinationFilePathA = DR(destinationFileNameA);
+            if (sVfs.SupportsCreationTime && dVfs.SupportsCreationTime)
+                Assert.AreNotEqual(creationTime, dVfs.GetCreationTime(destinationFilePathA));
+            if (sVfs.SupportsLastWriteTime && dVfs.SupportsLastWriteTime)
+                Assert.AreEqual(lastWriteTime, dVfs.GetLastWriteTime(destinationFilePathA));
+            if (sVfs.SupportsLastAccessTime && dVfs.SupportsLastAccessTime)
+                Assert.AreNotEqual(lastAccessTime, dVfs.GetLastAccessTime(destinationFilePathA));
+            Assert.AreEqual(fileContents, dVfs.ReadAllFileText(destinationFilePathA));
 
-            Assert.That.VfsHierarchyIs(dVfs, dr, [destinationFileName]);
+            string destinationFilePathB = DR(destinationFileNameB);
+            if (sVfs.SupportsCreationTime && dVfs.SupportsCreationTime)
+                Assert.AreEqual(creationTime, dVfs.GetCreationTime(destinationFilePathB));
+            if (sVfs.SupportsLastWriteTime && dVfs.SupportsLastWriteTime)
+                Assert.AreEqual(lastWriteTime, dVfs.GetLastWriteTime(destinationFilePathB));
+            if (sVfs.SupportsLastAccessTime && dVfs.SupportsLastAccessTime)
+                Assert.AreEqual(lastAccessTime, dVfs.GetLastAccessTime(destinationFilePathB));
+            Assert.AreEqual(fileContents, dVfs.ReadAllFileText(destinationFilePathB));
+
+            Assert.That.VfsHierarchyIs(dVfs, dr, [destinationFileNameA, destinationFileNameB]);
         }
     }
 

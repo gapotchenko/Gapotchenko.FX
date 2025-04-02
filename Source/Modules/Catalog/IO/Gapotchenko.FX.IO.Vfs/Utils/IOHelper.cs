@@ -10,17 +10,22 @@ namespace Gapotchenko.FX.IO.Vfs.Utils;
 
 static class IOHelper
 {
+    #region Directory
+
+    #region Move
+
     public static void MoveDirectoryOptimized(
         IFileSystemView sourceView,
         string sourcePath,
         IFileSystemView destinationView,
         string destinationPath,
-        bool overwrite)
+        bool overwrite,
+        VfsMoveOptions options)
     {
         if (sourceView == destinationView)
-            destinationView.MoveDirectory(sourcePath, destinationPath, overwrite);
+            destinationView.MoveDirectory(sourcePath, destinationPath, overwrite, options);
         else
-            MoveDirectoryNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite);
+            MoveDirectoryNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite, options);
     }
 
     public static void MoveDirectoryNaive(
@@ -28,7 +33,8 @@ static class IOHelper
         string sourcePath,
         IFileSystemView destinationView,
         string destinationPath,
-        bool overwrite)
+        bool overwrite,
+        VfsMoveOptions options)
     {
         if (!sourceView.DirectoryExists(sourcePath))
         {
@@ -40,9 +46,20 @@ static class IOHelper
         if (destinationView.DirectoryExists(destinationPath))
         {
             if (overwrite)
+            {
                 destinationView.DeleteDirectory(destinationPath, true);
+                if (sourceView == destinationView)
+                {
+                    // Give an opportunity to use a more optimized operation implementation
+                    // that exists but does not support overwriting.
+                    destinationView.MoveDirectory(sourcePath, destinationPath, false, options);
+                    return;
+                }
+            }
             else
+            {
                 throw new IOException(VfsResourceKit.DirectoryAlreadyExists(destinationPath));
+            }
         }
         else
         {
@@ -64,7 +81,7 @@ static class IOHelper
                     Path.GetFileName(sourceEntryPath));
 
                 if (sourceView.FileExists(sourceEntryPath))
-                    sourceView.MoveFile(sourceEntryPath, destinationView, destinationEntryPath, overwrite);
+                    sourceView.MoveFile(sourceEntryPath, destinationView, destinationEntryPath, overwrite, options);
                 else
                     MoveDirectoryCore(sourceEntryPath, destinationEntryPath);
             }
@@ -76,17 +93,22 @@ static class IOHelper
         }
     }
 
+    #endregion
+
+    #region Copy
+
     public static void CopyDirectoryOptimized(
         IReadOnlyFileSystemView sourceView,
         string sourcePath,
         IFileSystemView destinationView,
         string destinationPath,
-        bool overwrite)
+        bool overwrite,
+        VfsCopyOptions options)
     {
         if (sourceView == destinationView)
-            destinationView.CopyDirectory(sourcePath, destinationPath, overwrite);
+            destinationView.CopyDirectory(sourcePath, destinationPath, overwrite, options);
         else
-            CopyDirectoryNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite);
+            CopyDirectoryNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite, options);
     }
 
     public static void CopyDirectoryNaive(
@@ -94,7 +116,8 @@ static class IOHelper
         string sourcePath,
         IFileSystemView destinationView,
         string destinationPath,
-        bool overwrite)
+        bool overwrite,
+        VfsCopyOptions options)
     {
         if (!sourceView.DirectoryExists(sourcePath))
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindDirectory(sourcePath));
@@ -108,6 +131,10 @@ static class IOHelper
 
         void CopyDirectoryCore(string sourcePath, string destinationPath)
         {
+            EntryMetadata? metadata = (options & VfsCopyOptions.Archive) != 0
+                ? EntryMetadata.GetFrom(sourceView, sourcePath, destinationView)
+                : null;
+
             destinationView.CreateDirectory(destinationPath);
 
             foreach (string sourceEntryPath in sourceView.EnumerateEntries(sourcePath))
@@ -117,34 +144,41 @@ static class IOHelper
                     Path.GetFileName(sourceEntryPath));
 
                 if (sourceView.FileExists(sourceEntryPath))
-                    sourceView.CopyFile(sourceEntryPath, destinationView, destinationEntryPath, overwrite);
+                    sourceView.CopyFile(sourceEntryPath, destinationView, destinationEntryPath, overwrite, options);
                 else
                     CopyDirectoryCore(sourceEntryPath, destinationEntryPath);
             }
 
             CopyEntryAttributes(sourceView, sourcePath, destinationView, destinationPath);
+            metadata?.SetTo(destinationView, destinationPath);
         }
     }
 
+    #endregion
+
+    #endregion
+
+    #region File
+
+    #region Move
+
     public static void MoveFileOptimized(
-        IFileSystemView sourceView,
-        string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath,
-        bool overwrite)
+        IFileSystemView sourceView, string sourcePath,
+        IFileSystemView destinationView, string destinationPath,
+        bool overwrite,
+        VfsMoveOptions options)
     {
         if (sourceView == destinationView)
-            destinationView.MoveFile(sourcePath, destinationPath, overwrite);
+            destinationView.MoveFile(sourcePath, destinationPath, overwrite, options);
         else
-            MoveFileNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite);
+            MoveFileNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite, options);
     }
 
     public static void MoveFileNaive(
-        IFileSystemView sourceView,
-        string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath,
-        bool overwrite)
+        IFileSystemView sourceView, string sourcePath,
+        IFileSystemView destinationView, string destinationPath,
+        bool overwrite,
+        VfsMoveOptions options)
     {
         // Copy to the destination.
         sourceView.CopyFile(sourcePath, destinationView, destinationPath, overwrite, VfsCopyOptions.Archive);
@@ -161,6 +195,10 @@ static class IOHelper
             throw;
         }
     }
+
+    #endregion
+
+    #region Copy
 
     public static void CopyFileOptimized(
         IReadOnlyFileSystemView sourceView,
@@ -212,6 +250,12 @@ static class IOHelper
         }
     }
 
+    #endregion
+
+    #endregion
+
+    #region Entry
+
     static void CopyEntryAttributes(
         IReadOnlyFileSystemView sourceView,
         string sourcePath,
@@ -231,7 +275,10 @@ static class IOHelper
     /// </summary>
     readonly struct EntryMetadata
     {
-        public static EntryMetadata GetFrom(IReadOnlyFileSystemView view, string path, IReadOnlyFileSystemView? capabilitiesHint = null) =>
+        public static EntryMetadata GetFrom(
+            IReadOnlyFileSystemView view,
+            string path,
+            IReadOnlyFileSystemView? capabilitiesHint = null) =>
             new(view, path, capabilitiesHint);
 
         EntryMetadata(IReadOnlyFileSystemView view, string path, IReadOnlyFileSystemView? capabilitiesHint)
@@ -269,4 +316,6 @@ static class IOHelper
         if (time == DateTime.MinValue)
             throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(path), path);
     }
+
+    #endregion
 }

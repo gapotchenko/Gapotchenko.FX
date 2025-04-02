@@ -53,25 +53,33 @@ sealed class LocalFileSystemView : FileSystemViewKit
     public override void CopyFile(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
     {
         const VfsCopyOptions supportedOptions = VfsCopyOptions.None;
-        if ((options & ~supportedOptions) != 0)
-        {
-            base.CopyFile(sourcePath, destinationPath, overwrite, options);
-        }
-        else
+        if ((options & ~supportedOptions) == 0)
         {
             File.Copy(sourcePath, destinationPath, overwrite);
         }
+        else
+        {
+            base.CopyFile(sourcePath, destinationPath, overwrite, options);
+        }
     }
 
-    public override void MoveFile(string sourcePath, string destinationPath, bool overwrite)
+    public override void MoveFile(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
+        const VfsMoveOptions supportedOptions = VfsMoveOptions.None;
+        if ((options & ~supportedOptions) == 0)
+        {
 #if NETCOREAPP3_0_OR_GREATER
-        File.Move(sourcePath, destinationPath, overwrite);
+            File.Move(sourcePath, destinationPath, overwrite);
 #else
-        if (overwrite && File.Exists(destinationPath))
-            File.Delete(destinationPath);
-        File.Move(sourcePath, destinationPath);
+            if (overwrite && File.Exists(destinationPath))
+                File.Delete(destinationPath);
+            File.Move(sourcePath, destinationPath);
 #endif
+        }
+        else
+        {
+            base.MoveFile(sourcePath, destinationPath, overwrite, options);
+        }
     }
 
     #endregion
@@ -91,9 +99,12 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override void DeleteDirectory(string path, bool recursive) => Directory.Delete(path, recursive);
 
-    public override void MoveDirectory(string sourcePath, string destinationPath, bool overwrite)
+    public override void MoveDirectory(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
-        if (!overwrite && Directory.Exists(sourcePath))
+        const VfsMoveOptions supportedOptions = VfsMoveOptions.None;
+        if ((options & ~supportedOptions) == 0 &&
+            !(overwrite && Directory.Exists(destinationPath)) &&
+            Directory.Exists(sourcePath))
         {
             const int COR_E_IO = unchecked((int)0x80131620);
 
@@ -113,7 +124,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
                 // Move will not work across volumes.
 
                 // Downgrade to the base implementation.
-                base.MoveDirectory(sourcePath, destinationPath, false);
+                base.MoveDirectory(sourcePath, destinationPath, false, options);
             }
 
             static string? GetPathRoot(string path) => Path.GetPathRoot(Path.GetFullPath(path));
@@ -121,7 +132,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
         else
         {
             // No acceleration is available.
-            base.MoveDirectory(sourcePath, destinationPath, overwrite);
+            base.MoveDirectory(sourcePath, destinationPath, overwrite, options);
         }
     }
 

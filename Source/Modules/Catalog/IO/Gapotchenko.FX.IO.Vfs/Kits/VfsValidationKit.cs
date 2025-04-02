@@ -129,5 +129,35 @@ public static class VfsValidationKit
             if ((share & ~(FileShare.ReadWrite | FileShare.Delete | FileShare.Inheritable)) != 0)
                 throw new ArgumentOutOfRangeException(argumentName, Resources.EnumValueIsOutOfLegalRange);
         }
+
+        /// <summary>
+        /// Validates the specified <see cref="VfsCopyOptions"/> argument value.
+        /// </summary>
+        /// <param name="options">The <see cref="VfsCopyOptions"/> value.</param>
+        /// <param name="argumentName">The argument name.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="options"/> value is out of legal range.</exception>
+        public static void ValidateCopyOptions(
+            VfsCopyOptions options,
+            [CallerArgumentExpression(nameof(options))] string? argumentName = null)
+        {
+            const VfsCopyOptions knownOptions = VfsCopyOptions.Archive;
+            if ((options & ~knownOptions) != 0)
+                throw new ArgumentOutOfRangeException(argumentName, Resources.EnumValueIsOutOfLegalRange);
+        }
+
+        /// <summary>
+        /// Validates the specified <see cref="VfsMoveOptions"/> argument value.
+        /// </summary>
+        /// <param name="options">The <see cref="VfsMoveOptions"/> value.</param>
+        /// <param name="argumentName">The argument name.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="options"/> value is out of legal range.</exception>
+        public static void ValidateMoveOptions(
+            VfsMoveOptions options,
+            [CallerArgumentExpression(nameof(options))] string? argumentName = null)
+        {
+            const VfsMoveOptions knownOptions = VfsMoveOptions.None;
+            if ((options & ~knownOptions) != 0)
+                throw new ArgumentOutOfRangeException(argumentName, Resources.EnumValueIsOutOfLegalRange);
+        }
     }
 }
