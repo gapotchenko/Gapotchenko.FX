@@ -22,7 +22,7 @@ abstract class ZipArchiveBase : FileSystemViewKit, IZipArchive
     #region Paths
 
     /// <inheritdoc/>
-    public sealed override char DirectorySeparatorChar => C_DirectorySeparatorChar;
+    public sealed override char DirectorySeparatorChar => VfsPathKit.DirectorySeparatorChar;
 
     /// <inheritdoc/>
     public sealed override StringComparer PathComparer => m_PathComparer;
@@ -39,10 +39,7 @@ abstract class ZipArchiveBase : FileSystemViewKit, IZipArchive
     private protected static string? GetFullPathCore(ReadOnlySpan<string> parts) =>
         parts == null
             ? null!
-            : (C_DirectorySeparatorChar + VfsPathKit.Join(parts, C_DirectorySeparatorChar));
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    internal const char C_DirectorySeparatorChar = '/';
+            : (VfsPathKit.DirectorySeparatorChar + VfsPathKit.Join(parts));
 
     #endregion
 

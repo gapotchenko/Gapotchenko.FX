@@ -11,6 +11,21 @@ public abstract partial class FileSystemViewVfsTests
 {
     // This class is partial. Please take a look at the neighboring source files.
 
+    [TestMethod]
+    public void FileSystemView_Vfs_Empty()
+    {
+        RunVfsTest(Verify);
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            Assert.IsTrue(vfs.IsPathRooted(rootPath.AsSpan()));
+            Assert.IsTrue(vfs.DirectoryExists(rootPath));
+            Assert.IsFalse(vfs.EnumerateEntries(rootPath).Any());
+        }
+    }
+
+    #region Engine
+
     /// <summary>
     /// Creates an empty virtual file system view.
     /// </summary>
@@ -77,4 +92,6 @@ public abstract partial class FileSystemViewVfsTests
     delegate void VfsPhasedReadOnlyTest(IReadOnlyFileSystemView vfs, string rootPath, int phase);
 
     static void DisposeVfs(IFileSystemView? vfs) => (vfs as IDisposable)?.Dispose();
+
+    #endregion
 }

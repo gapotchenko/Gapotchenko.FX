@@ -165,7 +165,13 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual bool IsPathRooted(ReadOnlySpan<char> path) => BaseView.IsPathRooted(path);
 
     /// <inheritdoc/>
+    public virtual ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path) => BaseView.GetPathRoot(path);
+
+    /// <inheritdoc/>
     public virtual string CombinePaths(params IEnumerable<string?> paths) => BaseView.CombinePaths(paths);
+
+    /// <inheritdoc/>
+    public virtual ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path) => BaseView.GetDirectoryName(path);
 
     #endregion
 

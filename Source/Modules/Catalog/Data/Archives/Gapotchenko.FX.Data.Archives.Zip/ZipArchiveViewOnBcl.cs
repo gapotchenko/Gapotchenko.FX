@@ -124,7 +124,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         }
         else
         {
-            entryName = VfsPathKit.Join(filePathParts, C_DirectorySeparatorChar);
+            entryName = VfsPathKit.Join(filePathParts);
             var entry = archive.GetEntry(entryName);
             if (entry != null)
             {
@@ -153,7 +153,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
             directoryExists = filePathParts.Length == 1;
             if (!directoryExists)
-                directoryExists = archive.GetEntry(VfsPathKit.Join(filePathParts[..^1], C_DirectorySeparatorChar) + C_DirectorySeparatorChar) != null;
+                directoryExists = archive.GetEntry(VfsPathKit.Join(filePathParts[..^1]) + VfsPathKit.DirectorySeparatorChar) != null;
         }
 
         if (!directoryExists)
@@ -228,7 +228,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             if (!parentExists && DirectoryExistsCore(subPath))
                 continue;
 
-            archive.CreateEntry(VfsPathKit.Join(subPath.Span, C_DirectorySeparatorChar) + C_DirectorySeparatorChar);
+            archive.CreateEntry(VfsPathKit.Join(subPath.Span) + VfsPathKit.DirectorySeparatorChar);
             parentExists = true;
         }
     }
@@ -269,10 +269,10 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
     ZipArchiveEntry GetDirectoryArchiveEntry(in StructuredPath path)
     {
-        string? entryPath = VfsPathKit.Join(path.Parts.Span, C_DirectorySeparatorChar);
+        string? entryPath = VfsPathKit.Join(path.Parts.Span);
         if (entryPath != null)
         {
-            var entry = archive.GetEntry(entryPath + C_DirectorySeparatorChar);
+            var entry = archive.GetEntry(entryPath + VfsPathKit.DirectorySeparatorChar);
             if (entry != null)
                 return entry;
         }
@@ -281,7 +281,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
     }
 
-    static bool IsDirectoryArchiveEntry(string fullName) => fullName.EndsWith(C_DirectorySeparatorChar);
+    static bool IsDirectoryArchiveEntry(string fullName) => fullName.EndsWith(VfsPathKit.DirectorySeparatorChar);
 
     #endregion
 
@@ -421,11 +421,11 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         if (pathParts.IsEmpty)
             return null;
 
-        string entryPath = VfsPathKit.Join(pathParts, C_DirectorySeparatorChar);
+        string entryPath = VfsPathKit.Join(pathParts);
 
         if (considerDirectories)
         {
-            if (archive.GetEntry(entryPath + C_DirectorySeparatorChar) is not null and var directoryEntry)
+            if (archive.GetEntry(entryPath + VfsPathKit.DirectorySeparatorChar) is not null and var directoryEntry)
                 return directoryEntry;
         }
 

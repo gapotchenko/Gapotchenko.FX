@@ -33,7 +33,5 @@ readonly struct StructuredPath
 
     public ReadOnlyMemory<string> Parts { get; }
 
-    public override string? ToString() =>
-        OriginalPath ??
-        VfsPathKit.Join(Parts.Span, ZipArchiveBase.C_DirectorySeparatorChar);
+    public override string? ToString() => OriginalPath ?? VfsPathKit.Join(Parts.Span);
 }

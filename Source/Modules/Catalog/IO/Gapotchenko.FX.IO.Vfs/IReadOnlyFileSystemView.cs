@@ -1,6 +1,8 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
 //
+// Portions © .NET Foundation and its Licensors
+//
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
@@ -136,12 +138,36 @@ public interface IReadOnlyFileSystemView
     bool IsPathRooted(ReadOnlySpan<char> path);
 
     /// <summary>
+    /// Gets the root directory information from the path contained in the specified character span.
+    /// </summary>
+    /// <param name="path">A read-only span of characters containing the path from which to obtain root directory information.</param>
+    /// <returns>
+    /// A read-only span of characters containing the root directory of <paramref name="path"/>,
+    /// or an empty span if <paramref name="path"/> does not contain root directory information.
+    /// Returns an empty span representing <see langword="null"/> if <paramref name="path"/> is effectively empty.</returns>
+    ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path);
+
+    /// <summary>
     /// Combines a sequence of strings into a path.
     /// </summary>
     /// <param name="paths">A sequence of parts of the path.</param>
     /// <returns>The combined paths.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
     string CombinePaths(params IEnumerable<string?> paths);
+
+    /// <summary>
+    /// Returns the directory information for the specified path represented by a character span.
+    /// </summary>
+    /// <param name="path">The path to retrieve the directory information from.</param>
+    /// <returns>
+    /// Directory information for <paramref name="path"/>,
+    /// or an empty span representing <see langword="null"/> if <paramref name="path"/> denotes a root directory or is empty.
+    /// Returns an empty span if <paramref name="path"/> does not contain directory information.
+    /// </returns>
+    /// <exception cref="PathTooLongException">
+    /// The <paramref name="path"/> parameter is longer than the maximum length defined by the file system.
+    /// </exception>
+    ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path);
 
     #endregion
 }

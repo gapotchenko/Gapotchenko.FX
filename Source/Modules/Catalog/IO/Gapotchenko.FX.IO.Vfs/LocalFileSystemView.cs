@@ -205,12 +205,26 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     protected override string GetFullPathCore(string path) => Path.GetFullPath(path);
 
-    public override bool IsPathRooted(ReadOnlySpan<char> path) =>
+    public override bool IsPathRooted(ReadOnlySpan<char> path)
+    {
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        Path.IsPathRooted(path);
+        return Path.IsPathRooted(path);
 #else
-        Path.IsPathRooted(path.ToString());
+        return Path.IsPathRooted(path.ToString());
 #endif
+    }
+
+    public override ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path)
+    {
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        return Path.GetPathRoot(path);
+#else
+        if (path.IsEmpty)
+            return null;
+        else
+            return Path.GetPathRoot(path.ToString()).AsSpan();
+#endif
+    }
 
     public override string CombinePaths(params IEnumerable<string?> paths)
     {
@@ -223,6 +237,18 @@ sealed class LocalFileSystemView : FileSystemViewKit
             arr = arr.Where(x => x != null).ToArray();
 
         return Path.Combine(arr!);
+    }
+
+    public override ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path)
+    {
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        return Path.GetDirectoryName(path);
+#else
+        if (path.IsEmpty)
+            return null;
+        else
+            return Path.GetDirectoryName(path.ToString()).AsSpan();
+#endif
     }
 
     #endregion

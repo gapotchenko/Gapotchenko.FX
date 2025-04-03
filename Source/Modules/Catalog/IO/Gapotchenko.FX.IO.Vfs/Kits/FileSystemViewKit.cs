@@ -1,6 +1,8 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
 //
+// Portions © .NET Foundation and its Licensors
+//
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
@@ -235,18 +237,28 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <inheritdoc cref="GetFullPath(string?)"/>
     protected virtual string GetFullPathCore(string path)
     {
+        char directorySeparatorChar = DirectorySeparatorChar;
+
         string[] parts =
-            VfsPathKit.Split(path) ??
+            VfsPathKit.Split(path, directorySeparatorChar) ??
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
 
-        char directorySeparatorChar = DirectorySeparatorChar;
         return directorySeparatorChar + VfsPathKit.Join(parts, directorySeparatorChar);
     }
 
     /// <inheritdoc/>
-    public virtual bool IsPathRooted(ReadOnlySpan<char> path) =>
-        !path.IsEmpty &&
-        VfsPathKit.IsDirectorySeparator(path[0], DirectorySeparatorChar);
+    public virtual bool IsPathRooted(ReadOnlySpan<char> path) => !GetPathRoot(path).IsEmpty;
+
+    /// <inheritdoc/>
+    public virtual ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path)
+    {
+        if (path.IsEmpty)
+            return null;
+        else if (VfsPathKit.IsDirectorySeparator(path[0], DirectorySeparatorChar))
+            return path[..1];
+        else
+            return [];
+    }
 
     /// <inheritdoc/>
     public virtual string CombinePaths(params IEnumerable<string?> paths)
@@ -279,6 +291,34 @@ public abstract class FileSystemViewKit : IFileSystemView
         }
 
         return builder.ToString();
+    }
+
+    /// <inheritdoc/>
+    public virtual ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path)
+    {
+        if (path.IsEmpty)
+            return null;
+
+        int end = GetDirectoryNameOffset(path);
+        return end >= 0 ? path[..end] : null;
+
+        int GetDirectoryNameOffset(ReadOnlySpan<char> path)
+        {
+            int rootLength = GetPathRoot(path).Length;
+            int end = path.Length;
+            if (end <= rootLength)
+                return -1;
+
+            char directorySeparatorChar = DirectorySeparatorChar;
+
+            while (end > rootLength && !VfsPathKit.IsDirectorySeparator(path[--end], directorySeparatorChar)) ;
+
+            // Trim off any remaining separators (to deal with C:\foo\\bar)
+            while (end > rootLength && VfsPathKit.IsDirectorySeparator(path[end - 1], directorySeparatorChar))
+                end--;
+
+            return end;
+        }
     }
 
     #endregion
