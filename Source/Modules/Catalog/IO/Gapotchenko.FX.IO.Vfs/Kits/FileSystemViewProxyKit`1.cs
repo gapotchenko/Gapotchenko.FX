@@ -173,6 +173,9 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     /// <inheritdoc/>
     public virtual ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path) => BaseView.GetDirectoryName(path);
 
+    /// <inheritdoc/>
+    public virtual ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path) => BaseView.GetFileName(path);
+
     #endregion
 
     /// <summary>

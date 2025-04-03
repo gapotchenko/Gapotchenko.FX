@@ -144,7 +144,8 @@ public interface IReadOnlyFileSystemView
     /// <returns>
     /// A read-only span of characters containing the root directory of <paramref name="path"/>,
     /// or an empty span if <paramref name="path"/> does not contain root directory information.
-    /// Returns an empty span representing <see langword="null"/> if <paramref name="path"/> is effectively empty.</returns>
+    /// Returns an empty span representing <see langword="null"/> if <paramref name="path"/> is effectively empty.
+    /// </returns>
     ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path);
 
     /// <summary>
@@ -168,6 +169,13 @@ public interface IReadOnlyFileSystemView
     /// The <paramref name="path"/> parameter is longer than the maximum length defined by the file system.
     /// </exception>
     ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path);
+
+    /// <summary>
+    /// Returns the file name and extension of a file path that is represented by a read-only character span.
+    /// </summary>
+    /// <param name="path">A read-only span that contains the path from which to obtain the file name and extension.</param>
+    /// <returns>The characters after the last directory separator character in <paramref name="path"/>.</returns>
+    ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path);
 
     #endregion
 }

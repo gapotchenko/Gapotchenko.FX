@@ -13,6 +13,21 @@ namespace Gapotchenko.FX.IO.Vfs;
 
 partial class FileSystemViewExtensions
 {
+    /// <inheritdoc cref="Path.IsPathRooted(string?)"/>
+    /// <param name="view">The file-system view.</param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
+    public static bool IsPathRooted(this IReadOnlyFileSystemView view, [NotNullWhen(true)] string? path)
+    {
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
+
+        if (path is null)
+            return false;
+        else
+            return view.IsPathRooted(path.AsSpan());
+    }
+
     /// <summary>
     /// Gets the root directory information from the path contained in the specified string.
     /// </summary>
@@ -24,6 +39,7 @@ partial class FileSystemViewExtensions
     /// Returns <see langword="null"/> if <paramref name="path"/> is <see langword="null"/> or is effectively empty.
     /// </returns>
     /// <inheritdoc cref="IReadOnlyFileSystemView.GetPathRoot(ReadOnlySpan{char})"/>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     public static string? GetPathRoot(this IReadOnlyFileSystemView view, string? path)
     {
         if (view is null)
@@ -94,6 +110,7 @@ partial class FileSystemViewExtensions
     /// Returns <see cref="string.Empty"/> if <paramref name="path"/> does not contain directory information.
     /// </returns>
     /// <inheritdoc cref="IReadOnlyFileSystemView.GetDirectoryName(ReadOnlySpan{char})"/>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     public static string? GetDirectoryName(this IReadOnlyFileSystemView view, string? path)
     {
         if (view is null)
@@ -105,5 +122,32 @@ partial class FileSystemViewExtensions
             return result.ToString();
         else
             return null;
+    }
+
+    /// <summary>
+    /// Returns the file name and extension of the specified path string.
+    /// </summary>
+    /// <param name="view">The file-system view.</param>
+    /// <param name="path">The path string from which to obtain the file name and extension.</param>
+    /// <returns>
+    /// The characters after the last directory separator character in <paramref name="path"/>.
+    /// If the last character of <paramref name="path"/> is a directory separator character, this method returns <see cref="string.Empty"/>.
+    /// If <paramref name="path"/> is <see langword="null"/>, this method returns <see langword="null"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
+    [return: NotNullIfNotNull(nameof(path))]
+    public static string? GetFileName(this IReadOnlyFileSystemView view, string? path)
+    {
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
+
+        if (string.IsNullOrEmpty(path))
+            return path;
+
+        var result = view.GetFileName(path.AsSpan());
+        if (path.Length == result.Length)
+            return path;
+
+        return result.ToString();
     }
 }

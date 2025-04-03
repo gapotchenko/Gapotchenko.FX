@@ -199,7 +199,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     #region Paths
 
     /// <inheritdoc/>
-    public virtual char DirectorySeparatorChar => '/';
+    public virtual char DirectorySeparatorChar => VfsPathKit.DirectorySeparatorChar;
 
     /// <inheritdoc/>
     public abstract StringComparer PathComparer { get; }
@@ -250,15 +250,8 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual bool IsPathRooted(ReadOnlySpan<char> path) => !GetPathRoot(path).IsEmpty;
 
     /// <inheritdoc/>
-    public virtual ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path)
-    {
-        if (path.IsEmpty)
-            return null;
-        else if (VfsPathKit.IsDirectorySeparator(path[0], DirectorySeparatorChar))
-            return path[..1];
-        else
-            return [];
-    }
+    public virtual ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path) =>
+        VfsPathKit.GetPathRoot(path, DirectorySeparatorChar);
 
     /// <inheritdoc/>
     public virtual string CombinePaths(params IEnumerable<string?> paths)
@@ -319,6 +312,22 @@ public abstract class FileSystemViewKit : IFileSystemView
 
             return end;
         }
+    }
+
+    /// <inheritdoc/>
+    public virtual ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path)
+    {
+        int root = GetPathRoot(path).Length;
+
+        // We don't want to cut off "C:\file.txt:stream" (i.e. should be "file.txt:stream")
+        // but we *do* want "C:Foo" => "Foo". This necessitates checking for the root.
+
+        int i = path.LastIndexOfAny([
+            DirectorySeparatorChar,
+            VfsPathKit.DirectorySeparatorChar,
+            VfsPathKit.AltDirectorySeparatorChar]);
+
+        return path[(i < root ? root : i + 1)..];
     }
 
     #endregion

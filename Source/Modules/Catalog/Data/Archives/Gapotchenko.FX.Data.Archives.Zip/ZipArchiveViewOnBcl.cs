@@ -421,6 +421,18 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         if (pathParts.IsEmpty)
             return null;
 
+        if (considerFiles &&
+            path.OriginalPath is not null and var originalPath &&
+            originalPath.Length > 0 &&
+            VfsPathKit.IsDirectorySeparator(originalPath[^1]))
+        {
+            // Make sure that if the path ends in a trailing slash, it's truly a directory.
+            considerFiles = false;
+
+            if (!considerDirectories)
+                return null;
+        }
+
         string entryPath = VfsPathKit.Join(pathParts);
 
         if (considerDirectories)

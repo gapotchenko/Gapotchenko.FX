@@ -251,5 +251,17 @@ sealed class LocalFileSystemView : FileSystemViewKit
 #endif
     }
 
+    public override ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path)
+    {
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        return Path.GetFileName(path);
+#else
+        if (path.IsEmpty)
+            return path;
+        else
+            return Path.GetFileName(path.ToString()).AsSpan();
+#endif
+    }
+
     #endregion
 }

@@ -10,7 +10,7 @@ using System.Text;
 namespace Gapotchenko.FX.IO.Vfs.Kits;
 
 /// <summary>
-/// Provides path manipulation primitives for virtual file-system hierarchies.
+/// Provides path manipulation primitives for hierarchies of virtual file-system entries.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public static class VfsPathKit
@@ -62,18 +62,18 @@ public static class VfsPathKit
                 case "..":
                     if (list.Count is > 0 and var count)
                     {
-                        // Return to a previous directory by exiting the current.
+                        // Return to a previous directory by exiting the current directory.
                         list.RemoveAt(count - 1);
                     }
                     else
                     {
-                        // The path points to a directory outside the root hierarchy.
+                        // The path points to a directory outside of the root hierarchy.
                         return null;
                     }
                     break;
 
                 default:
-                    // Enter a subdirectory.
+                    // Enter to a subdirectory.
                     list.Add(part.Length == name.Length ? part : name.ToString());
                     break;
             }
@@ -126,6 +126,26 @@ public static class VfsPathKit
     }
 
     /// <summary>
+    /// Gets the root directory information from the path contained in the specified character span.
+    /// </summary>
+    /// <param name="path">A read-only span of characters containing the path from which to obtain root directory information.</param>
+    /// <param name="directorySeparatorChar">The directory separator character.</param>
+    /// <returns>
+    /// A read-only span of characters containing the root directory of <paramref name="path"/>,
+    /// or an empty span if <paramref name="path"/> does not contain root directory information.
+    /// Returns an empty span representing <see langword="null"/> if <paramref name="path"/> is effectively empty.
+    /// </returns>
+    public static ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path, char directorySeparatorChar = DirectorySeparatorChar)
+    {
+        if (path.IsEmpty)
+            return null;
+        else if (IsDirectorySeparator(path[0], directorySeparatorChar))
+            return path[..1];
+        else
+            return [];
+    }
+
+    /// <summary>
     /// Get a value indicating whether the specified character is a directory separator character.
     /// </summary>
     /// <param name="c">The character to check.</param>
@@ -139,7 +159,8 @@ public static class VfsPathKit
          IsDirectorySeparator(c);
 
     /// <inheritdoc cref="IsDirectorySeparator(char, char)"/>
-    public static bool IsDirectorySeparator(char c) => c is DirectorySeparatorChar or AltDirectorySeparatorChar;
+    public static bool IsDirectorySeparator(char c) =>
+        c is DirectorySeparatorChar or AltDirectorySeparatorChar;
 
     /// <summary>
     /// Gets the default directory separator character.
