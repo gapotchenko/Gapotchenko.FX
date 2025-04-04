@@ -142,7 +142,7 @@ public static class VfsPathKit
         else if (IsDirectorySeparator(path[0], directorySeparatorChar))
             return path[..1];
         else
-            return [];
+            return string.Empty.AsSpan();
     }
 
     /// <summary>

@@ -214,10 +214,27 @@ sealed class LocalFileSystemView : FileSystemViewKit
 #endif
     }
 
+    public override string? GetPathRoot(string? path)
+    {
+#if !(NETCOREAPP || NETSTANDARD2_1_OR_GREATER)
+        // .NET Framework only: argument exception is thrown when path is empty.
+        if (path?.Length == 0)
+            return null;
+#endif
+        return Path.GetPathRoot(path);
+    }
+
     public override ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path)
     {
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        return Path.GetPathRoot(path);
+        var result = Path.GetPathRoot(path);
+        if (result == null && !path.IsEmpty)
+        {
+            // A span that signifies null should not be returned here,
+            // so it gets converted to a span signifying an empty string.
+            result = string.Empty.AsSpan();
+        }
+        return result;
 #else
         if (path.IsEmpty)
             return null;

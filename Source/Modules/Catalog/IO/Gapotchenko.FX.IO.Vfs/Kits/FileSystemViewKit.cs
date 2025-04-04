@@ -250,6 +250,17 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual bool IsPathRooted(ReadOnlySpan<char> path) => !GetPathRoot(path).IsEmpty;
 
     /// <inheritdoc/>
+    public virtual string? GetPathRoot(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return null;
+        else if (GetPathRoot(path.AsSpan()) is var result && result != null)
+            return result.ToString();
+        else
+            return null;
+    }
+
+    /// <inheritdoc/>
     public virtual ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path) =>
         VfsPathKit.GetPathRoot(path, DirectorySeparatorChar);
 

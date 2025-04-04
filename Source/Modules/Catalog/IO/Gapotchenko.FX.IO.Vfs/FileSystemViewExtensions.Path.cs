@@ -7,52 +7,13 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.IO.Vfs.Kits;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs;
 
 partial class FileSystemViewExtensions
 {
-    /// <inheritdoc cref="Path.IsPathRooted(string?)"/>
-    /// <param name="view">The file-system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
-    public static bool IsPathRooted(this IReadOnlyFileSystemView view, [NotNullWhen(true)] string? path)
-    {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
-
-        if (path is null)
-            return false;
-        else
-            return view.IsPathRooted(path.AsSpan());
-    }
-
-    /// <summary>
-    /// Gets the root directory information from the path contained in the specified string.
-    /// </summary>
-    /// <param name="view">The file-system view.</param>
-    /// <param name="path">A string containing the path from which to obtain root directory information.</param>
-    /// <returns>
-    /// A string containing the root directory of <paramref name="path"/>,
-    /// or an empty span if <paramref name="path"/> does not contain root directory information.
-    /// Returns <see langword="null"/> if <paramref name="path"/> is <see langword="null"/> or is effectively empty.
-    /// </returns>
-    /// <inheritdoc cref="IReadOnlyFileSystemView.GetPathRoot(ReadOnlySpan{char})"/>
-    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
-    public static string? GetPathRoot(this IReadOnlyFileSystemView view, string? path)
-    {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
-
-        if (string.IsNullOrEmpty(path))
-            return null;
-        else if (view.GetPathRoot(path.AsSpan()) is var result && result != null)
-            return result.ToString();
-        else
-            return null;
-    }
-
     /// <summary>
     /// Concatenates a sequence of paths into a single path.
     /// </summary>

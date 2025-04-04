@@ -138,6 +138,17 @@ public interface IReadOnlyFileSystemView
     bool IsPathRooted(ReadOnlySpan<char> path);
 
     /// <summary>
+    /// Gets the root directory information from the path contained in the specified string.
+    /// </summary>
+    /// <param name="path">A string containing the path from which to obtain root directory information.</param>
+    /// <returns>
+    /// A string containing the root directory of <paramref name="path"/>,
+    /// or <see cref="string.Empty"/> if <paramref name="path"/> does not contain root directory information.
+    /// Returns <see langword="null"/> if <paramref name="path"/> is <see langword="null"/> or is effectively empty.
+    /// </returns>
+    string? GetPathRoot(string? path);
+
+    /// <summary>
     /// Gets the root directory information from the path contained in the specified character span.
     /// </summary>
     /// <param name="path">A read-only span of characters containing the path from which to obtain root directory information.</param>
