@@ -70,6 +70,15 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot create &apos;{0}&apos; because a file or directory with the same name already exists..
+        /// </summary>
+        internal static string CannotCreateAlreadyExistingEntryX {
+            get {
+                return ResourceManager.GetString("CannotCreateAlreadyExistingEntryX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File system does not support reading..
         /// </summary>
         internal static string CannotReadFS {

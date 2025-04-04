@@ -72,6 +72,20 @@ public static class VfsResourceKit
 
     #endregion
 
+    #region Entries
+
+    /// <summary>
+    /// Looks up a localized string similar to:
+    /// <code>
+    /// Cannot create '{path}' because a file or directory with the same name already exists.
+    /// </code>
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The formatted string.</returns>
+    public static string CannotCreateAlreadyExistingEntry(string? path) => string.Format(Resources.CannotCreateAlreadyExistingEntryX, path);
+
+    #endregion
+
     #region Paths
 
     /// <summary>
@@ -104,8 +118,6 @@ public static class VfsResourceKit
 
     #endregion
 
-    #region File system
-
     /// <summary>
     /// Looks up a localized string similar to:
     /// <code>
@@ -121,6 +133,4 @@ public static class VfsResourceKit
     /// </code>
     /// </summary>
     public static string CannotWriteFS => Resources.CannotWriteFS;
-
-    #endregion
 }

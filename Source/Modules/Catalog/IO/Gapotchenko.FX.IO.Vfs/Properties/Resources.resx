@@ -159,4 +159,7 @@
   <data name="CouldNotFindDirectoryX" xml:space="preserve">
     <value>Could not find directory '{0}'.</value>
   </data>
+  <data name="CannotCreateAlreadyExistingEntryX" xml:space="preserve">
+    <value>Cannot create '{0}' because a file or directory with the same name already exists.</value>
+  </data>
 </root>

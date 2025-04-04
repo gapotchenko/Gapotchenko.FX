@@ -8,6 +8,52 @@ namespace Gapotchenko.FX.IO.Vfs.Tests;
 
 partial class FileSystemViewVfsTests
 {
+    #region Create
+
+    [TestMethod]
+    public void FileSystemView_Vfs_File_CreateEmpty()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string fileName = "Empty.txt";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            vfs.CreateFile(filePath).Dispose();
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            Assert.IsTrue(vfs.FileExists(filePath));
+        }
+    }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_File_CreateWithExistingDirectoryNameClash()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string entryName = "Entry";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            string entryPath = vfs.CombinePaths(rootPath, entryName);
+            vfs.CreateDirectory(entryPath);
+            Assert.ThrowsException<UnauthorizedAccessException>(() => vfs.CreateFile(entryPath));
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            string entryPath = vfs.CombinePaths(rootPath, entryName);
+            Assert.IsTrue(vfs.DirectoryExists(entryPath));
+            Assert.IsFalse(vfs.FileExists(entryPath));
+        }
+    }
+
+    #endregion
+
     #region Read/write/append text
 
     [TestMethod]

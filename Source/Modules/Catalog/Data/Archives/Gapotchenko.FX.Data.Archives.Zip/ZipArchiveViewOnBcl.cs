@@ -170,6 +170,11 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             case FileMode.Create or FileMode.OpenOrCreate or FileMode.CreateNew or FileMode.Append:
                 if (entryName is null)
                     break; // invalid file name
+
+                // Ensure that there is no existing directory with the same name.
+                if (DirectoryExistsCore(path))
+                    throw new UnauthorizedAccessException(VfsResourceKit.AccessToPathIsDenied(path.ToString()));
+
                 // Create a new file.
                 return (archive.CreateEntry(entryName), true);
 
@@ -223,12 +228,15 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         for (int i = 1; i <= n; ++i)
         {
-            var subPath = pathParts.AsMemory()[..i];
+            var subPath = new StructuredPath(pathParts.AsMemory()[..i]);
 
             if (!parentExists && DirectoryExistsCore(subPath))
                 continue;
 
-            archive.CreateEntry(VfsPathKit.Join(subPath.Span) + VfsPathKit.DirectorySeparatorChar);
+            if (FileExistsCore(subPath))
+                throw new IOException(VfsResourceKit.CannotCreateAlreadyExistingEntry(subPath.ToString()));
+
+            archive.CreateEntry(VfsPathKit.Join(subPath.Parts.Span) + VfsPathKit.DirectorySeparatorChar);
             parentExists = true;
         }
     }

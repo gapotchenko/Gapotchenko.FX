@@ -279,7 +279,11 @@ public static class FileSystem
     /// <see langword="false"/> if neither directory nor file exists or an error occurs when trying to determine if the specified file system entry exists.
     /// </returns>
     public static bool EntryExists([NotNullWhen(true)] string? path) =>
+#if NET7_0_OR_GREATER
+        Path.Exists(path);
+#else
         File.Exists(path) || Directory.Exists(path);
+#endif
 
     /// <summary>
     /// Waits for a read access to the file.

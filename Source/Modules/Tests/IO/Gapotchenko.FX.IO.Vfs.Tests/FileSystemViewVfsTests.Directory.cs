@@ -15,16 +15,38 @@ partial class FileSystemViewVfsTests
     {
         RunVfsTest(Mutate, Verify);
 
-        const string directoryPath = "Empty";
+        const string directoryName = "Empty";
 
         static void Mutate(IFileSystemView vfs, string rootPath)
         {
-            vfs.CreateDirectory(vfs.CombinePaths(rootPath, directoryPath));
+            vfs.CreateDirectory(vfs.CombinePaths(rootPath, directoryName));
         }
 
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
-            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, directoryPath)));
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, directoryName)));
+        }
+    }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_File_CreateWithExistingFileNameClash()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string entryName = "Entry";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            string entryPath = vfs.CombinePaths(rootPath, entryName);
+            vfs.CreateFile(entryPath).Dispose();
+            Assert.ThrowsException<IOException>(() => vfs.CreateDirectory(entryPath));
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            string entryPath = vfs.CombinePaths(rootPath, entryName);
+            Assert.IsTrue(vfs.FileExists(entryPath));
+            Assert.IsFalse(vfs.DirectoryExists(entryPath));
         }
     }
 
