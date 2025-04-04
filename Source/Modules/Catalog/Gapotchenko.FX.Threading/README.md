@@ -146,9 +146,9 @@ This closes the gap in the mainstream .NET BCL which had a decade-old lack of th
 <summary>Historical context</summary>
 
 One of the main barriers for implementing asynchronous synchronization in .NET was the impossibility to achieve reentrancy.
-That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supported downward propagation of information associated with an asynchronous control flow.
+That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supports downward propagation of information associated with an asynchronous control flow.
 
-However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` module became the world's first (clean) implementation of reentrant synchronization primitives for .NET's asynchronous execution model.
+However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` module became the world's first clean implementation of reentrant asynchronous synchronization primitives for .NET.
 The word "clean" means that it does not use such unreliable techniques as `System.Diagnostics.StackTrace`.
 Previously, clean implementations were considered impossible due to aforementioned limitations of the `System.AsyncLocal<T>` class.
 If you are interested in gory implementation details, take a look at the corresponding [source file](Utils/ExecutionContextHelper.AsyncLocal.cs).
@@ -296,7 +296,8 @@ Result for Consumer #2: 42
 <details>
 <summary>More details on AsyncMonitor</summary>
 
-`Gapotchenko.FX.Threading.AsyncMonitor` class can be used as a drop-in replacement for `System.Threading.Monitor`.
+`Gapotchenko.FX.Threading.AsyncMonitor` class can be used as a drop-in replacement for `System.Threading.Monitor`;
+it was designed with that scenario in mind.
 
 Let's take a look at example.
 The synchronous code below uses `System.Threading.Monitor`:
@@ -386,7 +387,7 @@ class NewCode
 ```
 
 Note the use of `AsyncMonitor.For(object)` method in the code above.
-It allows to imitate the semantics associated with `lock (object)` C# keyword that attaches a monitor to the specified object.
+It allows to imitate the semantics of `lock (object)` C# keyword which attaches a monitor to the specified object.
 `AsyncMonitor.For(object)` method is provided for semantical and ideological compatibility with `System.Threading.Monitor` class in order to ease the translation of existing codebases.
 As a more efficient approach, however, it is recommended to use an instance of `AsyncMonitor` explicitly without "attaching" it to a particular object:
 
