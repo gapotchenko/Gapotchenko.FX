@@ -161,7 +161,9 @@ public abstract class FileSystemViewKit : IFileSystemView
     #region Entries
 
     /// <inheritdoc/>
-    public virtual bool EntryExists([NotNullWhen(true)] string? path) => FileExists(path) || DirectoryExists(path);
+    public virtual bool EntryExists([NotNullWhen(true)] string? path) =>
+        FileExists(path) ||
+        DirectoryExists(path);
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path) =>
@@ -203,6 +205,39 @@ public abstract class FileSystemViewKit : IFileSystemView
 
     /// <inheritdoc/>
     public abstract StringComparer PathComparer { get; }
+
+    /// <inheritdoc/>
+    public virtual string CombinePaths(params IEnumerable<string?> paths)
+    {
+        if (paths is null)
+            throw new ArgumentNullException(nameof(paths));
+
+        char directorySeparatorChar = DirectorySeparatorChar;
+        var builder = new StringBuilder();
+
+        foreach (string? path in paths)
+        {
+            if (string.IsNullOrEmpty(path))
+                continue;
+
+            if (IsPathRooted(path.AsSpan()))
+            {
+                builder.Clear();
+            }
+            else if (builder.Length != 0)
+            {
+                if (!VfsPathKit.IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
+                    !VfsPathKit.IsDirectorySeparator(path[0], directorySeparatorChar))
+                {
+                    builder.Append(directorySeparatorChar);
+                }
+            }
+
+            builder.Append(path);
+        }
+
+        return builder.ToString();
+    }
 
     /// <inheritdoc/>
     [return: NotNullIfNotNull(nameof(path))]
@@ -247,54 +282,14 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
-    public virtual bool IsPathRooted(ReadOnlySpan<char> path) => !GetPathRoot(path).IsEmpty;
-
-    /// <inheritdoc/>
-    public virtual string? GetPathRoot(string? path)
+    public virtual string? GetDirectoryName(string? path)
     {
         if (string.IsNullOrEmpty(path))
             return null;
-        else if (GetPathRoot(path.AsSpan()) is var result && result != null)
+        else if (GetDirectoryName(path.AsSpan()) is var result && result != null)
             return result.ToString();
         else
             return null;
-    }
-
-    /// <inheritdoc/>
-    public virtual ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path) =>
-        VfsPathKit.GetPathRoot(path, DirectorySeparatorChar);
-
-    /// <inheritdoc/>
-    public virtual string CombinePaths(params IEnumerable<string?> paths)
-    {
-        if (paths is null)
-            throw new ArgumentNullException(nameof(paths));
-
-        char directorySeparatorChar = DirectorySeparatorChar;
-        var builder = new StringBuilder();
-
-        foreach (string? path in paths)
-        {
-            if (string.IsNullOrEmpty(path))
-                continue;
-
-            if (IsPathRooted(path.AsSpan()))
-            {
-                builder.Clear();
-            }
-            else if (builder.Length != 0)
-            {
-                if (!VfsPathKit.IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
-                    !VfsPathKit.IsDirectorySeparator(path[0], directorySeparatorChar))
-                {
-                    builder.Append(directorySeparatorChar);
-                }
-            }
-
-            builder.Append(path);
-        }
-
-        return builder.ToString();
     }
 
     /// <inheritdoc/>
@@ -326,6 +321,19 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
+    public virtual string? GetFileName(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return path;
+
+        var result = GetFileName(path.AsSpan());
+        if (path.Length == result.Length)
+            return path;
+
+        return result.ToString();
+    }
+
+    /// <inheritdoc/>
     public virtual ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path)
     {
         int root = GetPathRoot(path).Length;
@@ -340,6 +348,46 @@ public abstract class FileSystemViewKit : IFileSystemView
 
         return path[(i < root ? root : i + 1)..];
     }
+
+    /// <inheritdoc/>
+    public virtual bool IsPathRooted([NotNullWhen(true)] string? path) => IsPathRooted(path.AsSpan());
+
+    /// <inheritdoc/>
+    public virtual bool IsPathRooted(ReadOnlySpan<char> path) => !GetPathRoot(path).IsEmpty;
+
+    /// <inheritdoc/>
+    public virtual string? GetPathRoot(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return null;
+        else if (GetPathRoot(path.AsSpan()) is var result && result != null)
+            return result.ToString();
+        else
+            return null;
+    }
+
+    /// <inheritdoc/>
+    public virtual ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path) =>
+        VfsPathKit.GetPathRoot(path, DirectorySeparatorChar);
+
+    /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(path))]
+    public virtual string? TrimEndingDirectorySeparator(string? path) =>
+        path != null && EndsInDirectorySeparator(path.AsSpan()) && !IsRootPath(path.AsSpan()) ?
+            path[..^1] :
+            path;
+
+    /// <inheritdoc/>
+    public virtual ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) =>
+        EndsInDirectorySeparator(path) && !IsRootPath(path) ?
+            path[..^1] :
+            path;
+
+    bool EndsInDirectorySeparator(ReadOnlySpan<char> path) =>
+        path.Length > 0 &&
+        VfsPathKit.IsDirectorySeparator(path[^1], DirectorySeparatorChar);
+
+    bool IsRootPath(ReadOnlySpan<char> path) => path.Length == GetPathRoot(path).Length;
 
     #endregion
 }

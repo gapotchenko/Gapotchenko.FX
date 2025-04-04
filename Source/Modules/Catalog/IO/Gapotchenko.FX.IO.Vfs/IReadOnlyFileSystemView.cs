@@ -126,9 +126,73 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="FileSystem.PathComparer"/>
     StringComparer PathComparer { get; }
 
+    /// <summary>
+    /// Combines a sequence of strings into a path.
+    /// </summary>
+    /// <param name="paths">A sequence of parts of the path.</param>
+    /// <returns>The combined paths.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
+    string CombinePaths(params IEnumerable<string?> paths);
+
     /// <inheritdoc cref="Path.GetFullPath(string)"/>
     [return: NotNullIfNotNull(nameof(path))]
     string? GetFullPath(string? path);
+
+    /// <summary>
+    /// Returns the directory information for the specified path.
+    /// </summary>
+    /// <param name="path">The path to retrieve the directory information from.</param>
+    /// <returns>
+    /// Directory information for <paramref name="path"/>,
+    /// or <see langword="null"/> if <paramref name="path"/> denotes a root directory or is <see langword="null"/>.
+    /// Returns <see cref="string.Empty"/> if <paramref name="path"/> does not contain directory information.
+    /// </returns>
+    /// <inheritdoc cref="IReadOnlyFileSystemView.GetDirectoryName(ReadOnlySpan{char})"/>
+    string? GetDirectoryName(string? path);
+
+    /// <summary>
+    /// Returns the directory information for the specified path represented by a character span.
+    /// </summary>
+    /// <param name="path">The path to retrieve the directory information from.</param>
+    /// <returns>
+    /// Directory information for <paramref name="path"/>,
+    /// or an empty span representing <see langword="null"/> if <paramref name="path"/> denotes a root directory or is empty.
+    /// Returns an empty span if <paramref name="path"/> does not contain directory information.
+    /// </returns>
+    /// <exception cref="PathTooLongException">
+    /// The <paramref name="path"/> parameter is longer than the maximum length defined by the file system.
+    /// </exception>
+    ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path);
+
+    /// <summary>
+    /// Returns the file name and extension of the specified path string.
+    /// </summary>
+    /// <param name="path">The path string from which to obtain the file name and extension.</param>
+    /// <returns>
+    /// The characters after the last directory separator character in <paramref name="path"/>.
+    /// If the last character of <paramref name="path"/> is a directory separator character, this method returns <see cref="string.Empty"/>.
+    /// If <paramref name="path"/> is <see langword="null"/>, this method returns <see langword="null"/>.
+    /// </returns>
+    [return: NotNullIfNotNull(nameof(path))]
+    string? GetFileName(string? path);
+
+    /// <summary>
+    /// Returns the file name and extension of a file path that is represented by a read-only character span.
+    /// </summary>
+    /// <param name="path">A read-only span that contains the path from which to obtain the file name and extension.</param>
+    /// <returns>
+    /// The characters after the last directory separator character in <paramref name="path"/>.
+    /// If the last character of <paramref name="path"/> is a directory separator character, this method returns an empty span.
+    /// If <paramref name="path"/> represents <see langword="null"/>, this method returns an empty span representing <see langword="null"/>.
+    /// </returns>
+    ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path);
+
+    /// <summary>
+    /// Returns a value indicating whether the specified path string contains a root.
+    /// </summary>
+    /// <param name="path">The path to test.</param>
+    /// <returns><see langword="true"/> if <paramref name="path"/> contains a root; otherwise, <see langword="false"/>.</returns>
+    bool IsPathRooted([NotNullWhen(true)] string? path);
 
     /// <summary>
     /// Returns a value indicating whether the specified path string contains a root.
@@ -160,33 +224,19 @@ public interface IReadOnlyFileSystemView
     ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path);
 
     /// <summary>
-    /// Combines a sequence of strings into a path.
+    /// Trims one trailing directory separator beyond the root of the specified path.
     /// </summary>
-    /// <param name="paths">A sequence of parts of the path.</param>
-    /// <returns>The combined paths.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
-    string CombinePaths(params IEnumerable<string?> paths);
+    /// <param name="path">The path to trim.</param>
+    /// <returns>The <paramref name="path"/> without any trailing directory separators.</returns>
+    [return: NotNullIfNotNull(nameof(path))]
+    string? TrimEndingDirectorySeparator(string? path);
 
     /// <summary>
-    /// Returns the directory information for the specified path represented by a character span.
+    /// Trims one trailing directory separator beyond the root of the specified path.
     /// </summary>
-    /// <param name="path">The path to retrieve the directory information from.</param>
-    /// <returns>
-    /// Directory information for <paramref name="path"/>,
-    /// or an empty span representing <see langword="null"/> if <paramref name="path"/> denotes a root directory or is empty.
-    /// Returns an empty span if <paramref name="path"/> does not contain directory information.
-    /// </returns>
-    /// <exception cref="PathTooLongException">
-    /// The <paramref name="path"/> parameter is longer than the maximum length defined by the file system.
-    /// </exception>
-    ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path);
-
-    /// <summary>
-    /// Returns the file name and extension of a file path that is represented by a read-only character span.
-    /// </summary>
-    /// <param name="path">A read-only span that contains the path from which to obtain the file name and extension.</param>
-    /// <returns>The characters after the last directory separator character in <paramref name="path"/>.</returns>
-    ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path);
+    /// <param name="path">The path to trim.</param>
+    /// <returns>The <paramref name="path"/> without any trailing directory separators.</returns>
+    ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path);
 
     #endregion
 }

@@ -45,9 +45,12 @@ public static class PathEx
     /// <param name="path">The path to trim.</param>
     /// <returns>The path without any trailing directory separators.</returns>
 #endif
-    public static string TrimEndingDirectorySeparator(string path) =>
+    [return: NotNullIfNotNull(nameof(path))]
+    public static string? TrimEndingDirectorySeparator(string? path) =>
 #if TFF_PATH_TRIM_ENDING_DIRECTORY_SEPARATOR
-        Path.TrimEndingDirectorySeparator(path);
+        path is null
+            ? null
+            : Path.TrimEndingDirectorySeparator(path);
 #else
         TrimEndingDirectorySeparatorCore(path);
 #endif

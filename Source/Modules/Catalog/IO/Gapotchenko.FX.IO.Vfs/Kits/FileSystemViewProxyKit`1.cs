@@ -158,8 +158,26 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual StringComparer PathComparer => BaseView.PathComparer;
 
     /// <inheritdoc/>
+    public virtual string CombinePaths(params IEnumerable<string?> paths) => BaseView.CombinePaths(paths);
+
+    /// <inheritdoc/>
     [return: NotNullIfNotNull(nameof(path))]
     public virtual string? GetFullPath(string? path) => BaseView.GetFullPath(path);
+
+    /// <inheritdoc/>
+    public virtual string? GetDirectoryName(string? path) => BaseView.GetDirectoryName(path);
+
+    /// <inheritdoc/>
+    public virtual ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path) => BaseView.GetDirectoryName(path);
+
+    /// <inheritdoc/>
+    public virtual string? GetFileName(string? path) => BaseView.GetFileName(path);
+
+    /// <inheritdoc/>
+    public virtual ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path) => BaseView.GetFileName(path);
+
+    /// <inheritdoc/>
+    public virtual bool IsPathRooted([NotNullWhen(true)] string? path) => BaseView.IsPathRooted(path);
 
     /// <inheritdoc/>
     public virtual bool IsPathRooted(ReadOnlySpan<char> path) => BaseView.IsPathRooted(path);
@@ -171,13 +189,12 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path) => BaseView.GetPathRoot(path);
 
     /// <inheritdoc/>
-    public virtual string CombinePaths(params IEnumerable<string?> paths) => BaseView.CombinePaths(paths);
+    [return: NotNullIfNotNull(nameof(path))]
+    public virtual string? TrimEndingDirectorySeparator(string? path) => BaseView.TrimEndingDirectorySeparator(path);
 
     /// <inheritdoc/>
-    public virtual ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path) => BaseView.GetDirectoryName(path);
-
-    /// <inheritdoc/>
-    public virtual ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path) => BaseView.GetFileName(path);
+    public virtual ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) =>
+         BaseView.TrimEndingDirectorySeparator(path);
 
     #endregion
 

@@ -203,46 +203,6 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override StringComparer PathComparer => FileSystem.PathComparer;
 
-    protected override string GetFullPathCore(string path) => Path.GetFullPath(path);
-
-    public override bool IsPathRooted(ReadOnlySpan<char> path)
-    {
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        return Path.IsPathRooted(path);
-#else
-        return Path.IsPathRooted(path.ToString());
-#endif
-    }
-
-    public override string? GetPathRoot(string? path)
-    {
-#if !(NETCOREAPP || NETSTANDARD2_1_OR_GREATER)
-        // .NET Framework only: argument exception is thrown when path is empty.
-        if (path?.Length == 0)
-            return null;
-#endif
-        return Path.GetPathRoot(path);
-    }
-
-    public override ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path)
-    {
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        var result = Path.GetPathRoot(path);
-        if (result == null && !path.IsEmpty)
-        {
-            // A span that signifies null should not be returned here,
-            // so it gets converted to a span signifying an empty string.
-            result = string.Empty.AsSpan();
-        }
-        return result;
-#else
-        if (path.IsEmpty)
-            return null;
-        else
-            return Path.GetPathRoot(path.ToString()).AsSpan();
-#endif
-    }
-
     public override string CombinePaths(params IEnumerable<string?> paths)
     {
         if (paths is null)
@@ -254,6 +214,19 @@ sealed class LocalFileSystemView : FileSystemViewKit
             arr = arr.Where(x => x != null).ToArray();
 
         return Path.Combine(arr!);
+    }
+
+    protected override string GetFullPathCore(string path) => Path.GetFullPath(path);
+
+    public override string? GetDirectoryName(string? path)
+    {
+#if !(NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
+        // .NET Framework and .NET Core versions older than 2.1:
+        // argument exception is thrown when the path is empty.
+        if (path?.Length == 0)
+            return null;
+#endif
+        return Path.GetDirectoryName(path);
     }
 
     public override ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path)
@@ -268,6 +241,11 @@ sealed class LocalFileSystemView : FileSystemViewKit
 #endif
     }
 
+    public override string? GetFileName(string? path)
+    {
+        return Path.GetFileName(path);
+    }
+
     public override ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path)
     {
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
@@ -279,6 +257,56 @@ sealed class LocalFileSystemView : FileSystemViewKit
             return Path.GetFileName(path.ToString()).AsSpan();
 #endif
     }
+
+    public override bool IsPathRooted([NotNullWhen(true)] string? path)
+    {
+        return Path.IsPathRooted(path);
+    }
+
+    public override bool IsPathRooted(ReadOnlySpan<char> path)
+    {
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        return Path.IsPathRooted(path);
+#else
+        return Path.IsPathRooted(path.ToString());
+#endif
+    }
+
+    public override string? GetPathRoot(string? path)
+    {
+#if !(NETCOREAPP || NETSTANDARD2_1_OR_GREATER)
+        // .NET Framework only: argument exception is thrown when the path is empty.
+        if (path?.Length == 0)
+            return null;
+#endif
+        return Path.GetPathRoot(path);
+    }
+
+    public override ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path)
+    {
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        var result = Path.GetPathRoot(path);
+        if (result == null && !path.IsEmpty)
+        {
+            // A span that signifies null should not be returned here;
+            // converting it to a span signifying an empty string.
+            result = string.Empty.AsSpan();
+        }
+        return result;
+#else
+        if (path.IsEmpty)
+            return null;
+        else
+            return Path.GetPathRoot(path.ToString()).AsSpan();
+#endif
+    }
+
+    [return: NotNullIfNotNull(nameof(path))]
+    public override string? TrimEndingDirectorySeparator(string? path) =>
+        PathEx.TrimEndingDirectorySeparator(path);
+
+    public override ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) =>
+        PathEx.TrimEndingDirectorySeparator(path);
 
     #endregion
 }
