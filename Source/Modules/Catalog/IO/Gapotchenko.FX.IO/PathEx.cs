@@ -12,4 +12,8 @@ namespace Gapotchenko.FX.IO;
 public static partial class PathEx
 {
     // This class is partial. Please take a look at the neighboring source files.
+
+    static bool IsDirectorySeparator(char c) =>
+        c == Path.DirectorySeparatorChar ||
+        c == Path.AltDirectorySeparatorChar;
 }

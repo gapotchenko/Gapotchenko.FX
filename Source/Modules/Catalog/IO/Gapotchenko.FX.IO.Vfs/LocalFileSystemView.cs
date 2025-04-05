@@ -302,19 +302,13 @@ sealed class LocalFileSystemView : FileSystemViewKit
     }
 
     [return: NotNullIfNotNull(nameof(path))]
-    public override string? TrimEndingDirectorySeparator(string? path) =>
-        PathEx.TrimEndingDirectorySeparator(path);
+    public override string? TrimEndingDirectorySeparator(string? path) => PathEx.TrimEndingDirectorySeparator(path);
 
-    public override ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) =>
-        PathEx.TrimEndingDirectorySeparator(path);
+    public override ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) => PathEx.TrimEndingDirectorySeparator(path);
 
-#if NETCOREAPP3_0_OR_GREATER
+    public override bool EndsInDirectorySeparator([NotNullWhen(true)] string? path) => PathEx.EndsInDirectorySeparator(path);
 
-    public override bool EndsInDirectorySeparator([NotNullWhen(true)] string? path) => Path.EndsInDirectorySeparator(path!);
-
-    public override bool EndsInDirectorySeparator(ReadOnlySpan<char> path) => Path.EndsInDirectorySeparator(path);
-
-#endif
+    public override bool EndsInDirectorySeparator(ReadOnlySpan<char> path) => PathEx.EndsInDirectorySeparator(path);
 
     #endregion
 }

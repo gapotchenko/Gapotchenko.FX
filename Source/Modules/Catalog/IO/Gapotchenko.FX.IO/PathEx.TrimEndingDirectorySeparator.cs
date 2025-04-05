@@ -85,7 +85,7 @@ partial class PathEx
 
     [return: NotNullIfNotNull(nameof(path))]
     static string? TrimEndingDirectorySeparatorCore(string? path) =>
-        path != null && EndsInDirectorySeparator(path.AsSpan()) && !IsRootPath(path.AsSpan()) ?
+        path != null && EndsInDirectorySeparator(path) && !IsRootPath(path.AsSpan()) ?
             path[..^1] :
             path;
 
@@ -93,10 +93,6 @@ partial class PathEx
         EndsInDirectorySeparator(path) && !IsRootPath(path) ?
             path[..^1] :
             path;
-
-    static bool EndsInDirectorySeparator(ReadOnlySpan<char> path) =>
-        path.Length > 0 &&
-        IsDirectorySeparator(path[^1]);
 
     static bool IsRootPath(ReadOnlySpan<char> path) => path.Length == GetRootPathLength(path);
 
@@ -114,8 +110,4 @@ partial class PathEx
     }
 
 #endif
-
-    static bool IsDirectorySeparator(char c) =>
-        c == Path.DirectorySeparatorChar ||
-        c == Path.AltDirectorySeparatorChar;
 }
