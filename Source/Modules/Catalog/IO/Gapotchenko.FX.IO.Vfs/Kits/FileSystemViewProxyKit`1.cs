@@ -196,6 +196,12 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) =>
          BaseView.TrimEndingDirectorySeparator(path);
 
+    /// <inheritdoc/>
+    public virtual bool EndsInDirectorySeparator([NotNullWhen(true)] string? path) => BaseView.EndsInDirectorySeparator(path);
+
+    /// <inheritdoc/>
+    public virtual bool EndsInDirectorySeparator(ReadOnlySpan<char> path) => BaseView.EndsInDirectorySeparator(path);
+
     #endregion
 
     /// <summary>

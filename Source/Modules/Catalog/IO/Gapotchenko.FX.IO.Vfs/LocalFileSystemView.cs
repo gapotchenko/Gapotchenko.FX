@@ -308,5 +308,13 @@ sealed class LocalFileSystemView : FileSystemViewKit
     public override ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) =>
         PathEx.TrimEndingDirectorySeparator(path);
 
+#if NETCOREAPP3_0_OR_GREATER
+
+    public override bool EndsInDirectorySeparator([NotNullWhen(true)] string? path) => Path.EndsInDirectorySeparator(path!);
+
+    public override bool EndsInDirectorySeparator(ReadOnlySpan<char> path) => Path.EndsInDirectorySeparator(path);
+
+#endif
+
     #endregion
 }

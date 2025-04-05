@@ -238,5 +238,25 @@ public interface IReadOnlyFileSystemView
     /// <returns>The <paramref name="path"/> without any trailing directory separators.</returns>
     ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path);
 
+    /// <summary>
+    /// Returns a value that indicates whether the specified path ends in a directory separator.
+    /// </summary>
+    /// <param name="path">The path to analyze.</param>
+    /// <returns>
+    /// <see langword="true"/> if the path ends in a directory separator; 
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    bool EndsInDirectorySeparator([NotNullWhen(true)] string? path);
+
+    /// <summary>
+    /// Returns a value that indicates whether the path, specified as a read-only span, ends in a directory separator.
+    /// </summary>
+    /// <param name="path">The path to analyze.</param>
+    /// <returns>
+    /// <see langword="true"/> if the path ends in a directory separator; 
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    bool EndsInDirectorySeparator(ReadOnlySpan<char> path);
+
     #endregion
 }

@@ -373,7 +373,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <inheritdoc/>
     [return: NotNullIfNotNull(nameof(path))]
     public virtual string? TrimEndingDirectorySeparator(string? path) =>
-        path != null && EndsInDirectorySeparator(path.AsSpan()) && !IsRootPath(path.AsSpan()) ?
+        path != null && EndsInDirectorySeparator(path) && !IsRootPath(path.AsSpan()) ?
             path[..^1] :
             path;
 
@@ -383,11 +383,16 @@ public abstract class FileSystemViewKit : IFileSystemView
             path[..^1] :
             path;
 
-    bool EndsInDirectorySeparator(ReadOnlySpan<char> path) =>
+    bool IsRootPath(ReadOnlySpan<char> path) => path.Length == GetPathRoot(path).Length;
+
+    /// <inheritdoc/>
+    public virtual bool EndsInDirectorySeparator([NotNullWhen(true)] string? path) =>
+        EndsInDirectorySeparator(path.AsSpan());
+
+    /// <inheritdoc/>
+    public virtual bool EndsInDirectorySeparator(ReadOnlySpan<char> path) =>
         path.Length > 0 &&
         VfsPathKit.IsDirectorySeparator(path[^1], DirectorySeparatorChar);
-
-    bool IsRootPath(ReadOnlySpan<char> path) => path.Length == GetPathRoot(path).Length;
 
     #endregion
 }

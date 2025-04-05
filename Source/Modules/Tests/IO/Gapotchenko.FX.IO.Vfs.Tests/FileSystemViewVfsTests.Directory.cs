@@ -65,7 +65,7 @@ partial class FileSystemViewVfsTests
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
             Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, directoryPath)));
-            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, Path.GetDirectoryName(directoryPath))));
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, vfs.GetDirectoryName(directoryPath))));
         }
     }
 
@@ -79,15 +79,15 @@ partial class FileSystemViewVfsTests
         static void Mutate(IFileSystemView vfs, string rootPath)
         {
             vfs.CreateDirectory(vfs.CombinePaths(rootPath, directoryPath, "..", ".."));
-            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, Path.GetDirectoryName(Path.GetDirectoryName(directoryPath)))));
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, vfs.GetDirectoryName(vfs.GetDirectoryName(directoryPath)))));
             vfs.CreateDirectory(vfs.CombinePaths(rootPath, directoryPath));
         }
 
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
             Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, directoryPath)));
-            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, Path.GetDirectoryName(directoryPath))));
-            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, Path.GetDirectoryName(Path.GetDirectoryName(directoryPath)))));
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, vfs.GetDirectoryName(directoryPath))));
+            Assert.IsTrue(vfs.DirectoryExists(vfs.CombinePaths(rootPath, vfs.GetDirectoryName(vfs.GetDirectoryName(directoryPath)))));
         }
     }
 

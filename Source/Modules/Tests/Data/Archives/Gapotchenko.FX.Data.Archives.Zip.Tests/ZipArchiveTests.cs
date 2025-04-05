@@ -159,7 +159,7 @@ public abstract partial class ZipArchiveTests
         Assert.IsTrue(archive.FileExists(path));
         archive.DeleteFile(path);
         Assert.IsFalse(archive.FileExists(path));
-        Assert.IsTrue(archive.DirectoryExists(Path.GetDirectoryName(path)));
+        Assert.IsTrue(archive.DirectoryExists(archive.GetDirectoryName(path)));
 
         Assert.ThrowsException<FileNotFoundException>(() => archive.DeleteFile(path));
     }

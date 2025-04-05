@@ -162,4 +162,33 @@ partial class FileSystemViewVfsTests
             }
         }
     }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_Path_EndsInDirectorySeparator()
+    {
+        RunVfsTest(Test);
+
+        static void Test(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            string dsc = $"{vfs.DirectorySeparatorChar}";
+
+            Assert.IsFalse(EndsInDirectorySeparator(null));
+            Assert.IsFalse(EndsInDirectorySeparator(""));
+            Assert.IsFalse(EndsInDirectorySeparator("entry"));
+            Assert.IsTrue(EndsInDirectorySeparator(dsc));
+            Assert.IsFalse(EndsInDirectorySeparator(dsc + "entry"));
+            Assert.IsTrue(EndsInDirectorySeparator("entry" + dsc));
+            Assert.IsFalse(EndsInDirectorySeparator("container" + dsc + "entry"));
+
+            bool EndsInDirectorySeparator(string? path)
+            {
+                bool resultA = vfs.EndsInDirectorySeparator(path);
+                bool resultB = vfs.EndsInDirectorySeparator(path.AsSpan());
+                Assert.AreEqual(resultA, resultB);
+                if (resultA)
+                    Assert.IsNotNull(path);
+                return resultA;
+            }
+        }
+    }
 }

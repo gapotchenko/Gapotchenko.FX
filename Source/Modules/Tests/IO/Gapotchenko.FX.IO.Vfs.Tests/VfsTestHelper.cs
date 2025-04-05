@@ -4,10 +4,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-namespace Gapotchenko.FX.IO.Vfs.Tests;
-
-using Gapotchenko.FX.Text;
 using System.Text;
+
+namespace Gapotchenko.FX.IO.Vfs.Tests;
 
 public static class VfsTestHelper
 {
@@ -20,13 +19,13 @@ public static class VfsTestHelper
         foreach (string entryPath in entriesPaths)
         {
             string fullPath = vfs.CombinePaths(directoryPath, entryPath);
-            if (IsDirectoryName(vfs, entryPath))
+            if (vfs.EndsInDirectorySeparator(entryPath))
             {
                 vfs.CreateDirectory(fullPath);
             }
             else
             {
-                string? fullDirectoryPath = Path.GetDirectoryName(fullPath);
+                string? fullDirectoryPath = vfs.GetDirectoryName(fullPath);
                 if (fullDirectoryPath != null)
                     vfs.CreateDirectory(fullDirectoryPath);
 
@@ -38,17 +37,12 @@ public static class VfsTestHelper
         }
     }
 
-    public static bool IsDirectoryName(IReadOnlyFileSystemView vfs, string name) =>
-        name.EndsWith('/') ||
-        name.EndsWith(vfs.DirectorySeparatorChar);
-
     public static byte[] GetDefaultFileContents(IReadOnlyFileSystemView vfs, string path)
     {
-        _ = vfs;
         return Encoding.UTF8.GetBytes(
             string.Format(
                 "This is default contents of the '{0}' file.",
-                Path.GetFileName(path)));
+                vfs.GetFileName(path)));
     }
 
     public static DateTime SpecialUtcTime1 { get; } = GetSpecialUtcTime(1);

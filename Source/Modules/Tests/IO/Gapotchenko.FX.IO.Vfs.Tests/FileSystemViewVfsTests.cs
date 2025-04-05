@@ -18,7 +18,7 @@ public abstract partial class FileSystemViewVfsTests
 
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
-            Assert.IsTrue(vfs.IsPathRooted(rootPath.AsSpan()));
+            Assert.IsTrue(vfs.IsPathRooted(rootPath));
             Assert.IsTrue(vfs.DirectoryExists(rootPath));
             Assert.IsFalse(vfs.EnumerateEntries(rootPath).Any());
         }

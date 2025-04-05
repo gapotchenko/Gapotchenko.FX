@@ -27,15 +27,14 @@ public static class AssertExtensions
             .Select(x => vfs.GetFullPath(vfs.CombinePaths(directoryPath, x)))
             .ToHashSet(vfs.PathComparer);
 
-        bool useDirectoryTrail = expected.Any(x => VfsTestHelper.IsDirectoryName(vfs, x));
+        bool useDirectoryTrail = expected.Any(vfs.EndsInDirectorySeparator);
         if (useDirectoryTrail)
             actual = actual.Select(x => vfs.DirectoryExists(x) ? x + vfs.DirectorySeparatorChar : x);
 
         // Add implied subdirectories if they are missing.
         foreach (string entryPath in expected.ToList())
         {
-            string? entryDirectoryPath = Path.GetDirectoryName(entryPath);
-            entryDirectoryPath = entryDirectoryPath?.Replace(Path.DirectorySeparatorChar, vfs.DirectorySeparatorChar);
+            string? entryDirectoryPath = vfs.GetDirectoryName(entryPath);
             if (!string.IsNullOrEmpty(entryDirectoryPath) &&
                 !vfs.PathComparer.Equals(entryDirectoryPath, directoryPath))
             {
