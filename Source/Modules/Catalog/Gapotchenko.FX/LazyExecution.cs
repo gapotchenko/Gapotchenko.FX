@@ -13,13 +13,13 @@ namespace Gapotchenko.FX;
 /// </summary>
 /// <remarks>
 /// <see cref="LazyExecution"/> is not thread-safe.
-/// For thread-safe lazy execution, please use <see cref="Threading.ExecuteOnce"/> struct.
+/// For thread-safe lazy execution, please use <see cref="Threading.ExecuteOnce"/> structure.
 /// </remarks>
 [DebuggerDisplay("IsExecuted={IsExecuted}")]
 public struct LazyExecution
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="LazyExecution"/> struct.
+    /// Initializes a new instance of the <see cref="LazyExecution"/> structure.
     /// </summary>
     /// <param name="action">The action.</param>
     public LazyExecution(Action action)

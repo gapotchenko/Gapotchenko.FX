@@ -12,7 +12,7 @@ namespace Gapotchenko.FX;
 public static class LazyEvaluation
 {
     /// <summary>
-    /// Creates a new instance of the <see cref="LazyEvaluation{T}"/> struct.
+    /// Creates a new instance of the <see cref="LazyEvaluation{T}"/> structure.
     /// When lazy evaluation occurs, the default constructor of the target type <typeparamref name="T"/> is used.
     /// </summary>
     /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
@@ -20,7 +20,7 @@ public static class LazyEvaluation
     public static LazyEvaluation<T> Create<T>() where T : new() => new(() => new T());
 
     /// <summary>
-    /// Creates a new instance of the <see cref="LazyEvaluation{T}"/> struct.
+    /// Creates a new instance of the <see cref="LazyEvaluation{T}"/> structure.
     /// </summary>
     /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>

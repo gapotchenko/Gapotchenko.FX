@@ -34,7 +34,7 @@ namespace Gapotchenko.FX.Threading;
 public struct EvaluateOnce<T>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> structure.
     /// </summary>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     public EvaluateOnce(Func<T> valueFactory) :
@@ -43,7 +43,7 @@ public struct EvaluateOnce<T>
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> structure.
     /// </summary>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     /// <param name="syncLock">
@@ -58,7 +58,7 @@ public struct EvaluateOnce<T>
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> structure.
     /// </summary>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     /// <param name="syncLock">

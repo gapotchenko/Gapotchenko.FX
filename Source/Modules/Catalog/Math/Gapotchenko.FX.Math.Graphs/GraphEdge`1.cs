@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Math.Graphs;
 /// </summary>
 /// <typeparam name="TVertex">The type of end-vertices in the edge.</typeparam>
 /// <remarks>
-/// Initializes a new instance of <see cref="GraphEdge{TVertex}"/> struct with source and destination end-vertices.
+/// Initializes a new instance of <see cref="GraphEdge{TVertex}"/> structure with source and destination end-vertices.
 /// </remarks>
 /// <param name="from">The source vertex.</param>
 /// <param name="to">The destination vertex.</param>

@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Threading;
 public static class EvaluateOnce
 {
     /// <summary>
-    /// Creates a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// Creates a new instance of the <see cref="EvaluateOnce{T}"/> structure.
     /// When lazy evaluation occurs, the default constructor of the target type <typeparamref name="T"/> is used.
     /// </summary>
     /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
@@ -20,7 +20,7 @@ public static class EvaluateOnce
     public static EvaluateOnce<T> Create<T>() where T : new() => new(() => new T());
 
     /// <summary>
-    /// Creates a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// Creates a new instance of the <see cref="EvaluateOnce{T}"/> structure.
     /// </summary>
     /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
@@ -28,7 +28,7 @@ public static class EvaluateOnce
     public static EvaluateOnce<T> Create<T>(Func<T> valueFactory) => new(valueFactory);
 
     /// <summary>
-    /// Creates a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// Creates a new instance of the <see cref="EvaluateOnce{T}"/> structure.
     /// </summary>
     /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
@@ -40,7 +40,7 @@ public static class EvaluateOnce
     public static EvaluateOnce<T> Create<T>(Func<T> valueFactory, object? syncLock) => new(valueFactory, syncLock);
 
     /// <summary>
-    /// Creates a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// Creates a new instance of the <see cref="EvaluateOnce{T}"/> structure.
     /// </summary>
     /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
