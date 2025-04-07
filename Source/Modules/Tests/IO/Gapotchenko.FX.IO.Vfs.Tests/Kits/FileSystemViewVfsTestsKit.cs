@@ -4,10 +4,10 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-namespace Gapotchenko.FX.IO.Vfs.Tests;
+namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
 [TestCategory("vfs")]
-public abstract partial class FileSystemViewVfsTests
+public abstract partial class FileSystemViewVfsTestsKit
 {
     // This class is partial. Please take a look at the neighboring source files.
 

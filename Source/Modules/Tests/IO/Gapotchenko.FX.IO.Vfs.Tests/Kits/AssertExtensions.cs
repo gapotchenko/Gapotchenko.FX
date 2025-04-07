@@ -6,7 +6,7 @@
 
 using Gapotchenko.FX.Linq;
 
-namespace Gapotchenko.FX.IO.Vfs.Tests;
+namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class AssertExtensions

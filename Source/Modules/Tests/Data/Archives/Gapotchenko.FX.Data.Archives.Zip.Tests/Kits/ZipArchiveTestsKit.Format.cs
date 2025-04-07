@@ -4,9 +4,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
+namespace Gapotchenko.FX.Data.Archives.Zip.Tests.Kits;
 
-partial class ZipArchiveTests
+partial class ZipArchiveTestsKit
 {
     protected virtual IDataArchiveFormat<IZipArchive, ZipArchiveOptions>? Format => null;
 

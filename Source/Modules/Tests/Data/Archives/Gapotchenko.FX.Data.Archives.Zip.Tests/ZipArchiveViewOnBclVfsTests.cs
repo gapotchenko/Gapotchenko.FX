@@ -1,13 +1,13 @@
 ﻿using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
-using Gapotchenko.FX.IO.Vfs.Tests;
+using Gapotchenko.FX.IO.Vfs.Tests.Kits;
 using System.IO.Compression;
 
 namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
 
 [TestClass]
 [TestCategory("bcl")]
-public sealed class ZipArchiveViewOnBclVfsTests : FileSystemViewVfsTests
+public sealed class ZipArchiveViewOnBclVfsTests : FileSystemViewVfsTestsKit
 {
     protected override IFileSystemView CreateVfs(out string rootPath)
     {

@@ -1,6 +1,6 @@
 ﻿using Gapotchenko.FX.IO.Kits;
 
-namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
+namespace Gapotchenko.FX.Data.Archives.Zip.Tests.Kits;
 
 sealed class StreamDiagnostics(Stream baseStream) : StreamProxyKit(baseStream)
 {

@@ -4,9 +4,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-namespace Gapotchenko.FX.IO.Vfs.Tests;
+namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
-partial class FileSystemViewVfsTests
+partial class FileSystemViewVfsTestsKit
 {
     #region Create
 
@@ -109,9 +109,9 @@ partial class FileSystemViewVfsTests
     [TestMethod]
     public void FileSystemView_Vfs_File_Copy()
     {
-        var creationTime = VfsTestHelper.SpecialUtcTime1;
-        var lastWriteTime = VfsTestHelper.SpecialUtcTime2;
-        var lastAccessTime = VfsTestHelper.SpecialUtcTime3;
+        var creationTime = VfsTestKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestKit.SpecialUtcTime3;
 
         RunVfsTest(Mutate, Verify);
 
@@ -202,9 +202,9 @@ partial class FileSystemViewVfsTests
     [DataRow(false), DataRow(true)]
     public void FileSystemView_Vfs_File_CopyTo(bool reverse)
     {
-        var creationTime = VfsTestHelper.SpecialUtcTime1;
-        var lastWriteTime = VfsTestHelper.SpecialUtcTime2;
-        var lastAccessTime = VfsTestHelper.SpecialUtcTime3;
+        var creationTime = VfsTestKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestKit.SpecialUtcTime3;
 
         using var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
 
@@ -297,9 +297,9 @@ partial class FileSystemViewVfsTests
     [TestMethod]
     public void FileSystemView_Vfs_File_Move()
     {
-        var creationTime = VfsTestHelper.SpecialUtcTime1;
-        var lastWriteTime = VfsTestHelper.SpecialUtcTime2;
-        var lastAccessTime = VfsTestHelper.SpecialUtcTime3;
+        var creationTime = VfsTestKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestKit.SpecialUtcTime3;
 
         RunVfsTest(Mutate, Verify);
 
@@ -364,9 +364,9 @@ partial class FileSystemViewVfsTests
     [DataRow(false), DataRow(true)]
     public void FileSystemView_Vfs_File_MoveTo(bool reverse)
     {
-        var creationTime = VfsTestHelper.SpecialUtcTime1;
-        var lastWriteTime = VfsTestHelper.SpecialUtcTime2;
-        var lastAccessTime = VfsTestHelper.SpecialUtcTime3;
+        var creationTime = VfsTestKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestKit.SpecialUtcTime3;
 
         using var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
 

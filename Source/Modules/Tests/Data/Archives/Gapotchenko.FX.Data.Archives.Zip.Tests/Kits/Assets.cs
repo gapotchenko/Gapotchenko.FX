@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions;
 
-namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
+namespace Gapotchenko.FX.Data.Archives.Zip.Tests.Kits;
 
 static class Assets
 {
@@ -8,7 +8,7 @@ static class Assets
     {
         string path = Path.Combine(
             typeof(Assets).Assembly.GetAssemblyLocation(),
-            "../../../../Assets",
+            "../../../../Kits/Assets",
             fileName);
 
         Stream stream = File.OpenRead(path);

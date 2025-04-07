@@ -4,9 +4,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-namespace Gapotchenko.FX.IO.Vfs.Tests;
+namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
-partial class FileSystemViewVfsTests
+partial class FileSystemViewVfsTestsKit
 {
     [TestMethod]
     public void FileSystemView_Vfs_Capabilities_LastWriteTime()
@@ -16,7 +16,7 @@ partial class FileSystemViewVfsTests
         void Test(IFileSystemView vfs, string rootPath)
         {
             string path = vfs.CombinePaths(rootPath, "Entry");
-            var time = VfsTestHelper.SpecialUtcTime1;
+            var time = VfsTestKit.SpecialUtcTime1;
 
             if (vfs.SupportsLastWriteTime)
             {
@@ -56,7 +56,7 @@ partial class FileSystemViewVfsTests
         void Test(IFileSystemView vfs, string rootPath)
         {
             string path = vfs.CombinePaths(rootPath, "Entry");
-            var time = VfsTestHelper.SpecialUtcTime1;
+            var time = VfsTestKit.SpecialUtcTime1;
 
             if (vfs.SupportsCreationTime)
             {
@@ -96,7 +96,7 @@ partial class FileSystemViewVfsTests
         void Test(IFileSystemView vfs, string rootPath)
         {
             string path = vfs.CombinePaths(rootPath, "Entry");
-            var time = VfsTestHelper.SpecialUtcTime1;
+            var time = VfsTestKit.SpecialUtcTime1;
 
             if (vfs.SupportsLastAccessTime)
             {
