@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.IO.Vfs.Properties;
 using System.Diagnostics;
 
@@ -24,25 +25,6 @@ public readonly partial struct VfsSearchExpression
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VfsSearchExpression"/> structure for the specified search expression.
-    /// </summary>
-    /// <inheritdoc cref="VfsSearchExpression(string?, char, VfsSearchExpressionOptions)"/>
-    public VfsSearchExpression(string? pattern, char directorySeparatorChar) :
-        this(pattern, directorySeparatorChar, VfsSearchExpressionOptions.None)
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VfsSearchExpression"/> structure for the specified search expression,
-    /// with options that modify the pattern interpretation.
-    /// </summary>
-    /// <inheritdoc cref="VfsSearchExpression(string?, char, MatchType, VfsSearchExpressionOptions)"/>
-    public VfsSearchExpression(string? pattern, char directorySeparatorChar, VfsSearchExpressionOptions options) :
-        this(pattern, directorySeparatorChar, MatchType.Win32, options)
-    {
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="VfsSearchExpression"/> structure for the specified search expression,
     /// with match type and options that modify the pattern interpretation.
     /// </summary>
@@ -58,7 +40,11 @@ public readonly partial struct VfsSearchExpression
     /// <param name="options">
     /// A bitwise combination of the enumeration values that modify the search expression behavior.
     /// </param>
-    public VfsSearchExpression(string? pattern, char directorySeparatorChar, MatchType matchType, VfsSearchExpressionOptions options)
+    public VfsSearchExpression(
+        string? pattern,
+        char directorySeparatorChar = VfsPathKit.DirectorySeparatorChar,
+        MatchType matchType = MatchType.Win32,
+        VfsSearchExpressionOptions options = VfsSearchExpressionOptions.None)
     {
         if (matchType is not (MatchType.Simple or MatchType.Win32))
             throw new ArgumentOutOfRangeException(nameof(matchType), Resources.EnumValueIsOutOfLegalRange);
@@ -80,11 +66,7 @@ public readonly partial struct VfsSearchExpression
     /// <see langword="true"/> if the search expression finds a match;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public bool IsMatch(ReadOnlySpan<char> input)
-    {
-        var impl = m_Impl;
-        return impl is null || impl.IsMatch(input);
-    }
+    public bool IsMatch(ReadOnlySpan<char> input) => m_Impl?.IsMatch(input) ?? true;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly IImpl? m_Impl;
