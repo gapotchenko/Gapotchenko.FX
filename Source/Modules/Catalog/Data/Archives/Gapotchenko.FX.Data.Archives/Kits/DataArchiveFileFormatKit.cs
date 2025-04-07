@@ -5,13 +5,12 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.IO.Vfs;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Archives.Kits;
 
 /// <summary>
-/// Provides a base implementation for the <see cref="IDataArchiveFileFormat{TArchive, TOptions}"/> interface.
+/// Provides the base implementation of <see cref="IDataArchiveFileFormat{TArchive, TOptions}"/> interface.
 /// </summary>
 /// <remarks/>
 /// <inheritdoc/>
@@ -21,16 +20,13 @@ public abstract class DataArchiveFileFormatKit<TArchive, TOptions> : IDataArchiv
     where TOptions : DataArchiveOptions
 {
     /// <inheritdoc/>
-    public IReadOnlyList<string> FileExtensions =>
-        m_FileExtensions ??=
-        new ReadOnlyCollection<string>(FileExtensionsCore);
+    public IReadOnlyList<string> FileExtensions => m_CachedFileExtensions ??= GetFileExtensionsCore();
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IReadOnlyList<string>? m_FileExtensions;
+    IReadOnlyList<string>? m_CachedFileExtensions;
 
     /// <inheritdoc cref="FileExtensions"/>
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    protected abstract string[] FileExtensionsCore { get; }
+    protected abstract IReadOnlyList<string> GetFileExtensionsCore();
 
     IVirtualFileSystem IVfsFormat.Create(Stream stream, bool leaveOpen, VfsOptions? options) =>
         Create(stream, leaveOpen, (TOptions?)options);
@@ -71,14 +67,26 @@ public abstract class DataArchiveFileFormatKit<TArchive, TOptions> : IDataArchiv
         if (stream is null)
             throw new ArgumentNullException(nameof(stream));
 
+        bool hasException = false;
         long oldPosition = stream.Position;
         try
         {
             return IsMountableCore(stream, options);
         }
+        catch
+        {
+            hasException = true;
+            throw;
+        }
         finally
         {
-            stream.Position = oldPosition;
+            try
+            {
+                stream.Position = oldPosition;
+            }
+            catch (IOException) when (hasException)
+            {
+            }
         }
     }
 

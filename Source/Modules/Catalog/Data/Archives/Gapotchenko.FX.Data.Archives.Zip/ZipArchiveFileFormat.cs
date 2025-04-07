@@ -13,7 +13,7 @@ sealed class ZipArchiveFileFormat : DataArchiveFileFormatKit<IZipArchive, ZipArc
 {
     public static ZipArchiveFileFormat Instance { get; } = new();
 
-    protected override string[] FileExtensionsCore => [".zip"];
+    protected override IReadOnlyList<string> GetFileExtensionsCore() => [".zip"];
 
     protected override IZipArchive CreateCore(Stream stream, bool leaveOpen, ZipArchiveOptions? options)
     {
