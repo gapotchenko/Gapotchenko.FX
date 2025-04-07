@@ -2,6 +2,12 @@
 #define TFF_READONLYSPAN_SEQUENCEEQUAL
 #endif
 
+#if NET8_0_OR_GREATER
+#define TFF_READONLYSPAN_CONTAINSANY
+#endif
+
+using System.Runtime.CompilerServices;
+
 namespace Gapotchenko.FX.Memory;
 
 /// <summary>
@@ -103,4 +109,95 @@ public static partial class ReadOnlySpanPolyfills
             valueLength <= spanLength &&
             span[(spanLength - valueLength)..].SequenceEqual(value, comparer);
     }
+
+    #region ContainsAny
+
+    /// <summary>
+    /// <para>
+    /// Searches for an occurrence of <paramref name="value0"/> or <paramref name="value1"/>.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
+    /// </summary>
+    /// <param name="span">The span to search.</param>
+    /// <param name="value0">One of the values to search for.</param>
+    /// <param name="value1">One of the values to search for.</param>
+    /// <returns>
+    /// <see langword="true"/> if found.
+    /// If not found, returns <see langword="false"/>.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ContainsAny<T>(
+#if !TFF_READONLYSPAN_CONTAINSANY
+        this
+#endif
+        ReadOnlySpan<T> span, T value0, T value1) where T : IEquatable<T>
+    {
+#if TFF_READONLYSPAN_CONTAINSANY
+        return span.ContainsAny(value0, value1);
+#else
+        return span.IndexOfAny(value0, value1) >= 0;
+#endif
+    }
+
+    /// <summary>
+    /// <para>
+    /// Searches for an occurrence of <paramref name="value0"/>, <paramref name="value1"/> or <paramref name="value2"/>.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
+    /// </summary>
+    /// <param name="span">The span to search.</param>
+    /// <param name="value0">One of the values to search for.</param>
+    /// <param name="value1">One of the values to search for.</param>
+    /// <param name="value2">One of the values to search for.</param>
+    /// <returns>
+    /// <see langword="true"/> if found.
+    /// If not found, returns <see langword="false"/>.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ContainsAny<T>(
+#if !TFF_READONLYSPAN_CONTAINSANY
+        this
+#endif
+        ReadOnlySpan<T> span, T value0, T value1, T value2) where T : IEquatable<T>
+    {
+#if TFF_READONLYSPAN_CONTAINSANY
+        return span.ContainsAny(value0, value1, value2);
+#else
+        return span.IndexOfAny(value0, value1, value2) >= 0;
+#endif
+    }
+
+    /// <summary>
+    /// <para>
+    /// Searches for an occurrence of any of the specified <paramref name="values"/>.
+    /// </para>
+    /// <para>
+    /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
+    /// </summary>
+    /// <param name="span">The span to search.</param>
+    /// <param name="values">The set of values to search for.</param>
+    /// <returns>
+    /// <see langword="true"/> if found.
+    /// If not found, returns <see langword="false"/>.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool ContainsAny<T>(
+#if !TFF_READONLYSPAN_CONTAINSANY
+        this
+#endif
+        ReadOnlySpan<T> span, ReadOnlySpan<T> values) where T : IEquatable<T>
+    {
+#if TFF_READONLYSPAN_CONTAINSANY
+        return span.ContainsAny(values);
+#else
+        return span.IndexOfAny(values) >= 0;
+#endif
+    }
+
+    #endregion
 }
