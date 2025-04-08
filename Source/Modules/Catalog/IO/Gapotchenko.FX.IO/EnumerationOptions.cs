@@ -4,6 +4,7 @@
 
 #if !TFF_IO_ENUMERATIONOPTIONS
 
+#pragma warning disable IDE1006 // Naming Styles
 #pragma warning disable IDE0130 // Namespace does not match folder structure
 
 namespace System.IO;
@@ -25,14 +26,28 @@ public class EnumerationOptions
     {
     }
 
+    int _maxRecursionDepth = int.MaxValue;
+
     /// <summary>
-    /// Gets or sets the attributes to skip.
+    /// Gets or sets a value that indicates whether to recurse into subdirectories while enumerating.
     /// </summary>
     /// <value>
-    /// The attributes to skip.
-    /// The default is <c>FileAttributes.Hidden | FileAttributes.System</c>.
+    /// <see langword="true"/> to recurse into subdirectories;
+    /// otherwise, <see langword="false"/>.
+    /// The default is <see langword="false"/>.
     /// </value>
-    public FileAttributes AttributesToSkip { get; set; } = FileAttributes.Hidden | FileAttributes.System;
+    public bool RecurseSubdirectories { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value that indicates whether to skip files or directories when access is denied
+    /// (for example, <see cref="UnauthorizedAccessException"/> or <see cref="System.Security.SecurityException"/>).
+    /// </summary>
+    /// <value>
+    /// <see langword="true"/> to skip inaccessible files or directories;
+    /// otherwise, <see langword="false"/>.
+    /// The default is <see langword="true"/>.
+    /// </value>
+    public bool IgnoreInaccessible { get; set; } = true;
 
     /// <summary>
     /// Gets or sets the suggested buffer size, in bytes.
@@ -56,28 +71,13 @@ public class EnumerationOptions
     public int BufferSize { get; set; }
 
     /// <summary>
-    /// Gets or sets a value that indicates whether to skip files or directories when access is denied
-    /// (for example, <see cref="UnauthorizedAccessException"/> or <see cref="System.Security.SecurityException"/>).
+    /// Gets or sets the attributes to skip.
     /// </summary>
     /// <value>
-    /// <see langword="true"/> to skip inaccessible files or directories;
-    /// otherwise, <see langword="false"/>.
-    /// The default is <see langword="true"/>.
+    /// The attributes to skip.
+    /// The default is <c>FileAttributes.Hidden | FileAttributes.System</c>.
     /// </value>
-    public bool IgnoreInaccessible { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets the case-matching behavior.
-    /// </summary>
-    /// <value>
-    /// One of the enumeration values that indicates the case-matching behavior.
-    /// The default is <see cref="MatchCasing.PlatformDefault"/>.
-    /// </value>
-    /// <remarks>
-    /// For APIs that allow specifying a match expression, this property allows you to specify the case matching behavior.
-    /// The default is to match platform defaults, which are gleaned from the case sensitivity of the temporary folder.
-    /// </remarks>
-    public MatchCasing MatchCasing { get; set; }
+    public FileAttributes AttributesToSkip { get; set; } = FileAttributes.Hidden | FileAttributes.System;
 
     /// <summary>
     /// Gets or sets the match type.
@@ -93,6 +93,19 @@ public class EnumerationOptions
     public MatchType MatchType { get; set; }
 
     /// <summary>
+    /// Gets or sets the case-matching behavior.
+    /// </summary>
+    /// <value>
+    /// One of the enumeration values that indicates the case-matching behavior.
+    /// The default is <see cref="MatchCasing.PlatformDefault"/>.
+    /// </value>
+    /// <remarks>
+    /// For APIs that allow specifying a match expression, this property allows you to specify the case matching behavior.
+    /// The default is to match platform defaults, which are gleaned from the case sensitivity of the temporary folder.
+    /// </remarks>
+    public MatchCasing MatchCasing { get; set; }
+
+    /// <summary>
     /// Gets or sets a value that indicates the maximum directory depth to recurse while enumerating,
     /// when <see cref="RecurseSubdirectories"/> is set to <see langword="true"/>.
     /// </summary>
@@ -104,17 +117,17 @@ public class EnumerationOptions
     /// If <see cref="MaxRecursionDepth"/> is set to a negative number, the default value <see cref="int.MaxValue"/> is used.
     /// If <see cref="MaxRecursionDepth"/> is set to zero, enumeration returns the contents of the initial directory.
     /// </remarks>
-    public int MaxRecursionDepth { get; set; } = int.MaxValue;
+    public int MaxRecursionDepth
+    {
+        get => _maxRecursionDepth;
+        set
+        {
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), value, "The value must be a non-negative number.");
 
-    /// <summary>
-    /// Gets or sets a value that indicates whether to recurse into subdirectories while enumerating.
-    /// </summary>
-    /// <value>
-    /// <see langword="true"/> to recurse into subdirectories;
-    /// otherwise, <see langword="false"/>.
-    /// The default is <see langword="false"/>.
-    /// </value>
-    public bool RecurseSubdirectories { get; set; }
+            _maxRecursionDepth = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets a value that indicates whether to return the special directory entries "." and "..".
