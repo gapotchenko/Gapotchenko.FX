@@ -28,7 +28,7 @@ abstract class ZipArchiveBase : FileSystemViewKit, IZipArchive
     public sealed override StringComparer PathComparer => m_PathComparer;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private protected static StringComparer m_PathComparer => StringComparer.InvariantCulture;
+    private protected static StringComparer m_PathComparer => StringComparer.Ordinal;
 
     /// <inheritdoc/>
     protected sealed override string GetFullPathCore(string path) =>

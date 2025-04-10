@@ -5,7 +5,7 @@ using Gapotchenko.FX.IO.Vfs.Tests.Kits;
 namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
 
 [TestClass]
-public sealed class ZipArchiveVfsTests : FileSystemViewVfsTestsKit
+public sealed class ZipArchiveVfsTests : FileSystemViewVfsTestKit
 {
     protected override IFileSystemView CreateVfs(out string rootPath)
     {

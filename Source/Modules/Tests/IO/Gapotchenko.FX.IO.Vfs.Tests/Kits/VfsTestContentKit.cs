@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
-public static class VfsTestKit
+public static class VfsTestContentKit
 {
     public static void CreateHierarchy(
         IFileSystemView vfs,
@@ -20,7 +20,9 @@ public static class VfsTestKit
         {
             string fullPath = vfs.CombinePaths(directoryPath, entryPath);
             if (vfs.EndsInDirectorySeparator(entryPath))
+            {
                 vfs.CreateDirectory(fullPath);
+            }
             else
             {
                 string? fullDirectoryPath = vfs.GetDirectoryName(fullPath);

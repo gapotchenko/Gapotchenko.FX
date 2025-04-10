@@ -6,7 +6,7 @@
 
 namespace Gapotchenko.FX.Data.Archives.Zip.Tests.Kits;
 
-partial class ZipArchiveTestsKit
+partial class ZipArchiveTestKit
 {
     protected virtual IDataArchiveFormat<IZipArchive, ZipArchiveOptions>? Format => null;
 

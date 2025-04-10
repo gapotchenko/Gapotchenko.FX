@@ -5,7 +5,7 @@ namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
 
 [TestClass]
 [TestCategory("bcl")]
-public sealed class ZipArchiveViewOnBclZipTests : ZipArchiveTestsKit
+public sealed class ZipArchiveViewOnBclZipTests : ZipArchiveTestKit
 {
     protected override IZipArchive Mount(Stream stream) =>
         ZipArchive.CreateView(

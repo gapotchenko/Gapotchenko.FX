@@ -6,7 +6,7 @@
 
 namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
-partial class FileSystemViewVfsTestsKit
+partial class FileSystemViewVfsTestKit
 {
     [TestMethod]
     public void FileSystemView_Vfs_Capabilities_LastWriteTime()
@@ -16,7 +16,7 @@ partial class FileSystemViewVfsTestsKit
         void Test(IFileSystemView vfs, string rootPath)
         {
             string path = vfs.CombinePaths(rootPath, "Entry");
-            var time = VfsTestKit.SpecialUtcTime1;
+            var time = VfsTestContentKit.SpecialUtcTime1;
 
             if (vfs.SupportsLastWriteTime)
             {
@@ -56,7 +56,7 @@ partial class FileSystemViewVfsTestsKit
         void Test(IFileSystemView vfs, string rootPath)
         {
             string path = vfs.CombinePaths(rootPath, "Entry");
-            var time = VfsTestKit.SpecialUtcTime1;
+            var time = VfsTestContentKit.SpecialUtcTime1;
 
             if (vfs.SupportsCreationTime)
             {
@@ -96,7 +96,7 @@ partial class FileSystemViewVfsTestsKit
         void Test(IFileSystemView vfs, string rootPath)
         {
             string path = vfs.CombinePaths(rootPath, "Entry");
-            var time = VfsTestKit.SpecialUtcTime1;
+            var time = VfsTestContentKit.SpecialUtcTime1;
 
             if (vfs.SupportsLastAccessTime)
             {

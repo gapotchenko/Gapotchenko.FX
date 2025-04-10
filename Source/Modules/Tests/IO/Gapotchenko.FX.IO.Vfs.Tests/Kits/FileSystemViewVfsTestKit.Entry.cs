@@ -6,7 +6,7 @@
 
 namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
-partial class FileSystemViewVfsTestsKit
+partial class FileSystemViewVfsTestKit
 {
     [TestMethod]
     public void FileSystemView_Vfs_Entry_Exists()

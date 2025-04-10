@@ -7,7 +7,7 @@ namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
 
 [TestClass]
 [TestCategory("bcl")]
-public sealed class ZipArchiveViewOnBclVfsTests : FileSystemViewVfsTestsKit
+public sealed class ZipArchiveViewOnBclVfsTests : FileSystemViewVfsTestKit
 {
     protected override IFileSystemView CreateVfs(out string rootPath)
     {
