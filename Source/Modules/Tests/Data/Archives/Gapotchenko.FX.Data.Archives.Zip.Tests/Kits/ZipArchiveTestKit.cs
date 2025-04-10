@@ -80,9 +80,9 @@ public abstract partial class ZipArchiveTestKit
         Assert.IsFalse(archive.EnumerateFiles("/").Any());
         Assert.IsTrue(archive.EnumerateEntries("/").SequenceEqual(["/Container"]));
 
-        Assert.IsTrue(archive.EnumerateDirectories("Container").SequenceEqual(["/Container/Empty"]));
+        Assert.IsTrue(archive.EnumerateDirectories("Container").SequenceEqual(["Container/Empty"]));
         Assert.IsFalse(archive.EnumerateFiles("Container").Any());
-        Assert.IsTrue(archive.EnumerateEntries("Container").SequenceEqual(["/Container/Empty"]));
+        Assert.IsTrue(archive.EnumerateEntries("Container").SequenceEqual(["Container/Empty"]));
 
         Assert.IsTrue(archive.DirectoryExists("/Container/Empty"));
         Assert.IsFalse(archive.FileExists("/Container/Empty"));
