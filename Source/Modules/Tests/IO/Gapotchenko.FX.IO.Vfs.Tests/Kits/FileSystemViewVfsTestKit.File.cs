@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.Linq;
+
 namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
 partial class FileSystemViewVfsTestKit
@@ -432,6 +434,43 @@ partial class FileSystemViewVfsTestKit
             Assert.That.VfsHierarchyIs(dVfs, dr, [destinationFileName]);
         }
     }
+
+    #endregion
+
+    #region Enumerate
+
+    [TestMethod]
+    public void FileSystemView_Vfs_File_Enumerate()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            VfsTestContentKit.CreateHierarchy(
+                vfs,
+                rootPath,
+                [
+                    "A", "B", "C",
+                    "Empty" + vfs.DirectorySeparatorChar
+                ]);
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            string directoryPath = vfs.CombinePaths(rootPath, "Empty", "..");
+
+            var filePaths = vfs.EnumerateFiles(directoryPath).ToList();
+
+            Assert.AreEqual(3, filePaths.Count);
+            Assert.IsTrue(
+                filePaths.All(x => x.StartsWith(directoryPath, StringComparison.Ordinal)),
+                "Enumerated file paths do not preserve the path of a directory being enumerated.");
+            Assert.IsTrue(
+                filePaths.All(vfs.FileExists),
+                "Enumerated file paths are pointing to non-existing files.");
+        }
+    }
+
 
     #endregion
 }

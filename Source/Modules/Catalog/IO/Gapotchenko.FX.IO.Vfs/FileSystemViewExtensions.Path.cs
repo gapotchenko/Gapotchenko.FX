@@ -13,6 +13,40 @@ namespace Gapotchenko.FX.IO.Vfs;
 
 partial class FileSystemViewExtensions
 {
+    /// <inheritdoc cref="JoinPaths(IReadOnlyFileSystemView, ReadOnlySpan{string?})"/>
+    /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
+    public static string JoinPaths(
+        this IReadOnlyFileSystemView view,
+        params IEnumerable<string?> paths)
+    {
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
+        if (paths is null)
+            throw new ArgumentNullException(nameof(paths));
+
+        char directorySeparatorChar = view.DirectorySeparatorChar;
+        var builder = new StringBuilder();
+
+        foreach (string? path in paths)
+        {
+            if (string.IsNullOrEmpty(path))
+                continue;
+
+            if (builder.Length != 0)
+            {
+                if (!VfsPathKit.IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
+                    !VfsPathKit.IsDirectorySeparator(path[0], directorySeparatorChar))
+                {
+                    builder.Append(directorySeparatorChar);
+                }
+            }
+
+            builder.Append(path);
+        }
+
+        return builder.ToString();
+    }
+
     /// <summary>
     /// Concatenates a sequence of paths into a single path.
     /// </summary>
@@ -29,12 +63,10 @@ partial class FileSystemViewExtensions
     /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
     public static string JoinPaths(
         this IReadOnlyFileSystemView view,
-        params IEnumerable<string?> paths)
+        params ReadOnlySpan<string?> paths)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));
-        if (paths is null)
-            throw new ArgumentNullException(nameof(paths));
 
         char directorySeparatorChar = view.DirectorySeparatorChar;
         var builder = new StringBuilder();

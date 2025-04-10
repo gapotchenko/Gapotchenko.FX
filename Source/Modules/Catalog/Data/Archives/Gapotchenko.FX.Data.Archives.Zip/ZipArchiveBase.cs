@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
 using System.Diagnostics;
 
@@ -29,6 +30,24 @@ abstract class ZipArchiveBase : FileSystemViewKit, IZipArchive
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private protected static StringComparer m_PathComparer => StringComparer.Ordinal;
+
+    /// <summary>
+    /// Gets the path string prefixed by the specified path.
+    /// </summary>
+    /// <param name="prefixPath">The prefix path.</param>
+    /// <param name="parts">The parts of a path to be prefixed.</param>
+    /// <returns>The path string prefixed by <paramref name="prefixPath"/>.</returns>
+    private protected string GetPrefixedPath(in StructuredPath prefixPath, ReadOnlySpan<string> parts)
+    {
+        if (prefixPath.OriginalPath is not null and string originalPath)
+        {
+            int level = prefixPath.Parts.Length;
+            if (parts.Length >= level)
+                return this.JoinPaths([originalPath, .. parts[level..]]);
+        }
+
+        return GetFullPathCore(parts);
+    }
 
     /// <inheritdoc/>
     protected sealed override string GetFullPathCore(string path) =>
