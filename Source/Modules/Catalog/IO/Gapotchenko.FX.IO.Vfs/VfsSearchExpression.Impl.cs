@@ -14,20 +14,16 @@ partial struct VfsSearchExpression
 {
     static IImpl CreateImpl(string pattern, char directorySeparatorChar, MatchType matchType, VfsSearchExpressionOptions options)
     {
-        return pattern switch
+        return (matchType, pattern) switch
         {
-            "*" => AnyPlusImpl.Instance,
-            _ => matchType switch
-            {
-                MatchType.Win32 =>
-                    pattern switch
-                    {
-                        "" or "." or "*.*" => AnyPlusImpl.Instance,
-                        _ => new Win32Impl(pattern, directorySeparatorChar, options)
-                    },
+            (_, "*") => AnyPlusImpl.Instance,
 
-                MatchType.Simple => new SimpleImpl(pattern, options)
-            }
+            // Win32
+            (MatchType.Win32, "" or "." or "*.*") => AnyPlusImpl.Instance,
+            (MatchType.Win32, _) => new Win32Impl(pattern, directorySeparatorChar, options),
+
+            // Simple
+            (MatchType.Simple, _) => new SimpleImpl(pattern, options)
         };
     }
 

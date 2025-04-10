@@ -53,7 +53,7 @@ partial class FileSystemViewExtensions
     /// <remarks>
     /// This method simply concatenates the specified <paramref name="paths"/>
     /// and adds a directory separator character between them if one is not already present.
-    /// If the length of a specified path component is zero, the method concatenates the remaining parts.
+    /// If a specified path component is <see langword="null"/> or its length is zero, the method concatenates the remaining parts.
     /// If the length of the resulting concatenated string is zero, the method returns <see cref="string.Empty"/>.
     /// </remarks>
     /// <param name="view">The file-system view.</param>

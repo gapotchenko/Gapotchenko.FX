@@ -43,7 +43,7 @@ abstract class ZipArchiveBase : FileSystemViewKit, IZipArchive
         {
             int level = prefixPath.Parts.Length;
             if (parts.Length >= level)
-                return this.JoinPaths([originalPath, .. parts[level..]]);
+                return this.JoinPaths(originalPath, VfsPathKit.Join(parts[level..]));
         }
 
         return GetFullPathCore(parts);
