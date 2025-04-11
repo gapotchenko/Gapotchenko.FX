@@ -1,9 +1,12 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
 //
+// Portions © .NET Foundation and its Licensors
+//
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.Memory;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -37,7 +40,7 @@ public static class VfsPathKit
         {
             return
                 Normalize(
-                    FileSystem.SplitPath(path),
+                    SplitPath(path, directorySeparatorChar),
                     directorySeparatorChar)
                 ?.ToArray();
         }
@@ -83,6 +86,54 @@ public static class VfsPathKit
     }
 
     /// <summary>
+    /// Splits a specified path into a sequence of file system entry names.
+    /// </summary>
+    /// <remarks>
+    /// For example, the entry names of the <c>"C:\Users\Tester\Documents"</c> path are:
+    /// <list type="bullet">
+    /// <item><c>C:\</c></item>
+    /// <item><c>Users</c></item>
+    /// <item><c>Tester</c></item>
+    /// <item><c>Documents</c></item>
+    /// </list>
+    /// </remarks>
+    /// <param name="path">The path to split.</param>
+    /// <param name="directorySeparatorChar">The directory separator character.</param>
+    /// <returns>The sequence of file system entry names.</returns>
+    static IEnumerable<string> SplitPath(string? path, char directorySeparatorChar) =>
+        EnumerateSubpaths(path, directorySeparatorChar)
+        .Reverse()
+        .Select(
+            subpath =>
+            {
+                if (GetFileName(subpath.AsSpan(), directorySeparatorChar) is var part && !part.IsEmpty)
+                    return part.ToString();
+                else
+                    return GetDirectoryName(subpath.AsSpan(), directorySeparatorChar) == null ? subpath : subpath[^1..^0];
+            });
+
+    /// <summary>
+    /// Enumerates subpaths of the specified path.
+    /// </summary>
+    /// <remarks>
+    /// For example, the subpaths of the <c>"C:\Users\Tester\Documents"</c> path are:
+    /// <list type="bullet">
+    /// <item><c>C:\Users\Tester\Documents</c></item>
+    /// <item><c>C:\Users\Tester</c></item>
+    /// <item><c>C:\Users</c></item>
+    /// <item><c>C:\</c></item>
+    /// </list>
+    /// </remarks>
+    /// <param name="path">The path to enumerate subpaths for.</param>
+    /// <param name="directorySeparatorChar">The directory separator character.</param>
+    /// <returns>The sequence of subpaths of the specified path.</returns>
+    static IEnumerable<string> EnumerateSubpaths(string? path, char directorySeparatorChar)
+    {
+        for (string? i = path; !string.IsNullOrEmpty(i); i = GetDirectoryName(i.AsSpan(), directorySeparatorChar).ToNullableString())
+            yield return i.ToString();
+    }
+
+    /// <summary>
     /// Concatenates a sequence of parts into a single path.
     /// using the specified directory separator character.
     /// </summary>
@@ -123,6 +174,66 @@ public static class VfsPathKit
             sb.Append(part);
         }
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Returns the directory information for the specified path represented by a character span.
+    /// </summary>
+    /// <param name="path">The path to retrieve the directory information from.</param>
+    /// <param name="directorySeparatorChar">The directory separator character.</param>
+    /// <returns>
+    /// Directory information for <paramref name="path"/>,
+    /// or an empty span representing <see langword="null"/> if <paramref name="path"/> denotes a root directory or is empty.
+    /// Returns an empty span if <paramref name="path"/> does not contain directory information.
+    /// </returns>
+    public static ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path, char directorySeparatorChar = DirectorySeparatorChar)
+    {
+        if (path.IsEmpty)
+            return null;
+
+        int end = GetDirectoryNameOffset(path);
+        return end >= 0 ? path[..end] : null;
+
+        int GetDirectoryNameOffset(ReadOnlySpan<char> path)
+        {
+            int rootLength = GetPathRoot(path).Length;
+            int end = path.Length;
+            if (end <= rootLength)
+                return -1;
+
+            while (end > rootLength && !IsDirectorySeparator(path[--end], directorySeparatorChar)) ;
+
+            // Trim off any remaining separators (to deal with C:\foo\\bar)
+            while (end > rootLength && IsDirectorySeparator(path[end - 1], directorySeparatorChar))
+                end--;
+
+            return end;
+        }
+    }
+
+    /// <summary>
+    /// Returns the file name and extension of a file path that is represented by a read-only character span.
+    /// </summary>
+    /// <param name="path">A read-only span that contains the path from which to obtain the file name and extension.</param>
+    /// <param name="directorySeparatorChar">The directory separator character.</param>
+    /// <returns>
+    /// The characters after the last directory separator character in <paramref name="path"/>.
+    /// If the last character of <paramref name="path"/> is a directory separator character, this method returns an empty span.
+    /// If <paramref name="path"/> represents <see langword="null"/>, this method returns an empty span representing <see langword="null"/>.
+    /// </returns>
+    public static ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path, char directorySeparatorChar = DirectorySeparatorChar)
+    {
+        int root = GetPathRoot(path).Length;
+
+        // We don't want to cut off "C:\file.txt:stream" (i.e. should be "file.txt:stream")
+        // but we *do* want "C:Foo" => "Foo". This necessitates checking for the root.
+
+        int i = path.LastIndexOfAny([
+            directorySeparatorChar,
+            DirectorySeparatorChar,
+            AltDirectorySeparatorChar]);
+
+        return path[(i < root ? root : i + 1)..];
     }
 
     /// <summary>

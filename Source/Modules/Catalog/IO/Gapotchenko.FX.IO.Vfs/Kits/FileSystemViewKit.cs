@@ -293,32 +293,8 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
-    public virtual ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path)
-    {
-        if (path.IsEmpty)
-            return null;
-
-        int end = GetDirectoryNameOffset(path);
-        return end >= 0 ? path[..end] : null;
-
-        int GetDirectoryNameOffset(ReadOnlySpan<char> path)
-        {
-            int rootLength = GetPathRoot(path).Length;
-            int end = path.Length;
-            if (end <= rootLength)
-                return -1;
-
-            char directorySeparatorChar = DirectorySeparatorChar;
-
-            while (end > rootLength && !VfsPathKit.IsDirectorySeparator(path[--end], directorySeparatorChar)) ;
-
-            // Trim off any remaining separators (to deal with C:\foo\\bar)
-            while (end > rootLength && VfsPathKit.IsDirectorySeparator(path[end - 1], directorySeparatorChar))
-                end--;
-
-            return end;
-        }
-    }
+    public virtual ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path) =>
+        VfsPathKit.GetDirectoryName(path, DirectorySeparatorChar);
 
     /// <inheritdoc/>
     public virtual string? GetFileName(string? path)
@@ -334,20 +310,8 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
-    public virtual ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path)
-    {
-        int root = GetPathRoot(path).Length;
-
-        // We don't want to cut off "C:\file.txt:stream" (i.e. should be "file.txt:stream")
-        // but we *do* want "C:Foo" => "Foo". This necessitates checking for the root.
-
-        int i = path.LastIndexOfAny([
-            DirectorySeparatorChar,
-            VfsPathKit.DirectorySeparatorChar,
-            VfsPathKit.AltDirectorySeparatorChar]);
-
-        return path[(i < root ? root : i + 1)..];
-    }
+    public virtual ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path) =>
+        VfsPathKit.GetFileName(path, DirectorySeparatorChar);
 
     /// <inheritdoc/>
     public virtual bool IsPathRooted([NotNullWhen(true)] string? path) => IsPathRooted(path.AsSpan());
