@@ -16,22 +16,22 @@ public interface IReadOnlyFileSystemView
     #region Capabilities
 
     /// <summary>
-    /// Gets a value indicating whether the current file system supports reading.
+    /// Gets a value indicating whether the current file storage supports reading.
     /// </summary>
     bool CanRead { get; }
 
     /// <summary>
-    /// Gets a value indicating whether the current file system supports the date and time of a last write to a file or a directory.
+    /// Gets a value indicating whether the current file storage supports the date and time of a last write to a file or a directory.
     /// </summary>
     bool SupportsLastWriteTime { get; }
 
     /// <summary>
-    /// Gets a value indicating whether the current file system supports the date and time of a creation of a file or a directory.
+    /// Gets a value indicating whether the current file storage supports the date and time of a creation of a file or a directory.
     /// </summary>
     bool SupportsCreationTime { get; }
 
     /// <summary>
-    /// Gets a value indicating whether the current file system supports the date and time of a last access to a file or a directory.
+    /// Gets a value indicating whether the current file storage supports the date and time of a last access to a file or a directory.
     /// </summary>
     bool SupportsLastAccessTime { get; }
 

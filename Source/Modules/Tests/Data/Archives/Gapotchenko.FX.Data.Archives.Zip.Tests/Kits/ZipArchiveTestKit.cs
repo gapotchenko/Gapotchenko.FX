@@ -35,22 +35,25 @@ public abstract partial class ZipArchiveTestKit
     {
         using var archive = Mount(Assets.OpenStream("Empty.zip"));
 
-        Assert.IsFalse(archive.EnumerateDirectories("/").Any());
-        Assert.IsFalse(archive.EnumerateFiles("/").Any());
-        Assert.IsFalse(archive.EnumerateEntries("/").Any());
+        string ds = $"{archive.DirectorySeparatorChar}";
+        string ads = $"{archive.AltDirectorySeparatorChar}";
+
+        Assert.IsFalse(archive.EnumerateDirectories(ds).Any());
+        Assert.IsFalse(archive.EnumerateFiles(ds).Any());
+        Assert.IsFalse(archive.EnumerateEntries(ds).Any());
 
         Assert.IsFalse(archive.DirectoryExists(""));
 
-        Assert.IsTrue(archive.DirectoryExists("/"));
-        Assert.IsTrue(archive.DirectoryExists("\\"));
+        Assert.IsTrue(archive.DirectoryExists(ds));
+        Assert.IsTrue(archive.DirectoryExists(ads));
         Assert.IsTrue(archive.DirectoryExists("."));
 
-        Assert.IsFalse(archive.FileExists("/"));
-        Assert.IsFalse(archive.FileExists("\\"));
+        Assert.IsFalse(archive.FileExists(ds));
+        Assert.IsFalse(archive.FileExists(ads));
         Assert.IsFalse(archive.FileExists("."));
 
         Assert.ThrowsException<FileNotFoundException>(() => archive.ReadTextFile("File.txt"));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadTextFile("Directory/File.txt"));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadTextFile(archive.JoinPaths("Directory", "File.txt")));
     }
 
     [TestMethod]
@@ -58,11 +61,15 @@ public abstract partial class ZipArchiveTestKit
     {
         using var archive = Mount(Assets.OpenStream("EmptyDirectory.zip"));
 
-        Assert.IsTrue(archive.EnumerateDirectories("/").SequenceEqual(["/Empty"]));
-        Assert.IsFalse(archive.EnumerateFiles("/").Any());
-        Assert.IsTrue(archive.EnumerateEntries("/").SequenceEqual(["/Empty"]));
+        string ds = $"{archive.DirectorySeparatorChar}";
+        string ads = $"{archive.AltDirectorySeparatorChar}";
 
-        foreach (string prefix in new[] { "/", "", "./", "\\", ".\\" })
+        string emptyPath = archive.JoinPaths(ds, "Empty");
+        Assert.IsTrue(archive.EnumerateDirectories(ds).SequenceEqual([emptyPath]));
+        Assert.IsFalse(archive.EnumerateFiles(ds).Any());
+        Assert.IsTrue(archive.EnumerateEntries(ds).SequenceEqual([emptyPath]));
+
+        foreach (string prefix in new[] { ds, "", $".{ds}", ads, $".{ads}" })
         {
             string path = prefix + "Empty";
             Assert.IsTrue(archive.DirectoryExists(path));
@@ -76,17 +83,21 @@ public abstract partial class ZipArchiveTestKit
     {
         using var archive = Mount(Assets.OpenStream("EmptyNestedDirectory.zip"));
 
-        Assert.IsTrue(archive.EnumerateDirectories("/").SequenceEqual(["/Container"]));
-        Assert.IsFalse(archive.EnumerateFiles("/").Any());
-        Assert.IsTrue(archive.EnumerateEntries("/").SequenceEqual(["/Container"]));
+        string ds = $"{archive.DirectorySeparatorChar}";
 
-        Assert.IsTrue(archive.EnumerateDirectories("Container").SequenceEqual(["Container/Empty"]));
-        Assert.IsFalse(archive.EnumerateFiles("Container").Any());
-        Assert.IsTrue(archive.EnumerateEntries("Container").SequenceEqual(["Container/Empty"]));
+        string containerPath = archive.JoinPaths(ds, "Container");
+        Assert.IsTrue(archive.EnumerateDirectories(ds).SequenceEqual([containerPath]));
+        Assert.IsFalse(archive.EnumerateFiles(ds).Any());
+        Assert.IsTrue(archive.EnumerateEntries(ds).SequenceEqual([containerPath]));
 
-        Assert.IsTrue(archive.DirectoryExists("/Container/Empty"));
-        Assert.IsFalse(archive.FileExists("/Container/Empty"));
-        Assert.IsTrue(archive.EntryExists("/Container/Empty"));
+        string emptyPath = archive.JoinPaths(containerPath, "Empty");
+        Assert.IsTrue(archive.EnumerateDirectories(containerPath).SequenceEqual([emptyPath]));
+        Assert.IsFalse(archive.EnumerateFiles(containerPath).Any());
+        Assert.IsTrue(archive.EnumerateEntries(containerPath).SequenceEqual([emptyPath]));
+
+        Assert.IsTrue(archive.DirectoryExists(emptyPath));
+        Assert.IsFalse(archive.FileExists(emptyPath));
+        Assert.IsTrue(archive.EntryExists(emptyPath));
     }
 
     [TestMethod]
@@ -94,11 +105,15 @@ public abstract partial class ZipArchiveTestKit
     {
         using var archive = Mount(Assets.OpenStream("OneFile.zip"));
 
-        Assert.IsFalse(archive.EnumerateDirectories("/").Any());
-        Assert.IsTrue(archive.EnumerateFiles("/").SequenceEqual(["/1.txt"]));
-        Assert.IsTrue(archive.EnumerateEntries("/").SequenceEqual(["/1.txt"]));
+        string ds = $"{archive.DirectorySeparatorChar}";
 
-        Assert.AreEqual("The first file.", archive.ReadAllFileText("1.txt"));
+        string filePath = archive.JoinPaths(ds, "1.txt");
+
+        Assert.IsFalse(archive.EnumerateDirectories(ds).Any());
+        Assert.IsTrue(archive.EnumerateFiles(ds).SequenceEqual([filePath]));
+        Assert.IsTrue(archive.EnumerateEntries(ds).SequenceEqual([filePath]));
+
+        Assert.AreEqual("The first file.", archive.ReadAllFileText(filePath));
     }
 
     [TestMethod]
@@ -106,11 +121,17 @@ public abstract partial class ZipArchiveTestKit
     {
         using var archive = Mount(Assets.OpenStream("TwoFiles.zip"));
 
-        Assert.IsTrue(archive.EnumerateFiles("/").Order().SequenceEqual(["/1.txt", "/2.txt"]));
+        string ds = $"{archive.DirectorySeparatorChar}";
 
-        Assert.AreEqual("The first file.", archive.ReadAllFileText("1.txt"));
-        Assert.AreEqual("The second file.", archive.ReadAllFileText("2.txt"));
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText("3.txt"));
+        string filePath1 = archive.JoinPaths(ds, "1.txt");
+        string filePath2 = archive.JoinPaths(ds, "2.txt");
+
+        Assert.IsTrue(archive.EnumerateFiles(ds).Order().SequenceEqual([filePath1, filePath2]));
+
+        Assert.AreEqual("The first file.", archive.ReadAllFileText(filePath1));
+        Assert.AreEqual("The second file.", archive.ReadAllFileText(filePath2));
+
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "3.txt")));
     }
 
     [TestMethod]
@@ -118,21 +139,27 @@ public abstract partial class ZipArchiveTestKit
     {
         using var archive = Mount(Assets.OpenStream("TwoNestedFiles.zip"));
 
-        Assert.IsFalse(archive.EnumerateFiles("/").Any());
-        Assert.IsTrue(archive.EnumerateFiles("/", "*", SearchOption.AllDirectories).Order().SequenceEqual(["/Container/1.txt", "/Container/2.txt"]));
-        Assert.IsTrue(archive.EnumerateFiles("/Container").Order().SequenceEqual(["/Container/1.txt", "/Container/2.txt"]));
+        string ds = $"{archive.DirectorySeparatorChar}";
 
-        Assert.AreEqual("The first file.", archive.ReadAllFileText("Container/1.txt"));
-        Assert.AreEqual("The second file.", archive.ReadAllFileText("Container/2.txt"));
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText("Container/3.txt"));
+        string containerPath = archive.JoinPaths(ds, "Container");
+        string filePath1 = archive.JoinPaths(containerPath, "1.txt");
+        string filePath2 = archive.JoinPaths(containerPath, "2.txt");
 
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText("1.txt"));
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText("2.txt"));
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText("3.txt"));
+        Assert.IsFalse(archive.EnumerateFiles(ds).Any());
+        Assert.IsTrue(archive.EnumerateFiles(ds, "*", SearchOption.AllDirectories).Order().SequenceEqual([filePath1, filePath2]));
+        Assert.IsTrue(archive.EnumerateFiles(containerPath).Order().SequenceEqual([filePath1, filePath2]));
 
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText("Other/1.txt"));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText("Other/2.txt"));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText("Other/3.txt"));
+        Assert.AreEqual("The first file.", archive.ReadAllFileText(filePath1));
+        Assert.AreEqual("The second file.", archive.ReadAllFileText(filePath2));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Container", "3.txt")));
+
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "1.txt")));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "2.txt")));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "3.txt")));
+
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Other", "1.txt")));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Other", "2.txt")));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Other", "3.txt")));
     }
 
     [TestMethod]
@@ -140,13 +167,13 @@ public abstract partial class ZipArchiveTestKit
     {
         using var archive = Mount(Assets.OpenStream("OneFile.zip", true));
 
-        string path = "1.txt";
+        string filePath = "1.txt";
 
-        Assert.IsTrue(archive.FileExists(path));
-        archive.DeleteFile(path);
-        Assert.IsFalse(archive.FileExists(path));
+        Assert.IsTrue(archive.FileExists(filePath));
+        archive.DeleteFile(filePath);
+        Assert.IsFalse(archive.FileExists(filePath));
 
-        Assert.ThrowsException<FileNotFoundException>(() => archive.DeleteFile(path));
+        Assert.ThrowsException<FileNotFoundException>(() => archive.DeleteFile(filePath));
     }
 
     [TestMethod]
@@ -169,13 +196,13 @@ public abstract partial class ZipArchiveTestKit
     {
         using var archive = Mount(Assets.OpenStream("EmptyDirectory.zip", true));
 
-        string path = "Empty";
+        string directoryPath = "Empty";
 
-        Assert.IsTrue(archive.DirectoryExists(path));
-        archive.DeleteDirectory(path);
-        Assert.IsFalse(archive.DirectoryExists(path));
+        Assert.IsTrue(archive.DirectoryExists(directoryPath));
+        archive.DeleteDirectory(directoryPath);
+        Assert.IsFalse(archive.DirectoryExists(directoryPath));
 
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(path));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(directoryPath));
     }
 
     [TestMethod]
@@ -183,16 +210,16 @@ public abstract partial class ZipArchiveTestKit
     {
         using var archive = Mount(Assets.OpenStream("OneNestedFile.zip", true));
 
-        string path = "Container";
+        string direcotyPath = "Container";
 
-        Assert.IsTrue(archive.DirectoryExists(path));
-        Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(path));
-        Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(path, false));
+        Assert.IsTrue(archive.DirectoryExists(direcotyPath));
 
-        archive.DeleteDirectory(path, true);
+        Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(direcotyPath));
+        Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(direcotyPath, false));
+        archive.DeleteDirectory(direcotyPath, true);
 
-        Assert.IsFalse(archive.DirectoryExists(path));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(path));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(path, true));
+        Assert.IsFalse(archive.DirectoryExists(direcotyPath));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(direcotyPath));
+        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(direcotyPath, true));
     }
 }

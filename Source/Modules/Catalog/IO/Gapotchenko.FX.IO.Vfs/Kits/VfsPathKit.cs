@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.IO.Vfs.Kits;
 public static class VfsPathKit
 {
     /// <summary>
-    /// Splits the specified path into parts.
+    /// Splits the specified path into its effective parts.
     /// </summary>
     /// <remarks>
     /// The path parts are normalized to eliminate references to <c>"."</c> (current) and <c>".."</c> (previous) directories.
@@ -27,7 +27,7 @@ public static class VfsPathKit
     /// <param name="path">The path to split.</param>
     /// <param name="directorySeparatorChar">The directory separator character.</param>
     /// <returns>
-    /// The array of parts of the path, or <see langword="null"/> if the <paramref name="path"/> is <see langword="null"/>, empty or points outside the root hierarchy.
+    /// The array of effective parts of the path, or <see langword="null"/> if the <paramref name="path"/> is <see langword="null"/>, empty or points outside the root hierarchy.
     /// The array is empty when the <paramref name="path"/> represents the root path <c>"/"</c>.
     /// </returns>
     public static string[]? Split(string? path, char directorySeparatorChar = DirectorySeparatorChar)
@@ -48,13 +48,15 @@ public static class VfsPathKit
 
     static IEnumerable<string>? Normalize(IEnumerable<string> parts, char directorySeparatorChar)
     {
+        ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { directorySeparatorChar, AltDirectorySeparatorChar };
+
         var list = new List<string>();
 
         foreach (string part in parts)
         {
             // Get the effective name of the part
             // by trimming off the directory separators.
-            var name = part.AsSpan().Trim([directorySeparatorChar, AltDirectorySeparatorChar]);
+            var name = part.AsSpan().Trim(directorySeparatorChars);
 
             switch (name)
             {
@@ -272,7 +274,7 @@ public static class VfsPathKit
     public const char DirectorySeparatorChar = '/';
 
     /// <summary>
-    /// Gets the alternative directory separator character.
+    /// Gets the alternate directory separator character.
     /// </summary>
-    public const char AltDirectorySeparatorChar = '\\';
+    public const char AltDirectorySeparatorChar = '/';
 }
