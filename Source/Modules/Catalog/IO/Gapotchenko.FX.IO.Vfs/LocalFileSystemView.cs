@@ -6,6 +6,7 @@
 
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.Linq;
+using Gapotchenko.FX.Memory;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -212,10 +213,70 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
         string?[] arr = EnumerableEx.AsArray(paths);
 
-        if (Array.IndexOf(arr, null) != -1)
-            arr = arr.Where(x => x != null).ToArray();
+        if (Array.IndexOf(arr, null) is not -1 and var index)
+        {
+            int n = arr.Length;
+            int startIndex = index + 1;
+            int count = index;
 
-        return Path.Combine(arr!);
+            for (int i = startIndex; i < n; ++i)
+            {
+                if (arr[i] is not null)
+                    ++count;
+            }
+
+            string[] effectivePaths = new string[count];
+
+            Array.Copy(arr, effectivePaths, index);
+
+            for (int si = startIndex, di = index; si < n; ++si, ++di)
+            {
+                if (arr[si] is not null and var path)
+                    effectivePaths[di] = path;
+            }
+
+            return Path.Combine(effectivePaths);
+        }
+        else
+        {
+            return Path.Combine(arr!);
+        }
+    }
+
+    public override string CombinePaths(params ReadOnlySpan<string?> paths)
+    {
+        if (ReadOnlySpanPolyfills.IndexOf(paths, null) is not -1 and var index)
+        {
+            int n = paths.Length;
+            int startIndex = index + 1;
+            int count = index;
+
+            for (int i = startIndex; i < n; ++i)
+            {
+                if (paths[i] is not null)
+                    ++count;
+            }
+
+            string[] effectivePaths = new string[count];
+
+            paths[..index].CopyTo(effectivePaths.AsSpan()!);
+
+            for (int si = startIndex, di = index; si < n; ++si, ++di)
+            {
+                if (paths[si] is not null and var path)
+                    effectivePaths[di] = path;
+            }
+
+            return Path.Combine(effectivePaths);
+        }
+        else
+        {
+#if NET9_0_OR_GREATER
+            return Path.Combine(paths!);
+#else
+            return Path.Combine(paths.ToArray()!);
+#endif
+        }
     }
 
     protected override string GetFullPathCore(string path) => Path.GetFullPath(path);

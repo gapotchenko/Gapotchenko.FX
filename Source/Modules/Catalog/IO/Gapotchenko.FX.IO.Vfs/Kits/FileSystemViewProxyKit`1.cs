@@ -164,6 +164,9 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual string CombinePaths(params IEnumerable<string?> paths) => BaseView.CombinePaths(paths);
 
     /// <inheritdoc/>
+    public virtual string CombinePaths(params ReadOnlySpan<string?> paths) => BaseView.CombinePaths(paths);
+
+    /// <inheritdoc/>
     [return: NotNullIfNotNull(nameof(path))]
     public virtual string? GetFullPath(string? path) => BaseView.GetFullPath(path);
 

@@ -243,6 +243,36 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
+    public virtual string CombinePaths(params ReadOnlySpan<string?> paths)
+    {
+        char directorySeparatorChar = DirectorySeparatorChar;
+        var builder = new StringBuilder();
+
+        foreach (string? path in paths)
+        {
+            if (string.IsNullOrEmpty(path))
+                continue;
+
+            if (IsPathRooted(path.AsSpan()))
+            {
+                builder.Clear();
+            }
+            else if (builder.Length != 0)
+            {
+                if (!VfsPathKit.IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
+                    !VfsPathKit.IsDirectorySeparator(path[0], directorySeparatorChar))
+                {
+                    builder.Append(directorySeparatorChar);
+                }
+            }
+
+            builder.Append(path);
+        }
+
+        return builder.ToString();
+    }
+
+    /// <inheritdoc/>
     [return: NotNullIfNotNull(nameof(path))]
     public string? GetFullPath(string? path)
     {

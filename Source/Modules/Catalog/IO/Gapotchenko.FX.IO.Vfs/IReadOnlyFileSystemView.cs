@@ -140,6 +140,13 @@ public interface IReadOnlyFileSystemView
     /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
     string CombinePaths(params IEnumerable<string?> paths);
 
+    /// <summary>
+    /// Combines a span of strings into a path.
+    /// </summary>
+    /// <param name="paths">A span of parts of the path.</param>
+    /// <returns>The combined paths.</returns>
+    string CombinePaths(params ReadOnlySpan<string?> paths);
+
     /// <inheritdoc cref="Path.GetFullPath(string)"/>
     [return: NotNullIfNotNull(nameof(path))]
     string? GetFullPath(string? path);

@@ -31,17 +31,20 @@ partial class ReadOnlySpanPolyfills
     /// <see langword="true"/> if found,
     /// <see langword="false"/> otherwise.
     /// </returns>
+#if TFF_READONLYSPAN_CONTAINS && NET7_0_OR_GREATER
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Contains<T>(
 #if !TFF_READONLYSPAN_CONTAINS
         this
 #endif
-        ReadOnlySpan<T> span, T value) where T : IEquatable<T>
+        ReadOnlySpan<T> span, T value) where T : IEquatable<T>?
     {
-#if TFF_READONLYSPAN_CONTAINS
+#if TFF_READONLYSPAN_CONTAINS && NET7_0_OR_GREATER
         return span.Contains(value);
 #else
-        return span.IndexOf(value) >= 0;
+        return IndexOf(span, value) >= 0;
 #endif
     }
 
@@ -62,6 +65,9 @@ partial class ReadOnlySpanPolyfills
     /// <see langword="true"/> if found.
     /// If not found, returns <see langword="false"/>.
     /// </returns>
+#if TFF_READONLYSPAN_CONTAINSANY
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsAny<T>(
 #if !TFF_READONLYSPAN_CONTAINSANY
@@ -92,6 +98,9 @@ partial class ReadOnlySpanPolyfills
     /// <see langword="true"/> if found.
     /// If not found, returns <see langword="false"/>.
     /// </returns>
+#if TFF_READONLYSPAN_CONTAINSANY
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsAny<T>(
 #if !TFF_READONLYSPAN_CONTAINSANY
@@ -120,6 +129,9 @@ partial class ReadOnlySpanPolyfills
     /// <see langword="true"/> if found.
     /// If not found, returns <see langword="false"/>.
     /// </returns>
+#if TFF_READONLYSPAN_CONTAINSANY
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsAny<T>(
 #if !TFF_READONLYSPAN_CONTAINSANY
