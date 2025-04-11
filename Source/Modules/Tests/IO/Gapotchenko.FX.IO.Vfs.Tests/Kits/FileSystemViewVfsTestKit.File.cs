@@ -4,8 +4,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-using Gapotchenko.FX.Linq;
-
 namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
 partial class FileSystemViewVfsTestKit

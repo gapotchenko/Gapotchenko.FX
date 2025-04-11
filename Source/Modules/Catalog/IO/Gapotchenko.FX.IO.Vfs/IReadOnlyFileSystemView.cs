@@ -123,6 +123,12 @@ public interface IReadOnlyFileSystemView
     /// </summary>
     char DirectorySeparatorChar { get; }
 
+    /// <summary>
+    /// Gets an alternate character used to separate directory levels in a path string
+    /// that reflects a hierarchical file system organization.
+    /// </summary>
+    char AltDirectorySeparatorChar { get; }
+
     /// <inheritdoc cref="FileSystem.PathComparer"/>
     StringComparer PathComparer { get; }
 

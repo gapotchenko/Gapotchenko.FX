@@ -201,6 +201,8 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override char DirectorySeparatorChar => Path.DirectorySeparatorChar;
 
+    public override char AltDirectorySeparatorChar => Path.AltDirectorySeparatorChar;
+
     public override StringComparer PathComparer => FileSystem.PathComparer;
 
     public override string CombinePaths(params IEnumerable<string?> paths)

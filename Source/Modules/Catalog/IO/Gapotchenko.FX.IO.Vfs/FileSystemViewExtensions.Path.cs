@@ -6,7 +6,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-using Gapotchenko.FX.IO.Vfs.Kits;
+using Gapotchenko.FX.Memory;
 using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs;
@@ -25,6 +25,8 @@ partial class FileSystemViewExtensions
             throw new ArgumentNullException(nameof(paths));
 
         char directorySeparatorChar = view.DirectorySeparatorChar;
+        ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { directorySeparatorChar, view.AltDirectorySeparatorChar };
+
         var builder = new StringBuilder();
 
         foreach (string? path in paths)
@@ -34,8 +36,8 @@ partial class FileSystemViewExtensions
 
             if (builder.Length != 0)
             {
-                if (!VfsPathKit.IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
-                    !VfsPathKit.IsDirectorySeparator(path[0], directorySeparatorChar))
+                if (!directorySeparatorChars.Contains(builder[^1]) &&
+                    !directorySeparatorChars.Contains(path[0]))
                 {
                     builder.Append(directorySeparatorChar);
                 }
@@ -69,6 +71,8 @@ partial class FileSystemViewExtensions
             throw new ArgumentNullException(nameof(view));
 
         char directorySeparatorChar = view.DirectorySeparatorChar;
+        ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { directorySeparatorChar, view.AltDirectorySeparatorChar };
+
         var builder = new StringBuilder();
 
         foreach (string? path in paths)
@@ -78,8 +82,8 @@ partial class FileSystemViewExtensions
 
             if (builder.Length != 0)
             {
-                if (!VfsPathKit.IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
-                    !VfsPathKit.IsDirectorySeparator(path[0], directorySeparatorChar))
+                if (!directorySeparatorChars.Contains(builder[^1]) &&
+                    !directorySeparatorChars.Contains(path[0]))
                 {
                     builder.Append(directorySeparatorChar);
                 }

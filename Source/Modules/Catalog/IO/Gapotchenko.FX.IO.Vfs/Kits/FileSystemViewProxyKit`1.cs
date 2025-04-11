@@ -155,6 +155,9 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual char DirectorySeparatorChar => BaseView.DirectorySeparatorChar;
 
     /// <inheritdoc/>
+    public virtual char AltDirectorySeparatorChar => BaseView.AltDirectorySeparatorChar;
+
+    /// <inheritdoc/>
     public virtual StringComparer PathComparer => BaseView.PathComparer;
 
     /// <inheritdoc/>

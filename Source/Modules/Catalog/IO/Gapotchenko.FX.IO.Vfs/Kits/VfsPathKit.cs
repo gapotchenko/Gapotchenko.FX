@@ -54,7 +54,7 @@ public static class VfsPathKit
         {
             // Get the effective name of the part
             // by trimming off the directory separators.
-            var name = part.AsSpan().Trim([directorySeparatorChar, DirectorySeparatorChar, AltDirectorySeparatorChar]);
+            var name = part.AsSpan().Trim([directorySeparatorChar, AltDirectorySeparatorChar]);
 
             switch (name)
             {
@@ -228,10 +228,7 @@ public static class VfsPathKit
         // We don't want to cut off "C:\file.txt:stream" (i.e. should be "file.txt:stream")
         // but we *do* want "C:Foo" => "Foo". This necessitates checking for the root.
 
-        int i = path.LastIndexOfAny([
-            directorySeparatorChar,
-            DirectorySeparatorChar,
-            AltDirectorySeparatorChar]);
+        int i = path.LastIndexOfAny(directorySeparatorChar, AltDirectorySeparatorChar);
 
         return path[(i < root ? root : i + 1)..];
     }
@@ -265,13 +262,9 @@ public static class VfsPathKit
     /// <see langword="true"/> if the specified character is a directory separator character;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool IsDirectorySeparator(char c, char directorySeparatorChar) =>
+    public static bool IsDirectorySeparator(char c, char directorySeparatorChar = DirectorySeparatorChar) =>
          c == directorySeparatorChar ||
-         IsDirectorySeparator(c);
-
-    /// <inheritdoc cref="IsDirectorySeparator(char, char)"/>
-    public static bool IsDirectorySeparator(char c) =>
-        c is DirectorySeparatorChar or AltDirectorySeparatorChar;
+         c == AltDirectorySeparatorChar;
 
     /// <summary>
     /// Gets the default directory separator character.

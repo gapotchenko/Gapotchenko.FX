@@ -204,6 +204,9 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual char DirectorySeparatorChar => VfsPathKit.DirectorySeparatorChar;
 
     /// <inheritdoc/>
+    public virtual char AltDirectorySeparatorChar => VfsPathKit.AltDirectorySeparatorChar;
+
+    /// <inheritdoc/>
     public abstract StringComparer PathComparer { get; }
 
     /// <inheritdoc/>

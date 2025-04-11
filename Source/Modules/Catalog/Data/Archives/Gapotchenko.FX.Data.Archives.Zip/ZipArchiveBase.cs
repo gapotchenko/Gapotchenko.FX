@@ -23,7 +23,10 @@ abstract class ZipArchiveBase : FileSystemViewKit, IZipArchive
     #region Paths
 
     /// <inheritdoc/>
-    public sealed override char DirectorySeparatorChar => VfsPathKit.DirectorySeparatorChar;
+    public sealed override char DirectorySeparatorChar => base.DirectorySeparatorChar;
+
+    /// <inheritdoc/>
+    public sealed override char AltDirectorySeparatorChar => base.AltDirectorySeparatorChar;
 
     /// <inheritdoc/>
     public sealed override StringComparer PathComparer => m_PathComparer;
