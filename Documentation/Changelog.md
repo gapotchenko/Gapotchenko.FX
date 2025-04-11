@@ -11,7 +11,7 @@ Release date: not released yet
 - Gapotchenko.FX.IO: improved selection of a default buffer size for block copy operations working on streams
 - `Gapotchenko.FX.Collections.Generic.Deque<T>` made compatible with collection initializers
 - Polyfills:
-    - Added polyfills for `ContainsAny`, `SequenceEqual`, `StartsWith` and `EndsWith` methods of `ReadOnlySpan<T>` and `Span<T>` types
+    - Added polyfills for `Contains`, `ContainsAny`, `SequenceEqual`, `StartsWith` and `EndsWith` methods of `ReadOnlySpan<T>` and `Span<T>` types
     - Added polyfills for `Path.EndsInDirectorySeparator(string?)` and `Path.EndsInDirectorySeparator(ReadOnlySpan<char>)` methods
     - `Stream.ReadExactly` and `Stream.ReadAtLeast` polyfill methods provided by the `Gapotchenko.FX.IO` module are now available for all supported target frameworks
 - Fixed issues:
