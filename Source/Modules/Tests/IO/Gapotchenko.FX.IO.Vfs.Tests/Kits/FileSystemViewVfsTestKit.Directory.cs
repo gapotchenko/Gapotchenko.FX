@@ -106,7 +106,7 @@ partial class FileSystemViewVfsTestKit
         void Mutate(IFileSystemView vfs, string rootPath)
         {
             // A
-            VfsTestContentKit.CreateHierarchy(vfs, Root("A"), copiedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(vfs, Root("A"), copiedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
 
             // B
             vfs.CopyDirectory(Root("A"), Root("B"));
@@ -120,9 +120,9 @@ partial class FileSystemViewVfsTestKit
             vfs.CopyDirectory(Root("A"), Root("D"), true);
 
             // E
-            VfsTestContentKit.CreateHierarchy(vfs, Root("E"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(vfs, Root("E"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             Assert.ThrowsException<IOException>(() => vfs.CopyDirectory(Root("A"), Root("E")));
-            Assert.That.VfsHierarchyIs(vfs, Root("E"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("E"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             vfs.CopyDirectory(Root("A"), Root("E"), true);
 
             string Root(string path) => vfs.CombinePaths(rootPath, path);
@@ -130,11 +130,11 @@ partial class FileSystemViewVfsTestKit
 
         void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
-            Assert.That.VfsHierarchyIs(vfs, Root("A"), copiedHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.That.VfsHierarchyIs(vfs, Root("B"), copiedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("A"), copiedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("B"), copiedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             Assert.That.VfsHierarchyIs(vfs, Root("C"), []);
-            Assert.That.VfsHierarchyIs(vfs, Root("D"), copiedHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.That.VfsHierarchyIs(vfs, Root("E"), [.. existingHierarchy, .. copiedHierarchy], VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("D"), copiedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("E"), [.. existingHierarchy, .. copiedHierarchy], VfsTestContentsKit.GetDefaultFileContents);
 
             string Root(string path) => vfs.CombinePaths(rootPath, path);
         }
@@ -167,7 +167,7 @@ partial class FileSystemViewVfsTestKit
             #endregion
 
             // A
-            VfsTestContentKit.CreateHierarchy(sVfs, SR("A"), copiedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(sVfs, SR("A"), copiedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
 
             // B
             sVfs.CopyDirectory(SR("A"), dVfs, DR("B"));
@@ -181,9 +181,9 @@ partial class FileSystemViewVfsTestKit
             sVfs.CopyDirectory(SR("A"), dVfs, DR("D"), true);
 
             // E
-            VfsTestContentKit.CreateHierarchy(dVfs, DR("E"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(dVfs, DR("E"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             Assert.ThrowsException<IOException>(() => sVfs.CopyDirectory(SR("A"), dVfs, DR("E")));
-            Assert.That.VfsHierarchyIs(dVfs, DR("E"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(dVfs, DR("E"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             sVfs.CopyDirectory(SR("A"), dVfs, DR("E"), true);
         }
 
@@ -202,11 +202,11 @@ partial class FileSystemViewVfsTestKit
 
             #endregion
 
-            Assert.That.VfsHierarchyIs(sVfs, SR("A"), copiedHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.That.VfsHierarchyIs(dVfs, DR("B"), copiedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(sVfs, SR("A"), copiedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(dVfs, DR("B"), copiedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             Assert.That.VfsHierarchyIs(dVfs, DR("C"), []);
-            Assert.That.VfsHierarchyIs(dVfs, DR("D"), copiedHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.That.VfsHierarchyIs(dVfs, DR("E"), [.. existingHierarchy, .. copiedHierarchy], VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(dVfs, DR("D"), copiedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(dVfs, DR("E"), [.. existingHierarchy, .. copiedHierarchy], VfsTestContentsKit.GetDefaultFileContents);
         }
     }
 
@@ -225,25 +225,25 @@ partial class FileSystemViewVfsTestKit
         void Mutate(IFileSystemView vfs, string rootPath)
         {
             // A
-            VfsTestContentKit.CreateHierarchy(vfs, Root("A"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(vfs, Root("A"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
 
             // B
             vfs.MoveDirectory(Root("A"), Root("B"));
 
             // C
-            VfsTestContentKit.CreateHierarchy(vfs, Root("C"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(vfs, Root("C"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
 
             // D
-            VfsTestContentKit.CreateHierarchy(vfs, Root("D"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(vfs, Root("D"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             Assert.ThrowsException<IOException>(() => vfs.MoveDirectory(Root("C"), Root("D")));
 
             // E
-            VfsTestContentKit.CreateHierarchy(vfs, Root("E"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(vfs, Root("E"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
 
             // F
-            VfsTestContentKit.CreateHierarchy(vfs, Root("F"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(vfs, Root("F"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             Assert.ThrowsException<IOException>(() => vfs.MoveDirectory(Root("E"), Root("F")));
-            Assert.That.VfsHierarchyIs(vfs, Root("F"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("F"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             vfs.MoveDirectory(Root("E"), Root("F"), true);
 
             string Root(string path) => vfs.CombinePaths(rootPath, path);
@@ -252,11 +252,11 @@ partial class FileSystemViewVfsTestKit
         void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
             Assert.IsFalse(vfs.DirectoryExists(Root("A")));
-            Assert.That.VfsHierarchyIs(vfs, Root("B"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.That.VfsHierarchyIs(vfs, Root("C"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.That.VfsHierarchyIs(vfs, Root("D"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("B"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("C"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("D"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             Assert.IsFalse(vfs.DirectoryExists(Root("E")));
-            Assert.That.VfsHierarchyIs(vfs, Root("F"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(vfs, Root("F"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
 
             string Root(string path) => vfs.CombinePaths(rootPath, path);
         }
@@ -289,25 +289,25 @@ partial class FileSystemViewVfsTestKit
             #endregion
 
             // A
-            VfsTestContentKit.CreateHierarchy(sVfs, SR("A"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(sVfs, SR("A"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
 
             // B
             sVfs.MoveDirectory(SR("A"), dVfs, DR("B"));
 
             // C
-            VfsTestContentKit.CreateHierarchy(sVfs, SR("C"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(sVfs, SR("C"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
 
             // D
-            VfsTestContentKit.CreateHierarchy(dVfs, DR("D"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(dVfs, DR("D"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             Assert.ThrowsException<IOException>(() => sVfs.MoveDirectory(SR("C"), dVfs, DR("D")));
 
             // E
-            VfsTestContentKit.CreateHierarchy(sVfs, SR("E"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(sVfs, SR("E"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
 
             // F
-            VfsTestContentKit.CreateHierarchy(dVfs, DR("F"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            VfsTestContentsKit.CreateHierarchy(dVfs, DR("F"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             Assert.ThrowsException<IOException>(() => sVfs.MoveDirectory(SR("E"), dVfs, DR("F")));
-            Assert.That.VfsHierarchyIs(dVfs, DR("F"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(dVfs, DR("F"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             sVfs.MoveDirectory(SR("E"), dVfs, DR("F"), true);
         }
 
@@ -327,11 +327,11 @@ partial class FileSystemViewVfsTestKit
             #endregion
 
             Assert.IsFalse(sVfs.DirectoryExists(SR("A")));
-            Assert.That.VfsHierarchyIs(dVfs, DR("B"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.That.VfsHierarchyIs(sVfs, SR("C"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.That.VfsHierarchyIs(dVfs, DR("D"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(dVfs, DR("B"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(sVfs, SR("C"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(dVfs, DR("D"), existingHierarchy, VfsTestContentsKit.GetDefaultFileContents);
             Assert.IsFalse(sVfs.DirectoryExists(DR("E")));
-            Assert.That.VfsHierarchyIs(dVfs, DR("F"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
+            Assert.That.VfsHierarchyIs(dVfs, DR("F"), movedHierarchy, VfsTestContentsKit.GetDefaultFileContents);
         }
     }
 

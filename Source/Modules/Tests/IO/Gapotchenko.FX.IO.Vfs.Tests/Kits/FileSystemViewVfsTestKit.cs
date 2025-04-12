@@ -55,17 +55,17 @@ public abstract partial class FileSystemViewVfsTestKit
         return vfs;
     }
 
-    void RunVfsTest(VfsMutatingTest test) =>
-        RunVfsTest(test, (VfsPhasedReadOnlyTest?)null);
+    void RunVfsTest(VfsTest test) =>
+        RunVfsTest(test, (VfsTest?)null);
 
-    void RunVfsTest(VfsMutatingTest mutate, VfsReadOnlyTest? verify) =>
+    void RunVfsTest(VfsTest mutate, VfsTest? verify) =>
         RunVfsTest(
             mutate,
             verify is null
                 ? null
                 : (vfs, rootPath, phase) => verify(vfs, rootPath));
 
-    void RunVfsTest(VfsMutatingTest mutate, VfsPhasedReadOnlyTest? verify)
+    void RunVfsTest(VfsTest mutate, VfsPhasedTest? verify)
     {
         var vfs = CreateVfs(out string rootPath);
         try
@@ -85,11 +85,9 @@ public abstract partial class FileSystemViewVfsTestKit
         }
     }
 
-    delegate void VfsMutatingTest(IFileSystemView vfs, string rootPath);
+    delegate void VfsTest(IFileSystemView vfs, string rootPath);
 
-    delegate void VfsReadOnlyTest(IReadOnlyFileSystemView vfs, string rootPath);
-
-    delegate void VfsPhasedReadOnlyTest(IReadOnlyFileSystemView vfs, string rootPath, int phase);
+    delegate void VfsPhasedTest(IFileSystemView vfs, string rootPath, int phase);
 
     static void DisposeVfs(IFileSystemView? vfs) => (vfs as IDisposable)?.Dispose();
 

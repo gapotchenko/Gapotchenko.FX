@@ -13,31 +13,57 @@ namespace Gapotchenko.FX.IO;
 sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool canWrite, bool canSeek) :
     StreamProxyKit(baseStream)
 {
-    #region Read
+    #region Capabilities
 
     public override bool CanRead => canRead && base.CanRead;
 
+    public override bool CanWrite => canWrite && base.CanWrite;
+
+    public override bool CanSeek => canSeek && base.CanSeek;
+
+    void EnsureCanRead()
+    {
+        if (!canRead)
+            throw new NotSupportedException("Stream does not support reading.");
+    }
+
+    void EnsureCanWrite()
+    {
+        if (!canWrite)
+            throw new NotSupportedException("Stream does not support writing.");
+    }
+
+    void EnsureCanSeek()
+    {
+        if (!canSeek)
+            throw new NotSupportedException("Stream does not support seeking.");
+    }
+
+    #endregion
+
+    #region Read
+
     public override int Read(byte[] buffer, int offset, int count)
     {
-        ValidateCanRead();
+        EnsureCanRead();
         return base.Read(buffer, offset, count);
     }
 
     public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback? callback, object? state)
     {
-        ValidateCanRead();
+        EnsureCanRead();
         return base.BeginRead(buffer, offset, count, callback, state);
     }
 
     public override int ReadByte()
     {
-        ValidateCanRead();
+        EnsureCanRead();
         return base.ReadByte();
     }
 
     public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
     {
-        ValidateCanRead();
+        EnsureCanRead();
         return await base.ReadAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
     }
 
@@ -45,23 +71,17 @@ sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool ca
 
     public override int Read(Span<byte> buffer)
     {
-        ValidateCanRead();
+        EnsureCanRead();
         return base.Read(buffer);
     }
 
     public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken)
     {
-        ValidateCanRead();
+        EnsureCanRead();
         return await base.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
     }
 
 #endif
-
-    void ValidateCanRead()
-    {
-        if (!canRead)
-            throw new NotSupportedException("Stream does not support reading.");
-    }
 
     #endregion
 
@@ -107,12 +127,6 @@ sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool ca
 
 #endif
 
-    void EnsureCanWrite()
-    {
-        if (!canWrite)
-            throw new NotSupportedException("Stream does not support writing.");
-    }
-
     #endregion
 
     #region Seek
@@ -152,12 +166,6 @@ sealed class StreamViewWithCapabilities(Stream baseStream, bool canRead, bool ca
     {
         EnsureCanSeek();
         return base.Seek(offset, origin);
-    }
-
-    void EnsureCanSeek()
-    {
-        if (!canSeek)
-            throw new NotSupportedException("Stream does not support seeking.");
     }
 
     #endregion

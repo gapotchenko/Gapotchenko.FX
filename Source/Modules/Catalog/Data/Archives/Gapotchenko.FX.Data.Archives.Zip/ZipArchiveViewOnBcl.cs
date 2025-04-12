@@ -85,7 +85,9 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
             return StreamView.WithCapabilities(
                 stream,
-                CanRead, CanWrite, true);
+                (access & FileAccess.Read) != 0 && CanRead,
+                (access & FileAccess.Write) != 0 && CanWrite,
+                true);
         }
         catch
         {

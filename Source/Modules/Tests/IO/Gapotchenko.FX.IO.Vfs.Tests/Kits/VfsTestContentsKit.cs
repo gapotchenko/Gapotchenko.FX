@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
-public static class VfsTestContentKit
+public static class VfsTestContentsKit
 {
     public static void CreateHierarchy(
         IFileSystemView vfs,

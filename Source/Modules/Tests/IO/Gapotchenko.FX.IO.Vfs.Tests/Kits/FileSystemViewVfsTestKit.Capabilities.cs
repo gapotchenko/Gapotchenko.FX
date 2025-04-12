@@ -16,7 +16,7 @@ partial class FileSystemViewVfsTestKit
         void Test(IFileSystemView vfs, string rootPath)
         {
             string path = vfs.CombinePaths(rootPath, "Entry");
-            var time = VfsTestContentKit.SpecialUtcTime1;
+            var time = VfsTestContentsKit.SpecialUtcTime1;
 
             if (vfs.SupportsLastWriteTime)
             {
@@ -56,7 +56,7 @@ partial class FileSystemViewVfsTestKit
         void Test(IFileSystemView vfs, string rootPath)
         {
             string path = vfs.CombinePaths(rootPath, "Entry");
-            var time = VfsTestContentKit.SpecialUtcTime1;
+            var time = VfsTestContentsKit.SpecialUtcTime1;
 
             if (vfs.SupportsCreationTime)
             {
@@ -96,7 +96,7 @@ partial class FileSystemViewVfsTestKit
         void Test(IFileSystemView vfs, string rootPath)
         {
             string path = vfs.CombinePaths(rootPath, "Entry");
-            var time = VfsTestContentKit.SpecialUtcTime1;
+            var time = VfsTestContentsKit.SpecialUtcTime1;
 
             if (vfs.SupportsLastAccessTime)
             {

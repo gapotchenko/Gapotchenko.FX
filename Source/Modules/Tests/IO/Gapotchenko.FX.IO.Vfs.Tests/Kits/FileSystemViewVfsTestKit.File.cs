@@ -54,6 +54,98 @@ partial class FileSystemViewVfsTestKit
 
     #endregion
 
+    #region Open
+
+    [TestMethod]
+    public void FileSystemView_Vfs_File_OpenFile_ReadAccess()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string fileName = "File.txt";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            vfs.WriteAllFileBytes(
+                filePath,
+                VfsTestContentsKit.GetDefaultFileContents(vfs, filePath));
+        }
+
+        static void Verify(IFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            using var stream = vfs.OpenFile(filePath, FileMode.Open, FileAccess.Read);
+
+            Assert.IsTrue(stream.CanRead);
+            Assert.IsFalse(stream.CanWrite);
+
+            Assert.IsTrue(
+                VfsTestContentsKit.GetDefaultFileContents(vfs, filePath)
+                .SequenceEqual(stream.AsEnumerable()));
+        }
+    }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_File_OpenFile_WriteAccess()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string fileName = "File.txt";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            using var stream = vfs.OpenFile(filePath, FileMode.CreateNew, FileAccess.Write);
+
+            Assert.IsFalse(stream.CanRead);
+            Assert.IsTrue(stream.CanWrite);
+
+            byte[] contents = VfsTestContentsKit.GetDefaultFileContents(vfs, filePath);
+            stream.Write(contents, 0, contents.Length);
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            using var stream = vfs.ReadFile(filePath);
+
+            Assert.IsTrue(
+                VfsTestContentsKit.GetDefaultFileContents(vfs, filePath)
+                .SequenceEqual(stream.AsEnumerable()));
+        }
+    }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_File_ReadFile()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string fileName = "File.txt";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            vfs.WriteAllFileBytes(
+                filePath,
+                VfsTestContentsKit.GetDefaultFileContents(vfs, filePath));
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            using var stream = vfs.ReadFile(filePath);
+
+            Assert.IsTrue(stream.CanRead);
+            Assert.IsFalse(stream.CanWrite);
+
+            Assert.IsTrue(
+                VfsTestContentsKit.GetDefaultFileContents(vfs, filePath)
+                .SequenceEqual(stream.AsEnumerable()));
+        }
+    }
+
+    #endregion
+
     #region Read/write/append text
 
     [TestMethod]
@@ -109,9 +201,9 @@ partial class FileSystemViewVfsTestKit
     [TestMethod]
     public void FileSystemView_Vfs_File_Copy()
     {
-        var creationTime = VfsTestContentKit.SpecialUtcTime1;
-        var lastWriteTime = VfsTestContentKit.SpecialUtcTime2;
-        var lastAccessTime = VfsTestContentKit.SpecialUtcTime3;
+        var creationTime = VfsTestContentsKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestContentsKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestContentsKit.SpecialUtcTime3;
 
         RunVfsTest(Mutate, Verify);
 
@@ -202,9 +294,9 @@ partial class FileSystemViewVfsTestKit
     [DataRow(false), DataRow(true)]
     public void FileSystemView_Vfs_File_CopyTo(bool reverse)
     {
-        var creationTime = VfsTestContentKit.SpecialUtcTime1;
-        var lastWriteTime = VfsTestContentKit.SpecialUtcTime2;
-        var lastAccessTime = VfsTestContentKit.SpecialUtcTime3;
+        var creationTime = VfsTestContentsKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestContentsKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestContentsKit.SpecialUtcTime3;
 
         using var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
 
@@ -297,9 +389,9 @@ partial class FileSystemViewVfsTestKit
     [TestMethod]
     public void FileSystemView_Vfs_File_Move()
     {
-        var creationTime = VfsTestContentKit.SpecialUtcTime1;
-        var lastWriteTime = VfsTestContentKit.SpecialUtcTime2;
-        var lastAccessTime = VfsTestContentKit.SpecialUtcTime3;
+        var creationTime = VfsTestContentsKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestContentsKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestContentsKit.SpecialUtcTime3;
 
         RunVfsTest(Mutate, Verify);
 
@@ -364,9 +456,9 @@ partial class FileSystemViewVfsTestKit
     [DataRow(false), DataRow(true)]
     public void FileSystemView_Vfs_File_MoveTo(bool reverse)
     {
-        var creationTime = VfsTestContentKit.SpecialUtcTime1;
-        var lastWriteTime = VfsTestContentKit.SpecialUtcTime2;
-        var lastAccessTime = VfsTestContentKit.SpecialUtcTime3;
+        var creationTime = VfsTestContentsKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestContentsKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestContentsKit.SpecialUtcTime3;
 
         using var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
 
@@ -444,7 +536,7 @@ partial class FileSystemViewVfsTestKit
 
         static void Mutate(IFileSystemView vfs, string rootPath)
         {
-            VfsTestContentKit.CreateHierarchy(
+            VfsTestContentsKit.CreateHierarchy(
                 vfs,
                 rootPath,
                 [
@@ -460,15 +552,16 @@ partial class FileSystemViewVfsTestKit
             var filePaths = vfs.EnumerateFiles(directoryPath).ToList();
 
             Assert.AreEqual(3, filePaths.Count);
+
             Assert.IsTrue(
-                filePaths.All(x => x.StartsWith(directoryPath, StringComparison.Ordinal)),
+                filePaths.All(x => x.StartsWith(directoryPath + vfs.DirectorySeparatorChar, StringComparison.Ordinal)),
                 "Enumerated file paths do not preserve the path of a directory being enumerated.");
+
             Assert.IsTrue(
                 filePaths.All(vfs.FileExists),
                 "Enumerated file paths are pointing to non-existing files.");
         }
     }
-
 
     #endregion
 }

@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Represents a read-only virtual file-system view.
+/// Represents a read-only view on a virtual file system.
 /// </summary>
 public interface IReadOnlyFileSystemView
 {

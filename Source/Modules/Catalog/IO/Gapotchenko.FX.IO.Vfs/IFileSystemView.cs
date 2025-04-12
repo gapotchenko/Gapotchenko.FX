@@ -9,7 +9,7 @@
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Represents a virtual file-system view.
+/// Represents a view on virtual file system.
 /// </summary>
 public interface IFileSystemView : IReadOnlyFileSystemView
 {

@@ -29,24 +29,8 @@ partial class FileSystemViewExtensions
         ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { directorySeparatorChar, view.AltDirectorySeparatorChar };
 
         var builder = new StringBuilder();
-
         foreach (string? path in paths)
-        {
-            if (string.IsNullOrEmpty(path))
-                continue;
-
-            if (builder.Length != 0)
-            {
-                if (!directorySeparatorChars.Contains(builder[^1]) &&
-                    !directorySeparatorChars.Contains(path[0]))
-                {
-                    builder.Append(directorySeparatorChar);
-                }
-            }
-
-            builder.Append(path);
-        }
-
+            AppendJoinedPath(builder, path, directorySeparatorChar, directorySeparatorChars);
         return builder.ToString();
     }
 
@@ -76,24 +60,29 @@ partial class FileSystemViewExtensions
         ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { directorySeparatorChar, view.AltDirectorySeparatorChar };
 
         var builder = new StringBuilder();
-
         foreach (string? path in paths)
+            AppendJoinedPath(builder, path, directorySeparatorChar, directorySeparatorChars);
+        return builder.ToString();
+    }
+
+    static void AppendJoinedPath(
+        StringBuilder builder,
+        string? path,
+        char directorySeparatorChar,
+        ReadOnlySpan<char> directorySeparatorChars)
+    {
+        if (string.IsNullOrEmpty(path))
+            return;
+
+        if (builder.Length != 0)
         {
-            if (string.IsNullOrEmpty(path))
-                continue;
-
-            if (builder.Length != 0)
+            if (!directorySeparatorChars.Contains(builder[^1]) &&
+                !directorySeparatorChars.Contains(path[0]))
             {
-                if (!directorySeparatorChars.Contains(builder[^1]) &&
-                    !directorySeparatorChars.Contains(path[0]))
-                {
-                    builder.Append(directorySeparatorChar);
-                }
+                builder.Append(directorySeparatorChar);
             }
-
-            builder.Append(path);
         }
 
-        return builder.ToString();
+        builder.Append(path);
     }
 }

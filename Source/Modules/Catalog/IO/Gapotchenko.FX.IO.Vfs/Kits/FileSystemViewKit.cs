@@ -216,29 +216,10 @@ public abstract class FileSystemViewKit : IFileSystemView
             throw new ArgumentNullException(nameof(paths));
 
         char directorySeparatorChar = DirectorySeparatorChar;
+
         var builder = new StringBuilder();
-
         foreach (string? path in paths)
-        {
-            if (string.IsNullOrEmpty(path))
-                continue;
-
-            if (IsPathRooted(path.AsSpan()))
-            {
-                builder.Clear();
-            }
-            else if (builder.Length != 0)
-            {
-                if (!VfsPathKit.IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
-                    !VfsPathKit.IsDirectorySeparator(path[0], directorySeparatorChar))
-                {
-                    builder.Append(directorySeparatorChar);
-                }
-            }
-
-            builder.Append(path);
-        }
-
+            AppendCombinedPath(builder, path, directorySeparatorChar);
         return builder.ToString();
     }
 
@@ -246,30 +227,32 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual string CombinePaths(params ReadOnlySpan<string?> paths)
     {
         char directorySeparatorChar = DirectorySeparatorChar;
+
         var builder = new StringBuilder();
-
         foreach (string? path in paths)
-        {
-            if (string.IsNullOrEmpty(path))
-                continue;
+            AppendCombinedPath(builder, path, directorySeparatorChar);
+        return builder.ToString();
+    }
 
+    void AppendCombinedPath(StringBuilder builder, string? path, char directorySeparatorChar)
+    {
+        if (string.IsNullOrEmpty(path))
+            return;
+
+        if (builder.Length != 0)
+        {
             if (IsPathRooted(path.AsSpan()))
             {
                 builder.Clear();
             }
-            else if (builder.Length != 0)
+            else if (!VfsPathKit.IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
+                !VfsPathKit.IsDirectorySeparator(path[0], directorySeparatorChar))
             {
-                if (!VfsPathKit.IsDirectorySeparator(builder[^1], directorySeparatorChar) &&
-                    !VfsPathKit.IsDirectorySeparator(path[0], directorySeparatorChar))
-                {
-                    builder.Append(directorySeparatorChar);
-                }
+                builder.Append(directorySeparatorChar);
             }
-
-            builder.Append(path);
         }
 
-        return builder.ToString();
+        builder.Append(path);
     }
 
     /// <inheritdoc/>
