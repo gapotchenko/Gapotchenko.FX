@@ -6,6 +6,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using System.Runtime.CompilerServices;
+
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
@@ -145,6 +147,7 @@ public interface IReadOnlyFileSystemView
     /// </summary>
     /// <param name="paths">A span of parts of the path.</param>
     /// <returns>The combined paths.</returns>
+    [OverloadResolutionPriority(1)]
     string CombinePaths(params ReadOnlySpan<string?> paths);
 
     /// <inheritdoc cref="Path.GetFullPath(string)"/>

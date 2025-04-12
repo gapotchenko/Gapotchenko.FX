@@ -229,10 +229,10 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
             Array.Copy(arr, effectivePaths, index);
 
-            for (int si = startIndex, di = index; si < n; ++si, ++di)
+            for (int si = startIndex, di = index; si < n; ++si)
             {
                 if (arr[si] is not null and var path)
-                    effectivePaths[di] = path;
+                    effectivePaths[di++] = path;
             }
 
             return Path.Combine(effectivePaths);
@@ -261,10 +261,10 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
             paths[..index].CopyTo(effectivePaths.AsSpan()!);
 
-            for (int si = startIndex, di = index; si < n; ++si, ++di)
+            for (int si = startIndex, di = index; si < n; ++si)
             {
                 if (paths[si] is not null and var path)
-                    effectivePaths[di] = path;
+                    effectivePaths[di++] = path;
             }
 
             return Path.Combine(effectivePaths);
@@ -351,8 +351,8 @@ sealed class LocalFileSystemView : FileSystemViewKit
         var result = Path.GetPathRoot(path);
         if (result == null && !path.IsEmpty)
         {
-            // A span that signifies null should not be returned here;
-            // converting it to a span signifying an empty string.
+            // Change an empty span signifying null to
+            // an empty span signifying an empty string.
             result = string.Empty.AsSpan();
         }
         return result;

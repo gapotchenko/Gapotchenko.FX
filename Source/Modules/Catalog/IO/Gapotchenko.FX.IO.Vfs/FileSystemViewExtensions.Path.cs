@@ -7,6 +7,7 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.Memory;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs;
@@ -63,9 +64,10 @@ partial class FileSystemViewExtensions
     /// <returns>The concatenated path.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
+    [OverloadResolutionPriority(1)]
     public static string JoinPaths(
         this IReadOnlyFileSystemView view,
-        params ReadOnlySpan<string?> paths)
+        params scoped ReadOnlySpan<string?> paths)
     {
         if (view is null)
             throw new ArgumentNullException(nameof(view));

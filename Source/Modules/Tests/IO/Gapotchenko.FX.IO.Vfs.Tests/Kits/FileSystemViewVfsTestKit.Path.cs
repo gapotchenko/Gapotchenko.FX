@@ -11,6 +11,91 @@ namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 partial class FileSystemViewVfsTestKit
 {
     [TestMethod]
+    public void FileSystemView_Vfs_Path_JoinPaths()
+    {
+        RunVfsTest(Test);
+
+        static void Test(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            char ds = vfs.DirectorySeparatorChar;
+            char ads = vfs.AltDirectorySeparatorChar;
+
+            Assert.AreEqual("", JoinPaths());
+            Assert.AreEqual("a", JoinPaths("a"));
+            Assert.AreEqual($"a{ds}b", JoinPaths("a", "b"));
+
+            Assert.AreEqual($"a{ds}b", JoinPaths("a", $"{ds}b"));
+            Assert.AreEqual($"a{ds}b", JoinPaths($"a{ds}", "b"));
+            Assert.AreEqual($"a{ds}{ds}b", JoinPaths($"a{ds}", $"{ds}b"));
+
+            Assert.AreEqual($"a{ads}b", JoinPaths("a", $"{ads}b"));
+            Assert.AreEqual($"a{ads}b", JoinPaths($"a{ads}", "b"));
+            Assert.AreEqual($"a{ads}{ads}b", JoinPaths($"a{ads}", $"{ads}b"));
+
+            Assert.AreEqual($"a{ds}{ads}b", JoinPaths($"a{ds}", $"{ads}b"));
+            Assert.AreEqual($"a{ads}{ds}b", JoinPaths($"a{ads}", $"{ds}b"));
+
+            foreach (string?[] i in PermuteValueInsertions(["a", "b", "c"], [null, ""], 2))
+            {
+                Assert.AreEqual(
+                    $"a{ds}b{ds}c",
+                    JoinPaths(i),
+                    "Null/empty value handling is violated for: " + string.Join(", ", i.Select(x => x ?? "<null>")));
+            }
+
+            string JoinPaths(params string?[] paths)
+            {
+                string resultA = vfs.JoinPaths(paths.AsEnumerable());
+                string resultB = vfs.JoinPaths(paths.AsSpan());
+                Assert.AreEqual(resultA, resultB);
+                return resultA;
+            }
+        }
+    }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_Path_CombinePaths()
+    {
+        RunVfsTest(Test);
+
+        static void Test(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            char ds = vfs.DirectorySeparatorChar;
+            char ads = vfs.AltDirectorySeparatorChar;
+
+            Assert.AreEqual("", CombinePaths());
+            Assert.AreEqual("a", CombinePaths("a"));
+            Assert.AreEqual($"a{ds}b", CombinePaths("a", "b"));
+
+            Assert.AreEqual($"{ds}b", CombinePaths("a", $"{ds}b"));
+            Assert.AreEqual($"a{ds}b", CombinePaths($"a{ds}", "b"));
+            Assert.AreEqual($"{ds}b", CombinePaths($"a{ds}", $"{ds}b"));
+
+            Assert.AreEqual($"{ads}b", CombinePaths("a", $"{ads}b"));
+            Assert.AreEqual($"a{ads}b", CombinePaths($"a{ads}", "b"));
+            Assert.AreEqual($"{ads}b", CombinePaths($"a{ads}", $"{ads}b"));
+            Assert.AreEqual($"{ads}b", CombinePaths($"a{ds}", $"{ads}b"));
+            Assert.AreEqual($"{ds}b", CombinePaths($"a{ads}", $"{ds}b"));
+
+            foreach (string?[] i in PermuteValueInsertions(["a", "b", "c"], [null, ""], 2))
+            {
+                Assert.AreEqual(
+                    $"a{ds}b{ds}c",
+                    CombinePaths(i),
+                    "Null/empty value handling is violated for: " + string.Join(", ", i.Select(x => x ?? "<null>")));
+            }
+
+            string CombinePaths(params string?[] paths)
+            {
+                string resultA = vfs.CombinePaths(paths.AsEnumerable());
+                string resultB = vfs.CombinePaths(paths.AsSpan());
+                Assert.AreEqual(resultA, resultB);
+                return resultA;
+            }
+        }
+    }
+
+    [TestMethod]
     public void FileSystemView_Vfs_Path_GetFullPath()
     {
         RunVfsTest(Test);
@@ -193,4 +278,47 @@ partial class FileSystemViewVfsTestKit
             }
         }
     }
+
+    #region Helpers
+
+    static IEnumerable<T[]> PermuteValueInsertions<T>(T[] source, T[] insertionValues, int maxInsertionLength)
+        where T : class?
+    {
+        int en = source.Length;
+        int cn = checked((int)Math.Round(Math.Pow(2, en + 1)));
+
+        foreach (var value in insertionValues)
+        {
+            for (int insertionLength = 1; insertionLength <= maxInsertionLength; ++insertionLength)
+            {
+                for (int c = 0; c < cn; ++c)
+                {
+                    var list = new List<T>(en * 2 + 1);
+
+                    for (int i = 0; i < en; ++i)
+                    {
+                        if (hasBit(i))
+                            addValue();
+                        list.Add(source[i]);
+                    }
+                    if (hasBit(en))
+                        addValue();
+
+                    yield return list.ToArray();
+
+                    // --------------------------------------------
+
+                    bool hasBit(int n) => (c & (1 << n)) != 0;
+
+                    void addValue()
+                    {
+                        for (int i = 0; i < insertionLength; ++i)
+                            list.Add(value);
+                    }
+                }
+            }
+        }
+    }
+
+    #endregion
 }

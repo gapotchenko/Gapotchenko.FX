@@ -57,9 +57,13 @@ public static partial class ReadOnlySpanPolyfills
 #endif
     }
 
+#if !NET7_0_OR_GREATER
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static bool Equals<T>(T a, T b) where T : IEquatable<T>? =>
         a is null ? b is null : a.Equals(b);
+
+#endif
 
     /// <summary>
     /// <para>
