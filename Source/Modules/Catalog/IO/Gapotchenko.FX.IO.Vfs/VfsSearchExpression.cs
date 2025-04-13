@@ -25,8 +25,8 @@ public readonly partial struct VfsSearchExpression
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VfsSearchExpression"/> structure for the specified search expression,
-    /// with match type and options that modify the pattern interpretation.
+    /// Initializes a new instance of the <see cref="VfsSearchExpression"/> structure for the specified search expression
+    /// with specified match type and options that modify the pattern interpretation.
     /// </summary>
     /// <param name="pattern">
     /// The search expression pattern to match 

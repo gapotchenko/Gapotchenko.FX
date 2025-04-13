@@ -7,6 +7,7 @@
 // Year of introduction: 2025
 
 using System.Runtime.CompilerServices;
+using System.Security;
 
 namespace Gapotchenko.FX.IO.Vfs;
 
@@ -53,6 +54,37 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="Directory.EnumerateFiles(string, string, SearchOption)"/>
     IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 
+    /// <summary>
+    /// Returns an enumerable collection of full file names
+    /// that match a search pattern and enumeration options in a specified path,
+    /// and optionally searches subdirectories.
+    /// </summary>
+    /// <param name="path">
+    /// The relative or absolute path to the directory to search.
+    /// This string is not case-sensitive.
+    /// </param>
+    /// <param name="searchPattern">
+    /// The search string to match against the names of files in path.
+    /// This parameter can contain a combination of valid literal path and wildcard (* and ?) characters,
+    /// but it doesn't support regular expressions.
+    /// </param>
+    /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
+    /// <returns>
+    /// An enumerable collection of the full names (including paths) for the files
+    /// in the directory specified by <paramref name="path"/>
+    /// and that match the specified search pattern and enumeration options.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="searchPattern"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
+    /// <exception cref="ArgumentException"><paramref name="searchPattern"/> does not contain a valid pattern.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="enumerationOptions"/> is not a valid <see cref="EnumerationOptions"/> value.</exception>
+    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
+    /// <exception cref="IOException"><paramref name="path"/> is a file name.</exception>
+    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
+    IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
+
     /// <inheritdoc cref="File.OpenRead(string)"/>
     Stream ReadFile(string path);
 
@@ -76,6 +108,38 @@ public interface IReadOnlyFileSystemView
     IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
 
     /// <summary>
+    /// Returns an enumerable collection of the directory full names
+    /// that match a search pattern in a specified path,
+    /// and optionally searches subdirectories.
+    /// </summary>
+    /// <param name="path">
+    /// The relative or absolute path to the directory to search.
+    /// This string is not case-sensitive.
+    /// </param>
+    /// <param name="searchPattern">
+    /// The search string to match against the names of directories in path.
+    /// This parameter can contain a combination of valid literal path and wildcard (* and ?) characters,
+    /// but it doesn't support regular expressions.
+    /// </param>
+    /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
+    /// <returns>
+    /// An enumerable collection of the full names (including paths) for the directories
+    /// in the directory specified by <paramref name="path"/>
+    /// and that match the specified search pattern and enumeration options.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="searchPattern"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
+    /// <exception cref="ArgumentException"><paramref name="searchPattern"/> does not contain a valid pattern.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="enumerationOptions"/> is not a valid <see cref="EnumerationOptions"/> value.</exception>
+    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
+    /// <exception cref="IOException"><paramref name="path"/> is a file name.</exception>
+    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
+    /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
+    IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions);
+
+    /// <summary>
     /// Determines whether the given path refers to an existing file or directory in the file system.
     /// </summary>
     /// <inheritdoc cref="FileSystem.EntryExists(string?)"/>
@@ -93,6 +157,37 @@ public interface IReadOnlyFileSystemView
 
     /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string, string, SearchOption)"/>
     IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption);
+
+    /// <summary>
+    /// Returns an enumerable collection of file names and directory names
+    /// that match a search pattern and enumeration options in a specified path.
+    /// </summary>
+    /// <param name="path">
+    /// The relative or absolute path to the directory to search.
+    /// This string is not case-sensitive.
+    /// </param>
+    /// <param name="searchPattern">
+    /// The search string to match against the names of files and directories in path.
+    /// This parameter can contain a combination of valid literal path and wildcard (* and ?) characters,
+    /// but it doesn't support regular expressions.
+    /// </param>
+    /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
+    /// <returns>
+    /// An enumerable collection of file-system entries
+    /// in the directory specified by <paramref name="path"/>
+    /// that match the specified search pattern and the specified enumeration options.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="searchPattern"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
+    /// <exception cref="ArgumentException"><paramref name="searchPattern"/> does not contain a valid pattern.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="enumerationOptions"/> is not a valid <see cref="EnumerationOptions"/> value.</exception>
+    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
+    /// <exception cref="IOException"><paramref name="path"/> is a file name.</exception>
+    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
+    /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
+    IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
 
     /// <remarks>
     /// If the file or directory described in the <paramref name="path"/> parameter does not exist,

@@ -37,7 +37,7 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     }
 
     void EnsureCanOpenFile(FileMode mode, FileAccess access) =>
-        VfsCapabilitiesKit.EnsureCanOpenFile(mode, access, canRead, canWrite);
+        VfsValidationKit.Capabilities.EnsureCanOpenFile(mode, access, canRead, canWrite);
 
     #endregion
 
@@ -65,6 +65,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     {
         EnsureCanRead();
         return base.EnumerateFiles(path, searchPattern, searchOption);
+    }
+
+    public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        EnsureCanRead();
+        return base.EnumerateFiles(path, searchPattern, enumerationOptions);
     }
 
     public override Stream ReadFile(string path)
@@ -125,6 +131,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.EnumerateDirectories(path, searchPattern, searchOption);
     }
 
+    public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        EnsureCanRead();
+        return base.EnumerateDirectories(path, searchPattern, enumerationOptions);
+    }
+
     public override void CreateDirectory(string path)
     {
         EnsureCanWrite();
@@ -175,6 +187,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     {
         EnsureCanRead();
         return base.EnumerateEntries(path, searchPattern, searchOption);
+    }
+
+    public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        EnsureCanRead();
+        return base.EnumerateEntries(path, searchPattern, enumerationOptions);
     }
 
     public override DateTime GetCreationTime(string path)

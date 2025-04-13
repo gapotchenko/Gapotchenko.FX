@@ -5,6 +5,7 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.IO;
+using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Memory;
@@ -355,7 +356,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         if (pathParts.Span != null)
         {
-            searchPattern = Empty.Nullify(searchPattern, "*", StringComparison.Ordinal);
+            var searchExpression = new VfsSearchExpression(searchPattern);
 
             directoryExists = pathParts.Length == 0;
 
@@ -383,7 +384,10 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                         if (entryPathParts.AsSpan().StartsWith(pathParts.Span, m_PathComparer))
                         {
                             if (enumerateDirectories && feasibleHierarchyLevel)
-                                yield return entryPathParts;
+                            {
+                                if (searchExpression.IsMatch(entryPathParts[^1].AsSpan()))
+                                    yield return entryPathParts;
+                            }
                             directoryExists = true;
                         }
                     }
@@ -396,7 +400,10 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                         if (entryPathParts.AsSpan()[..^1].StartsWith(pathParts.Span, m_PathComparer))
                         {
                             if (enumerateFiles && feasibleHierarchyLevel)
-                                yield return entryPathParts;
+                            {
+                                if (searchExpression.IsMatch(entryPathParts[^1].AsSpan()))
+                                    yield return entryPathParts;
+                            }
                             directoryExists = true;
                         }
                     }

@@ -64,7 +64,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <exception cref="NotSupportedException">File system does not support reading.</exception>
     /// <exception cref="NotSupportedException">File system does not support writing.</exception>
     protected void EnsureCanOpenFile(FileMode mode, FileAccess access) =>
-        VfsCapabilitiesKit.EnsureCanOpenFile(mode, access, CanRead, CanWrite);
+        VfsValidationKit.Capabilities.EnsureCanOpenFile(mode, access, CanRead, CanWrite);
 
     #endregion
 
@@ -82,6 +82,14 @@ public abstract class FileSystemViewKit : IFileSystemView
 
     /// <inheritdoc/>
     public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
+
+    /// <inheritdoc/>
+    public virtual IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        // TODO
+
+        throw new NotImplementedException();
+    }
 
     /// <inheritdoc/>
     public virtual Stream ReadFile(string path) =>
@@ -131,6 +139,14 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
 
     /// <inheritdoc/>
+    public virtual IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        // TODO
+
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
     public abstract void CreateDirectory(string path);
 
     /// <inheritdoc/>
@@ -177,6 +193,11 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
         EnumerateFiles(path, searchPattern, searchOption)
         .Concat(EnumerateDirectories(path, searchPattern, searchOption));
+
+    /// <inheritdoc/>
+    public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
+        EnumerateFiles(path, searchPattern, enumerationOptions)
+        .Concat(EnumerateDirectories(path, searchPattern, enumerationOptions));
 
     /// <inheritdoc/>
     public virtual DateTime GetCreationTime(string path) => throw new NotSupportedException();

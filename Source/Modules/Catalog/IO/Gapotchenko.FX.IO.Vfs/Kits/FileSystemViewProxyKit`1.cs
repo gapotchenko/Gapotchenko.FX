@@ -62,6 +62,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
         BaseView.EnumerateFiles(path, searchPattern, searchOption);
 
     /// <inheritdoc/>
+    public virtual IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
+        BaseView.EnumerateFiles(path, searchPattern, enumerationOptions);
+
+    /// <inheritdoc/>
     public virtual Stream ReadFile(string path) => BaseView.ReadFile(path);
 
     /// <inheritdoc/>
@@ -98,6 +102,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
         BaseView.EnumerateDirectories(path, searchPattern, searchOption);
 
     /// <inheritdoc/>
+    public virtual IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
+        BaseView.EnumerateDirectories(path, searchPattern, enumerationOptions);
+
+    /// <inheritdoc/>
     public virtual void CreateDirectory(string path) => BaseView.CreateDirectory(path);
 
     /// <inheritdoc/>
@@ -128,6 +136,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
         BaseView.EnumerateEntries(path, searchPattern, searchOption);
+
+    /// <inheritdoc/>
+    public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
+        BaseView.EnumerateEntries(path, searchPattern, enumerationOptions);
 
     /// <inheritdoc/>
     public virtual DateTime GetCreationTime(string path) => BaseView.GetCreationTime(path);

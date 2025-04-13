@@ -11,7 +11,6 @@ namespace Gapotchenko.FX.Data.Archives;
 /// <summary>
 /// Defines the options of a data archive.
 /// </summary>
-[ImmutableObject(true)]
 public abstract record DataArchiveOptions : VfsOptions
 {
 }

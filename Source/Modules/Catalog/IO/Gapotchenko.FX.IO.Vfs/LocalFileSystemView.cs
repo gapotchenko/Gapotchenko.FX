@@ -45,6 +45,16 @@ sealed class LocalFileSystemView : FileSystemViewKit
     public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateFiles(path, searchPattern, searchOption);
 
+    public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
+        return Directory.EnumerateFiles(path, searchPattern, enumerationOptions);
+#else
+        // TODO
+        throw new NotImplementedException();
+#endif
+    }
+
     public override Stream ReadFile(string path) => File.OpenRead(path);
 
     public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) => File.Open(path, mode, access, share);
@@ -95,6 +105,16 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateDirectories(path, searchPattern, searchOption);
+
+    public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
+        return Directory.EnumerateDirectories(path, searchPattern, enumerationOptions);
+#else
+        // TODO
+        throw new NotImplementedException();
+#endif
+    }
 
     public override void CreateDirectory(string path) => Directory.CreateDirectory(path);
 
@@ -149,6 +169,16 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
+
+    public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
+        return Directory.EnumerateFileSystemEntries(path, searchPattern, enumerationOptions);
+#else
+        // TODO
+        throw new NotImplementedException();
+#endif
+    }
 
     public override DateTime GetCreationTime(string path)
     {
