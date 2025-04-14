@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.IO.Vfs.Kits;
 
 /// <summary>
-/// Provides validation facilities for a virtual file system.
+/// Provides validation facilities for a virtual file system implementation.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public static partial class VfsValidationKit

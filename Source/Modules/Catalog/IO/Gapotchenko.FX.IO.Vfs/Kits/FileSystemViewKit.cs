@@ -38,6 +38,9 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <inheritdoc/>
     public virtual bool SupportsLastAccessTime => false;
 
+    /// <inheritdoc/>
+    public virtual bool SupportsAttributes => false;
+
     /// <summary>
     /// Ensures that the file system supports reading.
     /// </summary>
@@ -86,9 +89,11 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
     {
-        // TODO
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+        VfsValidationKit.Arguments.ValidateEnumerationOptions(enumerationOptions);
 
-        throw new NotImplementedException();
+        return EnumerateEntriesCore(path, searchPattern, enumerationOptions, true, false);
     }
 
     /// <inheritdoc/>
@@ -141,9 +146,11 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
     {
-        // TODO
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+        VfsValidationKit.Arguments.ValidateEnumerationOptions(enumerationOptions);
 
-        throw new NotImplementedException();
+        return EnumerateEntriesCore(path, searchPattern, enumerationOptions, false, true);
     }
 
     /// <inheritdoc/>
@@ -199,6 +206,53 @@ public abstract class FileSystemViewKit : IFileSystemView
         EnumerateFiles(path, searchPattern, enumerationOptions)
         .Concat(EnumerateDirectories(path, searchPattern, enumerationOptions));
 
+    IEnumerable<string> EnumerateEntriesCore(
+        string path,
+        string searchPattern,
+        EnumerationOptions options,
+        bool enumerateFiles,
+        bool enumerateDirectories)
+    {
+        EnsureCanRead();
+
+        // ----------------------------------------------------------------------
+
+        int maxRecursionDepth = VfsSearchKit.GetMaxRecursionDepth(options);
+
+        var attributesToSkip = options.AttributesToSkip;
+        if (attributesToSkip != 0 && !SupportsAttributes)
+            attributesToSkip = 0;
+
+        (path, searchPattern) = CalculateEntryEnumerationPath(path, searchPattern);
+
+        // ----------------------------------------------------------------------
+
+        //if (options.MatchType == MatchType.Win32 && options.MatchCasing is MatchCasing.PlatformDefault)
+
+        // TODO
+
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Calculates the effective directory path that should be used for enumerating file-system entries.
+    /// </summary>
+    /// <param name="path">The directory path.</param>
+    /// <param name="searchPattern">The search pattern.</param>
+    /// <returns>
+    /// A tuple containing a calculated directory path and a modified search pattern.
+    /// </returns>
+    protected (string Path, string SearchPattern) CalculateEntryEnumerationPath(string path, string searchPattern)
+    {
+        string? directoryName = GetDirectoryName(searchPattern);
+        if (!string.IsNullOrEmpty(directoryName))
+        {
+            path = CombinePaths(path, directoryName);
+            searchPattern = GetFileName(searchPattern);
+        }
+        return (path, searchPattern);
+    }
+
     /// <inheritdoc/>
     public virtual DateTime GetCreationTime(string path) => throw new NotSupportedException();
 
@@ -216,6 +270,12 @@ public abstract class FileSystemViewKit : IFileSystemView
 
     /// <inheritdoc/>
     public virtual void SetLastAccessTime(string path, DateTime lastAccessTime) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public virtual FileAttributes GetAttributes(string path) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public virtual void SetAttributes(string path, FileAttributes attributes) => throw new NotSupportedException();
 
     #endregion
 
@@ -334,6 +394,7 @@ public abstract class FileSystemViewKit : IFileSystemView
         VfsPathKit.GetDirectoryName(path, DirectorySeparatorChar);
 
     /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(path))]
     public virtual string? GetFileName(string? path)
     {
         if (string.IsNullOrEmpty(path))

@@ -9,7 +9,7 @@ using Gapotchenko.FX.IO.Vfs.Properties;
 namespace Gapotchenko.FX.IO.Vfs.Kits;
 
 /// <summary>
-/// Provides commonly used resources for a virtual file system.
+/// Provides commonly used resources for a virtual file system implementation.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public static class VfsResourceKit

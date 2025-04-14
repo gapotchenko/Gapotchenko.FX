@@ -231,5 +231,17 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.SetLastAccessTime(path, lastAccessTime);
     }
 
+    public override FileAttributes GetAttributes(string path)
+    {
+        EnsureCanRead();
+        return base.GetAttributes(path);
+    }
+
+    public override void SetAttributes(string path, FileAttributes attributes)
+    {
+        EnsureCanWrite();
+        base.SetAttributes(path, attributes);
+    }
+
     #endregion
 }

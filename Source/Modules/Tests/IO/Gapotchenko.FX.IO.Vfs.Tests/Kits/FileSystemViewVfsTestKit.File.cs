@@ -536,30 +536,72 @@ partial class FileSystemViewVfsTestKit
 
         static void Mutate(IFileSystemView vfs, string rootPath)
         {
+            char ds = vfs.DirectorySeparatorChar;
+
             VfsTestContentsKit.CreateHierarchy(
                 vfs,
                 rootPath,
                 [
                     "A", "B", "C",
-                    "Empty" + vfs.DirectorySeparatorChar
+                    "Empty" + ds,
+                    $"Container{ds}1.txt",
+                    $"Container{ds}2.txt",
+                    $"Container{ds}3.bin"
                 ]);
         }
 
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
-            string directoryPath = vfs.CombinePaths(rootPath, "Empty", "..");
+            char ds = vfs.DirectorySeparatorChar;
+            char ads = vfs.AltDirectorySeparatorChar;
 
-            var filePaths = vfs.EnumerateFiles(directoryPath).ToList();
+            // ---------------------------------------------------------------------------
 
-            Assert.AreEqual(3, filePaths.Count);
+            Scenario1(ds);
+            if (ads != ds)
+                Scenario1(ads);
 
-            Assert.IsTrue(
-                filePaths.All(x => x.StartsWith(directoryPath + vfs.DirectorySeparatorChar, StringComparison.Ordinal)),
-                "Enumerated file paths do not preserve the path of a directory being enumerated.");
+            void Scenario1(char eds)
+            {
+                string directoryPath = vfs.JoinPaths(rootPath, $"Empty{eds}..");
 
-            Assert.IsTrue(
-                filePaths.All(vfs.FileExists),
-                "Enumerated file paths are pointing to non-existing files.");
+                var filePaths = vfs.EnumerateFiles(directoryPath).ToList();
+
+                Assert.AreEqual(3, filePaths.Count);
+
+                Assert.IsTrue(
+                    filePaths.All(x => x.StartsWith(directoryPath + ds, StringComparison.Ordinal)),
+                    "Enumerated file paths do not preserve the path of a directory being enumerated.");
+
+                Assert.IsTrue(
+                    filePaths.All(vfs.FileExists),
+                    "Enumerated file paths are pointing to non-existing files.");
+            }
+
+            // ---------------------------------------------------------------------------
+
+            Scenario2();
+
+            void Scenario2()
+            {
+                string patternDirectoryPath = vfs.JoinPaths("Container", ".");
+
+                var filePaths = vfs.EnumerateFiles(rootPath, vfs.JoinPaths(patternDirectoryPath, "*.txt")).ToList();
+
+                Assert.AreEqual(2, filePaths.Count);
+
+                Assert.IsTrue(
+                    filePaths.All(x => x.EndsWith(".txt", StringComparison.Ordinal)),
+                    "Enumerated file paths do not match the search pattern.");
+
+                Assert.IsTrue(
+                    filePaths.All(x => x.StartsWith(vfs.JoinPaths(rootPath, patternDirectoryPath) + ds, StringComparison.Ordinal)),
+                    "Enumerated file paths do not preserve the path of a directory being enumerated.");
+
+                Assert.IsTrue(
+                    filePaths.All(vfs.FileExists),
+                    "Enumerated file paths are pointing to non-existing files.");
+            }
         }
     }
 

@@ -38,6 +38,11 @@ public interface IReadOnlyFileSystemView
     /// </summary>
     bool SupportsLastAccessTime { get; }
 
+    /// <summary>
+    /// Gets a value indicating whether the current file storage supports file and directory attributes.
+    /// </summary>
+    bool SupportsAttributes { get; }
+
     #endregion
 
     #region Files
@@ -209,6 +214,13 @@ public interface IReadOnlyFileSystemView
     /// </remarks>
     /// <inheritdoc cref="File.GetLastAccessTimeUtc(string)"/>
     DateTime GetLastAccessTime(string path);
+
+    /// <summary>
+    /// Gets the <see cref="FileAttributes"/> of the specified file or directory.
+    /// </summary>
+    /// <param name="path">The file or directory for which to obtain attribute information.</param>
+    /// <inheritdoc cref="File.GetAttributes(string)"/>
+    FileAttributes GetAttributes(string path);
 
     #endregion
 

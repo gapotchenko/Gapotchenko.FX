@@ -43,6 +43,9 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     /// <inheritdoc/>
     public virtual bool SupportsLastAccessTime => BaseView.SupportsLastAccessTime;
 
+    /// <inheritdoc/>
+    public virtual bool SupportsAttributes => BaseView.SupportsAttributes;
+
     #endregion
 
     #region Files
@@ -159,6 +162,12 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     /// <inheritdoc/>
     public virtual void SetLastAccessTime(string path, DateTime lastAccessTime) => BaseView.SetLastAccessTime(path, lastAccessTime);
 
+    /// <inheritdoc/>
+    public virtual FileAttributes GetAttributes(string path) => BaseView.GetAttributes(path);
+
+    /// <inheritdoc/>
+    public virtual void SetAttributes(string path, FileAttributes attributes) => BaseView.SetAttributes(path, attributes);
+
     #endregion
 
     #region Paths
@@ -189,6 +198,7 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path) => BaseView.GetDirectoryName(path);
 
     /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(path))]
     public virtual string? GetFileName(string? path) => BaseView.GetFileName(path);
 
     /// <inheritdoc/>

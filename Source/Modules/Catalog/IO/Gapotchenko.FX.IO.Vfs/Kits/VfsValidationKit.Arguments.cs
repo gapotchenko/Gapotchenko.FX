@@ -64,6 +64,20 @@ partial class VfsValidationKit
         }
 
         /// <summary>
+        /// Validates the specified <see cref="EnumerationOptions"/> argument value.
+        /// </summary>
+        /// <param name="enumerationOptions">The <see cref="EnumerationOptions"/> value.</param>
+        /// <param name="argumentName">The argument name.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="enumerationOptions"/> value is out of legal range.</exception>
+        public static void ValidateEnumerationOptions(
+            EnumerationOptions enumerationOptions,
+            [CallerArgumentExpression(nameof(enumerationOptions))] string? argumentName = null)
+        {
+            if (enumerationOptions is null)
+                throw new ArgumentNullException(argumentName);
+        }
+
+        /// <summary>
         /// Validates the specified <see cref="FileMode"/> and <see cref="FileAccess"/> argument values.
         /// </summary>
         /// <param name="mode">The <see cref="FileMode"/> value.</param>

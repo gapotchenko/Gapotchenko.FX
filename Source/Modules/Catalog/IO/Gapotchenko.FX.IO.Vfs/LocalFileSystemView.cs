@@ -32,6 +32,8 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override bool SupportsLastAccessTime => true;
 
+    public override bool SupportsAttributes => true;
+
     #endregion
 
     #region Files
@@ -45,15 +47,10 @@ sealed class LocalFileSystemView : FileSystemViewKit
     public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateFiles(path, searchPattern, searchOption);
 
-    public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
-    {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
-        return Directory.EnumerateFiles(path, searchPattern, enumerationOptions);
-#else
-        // TODO
-        throw new NotImplementedException();
+    public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
+        Directory.EnumerateFiles(path, searchPattern, enumerationOptions);
 #endif
-    }
 
     public override Stream ReadFile(string path) => File.OpenRead(path);
 
@@ -106,15 +103,10 @@ sealed class LocalFileSystemView : FileSystemViewKit
     public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateDirectories(path, searchPattern, searchOption);
 
-    public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
-    {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
-        return Directory.EnumerateDirectories(path, searchPattern, enumerationOptions);
-#else
-        // TODO
-        throw new NotImplementedException();
+    public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
+        Directory.EnumerateDirectories(path, searchPattern, enumerationOptions);
 #endif
-    }
 
     public override void CreateDirectory(string path) => Directory.CreateDirectory(path);
 
@@ -170,15 +162,10 @@ sealed class LocalFileSystemView : FileSystemViewKit
     public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
         Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
 
-    public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
-    {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
-        return Directory.EnumerateFileSystemEntries(path, searchPattern, enumerationOptions);
-#else
-        // TODO
-        throw new NotImplementedException();
+    public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
+        Directory.EnumerateFileSystemEntries(path, searchPattern, enumerationOptions);
 #endif
-    }
 
     public override DateTime GetCreationTime(string path)
     {
@@ -225,6 +212,10 @@ sealed class LocalFileSystemView : FileSystemViewKit
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     static readonly DateTime m_NonExistentEntryTime = DateTime.FromFileTimeUtc(0);
+
+    public override FileAttributes GetAttributes(string path) => File.GetAttributes(path);
+
+    public override void SetAttributes(string path, FileAttributes attributes) => File.SetAttributes(path, attributes);
 
     #endregion
 
@@ -334,6 +325,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
 #endif
     }
 
+    [return: NotNullIfNotNull(nameof(path))]
     public override string? GetFileName(string? path)
     {
         return Path.GetFileName(path);

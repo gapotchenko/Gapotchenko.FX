@@ -139,5 +139,13 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// </param>
     void SetLastAccessTime(string path, DateTime lastAccessTime);
 
+    /// <summary>
+    /// Sets the specified <see cref="FileAttributes"/> of the file or directory on the specified path.
+    /// </summary>
+    /// <param name="path">The file or directory for which to set the attribute information.</param>
+    /// <param name="attributes">The attributes to set.</param>
+    /// <inheritdoc cref="File.SetAttributes(string, FileAttributes)"/>
+    void SetAttributes(string path, FileAttributes attributes);
+
     #endregion
 }
