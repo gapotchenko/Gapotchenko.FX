@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.IO.Vfs;
 partial class FileSystemViewExtensions
 {
     /// <inheritdoc cref="Directory.Delete(string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static void DeleteDirectory(this IFileSystemView view, string path) =>
         (view ?? throw new ArgumentNullException(nameof(view)))
@@ -25,7 +25,7 @@ partial class FileSystemViewExtensions
     /// Overwriting a directory of the same name is not allowed.
     /// </summary>
     /// <inheritdoc cref="IFileSystemView.CopyDirectory(string, string, bool, VfsCopyOptions)"/>
-    /// <param name="view">The file-system view to copy the directory for.</param>
+    /// <param name="view">The file system view to copy the directory for.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
     public static void CopyDirectory(
@@ -39,7 +39,7 @@ partial class FileSystemViewExtensions
     /// Overwriting a directory of the same name is controlled by the <paramref name="overwrite"/> parameter.
     /// </summary>
     /// <inheritdoc cref="IFileSystemView.CopyDirectory(string, string, bool, VfsCopyOptions)"/>
-    /// <param name="view">The file-system view to copy the directory for.</param>
+    /// <param name="view">The file system view to copy the directory for.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
     /// <param name="overwrite"><inheritdoc/></param>
@@ -104,7 +104,7 @@ partial class FileSystemViewExtensions
     /// providing the option to specify a new directory name.
     /// </summary>
     /// <inheritdoc cref="IFileSystemView.MoveDirectory(string, string, bool, VfsMoveOptions)"/>
-    /// <param name="view">The file-system view to move the directory at.</param>
+    /// <param name="view">The file system view to move the directory at.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
     public static void MoveDirectory(
@@ -119,7 +119,7 @@ partial class FileSystemViewExtensions
     /// to overwrite the destination directory if it already exists.
     /// </summary>
     /// <inheritdoc cref="IFileSystemView.MoveDirectory(string, string, bool, VfsMoveOptions)"/>
-    /// <param name="view">The file-system view to move the directory at.</param>
+    /// <param name="view">The file system view to move the directory at.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
     /// <param name="overwrite"><inheritdoc/></param>

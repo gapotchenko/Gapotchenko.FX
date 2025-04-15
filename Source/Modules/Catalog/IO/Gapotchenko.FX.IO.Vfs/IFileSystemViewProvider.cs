@@ -16,7 +16,7 @@ namespace Gapotchenko.FX.IO.Vfs;
 public interface IFileSystemViewProvider : ICanProvideFileSystemView, IReadOnlyFileSystemViewProvider
 {
     /// <summary>
-    /// Gets the file-system view.
+    /// Gets the file system view.
     /// </summary>
     new IFileSystemView FileSystemView { get; }
 }
@@ -31,7 +31,7 @@ public interface IFileSystemViewProvider : ICanProvideFileSystemView, IReadOnlyF
 public interface IReadOnlyFileSystemViewProvider : ICanProvideReadOnlyFileSystemView
 {
     /// <summary>
-    /// Gets the file-system view.
+    /// Gets the file system view.
     /// </summary>
     IReadOnlyFileSystemView FileSystemView { get; }
 }

@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Represents a virtual file-system view of the local file system.
+/// Represents a virtual file system view of the local file system.
 /// </summary>
 sealed class LocalFileSystemView : FileSystemViewKit
 {

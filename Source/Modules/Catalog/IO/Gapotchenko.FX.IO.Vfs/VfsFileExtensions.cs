@@ -38,7 +38,7 @@ public static class VfsFileExtensions
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
     /// <param name="file">The <see cref="IVfsFile{TVfs, TOptions}"/> instance.</param>
-    /// <param name="view">The file-system view to open the file at.</param>
+    /// <param name="view">The file system view to open the file at.</param>
     /// <param name="path">The file to be opened for reading.</param>
     /// <param name="options">The storage options.</param>
     /// <returns>A read-only <typeparamref name="TVfs"/> instance opened for the specified path.</returns>
@@ -77,7 +77,7 @@ public static class VfsFileExtensions
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
     /// <param name="file">The <see cref="IVfsFile{TVfs, TOptions}"/> instance.</param>
-    /// <param name="view">The file-system view to open the file at.</param>
+    /// <param name="view">The file system view to open the file at.</param>
     /// <param name="path">The file to be opened for writing.</param>
     /// <param name="options">The storage options.</param>
     /// <returns>An unshared <typeparamref name="TVfs"/> instance opened for the specified path with read/write access.</returns>
@@ -118,7 +118,7 @@ public static class VfsFileExtensions
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
     /// <param name="file">The <see cref="IVfsFile{TVfs, TOptions}"/> instance.</param>
-    /// <param name="view">The file-system view to create the file at.</param>
+    /// <param name="view">The file system view to create the file at.</param>
     /// <param name="path">The path of the file create.</param>
     /// <param name="options">The storage options.</param>
     public static TVfs Create<TVfs, TOptions>(
@@ -167,7 +167,7 @@ public static class VfsFileExtensions
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
     /// <param name="file">The <see cref="IVfsFile{TVfs, TOptions}"/> instance.</param>
-    /// <param name="view">The file-system view to open the file at.</param>
+    /// <param name="view">The file system view to open the file at.</param>
     /// <param name="path">The file to open.</param>
     /// <param name="mode">The file mode.</param>
     /// <param name="access">The file access.</param>

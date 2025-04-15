@@ -9,19 +9,19 @@ using Gapotchenko.FX.IO.Vfs.Utils;
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Provides static methods for working with virtual file-system views.
+/// Provides static methods for working with virtual file system views.
 /// </summary>
 public static class FileSystemView
 {
     /// <summary>
-    /// Gets the virtual file-system view of the local file system.
+    /// Gets the virtual file system view of the local file system.
     /// </summary>
     public static IFileSystemView Local => LocalFileSystemView.Instance;
 
     /// <summary>
     /// Gets a view on the specified virtual file system with capabilities enforced according to the specified values.
     /// </summary>
-    /// <param name="view">The virtual file-system view to enforce the capabilities for.</param>
+    /// <param name="view">The virtual file system view to enforce the capabilities for.</param>
     /// <param name="canRead">Indicates whether the file system should support reading.</param>
     /// <param name="canWrite">Indicates whether the file system should support writing.</param>
     /// <returns>

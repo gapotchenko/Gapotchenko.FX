@@ -43,7 +43,7 @@ partial class FileSystemViewExtensions
     /// If a specified path component is <see langword="null"/> or its length is zero, the method concatenates the remaining parts.
     /// If the length of the resulting concatenated string is zero, the method returns <see cref="string.Empty"/>.
     /// </remarks>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="paths">A sequence of paths.</param>
     /// <returns>The concatenated path.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>

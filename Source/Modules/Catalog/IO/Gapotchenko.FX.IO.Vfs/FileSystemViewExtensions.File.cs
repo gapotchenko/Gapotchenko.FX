@@ -24,7 +24,7 @@ partial class FileSystemViewExtensions
     #region Open
 
     /// <inheritdoc cref="File.OpenWrite(string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static Stream WriteFile(this IFileSystemView view, string path)
     {
@@ -38,7 +38,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.OpenText(string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static StreamReader ReadTextFile(this IReadOnlyFileSystemView view, string path)
     {
@@ -52,14 +52,14 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.Open(string, FileMode)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="mode"><inheritdoc/></param>
     public static Stream OpenFile(this IFileSystemView view, string path, FileMode mode) =>
         OpenFile(view, path, mode, FileAccess.ReadWrite);
 
     /// <inheritdoc cref="File.Open(string, FileMode, FileAccess)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="mode"><inheritdoc/></param>
     /// <param name="access"><inheritdoc/></param>
@@ -76,7 +76,7 @@ partial class FileSystemViewExtensions
     #region Create
 
     /// <inheritdoc cref="File.Create(string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static Stream CreateFile(this IFileSystemView view, string path)
     {
@@ -89,7 +89,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.CreateText(string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static StreamWriter CreateTextFile(this IFileSystemView view, string path)
     {
@@ -122,7 +122,7 @@ partial class FileSystemViewExtensions
     #region Append
 
     /// <inheritdoc cref="File.AppendText(string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static StreamWriter AppendTextFile(this IFileSystemView view, string path)
     {
@@ -155,7 +155,7 @@ partial class FileSystemViewExtensions
     #region Read/write bytes
 
     /// <inheritdoc cref="File.ReadAllBytes(string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static byte[] ReadAllFileBytes(this IReadOnlyFileSystemView view, string path)
     {
@@ -269,7 +269,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.WriteAllBytes(string, byte[])"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="bytes"><inheritdoc/></param>
     public static void WriteAllFileBytes(this IFileSystemView view, string path, byte[] bytes)
@@ -297,7 +297,7 @@ partial class FileSystemViewExtensions
     #region Read/write/append text
 
     /// <inheritdoc cref="File.ReadAllText(string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static string ReadAllFileText(this IReadOnlyFileSystemView view, string path)
     {
@@ -311,7 +311,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.ReadAllText(string, Encoding)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
     public static string ReadAllFileText(this IReadOnlyFileSystemView view, string path, Encoding encoding)
@@ -332,7 +332,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.WriteAllText(string, string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     public static void WriteAllFileText(this IFileSystemView view, string path, string? contents)
@@ -352,7 +352,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.WriteAllText(string, string, Encoding)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
@@ -373,7 +373,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.AppendAllText(string, string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     public static void AppendAllFileText(this IFileSystemView view, string path, string? contents)
@@ -393,7 +393,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.AppendAllText(string, string, Encoding)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
@@ -418,7 +418,7 @@ partial class FileSystemViewExtensions
     #region Read/write/append lines
 
     /// <inheritdoc cref="File.ReadLines(string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static IEnumerable<string> ReadFileLines(this IReadOnlyFileSystemView view, string path)
     {
@@ -432,7 +432,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.ReadLines(string, Encoding)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
     public static IEnumerable<string> ReadFileLines(this IReadOnlyFileSystemView view, string path, Encoding encoding)
@@ -455,7 +455,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.ReadAllLines(string)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static string[] ReadAllFileLines(this IReadOnlyFileSystemView view, string path)
     {
@@ -469,7 +469,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.ReadAllLines(string, Encoding)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
     public static string[] ReadAllFileLines(this IReadOnlyFileSystemView view, string path, Encoding encoding)
@@ -495,7 +495,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.WriteAllLines(string, IEnumerable{string})"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     public static void WriteAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents)
@@ -518,7 +518,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.WriteAllLines(string, IEnumerable{string}, Encoding)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
@@ -548,7 +548,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.AppendAllLines(string, IEnumerable{string})"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     public static void AppendAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents)
@@ -571,7 +571,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="File.AppendAllLines(string, IEnumerable{string}, Encoding)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     /// <param name="encoding"><inheritdoc/></param>
@@ -603,7 +603,7 @@ partial class FileSystemViewExtensions
     /// Overwriting a file of the same name is not allowed.
     /// </summary>
     /// <inheritdoc cref="IFileSystemView.CopyFile(string, string, bool, VfsCopyOptions)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
     public static void CopyFile(
@@ -617,7 +617,7 @@ partial class FileSystemViewExtensions
     /// Overwriting a file of the same name is controlled by the <paramref name="overwrite"/> parameter.
     /// </summary>
     /// <inheritdoc cref="IFileSystemView.CopyFile(string, string, bool, VfsCopyOptions)"/>
-    /// <param name="view">The file-system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
     /// <param name="overwrite"><inheritdoc/></param>
@@ -685,7 +685,7 @@ partial class FileSystemViewExtensions
     /// providing the option to specify a new file name.
     /// </summary>
     /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool, VfsMoveOptions)"/>
-    /// <param name="view">The file-system view to move the file at.</param>
+    /// <param name="view">The file system view to move the file at.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
     public static void MoveFile(
@@ -700,7 +700,7 @@ partial class FileSystemViewExtensions
     /// to overwrite the destination file if it already exists.
     /// </summary>
     /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool, VfsMoveOptions)"/>
-    /// <param name="view">The file-system view to move the file at.</param>
+    /// <param name="view">The file system view to move the file at.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
     /// <param name="overwrite"><inheritdoc/></param>
