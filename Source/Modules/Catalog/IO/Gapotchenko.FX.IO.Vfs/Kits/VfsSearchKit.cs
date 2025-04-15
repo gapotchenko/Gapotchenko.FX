@@ -121,4 +121,24 @@ public static class VfsSearchKit
             StringComparison.CurrentCultureIgnoreCase or
             StringComparison.InvariantCultureIgnoreCase or
             StringComparison.OrdinalIgnoreCase;
+
+    /// <summary>
+    /// Calculates the effective directory path that should be used for enumerating file-system entries
+    /// by the specified search pattern.
+    /// </summary>
+    /// <param name="view">The file system view.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="searchPattern">The search pattern.</param>
+    public static void AdjustPatternPath(IReadOnlyFileSystemView view, ref string path, ref string searchPattern)
+    {
+        if (view.IsPathRooted(searchPattern))
+            throw new ArgumentException(VfsResourceKit.SecondPathFragmentMustNotBeRooted, nameof(searchPattern));
+
+        string? directoryName = view.GetDirectoryName(searchPattern);
+        if (!string.IsNullOrEmpty(directoryName))
+        {
+            path = view.JoinPaths(path, directoryName);
+            searchPattern = view.GetFileName(searchPattern);
+        }
+    }
 }

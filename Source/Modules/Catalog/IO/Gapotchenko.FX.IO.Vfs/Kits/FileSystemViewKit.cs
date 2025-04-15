@@ -6,7 +6,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO.Vfs.Utils;
+using System.Security;
 using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs.Kits;
@@ -216,6 +218,10 @@ public abstract class FileSystemViewKit : IFileSystemView
         EnsureCanRead();
 
         // ----------------------------------------------------------------------
+        // Parameters calculation
+        // ----------------------------------------------------------------------
+
+        VfsSearchKit.AdjustPatternPath(this, ref path, ref searchPattern);
 
         int maxRecursionDepth = VfsSearchKit.GetMaxRecursionDepth(options);
 
@@ -223,11 +229,8 @@ public abstract class FileSystemViewKit : IFileSystemView
         if (attributesToSkip != 0 && !SupportsAttributes)
             attributesToSkip = 0;
 
-        bool returnSpecialDirectories = options.ReturnSpecialDirectories;
-        bool ignoreInaccesible = options.IgnoreInaccessible;
-
-        (path, searchPattern) = CalculateEntryEnumerationPath(path, searchPattern);
-
+        // ----------------------------------------------------------------------
+        // Short circuit handling
         // ----------------------------------------------------------------------
 
         if (options.MatchType == MatchType.Win32 &&
@@ -235,49 +238,140 @@ public abstract class FileSystemViewKit : IFileSystemView
         {
             if (maxRecursionDepth is 0 or int.MaxValue &&
                 attributesToSkip == 0 &&
-                !returnSpecialDirectories &&
-                !ignoreInaccesible)
+                !options.ReturnSpecialDirectories &&
+                !options.IgnoreInaccessible)
             {
                 var searchOption = maxRecursionDepth is 0 ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
-                return
-                    (enumerateFiles, enumerateDirectories) switch
-                    {
-                        (true, false) => EnumerateFiles(path, searchPattern, searchOption),
-                        (false, true) => EnumerateDirectories(path, searchPattern, searchOption),
-                        (true, true) => EnumerateEntries(path, searchPattern, searchOption),
-                        (false, false) => []
-                    };
+                return EnumerateEntriesCore(path, searchPattern, searchOption, enumerateFiles, enumerateDirectories);
             }
         }
 
         // ----------------------------------------------------------------------
+        // Polyfill implementation using more basic but available primitives
+        // ----------------------------------------------------------------------
 
-        // TODO
+        return EnumerateEntriesPolyfill();
 
-        throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// Calculates the effective directory path that should be used for enumerating file-system entries.
-    /// </summary>
-    /// <param name="path">The directory path.</param>
-    /// <param name="searchPattern">The search pattern.</param>
-    /// <returns>
-    /// A tuple containing a calculated directory path and a modified search pattern.
-    /// </returns>
-    protected (string Path, string SearchPattern) CalculateEntryEnumerationPath(string path, string searchPattern)
-    {
-        if (IsPathRooted(searchPattern))
-            throw new ArgumentException(VfsResourceKit.SecondPathFragmentMustNotBeRooted, nameof(searchPattern));
-
-        string? directoryName = GetDirectoryName(searchPattern);
-        if (!string.IsNullOrEmpty(directoryName))
+        IEnumerable<string> EnumerateEntriesPolyfill()
         {
-            path = this.JoinPaths(path, directoryName);
-            searchPattern = GetFileName(searchPattern);
+            var searchExpression = new VfsSearchExpression(
+                searchPattern,
+                DirectorySeparatorChar,
+                options.MatchType,
+                VfsSearchKit.GetSearchExpressionOptions(this, options.MatchCasing));
+
+            string entryPath = path;
+            int remainingRecursionDepth = maxRecursionDepth;
+
+            var pending = new Queue<(string Path, int RemainingRecursionDepth)>();
+
+            for (; ; )
+            {
+                foreach (string i in EnumerateHierarchy(entryPath, remainingRecursionDepth))
+                    yield return i;
+
+                if (!pending.TryDequeue(out var next))
+                    break;
+
+                entryPath = next.Path;
+                remainingRecursionDepth = next.RemainingRecursionDepth;
+            }
+
+            IEnumerable<string> EnumerateHierarchy(string path, int remainingRecursionDepth)
+            {
+                IEnumerable<string> query;
+
+                try
+                {
+                    query = EnumerateEntriesCore(
+                        path,
+                        "*",
+                        SearchOption.TopDirectoryOnly,
+                        enumerateFiles,
+                        enumerateDirectories || remainingRecursionDepth > 0);
+                }
+                catch (Exception e) when (options.IgnoreInaccessible && e is UnauthorizedAccessException or SecurityException)
+                {
+                    // Ignore an access error.
+                    yield break;
+                }
+
+                if (enumerateDirectories && options.ReturnSpecialDirectories)
+                {
+                    // Emulate special directories.
+
+                    // The current directory ".".
+                    yield return this.JoinPaths(path, ".");
+
+                    // The parent directory "..".
+                    if (!GetDirectoryName(path.AsSpan()).IsEmpty)
+                    {
+                        string directoryPath = this.JoinPaths(path, "..");
+                        if (!options.IgnoreInaccessible || DirectoryExists(directoryPath))
+                            yield return directoryPath;
+                    }
+                }
+
+                foreach (string entryPath in query)
+                {
+                    FileAttributes? entryAttributes = null;
+
+                    if (attributesToSkip != 0)
+                    {
+                        var attributes = GetAttributes(entryPath);
+                        if ((attributes & attributesToSkip) != 0)
+                            continue;
+                        entryAttributes = attributes;
+                    }
+
+                    bool fileExists = false;
+                    if (enumerateFiles &&
+                        ((entryAttributes.HasValue && (entryAttributes.Value & FileAttributes.Directory) == 0) ||
+                        (fileExists = FileExists(entryPath))))
+                    {
+                        if (searchExpression.IsMatch(GetFileName(entryPath.AsSpan())))
+                        {
+                            if (fileExists || !options.IgnoreInaccessible || FileExists(entryPath))
+                                yield return path;
+                        }
+                        continue;
+                    }
+
+                    if (options.IgnoreInaccessible && !DirectoryExists(entryPath))
+                        continue;
+
+                    if (enumerateDirectories)
+                    {
+                        if (searchExpression.IsMatch(GetFileName(entryPath.AsSpan())))
+                            yield return path;
+                    }
+
+                    if (remainingRecursionDepth > 0)
+                        pending.Enqueue((entryPath, remainingRecursionDepth - 1));
+                }
+            }
         }
 
-        return (path, searchPattern);
+        // ----------------------------------------------------------------------
+        // Helper functions
+        // ----------------------------------------------------------------------
+
+        IEnumerable<string> EnumerateEntriesCore(
+           string path,
+           string searchPattern,
+           SearchOption searchOption,
+           bool enumerateFiles,
+           bool enumerateDirectories)
+        {
+            return
+                (enumerateFiles, enumerateDirectories) switch
+                {
+                    (true, false) => EnumerateFiles(path, searchPattern, searchOption),
+                    (false, true) => EnumerateDirectories(path, searchPattern, searchOption),
+                    (true, true) => EnumerateEntries(path, searchPattern, searchOption),
+                    (false, false) => []
+                };
+        }
     }
 
     /// <inheritdoc/>

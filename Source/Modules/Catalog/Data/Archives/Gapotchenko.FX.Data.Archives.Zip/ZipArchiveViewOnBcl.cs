@@ -47,7 +47,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         EnsureCanRead();
 
-        (path, searchPattern) = CalculateEntryEnumerationPath(path, searchPattern);
+        VfsSearchKit.AdjustPatternPath(this, ref path, ref searchPattern);
 
         var structuredPath = new StructuredPath(path);
         return
@@ -213,7 +213,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         EnsureCanRead();
 
-        (path, searchPattern) = CalculateEntryEnumerationPath(path, searchPattern);
+        VfsSearchKit.AdjustPatternPath(this, ref path, ref searchPattern);
 
         var structuredPath = new StructuredPath(path);
         return
@@ -342,7 +342,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         EnsureCanRead();
 
-        (path, searchPattern) = CalculateEntryEnumerationPath(path, searchPattern);
+        VfsSearchKit.AdjustPatternPath(this, ref path, ref searchPattern);
 
         var structuredPath = new StructuredPath(path);
         return
