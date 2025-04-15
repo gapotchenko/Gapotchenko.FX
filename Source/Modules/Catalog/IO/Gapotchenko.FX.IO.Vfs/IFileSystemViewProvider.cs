@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// This interface is useful in conjunction with <see cref="FileSystemView.For(IFileSystemViewProvider)"/> method.
 /// </remarks>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
-public interface IFileSystemViewProvider : ICanProvideFileSystemView, IReadOnlyFileSystemViewProvider
+public interface IFileSystemViewProvider : IFileSystemViewProvisionIntent, IReadOnlyFileSystemViewProvider
 {
     /// <summary>
     /// Gets the file system view.
@@ -28,7 +28,7 @@ public interface IFileSystemViewProvider : ICanProvideFileSystemView, IReadOnlyF
 /// This interface is useful in conjunction with <see cref="FileSystemView.For(IReadOnlyFileSystemViewProvider)"/> method.
 /// </remarks>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
-public interface IReadOnlyFileSystemViewProvider : ICanProvideReadOnlyFileSystemView
+public interface IReadOnlyFileSystemViewProvider : IReadOnlyFileSystemViewProvisionIntent
 {
     /// <summary>
     /// Gets the file system view.
@@ -44,11 +44,11 @@ public interface IReadOnlyFileSystemViewProvider : ICanProvideReadOnlyFileSystem
 /// A type implementing this interface should also implement <see cref="IFileSystemViewProvider"/> interface.
 /// </para>
 /// <para>
-/// This interface is useful in conjunction with <see cref="FileSystemView.For(ICanProvideFileSystemView)"/> method.
+/// This interface is useful in conjunction with <see cref="FileSystemView.For(IFileSystemViewProvisionIntent)"/> method.
 /// </para>
 /// </remarks>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
-public interface ICanProvideFileSystemView : ICanProvideReadOnlyFileSystemView
+public interface IFileSystemViewProvisionIntent : IReadOnlyFileSystemViewProvisionIntent
 {
 }
 
@@ -60,10 +60,10 @@ public interface ICanProvideFileSystemView : ICanProvideReadOnlyFileSystemView
 /// A type implementing this interface should also implement <see cref="IReadOnlyFileSystemViewProvider"/> interface.
 /// </para>
 /// <para>
-/// This interface is useful in conjunction with <see cref="FileSystemView.For(ICanProvideReadOnlyFileSystemView)"/> method.
+/// This interface is useful in conjunction with <see cref="FileSystemView.For(IReadOnlyFileSystemViewProvisionIntent)"/> method.
 /// </para>
 /// </remarks>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
-public interface ICanProvideReadOnlyFileSystemView
+public interface IReadOnlyFileSystemViewProvisionIntent
 {
 }

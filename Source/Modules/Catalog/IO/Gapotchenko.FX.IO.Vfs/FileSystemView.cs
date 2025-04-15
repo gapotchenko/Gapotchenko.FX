@@ -48,7 +48,7 @@ public static class FileSystemView
     }
 
     /// <summary>
-    /// Gets an <see cref="IReadOnlyFileSystemView"/> instance from the specified file-system view provider.
+    /// Gets an <see cref="IReadOnlyFileSystemView"/> instance from the specified file system view provider.
     /// </summary>
     /// <remarks>
     /// This method allows to retrieve an <see cref="IReadOnlyFileSystemView"/> instance
@@ -65,7 +65,7 @@ public static class FileSystemView
         .FileSystemView;
 
     /// <summary>
-    /// Gets an <see cref="IFileSystemView"/> instance from the specified file-system view provider.
+    /// Gets an <see cref="IFileSystemView"/> instance from the specified file system view provider.
     /// </summary>
     /// <remarks>
     /// This method allows to retrieve an <see cref="IFileSystemView"/> instance
@@ -83,8 +83,7 @@ public static class FileSystemView
 
     /// <inheritdoc cref="For(IReadOnlyFileSystemViewProvider)"/>
     /// <exception cref="ArgumentException">The object does not implement <see cref="IReadOnlyFileSystemViewProvider"/> interface.</exception>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static IReadOnlyFileSystemView For(ICanProvideReadOnlyFileSystemView provider) =>
+    public static IReadOnlyFileSystemView For(IReadOnlyFileSystemViewProvisionIntent provider) =>
         ((provider ?? throw new ArgumentNullException(nameof(provider)))
         as IReadOnlyFileSystemViewProvider
         ?? throw new ArgumentException(
@@ -94,8 +93,7 @@ public static class FileSystemView
 
     /// <inheritdoc cref="For(IFileSystemViewProvider)"/>
     /// <exception cref="ArgumentException">The object does not implement <see cref="IFileSystemViewProvider"/> interface.</exception>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static IFileSystemView For(ICanProvideFileSystemView provider) =>
+    public static IFileSystemView For(IFileSystemViewProvisionIntent provider) =>
         ((provider ?? throw new ArgumentNullException(nameof(provider)))
         as IFileSystemViewProvider
         ?? throw new ArgumentException(
