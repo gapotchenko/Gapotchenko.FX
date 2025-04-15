@@ -330,7 +330,7 @@ public abstract class FileSystemViewKit : IFileSystemView
                         if (searchExpression.IsMatch(GetFileName(entryPath.AsSpan())))
                         {
                             if (fileExists || !options.IgnoreInaccessible || FileExists(entryPath))
-                                yield return path;
+                                yield return entryPath;
                         }
                         continue;
                     }
@@ -341,7 +341,7 @@ public abstract class FileSystemViewKit : IFileSystemView
                     if (enumerateDirectories)
                     {
                         if (searchExpression.IsMatch(GetFileName(entryPath.AsSpan())))
-                            yield return path;
+                            yield return entryPath;
                     }
 
                     if (remainingRecursionDepth > 0)

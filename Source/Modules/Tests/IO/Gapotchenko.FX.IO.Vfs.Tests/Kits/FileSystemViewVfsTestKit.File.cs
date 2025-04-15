@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.Linq;
+
 namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
 partial class FileSystemViewVfsTestKit
@@ -544,9 +546,9 @@ partial class FileSystemViewVfsTestKit
                 [
                     "A", "B", "C",
                     "Empty" + ds,
-                    $"Container{ds}1.txt",
-                    $"Container{ds}2.txt",
-                    $"Container{ds}3.bin"
+                    $"Container 1{ds}1.txt",
+                    $"Container 1{ds}2.txt",
+                    $"Container 1{ds}3.bin"
                 ]);
         }
 
@@ -565,7 +567,7 @@ partial class FileSystemViewVfsTestKit
             {
                 string directoryPath = vfs.JoinPaths(rootPath, $"Empty{eds}..");
 
-                var filePaths = vfs.EnumerateFiles(directoryPath).ToList();
+                var filePaths = vfs.EnumerateFiles(directoryPath).ToHashSet(StringComparer.Ordinal);
 
                 Assert.AreEqual(3, filePaths.Count);
 
@@ -576,6 +578,10 @@ partial class FileSystemViewVfsTestKit
                 Assert.IsTrue(
                     filePaths.All(vfs.FileExists),
                     "Enumerated file paths are pointing to non-existing files.");
+
+                Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*")));
+                Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*", SearchOption.TopDirectoryOnly)));
+                Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*", new EnumerationOptions())));
             }
 
             // ---------------------------------------------------------------------------
@@ -584,9 +590,10 @@ partial class FileSystemViewVfsTestKit
 
             void Scenario2()
             {
-                string patternDirectoryPath = vfs.JoinPaths("Container", ".");
+                string searchPatternDirectoryPath = vfs.JoinPaths("Container 1", ".");
+                string searchPattern = vfs.JoinPaths(searchPatternDirectoryPath, "*.txt");
 
-                var filePaths = vfs.EnumerateFiles(rootPath, vfs.JoinPaths(patternDirectoryPath, "*.txt")).ToList();
+                var filePaths = vfs.EnumerateFiles(rootPath, searchPattern).ToHashSet(StringComparer.Ordinal);
 
                 Assert.AreEqual(2, filePaths.Count);
 
@@ -595,12 +602,15 @@ partial class FileSystemViewVfsTestKit
                     "Enumerated file paths do not match the search pattern.");
 
                 Assert.IsTrue(
-                    filePaths.All(x => x.StartsWith(vfs.JoinPaths(rootPath, patternDirectoryPath) + ds, StringComparison.Ordinal)),
+                    filePaths.All(x => x.StartsWith(vfs.JoinPaths(rootPath, searchPatternDirectoryPath) + ds, StringComparison.Ordinal)),
                     "Enumerated file paths do not preserve the path of a directory being enumerated.");
 
                 Assert.IsTrue(
                     filePaths.All(vfs.FileExists),
                     "Enumerated file paths are pointing to non-existing files.");
+
+                Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(rootPath, searchPattern, SearchOption.TopDirectoryOnly)));
+                Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(rootPath, searchPattern, new EnumerationOptions())));
             }
         }
     }
