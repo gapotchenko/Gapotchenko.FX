@@ -17,8 +17,8 @@ namespace Gapotchenko.FX.IO.Vfs.Kits;
 /// Provides a base implementation of <see cref="IFileSystemView"/> interface.
 /// </summary>
 /// <remarks>
-/// This class provides a foundation for a virtual file system (VFS) implementation.
-/// While it is not obligatory to use this class, doing so may significantly simplify a particular VFS implementation.
+/// This class provides a solid foundation for a virtual file system (VFS) implementation.
+/// While it is not obligatory to use it, doing so may significantly simplify a particular VFS implementation.
 /// </remarks>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
 public abstract class FileSystemViewKit : IFileSystemView
@@ -247,7 +247,7 @@ public abstract class FileSystemViewKit : IFileSystemView
         }
 
         // ----------------------------------------------------------------------
-        // Polyfill implementation using more basic but available primitives
+        // Polyfill implementation using more basic available primitives
         // ----------------------------------------------------------------------
 
         return EnumerateEntriesPolyfill();
@@ -264,7 +264,6 @@ public abstract class FileSystemViewKit : IFileSystemView
             int remainingRecursionDepth = maxRecursionDepth;
 
             var pending = new Queue<(string Path, int RemainingRecursionDepth)>();
-
             for (; ; )
             {
                 foreach (string i in EnumerateHierarchy(entryPath, remainingRecursionDepth))
@@ -272,7 +271,6 @@ public abstract class FileSystemViewKit : IFileSystemView
 
                 if (!pending.TryDequeue(out var next))
                     break;
-
                 entryPath = next.Path;
                 remainingRecursionDepth = next.RemainingRecursionDepth;
             }
