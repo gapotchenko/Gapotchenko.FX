@@ -34,6 +34,9 @@ abstract class ZipArchiveBase : FileSystemViewKit, IZipArchive
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private protected static StringComparer m_PathComparer => StringComparer.Ordinal;
 
+    /// <inheritdoc/>
+    public sealed override StringComparison PathComparison => StringComparison.Ordinal;
+
     /// <summary>
     /// Gets the path string prefixed by the specified path.
     /// </summary>

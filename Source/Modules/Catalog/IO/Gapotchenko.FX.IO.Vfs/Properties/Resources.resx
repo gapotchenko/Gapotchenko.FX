@@ -162,4 +162,7 @@
   <data name="CannotCreateAlreadyExistingEntryX" xml:space="preserve">
     <value>Cannot create '{0}' because a file or directory with the same name already exists.</value>
   </data>
+  <data name="SecondPathFragmentMustNotBeRooted" xml:space="preserve">
+    <value>Second path fragment must not be rooted.</value>
+  </data>
 </root>

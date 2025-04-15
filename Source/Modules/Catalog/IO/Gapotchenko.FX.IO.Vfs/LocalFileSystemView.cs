@@ -227,6 +227,8 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override StringComparer PathComparer => FileSystem.PathComparer;
 
+    public override StringComparison PathComparison => FileSystem.PathComparison;
+
     public override string CombinePaths(params IEnumerable<string?> paths)
     {
         if (paths is null)

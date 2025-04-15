@@ -133,4 +133,12 @@ public static class VfsResourceKit
     /// </code>
     /// </summary>
     public static string CannotWriteFS => Resources.CannotWriteFS;
+
+    /// <summary>
+    /// Looks up a localized string similar to:
+    /// <code>
+    /// Second path fragment must not be rooted.
+    /// </code>
+    /// </summary>
+    public static string SecondPathFragmentMustNotBeRooted => Resources.SecondPathFragmentMustNotBeRooted;
 }

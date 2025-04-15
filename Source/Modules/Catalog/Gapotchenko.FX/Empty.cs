@@ -381,6 +381,41 @@ public static class Empty
     }
 
     /// <summary>
+    /// Nullifies an empty <typeparamref name="T"/> value.
+    /// </summary>
+    /// <param name="value">The value to nullify.</param>
+    /// <param name="empty">The value to treat as empty.</param>
+    /// <returns>The value or a <see langword="null"/> if the value is empty.</returns>
+    public static T? Nullify<T>(T value, T empty) where T : struct, IEquatable<T>
+    {
+        if (value.Equals(empty))
+            return null;
+        else
+            return value;
+    }
+
+    /// <summary>
+    /// Nullifies an empty <typeparamref name="T"/> value.
+    /// </summary>
+    /// <param name="value">The value to nullify.</param>
+    /// <param name="empty">The value to treat as empty.</param>
+    /// <param name="reserved">The reserved parameter used for method signature resolution.</param>
+    /// <returns>The value or a <see langword="null"/> if the value is empty.</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static T? Nullify<T>(T value, T empty, int reserved = 0) where T : struct, Enum
+    {
+        // The reserved parameter is needed to avoid the method signature conflict with
+        // an existing method that should be kept to provide backward binary compatibility
+        // between the module versions.
+        _ = reserved;
+
+        if (EqualityComparer<T>.Default.Equals(value, empty))
+            return null;
+        else
+            return value;
+    }
+
+    /// <summary>
     /// Nullifies an empty function in terms of lambda calculus provided by <see cref="Fn"/> class.
     /// </summary>
     /// <param name="action">The action.</param>

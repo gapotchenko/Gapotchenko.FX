@@ -241,6 +241,9 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="FileSystem.PathComparer"/>
     StringComparer PathComparer { get; }
 
+    /// <inheritdoc cref="FileSystem.PathComparison"/>
+    StringComparison PathComparison { get; }
+
     /// <summary>
     /// Combines a sequence of strings into a path.
     /// </summary>

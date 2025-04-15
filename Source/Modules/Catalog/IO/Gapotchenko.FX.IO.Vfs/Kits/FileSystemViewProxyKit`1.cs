@@ -182,6 +182,9 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual StringComparer PathComparer => BaseView.PathComparer;
 
     /// <inheritdoc/>
+    public virtual StringComparison PathComparison => BaseView.PathComparison;
+
+    /// <inheritdoc/>
     public virtual string CombinePaths(params IEnumerable<string?> paths) => BaseView.CombinePaths(paths);
 
     /// <inheritdoc/>

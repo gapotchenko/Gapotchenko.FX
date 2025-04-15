@@ -194,5 +194,14 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
                 return ResourceManager.GetString("PathIsEmpty", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Second path fragment must not be rooted..
+        /// </summary>
+        internal static string SecondPathFragmentMustNotBeRooted {
+            get {
+                return ResourceManager.GetString("SecondPathFragmentMustNotBeRooted", resourceCulture);
+            }
+        }
     }
 }

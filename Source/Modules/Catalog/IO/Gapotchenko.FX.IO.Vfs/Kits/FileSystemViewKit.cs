@@ -223,11 +223,34 @@ public abstract class FileSystemViewKit : IFileSystemView
         if (attributesToSkip != 0 && !SupportsAttributes)
             attributesToSkip = 0;
 
+        bool returnSpecialDirectories = options.ReturnSpecialDirectories;
+        bool ignoreInaccesible = options.IgnoreInaccessible;
+
         (path, searchPattern) = CalculateEntryEnumerationPath(path, searchPattern);
 
         // ----------------------------------------------------------------------
 
-        //if (options.MatchType == MatchType.Win32 && options.MatchCasing is MatchCasing.PlatformDefault)
+        if (options.MatchType == MatchType.Win32 &&
+            VfsSearchKit.IsDefaultMatchCasing(this, options.MatchCasing))
+        {
+            if (maxRecursionDepth is 0 or int.MaxValue &&
+                attributesToSkip == 0 &&
+                !returnSpecialDirectories &&
+                !ignoreInaccesible)
+            {
+                var searchOption = maxRecursionDepth is 0 ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
+                return
+                    (enumerateFiles, enumerateDirectories) switch
+                    {
+                        (true, false) => EnumerateFiles(path, searchPattern, searchOption),
+                        (false, true) => EnumerateDirectories(path, searchPattern, searchOption),
+                        (true, true) => EnumerateEntries(path, searchPattern, searchOption),
+                        (false, false) => []
+                    };
+            }
+        }
+
+        // ----------------------------------------------------------------------
 
         // TODO
 
@@ -244,12 +267,16 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// </returns>
     protected (string Path, string SearchPattern) CalculateEntryEnumerationPath(string path, string searchPattern)
     {
+        if (IsPathRooted(searchPattern))
+            throw new ArgumentException(VfsResourceKit.SecondPathFragmentMustNotBeRooted, nameof(searchPattern));
+
         string? directoryName = GetDirectoryName(searchPattern);
         if (!string.IsNullOrEmpty(directoryName))
         {
-            path = CombinePaths(path, directoryName);
+            path = this.JoinPaths(path, directoryName);
             searchPattern = GetFileName(searchPattern);
         }
+
         return (path, searchPattern);
     }
 
@@ -289,6 +316,9 @@ public abstract class FileSystemViewKit : IFileSystemView
 
     /// <inheritdoc/>
     public abstract StringComparer PathComparer { get; }
+
+    /// <inheritdoc/>
+    public abstract StringComparison PathComparison { get; }
 
     /// <inheritdoc/>
     public virtual string CombinePaths(params IEnumerable<string?> paths)
