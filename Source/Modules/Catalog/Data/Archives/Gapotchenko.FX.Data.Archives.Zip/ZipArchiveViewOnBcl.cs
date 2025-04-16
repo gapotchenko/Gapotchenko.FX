@@ -51,7 +51,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         var structuredPath = new StructuredPath(path);
         return
-            EnumerateEntriesCore(structuredPath, searchPattern, searchOption, true, false)
+            EnumerateEntriesCore(structuredPath, searchPattern, VfsSearchKit.GetMaxRecursionDepth(searchOption), true, false)
             .Select(x => GetPrefixedPath(structuredPath, x));
     }
 
@@ -217,7 +217,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         var structuredPath = new StructuredPath(path);
         return
-            EnumerateEntriesCore(structuredPath, searchPattern, searchOption, false, true)
+            EnumerateEntriesCore(structuredPath, searchPattern, VfsSearchKit.GetMaxRecursionDepth(searchOption), false, true)
             .Select(x => GetPrefixedPath(structuredPath, x));
     }
 
@@ -328,11 +328,22 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             return considerDirectories;
         }
 
-        return TryGetArchiveEntry(path, considerFiles, considerDirectories) != null;
+        if (TryGetArchiveEntry(path, considerFiles, considerDirectories) != null)
+            return true;
+
+        if (considerDirectories)
+        {
+            // Directory may be implicit without having a dedicated archive entry.
+            return EnumerateEntriesCore(path, throwWhenDirectoryNotFound: false).Any();
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    IEnumerable<string[]> EnumerateEntriesCore(in StructuredPath path) =>
-        EnumerateEntriesCore(path, null, SearchOption.TopDirectoryOnly, true, true);
+    IEnumerable<string[]> EnumerateEntriesCore(in StructuredPath path, bool throwWhenDirectoryNotFound = true) =>
+        EnumerateEntriesCore(path, null, 0, true, true, throwWhenDirectoryNotFound);
 
     public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption)
     {
@@ -346,27 +357,25 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         var structuredPath = new StructuredPath(path);
         return
-            EnumerateEntriesCore(structuredPath, searchPattern, searchOption, true, true)
+            EnumerateEntriesCore(structuredPath, searchPattern, VfsSearchKit.GetMaxRecursionDepth(searchOption), true, true)
             .Select(x => GetPrefixedPath(structuredPath, x));
     }
 
     IEnumerable<string[]> EnumerateEntriesCore(
         StructuredPath path,
         string? searchPattern,
-        SearchOption searchOption,
+        int maxRecursionDepth,
         bool enumerateFiles,
-        bool enumerateDirectories)
+        bool enumerateDirectories,
+        bool throwWhenDirectoryNotFound = true)
     {
         var pathParts = path.Parts;
-        bool directoryExists = false;
+        bool directoryFound = !throwWhenDirectoryNotFound;
 
         if (pathParts.Span != null)
         {
+            directoryFound |= pathParts.Length == 0;
             var searchExpression = new VfsSearchExpression(searchPattern);
-
-            directoryExists = pathParts.Length == 0;
-
-            bool recursive = searchOption == SearchOption.AllDirectories;
 
             foreach (var entry in GetArchiveEntriesSnapshot())
             {
@@ -375,17 +384,18 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                 if (entryPathParts is null)
                     continue;
 
+                int recursionDepth = entryPathParts.Length - pathParts.Length - 1;
                 bool feasibleHierarchyLevel =
-                    recursive
-                        ? entryPathParts.Length > pathParts.Length
-                        : entryPathParts.Length == pathParts.Length + 1;
-                if (directoryExists && !feasibleHierarchyLevel)
+                    recursionDepth >= 0 &&
+                    recursionDepth <= maxRecursionDepth;
+
+                if (directoryFound && !feasibleHierarchyLevel)
                     continue;
 
                 if (IsDirectoryArchiveEntry(entryPath))
                 {
                     // Directory
-                    if (enumerateDirectories || !directoryExists)
+                    if (enumerateDirectories || !directoryFound)
                     {
                         if (entryPathParts.AsSpan().StartsWith(pathParts.Span, m_PathComparer))
                         {
@@ -394,14 +404,14 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                                 if (searchExpression.IsMatch(entryPathParts[^1].AsSpan()))
                                     yield return entryPathParts;
                             }
-                            directoryExists = true;
+                            directoryFound = true;
                         }
                     }
                 }
                 else
                 {
                     // File
-                    if (enumerateFiles || !directoryExists)
+                    if (enumerateFiles || !directoryFound)
                     {
                         if (entryPathParts.AsSpan()[..^1].StartsWith(pathParts.Span, m_PathComparer))
                         {
@@ -410,14 +420,14 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                                 if (searchExpression.IsMatch(entryPathParts[^1].AsSpan()))
                                     yield return entryPathParts;
                             }
-                            directoryExists = true;
+                            directoryFound = true;
                         }
                     }
                 }
             }
         }
 
-        if (!directoryExists)
+        if (!directoryFound)
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
     }
 
