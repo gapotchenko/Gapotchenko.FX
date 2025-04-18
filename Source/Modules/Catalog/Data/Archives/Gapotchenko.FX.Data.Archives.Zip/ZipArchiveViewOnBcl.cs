@@ -467,20 +467,48 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
     {
         VfsValidationKit.Arguments.ValidatePath(path);
 
-        return
-            TryGetArchiveEntry(path, true, true)?.LastWriteTime.UtcDateTime ??
-            DateTime.MinValue;
+        EnsureCanRead();
+
+        return GetLastWriteTimeCore(path);
+
+        DateTime GetLastWriteTimeCore(in StructuredPath path)
+        {
+            return
+                TryGetArchiveEntry(path, true, true)?.LastWriteTime.UtcDateTime ??
+                EnumerateEntriesCore(path, false)
+                .Select(x => GetLastWriteTimeCore(x))
+                .MaxOrDefault(DateTime.MinValue);
+        }
     }
 
     public override void SetLastWriteTime(string path, DateTime lastWriteTime)
     {
         VfsValidationKit.Arguments.ValidatePath(path);
 
-        var entry =
-            TryGetArchiveEntry(path, true, true) ??
-            throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(path), path);
+        EnsureCanWrite();
 
-        entry.LastWriteTime = lastWriteTime.ToLocalTime();
+        SetLastWriteTimeCore(path, lastWriteTime);
+
+        void SetLastWriteTimeCore(in StructuredPath path, DateTime lastWriteTime)
+        {
+            var entry = TryGetArchiveEntry(path, true, true);
+
+            if (entry == null && DirectoryExistsCore(path))
+            {
+                // The path points to an implicit directory which has no archive entry.
+                // Let's make it explicit by creating such entry.
+                entry = archive.CreateEntry(VfsPathKit.Join(path.Parts.Span) + VfsPathKit.DirectorySeparatorChar);
+            }
+
+            if (entry == null)
+            {
+                // The path points to a non-existing entry.
+                string? displayPath = path.ToString();
+                throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
+            }
+
+            entry.LastWriteTime = lastWriteTime.ToLocalTime();
+        }
     }
 
     ZipArchiveEntry? TryGetArchiveEntry(
