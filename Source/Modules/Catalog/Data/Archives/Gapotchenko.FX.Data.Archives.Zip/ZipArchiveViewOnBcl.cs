@@ -52,7 +52,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         var structuredPath = new StructuredPath(path);
         return
             EnumerateEntriesCore(structuredPath, searchPattern, VfsSearchKit.GetMaxRecursionDepth(searchOption), true, false)
-            .Select(x => GetPrefixedPath(structuredPath, x));
+            .Select(x => GetOriginallyPrefixedPath(structuredPath, x));
     }
 
     public override Stream ReadFile(string path)
@@ -218,7 +218,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         var structuredPath = new StructuredPath(path);
         return
             EnumerateEntriesCore(structuredPath, searchPattern, VfsSearchKit.GetMaxRecursionDepth(searchOption), false, true)
-            .Select(x => GetPrefixedPath(structuredPath, x));
+            .Select(x => GetOriginallyPrefixedPath(structuredPath, x));
     }
 
     public override void CreateDirectory(string path)
@@ -358,7 +358,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         var structuredPath = new StructuredPath(path);
         return
             EnumerateEntriesCore(structuredPath, searchPattern, VfsSearchKit.GetMaxRecursionDepth(searchOption), true, true)
-            .Select(x => GetPrefixedPath(structuredPath, x));
+            .Select(x => GetOriginallyPrefixedPath(structuredPath, x));
     }
 
     IEnumerable<string[]> EnumerateEntriesCore(

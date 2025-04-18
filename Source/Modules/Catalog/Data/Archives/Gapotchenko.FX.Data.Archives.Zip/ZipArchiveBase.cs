@@ -6,6 +6,7 @@
 
 using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
+using Gapotchenko.FX.Memory;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Archives.Zip;
@@ -43,13 +44,13 @@ abstract class ZipArchiveBase : FileSystemViewKit, IZipArchive
     /// <param name="prefixPath">The prefix path.</param>
     /// <param name="parts">The parts of a path to be prefixed.</param>
     /// <returns>The path string prefixed by <paramref name="prefixPath"/>.</returns>
-    private protected string GetPrefixedPath(in StructuredPath prefixPath, ReadOnlySpan<string> parts)
+    private protected string GetOriginallyPrefixedPath(in StructuredPath prefixPath, ReadOnlySpan<string> parts)
     {
         if (prefixPath.OriginalPath is not null and string originalPath)
         {
-            int level = prefixPath.Parts.Length;
-            if (parts.Length >= level)
-                return this.JoinPaths(originalPath, VfsPathKit.Join(parts[level..]));
+            var prefixParts = prefixPath.Parts.Span;
+            if (parts.StartsWith(prefixParts, PathComparer))
+                return this.JoinPaths(originalPath, VfsPathKit.Join(parts[prefixParts.Length..]));
         }
 
         return GetFullPathCore(parts);
