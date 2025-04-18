@@ -18,7 +18,9 @@ namespace Gapotchenko.FX.IO.Vfs;
 public readonly partial struct VfsSearchExpression
 {
     /// <summary>
-    /// Returns the instance of the <see cref="VfsSearchExpression"/> structure that matches everything.
+    /// Returns the instance of the <see cref="VfsSearchExpression"/> structure
+    /// that represents the absence of expression
+    /// and matches everything.
     /// </summary>
     public static VfsSearchExpression None => new();
 

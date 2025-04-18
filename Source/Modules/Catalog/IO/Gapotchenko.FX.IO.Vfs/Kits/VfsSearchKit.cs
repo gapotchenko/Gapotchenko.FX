@@ -129,6 +129,7 @@ public static class VfsSearchKit
     /// <param name="view">The file system view.</param>
     /// <param name="path">The directory path.</param>
     /// <param name="searchPattern">The search pattern.</param>
+    /// <exception cref="ArgumentException">Second path fragment defined by <paramref name="searchPattern"/> must be rooted.</exception>
     public static void AdjustPatternPath(IReadOnlyFileSystemView view, ref string path, ref string searchPattern)
     {
         if (view.IsPathRooted(searchPattern))
