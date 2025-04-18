@@ -365,8 +365,10 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             directoryFound |= pathParts.Length == 0;
 
             // Keep track of duplicates because directories can be defined implicitly
-            // as a matter of fact without dedicated entries in the archive.
-            HashSet<ReadOnlyMemory<string>>? enumeratedDirectories = enumerateDirectories ? new(MemoryEqualityComparerForPathParts) : null;
+            // without presence of dedicated entries in the archive as a matter of fact.
+            HashSet<ReadOnlyMemory<string>>? enumeratedDirectories = enumerateDirectories
+                ? new(MemoryEqualityComparerForPathParts)
+                : null;
 
             var searchExpression = searchPattern is null
                 ? VfsSearchExpression.None
@@ -392,7 +394,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                 {
                     int recursionDepth = entryPathParts.Length - pathParts.Length - 1;
 
-                    bool? parentDirectoryMatch = null; // assists in lookup optimizations
+                    bool? parentDirectoryMatch = null; // assists in directory check optimizations
                     if (enumerateDirectories && recursionDepth > 0)
                     {
                         var parentDirectoryPathParts = entryPathParts[..^1];
@@ -437,13 +439,13 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
                     if (assumeDirectory || IsDirectoryArchiveEntry(entryPath))
                     {
-                        // Directory
+                        // A directory.
                         if (enumeratedDirectories != null && enumeratedDirectories.Add(entryPathParts))
                             yield return entryPathParts;
                     }
                     else
                     {
-                        // File
+                        // A file.
                         if (enumerateFiles)
                             yield return entryPathParts;
                     }
@@ -491,14 +493,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         void SetLastWriteTimeCore(in StructuredPath path, DateTime lastWriteTime)
         {
-            var entry = TryGetArchiveEntry(path, true, true);
-
-            if (entry == null && DirectoryExistsCore(path))
-            {
-                // The path points to an implicit directory which has no archive entry.
-                // Let's make it explicit by creating such entry.
-                entry = archive.CreateEntry(VfsPathKit.Join(path.Parts.Span) + VfsPathKit.DirectorySeparatorChar);
-            }
+            var entry = TryGetExplicitArchiveEntry(path, true);
 
             if (entry == null)
             {
@@ -509,6 +504,20 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
             entry.LastWriteTime = lastWriteTime.ToLocalTime();
         }
+    }
+
+    ZipArchiveEntry? TryGetExplicitArchiveEntry(in StructuredPath path, bool considerFiles)
+    {
+        var entry = TryGetArchiveEntry(path, considerFiles, true);
+
+        if (entry == null && DirectoryExistsCore(path))
+        {
+            // The path points to an implicit directory which has no archive entry.
+            // Let's make that directory explicit by creating such entry.
+            entry = archive.CreateEntry(VfsPathKit.Join(path.Parts.Span) + VfsPathKit.DirectorySeparatorChar);
+        }
+
+        return entry;
     }
 
     ZipArchiveEntry? TryGetArchiveEntry(

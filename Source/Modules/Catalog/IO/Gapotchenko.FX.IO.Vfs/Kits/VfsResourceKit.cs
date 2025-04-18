@@ -19,7 +19,7 @@ public static class VfsResourceKit
     /// <summary>
     /// Looks up a localized string similar to:
     /// <code>
-    /// Could not find file '{<paramref name="path"/>}.
+    /// Could not find file '{<paramref name="path"/>}'.
     /// </code>
     /// </summary>
     /// <param name="path">The path.</param>
@@ -43,7 +43,7 @@ public static class VfsResourceKit
     /// <summary>
     /// Looks up a localized string similar to:
     /// <code>
-    /// Could not find directory '{<paramref name="path"/>}.
+    /// Could not find directory '{<paramref name="path"/>}'.
     /// </code>
     /// </summary>
     /// <param name="path">The path.</param>

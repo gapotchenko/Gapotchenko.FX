@@ -155,7 +155,7 @@ public static class VfsPathKit
                 parts.Where(x => !string.IsNullOrEmpty(x)));
 
     /// <summary>
-    /// Concatenates a span of parts into a single path.
+    /// Concatenates a span of parts into a single path
     /// using the specified directory separator character.
     /// </summary>
     /// <inheritdoc cref="Join(IEnumerable{string?}?, char)"/>
