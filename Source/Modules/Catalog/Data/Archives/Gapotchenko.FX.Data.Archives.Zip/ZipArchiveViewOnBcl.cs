@@ -365,7 +365,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             directoryFound |= pathParts.Length == 0;
 
             // Keep track of duplicates because directories can be defined implicitly
-            // without presence of dedicated entries in the archive as a matter of fact.
+            // without presence of dedicated entries in the archive.
             HashSet<ReadOnlyMemory<string>>? enumeratedDirectories = enumerateDirectories
                 ? new(MemoryEqualityComparerForPathParts)
                 : null;
@@ -496,21 +496,22 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
     ZipArchiveEntry GetExplicitArchiveEntry(in StructuredPath path, bool considerFiles)
     {
         var entry = TryGetArchiveEntry(path, considerFiles, true);
-
-        if (entry == null && path.IsDirectory && FileExistsCore(path.Parts))
+        if (entry != null)
+        {
+            return entry;
+        }
+        else if (path.IsDirectory && FileExistsCore(path.Parts))
         {
             // The path represents a directory but points to a file.
             throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
         }
-
-        if (entry == null && DirectoryExistsCore(path))
+        else if (DirectoryExistsCore(path))
         {
             // The path points to an implicit directory which has no archive entry.
             // Let's make that directory explicit by creating an archive entry for it.
-            entry = archive.CreateEntry(VfsPathKit.Join(path.Parts.Span) + VfsPathKit.DirectorySeparatorChar);
+            return archive.CreateEntry(VfsPathKit.Join(path.Parts.Span) + VfsPathKit.DirectorySeparatorChar);
         }
-
-        if (entry == null)
+        else
         {
             // The path points to a non-existing entry.
             string? displayPath = path.ToString();
@@ -519,8 +520,6 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             else
                 throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
         }
-
-        return entry;
     }
 
     ZipArchiveEntry? TryGetArchiveEntry(

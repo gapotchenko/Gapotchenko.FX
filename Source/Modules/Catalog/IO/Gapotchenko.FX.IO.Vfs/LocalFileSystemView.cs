@@ -199,17 +199,17 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     static DateTime ConvertUtcTimeToVfs(string path, DateTime time)
     {
-        if (time == m_NonExistentEntryTime)
+        if (time == m_NonexistentEntryTime)
         {
             // The path points to a file-system entry that does not exist.
             return DateTime.MinValue;
         }
 
-        if (PathEx.EndsInDirectorySeparator(path) &&
-            File.Exists(PathEx.TrimEndingDirectorySeparator(path)))
+        if (PathEx.EndsInDirectorySeparator(path) && !Directory.Exists(path))
         {
-            // The path represents a directory but points to a file.
-            // This is an invalid directory path despite the fact that a prior IO operation might be successful.
+            // The path represents a directory but points to something else.
+            // Such directory path is invalid despite the fact that a prior IO operation might be successful.
+            // The directory path invalidity reflects the behavior of Path.Exists method.
             return DateTime.MinValue;
         }
 
@@ -219,15 +219,13 @@ sealed class LocalFileSystemView : FileSystemViewKit
     static DateTime ConvertUtcTimeFromVfs(DateTime time) => time.ToUniversalTime();
 
     /// <summary>
-    /// <para>
-    /// The value returned by the .NET file system APIs to represent a timestamp of a non-existent file-system entry.
-    /// </para>
-    /// <para>
+    /// The value returned by .NET APIs for file system to represent a timestamp of a nonexistent file-system entry:
+    /// <code>
     /// 12:00 midnight, January 1, 1601 A.D. (C.E.) Coordinated Universal Time (UTC)
-    /// </para>
+    /// </code>
     /// </summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    static readonly DateTime m_NonExistentEntryTime = DateTime.FromFileTimeUtc(0);
+    static readonly DateTime m_NonexistentEntryTime = DateTime.FromFileTimeUtc(0);
 
     public override FileAttributes GetAttributes(string path) => File.GetAttributes(path);
 
@@ -391,7 +389,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
         var result = Path.GetPathRoot(path);
         if (result == null && !path.IsEmpty)
         {
-            // Change an empty span signifying null to
+            // Change an empty span signifying a null value to
             // an empty span signifying an empty string.
             result = string.Empty.AsSpan();
         }

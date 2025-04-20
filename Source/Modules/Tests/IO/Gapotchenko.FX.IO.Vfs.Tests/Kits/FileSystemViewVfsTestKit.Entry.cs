@@ -15,25 +15,25 @@ partial class FileSystemViewVfsTestKit
 
         static void Mutate(IFileSystemView vfs, string rootPath)
         {
-            vfs.CreateDirectory(vfs.CombinePaths(rootPath, "B"));
-            vfs.CreateFile(vfs.CombinePaths(rootPath, "C")).Dispose();
+            vfs.CreateDirectory(vfs.CombinePaths(rootPath, "directory"));
+            vfs.CreateFile(vfs.CombinePaths(rootPath, "file")).Dispose();
         }
 
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
             char dsc = vfs.DirectorySeparatorChar;
 
-            string pathA = vfs.CombinePaths(rootPath, "A");
-            Assert.IsFalse(vfs.EntryExists(pathA));
-            Assert.IsFalse(vfs.EntryExists(pathA + dsc));
+            string nonexistentPath = vfs.CombinePaths(rootPath, "nonexistent");
+            Assert.IsFalse(vfs.EntryExists(nonexistentPath));
+            Assert.IsFalse(vfs.EntryExists(nonexistentPath + dsc));
 
-            string pathB = vfs.CombinePaths(rootPath, "B");
-            Assert.IsTrue(vfs.EntryExists(pathB));
-            Assert.IsTrue(vfs.EntryExists(pathB + dsc));
+            string directoryPath = vfs.CombinePaths(rootPath, "directory");
+            Assert.IsTrue(vfs.EntryExists(directoryPath));
+            Assert.IsTrue(vfs.EntryExists(directoryPath + dsc));
 
-            string pathC = vfs.CombinePaths(rootPath, "C");
-            Assert.IsTrue(vfs.EntryExists(pathC));
-            Assert.IsFalse(vfs.EntryExists(pathC + dsc));
+            string filePath = vfs.CombinePaths(rootPath, "file");
+            Assert.IsTrue(vfs.EntryExists(filePath));
+            Assert.IsFalse(vfs.EntryExists(filePath + dsc));
         }
     }
 
@@ -75,8 +75,23 @@ partial class FileSystemViewVfsTestKit
 
         void Mutate(IFileSystemView vfs, string rootPath)
         {
+            #region No support
+
             if (!supportsXxxTime(vfs))
+            {
+                Assert.ThrowsException<NotSupportedException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent"), specialTime));
                 return;
+            }
+
+            #endregion
+
+            #region Arguments
+
+            Assert.ThrowsException<ArgumentException>(() => setXxxTime(vfs, "", specialTime));
+
+            #endregion
+
+            #region File system structure initialization
 
             vfs.CreateDirectory(vfs.CombinePaths(rootPath, "directory"));
             vfs.CreateFile(vfs.CombinePaths(rootPath, "file")).Dispose();
@@ -84,6 +99,8 @@ partial class FileSystemViewVfsTestKit
             vfs.CreateDirectory(vfs.CombinePaths(rootPath, "container", "directory-a"));
             vfs.CreateDirectory(vfs.CombinePaths(rootPath, "container", "directory-b"));
             vfs.CreateFile(vfs.CombinePaths(rootPath, "container", "file")).Dispose();
+
+            #endregion
 
             char dsc = vfs.DirectorySeparatorChar;
 
@@ -100,8 +117,21 @@ partial class FileSystemViewVfsTestKit
 
         void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
+            #region No support
+
             if (!supportsXxxTime(vfs))
+            {
+                Assert.ThrowsException<NotSupportedException>(() => getXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent")));
                 return;
+            }
+
+            #endregion
+
+            #region Arguments
+
+            Assert.ThrowsException<ArgumentException>(() => getXxxTime(vfs, ""));
+
+            #endregion
 
             char dsc = vfs.DirectorySeparatorChar;
 

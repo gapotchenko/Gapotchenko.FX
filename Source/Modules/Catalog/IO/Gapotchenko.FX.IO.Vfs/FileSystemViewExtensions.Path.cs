@@ -25,12 +25,11 @@ partial class FileSystemViewExtensions
         if (paths is null)
             throw new ArgumentNullException(nameof(paths));
 
-        char directorySeparatorChar = view.DirectorySeparatorChar;
-        ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { directorySeparatorChar, view.AltDirectorySeparatorChar };
+        ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { view.DirectorySeparatorChar, view.AltDirectorySeparatorChar };
 
         var builder = new StringBuilder();
         foreach (string? path in paths)
-            AppendJoinedPath(builder, path, directorySeparatorChar, directorySeparatorChars);
+            AppendJoinedPath(builder, path, directorySeparatorChars);
         return builder.ToString();
     }
 
@@ -56,20 +55,15 @@ partial class FileSystemViewExtensions
         if (view is null)
             throw new ArgumentNullException(nameof(view));
 
-        char directorySeparatorChar = view.DirectorySeparatorChar;
-        ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { directorySeparatorChar, view.AltDirectorySeparatorChar };
+        ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { view.DirectorySeparatorChar, view.AltDirectorySeparatorChar };
 
         var builder = new StringBuilder();
         foreach (string? path in paths)
-            AppendJoinedPath(builder, path, directorySeparatorChar, directorySeparatorChars);
+            AppendJoinedPath(builder, path, directorySeparatorChars);
         return builder.ToString();
     }
 
-    static void AppendJoinedPath(
-        StringBuilder builder,
-        string? path,
-        char directorySeparatorChar,
-        ReadOnlySpan<char> directorySeparatorChars)
+    static void AppendJoinedPath(StringBuilder builder, string? path, ReadOnlySpan<char> directorySeparatorChars)
     {
         if (string.IsNullOrEmpty(path))
             return;
@@ -79,7 +73,7 @@ partial class FileSystemViewExtensions
             if (!directorySeparatorChars.Contains(builder[^1]) &&
                 !directorySeparatorChars.Contains(path[0]))
             {
-                builder.Append(directorySeparatorChar);
+                builder.Append(directorySeparatorChars[0]);
             }
         }
 
