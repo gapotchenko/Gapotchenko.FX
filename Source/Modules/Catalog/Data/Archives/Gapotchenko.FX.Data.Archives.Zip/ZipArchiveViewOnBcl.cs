@@ -499,7 +499,10 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             {
                 // The path points to a non-existing entry.
                 string? displayPath = path.ToString();
-                throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
+                if (path.Parts is var parts && (parts.Length < 2 || DirectoryExistsCore(parts[..^1])))
+                    throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
+                else
+                    throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
             }
 
             entry.LastWriteTime = lastWriteTime.ToLocalTime();
