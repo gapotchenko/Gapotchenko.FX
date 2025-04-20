@@ -433,7 +433,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                     if (!feasibleHierarchyLevel)
                         yield break;
 
-                    // Check the name of the entry according to the search pattern.
+                    // Match the name of the entry according to the search pattern.
                     if (!searchExpression.IsMatch(entryPathParts.Span[^1].AsSpan()))
                         yield break;
 
@@ -489,35 +489,35 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         EnsureCanWrite();
 
-        SetLastWriteTimeCore(path, lastWriteTime);
-
-        void SetLastWriteTimeCore(in StructuredPath path, DateTime lastWriteTime)
-        {
-            var entry = TryGetExplicitArchiveEntry(path, true);
-
-            if (entry == null)
-            {
-                // The path points to a non-existing entry.
-                string? displayPath = path.ToString();
-                if (path.Parts is var parts && (parts.Length < 2 || DirectoryExistsCore(parts[..^1])))
-                    throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
-                else
-                    throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
-            }
-
-            entry.LastWriteTime = lastWriteTime.ToLocalTime();
-        }
+        var entry = GetExplicitArchiveEntry(path, true);
+        entry.LastWriteTime = lastWriteTime.ToLocalTime();
     }
 
-    ZipArchiveEntry? TryGetExplicitArchiveEntry(in StructuredPath path, bool considerFiles)
+    ZipArchiveEntry GetExplicitArchiveEntry(in StructuredPath path, bool considerFiles)
     {
         var entry = TryGetArchiveEntry(path, considerFiles, true);
+
+        if (entry == null && path.IsDirectory && FileExistsCore(path.Parts))
+        {
+            // The path represents a directory but points to a file.
+            throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
+        }
 
         if (entry == null && DirectoryExistsCore(path))
         {
             // The path points to an implicit directory which has no archive entry.
-            // Let's make that directory explicit by creating such entry.
+            // Let's make that directory explicit by creating an archive entry for it.
             entry = archive.CreateEntry(VfsPathKit.Join(path.Parts.Span) + VfsPathKit.DirectorySeparatorChar);
+        }
+
+        if (entry == null)
+        {
+            // The path points to a non-existing entry.
+            string? displayPath = path.ToString();
+            if (path.Parts is var parts && (parts.Length < 2 || DirectoryExistsCore(parts[..^1])))
+                throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
+            else
+                throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
         }
 
         return entry;
@@ -532,10 +532,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         if (pathParts.IsEmpty)
             return null;
 
-        if (considerFiles &&
-            path.OriginalPath is not null and var originalPath &&
-            originalPath.Length > 0 &&
-            VfsPathKit.IsDirectorySeparator(originalPath[^1]))
+        if (considerFiles && path.IsDirectory)
         {
             // Make sure that if the path ends in a trailing slash, it's truly a directory.
             considerFiles = false;

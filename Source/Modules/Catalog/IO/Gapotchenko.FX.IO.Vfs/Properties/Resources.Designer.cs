@@ -178,6 +178,15 @@ namespace Gapotchenko.FX.IO.Vfs.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The directory name is invalid: &apos;{0}&apos;..
+        /// </summary>
+        internal static string InvalidDirectoryNameX {
+            get {
+                return ResourceManager.GetString("InvalidDirectoryNameX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The object does not implement {0} interface..
         /// </summary>
         internal static string ObjectDoesNotImplXInterface {

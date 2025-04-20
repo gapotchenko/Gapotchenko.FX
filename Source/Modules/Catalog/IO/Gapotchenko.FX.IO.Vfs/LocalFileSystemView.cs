@@ -169,7 +169,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override DateTime GetCreationTime(string path)
     {
-        return ConvertUtcTimeToVfs(Directory.GetCreationTimeUtc(path));
+        return ConvertUtcTimeToVfs(path, Directory.GetCreationTimeUtc(path));
     }
 
     public override void SetCreationTime(string path, DateTime creationTime)
@@ -179,7 +179,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override DateTime GetLastWriteTime(string path)
     {
-        return ConvertUtcTimeToVfs(Directory.GetLastWriteTimeUtc(path));
+        return ConvertUtcTimeToVfs(path, Directory.GetLastWriteTimeUtc(path));
     }
 
     public override void SetLastWriteTime(string path, DateTime lastWriteTime)
@@ -189,7 +189,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override DateTime GetLastAccessTime(string path)
     {
-        return ConvertUtcTimeToVfs(Directory.GetLastAccessTimeUtc(path));
+        return ConvertUtcTimeToVfs(path, Directory.GetLastAccessTimeUtc(path));
     }
 
     public override void SetLastAccessTime(string path, DateTime lastAccessTime)
@@ -197,8 +197,24 @@ sealed class LocalFileSystemView : FileSystemViewKit
         Directory.SetLastAccessTimeUtc(path, ConvertUtcTimeFromVfs(lastAccessTime));
     }
 
-    static DateTime ConvertUtcTimeToVfs(DateTime time) =>
-        time == m_NonExistentEntryTime ? DateTime.MinValue : time;
+    static DateTime ConvertUtcTimeToVfs(string path, DateTime time)
+    {
+        if (time == m_NonExistentEntryTime)
+        {
+            // The path points to a file-system entry that does not exist.
+            return DateTime.MinValue;
+        }
+
+        if (PathEx.EndsInDirectorySeparator(path) &&
+            File.Exists(PathEx.TrimEndingDirectorySeparator(path)))
+        {
+            // The path represents a directory but points to a file.
+            // This is an invalid directory path despite the fact that a prior IO operation might be successful.
+            return DateTime.MinValue;
+        }
+
+        return time;
+    }
 
     static DateTime ConvertUtcTimeFromVfs(DateTime time) => time.ToUniversalTime();
 

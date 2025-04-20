@@ -165,4 +165,7 @@
   <data name="SecondPathFragmentMustNotBeRooted" xml:space="preserve">
     <value>Second path fragment must not be rooted.</value>
   </data>
+  <data name="InvalidDirectoryNameX" xml:space="preserve">
+    <value>The directory name is invalid: '{0}'.</value>
+  </data>
 </root>

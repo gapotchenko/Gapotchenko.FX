@@ -70,6 +70,16 @@ public static class VfsResourceKit
     /// <returns>The formatted string.</returns>
     public static string DirectoryIsNotEmpty(string? path) => string.Format(Resources.DirectoryXIsNotEmpty, path);
 
+    /// <summary>
+    /// Looks up a localized string similar to:
+    /// <code>
+    /// The directory name is invalid: '{path}'.
+    /// </code>
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The formatted string.</returns>
+    public static string InvalidDirectoryName(string? path) => string.Format(Resources.InvalidDirectoryNameX, path);
+
     #endregion
 
     #region Entries

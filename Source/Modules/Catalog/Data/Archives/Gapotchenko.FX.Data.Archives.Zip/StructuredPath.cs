@@ -14,8 +14,6 @@ readonly struct StructuredPath
 
     public static implicit operator StructuredPath(string[]? parts) => new(parts);
 
-    public static implicit operator StructuredPath(in Memory<string> parts) => new(parts);
-
     public static implicit operator StructuredPath(in ReadOnlyMemory<string> parts) => new(parts);
 
     public StructuredPath(string? path)
@@ -28,6 +26,13 @@ readonly struct StructuredPath
     {
         Parts = parts;
     }
+
+    /// <summary>
+    /// Gets a value indicating whether the path represents a directory.
+    /// </summary>
+    public bool IsDirectory =>
+        Parts is var parts && parts.IsEmpty && parts.Span != null || // root directory
+        OriginalPath is var originalPath && !string.IsNullOrEmpty(originalPath) && VfsPathKit.IsDirectorySeparator(originalPath[^1]); // path ends with '/'
 
     public string? OriginalPath { get; }
 

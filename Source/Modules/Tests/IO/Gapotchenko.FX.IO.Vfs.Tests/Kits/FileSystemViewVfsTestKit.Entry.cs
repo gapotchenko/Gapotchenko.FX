@@ -38,46 +38,86 @@ partial class FileSystemViewVfsTestKit
     }
 
     [TestMethod]
+    public void FileSystemView_Vfs_Entry_CreationTime()
+    {
+        FileSystemView_Vfs_Entry_XxxTime(
+            vfs => vfs.SupportsCreationTime,
+            (vfs, path) => vfs.GetCreationTime(path),
+            (vfs, path, time) => vfs.SetCreationTime(path, time));
+    }
+
+    [TestMethod]
     public void FileSystemView_Vfs_Entry_LastWriteTime()
     {
+        FileSystemView_Vfs_Entry_XxxTime(
+            vfs => vfs.SupportsLastWriteTime,
+            (vfs, path) => vfs.GetLastWriteTime(path),
+            (vfs, path, time) => vfs.SetLastWriteTime(path, time));
+    }
+
+    [TestMethod]
+    public void FileSystemView_Vfs_Entry_LastAccessTime()
+    {
+        FileSystemView_Vfs_Entry_XxxTime(
+            vfs => vfs.SupportsLastAccessTime,
+            (vfs, path) => vfs.GetLastAccessTime(path),
+            (vfs, path, time) => vfs.SetLastAccessTime(path, time));
+    }
+
+    void FileSystemView_Vfs_Entry_XxxTime(
+        Func<IReadOnlyFileSystemView, bool> supportsXxxTime,
+        Func<IReadOnlyFileSystemView, string, DateTime> getXxxTime,
+        Action<IFileSystemView, string, DateTime> setXxxTime)
+    {
+        var specialTime = VfsTestContentsKit.SpecialUtcTime1;
+
         RunVfsTest(Mutate, Verify);
 
-        static void Mutate(IFileSystemView vfs, string rootPath)
+        void Mutate(IFileSystemView vfs, string rootPath)
         {
-            if (!vfs.SupportsLastWriteTime)
+            if (!supportsXxxTime(vfs))
                 return;
 
             vfs.CreateDirectory(vfs.CombinePaths(rootPath, "directory"));
             vfs.CreateFile(vfs.CombinePaths(rootPath, "file")).Dispose();
 
-            vfs.CreateDirectory(vfs.CombinePaths(rootPath, "container", "directory"));
+            vfs.CreateDirectory(vfs.CombinePaths(rootPath, "container", "directory-a"));
+            vfs.CreateDirectory(vfs.CombinePaths(rootPath, "container", "directory-b"));
             vfs.CreateFile(vfs.CombinePaths(rootPath, "container", "file")).Dispose();
 
             char dsc = vfs.DirectorySeparatorChar;
-            var specialTime = VfsTestContentsKit.SpecialUtcTime1;
 
-            Assert.ThrowsException<FileNotFoundException>(() => vfs.SetLastWriteTime(vfs.CombinePaths(rootPath, "non-existent"), specialTime));
-            Assert.ThrowsException<FileNotFoundException>(() => vfs.SetLastWriteTime(vfs.CombinePaths(rootPath, "non-existent" + dsc), specialTime));
-            Assert.ThrowsException<DirectoryNotFoundException>(() => vfs.SetLastWriteTime(vfs.CombinePaths(rootPath, "non-existent-container", "non-existent"), specialTime));
-            Assert.ThrowsException<DirectoryNotFoundException>(() => vfs.SetLastWriteTime(vfs.CombinePaths(rootPath, "non-existent-container", "non-existent") + dsc, specialTime));
+            Assert.ThrowsException<FileNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent"), specialTime));
+            Assert.ThrowsException<FileNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent" + dsc), specialTime));
+            Assert.ThrowsException<DirectoryNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent-container", "nonexistent"), specialTime));
+            Assert.ThrowsException<DirectoryNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent-container", "nonexistent") + dsc, specialTime));
 
-            vfs.SetLastWriteTime(vfs.CombinePaths(rootPath, "container", "directory"), specialTime);
-            vfs.SetLastWriteTime(vfs.CombinePaths(rootPath, "container", "file"), specialTime);
+            setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "directory-a"), specialTime);
+            setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "directory-b") + dsc, specialTime);
+            setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "file"), specialTime);
+            Assert.ThrowsException<IOException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "file") + dsc, specialTime));
         }
 
-        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
-            if (!vfs.SupportsLastWriteTime)
+            if (!supportsXxxTime(vfs))
                 return;
 
-            Assert.AreEqual(DateTime.MinValue, vfs.GetLastWriteTime(vfs.CombinePaths(rootPath, "non-existent")));
-            Assert.AreNotEqual(DateTime.MinValue, vfs.GetLastWriteTime(vfs.CombinePaths(rootPath, "file")));
-            Assert.AreNotEqual(DateTime.MinValue, vfs.GetLastWriteTime(vfs.CombinePaths(rootPath, "directory")));
+            char dsc = vfs.DirectorySeparatorChar;
 
-            var specialTime = VfsTestContentsKit.SpecialUtcTime1;
+            Assert.AreEqual(DateTime.MinValue, getXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent")));
+            Assert.AreEqual(DateTime.MinValue, getXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent") + dsc));
+            Assert.AreNotEqual(DateTime.MinValue, getXxxTime(vfs, vfs.CombinePaths(rootPath, "directory")));
+            Assert.AreNotEqual(DateTime.MinValue, getXxxTime(vfs, vfs.CombinePaths(rootPath, "directory") + dsc));
+            Assert.AreNotEqual(DateTime.MinValue, getXxxTime(vfs, vfs.CombinePaths(rootPath, "file")));
+            Assert.AreEqual(DateTime.MinValue, getXxxTime(vfs, vfs.CombinePaths(rootPath, "file") + dsc));
 
-            Assert.AreEqual(specialTime, vfs.GetLastWriteTime(vfs.CombinePaths(rootPath, "container", "directory")));
-            Assert.AreEqual(specialTime, vfs.GetLastWriteTime(vfs.CombinePaths(rootPath, "container", "file")));
+            Assert.AreEqual(specialTime, getXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "directory-a")));
+            Assert.AreEqual(specialTime, getXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "directory-a") + dsc));
+            Assert.AreEqual(specialTime, getXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "directory-b")));
+            Assert.AreEqual(specialTime, getXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "directory-b") + dsc));
+            Assert.AreEqual(specialTime, getXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "file")));
+            Assert.AreEqual(DateTime.MinValue, getXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "file") + dsc));
         }
     }
 }
