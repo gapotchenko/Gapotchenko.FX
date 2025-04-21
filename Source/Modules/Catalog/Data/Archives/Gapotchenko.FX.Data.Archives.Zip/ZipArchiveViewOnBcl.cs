@@ -238,16 +238,18 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
     void DeleteDirectoryCore(in StructuredPath path, bool recursive)
     {
         var pathParts = path.Parts.Span;
-        if (pathParts != null && pathParts.Length == 0)
+        if (pathParts.IsEmpty)
             throw new IOException(VfsResourceKit.AccessToPathIsDenied(path.ToString()));
 
         if (!recursive)
         {
+            // Ensure that the directory is empty before it can be deleted.
             if (EnumerateEntriesCore(path).Any())
                 throw new IOException(VfsResourceKit.DirectoryIsNotEmpty(path.ToString()));
         }
         else
         {
+            // Recursively clean the directory before deleting it.
             var entryPaths = EnumerateEntriesCore(path).ToList();
             foreach (var entryPathParts in entryPaths)
             {
@@ -258,21 +260,17 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             }
         }
 
-        GetDirectoryArchiveEntry(path).Delete();
+        // Try to delete explicit directory entry from the archive if it exists.
+        // It may not exist if the directory being deleted is implicit.
+        TryGetDirectoryArchiveEntry(path)?.Delete();
     }
 
-    ZipArchiveEntry GetDirectoryArchiveEntry(in StructuredPath path)
+    ZipArchiveEntry? TryGetDirectoryArchiveEntry(in StructuredPath path)
     {
-        string? entryPath = VfsPathKit.Join(path.Parts.Span);
-        if (entryPath != null)
-        {
-            var entry = archive.GetEntry(entryPath + VfsPathKit.DirectorySeparatorChar);
-            if (entry != null)
-                return entry;
-        }
-
-        string? displayPath = path.OriginalPath ?? entryPath;
-        throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
+        if (VfsPathKit.Join(path.Parts.Span) is not null and var entryPath)
+            return archive.GetEntry(entryPath + VfsPathKit.DirectorySeparatorChar);
+        else
+            return null;
     }
 
     static bool IsDirectoryArchiveEntry(string fullName) => fullName.EndsWith(VfsPathKit.DirectorySeparatorChar);
@@ -299,7 +297,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         if (pathParts.Length == 0)
         {
             // The root directory always exists.
-            // The root file never exists.
+            // A root file never exists.
             return considerDirectories;
         }
 
@@ -308,7 +306,9 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         if (considerDirectories)
         {
-            // Directory may be implicit without having a dedicated archive entry.
+            // Directory may be implicit without having an explicit archive entry.
+            // In this case, we try to enumerate its entries to determine whether
+            // the directory is defined implicitly.
             return EnumerateEntriesCore(path, throwWhenDirectoryNotFound: false).Any();
         }
         else

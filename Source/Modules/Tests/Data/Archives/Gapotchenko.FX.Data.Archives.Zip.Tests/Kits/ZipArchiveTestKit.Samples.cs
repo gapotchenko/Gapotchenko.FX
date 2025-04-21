@@ -29,5 +29,11 @@ partial class ZipArchiveTestKit
 
         archive.SetLastWriteTime(hostFxrPath, VfsTestContentsKit.SpecialUtcTime1);
         Assert.AreEqual(VfsTestContentsKit.SpecialUtcTime1, archive.GetLastWriteTime(hostFxrPath));
+
+        Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(hostFxrPath));
+        archive.DeleteDirectory(hostFxrPath, true);
+        Assert.IsFalse(
+            archive.DirectoryExists(hostFxrPath),
+            $"'{hostFxrPath}' directory was not deleted.");
     }
 }
