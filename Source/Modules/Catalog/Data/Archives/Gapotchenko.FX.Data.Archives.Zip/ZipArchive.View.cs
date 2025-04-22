@@ -13,15 +13,15 @@ partial class ZipArchive
         CreateView(archive, false);
 
     /// <summary>
-    /// Creates a virtual file system view for the specified <see cref="System.IO.Compression.ZipArchive"/> instance.
+    /// Creates a virtual file system view on the specified <see cref="System.IO.Compression.ZipArchive"/> backing store.
     /// </summary>
-    /// <param name="archive">The <see cref="System.IO.Compression.ZipArchive"/> instance to create the view of.</param>
+    /// <param name="archive">The <see cref="System.IO.Compression.ZipArchive"/> backing store to create the view for.</param>
     /// <param name="leaveOpen">
     /// <see langword="true"/> to leave the underlying <paramref name="archive"/> open
-    /// after the created <see cref="IZipArchiveView{T}"/> view object is disposed;
+    /// after the created <see cref="IZipArchiveView{T}"/> object is disposed;
     /// otherwise, <see langword="false"/>.
     /// </param>
-    /// <returns>The instance of a virtual file system view for the <paramref name="archive"/>.</returns>
+    /// <returns>The instance implementing <see cref="IZipArchive"/> interface for <paramref name="archive"/> backing store.</returns>
     public static IZipArchiveView<System.IO.Compression.ZipArchive> CreateView(System.IO.Compression.ZipArchive archive, bool leaveOpen) =>
         new ZipArchiveViewOnBcl(archive, leaveOpen);
 }

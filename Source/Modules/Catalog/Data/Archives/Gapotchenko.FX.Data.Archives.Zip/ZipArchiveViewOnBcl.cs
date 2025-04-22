@@ -16,6 +16,17 @@ using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Data.Archives.Zip;
 
+/// <summary>
+/// Implements the interface of a virtual file system that uses <see cref="System.IO.Compression.ZipArchive"/> class
+/// provided by .NET Base Class Library (BCL)
+/// as a backing store.
+/// </summary>
+/// <param name="archive">The <see cref="System.IO.Compression.ZipArchive"/> instance.</param>
+/// <param name="leaveOpen">
+/// <see langword="true"/> to leave the underlying <paramref name="archive"/> instance open
+/// after the created <see cref="ZipArchiveViewOnBcl"/> object is disposed;
+/// otherwise, <see langword="false"/>.
+/// </param>
 sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool leaveOpen) :
     ZipArchiveBase,
     IZipArchiveView<System.IO.Compression.ZipArchive>
@@ -42,6 +53,9 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
     public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
         EnumerateEntriesImpl(path, searchPattern, searchOption, true, false);
+
+    public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
+        EnumerateEntriesImpl(path, searchPattern, enumerationOptions, true, false);
 
     public override Stream ReadFile(string path)
     {
@@ -196,6 +210,9 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
     public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
         EnumerateEntriesImpl(path, searchPattern, searchOption, false, true);
 
+    public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
+        EnumerateEntriesImpl(path, searchPattern, enumerationOptions, false, true);
+
     public override void CreateDirectory(string path)
     {
         VfsValidationKit.Arguments.ValidatePath(path);
@@ -339,6 +356,33 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                 MatchType.Win32,
                 MatchCasing.PlatformDefault,
                 VfsSearchKit.GetMaxRecursionDepth(searchOption),
+                enumerateFiles,
+                enumerateDirectories)
+            .Select(x => GetOriginallyPrefixedPath(structuredPath, x.Span));
+    }
+
+    public override IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
+        EnumerateEntriesImpl(path, searchPattern, enumerationOptions, true, true);
+
+    [StackTraceHidden]
+    IEnumerable<string> EnumerateEntriesImpl(string path, string searchPattern, EnumerationOptions enumerationOptions, bool enumerateFiles, bool enumerateDirectories)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+        VfsValidationKit.Arguments.ValidateEnumerationOptions(enumerationOptions);
+
+        EnsureCanRead();
+
+        VfsSearchKit.AdjustPatternPath(this, ref path, ref searchPattern);
+
+        var structuredPath = new StructuredPath(path);
+        return
+            EnumerateEntriesCore(
+                structuredPath,
+                searchPattern,
+                enumerationOptions.MatchType,
+                enumerationOptions.MatchCasing,
+                VfsSearchKit.GetMaxRecursionDepth(enumerationOptions),
                 enumerateFiles,
                 enumerateDirectories)
             .Select(x => GetOriginallyPrefixedPath(structuredPath, x.Span));
@@ -615,5 +659,5 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             archive.Dispose();
     }
 
-    public System.IO.Compression.ZipArchive BaseStorage => archive;
+    public System.IO.Compression.ZipArchive BackingStore => archive;
 }

@@ -7,13 +7,13 @@
 namespace Gapotchenko.FX.Data.Archives.Zip;
 
 /// <summary>
-/// Represents a ZIP data archive view on the base storage.
+/// Represents a ZIP data archive view on <typeparamref name="T"/> backing store.
 /// </summary>
-/// <typeparam name="T">The type of the base storage.</typeparam>
+/// <typeparam name="T">The type of the backing store.</typeparam>
 public interface IZipArchiveView<out T> : IZipArchive
 {
     /// <summary>
-    /// Gets the base storage.
+    /// Gets the <typeparamref name="T"/> backing store.
     /// </summary>
-    T BaseStorage { get; }
+    T BackingStore { get; }
 }
