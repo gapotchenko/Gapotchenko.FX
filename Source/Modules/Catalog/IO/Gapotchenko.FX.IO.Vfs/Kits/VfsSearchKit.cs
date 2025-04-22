@@ -109,7 +109,7 @@ public static class VfsSearchKit
     /// </summary>
     /// <param name="view">The file system view.</param>
     /// <returns>The default <see cref="MatchCasing"/> value.</returns>
-    public static MatchCasing GetDefaultMatchCasing(IReadOnlyFileSystemView view)
+    static MatchCasing GetDefaultMatchCasing(IReadOnlyFileSystemView view)
     {
         return IsIgnoreCaseComparison(view.PathComparison)
             ? MatchCasing.CaseInsensitive

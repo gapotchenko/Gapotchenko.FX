@@ -76,6 +76,10 @@ public static class VfsResourceKit
     /// The directory name is invalid: '{path}'.
     /// </code>
     /// </summary>
+    /// <remarks>
+    /// This resource string is typically used as an error message for <see cref="IOException"/> signifying that
+    /// a directory path points to a file and not to a directory.
+    /// </remarks>
     /// <param name="path">The path.</param>
     /// <returns>The formatted string.</returns>
     public static string InvalidDirectoryName(string? path) => string.Format(Resources.InvalidDirectoryNameX, path);

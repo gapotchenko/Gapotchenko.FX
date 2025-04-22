@@ -306,9 +306,9 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
         if (considerDirectories)
         {
-            // Directory may be implicit without having an explicit archive entry.
-            // In this case, we try to enumerate its entries to determine whether
-            // the directory is defined implicitly.
+            // Directory may be defined implicitly without having a dedicated archive entry.
+            // In this case, we try to enumerate its inner entries to determine whether
+            // the directory exists.
             return EnumerateEntriesCore(path, throwWhenDirectoryNotFound: false).Any();
         }
         else
@@ -357,12 +357,16 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         bool enumerateDirectories,
         bool throwWhenDirectoryNotFound = true)
     {
-        var pathParts = path.Parts;
-        bool directoryFound = !throwWhenDirectoryNotFound;
+        // The status of the enumerated directory.
+        var directoryStatus = throwWhenDirectoryNotFound
+            ? EnumeratedDirectoryStatus.None
+            : EnumeratedDirectoryStatus.Found; // pretend that the directory is found
 
+        var pathParts = path.Parts;
         if (pathParts.Span != null)
         {
-            directoryFound |= pathParts.Length == 0;
+            if (pathParts.Length == 0)
+                directoryStatus = EnumeratedDirectoryStatus.Found;
 
             // Keep track of duplicates because directories can be defined implicitly
             // without presence of dedicated entries in the archive.
@@ -385,22 +389,23 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                 if (entryPathParts is null)
                     continue;
 
-                foreach (var foundEntryPath in FindEntries(entryPathParts))
+                foreach (var foundEntryPath in FindEntries(entryPathParts, IsDirectoryArchiveEntry(entryPath)))
                     yield return foundEntryPath;
 
-                IEnumerable<ReadOnlyMemory<string>> FindEntries(
-                    ReadOnlyMemory<string> entryPathParts,
-                    bool assumeDirectory = false)
+                if (directoryStatus == EnumeratedDirectoryStatus.Invalid)
+                    break;
+
+                IEnumerable<ReadOnlyMemory<string>> FindEntries(ReadOnlyMemory<string> entryPathParts, bool isDirectory)
                 {
                     int recursionDepth = entryPathParts.Length - pathParts.Length - 1;
 
-                    bool? parentDirectoryMatch = null; // assists in directory check optimizations
+                    bool? parentDirectoryMatch = null; // assists in directory checking optimizations
                     if (enumerateDirectories && recursionDepth > 0)
                     {
                         var parentDirectoryPathParts = entryPathParts[..^1];
                         if (parentDirectoryPathParts.Span.StartsWith(pathParts.Span, m_PathComparer))
                         {
-                            directoryFound = true;
+                            directoryStatus = EnumeratedDirectoryStatus.Found;
 
                             // The parent directory of the current entry may be implicit,
                             // so we must scan it as if it was explicit.
@@ -416,12 +421,24 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                     }
 
                     // Check for existence of the initial directory containing the entry.
-                    if (!directoryFound && recursionDepth == -1)
-                        directoryFound = entryPathParts.Span.SequenceEqual(pathParts.Span, m_PathComparer);
+                    if (directoryStatus == EnumeratedDirectoryStatus.None &&
+                        recursionDepth == -1 &&
+                        entryPathParts.Span.SequenceEqual(pathParts.Span, m_PathComparer))
+                    {
+                        if (isDirectory)
+                        {
+                            directoryStatus = EnumeratedDirectoryStatus.Found;
+                        }
+                        else
+                        {
+                            directoryStatus = EnumeratedDirectoryStatus.Invalid;
+                            yield break;
+                        }
+                    }
 
                     // Check the hierarchy level of the entry.
                     bool feasibleHierarchyLevel = recursionDepth >= 0 && recursionDepth <= maxRecursionDepth;
-                    if (directoryFound && !feasibleHierarchyLevel)
+                    if (directoryStatus != EnumeratedDirectoryStatus.None && !feasibleHierarchyLevel)
                         yield break;
 
                     // Check the parent directory of the entry.
@@ -429,7 +446,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                         yield break;
 
                     // Revisit the hierarchy level feasibility.
-                    directoryFound = true;
+                    directoryStatus = EnumeratedDirectoryStatus.Found;
                     if (!feasibleHierarchyLevel)
                         yield break;
 
@@ -437,7 +454,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                     if (!searchExpression.IsMatch(entryPathParts.Span[^1].AsSpan()))
                         yield break;
 
-                    if (assumeDirectory || IsDirectoryArchiveEntry(entryPath))
+                    if (isDirectory)
                     {
                         // A directory.
                         if (enumeratedDirectories != null && enumeratedDirectories.Add(entryPathParts))
@@ -453,8 +470,32 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
             }
         }
 
-        if (!directoryFound)
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
+        switch (directoryStatus)
+        {
+            case EnumeratedDirectoryStatus.None:
+                throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
+
+            case EnumeratedDirectoryStatus.Invalid:
+                throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
+        }
+    }
+
+    enum EnumeratedDirectoryStatus
+    {
+        /// <summary>
+        /// The directory is not found.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// The directory has been found.
+        /// </summary>
+        Found,
+
+        /// <summary>
+        /// The directory path points to a file.
+        /// </summary>
+        Invalid
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

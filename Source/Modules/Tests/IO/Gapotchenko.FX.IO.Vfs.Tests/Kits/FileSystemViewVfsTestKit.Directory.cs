@@ -336,4 +336,14 @@ partial class FileSystemViewVfsTestKit
     }
 
     #endregion
+
+    #region Enumerate
+
+    [TestMethod]
+    public void FileSystemView_Vfs_Directory_Enumerate()
+    {
+        FileSystemView_Vfs_Entry_Enumerate(false, true);
+    }
+
+    #endregion
 }
