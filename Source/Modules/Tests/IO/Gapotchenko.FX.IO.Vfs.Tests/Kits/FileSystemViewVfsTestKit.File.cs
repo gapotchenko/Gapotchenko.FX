@@ -70,7 +70,7 @@ partial class FileSystemViewVfsTestKit
             string filePath = vfs.CombinePaths(rootPath, fileName);
             vfs.WriteAllFileBytes(
                 filePath,
-                VfsTestContentsKit.GetDefaultFileContents(vfs, filePath));
+                VfsTestContentKit.GetDefaultFileContents(vfs, filePath));
         }
 
         static void Verify(IFileSystemView vfs, string rootPath)
@@ -82,7 +82,7 @@ partial class FileSystemViewVfsTestKit
             Assert.IsFalse(stream.CanWrite);
 
             Assert.IsTrue(
-                VfsTestContentsKit.GetDefaultFileContents(vfs, filePath)
+                VfsTestContentKit.GetDefaultFileContents(vfs, filePath)
                 .SequenceEqual(stream.AsEnumerable()));
         }
     }
@@ -102,7 +102,7 @@ partial class FileSystemViewVfsTestKit
             Assert.IsFalse(stream.CanRead);
             Assert.IsTrue(stream.CanWrite);
 
-            byte[] contents = VfsTestContentsKit.GetDefaultFileContents(vfs, filePath);
+            byte[] contents = VfsTestContentKit.GetDefaultFileContents(vfs, filePath);
             stream.Write(contents, 0, contents.Length);
         }
 
@@ -112,7 +112,7 @@ partial class FileSystemViewVfsTestKit
             using var stream = vfs.ReadFile(filePath);
 
             Assert.IsTrue(
-                VfsTestContentsKit.GetDefaultFileContents(vfs, filePath)
+                VfsTestContentKit.GetDefaultFileContents(vfs, filePath)
                 .SequenceEqual(stream.AsEnumerable()));
         }
     }
@@ -129,7 +129,7 @@ partial class FileSystemViewVfsTestKit
             string filePath = vfs.CombinePaths(rootPath, fileName);
             vfs.WriteAllFileBytes(
                 filePath,
-                VfsTestContentsKit.GetDefaultFileContents(vfs, filePath));
+                VfsTestContentKit.GetDefaultFileContents(vfs, filePath));
         }
 
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
@@ -141,7 +141,7 @@ partial class FileSystemViewVfsTestKit
             Assert.IsFalse(stream.CanWrite);
 
             Assert.IsTrue(
-                VfsTestContentsKit.GetDefaultFileContents(vfs, filePath)
+                VfsTestContentKit.GetDefaultFileContents(vfs, filePath)
                 .SequenceEqual(stream.AsEnumerable()));
         }
     }
@@ -203,9 +203,9 @@ partial class FileSystemViewVfsTestKit
     [TestMethod]
     public void FileSystemView_Vfs_File_Copy()
     {
-        var creationTime = VfsTestContentsKit.SpecialUtcTime1;
-        var lastWriteTime = VfsTestContentsKit.SpecialUtcTime2;
-        var lastAccessTime = VfsTestContentsKit.SpecialUtcTime3;
+        var creationTime = VfsTestContentKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestContentKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestContentKit.SpecialUtcTime3;
 
         RunVfsTest(Mutate, Verify);
 
@@ -296,9 +296,9 @@ partial class FileSystemViewVfsTestKit
     [DataRow(false), DataRow(true)]
     public void FileSystemView_Vfs_File_CopyTo(bool reverse)
     {
-        var creationTime = VfsTestContentsKit.SpecialUtcTime1;
-        var lastWriteTime = VfsTestContentsKit.SpecialUtcTime2;
-        var lastAccessTime = VfsTestContentsKit.SpecialUtcTime3;
+        var creationTime = VfsTestContentKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestContentKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestContentKit.SpecialUtcTime3;
 
         using var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
 
@@ -391,9 +391,9 @@ partial class FileSystemViewVfsTestKit
     [TestMethod]
     public void FileSystemView_Vfs_File_Move()
     {
-        var creationTime = VfsTestContentsKit.SpecialUtcTime1;
-        var lastWriteTime = VfsTestContentsKit.SpecialUtcTime2;
-        var lastAccessTime = VfsTestContentsKit.SpecialUtcTime3;
+        var creationTime = VfsTestContentKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestContentKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestContentKit.SpecialUtcTime3;
 
         RunVfsTest(Mutate, Verify);
 
@@ -458,9 +458,9 @@ partial class FileSystemViewVfsTestKit
     [DataRow(false), DataRow(true)]
     public void FileSystemView_Vfs_File_MoveTo(bool reverse)
     {
-        var creationTime = VfsTestContentsKit.SpecialUtcTime1;
-        var lastWriteTime = VfsTestContentsKit.SpecialUtcTime2;
-        var lastAccessTime = VfsTestContentsKit.SpecialUtcTime3;
+        var creationTime = VfsTestContentKit.SpecialUtcTime1;
+        var lastWriteTime = VfsTestContentKit.SpecialUtcTime2;
+        var lastAccessTime = VfsTestContentKit.SpecialUtcTime3;
 
         using var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
 

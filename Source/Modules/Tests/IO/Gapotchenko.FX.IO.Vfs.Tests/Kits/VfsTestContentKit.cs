@@ -8,15 +8,15 @@ using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
-public static class VfsTestContentsKit
+public static class VfsTestContentKit
 {
     public static void CreateHierarchy(
         IFileSystemView vfs,
         string directoryPath,
-        IEnumerable<string> entriesPaths,
+        IEnumerable<string> entryPaths,
         Func<IReadOnlyFileSystemView, string, byte[]>? getFileContents = null)
     {
-        foreach (string entryPath in entriesPaths)
+        foreach (string entryPath in entryPaths)
         {
             string fullPath = vfs.CombinePaths(directoryPath, entryPath);
             if (vfs.EndsInDirectorySeparator(entryPath))
