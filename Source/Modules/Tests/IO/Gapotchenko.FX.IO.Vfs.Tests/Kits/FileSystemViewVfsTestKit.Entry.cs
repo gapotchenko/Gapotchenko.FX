@@ -71,7 +71,7 @@ partial class FileSystemViewVfsTestKit
         Func<IReadOnlyFileSystemView, string, DateTime> getXxxTime,
         Action<IFileSystemView, string, DateTime> setXxxTime)
     {
-        var specialTime = VfsTestContentsKit.SpecialUtcTime1;
+        var specialTime = VfsTestContentKit.SpecialUtcTime1;
 
         RunVfsTest(Mutate, Verify);
 
@@ -167,7 +167,7 @@ partial class FileSystemViewVfsTestKit
         {
             char ds = vfs.DirectorySeparatorChar;
 
-            VfsTestContentsKit.CreateHierarchy(
+            VfsTestContentKit.CreateHierarchy(
                 vfs,
                 rootPath,
                 [
@@ -178,7 +178,13 @@ partial class FileSystemViewVfsTestKit
                     // Scenario 2
                     $"Scenario 2{ds}1.txt",
                     $"Scenario 2{ds}2.txt",
-                    $"Scenario 2{ds}3.bin"
+                    $"Scenario 2{ds}3.bin",
+
+                    // Scenario 3
+                    $"Scenario 3{ds}File",
+                    $"Scenario 3{ds}Directory{ds}",
+                    $"Scenario 3{ds}Container{ds}Contained File",
+                    $"Scenario 3{ds}Container{ds}Contained Directory{ds}"
                 ]);
         }
 
@@ -187,11 +193,13 @@ partial class FileSystemViewVfsTestKit
             char ds = vfs.DirectorySeparatorChar;
             char ads = vfs.AltDirectorySeparatorChar;
             var defaultEnumerationOptions = new EnumerationOptions();
+            const int countOfSpecialDirectoriesPerDirectory = 2; // "." and ".."
 
             Scenario1(ds);
             if (ads != ds)
                 Scenario1(ads);
             Scenario2();
+            Scenario3();
 
             #region Scenarios
 
@@ -295,9 +303,119 @@ partial class FileSystemViewVfsTestKit
                 }
             }
 
+            void Scenario3()
+            {
+                string directoryPath = vfs.JoinPaths(rootPath, "Scenario 3");
+
+                if (enumerateFiles)
+                {
+                    var filePaths = ToUniqueHashSet(vfs.EnumerateFiles(directoryPath));
+
+                    Assert.AreEqual(1, filePaths.Count);
+                    VerifySearchPattern(vfs, directoryPath, null, filePaths);
+                    VerifyFilesExistence(vfs, filePaths);
+
+                    Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*")));
+                    Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*", SearchOption.TopDirectoryOnly)));
+                    Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*", defaultEnumerationOptions)));
+#if NET6_0_OR_GREATER
+                    Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*", new EnumerationOptions { RecurseSubdirectories = true, MaxRecursionDepth = 0 })));
+#endif
+
+                    // ------------------------------------------------------
+
+                    filePaths = ToUniqueHashSet(vfs.EnumerateFiles(directoryPath, "*", SearchOption.AllDirectories));
+
+                    Assert.AreEqual(2, filePaths.Count);
+                    VerifySearchPattern(vfs, directoryPath, null, filePaths);
+                    VerifyFilesExistence(vfs, filePaths);
+
+                    Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*", SearchOption.AllDirectories)));
+                    Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*", new EnumerationOptions { RecurseSubdirectories = true })));
+#if NET6_0_OR_GREATER
+                    Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*", new EnumerationOptions { RecurseSubdirectories = true, MaxRecursionDepth = 1 })));
+#endif
+                }
+
+                if (enumerateDirectories)
+                {
+                    var directoryPaths = ToUniqueHashSet(vfs.EnumerateDirectories(directoryPath));
+
+                    Assert.AreEqual(2, directoryPaths.Count);
+                    VerifySearchPattern(vfs, directoryPath, null, directoryPaths);
+                    VerifyDirectoriesExistence(vfs, directoryPaths);
+                    VerifySpecialDirectories(vfs, directoryPaths, 0);
+
+                    Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*")));
+                    Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*", SearchOption.TopDirectoryOnly)));
+                    Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*", defaultEnumerationOptions)));
+#if NET6_0_OR_GREATER
+                    Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*", new EnumerationOptions { RecurseSubdirectories = true, MaxRecursionDepth = 0 })));
+#endif
+
+                    // ------------------------------------------------------
+
+                    directoryPaths = ToUniqueHashSet(vfs.EnumerateDirectories(directoryPath, "*", SearchOption.AllDirectories));
+
+                    Assert.AreEqual(3, directoryPaths.Count);
+                    VerifySearchPattern(vfs, directoryPath, null, directoryPaths);
+                    VerifyDirectoriesExistence(vfs, directoryPaths);
+                    VerifySpecialDirectories(vfs, directoryPaths, 0);
+
+                    Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*", SearchOption.AllDirectories)));
+                    Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*", new EnumerationOptions { RecurseSubdirectories = true })));
+#if NET6_0_OR_GREATER
+                    Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*", new EnumerationOptions { RecurseSubdirectories = true, MaxRecursionDepth = 1 })));
+#endif
+
+                    // ------------------------------------------------------
+
+                    directoryPaths = ToUniqueHashSet(vfs.EnumerateDirectories(directoryPath, "*", new EnumerationOptions { ReturnSpecialDirectories = true }));
+
+                    Assert.AreEqual(4, directoryPaths.Count);
+                    VerifySearchPattern(vfs, directoryPath, null, directoryPaths);
+                    VerifyDirectoriesExistence(vfs, directoryPaths);
+                    VerifySpecialDirectories(vfs, directoryPaths, 2);
+
+#if NET6_0_OR_GREATER
+                    Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*", new EnumerationOptions { ReturnSpecialDirectories = true, RecurseSubdirectories = true, MaxRecursionDepth = 0 })));
+#endif
+
+                    // ------------------------------------------------------
+
+                    directoryPaths = ToUniqueHashSet(vfs.EnumerateDirectories(directoryPath, "*", new EnumerationOptions { RecurseSubdirectories = true, ReturnSpecialDirectories = true }));
+
+                    // Count of inner directories inside the directory being enumerated.
+                    const int countOfInnerDirectories = 3;
+                    // Count of special directories for the inner directories plus the directory being enumerated.
+                    const int countOfSpecialDirectories = (countOfInnerDirectories + 1) * countOfSpecialDirectoriesPerDirectory;
+
+                    Assert.AreEqual(countOfInnerDirectories + countOfSpecialDirectories, directoryPaths.Count);
+                    VerifySearchPattern(vfs, directoryPath, null, directoryPaths);
+                    VerifyDirectoriesExistence(vfs, directoryPaths);
+                    VerifySpecialDirectories(vfs, directoryPaths, countOfSpecialDirectories);
+
+#if NET6_0_OR_GREATER
+                    Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*", new EnumerationOptions { ReturnSpecialDirectories = true, RecurseSubdirectories = true, MaxRecursionDepth = 2 })));
+#endif
+                }
+            }
+
             #endregion
 
             #region Helpers
+
+            static void VerifySpecialDirectories(IReadOnlyFileSystemView vfs, IEnumerable<string> directoryPaths, int expectedCount)
+            {
+                int actualCount = directoryPaths.Count(x => IsSpecialDirectory(vfs, x));
+                Assert.AreEqual(
+                    expectedCount,
+                    actualCount,
+                    "Enumerated directory paths contain an invalid number of special directories.");
+            }
+
+            static bool IsSpecialDirectory(IReadOnlyFileSystemView vfs, string path) =>
+                vfs.GetFileName(path) is "." or "..";
 
             static void DiscardAll<T>(IEnumerable<T> source)
             {

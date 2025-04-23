@@ -27,8 +27,8 @@ partial class ZipArchiveTestKit
             archive.GetLastWriteTime(hostFxrPath),
             $"The last write time of '{hostFxrPath}' directory should not correspond to a non-existing entry.");
 
-        archive.SetLastWriteTime(hostFxrPath, VfsTestContentsKit.SpecialUtcTime1);
-        Assert.AreEqual(VfsTestContentsKit.SpecialUtcTime1, archive.GetLastWriteTime(hostFxrPath));
+        archive.SetLastWriteTime(hostFxrPath, VfsTestContentKit.SpecialUtcTime1);
+        Assert.AreEqual(VfsTestContentKit.SpecialUtcTime1, archive.GetLastWriteTime(hostFxrPath));
 
         Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(hostFxrPath));
         archive.DeleteDirectory(hostFxrPath, true);

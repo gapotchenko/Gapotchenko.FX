@@ -355,6 +355,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                 searchPattern,
                 MatchType.Win32,
                 MatchCasing.PlatformDefault,
+                false,
                 VfsSearchKit.GetMaxRecursionDepth(searchOption),
                 enumerateFiles,
                 enumerateDirectories)
@@ -382,6 +383,7 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                 searchPattern,
                 enumerationOptions.MatchType,
                 enumerationOptions.MatchCasing,
+                enumerationOptions.ReturnSpecialDirectories,
                 VfsSearchKit.GetMaxRecursionDepth(enumerationOptions),
                 enumerateFiles,
                 enumerateDirectories)
@@ -389,13 +391,14 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
     }
 
     IEnumerable<ReadOnlyMemory<string>> EnumerateEntriesCore(in StructuredPath path, bool throwWhenDirectoryNotFound = true) =>
-        EnumerateEntriesCore(path, null, default, default, 0, true, true, throwWhenDirectoryNotFound);
+        EnumerateEntriesCore(path, null, default, default, false, 0, true, true, throwWhenDirectoryNotFound);
 
     IEnumerable<ReadOnlyMemory<string>> EnumerateEntriesCore(
         StructuredPath path,
         string? searchPattern,
         MatchType matchType,
         MatchCasing matchCasing,
+        bool returnSpecialDirectories,
         int maxRecursionDepth,
         bool enumerateFiles,
         bool enumerateDirectories,
@@ -404,12 +407,12 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         // The status of the enumerated directory.
         var directoryStatus = throwWhenDirectoryNotFound
             ? EnumeratedDirectoryStatus.None
-            : EnumeratedDirectoryStatus.Found; // pretend that the directory is found
+            : EnumeratedDirectoryStatus.Ignored;
 
         var pathParts = path.Parts;
         if (pathParts.Span != null)
         {
-            if (pathParts.Length == 0)
+            if (pathParts.IsEmpty)
                 directoryStatus = EnumeratedDirectoryStatus.Found;
 
             // Keep track of duplicates because directories can be defined implicitly
@@ -502,7 +505,17 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
                     {
                         // A directory.
                         if (enumeratedDirectories != null && enumeratedDirectories.Add(entryPathParts))
+                        {
+                            // The directory itself.
                             yield return entryPathParts;
+
+                            // Special subdirectories for it.
+                            if (returnSpecialDirectories && recursionDepth + 1 <= maxRecursionDepth)
+                            {
+                                yield return (string[])[.. entryPathParts.Span, "."];
+                                yield return (string[])[.. entryPathParts.Span, ".."];
+                            }
+                        }
                     }
                     else
                     {
@@ -521,6 +534,16 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
 
             case EnumeratedDirectoryStatus.Invalid:
                 throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
+
+            case EnumeratedDirectoryStatus.Found:
+                if (enumerateDirectories && returnSpecialDirectories)
+                {
+                    // Special sub-directories for the directory being enumerated.
+                    yield return (string[])[.. pathParts.Span, "."];
+                    if (!pathParts.IsEmpty)
+                        yield return (string[])[.. pathParts.Span, ".."];
+                }
+                break;
         }
     }
 
@@ -539,7 +562,12 @@ sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool 
         /// <summary>
         /// The directory path points to a file.
         /// </summary>
-        Invalid
+        Invalid,
+
+        /// <summary>
+        /// The directory status is ignored.
+        /// </summary>
+        Ignored
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
