@@ -33,7 +33,7 @@ public static class VfsFileExtensions
 
     /// <summary>
     /// Opens an existing file representing a <typeparamref name="TVfs"/> storage for reading
-    /// in the specified file-system view.
+    /// in the specified file system view.
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
@@ -72,7 +72,7 @@ public static class VfsFileExtensions
 
     /// <summary>
     /// Opens an existing file or creates a new file representing a <typeparamref name="TVfs"/> storage for writing
-    /// in the specified file-system view.
+    /// in the specified file system view.
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
@@ -113,7 +113,7 @@ public static class VfsFileExtensions
 
     /// <summary>
     /// Creates or overwrites a file representing a <typeparamref name="TVfs"/> storage in the specified path
-    /// of the file-system view.
+    /// of the file system view.
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
@@ -161,7 +161,7 @@ public static class VfsFileExtensions
 
     /// <summary>
     /// Opens a file representing a <typeparamref name="TVfs"/> storage on the specified path
-    /// in the specified file-system view,
+    /// in the specified file system view,
     /// with the specified mode, access, and sharing options.
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
