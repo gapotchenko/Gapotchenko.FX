@@ -94,20 +94,19 @@ as it elegantly solves a world-class problem of bridging sync and async models t
 
 ## `Sequential`, an Antogonist to `Parallel`
 
-.NET platform provides `System.Threading.Tasks.Parallel` class that contains a bunch of static methods allowing one to execute the tasks in parallel.
+.NET platform provides `System.Threading.Tasks.Parallel` class that contains a bunch of static methods allowing to execute the tasks in parallel.
 But what if you want to temporarily switch them to a sequential execution mode?
 
-Of course, you can do that manually, for example, by changing `Parallel.ForEach` method to `foreach` C# language keyword.
+Of course, you can do it manually, for example, by changing `Parallel.ForEach` method to `foreach` C# language keyword.
 But this constitutes a lot of manual labour prone to errors.
-That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, a drop-in anotogonist to `Parallel`.
+That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, a drop-in "antogonist" to `Parallel`.
 It allows you to make the switch by just changing the class name from `Parallel` to `Sequential` in a corresponding function call.
 So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now executed sequentially allowing you to isolate that pesky multithreading bug you were hunting for.
 
-### Automatic Selection Between Parallel and Sequential
+### Automatic Selection Between Parallel and Sequential Modes
 
 `System.Threading.Tasks.Parallel` class allows you to execute tasks in parallel,
-while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to do the same,
-but sequentially.
+while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to execute them sequentially.
 But what if you want to get the best of two worlds?
 Meet `DebuggableParallel` class provided by `Gapotchenko.FX.Threading` module that does an automatic contextful choice for you.
 
@@ -115,7 +114,7 @@ Meet `DebuggableParallel` class provided by `Gapotchenko.FX.Threading` module th
 <summary>More details</summary>
 
 When a project has an attached debugger, `DebuggableParallel` primitive executes the specified tasks sequentially.
-When there is no debugger attached, `DebuggableParallel` will execute the tasks in parallel.
+When there is no debugger attached, `DebuggableParallel` executes the tasks in parallel.
 And of course, it's a drop-in replacement for the ubiquitous `System.Threading.Tasks.Parallel` class.
 
 The automatic selection of the task execution mode enables multi-threaded code to be effortlessly debugged,

@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.IO.svg)](https://www.nuget.org/packages/Gapotchenko.FX.IO)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.IO.svg)](https://www.nuget.org/packages/Gapotchenko.FX.IO)
 
-The module provides commonly demanded input/output functionality that is missing in conventional .NET platform.
+The module provides commonly demanded input/output functionality that is missing in baseline .NET platform.
 
 ## FileSystem
 

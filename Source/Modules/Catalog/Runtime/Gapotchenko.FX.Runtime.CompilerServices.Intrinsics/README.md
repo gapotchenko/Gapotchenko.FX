@@ -10,8 +10,8 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics)
 
-The module allows to define and compile intrinsic functions.
-They can be used in hardware-accelerated implementations of various performance-sensitive algorithms.
+The module allows to define and compile intrinsic functions using machine code.
+They can be used in hardware-accelerated implementations of performance-sensitive algorithms.
 
 ## Example
 

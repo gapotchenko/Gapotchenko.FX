@@ -8,9 +8,9 @@ The module provides data structures and primitives for working with abstract gra
 ## Graph&lt;T&gt;
 
 `Graph<T>` class provided by `Gapotchenko.FX.Math.Graphs` represents a strongly-typed graph of objects.
-The objects correspond to mathematical abstractions called graph vertices and each of the related pairs of vertices is called an edge.
-A graph can be viewed as a structure that contains two sets: set of vertices and set of edges.
-Vertices define "what" graph contains and edges define "how" those vertices are connected.
+The objects stored in a graph are called vertices and each of the related pairs of vertices is called an edge.
+A graph can be viewed as a structure containing two sets: the set of vertices and the set of edges.
+Vertices define "what" graph contains and edges define "how" those vertices are interconnected.
 
 Let's take a look at the simplest directional graph that contains just two vertices:
 

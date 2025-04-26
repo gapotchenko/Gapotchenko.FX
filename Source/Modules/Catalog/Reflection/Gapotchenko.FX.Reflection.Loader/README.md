@@ -10,7 +10,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Reflection.Loader.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Reflection.Loader)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Reflection.Loader.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Reflection.Loader)
 
-The module provides versatile primitives that can be used to automatically lookup and load .NET assembly dependencies in various dynamic scenarios.
+The module provides versatile primitives that can be used to automatically lookup and load .NET assembly dependencies in dynamic scenarios.
 
 ## Introduction
 
