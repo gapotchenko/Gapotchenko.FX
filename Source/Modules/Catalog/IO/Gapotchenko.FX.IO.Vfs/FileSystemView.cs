@@ -19,6 +19,23 @@ public static class FileSystemView
     public static IFileSystemView Local => LocalFileSystemView.Instance;
 
     /// <summary>
+    /// Gets a value indicating whether the specified file system view represents local file system.
+    /// </summary>
+    /// <param name="view">The file system view.</param>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="view"/> represents local file system;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
+    public static bool IsLocal(IReadOnlyFileSystemView view)
+    {
+        if (view is null)
+            throw new ArgumentNullException(nameof(view));
+
+        return view is LocalFileSystemView;
+    }
+
+    /// <summary>
     /// Gets a view on the specified virtual file system with capabilities enforced according to the specified values.
     /// </summary>
     /// <param name="view">The virtual file system view to enforce the capabilities for.</param>
