@@ -6,7 +6,7 @@
     <!--<Prefer32Bit>true</Prefer32Bit>-->
     <Nullable>enable</Nullable>
     <LangVersion>12.0</LangVersion>
-    <NoWarn>CS0162</NoWarn>
+    <NoWarn>$(NoWarn),CS0162</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
