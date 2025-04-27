@@ -474,7 +474,7 @@ public class AppInformation : IAppInformation
                 return processPath;
         }
 
-        throw new Exception("Unable to determine app executable file path.");
+        throw new AppModelException("Unable to determine app executable file path.");
     }
 
     static string GetLocalExecutablePath(string localPath)
