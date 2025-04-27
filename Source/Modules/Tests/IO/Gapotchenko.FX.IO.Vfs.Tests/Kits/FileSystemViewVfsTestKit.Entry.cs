@@ -216,6 +216,7 @@ partial class FileSystemViewVfsTestKit
                     Assert.AreEqual(4, entryPaths.Count);
                     VerifySearchPattern(vfs, directoryPath, null, SearchOption.TopDirectoryOnly, entryPaths);
                     VerifyEntriesExistence(vfs, entryPaths, 3, 1);
+                    VerifySpecialDirectories(vfs, entryPaths, 0);
 
                     Assert.IsTrue(entryPaths.SetEquals(vfs.EnumerateEntries(directoryPath, "*")));
                     Assert.IsTrue(entryPaths.SetEquals(vfs.EnumerateEntries(directoryPath, "*", SearchOption.TopDirectoryOnly)));
@@ -235,6 +236,7 @@ partial class FileSystemViewVfsTestKit
                         Assert.AreEqual(3, filePaths.Count);
                         VerifySearchPattern(vfs, directoryPath, null, SearchOption.TopDirectoryOnly, filePaths);
                         VerifyFilesExistence(vfs, filePaths);
+                        VerifySpecialDirectories(vfs, filePaths, 0);
 
                         Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*")));
                         Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*", SearchOption.TopDirectoryOnly)));
@@ -253,6 +255,7 @@ partial class FileSystemViewVfsTestKit
                         Assert.AreEqual(1, directoryPaths.Count);
                         VerifySearchPattern(vfs, directoryPath, null, SearchOption.TopDirectoryOnly, directoryPaths);
                         VerifyDirectoriesExistence(vfs, directoryPaths);
+                        VerifySpecialDirectories(vfs, directoryPaths, 0);
 
                         Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*")));
                         Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*", SearchOption.TopDirectoryOnly)));
@@ -277,6 +280,7 @@ partial class FileSystemViewVfsTestKit
                     Assert.AreEqual(2, entryPaths.Count);
                     VerifySearchPattern(vfs, rootPath, searchPattern, SearchOption.TopDirectoryOnly, entryPaths);
                     VerifyEntriesExistence(vfs, entryPaths, 2, 0);
+                    VerifySpecialDirectories(vfs, entryPaths, 0);
 
                     Assert.IsTrue(entryPaths.SetEquals(vfs.EnumerateEntries(rootPath, searchPattern, SearchOption.TopDirectoryOnly)));
                     Assert.IsTrue(entryPaths.SetEquals(vfs.EnumerateEntries(rootPath, searchPattern, defaultEnumerationOptions)));
@@ -290,6 +294,7 @@ partial class FileSystemViewVfsTestKit
                         Assert.AreEqual(2, filePaths.Count);
                         VerifySearchPattern(vfs, rootPath, searchPattern, SearchOption.TopDirectoryOnly, filePaths);
                         VerifyFilesExistence(vfs, filePaths);
+                        VerifySpecialDirectories(vfs, filePaths, 0);
 
                         Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(rootPath, searchPattern, SearchOption.TopDirectoryOnly)));
                         Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(rootPath, searchPattern, defaultEnumerationOptions)));

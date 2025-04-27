@@ -242,17 +242,17 @@ public abstract class FileSystemViewKit : IFileSystemView
                 !options.IgnoreInaccessible)
             {
                 var searchOption = maxRecursionDepth is 0 ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
-                return EnumerateEntriesCore(path, searchPattern, searchOption, enumerateFiles, enumerateDirectories);
+                return EnumerateEntriesMatrix(path, searchPattern, searchOption, enumerateFiles, enumerateDirectories);
             }
         }
 
         // ----------------------------------------------------------------------
-        // Polyfill implementation using more basic available primitives
+        // Polyfill implementation that uses more basic but available primitives
         // ----------------------------------------------------------------------
 
-        return EnumerateEntriesPolyfill();
+        return EnumerateEntriesPolyfillImpl(path, maxRecursionDepth);
 
-        IEnumerable<string> EnumerateEntriesPolyfill()
+        IEnumerable<string> EnumerateEntriesPolyfillImpl(string path, int remainingRecursionDepth)
         {
             var searchExpression = new VfsSearchExpression(
                 searchPattern,
@@ -260,19 +260,24 @@ public abstract class FileSystemViewKit : IFileSystemView
                 options.MatchType,
                 VfsSearchKit.GetSearchExpressionOptions(this, options.MatchCasing));
 
-            string entryPath = path;
-            int remainingRecursionDepth = maxRecursionDepth;
+            var pendingHierarchies = new Queue<(string Path, int RemainingRecursionDepth)>();
 
-            var pending = new Queue<(string Path, int RemainingRecursionDepth)>();
             for (; ; )
             {
-                foreach (string i in EnumerateHierarchy(entryPath, remainingRecursionDepth))
+                foreach (string i in EnumerateHierarchy(path, remainingRecursionDepth))
                     yield return i;
 
-                if (!pending.TryDequeue(out var next))
+                if (pendingHierarchies.TryDequeue(out var next))
+                {
+                    // Next hierarchy.
+                    path = next.Path;
+                    remainingRecursionDepth = next.RemainingRecursionDepth;
+                }
+                else
+                {
+                    // No hierarchies left.
                     break;
-                entryPath = next.Path;
-                remainingRecursionDepth = next.RemainingRecursionDepth;
+                }
             }
 
             IEnumerable<string> EnumerateHierarchy(string path, int remainingRecursionDepth)
@@ -281,7 +286,7 @@ public abstract class FileSystemViewKit : IFileSystemView
 
                 try
                 {
-                    query = EnumerateEntriesCore(
+                    query = EnumerateEntriesMatrix(
                         path,
                         "*",
                         SearchOption.TopDirectoryOnly,
@@ -345,7 +350,7 @@ public abstract class FileSystemViewKit : IFileSystemView
                     }
 
                     if (remainingRecursionDepth > 0)
-                        pending.Enqueue((entryPath, remainingRecursionDepth - 1));
+                        pendingHierarchies.Enqueue((entryPath, remainingRecursionDepth - 1));
                 }
             }
         }
@@ -354,7 +359,7 @@ public abstract class FileSystemViewKit : IFileSystemView
         // Helper functions
         // ----------------------------------------------------------------------
 
-        IEnumerable<string> EnumerateEntriesCore(
+        IEnumerable<string> EnumerateEntriesMatrix(
            string path,
            string searchPattern,
            SearchOption searchOption,

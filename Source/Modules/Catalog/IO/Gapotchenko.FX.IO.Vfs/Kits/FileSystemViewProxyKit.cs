@@ -7,6 +7,7 @@
 namespace Gapotchenko.FX.IO.Vfs.Kits;
 
 /// <inheritdoc/>
+[EditorBrowsable(EditorBrowsableState.Advanced)]
 public abstract class FileSystemViewProxyKit : FileSystemViewProxyKit<IFileSystemView>
 {
     /// <summary>

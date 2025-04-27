@@ -9,6 +9,7 @@ namespace Gapotchenko.FX.IO.Vfs.Kits;
 /// <summary>
 /// Provides facilities for implementing search functionality of a virtual file system.
 /// </summary>
+[EditorBrowsable(EditorBrowsableState.Advanced)]
 public static class VfsSearchKit
 {
     /// <summary>

@@ -10,6 +10,7 @@ namespace Gapotchenko.FX.IO.Vfs.Kits;
 /// Provides a base implementation of <see cref="IFileSystemView"/> proxy.
 /// </summary>
 /// <typeparam name="T">The type of the base file system view.</typeparam>
+[EditorBrowsable(EditorBrowsableState.Advanced)]
 public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     where T : IFileSystemView
 {
