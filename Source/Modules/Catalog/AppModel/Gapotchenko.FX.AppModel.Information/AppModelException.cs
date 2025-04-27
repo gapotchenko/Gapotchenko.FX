@@ -39,5 +39,5 @@ public class AppModelException : Exception
 }
 
 // NOTE: this class conceptually belongs to Gapotchenko.FX.AppModel module
-// which does not exist yet. If it appears, AppModelException type should
+// which does not exist yet. When it appears, AppModelException type should
 // be forwarded there for binary compatibility.

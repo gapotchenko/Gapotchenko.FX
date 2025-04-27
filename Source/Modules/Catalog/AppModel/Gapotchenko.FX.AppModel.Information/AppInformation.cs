@@ -1,4 +1,12 @@
-﻿using Gapotchenko.FX.Threading;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using Gapotchenko.FX.Threading;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -181,13 +189,8 @@ public class AppInformation : IAppInformation
 
     FileVersionInfo RetrieveEntryFileVersionInfo()
     {
-        string filePath;
-
         var type = EntryType;
-        if (type != null)
-            filePath = type.Module.FullyQualifiedName;
-        else
-            filePath = ExecutablePath;
+        string filePath = type != null ? type.Module.FullyQualifiedName : ExecutablePath;
 
         return FileVersionInfo.GetVersionInfo(filePath);
     }
@@ -474,7 +477,7 @@ public class AppInformation : IAppInformation
                 return processPath;
         }
 
-        throw new AppModelException("Unable to determine app executable file path.");
+        throw new AppModelException("Unable to determine executable file path of the app.");
     }
 
     static string GetLocalExecutablePath(string localPath)
@@ -488,13 +491,9 @@ public class AppInformation : IAppInformation
                 frameworkDescription.StartsWith(".NET ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 5)
 #endif
             {
-                string? exeExtension;
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    exeExtension = ".exe";
-                else
-                    exeExtension = null;
-
+                string? exeExtension = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : null;
                 string exePath = Path.ChangeExtension(localPath, exeExtension);
+
                 if (File.Exists(exePath))
                     localPath = exePath;
             }

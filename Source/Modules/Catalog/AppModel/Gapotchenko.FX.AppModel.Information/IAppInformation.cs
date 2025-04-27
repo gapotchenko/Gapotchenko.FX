@@ -1,4 +1,12 @@
-﻿namespace Gapotchenko.FX.AppModel;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+namespace Gapotchenko.FX.AppModel;
 
 /// <summary>
 /// Provides information about the app.

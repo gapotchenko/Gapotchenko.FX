@@ -1,4 +1,12 @@
-﻿using System.Runtime.InteropServices;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Gapotchenko.FX.AppModel;
