@@ -23,7 +23,9 @@ static class ExceptionHelper
     public static void ThrowIfThisIsNull([NotNull] object? @this)
     {
         if (@this is null)
+#pragma warning disable CA2201 // Do not raise reserved exception types
             throw new NullReferenceException();
+#pragma warning restore CA2201 // Do not raise reserved exception types
     }
 
     /// <summary>

@@ -3,11 +3,7 @@
 //
 // File introduced by: Kirill Rode
 // Year of introduction: 2021
-//
-// Contributors:
-//   - Oleksiy Gapotchenko (development)
-//   - Kirill Rode (development)
-//
+
 // AssociativeArray<TKey, TValue> is a collection of key/value pairs that
 // supports null keys.
 
@@ -19,10 +15,11 @@ using System.Diagnostics;
 
 #if NET8_0_OR_GREATER
 using static System.ArgumentNullException;
-using static System.ArgumentOutOfRangeException;
 #else
 using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
 #endif
+
+#pragma warning disable CA1710 // Identifiers should have correct suffix
 
 namespace Gapotchenko.FX.Collections.Generic;
 

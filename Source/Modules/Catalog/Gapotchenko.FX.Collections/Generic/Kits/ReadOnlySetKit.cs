@@ -16,6 +16,8 @@ using static System.ArgumentOutOfRangeException;
 using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
 #endif
 
+#pragma warning disable CA1710 // Identifiers should have correct suffix
+
 namespace Gapotchenko.FX.Collections.Generic.Kits;
 
 /// <summary>

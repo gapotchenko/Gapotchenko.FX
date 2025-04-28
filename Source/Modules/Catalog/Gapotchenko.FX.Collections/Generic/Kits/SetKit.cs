@@ -7,6 +7,8 @@
 using Gapotchenko.FX.Linq;
 using System.Diagnostics;
 
+#pragma warning disable CA1710 // Identifiers should have correct suffix
+
 namespace Gapotchenko.FX.Collections.Generic.Kits;
 
 /// <summary>
