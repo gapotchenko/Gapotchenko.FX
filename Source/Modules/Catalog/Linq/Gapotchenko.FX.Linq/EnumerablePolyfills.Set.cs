@@ -168,7 +168,7 @@ partial class EnumerablePolyfills
     /// <remarks>
     /// <para>This method is implemented by using deferred execution. The immediate return value is an object that stores all the information that is required to perform the action. The query represented by this method is not executed until the object is enumerated either by calling its `GetEnumerator` method directly or by using `foreach` in Visual C# or `For Each` in Visual Basic.</para>
     /// <para>The default equality comparer, <see cref="EqualityComparer{T}.Default" />, is used to compare values.</para>
-    /// <para>When the object returned by this method is enumerated, <see cref="O:Enumerable.UnionBy" /> enumerates <paramref name="first" /> and <paramref name="second" /> in that order and yields each element that has not already been yielded.</para>
+    /// <para>When the object returned by this method is enumerated, `UnionBy` enumerates <paramref name="first" /> and <paramref name="second" /> in that order and yields each element that has not already been yielded.</para>
     /// </remarks>
 #if TFF_ENUMERABLE_UNIONBY
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -200,7 +200,7 @@ partial class EnumerablePolyfills
     /// <remarks>
     /// <para>This method is implemented by using deferred execution. The immediate return value is an object that stores all the information that is required to perform the action. The query represented by this method is not executed until the object is enumerated either by calling its `GetEnumerator` method directly or by using `foreach` in Visual C# or `For Each` in Visual Basic.</para>
     /// <para>If <paramref name="comparer" /> is <see langword="null" />, the default equality comparer, <see cref="EqualityComparer{T}.Default" />, is used to compare values.</para>
-    /// <para>When the object returned by this method is enumerated, <see cref="O:Enumerable.UnionBy" /> enumerates <paramref name="first" /> and <paramref name="second" /> in that order and yields each element that has not already been yielded.</para>
+    /// <para>When the object returned by this method is enumerated, `UnionBy` enumerates <paramref name="first" /> and <paramref name="second" /> in that order and yields each element that has not already been yielded.</para>
     /// </remarks>
 #if TFF_ENUMERABLE_UNIONBY
     [EditorBrowsable(EditorBrowsableState.Never)]
