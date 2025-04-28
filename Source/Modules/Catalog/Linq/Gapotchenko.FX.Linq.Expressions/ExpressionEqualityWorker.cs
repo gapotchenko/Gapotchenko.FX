@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Linq.Expressions;
 
@@ -83,7 +84,7 @@ sealed class ExpressionEqualityWorker
                 return false;
 
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new SwitchExpressionException(x.BindingType);
         }
     }
 
