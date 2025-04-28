@@ -39,7 +39,7 @@ public abstract partial class ChecksumAlgorithm<T> : IChecksumAlgorithm<T>
         var iterator = CreateIterator();
 
         var pool = ArrayPool<byte>.Shared;
-        var buffer = pool.Rent(BufferSize);
+        byte[] buffer = pool.Rent(BufferSize);
         try
         {
             for (; ; )
@@ -69,13 +69,17 @@ public abstract partial class ChecksumAlgorithm<T> : IChecksumAlgorithm<T>
         var iterator = CreateIterator();
 
         var pool = ArrayPool<byte>.Shared;
-        var buffer = pool.Rent(BufferSize);
+        byte[] buffer = pool.Rent(BufferSize);
         try
         {
             for (; ; )
             {
                 int bytesRead = await
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                    stream.ReadAsync(buffer.AsMemory(0, BufferSize), cancellationToken)
+#else
                     stream.ReadAsync(buffer, 0, BufferSize, cancellationToken)
+#endif
                     .ConfigureAwait(false);
                 if (bytesRead <= 0)
                     break;
