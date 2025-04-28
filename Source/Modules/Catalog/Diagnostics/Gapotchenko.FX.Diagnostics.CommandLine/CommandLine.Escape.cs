@@ -2,6 +2,7 @@
 
 using Gapotchenko.FX.Text;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -17,20 +18,20 @@ partial class CommandLine
     [return: NotNullIfNotNull(nameof(value))]
     public static string? EscapeArgument(string? value)
     {
-        if (value == null)
+        if (value is null)
             return null;
 
         int length = value.Length;
-        if (length == 0)
+        if (length is 0)
             return string.Empty;
 
-        var sb = new StringBuilder();
+        var sb = new StringBuilder(length + 8);
         Escape.AppendQuotedText(sb, value);
 
         if (sb.Length == length)
             return value;
-
-        return sb.ToString();
+        else
+            return sb.ToString();
     }
 
     /// <summary>
@@ -46,42 +47,47 @@ partial class CommandLine
         [return: NotNullIfNotNull(nameof(value))]
         public static string? EncodeFileName(string? value)
         {
-            if (value == null)
+            if (value is null)
                 return null;
-
-            if (value.Length != 0 && value[0] == '-')
+            else if (value.StartsWith('-'))
                 return "." + Path.DirectorySeparatorChar + value;
             else
                 return value;
         }
 
-        public static void AppendQuotedText(StringBuilder sb, string text)
+        public static void AppendQuotedText(
+            StringBuilder builder,
+            string text,
+            [CallerArgumentExpression(nameof(text))] string? textArgumentName = null)
         {
             bool quotingRequired = IsQuotingRequired(text);
             if (quotingRequired)
-                sb.Append('"');
+                builder.Append('"');
 
             int numberOfQuotes = 0;
             for (int i = 0; i < text.Length; i++)
             {
                 if (text[i] == '"')
-                    numberOfQuotes++;
+                    ++numberOfQuotes;
             }
 
             if (numberOfQuotes > 0)
             {
                 if ((numberOfQuotes % 2) != 0)
-                    throw new Exception("Command line parameter cannot contain an odd number of double quotes.");
-                text = text.Replace("\\\"", "\\\\\"").Replace("\"", "\\\"");
+                    throw new ArgumentException("Command-line parameter cannot contain an odd number of double quotes.", textArgumentName);
+
+                text = text
+                    .Replace("\\\"", "\\\\\"")
+                    .Replace("\"", "\\\"");
             }
 
-            sb.Append(text);
+            builder.Append(text);
 
             if (quotingRequired && text.EndsWith('\\'))
-                sb.Append('\\');
+                builder.Append('\\');
 
             if (quotingRequired)
-                sb.Append('"');
+                builder.Append('"');
         }
 
         static bool IsQuotingRequired(string parameter) =>
@@ -89,21 +95,19 @@ partial class CommandLine
             DefinitelyNeedQuotesRegex.IsMatch(parameter);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        static Regex AllowedUnquotedRegex => m_CachedAllowedUnquotedRegex ??= new(
+            @"^[a-z\\/:0-9\._\-+=]*$",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static Regex? m_CachedAllowedUnquotedRegex;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static Regex AllowedUnquotedRegex =>
-            m_CachedAllowedUnquotedRegex ??= new Regex(
-                @"^[a-z\\/:0-9\._\-+=]*$",
-                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        static Regex DefinitelyNeedQuotesRegex => m_CachedDefinitelyNeedQuotesRegex ??= new(
+            "[|><\\s,;\"]+",
+            RegexOptions.CultureInvariant);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         static Regex? m_CachedDefinitelyNeedQuotesRegex;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        static Regex DefinitelyNeedQuotesRegex =>
-            m_CachedDefinitelyNeedQuotesRegex ??= new Regex(
-                "[|><\\s,;\"]+",
-                RegexOptions.CultureInvariant);
     }
 }
