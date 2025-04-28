@@ -23,7 +23,7 @@ partial class Permutations
     /// </summary>
     /// <typeparam name="T">The type of elements that the row contains.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IResult<T> : IReadOnlyCollection<IRow<T>>
+    public interface IResult<T> : IReadOnlyCollection<IResultRow<T>>
     {
         /// <summary>
         /// <para>
@@ -73,7 +73,7 @@ partial class Permutations
 
     sealed class Result<T>(ResultMode mode, IEnumerable<T> source, IEqualityComparer<T>? comparer) : IResult<T>
     {
-        int IReadOnlyCollection<IRow<T>>.Count => Count();
+        int IReadOnlyCollection<IResultRow<T>>.Count => Count();
 
         public int Count() =>
             LazyInitializerEx.EnsureInitialized(
@@ -120,9 +120,9 @@ partial class Permutations
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public IEnumerator<IRow<T>> GetEnumerator() => Enumerate().GetEnumerator();
+        public IEnumerator<IResultRow<T>> GetEnumerator() => Enumerate().GetEnumerator();
 
-        IEnumerable<IRow<T>> Enumerate() => Permute(source, mode == ResultMode.Distinct, m_Comparer);
+        IEnumerable<IResultRow<T>> Enumerate() => Permute(source, mode == ResultMode.Distinct, m_Comparer);
 
         public IResult<T> Distinct() => Distinct(null);
 

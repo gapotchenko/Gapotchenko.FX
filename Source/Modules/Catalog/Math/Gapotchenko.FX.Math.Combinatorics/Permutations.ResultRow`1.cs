@@ -16,11 +16,11 @@ partial class Permutations
     /// </summary>
     /// <typeparam name="T">The type of elements that the row contains.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IRow<T> : IEnumerable<T>, IEquatable<IRow<T>>
+    public interface IResultRow<T> : IEnumerable<T>, IEquatable<IResultRow<T>>
     {
     }
 
-    sealed class Row<T>(IReadOnlyList<T> source, int[] transform) : IRow<T>, IReadOnlyList<T>
+    sealed class ResultRow<T>(IReadOnlyList<T> source, int[] transform) : IResultRow<T>, IReadOnlyList<T>
     {
         public T this[int index] => m_Source[transform[index]];
 
@@ -34,13 +34,13 @@ partial class Permutations
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public bool Equals(IRow<T>? other) =>
+        public bool Equals(IResultRow<T>? other) =>
             ReferenceEquals(this, other) ||
-            other is Row<T> otherRow &&
+            other is ResultRow<T> otherRow &&
             ReferenceEquals(m_Source, otherRow.m_Source) &&
             this.SequenceEqual(otherRow);
 
-        public override bool Equals(object? obj) => obj is IRow<T> other && Equals(other);
+        public override bool Equals(object? obj) => obj is IResultRow<T> other && Equals(other);
 
         public override int GetHashCode() =>
             HashCode.Combine(

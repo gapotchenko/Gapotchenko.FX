@@ -16,19 +16,16 @@ partial class CartesianProduct
     /// </summary>
     /// <typeparam name="T">The type of elements that the row contains.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IRow<T> : IEnumerable<T>, IEquatable<IRow<T>>
+    public interface IResultRow<T> : IEnumerable<T>, IEquatable<IResultRow<T>>
     {
     }
 
-    sealed class Row<T> : IRow<T>, IReadOnlyList<T>
+    sealed class ResultRow<T> : IResultRow<T>, IReadOnlyList<T>
     {
-        public Row(IReadOnlyList<T> source)
+        public ResultRow(IReadOnlyList<T> source)
         {
             m_Source = source;
         }
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IReadOnlyList<T> m_Source;
 
         public int Count => m_Source.Count;
 
@@ -38,16 +35,16 @@ partial class CartesianProduct
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public bool Equals(IRow<T>? other) =>
+        public bool Equals(IResultRow<T>? other) =>
             ReferenceEquals(this, other) ||
-            other is Row<T> otherRow &&
+            other is ResultRow<T> otherRow &&
             ReferenceEquals(m_Source, otherRow.m_Source) &&
             this.SequenceEqual(otherRow);
 
         public override bool Equals(object? obj) =>
             obj switch
             {
-                Row<T> other => Equals(other),
+                ResultRow<T> other => Equals(other),
                 _ => false
             };
 
@@ -55,5 +52,8 @@ partial class CartesianProduct
             HashCode.Combine(
                 m_Source.GetHashCode(),
                 HashCodeEx.SequenceCombine(this));
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly IReadOnlyList<T> m_Source;
     }
 }

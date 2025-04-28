@@ -21,7 +21,7 @@ partial class CartesianProduct
     /// </summary>
     /// <typeparam name="T">The type of elements that the row contains.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IResult<T> : IEnumerable<IRow<T>>
+    public interface IResult<T> : IEnumerable<IResultRow<T>>
     {
         /// <summary>
         /// <para>
@@ -65,7 +65,7 @@ partial class CartesianProduct
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly IEqualityComparer<T>? m_Comparer;
 
-        public IEnumerator<IRow<T>> GetEnumerator() => Multiply(m_Factors).GetEnumerator();
+        public IEnumerator<IResultRow<T>> GetEnumerator() => Multiply(m_Factors).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

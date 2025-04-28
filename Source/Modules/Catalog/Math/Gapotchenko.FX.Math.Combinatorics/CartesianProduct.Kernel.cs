@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Math.Combinatorics;
 
 partial class CartesianProduct
 {
-    static IEnumerable<IRow<T>> Multiply<T>(IEnumerable<IEnumerable<T>> factors)
+    static IEnumerable<IResultRow<T>> Multiply<T>(IEnumerable<IEnumerable<T>> factors)
     {
         var items = MemoizeMultipliers(factors).ReifyList();
         int rank = items.Count;
@@ -38,7 +38,7 @@ partial class CartesianProduct
             for (int i = 0; i != rank; i++)
                 row[i] = enumerators[i].Current;
 
-            yield return new Row<T>(row);
+            yield return new ResultRow<T>(row);
 
             for (int i = 0; i != rank; i++)
             {

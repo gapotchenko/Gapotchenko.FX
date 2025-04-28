@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Math.Combinatorics;
 
 partial class Permutations
 {
-    static IEnumerable<IRow<T>> Permute<T>(IEnumerable<T> sequence, bool distinct, IEqualityComparer<T>? comparer)
+    static IEnumerable<IResultRow<T>> Permute<T>(IEnumerable<T> sequence, bool distinct, IEqualityComparer<T>? comparer)
     {
         var items = sequence.ReifyList();
 
@@ -51,7 +51,7 @@ partial class Permutations
             }
         }
 
-        yield return new Row<T>(items, transform.Select(x => x.Second).ToArray());
+        yield return new ResultRow<T>(items, transform.Select(x => x.Second).ToArray());
 
         for (; ; )
         {
@@ -83,7 +83,7 @@ partial class Permutations
             // Reverse the decreasing partition.
             Array.Reverse(transform, decreasingPart + 1, length - decreasingPart - 1);
 
-            yield return new Row<T>(items, transform.Select(x => x.Second).ToArray());
+            yield return new ResultRow<T>(items, transform.Select(x => x.Second).ToArray());
         }
     }
 }
