@@ -4,6 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+#pragma warning disable CA1710 // Identifiers should have correct suffix
 #pragma warning disable CA1835 // Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'
 
 namespace Gapotchenko.FX.IO.Kits;
@@ -169,7 +170,9 @@ public class StreamProxyKit<T> : Stream
 
 #if NET5_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
     /// <inheritdoc/>
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
     public override async ValueTask DisposeAsync()
+#pragma warning restore CA1816
     {
         await BaseStream.DisposeAsync().ConfigureAwait(false);
         await base.DisposeAsync().ConfigureAwait(false);

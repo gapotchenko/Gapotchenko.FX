@@ -210,7 +210,7 @@ static partial class StreamPolyfills
             throw new ArgumentNullException(nameof(stream));
 
 #if TFF_STREAM_READEXACTLY
-        return stream.ReadExactlyAsync(buffer, offset, count);
+        return stream.ReadExactlyAsync(buffer, offset, count, cancellationToken);
 #else
         ValidateBufferArguments(buffer, offset, count);
 

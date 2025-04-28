@@ -8,6 +8,8 @@
 
 using System.Runtime.InteropServices;
 
+#pragma warning disable CA2101 // Specify marshaling for P/Invoke string arguments
+
 namespace Gapotchenko.FX.IO.Pal.Unix;
 
 #if NET
