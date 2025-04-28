@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2021
 
+#pragma warning disable CA1707 // Identifiers should not contain underscores
+
 namespace Gapotchenko.FX.Data.Integrity.Checksum;
 
 partial class Crc16
