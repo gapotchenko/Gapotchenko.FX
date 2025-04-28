@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Diagnostics.Pal;
 
 /// <summary>
-/// Universal pointer that can hold both 32- and 64-bit values.
+/// Universal pointer that can hold both 32-bit and 64-bit values.
 /// </summary>
 readonly struct UniPtr : IEquatable<UniPtr>
 {
@@ -14,13 +14,13 @@ readonly struct UniPtr : IEquatable<UniPtr>
     public UniPtr(int value)
     {
         m_Value = value;
-        m_Size = sizeof(int);
+        m_Size = sizeof(int); // 4 bytes, 32 bits
     }
 
     public UniPtr(long value)
     {
         m_Value = value;
-        m_Size = sizeof(long);
+        m_Size = sizeof(long); // 8 bytes, 64 bits
     }
 
     public UniPtr(ulong value) :
@@ -35,7 +35,7 @@ readonly struct UniPtr : IEquatable<UniPtr>
     }
 
     readonly long m_Value;
-    readonly byte m_Size;
+    readonly byte m_Size; // in bytes
 
     public int Size => m_Size;
 
@@ -71,11 +71,11 @@ readonly struct UniPtr : IEquatable<UniPtr>
 
     public static bool operator !=(UniPtr a, UniPtr b) => a.ToUInt64() != b.ToUInt64();
 
-    public override int GetHashCode() => m_Value.GetHashCode();
-
     public override bool Equals(object? obj) => obj is UniPtr other && Equals(other);
 
     public bool Equals(UniPtr other) => m_Value == other.m_Value;
+
+    public override int GetHashCode() => m_Value.GetHashCode();
 
     public override readonly string ToString() => ((ulong)m_Value).ToString();
 }

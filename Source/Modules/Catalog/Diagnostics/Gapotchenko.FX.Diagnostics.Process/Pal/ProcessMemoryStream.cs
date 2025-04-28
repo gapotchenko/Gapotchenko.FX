@@ -101,10 +101,13 @@ sealed class ProcessMemoryStream : Stream
 
             if (currentCount == 0)
             {
-                // EOF
+                // End of file (EOF).
                 break;
             }
 
+            // Accessing the first memory page should always work,
+            // but if it doesn't then it denotes an exceptional situation.
+            // Errors in accessing consequential pages are treated as an EOF condition.
             bool throwOnError = pageStart == m_FirstPageAddress;
 
             int r = m_Accessor.ReadMemory(addr, buffer, offset, currentCount, throwOnError);
@@ -112,7 +115,8 @@ sealed class ProcessMemoryStream : Stream
             {
                 if (throwOnError)
                 {
-                    // In case if process memory adapter disregards a throw on error flag.
+                    // Just in case if a process memory adapter
+                    // disregards the throw on error flag.
                     throw new IOException();
                 }
 

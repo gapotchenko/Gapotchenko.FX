@@ -7,6 +7,11 @@
     <TargetPlatforms>any;windows</TargetPlatforms>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- TODO: change to 'recommended'. -->
+    <AnalysisMode>none</AnalysisMode>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageTag Include="process" />
     <PackageTag Include="environment" />
