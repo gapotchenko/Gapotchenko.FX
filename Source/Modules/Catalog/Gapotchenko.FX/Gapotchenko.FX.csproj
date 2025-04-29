@@ -1,11 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <PackageDescription>.NET polyfill to the future. A versatile RAD (Rapid Application Development) framework for .NET platform.</PackageDescription>
   </PropertyGroup>
 
@@ -15,6 +10,17 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.EvaluateOnce&lt;T&gt;" />
     <CommonlyUsedPart Include="Gapotchenko.FX.UriQueryBuilder" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <CLSCompliant>true</CLSCompliant>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- The diagnostics below need various polyfills to be cleared
+         but they are unavailable at this stage. -->
+    <NoWarn>$(NoWarn),CA1865,CA2249</NoWarn>
+  </PropertyGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

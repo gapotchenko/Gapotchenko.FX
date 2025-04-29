@@ -94,41 +94,6 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
         m_HasValue ? new((TResult)(object)m_Value!) : default;
 
     /// <summary>
-    /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified object.
-    /// </summary>
-    /// <param name="obj">An object.</param>
-    /// <returns><see langword="true"/> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <see langword="false"/>.</returns>
-    public override readonly bool Equals(object? obj) => OptionalEqualityComparer<T>.EqualsCore(this, obj, EqualityComparer<T>.Default);
-
-    /// <summary>
-    /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified optional value.
-    /// </summary>
-    /// <param name="other">An optional value.</param>
-    /// <returns><see langword="true"/> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <see langword="false"/>.</returns>
-    public readonly bool Equals(Optional<T> other) => Optional.Equals(this, other, null);
-
-    /// <inheritdoc cref="Equals(object?)"/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public readonly bool Equals<TOther>(TOther? obj) where TOther : struct, IOptional =>
-        OptionalEqualityComparer<T>.EqualsCore(this, obj, EqualityComparer<T>.Default);
-
-    /// <summary>
-    /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified value.
-    /// </summary>
-    /// <param name="other">A value.</param>
-    /// <returns><see langword="true"/> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <see langword="false"/>.</returns>
-    public readonly bool Equals(T? other) => OptionalEqualityComparer<T>.EqualsCore(this, other, EqualityComparer<T>.Default);
-
-    /// <summary>
-    /// Retrieves the hash code of the object returned by the <see cref="Value"/> property.
-    /// </summary>
-    /// <returns>
-    /// The hash code of the object returned by the <see cref="Value"/> property if the <see cref="HasValue"/> property is <see langword="true"/>,
-    /// or zero if the <see cref="HasValue"/> property is <see langword="false"/>.
-    /// </returns>
-    public override readonly int GetHashCode() => Optional.GetHashCode(this, null);
-
-    /// <summary>
     /// Returns the text representation of the value of the current <see cref="Optional{T}"/> object.
     /// </summary>
     /// <returns>
@@ -165,14 +130,46 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     /// <returns>
     /// A <see cref="Optional{T}"/> object whose <see cref="HasValue"/> property is <see langword="false"/>.
     /// </returns>
+#pragma warning disable CA1000 // Do not declare static members on generic types
     public static Optional<T> None => default;
+#pragma warning restore CA1000
+
+    #region Equality
 
     /// <summary>
-    /// Compares the current <see cref="Optional{T}"/> object to a specified object.
+    /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified object.
     /// </summary>
-    /// <param name="other">An object to compare to.</param>
-    /// <returns>The comparison result.</returns>
-    readonly int IComparable<Optional<T>>.CompareTo(Optional<T> other) => Optional.Compare(this, other, null);
+    /// <param name="obj">An object.</param>
+    /// <returns><see langword="true"/> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <see langword="false"/>.</returns>
+    public override readonly bool Equals(object? obj) => OptionalEqualityComparer<T>.EqualsCore(this, obj, EqualityComparer<T>.Default);
+
+    /// <summary>
+    /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified optional value.
+    /// </summary>
+    /// <param name="other">An optional value.</param>
+    /// <returns><see langword="true"/> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <see langword="false"/>.</returns>
+    public readonly bool Equals(Optional<T> other) => Optional.Equals(this, other, null);
+
+    /// <inheritdoc cref="Equals(object?)"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public readonly bool Equals<TOther>(TOther? obj) where TOther : struct, IOptional =>
+        OptionalEqualityComparer<T>.EqualsCore(this, obj, EqualityComparer<T>.Default);
+
+    /// <summary>
+    /// Indicates whether the current <see cref="Optional{T}"/> object is equal to a specified value.
+    /// </summary>
+    /// <param name="other">A value.</param>
+    /// <returns><see langword="true"/> if the other parameter is equal to the current <see cref="Optional{T}"/> object; otherwise, <see langword="false"/>.</returns>
+    public readonly bool Equals(T? other) => OptionalEqualityComparer<T>.EqualsCore(this, other, EqualityComparer<T>.Default);
+
+    /// <summary>
+    /// Retrieves the hash code of the object returned by the <see cref="Value"/> property.
+    /// </summary>
+    /// <returns>
+    /// The hash code of the object returned by the <see cref="Value"/> property if the <see cref="HasValue"/> property is <see langword="true"/>,
+    /// or zero if the <see cref="HasValue"/> property is <see langword="false"/>.
+    /// </returns>
+    public override readonly int GetHashCode() => Optional.GetHashCode(this, null);
 
     /// <summary>
     /// Determines whether two specified <see cref="Optional{T}"/> objects are equal.
@@ -237,4 +234,79 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     /// <param name="right">The right <see cref="IOptional"/> object.</param>
     /// <returns><see langword="true"/> if <paramref name="left"/> does not equal <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(Optional<T> left, IOptional? right) => !(left == right);
+
+    #endregion
+
+    #region Comparability
+
+    /// <summary>
+    /// Compares the current <see cref="Optional{T}"/> object to a specified object.
+    /// </summary>
+    /// <param name="other">An object to compare to.</param>
+    /// <returns>The comparison result.</returns>
+    readonly int IComparable<Optional<T>>.CompareTo(Optional<T> other) => CompareTo(other);
+
+    /// <summary>
+    /// Determines whether the first specified <see cref="Optional{T}"/> object
+    /// is greater than
+    /// the second specified <see cref="Optional{T}"/> object.
+    /// </summary>
+    /// <param name="left">The first <see cref="Optional{T}"/> object.</param>
+    /// <param name="right">The second <see cref="Optional{T}"/> object.</param>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="left"/>
+    /// is greater than
+    /// <paramref name="right"/>;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator >(Optional<T> left, Optional<T> right) => left.HasValue && right.HasValue && left.CompareTo(right) > 0;
+
+    /// <summary>
+    /// Determines whether the first specified <see cref="Optional{T}"/> object
+    /// is less than
+    /// the second specified <see cref="Optional{T}"/> object.
+    /// </summary>
+    /// <param name="left">The first <see cref="Optional{T}"/> object.</param>
+    /// <param name="right">The second <see cref="Optional{T}"/> object.</param>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="left"/>
+    /// is less than
+    /// <paramref name="right"/>;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator <(Optional<T> left, Optional<T> right) => left.HasValue && right.HasValue && left.CompareTo(right) < 0;
+
+    /// <summary>
+    /// Determines whether the first specified <see cref="Optional{T}"/> object
+    /// is greater than or equal to
+    /// the second specified <see cref="Optional{T}"/> object.
+    /// </summary>
+    /// <param name="left">The first <see cref="Optional{T}"/> object.</param>
+    /// <param name="right">The second <see cref="Optional{T}"/> object.</param>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="left"/>
+    /// is greater than or equal to
+    /// <paramref name="right"/>;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator >=(Optional<T> left, Optional<T> right) => left.HasValue && right.HasValue && left.CompareTo(right) >= 0;
+
+    /// <summary>
+    /// Determines whether the first specified <see cref="Optional{T}"/> object
+    /// is less than or equal to
+    /// the second specified <see cref="Optional{T}"/> object.
+    /// </summary>
+    /// <param name="left">The first <see cref="Optional{T}"/> object.</param>
+    /// <param name="right">The second <see cref="Optional{T}"/> object.</param>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="left"/>
+    /// is less than or equal to
+    /// <paramref name="right"/>;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator <=(Optional<T> left, Optional<T> right) => left.HasValue && right.HasValue && left.CompareTo(right) <= 0;
+
+    readonly int CompareTo(Optional<T> other) => Optional.Compare(this, other, null);
+
+    #endregion
 }

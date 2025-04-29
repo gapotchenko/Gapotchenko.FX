@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+#pragma warning disable CS1718 // Comparison made to same variable
+
 namespace Gapotchenko.FX.Tests;
 
 [TestClass]
@@ -13,11 +15,10 @@ public class OptionalTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Optional_AV2()
     {
         var optional = Optional<int>.None;
-        _ = optional.Value;
+        Assert.ThrowsException<InvalidOperationException>(() => optional.Value);
     }
 
     [TestMethod]
@@ -36,11 +37,10 @@ public class OptionalTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Optional_AV5()
     {
         var optional = new Optional<int>();
-        _ = optional.Value;
+        Assert.ThrowsException<InvalidOperationException>(() => optional.Value);
     }
 
     [TestMethod]
@@ -59,11 +59,10 @@ public class OptionalTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Optional_AR2()
     {
         var optional = Optional<string>.None;
-        _ = optional.Value;
+        Assert.ThrowsException<InvalidOperationException>(() => optional.Value);
     }
 
     [TestMethod]
@@ -82,11 +81,10 @@ public class OptionalTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Optional_AR5()
     {
         var optional = new Optional<string>();
-        _ = optional.Value;
+        Assert.ThrowsException<InvalidOperationException>(() => optional.Value);
     }
 
     [TestMethod]
@@ -351,4 +349,104 @@ public class OptionalTests
         optional = new(s);
         Assert.AreEqual(s, optional.Value.Value);
     }
+
+    #region Comparability
+
+    [TestMethod]
+    public void Optional_Comparability_CompareWithNone()
+    {
+        Test<int>();
+        Test(-10);
+        Test(10);
+
+        Test<string>();
+        Test(string.Empty);
+
+        static void Test<T>(T? value = default)
+        {
+            var comparer = Comparer<Optional<T?>>.Default;
+
+            var none = Optional<T?>.None;
+            var some = Optional.Some(value);
+
+            Assert.AreEqual(0, comparer.Compare(none, none));
+            Assert.IsTrue(comparer.Compare(some, none) > 0);
+            Assert.IsTrue(comparer.Compare(none, some) < 0);
+            Assert.AreEqual(0, comparer.Compare(some, some));
+        }
+    }
+
+    [TestMethod]
+    public void Optional_Comparability_GreaterThan()
+    {
+        Optional<int> a = 10;
+        Optional<int> b = -10;
+
+        Assert.IsTrue(a > b);
+        Assert.IsFalse(b > a);
+        Assert.IsFalse(a > Optional<int>.None);
+        Assert.IsFalse(Optional<int>.None > b);
+        Assert.IsFalse(Optional<int>.None > Optional<int>.None);
+        Assert.IsFalse(a > a);
+        Assert.IsFalse(b > b);
+
+        var comparer = Comparer<Optional<int>>.Default;
+        Assert.IsTrue(comparer.Compare(a, b) > 0);
+    }
+
+    [TestMethod]
+    public void Optional_Comparability_LessThan()
+    {
+        Optional<int> a = -10;
+        Optional<int> b = 10;
+
+        Assert.IsTrue(a < b);
+        Assert.IsFalse(b < a);
+        Assert.IsFalse(a < Optional<int>.None);
+        Assert.IsFalse(Optional<int>.None < b);
+        Assert.IsFalse(Optional<int>.None < Optional<int>.None);
+        Assert.IsFalse(a < a);
+        Assert.IsFalse(b < b);
+
+        var comparer = Comparer<Optional<int>>.Default;
+        Assert.IsTrue(comparer.Compare(a, b) < 0);
+    }
+
+    [TestMethod]
+    public void Optional_Comparability_GreaterThanOrEqualTo()
+    {
+        Optional<int> a = 10;
+        Optional<int> b = -10;
+
+        Assert.IsTrue(a >= b);
+        Assert.IsFalse(b >= a);
+        Assert.IsFalse(a >= Optional<int>.None);
+        Assert.IsFalse(Optional<int>.None >= b);
+        Assert.IsFalse(Optional<int>.None >= Optional<int>.None);
+        Assert.IsTrue(a >= a);
+        Assert.IsTrue(b >= b);
+
+        var comparer = Comparer<Optional<int>>.Default;
+        Assert.IsTrue(comparer.Compare(a, b) >= 0);
+    }
+
+    [TestMethod]
+    public void Optional_Comparability_LessThanOrEqualTo()
+    {
+        Optional<int> a = -10;
+        Optional<int> b = 10;
+
+        Assert.IsTrue(a <= b);
+        Assert.IsFalse(b <= a);
+        Assert.IsFalse(a <= Optional<int>.None);
+        Assert.IsFalse(Optional<int>.None <= b);
+        Assert.IsFalse(Optional<int>.None <= Optional<int>.None);
+        Assert.IsTrue(a <= a);
+        Assert.IsTrue(b <= b);
+
+        var comparer = Comparer<Optional<int>>.Default;
+        Assert.IsTrue(comparer.Compare(a, b) <= 0);
+    }
+
+    #endregion
 }

@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX;
+﻿#pragma warning disable CA1000 // Do not declare static members on generic types
+
+namespace Gapotchenko.FX;
 
 /// <summary>
 /// Optimized and fast equality comparer for one-dimensional arrays.
