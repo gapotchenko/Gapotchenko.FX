@@ -9,10 +9,6 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.Tuples.TupleEqualityComparer" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>

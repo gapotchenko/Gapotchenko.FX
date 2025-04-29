@@ -8,10 +8,6 @@
     <PackageTag Include="security;rc4;arc4" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>

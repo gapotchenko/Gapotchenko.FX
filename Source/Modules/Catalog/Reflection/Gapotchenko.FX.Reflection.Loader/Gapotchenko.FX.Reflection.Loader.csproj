@@ -8,10 +8,6 @@
     <DefineConstants>$(DefineConstants),ASSEMBLY_LOADER_INITIALIZER</DefineConstants>    
   </PropertyGroup>
 
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
-  
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Reflection.AssemblyAutoLoader" />
   </ItemGroup>

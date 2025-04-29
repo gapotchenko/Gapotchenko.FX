@@ -2,15 +2,22 @@
 
   <!-- Language agnostic -->
   <PropertyGroup>
-    <NoWarn>$(NoWarn),CA1034,CA1028,CA1305,CA1510,CA1513,CA1711,CA1716,CA1720,CA1814,CA1815,CA1822,CA1838,CA1859,CA1863,CA2214,CA2225,CA2265</NoWarn>
+    <NoWarn>$(NoWarn),CA1034,CA1028,CA1305,CA1513,CA1711,CA1716,CA1720,CA1814,CA1815,CA1822,CA1838,CA1859,CA1863,CA2214,CA2225,CA2265</NoWarn>
     <NoWarn>$(NoWarn),IDE0010,IDE0016,IDE0302</NoWarn>
     <NoWarn>$(NoWarn),SYSLIB1054</NoWarn>
     <NoWarn>$(NoWarn),NU1510</NoWarn>
     <WarningsAsErrors>$(WarningsAsErrors),CA2241</WarningsAsErrors>
+
+    <!-- Exception throw helpers -->
+    <NoWarn>$(NoWarn),CA1510,CA1511,CA1512,CA1513</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(MasteringProjectKind)' != 'utility' ">
     <WarningsAsErrors>$(WarningsAsErrors),CA1309,CA1310,CA2248</WarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(MasteringProjectKind)' == 'module' ">
+    <AnalysisMode>recommended</AnalysisMode>
   </PropertyGroup>
 
   <!-- C# -->

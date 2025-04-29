@@ -11,10 +11,6 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.AsyncMonitor" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX\Gapotchenko.FX.csproj" />

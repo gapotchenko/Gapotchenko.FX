@@ -5,10 +5,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
-
   <Import Project="$(MasteringDir)\OOB\System.Buffers.props" />
   <Import Project="$(MasteringDir)\OOB\System.Memory.props" />
 

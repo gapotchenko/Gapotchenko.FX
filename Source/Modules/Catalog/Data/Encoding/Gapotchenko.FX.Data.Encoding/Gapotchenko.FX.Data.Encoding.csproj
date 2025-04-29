@@ -5,10 +5,6 @@
     <PackageDescription>Provides a quasi-universal framework for data encodings. Supports both synchronous and asynchronous data processing models, including the iterative transcoding.</PackageDescription>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
-
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>

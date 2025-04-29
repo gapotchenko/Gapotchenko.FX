@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
     <NoWarn>$(NoWarn),GPFX0001</NoWarn>
   </PropertyGroup>
 
