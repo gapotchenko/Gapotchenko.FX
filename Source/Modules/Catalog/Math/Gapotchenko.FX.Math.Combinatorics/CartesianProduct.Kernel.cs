@@ -60,8 +60,9 @@ partial class CartesianProduct
 
     static IEnumerable<IEnumerable<T>> MemoizeMultipliers<T>(IEnumerable<IEnumerable<T>> factors)
     {
-        var gtc = new GroupTransformCorrelator<IEnumerable<T>>(EnumerableEx.Memoize);
         factors = factors.Memoize();
+
+        var gtc = new GroupTransformCorrelator<IEnumerable<T>>(EnumerableEx.Memoize);
         foreach (var factor in factors.SkipLast(1))
             gtc.Transform(factor);
         return factors.Select(gtc.Correlate);
@@ -69,8 +70,9 @@ partial class CartesianProduct
 
     static IEnumerable<IEnumerable<T>> DistinctMultipliers<T>(IEnumerable<IEnumerable<T>> factors, IEqualityComparer<T>? equalityComparer)
     {
-        var gtc = new GroupTransformCorrelator<IEnumerable<T>>(x => x.Distinct(equalityComparer));
         factors = factors.Memoize();
+
+        var gtc = new GroupTransformCorrelator<IEnumerable<T>>(x => x.Distinct(equalityComparer));
         foreach (var factor in factors)
             gtc.Transform(factor);
         return factors.Select(gtc.Correlate);

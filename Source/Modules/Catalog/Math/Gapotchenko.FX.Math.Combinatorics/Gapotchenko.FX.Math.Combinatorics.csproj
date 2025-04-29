@@ -12,10 +12,6 @@
   <ItemGroup>
     <PackageTag Include="combinatorics;permutations;combinations;variations;cartesian-product" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />

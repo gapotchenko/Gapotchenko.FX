@@ -45,7 +45,7 @@ partial class Permutations
 
             foreach (var list in lists)
             {
-                foreach (var i in list)
+                foreach (int i in list)
                     transform[transformIndex++] = (elementIndex, i);
                 elementIndex += list.Count;
             }

@@ -7,8 +7,9 @@
 namespace Gapotchenko.FX.Math.Combinatorics;
 
 /// <summary>
-/// Cartesian product LINQ extensions.
+/// Provides LINQ extension methods for Cartesian product.
 /// </summary>
+/// <seealso cref="CartesianProduct"/>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class CartesianProductExtensions
 {
@@ -43,7 +44,7 @@ public static class CartesianProductExtensions
         if (second == null)
             throw new ArgumentNullException(nameof(second));
 
-        return CartesianProduct.MultiplyAccelerated(new[] { first, second });
+        return CartesianProduct.MultiplyAccelerated([first, second]);
     }
 
     /// <summary>
@@ -66,7 +67,7 @@ public static class CartesianProductExtensions
         if (third == null)
             throw new ArgumentNullException(nameof(third));
 
-        return CartesianProduct.MultiplyAccelerated(new[] { first, second, third });
+        return CartesianProduct.MultiplyAccelerated([first, second, third]);
     }
 
     /// <summary>
@@ -93,7 +94,7 @@ public static class CartesianProductExtensions
         if (fourth == null)
             throw new ArgumentNullException(nameof(fourth));
 
-        return CartesianProduct.MultiplyAccelerated(new[] { first, second, third, fourth });
+        return CartesianProduct.MultiplyAccelerated([first, second, third, fourth]);
     }
 
     /// <summary>

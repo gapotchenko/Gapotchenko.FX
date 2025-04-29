@@ -47,23 +47,17 @@ partial class CartesianProduct
         IResult<T> Distinct(IEqualityComparer<T>? comparer);
     }
 
-    sealed class Result<T> : IResult<T>
+    sealed class Result<T>(ResultMode mode, IEnumerable<IEnumerable<T>> factors, IEqualityComparer<T>? comparer) :
+        IResult<T>
     {
-        public Result(ResultMode mode, IEnumerable<IEnumerable<T>> factors, IEqualityComparer<T>? comparer)
-        {
-            m_Mode = mode;
-            m_Factors = factors;
-            m_Comparer = comparer;
-        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly ResultMode m_Mode = mode;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly ResultMode m_Mode;
+        readonly IEnumerable<IEnumerable<T>> m_Factors = factors;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IEnumerable<IEnumerable<T>> m_Factors;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IEqualityComparer<T>? m_Comparer;
+        readonly IEqualityComparer<T>? m_Comparer = comparer;
 
         public IEnumerator<IResultRow<T>> GetEnumerator() => Multiply(m_Factors).GetEnumerator();
 

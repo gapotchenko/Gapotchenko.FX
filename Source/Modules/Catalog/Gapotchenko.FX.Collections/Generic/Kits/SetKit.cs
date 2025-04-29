@@ -96,7 +96,7 @@ public abstract class SetKit<T> : ReadOnlySetKit<T>, ISet<T>
             return;
         }
 
-        if (other.TryGetNonEnumeratedCount(out var otherCount))
+        if (other.TryGetNonEnumeratedCount(out int otherCount))
         {
             if (otherCount == 0)
             {
@@ -106,11 +106,11 @@ public abstract class SetKit<T> : ReadOnlySetKit<T>, ISet<T>
             }
         }
 
-        if (other is ReadOnlySetKit<T> rosb)
+        if (other is ReadOnlySetKit<T> rosk)
         {
-            if (rosb.Comparer.Equals(Comparer))
+            if (rosk.Comparer.Equals(Comparer))
             {
-                IntersectWithSetWithCompatibleComparer(rosb);
+                IntersectWithSetWithCompatibleComparer(rosk);
                 return;
             }
         }
@@ -182,11 +182,11 @@ public abstract class SetKit<T> : ReadOnlySetKit<T>, ISet<T>
             return;
         }
 
-        if (other is ReadOnlySetKit<T> rosb)
+        if (other is ReadOnlySetKit<T> rosk)
         {
-            if (rosb.Comparer.Equals(Comparer))
+            if (rosk.Comparer.Equals(Comparer))
             {
-                SymmetricExceptWithSetWithCompatibleComparer(rosb);
+                SymmetricExceptWithSetWithCompatibleComparer(rosk);
                 return;
             }
         }

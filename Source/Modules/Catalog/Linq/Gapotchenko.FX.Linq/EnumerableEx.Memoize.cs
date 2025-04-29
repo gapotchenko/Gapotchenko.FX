@@ -28,57 +28,71 @@ partial class EnumerableEx
         switch (source)
         {
             case null:
-                return null!; // for binary compatibility
+#if BINARY_COMPATIBILITY
+                return null!;
+#else
+                throw new ArgumentNullException(nameof(source));
+#endif
 
-            case CachedEnumerable<T> existingCachedEnumerable:
-                if (!isThreadSafe || existingCachedEnumerable is ThreadSafeCachedEnumerable<T>)
+            case CachedEnumerable<T> cachedEnumerable:
+                if (!isThreadSafe ||
+                    cachedEnumerable is ThreadSafeCachedEnumerable<T>)
                 {
                     // The source is already memoized with compatible parameters.
-                    return existingCachedEnumerable;
+                    return cachedEnumerable;
                 }
                 break;
 
-            case IList<T> _:
-            case IReadOnlyList<T> _:
-            case string _:
+            case IList<T>:
+            case IReadOnlyList<T>:
+            case string:
                 // Given source types are intrinsically memoized by their nature.
                 return source;
         }
 
+#pragma warning disable IDE0306 // Simplify collection initialization
         if (isThreadSafe)
             return new ThreadSafeCachedEnumerable<T>(source);
         else
             return new CachedEnumerable<T>(source);
+#pragma warning restore IDE0306 // Simplify collection initialization
     }
 
-    class CachedEnumerable<T> : IEnumerable<T>, IReadOnlyList<T>
+    class CachedEnumerable<T>(IEnumerable<T> source) : IReadOnlyList<T>
     {
-        public CachedEnumerable(IEnumerable<T> source)
+        public virtual T this[int index]
         {
-            m_Source = source;
+            get
+            {
+                EnsureItemIsCachedNoLock(index);
+                return Cache[index];
+            }
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<T>? m_Source;
+        internal virtual bool EnsureItemIsCached(int index) => EnsureItemIsCachedNoLock(index);
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerator<T>? m_SourceEnumerator;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly IList<T> Cache = [];
+        bool EnsureItemIsCachedNoLock(int index)
+        {
+            while (Cache.Count <= index)
+            {
+                if (!TryCacheElementNoLock())
+                    return false;
+            }
+            return true;
+        }
 
         public virtual int Count
         {
             get
             {
-                while (_TryCacheElementNoLock()) ;
+                while (TryCacheElementNoLock()) ;
                 return Cache.Count;
             }
         }
 
         protected bool CacheIsBuilt => m_Source == null && m_SourceEnumerator == null;
 
-        bool _TryCacheElementNoLock()
+        bool TryCacheElementNoLock()
         {
             if (m_SourceEnumerator == null)
             {
@@ -109,46 +123,29 @@ partial class EnumerableEx
             }
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<T>? m_Source = source;
+
         protected virtual void ClearSourceEnumerator()
         {
             m_SourceEnumerator = null;
         }
 
-        public virtual T this[int index]
-        {
-            get
-            {
-                _EnsureItemIsCachedNoLock(index);
-                return Cache[index];
-            }
-        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerator<T>? m_SourceEnumerator;
 
         public IEnumerator<T> GetEnumerator() => new CachedEnumerator<T>(this);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        internal virtual bool EnsureItemIsCached(int index) => _EnsureItemIsCachedNoLock(index);
-
-        bool _EnsureItemIsCachedNoLock(int index)
-        {
-            while (Cache.Count <= index)
-            {
-                if (!_TryCacheElementNoLock())
-                    return false;
-            }
-            return true;
-        }
-
         internal virtual T GetCacheItem(int index) => Cache[index];
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected readonly IList<T> Cache = [];
     }
 
-    sealed class ThreadSafeCachedEnumerable<T> : CachedEnumerable<T>
+    sealed class ThreadSafeCachedEnumerable<T>(IEnumerable<T> source) : CachedEnumerable<T>(source)
     {
-        public ThreadSafeCachedEnumerable(IEnumerable<T> source) :
-            base(source)
-        {
-        }
-
         public override int Count
         {
             get
@@ -172,12 +169,12 @@ partial class EnumerableEx
                 if (CacheIsBuilt)
                     return Cache[index];
                 else
-                    return _GetItemWithLock(index);
+                    return GetItemWithLock(index);
             }
         }
 
-        // A separate method to allow the inlining opportunities for this[index] getter.
-        T _GetItemWithLock(int index)
+        // Should be a separate method to allow code inlining opportunities for this[index] getter.
+        T GetItemWithLock(int index)
         {
             lock (Cache)
                 return base[index];
@@ -216,27 +213,15 @@ partial class EnumerableEx
         }
     }
 
-    sealed class CachedEnumerator<T> : IEnumerator<T>
+    sealed class CachedEnumerator<T>(CachedEnumerable<T> cachedEnumerable) : IEnumerator<T>
     {
-        CachedEnumerable<T>? m_CachedEnumerable;
-
-        const int InitialIndex = -1;
-        const int EofIndex = -2;
-
-        int m_Index = InitialIndex;
-
-        public CachedEnumerator(CachedEnumerable<T> cachedEnumerable)
-        {
-            m_CachedEnumerable = cachedEnumerable;
-        }
-
         public T Current
         {
             get
             {
                 var cachedEnumerable = m_CachedEnumerable ?? throw new InvalidOperationException();
 
-                var index = m_Index;
+                int index = m_Index;
                 if (index < 0)
                     throw new InvalidOperationException();
 
@@ -275,9 +260,16 @@ partial class EnumerableEx
             }
         }
 
+        CachedEnumerable<T>? m_CachedEnumerable = cachedEnumerable;
+
         public void Reset()
         {
             m_Index = InitialIndex;
         }
+
+        int m_Index = InitialIndex;
+
+        const int InitialIndex = -1;
+        const int EofIndex = -2;
     }
 }

@@ -37,15 +37,18 @@ partial class Permutations
         public bool Equals(IResultRow<T>? other) =>
             ReferenceEquals(this, other) ||
             other is ResultRow<T> otherRow &&
-            ReferenceEquals(m_Source, otherRow.m_Source) &&
-            this.SequenceEqual(otherRow);
+            ReferenceEquals(m_Source, otherRow.m_Source) && // ensure that the source is the same
+            this.SequenceEqual(otherRow); // and that the resulting permutation is the same
 
         public override bool Equals(object? obj) => obj is IResultRow<T> other && Equals(other);
 
-        public override int GetHashCode() =>
-            HashCode.Combine(
-                m_Source.GetHashCode(),
-                HashCodeEx.SequenceCombine(this));
+        public override int GetHashCode()
+        {
+            var hc = new HashCode();
+            hc.Add(m_Source.GetHashCode());
+            hc.AddRange(this);
+            return hc.ToHashCode();
+        }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly IReadOnlyList<T> m_Source = source;
