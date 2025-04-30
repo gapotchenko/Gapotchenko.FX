@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.7.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Catalog\Versioning\Gapotchenko.FX.Versioning.Semantic\Gapotchenko.FX.Versioning.Semantic.csproj" />
+  </ItemGroup>
+
+</Project>
