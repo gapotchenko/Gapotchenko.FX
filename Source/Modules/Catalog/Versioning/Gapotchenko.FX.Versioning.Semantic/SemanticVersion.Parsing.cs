@@ -5,6 +5,7 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.Threading;
+using Gapotchenko.FX.Versioning.Properties;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -17,17 +18,12 @@ partial class SemanticVersion
     /// </summary>
     /// <param name="input">A string that contains a semantic version to convert.</param>
     /// <returns>An object that is equivalent to the version string specified in the input parameter.</returns>
-    public static SemanticVersion Parse(string input)
-    {
-        if (input == null)
-            throw new ArgumentNullException(nameof(input));
-
-        var version = new SemanticVersion();
-        if (version.TryParseCore(input))
-            return version;
-        else
-            throw new FormatException("Semantic version has an invalid format.");
-    }
+    /// <exception cref="FormatException"><paramref name="input"/> string has an invalid format.</exception>
+    [return: NotNullIfNotNull(nameof(input))]
+    public static SemanticVersion? Parse(string? input) =>
+        input is null ?
+            null :
+            new(ParseCore(input));
 
     /// <summary>
     /// Tries to convert the string representation of a version string to an equivalent <see cref="SemanticVersion"/> object,
@@ -39,12 +35,8 @@ partial class SemanticVersion
     /// or null if the conversion failed.
     /// </param>
     /// <returns><c>true</c> if the input parameter was converted successfully; otherwise, <c>false</c>.</returns>
-    public static bool TryParse(string? input, out SemanticVersion result)
-    {
-        var value = TryParse(input);
-        result = value;
-        return value is not null;
-    }
+    public static bool TryParse([NotNullWhen(true)] string? input, [NotNullWhen(true)] out SemanticVersion? result) =>
+        (result = TryParse(input)) is not null;
 
     /// <summary>
     /// Tries to convert the string representation of a version string to an equivalent <see cref="SemanticVersion"/> object.
@@ -55,23 +47,19 @@ partial class SemanticVersion
     {
         if (string.IsNullOrEmpty(input))
             return null;
-
-        var version = new SemanticVersion();
-        if (version.TryParseCore(input))
-            return version;
         else
-            return null;
+            return Create(TryParseCore(input));
     }
 
-    bool TryParseCore(string version) =>
-        Parser.TryParseVersion(
-            version,
-            out m_Major, out m_Minor, out m_Patch,
-            out m_PreReleaseLabel, out m_BuildLabel);
+    static Model ParseCore(string input) =>
+         Parser.TryParseVersion(input) ??
+         throw new FormatException(Resources.SemanticVersionHasInvalidFormat);
+
+    static Model? TryParseCore(string input) => Parser.TryParseVersion(input);
 
     static partial class Parser
     {
-        public static bool IsValidLabel(string s) => GetLabelRegex().IsMatch(s);
+        public static bool IsValidLabel(string? s) => s is null || GetLabelRegex().IsMatch(s);
 
 #if NET7_0_OR_GREATER
         [GeneratedRegex(LabelRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
@@ -91,8 +79,8 @@ partial class SemanticVersion
             var match = GetLabelsRegex().Match(labels);
             if (match.Success)
             {
-                preReleaseLabel = Empty.Nullify(match.Groups["prl"].Value);
-                buildLabel = Empty.Nullify(match.Groups["bl"].Value);
+                preReleaseLabel = FX.Empty.Nullify(match.Groups["prl"].Value);
+                buildLabel = FX.Empty.Nullify(match.Groups["bl"].Value);
                 return true;
             }
             else
@@ -116,45 +104,43 @@ partial class SemanticVersion
 
         const string LabelsRegexPattern = $@"^(-?(?<prl>{LabelRegexText}))?(\+(?<bl>{LabelRegexText}))?$";
 
-        public static bool TryParseVersion(
-            string version,
-            out int major, out int minor, out int patch,
-            out string? preReleaseLabel, out string? buildLabel)
+        public static Model? TryParseVersion(string input)
         {
-            major = default;
-            minor = default;
-            patch = default;
-            preReleaseLabel = default;
-            buildLabel = default;
-
-            var match = GetVersionRegex().Match(version);
+            var match = GetVersionRegex().Match(input);
             if (!match.Success)
-                return false;
+                return null;
 
             var majorGroup = match.Groups["ma"];
             if (!majorGroup.Success)
-                return false;
-            if (!int.TryParse(majorGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out major))
-                return false;
+                return null;
+            if (!int.TryParse(majorGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out int major))
+                return null;
 
+            int minor = 0;
             var minorGroup = match.Groups["mi"];
             if (minorGroup.Success)
             {
                 if (!int.TryParse(minorGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out minor))
-                    return false;
+                    return null;
             }
 
+            int patch = 0;
             var patchrGroup = match.Groups["p"];
             if (patchrGroup.Success)
             {
                 if (!int.TryParse(patchrGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out patch))
-                    return false;
+                    return null;
             }
 
-            preReleaseLabel = Empty.Nullify(match.Groups["prl"].Value);
-            buildLabel = Empty.Nullify(match.Groups["bl"].Value);
-
-            return true;
+            return
+                new Model
+                {
+                    Major = major,
+                    Minor = minor,
+                    Patch = patch,
+                    PreReleaseLabel = FX.Empty.Nullify(match.Groups["prl"].Value),
+                    BuildLabel = FX.Empty.Nullify(match.Groups["bl"].Value)
+                };
         }
 
 #if NET7_0_OR_GREATER

@@ -11,7 +11,8 @@ namespace System;
 /// </para>
 /// </summary>
 /// <typeparam name="T">The class of a cloneable object.</typeparam>
-public interface ICloneable<out T> : ICloneable where T : class
+public interface ICloneable<out T> : ICloneable
+    where T : class
 {
     /// <summary>
     /// Creates a new object that is a copy of the current instance.
