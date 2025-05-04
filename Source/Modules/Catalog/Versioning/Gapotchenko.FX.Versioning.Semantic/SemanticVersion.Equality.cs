@@ -15,7 +15,7 @@ partial record SemanticVersion
         m_Major == obj.Major &&
         m_Minor == obj.m_Minor &&
         m_Patch == obj.m_Patch &&
-        // SemVer 2.0 standard requires to ignore 'BuildLabel' (Build metadata).
+        // SemVer 2.0 standard requires to ignore the build label.
         string.Equals(m_PreReleaseLabel, obj.m_PreReleaseLabel, StringComparison.Ordinal);
 
     /// <inheritdoc/>
