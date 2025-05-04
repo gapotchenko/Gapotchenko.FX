@@ -46,6 +46,7 @@ partial class SemanticVersionTests
 
         if (match)
         {
+            // Test same values.
             SemanticVersion_Equals_Test(a, a, true);
             if (versionA != versionB)
                 SemanticVersion_Equals_Test(b, b, true);
@@ -71,8 +72,8 @@ partial class SemanticVersionTests
         Assert.AreEqual(match, a == b);
         Assert.AreNotEqual(match, a != b);
 
-        if (a is not null && b is not null)
-            Assert.AreEqual(match, a.GetHashCode() == b.GetHashCode());
+        if (match && a is not null && b is not null)
+            Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
     }
 
     [TestMethod]
