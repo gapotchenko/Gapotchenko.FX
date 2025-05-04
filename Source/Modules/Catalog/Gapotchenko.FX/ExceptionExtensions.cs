@@ -27,9 +27,10 @@ public static class ExceptionExtensions
             IsCancellationExceptionCore);
 
     static bool IsCancellationExceptionCore(Exception exception) =>
-        exception is ThreadAbortException ||
-        exception is ThreadInterruptedException ||
-        exception is OperationCanceledException;
+        exception is
+            ThreadAbortException or
+            ThreadInterruptedException or
+            OperationCanceledException;
 
     /// <summary>
     /// Gets a value indicating whether the exception is intended to affect the control flow of the code execution.
@@ -82,21 +83,20 @@ public static class ExceptionExtensions
         if (predicate == null)
             throw new ArgumentNullException(nameof(predicate));
 
-        using (var enumerator = source.GetEnumerator())
-        {
-            if (!enumerator.MoveNext())
-            {
-                // Sequence is empty.
-                return false;
-            }
+        using var enumerator = source.GetEnumerator();
 
-            do
-            {
-                if (!predicate(enumerator.Current))
-                    return false;
-            }
-            while (enumerator.MoveNext());
+        if (!enumerator.MoveNext())
+        {
+            // Sequence is empty.
+            return false;
         }
+
+        do
+        {
+            if (!predicate(enumerator.Current))
+                return false;
+        }
+        while (enumerator.MoveNext());
 
         return true;
     }
