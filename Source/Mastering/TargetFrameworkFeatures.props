@@ -85,6 +85,11 @@
     <MasteringFrameworkFeature Include="TFF_REQUIREDMEMBERATTRIBUTE;TFF_STATIC_INTERFACE" />
   </ItemGroup>
 
+  <!-- .NET 10.0 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '10.0')) ">
+    <MasteringFrameworkFeature Include="TFF_STATIC_EXTENSIONS" />
+  </ItemGroup>
+
   <!-- ================================================================== -->
 
   <Target Name="DefineMasteringFrameworkFeatureConstants"

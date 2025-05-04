@@ -205,7 +205,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
             return DateTime.MinValue;
         }
 
-        if (PathEx.EndsInDirectorySeparator(path) && !Directory.Exists(path))
+        if (Path.EndsInDirectorySeparator(path) && !Directory.Exists(path))
         {
             // The path represents a directory but points to something else.
             // Such directory path is invalid despite the fact that a prior IO operation might be successful.
@@ -403,13 +403,16 @@ sealed class LocalFileSystemView : FileSystemViewKit
     }
 
     [return: NotNullIfNotNull(nameof(path))]
-    public override string? TrimEndingDirectorySeparator(string? path) => PathEx.TrimEndingDirectorySeparator(path);
+    public override string? TrimEndingDirectorySeparator(string? path) =>
+        path is null
+            ? null
+            : Path.TrimEndingDirectorySeparator(path);
 
-    public override ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) => PathEx.TrimEndingDirectorySeparator(path);
+    public override ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) => Path.TrimEndingDirectorySeparator(path);
 
-    public override bool EndsInDirectorySeparator([NotNullWhen(true)] string? path) => PathEx.EndsInDirectorySeparator(path);
+    public override bool EndsInDirectorySeparator([NotNullWhen(true)] string? path) => Path.EndsInDirectorySeparator(path!);
 
-    public override bool EndsInDirectorySeparator(ReadOnlySpan<char> path) => PathEx.EndsInDirectorySeparator(path);
+    public override bool EndsInDirectorySeparator(ReadOnlySpan<char> path) => Path.EndsInDirectorySeparator(path);
 
     #endregion
 }

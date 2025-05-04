@@ -7,7 +7,7 @@
 namespace Gapotchenko.FX.IO;
 
 /// <summary>
-/// Provides polyfill extension methods for <see cref="Stream"/>.
+/// Provides polyfill extension methods for <see cref="Stream"/> class.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static partial class StreamPolyfills

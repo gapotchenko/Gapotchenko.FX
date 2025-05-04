@@ -247,7 +247,7 @@ public static class FileSystem
                         throw new ArgumentOutOfRangeException(nameof(index));
 
                     parts.Insert(offset, subpath);
-                    return PathEx.Join(parts);
+                    return Path.Join(parts);
                 }
         }
     }
@@ -267,7 +267,7 @@ public static class FileSystem
 
         var parts = SplitPath(path).ToList();
         var (offset, length) = range.GetOffsetAndLength(parts.Count);
-        return PathEx.Join(parts.Skip(offset).Take(length));
+        return Path.Join(parts.Skip(offset).Take(length));
     }
 
     /// <summary>
@@ -498,7 +498,7 @@ public static class FileSystem
             if (!EntryExists(path))
                 throw new IOException(string.Format(Resources.FileSystemEntryXDoesNotExsit, path));
             else
-                return Path.GetFullPath(PathEx.TrimEndingDirectorySeparator(path));
+                return Path.GetFullPath(Path.TrimEndingDirectorySeparator(path));
         }
     }
 
