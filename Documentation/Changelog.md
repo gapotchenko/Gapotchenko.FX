@@ -6,6 +6,7 @@
 
 Release date: not released yet
 
+- Preliminary support for .NET 10.0 target framework
 - Introduced `Gapotchenko.FX.IO.Vfs` module that provides the concept of a virtual file system which allows to work with file systems in a unified way independently of their actual nature.
   Be it a local ZIP archive, an CD/DVD ISO image, a custom FAT12 implementation or a remote cloud storage
 - Gapotchenko.FX.IO: improved selection of a default buffer size for block copy operations working on streams

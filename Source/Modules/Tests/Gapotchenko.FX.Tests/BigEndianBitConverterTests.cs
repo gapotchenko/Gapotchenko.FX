@@ -290,7 +290,7 @@ public class BigEndianBitConverterTests
     static byte[] GetCanonicalRepresentation(Decimal value) => GetCanonicalRepresentation(x => x.Write(value));
 
     static byte[] GetCanonicalRepresentation(Action<BinaryWriter> write) =>
-        LittleEndianBitConverterTests.GetCanonicalRepresentation(write).Reverse().ToArray();
+        LittleEndianBitConverterTests.GetCanonicalRepresentation(write).AsEnumerable().Reverse().ToArray();
 
     static IEnumerable<byte> Neg(IEnumerable<byte> source) => LittleEndianBitConverterTests.Neg(source.Reverse()).Reverse();
 }

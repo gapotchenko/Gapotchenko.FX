@@ -28,13 +28,15 @@ public class SpanEqualityComparerTests
     [TestMethod]
     public void SpanEqualityComparer_EmptySpansAreEqual()
     {
-        var empty = Array.Empty<byte>();
+        byte[] empty = [];
 
         Assert.IsTrue(SpanEqualityComparer.Equals(new ReadOnlySpan<byte>(empty), empty));
         Assert.IsTrue(SpanEqualityComparer.Equals(new ReadOnlySpan<byte>(new byte[0]), new byte[0]));
 
         Assert.IsTrue(SpanEqualityComparer.Equals(empty.AsSpan(), empty));
+#pragma warning disable CA1825 // Avoid zero-length array allocations
         Assert.IsTrue(SpanEqualityComparer.Equals((new byte[0]).AsSpan(), new byte[0]));
+#pragma warning restore CA1825
     }
 
     [TestMethod]
@@ -62,8 +64,8 @@ public class SpanEqualityComparerTests
     [TestMethod]
     public void SpanEqualityComparer_SameSpansAreEqual_Byte()
     {
-        var x = new byte[] { 1, 2, 3 };
-        var y = new byte[] { 1, 2, 3 };
+        byte[] x = [1, 2, 3];
+        byte[] y = [1, 2, 3];
 
         Assert.IsTrue(SpanEqualityComparer.Equals(new ReadOnlySpan<byte>(x), y));
         Assert.AreEqual(
@@ -79,8 +81,8 @@ public class SpanEqualityComparerTests
     [TestMethod]
     public void SpanEqualityComparer_SameSpansAreEqual_Int32()
     {
-        var x = new int[] { 1, 2, 3 };
-        var y = new int[] { 1, 2, 3 };
+        int[] x = [1, 2, 3];
+        int[] y = [1, 2, 3];
 
         Assert.IsTrue(SpanEqualityComparer.Equals(new ReadOnlySpan<int>(x), y));
         Assert.AreEqual(
@@ -96,8 +98,8 @@ public class SpanEqualityComparerTests
     [TestMethod]
     public void SpanEqualityComparer_DifferentSpansAreNotEqual_Byte()
     {
-        var x = new byte[] { 1, 2, 3 };
-        var y = new byte[] { 3, 4, 5 };
+        byte[] x = [1, 2, 3];
+        byte[] y = [3, 4, 5];
 
         Assert.IsFalse(SpanEqualityComparer.Equals(new ReadOnlySpan<byte>(x), y));
         Assert.AreNotEqual(
@@ -113,8 +115,8 @@ public class SpanEqualityComparerTests
     [TestMethod]
     public void SpanEqualityComparer_DifferentSpansAreNotEqual_Int32()
     {
-        var x = new int[] { 1, 2, 3 };
-        var y = new int[] { 3, 4, 5 };
+        int[] x = [1, 2, 3];
+        int[] y = [3, 4, 5];
 
         Assert.IsFalse(SpanEqualityComparer.Equals(new ReadOnlySpan<int>(x), y));
         Assert.AreNotEqual(

@@ -1,5 +1,18 @@
-﻿#if NET6_0_OR_GREATER
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// Portions © .NET Foundation and its licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+#if NET6_0_OR_GREATER
 #define TFF_READONLYSPAN_SEQUENCEEQUAL
+#endif
+
+#if NET10_0_OR_GREATER
+#define TFF_READONLYSPAN_STARTSWITH
+#define TFF_READONLYSPAN_ENDSWITH
 #endif
 
 using System.Runtime.CompilerServices;
@@ -124,12 +137,24 @@ public static partial class ReadOnlySpanPolyfills
     /// <see langword="true"/> if <paramref name="value"/> matches the beginning of the <paramref name="span"/>; 
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool StartsWith<T>(this ReadOnlySpan<T> span, ReadOnlySpan<T> value, IEqualityComparer<T>? comparer = null)
+#if TFF_READONLYSPAN_STARTSWITH
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+    public static bool StartsWith<T>(
+#if !TFF_READONLYSPAN_STARTSWITH
+        this
+#endif
+        ReadOnlySpan<T> span, ReadOnlySpan<T> value, IEqualityComparer<T>? comparer = null)
     {
+#if TFF_READONLYSPAN_STARTSWITH
+        return span.StartsWith(value, comparer);
+#else
         int valueLength = value.Length;
         return
             valueLength <= span.Length &&
             span[..valueLength].SequenceEqual(value, comparer);
+#endif
     }
 
     /// <summary>
@@ -151,12 +176,20 @@ public static partial class ReadOnlySpanPolyfills
     /// <see langword="true"/> if <paramref name="value"/> matches the ending of the <paramref name="span"/>; 
     /// otherwise, <see langword="false"/>.
     /// </returns>
+#if TFF_READONLYSPAN_ENDSWITH
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
     public static bool EndsWith<T>(this ReadOnlySpan<T> span, ReadOnlySpan<T> value, IEqualityComparer<T>? comparer)
     {
+#if TFF_READONLYSPAN_STARTSWITH
+        return span.EndsWith(value, comparer);
+#else
         int valueLength = value.Length;
         int spanLength = span.Length;
         return
             valueLength <= spanLength &&
             span[(spanLength - valueLength)..].SequenceEqual(value, comparer);
+#endif
     }
 }

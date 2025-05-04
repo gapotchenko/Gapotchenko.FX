@@ -25,6 +25,7 @@ partial class SpanPolyfills
     /// Values are compared using <see cref="IEquatable{T}.Equals(T)"/>.
     /// </summary>
     /// <inheritdoc cref="ReadOnlySpanPolyfills.Contains{T}(ReadOnlySpan{T}, T)"/>
+    [OverloadResolutionPriority(1)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Contains<T>(
 #if !TFF_SPAN_CONTAINS
@@ -42,6 +43,7 @@ partial class SpanPolyfills
     #region ContainsAny
 
     /// <inheritdoc cref="ReadOnlySpanPolyfills.ContainsAny{T}(ReadOnlySpan{T}, T, T)"/>
+    [OverloadResolutionPriority(1)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsAny<T>(
 #if !TFF_SPAN_CONTAINSANY
@@ -57,6 +59,7 @@ partial class SpanPolyfills
     }
 
     /// <inheritdoc cref="ReadOnlySpanPolyfills.ContainsAny{T}(ReadOnlySpan{T}, T, T, T)"/>
+    [OverloadResolutionPriority(1)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsAny<T>(
 #if !TFF_SPAN_CONTAINSANY
@@ -72,6 +75,7 @@ partial class SpanPolyfills
     }
 
     /// <inheritdoc cref="ReadOnlySpanPolyfills.ContainsAny{T}(ReadOnlySpan{T}, ReadOnlySpan{T})"/>
+    [OverloadResolutionPriority(1)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool ContainsAny<T>(
 #if !TFF_SPAN_CONTAINSANY
