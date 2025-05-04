@@ -6,7 +6,7 @@
 
 namespace Gapotchenko.FX.Versioning;
 
-partial class SemanticVersion : IEmptiable<SemanticVersion>
+partial record SemanticVersion : IEmptiable<SemanticVersion>
 {
     /// <summary>
     /// Gets the empty <see cref="SemanticVersion"/>.

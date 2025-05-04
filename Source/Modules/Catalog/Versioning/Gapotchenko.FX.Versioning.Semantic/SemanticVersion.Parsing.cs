@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace Gapotchenko.FX.Versioning;
 
-partial class SemanticVersion
+partial record SemanticVersion
 {
     /// <summary>
     /// Converts the string representation of a version number to an equivalent <see cref="SemanticVersion"/> object.
@@ -160,6 +160,6 @@ partial class SemanticVersion
         static readonly object m_Lock = new();
 #endif
 
-        const string LabelRegexText = @"[0-9A-Za-z][0-9A-Za-z\-\.]*";
+        const string LabelRegexText = @"[0-9A-Za-z][0-9A-Za-z\-\.]+";
     }
 }

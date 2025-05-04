@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace Gapotchenko.FX.Versioning;
 
-partial class SemanticVersion : IComparable, IComparable<SemanticVersion>
+partial record SemanticVersion : IComparable, IComparable<SemanticVersion>
 {
     /// <summary>
     /// Compares the current <see cref="SemanticVersion"/> object to a specified object and returns an indication of their relative values.

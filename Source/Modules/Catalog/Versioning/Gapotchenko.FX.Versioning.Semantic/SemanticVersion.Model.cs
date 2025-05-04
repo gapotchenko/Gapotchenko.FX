@@ -8,7 +8,7 @@ using Gapotchenko.FX.Versioning.Properties;
 
 namespace Gapotchenko.FX.Versioning;
 
-partial class SemanticVersion
+partial record SemanticVersion
 {
     /// <summary>
     /// The object model of a semantic version.
@@ -43,14 +43,14 @@ partial class SemanticVersion
     }
 
     /// <summary>
-    /// Creates a new instance of the <see cref="SemanticVersion"/> class using the specified model.
+    /// Creates a new instance of the <see cref="SemanticVersion"/> record using the specified model.
     /// </summary>
     /// <param name="model">The model.</param>
     [return: NotNullIfNotNull(nameof(model))]
     static SemanticVersion? Create(in Model? model) => model is null ? null : new(model.Value);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SemanticVersion"/> class using the specified model.
+    /// Initializes a new instance of the <see cref="SemanticVersion"/> record using the specified model.
     /// </summary>
     /// <param name="model">The model.</param>
     SemanticVersion(in Model model)

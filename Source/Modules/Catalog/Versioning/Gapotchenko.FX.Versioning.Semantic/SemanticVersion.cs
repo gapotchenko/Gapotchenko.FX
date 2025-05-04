@@ -15,121 +15,74 @@ namespace Gapotchenko.FX.Versioning;
 [Serializable]
 [ImmutableObject(true)]
 [TypeConverter(typeof(SemanticVersionConverter))]
-public sealed partial class SemanticVersion : ICloneable<SemanticVersion>
+public sealed partial record SemanticVersion
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="SemanticVersion"/> class using the specified major, minor, patch, pre-release label, and build label values.
+    /// Gets or initializes the value of the major component of the version number for the current <see cref="SemanticVersion"/> object.
     /// </summary>
-    /// <param name="major">The major version number.</param>
-    /// <param name="minor">The minor version number.</param>
-    /// <param name="patch">The patch number.</param>
-    /// <param name="preReleaseLabel">The pre-release label.</param>
-    /// <param name="buildLabel">The build label.</param>
-    public SemanticVersion(int major, int minor, int patch, string? preReleaseLabel, string? buildLabel) :
-        this(major, minor, patch)
+    /// <value>The major version number.</value>
+    public int Major
     {
-        if (!string.IsNullOrEmpty(preReleaseLabel))
+        get => m_Major;
+        init
         {
-            if (!Parser.IsValidLabel(preReleaseLabel))
-                throw new ArgumentException("Pre-release label for semantic version has an invalid format.", nameof(preReleaseLabel));
-            m_PreReleaseLabel = preReleaseLabel;
-        }
-
-        if (!string.IsNullOrEmpty(buildLabel))
-        {
-            if (!Parser.IsValidLabel(buildLabel))
-                throw new ArgumentException("Build label for semantic version has an invalid format.", nameof(buildLabel));
-            m_BuildLabel = buildLabel;
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Major component of semantic version cannot be negative.");
+            m_Major = value;
         }
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SemanticVersion"/> class using the specified major, minor, patch, and label values.
+    /// Gets or initializes the value of the minor component of the version number for the current <see cref="SemanticVersion"/> object.
     /// </summary>
-    /// <param name="major">The major version number.</param>
-    /// <param name="minor">The minor version number.</param>
-    /// <param name="patch">The patch number.</param>
-    /// <param name="label">The labels.</param>
-    public SemanticVersion(int major, int minor, int patch, string? label) :
-        this(major, minor, patch)
+    /// <value>The minor version number.</value>
+    public int Minor
     {
-        if (!string.IsNullOrEmpty(label))
+        get => m_Minor;
+        init
         {
-            if (!Parser.TryParseLabels(label, out m_PreReleaseLabel, out m_BuildLabel))
-                throw new ArgumentException("Label for semantic version has an invalid format.", nameof(label));
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Minor component of semantic version cannot be negative.");
+            m_Minor = value;
         }
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SemanticVersion"/> class using the specified major, minor, and patch values.
+    /// Gets or initializes the value of the patch component of the version number for the current <see cref="SemanticVersion"/> object.
     /// </summary>
-    /// <param name="major">The major version number.</param>
-    /// <param name="minor">The minor version number.</param>
-    /// <param name="patch">The patch number.</param>
-    public SemanticVersion(int major, int minor, int patch)
+    /// <value>The patch number.</value>
+    public int Patch
     {
-        if (major < 0)
-            throw new ArgumentOutOfRangeException(nameof(major), "Major component of semantic version cannot be negative.");
-        if (minor < 0)
-            throw new ArgumentOutOfRangeException(nameof(minor), "Minor component of semantic version cannot be negative.");
-        if (patch < 0)
-            throw new ArgumentOutOfRangeException(nameof(patch), "Patch component of semantic version cannot be negative.");
-
-        m_Major = major;
-        m_Minor = minor;
-        m_Patch = patch;
+        get => m_Patch;
+        init
+        {
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Patch component of semantic version cannot be negative.");
+            m_Patch = value;
+        }
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SemanticVersion"/> class using the specified major and minor values.
+    /// Gets or initializes the value of the pre-release label of the version string for the current <see cref="SemanticVersion"/> object.
     /// </summary>
-    /// <param name="major">The major version number.</param>
-    /// <param name="minor">The minor version number.</param>
-    public SemanticVersion(int major, int minor) :
-        this(major, minor, 0)
+    /// <value>The pre-release label.</value>
+    /// <exception cref="ArgumentException"><paramref name="value"/> has an invalid format.</exception>
+    public string? PreReleaseLabel
     {
+        get => m_PreReleaseLabel;
+        init => m_PreReleaseLabel = VerifyLabel(value);
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SemanticVersion"/> class using the specified major value.
+    /// Gets or initializes the value of the build label of the version string for the current <see cref="SemanticVersion"/> object.
     /// </summary>
-    /// <param name="major">The major version number.</param>
-    public SemanticVersion(int major) :
-        this(major, 0)
+    /// <value>The build label.</value>
+    /// <exception cref="ArgumentException"><paramref name="value"/> has an invalid format.</exception>
+    public string? BuildLabel
     {
+        get => m_BuildLabel;
+        init => m_BuildLabel = VerifyLabel(value);
     }
-
-    SemanticVersion()
-    {
-    }
-
-    /// <summary>
-    /// Gets the value of the major component of the version number for the current <see cref="SemanticVersion"/> object.
-    /// </summary>
-    /// <returns>The major version number.</returns>
-    public int Major => m_Major;
-
-    /// <summary>
-    /// Gets the value of the minor component of the version number for the current <see cref="SemanticVersion"/> object.
-    /// </summary>
-    /// <returns>The minor version number.</returns>
-    public int Minor => m_Minor;
-
-    /// <summary>
-    /// Gets the value of the patch component of the version number for the current <see cref="SemanticVersion"/> object.
-    /// </summary>
-    /// <returns>The patch number.</returns>
-    public int Patch => m_Patch;
-
-    /// <summary>
-    /// Gets the value of the pre-release label of the version string for the current <see cref="SemanticVersion"/> object.
-    /// </summary>
-    public string? PreReleaseLabel => m_PreReleaseLabel;
-
-    /// <summary>
-    /// Gets the value of the build label of the version string for the current <see cref="SemanticVersion"/> object.
-    /// </summary>
-    public string? BuildLabel => m_BuildLabel;
 
     int m_Major;
     int m_Minor;
@@ -165,21 +118,4 @@ public sealed partial class SemanticVersion : ICloneable<SemanticVersion>
     }
 
     #endregion
-
-    /// <summary>
-    /// Returns a new <see cref="SemanticVersion"/> object whose value is the same as the current object.
-    /// </summary>
-    /// <returns>A new <see cref="SemanticVersion"/> whose values are a copy of the current object.</returns>
-    public SemanticVersion Clone() =>
-        new()
-        {
-            m_Major = m_Major,
-            m_Minor = m_Minor,
-            m_Patch = m_Patch,
-            m_PreReleaseLabel = m_PreReleaseLabel,
-            m_BuildLabel = m_BuildLabel,
-            m_CachedString = m_CachedString
-        };
-
-    object ICloneable.Clone() => Clone();
 }
