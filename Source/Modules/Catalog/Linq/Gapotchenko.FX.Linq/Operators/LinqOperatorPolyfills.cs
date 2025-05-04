@@ -1,4 +1,10 @@
-﻿namespace Gapotchenko.FX.Linq.Operators;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+namespace Gapotchenko.FX.Linq.Operators;
 
 /// <summary>
 /// Provides extension methods for LINQ operator polyfills.
@@ -7,10 +13,15 @@
 public static class LinqOperatorPolyfills
 {
     /// <summary>
-    /// A LINQ-style pipe operator for programming languages that do not have a built-in pipe operator.
+    /// Passes the current value to the specified function as an argument.
     /// </summary>
     /// <remarks>
+    /// <para>
+    /// The method represents a LINQ-style pipe operator for programming languages that do not have a built-in pipe operator.
+    /// </para>
+    /// <para>
     /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </remarks>
     /// <typeparam name="TInput">The type of pipe input.</typeparam>
     /// <typeparam name="TOutput">The type of pipe output.</typeparam>
@@ -24,10 +35,15 @@ public static class LinqOperatorPolyfills
         (input);
 
     /// <summary>
-    /// A LINQ-style pipe operator for programming languages that do not have a built-in pipe operator.
+    /// Passes the current value to the specified function as an argument.
     /// </summary>
     /// <remarks>
+    /// <para>
+    /// The method represents a LINQ-style pipe operator for programming languages that do not have a built-in pipe operator.
+    /// </para>
+    /// <para>
     /// This is a polyfill provided by Gapotchenko.FX.
+    /// </para>
     /// </remarks>
     /// <typeparam name="TInput">The type of pipe input.</typeparam>
     /// <param name="input">The pipe input.</param>
