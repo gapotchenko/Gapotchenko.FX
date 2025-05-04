@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2019
 
+using System.Runtime.CompilerServices;
+
 namespace Gapotchenko.FX.IO;
 
 #if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
@@ -14,15 +16,48 @@ namespace Gapotchenko.FX.IO;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class IOExceptionExtensions
 {
-    /// <inheritdoc cref="FileSystem.IsFileAccessViolationError(IOException)"/>
-    [Obsolete("Use FileSystem.IsFileSharingViolationError(Exception) method instead.")]
+    /// <inheritdoc cref="FileSystem.IsAccessViolationError(IOException)"/>
+    [Obsolete("Use FileSystem.IsAccessViolationError(Exception) method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool IsFileAccessViolationException(
 #if SOURCE_COMPATIBILITY
         this
 #endif
         IOException exception) =>
-        FileSystem.IsFileAccessViolationError(exception);
+        FileSystem.IsAccessViolationError(exception);
+}
+
+/// <summary>
+/// Provides polyfill methods for <see cref="Path"/> class.
+/// </summary>
+#if TFF_STATIC_EXTENSIONS
+[Obsolete("Use System.IO.Path type instead.")]
+[EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+public static class PathEx
+{
+    /// <inheritdoc cref="PathPolyfills.GetRelativePath(string, string)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string GetRelativePath(string relativeTo, string path) =>
+        Path.GetRelativePath(relativeTo, path);
+
+    /// <inheritdoc cref="PathPolyfills.Join(IEnumerable{string?})"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string Join(params string?[] paths) => Path.Join(paths);
+
+    /// <inheritdoc cref="PathPolyfills.Join(IEnumerable{string?})"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string Join(IEnumerable<string?> paths) => Path.Join(paths);
+
+    /// <inheritdoc cref="PathPolyfills.TrimEndingDirectorySeparator(string)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string TrimEndingDirectorySeparator(string path) =>
+        Path.TrimEndingDirectorySeparator(path);
+
+    /// <inheritdoc cref="PathPolyfills.TrimEndingDirectorySeparator(ReadOnlySpan{char})"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) =>
+        Path.TrimEndingDirectorySeparator(path);
 }
 
 #endif

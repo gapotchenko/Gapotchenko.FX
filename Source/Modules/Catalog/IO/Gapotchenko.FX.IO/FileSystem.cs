@@ -510,7 +510,7 @@ public static class FileSystem
     /// </remarks>
     /// <param name="exception">The exception.</param>
     /// <returns><see langword="true"/> if exception represents a file access violation error; otherwise, <see langword="false"/>.</returns>
-    public static bool IsFileAccessViolationError(IOException exception)
+    public static bool IsAccessViolationError(IOException exception)
     {
         if (exception == null)
             throw new ArgumentNullException(nameof(exception));

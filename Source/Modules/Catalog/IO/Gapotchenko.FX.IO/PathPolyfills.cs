@@ -31,7 +31,7 @@ public static partial class PathPolyfills
     // This class is partial. Please take a look at the neighboring source files.
 
     /// <summary>
-    /// Provides polyfill extension methods for <see cref="Path"/> class.
+    /// Provides member polyfills for <see cref="Path"/> class.
     /// </summary>
     extension(Path)
     {
