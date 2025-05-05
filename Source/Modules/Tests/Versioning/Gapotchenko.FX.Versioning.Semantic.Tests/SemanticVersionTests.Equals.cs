@@ -21,7 +21,7 @@ partial class SemanticVersionTests
 
     [TestMethod]
     [DataRow("1.0-label", "1.0-label+build")]
-    [DataRow("1.0-label+build1", "1.0-label+build2")]
+    [DataRow("1.0.0-alpha+build.1", "1.0.0-alpha+build.2")]
     public void SemanticVersion_Equals_MatchesEqualValues(string? versionA, string? versionB) =>
         SemanticVersion_Equals_Test(versionA, versionB, true);
 
@@ -33,6 +33,7 @@ partial class SemanticVersionTests
     [DataRow("0.0.0", "0.0.1")]
     [DataRow("1.0", "1.0-label")]
     [DataRow("1.0-label1", "1.0-label2")]
+    [DataRow("1.0.0", "1.0.0-alpha+build.1")]
     public void SemanticVersion_Equals_MismatchesUnequalValues(string? versionA, string? versionB) =>
         SemanticVersion_Equals_Test(versionA, versionB, false);
 
@@ -59,18 +60,39 @@ partial class SemanticVersionTests
         {
             Assert.AreEqual(match, a.Equals(b));
             Assert.AreEqual(match, a.Equals((object?)b));
+
             Assert.AreEqual(match, a.CompareTo(b) == 0);
+            Assert.AreEqual(match, a.CompareTo((object?)b) == 0);
         }
 
         if (b is not null)
         {
             Assert.AreEqual(match, b.Equals(a));
             Assert.AreEqual(match, b.Equals((object?)a));
+
             Assert.AreEqual(match, b.CompareTo(a) == 0);
+            Assert.AreEqual(match, b.CompareTo((object?)a) == 0);
         }
 
         Assert.AreEqual(match, a == b);
         Assert.AreNotEqual(match, a != b);
+
+        if (match)
+        {
+            Assert.IsTrue(a >= b);
+            Assert.IsTrue(a <= b);
+            Assert.IsFalse(a > b);
+            Assert.IsFalse(a < b);
+        }
+        else
+        {
+            bool greater = a > b;
+            bool less = a < b;
+            Assert.IsTrue(greater || less);
+            Assert.IsFalse(greater && less);
+
+            Assert.IsFalse(a >= b && a <= b);
+        }
 
         if (match && a is not null && b is not null)
             Assert.AreEqual(a.GetHashCode(), b.GetHashCode());
