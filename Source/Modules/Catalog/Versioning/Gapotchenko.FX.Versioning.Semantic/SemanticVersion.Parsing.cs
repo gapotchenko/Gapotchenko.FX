@@ -125,10 +125,10 @@ partial record SemanticVersion
             }
 
             int patch = 0;
-            var patchrGroup = match.Groups["p"];
-            if (patchrGroup.Success)
+            var patchGroup = match.Groups["p"];
+            if (patchGroup.Success)
             {
-                if (!int.TryParse(patchrGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out patch))
+                if (!int.TryParse(patchGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out patch))
                     return null;
             }
 

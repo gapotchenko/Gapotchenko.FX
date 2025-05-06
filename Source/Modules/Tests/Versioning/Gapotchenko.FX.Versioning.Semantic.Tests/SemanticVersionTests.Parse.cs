@@ -24,6 +24,7 @@ partial class SemanticVersionTests
         get
         {
             yield return [""];
+            yield return ["."];
             yield return [","];
             yield return ["1.abc.3"];
             yield return ["123!"];
@@ -31,4 +32,6 @@ partial class SemanticVersionTests
             yield return ["123,abc,123"];
         }
     }
+
+
 }

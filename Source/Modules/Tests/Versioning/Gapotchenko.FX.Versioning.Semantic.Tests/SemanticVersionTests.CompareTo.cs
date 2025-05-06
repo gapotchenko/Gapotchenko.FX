@@ -17,6 +17,8 @@ partial class SemanticVersionTests
     [DataRow("1.2.0", "1.1.0", 1)]
     [DataRow("1.1.3", "1.1.4", -1)]
     [DataRow("1.0.0-alpha", "1.0.0", -1)]
+    [DataRow("1.0.0", null, 1)]
+    [DataRow("0", null, 1)]
     // ---
     [DataRow("1.0.0-alpha", "1.0.0-alpha.1", -1)]
     [DataRow("1.0.0-alpha.1", "1.0.0-beta.2", -1)]
@@ -32,12 +34,12 @@ partial class SemanticVersionTests
     [DataRow("1.0.0+0.3.7", "1.0.0", 0)]
     [DataRow("1.0.0+0.3.7", "1.0.0+0.3", 0)]
     // ---
-    public void SemanticVersion_CompareTo_Relations(string? versionA, string? versionB, int relation) =>
+    public void SemanticVersion_CompareTo_Relation(string? versionA, string? versionB, int relation) =>
         SemanticVersion_CompareTo_Test(versionA, versionB, relation);
 
     [TestMethod]
     [DataRow(["1.0.0-alpha", "1.0.0-alpha.1", "1.0.0-alpha.beta", "1.0.0-beta", "1.0.0-beta.2", "1.0.0-beta.11", "1.0.0-rc.1", "1.0.0"])]
-    public void SemanticVersion_CompareTo_Order(string[] versions)
+    public void SemanticVersion_CompareTo_Order(string?[] versions)
     {
         for (int i = 1; i < versions.Length; ++i)
             SemanticVersion_CompareTo_Test(versions[i - 1], versions[i], -1);

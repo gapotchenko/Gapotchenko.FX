@@ -16,13 +16,13 @@ partial class SemanticVersionTests
     [DataRow("1.0.3-label")]
     [DataRow("2.5-label+build")]
     [DataRow(null)]
-    public void SemanticVersion_Equals_MatchesEqualValues(string? version) =>
-        SemanticVersion_Equals_MatchesEqualValues(version, version);
+    public void SemanticVersion_Equals_EqualValues(string? version) =>
+        SemanticVersion_Equals_EqualValues(version, version);
 
     [TestMethod]
     [DataRow("1.0-label", "1.0-label+build")]
     [DataRow("1.0.0-alpha+build.1", "1.0.0-alpha+build.2")]
-    public void SemanticVersion_Equals_MatchesEqualValues(string? versionA, string? versionB) =>
+    public void SemanticVersion_Equals_EqualValues(string? versionA, string? versionB) =>
         SemanticVersion_Equals_Test(versionA, versionB, true);
 
     [TestMethod]
@@ -34,7 +34,7 @@ partial class SemanticVersionTests
     [DataRow("1.0", "1.0-label")]
     [DataRow("1.0-label1", "1.0-label2")]
     [DataRow("1.0.0", "1.0.0-alpha+build.1")]
-    public void SemanticVersion_Equals_MismatchesUnequalValues(string? versionA, string? versionB) =>
+    public void SemanticVersion_Equals_UnequalValues(string? versionA, string? versionB) =>
         SemanticVersion_Equals_Test(versionA, versionB, false);
 
     static void SemanticVersion_Equals_Test(string? versionA, string? versionB, bool match)
@@ -99,7 +99,7 @@ partial class SemanticVersionTests
     }
 
     [TestMethod]
-    public void SemanticVersion_Equals_MismatchesAnotherType()
+    public void SemanticVersion_Equals_AnotherType()
     {
         const string s = "1.0";
         var version = new SemanticVersion(s);
