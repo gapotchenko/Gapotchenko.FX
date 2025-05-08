@@ -8,18 +8,18 @@ Release date: not released yet
 
 - Preliminary support for .NET 10.0 target framework
 - Introduced `Gapotchenko.FX.IO.Vfs` module that provides the concept of a virtual file system which allows to work with file systems in a unified way independently of their actual nature.
-  Be it a local ZIP archive, an CD/DVD ISO image, a custom FAT12 implementation or a remote cloud storage
-- Gapotchenko.FX.IO: improved selection of a default buffer size for block copy operations working on streams
+  Be it a local ZIP archive, an CD/DVD ISO image, a custom FAT12 implementation, or a remote cloud storage
+- Improved selection of a default buffer size for block copy operations on streams in `Gapotchenko.FX.IO` module
 - `Gapotchenko.FX.Collections.Generic.Deque<T>` made compatible with collection initializers
 - Polyfills:
     - Added polyfills for `Contains`, `ContainsAny`, `SequenceEqual`, `StartsWith` and `EndsWith` methods of `ReadOnlySpan<T>` and `Span<T>` types
     - Added polyfills for `Path.EndsInDirectorySeparator(string?)` and `Path.EndsInDirectorySeparator(ReadOnlySpan<char>)` methods
     - `Stream.ReadExactly` and `Stream.ReadAtLeast` polyfill methods provided by the `Gapotchenko.FX.IO` module are now available for all supported target frameworks
 - Fixed issues:
-    - Fixed issue that led to an empty string value returned by the `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
-    - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with its own entry point
-    - Fixed issue that led to an empty string value returned by the `AppInformation.Trademark` property instead of a `null` value
-    - Fixed potential vulnerabilities that might be caused by the WorstFit Attack; applies only to Windows OS
+    - Fixed issue that led to an empty string value returned by `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
+    - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly having its own entry point
+    - Fixed issue that led to an empty string value returned by `AppInformation.Trademark` property instead of a `null` value
+    - Fixed potential vulnerabilities that could be targeted by [WorstFit Attack](https://worst.fit/); applies to Windows OS only
 
 ## 2024
 

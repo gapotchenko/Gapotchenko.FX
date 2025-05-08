@@ -56,10 +56,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gapotchenko.FX.Collections.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mastering", "Mastering", "{68BA92DB-7296-463D-9C99-01357420A1A0}"
 	ProjectSection(SolutionItems) = preProject
-		Mastering\Analysis.props = Mastering\Analysis.props
-		Mastering\Language.props = Mastering\Language.props
-		Mastering\NuGet.targets = Mastering\NuGet.targets
-		Mastering\TargetFrameworkFeatures.props = Mastering\TargetFrameworkFeatures.props
 		Mastering\Targeting.props = Mastering\Targeting.props
 		Mastering\Version.props = Mastering\Version.props
 	EndProjectSection
@@ -279,6 +275,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Versioning.Semantic", "Modules\Catalog\Versioning\Gapotchenko.FX.Versioning.Semantic\Gapotchenko.FX.Versioning.Semantic.csproj", "{E689A4C4-65C0-4299-BD94-672DB455AC2B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gapotchenko.FX.Versioning.Semantic.Tests", "Modules\Tests\Versioning\Gapotchenko.FX.Versioning.Semantic.Tests\Gapotchenko.FX.Versioning.Semantic.Tests.csproj", "{2129B0E7-FAA2-4A5E-A54B-D281C2AEC37C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Advanced", "Advanced", "{1069ECFE-A2A8-4F91-8498-A567E2F7BC07}"
+	ProjectSection(SolutionItems) = preProject
+		Mastering\Analysis.props = Mastering\Analysis.props
+		Mastering\Language.props = Mastering\Language.props
+		Mastering\NuGet.targets = Mastering\NuGet.targets
+		Mastering\TargetFrameworkFeatures.props = Mastering\TargetFrameworkFeatures.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -688,6 +692,7 @@ Global
 		{800FED0B-2950-4CF5-90B0-6F2A9DFE3649} = {7941CC7C-C78C-4A9E-95F2-9021FFC867EB}
 		{E689A4C4-65C0-4299-BD94-672DB455AC2B} = {800FED0B-2950-4CF5-90B0-6F2A9DFE3649}
 		{2129B0E7-FAA2-4A5E-A54B-D281C2AEC37C} = {800FED0B-2950-4CF5-90B0-6F2A9DFE3649}
+		{1069ECFE-A2A8-4F91-8498-A567E2F7BC07} = {68BA92DB-7296-463D-9C99-01357420A1A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC65FA11-CBF6-4179-95CA-218A268B120B}
