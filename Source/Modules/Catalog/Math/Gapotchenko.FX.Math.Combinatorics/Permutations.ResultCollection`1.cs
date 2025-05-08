@@ -14,16 +14,11 @@ namespace Gapotchenko.FX.Math.Combinatorics;
 partial class Permutations
 {
     /// <summary>
-    /// <para>
-    /// Represents the result of permutations.
-    /// </para>
-    /// <para>
-    /// Exposes accelerated LINQ operations and the enumerator for the rows.
-    /// </para>
+    /// A collection of rows representing a sequence of permutation results.
     /// </summary>
     /// <typeparam name="T">The type of elements that the row contains.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IResult<T> : IReadOnlyCollection<IResultRow<T>>
+    public interface IResultCollection<T> : IReadOnlyCollection<IResultRow<T>>
     {
         /// <summary>
         /// <para>
@@ -55,8 +50,8 @@ partial class Permutations
         /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
         /// </para>
         /// </summary>
-        /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
-        IResult<T> Distinct();
+        /// <returns>An <see cref="IResultCollection{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
+        IResultCollection<T> Distinct();
 
         /// <summary>
         /// <para>
@@ -67,11 +62,12 @@ partial class Permutations
         /// </para>
         /// </summary>
         /// <param name="comparer">The comparer.</param>
-        /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
-        IResult<T> Distinct(IEqualityComparer<T>? comparer);
+        /// <returns>An <see cref="IResultCollection{T}"/> that contains distinct elements from the source sequence of permutations.</returns>
+        IResultCollection<T> Distinct(IEqualityComparer<T>? comparer);
     }
 
-    sealed class Result<T>(ResultMode mode, IEnumerable<T> source, IEqualityComparer<T>? comparer) : IResult<T>
+    sealed class ResultCollection<T>(ResultMode mode, IEnumerable<T> source, IEqualityComparer<T>? comparer) :
+        IResultCollection<T>
     {
         int IReadOnlyCollection<IResultRow<T>>.Count => Count();
 
@@ -124,9 +120,9 @@ partial class Permutations
 
         IEnumerable<IResultRow<T>> Enumerate() => Permute(source, mode == ResultMode.Distinct, m_Comparer);
 
-        public IResult<T> Distinct() => Distinct(null);
+        public IResultCollection<T> Distinct() => Distinct(null);
 
-        public IResult<T> Distinct(IEqualityComparer<T>? comparer)
+        public IResultCollection<T> Distinct(IEqualityComparer<T>? comparer)
         {
             switch (mode)
             {
@@ -138,7 +134,7 @@ partial class Permutations
                     }
                     else
                     {
-                        return new Result<T>(ResultMode.Distinct, source, comparer);
+                        return new ResultCollection<T>(ResultMode.Distinct, source, comparer);
                     }
 
                 case ResultMode.Distinct:
@@ -157,11 +153,11 @@ partial class Permutations
         readonly IEqualityComparer<T>? m_Comparer = comparer;
     }
 
-    internal static IResult<T> PermuteAccelerated<T>(IEnumerable<T> sequence)
+    internal static IResultCollection<T> PermuteAccelerated<T>(IEnumerable<T> sequence)
     {
         if (!Utility.IsSet(sequence))
             sequence = sequence.ReifyList();
 
-        return new Result<T>(ResultMode.Default, sequence, null);
+        return new ResultCollection<T>(ResultMode.Default, sequence, null);
     }
 }

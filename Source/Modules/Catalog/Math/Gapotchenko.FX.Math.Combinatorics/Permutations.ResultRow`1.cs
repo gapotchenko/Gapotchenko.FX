@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Math.Combinatorics;
 partial class Permutations
 {
     /// <summary>
-    /// Represents a row in sequence of permutation results.
+    /// Represents a row in a sequence of permutation results.
     /// </summary>
     /// <typeparam name="T">The type of elements that the row contains.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]

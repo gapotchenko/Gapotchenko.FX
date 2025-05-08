@@ -18,18 +18,16 @@ public static partial class CartesianProduct
     /// <param name="factor1">The first factor.</param>
     /// <param name="factor2">The second factor.</param>
     /// <param name="rest">The rest of factors.</param>
-    /// <returns>The Cartesian product of the specified factors.</returns>
+    /// <returns>An <see cref="IResultCollection{T}"/> instance representing the sequence of Cartesian product results.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="factor1"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor2"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="rest"/> is <see langword="null"/>.</exception>
-    public static IResult<T> Of<T>(IEnumerable<T> factor1, IEnumerable<T> factor2, params IEnumerable<T>[] rest)
+    public static IResultCollection<T> Of<T>(IEnumerable<T> factor1, IEnumerable<T> factor2, params IEnumerable<T>[] rest)
     {
-#if !(SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY)
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
-#endif
+        if (factor1 == null)
+            throw new ArgumentNullException(nameof(factor1));
+        if (factor2 == null)
+            throw new ArgumentNullException(nameof(factor2));
         if (rest == null)
             throw new ArgumentNullException(nameof(rest));
 
@@ -41,18 +39,14 @@ public static partial class CartesianProduct
     /// </summary>
     /// <typeparam name="T">Type of factor items.</typeparam>
     /// <param name="factors">The factors.</param>
-    /// <returns>The Cartesian product of the specified factors.</returns>
+    /// <returns>An <see cref="IResultCollection{T}"/> instance representing the sequence of Cartesian product results.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="factors"/> is <see langword="null"/>.</exception>
-    public static IResult<T> Of<T>(IEnumerable<IEnumerable<T>> factors)
+    public static IResultCollection<T> Of<T>(IEnumerable<IEnumerable<T>> factors)
     {
         if (factors == null)
             throw new ArgumentNullException(nameof(factors));
 
-#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
-        factors = factors.Where(x => x != null);
-#else
         factors = factors.Select(x => x ?? throw new ArgumentException("A Cartesian product factor cannot be null.", nameof(factors)));
-#endif
 
         return MultiplyAccelerated(factors);
     }
@@ -67,7 +61,10 @@ public static partial class CartesianProduct
     /// <param name="factor1">The first factor.</param>
     /// <param name="factor2">The second factor.</param>
     /// <param name="resultSelector">The projection function that maps a combination of input factor elements to an element of a resulting sequence.</param>
-    /// <returns>The Cartesian product of two factors with user-defined projection applied.</returns>
+    /// <returns>
+    /// An <see cref="IResultCollection{T}"/> instance representing the sequence of Cartesian product results
+    /// of two factors with user-defined projection applied.
+    /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="factor1"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor2"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="resultSelector"/> is <see langword="null"/>.</exception>
@@ -76,22 +73,12 @@ public static partial class CartesianProduct
         IEnumerable<T2> factor2,
         Func<T1, T2, TResult> resultSelector)
     {
-#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
+        if (factor1 == null)
+            throw new ArgumentNullException(nameof(factor1));
+        if (factor2 == null)
+            throw new ArgumentNullException(nameof(factor2));
         if (resultSelector == null)
             throw new ArgumentNullException(nameof(resultSelector));
-        if (factor1 == null ||
-            factor2 == null)
-        {
-            return [];
-        }
-#else
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
-        if (resultSelector == null)
-            throw new ArgumentNullException(nameof(resultSelector));
-#endif
 
         return Multiply(factor1, factor2, resultSelector);
     }
@@ -108,7 +95,10 @@ public static partial class CartesianProduct
     /// <param name="factor2">The second factor.</param>
     /// <param name="factor3">The third factor.</param>
     /// <param name="resultSelector">The projection function that maps a combination of input factor elements to an element of a resulting sequence.</param>
-    /// <returns>The Cartesian product of three factors with user-defined projection applied.</returns>
+    /// <returns>
+    /// An <see cref="IResultCollection{T}"/> instance representing the sequence of Cartesian product results
+    /// of three factors with user-defined projection applied.
+    /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="factor1"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor2"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor3"/> is <see langword="null"/>.</exception>
@@ -138,7 +128,10 @@ public static partial class CartesianProduct
     /// <param name="factor3">The third factor.</param>
     /// <param name="factor4">The fourth factor.</param>
     /// <param name="resultSelector">The projection function that maps a combination of input factor elements to an element of a resulting sequence.</param>
-    /// <returns>The Cartesian product of four factors with user-defined projection applied.</returns>
+    /// <returns>
+    /// An <see cref="IResultCollection{T}"/> instance representing the sequence of Cartesian product results
+    /// of four factors with user-defined projection applied.
+    /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="factor1"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor2"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor3"/> is <see langword="null"/>.</exception>
@@ -173,7 +166,10 @@ public static partial class CartesianProduct
     /// <param name="factor4">The fourth factor.</param>
     /// <param name="factor5">The fifth factor.</param>
     /// <param name="resultSelector">The projection function that maps a combination of input factor elements to an element of a resulting sequence.</param>
-    /// <returns>The Cartesian product of five factors with user-defined projection applied.</returns>
+    /// <returns>
+    /// An <see cref="IResultCollection{T}"/> instance representing the sequence of Cartesian product results
+    /// of five factors with user-defined projection applied.
+    /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="factor1"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor2"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor3"/> is <see langword="null"/>.</exception>
@@ -213,7 +209,10 @@ public static partial class CartesianProduct
     /// <param name="factor5">The fifth factor.</param>
     /// <param name="factor6">The sixth factor.</param>
     /// <param name="resultSelector">The projection function that maps a combination of input factor elements to an element of a resulting sequence.</param>
-    /// <returns>The Cartesian product of six factors with user-defined projection applied.</returns>
+    /// <returns>
+    /// An <see cref="IResultCollection{T}"/> instance representing the sequence of Cartesian product results
+    /// of six factors with user-defined projection applied.
+    /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="factor1"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor2"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor3"/> is <see langword="null"/>.</exception>
@@ -258,7 +257,10 @@ public static partial class CartesianProduct
     /// <param name="factor6">The sixth factor.</param>
     /// <param name="factor7">The seventh factor.</param>
     /// <param name="resultSelector">The projection function that maps a combination of input factor elements to an element of a resulting sequence.</param>
-    /// <returns>The Cartesian product of seven factors with user-defined projection applied.</returns>
+    /// <returns>
+    /// An <see cref="IResultCollection{T}"/> instance representing the sequence of Cartesian product results
+    /// of seven factors with user-defined projection applied.
+    /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="factor1"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor2"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor3"/> is <see langword="null"/>.</exception>
@@ -308,7 +310,10 @@ public static partial class CartesianProduct
     /// <param name="factor7">The seventh factor.</param>
     /// <param name="factor8">The eighth factor.</param>
     /// <param name="resultSelector">The projection function that maps a combination of input factor elements to an element of a resulting sequence.</param>
-    /// <returns>The Cartesian product of eight factors with user-defined projection applied.</returns>
+    /// <returns>
+    /// An <see cref="IResultCollection{T}"/> instance representing the sequence of Cartesian product results
+    /// of eight factors with user-defined projection applied.
+    /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="factor1"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor2"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="factor3"/> is <see langword="null"/>.</exception>

@@ -12,16 +12,11 @@ namespace Gapotchenko.FX.Math.Combinatorics;
 partial class CartesianProduct
 {
     /// <summary>
-    /// <para>
-    /// Represents the Cartesian product result.
-    /// </para>
-    /// <para>
-    /// Exposes accelerated LINQ operations and the enumerator for the rows.
-    /// </para>
+    /// A collection of rows representing a sequence of Cartesian product results.
     /// </summary>
     /// <typeparam name="T">The type of elements that the row contains.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IResult<T> : IEnumerable<IResultRow<T>>
+    public interface IResultCollection<T> : IEnumerable<IResultRow<T>>
     {
         /// <summary>
         /// <para>
@@ -31,8 +26,8 @@ partial class CartesianProduct
         /// This is an accelerated LINQ operation provided by the algorithm kernel to automatically reduce the computational complexity.
         /// </para>
         /// </summary>
-        /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of Cartesian product results.</returns>
-        IResult<T> Distinct();
+        /// <returns>An <see cref="IResultCollection{T}"/> that contains distinct elements from the source sequence of Cartesian product results.</returns>
+        IResultCollection<T> Distinct();
 
         /// <summary>
         /// <para>
@@ -43,34 +38,25 @@ partial class CartesianProduct
         /// </para>
         /// </summary>
         /// <param name="comparer">The comparer.</param>
-        /// <returns>An <see cref="IResult{T}"/> that contains distinct elements from the source sequence of Cartesian product results.</returns>
-        IResult<T> Distinct(IEqualityComparer<T>? comparer);
+        /// <returns>An <see cref="IResultCollection{T}"/> that contains distinct elements from the source sequence of Cartesian product results.</returns>
+        IResultCollection<T> Distinct(IEqualityComparer<T>? comparer);
     }
 
-    sealed class Result<T>(ResultMode mode, IEnumerable<IEnumerable<T>> factors, IEqualityComparer<T>? comparer) :
-        IResult<T>
+    sealed class ResultCollection<T>(ResultMode mode, IEnumerable<IEnumerable<T>> factors, IEqualityComparer<T>? comparer) :
+        IResultCollection<T>
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly ResultMode m_Mode = mode;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IEnumerable<IEnumerable<T>> m_Factors = factors;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IEqualityComparer<T>? m_Comparer = comparer;
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public IEnumerator<IResultRow<T>> GetEnumerator() => Multiply(m_Factors).GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public IResultCollection<T> Distinct() => Distinct(null);
 
-        public IResult<T> Distinct() => Distinct(null);
-
-        public IResult<T> Distinct(IEqualityComparer<T>? comparer)
+        public IResultCollection<T> Distinct(IEqualityComparer<T>? comparer)
         {
             switch (m_Mode)
             {
                 case ResultMode.Default:
-                    return new Result<T>(
+                    return new ResultCollection<T>(
                         ResultMode.Distinct,
                         DistinctMultipliers(m_Factors, comparer),
                         comparer);
@@ -85,7 +71,16 @@ partial class CartesianProduct
                     throw new InvalidOperationException();
             }
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly ResultMode m_Mode = mode;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly IEnumerable<IEnumerable<T>> m_Factors = factors;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly IEqualityComparer<T>? m_Comparer = comparer;
     }
 
-    internal static IResult<T> MultiplyAccelerated<T>(IEnumerable<IEnumerable<T>> factors) => new Result<T>(ResultMode.Default, factors, null);
+    internal static IResultCollection<T> MultiplyAccelerated<T>(IEnumerable<IEnumerable<T>> factors) => new ResultCollection<T>(ResultMode.Default, factors, null);
 }

@@ -19,7 +19,7 @@ public static class CartesianProductExtensions
     /// <typeparam name="T">Type of sequence elements.</typeparam>
     /// <param name="factors">The input sequences.</param>
     /// <returns>The Cartesian product of input sequences.</returns>
-    public static CartesianProduct.IResult<T> CrossJoin<T>(this IEnumerable<IEnumerable<T>> factors)
+    public static CartesianProduct.IResultCollection<T> CrossJoin<T>(this IEnumerable<IEnumerable<T>> factors)
     {
         if (factors == null)
             throw new ArgumentNullException(nameof(factors));
@@ -35,7 +35,7 @@ public static class CartesianProductExtensions
     /// <param name="first">The first input sequence of elements.</param>
     /// <param name="second">The second input sequence of elements.</param>
     /// <returns>The Cartesian product of two input sequences.</returns>
-    public static CartesianProduct.IResult<TSource> CrossJoin<TSource>(
+    public static CartesianProduct.IResultCollection<TSource> CrossJoin<TSource>(
         this IEnumerable<TSource> first,
         IEnumerable<TSource> second)
     {
@@ -55,7 +55,7 @@ public static class CartesianProductExtensions
     /// <param name="second">The second input sequence of elements.</param>
     /// <param name="third">The third input sequence of elements.</param>
     /// <returns>The Cartesian product of three input sequences.</returns>
-    public static CartesianProduct.IResult<TSource> CrossJoin<TSource>(
+    public static CartesianProduct.IResultCollection<TSource> CrossJoin<TSource>(
         this IEnumerable<TSource> first,
         IEnumerable<TSource> second,
         IEnumerable<TSource> third)
@@ -79,7 +79,7 @@ public static class CartesianProductExtensions
     /// <param name="third">The third input sequence of elements.</param>
     /// <param name="fourth">The fourth input sequence of elements.</param>
     /// <returns>The Cartesian product of four input sequences.</returns>
-    public static CartesianProduct.IResult<TSource> CrossJoin<TSource>(
+    public static CartesianProduct.IResultCollection<TSource> CrossJoin<TSource>(
         this IEnumerable<TSource> first,
         IEnumerable<TSource> second,
         IEnumerable<TSource> third,
@@ -107,7 +107,7 @@ public static class CartesianProductExtensions
     /// <param name="fourth">The fourth input sequence of elements.</param>
     /// <param name="rest">The rest of input sequences of elements.</param>
     /// <returns>The Cartesian product of input sequences.</returns>
-    public static CartesianProduct.IResult<TSource> CrossJoin<TSource>(
+    public static CartesianProduct.IResultCollection<TSource> CrossJoin<TSource>(
         this IEnumerable<TSource> first,
         IEnumerable<TSource> second,
         IEnumerable<TSource> third,

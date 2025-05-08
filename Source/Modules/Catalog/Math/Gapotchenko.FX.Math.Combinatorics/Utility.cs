@@ -11,17 +11,18 @@ namespace Gapotchenko.FX.Math.Combinatorics;
 static class Utility
 {
     public static bool IsSet<T>(IEnumerable<T> sequence) =>
+        sequence is
 #if TFF_IREADONLYSET
-        sequence is IReadOnlySet<T> ||
+            IReadOnlySet<T> or
 #endif
-        sequence is ISet<T>;
+            ISet<T>;
 
     public static bool IsCompatibleSet<T>(IEnumerable<T> sequence, IEqualityComparer<T>? comparer)
     {
         var sequenceComparer =
             sequence switch
             {
-                ReadOnlySetKit<T> rosk => rosk.Comparer,
+                ReadOnlySetKit<T> sk => sk.Comparer,
                 HashSet<T> hs => hs.Comparer,
                 _ => null
             };

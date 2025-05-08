@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Math.Combinatorics;
 partial class CartesianProduct
 {
     /// <summary>
-    /// Represents a row in sequence of Cartesian product results.
+    /// Represents a row in a sequence of Cartesian product results.
     /// </summary>
     /// <typeparam name="T">The type of elements that the row contains.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]

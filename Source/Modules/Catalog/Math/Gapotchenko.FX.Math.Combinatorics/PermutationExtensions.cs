@@ -19,7 +19,7 @@ public static class PermutationExtensions
     /// <typeparam name="TSource">The type of the elements of source.</typeparam>
     /// <param name="source">The source sequence.</param>
     /// <returns>An enumerable that contains all possible permutations of elements from the source sequence.</returns>
-    public static Permutations.IResult<TSource> Permute<TSource>(this IEnumerable<TSource> source)
+    public static Permutations.IResultCollection<TSource> Permute<TSource>(this IEnumerable<TSource> source)
     {
         if (source == null)
             throw new ArgumentNullException(nameof(source));
