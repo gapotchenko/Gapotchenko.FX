@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace Gapotchenko.FX.Versioning.Semantic.Tests;
 
 partial class SemanticVersionTests
@@ -33,5 +35,51 @@ partial class SemanticVersionTests
         }
     }
 
+    #region Parse
 
+    [TestMethod]
+    [DynamicData(nameof(SemanticVersion_Parse_TestData_ValidInputs))]
+    public void SemanticVersion_Parse_ValidInput(string input)
+    {
+        var tfm = SemanticVersion_Parse_ProcessesInput(input);
+        Assert.AreEqual(new SemanticVersion(input), tfm);
+    }
+
+    [TestMethod]
+    public void SemanticVersion_Parse_NullInput()
+    {
+        Assert.IsNull(SemanticVersion_Parse_ProcessesInput(null));
+    }
+
+    [return: NotNullIfNotNull(nameof(input))]
+    static SemanticVersion? SemanticVersion_Parse_ProcessesInput(string? input)
+    {
+        var version = SemanticVersion.Parse(input);
+
+#if TODO
+        if (input is null)
+        {
+            Assert.ThrowsExactly<FormatException>(() => SemanticVersion.Parse(input.AsSpan()));
+        }
+        else
+        {
+            var anotherVersion = SemanticVersion.Parse(input.AsSpan());
+            Assert.AreEqual(version, anotherVersion);
+        }
+#endif
+
+        return version;
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(SemanticVersion_Parse_TestData_InvalidInputs))]
+    public void SemanticVersion_Parse_InvalidInput(string input)
+    {
+        Assert.ThrowsExactly<FormatException>(() => SemanticVersion.Parse(input));
+#if TODO
+        Assert.ThrowsExactly<FormatException>(() => SemanticVersion.Parse(input.AsSpan()));
+#endif
+    }
+
+    #endregion
 }
