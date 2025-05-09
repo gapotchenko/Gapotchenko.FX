@@ -18,5 +18,5 @@ public interface ITopologicallyOrderedEnumerable<TElement> : IOrderedEnumerable<
     /// <returns>
     /// A sequence whose elements correspond to those of the input sequence in reverse topological order.
     /// </returns>
-    public ITopologicallyOrderedEnumerable<TElement> Reverse();
+    ITopologicallyOrderedEnumerable<TElement> Reverse();
 }

@@ -24,7 +24,7 @@ public enum GraphIncidenceOptions
     /// </summary>
     /// <remarks>
     /// This option eliminates loops (also called self-loops or buckles) from appearing in a resulting graph.
-    /// A loop exists when a vertex has an incident edge outgoing to itself.
+    /// A loop would exist if there was a vertex having an incident edge outgoing to itself.
     /// </remarks>
     ReflexiveReduction = 1 << 1,
 
@@ -34,6 +34,8 @@ public enum GraphIncidenceOptions
     /// </summary>
     /// <remarks>
     /// A singleton graph (containing only one vertex) is always connected by definition.
+    /// When this option is specified and there is only one vertex in the graph,
+    /// that vertex is not excluded.
     /// </remarks>
     Connected = 1 << 2
 }
