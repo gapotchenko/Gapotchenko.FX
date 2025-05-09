@@ -30,7 +30,7 @@ public static class IOExceptionExtensions
 /// <summary>
 /// Provides polyfill methods for <see cref="Path"/> class.
 /// </summary>
-#if TFF_STATIC_EXTENSIONS
+#if TFF_EXTENSION_DECLARATION
 [Obsolete("Use System.IO.Path type instead.")]
 [EditorBrowsable(EditorBrowsableState.Never)]
 #endif

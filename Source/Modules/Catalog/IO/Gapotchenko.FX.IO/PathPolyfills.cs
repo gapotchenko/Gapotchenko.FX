@@ -6,6 +6,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
+#region Target framework features determination
+
 #if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 #define TFF_PATH_GETRELATIVEPATH
 #endif
@@ -15,6 +17,12 @@
 #define TFF_PATH_JOIN
 #define TFF_PATH_TRIMENDINGDIRECTORYSEPARATOR
 #endif
+
+#if NET7_0_OR_GREATER
+#define TFF_PATH_EXISTS
+#endif
+
+#endregion
 
 using Gapotchenko.FX.IO.Pal;
 using System.Runtime.CompilerServices;
@@ -163,6 +171,36 @@ public static partial class PathPolyfills
                 IsDirectorySeparator(path[^1]);
 #endif
         }
+
+        #endregion
+
+        #region Exists
+
+        /// <summary>
+        /// Determines whether the specified file or directory exists.
+        /// </summary>
+        /// <remarks>
+        /// Unlike <see cref="File.Exists(string?)"/> it returns true for existing, non-regular files like pipes.
+        /// If the path targets an existing link, but the target of the link does not exist, it returns true.
+        /// </remarks>
+        /// <param name="path">The path to check</param>
+        /// <returns>
+        /// <see langword="true" /> if the caller has the required permissions and <paramref name="path" /> contains
+        /// the name of an existing file or directory; otherwise, <see langword="false" />.
+        /// This method also returns <see langword="false" /> if <paramref name="path" /> is <see langword="null" />,
+        /// an invalid path, or a zero-length string. If the caller does not have sufficient permissions to read the specified path,
+        /// no exception is thrown and the method returns <see langword="false" /> regardless of the existence of <paramref name="path" />.
+        /// </returns>
+#if TFF_PATH_EXISTS
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool Exists([NotNullWhen(true)] string? path) =>
+#if TFF_PATH_EXISTS
+            Path.Exists(path);
+#else
+            File.Exists(path) || Directory.Exists(path);
+#endif
 
         #endregion
 

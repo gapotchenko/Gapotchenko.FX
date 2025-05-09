@@ -153,7 +153,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     #region Entries
 
-    public override bool EntryExists([NotNullWhen(true)] string? path) => FileSystem.EntryExists(path);
+    public override bool EntryExists([NotNullWhen(true)] string? path) => Path.Exists(path);
 
     public override IEnumerable<string> EnumerateEntries(string path) => Directory.EnumerateFileSystemEntries(path);
 

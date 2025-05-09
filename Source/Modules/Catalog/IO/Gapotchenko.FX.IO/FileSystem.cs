@@ -270,6 +270,8 @@ public static class FileSystem
         return Path.Join(parts.Skip(offset).Take(length));
     }
 
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
+
     /// <summary>
     /// Determines whether the given path refers to an existing file or directory on disk.
     /// </summary>
@@ -278,11 +280,12 @@ public static class FileSystem
     /// <see langword="true"/> if path refers to an existing file or directory;
     /// <see langword="false"/> if neither directory nor file exists or an error occurs when trying to determine if the specified file system entry exists.
     /// </returns>
-    public static bool EntryExists([NotNullWhen(true)] string? path) =>
-#if NET7_0_OR_GREATER
-        Path.Exists(path);
-#else
-        File.Exists(path) || Directory.Exists(path);
+#if TFF_EXTENSION_DECLARATION
+    [Obsolete("Use System.IO.Path.Exists method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static bool EntryExists([NotNullWhen(true)] string? path) => Path.Exists(path);
+
 #endif
 
     /// <summary>
@@ -495,7 +498,7 @@ public static class FileSystem
         else
         {
             // A graceful fallback.
-            if (!EntryExists(path))
+            if (!Path.Exists(path))
                 throw new IOException(string.Format(Resources.FileSystemEntryXDoesNotExsit, path));
             else
                 return Path.GetFullPath(Path.TrimEndingDirectorySeparator(path));
