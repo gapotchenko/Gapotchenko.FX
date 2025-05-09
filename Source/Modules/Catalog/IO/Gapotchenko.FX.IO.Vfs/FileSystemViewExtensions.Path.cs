@@ -20,10 +20,8 @@ partial class FileSystemViewExtensions
         this IReadOnlyFileSystemView view,
         params IEnumerable<string?> paths)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
-        if (paths is null)
-            throw new ArgumentNullException(nameof(paths));
+        ArgumentNullException.ThrowIfNull(view);
+        ArgumentNullException.ThrowIfNull(paths);
 
         ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { view.DirectorySeparatorChar, view.AltDirectorySeparatorChar };
 
@@ -52,8 +50,7 @@ partial class FileSystemViewExtensions
         this IReadOnlyFileSystemView view,
         params scoped ReadOnlySpan<string?> paths)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { view.DirectorySeparatorChar, view.AltDirectorySeparatorChar };
 

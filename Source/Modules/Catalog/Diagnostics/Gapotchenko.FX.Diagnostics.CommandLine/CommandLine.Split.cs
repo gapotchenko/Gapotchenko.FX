@@ -13,8 +13,7 @@ partial class CommandLine
     /// <returns>A sequence of command line arguments.</returns>
     public static IEnumerable<string> Split(TextReader tr)
     {
-        if (tr == null)
-            throw new ArgumentNullException(nameof(tr));
+        ArgumentNullException.ThrowIfNull(tr);
 
         _SkipWhitespaces(tr);
 

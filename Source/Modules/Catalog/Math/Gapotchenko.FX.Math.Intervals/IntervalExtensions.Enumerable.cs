@@ -57,12 +57,10 @@ partial class IntervalExtensions
         Func<TSource, TKey> keySelector)
         where TInterval : IInterval<TKey>
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
         if (interval == null)
             throw new ArgumentNullException(nameof(interval));
-        if (keySelector == null)
-            throw new ArgumentNullException(nameof(keySelector));
+        ArgumentNullException.ThrowIfNull(keySelector);
 
         if (interval.IsEmpty)
             return [];
@@ -121,12 +119,10 @@ partial class IntervalExtensions
         Func<TSource, TKey> keySelector)
         where TInterval : IInterval<TKey>
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
         if (interval == null)
             throw new ArgumentNullException(nameof(interval));
-        if (keySelector == null)
-            throw new ArgumentNullException(nameof(keySelector));
+        ArgumentNullException.ThrowIfNull(keySelector);
 
         if (interval.IsInfinite)
             return [];

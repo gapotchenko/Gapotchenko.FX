@@ -27,8 +27,7 @@ public class FragmentedMemoryStream : Stream
     /// <param name="buffer">The array of bytes from which to create the current stream.</param>
     public FragmentedMemoryStream(byte[] buffer)
     {
-        if (buffer == null)
-            throw new ArgumentNullException(nameof(buffer));
+        ArgumentNullException.ThrowIfNull(buffer);
 
         Write(buffer, 0, buffer.Length);
         Position = 0;
@@ -87,8 +86,7 @@ public class FragmentedMemoryStream : Stream
     /// <inheritdoc/>
     public override int Read(byte[] buffer, int offset, int count)
     {
-        if (buffer == null)
-            throw new ArgumentNullException(nameof(buffer));
+        ArgumentNullException.ThrowIfNull(buffer);
         if (offset < 0)
             throw new ArgumentOutOfRangeException(nameof(offset), offset, "Buffer offset cannot be negative.");
         if (count < 0)
@@ -154,8 +152,7 @@ public class FragmentedMemoryStream : Stream
     /// <inheritdoc/>
     public override void Write(byte[] buffer, int offset, int count)
     {
-        if (buffer == null)
-            throw new ArgumentNullException(nameof(buffer));
+        ArgumentNullException.ThrowIfNull(buffer);
         if (offset < 0)
             throw new ArgumentOutOfRangeException(nameof(offset), offset, "Buffer offset cannot be negative.");
         if (count < 0)
@@ -288,8 +285,7 @@ public class FragmentedMemoryStream : Stream
         // This method is needed to mimic the interface of MemoryStream
         // (to be a drop-in replacement).
 
-        if (destination == null)
-            throw new ArgumentNullException(nameof(destination));
+        ArgumentNullException.ThrowIfNull(destination);
 
         long savedPosition = Position;
         Position = 0;

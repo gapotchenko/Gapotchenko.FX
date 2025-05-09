@@ -61,8 +61,7 @@ partial class StreamPolyfills
         int minimumBytes,
         bool throwOnEndOfStream = true)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
 #if TFF_STREAM_READATLEAST
         return stream.ReadAtLeast(buffer, minimumBytes, throwOnEndOfStream);
@@ -123,8 +122,7 @@ partial class StreamPolyfills
         bool throwOnEndOfStream = true,
         CancellationToken cancellationToken = default)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
 #if TFF_STREAM_READATLEAST
         return stream.ReadAtLeastAsync(buffer, minimumBytes, throwOnEndOfStream, cancellationToken);

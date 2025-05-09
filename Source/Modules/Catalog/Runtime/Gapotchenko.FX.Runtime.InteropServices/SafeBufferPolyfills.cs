@@ -39,8 +39,7 @@ public static class SafeBufferPolyfills
         ulong byteOffset,
         Span<byte> buffer)
     {
-        if (safeBuffer is null)
-            throw new ArgumentNullException(nameof(safeBuffer));
+        ArgumentNullException.ThrowIfNull(safeBuffer);
 
 #if TFF_SAFEBUFFER_READSPAN
         safeBuffer.ReadSpan(byteOffset, buffer);

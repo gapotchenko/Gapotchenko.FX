@@ -48,10 +48,8 @@ public static partial class EnumerableExtensions
     /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is <see langword="null"/>.</exception>
     public static bool EndsWith<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource>? comparer)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (value == null)
-            throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(value);
 
         if (ReferenceEquals(source, value))
             return true;

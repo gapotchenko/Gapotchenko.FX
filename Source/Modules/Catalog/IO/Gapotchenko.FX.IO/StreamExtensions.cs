@@ -19,10 +19,8 @@ public static class StreamExtensions
     /// <inheritdoc cref="CopyBlockTo(Stream, Stream, long)"/>
     public static void CopyBlockTo(this Stream source, Stream destination, long count)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (destination == null)
-            throw new ArgumentNullException(nameof(destination));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destination);
         if (count < 0)
             throw new ArgumentOutOfRangeException(nameof(count));
 
@@ -38,10 +36,8 @@ public static class StreamExtensions
     /// <param name="bufferSize">The buffer size.</param>
     public static void CopyBlockTo(this Stream source, Stream destination, long count, int bufferSize)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (destination == null)
-            throw new ArgumentNullException(nameof(destination));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destination);
         if (count < 0)
             throw new ArgumentOutOfRangeException(nameof(count));
         if (bufferSize <= 0)
@@ -108,10 +104,8 @@ public static class StreamExtensions
         long count,
         CancellationToken cancellationToken = default)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (destination == null)
-            throw new ArgumentNullException(nameof(destination));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destination);
         if (count < 0)
             throw new ArgumentOutOfRangeException(nameof(count));
 
@@ -139,10 +133,8 @@ public static class StreamExtensions
         int bufferSize,
         CancellationToken cancellationToken = default)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (destination == null)
-            throw new ArgumentNullException(nameof(destination));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destination);
         if (count < 0)
             throw new ArgumentOutOfRangeException(nameof(count));
         if (bufferSize <= 0)
@@ -252,8 +244,7 @@ public static class StreamExtensions
     /// <returns>The sequence of bytes representing the contents of a stream.</returns>
     public static IEnumerable<byte> AsEnumerable(this Stream stream)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         for (; ; )
         {

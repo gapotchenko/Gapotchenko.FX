@@ -19,8 +19,7 @@ public static partial class Permutations
     /// <returns>An enumerable that contains all possible permutations of elements from the sequence.</returns>
     public static IResultCollection<T> Of<T>(IEnumerable<T> sequence)
     {
-        if (sequence == null)
-            throw new ArgumentNullException(nameof(sequence));
+        ArgumentNullException.ThrowIfNull(sequence);
 
         return PermuteAccelerated(sequence);
     }

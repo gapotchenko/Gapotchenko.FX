@@ -28,8 +28,7 @@ partial class FileSystemViewExtensions
     /// <param name="path"><inheritdoc/></param>
     public static Stream WriteFile(this IFileSystemView view, string path)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
             return File.OpenWrite(path);
@@ -42,8 +41,7 @@ partial class FileSystemViewExtensions
     /// <param name="path"><inheritdoc/></param>
     public static StreamReader ReadTextFile(this IReadOnlyFileSystemView view, string path)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
             return File.OpenText(path);
@@ -65,8 +63,7 @@ partial class FileSystemViewExtensions
     /// <param name="access"><inheritdoc/></param>
     public static Stream OpenFile(this IFileSystemView view, string path, FileMode mode, FileAccess access)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         return view.OpenFile(path, mode, access, FileShare.None);
     }
@@ -93,8 +90,7 @@ partial class FileSystemViewExtensions
     /// <param name="path"><inheritdoc/></param>
     public static StreamWriter CreateTextFile(this IFileSystemView view, string path)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
             return File.CreateText(path);
@@ -104,10 +100,8 @@ partial class FileSystemViewExtensions
 
     static StreamWriter CreateTextFile(this IFileSystemView view, string path, Encoding encoding)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
-        if (encoding is null)
-            throw new ArgumentNullException(nameof(encoding));
+        ArgumentNullException.ThrowIfNull(view);
+        ArgumentNullException.ThrowIfNull(encoding);
 
         return new StreamWriter(
             CreateFileForWritingCore(view, path),
@@ -126,8 +120,7 @@ partial class FileSystemViewExtensions
     /// <param name="path"><inheritdoc/></param>
     public static StreamWriter AppendTextFile(this IFileSystemView view, string path)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
             return File.AppendText(path);
@@ -137,10 +130,8 @@ partial class FileSystemViewExtensions
 
     static StreamWriter AppendTextFile(this IFileSystemView view, string path, Encoding encoding)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
-        if (encoding is null)
-            throw new ArgumentNullException(nameof(encoding));
+        ArgumentNullException.ThrowIfNull(view);
+        ArgumentNullException.ThrowIfNull(encoding);
 
         return new StreamWriter(
             AppendFileCore(view, path),
@@ -284,8 +275,7 @@ partial class FileSystemViewExtensions
         }
         else
         {
-            if (bytes is null)
-                throw new ArgumentNullException(nameof(bytes));
+            ArgumentNullException.ThrowIfNull(bytes);
 
             using var stream = CreateFileForWritingCore(view, path);
             stream.Write(bytes, 0, bytes.Length);
@@ -301,8 +291,7 @@ partial class FileSystemViewExtensions
     /// <param name="path"><inheritdoc/></param>
     public static string ReadAllFileText(this IReadOnlyFileSystemView view, string path)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
             return File.ReadAllText(path);
@@ -316,8 +305,7 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static string ReadAllFileText(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
             return File.ReadAllText(path, encoding);
@@ -337,8 +325,7 @@ partial class FileSystemViewExtensions
     /// <param name="contents"><inheritdoc/></param>
     public static void WriteAllFileText(this IFileSystemView view, string path, string? contents)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
         {
@@ -358,8 +345,7 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static void WriteAllFileText(this IFileSystemView view, string path, string? contents, Encoding encoding)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
         {
@@ -378,8 +364,7 @@ partial class FileSystemViewExtensions
     /// <param name="contents"><inheritdoc/></param>
     public static void AppendAllFileText(this IFileSystemView view, string path, string? contents)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
         {
@@ -399,8 +384,7 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static void AppendAllFileText(this IFileSystemView view, string path, string? contents, Encoding encoding)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
         {
@@ -422,8 +406,7 @@ partial class FileSystemViewExtensions
     /// <param name="path"><inheritdoc/></param>
     public static IEnumerable<string> ReadFileLines(this IReadOnlyFileSystemView view, string path)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
             return File.ReadLines(path);
@@ -437,8 +420,7 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static IEnumerable<string> ReadFileLines(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
             return File.ReadAllLines(path, encoding);
@@ -459,8 +441,7 @@ partial class FileSystemViewExtensions
     /// <param name="path"><inheritdoc/></param>
     public static string[] ReadAllFileLines(this IReadOnlyFileSystemView view, string path)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
             return File.ReadAllLines(path);
@@ -474,8 +455,7 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static string[] ReadAllFileLines(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
             return File.ReadAllLines(path, encoding);
@@ -500,8 +480,7 @@ partial class FileSystemViewExtensions
     /// <param name="contents"><inheritdoc/></param>
     public static void WriteAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
         {
@@ -509,8 +488,7 @@ partial class FileSystemViewExtensions
         }
         else
         {
-            if (contents is null)
-                throw new ArgumentNullException(nameof(contents));
+            ArgumentNullException.ThrowIfNull(contents);
 
             using var writer = view.CreateTextFile(path);
             WriteAllLinesCore(writer, contents);
@@ -524,8 +502,7 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static void WriteAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents, Encoding encoding)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
         {
@@ -533,8 +510,7 @@ partial class FileSystemViewExtensions
         }
         else
         {
-            if (contents is null)
-                throw new ArgumentNullException(nameof(contents));
+            ArgumentNullException.ThrowIfNull(contents);
 
             using var writer = view.CreateTextFile(path, encoding);
             WriteAllLinesCore(writer, contents);
@@ -553,8 +529,7 @@ partial class FileSystemViewExtensions
     /// <param name="contents"><inheritdoc/></param>
     public static void AppendAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
         {
@@ -562,8 +537,7 @@ partial class FileSystemViewExtensions
         }
         else
         {
-            if (contents is null)
-                throw new ArgumentNullException(nameof(contents));
+            ArgumentNullException.ThrowIfNull(contents);
 
             using var writer = view.AppendTextFile(path);
             WriteAllLinesCore(writer, contents);
@@ -577,8 +551,7 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static void AppendAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents, Encoding encoding)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         if (view is LocalFileSystemView)
         {
@@ -586,8 +559,7 @@ partial class FileSystemViewExtensions
         }
         else
         {
-            if (contents is null)
-                throw new ArgumentNullException(nameof(contents));
+            ArgumentNullException.ThrowIfNull(contents);
 
             using var writer = view.AppendTextFile(path, encoding);
             WriteAllLinesCore(writer, contents);
@@ -663,10 +635,8 @@ partial class FileSystemViewExtensions
         bool overwrite = false,
         VfsCopyOptions options = VfsCopyOptions.None)
     {
-        if (sourceView is null)
-            throw new ArgumentNullException(nameof(sourceView));
-        if (destinationView is null)
-            throw new ArgumentNullException(nameof(destinationView));
+        ArgumentNullException.ThrowIfNull(sourceView);
+        ArgumentNullException.ThrowIfNull(destinationView);
         VfsValidationKit.Arguments.ValidateCopyOptions(options);
 
         IOHelper.CopyFileOptimized(
@@ -740,10 +710,8 @@ partial class FileSystemViewExtensions
         bool overwrite = false,
         VfsMoveOptions options = VfsMoveOptions.None)
     {
-        if (sourceView is null)
-            throw new ArgumentNullException(nameof(sourceView));
-        if (destinationView is null)
-            throw new ArgumentNullException(nameof(destinationView));
+        ArgumentNullException.ThrowIfNull(sourceView);
+        ArgumentNullException.ThrowIfNull(destinationView);
         VfsValidationKit.Arguments.ValidateMoveOptions(options);
 
         IOHelper.MoveFileOptimized(

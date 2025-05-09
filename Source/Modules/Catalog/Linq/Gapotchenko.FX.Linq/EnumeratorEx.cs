@@ -13,8 +13,7 @@ public static class EnumeratorEx
     /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the remaining elements in the <see cref="IEnumerator{T}"/>.</returns>
     public static IEnumerable<T> Rest<T>(this IEnumerator<T> enumerator)
     {
-        if (enumerator == null)
-            throw new ArgumentNullException(nameof(enumerator));
+        ArgumentNullException.ThrowIfNull(enumerator);
         while (enumerator.MoveNext())
             yield return enumerator.Current;
     }

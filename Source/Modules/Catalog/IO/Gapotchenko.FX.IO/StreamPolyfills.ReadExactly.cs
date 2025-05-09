@@ -42,8 +42,7 @@ static partial class StreamPolyfills
         Stream stream,
         Span<byte> buffer)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
 #if TFF_STREAM_READEXACTLY
         stream.ReadExactly(buffer);
@@ -84,8 +83,7 @@ static partial class StreamPolyfills
         Memory<byte> buffer,
         CancellationToken cancellationToken = default)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
 #if TFF_STREAM_READEXACTLY
         return stream.ReadExactlyAsync(buffer, cancellationToken);
@@ -145,8 +143,7 @@ static partial class StreamPolyfills
         int offset,
         int count)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
 #if TFF_STREAM_READEXACTLY
         stream.ReadExactly(buffer, offset, count);
@@ -206,8 +203,7 @@ static partial class StreamPolyfills
         int count,
         CancellationToken cancellationToken = default)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
 #if TFF_STREAM_READEXACTLY
         return stream.ReadExactlyAsync(buffer, offset, count, cancellationToken);

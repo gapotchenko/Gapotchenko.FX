@@ -43,8 +43,7 @@ partial class EnumerableEx
     /// <returns><see langword="true"/> if the number of elements in a sequence is greater or equal to a specified <paramref name="value"/>; otherwise, <see langword="false"/>.</returns>
     public static bool CountIsAtLeast<TSource>(this IEnumerable<TSource> source, int value)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         if (value <= 0)
             return true;

@@ -24,8 +24,7 @@ public static class ConsoleEx
 
     static SecureString ReadPassword(char mask, TextWriter writer)
     {
-        if (writer == null)
-            throw new ArgumentNullException(nameof(writer));
+        ArgumentNullException.ThrowIfNull(writer);
 
         var password = new SecureString();
 

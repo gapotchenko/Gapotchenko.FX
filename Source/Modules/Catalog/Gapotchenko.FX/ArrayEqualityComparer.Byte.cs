@@ -26,8 +26,7 @@ partial class ArrayEqualityComparer
 
         public override int GetHashCode(byte[] obj)
         {
-            if (obj is null)
-                throw new ArgumentNullException(nameof(obj));
+            ArgumentNullException.ThrowIfNull(obj);
 
             // FNV-1a
             // The fastest hash function for byte arrays with lowest collision rate so far (10/2014).

@@ -34,8 +34,7 @@ public abstract class DataArchiveFileFormatKit<TArchive, TOptions> : IDataArchiv
     /// <inheritdoc/>
     public TArchive Create(Stream stream, bool leaveOpen = false, TOptions? options = null)
     {
-        if (stream is null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         return CreateCore(stream, leaveOpen, options);
     }
@@ -49,8 +48,7 @@ public abstract class DataArchiveFileFormatKit<TArchive, TOptions> : IDataArchiv
     /// <inheritdoc/>
     public TArchive Mount(Stream stream, bool writable = false, bool leaveOpen = false, TOptions? options = null)
     {
-        if (stream is null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         return MountCore(stream, writable, leaveOpen, options);
     }
@@ -64,8 +62,7 @@ public abstract class DataArchiveFileFormatKit<TArchive, TOptions> : IDataArchiv
     /// <inheritdoc/>
     public bool IsMountable(Stream stream, TOptions? options = null)
     {
-        if (stream is null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         bool hasException = false;
         long oldPosition = stream.Position;

@@ -30,8 +30,7 @@ public class AppInformation : IAppInformation
     /// <returns>The app information.</returns>
     public static IAppInformation For(Type type)
     {
-        if (type == null)
-            throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         return new AppInformation
         {
@@ -47,8 +46,7 @@ public class AppInformation : IAppInformation
     /// <returns>The app information.</returns>
     public static IAppInformation For(Assembly assembly)
     {
-        if (assembly == null)
-            throw new ArgumentNullException(nameof(assembly));
+        ArgumentNullException.ThrowIfNull(assembly);
 
         var entryType = assembly.EntryPoint?.ReflectedType;
 

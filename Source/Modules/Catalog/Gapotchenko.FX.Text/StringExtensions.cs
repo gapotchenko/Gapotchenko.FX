@@ -26,8 +26,7 @@ public static class StringExtensions
 #endif
         string s, char value)
     {
-        if (s == null)
-            throw new ArgumentNullException(nameof(s));
+        ArgumentNullException.ThrowIfNull(s);
 
         return s.Length != 0 && s[0] == value;
     }
@@ -52,8 +51,7 @@ public static class StringExtensions
 #endif
         string s, char value)
     {
-        if (s == null)
-            throw new ArgumentNullException(nameof(s));
+        ArgumentNullException.ThrowIfNull(s);
 
         int n = s.Length;
         return n != 0 && s[n - 1] == value;
@@ -79,8 +77,7 @@ public static class StringExtensions
 #endif
         string s, char value)
     {
-        if (s == null)
-            throw new ArgumentNullException(nameof(s));
+        ArgumentNullException.ThrowIfNull(s);
 
 #if TFF_STRING_CONTAINS_CHAR
         return s.Contains(value);

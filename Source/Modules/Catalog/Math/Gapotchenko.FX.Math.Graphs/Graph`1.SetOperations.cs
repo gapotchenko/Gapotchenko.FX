@@ -11,8 +11,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public bool GraphEquals(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         return
             other == this ||
@@ -23,8 +22,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public bool IsEdgeInducedSubgraphOf(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         return
             other == this ||
@@ -36,8 +34,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public bool IsEdgeInducedSupergraphOf(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         return
             other == this ||
@@ -55,8 +52,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public bool IsProperSubgraphOf(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         return
             !GraphEquals(other) &&
@@ -66,8 +62,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public bool IsProperSupergraphOf(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         return
             !GraphEquals(other) &&
@@ -77,8 +72,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public bool IsSubgraphOf(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         return
             other == this ||
@@ -89,8 +83,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public bool IsSupergraphOf(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         return
             other == this ||
@@ -101,8 +94,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public bool IsVertexInducedSubgraphOf(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         return
             other == this ||
@@ -113,8 +105,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public bool IsVertexInducedSupergraphOf(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         return
             other == this ||
@@ -128,8 +119,7 @@ partial class Graph<TVertex>
     /// <inheritdoc cref="IGraph{TVertex}.Intersect(IReadOnlyGraph{TVertex})"/>
     public Graph<TVertex> Intersect(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         var graph = Clone();
         graph.IntersectWithCore(other);
@@ -143,8 +133,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public void IntersectWith(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         IntersectWithCore(other);
     }
@@ -158,8 +147,7 @@ partial class Graph<TVertex>
     /// <inheritdoc cref="IGraph{TVertex}.Except(IReadOnlyGraph{TVertex})"/>
     public Graph<TVertex> Except(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         var graph = Clone();
         graph.ExceptWithCore(other);
@@ -173,8 +161,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public void ExceptWith(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         ExceptWithCore(other);
     }
@@ -188,8 +175,7 @@ partial class Graph<TVertex>
     /// <inheritdoc cref="IGraph{TVertex}.Union(IReadOnlyGraph{TVertex})"/>
     public Graph<TVertex> Union(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         var graph = Clone();
         graph.UnionWithCore(other);
@@ -203,8 +189,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public void UnionWith(IReadOnlyGraph<TVertex> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         UnionWithCore(other);
     }

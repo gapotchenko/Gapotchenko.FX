@@ -82,10 +82,8 @@ partial class FileSystemViewExtensions
         bool overwrite = false,
         VfsCopyOptions options = VfsCopyOptions.None)
     {
-        if (sourceView is null)
-            throw new ArgumentNullException(nameof(sourceView));
-        if (destinationView is null)
-            throw new ArgumentNullException(nameof(destinationView));
+        ArgumentNullException.ThrowIfNull(sourceView);
+        ArgumentNullException.ThrowIfNull(destinationView);
         VfsValidationKit.Arguments.ValidateCopyOptions(options);
 
         IOHelper.CopyDirectoryOptimized(
@@ -156,10 +154,8 @@ partial class FileSystemViewExtensions
         bool overwrite = false,
         VfsMoveOptions options = VfsMoveOptions.None)
     {
-        if (sourceView is null)
-            throw new ArgumentNullException(nameof(sourceView));
-        if (destinationView is null)
-            throw new ArgumentNullException(nameof(destinationView));
+        ArgumentNullException.ThrowIfNull(sourceView);
+        ArgumentNullException.ThrowIfNull(destinationView);
         VfsValidationKit.Arguments.ValidateMoveOptions(options);
 
         IOHelper.MoveDirectoryOptimized(

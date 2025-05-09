@@ -6,8 +6,7 @@ sealed class VirtualTerminalWriter : TextWriter
 {
     public VirtualTerminalWriter(IVirtualTerminalOutputBackend backend)
     {
-        if (backend == null)
-            throw new ArgumentNullException(nameof(backend));
+        ArgumentNullException.ThrowIfNull(backend);
 
         m_Backend = backend;
         m_BackendTextWriter = backend.Out;

@@ -14,8 +14,7 @@ public abstract class GenericBase16 : TextDataEncoding, IBase16
 {
     private protected GenericBase16(TextDataEncodingAlphabet alphabet)
     {
-        if (alphabet == null)
-            throw new ArgumentNullException(nameof(alphabet));
+        ArgumentNullException.ThrowIfNull(alphabet);
 
         if (alphabet.Size != Base)
         {

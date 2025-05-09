@@ -139,8 +139,7 @@ partial class ProcessExtensions
         int millisecondsTimeout,
         CancellationToken cancellationToken)
     {
-        if (process == null)
-            throw new ArgumentNullException(nameof(process));
+        ArgumentNullException.ThrowIfNull(process);
         if (millisecondsTimeout < Timeout.Infinite)
             throw new ArgumentOutOfRangeException(nameof(millisecondsTimeout), "The value needs to be either -1 (signifying an infinite timeout), 0 or a positive integer.");
 

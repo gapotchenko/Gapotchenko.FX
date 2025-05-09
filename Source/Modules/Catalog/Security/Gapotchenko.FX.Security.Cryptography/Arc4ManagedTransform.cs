@@ -35,8 +35,7 @@ sealed class Arc4ManagedTransform : ICryptoTransform
     {
         CheckInputParameters(inputBuffer, inputOffset, inputCount);
 
-        if (outputBuffer == null)
-            throw new ArgumentNullException(nameof(outputBuffer));
+        ArgumentNullException.ThrowIfNull(outputBuffer);
         if (outputOffset < 0)
             throw new ArgumentOutOfRangeException(nameof(outputOffset), "Non negative number is required.");
         if (outputOffset > outputBuffer.Length - inputCount)
@@ -86,8 +85,7 @@ sealed class Arc4ManagedTransform : ICryptoTransform
 
     static void CheckInputParameters(byte[] inputBuffer, int inputOffset, int inputCount)
     {
-        if (inputBuffer == null)
-            throw new ArgumentNullException(nameof(inputBuffer));
+        ArgumentNullException.ThrowIfNull(inputBuffer);
         if (inputOffset < 0)
             throw new ArgumentOutOfRangeException(nameof(inputOffset), "Non negative number is required.");
         if (inputCount < 0)

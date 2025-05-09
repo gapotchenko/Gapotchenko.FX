@@ -25,8 +25,7 @@ partial record SemanticVersion
         /// <exception cref="ArgumentException"><paramref name="version"/> has an invalid format.</exception>
         public static Model Create(string version)
         {
-            if (version == null)
-                throw new ArgumentNullException(nameof(version));
+            ArgumentNullException.ThrowIfNull(version);
             if (version.Length == 0)
                 throw new ArgumentException("Semantic version string cannot be empty.", nameof(version));
 

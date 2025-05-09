@@ -420,8 +420,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <inheritdoc/>
     public virtual string CombinePaths(params IEnumerable<string?> paths)
     {
-        if (paths is null)
-            throw new ArgumentNullException(nameof(paths));
+        ArgumentNullException.ThrowIfNull(paths);
 
         char directorySeparatorChar = DirectorySeparatorChar;
 

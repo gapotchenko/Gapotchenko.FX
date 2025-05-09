@@ -13,10 +13,8 @@ public static class CollectionExtensions
     /// <param name="collection">The collection whose elements should be added.</param>
     public static void AddRange<T>(this ICollection<T> target, IEnumerable<T> collection)
     {
-        if (target == null)
-            throw new ArgumentNullException(nameof(target));
-        if (collection == null)
-            throw new ArgumentNullException(nameof(collection));
+        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(collection);
 
         foreach (var i in collection)
             target.Add(i);

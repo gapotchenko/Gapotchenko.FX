@@ -99,8 +99,7 @@ public readonly struct IntervalBoundary<T> : IEquatable<IntervalBoundary<T>>
     /// <exception cref="ArgumentNullException"><paramref name="selector"/> is null.</exception>
     public IntervalBoundary<TResult> SelectValue<TResult>(Func<T, TResult> selector)
     {
-        if (selector == null)
-            throw new ArgumentNullException(nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         return new(Kind, HasValue ? selector(m_Value) : default!);
     }

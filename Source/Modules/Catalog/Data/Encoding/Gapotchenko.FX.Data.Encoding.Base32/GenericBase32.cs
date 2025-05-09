@@ -16,8 +16,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
 {
     private protected GenericBase32(TextDataEncodingAlphabet alphabet, char paddingChar)
     {
-        if (alphabet == null)
-            throw new ArgumentNullException(nameof(alphabet));
+        ArgumentNullException.ThrowIfNull(alphabet);
 
         ValidateAlphabet(alphabet);
 
@@ -31,8 +30,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
     /// <param name="alphabet">The alphabet.</param>
     protected virtual void ValidateAlphabet(TextDataEncodingAlphabet alphabet)
     {
-        if (alphabet is null)
-            throw new ArgumentNullException(nameof(alphabet));
+        ArgumentNullException.ThrowIfNull(alphabet);
 
         if (alphabet.Size != Base)
         {

@@ -33,8 +33,7 @@ public abstract partial class ChecksumAlgorithm<T> : IChecksumAlgorithm<T>
     /// <inheritdoc/>
     public virtual T ComputeChecksum(Stream stream)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         var iterator = CreateIterator();
 
@@ -63,8 +62,7 @@ public abstract partial class ChecksumAlgorithm<T> : IChecksumAlgorithm<T>
     /// <inheritdoc/>
     public virtual async Task<T> ComputeChecksumAsync(Stream stream, CancellationToken cancellationToken = default)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         var iterator = CreateIterator();
 

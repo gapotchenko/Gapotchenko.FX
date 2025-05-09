@@ -61,8 +61,7 @@ partial class CommandLine
     /// <returns>The command line.</returns>
     public static string Build(IEnumerable<string?> args)
     {
-        if (args == null)
-            throw new ArgumentNullException(nameof(args));
+        ArgumentNullException.ThrowIfNull(args);
 
         var clb = new CommandLineBuilder();
         foreach (var arg in args)

@@ -20,8 +20,7 @@ partial class CartesianProduct
     /// <exception cref="OverflowException">The result is too big to fit into <see cref="int"/>.</exception>
     public static int Cardinality(params IEnumerable<int> lengths)
     {
-        if (lengths == null)
-            throw new ArgumentNullException(nameof(lengths));
+        ArgumentNullException.ThrowIfNull(lengths);
 
         int cardinality = 1;
         bool hasFactor = false;
@@ -53,8 +52,7 @@ partial class CartesianProduct
     /// <exception cref="OverflowException">The result is too big to fit into <see cref="long"/>.</exception>
     public static long Cardinality(IEnumerable<long> lengths)
     {
-        if (lengths == null)
-            throw new ArgumentNullException(nameof(lengths));
+        ArgumentNullException.ThrowIfNull(lengths);
 
         long cardinality = 1;
         bool hasFactor = false;

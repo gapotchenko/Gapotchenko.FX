@@ -17,8 +17,7 @@ public static unsafe class Intrinsics
     /// <param name="type">The type with intrinsic methods to initialize.</param>
     public static void InitializeType(Type type)
     {
-        if (type == null)
-            throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         var patcher = m_Patcher;
         if (patcher == null)

@@ -21,8 +21,7 @@ public static class PermutationExtensions
     /// <returns>An enumerable that contains all possible permutations of elements from the source sequence.</returns>
     public static Permutations.IResultCollection<TSource> Permute<TSource>(this IEnumerable<TSource> source)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         return Permutations.PermuteAccelerated(source);
     }

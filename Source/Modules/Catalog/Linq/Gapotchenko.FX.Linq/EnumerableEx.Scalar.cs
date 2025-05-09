@@ -23,8 +23,7 @@ partial class EnumerableEx
     /// </returns>
     public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source, TSource defaultValue)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         using var enumerator = source.GetEnumerator();
 
@@ -72,10 +71,8 @@ partial class EnumerableEx
     /// </returns>
     public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate, TSource defaultValue)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (predicate == null)
-            throw new ArgumentNullException(nameof(predicate));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(predicate);
 
         Optional<TSource> result = default;
 

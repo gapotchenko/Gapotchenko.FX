@@ -117,10 +117,8 @@ partial class EnumerableEx
         bool isMax,
         Optional<TSource> defaultValue)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (keySelector == null)
-            throw new ArgumentNullException(nameof(keySelector));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
         using var e = source.GetEnumerator();
 

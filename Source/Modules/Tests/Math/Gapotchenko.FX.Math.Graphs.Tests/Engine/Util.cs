@@ -4,10 +4,8 @@ static class Util
 {
     public static bool SetEquals<T>(this ISet<GraphEdge<T>> edgeSet, IEnumerable<(T From, T To)> other)
     {
-        if (edgeSet == null)
-            throw new ArgumentNullException(nameof(edgeSet));
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(edgeSet);
+        ArgumentNullException.ThrowIfNull(other);
 
         return edgeSet.SetEquals(Conv(other));
     }

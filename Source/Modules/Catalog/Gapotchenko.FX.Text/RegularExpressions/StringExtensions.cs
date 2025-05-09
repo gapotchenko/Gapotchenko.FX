@@ -27,8 +27,7 @@ public static class StringExtensions
         [StringSyntax(StringSyntaxAttribute.Regex)] string? pattern,
         StringComparison comparisionType)
     {
-        if (input == null)
-            throw new ArgumentNullException(nameof(input));
+        ArgumentNullException.ThrowIfNull(input);
 
         if (pattern == null)
             return null;
@@ -107,8 +106,7 @@ public static class StringExtensions
         [StringSyntax(StringSyntaxAttribute.Regex)] string pattern,
         StringComparison comparisionType)
     {
-        if (pattern == null)
-            throw new ArgumentNullException(nameof(pattern));
+        ArgumentNullException.ThrowIfNull(pattern);
 
         return IndexOfRegex(input, "^" + pattern, comparisionType) == 0;
     }
@@ -137,8 +135,7 @@ public static class StringExtensions
         [StringSyntax(StringSyntaxAttribute.Regex)] string pattern,
         StringComparison comparisionType)
     {
-        if (pattern == null)
-            throw new ArgumentNullException(nameof(pattern));
+        ArgumentNullException.ThrowIfNull(pattern);
 
         return IndexOfRegex(input, pattern + "$", comparisionType) != -1;
     }
@@ -167,8 +164,7 @@ public static class StringExtensions
         [StringSyntax(StringSyntaxAttribute.Regex)] string? pattern,
         StringComparison comparisionType)
     {
-        if (input == null)
-            throw new ArgumentNullException(nameof(input));
+        ArgumentNullException.ThrowIfNull(input);
 
         if (pattern == null)
             return false;

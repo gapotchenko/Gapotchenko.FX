@@ -73,12 +73,9 @@ public static class TopologicalSortExtensions
         Func<TKey, TKey, bool> dependencyFunction,
         IEqualityComparer<TKey>? comparer = null)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (keySelector == null)
-            throw new ArgumentNullException(nameof(keySelector));
-        if (dependencyFunction == null)
-            throw new ArgumentNullException(nameof(dependencyFunction));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
+        ArgumentNullException.ThrowIfNull(dependencyFunction);
 
         return new TopologicallyOrderedEnumerable.PrimaryEnumerable<TSource, TKey>(source, keySelector, comparer, GraphFactory);
 
@@ -143,12 +140,9 @@ public static class TopologicalSortExtensions
         Func<TKey, IEnumerable<TKey>?> dependencyFunction,
         IEqualityComparer<TKey>? comparer = null)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (keySelector == null)
-            throw new ArgumentNullException(nameof(keySelector));
-        if (dependencyFunction == null)
-            throw new ArgumentNullException(nameof(dependencyFunction));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
+        ArgumentNullException.ThrowIfNull(dependencyFunction);
 
         return new TopologicallyOrderedEnumerable.PrimaryEnumerable<TSource, TKey>(source, keySelector, comparer, GraphFactory);
 
@@ -218,12 +212,9 @@ public static class TopologicalSortExtensions
         Func<TSource, TKey> keySelector,
         IReadOnlyGraph<TKey> dependencyGraph)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (keySelector == null)
-            throw new ArgumentNullException(nameof(keySelector));
-        if (dependencyGraph == null)
-            throw new ArgumentNullException(nameof(dependencyGraph));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
+        ArgumentNullException.ThrowIfNull(dependencyGraph);
 
         return new TopologicallyOrderedEnumerable.PrimaryEnumerable<TSource, TKey>(
             source,

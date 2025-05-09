@@ -13,8 +13,7 @@ sealed class ProcessMemoryAccessor(IntPtr hProcess) : IProcessMemoryAccessor
 
     public unsafe int ReadMemory(UniPtr address, byte[] buffer, int offset, int count, bool throwOnError)
     {
-        if (buffer == null)
-            throw new ArgumentNullException(nameof(buffer));
+        ArgumentNullException.ThrowIfNull(buffer);
         if (offset + count > buffer.Length)
             throw new ArgumentException();
 

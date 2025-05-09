@@ -11,8 +11,7 @@ sealed class VirtualTerminalConsoleOutputBackend : IVirtualTerminalOutputBackend
 
     public VirtualTerminalConsoleOutputBackend(TextWriter textWriter)
     {
-        if (textWriter == null)
-            throw new ArgumentNullException(nameof(textWriter));
+        ArgumentNullException.ThrowIfNull(textWriter);
 
         Out = textWriter;
     }

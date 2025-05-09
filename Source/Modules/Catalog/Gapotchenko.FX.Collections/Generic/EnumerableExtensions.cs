@@ -62,12 +62,9 @@ public static class EnumerableExtensions
         Func<TSource, TElement> elementSelector,
         IEqualityComparer<TKey>? comparer = null)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (keySelector == null)
-            throw new ArgumentNullException(nameof(keySelector));
-        if (elementSelector == null)
-            throw new ArgumentNullException(nameof(elementSelector));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
+        ArgumentNullException.ThrowIfNull(elementSelector);
 
         var associativeArray = new AssociativeArray<TKey, TElement>(comparer);
         foreach (var item in source)

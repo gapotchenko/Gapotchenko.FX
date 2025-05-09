@@ -245,8 +245,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override string CombinePaths(params IEnumerable<string?> paths)
     {
-        if (paths is null)
-            throw new ArgumentNullException(nameof(paths));
+        ArgumentNullException.ThrowIfNull(paths);
 
         string?[] arr = EnumerableEx.AsArray(paths);
 

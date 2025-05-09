@@ -89,8 +89,7 @@ public static class Optional
     /// </returns>
     public static Optional<T> Discriminate<T>(T value, Func<T, bool> nonePredicate)
     {
-        if (nonePredicate == null)
-            throw new ArgumentNullException(nameof(nonePredicate));
+        ArgumentNullException.ThrowIfNull(nonePredicate);
 
         return nonePredicate(value) ? default : Some(value);
     }
@@ -106,8 +105,7 @@ public static class Optional
     /// <exception cref="ArgumentNullException"><paramref name="optionalType"/> is <see langword="null"/>.</exception>
     public static Type? GetUnderlyingType(Type optionalType)
     {
-        if (optionalType == null)
-            throw new ArgumentNullException(nameof(optionalType));
+        ArgumentNullException.ThrowIfNull(optionalType);
 
         if (optionalType.IsConstructedGenericType)
         {

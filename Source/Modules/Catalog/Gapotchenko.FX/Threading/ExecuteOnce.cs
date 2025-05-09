@@ -38,8 +38,7 @@ public struct ExecuteOnce
     /// </param>
     public ExecuteOnce(Action action, object? syncLock)
     {
-        if (action is null)
-            throw new ArgumentNullException(nameof(action));
+        ArgumentNullException.ThrowIfNull(action);
 
         m_Action = action;
         m_SyncLock = syncLock;

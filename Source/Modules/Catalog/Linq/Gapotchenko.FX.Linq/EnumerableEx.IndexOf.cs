@@ -23,8 +23,7 @@ partial class EnumerableEx
     /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
     public static int IndexOf<TSource>(this IEnumerable<TSource> source, TSource value, IEqualityComparer<TSource>? comparer)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         comparer ??= EqualityComparer<TSource>.Default;
 
@@ -65,8 +64,7 @@ partial class EnumerableEx
     /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
     public static long LongIndexOf<TSource>(this IEnumerable<TSource> source, TSource value, IEqualityComparer<TSource>? comparer)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         comparer ??= EqualityComparer<TSource>.Default;
 
@@ -95,10 +93,8 @@ partial class EnumerableEx
     /// <returns>The index of the first element that satisfies a condition; otherwise, -1.</returns>
     public static int IndexOf<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (predicate == null)
-            throw new ArgumentNullException(nameof(predicate));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(predicate);
 
         using var enumerator = source.GetEnumerator();
 
@@ -125,10 +121,8 @@ partial class EnumerableEx
     /// <returns>The index of the first element that satisfies a condition; otherwise, -1.</returns>
     public static long LongIndexOf<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (predicate == null)
-            throw new ArgumentNullException(nameof(predicate));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(predicate);
 
         using var enumerator = source.GetEnumerator();
 
@@ -157,10 +151,8 @@ partial class EnumerableEx
     /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
     public static int IndexOf<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource>? comparer)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (value == null)
-            throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(value);
 
         if (ReferenceEquals(source, value))
             return 0;
@@ -227,10 +219,8 @@ partial class EnumerableEx
     /// <returns>The index of the first occurrence of value within the entire sequence, if found; otherwise, -1.</returns>
     public static long LongIndexOf<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource>? comparer)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (value == null)
-            throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(value);
 
         if (ReferenceEquals(source, value))
             return 0;

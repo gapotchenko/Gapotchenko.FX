@@ -549,8 +549,7 @@ public static class Sequential
     /// <inheritdoc cref="Parallel.Invoke(Action[])"/>
     public static void Invoke(params Action[] actions)
     {
-        if (actions == null)
-            throw new ArgumentNullException(nameof(actions));
+        ArgumentNullException.ThrowIfNull(actions);
 
         foreach (var action in actions)
             action();

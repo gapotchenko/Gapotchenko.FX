@@ -26,10 +26,8 @@ partial class EnumerableEx
         this IEnumerable<TElement> source,
         Func<TElement, TKey> keySelector)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (keySelector == null)
-            throw new ArgumentNullException(nameof(keySelector));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
         var keyEqualityComparer = EqualityComparer<TKey>.Default;
 

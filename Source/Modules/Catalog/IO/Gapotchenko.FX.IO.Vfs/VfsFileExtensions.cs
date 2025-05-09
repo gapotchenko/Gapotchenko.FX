@@ -50,8 +50,7 @@ public static class VfsFileExtensions
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        if (file is null)
-            throw new ArgumentNullException(nameof(file));
+        ArgumentNullException.ThrowIfNull(file);
 
         return file.Format.Mount(view.ReadFile(path), options: options);
     }
@@ -89,8 +88,7 @@ public static class VfsFileExtensions
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        if (file is null)
-            throw new ArgumentNullException(nameof(file));
+        ArgumentNullException.ThrowIfNull(file);
 
         return OpenWriteCore(file.Format, view, path, FileAccess.ReadWrite, FileShare.None, options);
     }
@@ -129,8 +127,7 @@ public static class VfsFileExtensions
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        if (file is null)
-            throw new ArgumentNullException(nameof(file));
+        ArgumentNullException.ThrowIfNull(file);
 
         return OpenNewCore(file.Format, view, path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, options);
     }
@@ -185,8 +182,7 @@ public static class VfsFileExtensions
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        if (file is null)
-            throw new ArgumentNullException(nameof(file));
+        ArgumentNullException.ThrowIfNull(file);
 
         VfsValidationKit.Arguments.ValidateFileAccess(access);
         if (access == FileAccess.Write)

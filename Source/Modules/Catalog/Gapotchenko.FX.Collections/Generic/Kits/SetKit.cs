@@ -54,8 +54,7 @@ public abstract class SetKit<T> : ReadOnlySetKit<T>, ISet<T>
     /// <inheritdoc/>
     public virtual void ExceptWith(IEnumerable<T> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         EnsureNotReadOnly();
 
@@ -79,8 +78,7 @@ public abstract class SetKit<T> : ReadOnlySetKit<T>, ISet<T>
     /// <inheritdoc/>
     public virtual void IntersectWith(IEnumerable<T> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         EnsureNotReadOnly();
 
@@ -164,8 +162,7 @@ public abstract class SetKit<T> : ReadOnlySetKit<T>, ISet<T>
     /// <inheritdoc/>
     public virtual void SymmetricExceptWith(IEnumerable<T> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         EnsureNotReadOnly();
 
@@ -214,8 +211,7 @@ public abstract class SetKit<T> : ReadOnlySetKit<T>, ISet<T>
     /// <inheritdoc/>
     public virtual void UnionWith(IEnumerable<T> other)
     {
-        if (other == null)
-            throw new ArgumentNullException(nameof(other));
+        ArgumentNullException.ThrowIfNull(other);
 
         EnsureNotReadOnly();
 

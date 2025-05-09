@@ -224,10 +224,8 @@ public static class FileSystem
     /// <exception cref="ArgumentOutOfRangeException">The specified index is out of range.</exception>
     public static string InsertSubpath(string path, Index index, string subpath)
     {
-        if (path == null)
-            throw new ArgumentNullException(nameof(path));
-        if (subpath == null)
-            throw new ArgumentNullException(nameof(subpath));
+        ArgumentNullException.ThrowIfNull(path);
+        ArgumentNullException.ThrowIfNull(subpath);
 
         switch ((index.IsFromEnd, index.Value))
         {
@@ -262,8 +260,7 @@ public static class FileSystem
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="range"/> is out of the range of valid values.</exception>
     public static string GetSubpath(string path, Range range)
     {
-        if (path is null)
-            throw new ArgumentNullException(nameof(path));
+        ArgumentNullException.ThrowIfNull(path);
 
         var parts = SplitPath(path).ToList();
         var (offset, length) = range.GetOffsetAndLength(parts.Count);
@@ -515,8 +512,7 @@ public static class FileSystem
     /// <returns><see langword="true"/> if exception represents a file access violation error; otherwise, <see langword="false"/>.</returns>
     public static bool IsAccessViolationError(IOException exception)
     {
-        if (exception == null)
-            throw new ArgumentNullException(nameof(exception));
+        ArgumentNullException.ThrowIfNull(exception);
 
         int errorCode = Marshal.GetHRForException(exception) & ((1 << 16) - 1);
 

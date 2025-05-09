@@ -24,8 +24,7 @@ public struct LazyExecution
     /// <param name="action">The action.</param>
     public LazyExecution(Action action)
     {
-        if (action == null)
-            throw new ArgumentNullException(nameof(action));
+        ArgumentNullException.ThrowIfNull(action);
 
         m_Action = Empty.Nullify(action);
     }

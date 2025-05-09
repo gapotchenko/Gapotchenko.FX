@@ -23,8 +23,7 @@ public class StreamProxyKit<T> : Stream
     /// <exception cref="ArgumentNullException"><paramref name="baseStream"/> is <see langword="null"/>.</exception>
     protected StreamProxyKit(T baseStream)
     {
-        if (baseStream is null)
-            throw new ArgumentNullException(nameof(baseStream));
+        ArgumentNullException.ThrowIfNull(baseStream);
 
         BaseStream = baseStream;
     }

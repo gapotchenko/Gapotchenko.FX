@@ -16,8 +16,7 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
 {
     private protected GenericBase64(TextDataEncodingAlphabet alphabet, char paddingChar)
     {
-        if (alphabet == null)
-            throw new ArgumentNullException(nameof(alphabet));
+        ArgumentNullException.ThrowIfNull(alphabet);
 
         if (alphabet.Size != Base)
         {

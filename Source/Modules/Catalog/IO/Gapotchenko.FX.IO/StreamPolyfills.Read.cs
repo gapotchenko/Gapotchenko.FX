@@ -38,8 +38,7 @@ partial class StreamPolyfills
         Stream stream,
         Span<byte> buffer)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
 #if TFF_STREAM_READ_SPAN
         return stream.Read(buffer);

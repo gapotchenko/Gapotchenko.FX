@@ -21,8 +21,7 @@ public static class CartesianProductExtensions
     /// <returns>The Cartesian product of input sequences.</returns>
     public static CartesianProduct.IResultCollection<T> CrossJoin<T>(this IEnumerable<IEnumerable<T>> factors)
     {
-        if (factors == null)
-            throw new ArgumentNullException(nameof(factors));
+        ArgumentNullException.ThrowIfNull(factors);
 
         return CartesianProduct.MultiplyAccelerated(
             factors.Select(x => x ?? throw new ArgumentException("A Cartesian product factor cannot be null.", nameof(factors))));
@@ -39,10 +38,8 @@ public static class CartesianProductExtensions
         this IEnumerable<TSource> first,
         IEnumerable<TSource> second)
     {
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
 
         return CartesianProduct.MultiplyAccelerated([first, second]);
     }
@@ -60,12 +57,9 @@ public static class CartesianProductExtensions
         IEnumerable<TSource> second,
         IEnumerable<TSource> third)
     {
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
-        if (third == null)
-            throw new ArgumentNullException(nameof(third));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        ArgumentNullException.ThrowIfNull(third);
 
         return CartesianProduct.MultiplyAccelerated([first, second, third]);
     }
@@ -85,14 +79,10 @@ public static class CartesianProductExtensions
         IEnumerable<TSource> third,
         IEnumerable<TSource> fourth)
     {
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
-        if (third == null)
-            throw new ArgumentNullException(nameof(third));
-        if (fourth == null)
-            throw new ArgumentNullException(nameof(fourth));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        ArgumentNullException.ThrowIfNull(third);
+        ArgumentNullException.ThrowIfNull(fourth);
 
         return CartesianProduct.MultiplyAccelerated([first, second, third, fourth]);
     }
@@ -114,16 +104,11 @@ public static class CartesianProductExtensions
         IEnumerable<TSource> fourth,
         params IEnumerable<TSource>[] rest)
     {
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
-        if (third == null)
-            throw new ArgumentNullException(nameof(third));
-        if (fourth == null)
-            throw new ArgumentNullException(nameof(fourth));
-        if (rest == null)
-            throw new ArgumentNullException(nameof(rest));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        ArgumentNullException.ThrowIfNull(third);
+        ArgumentNullException.ThrowIfNull(fourth);
+        ArgumentNullException.ThrowIfNull(rest);
 
         return CartesianProduct.MultiplyAccelerated(new[] { first, second, third, fourth }.Concat(rest));
     }

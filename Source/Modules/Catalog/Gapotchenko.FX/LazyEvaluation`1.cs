@@ -34,8 +34,7 @@ public struct LazyEvaluation<T>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     public LazyEvaluation(Func<T> valueFactory)
     {
-        if (valueFactory == null)
-            throw new ArgumentNullException(nameof(valueFactory));
+        ArgumentNullException.ThrowIfNull(valueFactory);
 
         m_ValueFactory = Empty.Nullify(valueFactory);
         m_Value = default;

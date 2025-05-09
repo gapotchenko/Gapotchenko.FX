@@ -29,8 +29,7 @@ public static class FileSystemView
     /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     public static bool IsLocal(IReadOnlyFileSystemView view)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
+        ArgumentNullException.ThrowIfNull(view);
 
         return view is LocalFileSystemView;
     }

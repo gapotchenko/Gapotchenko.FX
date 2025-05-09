@@ -33,10 +33,8 @@ public static class SetExtensions
     /// </returns>
     public static bool AddRange<T>(this ISet<T> target, IEnumerable<T> collection)
     {
-        if (target == null)
-            throw new ArgumentNullException(nameof(target));
-        if (collection == null)
-            throw new ArgumentNullException(nameof(collection));
+        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(collection);
 
         bool result = false;
         foreach (var i in collection)

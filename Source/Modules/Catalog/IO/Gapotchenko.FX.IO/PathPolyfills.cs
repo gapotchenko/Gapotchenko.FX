@@ -243,8 +243,7 @@ public static partial class PathPolyfills
         /// <exception cref="ArgumentNullException"><paramref name="paths"/> is <see langword="null"/>.</exception>
         public static string Join(params IEnumerable<string?> paths)
         {
-            if (paths == null)
-                throw new ArgumentNullException(nameof(paths));
+            ArgumentNullException.ThrowIfNull(paths);
 
             var builder = new StringBuilder();
             foreach (string? path in paths)

@@ -41,8 +41,7 @@ partial class ProcessExtensions
     /// <exception cref="Win32Exception">The wait setting could not be accessed.</exception>
     public static Task<bool> WaitForExitAsync(this Process process, int millisecondsTimeout, CancellationToken cancellationToken = default)
     {
-        if (process == null)
-            throw new ArgumentNullException(nameof(process));
+        ArgumentNullException.ThrowIfNull(process);
 
         // IMPROVE: Needs a more efficient implementation without polling.
 

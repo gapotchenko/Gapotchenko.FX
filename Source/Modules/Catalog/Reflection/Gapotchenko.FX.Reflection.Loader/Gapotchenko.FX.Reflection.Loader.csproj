@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Reflection.AssemblyAutoLoader" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.0;netcoreapp2.0;netcoreapp3.0;net5.0</TargetFrameworks>
     <!-- Use newer target frameworks in debug to allow more thorough nullable checks. -->
@@ -8,10 +12,11 @@
     <DefineConstants>$(DefineConstants),ASSEMBLY_LOADER_INITIALIZER</DefineConstants>    
   </PropertyGroup>
 
-  <ItemGroup>
-    <CommonlyUsedPart Include="Gapotchenko.FX.Reflection.AssemblyAutoLoader" />
-  </ItemGroup>
-  
+  <PropertyGroup>
+    <!-- Exception throw helpers -->
+    <NoWarn>$(NoWarn),CA1510,CA1511,CA1512,CA1513</NoWarn>
+  </PropertyGroup>
+    
   <ItemGroup>
     <PackageReference Include="IsExternalInit" Version="1.0.3">
       <PrivateAssets>all</PrivateAssets>

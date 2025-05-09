@@ -44,8 +44,7 @@ public sealed class TextDataEncodingAlphabet
         bool caseSensitive,
         IReadOnlyDictionary<char, string>? synonyms)
     {
-        if (symbols == null)
-            throw new ArgumentNullException(nameof(symbols));
+        ArgumentNullException.ThrowIfNull(symbols);
 
         m_Symbols = symbols;
 

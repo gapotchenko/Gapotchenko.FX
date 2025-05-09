@@ -24,12 +24,9 @@ public static partial class CartesianProduct
     /// <exception cref="ArgumentNullException"><paramref name="rest"/> is <see langword="null"/>.</exception>
     public static IResultCollection<T> Of<T>(IEnumerable<T> factor1, IEnumerable<T> factor2, params IEnumerable<T>[] rest)
     {
-        if (factor1 == null)
-            throw new ArgumentNullException(nameof(factor1));
-        if (factor2 == null)
-            throw new ArgumentNullException(nameof(factor2));
-        if (rest == null)
-            throw new ArgumentNullException(nameof(rest));
+        ArgumentNullException.ThrowIfNull(factor1);
+        ArgumentNullException.ThrowIfNull(factor2);
+        ArgumentNullException.ThrowIfNull(rest);
 
         return Of(new[] { factor1, factor2 }.Concat(rest));
     }
@@ -43,8 +40,7 @@ public static partial class CartesianProduct
     /// <exception cref="ArgumentNullException"><paramref name="factors"/> is <see langword="null"/>.</exception>
     public static IResultCollection<T> Of<T>(IEnumerable<IEnumerable<T>> factors)
     {
-        if (factors == null)
-            throw new ArgumentNullException(nameof(factors));
+        ArgumentNullException.ThrowIfNull(factors);
 
         factors = factors.Select(x => x ?? throw new ArgumentException("A Cartesian product factor cannot be null.", nameof(factors)));
 
@@ -73,12 +69,9 @@ public static partial class CartesianProduct
         IEnumerable<T2> factor2,
         Func<T1, T2, TResult> resultSelector)
     {
-        if (factor1 == null)
-            throw new ArgumentNullException(nameof(factor1));
-        if (factor2 == null)
-            throw new ArgumentNullException(nameof(factor2));
-        if (resultSelector == null)
-            throw new ArgumentNullException(nameof(resultSelector));
+        ArgumentNullException.ThrowIfNull(factor1);
+        ArgumentNullException.ThrowIfNull(factor2);
+        ArgumentNullException.ThrowIfNull(resultSelector);
 
         return Multiply(factor1, factor2, resultSelector);
     }
