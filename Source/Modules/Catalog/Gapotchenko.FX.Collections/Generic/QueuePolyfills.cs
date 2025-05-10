@@ -1,5 +1,6 @@
 ﻿// Gapotchenko.FX
 // Copyright © Gapotchenko and Contributors
+//
 // Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -12,7 +13,7 @@
 namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
-/// Provides polyfill extension methods for <see cref="Queue{T}"/>.
+/// Provides polyfill extension methods for <see cref="Queue{T}"/> class.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class QueuePolyfills
@@ -37,11 +38,11 @@ public static class QueuePolyfills
 #endif
         Queue<T> queue, [MaybeNullWhen(false)] out T result)
     {
+        ArgumentNullException.ThrowIfNull(queue);
+
 #if TFF_QUEUE_TRYDEQUEUE
         return queue.TryDequeue(out result);
 #else
-        ArgumentNullException.ThrowIfNull(queue);
-
         if (queue.Count == 0)
         {
             result = default;

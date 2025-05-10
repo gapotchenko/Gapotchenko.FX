@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
-/// Provides extension methods for <see cref="List{T}"/>.
+/// Provides extension methods for <see cref="List{T}"/> class.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ListExtensions

@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
-/// Provides extension methods for <see cref="IEnumerable{T}"/>.
+/// Provides extension methods for <see cref="IEnumerable{T}"/> interface.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class EnumerableExtensions
