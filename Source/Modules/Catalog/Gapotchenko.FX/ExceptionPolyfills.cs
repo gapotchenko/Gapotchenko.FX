@@ -19,13 +19,14 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX;
 
 /// <summary>
-/// Provides polyfill methods for classes provided by BCL and inherited from <see cref="Exception"/> class.
+/// Provides polyfill extension methods for classes provided by BCL and inherited from <see cref="Exception"/> class.
 /// </summary>
+[StackTraceHidden]
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ExceptionPolyfills
 {
     /// <summary>
-    /// Provides polyfill methods for <see cref="ArgumentNullException"/> class.
+    /// Provides polyfill extension methods for <see cref="ArgumentNullException"/> class.
     /// </summary>
     extension(ArgumentNullException)
     {
@@ -39,7 +40,6 @@ public static class ExceptionPolyfills
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="argument"/> is <see langword="null"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -60,7 +60,6 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
         /// <exception cref="ArgumentNullException"><paramref name="argument"/> is <see langword="null"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -77,7 +76,7 @@ public static class ExceptionPolyfills
     }
 
     /// <summary>
-    /// Provides polyfill methods for <see cref="ArgumentOutOfRangeException"/> class.
+    /// Provides polyfill extension methods for <see cref="ArgumentOutOfRangeException"/> class.
     /// </summary>
     extension(ArgumentOutOfRangeException)
     {
@@ -90,7 +89,6 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is zero.</exception>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -106,7 +104,6 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfZero(int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -137,7 +134,6 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is negative.</exception>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -153,7 +149,6 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfNegative(int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -184,7 +179,6 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is negative or zero.</exception>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -200,7 +194,6 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfNegativeOrZero(int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -232,7 +225,6 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is greater than <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -248,7 +240,6 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfGreaterThan(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -280,7 +271,6 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is greater than or equal to <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -296,7 +286,6 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfGreaterThanOrEqual(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -328,7 +317,6 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is less than <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -344,7 +332,6 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfLessThan(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -376,7 +363,6 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is less than or equal to <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -392,7 +378,6 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfLessThanOrEqual(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -424,7 +409,6 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is equal to <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -440,7 +424,6 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfEqual(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -472,7 +455,6 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is equal to <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -488,7 +470,6 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfNotEqual(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
-        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -509,5 +490,50 @@ public static class ExceptionPolyfills
 #endif
 
         #endregion
+    }
+
+    /// <summary>
+    /// Provides polyfill extension methods for <see cref="ObjectDisposedException"/> class.
+    /// </summary>
+    extension(ObjectDisposedException)
+    {
+        /// <summary>
+        /// Throws an <see cref="ObjectDisposedException"/> if the specified <paramref name="condition"/> is <see langword="true"/>.
+        /// </summary>
+        /// <param name="condition">The condition to evaluate.</param>
+        /// <param name="instance">The object whose type's full name should be included in any resulting <see cref="ObjectDisposedException"/>.</param>
+        /// <exception cref="ObjectDisposedException">The <paramref name="condition"/> is <see langword="true"/>.</exception>
+#if TFF_EXCEPTION_THROWIF
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static void ThrowIf([DoesNotReturnIf(true)] bool condition, object instance)
+        {
+#if TFF_EXCEPTION_THROWIF
+            ObjectDisposedException.ThrowIf(condition, instance);
+#else
+            if (condition)
+                Throw(instance);
+
+            [DoesNotReturn]
+            static void Throw(object? instance) => throw new ObjectDisposedException(instance?.GetType().FullName);
+#endif
+        }
+
+        /// <inheritdoc cref="ThrowIf(bool, object)"/>
+        /// <param name="condition"><inheritdoc/></param>
+        /// <param name="type">The type whose full name should be included in any resulting <see cref="ObjectDisposedException"/>.</param>
+        public static void ThrowIf([DoesNotReturnIf(true)] bool condition, Type type)
+        {
+#if TFF_EXCEPTION_THROWIF
+            ObjectDisposedException.ThrowIf(condition, type);
+#else
+            if (condition)
+                Throw(type);
+
+            [DoesNotReturn]
+            static void Throw(Type? type) => throw new ObjectDisposedException(type?.FullName);
+#endif
+        }
     }
 }
