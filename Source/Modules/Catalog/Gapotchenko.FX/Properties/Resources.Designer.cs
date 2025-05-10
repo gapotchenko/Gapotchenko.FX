@@ -97,6 +97,87 @@ namespace Gapotchenko.FX.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be equal to &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeEqual {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be greater than &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeGreater {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeGreater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be greater than or equal to &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeGreaterOrEqual {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeGreaterOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be less than &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeLess {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeLess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be less than or equal to &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeLessOrEqual {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeLessOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be a non-negative value..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeNonNegative {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeNonNegative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be a non-negative and non-zero value..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeNonNegativeNonZero {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeNonNegativeNonZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be a non-zero value..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeNonZero {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeNonZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must not be equal to &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeNotEqual {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeNotEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Index was out of range. Must be non-negative and less than the size of the collection..
         /// </summary>
         internal static string ArgumentOutOfRange_Index {

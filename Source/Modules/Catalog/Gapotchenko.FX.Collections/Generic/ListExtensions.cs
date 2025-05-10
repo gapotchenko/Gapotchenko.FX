@@ -1,11 +1,4 @@
-﻿using Gapotchenko.FX.Collections.Utils;
-
-#if NET8_0_OR_GREATER
-using static System.ArgumentNullException;
-#else
-using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
-#endif
-namespace Gapotchenko.FX.Collections.Generic;
+﻿namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
 /// Provides extension methods for <see cref="List{T}"/>.
@@ -35,7 +28,7 @@ public static class ListExtensions
     /// </param>
     public static void StableSort<T>(this List<T> list, IComparer<T>? comparer)
     {
-        ThrowIfNull(list);
+        ArgumentNullException.ThrowIfNull(list);
 
         if (list.Count < 2)
             return;

@@ -9,7 +9,7 @@
     <WarningsAsErrors>$(WarningsAsErrors),CA2241</WarningsAsErrors>
 
     <!-- Exception throw helpers -->
-    <NoWarn>$(NoWarn),CA1511,CA1512,CA1513</NoWarn>
+    <NoWarn>$(NoWarn),CA1511</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(MasteringProjectKind)' != 'utility' ">

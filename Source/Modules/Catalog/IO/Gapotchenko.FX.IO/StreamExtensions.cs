@@ -21,8 +21,7 @@ public static class StreamExtensions
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(destination);
-        if (count < 0)
-            throw new ArgumentOutOfRangeException(nameof(count));
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
 
         CopyBlockToCore(source, destination, count, GetCopyBufferSize(source));
     }
@@ -38,10 +37,8 @@ public static class StreamExtensions
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(destination);
-        if (count < 0)
-            throw new ArgumentOutOfRangeException(nameof(count));
-        if (bufferSize <= 0)
-            throw new ArgumentOutOfRangeException(nameof(bufferSize));
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(bufferSize);
 
         CopyBlockToCore(source, destination, count, bufferSize);
     }
@@ -106,8 +103,7 @@ public static class StreamExtensions
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(destination);
-        if (count < 0)
-            throw new ArgumentOutOfRangeException(nameof(count));
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
 
         return CopyBlockToAsyncCore(
             source,
@@ -135,10 +131,8 @@ public static class StreamExtensions
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(destination);
-        if (count < 0)
-            throw new ArgumentOutOfRangeException(nameof(count));
-        if (bufferSize <= 0)
-            throw new ArgumentOutOfRangeException(nameof(bufferSize));
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(bufferSize);
 
         return CopyBlockToAsyncCore(source, destination, count, bufferSize, cancellationToken);
     }
@@ -165,7 +159,7 @@ public static class StreamExtensions
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                int bytesToRead = (int)(Math.Min(bufferSize, count));
+                int bytesToRead = (int)Math.Min(bufferSize, count);
                 int bytesRead = await
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
                     source.ReadAsync(buffer.AsMemory(0, bytesToRead), cancellationToken)

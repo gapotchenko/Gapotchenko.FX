@@ -1,11 +1,6 @@
-﻿using System.Diagnostics;
+﻿using Gapotchenko.FX;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
-
-#if NET8_0_OR_GREATER
-using static System.ArgumentOutOfRangeException;
-#else
-using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
-#endif
 
 namespace Gapotchenko.FX.Collections.Utils;
 
@@ -57,7 +52,7 @@ static class HashHelpers
 
     public static int GetPrime(int min)
     {
-        ThrowIfNegative(min);
+        ArgumentOutOfRangeException.ThrowIfNegative(min);
 
         foreach (int prime in Primes)
         {

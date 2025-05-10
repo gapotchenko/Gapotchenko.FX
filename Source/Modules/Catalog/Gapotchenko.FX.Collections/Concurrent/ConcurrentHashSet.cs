@@ -10,13 +10,6 @@ using Gapotchenko.FX.Threading;
 using System.Collections;
 using System.Diagnostics;
 
-#if NET8_0_OR_GREATER
-using static System.ArgumentNullException;
-using static System.ArgumentOutOfRangeException;
-#else
-using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
-#endif
-
 namespace Gapotchenko.FX.Collections.Concurrent;
 
 /// <summary>
@@ -183,7 +176,7 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
     public ConcurrentHashSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
         : this(comparer)
     {
-        ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(collection);
 
         InitializeFromCollection(collection);
     }
@@ -211,7 +204,7 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
     public ConcurrentHashSet(int concurrencyLevel, IEnumerable<T> collection, IEqualityComparer<T>? comparer) :
         this(concurrencyLevel, DefaultCapacity, false, comparer)
     {
-        ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(collection);
 
         InitializeFromCollection(collection);
     }
@@ -241,8 +234,8 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
 
     ConcurrentHashSet(int concurrencyLevel, int capacity, bool growLockArray, IEqualityComparer<T>? comparer)
     {
-        ThrowIfLessThan(concurrencyLevel, 1);
-        ThrowIfNegative(capacity);
+        ArgumentOutOfRangeException.ThrowIfLessThan(concurrencyLevel, 1);
+        ArgumentOutOfRangeException.ThrowIfNegative(capacity);
 
         // The capacity should be at least as large as the concurrency level. Otherwise, we would have locks that don't guard
         // any buckets.
@@ -409,8 +402,8 @@ public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T
 
     void ICollection<T>.CopyTo(T[] array, int arrayIndex)
     {
-        ThrowIfNull(array);
-        ThrowIfNegative(arrayIndex);
+        ArgumentNullException.ThrowIfNull(array);
+        ArgumentOutOfRangeException.ThrowIfNegative(arrayIndex);
 
         var locksAcquired = 0;
         try
