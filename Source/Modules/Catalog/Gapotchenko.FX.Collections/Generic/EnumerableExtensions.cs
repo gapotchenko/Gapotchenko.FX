@@ -6,6 +6,8 @@
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class EnumerableExtensions
 {
+    #region ToAssociativeArray
+
     /// <summary>
     /// Creates an <see cref="AssociativeArray{TKey, TValue}"/> from an <see cref="IEnumerable{T}"/>
     /// according to a specified key selector function and key comparer.
@@ -72,4 +74,6 @@ public static class EnumerableExtensions
 
         return associativeArray;
     }
+
+    #endregion
 }

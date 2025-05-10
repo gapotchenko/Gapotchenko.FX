@@ -14,9 +14,7 @@ public static class DictionaryExtensions
     /// </summary>
     /// <param name="value">The dictionary to test.</param>
     /// <returns><see langword="true"/> if the <paramref name="value"/> parameter is null or an empty dictionary; otherwise, <see langword="false"/>.</returns>
-#if DEBUG
     [Obsolete("Use 'dictionary?.Length is not > 0' expression instead.")]
-#endif
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool IsNullOrEmpty(
         [NotNullWhen(false)]
