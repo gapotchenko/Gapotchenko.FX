@@ -7,10 +7,10 @@
 namespace Gapotchenko.FX.Math.Graphs;
 
 /// <summary>
-/// Provides topological sort extension methods.
+/// Provides extension methods for <see cref="IEnumerable{T}"/>.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public static class TopologicalSortExtensions
+public static class EnumerableExtensions
 {
     /// <summary>
     /// <para>
