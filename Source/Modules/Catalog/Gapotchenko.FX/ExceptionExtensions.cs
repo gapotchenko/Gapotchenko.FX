@@ -76,9 +76,6 @@ public static class ExceptionExtensions
 
     static bool AnyAndAll<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
     {
-        ArgumentNullException.ThrowIfNull(source);
-        ArgumentNullException.ThrowIfNull(predicate);
-
         using var enumerator = source.GetEnumerator();
 
         if (!enumerator.MoveNext())

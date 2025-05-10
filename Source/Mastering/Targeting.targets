@@ -1,7 +1,7 @@
 ﻿<Project>
 
   <PropertyGroup Condition=" '$(MasteringProjectKind)' == 'module' OR '$(MasteringProjectKind)' == 'profile' ">
-    <TargetFrameworks Condition=" '$(TargetPlatforms)' == 'any;windows' ">$(TargetFrameworks);net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows;net9.0-windows</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(TargetPlatforms)' == 'any;windows' ">$(TargetFrameworks);net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
   </PropertyGroup>
 
   <Target Name="ConfigureLangTargeting"
