@@ -11,7 +11,7 @@ public static class ExceptionExtensions
     /// </summary>
     /// <remarks>
     /// There is a predefined set of such exceptions:
-    /// <see cref="ThreadInterruptedException"/>, <see cref="ThreadAbortException"/>, <see cref="TaskCanceledException"/> and
+    /// <see cref="ThreadInterruptedException"/>, <see cref="ThreadAbortException"/>, <see cref="TaskCanceledException"/>,
     /// <see cref="OperationCanceledException"/>.
     /// </remarks>
     /// <param name="exception">The exception.</param>
@@ -40,9 +40,7 @@ public static class ExceptionExtensions
     /// There is a predefined set of such exceptions:
     /// all the cancellation exceptions reported by <see cref="IsCancellationException(Exception)"/>, and
     /// <see cref="StackOverflowException"/>.
-    /// </para>
-    /// <para>
-    /// The list can be semantically extended by deriving a custom exception from <see cref="IControlFlowException"/>.
+    /// This list can be semantically extended by deriving a custom exception from <see cref="IControlFlowException"/>.
     /// </para>
     /// </remarks>
     /// <param name="exception">The exception.</param>

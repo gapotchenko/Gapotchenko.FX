@@ -48,9 +48,6 @@ public class BitReader : BinaryReader
         m_BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
     }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IBitConverter m_BitConverter;
-
     /// <summary>
     /// Gets or sets the current bit converter.
     /// </summary>
@@ -61,36 +58,6 @@ public class BitReader : BinaryReader
         set => m_BitConverter = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    readonly byte[] m_Buffer = new byte[16];
-
-    void _FillBuffer(int count)
-    {
-        var stream = BaseStream;
-        if (stream == null)
-            throw new ObjectDisposedException(null);
-
-        if (count == 1)
-        {
-            int b = stream.ReadByte();
-            if (b == -1)
-                throw new EndOfStreamException();
-            m_Buffer[0] = (byte)b;
-        }
-        else
-        {
-            int offset = 0;
-            do
-            {
-                int readBytes = stream.Read(m_Buffer, offset, count - offset);
-                if (readBytes == 0)
-                    throw new EndOfStreamException();
-                offset += readBytes;
-            }
-            while (offset < count);
-        }
-    }
-
     /// <summary>
     /// Reads a 2-byte signed integer from the current stream and advances the current position of the stream by two bytes.
     /// </summary>
@@ -99,8 +66,9 @@ public class BitReader : BinaryReader
     /// </returns>
     public override short ReadInt16()
     {
-        _FillBuffer(2);
-        return m_BitConverter.ToInt16(m_Buffer);
+        Span<byte> buffer = stackalloc byte[2];
+        BaseStream.ReadExactly(buffer);
+        return m_BitConverter.ToInt16(buffer);
     }
 
     /// <summary>
@@ -112,16 +80,18 @@ public class BitReader : BinaryReader
     [CLSCompliant(false)]
     public override ushort ReadUInt16()
     {
-        _FillBuffer(2);
-        return m_BitConverter.ToUInt16(m_Buffer);
+        Span<byte> buffer = stackalloc byte[2];
+        BaseStream.ReadExactly(buffer);
+        return m_BitConverter.ToUInt16(buffer);
     }
 
     /// <summary>Reads a 4-byte signed integer from the current stream and advances the current position of the stream by four bytes.</summary>
     /// <returns>A 4-byte signed integer read from the current stream.</returns>
     public override int ReadInt32()
     {
-        _FillBuffer(4);
-        return m_BitConverter.ToInt32(m_Buffer);
+        Span<byte> buffer = stackalloc byte[4];
+        BaseStream.ReadExactly(buffer);
+        return m_BitConverter.ToInt32(buffer);
     }
 
     /// <summary>
@@ -133,8 +103,9 @@ public class BitReader : BinaryReader
     [CLSCompliant(false)]
     public override uint ReadUInt32()
     {
-        _FillBuffer(4);
-        return m_BitConverter.ToUInt32(m_Buffer);
+        Span<byte> buffer = stackalloc byte[4];
+        BaseStream.ReadExactly(buffer);
+        return m_BitConverter.ToUInt32(buffer);
     }
 
     /// <summary>
@@ -145,8 +116,9 @@ public class BitReader : BinaryReader
     /// </returns>
     public override long ReadInt64()
     {
-        _FillBuffer(8);
-        return m_BitConverter.ToInt64(m_Buffer);
+        Span<byte> buffer = stackalloc byte[8];
+        BaseStream.ReadExactly(buffer);
+        return m_BitConverter.ToInt64(buffer);
     }
 
     /// <summary>
@@ -158,8 +130,9 @@ public class BitReader : BinaryReader
     [CLSCompliant(false)]
     public override ulong ReadUInt64()
     {
-        _FillBuffer(8);
-        return m_BitConverter.ToUInt64(m_Buffer);
+        Span<byte> buffer = stackalloc byte[8];
+        BaseStream.ReadExactly(buffer);
+        return m_BitConverter.ToUInt64(buffer);
     }
 
     /// <summary>
@@ -170,8 +143,9 @@ public class BitReader : BinaryReader
     /// </returns>
     public override float ReadSingle()
     {
-        _FillBuffer(4);
-        return m_BitConverter.ToSingle(m_Buffer);
+        Span<byte> buffer = stackalloc byte[4];
+        BaseStream.ReadExactly(buffer);
+        return m_BitConverter.ToSingle(buffer);
     }
 
     /// <summary>
@@ -182,8 +156,9 @@ public class BitReader : BinaryReader
     /// </returns>
     public override double ReadDouble()
     {
-        _FillBuffer(8);
-        return m_BitConverter.ToDouble(m_Buffer);
+        Span<byte> buffer = stackalloc byte[8];
+        BaseStream.ReadExactly(buffer);
+        return m_BitConverter.ToDouble(buffer);
     }
 
     /// <summary>
@@ -194,7 +169,11 @@ public class BitReader : BinaryReader
     /// </returns>
     public override decimal ReadDecimal()
     {
-        _FillBuffer(16);
-        return m_BitConverter.ToDecimal(m_Buffer);
+        Span<byte> buffer = stackalloc byte[16];
+        BaseStream.ReadExactly(buffer);
+        return m_BitConverter.ToDecimal(buffer);
     }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IBitConverter m_BitConverter;
 }
