@@ -7,9 +7,6 @@
     <NoWarn>$(NoWarn),SYSLIB1054</NoWarn>
     <NoWarn>$(NoWarn),NU1510</NoWarn>
     <WarningsAsErrors>$(WarningsAsErrors),CA2241</WarningsAsErrors>
-
-    <!-- Exception throw helpers -->
-    <NoWarn>$(NoWarn),CA1511</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(MasteringProjectKind)' != 'utility' ">

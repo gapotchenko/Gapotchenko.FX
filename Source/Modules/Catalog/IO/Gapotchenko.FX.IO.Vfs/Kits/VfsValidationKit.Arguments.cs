@@ -29,8 +29,7 @@ partial class VfsValidationKit
             [NotNull] string? path,
             [CallerArgumentExpression(nameof(path))] string? argumentName = null)
         {
-            if (path is null)
-                throw new ArgumentNullException(argumentName);
+            ArgumentNullException.ThrowIfNull(path, argumentName);
             if (path.Length == 0)
                 throw new ArgumentException(Resources.PathIsEmpty, argumentName);
         }
@@ -45,8 +44,7 @@ partial class VfsValidationKit
             [NotNull] string? searchPattern,
             [CallerArgumentExpression(nameof(searchPattern))] string? argumentName = null)
         {
-            if (searchPattern is null)
-                throw new ArgumentNullException(argumentName);
+            ArgumentNullException.ThrowIfNull(searchPattern, argumentName);
         }
 
         /// <summary>
@@ -73,8 +71,7 @@ partial class VfsValidationKit
             EnumerationOptions enumerationOptions,
             [CallerArgumentExpression(nameof(enumerationOptions))] string? argumentName = null)
         {
-            if (enumerationOptions is null)
-                throw new ArgumentNullException(argumentName);
+            ArgumentNullException.ThrowIfNull(enumerationOptions, argumentName);
         }
 
         /// <summary>

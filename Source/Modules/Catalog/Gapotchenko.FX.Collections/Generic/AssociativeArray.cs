@@ -811,8 +811,10 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         State m_State;
 
+#pragma warning disable IDE0032 // Use auto property
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         T? m_Current;
+#pragma warning restore IDE0032 // Use auto property
 
         public T Current => m_Current!;
 

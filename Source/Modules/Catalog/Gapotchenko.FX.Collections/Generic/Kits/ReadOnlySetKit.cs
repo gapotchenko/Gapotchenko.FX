@@ -60,7 +60,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
 
         if (count == 0)
         {
-            if (other.TryGetNonEnumeratedCount(out var otherCount))
+            if (other.TryGetNonEnumeratedCount(out int otherCount))
                 return otherCount > 0;
             else
                 return other.Any();
@@ -106,7 +106,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         if (count == 0)
             return false;
 
-        if (other.TryGetNonEnumeratedCount(out var otherCount) && otherCount == 0)
+        if (other.TryGetNonEnumeratedCount(out int otherCount) && otherCount == 0)
             return true;
 
         switch (other)
@@ -174,7 +174,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         if (other == this)
             return true;
 
-        if (other.TryGetNonEnumeratedCount(out var otherCount) && otherCount == 0)
+        if (other.TryGetNonEnumeratedCount(out int otherCount) && otherCount == 0)
             return true;
 
         switch (other)
@@ -200,7 +200,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
 
         if (Count == 0)
             return false;
-        if (other.TryGetNonEnumeratedCount(out var otherCount) && otherCount == 0)
+        if (other.TryGetNonEnumeratedCount(out int otherCount) && otherCount == 0)
             return false;
 
         foreach (var i in other)
@@ -222,7 +222,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
 
         int expectedCount = Count;
 
-        if (other.TryGetNonEnumeratedCount(out var count))
+        if (other.TryGetNonEnumeratedCount(out int count))
         {
             return count == expectedCount && ContainsAllElements(other);
         }
