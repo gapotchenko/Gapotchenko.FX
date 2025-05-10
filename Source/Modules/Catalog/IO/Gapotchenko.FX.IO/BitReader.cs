@@ -62,7 +62,7 @@ public class BitReader : BinaryReader
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    byte[] m_Buffer = new byte[16];
+    readonly byte[] m_Buffer = new byte[16];
 
     void _FillBuffer(int count)
     {

@@ -114,12 +114,12 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
             case ReadOnlySetKit<T> readOnlySetKit when readOnlySetKit.Comparer.Equals(Comparer):
                 if (readOnlySetKit.Count >= count)
                     return false;
-                return ContainsAllElements(readOnlySetKit);
+                return ContainsAllElementsOf(readOnlySetKit);
 
             case HashSet<T> hashSet when hashSet.Comparer.Equals(Comparer):
                 if (hashSet.Count >= count)
                     return false;
-                return ContainsAllElements(hashSet);
+                return ContainsAllElementsOf(hashSet);
 
             default:
                 var (presenceCount, absence) = CalculateInclusivityOf(other, true);
@@ -190,7 +190,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
                 break;
         }
 
-        return ContainsAllElements(other);
+        return ContainsAllElementsOf(other);
     }
 
     /// <inheritdoc/>
@@ -224,7 +224,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
 
         if (other.TryGetNonEnumeratedCount(out int count))
         {
-            return count == expectedCount && ContainsAllElements(other);
+            return count == expectedCount && ContainsAllElementsOf(other);
         }
         else
         {
@@ -271,7 +271,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         return (presence.Count, absence);
     }
 
-    bool ContainsAllElements(IEnumerable<T> other)
+    bool ContainsAllElementsOf(IEnumerable<T> other)
     {
         foreach (var i in other)
         {

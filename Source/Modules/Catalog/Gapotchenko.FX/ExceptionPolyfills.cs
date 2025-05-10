@@ -11,6 +11,7 @@
 #endif
 
 using Gapotchenko.FX.Properties;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 #pragma warning disable CA1708 // Identifiers should differ by more than case
@@ -38,6 +39,7 @@ public static class ExceptionPolyfills
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="argument"/> is <see langword="null"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -58,6 +60,7 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
         /// <exception cref="ArgumentNullException"><paramref name="argument"/> is <see langword="null"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -87,6 +90,7 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is zero.</exception>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -102,6 +106,7 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfZero(int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -132,6 +137,7 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is negative.</exception>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -147,6 +153,7 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfNegative(int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -177,6 +184,7 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is negative or zero.</exception>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -192,6 +200,7 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfNegativeOrZero(int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -223,6 +232,7 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is greater than <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -238,6 +248,7 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfGreaterThan(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -269,6 +280,7 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is greater than or equal to <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -284,6 +296,7 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfGreaterThanOrEqual(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -315,6 +328,7 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is less than <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -330,6 +344,7 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfLessThan(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -361,6 +376,7 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is less than or equal to <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -376,6 +392,7 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfLessThanOrEqual(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -407,6 +424,7 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is equal to <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -422,6 +440,7 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfEqual(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -453,6 +472,7 @@ public static class ExceptionPolyfills
         /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is equal to <paramref name="other"/>.</exception>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -468,6 +488,7 @@ public static class ExceptionPolyfills
 
         /// <inheritdoc cref="ThrowIfNotEqual(int, int, string?)"/>
 #if TFF_EXCEPTION_THROWIF
+        [StackTraceHidden]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
