@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 

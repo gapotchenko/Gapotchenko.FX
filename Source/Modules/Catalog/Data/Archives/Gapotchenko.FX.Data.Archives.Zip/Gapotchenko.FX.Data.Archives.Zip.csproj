@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <PackageDescription>Provides functionality for reading, creation and modification of ZIP archives.</PackageDescription>
-    <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
 
   <ItemGroup>

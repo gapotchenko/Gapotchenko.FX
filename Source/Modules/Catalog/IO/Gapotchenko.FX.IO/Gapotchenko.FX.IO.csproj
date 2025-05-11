@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
     <TargetPlatforms>any;windows</TargetPlatforms>
   </PropertyGroup>
 

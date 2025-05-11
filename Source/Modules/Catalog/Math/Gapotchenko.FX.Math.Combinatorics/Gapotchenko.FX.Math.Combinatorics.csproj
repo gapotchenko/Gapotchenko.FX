@@ -1,9 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
-  </PropertyGroup>
-  
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Combinatorics.Permutations" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Combinatorics.CartesianProduct" />

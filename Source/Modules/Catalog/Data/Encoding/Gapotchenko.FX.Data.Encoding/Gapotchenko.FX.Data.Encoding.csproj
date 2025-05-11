@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
     <PackageDescription>Provides a quasi-universal framework for data encodings. Supports both synchronous and asynchronous data processing models, including the iterative transcoding.</PackageDescription>
   </PropertyGroup>
 

@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <PackageDescription>Provides a quasi-universal framework for data archival and compression.</PackageDescription>
-    <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
 
   <ItemGroup>
