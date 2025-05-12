@@ -82,4 +82,44 @@ partial class SemanticVersionTests
     }
 
     #endregion
+
+    #region TryParse
+
+    [TestMethod]
+    [DynamicData(nameof(SemanticVersion_Parse_TestData_ValidInputs))]
+    public void SemanticVersion_TryParse_ValidInput(string input)
+    {
+        var version = SemanticVersion_TryParse_ProcessesInput(input);
+        Assert.AreEqual(new SemanticVersion(input), version);
+    }
+
+    static SemanticVersion SemanticVersion_TryParse_ProcessesInput(string input)
+    {
+        var version = SemanticVersion.TryParse(input);
+        Assert.IsNotNull(version);
+
+        Assert.IsTrue(SemanticVersion.TryParse(input, out var anotherVersion));
+        Assert.IsNotNull(anotherVersion);
+        Assert.AreEqual(version, anotherVersion);
+
+        return version;
+    }
+
+    [TestMethod]
+    [DynamicData(nameof(SemanticVersion_Parse_TestData_InvalidInputs))]
+    public void SemanticVersion_TryParse_InvalidInput(string input) => SemanticVersion_TryParse_FailsOnInput(input);
+
+    [TestMethod]
+    public void SemanticVersion_TryParse_NullInput() => SemanticVersion_TryParse_FailsOnInput(null);
+
+    static void SemanticVersion_TryParse_FailsOnInput(string? input)
+    {
+        var version = SemanticVersion.TryParse(input);
+        Assert.IsNull(version);
+
+        Assert.IsFalse(SemanticVersion.TryParse(input, out version));
+        Assert.IsNull(version);
+    }
+
+    #endregion
 }

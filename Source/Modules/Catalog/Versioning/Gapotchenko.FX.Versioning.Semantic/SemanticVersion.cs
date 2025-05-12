@@ -10,7 +10,7 @@ using System.Text;
 namespace Gapotchenko.FX.Versioning;
 
 /// <summary>
-/// Represents semantic version.
+/// Represents a semantic version.
 /// </summary>
 [Serializable]
 [ImmutableObject(true)]
