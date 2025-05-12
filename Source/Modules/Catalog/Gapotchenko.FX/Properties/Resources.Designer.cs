@@ -61,6 +61,24 @@ namespace Gapotchenko.FX.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The value cannot be an empty string or composed entirely of whitespace..
+        /// </summary>
+        internal static string Argument_EmptyOrWhiteSpaceString {
+            get {
+                return ResourceManager.GetString("Argument_EmptyOrWhiteSpaceString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value cannot be an empty string..
+        /// </summary>
+        internal static string Argument_EmptyString {
+            get {
+                return ResourceManager.GetString("Argument_EmptyString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value cannot be empty..
         /// </summary>
         internal static string Argument_EmptyValue {

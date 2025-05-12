@@ -13,14 +13,14 @@
     <WarningsAsErrors>$(WarningsAsErrors),CA1309,CA1310,CA2248</WarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(MasteringProjectKind)' == 'module' ">
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
-
   <!-- C# -->
   <PropertyGroup>
     <NoWarn>$(NoWarn),CS0728,CS8524,CS9107</NoWarn>
     <WarningsAsErrors>$(WarningsAsErrors),CS8509</WarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(MasteringProjectKind)' == 'module' ">
+    <AnalysisMode>recommended</AnalysisMode>
   </PropertyGroup>
 
 </Project>

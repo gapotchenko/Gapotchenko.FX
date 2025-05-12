@@ -15,7 +15,7 @@ Release date: not released yet
     - Added `Contains`, `ContainsAny`, `SequenceEqual`, `StartsWith` and `EndsWith` polyfill methods for `ReadOnlySpan<T>` and `Span<T>` types
     - Added `Path.EndsInDirectorySeparator(string?)` and `Path.EndsInDirectorySeparator(ReadOnlySpan<char>)` polyfill methods
     - `Stream.ReadExactly` and `Stream.ReadAtLeast` polyfill methods provided by the `Gapotchenko.FX.IO` module are now available for all supported target frameworks
-    - Implemented polyfill `ThrowIf...` methods for `ArgumentNullException`, `ArgumentOutOfRangeException` and `ObjectDisposedException` classes
+    - Implemented polyfill `ThrowIf...` methods for `ArgumentException`, `ArgumentNullException`, `ArgumentOutOfRangeException` and `ObjectDisposedException` classes
     - Added `StringBuilder.Append(ReadOnlySpan<char>)` polyfill method
 - Fixed issues:
     - Fixed issue that led to an empty string value returned by `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
