@@ -1,6 +1,7 @@
 ﻿<Project>
 
   <PropertyGroup>
+    <MasteringDir>$(MSBuildThisFileDirectory)</MasteringDir>
     <MasteringProjectModulePrefix>Gapotchenko.FX</MasteringProjectModulePrefix>
   </PropertyGroup>
 
@@ -10,10 +11,6 @@
   <Import Project="Product.props" />
 
   <!-- =================================================================== -->
-
-  <PropertyGroup>
-    <MasteringDir>$(MSBuildThisFileDirectory)</MasteringDir>
-  </PropertyGroup>
 
   <PropertyGroup>
     <Deterministic>true</Deterministic>
