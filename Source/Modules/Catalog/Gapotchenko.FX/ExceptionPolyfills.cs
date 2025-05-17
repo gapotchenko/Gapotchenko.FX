@@ -1,6 +1,6 @@
 ﻿// Gapotchenko.FX
-// Copyright © Gapotchenko and Contributors
 //
+// Copyright © Gapotchenko and Contributors
 // Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -15,7 +15,7 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX;
 
 /// <summary>
-/// Provides polyfill extension methods for classes provided by BCL and inherited from <see cref="Exception"/> class.
+/// Provides polyfill extension methods for BCL classes derived from <see cref="Exception"/>.
 /// </summary>
 [StackTraceHidden]
 [EditorBrowsable(EditorBrowsableState.Never)]
@@ -308,6 +308,22 @@ public static class ExceptionPolyfills
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        [CLSCompliant(false)]
+        public static void ThrowIfGreaterThan(uint value, uint other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+        {
+#if NET8_0_OR_GREATER
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, other, paramName);
+#else
+            if (value > other)
+                ThrowGreater(value, other, paramName);
+#endif
+        }
+
+        /// <inheritdoc cref="ThrowIfGreaterThan(int, int, string?)"/>
+#if NET8_0_OR_GREATER
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public static void ThrowIfGreaterThan(double value, double other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
         {
 #if NET8_0_OR_GREATER
@@ -340,6 +356,22 @@ public static class ExceptionPolyfills
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static void ThrowIfGreaterThanOrEqual(int value, int other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+        {
+#if NET8_0_OR_GREATER
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(value, other, paramName);
+#else
+            if (value >= other)
+                ThrowGreaterEqual(value, other, paramName);
+#endif
+        }
+
+        /// <inheritdoc cref="ThrowIfGreaterThanOrEqual(int, int, string?)"/>
+#if NET8_0_OR_GREATER
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [CLSCompliant(false)]
+        public static void ThrowIfGreaterThanOrEqual(uint value, uint other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
         {
 #if NET8_0_OR_GREATER
             ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(value, other, paramName);
@@ -400,6 +432,22 @@ public static class ExceptionPolyfills
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        [CLSCompliant(false)]
+        public static void ThrowIfLessThan(uint value, uint other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+        {
+#if NET8_0_OR_GREATER
+            ArgumentOutOfRangeException.ThrowIfLessThan(value, other, paramName);
+#else
+            if (value < other)
+                ThrowLess(value, other, paramName);
+#endif
+        }
+
+        /// <inheritdoc cref="ThrowIfLessThan(int, int, string?)"/>
+#if NET8_0_OR_GREATER
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public static void ThrowIfLessThan(double value, double other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
         {
 #if NET8_0_OR_GREATER
@@ -432,6 +480,22 @@ public static class ExceptionPolyfills
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static void ThrowIfLessThanOrEqual(int value, int other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+        {
+#if NET8_0_OR_GREATER
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(value, other, paramName);
+#else
+            if (value <= other)
+                ThrowLessEqual(value, other, paramName);
+#endif
+        }
+
+        /// <inheritdoc cref="ThrowIfLessThanOrEqual(int, int, string?)"/>
+#if NET8_0_OR_GREATER
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [CLSCompliant(false)]
+        public static void ThrowIfLessThanOrEqual(uint value, uint other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
         {
 #if NET8_0_OR_GREATER
             ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(value, other, paramName);
