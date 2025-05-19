@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -13,7 +14,7 @@ partial class ZipArchive
         CreateView(archive, false);
 
     /// <summary>
-    /// Creates a virtual file system view on the specified <see cref="System.IO.Compression.ZipArchive"/> backing store.
+    /// Creates a virtual file system view of the specified <see cref="System.IO.Compression.ZipArchive"/> backing store.
     /// </summary>
     /// <param name="archive">The <see cref="System.IO.Compression.ZipArchive"/> backing store to create the view for.</param>
     /// <param name="leaveOpen">
@@ -23,5 +24,5 @@ partial class ZipArchive
     /// </param>
     /// <returns>The instance implementing <see cref="IZipArchive"/> interface for <paramref name="archive"/> backing store.</returns>
     public static IZipArchiveView<System.IO.Compression.ZipArchive> CreateView(System.IO.Compression.ZipArchive archive, bool leaveOpen) =>
-        new ZipArchiveViewOnBcl(archive, leaveOpen);
+        new ZipArchiveViewOfBcl(archive, leaveOpen);
 }

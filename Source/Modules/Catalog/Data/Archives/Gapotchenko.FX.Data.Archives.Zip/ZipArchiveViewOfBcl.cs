@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -24,10 +25,10 @@ namespace Gapotchenko.FX.Data.Archives.Zip;
 /// <param name="archive">The <see cref="System.IO.Compression.ZipArchive"/> instance.</param>
 /// <param name="leaveOpen">
 /// <see langword="true"/> to leave the underlying <paramref name="archive"/> instance open
-/// after the created <see cref="ZipArchiveViewOnBcl"/> object is disposed;
+/// after the created <see cref="ZipArchiveViewOfBcl"/> object is disposed;
 /// otherwise, <see langword="false"/>.
 /// </param>
-sealed class ZipArchiveViewOnBcl(System.IO.Compression.ZipArchive archive, bool leaveOpen) :
+sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool leaveOpen) :
     ZipArchiveBase,
     IZipArchiveView<System.IO.Compression.ZipArchive>
 {

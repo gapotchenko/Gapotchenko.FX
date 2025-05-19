@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.IO.Vfs;
 public interface IVfsFileFormat : IVfsFormat
 {
     /// <summary>
-    /// Gets the list of file extensions that are typically used to store the data in this format.
+    /// Gets the list of file extensions that are typically represent the data in this format.
     /// </summary>
     IReadOnlyList<string> FileExtensions { get; }
 }

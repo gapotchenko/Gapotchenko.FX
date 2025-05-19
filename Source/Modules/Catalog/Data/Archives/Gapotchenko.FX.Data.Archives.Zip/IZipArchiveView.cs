@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -7,7 +8,7 @@
 namespace Gapotchenko.FX.Data.Archives.Zip;
 
 /// <summary>
-/// Represents a ZIP data archive view on <typeparamref name="T"/> backing store.
+/// Represents a ZIP data archive view that uses <typeparamref name="T"/> as a backing store.
 /// </summary>
 /// <typeparam name="T">The type of the backing store.</typeparam>
 public interface IZipArchiveView<out T> : IZipArchive

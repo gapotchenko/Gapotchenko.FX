@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -12,7 +13,7 @@ namespace Gapotchenko.FX.IO.Vfs;
 public interface IVfsFormat
 {
     /// <summary>
-    /// Creates a new file system in the specified stream.
+    /// Creates a new file system in the specified data stream.
     /// The existing data in the stream, if any, will be overwritten.
     /// </summary>
     /// <remarks>
@@ -30,8 +31,7 @@ public interface IVfsFormat
 
     /// <summary>
     /// Mounts (opens) an existing file system
-    /// using the specified stream
-    /// and with the <see cref="IFileSystemView.CanWrite"/> property set as specified.
+    /// using the specified data stream.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -57,7 +57,7 @@ public interface IVfsFormat
     IVirtualFileSystem Mount(Stream stream, bool writable = false, bool leaveOpen = false, VfsOptions? options = null);
 
     /// <summary>
-    /// Determines whether the specified stream can be mounted using the current storage format.
+    /// Determines whether the specified data stream can be mounted using the current storage format.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <param name="options">The file system options.</param>
@@ -80,7 +80,7 @@ public interface IVfsFormat<out TVfs, TOptions> : IVfsFormat
     where TOptions : VfsOptions
 {
     /// <summary>
-    /// Creates a new <typeparamref name="TVfs"/> storage in the specified stream.
+    /// Creates a new <typeparamref name="TVfs"/> storage in the specified data stream.
     /// The existing data in the stream, if any, will be overwritten.
     /// </summary>
     /// <param name="stream"><inheritdoc/></param>
@@ -95,7 +95,7 @@ public interface IVfsFormat<out TVfs, TOptions> : IVfsFormat
 
     /// <summary>
     /// Mounts (opens) an existing <typeparamref name="TVfs"/> storage
-    /// using the specified stream.
+    /// using the specified data stream.
     /// </summary>
     /// <remarks>
     /// <para>

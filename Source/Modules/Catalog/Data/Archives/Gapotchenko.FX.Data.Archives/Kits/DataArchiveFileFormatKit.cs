@@ -1,11 +1,11 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
 using Gapotchenko.FX.IO.Vfs;
-using System.Diagnostics;
 
 namespace Gapotchenko.FX.Data.Archives.Kits;
 
@@ -20,10 +20,7 @@ public abstract class DataArchiveFileFormatKit<TArchive, TOptions> : IDataArchiv
     where TOptions : DataArchiveOptions
 {
     /// <inheritdoc/>
-    public IReadOnlyList<string> FileExtensions => m_CachedFileExtensions ??= GetFileExtensionsCore();
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IReadOnlyList<string>? m_CachedFileExtensions;
+    public IReadOnlyList<string> FileExtensions => field ??= GetFileExtensionsCore();
 
     /// <inheritdoc cref="FileExtensions"/>
     protected abstract IReadOnlyList<string> GetFileExtensionsCore();
@@ -83,6 +80,7 @@ public abstract class DataArchiveFileFormatKit<TArchive, TOptions> : IDataArchiv
             }
             catch (IOException) when (hasException)
             {
+                // Do not overshadow the existing exception.
             }
         }
     }
