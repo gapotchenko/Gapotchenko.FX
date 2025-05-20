@@ -18,6 +18,7 @@ Release date: not released yet
     - Implemented polyfill `ThrowIf...` methods for `ArgumentException`, `ArgumentNullException`, `ArgumentOutOfRangeException` and `ObjectDisposedException` classes
     - Added `StringBuilder.Append(ReadOnlySpan<char>)` polyfill method
     - Added `Array.Fill<T>(T[], T)` and `Array.Fill<T>(T[], T, int, int)` polyfill methods
+    - Added `Random.Shared` and `Random.Shuffle<T>(Span<T>)` polyfill members
 - Fixed issues:
     - Fixed issue that led to an empty string value returned by `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
     - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly having its own entry point

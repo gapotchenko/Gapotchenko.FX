@@ -1,4 +1,5 @@
 ﻿#region Usings
+using Gapotchenko.FX;
 using Gapotchenko.FX.AppModel;
 using Gapotchenko.FX.Data.Integrity.Checksum;
 using Gapotchenko.FX.Data.Encoding;
@@ -35,6 +36,8 @@ class Program
         {
             var mutex = new AsyncLock();
             var cv = new AsyncConditionVariable(mutex);
+
+            int[] arr = [1, 2, 3];
 
             ThreadPool.QueueUserWorkItem(
                 (_) =>
