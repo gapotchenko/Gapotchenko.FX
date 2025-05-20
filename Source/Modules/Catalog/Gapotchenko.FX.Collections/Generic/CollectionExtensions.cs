@@ -6,12 +6,12 @@
 public static class CollectionExtensions
 {
     /// <summary>
-    /// Adds the elements of the specified collection to the end of the target.
+    /// Adds the elements of the specified collection to the end of the target collection.
     /// </summary>
     /// <typeparam name="T">The type of the elements of collection.</typeparam>
     /// <param name="target">The collection where the elements should be added to.</param>
     /// <param name="collection">The collection whose elements should be added.</param>
-    public static void AddRange<T>(this ICollection<T> target, IEnumerable<T> collection)
+    public static void AddRange<T>(this ICollection<T> target, params IEnumerable<T> collection)
     {
         ArgumentNullException.ThrowIfNull(target);
         ArgumentNullException.ThrowIfNull(collection);
@@ -21,7 +21,7 @@ public static class CollectionExtensions
     }
 
     /// <summary>
-    /// Adds the elements of the specified collection to the end of the target.
+    /// Adds the elements of the specified collection to the end of the target collection.
     /// </summary>
     /// <typeparam name="T">The type of the elements of collection.</typeparam>
     /// <param name="target">The collection where the elements should be added to.</param>
