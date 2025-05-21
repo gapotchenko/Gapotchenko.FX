@@ -24,15 +24,6 @@ public sealed class SemanticVersionConverter : TypeConverter
     }
 
     /// <inheritdoc/>
-    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
-    {
-        if (destinationType == typeof(string))
-            return true;
-        else
-            return base.CanConvertTo(context, destinationType);
-    }
-
-    /// <inheritdoc/>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
         if (value is string s)
@@ -42,10 +33,23 @@ public sealed class SemanticVersionConverter : TypeConverter
     }
 
     /// <inheritdoc/>
+    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
+    {
+        if (destinationType == typeof(string))
+            return true;
+        else if (destinationType == typeof(Version))
+            return true;
+        else
+            return base.CanConvertTo(context, destinationType);
+    }
+
+    /// <inheritdoc/>
     public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
     {
         if (destinationType == typeof(string))
             return ((SemanticVersion?)value)?.ToString();
+        else if (destinationType == typeof(Version))
+            return (Version?)value;
         else
             return base.ConvertTo(context, culture, value, destinationType);
     }

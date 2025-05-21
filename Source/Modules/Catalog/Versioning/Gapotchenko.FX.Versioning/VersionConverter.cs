@@ -23,21 +23,21 @@ public sealed class VersionConverter : TypeConverter
     }
 
     /// <inheritdoc/>
-    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
-    {
-        if (destinationType == typeof(string))
-            return true;
-        else
-            return base.CanConvertTo(context, destinationType);
-    }
-
-    /// <inheritdoc/>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
         if (value is string s)
             return Version.Parse(s);
         else
             return base.ConvertFrom(context, culture, value);
+    }
+
+    /// <inheritdoc/>
+    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
+    {
+        if (destinationType == typeof(string))
+            return true;
+        else
+            return base.CanConvertTo(context, destinationType);
     }
 
     /// <inheritdoc/>
@@ -55,7 +55,7 @@ public sealed class VersionConverter : TypeConverter
     public static void Register()
     {
         var type = typeof(Version);
-        if (TypeDescriptor.GetConverter(type).GetType() == typeof(TypeConverter))
-            TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(typeof(VersionConverter)));
+        if (TypeDescriptor.GetConverter(type).GetType() == typeof(TypeConverter)) // if no other converter is installed for the type,
+            TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(typeof(VersionConverter))); // install this converter.
     }
 }
