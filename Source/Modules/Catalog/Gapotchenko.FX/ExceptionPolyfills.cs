@@ -118,6 +118,10 @@ public static class ExceptionPolyfills
 #endif
         }
 
+#if DEBUG
+        // 2025.05.21:
+        // The presence of the extension method below currently causes CS0570 error in consuming C# projects.
+
         /// <summary>
         /// Throws an <see cref="ArgumentNullException"/> if <paramref name="argument"/> is <see langword="null"/>.
         /// </summary>
@@ -138,6 +142,7 @@ public static class ExceptionPolyfills
                 throw new ArgumentNullException(paramName);
 #endif
         }
+#endif
     }
 
     /// <summary>
