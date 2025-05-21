@@ -48,20 +48,17 @@ partial class EnumerableEx
         if (value <= 0)
             return true;
 
-        if (TryGetNonEnumeratedCount(source, out var optimizedCount))
+        if (TryGetNonEnumeratedCount(source, out int optimizedCount))
             return optimizedCount >= value;
 
         using var enumerator = source.GetEnumerator();
 
         int count = 0;
-        checked
+        while (enumerator.MoveNext())
         {
-            while (enumerator.MoveNext())
-            {
-                ++count;
-                if (count >= value)
-                    return true;
-            }
+            checked { ++count; }
+            if (count >= value)
+                return true;
         }
 
         return false;
@@ -88,7 +85,7 @@ partial class EnumerableEx
         IEnumerable<TSource> source,
         out int count)
     {
-        var result = TryGetNonEnumeratedCount(source);
+        int? result = TryGetNonEnumeratedCount(source);
         count = result.GetValueOrDefault();
         return result.HasValue;
     }
@@ -109,13 +106,15 @@ partial class EnumerableEx
             {
                 null => throw new ArgumentNullException(nameof(source)),
                 IReadOnlyCollection<TSource> roc => roc.Count,
+#if !(TFF_ENUMERABLE_TRYGETNONENUMERATEDCOUNT && NET10_0_OR_GREATER)
                 ICollection<TSource> c => c.Count,
                 ICollection c => c.Count,
+#endif
                 _ => null
             };
 
 #if TFF_ENUMERABLE_TRYGETNONENUMERATEDCOUNT
-        if (count == null && source.TryGetNonEnumeratedCount(out var n))
+        if (count is null && source.TryGetNonEnumeratedCount(out int n))
             count = n;
 #endif
 

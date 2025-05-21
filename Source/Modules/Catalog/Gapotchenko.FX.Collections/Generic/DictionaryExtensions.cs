@@ -28,7 +28,7 @@ public static class DictionaryExtensions
         IDictionary<TKey, TValue> dictionary,
         TKey key,
         TValue value)
-#if !TFF_DICTIONARY_NULL_KEY
+#if !TFF_IDICTIONARY_NULL_KEY
         where TKey : notnull
 #endif
     {
@@ -71,7 +71,7 @@ public static class DictionaryExtensions
         IDictionary<TKey, TValue> dictionary,
         TKey key,
         [MaybeNullWhen(false)] out TValue value)
-#if !TFF_DICTIONARY_NULL_KEY
+#if !TFF_IDICTIONARY_NULL_KEY
         where TKey : notnull
 #endif
     {
