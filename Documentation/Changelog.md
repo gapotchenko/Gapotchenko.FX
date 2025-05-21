@@ -19,11 +19,12 @@ Release date: not released yet
     - Added `StringBuilder.Append(ReadOnlySpan<char>)` polyfill method
     - Added `Array.Fill<T>(T[], T)` and `Array.Fill<T>(T[], T, int, int)` polyfill methods
     - Added `Random.Shared` and `Random.Shuffle<T>(Span<T>)` polyfill members
+    - Added `Shuffle` polyfill method for `IEnumerable<T>` type
 - Fixed issues:
     - Fixed issue that led to an empty string value returned by `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
-    - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly having its own entry point
+    - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with its own entry point
     - Fixed issue that led to an empty string value returned by `AppInformation.Trademark` property instead of a `null` value
-    - Fixed potential vulnerabilities that could be targeted by [WorstFit Attack](https://worst.fit/); applies to Windows OS only
+    - Fixed P/Invoke issues that could be potentially targeted by [WorstFit Attack](https://worst.fit/) vulnerability (applies to Windows OS only)
 
 ## 2024
 
@@ -61,8 +62,8 @@ Release date: November 10, 2024
 - Added ability to retrieve connected components of a graph by using `Graph<T>.ConnectedComponents` property
 - Added ability to supply an additional cancellation token to `Gapotchenko.FX.Threading.Tasks.TaskBridge.Execute` method
 - Added a functional facility that implements a [pipe operator](https://github.com/dotnet/csharplang/discussions/96) concept.
-  The facility is provided in the form of `PipeOperator` extension method that resides in `Gapotchenko.FX.Linq.Operators` namespace provided by `Gapotchenko.FX.Linq` module.
-  It allows you to have a pipe operator functionality in .NET languages that do not natively provide pipe operators
+  The facility is provided in the form of `PipeTo` extension method that resides in `Gapotchenko.FX.Linq.Operators` namespace provided by `Gapotchenko.FX.Linq` module.
+  It allows you to have a pipe operator functionality in .NET languages that do not natively provide pipe operators yet
 - Use hardware-accelerated CRC-32C checksum algorithm implementation when it is available
 - Deprecated `Gapotchenko.FX.Math.Topology` module in favor of a formalized `Gapotchenko.FX.Math.Graphs` module
 - Polyfills:
