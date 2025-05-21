@@ -25,6 +25,6 @@ partial record SemanticVersion : IEmptiable<SemanticVersion>
         m_Major is 0 &&
         m_Minor is 0 &&
         m_Patch is 0 &&
-        m_PreReleaseLabel is null &&
-        m_BuildLabel is null;
+        m_Prerelease is null &&
+        m_Build is null;
 }

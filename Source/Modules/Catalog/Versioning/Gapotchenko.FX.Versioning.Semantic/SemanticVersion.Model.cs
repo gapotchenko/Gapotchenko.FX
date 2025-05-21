@@ -25,9 +25,7 @@ partial record SemanticVersion
         /// <exception cref="ArgumentException"><paramref name="version"/> has an invalid format.</exception>
         public static Model Create(string version)
         {
-            ArgumentNullException.ThrowIfNull(version);
-            if (version.Length == 0)
-                throw new ArgumentException("Semantic version string cannot be empty.", nameof(version));
+            ArgumentException.ThrowIfNullOrEmpty(version);
 
             return
                 TryParseCore(version) ??
@@ -37,8 +35,8 @@ partial record SemanticVersion
         public int Major { get; init; }
         public int Minor { get; init; }
         public int Patch { get; init; }
-        public string? PreReleaseLabel { get; init; }
-        public string? BuildLabel { get; init; }
+        public string? Prerelease { get; init; }
+        public string? Build { get; init; }
     }
 
     /// <summary>
@@ -57,7 +55,7 @@ partial record SemanticVersion
         m_Major = model.Major;
         m_Minor = model.Minor;
         m_Patch = model.Patch;
-        m_PreReleaseLabel = model.PreReleaseLabel;
-        m_BuildLabel = model.BuildLabel;
+        m_Prerelease = model.Prerelease;
+        m_Build = model.Build;
     }
 }

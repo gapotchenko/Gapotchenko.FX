@@ -4,7 +4,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Versioning;
@@ -31,19 +30,45 @@ partial record SemanticVersion
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="SemanticVersion"/> record using the specified major, minor, patch, prerelease, and build values.
+    /// </summary>
+    /// <param name="major">The major version number.</param>
+    /// <param name="minor">The minor version number.</param>
+    /// <param name="patch">The patch number.</param>
+    /// <param name="prerelease">The prerelease label metadata.</param>
+    /// <param name="build">The build label metadata.</param>
+    /// <exception cref="ArgumentException"><paramref name="prerelease"/> has an invalid format.</exception>
+    /// <exception cref="ArgumentException"><paramref name="build"/> has an invalid format.</exception>
+    public SemanticVersion(int major, int minor, int patch, string? prerelease, string? build) :
+        this(major, minor, patch)
+    {
+        if (!string.IsNullOrEmpty(prerelease))
+        {
+            ValidateLabelMetadata(prerelease);
+            m_Prerelease = prerelease;
+        }
+
+        if (!string.IsNullOrEmpty(build))
+        {
+            ValidateLabelMetadata(build);
+            m_Build = build;
+        }
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="SemanticVersion"/> record using the specified major, minor, patch, and label values.
     /// </summary>
     /// <param name="major">The major version number.</param>
     /// <param name="minor">The minor version number.</param>
     /// <param name="patch">The patch number.</param>
-    /// <param name="label">The labels.</param>
+    /// <param name="label">The label.</param>
     /// <exception cref="ArgumentException"><paramref name="label"/> has an invalid format.</exception>
     public SemanticVersion(int major, int minor, int patch, string? label) :
         this(major, minor, patch)
     {
         if (!string.IsNullOrEmpty(label))
         {
-            if (!Parser.TryParseLabels(label, out m_PreReleaseLabel, out m_BuildLabel))
+            if (!Parser.TryParseLabel(label, out m_Prerelease, out m_Build))
                 throw new ArgumentException("The value has an invalid format.", nameof(label));
         }
     }
@@ -56,36 +81,13 @@ partial record SemanticVersion
     /// <param name="patch">The patch number.</param>
     public SemanticVersion(int major, int minor, int patch)
     {
-        if (major < 0)
-            throw new ArgumentOutOfRangeException(nameof(major), "Major component of semantic version cannot be negative.");
-        if (minor < 0)
-            throw new ArgumentOutOfRangeException(nameof(minor), "Minor component of semantic version cannot be negative.");
-        if (patch < 0)
-            throw new ArgumentOutOfRangeException(nameof(patch), "Patch component of semantic version cannot be negative.");
+        ArgumentOutOfRangeException.ThrowIfNegative(major);
+        ArgumentOutOfRangeException.ThrowIfNegative(minor);
+        ArgumentOutOfRangeException.ThrowIfNegative(patch);
 
         m_Major = major;
         m_Minor = minor;
         m_Patch = patch;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SemanticVersion"/> record using the specified major, minor, patch, pre-release label, and build label values.
-    /// </summary>
-    /// <param name="major">The major version number.</param>
-    /// <param name="minor">The minor version number.</param>
-    /// <param name="patch">The patch number.</param>
-    /// <param name="preReleaseLabel">The pre-release label.</param>
-    /// <param name="buildLabel">The build label.</param>
-    /// <exception cref="ArgumentException"><paramref name="preReleaseLabel"/> has an invalid format.</exception>
-    /// <exception cref="ArgumentException"><paramref name="buildLabel"/> has an invalid format.</exception>
-    public SemanticVersion(int major, int minor, int patch, string? preReleaseLabel, string? buildLabel) :
-        this(major, minor, patch)
-    {
-        if (!string.IsNullOrEmpty(preReleaseLabel))
-            m_PreReleaseLabel = VerifyLabel(preReleaseLabel);
-
-        if (!string.IsNullOrEmpty(buildLabel))
-            m_BuildLabel = VerifyLabel(buildLabel);
     }
 
     /// <summary>
@@ -100,14 +102,11 @@ partial record SemanticVersion
     {
     }
 
-    [StackTraceHidden]
-    [return: NotNullIfNotNull(nameof(value))]
-    static string? VerifyLabel(
+    static void ValidateLabelMetadata(
         string? value,
         [CallerArgumentExpression(nameof(value))] string? paramName = null)
     {
-        if (!Parser.IsValidLabel(value))
+        if (!Parser.IsValidLabelMetadata(value))
             throw new ArgumentException("The value has an invalid format.", paramName);
-        return value;
     }
 }

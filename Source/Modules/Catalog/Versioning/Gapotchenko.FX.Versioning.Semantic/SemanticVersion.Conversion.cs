@@ -12,7 +12,7 @@ partial record SemanticVersion
     /// Converts a <see cref="SemanticVersion"/> object to a <see cref="Version"/> object.
     /// </summary>
     /// <remarks>
-    /// The conversion is lossy because <see cref="Version"/> class has no properties equivalent to <see cref="PreReleaseLabel"/> and <see cref="BuildLabel"/>.
+    /// The conversion is lossy because <see cref="Version"/> class has no properties equivalent to <see cref="Prerelease"/> and <see cref="Build"/>.
     /// </remarks>
     /// <param name="version">The semantic version.</param>
     /// <returns>A <see cref="Version"/> object.</returns>

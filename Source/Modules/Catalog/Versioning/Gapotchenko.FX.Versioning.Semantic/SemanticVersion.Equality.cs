@@ -15,8 +15,9 @@ partial record SemanticVersion
         m_Major == obj.Major &&
         m_Minor == obj.m_Minor &&
         m_Patch == obj.m_Patch &&
-        // SemVer 2.0 standard requires to ignore the build label.
-        string.Equals(m_PreReleaseLabel, obj.m_PreReleaseLabel, StringComparison.Ordinal);
+        string.Equals(m_Prerelease, obj.m_Prerelease, StringComparison.Ordinal)
+        // SemVer 2.0 standard requires to ignore the build metadata.
+        ;
 
     /// <inheritdoc/>
     public override int GetHashCode() =>
@@ -24,5 +25,5 @@ partial record SemanticVersion
             m_Major.GetHashCode(),
             m_Minor.GetHashCode(),
             m_Patch.GetHashCode(),
-            m_PreReleaseLabel != null ? StringComparer.Ordinal.GetHashCode(m_PreReleaseLabel) : 0);
+            m_Prerelease != null ? StringComparer.Ordinal.GetHashCode(m_Prerelease) : 0);
 }

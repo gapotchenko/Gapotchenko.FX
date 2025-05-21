@@ -1,10 +1,9 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Versioning.Semantic.Tests;
 
@@ -17,8 +16,8 @@ partial class SemanticVersionTests
         Assert.AreEqual(1, version.Major);
         Assert.AreEqual(2, version.Minor);
         Assert.AreEqual(3, version.Patch);
-        Assert.IsNull(version.PreReleaseLabel);
-        Assert.IsNull(version.BuildLabel);
+        Assert.IsNull(version.Prerelease);
+        Assert.IsNull(version.Build);
     }
 
     [TestMethod]
@@ -28,8 +27,8 @@ partial class SemanticVersionTests
         Assert.AreEqual(1, version.Major);
         Assert.AreEqual(2, version.Minor);
         Assert.AreEqual(3, version.Patch);
-        Assert.AreEqual("alpha.1", version.PreReleaseLabel);
-        Assert.AreEqual("build.123", version.BuildLabel);
+        Assert.AreEqual("alpha.1", version.Prerelease);
+        Assert.AreEqual("build.123", version.Build);
     }
 
     [TestMethod]
@@ -54,32 +53,32 @@ partial class SemanticVersionTests
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => new SemanticVersion(0, 0, -1));
 
         var version = new SemanticVersion(0, 0, 0);
-        Assert.IsNull(version.PreReleaseLabel);
-        Assert.IsNull(version.BuildLabel);
+        Assert.IsNull(version.Prerelease);
+        Assert.IsNull(version.Build);
 
         version = new SemanticVersion(0, 0, 0, null);
-        Assert.IsNull(version.PreReleaseLabel);
-        Assert.IsNull(version.BuildLabel);
+        Assert.IsNull(version.Prerelease);
+        Assert.IsNull(version.Build);
 
         version = new SemanticVersion(0, 0, 0, "");
-        Assert.IsNull(version.PreReleaseLabel);
-        Assert.IsNull(version.BuildLabel);
+        Assert.IsNull(version.Prerelease);
+        Assert.IsNull(version.Build);
 
         version = new SemanticVersion(0, 0, 0, null, null);
-        Assert.IsNull(version.PreReleaseLabel);
-        Assert.IsNull(version.BuildLabel);
+        Assert.IsNull(version.Prerelease);
+        Assert.IsNull(version.Build);
 
         version = new SemanticVersion(0, 0, 0, "", null);
-        Assert.IsNull(version.PreReleaseLabel);
-        Assert.IsNull(version.BuildLabel);
+        Assert.IsNull(version.Prerelease);
+        Assert.IsNull(version.Build);
 
         version = new SemanticVersion(0, 0, 0, null, "");
-        Assert.IsNull(version.PreReleaseLabel);
-        Assert.IsNull(version.BuildLabel);
+        Assert.IsNull(version.Prerelease);
+        Assert.IsNull(version.Build);
 
         version = new SemanticVersion(0, 0, 0, "", "");
-        Assert.IsNull(version.PreReleaseLabel);
-        Assert.IsNull(version.BuildLabel);
+        Assert.IsNull(version.Prerelease);
+        Assert.IsNull(version.Build);
 
         Assert.ThrowsException<ArgumentNullException>(() => new SemanticVersion(null!));
     }

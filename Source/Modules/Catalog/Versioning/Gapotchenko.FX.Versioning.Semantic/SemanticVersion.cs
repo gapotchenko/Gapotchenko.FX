@@ -26,11 +26,13 @@ public sealed partial record SemanticVersion
         get => m_Major;
         init
         {
-            if (value < 0)
-                throw new ArgumentOutOfRangeException(nameof(value), "Major component of semantic version cannot be negative.");
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
             m_Major = value;
         }
     }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    int m_Major;
 
     /// <summary>
     /// Gets or initializes the value of the minor component of the version number for the current <see cref="SemanticVersion"/> object.
@@ -41,11 +43,13 @@ public sealed partial record SemanticVersion
         get => m_Minor;
         init
         {
-            if (value < 0)
-                throw new ArgumentOutOfRangeException(nameof(value), "Minor component of semantic version cannot be negative.");
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
             m_Minor = value;
         }
     }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    int m_Minor;
 
     /// <summary>
     /// Gets or initializes the value of the patch component of the version number for the current <see cref="SemanticVersion"/> object.
@@ -56,39 +60,49 @@ public sealed partial record SemanticVersion
         get => m_Patch;
         init
         {
-            if (value < 0)
-                throw new ArgumentOutOfRangeException(nameof(value), "Patch component of semantic version cannot be negative.");
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
             m_Patch = value;
         }
     }
 
-    /// <summary>
-    /// Gets or initializes the value of the pre-release label of the version string for the current <see cref="SemanticVersion"/> object.
-    /// </summary>
-    /// <value>The pre-release label.</value>
-    /// <exception cref="ArgumentException"><paramref name="value"/> has an invalid format.</exception>
-    public string? PreReleaseLabel
-    {
-        get => m_PreReleaseLabel;
-        init => m_PreReleaseLabel = VerifyLabel(value);
-    }
-
-    /// <summary>
-    /// Gets or initializes the value of the build label of the version string for the current <see cref="SemanticVersion"/> object.
-    /// </summary>
-    /// <value>The build label.</value>
-    /// <exception cref="ArgumentException"><paramref name="value"/> has an invalid format.</exception>
-    public string? BuildLabel
-    {
-        get => m_BuildLabel;
-        init => m_BuildLabel = VerifyLabel(value);
-    }
-
-    int m_Major;
-    int m_Minor;
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     int m_Patch;
-    string? m_PreReleaseLabel;
-    string? m_BuildLabel;
+
+    /// <summary>
+    /// Gets or initializes the value of the prerelease metadata of the version label for the current <see cref="SemanticVersion"/> object.
+    /// </summary>
+    /// <value>The prerelease metadata, or <see langword="null"/> if there is no prerelease metadata.</value>
+    /// <exception cref="ArgumentException"><paramref name="value"/> has an invalid format.</exception>
+    public string? Prerelease
+    {
+        get => m_Prerelease;
+        init
+        {
+            ValidateLabelMetadata(value);
+            m_Prerelease = value;
+        }
+    }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    string? m_Prerelease;
+
+    /// <summary>
+    /// Gets or initializes the value of the build metadata of the version label for the current <see cref="SemanticVersion"/> object.
+    /// </summary>
+    /// <value>The build metadata, or <see langword="null"/> if there is no build metadata.</value>
+    /// <exception cref="ArgumentException"><paramref name="value"/> has an invalid format.</exception>
+    public string? Build
+    {
+        get => m_Build;
+        init
+        {
+            ValidateLabelMetadata(value);
+            m_Build = value;
+        }
+    }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    string? m_Build;
 
     #region Formatting
 
@@ -108,11 +122,11 @@ public sealed partial record SemanticVersion
             .Append('.').Append(m_Minor)
             .Append('.').Append(m_Patch);
 
-        if (m_PreReleaseLabel is not null and var preReleaseLabel)
-            builder.Append('-').Append(preReleaseLabel);
+        if (m_Prerelease is not null and var prerelease)
+            builder.Append('-').Append(prerelease);
 
-        if (m_BuildLabel is not null and var buildLabel)
-            builder.Append('+').Append(buildLabel);
+        if (m_Build is not null and var build)
+            builder.Append('+').Append(build);
 
         return builder.ToString();
     }

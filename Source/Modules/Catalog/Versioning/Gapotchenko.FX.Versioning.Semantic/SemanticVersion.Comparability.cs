@@ -33,7 +33,7 @@ partial record SemanticVersion : IComparable, IComparable<SemanticVersion>
         m_Major != obj.m_Major ? (m_Major > obj.m_Major ? 1 : -1) :
         m_Minor != obj.m_Minor ? (m_Minor > obj.m_Minor ? 1 : -1) :
         m_Patch != obj.m_Patch ? (m_Patch > obj.m_Patch ? 1 : -1) :
-        ComparePreReleaseLabels(m_PreReleaseLabel, obj.m_PreReleaseLabel);
+        ComparePreReleaseLabels(m_Prerelease, obj.m_Prerelease);
 
     static int ComparePreReleaseLabels(string? x, string? y)
     {

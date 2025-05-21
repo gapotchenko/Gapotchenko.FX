@@ -59,7 +59,37 @@ partial record SemanticVersion
 
     static partial class Parser
     {
-        public static bool IsValidLabel(string? s) => s is null || GetLabelRegex().IsMatch(s);
+        public static bool IsValidLabelMetadata(string? s) => s is null || GetLabelMetadataRegex().IsMatch(s);
+
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(LabelMetadataRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
+        private static partial Regex GetLabelMetadataRegex();
+#else
+        static Regex GetLabelMetadataRegex() => m_LabelMetadataRegex.Value;
+
+        static readonly EvaluateOnce<Regex> m_LabelMetadataRegex = new(
+            () => new(LabelMetadataRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture),
+            m_Lock);
+#endif
+
+        const string LabelMetadataRegexPattern = $"^{LabelMetadataRegexText}$";
+
+        public static bool TryParseLabel(string label, out string? prerelease, out string? build)
+        {
+            var match = GetLabelRegex().Match(label);
+            if (match.Success)
+            {
+                prerelease = FX.Empty.Nullify(match.Groups["prl"].Value);
+                build = FX.Empty.Nullify(match.Groups["bl"].Value);
+                return true;
+            }
+            else
+            {
+                prerelease = default;
+                build = default;
+                return false;
+            }
+        }
 
 #if NET7_0_OR_GREATER
         [GeneratedRegex(LabelRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
@@ -67,42 +97,12 @@ partial record SemanticVersion
 #else
         static Regex GetLabelRegex() => m_LabelRegex.Value;
 
-        static readonly EvaluateOnce<Regex> m_LabelRegex = new(
+        static EvaluateOnce<Regex> m_LabelRegex = new(
             () => new(LabelRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture),
             m_Lock);
 #endif
 
-        const string LabelRegexPattern = $"^{LabelRegexText}$";
-
-        public static bool TryParseLabels(string labels, out string? preReleaseLabel, out string? buildLabel)
-        {
-            var match = GetLabelsRegex().Match(labels);
-            if (match.Success)
-            {
-                preReleaseLabel = FX.Empty.Nullify(match.Groups["prl"].Value);
-                buildLabel = FX.Empty.Nullify(match.Groups["bl"].Value);
-                return true;
-            }
-            else
-            {
-                preReleaseLabel = default;
-                buildLabel = default;
-                return false;
-            }
-        }
-
-#if NET7_0_OR_GREATER
-        [GeneratedRegex(LabelsRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
-        private static partial Regex GetLabelsRegex();
-#else
-        static Regex GetLabelsRegex() => m_LabelsRegex.Value;
-
-        static EvaluateOnce<Regex> m_LabelsRegex = new(
-            () => new(LabelsRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture),
-            m_Lock);
-#endif
-
-        const string LabelsRegexPattern = $@"^(-?(?<prl>{LabelRegexText}))?(\+(?<bl>{LabelRegexText}))?$";
+        const string LabelRegexPattern = $@"^(-?(?<prl>{LabelMetadataRegexText}))?(\+(?<bl>{LabelMetadataRegexText}))?$";
 
         public static Model? TryParseVersion(string input)
         {
@@ -138,8 +138,8 @@ partial record SemanticVersion
                     Major = major,
                     Minor = minor,
                     Patch = patch,
-                    PreReleaseLabel = FX.Empty.Nullify(match.Groups["prl"].Value),
-                    BuildLabel = FX.Empty.Nullify(match.Groups["bl"].Value)
+                    Prerelease = FX.Empty.Nullify(match.Groups["prl"].Value),
+                    Build = FX.Empty.Nullify(match.Groups["bl"].Value)
                 };
         }
 
@@ -154,12 +154,12 @@ partial record SemanticVersion
             m_Lock);
 #endif
 
-        const string VersionRegexPattern = $@"^(?<ma>\d+)(\.(?<mi>\d+))?(\.(?<p>\d+))?(-(?<prl>{LabelRegexText}))?(\+(?<bl>{LabelRegexText}))?$";
+        const string VersionRegexPattern = $@"^(?<ma>\d+)(\.(?<mi>\d+))?(\.(?<p>\d+))?(-(?<prl>{LabelMetadataRegexText}))?(\+(?<bl>{LabelMetadataRegexText}))?$";
 
 #if !NET7_0_OR_GREATER
         static readonly object m_Lock = new();
 #endif
 
-        const string LabelRegexText = @"[0-9A-Za-z][0-9A-Za-z\-\.]+";
+        const string LabelMetadataRegexText = @"[0-9A-Za-z][0-9A-Za-z\-\.]+";
     }
 }
