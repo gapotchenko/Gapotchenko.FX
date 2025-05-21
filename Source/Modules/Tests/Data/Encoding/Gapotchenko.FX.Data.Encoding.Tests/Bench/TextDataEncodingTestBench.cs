@@ -444,7 +444,7 @@ public static class TextDataEncodingTestBench
         for (int i = 0; i < iterations;)
         {
             double k = GetDouble(rng);
-            var value = (long)(from * (1.0 - k) + to * k);
+            long value = (long)(from * (1.0 - k) + to * k);
 
             if (value < from || value > to)
                 continue;

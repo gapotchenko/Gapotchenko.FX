@@ -76,8 +76,7 @@ static class RandomNumberGeneratorPolyfill
 #if NETSTANDARD2_1_OR_GREATER
         return RandomNumberGenerator.GetInt32(toExclusive);
 #else
-        if (toExclusive <= 0)
-            throw new ArgumentOutOfRangeException(nameof(toExclusive));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(toExclusive);
         return GetInt32(0, toExclusive);
 #endif
     }
