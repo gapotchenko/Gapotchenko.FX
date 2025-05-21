@@ -19,7 +19,7 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX;
 
 /// <summary>
-/// Provides polyfill extension members for <see cref="Random"/>.
+/// Provides polyfill extension members for <see cref="Random"/> class.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class RandomPolyfills

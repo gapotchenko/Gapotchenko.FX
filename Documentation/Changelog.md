@@ -20,6 +20,7 @@ Release date: not released yet
     - Added `Array.Fill<T>(T[], T)` and `Array.Fill<T>(T[], T, int, int)` polyfill methods
     - Added `Random.Shared` and `Random.Shuffle<T>(Span<T>)` polyfill members
     - Added `Shuffle` polyfill method for `IEnumerable<T>` type
+    - Added `Enum.GetValues<TEnum>()` polyfill method
 - Fixed issues:
     - Fixed issue that led to an empty string value returned by `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
     - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with its own entry point
