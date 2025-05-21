@@ -12,28 +12,28 @@ namespace Gapotchenko.FX.Versioning.Semantic.Tests;
 partial class SemanticVersionTests
 {
     [TestMethod]
-    [DataRow("1.0")]
+    [DataRow("1.0.0")]
     [DataRow("1.0.3-label")]
-    [DataRow("2.5-label+build")]
+    [DataRow("2.5.0-label+build")]
     [DataRow(null)]
     public void SemanticVersion_Equals_EqualValues(string? version) =>
         SemanticVersion_Equals_EqualValues(version, version);
 
     [TestMethod]
-    [DataRow("1.0-label", "1.0-label+build")]
+    [DataRow("1.0.0-label", "1.0.0-label+build")]
     [DataRow("1.0.0-alpha+build.1", "1.0.0-alpha+build.2")]
     public void SemanticVersion_Equals_EqualValues(string? versionA, string? versionB) =>
         SemanticVersion_Equals_Test(versionA, versionB, true);
 
     [TestMethod]
-    [DataRow("1.0", "2.0")]
-    [DataRow("0", null)]
+    [DataRow("1.0.0", "2.0.0")]
+    [DataRow("0.0.0", null)]
     [DataRow("0.0.0", "1.0.0")]
     [DataRow("0.0.0", "0.1.0")]
     [DataRow("0.0.0", "0.0.1")]
-    [DataRow("1.0", "1.0-label")]
-    [DataRow("1.0-label1", "1.0-label2")]
+    [DataRow("1.0.0", "1.0.0-label")]
     [DataRow("1.0.0", "1.0.0-alpha+build.1")]
+    [DataRow("1.0.0-label1", "1.0.0-label2")]
     public void SemanticVersion_Equals_UnequalValues(string? versionA, string? versionB) =>
         SemanticVersion_Equals_Test(versionA, versionB, false);
 
@@ -101,7 +101,7 @@ partial class SemanticVersionTests
     [TestMethod]
     public void SemanticVersion_Equals_AnotherType()
     {
-        const string s = "1.0";
+        const string s = "1.0.0";
         var version = new SemanticVersion(s);
         Assert.IsFalse(version.Equals(s));
     }

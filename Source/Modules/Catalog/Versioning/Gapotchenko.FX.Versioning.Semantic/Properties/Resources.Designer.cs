@@ -68,5 +68,14 @@ namespace Gapotchenko.FX.Versioning.Properties {
                 return ResourceManager.GetString("SemanticVersionHasInvalidFormat", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value has an invalid format..
+        /// </summary>
+        internal static string ValueHasInvalidFormat {
+            get {
+                return ResourceManager.GetString("ValueHasInvalidFormat", resourceCulture);
+            }
+        }
     }
 }

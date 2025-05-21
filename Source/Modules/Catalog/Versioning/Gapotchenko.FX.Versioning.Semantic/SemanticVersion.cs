@@ -12,6 +12,9 @@ namespace Gapotchenko.FX.Versioning;
 /// <summary>
 /// Represents a semantic version.
 /// </summary>
+/// <remarks>
+/// The implementation follows <see href="https://semver.org/spec/v2.0.0.html">Semantic Versioning 2.0.0</see> specification.
+/// </remarks>
 [Serializable]
 [ImmutableObject(true)]
 public sealed partial record SemanticVersion
@@ -80,7 +83,7 @@ public sealed partial record SemanticVersion
         get => m_Prerelease;
         init
         {
-            ValidateLabelComponent(value);
+            ValidatePrerelease(value);
             m_Prerelease = value;
         }
     }
@@ -98,7 +101,7 @@ public sealed partial record SemanticVersion
         get => m_Build;
         init
         {
-            ValidateLabelComponent(value);
+            ValidateBuild(value);
             m_Build = value;
         }
     }

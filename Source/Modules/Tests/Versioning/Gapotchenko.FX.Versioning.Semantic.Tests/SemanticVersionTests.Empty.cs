@@ -16,8 +16,8 @@ partial class SemanticVersionTests
     }
 
     [TestMethod]
-    public void SemanticVersion_Empty_EqualsToNewWithDefaultMajorVersion()
+    public void SemanticVersion_Empty_EqualsToNewWithDefaultArguments()
     {
-        Assert.AreEqual(new SemanticVersion((int)default), SemanticVersion.Empty);
+        Assert.AreEqual(new SemanticVersion(default, default, default), SemanticVersion.Empty);
     }
 }

@@ -120,4 +120,7 @@
   <data name="SemanticVersionHasInvalidFormat" xml:space="preserve">
     <value>Semantic version has an invalid format.</value>
   </data>
+  <data name="ValueHasInvalidFormat" xml:space="preserve">
+    <value>The value has an invalid format.</value>
+  </data>
 </root>

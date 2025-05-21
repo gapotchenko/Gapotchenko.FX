@@ -107,6 +107,10 @@ partial class SemanticVersionTests
             yield return ["1.0.0-alpha"];
             yield return ["1.0.0-alpha.1"];
             yield return ["1.0.0-alpha.beta"];
+            yield return ["1.0.0-a+b"];
+            yield return ["1.0.0+build"];
+            yield return ["1.0.0-prerelease+build"];
+            yield return ["1.0.0+build1-build2"];
         }
     }
 
@@ -114,9 +118,25 @@ partial class SemanticVersionTests
     {
         get
         {
+            yield return ["1"];
+            yield return ["1-prerelease"];
+            yield return ["1+build"];
+            yield return ["1-prerelease+build"];
+
+            yield return ["1.0"];
+            yield return ["1.0-prerelease"];
+            yield return ["1.0+build"];
+            yield return ["1.0-prerelease+build"];
+
+            yield return ["1.0.0.0"];
+            yield return ["1.0.0.0-prerelease"];
+            yield return ["1.0.0.0+build"];
+            yield return ["1.0.0.0-prerelease+build"];
+
             yield return [""];
             yield return ["."];
             yield return [","];
+
             yield return ["1.abc.3"];
             yield return ["123!"];
             yield return ["1a:2b:3c"];

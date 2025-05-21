@@ -18,7 +18,7 @@ partial class SemanticVersionTests
     [DataRow("1.1.3", "1.1.4", -1)]
     [DataRow("1.0.0-alpha", "1.0.0", -1)]
     [DataRow("1.0.0", null, 1)]
-    [DataRow("0", null, 1)]
+    [DataRow("0.0.0", null, 1)]
     // ---
     [DataRow("1.0.0-alpha", "1.0.0-alpha.1", -1)]
     [DataRow("1.0.0-alpha.1", "1.0.0-beta.2", -1)]

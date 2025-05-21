@@ -16,7 +16,7 @@ partial record SemanticVersion : IEmptiable<SemanticVersion>
 
     static class EmptyFactory
     {
-        public static readonly SemanticVersion Instance = new(0);
+        public static readonly SemanticVersion Instance = new(0, 0, 0);
     }
 
     /// <summary>

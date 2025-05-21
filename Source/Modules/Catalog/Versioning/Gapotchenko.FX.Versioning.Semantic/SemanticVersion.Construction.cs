@@ -5,31 +5,13 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.Versioning.Properties;
 using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Versioning;
 
 partial record SemanticVersion
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SemanticVersion"/> record using the specified major value.
-    /// </summary>
-    /// <param name="major">The major version number.</param>
-    public SemanticVersion(int major) :
-        this(major, 0)
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SemanticVersion"/> record using the specified major and minor values.
-    /// </summary>
-    /// <param name="major">The major version number.</param>
-    /// <param name="minor">The minor version number.</param>
-    public SemanticVersion(int major, int minor) :
-        this(major, minor, 0)
-    {
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="SemanticVersion"/> record using the specified major, minor, patch, prerelease, and build values.
     /// </summary>
@@ -45,13 +27,13 @@ partial record SemanticVersion
     {
         if (!string.IsNullOrEmpty(prerelease))
         {
-            ValidateLabelComponent(prerelease);
+            ValidatePrerelease(prerelease);
             m_Prerelease = prerelease;
         }
 
         if (!string.IsNullOrEmpty(build))
         {
-            ValidateLabelComponent(build);
+            ValidateBuild(build);
             m_Build = build;
         }
     }
@@ -70,7 +52,7 @@ partial record SemanticVersion
         if (!string.IsNullOrEmpty(label))
         {
             if (!Parser.TryParseLabel(label, out m_Prerelease, out m_Build))
-                throw new ArgumentException("The value has an invalid format.", nameof(label));
+                throw new ArgumentException(Resources.ValueHasInvalidFormat, nameof(label));
         }
     }
 
@@ -116,11 +98,19 @@ partial record SemanticVersion
         m_Build = semanticVersion.m_Build;
     }
 
-    static void ValidateLabelComponent(
+    static void ValidatePrerelease(
         string? value,
         [CallerArgumentExpression(nameof(value))] string? paramName = null)
     {
-        if (!Parser.IsValidLabelComponent(value))
-            throw new ArgumentException("The value has an invalid format.", paramName);
+        if (!Parser.IsValidPrerelease(value))
+            throw new ArgumentException(Resources.ValueHasInvalidFormat, paramName);
+    }
+
+    static void ValidateBuild(
+        string? value,
+        [CallerArgumentExpression(nameof(value))] string? paramName = null)
+    {
+        if (!Parser.IsValidBuild(value))
+            throw new ArgumentException(Resources.ValueHasInvalidFormat, paramName);
     }
 }

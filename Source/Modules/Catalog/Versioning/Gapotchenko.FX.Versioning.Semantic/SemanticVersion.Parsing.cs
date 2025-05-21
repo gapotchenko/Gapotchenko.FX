@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Versioning;
 partial record SemanticVersion
 {
     /// <summary>
-    /// Converts the string representation of a version number to an equivalent <see cref="SemanticVersion"/> object.
+    /// Converts the string representation of a semantic version to an equivalent <see cref="SemanticVersion"/> object.
     /// </summary>
     /// <param name="input">A string that contains a semantic version to convert.</param>
     /// <returns>An object that is equivalent to the version string specified in the input parameter.</returns>
@@ -27,7 +27,7 @@ partial record SemanticVersion
             new(ParseCore(input));
 
     /// <summary>
-    /// Tries to convert the string representation of a version string to an equivalent <see cref="SemanticVersion"/> object,
+    /// Tries to convert the string representation of a semantic version to an equivalent <see cref="SemanticVersion"/> object,
     /// and returns a value that indicates whether the conversion succeeded.
     /// </summary>
     /// <param name="input">A string that contains a semantic version to convert.</param>
@@ -40,7 +40,7 @@ partial record SemanticVersion
         (result = TryParse(input)) is not null;
 
     /// <summary>
-    /// Tries to convert the string representation of a version string to an equivalent <see cref="SemanticVersion"/> object.
+    /// Tries to convert the string representation of a semantic version to an equivalent <see cref="SemanticVersion"/> object.
     /// </summary>
     /// <param name="input">A string that contains a semantic version to convert.</param>
     /// <returns>An object that is equivalent to the version string specified in the input parameter if conversion was successful; otherwise, null.</returns>
@@ -58,30 +58,76 @@ partial record SemanticVersion
 
     static Model? TryParseCore(string input) => Parser.TryParseVersion(input);
 
+    /// <remarks>
+    /// The parser implementation is based on regular expressions provided in the specification:
+    /// https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+    /// </remarks>
     static partial class Parser
     {
-        public static bool IsValidLabelComponent(string? s) => s is null || GetLabelComponentRegex().IsMatch(s);
+        #region Version
+
+        public static Model? TryParseVersion(string input)
+        {
+            if (input.Length < 5 /* 0.0.0 */ ||
+                !char.IsDigit(input[0]))
+            {
+                // Fast discard.
+                return null;
+            }
+
+            var match = GetVersionRegex().Match(input);
+            if (!match.Success)
+                return null;
+
+            const NumberStyles numberStyle = NumberStyles.None;
+            var numberFormatProvider = NumberFormatInfo.InvariantInfo;
+
+            if (!int.TryParse(match.Groups[MajorRegexGroupName].Value, numberStyle, numberFormatProvider, out int major))
+                return null;
+            if (!int.TryParse(match.Groups[MinorRegexGroupName].Value, numberStyle, numberFormatProvider, out int minor))
+                return null;
+            if (!int.TryParse(match.Groups[PatchRegexGroupName].Value, numberStyle, numberFormatProvider, out int patch))
+                return null;
+
+            return
+                new Model
+                {
+                    Major = major,
+                    Minor = minor,
+                    Patch = patch,
+                    Prerelease = FX.Empty.Nullify(match.Groups[PrereleaseRegexGroupName].Value),
+                    Build = FX.Empty.Nullify(match.Groups[BuildRegexGroupName].Value)
+                };
+        }
 
 #if NET7_0_OR_GREATER
-        [GeneratedRegex(LabelComponentRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
-        private static partial Regex GetLabelComponentRegex();
+        [GeneratedRegex(VersionRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
+        private static partial Regex GetVersionRegex();
 #else
-        static Regex GetLabelComponentRegex() => m_LabelComponentRegex.Value;
+        static Regex GetVersionRegex() => m_VersionRegex.Value;
 
-        static readonly EvaluateOnce<Regex> m_LabelComponentRegex = new(
-            () => new(LabelComponentRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture),
+        static EvaluateOnce<Regex> m_VersionRegex = new(
+            () => new(VersionRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture),
             m_Lock);
 #endif
 
-        const string LabelComponentRegexPattern = $"^{LabelComponentRegexText}$";
+        const string VersionRegexPattern = $@"^(?<{MajorRegexGroupName}>0|[1-9]\d*)\.(?<{MinorRegexGroupName}>0|[1-9]\d*)\.(?<{PatchRegexGroupName}>0|[1-9]\d*){LabelRegexText}$";
+
+        const string MajorRegexGroupName = "major";
+        const string MinorRegexGroupName = "minor";
+        const string PatchRegexGroupName = "patch";
+
+        #endregion
+
+        #region Label component of the version
 
         public static bool TryParseLabel(string label, out string? prerelease, out string? build)
         {
             var match = GetLabelRegex().Match(label);
             if (match.Success)
             {
-                prerelease = FX.Empty.Nullify(match.Groups["prerelease"].Value);
-                build = FX.Empty.Nullify(match.Groups["build"].Value);
+                prerelease = FX.Empty.Nullify(match.Groups[PrereleaseRegexGroupName].Value);
+                build = FX.Empty.Nullify(match.Groups[BuildRegexGroupName].Value);
                 return true;
             }
             else
@@ -103,64 +149,61 @@ partial record SemanticVersion
             m_Lock);
 #endif
 
-        const string LabelRegexPattern = $@"^(-?(?<prl>{LabelComponentRegexText}))?(\+(?<bl>{LabelComponentRegexText}))?$";
+        const string LabelRegexPattern = $"^{LabelRegexText}$";
 
-        public static Model? TryParseVersion(string input)
-        {
-            var match = GetVersionRegex().Match(input);
-            if (!match.Success)
-                return null;
+        const string LabelRegexText = $@"(-(?<{PrereleaseRegexGroupName}>{PrereleaseRegexText}))?(\+(?<{BuildRegexGroupName}>{BuildRegexText}))?";
 
-            var majorGroup = match.Groups["major"];
-            if (!majorGroup.Success)
-                return null;
-            if (!int.TryParse(majorGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out int major))
-                return null;
+        const string PrereleaseRegexGroupName = "prerelease";
+        const string BuildRegexGroupName = "build";
 
-            int minor = 0;
-            var minorGroup = match.Groups["minor"];
-            if (minorGroup.Success)
-            {
-                if (!int.TryParse(minorGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out minor))
-                    return null;
-            }
+        #endregion
 
-            int patch = 0;
-            var patchGroup = match.Groups["patch"];
-            if (patchGroup.Success)
-            {
-                if (!int.TryParse(patchGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out patch))
-                    return null;
-            }
+        #region Build metadata component of the label
 
-            return
-                new Model
-                {
-                    Major = major,
-                    Minor = minor,
-                    Patch = patch,
-                    Prerelease = FX.Empty.Nullify(match.Groups["prerelease"].Value),
-                    Build = FX.Empty.Nullify(match.Groups["build"].Value)
-                };
-        }
+        public static bool IsValidBuild(string? value) => value is null || GetBuildRegex().IsMatch(value);
 
 #if NET7_0_OR_GREATER
-        [GeneratedRegex(VersionRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
-        private static partial Regex GetVersionRegex();
+        [GeneratedRegex(BuildRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
+        private static partial Regex GetBuildRegex();
 #else
-        static Regex GetVersionRegex() => m_VersionRegex.Value;
+        static Regex GetBuildRegex() => m_BuildRegex.Value;
 
-        static EvaluateOnce<Regex> m_VersionRegex = new(
-            () => new(VersionRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture),
+        static readonly EvaluateOnce<Regex> m_BuildRegex = new(
+            () => new(BuildRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture),
             m_Lock);
 #endif
 
-        const string VersionRegexPattern = $@"^(?<major>\d+)(\.(?<minor>\d+))?(\.(?<patch>\d+))?(-(?<prerelease>{LabelComponentRegexText}))?(\+(?<build>{LabelComponentRegexText}))?$";
+        const string BuildRegexPattern = $"^{BuildRegexText}$";
+
+        [StringSyntax(StringSyntaxAttribute.Regex)]
+        const string BuildRegexText = @"[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*";
+
+        #endregion
+
+        #region Prerelease component of the label 
+
+        public static bool IsValidPrerelease(string? value) => value is null || GetPrereleaseRegex().IsMatch(value);
+
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(PrereleaseRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
+        private static partial Regex GetPrereleaseRegex();
+#else
+        static Regex GetPrereleaseRegex() => m_PrereleaseRegex.Value;
+
+        static readonly EvaluateOnce<Regex> m_PrereleaseRegex = new(
+            () => new(PrereleaseRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture),
+            m_Lock);
+#endif
+
+        const string PrereleaseRegexPattern = $"^{PrereleaseRegexText}$";
+
+        [StringSyntax(StringSyntaxAttribute.Regex)]
+        const string PrereleaseRegexText = @"(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*";
+
+        #endregion
 
 #if !NET7_0_OR_GREATER
         static readonly object m_Lock = new();
 #endif
-
-        const string LabelComponentRegexText = @"[0-9A-Za-z][0-9A-Za-z\-\.]+";
     }
 }
