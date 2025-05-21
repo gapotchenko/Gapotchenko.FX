@@ -6,6 +6,7 @@
 
 namespace Gapotchenko.FX.Versioning;
 
+[TypeConverter(typeof(SemanticVersionConverter))]
 partial record SemanticVersion
 {
     /// <summary>

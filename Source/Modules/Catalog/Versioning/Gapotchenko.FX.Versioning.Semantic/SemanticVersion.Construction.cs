@@ -35,8 +35,8 @@ partial record SemanticVersion
     /// <param name="major">The major version number.</param>
     /// <param name="minor">The minor version number.</param>
     /// <param name="patch">The patch number.</param>
-    /// <param name="prerelease">The prerelease label metadata.</param>
-    /// <param name="build">The build label metadata.</param>
+    /// <param name="prerelease">The prerelease string.</param>
+    /// <param name="build">The build metadata.</param>
     /// <exception cref="ArgumentException"><paramref name="prerelease"/> has an invalid format.</exception>
     /// <exception cref="ArgumentException"><paramref name="build"/> has an invalid format.</exception>
     public SemanticVersion(int major, int minor, int patch, string? prerelease, string? build) :
@@ -44,13 +44,13 @@ partial record SemanticVersion
     {
         if (!string.IsNullOrEmpty(prerelease))
         {
-            ValidateLabelMetadata(prerelease);
+            ValidateLabelComponent(prerelease);
             m_Prerelease = prerelease;
         }
 
         if (!string.IsNullOrEmpty(build))
         {
-            ValidateLabelMetadata(build);
+            ValidateLabelComponent(build);
             m_Build = build;
         }
     }
@@ -60,8 +60,8 @@ partial record SemanticVersion
     /// </summary>
     /// <param name="major">The major version number.</param>
     /// <param name="minor">The minor version number.</param>
-    /// <param name="patch">The patch number.</param>
-    /// <param name="label">The label.</param>
+    /// <param name="patch">The patch version number.</param>
+    /// <param name="label">The version label.</param>
     /// <exception cref="ArgumentException"><paramref name="label"/> has an invalid format.</exception>
     public SemanticVersion(int major, int minor, int patch, string? label) :
         this(major, minor, patch)
@@ -102,11 +102,24 @@ partial record SemanticVersion
     {
     }
 
-    static void ValidateLabelMetadata(
+    /// <summary>
+    /// Copy constructor. Initializes a new record clone.
+    /// </summary>
+    /// <param name="semanticVersion">The record to clone.</param>
+    SemanticVersion(SemanticVersion semanticVersion)
+    {
+        m_Major = semanticVersion.m_Major;
+        m_Minor = semanticVersion.m_Minor;
+        m_Patch = semanticVersion.m_Patch;
+        m_Prerelease = semanticVersion.m_Prerelease;
+        m_Build = semanticVersion.m_Build;
+    }
+
+    static void ValidateLabelComponent(
         string? value,
         [CallerArgumentExpression(nameof(value))] string? paramName = null)
     {
-        if (!Parser.IsValidLabelMetadata(value))
+        if (!Parser.IsValidLabelComponent(value))
             throw new ArgumentException("The value has an invalid format.", paramName);
     }
 }

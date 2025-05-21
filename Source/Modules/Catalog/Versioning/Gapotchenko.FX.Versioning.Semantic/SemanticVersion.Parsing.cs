@@ -59,28 +59,28 @@ partial record SemanticVersion
 
     static partial class Parser
     {
-        public static bool IsValidLabelMetadata(string? s) => s is null || GetLabelMetadataRegex().IsMatch(s);
+        public static bool IsValidLabelComponent(string? s) => s is null || GetLabelComponentRegex().IsMatch(s);
 
 #if NET7_0_OR_GREATER
-        [GeneratedRegex(LabelMetadataRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
-        private static partial Regex GetLabelMetadataRegex();
+        [GeneratedRegex(LabelComponentRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
+        private static partial Regex GetLabelComponentRegex();
 #else
-        static Regex GetLabelMetadataRegex() => m_LabelMetadataRegex.Value;
+        static Regex GetLabelComponentRegex() => m_LabelComponentRegex.Value;
 
-        static readonly EvaluateOnce<Regex> m_LabelMetadataRegex = new(
-            () => new(LabelMetadataRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture),
+        static readonly EvaluateOnce<Regex> m_LabelComponentRegex = new(
+            () => new(LabelComponentRegexPattern, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture),
             m_Lock);
 #endif
 
-        const string LabelMetadataRegexPattern = $"^{LabelMetadataRegexText}$";
+        const string LabelComponentRegexPattern = $"^{LabelComponentRegexText}$";
 
         public static bool TryParseLabel(string label, out string? prerelease, out string? build)
         {
             var match = GetLabelRegex().Match(label);
             if (match.Success)
             {
-                prerelease = FX.Empty.Nullify(match.Groups["prl"].Value);
-                build = FX.Empty.Nullify(match.Groups["bl"].Value);
+                prerelease = FX.Empty.Nullify(match.Groups["prerelease"].Value);
+                build = FX.Empty.Nullify(match.Groups["build"].Value);
                 return true;
             }
             else
@@ -102,7 +102,7 @@ partial record SemanticVersion
             m_Lock);
 #endif
 
-        const string LabelRegexPattern = $@"^(-?(?<prl>{LabelMetadataRegexText}))?(\+(?<bl>{LabelMetadataRegexText}))?$";
+        const string LabelRegexPattern = $@"^(-?(?<prl>{LabelComponentRegexText}))?(\+(?<bl>{LabelComponentRegexText}))?$";
 
         public static Model? TryParseVersion(string input)
         {
@@ -110,14 +110,14 @@ partial record SemanticVersion
             if (!match.Success)
                 return null;
 
-            var majorGroup = match.Groups["ma"];
+            var majorGroup = match.Groups["major"];
             if (!majorGroup.Success)
                 return null;
             if (!int.TryParse(majorGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out int major))
                 return null;
 
             int minor = 0;
-            var minorGroup = match.Groups["mi"];
+            var minorGroup = match.Groups["minor"];
             if (minorGroup.Success)
             {
                 if (!int.TryParse(minorGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out minor))
@@ -125,7 +125,7 @@ partial record SemanticVersion
             }
 
             int patch = 0;
-            var patchGroup = match.Groups["p"];
+            var patchGroup = match.Groups["patch"];
             if (patchGroup.Success)
             {
                 if (!int.TryParse(patchGroup.Value, NumberStyles.None, NumberFormatInfo.InvariantInfo, out patch))
@@ -138,8 +138,8 @@ partial record SemanticVersion
                     Major = major,
                     Minor = minor,
                     Patch = patch,
-                    Prerelease = FX.Empty.Nullify(match.Groups["prl"].Value),
-                    Build = FX.Empty.Nullify(match.Groups["bl"].Value)
+                    Prerelease = FX.Empty.Nullify(match.Groups["prerelease"].Value),
+                    Build = FX.Empty.Nullify(match.Groups["build"].Value)
                 };
         }
 
@@ -154,12 +154,12 @@ partial record SemanticVersion
             m_Lock);
 #endif
 
-        const string VersionRegexPattern = $@"^(?<ma>\d+)(\.(?<mi>\d+))?(\.(?<p>\d+))?(-(?<prl>{LabelMetadataRegexText}))?(\+(?<bl>{LabelMetadataRegexText}))?$";
+        const string VersionRegexPattern = $@"^(?<major>\d+)(\.(?<minor>\d+))?(\.(?<patch>\d+))?(-(?<prerelease>{LabelComponentRegexText}))?(\+(?<build>{LabelComponentRegexText}))?$";
 
 #if !NET7_0_OR_GREATER
         static readonly object m_Lock = new();
 #endif
 
-        const string LabelMetadataRegexText = @"[0-9A-Za-z][0-9A-Za-z\-\.]+";
+        const string LabelComponentRegexText = @"[0-9A-Za-z][0-9A-Za-z\-\.]+";
     }
 }
