@@ -2,15 +2,10 @@
 
 namespace Gapotchenko.FX.Security.Cryptography;
 
-sealed class Arc4ManagedTransform : ICryptoTransform
+sealed class Arc4ManagedTransform(byte[] key) : ICryptoTransform
 {
+    byte[]? m_State = CreateState(key);
     byte m_X, m_Y;
-    byte[]? m_State;
-
-    public Arc4ManagedTransform(byte[] key)
-    {
-        m_State = CreateState(key);
-    }
 
     public void Dispose()
     {
@@ -36,12 +31,13 @@ sealed class Arc4ManagedTransform : ICryptoTransform
         CheckInputParameters(inputBuffer, inputOffset, inputCount);
 
         ArgumentNullException.ThrowIfNull(outputBuffer);
-        if (outputOffset < 0)
-            throw new ArgumentOutOfRangeException(nameof(outputOffset), "Non negative number is required.");
+        ArgumentOutOfRangeException.ThrowIfNegative(outputOffset);
         if (outputOffset > outputBuffer.Length - inputCount)
+        {
             throw new ArgumentException(
                 "Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.",
                 nameof(outputBuffer));
+        }
 
         return TransformBlockCore(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset);
     }
@@ -50,7 +46,7 @@ sealed class Arc4ManagedTransform : ICryptoTransform
     {
         CheckInputParameters(inputBuffer, inputOffset, inputCount);
 
-        var output = new byte[inputCount];
+        byte[] output = new byte[inputCount];
         TransformBlockCore(inputBuffer, inputOffset, inputCount, output, 0);
         return output;
     }
@@ -59,7 +55,7 @@ sealed class Arc4ManagedTransform : ICryptoTransform
     {
         const int StateSize = 256;
 
-        var state = new byte[StateSize];
+        byte[] state = new byte[StateSize];
 
         for (int i = 0; i < StateSize; ++i)
             state[i] = (byte)i;
@@ -78,7 +74,7 @@ sealed class Arc4ManagedTransform : ICryptoTransform
 
     static void SwapElements(byte[] array, int i, int j)
     {
-        var t = array[i];
+        byte t = array[i];
         array[i] = array[j];
         array[j] = t;
     }
@@ -86,30 +82,29 @@ sealed class Arc4ManagedTransform : ICryptoTransform
     static void CheckInputParameters(byte[] inputBuffer, int inputOffset, int inputCount)
     {
         ArgumentNullException.ThrowIfNull(inputBuffer);
-        if (inputOffset < 0)
-            throw new ArgumentOutOfRangeException(nameof(inputOffset), "Non negative number is required.");
-        if (inputCount < 0)
-            throw new ArgumentOutOfRangeException(nameof(inputCount), "Non negative number is required.");
+        ArgumentOutOfRangeException.ThrowIfNegative(inputOffset);
+        ArgumentOutOfRangeException.ThrowIfNegative(inputCount);
 
         if (inputOffset > inputBuffer.Length - inputCount)
+        {
             throw new ArgumentException(
                 "Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.",
                 nameof(inputBuffer));
+        }
     }
 
     int TransformBlockCore(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
     {
-        var state = m_State;
-        if (state == null)
-            throw new ObjectDisposedException(null);
+        byte[]? state = m_State;
+        ObjectDisposedException.ThrowIf(state is null, this);
 
         for (int i = 0; i < inputCount; ++i)
         {
             ++m_X;
             m_Y = (byte)(state[m_X] + m_Y);
             SwapElements(state, m_X, m_Y);
-            var keyIndex = (byte)(state[m_X] + state[m_Y]);
-            var key = state[keyIndex];
+            byte keyIndex = (byte)(state[m_X] + state[m_Y]);
+            byte key = state[keyIndex];
 
             outputBuffer[outputOffset + i] = (byte)(inputBuffer[inputOffset + i] ^ key);
         }

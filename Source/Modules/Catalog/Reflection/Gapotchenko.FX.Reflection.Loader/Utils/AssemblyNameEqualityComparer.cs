@@ -8,7 +8,7 @@ using Gapotchenko.FX.Reflection.Loader.Polyfills;
 using System.Globalization;
 using System.Reflection;
 
-namespace Gapotchenko.FX.Reflection.Loader.Util;
+namespace Gapotchenko.FX.Reflection.Loader.Utils;
 
 sealed class AssemblyNameEqualityComparer : IEqualityComparer<AssemblyName>
 {
