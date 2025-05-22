@@ -11,5 +11,6 @@ namespace Gapotchenko.FX.Math.Metrics;
 /// </summary>
 public static partial class StringMetrics
 {
-    // This class is partial. Please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 }

@@ -6,8 +6,8 @@
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static partial class EnumerableExtensions
 {
-    // This class is partial.
-    // For more code, please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 
     /// <summary>
     /// Streams all elements of a sequence, ensuring that each element is retrieved only once, despite enumeration restarts.

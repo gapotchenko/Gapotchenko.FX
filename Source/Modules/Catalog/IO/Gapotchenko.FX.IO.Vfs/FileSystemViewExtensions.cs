@@ -13,5 +13,6 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// </summary>
 public static partial class FileSystemViewExtensions
 {
-    // This class is partial. Please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 }

@@ -14,12 +14,13 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX.Memory;
 
 /// <summary>
-/// Provides polyfills for <see cref="Span{T}"/>.
+/// Provides polyfill methods for <see cref="Span{T}"/> structure.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static partial class SpanPolyfills
 {
-    // This class is partial. Please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 
     /// <inheritdoc cref="ReadOnlySpanPolyfills.StartsWith{T}(ReadOnlySpan{T}, ReadOnlySpan{T}, IEqualityComparer{T}?)"/>
 #if TFF_SPAN_STARTSWITH

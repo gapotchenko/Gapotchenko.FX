@@ -20,14 +20,15 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX.Memory;
 
 /// <summary>
-/// Provides polyfills for <see cref="ReadOnlySpan{T}"/>.
+/// Provides polyfill methods for <see cref="ReadOnlySpan{T}"/> stucture.
 /// </summary>
 #if NET7_0_OR_GREATER
 [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
 public static partial class ReadOnlySpanPolyfills
 {
-    // This class is partial. Please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 
     /// <summary>
     /// Searches for the specified value and returns the index of its first occurrence.

@@ -15,8 +15,8 @@ namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 [Trait("Category", "Deque")]
 public abstract partial class Deque_Tests<T> : IList_Generic_Tests<T>
 {
-    // This class is partial.
-    // For more code, please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 
     protected override IList<T> GenericIListFactory() => new Deque<T>();
 

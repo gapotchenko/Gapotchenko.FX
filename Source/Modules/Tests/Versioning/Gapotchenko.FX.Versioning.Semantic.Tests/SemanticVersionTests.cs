@@ -11,5 +11,5 @@ namespace Gapotchenko.FX.Versioning.Semantic.Tests;
 public partial class SemanticVersionTests
 {
     // This type is partial.
-    // Please take a look at the neighboring source files for the rest of the implementation.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 }

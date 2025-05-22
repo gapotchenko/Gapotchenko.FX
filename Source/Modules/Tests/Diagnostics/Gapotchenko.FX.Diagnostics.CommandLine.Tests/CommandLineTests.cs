@@ -5,5 +5,6 @@ namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests;
 [TestClass]
 public partial class CommandLineTests
 {
-    // This class is partial. Please take a look at the neighborhood.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 }

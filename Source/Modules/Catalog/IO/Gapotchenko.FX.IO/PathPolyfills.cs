@@ -6,7 +6,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
-#region Target framework features determination
+#region Target framework features
 
 #if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 #define TFF_PATH_GETRELATIVEPATH
@@ -36,7 +36,8 @@ namespace Gapotchenko.FX.IO;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static partial class PathPolyfills
 {
-    // This class is partial. Please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 
     /// <summary>
     /// Provides member polyfills for <see cref="Path"/> class.

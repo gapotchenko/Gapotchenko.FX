@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Versioning;
 public sealed partial record SemanticVersion
 {
     // This type is partial.
-    // Please take a look at the neighboring source files for the rest of the implementation.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 
     /// <summary>
     /// Gets or initializes the value of the major component of the version number for the current <see cref="SemanticVersion"/> object.

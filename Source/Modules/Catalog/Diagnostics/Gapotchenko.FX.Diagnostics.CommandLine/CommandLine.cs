@@ -5,7 +5,8 @@
 /// </summary>
 public static partial class CommandLine
 {
-    // This class is partial. Please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 
     /// <summary>
     /// Represents a character used to separate arguments in a command line string.
