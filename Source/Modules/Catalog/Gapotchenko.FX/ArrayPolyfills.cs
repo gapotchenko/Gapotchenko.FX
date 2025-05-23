@@ -10,6 +10,10 @@
 #define TFF_ARRAY_FILL
 #endif
 
+#if NET6_0_OR_GREATER
+#define TFF_ARRAY_CLEAR
+#endif
+
 using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX;
@@ -83,6 +87,25 @@ public static class ArrayPolyfills
             {
                 array.AsSpan(startIndex, count).Fill(value);
             }
+#endif
+        }
+
+        /// <summary>
+        /// Clears the contents of an array.
+        /// </summary>
+        /// <param name="array">The array to clear.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+#if TFF_ARRAY_CLEAR
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static void Clear(Array array)
+        {
+#if TFF_ARRAY_CLEAR
+            Array.Clear(array);
+#else
+            ArgumentNullException.ThrowIfNull(array);
+            Array.Clear(array, 0, array.Length);
 #endif
         }
     }

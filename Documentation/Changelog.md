@@ -18,7 +18,7 @@ Release date: not released yet
     - `Stream.ReadExactly` and `Stream.ReadAtLeast` polyfill methods provided by the `Gapotchenko.FX.IO` module are now available for all supported target frameworks
     - Implemented polyfill `ThrowIf...` methods for `ArgumentException`, `ArgumentNullException`, `ArgumentOutOfRangeException` and `ObjectDisposedException` classes
     - Added `StringBuilder.Append(ReadOnlySpan<char>)` polyfill method
-    - Added `Array.Fill<T>(T[], T)` and `Array.Fill<T>(T[], T, int, int)` polyfill methods
+    - Added `Clear(Array)`, `Fill<T>(T[], T)` and `Fill<T>(T[], T, int, int)` polyfill methods for `Array` type
     - Added `Random.Shared` and `Random.Shuffle<T>(Span<T>)` polyfill members
     - Added `Shuffle` polyfill method for `IEnumerable<T>` type
     - Added `Enum.GetValues<TEnum>()` polyfill method

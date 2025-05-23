@@ -524,7 +524,7 @@ public class OrderedDictionary<TKey, TValue> :
         {
             Debug.Assert(_entries is not null);
 
-            Array.Clear(_buckets, 0, _buckets.Length);
+            Array.Clear(_buckets);
             Array.Clear(_entries, 0, _count);
             _count = 0;
             _version++;
