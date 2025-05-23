@@ -38,9 +38,9 @@ public static class StringBuilderPolyfills
 #if TFF_STRINGBUILDER_APPEND_SPAN
         return sb.Append(value);
 #else
+        sb.EnsureCapacity(sb.Length + value.Length);
         foreach (char c in value)
             sb.Append(c);
-
         return sb;
 #endif
     }
