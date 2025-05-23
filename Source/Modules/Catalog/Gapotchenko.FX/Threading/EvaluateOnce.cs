@@ -61,5 +61,5 @@ public static class EvaluateOnce
     /// with <see cref="EvaluateOnce{T}.IsValueCreated"/> property set to <see langword="true"/>
     /// and with <see cref="EvaluateOnce{T}.Value"/> property set to <paramref name="value"/>.
     /// </returns>
-    public static EvaluateOnce<T> CreateWithValue<T>(T value) => new(value);
+    public static EvaluateOnce<T> Value<T>(T value) => new(value);
 }
