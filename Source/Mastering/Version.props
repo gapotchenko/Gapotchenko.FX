@@ -2,7 +2,7 @@
 
   <!-- Version Information -->
   <PropertyGroup>
-    <AssemblyVersion>2025.1.10</AssemblyVersion>
+    <AssemblyVersion>2025.1.11</AssemblyVersion>
     <VersionSuffix>beta</VersionSuffix>
   </PropertyGroup>
 
