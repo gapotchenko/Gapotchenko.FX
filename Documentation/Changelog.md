@@ -11,6 +11,7 @@ Release date: not released yet
   Be it a local ZIP archive, an CD/DVD ISO image, a custom FAT12 implementation, or a remote cloud storage
 - Improved selection of a default buffer size for block copy operations on streams in `Gapotchenko.FX.IO` module
 - `Gapotchenko.FX.Collections.Generic.Deque<T>` made compatible with collection initializers
+- `Gapotchenko.FX.Threading.EvaluateOnce<T>` primitive can now be created pre-initialized with a value
 - Polyfills:
     - Added `Contains`, `ContainsAny`, `SequenceEqual`, `StartsWith` and `EndsWith` polyfill methods for `ReadOnlySpan<T>` and `Span<T>` types
     - Added `Path.EndsInDirectorySeparator(string?)` and `Path.EndsInDirectorySeparator(ReadOnlySpan<char>)` polyfill methods
