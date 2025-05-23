@@ -1,10 +1,11 @@
-set windows-shell := ["cmd", "/c"]
 set working-directory := "Source"
+set windows-shell := ["cmd", "/c"]
 
 # Show the help for this justfile
 @help:
   just --list
 
+# Build release artifacts
 build:
   dotnet build -c Release
 
@@ -17,7 +18,7 @@ test:
   dotnet test -c Debug
   dotnet test -c Release
 
-# Pack NuGet packages
-pack:
+# Produce publishable artifacts
+publish:
   dotnet clean -c Release
   dotnet pack -c Release

@@ -13,7 +13,7 @@ if (args.Count != 2)
 
         Options:
           <alphabet>  The base alphabet to use. Possible values: english, greek.
-          <size>      The number of symbols in generated alphabet.
+          <size>      The number of symbols to produce in a generated alphabet.
         """);
     return 1;
 }
