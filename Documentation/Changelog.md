@@ -13,7 +13,7 @@ Release date: not released yet
 - `Gapotchenko.FX.Collections.Generic.Deque<T>` made compatible with collection initializers
 - `Gapotchenko.FX.Threading.EvaluateOnce<T>` primitive can now be created pre-initialized with a value
 - Polyfills:
-    - Added `Contains`, `ContainsAny`, `SequenceEqual`, `StartsWith` and `EndsWith` polyfill methods for `ReadOnlySpan<T>` and `Span<T>` types
+    - Added `Contains`, `ContainsAny`, `SequenceEqual`, `StartsWith` and `EndsWith` polyfill methods for `ReadOnlySpan<T>` type
     - Added `Path.EndsInDirectorySeparator(string?)` and `Path.EndsInDirectorySeparator(ReadOnlySpan<char>)` polyfill methods
     - `Stream.ReadExactly` and `Stream.ReadAtLeast` polyfill methods provided by the `Gapotchenko.FX.IO` module are now available for all supported target frameworks
     - Implemented polyfill `ThrowIf...` methods for `ArgumentException`, `ArgumentNullException`, `ArgumentOutOfRangeException` and `ObjectDisposedException` classes

@@ -6,6 +6,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+#if TODO
+
 #if NETCOREAPP3_0_OR_GREATER
 #define TFF_SPAN_CONTAINS
 #endif
@@ -92,3 +94,5 @@ partial class SpanPolyfills
 
     #endregion
 }
+
+#endif

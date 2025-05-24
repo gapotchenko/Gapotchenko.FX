@@ -4,6 +4,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+#if TODO
+
 #if NET10_0_OR_GREATER
 #define TFF_SPAN_STARTSWITH
 #define TFF_SPAN_ENDSWITH
@@ -56,3 +58,5 @@ public static partial class SpanPolyfills
         ReadOnlySpanPolyfills.EndsWith(span, value, comparer);
 #endif
 }
+
+#endif
