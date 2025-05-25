@@ -60,7 +60,7 @@ The `check` parameter shows what checksum value an algorithm should produce for 
 
 ``` C#
 // Get a byte representation of the string.
-var data = Encoding.UTF8.GetBytes("123456789");
+var data = Encoding.ASCII.GetBytes("123456789");
 
 // Compute a CRC-16 checksum.
 var checksum = Crc16.Standard.ComputeChecksum(data);
