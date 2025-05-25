@@ -49,10 +49,10 @@ CRC-8 family of cyclic redundancy checks consists of several attested checksum a
 The `check` parameter shows what checksum value an algorithm should produce for `"123456789"` input string interpreted as an ASCII data:
 
 ``` C#
-// Get the byte representation of the ASCII string.
-var data = Encoding.ASCII.GetBytes("123456789");
+// Get a byte representation of the string.
+var data = Encoding.UTF8.GetBytes("123456789");
 
-// Compute the checksum.
+// Compute a CRC-8 checksum.
 var checksum = Crc8.Standard.ComputeChecksum(data);
 
 // Print out the result ("Checksum=0xf4" for standard CRC-8).
