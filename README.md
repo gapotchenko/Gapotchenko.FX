@@ -25,7 +25,7 @@ Here is a short list of what Gapotchenko.FX can do:
     Many Gapotchenko.FX primitives are backed up by algorithms leveraging OS and hardware acceleration.
     For example, CRC-32C checksum algorithm provided by `Gapotchenko.FX.Data.Integrity.Checksum.Crc32` module leverages a special CPU instruction that does fast CRC-32C calculation in hardware, whenever possible
     
-All in all, you can consider Gapotchenko.FX to play the same role in .NET ecosystem as Boost plays for C++.
+All in all, you can consider Gapotchenko.FX to play a similar role in .NET ecosystem as Boost plays for C++.
 The project philosophical aim is to avoid situations like that:
 
 ![.NET Progress ca. 2012 - 2018](Documentation/Assets/dotnet-progress-ca-2012-2018.png?raw=true ".NET Progress ca. 2012 - 2018")
@@ -58,5 +58,5 @@ Gapotchenko.FX is largely platform-independent, but some parts of the implementa
   - Windows
 - Supported CPU architectures: x86, x64, ARM, ARM64
 
-When Gapotchenko.FX runs on an unsupported platform, the platform-dependent functionality is automatically downgraded to the next best thing — a less optimized generic implementation.
+When Gapotchenko.FX runs on an unsupported platform, the platform-dependent functionality is automatically downgraded to the next best thing â€” a less optimized generic implementation.
 On rare occasions, `System.PlatformNotSupported` exceptions may be raised by the functionality that fully depends on a platform to deliver the correct results.
