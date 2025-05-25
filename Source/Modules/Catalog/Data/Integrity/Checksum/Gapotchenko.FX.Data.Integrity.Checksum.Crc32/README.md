@@ -48,7 +48,7 @@ The `check` parameter shows what checksum value an algorithm should produce for 
 // Get a byte representation of the string.
 var data = Encoding.UTF8.GetBytes("123456789");
 
-// Compute the checksum.
+// Compute a CRC32 checksum.
 var checksum = Crc32.Standard.ComputeChecksum(data);
 
 // Print out the result ("Checksum=0xcbf43926" for standard CRC-32).
