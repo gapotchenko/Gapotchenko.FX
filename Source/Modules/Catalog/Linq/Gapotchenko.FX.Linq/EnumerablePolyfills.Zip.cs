@@ -1,4 +1,12 @@
-﻿#if NETCOREAPP3_0_OR_GREATER
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2024
+
+#if NETCOREAPP3_0_OR_GREATER
 #define TFF_ENUMERABLE_ZIP2
 #endif
 
