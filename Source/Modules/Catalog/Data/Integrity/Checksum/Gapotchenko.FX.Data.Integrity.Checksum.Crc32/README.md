@@ -45,8 +45,8 @@ CRC-32 family of cyclic redundancy checks consists of several attested checksum 
 The `check` parameter shows what checksum value an algorithm should produce for `"123456789"` input string interpreted as an ASCII data:
 
 ``` C#
-// Get the byte representation of the ASCII string.
-var data = Encoding.ASCII.GetBytes("123456789");
+// Get the byte representation of the string.
+var data = Encoding.UTF8.GetBytes("123456789");
 
 // Compute the checksum.
 var checksum = Crc32.Standard.ComputeChecksum(data);
