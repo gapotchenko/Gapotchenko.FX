@@ -28,4 +28,9 @@
     <None Include="$(MSBuildThisFileDirectory)Resources\NuGet\Package Icon.png" Pack="true" PackagePath="docs\assets\package-icon.png" Visible="false" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Clean Include="$(PackageOutputPath)/*.nupkg" />
+    <Clean Include="$(PackageOutputPath)/*.snupkg" />
+  </ItemGroup>   
+
 </Project>

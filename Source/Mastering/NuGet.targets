@@ -4,14 +4,6 @@
     <OrigPackageDescription>$(PackageDescription)</OrigPackageDescription>
   </PropertyGroup>
 
-  <Target Name="NuGetClean" AfterTargets="Clean">
-    <ItemGroup>
-        <FilesToDelete Include="$(PackageOutputPath)/*.nupkg" />
-        <FilesToDelete Include="$(PackageOutputPath)/*.snupkg" />
-    </ItemGroup>   
-    <Delete Files="@(FilesToDelete)" />
-  </Target>
-
   <Target Name="PrepareNuspec" BeforeTargets="_GetPackageFiles">
     <NLP_GeneratePackageRepositoryUrl
         ProjectDirectory="$(MSBuildProjectDirectory)"

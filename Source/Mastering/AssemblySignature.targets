@@ -1,0 +1,8 @@
+<Project>
+
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile Condition=" '$(AssemblyOriginatorKeyFile)' == '' AND Exists('$(MSBuildThisFileDirectory)Keys\Assembly.snk') ">$(MSBuildThisFileDirectory)Keys\Assembly.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly Condition=" !Exists('$(AssemblyOriginatorKeyFile)') ">false</SignAssembly>
+  </PropertyGroup>
+
+</Project>

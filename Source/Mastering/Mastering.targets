@@ -3,5 +3,6 @@
   <Import Project="Workarounds.targets" />
   <Import Project="NuGet.targets" />
   <Import Project="Targeting.targets" />
+  <Import Project="AssemblySignature.targets" />
 
 </Project>
