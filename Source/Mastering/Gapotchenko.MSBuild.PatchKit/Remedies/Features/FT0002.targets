@@ -1,7 +1,12 @@
 <Project>
 
+  <PropertyGroup Condition=" '$(PackageReadmeFile)' == '' AND Exists('$(MSBuildProjectDirectory)/README.md') ">
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <_MPK_FT0002_IncludePackageReadmeFile>true</_MPK_FT0002_IncludePackageReadmeFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <None Condition=" '$(PackageReadmeFile)' == 'README.md' " Include="$(PackageReadmeFile)" Pack="true" PackagePath="/" />
+    <None Condition=" '$(_MPK_FT0002_IncludePackageReadmeFile)' == 'true' " Include="$(PackageReadmeFile)" Pack="true" PackagePath="/" />
   </ItemGroup>
 
 </Project>

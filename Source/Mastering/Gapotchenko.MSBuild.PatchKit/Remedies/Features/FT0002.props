@@ -1,7 +1,2 @@
 <Project>
-
-  <PropertyGroup>
-    <PackageReadmeFile Condition=" '$(PackageReadmeFile)' == '' AND Exists('$(MSBuildProjectDirectory)/README.md') ">README.md</PackageReadmeFile>
-  </PropertyGroup>
-
 </Project>
