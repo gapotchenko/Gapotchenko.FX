@@ -1,12 +1,14 @@
 ﻿// Gapotchenko.FX
-// Copyright © Gapotchenko and Contributors
 //
+// Copyright © Gapotchenko and Contributors
 // Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
 #if TODO
+
+// This file is not longer needed because C# 14.0 does automatic inference of ReadOnlySpan<T> from Span<T>.
 
 #if NETCOREAPP3_0_OR_GREATER
 #define TFF_SPAN_CONTAINS
