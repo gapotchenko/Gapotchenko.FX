@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <Import Project="PatchKit.props" />
-
   <Import Project="Traits.props" />
   <Import Project="Version.props" />
   <Import Project="Product.props" />

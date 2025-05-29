@@ -1,7 +1,5 @@
 <Project>
 
-  <Import Project="Gapotchenko.MSBuild.PatchKit/Profiles/Recommended.targets" />
-  <Import Project="Gapotchenko.MSBuild.PatchKit/Remedies/Workarounds/WA0003.targets" />
-  <Import Project="Gapotchenko.MSBuild.PatchKit/Remedies/Features/FT0001.targets" />
+  <Import Project="Gapotchenko.MSBuild.PatchKit/Profiles/GP2025.targets" />
 
 </Project>
