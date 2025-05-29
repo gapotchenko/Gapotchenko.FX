@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <TFF_WIN32_REGISTRY_OOB Condition=" '$(MasteringFrameworkIdentifier)' != '.NETFramework' ">true</TFF_WIN32_REGISTRY_OOB>
+    <TFF_WIN32_REGISTRY_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETStandard' OR ('$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThan($(MasteringFrameworkVersion), '1.1')) AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '6.0'))) ">true</TFF_WIN32_REGISTRY_OOB>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_WIN32_REGISTRY_OOB)' == 'true' ">

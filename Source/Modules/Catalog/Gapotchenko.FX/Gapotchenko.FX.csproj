@@ -16,8 +16,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- The diagnostics below need various polyfills to be cleared
-         but they are unavailable at this stage. -->
+    <!-- The diagnostics below need various polyfills to be worked onn
+         but the polyfills are bonot available at this stage due to chicken and egg situationdilemma. -->
     <NoWarn>$(NoWarn),CA1865,CA2249</NoWarn>
   </PropertyGroup>
 

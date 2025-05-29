@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <TFF_HASHCODE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">true</TFF_HASHCODE_OOB>
+    <TFF_HASHCODE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '4.6.1')) ">true</TFF_HASHCODE_OOB>
     <TFF_HASHCODE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '2.1')) ">true</TFF_HASHCODE_OOB>
     <TFF_HASHCODE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '2.1')) ">true</TFF_HASHCODE_OOB>
   </PropertyGroup>
