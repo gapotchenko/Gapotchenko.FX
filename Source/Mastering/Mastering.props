@@ -15,7 +15,6 @@
   <PropertyGroup>
     <Deterministic>true</Deterministic>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <DefaultItemExcludes>$(DefaultItemExcludes);**\*.orig;**\launchSettings.json</DefaultItemExcludes>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(MasteringProjectKind)' == 'module' ">

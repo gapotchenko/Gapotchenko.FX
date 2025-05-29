@@ -6,5 +6,6 @@
 
   <Import Project="../Remedies/Features/FT0001.targets" />
   <Import Project="../Remedies/Features/FT0002.targets" />
+  <Import Project="../Remedies/Features/FT0003.targets" />
 
 </Project>

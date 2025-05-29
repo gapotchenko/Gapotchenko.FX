@@ -1,0 +1,7 @@
+<Project>
+
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);**\*.orig;**\launchSettings.json</DefaultItemExcludes>
+  </PropertyGroup>
+
+</Project>
