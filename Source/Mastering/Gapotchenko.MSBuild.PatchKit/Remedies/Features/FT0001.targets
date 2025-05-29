@@ -1,2 +1,8 @@
 <Project>
+
+  <PropertyGroup>
+    <!-- Change a default package output path to the new default path. -->
+    <PackageOutputPath Condition=" '$(PackageOutputPath)' == '$(BaseOutputPath)$(Configuration)\' ">$(PackageOutputPath)nuget\</PackageOutputPath>
+  </PropertyGroup>
+
 </Project>

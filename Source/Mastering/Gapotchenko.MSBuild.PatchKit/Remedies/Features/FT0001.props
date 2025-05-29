@@ -1,7 +1,2 @@
 <Project>
-
-  <PropertyGroup>
-    <PackageOutputPath>$(BaseOutputPath)/$(Configuration)/nuget</PackageOutputPath>
-  </PropertyGroup>
-
 </Project>

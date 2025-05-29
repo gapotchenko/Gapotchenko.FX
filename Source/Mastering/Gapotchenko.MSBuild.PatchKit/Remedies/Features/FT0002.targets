@@ -1,7 +1,7 @@
 <Project>
 
   <ItemGroup>
-    <None Condition=" '$(PackageReadmeFile)' != '' " Include="$(PackageReadmeFile)" Pack="true" PackagePath="/" />
+    <None Condition=" '$(PackageReadmeFile)' == 'README.md' " Include="$(PackageReadmeFile)" Pack="true" PackagePath="/" />
   </ItemGroup>
 
 </Project>

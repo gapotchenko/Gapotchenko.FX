@@ -1,4 +1,5 @@
 set working-directory := "Source"
+set dotenv-load := true
 set windows-shell := ["cmd", "/c"]
 
 # Show the help for this justfile
