@@ -1,0 +1,10 @@
+<Project>
+
+  <Import Project="Recommended.props" />
+
+  <Import Project="../Remedies/Workarounds/WA0003.props" />
+
+  <Import Project="../Remedies/Features/FT0001.props" />
+  <Import Project="../Remedies/Features/FT0002.props" />
+
+</Project>

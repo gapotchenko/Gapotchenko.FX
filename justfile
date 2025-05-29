@@ -5,10 +5,16 @@ set windows-shell := ["cmd", "/c"]
 @help:
     just --list
 
+# Start IDE using the project environment
+[windows]
+develop:
+    start Gapotchenko.FX.sln
+
 # Build release artifacts
 build:
     dotnet build -c Release
 
+# Clean all build artifacts
 clean:
     dotnet clean -c Debug
     dotnet clean -c Release

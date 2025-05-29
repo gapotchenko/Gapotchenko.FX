@@ -1,0 +1,8 @@
+<Project>
+
+  <PropertyGroup>
+    <MsbPatchKitFrameworkIdentifier>$([MSBuild]::GetTargetFrameworkIdentifier($(TargetFramework)))</MsbPatchKitFrameworkIdentifier>
+    <MsbPatchKitFrameworkVersion>$([MSBuild]::GetTargetFrameworkVersion($(TargetFramework)))</MsbPatchKitFrameworkVersion>
+  </PropertyGroup>
+
+</Project>

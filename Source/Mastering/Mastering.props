@@ -5,8 +5,9 @@
     <MasteringProjectModulePrefix>Gapotchenko.FX</MasteringProjectModulePrefix>
   </PropertyGroup>
 
+  <Import Project="PatchKit.props" />
+
   <Import Project="Traits.props" />
-  <Import Project="Workarounds.props" />
   <Import Project="Version.props" />
   <Import Project="Product.props" />
 
@@ -15,6 +16,7 @@
   <PropertyGroup>
     <Deterministic>true</Deterministic>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <DefaultItemExcludes>$(DefaultItemExcludes);**\*.orig;**\launchSettings.json</DefaultItemExcludes>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(MasteringProjectKind)' == 'module' ">
@@ -44,6 +46,5 @@
   <Import Project="Optimization.props" Condition=" Exists('Optimization.props') " />
   <Import Project="AssemblySignature.props" />
   <Import Project="AuthenticodeSignature.props" />
-  <Import Project="Polyfills.props" />
 
 </Project>

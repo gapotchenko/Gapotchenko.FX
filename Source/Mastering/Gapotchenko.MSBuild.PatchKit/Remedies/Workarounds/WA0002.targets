@@ -1,0 +1,15 @@
+<Project>
+
+  <!-- Workaround GP-MSB-RMD-WA0002
+       Fixes https://github.com/dotnet/sdk/issues/24146. -->
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <Using Remove="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionLessThan($(TargetFrameworkVersion), '4.0')) ">
+    <Using Remove="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionLessThan($(TargetFrameworkVersion), '3.5')) ">
+    <Using Remove="System.Linq" />
+  </ItemGroup>
+
+</Project>

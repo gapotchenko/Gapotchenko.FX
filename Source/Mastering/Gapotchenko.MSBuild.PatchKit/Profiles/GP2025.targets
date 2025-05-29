@@ -1,0 +1,10 @@
+<Project>
+
+  <Import Project="Recommended.targets" />
+
+  <Import Project="../Remedies/Workarounds/WA0003.targets" />
+
+  <Import Project="../Remedies/Features/FT0001.targets" />
+  <Import Project="../Remedies/Features/FT0002.targets" />
+
+</Project>

@@ -9,9 +9,4 @@
     <DefineConstants>$(DefineConstants),SOURCE_COMPATIBILITY,BINARY_COMPATIBILITY</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(MasteringProjectKind)' == 'module' ">
-    <!-- peverify-compat: https://github.com/dotnet/roslyn/issues/22485 -->
-    <Features Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' OR ( '$(MasteringFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '2.1')) ) ">$(Features),peverify-compat</Features>
-  </PropertyGroup>
-
 </Project>
