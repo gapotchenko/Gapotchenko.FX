@@ -176,19 +176,12 @@ public class AppInformation : IAppInformation
     /// <returns>The app entry assembly.</returns>
     protected virtual Assembly? RetrieveEntryAssembly() => EntryType?.Assembly ?? Assembly.GetEntryAssembly();
 
-    FileVersionInfo EntryFileVersionInfo =>
-        LazyInitializerEx.EnsureInitialized(
-            ref m_CachedEntryFileVersionInfo,
-            this,
-            RetrieveEntryFileVersionInfo);
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    FileVersionInfo? m_CachedEntryFileVersionInfo;
+    FileVersionInfo EntryFileVersionInfo => LazyInitializerEx.EnsureInitialized(ref field, this, RetrieveEntryFileVersionInfo);
 
     FileVersionInfo RetrieveEntryFileVersionInfo()
     {
         var type = EntryType;
-        string filePath = type != null ? type.Module.FullyQualifiedName : ExecutablePath;
+        string filePath = type?.Module.FullyQualifiedName ?? ExecutablePath;
 
         return FileVersionInfo.GetVersionInfo(filePath);
     }
