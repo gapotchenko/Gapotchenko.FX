@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Text;
+﻿#pragma warning disable CA1307
+
+namespace Gapotchenko.FX.Text;
 
 /// <summary>
 /// Provides polyfill methods for <see cref="string"/> type.

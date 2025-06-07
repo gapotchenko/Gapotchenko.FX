@@ -35,6 +35,8 @@ public static class StringPolyfills
 #endif
         string s, char value, StringComparison comparisonType)
     {
+        ArgumentNullException.ThrowIfNull(s);
+
 #if TFF_STRING_CONTAINS_CHAR
         return s.Contains(value, comparisonType);
 #else
@@ -63,6 +65,8 @@ public static class StringPolyfills
 #endif
         string s, string value, StringComparison comparisonType)
     {
+        ArgumentNullException.ThrowIfNull(s);
+
 #if TFF_STRING_OPS_COMPARISON
         return s.Contains(value, comparisonType);
 #else
@@ -90,6 +94,8 @@ public static class StringPolyfills
 #endif
         string s, StringComparison comparisonType)
     {
+        ArgumentNullException.ThrowIfNull(s);
+
 #if TFF_STRING_OPS_COMPARISON
         return s.GetHashCode(comparisonType);
 #else

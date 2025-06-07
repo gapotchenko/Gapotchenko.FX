@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <AnalysisMode>all</AnalysisMode>
+  </PropertyGroup>
+  
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Text.StringEditor" />
   </ItemGroup>
