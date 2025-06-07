@@ -31,11 +31,9 @@ public static class ConsoleEx
             {
                 try
                 {
-                    if (IsUnicodeConsoleFont())
+                    if (Console.IsOutputRedirected || IsUnicodeConsoleFont())
                     {
-                        var encoding = Encoding.UTF8;
-                        Console.OutputEncoding = encoding;
-                        Console.InputEncoding = encoding;
+                        Console.InputEncoding = Console.OutputEncoding = Encoding.UTF8;
                         return true;
                     }
                 }
