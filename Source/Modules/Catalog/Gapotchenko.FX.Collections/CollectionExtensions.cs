@@ -14,7 +14,7 @@ public static class CollectionExtensions
     /// </summary>
     /// <param name="value">The collection to test.</param>
     /// <returns><see langword="true"/> if the <paramref name="value"/> parameter is null or an empty collection; otherwise, <see langword="false"/>.</returns>
-    [Obsolete("Use 'collection?.Length is not > 0' expression instead.")]
+    [Obsolete("Use 'collection is null or []' expression instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool IsNullOrEmpty(
         [NotNullWhen(false)]
