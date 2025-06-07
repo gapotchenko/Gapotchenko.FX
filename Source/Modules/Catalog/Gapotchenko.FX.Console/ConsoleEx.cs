@@ -30,7 +30,7 @@ public static class ConsoleEx
 
         for (; ; )
         {
-            var c = Console.ReadKey(true).KeyChar;
+            char c = Console.ReadKey(true).KeyChar;
             if (c == 13)
             {
                 writer.WriteLine();
