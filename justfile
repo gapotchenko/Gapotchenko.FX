@@ -15,6 +15,10 @@ develop:
 build:
     dotnet build -c Release
 
+# Rebuild release artifacts
+rebuild:
+    dotnet build --no-incremental -c Release
+
 # Clean all build artifacts
 clean:
     dotnet clean -c Debug
