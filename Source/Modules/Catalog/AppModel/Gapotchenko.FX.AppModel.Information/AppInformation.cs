@@ -6,6 +6,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2020
 
+using Gapotchenko.FX.Linq.Operators;
 using Gapotchenko.FX.Threading;
 using System.Diagnostics;
 using System.Reflection;
@@ -178,10 +179,17 @@ public class AppInformation : IAppInformation
 
     FileVersionInfo EntryFileVersionInfo => LazyInitializerEx.EnsureInitialized(ref field, this, RetrieveEntryFileVersionInfo);
 
+#if TFF_ILC
+    [UnconditionalSuppressMessage("SingleFile", "IL3002", Justification = "Returns '<Unknown>' for modules with no file path.")]
+#endif
     FileVersionInfo RetrieveEntryFileVersionInfo()
     {
-        var type = EntryType;
-        string filePath = type?.Module.FullyQualifiedName ?? ExecutablePath;
+        string? filePath =
+            EntryType?.Module.FullyQualifiedName
+#if TFF_ILC
+            .PipeTo(x => Empty.Nullify(x, "<Unknown>"))
+#endif
+            ?? ExecutablePath;
 
         return FileVersionInfo.GetVersionInfo(filePath);
     }
@@ -427,6 +435,9 @@ public class AppInformation : IAppInformation
     /// Retrieves app executable path.
     /// </summary>
     /// <returns>The app executable path.</returns>
+#if TFF_ILC
+    [UnconditionalSuppressMessage("SingleFile", "IL3000", Justification = "Returns an empty string for assemblies embedded in a single-file app.")]
+#endif
     protected virtual string RetrieveExecutablePath()
     {
         var entryAssembly = EntryAssembly;
