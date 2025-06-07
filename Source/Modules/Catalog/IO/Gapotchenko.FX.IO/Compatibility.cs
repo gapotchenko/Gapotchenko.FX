@@ -16,7 +16,7 @@ namespace Gapotchenko.FX.IO;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class IOExceptionExtensions
 {
-    /// <inheritdoc cref="FileSystem.IsAccessViolationError(IOException)"/>
+    /// <inheritdoc cref="FileSystem.IsAccessViolationException(IOException)"/>
     [Obsolete("Use FileSystem.IsAccessViolationError(Exception) method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool IsFileAccessViolationException(
@@ -24,7 +24,7 @@ public static class IOExceptionExtensions
         this
 #endif
         IOException exception) =>
-        FileSystem.IsAccessViolationError(exception);
+        FileSystem.IsAccessViolationException(exception);
 }
 
 /// <summary>

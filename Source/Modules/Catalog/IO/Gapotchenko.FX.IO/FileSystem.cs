@@ -503,14 +503,14 @@ public static class FileSystem
     }
 
     /// <summary>
-    /// Determines whether an IO exception signifies a file access violation error.
+    /// Determines whether an IO exception signifies a file or directory access violation.
     /// </summary>
     /// <remarks>
-    /// A file access violation error usually occurs when the file is locked or opened with incompatible <see cref="FileShare"/> flags.
+    /// The access violation occurs when a file is locked or opened with incompatible <see cref="FileShare"/> flags.
     /// </remarks>
     /// <param name="exception">The exception.</param>
-    /// <returns><see langword="true"/> if exception represents a file access violation error; otherwise, <see langword="false"/>.</returns>
-    public static bool IsAccessViolationError(IOException exception)
+    /// <returns><see langword="true"/> if exception signifies a file or directory access violation; otherwise, <see langword="false"/>.</returns>
+    public static bool IsAccessViolationException(IOException exception)
     {
         ArgumentNullException.ThrowIfNull(exception);
 
