@@ -77,7 +77,7 @@ Gapotchenko.FX project welcomes contributions, or it can be a standalone NuGet p
 `Gapotchenko.FX.Data.Integrity.Checksum` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Integrity.Checksum):
 
 ```
-PM> Install-Package Gapotchenko.FX.Data.Integrity.Checksum
+dotnet package add Gapotchenko.FX.Data.Integrity.Checksum
 ```
 
 ## Other Modules

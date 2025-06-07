@@ -242,7 +242,7 @@ seq.OrderTopologicallyBy(…).ThenBy(…)
 `Gapotchenko.FX.Math.Graphs` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Graphs):
 
 ```
-PM> Install-Package Gapotchenko.FX.Math.Graphs
+dotnet package add Gapotchenko.FX.Math.Graphs
 ```
 
 ## Other Modules

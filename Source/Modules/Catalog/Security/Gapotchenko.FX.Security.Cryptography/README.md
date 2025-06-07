@@ -57,7 +57,7 @@ using (var arc4 = Arc4.Create())
 `Gapotchenko.FX.Security.Cryptography` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Security.Cryptography):
 
 ```
-PM> Install-Package Gapotchenko.FX.Security.Cryptography
+dotnet package add Gapotchenko.FX.Security.Cryptography
 ```
 
 ## Other Modules

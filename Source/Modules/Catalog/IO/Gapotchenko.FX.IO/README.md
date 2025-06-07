@@ -194,7 +194,7 @@ The same goes to `BitWriter`.
 `Gapotchenko.FX.IO` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.IO):
 
 ```
-PM> Install-Package Gapotchenko.FX.IO
+dotnet package add Gapotchenko.FX.IO
 ```
 
 ## Other Modules

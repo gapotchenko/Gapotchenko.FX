@@ -336,7 +336,7 @@ static class AssemblyLoader
 `Gapotchenko.FX.Reflection.Loader` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Reflection.Loader):
 
 ```
-PM> Install-Package Gapotchenko.FX.Reflection.Loader
+dotnet package add Gapotchenko.FX.Reflection.Loader
 ```
 
 ## Other Modules

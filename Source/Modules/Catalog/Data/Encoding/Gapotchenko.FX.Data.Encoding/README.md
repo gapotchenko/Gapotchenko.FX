@@ -190,7 +190,7 @@ Gapotchenko.FX project welcomes contributions, or it can be a standalone NuGet p
 `Gapotchenko.FX.Data.Encoding` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Encoding):
 
 ```
-PM> Install-Package Gapotchenko.FX.Data.Encoding
+dotnet package add Gapotchenko.FX.Data.Encoding
 ```
 
 ## Other Modules

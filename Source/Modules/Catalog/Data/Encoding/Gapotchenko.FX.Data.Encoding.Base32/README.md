@@ -118,7 +118,7 @@ var encodedText = FooBase32.Instance.GetString(...);
 `Gapotchenko.FX.Data.Encoding.Base32` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Encoding.Base32):
 
 ```
-PM> Install-Package Gapotchenko.FX.Data.Encoding.Base32
+dotnet package add Gapotchenko.FX.Data.Encoding.Base32
 ```
 
 ## Other Modules

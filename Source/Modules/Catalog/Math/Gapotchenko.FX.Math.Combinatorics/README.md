@@ -150,7 +150,7 @@ and data access, in turn, historically uses the term `cross join` for Cartesian 
 `Gapotchenko.FX.Math.Combinatorics` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Combinatorics):
 
 ```
-PM> Install-Package Gapotchenko.FX.Math.Combinatorics
+dotnet package add Gapotchenko.FX.Math.Combinatorics
 ```
 
 ## Other Modules

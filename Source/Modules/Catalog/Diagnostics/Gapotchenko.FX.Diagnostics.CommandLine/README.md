@@ -123,7 +123,7 @@ C:\Temp\Test 2.txt
 `Gapotchenko.FX.Diagnostics.CommandLine` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Diagnostics.CommandLine):
 
 ```
-PM> Install-Package Gapotchenko.FX.Diagnostics.CommandLine
+dotnet package add Gapotchenko.FX.Diagnostics.CommandLine
 ```
 
 ## Other Modules

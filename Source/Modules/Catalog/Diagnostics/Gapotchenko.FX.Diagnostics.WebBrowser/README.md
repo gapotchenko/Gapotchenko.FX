@@ -40,7 +40,7 @@ WebBrowser.Launch("https://example.com/");
 `Gapotchenko.FX.Diagnostics.WebBrowser` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Diagnostics.WebBrowser):
 
 ```
-PM> Install-Package Gapotchenko.FX.Diagnostics.WebBrowser
+dotnet package add Gapotchenko.FX.Diagnostics.WebBrowser
 ```
 
 ## Other Modules

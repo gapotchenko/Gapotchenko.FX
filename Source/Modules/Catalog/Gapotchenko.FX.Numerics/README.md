@@ -69,7 +69,7 @@ If hardware acceleration is not available for a particular operation then a high
 `Gapotchenko.FX.Numerics` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Numerics):
 
 ```
-PM> Install-Package Gapotchenko.FX.Numerics
+dotnet package add Gapotchenko.FX.Numerics
 ```
 
 ## Other Modules

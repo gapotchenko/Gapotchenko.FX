@@ -336,7 +336,7 @@ Gapotchenko.FX brings RAD back to the people 💪")
 The main Gapotchenko.FX module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX):
 
 ```
-PM> Install-Package Gapotchenko.FX
+dotnet package add Gapotchenko.FX
 ```
 
 ## Other Modules

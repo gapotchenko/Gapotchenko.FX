@@ -77,7 +77,7 @@ Base24 family of binary-to-text data encodings consists of the following algorit
 `Gapotchenko.FX.Data.Encoding.Base24` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Encoding.Base24):
 
 ```
-PM> Install-Package Gapotchenko.FX.Data.Encoding.Base24
+dotnet package add Gapotchenko.FX.Data.Encoding.Base24
 ```
 
 ## Other Modules

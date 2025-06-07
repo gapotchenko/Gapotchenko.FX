@@ -32,7 +32,7 @@ Instead of referencing each of them individually, you can opt-in into just using
 The Core profile is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Profiles.Core):
 
 ```
-PM> Install-Package Gapotchenko.FX.Profiles.Core
+dotnet package add Gapotchenko.FX.Profiles.Core
 ```
 
 ## See Also

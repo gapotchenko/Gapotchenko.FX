@@ -80,7 +80,7 @@ Console.WriteLine(fxProgress);
 `Gapotchenko.FX.Math` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math):
 
 ```
-PM> Install-Package Gapotchenko.FX.Math
+dotnet package add Gapotchenko.FX.Math
 ```
 
 ## Other Modules

@@ -23,7 +23,7 @@ Instead of referencing each module individually, you can opt-in into just using 
 The Math profile is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Profiles.Math):
 
 ```
-PM> Install-Package Gapotchenko.FX.Profiles.Math
+dotnet package add Gapotchenko.FX.Profiles.Math
 ```
 
 ## See Also

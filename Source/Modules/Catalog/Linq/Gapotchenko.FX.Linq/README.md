@@ -129,7 +129,7 @@ Conventional `Min` and `Max` methods just throw an exception in that case.
 `Gapotchenko.FX.Linq` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Linq):
 
 ```
-PM> Install-Package Gapotchenko.FX.Linq
+dotnet package add Gapotchenko.FX.Linq
 ```
 
 ## Other Modules

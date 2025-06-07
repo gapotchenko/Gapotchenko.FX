@@ -159,7 +159,7 @@ The keys, colors, and styling are fully customizable by deriving a class from th
 `Gapotchenko.FX.Console` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Console):
 
 ```
-PM> Install-Package Gapotchenko.FX.Console
+dotnet package add Gapotchenko.FX.Console
 ```
 
 ## Other Modules

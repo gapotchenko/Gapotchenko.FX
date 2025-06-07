@@ -255,7 +255,7 @@ class Program
 `Gapotchenko.FX.Diagnostics.Process` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Diagnostics.Process):
 
 ```
-PM> Install-Package Gapotchenko.FX.Diagnostics.Process
+dotnet package add Gapotchenko.FX.Diagnostics.Process
 ```
 
 ## Other Modules

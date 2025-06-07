@@ -196,7 +196,7 @@ This may save some CPU time and memory in cases where `T` type is sufficiently l
 `Gapotchenko.FX.Math.Intervals` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Intervals):
 
 ```
-PM> Install-Package Gapotchenko.FX.Math.Intervals
+dotnet package add Gapotchenko.FX.Math.Intervals
 ```
 
 ## Other Modules

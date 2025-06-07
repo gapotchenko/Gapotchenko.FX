@@ -102,7 +102,7 @@ var checksum = FooCrc8.Instance.ComputeChecksum(...);
 `Gapotchenko.FX.Data.Integrity.Checksum.Crc8` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Integrity.Checksum.Crc8):
 
 ```
-PM> Install-Package Gapotchenko.FX.Data.Integrity.Checksum.Crc8
+dotnet package add Gapotchenko.FX.Data.Integrity.Checksum.Crc8
 ```
 
 ## Other Modules

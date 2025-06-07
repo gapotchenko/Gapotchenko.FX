@@ -75,7 +75,7 @@ while using the underlying efficiency of the `StringBuilder`.
 `Gapotchenko.FX.Text` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Text):
 
 ```
-PM> Install-Package Gapotchenko.FX.Text
+dotnet package add Gapotchenko.FX.Text
 ```
 
 ## Other Modules

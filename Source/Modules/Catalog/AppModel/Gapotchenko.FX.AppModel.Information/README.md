@@ -64,7 +64,7 @@ Note that it is preferable to use `AppInformation.For(Type)` method because it i
 `Gapotchenko.FX.AppModel.Information` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.AppModel.Information):
 
 ```
-PM> Install-Package Gapotchenko.FX.AppModel.Information
+dotnet package add Gapotchenko.FX.AppModel.Information
 ```
 
 ## Other Modules

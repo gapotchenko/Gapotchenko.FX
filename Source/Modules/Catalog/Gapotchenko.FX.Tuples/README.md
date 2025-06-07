@@ -71,7 +71,7 @@ The remaining part of the concept is almost the same.
 `Gapotchenko.FX.Tuples` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Tuples):
 
 ```
-PM> Install-Package Gapotchenko.FX.Tuples
+dotnet package add Gapotchenko.FX.Tuples
 ```
 
 ## Other Modules

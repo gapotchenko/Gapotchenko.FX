@@ -43,7 +43,7 @@ async Task<DateTime> GetCustomerRegistrationDate(string name)
 `Gapotchenko.FX.Data.Linq` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Linq):
 
 ```
-PM> Install-Package Gapotchenko.FX.Data.Linq
+dotnet package add Gapotchenko.FX.Data.Linq
 ```
 
 ## Other Modules

@@ -117,7 +117,7 @@ Console.WriteLine("Similarity is {0.00}.", similarity);  // similarity = 0.36
 `Gapotchenko.FX.Math.Metrics` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Metrics):
 
 ```
-PM> Install-Package Gapotchenko.FX.Math.Metrics
+dotnet package add Gapotchenko.FX.Math.Metrics
 ```
 
 ## Other Modules

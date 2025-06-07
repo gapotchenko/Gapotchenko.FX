@@ -141,7 +141,7 @@ When intrinsic is not applied, the original method implementation is used, thus 
 `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics):
 
 ```
-PM> Install-Package Gapotchenko.FX.Runtime.CompilerServices.Intrinsics
+dotnet package add Gapotchenko.FX.Runtime.CompilerServices.Intrinsics
 ```
 
 ## Other Modules

@@ -22,7 +22,7 @@ The module provides polyfills for functionality defined in `System.Runtime.Inter
 `Gapotchenko.FX.Runtime.InteropServices` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Runtime.InteropServices):
 
 ```
-PM> Install-Package Gapotchenko.FX.Runtime.InteropServices
+dotnet package add Gapotchenko.FX.Runtime.InteropServices
 ```
 
 ## Other Modules

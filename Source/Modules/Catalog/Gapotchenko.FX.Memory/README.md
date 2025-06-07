@@ -32,7 +32,7 @@ Console.WriteLine(map[new byte[] { 4, 5, 6 }]);  // prints B
 `Gapotchenko.FX.Memory` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Memory):
 
 ```
-PM> Install-Package Gapotchenko.FX.Memory
+dotnet package add Gapotchenko.FX.Memory
 ```
 
 ## Other Modules

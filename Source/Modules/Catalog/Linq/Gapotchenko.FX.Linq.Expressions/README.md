@@ -22,7 +22,7 @@ This is useful for various purposes, most notably for caching.
 `Gapotchenko.FX.Linq.Expressions` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Linq.Expressions):
 
 ```
-PM> Install-Package Gapotchenko.FX.Linq.Expressions
+dotnet package add Gapotchenko.FX.Linq.Expressions
 ```
 
 ## Other Modules

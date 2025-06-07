@@ -416,7 +416,7 @@ class NewCode
 `Gapotchenko.FX.Threading` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Threading):
 
 ```
-PM> Install-Package Gapotchenko.FX.Threading
+dotnet package add Gapotchenko.FX.Threading
 ```
 
 ## Other Modules

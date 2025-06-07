@@ -101,7 +101,7 @@ var checksum = FooCrc32.Instance.ComputeChecksum(...);
 `Gapotchenko.FX.Data.Integrity.Checksum.Crc32` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Integrity.Checksum.Crc32):
 
 ```
-PM> Install-Package Gapotchenko.FX.Data.Integrity.Checksum.Crc32
+dotnet package add Gapotchenko.FX.Data.Integrity.Checksum.Crc32
 ```
 
 ## Other Modules
