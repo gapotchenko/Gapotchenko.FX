@@ -109,7 +109,7 @@ public static class Empty
     /// </summary>
     /// <param name="value">The value to nullify.</param>
     /// <param name="empty">The value to treat as empty.</param>
-    /// <returns>The string value or a <see langword="null"/> if the string is empty or <see langword="null"/>.</returns>
+    /// <returns>The string value or a <see langword="null"/> if the string equals to <paramref name="empty"/> or is <see langword="null"/>.</returns>
     public static string? Nullify(string? value, string? empty)
     {
         if (value == null || value == empty)
@@ -124,7 +124,10 @@ public static class Empty
     /// <param name="value">The value to nullify.</param>
     /// <param name="empty">The value to treat as empty.</param>
     /// <param name="comparison">The comparison.</param>
-    /// <returns>The string value or a <see langword="null"/> if the string is empty or <see langword="null"/>.</returns>
+    /// <returns>
+    /// The string value,
+    /// or a <see langword="null"/> if the string equals to <paramref name="empty"/> using <paramref name="comparison"/> or the string is <see langword="null"/>.
+    /// </returns>
     public static string? Nullify(string? value, string? empty, StringComparison comparison)
     {
         if (value == null || value.Equals(empty, comparison))
