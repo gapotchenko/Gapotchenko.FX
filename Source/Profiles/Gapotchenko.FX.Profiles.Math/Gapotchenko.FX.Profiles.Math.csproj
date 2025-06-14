@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <NoWarn>NU5128</NoWarn>
+    <NoWarn>$(NoWarn),NU1510,NU5128</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

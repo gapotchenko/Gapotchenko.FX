@@ -27,6 +27,7 @@
     <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Graphs\Gapotchenko.FX.Math.Graphs.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Metrics\Gapotchenko.FX.Math.Metrics.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Reflection\Gapotchenko.FX.Reflection.Loader\Gapotchenko.FX.Reflection.Loader.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Versioning\Gapotchenko.FX.Versioning.Semantic\Gapotchenko.FX.Versioning.Semantic.csproj" />
     <ProjectReference Include="..\..\Profiles\Gapotchenko.FX.Profiles.Core\Gapotchenko.FX.Profiles.Core.csproj" />
   </ItemGroup>
 
