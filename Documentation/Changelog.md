@@ -9,8 +9,9 @@ Release date: not released yet
 - Preliminary support for .NET 10.0 target framework
 - Introduced `Gapotchenko.FX.IO.Vfs` module that provides the concept of a virtual file system which allows to work with file systems in a unified way independently of their actual nature.
   Be it a local ZIP archive, an CD/DVD ISO image, a custom FAT12 implementation, or a remote cloud storage
+- Added `Gapotchenko.FX.IO.PositionTrackingTextReader` class that can track the current position within a sequential series of characters
 - Improved compatibility with AOT publishing
-- Improved selection of a default buffer size for block copy operations on streams in `Gapotchenko.FX.IO` module
+- Improved default buffer size selection algorithm for stream block copy operations in `Gapotchenko.FX.IO` module
 - `Gapotchenko.FX.Collections.Generic.Deque<T>` made compatible with collection initializers
 - `Gapotchenko.FX.Threading.EvaluateOnce<T>` primitive can now be created pre-initialized with a value
 - Polyfills:
