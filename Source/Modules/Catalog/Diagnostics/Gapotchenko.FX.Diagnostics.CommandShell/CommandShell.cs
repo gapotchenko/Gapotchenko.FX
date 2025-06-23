@@ -21,6 +21,7 @@ public static class CommandShell
     /// </summary>
     /// <param name="fileName">The file name.</param>
     /// <returns>A sequence of the located file paths.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
     public static IEnumerable<string> Which(string fileName) => Which(fileName, null);
 
     /// <summary>
@@ -30,6 +31,7 @@ public static class CommandShell
     /// <param name="fileName">The file name.</param>
     /// <param name="probingPaths">The probing paths to check before the <c>PATH</c> environment variable.</param>
     /// <returns>A sequence of the located file paths.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
     public static IEnumerable<string> Which(string fileName, params IEnumerable<string>? probingPaths)
     {
         ArgumentNullException.ThrowIfNull(fileName);
@@ -70,7 +72,7 @@ public static class CommandShell
         return LocateFile(fileName, probingPaths);
     }
 
-    static IEnumerable<string> LocateFile(string fileName, IEnumerable<string> probingPaths)
+    static IEnumerable<string> LocateFile(string fileName, IEnumerable<string?> probingPaths)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -109,7 +111,7 @@ public static class CommandShell
 
     static IEnumerable<string> LocateFileCore(
         string fileName,
-        IEnumerable<string> probingPaths,
+        IEnumerable<string?> probingPaths,
         Func<string, IEnumerable<string>>? getSuggestedFilePaths)
     {
         foreach (string? path in probingPaths.Distinct(FileSystem.PathComparer))
@@ -143,30 +145,4 @@ public static class CommandShell
             }
         }
     }
-
-#if false
-    static string NormalizeFilePath(string filePath)
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            // TODO: normalize the whole path, including parent directories.
-            // Hint #1. This is not the same as FileSystem.GetRealPath(string) method because
-            // symbol links to files are not getting resolved by the system 'where' tool.
-            // https://stackoverflow.com/questions/74451/getting-actual-file-name-with-proper-casing-on-windows
-            // Hint #2. The 'where' utility seems to use a file mask approach underneath, but not the command shell
-            // itself because when trying to execute "notep*d" command, a file not found error occurs, while 'where' utility works
-            // fine.
-
-            string? directoryPath = Path.GetDirectoryName(filePath);
-            if (!string.IsNullOrEmpty(directoryPath))
-            {
-                string? normalizedPath = Directory.EnumerateFiles(directoryPath, Path.GetFileName(filePath)).ScalarOrDefault();
-                if (normalizedPath != null)
-                    return normalizedPath;
-            }
-        }
-
-        return filePath;
-    }
-#endif
 }
