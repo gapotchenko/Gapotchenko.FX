@@ -72,6 +72,9 @@
     <Project Path="Modules/Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine/Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
     <Project Path="Modules/Tests/Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine.Tests/Gapotchenko.FX.Diagnostics.CommandLine.Tests.csproj" />
   </Folder>
+  <Folder Name="/01. Modules/Diagnostics/CommandShell/">
+    <Project Path="Modules/Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.CommandShell/Gapotchenko.FX.Diagnostics.CommandShell.csproj" Id="e9e1c67d-9089-4375-91ff-05d50e879a2c" />
+  </Folder>
   <Folder Name="/01. Modules/Diagnostics/Process/">
     <Project Path="Modules/Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.Process/Gapotchenko.FX.Diagnostics.Process.csproj" />
     <Project Path="Modules/Tests/Diagnostics/Gapotchenko.FX.Diagnostics.Process.Tests/Gapotchenko.FX.Diagnostics.Process.Tests.csproj" />

@@ -1,7 +1,7 @@
 ﻿namespace Gapotchenko.FX.Diagnostics;
 
 /// <summary>
-/// Performs operations on <see cref="System.String"/> instances that contain command-line information.
+/// Performs operations on <see cref="string"/> instances that contain command-line information.
 /// </summary>
 public static partial class CommandLine
 {
