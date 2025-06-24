@@ -19,6 +19,10 @@ public static class CommandShell
     /// <summary>
     /// Locates the paths of a file with the specified name using <c>PATH</c> environment variable.
     /// </summary>
+    /// <remarks>
+    /// <c>PATH</c> environment variable plays a special role in command-line tools discovery.
+    /// For more information, see <see href="https://en.wikipedia.org/wiki/PATH_(variable)"/>.
+    /// </remarks>
     /// <param name="fileName">The file name.</param>
     /// <returns>A sequence of the located file paths.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
@@ -26,8 +30,12 @@ public static class CommandShell
 
     /// <summary>
     /// Locates the paths of a file with the specified name using the specified probing paths first,
-    /// then using <c>PATH</c> environment variable.
+    /// then by using <c>PATH</c> environment variable.
     /// </summary>
+    /// <remarks>
+    /// <c>PATH</c> environment variable plays a special role in command-line tools discovery.
+    /// For more information, see <see href="https://en.wikipedia.org/wiki/PATH_(variable)"/>.
+    /// </remarks>
     /// <param name="fileName">The file name.</param>
     /// <param name="probingPaths">The probing paths to check before the <c>PATH</c> environment variable.</param>
     /// <returns>A sequence of the located file paths.</returns>
