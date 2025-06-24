@@ -139,7 +139,7 @@ without changing any other code.
 ## Asynchronous Concurrency
 
 `Gapotchenko.FX.Threading` module provides plenty of synchronization primitives supporting not only synchronous, but also asynchronous execution models.
-This closes the gap in the mainstream .NET BCL which had a decade-old lack of them.
+This closes the gap in the mainstream .NET BCL which had a decades-old lack of them.
 
 <details>
 <summary>Historical context</summary>
@@ -149,8 +149,8 @@ That impossibility was caused by certain limitations of `System.AsyncLocal<T>` c
 
 However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` module became the world's first clean implementation of reentrant asynchronous synchronization primitives for .NET.
 The word "clean" means that it does not use such unreliable techniques as `System.Diagnostics.StackTrace`.
-Previously, clean implementations were considered impossible due to aforementioned limitations of the `System.AsyncLocal<T>` class.
-If you are interested in gory implementation details, take a look at the corresponding [source file](Utils/ExecutionContextHelper.AsyncLocal.cs).
+Previously, clean implementations were considered unachievable due to aforementioned limitations of the `System.AsyncLocal<T>` class.
+If you are interested in gory implementation details, you are welcome to take a look at the corresponding [source file](Utils/ExecutionContextHelper.AsyncLocal.cs).
 
 </details>
 
@@ -208,6 +208,7 @@ using (await lockObj.EnterScopeAsync())
 ```
 
 `Gapotchenko.FX.Threading.AsyncLock` is an asynchronous equivalent of [`System.Threading.Lock`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.lock) class.
+The `AsyncLock` class supports both synchronous and asynchronous operations, so it can be used simultaneously by synchronous and asynchronous parts of the code.
 
 ### AsyncCriticalSection
 
@@ -236,6 +237,7 @@ So if you know that your algorithm does not require recursive locking, using `As
 `AsyncManualResetEvent` must be reset manually.
 
 This is an asynchronous equivalent of [`System.Threading.ManualResetEvent`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.manualresetevent) class.
+The `AsyncManualResetEvent` class supports both synchronous and asynchronous operations.
 
 ### AsyncAutoResetEvent
 
@@ -243,6 +245,7 @@ This is an asynchronous equivalent of [`System.Threading.ManualResetEvent`](http
 `AsyncAutoResetEvent` resets automatically after releasing a single waiting task.
 
 This is an asynchronous equivalent of [`System.Threading.AutoResetEvent`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.autoresetevent) class.
+The `AsyncAutoResetEvent` class supports both synchronous and asynchronous operations.
 
 ### AsyncMonitor
 
@@ -291,6 +294,7 @@ Result for Consumer #2: 42
 ```
 
 `Gapotchenko.FX.Threading.AsyncMonitor` is an asynchronous equivalent of [`System.Threading.Monitor`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.monitor) class.
+The `AsyncMonitor` class supports both synchronous and asynchronous operations.
 
 <details>
 <summary>More details on AsyncMonitor</summary>
@@ -394,14 +398,14 @@ As a more efficient approach, however, it is recommended to use an instance of `
 class NewCode
 {
     Queue<int> m_WorkItems = new();
-    AsyncMonitor m_Monitor = new();
+    AsyncMonitor m_WorkItemsMonitor = new();
 
     public async Task AddWorkItemAsync(int item)
     {
-        using (await m_Monitor.EnterScopeAsync())
+        using (await m_WorkItemsMonitor.EnterScopeAsync())
         {
             m_WorkItems.Enqueue(item);
-            m_Monitor.Notify();
+            m_WorkItemsMonitor.Notify();
         }
     }
 

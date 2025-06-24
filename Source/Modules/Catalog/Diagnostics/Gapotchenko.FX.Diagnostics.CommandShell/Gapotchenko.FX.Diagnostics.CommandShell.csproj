@@ -17,5 +17,4 @@
     <ProjectReference Include="..\..\IO\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
   </ItemGroup>
 
-
 </Project>

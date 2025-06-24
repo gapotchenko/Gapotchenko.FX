@@ -55,14 +55,16 @@ public static class CommandShell
             // The file name specifies a file path containing directories.
 
             fileName = Path.GetFileName(fileName);
+            // We can only look at the specified directory.
             probingPaths = [directoryName];
         }
         else
         {
-            // The file name specifies no path.
+            // The file name specifies no directory.
 
             probingPaths ??= [];
 
+            // Use PATH environment variables to complement the probing path set.
             string? path = Environment.GetEnvironmentVariable("PATH");
             if (!string.IsNullOrEmpty(path))
             {
