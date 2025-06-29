@@ -48,10 +48,8 @@ static partial class LockableHelper
 
     public static void Exit(ILockable lockable, int recursionLevel)
     {
-#if NET8_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(lockable);
         ArgumentOutOfRangeException.ThrowIfNegative(recursionLevel);
-#endif
 
         for (int i = 0; i < recursionLevel; ++i)
             lockable.Exit();
