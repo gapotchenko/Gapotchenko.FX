@@ -19,22 +19,22 @@ partial record SemanticVersion : IComparable, IComparable<SemanticVersion>
         obj switch
         {
             null => 1,
-            SemanticVersion semanticVersion => CompareTo(semanticVersion),
-            _ => throw new ArgumentException("Argument must be a semantic version.", nameof(obj))
+            SemanticVersion other => CompareTo(other),
+            _ => throw new ArgumentException("Argument must be an instance of SemanticVersion type.", nameof(obj))
         };
 
     /// <summary>
     /// Compares the current <see cref="SemanticVersion"/> object to a specified <see cref="SemanticVersion"/> object and returns an indication of their relative values.
     /// </summary>
-    /// <param name="obj">A <see cref="SemanticVersion"/> object to compare to the current <see cref="SemanticVersion"/> object, or null.</param>
-    /// <returns>A signed integer that indicates the relative values of the two objects.</returns>
-    public int CompareTo(SemanticVersion? obj) =>
-        ReferenceEquals(obj, this) ? 0 :
-        obj is null ? 1 :
-        m_Major != obj.m_Major ? (m_Major > obj.m_Major ? 1 : -1) :
-        m_Minor != obj.m_Minor ? (m_Minor > obj.m_Minor ? 1 : -1) :
-        m_Patch != obj.m_Patch ? (m_Patch > obj.m_Patch ? 1 : -1) :
-        ComparePreReleaseLabels(m_Prerelease, obj.m_Prerelease);
+    /// <param name="other">A <see cref="SemanticVersion"/> object to compare to the current <see cref="SemanticVersion"/> object, or <see langword="null"/>.</param>
+    /// <inheritdoc/>
+    public int CompareTo(SemanticVersion? other) =>
+        ReferenceEquals(other, this) ? 0 :
+        other is null ? 1 :
+        m_Major != other.m_Major ? (m_Major > other.m_Major ? 1 : -1) :
+        m_Minor != other.m_Minor ? (m_Minor > other.m_Minor ? 1 : -1) :
+        m_Patch != other.m_Patch ? (m_Patch > other.m_Patch ? 1 : -1) :
+        ComparePreReleaseLabels(m_Prerelease, other.m_Prerelease);
 
     static int ComparePreReleaseLabels(string? x, string? y)
     {
