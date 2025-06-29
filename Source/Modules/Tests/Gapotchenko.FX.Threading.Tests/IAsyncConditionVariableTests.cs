@@ -35,7 +35,7 @@ public abstract class IAsyncConditionVariableTests : IConditionVariableTests
         var cv = CreateAsyncConditionVariable();
 
         foreach (var waitFunc in EnumerateWaitAsyncFunctions(cv))
-            await Assert.ThrowsExceptionAsync<SynchronizationLockException>(() => waitFunc(timeout));
+            await Assert.ThrowsExactlyAsync<SynchronizationLockException>(() => waitFunc(timeout));
     }
 
     [TestMethod]

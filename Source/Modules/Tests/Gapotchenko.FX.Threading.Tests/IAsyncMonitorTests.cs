@@ -35,7 +35,7 @@ public abstract class IAsyncMonitorTests : IAsyncConditionVariableTests
     [TestMethod]
     public void IAsyncMonitor_For_ThrowsOnNull()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => GetAsyncMonitorFor(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => GetAsyncMonitorFor(null!));
     }
 
     [TestMethod]

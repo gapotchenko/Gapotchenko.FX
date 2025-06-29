@@ -175,6 +175,6 @@ public abstract class ILockableTests
     public void ILockable_Exit_NonLocked()
     {
         var lockable = CreateLockable();
-        Assert.ThrowsException<SynchronizationLockException>(lockable.Exit);
+        Assert.ThrowsExactly<SynchronizationLockException>(lockable.Exit);
     }
 }

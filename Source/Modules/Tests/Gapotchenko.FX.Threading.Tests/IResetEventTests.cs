@@ -127,7 +127,7 @@ public abstract class IResetEventTests
     public void IResetEvent_Wait_CanceledAutoReset()
     {
         var e = CreateResetEvent(true);
-        Assert.ThrowsException<TaskCanceledException>(() => e.Wait(0, new CancellationToken(true)));
+        Assert.ThrowsExactly<TaskCanceledException>(() => e.Wait(0, new CancellationToken(true)));
         Assert.IsTrue(e.IsSet);
     }
 

@@ -45,7 +45,7 @@ public abstract class IConditionVariableTests
     {
         var cv = CreateConditionVariable();
 
-        Assert.ThrowsException<SynchronizationLockException>(cv.Notify);
+        Assert.ThrowsExactly<SynchronizationLockException>(cv.Notify);
     }
 
     [TestMethod]
@@ -53,7 +53,7 @@ public abstract class IConditionVariableTests
     {
         var cv = CreateConditionVariable();
 
-        Assert.ThrowsException<SynchronizationLockException>(cv.NotifyAll);
+        Assert.ThrowsExactly<SynchronizationLockException>(cv.NotifyAll);
     }
 
     [TestMethod]
@@ -67,7 +67,7 @@ public abstract class IConditionVariableTests
         var cv = CreateConditionVariable();
 
         foreach (var waitFunc in EnumerateWaitFunctions(cv))
-            Assert.ThrowsException<SynchronizationLockException>(() => waitFunc(timeout));
+            Assert.ThrowsExactly<SynchronizationLockException>(() => waitFunc(timeout));
     }
 
     [TestMethod]
