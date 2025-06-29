@@ -88,52 +88,56 @@ partial record SemanticVersion : IComparable, IComparable<SemanticVersion>
         return xUnits.Length.CompareTo(yUnits.Length);
     }
 
+    /// <summary>
+    /// Determines whether the left specified <see cref="SemanticVersion"/> object is less than
+    /// the right specified <see cref="SemanticVersion"/> object.
+    /// </summary>
+    /// <param name="left">The left <see cref="SemanticVersion"/> object.</param>
+    /// <param name="right">The right <see cref="SemanticVersion"/> object.</param>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="left"/> is less than <paramref name="right"/>;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator <(SemanticVersion? left, SemanticVersion? right) =>
+        left is null
+            ? right is not null
+            : left.CompareTo(right) < 0;
 
     /// <summary>
-    /// Determines whether the first specified <see cref="SemanticVersion"/> object is less than
-    /// the second specified <see cref="SemanticVersion"/> object.
+    /// Determines whether the left specified <see cref="SemanticVersion"/> object is less than or equal to
+    /// the right specified <see cref="SemanticVersion"/> object.
     /// </summary>
-    /// <param name="v1">The first <see cref="SemanticVersion"/> object.</param>
-    /// <param name="v2">The second <see cref="SemanticVersion"/> object.</param>
-    /// <returns><c>true</c> if <paramref name="v1"/> is less than <paramref name="v2"/>; otherwise, <c>false</c>.</returns>
-    public static bool operator <(SemanticVersion? v1, SemanticVersion? v2)
-    {
-        if (v1 is null)
-            return v2 is not null;
-        else
-            return v1.CompareTo(v2) < 0;
-    }
+    /// <param name="left">The left <see cref="SemanticVersion"/> object.</param>
+    /// <param name="right">The right <see cref="SemanticVersion"/> object.</param>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="left"/> is less than or equal to <paramref name="right"/>;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator <=(SemanticVersion? left, SemanticVersion? right) =>
+        left is null ||
+        left.CompareTo(right) <= 0;
 
     /// <summary>
-    /// Determines whether the first specified <see cref="SemanticVersion"/> object is less than or equal to
-    /// the second specified <see cref="SemanticVersion"/> object.
+    /// Determines whether the left specified <see cref="SemanticVersion"/> object is greater than
+    /// the right specified <see cref="SemanticVersion"/> object.
     /// </summary>
-    /// <param name="v1">The first <see cref="SemanticVersion"/> object.</param>
-    /// <param name="v2">The second <see cref="SemanticVersion"/> object.</param>
-    /// <returns><c>true</c> if <paramref name="v1"/> is less than or equal to <paramref name="v2"/>; otherwise, <c>false</c>.</returns>
-    public static bool operator <=(SemanticVersion? v1, SemanticVersion? v2)
-    {
-        if (v1 is null)
-            return true;
-        else
-            return v1.CompareTo(v2) <= 0;
-    }
+    /// <param name="left">The left <see cref="SemanticVersion"/> object.</param>
+    /// <param name="right">The right <see cref="SemanticVersion"/> object.</param>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="left"/> is greater than <paramref name="right"/>;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator >(SemanticVersion? left, SemanticVersion? right) => right < left;
 
     /// <summary>
-    /// Determines whether the first specified <see cref="SemanticVersion"/> object is greater than
-    /// the second specified <see cref="SemanticVersion"/> object.
+    /// Determines whether the left specified <see cref="SemanticVersion"/> object is greater than or equal to
+    /// the right specified <see cref="SemanticVersion"/> object.
     /// </summary>
-    /// <param name="v1">The first <see cref="SemanticVersion"/> object.</param>
-    /// <param name="v2">The second <see cref="SemanticVersion"/> object.</param>
-    /// <returns><c>true</c> if <paramref name="v1"/> is greater than <paramref name="v2"/>; otherwise, <c>false</c>.</returns>
-    public static bool operator >(SemanticVersion? v1, SemanticVersion? v2) => v2 < v1;
-
-    /// <summary>
-    /// Determines whether the first specified <see cref="SemanticVersion"/> object is greater than or equal to
-    /// the second specified <see cref="SemanticVersion"/> object.
-    /// </summary>
-    /// <param name="v1">The first <see cref="SemanticVersion"/> object.</param>
-    /// <param name="v2">The second <see cref="SemanticVersion"/> object.</param>
-    /// <returns><c>true</c> if <paramref name="v1"/> is greater than or equal to <paramref name="v2"/>; otherwise, <c>false</c>.</returns>
-    public static bool operator >=(SemanticVersion? v1, SemanticVersion? v2) => v2 <= v1;
+    /// <param name="left">The left <see cref="SemanticVersion"/> object.</param>
+    /// <param name="right">The right <see cref="SemanticVersion"/> object.</param>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="left"/> is greater than or equal to <paramref name="right"/>;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator >=(SemanticVersion? left, SemanticVersion? right) => right <= left;
 }

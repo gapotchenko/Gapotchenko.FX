@@ -26,5 +26,5 @@ partial record SemanticVersion
             m_Major.GetHashCode(),
             m_Minor.GetHashCode(),
             m_Patch.GetHashCode(),
-            m_Prerelease != null ? StringComparer.Ordinal.GetHashCode(m_Prerelease) : 0);
+            m_Prerelease is { } prerelease ? StringComparer.Ordinal.GetHashCode(prerelease) : 0);
 }
