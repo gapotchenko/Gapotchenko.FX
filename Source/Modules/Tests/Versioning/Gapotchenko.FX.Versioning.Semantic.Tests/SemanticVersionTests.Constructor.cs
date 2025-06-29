@@ -42,15 +42,15 @@ partial class SemanticVersionTests
     [DynamicData(nameof(SemanticVersion_Parse_TestData_InvalidInputs))]
     public void SemanticVersion_Constructor_InvalidVersion(string version)
     {
-        Assert.ThrowsException<ArgumentException>(() => new SemanticVersion(version));
+        Assert.ThrowsExactly<ArgumentException>(() => new SemanticVersion(version));
     }
 
     [TestMethod]
     public void SemanticVersion_Constructor_Contract()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new SemanticVersion(-1, 0, 0));
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new SemanticVersion(0, -1, 0));
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new SemanticVersion(0, 0, -1));
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new SemanticVersion(-1, 0, 0));
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new SemanticVersion(0, -1, 0));
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new SemanticVersion(0, 0, -1));
 
         var version = new SemanticVersion(0, 0, 0);
         Assert.IsNull(version.Prerelease);
@@ -80,6 +80,6 @@ partial class SemanticVersionTests
         Assert.IsNull(version.Prerelease);
         Assert.IsNull(version.Build);
 
-        Assert.ThrowsException<ArgumentNullException>(() => new SemanticVersion(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new SemanticVersion(null!));
     }
 }
