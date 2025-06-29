@@ -5,287 +5,271 @@ namespace Gapotchenko.FX.Linq.Tests;
 partial class EnumerableExTests
 {
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Linq_Enumerable_SingleOrDefault_NullSourceArg()
     {
         IEnumerable<int>? seq = null;
-        seq!.SingleOrDefault();
+        Assert.ThrowsExactly<ArgumentNullException>(() => seq!.SingleOrDefault());
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Linq_Enumerable_SingleOrDefault_Value_NullSourceArg()
     {
-        EnumerableEx.SingleOrDefault(null!, "X");
+        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.SingleOrDefault(null!, "X"));
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Empty()
     {
-        var seq = new string[0];
-        var result = seq.SingleOrDefault();
+        string[] seq = [];
+        string? result = seq.SingleOrDefault();
         Assert.IsNull(result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Single()
     {
-        var seq = new[] { "ABC" };
-        var result = seq.SingleOrDefault();
+        string[] seq = ["ABC"];
+        string? result = seq.SingleOrDefault();
         Assert.AreEqual("ABC", result);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Linq_Enumerable_SingleOrDefault_MultipleDiff()
     {
-        var seq = new[] { "ABC", "DEF" };
-        seq.SingleOrDefault();
+        string[] seq = ["ABC", "DEF"];
+        Assert.ThrowsExactly<InvalidOperationException>(() => seq.SingleOrDefault());
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Linq_Enumerable_SingleOrDefault_MultipleSame()
     {
-        var seq = new[] { "ABC", "ABC" };
-        seq.SingleOrDefault();
+        string[] seq = ["ABC", "ABC"];
+        Assert.ThrowsExactly<InvalidOperationException>(() => seq.SingleOrDefault());
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Value_Empty()
     {
-        var seq = new string[0];
-        var result = seq.SingleOrDefault("X");
+        string[] seq = [];
+        string result = seq.SingleOrDefault("X");
         Assert.AreEqual("X", result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Value_Single()
     {
-        var seq = new[] { "ABC" };
-        var result = seq.SingleOrDefault("X");
+        string[] seq = ["ABC"];
+        string result = seq.SingleOrDefault("X");
         Assert.AreEqual("ABC", result);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Linq_Enumerable_SingleOrDefault_Value_MultipleDiff()
     {
-        var seq = new[] { "ABC", "DEF" };
-        seq.SingleOrDefault("X");
+        string[] seq = ["ABC", "DEF"];
+        Assert.ThrowsExactly<InvalidOperationException>(() => seq.SingleOrDefault("X"));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Linq_Enumerable_SingleOrDefault_Value_MultipleSame()
     {
-        var seq = new[] { "ABC", "ABC" };
-        seq.SingleOrDefault("X");
+        string[] seq = ["ABC", "ABC"];
+        Assert.ThrowsExactly<InvalidOperationException>(() => seq.SingleOrDefault("X"));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Linq_Enumerable_SingleOrDefault_Predicate_NullSeqArg()
     {
         IEnumerable<int>? seq = null;
-        seq!.SingleOrDefault(_ => true);
+        Assert.ThrowsExactly<ArgumentNullException>(() => seq!.SingleOrDefault(_ => true));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Linq_Enumerable_SingleOrDefault_Predicate_NullPredicateArg()
     {
-        var seq = new int[0];
-        seq.SingleOrDefault(null!);
+        int[] seq = [];
+        Assert.ThrowsExactly<ArgumentNullException>(() => seq.SingleOrDefault(null!));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_NullSeqArg()
     {
-        EnumerableEx.SingleOrDefault(null!, _ => true, 10);
+        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.SingleOrDefault(null!, _ => true, 10));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_NullPredicateArg()
     {
-        EnumerableEx.SingleOrDefault([], null!, 10);
+        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.SingleOrDefault([], null!, 10));
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Empty()
     {
-        var seq = new string[0];
-        var result = seq.SingleOrDefault(_ => true);
+        string[] seq = [];
+        string? result = seq.SingleOrDefault(_ => true);
         Assert.IsNull(result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Empty_NoMatch()
     {
-        var seq = new string[0];
-        var result = seq.SingleOrDefault(_ => false);
+        string[] seq = [];
+        string? result = seq.SingleOrDefault(_ => false);
         Assert.IsNull(result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_Empty()
     {
-        var seq = new string[0];
-        var result = seq.SingleOrDefault(_ => true, "X");
+        string[] seq = [];
+        string result = seq.SingleOrDefault(_ => true, "X");
         Assert.AreEqual("X", result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_Empty_NoMatch()
     {
-        var seq = new string[0];
-        var result = seq.SingleOrDefault(_ => false, "X");
+        string[] seq = [];
+        string result = seq.SingleOrDefault(_ => false, "X");
         Assert.AreEqual("X", result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Single()
     {
-        var seq = new[] { "ABC" };
-        var result = seq.SingleOrDefault(_ => true);
+        string[] seq = ["ABC"];
+        string? result = seq.SingleOrDefault(_ => true);
         Assert.AreEqual("ABC", result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Single_NoMatch()
     {
-        var seq = new[] { "ABC" };
-        var result = seq.SingleOrDefault(_ => false);
+        string[] seq = ["ABC"];
+        string? result = seq.SingleOrDefault(_ => false);
         Assert.IsNull(result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_Single()
     {
-        var seq = new[] { "ABC" };
-        var result = seq.SingleOrDefault(_ => true, "X");
+        string[] seq = ["ABC"];
+        string result = seq.SingleOrDefault(_ => true, "X");
         Assert.AreEqual("ABC", result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_Single_NoMatch()
     {
-        var seq = new[] { "ABC" };
-        var result = seq.SingleOrDefault(_ => false, "X");
+        string[] seq = ["ABC"];
+        string result = seq.SingleOrDefault(_ => false, "X");
         Assert.AreEqual("X", result);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Linq_Enumerable_SingleOrDefault_Predicate_MultipleDiff()
     {
-        var seq = new[] { "ABC", "DEF" };
-        seq.SingleOrDefault(_ => true);
+        string[] seq = ["ABC", "DEF"];
+        Assert.ThrowsExactly<InvalidOperationException>(() => seq.SingleOrDefault(_ => true));
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_MultipleDiff_NoMatch()
     {
-        var seq = new[] { "ABC", "DEF" };
-        var result = seq.SingleOrDefault(_ => false);
+        string[] seq = ["ABC", "DEF"];
+        string? result = seq.SingleOrDefault(_ => false);
         Assert.IsNull(result);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_MultipleDiff()
     {
-        var seq = new[] { "ABC", "DEF" };
-        seq.SingleOrDefault(_ => true, "X");
+        string[] seq = ["ABC", "DEF"];
+        Assert.ThrowsExactly<InvalidOperationException>(() => seq.SingleOrDefault(_ => true, "X"));
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_MultipleDiff_NoMatch()
     {
-        var seq = new[] { "ABC", "DEF" };
-        var result = seq.SingleOrDefault(_ => false, "X");
+        string[] seq = ["ABC", "DEF"];
+        string result = seq.SingleOrDefault(_ => false, "X");
         Assert.AreEqual("X", result);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Linq_Enumerable_SingleOrDefault_Predicate_MultipleSame()
     {
-        var seq = new[] { "ABC", "ABC" };
-        seq.SingleOrDefault(_ => true);
+        string[] seq = ["ABC", "ABC"];
+        Assert.ThrowsExactly<InvalidOperationException>(() => seq.SingleOrDefault(_ => true));
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_MultipleSame_NoMatch()
     {
-        var seq = new[] { "ABC", "ABC" };
-        var result = seq.SingleOrDefault(_ => false);
+        string[] seq = ["ABC", "ABC"];
+        string? result = seq.SingleOrDefault(_ => false);
         Assert.IsNull(result);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_MultipleSame()
     {
-        var seq = new[] { "ABC", "ABC" };
-        seq.SingleOrDefault(_ => true, "X");
+        string[] seq = ["ABC", "ABC"];
+        Assert.ThrowsExactly<InvalidOperationException>(() => seq.SingleOrDefault(_ => true, "X"));
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_MultipleSame_NoMatch()
     {
-        var seq = new[] { "ABC", "ABC" };
-        var result = seq.SingleOrDefault(_ => false, "X");
+        string[] seq = ["ABC", "ABC"];
+        string result = seq.SingleOrDefault(_ => false, "X");
         Assert.AreEqual("X", result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_NoMatch()
     {
-        var seq = new[] { "ABC", "DEF", "GHJ" };
-        var result = seq.SingleOrDefault(x => x.StartsWith("Z", StringComparison.Ordinal));
+        string[] seq = ["ABC", "DEF", "GHJ"];
+        string? result = seq.SingleOrDefault(x => x.StartsWith("Z", StringComparison.Ordinal));
         Assert.IsNull(result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_SingleMatch()
     {
-        var seq = new[] { "ABC", "DEF", "GHJ" };
-        var result = seq.SingleOrDefault(x => x.StartsWith("D", StringComparison.Ordinal));
+        string[] seq = ["ABC", "DEF", "GHJ"];
+        string? result = seq.SingleOrDefault(x => x.StartsWith("D", StringComparison.Ordinal));
         Assert.AreEqual("DEF", result);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
-    public void Linq_Enumerable_SingleOrDefault_Predicate_MultpipleMatch()
+    public void Linq_Enumerable_SingleOrDefault_Predicate_MultipleMatch()
     {
-        var seq = new[] { "ABC", "DEF", "GHJ", "AMBER" };
-        seq.SingleOrDefault(x => x.StartsWith("A", StringComparison.Ordinal));
+        string[] seq = ["ABC", "DEF", "GHJ", "AMBER"];
+        Assert.ThrowsExactly<InvalidOperationException>(() => seq.SingleOrDefault(x => x.StartsWith("A", StringComparison.Ordinal)));
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_NoMatch()
     {
-        var seq = new[] { "ABC", "DEF", "GHJ" };
-        var result = seq.SingleOrDefault(x => x.StartsWith("Z", StringComparison.Ordinal), "X");
+        string[] seq = ["ABC", "DEF", "GHJ"];
+        string result = seq.SingleOrDefault(x => x.StartsWith("Z", StringComparison.Ordinal), "X");
         Assert.AreEqual("X", result);
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_SingleMatch()
     {
-        var seq = new[] { "ABC", "DEF", "GHJ" };
-        var result = seq.SingleOrDefault(x => x.StartsWith("D", StringComparison.Ordinal), "X");
+        string[] seq = ["ABC", "DEF", "GHJ"];
+        string result = seq.SingleOrDefault(x => x.StartsWith("D", StringComparison.Ordinal), "X");
         Assert.AreEqual("DEF", result);
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
-    public void Linq_Enumerable_SingleOrDefault_Predicate_Valye_MultpipleMatch()
+    public void Linq_Enumerable_SingleOrDefault_Predicate_Value_MultipleMatch()
     {
-        var seq = new[] { "ABC", "DEF", "GHJ", "AMBER" };
-        seq.SingleOrDefault(x => x.StartsWith("A", StringComparison.Ordinal), "X");
+        string[] seq = ["ABC", "DEF", "GHJ", "AMBER"];
+        Assert.ThrowsExactly<InvalidOperationException>(() => seq.SingleOrDefault(x => x.StartsWith("A", StringComparison.Ordinal), "X"));
     }
 }
