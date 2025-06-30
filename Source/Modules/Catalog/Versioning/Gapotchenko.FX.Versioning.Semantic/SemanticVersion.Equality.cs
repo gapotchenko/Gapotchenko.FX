@@ -20,7 +20,10 @@ partial record SemanticVersion
         // Semantic Versioning 2.0.0 specification requires to ignore the build metadata.
         ;
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Returns the hash code for the current <see cref="SemanticVersion"/> object.
+    /// </summary>
+    /// <returns>A 32-bit signed integer hash code.</returns>
     public override int GetHashCode() =>
         HashCode.Combine(
             m_Major.GetHashCode(),

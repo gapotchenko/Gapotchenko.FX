@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Versioning;
 /// Represents a semantic version.
 /// </summary>
 /// <remarks>
-/// The semantic version implementation follows <see href="https://semver.org/spec/v2.0.0.html">Semantic Versioning 2.0.0</see> specification.
+/// The implementation follows <see href="https://semver.org/spec/v2.0.0.html">Semantic Versioning 2.0.0</see> specification.
 /// </remarks>
 [Serializable]
 [ImmutableObject(true)]
