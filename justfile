@@ -13,8 +13,7 @@ develop:
     @for /F "delims=" %%i in ('"dir /b | findstr ".*\.sln""') do @(start "" "%%i")
 
 # Start IDE using the project environment
-[linux]
-[macos]
+[unix]
 develop:
     open *.sln?
 
@@ -40,6 +39,3 @@ test:
 publish:
     dotnet clean -c Release
     dotnet pack -c Release
-
-# Make a release by testing and producing publishable project artifacts
-release: test publish
