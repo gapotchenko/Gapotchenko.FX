@@ -17,7 +17,8 @@ namespace Gapotchenko.FX.Diagnostics;
 public static class CommandShell
 {
     /// <summary>
-    /// Locates the paths of a file with the specified name using <c>PATH</c> environment variable.
+    /// Enumerates the paths of a file with the specified name using <c>PATH</c> environment variable
+    /// according to the rules of a host operating system.
     /// </summary>
     /// <remarks>
     /// <c>PATH</c> environment variable plays a special role in command-line tools discovery.
@@ -26,11 +27,12 @@ public static class CommandShell
     /// <param name="fileName">The file name.</param>
     /// <returns>A sequence of the located file paths.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
-    public static IEnumerable<string> Which(string fileName) => Which(fileName, null);
+    public static IEnumerable<string> Where(string fileName) => Where(fileName, null);
 
     /// <summary>
-    /// Locates the paths of a file with the specified name using the specified probing paths first,
-    /// then by using <c>PATH</c> environment variable.
+    /// Enumerates the paths of a file with the specified name using the specified probing paths first,
+    /// then by using <c>PATH</c> environment variable
+    /// according to the rules of a host operating system.
     /// </summary>
     /// <remarks>
     /// <c>PATH</c> environment variable plays a special role in command-line tools discovery.
@@ -40,7 +42,7 @@ public static class CommandShell
     /// <param name="probingPaths">The probing paths to check before the <c>PATH</c> environment variable.</param>
     /// <returns>A sequence of the located file paths.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
-    public static IEnumerable<string> Which(string fileName, params IEnumerable<string>? probingPaths)
+    public static IEnumerable<string> Where(string fileName, params IEnumerable<string>? probingPaths)
     {
         ArgumentNullException.ThrowIfNull(fileName);
 
