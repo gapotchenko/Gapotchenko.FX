@@ -52,12 +52,14 @@ public static class CommandShell
             return [];
         }
 
-        if (Empty.Nullify(Path.GetDirectoryName(fileName)) is not null and var directoryName)
+        if (Empty.Nullify(Path.GetDirectoryName(fileName)) is { } directoryName)
         {
-            // The file name specifies a file path containing directories.
+            // The specified file name contains directory information.
 
+            // Extract the file name.
             fileName = Path.GetFileName(fileName);
-            // We can only look at the specified directory.
+
+            // Only look at the specified directory.
             probingPaths = [directoryName];
         }
         else
@@ -128,7 +130,7 @@ public static class CommandShell
     {
         foreach (string? path in probingPaths.Distinct(FileSystem.PathComparer))
         {
-            if (path is null)
+            if (string.IsNullOrEmpty(path))
                 continue;
 
             string filePath;
