@@ -77,7 +77,7 @@ public struct EvaluateOnce<T>
     /// <remarks>
     /// After using this constructor, <see cref="IsValueCreated"/> property is set to <see langword="true"/>.
     /// </remarks>
-    /// <param name="value">The value to set <see cref="EvaluateOnce{T}.Value"/> property to.</param>
+    /// <param name="value">The preinitialized value to be used.</param>
     public EvaluateOnce(T value)
     {
         m_Value = value;

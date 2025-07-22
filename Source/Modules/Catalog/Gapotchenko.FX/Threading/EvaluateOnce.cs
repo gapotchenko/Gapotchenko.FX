@@ -55,7 +55,7 @@ public static class EvaluateOnce
     /// Creates and initializes a new instance of the <see cref="EvaluateOnce{T}"/> structure with the specified value of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
-    /// <param name="value">The value to set to <see cref="EvaluateOnce{T}.Value"/> property of a created <see cref="EvaluateOnce{T}"/> instance.</param>
+    /// <param name="value">The preinitialized value to be used.</param>
     /// <returns>
     /// A new <see cref="EvaluateOnce{T}"/> instance
     /// with <see cref="EvaluateOnce{T}.IsValueCreated"/> property set to <see langword="true"/>
