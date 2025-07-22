@@ -61,6 +61,15 @@ namespace Gapotchenko.FX.Linq.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enumeration has not started. Call MoveNext..
+        /// </summary>
+        internal static string EnumerationHasNotStarted {
+            get {
+                return ResourceManager.GetString("EnumerationHasNotStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sequence contains more than one element..
         /// </summary>
         internal static string MoreThanOneElement {
