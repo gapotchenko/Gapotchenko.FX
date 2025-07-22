@@ -21,6 +21,7 @@
     <ProjectReference Include="..\..\Modules\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc32\Gapotchenko.FX.Data.Integrity.Checksum.Crc32.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Data\Integrity\Checksum\Gapotchenko.FX.Data.Integrity.Checksum.Crc8\Gapotchenko.FX.Data.Integrity.Checksum.Crc8.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\AppModel\Gapotchenko.FX.AppModel.Information\Gapotchenko.FX.AppModel.Information.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.CommandShell\Gapotchenko.FX.Diagnostics.CommandShell.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Console\Gapotchenko.FX.Console.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Combinatorics\Gapotchenko.FX.Math.Combinatorics.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math.Intervals\Gapotchenko.FX.Math.Intervals.csproj" />

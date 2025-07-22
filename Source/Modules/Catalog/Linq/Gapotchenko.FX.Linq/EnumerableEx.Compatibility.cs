@@ -5,6 +5,21 @@ namespace Gapotchenko.FX.Linq;
 partial class EnumerableEx
 {
 #if BINARY_COMPATIBILITY
+    /// <inheritdoc cref="EnumerablePolyfills.FirstOrDefault{TSource}(IEnumerable{TSource}, TSource)"/>
+    [Obsolete("Use IEnumerable<T>.FirstOrDefault(source, defaultValue) extension method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static TSource FirstOrDefault<TSource>(IEnumerable<TSource> source, TSource defaultValue) => EnumerablePolyfills.FirstOrDefault(source, defaultValue);
+#endif
+
+#if BINARY_COMPATIBILITY
+    /// <inheritdoc cref="EnumerablePolyfills.FirstOrDefault{TSource}(IEnumerable{TSource}, Func{TSource, bool}, TSource)"/>
+    [Obsolete("Use IEnumerable<T>.FirstOrDefault(source, predicate, defaultValue) extension method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static TSource FirstOrDefault<TSource>(IEnumerable<TSource> source, Func<TSource, bool> predicate, TSource defaultValue) =>
+        EnumerablePolyfills.FirstOrDefault(source, predicate, defaultValue);
+#endif
+
+#if BINARY_COMPATIBILITY
     /// <inheritdoc cref="EnumerablePolyfills.ToHashSet{TSource}(IEnumerable{TSource})"/>
     [Obsolete("Use IEnumerable<T>.ToHashSet() extension method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
