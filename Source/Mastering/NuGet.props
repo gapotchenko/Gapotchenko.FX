@@ -21,6 +21,7 @@
     <IsPackable Condition=" '$(MasteringProjectKind)' == 'module' OR '$(MasteringProjectKind)' == 'profile' ">true</IsPackable>
     <GenerateNuspecDependsOn>PrepareNuspec;$(PackDependsOn)</GenerateNuspecDependsOn>
     <NuGetAudit>false</NuGetAudit>
+    <NoWarn Condition=" '$(Configuration)' == 'Release' ">$(NoWarn),NU1510</NoWarn>
   </PropertyGroup>
   
   <ItemGroup>
