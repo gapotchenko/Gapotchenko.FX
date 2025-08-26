@@ -1,6 +1,6 @@
 set working-directory := "Source"
 set dotenv-load := true
-set windows-shell := ["cmd", "/c"]
+set windows-shell := ["gnu-tk", "-i", "-c"]
 
 # Show the help for this justfile
 @help:
@@ -10,8 +10,7 @@ set windows-shell := ["cmd", "/c"]
 [group("development")]
 [windows]
 develop:
-    #!cmd /c
-    @for /F "delims=" %%i in ('"dir /b | findstr ".*\.sln""') do @(start "" "%%i")
+    start "" *.sln?
 
 # Start IDE using the project environment
 [group("development")]
