@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -eu
+
+SCRIPT_DIR="$(dirname "$(readlink -fn -- "$0")")"
+
+PROJECT_DIR="$SCRIPT_DIR/Gapotchenko.FX.Utilities.MDDocProcessor"
+CONFIGURATION="Release"
+
+EXE_FILE="$PROJECT_DIR/bin/$CONFIGURATION/net8.0/MDDocProcessor"
+
+if [ ! -e "$EXE_FILE" ]; then
+  INTERMEDIATE_DIR="$PROJECT_DIR/obj"
+  mkdir -p "$INTERMEDIATE_DIR"
+  # Build the project with flock to eliminate race conditions.
+  flock "$INTERMEDIATE_DIR/run.flock" dotnet build "$PROJECT_DIR" -c "$CONFIGURATION" > /dev/null
+fi
+
+# Run the project without locking to avoid thread contention.
+"$EXE_FILE" "$@"

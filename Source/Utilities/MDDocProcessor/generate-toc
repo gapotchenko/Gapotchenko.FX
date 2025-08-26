@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -eu
+
+SCRIPT_DIR="$(dirname "$(readlink -fn -- "$0")")"
+
+"$SCRIPT_DIR\run" generate-toc ../..
