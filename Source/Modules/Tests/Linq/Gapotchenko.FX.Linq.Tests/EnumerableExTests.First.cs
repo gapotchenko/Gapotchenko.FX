@@ -7,7 +7,7 @@ partial class EnumerableExTests
     [TestMethod]
     public void Linq_Enumerable_FirstOrDefault_Value_NullSourceArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.FirstOrDefault<int>(null!, 0));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ((IEnumerable<int>)null!).FirstOrDefault(0));
     }
 
     [TestMethod]
@@ -37,13 +37,13 @@ partial class EnumerableExTests
     [TestMethod]
     public void Linq_Enumerable_FirstOrDefault_Predicate_Value_NullSourceArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.FirstOrDefault(null!, _ => true, 10));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ((IEnumerable<int>)null!).FirstOrDefault(_ => true, 10));
     }
 
     [TestMethod]
     public void Linq_Enumerable_FirstOrDefault_Predicate_Value_NullPredicateArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.FirstOrDefault([], null!, 10));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Enumerable.Empty<int>().FirstOrDefault(null!, 10));
     }
 
     [TestMethod]
@@ -111,7 +111,7 @@ partial class EnumerableExTests
     }
 
     [TestMethod]
-    public void Linq_Enumerable_FirstOrDefault_Predicate_Value_MultpipleMatch()
+    public void Linq_Enumerable_FirstOrDefault_Predicate_Value_MultipleMatch()
     {
         string[] seq = ["ABC", "DEF", "GHJ", "AMBER"];
         string result = seq.FirstOrDefault(x => x.StartsWith("A", StringComparison.Ordinal), "X");

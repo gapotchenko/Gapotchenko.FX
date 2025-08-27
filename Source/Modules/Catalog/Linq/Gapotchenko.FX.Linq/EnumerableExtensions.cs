@@ -54,7 +54,7 @@ public static partial class EnumerableExtensions
         if (ReferenceEquals(source, value))
             return true;
 
-        if (EnumerableEx.TryGetNonEnumeratedCount(value, out var count))
+        if (EnumerablePolyfills.TryGetNonEnumeratedCount(value, out int count))
         {
             return source.TakeLast(count).SequenceEqual(value, comparer);
         }
@@ -63,5 +63,35 @@ public static partial class EnumerableExtensions
             var valueCollection = value.ReifyCollection();
             return source.TakeLast(valueCollection.Count).SequenceEqual(valueCollection, comparer);
         }
+    }
+
+    /// <summary>
+    /// Checks whether the number of elements in a sequence is greater or equal to a specified <paramref name="value"/>.
+    /// </summary>
+    /// <typeparam name="TSource">The type of the elements of <paramref name="source" />.</typeparam>
+    /// <param name="source">A sequence that contains elements to be counted.</param>
+    /// <param name="value">The value to compare the count of elements in a sequence with.</param>
+    /// <returns><see langword="true"/> if the number of elements in a sequence is greater or equal to a specified <paramref name="value"/>; otherwise, <see langword="false"/>.</returns>
+    public static bool CountIsAtLeast<TSource>(this IEnumerable<TSource> source, int value)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        if (value <= 0)
+            return true;
+
+        if (source.TryGetNonEnumeratedCount(out int optimizedCount))
+            return optimizedCount >= value;
+
+        using var enumerator = source.GetEnumerator();
+
+        int count = 0;
+        while (enumerator.MoveNext())
+        {
+            checked { ++count; }
+            if (count >= value)
+                return true;
+        }
+
+        return false;
     }
 }
