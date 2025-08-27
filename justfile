@@ -1,6 +1,8 @@
 set working-directory := "Source"
 set dotenv-load := true
 set windows-shell := ["gnu-tk", "-i", "-c"]
+set script-interpreter := ["gnu-tk", "-i", "-l", "/bin/sh", "-eu"]
+set unstable
 
 # Show the help for this justfile
 @help:
@@ -18,6 +20,15 @@ develop:
 develop:
     open *.sln?
 
+# Format source code
+[group("development")]
+[script]
+format:
+    echo 'Formatting **/*.sh...'
+    fd -e sh -x shfmt -i 4 -l -w
+    echo 'Formatting **/justfile...'
+    fd --glob justfile -x just --unstable --fmt --justfile
+
 # Build release artifacts
 build:
     dotnet build -c Release
@@ -32,9 +43,8 @@ clean:
     dotnet clean -c Release
 
 # Run all tests
-test:
-    dotnet test -c Debug
-    dotnet test -c Release
+test configuration="Release":
+    dotnet test -c "{{configuration}}"
 
 # Produce publishable artifacts
 publish:
