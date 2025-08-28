@@ -66,7 +66,7 @@ partial class EnumerableEx
     /// otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="first"/>, <paramref name="second"/> or <paramref name="predicate"/> is null.</exception>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [EditorBrowsable(EditorBrowsableState.Never)] // the method exists for optimization
     public static bool SequenceEqual<TFirst, TSecond>(this IReadOnlyList<TFirst> first, IReadOnlyList<TSecond> second, Func<TFirst, TSecond, bool> predicate)
     {
         ArgumentNullException.ThrowIfNull(first);
@@ -83,8 +83,10 @@ partial class EnumerableEx
             return false;
 
         for (int i = 0; i < count; ++i)
+        {
             if (!predicate(first[i], second[i]))
                 return false;
+        }
 
         return true;
     }
