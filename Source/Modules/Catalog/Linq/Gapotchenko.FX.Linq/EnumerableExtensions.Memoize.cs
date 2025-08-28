@@ -1,9 +1,16 @@
-﻿using System.Collections;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using System.Collections;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Linq;
 
-partial class EnumerableEx
+partial class EnumerableExtensions
 {
     /// <summary>
     /// Memoizes (caches) all elements of a sequence by ensuring that every element is retrieved only once.
@@ -28,11 +35,7 @@ partial class EnumerableEx
         switch (source)
         {
             case null:
-#if BINARY_COMPATIBILITY
-                return null!;
-#else
                 throw new ArgumentNullException(nameof(source));
-#endif
 
             case CachedEnumerable<T> cachedEnumerable:
                 if (!isThreadSafe ||
@@ -50,15 +53,13 @@ partial class EnumerableEx
                 return source;
         }
 
-#pragma warning disable IDE0306 // Simplify collection initialization
         if (isThreadSafe)
             return new ThreadSafeCachedEnumerable<T>(source);
         else
-            return new CachedEnumerable<T>(source);
-#pragma warning restore IDE0306 // Simplify collection initialization
+            return new ThreadUnsafeCachedEnumerable<T>(source);
     }
 
-    class CachedEnumerable<T>(IEnumerable<T> source) : IReadOnlyList<T>
+    abstract class CachedEnumerable<T>(IEnumerable<T> source) : IReadOnlyList<T>
     {
         public virtual T this[int index]
         {
@@ -142,6 +143,10 @@ partial class EnumerableEx
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly IList<T> Cache = [];
+    }
+
+    sealed class ThreadUnsafeCachedEnumerable<T>(IEnumerable<T> source) : CachedEnumerable<T>(source)
+    {
     }
 
     sealed class ThreadSafeCachedEnumerable<T>(IEnumerable<T> source) : CachedEnumerable<T>(source)
