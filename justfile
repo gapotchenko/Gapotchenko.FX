@@ -1,8 +1,29 @@
+# Gapotchenko.FX
+#
+# Copyright © Gapotchenko and Contributors
+#
+# File introduced by: Oleksiy Gapotchenko
+# Year of introduction: 2025
+
 set working-directory := "Source"
-set dotenv-load := true
+set unstable
+
+# ---------------------------------------------------------------------------
+# Shells & Interpreters
+# ---------------------------------------------------------------------------
+
 set windows-shell := ["gnu-tk", "-i", "-c"]
 set script-interpreter := ["gnu-tk", "-i", "-l", "/bin/sh", "-eu"]
-set unstable
+
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
+
+set dotenv-load := true
+
+# ---------------------------------------------------------------------------
+# Recipes
+# ---------------------------------------------------------------------------
 
 # Show the help for this justfile
 @help:
@@ -20,6 +41,12 @@ develop:
 develop:
     open *.sln?
 
+# Install development prerequisites
+[group("development")]
+prerequisites:
+    go install mvdan.cc/sh/v3/cmd/shfmt@latest
+    gnu-tk -i -x Build/Prerequisites.sh
+
 # Format source code
 [group("development")]
 [script]
@@ -28,6 +55,7 @@ format:
     fd -e sh -x shfmt -i 4 -l -w
     echo 'Formatting **/justfile...'
     fd --glob justfile -x just --unstable --fmt --justfile
+    (cd Mastering; cat Exclusion.dic | tr '[:upper:]' '[:lower:]' | sort -u | sponge Exclusion.dic)
 
 # Build release artifacts
 build:
