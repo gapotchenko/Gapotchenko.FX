@@ -1,6 +1,13 @@
-﻿namespace Gapotchenko.FX.Linq;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
 
-partial class EnumerableEx
+namespace Gapotchenko.FX.Linq;
+
+partial class EnumerableExtensions
 {
     /// <summary>
     /// Returns the only element of a sequence, or a <see langword="default"/> value if the sequence is empty or contains several elements.

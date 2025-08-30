@@ -1,4 +1,6 @@
-﻿// API Compatibility Layer
+﻿// --------------------------------------------------------------------------
+// API Compatibility Layer
+// --------------------------------------------------------------------------
 
 namespace Gapotchenko.FX.Linq;
 
@@ -100,6 +102,26 @@ partial class EnumerableEx
         else
             return EnumerableExtensions.Memoize(source, isThreadSafe);
     }
+
+    /// <inheritdoc cref="EnumerableExtensions.ScalarOrDefault{TSource}(IEnumerable{TSource})"/>
+    [Obsolete("Use extension method of IEnumerable<T> interface instead.")]
+    public static TSource? ScalarOrDefault<TSource>(IEnumerable<TSource> source) =>
+        EnumerableExtensions.ScalarOrDefault(source);
+
+    /// <inheritdoc cref="EnumerableExtensions.ScalarOrDefault{TSource}(IEnumerable{TSource}, TSource)"/>
+    [Obsolete("Use extension method of IEnumerable<T> interface instead.")]
+    public static TSource ScalarOrDefault<TSource>(IEnumerable<TSource> source, TSource defaultValue) =>
+        EnumerableExtensions.ScalarOrDefault(source, defaultValue);
+
+    /// <inheritdoc cref="EnumerableExtensions.ScalarOrDefault{TSource}(IEnumerable{TSource}, Func{TSource, bool})"/>
+    [Obsolete("Use extension method of IEnumerable<T> interface instead.")]
+    public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) =>
+        EnumerableExtensions.ScalarOrDefault(source, predicate);
+
+    /// <inheritdoc cref="EnumerableExtensions.ScalarOrDefault{TSource}(IEnumerable{TSource}, Func{TSource, bool}, TSource)"/>
+    [Obsolete("Use extension method of IEnumerable<T> interface instead.")]
+    public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate, TSource defaultValue) =>
+        EnumerableExtensions.ScalarOrDefault(source, predicate, defaultValue);
 
 #endif // BINARY_COMPATIBILITY
 }

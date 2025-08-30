@@ -1,4 +1,8 @@
-﻿using Gapotchenko.FX.Linq.Properties;
+﻿#if NET6_0_OR_GREATER
+#define TFF_ENUMERABLE_SINGLEORDEFAULT_VALUE
+#endif
+
+using Gapotchenko.FX.Linq.Properties;
 
 namespace Gapotchenko.FX.Linq;
 
