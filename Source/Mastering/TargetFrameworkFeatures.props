@@ -66,11 +66,6 @@
     <MasteringFrameworkFeature Include="TFF_IDICTIONARY_NULL_KEY;TFF_ILC;TFF_HASHSET_ENUMERATION_REMOVE_ALLOWED;TFF_IREADONLYSET;TFF_ISEXTERNALINIT;TFF_REFERENCEEQUALITYCOMPARER;TFF_MEMBERNOTNULLATTRIBUTE;TFF_MODULEINITIALIZERATTRIBUTE" />
   </ItemGroup>
 
-  <!-- .NET 6.0 -->
-  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '6.0')) ">
-    <MasteringFrameworkFeature Include="TFF_ENUMERABLE_FIRSTORDEFAULT_VALUE;TFF_ENUMERABLE_MINBY;TFF_ENUMERABLE_MAXBY;TFF_ENUMERABLE_MIN_COMPARER;TFF_ENUMERABLE_MAX_COMPARER;TFF_ENUMERABLE_LASTORDEFAULT_VALUE;TFF_ENUMERABLE_TRYGETNONENUMERATEDCOUNT" />
-  </ItemGroup>
-
   <!-- .NET 7.0 -->
   <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '7.0')) ">
     <MasteringFrameworkFeature Include="TFF_REQUIREDMEMBERATTRIBUTE;TFF_STATIC_INTERFACE" />

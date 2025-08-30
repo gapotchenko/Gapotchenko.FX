@@ -1,4 +1,11 @@
-﻿using Gapotchenko.FX.Linq.Properties;
+﻿#if NET6_0_OR_GREATER
+#define TFF_ENUMERABLE_MIN_COMPARER
+#define TFF_ENUMERABLE_MAX_COMPARER
+#define TFF_ENUMERABLE_MINBY
+#define TFF_ENUMERABLE_MAXBY
+#endif
+
+using Gapotchenko.FX.Linq.Properties;
 
 namespace Gapotchenko.FX.Linq;
 

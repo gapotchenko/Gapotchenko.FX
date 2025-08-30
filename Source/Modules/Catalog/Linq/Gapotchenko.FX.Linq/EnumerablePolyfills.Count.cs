@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿#if NET6_0_OR_GREATER
+#define TFF_ENUMERABLE_TRYGETNONENUMERATEDCOUNT
+#endif
+
+using System.Collections;
 
 namespace Gapotchenko.FX.Linq;
 

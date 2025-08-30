@@ -1,4 +1,12 @@
-﻿#if NET6_0_OR_GREATER
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2021
+
+#if NET6_0_OR_GREATER
 #define TFF_ENUMERABLE_SINGLEORDEFAULT_VALUE
 #endif
 
@@ -6,7 +14,7 @@ using Gapotchenko.FX.Linq.Properties;
 
 namespace Gapotchenko.FX.Linq;
 
-partial class EnumerableEx
+partial class EnumerablePolyfills
 {
     /// <summary>
     /// Returns the only element of a sequence, or the specified default value if the sequence is empty;
@@ -62,7 +70,7 @@ partial class EnumerableEx
 
         foreach (var element in source)
         {
-            if (predicate == null || predicate(element))
+            if (predicate?.Invoke(element) ?? true)
             {
                 if (result.HasValue)
                 {

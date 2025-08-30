@@ -1,4 +1,8 @@
-﻿namespace Gapotchenko.FX.Linq;
+﻿#if NET6_0_OR_GREATER
+#define TFF_ENUMERABLE_FIRSTORDEFAULT_VALUE
+#endif
+
+namespace Gapotchenko.FX.Linq;
 
 partial class EnumerablePolyfills
 {
