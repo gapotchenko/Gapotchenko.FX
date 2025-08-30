@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -62,7 +63,7 @@ partial class CartesianProduct
     {
         factors = factors.Memoize();
 
-        var gtc = new GroupTransformCorrelator<IEnumerable<T>>(EnumerableEx.Memoize);
+        var gtc = new GroupTransformCorrelator<IEnumerable<T>>(x => x.Memoize());
         foreach (var factor in factors.SkipLast(1))
             gtc.Transform(factor);
         return factors.Select(gtc.Correlate);
@@ -91,6 +92,8 @@ partial class CartesianProduct
 
         readonly Dictionary<T, T> m_Map = new(ReferenceEqualityComparer.Instance);
     }
+
+#pragma warning disable IDE0011 // Add braces
 
     internal static IEnumerable<TResult> Multiply<T1, T2, TResult>(
         IEnumerable<T1> factor1,
@@ -238,4 +241,6 @@ partial class CartesianProduct
                                     foreach (var i1 in factor1)
                                         yield return selector(i1, i2, i3, i4, i5, i6, i7, i8);
     }
+
+#pragma warning restore IDE0011 // Add braces
 }
