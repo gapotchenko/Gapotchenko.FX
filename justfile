@@ -33,13 +33,13 @@ set dotenv-load := true
 [group("development")]
 [windows]
 develop:
-    start "" *.sln?
+    start "" *.slnx
 
 # Start IDE using the project environment
 [group("development")]
 [unix]
 develop:
-    open *.sln?
+    open *.slnx
 
 # Install development prerequisites
 [group("development")]
