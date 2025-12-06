@@ -58,7 +58,7 @@ public partial class Graph<TVertex> : IGraph<TVertex>
                             queue.Enqueue(adjacent);
                 }
 
-                seen.AddRange(connectedVertices);
+                seen.UnionWith(connectedVertices);
 
                 var connectedSubgraph = GetSubgraph(connectedVertices);
                 yield return connectedSubgraph;

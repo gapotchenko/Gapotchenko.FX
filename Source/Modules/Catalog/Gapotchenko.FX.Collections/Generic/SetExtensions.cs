@@ -5,6 +5,9 @@
 /// </summary>
 public static class SetExtensions
 {
+    #region Compatibility
+
+#if BINARY_COMPATIBILITY || SOURCE_COMPATIBILITY
     /// <summary>
     /// Adds the elements of the specified collection to the target set.
     /// </summary>
@@ -15,6 +18,8 @@ public static class SetExtensions
     /// <see langword="true"/> if at least one element is added to the <paramref name="target">target set</paramref>;
     /// <see langword="false"/> if all the elements are already present.
     /// </returns>
+    [Obsolete("Use 'UnionWith' method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool AddRange<T>(this ISet<T> target, params IEnumerable<T> collection)
     {
         ArgumentNullException.ThrowIfNull(target);
@@ -36,11 +41,10 @@ public static class SetExtensions
     /// <see langword="true"/> if at least one element is added to the <paramref name="target">target set</paramref>;
     /// <see langword="false"/> if all the elements are already present.
     /// </returns>
+    [Obsolete("Use 'UnionWith' method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static bool AddRange<T>(this ISet<T> target, params T[] collection) => AddRange(target, (IEnumerable<T>)collection);
 
-    #region Compatibility
-
-#if BINARY_COMPATIBILITY || SOURCE_COMPATIBILITY
     /// <summary>
     /// Indicates whether the specified set is null or empty.
     /// </summary>
