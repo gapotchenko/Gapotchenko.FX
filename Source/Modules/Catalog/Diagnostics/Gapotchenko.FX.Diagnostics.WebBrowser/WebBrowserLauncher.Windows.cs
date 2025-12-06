@@ -29,8 +29,8 @@ partial class WebBrowserLauncher
         else
             ++j;
 
-        var args = command.AsSpan(j).Trim().ToString();
-        var filePath = command.AsSpan(0, j).Trim('"').ToString();
+        string args = command.AsSpan(j).Trim().ToString();
+        string filePath = command.AsSpan(0, j).Trim('"').ToString();
 
         string pattern = args;
 
