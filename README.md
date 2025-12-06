@@ -48,10 +48,9 @@ A profile is a collection of Gapotchenko.FX modules covering a common usage patt
 Gapotchenko.FX is largely platform-independent, but some parts of the implementation require specific integration with a host environment to achieve the best characteristics.
 
 - Supported target frameworks:
-  - .NET 5.0+
-  - .NET Core 2.0+
+  - .NET 6.0+
   - .NET Standard 2.0+
-  - .NET Framework 4.6.1+
+  - .NET Framework 4.7.2+
 - Supported operating systems: 
   - Linux
   - macOS
