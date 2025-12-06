@@ -7,13 +7,13 @@ partial class EnumerableExTests
     [TestMethod]
     public void Linq_Enumerable_ScalarOrDefault_NullSourceArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.ScalarOrDefault<int>(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Utils.NullEnumerable<int>().ScalarOrDefault());
     }
 
     [TestMethod]
     public void Linq_Enumerable_ScalarOrDefault_Value_NullSourceArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.ScalarOrDefault(null!, "X"));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Utils.NullEnumerable<string>().ScalarOrDefault("X"));
     }
 
     [TestMethod]
@@ -83,25 +83,25 @@ partial class EnumerableExTests
     [TestMethod]
     public void Linq_Enumerable_ScalarOrDefault_Predicate_NullSeqArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.ScalarOrDefault<int>(null!, _ => true));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Utils.NullEnumerable<int>().ScalarOrDefault(_ => true));
     }
 
     [TestMethod]
     public void Linq_Enumerable_ScalarOrDefault_Predicate_NullPredicateArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.ScalarOrDefault(new int[0], null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Enumerable.Empty<int>().ScalarOrDefault(null!));
     }
 
     [TestMethod]
     public void Linq_Enumerable_ScalarOrDefault_Predicate_Value_NullSeqArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.ScalarOrDefault(null!, _ => true, 10));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Utils.NullEnumerable<int>().ScalarOrDefault(_ => true, 10));
     }
 
     [TestMethod]
     public void Linq_Enumerable_ScalarOrDefault_Predicate_Value_NullPredicateArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.ScalarOrDefault([], null!, 10));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Enumerable.Empty<int>().ScalarOrDefault(null!, 10));
     }
 
     [TestMethod]

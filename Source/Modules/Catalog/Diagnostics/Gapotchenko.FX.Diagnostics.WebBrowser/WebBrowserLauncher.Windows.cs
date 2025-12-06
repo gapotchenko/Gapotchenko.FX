@@ -13,7 +13,7 @@ partial class WebBrowserLauncher
         if (j == -1)
             return false;
 
-        string scheme = url.Substring(0, j);
+        string scheme = url[..j];
 
         string? command = TryGetDefaultBrowserCommand_Windows(scheme);
         if (command == null)

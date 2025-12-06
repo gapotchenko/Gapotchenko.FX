@@ -14,7 +14,7 @@ partial class EnumerableExTests
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Value_NullSourceArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.SingleOrDefault(null!, "X"));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Utils.NullEnumerable<string>().SingleOrDefault("X"));
     }
 
     [TestMethod]
@@ -94,13 +94,13 @@ partial class EnumerableExTests
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_NullSeqArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.SingleOrDefault(null!, _ => true, 10));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Utils.NullEnumerable<int>().SingleOrDefault(_ => true, 10));
     }
 
     [TestMethod]
     public void Linq_Enumerable_SingleOrDefault_Predicate_Value_NullPredicateArg()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => EnumerableEx.SingleOrDefault([], null!, 10));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Enumerable.Empty<int>().SingleOrDefault(null!, 10));
     }
 
     [TestMethod]
