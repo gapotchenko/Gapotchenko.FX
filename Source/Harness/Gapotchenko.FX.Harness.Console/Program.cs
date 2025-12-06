@@ -21,6 +21,8 @@ using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Math.Metrics;
 using Gapotchenko.FX.Versioning;
+using Gapotchenko.FX.Data.Archives.Zip;
+using Gapotchenko.FX.IO.Vfs;
 #endregion
 
 #nullable enable
@@ -66,7 +68,6 @@ class Program
             ExecuteOnce a = new(() => Console.WriteLine("Once!"));
             a.EnsureExecuted();
             a.EnsureExecuted();
-
 
             if (!Console.IsOutputRedirected)
                 Console.OutputEncoding = Encoding.UTF8;

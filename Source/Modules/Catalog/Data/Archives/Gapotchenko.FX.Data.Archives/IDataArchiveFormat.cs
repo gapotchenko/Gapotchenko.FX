@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Data.Archives;
 /// <summary>
 /// Provides description and operations for the data archive format.
 /// </summary>
-public interface IDataArchiveFormat : IVfsFileFormat
+public interface IDataArchiveFormat : IVfsFileStorageFormat
 {
 }
 
@@ -23,7 +23,7 @@ public interface IDataArchiveFormat : IVfsFileFormat
 /// <typeparam name="TOptions">The type of the data archive options.</typeparam>
 public interface IDataArchiveFormat<out TArchive, TOptions> :
     IDataArchiveFormat,
-    IVfsFormat<TArchive, TOptions>
+    IVfsFileStorageFormat<TArchive, TOptions>
     where TArchive : IDataArchive
     where TOptions : DataArchiveOptions
 {

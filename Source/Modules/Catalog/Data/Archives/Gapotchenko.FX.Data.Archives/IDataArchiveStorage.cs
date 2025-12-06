@@ -9,13 +9,17 @@ using Gapotchenko.FX.IO.Vfs;
 
 namespace Gapotchenko.FX.Data.Archives;
 
-/// <inheritdoc/>
+/// <summary>
+/// Provides storage operations for working with <typeparamref name="TArchive"/> data archives.
+/// </summary>
 /// <typeparam name="TArchive">The type of the data archive.</typeparam>
 /// <typeparam name="TOptions">The type of the data archive options.</typeparam>
-public interface IDataArchiveFileFormat<out TArchive, TOptions> :
-    IDataArchiveFormat<TArchive, TOptions>,
-    IVfsFileFormat<TArchive, TOptions>
+public interface IDataArchiveStorage<out TArchive, TOptions> : IVfsStorage<TArchive, TOptions>
     where TArchive : IDataArchive
     where TOptions : DataArchiveOptions
 {
+    /// <summary>
+    /// Gets the storage format for the <typeparamref name="TArchive"/>.
+    /// </summary>
+    new IDataArchiveFormat<TArchive, TOptions> Format { get; }
 }

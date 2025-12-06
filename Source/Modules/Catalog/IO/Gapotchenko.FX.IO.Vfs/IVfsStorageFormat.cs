@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// <summary>
 /// Provides description and operations for the virtual file system format.
 /// </summary>
-public interface IVfsFormat
+public interface IVfsStorageFormat
 {
     /// <summary>
     /// Creates a new file system in the specified data stream.
@@ -75,7 +75,7 @@ public interface IVfsFormat
 /// </summary>
 /// <typeparam name="TVfs">The type of the virtual file system.</typeparam>
 /// <typeparam name="TOptions">The type of the virtual file system options.</typeparam>
-public interface IVfsFormat<out TVfs, TOptions> : IVfsFormat
+public interface IVfsStorageFormat<out TVfs, TOptions> : IVfsStorageFormat
     where TVfs : IVirtualFileSystem
     where TOptions : VfsOptions
 {
@@ -90,7 +90,7 @@ public interface IVfsFormat<out TVfs, TOptions> : IVfsFormat
     /// </param>
     /// <param name="options"><inheritdoc/></param>
     /// <returns>The <typeparamref name="TVfs"/> instance for the created storage.</returns>
-    /// <inheritdoc cref="IVfsFormat.Create(Stream, bool, VfsOptions?)"/>
+    /// <inheritdoc cref="IVfsStorageFormat.Create(Stream, bool, VfsOptions?)"/>
     TVfs Create(Stream stream, bool leaveOpen = false, TOptions? options = null);
 
     /// <summary>
@@ -114,9 +114,9 @@ public interface IVfsFormat<out TVfs, TOptions> : IVfsFormat
     /// </param>
     /// <param name="options"><inheritdoc/></param>
     /// <returns>The <typeparamref name="TVfs"/> instance representing the mounted storage.</returns>
-    /// <inheritdoc cref="IVfsFormat.Mount(Stream, bool, bool, VfsOptions?)"/>
+    /// <inheritdoc cref="IVfsStorageFormat.Mount(Stream, bool, bool, VfsOptions?)"/>
     TVfs Mount(Stream stream, bool writable = false, bool leaveOpen = false, TOptions? options = null);
 
-    /// <inheritdoc cref="IVfsFormat.IsMountable(Stream, VfsOptions?)"/>
+    /// <inheritdoc cref="IVfsStorageFormat.IsMountable(Stream, VfsOptions?)"/>
     bool IsMountable(Stream stream, TOptions? options = null);
 }

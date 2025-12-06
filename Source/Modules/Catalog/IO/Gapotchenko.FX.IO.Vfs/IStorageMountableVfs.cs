@@ -7,16 +7,18 @@
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Provides operations for working with files representing <typeparamref name="TVfs"/> virtual file systems.
+/// Defines the interface of a virtual file system mountable on a file.
 /// </summary>
 /// <typeparam name="TVfs">The type of the virtual file system.</typeparam>
 /// <typeparam name="TOptions">The type of the virtual file system options.</typeparam>
-public interface IVfsFile<out TVfs, TOptions>
+public interface IStorageMountableVfs<out TVfs, TOptions> : IVirtualFileSystem
     where TVfs : IVirtualFileSystem
     where TOptions : VfsOptions
 {
+#if TFF_STATIC_INTERFACE
     /// <summary>
-    /// Gets the file format of the <typeparamref name="TVfs"/> storage.
+    /// Gets the object for <typeparamref name="TVfs"/> files manipulation.
     /// </summary>
-    IVfsFileFormat<TVfs, TOptions> Format { get; }
+    static abstract IVfsStorage<TVfs, TOptions> Storage { get; }
+#endif
 }

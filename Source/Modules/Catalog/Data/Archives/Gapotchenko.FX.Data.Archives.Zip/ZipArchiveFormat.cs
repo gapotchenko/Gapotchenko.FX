@@ -10,9 +10,9 @@ using Gapotchenko.FX.IO;
 
 namespace Gapotchenko.FX.Data.Archives.Zip;
 
-sealed class ZipArchiveFileFormat : DataArchiveFileFormatKit<IZipArchive, ZipArchiveOptions>
+sealed class ZipArchiveFormat : DataArchiveFormatKit<IZipArchive, ZipArchiveOptions>
 {
-    public static ZipArchiveFileFormat Instance { get; } = new();
+    public static ZipArchiveFormat Instance { get; } = new();
 
     protected override IReadOnlyList<string> GetFileExtensionsCore() => [".zip"];
 
