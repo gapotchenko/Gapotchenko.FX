@@ -153,7 +153,7 @@ interval = Interval.ToInclusive(10);
 interval = Interval.ToExclusive(10);
 ```
 
-Or you can explicitly construct an interval by using an `Interval<T>` constructor and the notion of boundaries:
+Or you can explicitly construct an interval by using an `Interval<T>` constructor using the notion of boundaries:
 
 ``` C#
 // [10,20)
