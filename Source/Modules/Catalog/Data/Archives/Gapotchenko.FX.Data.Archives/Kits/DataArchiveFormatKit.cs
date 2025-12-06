@@ -10,12 +10,12 @@ using Gapotchenko.FX.IO.Vfs;
 namespace Gapotchenko.FX.Data.Archives.Kits;
 
 /// <summary>
-/// Provides the base implementation of <see cref="IDataArchiveFileFormat{TArchive, TOptions}"/> interface.
+/// Provides the base implementation of <see cref="IDataArchiveFormat{TArchive, TOptions}"/> interface.
 /// </summary>
 /// <remarks/>
 /// <inheritdoc/>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
-public abstract class DataArchiveFileFormatKit<TArchive, TOptions> : IDataArchiveFileFormat<TArchive, TOptions>
+public abstract class DataArchiveFormatKit<TArchive, TOptions> : IDataArchiveFormat<TArchive, TOptions>
     where TArchive : IDataArchive
     where TOptions : DataArchiveOptions
 {
@@ -25,7 +25,7 @@ public abstract class DataArchiveFileFormatKit<TArchive, TOptions> : IDataArchiv
     /// <inheritdoc cref="FileExtensions"/>
     protected abstract IReadOnlyList<string> GetFileExtensionsCore();
 
-    IVirtualFileSystem IVfsFormat.Create(Stream stream, bool leaveOpen, VfsOptions? options) =>
+    IVirtualFileSystem IVfsStorageFormat.Create(Stream stream, bool leaveOpen, VfsOptions? options) =>
         Create(stream, leaveOpen, (TOptions?)options);
 
     /// <inheritdoc/>
@@ -39,7 +39,7 @@ public abstract class DataArchiveFileFormatKit<TArchive, TOptions> : IDataArchiv
     /// <inheritdoc cref="Create(Stream, bool, TOptions?)"/>
     protected abstract TArchive CreateCore(Stream stream, bool leaveOpen, TOptions? options);
 
-    IVirtualFileSystem IVfsFormat.Mount(Stream stream, bool writable, bool leaveOpen, VfsOptions? options) =>
+    IVirtualFileSystem IVfsStorageFormat.Mount(Stream stream, bool writable, bool leaveOpen, VfsOptions? options) =>
         Mount(stream, writable, leaveOpen, (TOptions?)options);
 
     /// <inheritdoc/>
@@ -53,7 +53,7 @@ public abstract class DataArchiveFileFormatKit<TArchive, TOptions> : IDataArchiv
     /// <inheritdoc cref="Mount(Stream, bool, bool, TOptions?)"/>
     protected abstract TArchive MountCore(Stream stream, bool writable, bool leaveOpen, TOptions? options);
 
-    bool IVfsFormat.IsMountable(Stream stream, VfsOptions? options) =>
+    bool IVfsStorageFormat.IsMountable(Stream stream, VfsOptions? options) =>
         IsMountable(stream, (TOptions?)options);
 
     /// <inheritdoc/>

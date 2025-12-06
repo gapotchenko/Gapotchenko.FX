@@ -14,9 +14,9 @@ partial class ZipArchive
     /// <summary>
     /// Gets the object for ZIP files manipulation.
     /// </summary>
-    public static IDataArchiveFile<IZipArchive, ZipArchiveOptions> File => ZipArchiveFile.Instance;
+    public static IDataArchiveStorage<IZipArchive, ZipArchiveOptions> Storage => ZipArchiveStorage.Instance;
 
 #if TFF_STATIC_INTERFACE
-    static IVfsFile<IZipArchive, ZipArchiveOptions> IFileMountableVfs<IZipArchive, ZipArchiveOptions>.File => File;
+    static IVfsStorage<IZipArchive, ZipArchiveOptions> IStorageMountableVfs<IZipArchive, ZipArchiveOptions>.Storage => Storage;
 #endif
 }
