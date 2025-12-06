@@ -6,9 +6,9 @@
 
 Release date: not released yet
 
-- Preliminary support for .NET 10.0 target framework
+- Support for .NET 10.0 target framework
 - Introduced `Gapotchenko.FX.IO.Vfs` module that provides the concept of a virtual file system which allows to work with file systems in a unified way independently of their actual nature.
-  Be it a local ZIP archive, an CD/DVD ISO image, a custom FAT12 implementation, or a remote cloud storage
+  Be it a local ZIP archive, a CD/DVD ISO image, a custom FAT12 implementation, or a remote network storage
 - Added `EnumerableEx.Lazy(Func<IEnumerable<T>>)` method that allows to lazily initialize an `IEnumerable<T>` instance by the specified factory
 - Added `Gapotchenko.FX.IO.PositionTrackingTextReader` class that can track the current position within a sequential series of characters
 - Improved compatibility with AOT publishing
@@ -27,9 +27,10 @@ Release date: not released yet
     - Added `Enum.GetValues<TEnum>()` polyfill method
 - Fixed issues:
     - Fixed issue that led to an empty string value returned by `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
-    - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with its own entry point
+    - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly having its own entry point
     - Fixed issue that led to an empty string value returned by `AppInformation.Trademark` property instead of a `null` value
     - Fixed P/Invoke issues that could be potentially targeted by [WorstFit Attack](https://worst.fit/) vulnerability (applies to Windows OS only)
+- Retired support for target frameworks older then .NET 6.0 and .NET Framework 4.7.2
 
 ## 2024
 
