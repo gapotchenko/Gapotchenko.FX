@@ -55,6 +55,13 @@ public readonly struct VfsLocation
     public required string Path { get; init; }
 
     /// <summary>
+    /// Implicitly converts a file-system entry path to a <see cref="VfsLocation"/>
+    /// associated with the local <see cref="IFileSystemView"/>.
+    /// </summary>
+    /// <param name="path">The path of a file-system entry.</param>
+    public static implicit operator VfsLocation(string path) => new(path);
+
+    /// <summary>
     /// Implicitly converts a <see cref="VfsLocation"/> to a <see cref="VfsReadOnlyLocation"/>.
     /// </summary>
     /// <param name="location">The location.</param>

@@ -53,4 +53,11 @@ public readonly struct VfsReadOnlyLocation
     /// Gets or initializes the path of a file-system entry.
     /// </summary>
     public required string Path { get; init; }
+
+    /// <summary>
+    /// Implicitly converts a file-system entry path to a <see cref="VfsReadOnlyLocation"/>
+    /// associated with the local <see cref="IReadOnlyFileSystemView"/>.
+    /// </summary>
+    /// <param name="path">The path of a file-system entry.</param>
+    public static implicit operator VfsReadOnlyLocation(string path) => new(path);
 }
